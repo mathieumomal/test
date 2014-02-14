@@ -4,36 +4,10 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Etsi.Ultimate.DataAccess.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Etsi.Ultimate.DataAccess.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="EtsiUltimateDataAccessStoreContainer">
           <EntitySet Name="Enum_ReleaseStatus" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_ReleaseStatus" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="Releases" EntityType="Etsi.Ultimate.DataAccess.Store.Releases" store:Type="Tables" store:Schema="dbo" store:Name="Releases">
-            <DefiningQuery>SELECT 
-      [Releases].[ReleaseId] AS [ReleaseId], 
-      [Releases].[Name] AS [Name], 
-      [Releases].[ShortName] AS [ShortName], 
-      [Releases].[Description] AS [Description], 
-      [Releases].[Fk_ReleaseStatus] AS [Fk_ReleaseStatus], 
-      [Releases].[StartDate] AS [StartDate], 
-      [Releases].[Stage1FreezeDate] AS [Stage1FreezeDate], 
-      [Releases].[Stage1FreezeMtgId] AS [Stage1FreezeMtgId], 
-      [Releases].[Stage2FreezeDate] AS [Stage2FreezeDate], 
-      [Releases].[Stage2FreezeMtgId] AS [Stage2FreezeMtgId], 
-      [Releases].[Stage3FreezeDate] AS [Stage3FreezeDate], 
-      [Releases].[Stage3FreezeMtgId] AS [Stage3FreezeMtgId], 
-      [Releases].[EndDate] AS [EndDate], 
-      [Releases].[EndMtgId] AS [EndMtgId], 
-      [Releases].[ClosureDate] AS [ClosureDate], 
-      [Releases].[ClosureMtgId] AS [ClosureMtgId], 
-      [Releases].[SortOrder] AS [SortOrder], 
-      [Releases].[Version2g] AS [Version2g], 
-      [Releases].[Version3g] AS [Version3g], 
-      [Releases].[WpmCode2g] AS [WpmCode2g], 
-      [Releases].[WpmCode3g] AS [WpmCode3g], 
-      [Releases].[WpmProjectId] AS [WpmProjectId], 
-      [Releases].[IturCode] AS [IturCode]
-      FROM [dbo].[Releases] AS [Releases]</DefiningQuery>
-          </EntitySet>
+          <EntitySet Name="Releases" EntityType="Etsi.Ultimate.DataAccess.Store.Releases" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="View_Meetings" EntityType="Etsi.Ultimate.DataAccess.Store.View_Meetings" store:Type="Views" store:Schema="dbo" store:Name="View_Meetings">
             <DefiningQuery>SELECT 
       [View_Meetings].[MTG_ID] AS [MTG_ID], 
@@ -100,9 +74,6 @@
           <Property Name="Enum_ReleaseStatusId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="ReleaseStatus" Type="nchar" MaxLength="10" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view '3GPPDB.dbo.Releases' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
-      -->
         <EntityType Name="Releases">
           <Key>
             <PropertyRef Name="ReleaseId" />
@@ -205,8 +176,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Etsi.Ultimate.DataAccess" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -440,7 +410,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
       </DesignerInfoPropertySet>

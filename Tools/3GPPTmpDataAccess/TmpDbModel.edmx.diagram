@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="15ccb17074914b6c93f315f2d84c87ae" Name="Diagram1" ZoomLevel="34" >
+        <EntityTypeShape EntityType="TmpDbContext.C2001_04_25_schedule" Width="1.5" PointX="2.5737993803684596" PointY="21.491644317978828" />
+        <EntityTypeShape EntityType="TmpDbContext.C2001_11_06_filius_patris" Width="1.5" PointX="2.1362649286800366" PointY="9.3958527042511157" />
+        <EntityTypeShape EntityType="TmpDbContext.C2002_04_25_WPM_title_lines" Width="1.5" PointX="1.8769698598780529" PointY="17.896570869673308" />
+        <EntityTypeShape EntityType="TmpDbContext.C2002_08_06_CR_implementation_errors" Width="1.5" PointX="10.398050078376219" PointY="3.8805178123901216" />
+        <EntityTypeShape EntityType="TmpDbContext.C2003_03_04_work_plan" Width="1.5" PointX="9.36843737092262" PointY="2.0651493976196038" />
+        <EntityTypeShape EntityType="TmpDbContext.C2003_06_25_schedule_essentials_table" Width="1.5" PointX="3.0187850366434015" PointY="14.830905131451276" />
+        <EntityTypeShape EntityType="TmpDbContext.C2004_01_15_WID_history" Width="1.5" PointX="11.669587137023726" PointY="18.035437517815939" />
+        <EntityTypeShape EntityType="TmpDbContext.C2005_06_15_TSGs" Width="1.5" PointX="10.108283477885781" PointY="10.030110036036982" />
+        <EntityTypeShape EntityType="TmpDbContext.C2006_01_08_WI_rapporteurs" Width="1.5" PointX="9.33146542745245" PointY="10.530907203690571" />
+        <EntityTypeShape EntityType="TmpDbContext.C2006_03_17_tdocs" Width="1.5" PointX="8.30437029167282" PointY="5.6379753377465418" />
+        <EntityTypeShape EntityType="TmpDbContext.C2008_03_08_Specs_vs_WIs" Width="1.5" PointX="8.2925976180902676" PointY="10.483421032542093" />
+        <EntityTypeShape EntityType="TmpDbContext.C2009_06_11_CRs_to_WIs" Width="1.5" PointX="2.4468135193208296" PointY="6.0328407166678648" />
+        <EntityTypeShape EntityType="TmpDbContext.C2010_02_08_SpecXRef" Width="1.5" PointX="10.669769334918712" PointY="23.109747971924836" />
+        <EntityTypeShape EntityType="TmpDbContext.cmtee_officers" Width="1.5" PointX="10.64646357048604" PointY="18.7541613368104" />
+        <EntityTypeShape EntityType="TmpDbContext.committee" Width="1.5" PointX="2.6999905755277678" PointY="25.241712179613167" />
+        <EntityTypeShape EntityType="TmpDbContext.CR_categories" Width="1.5" PointX="1.75570399954715" PointY="25.507311445431462" />
+        <EntityTypeShape EntityType="TmpDbContext.CR_status_values" Width="1.5" PointX="11.302085363912436" PointY="14.073356485959774" />
+        <EntityTypeShape EntityType="TmpDbContext.jmm_spec_series" Width="1.5" PointX="8.8677678652423282" PointY="10.855662485051743" />
+        <EntityTypeShape EntityType="TmpDbContext.List_of_GSM___3G_CRs" Width="1.5" PointX="2.2748093112720218" PointY="17.500630774302703" />
+        <EntityTypeShape EntityType="TmpDbContext.Release" Width="1.5" PointX="11.964408148063537" PointY="21.97725814114197" />
+        <EntityTypeShape EntityType="TmpDbContext.Specs_GSM_3G" Width="1.5" PointX="9.7722112265286079" PointY="25.50833691354298" />
+        <EntityTypeShape EntityType="TmpDbContext.Specs_GSM_3G_release_info" Width="1.5" PointX="10.78838875460829" PointY="31.828262701550621" />
+        <EntityTypeShape EntityType="TmpDbContext.wpm_spec_release_mapping" Width="1.5" PointX="4.9751579281758316" PointY="28.520906446744178" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

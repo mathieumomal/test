@@ -53,6 +53,9 @@ namespace Etsi.Ultimate.Repositories
         }
 
         #endregion
+
+        
+        public IUltimateUnitOfWork UoW { get; set; }
     }
 
     public interface IEnumReleaseRepository : IEntityRepository<Enum_ReleaseStatus>

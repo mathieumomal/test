@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseImport", "DatabaseImport.csproj", "{1B01E09D-F994-466A-B1D1-111B0D427866}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "3GPPTmpDataAccess", "..\3GPPTmpDataAccess\3GPPTmpDataAccess.csproj", "{4ABBF98F-5A6A-4409-953B-2FBF781ABDBE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "..\..\Common\DataAccess\DataAccess.csproj", "{638F46A5-C23C-452D-A1F4-D0C49EA28F5B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainClasses", "..\..\Common\DomainClasses\DomainClasses.csproj", "{D5BDEDE9-D397-411C-AE94-1646836406BA}"
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B01E09D-F994-466A-B1D1-111B0D427866}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B01E09D-F994-466A-B1D1-111B0D427866}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B01E09D-F994-466A-B1D1-111B0D427866}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B01E09D-F994-466A-B1D1-111B0D427866}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ABBF98F-5A6A-4409-953B-2FBF781ABDBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ABBF98F-5A6A-4409-953B-2FBF781ABDBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ABBF98F-5A6A-4409-953B-2FBF781ABDBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ABBF98F-5A6A-4409-953B-2FBF781ABDBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{638F46A5-C23C-452D-A1F4-D0C49EA28F5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{638F46A5-C23C-452D-A1F4-D0C49EA28F5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{638F46A5-C23C-452D-A1F4-D0C49EA28F5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{638F46A5-C23C-452D-A1F4-D0C49EA28F5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5BDEDE9-D397-411C-AE94-1646836406BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5BDEDE9-D397-411C-AE94-1646836406BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5BDEDE9-D397-411C-AE94-1646836406BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5BDEDE9-D397-411C-AE94-1646836406BA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

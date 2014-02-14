@@ -10,18 +10,21 @@ namespace Etsi.Ultimate.Repositories
 {
     public class ReleaseRepository : IReleaseRepository
     {
-        private IUltimateContext context;
-
-        public ReleaseRepository(IUltimateUnitOfWork iUoW)
+        public IUltimateUnitOfWork UoW
         {
-            context = iUoW.Context;
+            get;
+            set;
+        }
+
+        public ReleaseRepository()
+        {
         }
 
         #region IReleaseRepository Membres
 
         public List<Release> GetAllReleaseByIdReleaseStatus(Enum_ReleaseStatus releaseStatus)
         {
-            return context.Release.Where(id => id.Fk_ReleaseStatus == releaseStatus.Enum_ReleaseStatusId).ToList();
+            return UoW.Context.Release.Where(id => id.Fk_ReleaseStatus == releaseStatus.Enum_ReleaseStatusId).ToList();
         }
 
         #endregion
@@ -30,7 +33,7 @@ namespace Etsi.Ultimate.Repositories
 
         public IQueryable<Release> All
         {
-            get { return context.Release; }
+            get { return UoW.Context.Release; }
         }
 
         public IQueryable<Release> AllIncluding(params System.Linq.Expressions.Expression<Func<Release, object>>[] includeProperties)
@@ -40,18 +43,18 @@ namespace Etsi.Ultimate.Repositories
 
         public Release Find(int id)
         {
-            return context.Release.Find(id);
+            return UoW.Context.Release.Find(id);
         }
 
         public void InsertOrUpdate(Release entity)
         {
             if (entity.ReleaseId == default(int))
             {
-                context.SetAdded(entity);
+                UoW.Context.SetAdded(entity);
             }
             else
             {
-                context.SetModified(entity);
+                UoW.Context.SetModified(entity);
             }
         }
 
@@ -62,7 +65,7 @@ namespace Etsi.Ultimate.Repositories
 
         public void Save()
         {
-            context.SaveChanges();
+            UoW.Context.SaveChanges();
         }
 
         #endregion
@@ -71,7 +74,7 @@ namespace Etsi.Ultimate.Repositories
 
         public void Dispose()
         {
-            context.Dispose();
+            UoW.Context.Dispose();
         }
 
         #endregion

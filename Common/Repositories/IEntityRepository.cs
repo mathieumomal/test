@@ -16,6 +16,8 @@ namespace Etsi.Ultimate.Repositories
     /// <typeparam name="T"> A Domain class</typeparam>
     public interface IEntityRepository<T> : IDisposable
     {
+        IUltimateUnitOfWork UoW { get; set; }
+
         /// <summary>
         /// Gives access to all the entities in the repository. The loading of the entities is 
         /// however lazy.

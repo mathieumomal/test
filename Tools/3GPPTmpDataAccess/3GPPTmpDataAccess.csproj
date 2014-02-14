@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4ABBF98F-5A6A-4409-953B-2FBF781ABDBE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Etsi.Ultimate.Tools.TmpDbDataAccess</RootNamespace>
+    <AssemblyName>Etsi.Ultimate.Tools.TmpDbDataAccess</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="C2001_04_25_schedule.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="C2001_11_06_filius_patris.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="C2002_04_25_WPM_title_lines.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="C2002_08_06_CR_implementation_errors.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="C2003_03_04_work_plan.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="C2003_06_25_schedule_essentials_table.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="C2004_01_15_WID_history.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="C2005_06_15_TSGs.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="C2006_01_08_WI_rapporteurs.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="C2006_03_17_tdocs.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="C2008_03_08_Specs_vs_WIs.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="C2009_06_11_CRs_to_WIs.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="C2010_02_08_SpecXRef.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="cmtee_officers.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="committee.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CR_categories.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="CR_status_values.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="jmm_spec_series.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="List_of_GSM___3G_CRs.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Release.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Specs_GSM_3G.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Specs_GSM_3G_release_info.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TmpDbModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TmpDbModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TmpDbModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TmpDbModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TmpDbModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="wpm_spec_release_mapping.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EntityDeploy Include="TmpDbModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>TmpDbModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.Config" />
+    <None Include="packages.config" />
+    <None Include="TmpDbModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>TmpDbModel.edmx</DependentUpon>
+      <LastGenOutput>TmpDbModel.Context.cs</LastGenOutput>
+    </None>
+    <None Include="TmpDbModel.edmx.diagram">
+      <DependentUpon>TmpDbModel.edmx</DependentUpon>
+    </None>
+    <None Include="TmpDbModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>TmpDbModel.edmx</DependentUpon>
+      <LastGenOutput>TmpDbModel.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

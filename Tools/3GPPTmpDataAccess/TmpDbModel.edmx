@@ -1,0 +1,1172 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="TmpDbContext.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="TmpDbContextStoreContainer">
+          <EntitySet Name="2001-04-25_schedule" EntityType="TmpDbContext.Store.2001-04-25_schedule" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="2001-11-06_filius-patris" EntityType="TmpDbContext.Store.2001-11-06_filius-patris" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="2002-04-25_WPM-title-lines" EntityType="TmpDbContext.Store.2002-04-25_WPM-title-lines" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="2002-08-06_CR-implementation-errors" EntityType="TmpDbContext.Store.2002-08-06_CR-implementation-errors" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="2003-03-04_work-plan" EntityType="TmpDbContext.Store.2003-03-04_work-plan" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="2003-06-25_schedule-essentials-table" EntityType="TmpDbContext.Store.2003-06-25_schedule-essentials-table" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="2004-01-15_WID-history" EntityType="TmpDbContext.Store.2004-01-15_WID-history" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="2005-06-15_TSGs" EntityType="TmpDbContext.Store.2005-06-15_TSGs" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="2006-01-08_WI-rapporteurs" EntityType="TmpDbContext.Store.2006-01-08_WI-rapporteurs" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="2006-03-17_tdocs" EntityType="TmpDbContext.Store.2006-03-17_tdocs" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="2008-03-08_Specs-vs-WIs" EntityType="TmpDbContext.Store.2008-03-08_Specs-vs-WIs" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="2009-06-11_CRs-to-WIs" EntityType="TmpDbContext.Store.2009-06-11_CRs-to-WIs" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="2010-02-08_SpecXRef" EntityType="TmpDbContext.Store.2010-02-08_SpecXRef" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="cmtee-officers" EntityType="TmpDbContext.Store.cmtee-officers" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="committees" EntityType="TmpDbContext.Store.committees" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CR-categories" EntityType="TmpDbContext.Store.CR-categories" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CR-status-values" EntityType="TmpDbContext.Store.CR-status-values" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="jmm_spec_series" EntityType="TmpDbContext.Store.jmm_spec_series" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="List_of_GSM_&amp;_3G_CRs" EntityType="TmpDbContext.Store.List_of_GSM_&amp;_3G_CRs" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Releases" EntityType="TmpDbContext.Store.Releases" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Specs_GSM+3G" EntityType="TmpDbContext.Store.Specs_GSM+3G" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Specs_GSM+3G_release-info" EntityType="TmpDbContext.Store.Specs_GSM+3G_release-info" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="wpm_spec-release_mapping" EntityType="TmpDbContext.Store.wpm_spec-release_mapping" store:Type="Tables" Schema="dbo" />
+        </EntityContainer>
+        <EntityType Name="2001-04-25_schedule">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="spec" Type="nvarchar" MaxLength="50" />
+          <Property Name="release" Type="nvarchar" MaxLength="50" />
+          <Property Name="SCHED_POSITION" Type="float" />
+          <Property Name="MLS_NAME" Type="nvarchar" MaxLength="255" />
+          <Property Name="TARGET_DATE" Type="datetime" />
+          <Property Name="ACHIEVED_DATE" Type="datetime" />
+          <Property Name="MAJOR_VERSION_NB" Type="int" />
+          <Property Name="TECHNICAL_VERSION_NB" Type="int" />
+          <Property Name="EDITORIAL_VERSION_NB" Type="int" />
+          <Property Name="comment" Type="nvarchar" MaxLength="255" />
+          <Property Name="MOD_TS" Type="datetime" />
+          <Property Name="MOD_BY" Type="nvarchar" MaxLength="12" />
+          <Property Name="expert-provided" Type="datetime" />
+          <Property Name="mcc-remarks" Type="nvarchar" MaxLength="250" />
+          <Property Name="location" Type="ntext" />
+          <Property Name="WKI_ID" Type="int" />
+          <Property Name="suppress-SDO-publication" Type="bit" />
+          <Property Name="suppress-from-missing--list" Type="bit" />
+          <Property Name="meeting" Type="nvarchar" MaxLength="50" />
+          <Property Name="Q1741-3" Type="bit" />
+          <Property Name="force-publication" Type="bit" />
+          <Property Name="M1457" Type="bit" />
+          <Property Name="proof" Type="datetime" />
+          <Property Name="uploaded" Type="datetime" />
+          <Property Name="toETSI" Type="datetime" />
+          <Property Name="completed" Type="datetime" />
+          <Property Name="multifile" Type="bit" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="2001-11-06_filius-patris">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="patrem" Type="nvarchar" MaxLength="50" />
+          <Property Name="filius" Type="nvarchar" MaxLength="50" />
+          <Property Name="createdate" Type="datetime" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="2002-04-25_WPM-title-lines">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="LTE" Type="bit" />
+          <Property Name="3g" Type="bit" />
+          <Property Name="2g" Type="bit" />
+          <Property Name="title_1_part" Type="nvarchar" MaxLength="255" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="2002-08-06_CR-implementation-errors">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="CR-record-key" Type="uniqueidentifier" />
+          <Property Name="Spec" Type="nvarchar" MaxLength="10" />
+          <Property Name="CR" Type="nvarchar" MaxLength="5" />
+          <Property Name="Rev" Type="nvarchar" MaxLength="2" />
+          <Property Name="Time of report" Type="datetime" />
+          <Property Name="Reason of Error" Type="nvarchar" MaxLength="255" />
+          <Property Name="Remarks" Type="ntext" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="2003-03-04_work-plan">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="ID" Type="float" />
+          <Property Name="Unique_ID" Type="float" />
+          <Property Name="Task Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="Acronym" Type="nvarchar" MaxLength="255" />
+          <Property Name="Outline_Level" Type="float" />
+          <Property Name="Release" Type="nvarchar" MaxLength="255" />
+          <Property Name="Resource_Names" Type="nvarchar" MaxLength="255" />
+          <Property Name="Start" Type="datetime" />
+          <Property Name="Finish" Type="datetime" />
+          <Property Name="% Work Complete" Type="float" />
+          <Property Name="HyPerlink" Type="nvarchar" MaxLength="255" />
+          <Property Name="WI_rapporteur_name" Type="nvarchar" MaxLength="255" />
+          <Property Name="last_modif" Type="datetime" />
+          <Property Name="Notes" Type="nvarchar" MaxLength="255" />
+          <Property Name="Stopped-at" Type="nvarchar" MaxLength="255" />
+          <Property Name="Early" Type="nvarchar" MaxLength="255" />
+          <Property Name="rappid" Type="float" />
+          <Property Name="created" Type="datetime" />
+          <Property Name="Level of Approval" Type="nvarchar" MaxLength="255" />
+          <Property Name="Impacted TSs and TRs" Type="nvarchar" MaxLength="255" />
+          <Property Name="TSG approved" Type="nvarchar" MaxLength="25" />
+          <Property Name="PCG approved" Type="nvarchar" MaxLength="25" />
+          <Property Name="Status Report" Type="nvarchar" MaxLength="255" />
+          <Property Name="L1uid" Type="float" />
+          <Property Name="L2uid" Type="float" />
+          <Property Name="L3uid" Type="float" />
+          <Property Name="L4uid" Type="float" />
+          <Property Name="parent-uid" Type="float" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="2003-06-25_schedule-essentials-table">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="spec" Type="nvarchar" MaxLength="50" />
+          <Property Name="release" Type="nvarchar" MaxLength="50" />
+          <Property Name="Vx" Type="int" />
+          <Property Name="Vy" Type="int" />
+          <Property Name="Vz" Type="int" />
+          <Property Name="available" Type="datetime" />
+          <Property Name="withdrawn" Type="bit" />
+          <Property Name="Version remarks" Type="nvarchar" MaxLength="255" />
+          <Property Name="URL" Type="ntext" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="2004-01-15_WID-history">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="uid" Type="int" />
+          <Property Name="tdoc" Type="nvarchar" MaxLength="50" />
+          <Property Name="when-added" Type="datetime" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="2005-06-15_TSGs">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="id" Type="int" />
+          <Property Name="TSG-name" Type="nvarchar" MaxLength="250" />
+          <Property Name="TSG-code-letter" Type="nvarchar" MaxLength="1" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="2006-01-08_WI-rapporteurs">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="UID" Type="int" />
+          <Property Name="persid" Type="int" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="2006-03-17_tdocs">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="doc_mtgId" Type="int" />
+          <Property Name="doc_mtg" Type="nvarchar" MaxLength="25" />
+          <Property Name="doc_tdoc" Type="nvarchar" MaxLength="25" />
+          <Property Name="doc_title" Type="nvarchar" MaxLength="250" />
+          <Property Name="doc_source" Type="nvarchar" MaxLength="255" />
+          <Property Name="doc_remarks" Type="ntext" />
+          <Property Name="doc_hlink" Type="ntext" />
+          <Property Name="record_added" Type="datetime" />
+          <Property Name="url_checked" Type="datetime" />
+          <Property Name="title-source_checked" Type="datetime" />
+          <Property Name="crHarvested" Type="datetime" />
+          <Property Name="crFlag" Type="bit" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="2008-03-08_Specs-vs-WIs">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="Spec" Type="nvarchar" MaxLength="25" />
+          <Property Name="WI_UID" Type="int" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="2009-06-11_CRs-to-WIs">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="wicode" Type="nvarchar" MaxLength="250" />
+          <Property Name="wispec" Type="nvarchar" MaxLength="250" />
+          <Property Name="wicr" Type="nvarchar" MaxLength="250" />
+          <Property Name="wicrrev" Type="nvarchar" MaxLength="250" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="2010-02-08_SpecXRef">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="referenceSpecReferencing" Type="nvarchar" MaxLength="30" />
+          <Property Name="referenceSpecReferenced" Type="nvarchar" MaxLength="30" />
+          <Property Name="referenceRel" Type="nvarchar" MaxLength="20" />
+          <Property Name="referenceSpecRfedWdrwn" Type="bit" />
+          <Property Name="referenceSpecRfedWdrwnRel" Type="bit" />
+          <Property Name="referenceAdded" Type="datetime" />
+          <Property Name="referenceOked" Type="bit" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="cmtee-officers">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="TB_ID" Type="int" />
+          <Property Name="PERSON_ID" Type="int" />
+          <Property Name="role" Type="nvarchar" MaxLength="40" />
+          <Property Name="elected-on" Type="datetime" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="committees">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="TB_ID" Type="int" />
+          <Property Name="TB_KEY1" Type="nvarchar" MaxLength="8" />
+          <Property Name="TB_KEY2" Type="nvarchar" MaxLength="8" />
+          <Property Name="TB_KEY3" Type="nvarchar" MaxLength="8" />
+          <Property Name="TB_TITLE" Type="nvarchar" MaxLength="70" />
+          <Property Name="PARENT_TB_ID" Type="int" />
+          <Property Name="WKIREF_PREFIX" Type="nvarchar" MaxLength="12" />
+          <Property Name="TB_NAME" Type="nvarchar" MaxLength="26" />
+          <Property Name="TB_STATUS" Type="nvarchar" MaxLength="12" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="CR-categories">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="CR category" Type="nvarchar" MaxLength="1" />
+          <Property Name="meaning" Type="nvarchar" MaxLength="50" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="CR-status-values">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="CR status value" Type="nvarchar" MaxLength="50" />
+          <Property Name="sort order" Type="int" />
+          <Property Name="TSG" Type="bit" />
+          <Property Name="WG" Type="bit" />
+          <Property Name="use" Type="nvarchar" MaxLength="250" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="jmm_spec_series">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="series_id" Type="nvarchar" MaxLength="4" />
+          <Property Name="series_description" Type="nvarchar" MaxLength="50" />
+          <Property Name="series_3g" Type="bit" />
+          <Property Name="series_2g" Type="bit" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="List_of_GSM_&amp;_3G_CRs">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="Meeting-1st-Level" Type="nvarchar" MaxLength="10" />
+          <Property Name="Doc-1st-Level" Type="nvarchar" MaxLength="13" />
+          <Property Name="Status-1st-Level" Type="nvarchar" MaxLength="30" />
+          <Property Name="Spec" Type="nvarchar" MaxLength="12" />
+          <Property Name="CR" Type="nvarchar" MaxLength="5" />
+          <Property Name="Rev" Type="nvarchar" MaxLength="2" />
+          <Property Name="Phase" Type="nvarchar" MaxLength="10" />
+          <Property Name="Subject" Type="nvarchar" MaxLength="200" />
+          <Property Name="Cat" Type="nvarchar" MaxLength="1" />
+          <Property Name="Version-Current" Type="nvarchar" MaxLength="10" />
+          <Property Name="Version-New" Type="nvarchar" MaxLength="10" />
+          <Property Name="Date" Type="datetime" />
+          <Property Name="Source-1st-Level" Type="nvarchar" MaxLength="255" />
+          <Property Name="WG-Responsible" Type="nvarchar" MaxLength="10" />
+          <Property Name="Meeting-2nd-Level" Type="nvarchar" MaxLength="10" />
+          <Property Name="Doc-2nd-Level" Type="nvarchar" MaxLength="15" />
+          <Property Name="Status-2nd-Level" Type="nvarchar" MaxLength="20" />
+          <Property Name="Workitem" Type="nvarchar" MaxLength="255" />
+          <Property Name="Remarks" Type="ntext" />
+          <Property Name="created" Type="datetime" />
+          <Property Name="Source-2nd-Level" Type="nvarchar" MaxLength="255" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Releases">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="Release_code" Type="nvarchar" MaxLength="50" />
+          <Property Name="Release_description" Type="nvarchar" MaxLength="50" />
+          <Property Name="Release_short_description" Type="nvarchar" MaxLength="10" />
+          <Property Name="version_2g" Type="nvarchar" MaxLength="10" />
+          <Property Name="version_3g" Type="nvarchar" MaxLength="10" />
+          <Property Name="sort-order" Type="smallint" />
+          <Property Name="defunct" Type="bit" />
+          <Property Name="remarks" Type="nvarchar" MaxLength="250" />
+          <Property Name="wpm_code_2g" Type="nvarchar" MaxLength="50" />
+          <Property Name="wpm_code_3g" Type="nvarchar" MaxLength="50" />
+          <Property Name="freeze meeting" Type="nvarchar" MaxLength="50" />
+          <Property Name="PROJECT_ID" Type="int" />
+          <Property Name="rel-proj-start" Type="datetime" />
+          <Property Name="rel-proj-end" Type="datetime" />
+          <Property Name="ITUR_code" Type="nvarchar" MaxLength="250" />
+          <Property Name="version_2g_dec" Type="nvarchar" MaxLength="10" />
+          <Property Name="version_3g_dec" Type="nvarchar" MaxLength="10" />
+          <Property Name="previousRelease" Type="nvarchar" MaxLength="50" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Specs_GSM+3G">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="Type" Type="nvarchar" MaxLength="50" />
+          <Property Name="Number" Type="nvarchar" MaxLength="50" />
+          <Property Name="For publication" Type="bit" />
+          <Property Name="Title" Type="nvarchar" MaxLength="255" />
+          <Property Name="former WG" Type="nvarchar" MaxLength="200" />
+          <Property Name="WG prime" Type="nvarchar" MaxLength="10" />
+          <Property Name="WG other" Type="nvarchar" MaxLength="200" />
+          <Property Name="rapporteur id" Type="int" />
+          <Property Name="general_remarks" Type="ntext" />
+          <Property Name="2g" Type="bit" />
+          <Property Name="3g" Type="bit" />
+          <Property Name="txfer to 3GPP notes" Type="nvarchar" MaxLength="255" />
+          <Property Name="transferred to 3GPP" Type="nvarchar" MaxLength="50" />
+          <Property Name="2g common" Type="bit" />
+          <Property Name="definitively withdrawn" Type="bit" />
+          <Property Name="creation_date" Type="datetime" />
+          <Property Name="update_date" Type="datetime" />
+          <Property Name="title verified" Type="datetime" />
+          <Property Name="URL" Type="ntext" />
+          <Property Name="Q1741-2" Type="bit" />
+          <Property Name="M1457" Type="bit" />
+          <Property Name="WI_UID" Type="int" />
+          <Property Name="description" Type="ntext" />
+          <Property Name="LTE" Type="bit" />
+          <Property Name="ComIMS" Type="bit" />
+          <Property Name="EPS" Type="bit" />
+          <Property Name="rapporteurChairman" Type="bit" />
+          <Property Name="otherAx" Type="bit" />
+          <Property Name="MCC_id" Type="int" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Specs_GSM+3G_release-info">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="Spec" Type="nvarchar" MaxLength="15" />
+          <Property Name="Release" Type="nvarchar" MaxLength="12" />
+          <Property Name="remarks" Type="nvarchar" MaxLength="255" />
+          <Property Name="withdrawn" Type="bit" />
+          <Property Name="creation_date" Type="datetime" />
+          <Property Name="update_date" Type="datetime" />
+          <Property Name="wpm record id" Type="int" />
+          <Property Name="freeze_meeting" Type="nvarchar" MaxLength="50" />
+          <Property Name="stopped-at_meeting" Type="nvarchar" MaxLength="50" />
+          <Property Name="inhibitUpgrade" Type="bit" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="wpm_spec-release_mapping">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="WKI_ID" Type="int" />
+          <Property Name="Release_short_description" Type="nvarchar" MaxLength="10" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="TmpDbContext" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TmpDB" p1:LazyLoadingEnabled="true" >
+          <EntitySet Name="C2001_04_25_schedule" EntityType="TmpDbContext.C2001_04_25_schedule" />
+          <EntitySet Name="C2001_11_06_filius_patris" EntityType="TmpDbContext.C2001_11_06_filius_patris" />
+          <EntitySet Name="C2002_04_25_WPM_title_lines" EntityType="TmpDbContext.C2002_04_25_WPM_title_lines" />
+          <EntitySet Name="C2002_08_06_CR_implementation_errors" EntityType="TmpDbContext.C2002_08_06_CR_implementation_errors" />
+          <EntitySet Name="C2003_03_04_work_plan" EntityType="TmpDbContext.C2003_03_04_work_plan" />
+          <EntitySet Name="C2003_06_25_schedule_essentials_table" EntityType="TmpDbContext.C2003_06_25_schedule_essentials_table" />
+          <EntitySet Name="C2004_01_15_WID_history" EntityType="TmpDbContext.C2004_01_15_WID_history" />
+          <EntitySet Name="C2005_06_15_TSGs" EntityType="TmpDbContext.C2005_06_15_TSGs" />
+          <EntitySet Name="C2006_01_08_WI_rapporteurs" EntityType="TmpDbContext.C2006_01_08_WI_rapporteurs" />
+          <EntitySet Name="C2006_03_17_tdocs" EntityType="TmpDbContext.C2006_03_17_tdocs" />
+          <EntitySet Name="C2008_03_08_Specs_vs_WIs" EntityType="TmpDbContext.C2008_03_08_Specs_vs_WIs" />
+          <EntitySet Name="C2009_06_11_CRs_to_WIs" EntityType="TmpDbContext.C2009_06_11_CRs_to_WIs" />
+          <EntitySet Name="C2010_02_08_SpecXRef" EntityType="TmpDbContext.C2010_02_08_SpecXRef" />
+          <EntitySet Name="cmtee_officers" EntityType="TmpDbContext.cmtee_officers" />
+          <EntitySet Name="committees" EntityType="TmpDbContext.committee" />
+          <EntitySet Name="CR_categories" EntityType="TmpDbContext.CR_categories" />
+          <EntitySet Name="CR_status_values" EntityType="TmpDbContext.CR_status_values" />
+          <EntitySet Name="jmm_spec_series" EntityType="TmpDbContext.jmm_spec_series" />
+          <EntitySet Name="List_of_GSM___3G_CRs" EntityType="TmpDbContext.List_of_GSM___3G_CRs" />
+          <EntitySet Name="Releases" EntityType="TmpDbContext.Release" />
+          <EntitySet Name="Specs_GSM_3G" EntityType="TmpDbContext.Specs_GSM_3G" />
+          <EntitySet Name="Specs_GSM_3G_release_info" EntityType="TmpDbContext.Specs_GSM_3G_release_info" />
+          <EntitySet Name="wpm_spec_release_mapping" EntityType="TmpDbContext.wpm_spec_release_mapping" />
+        </EntityContainer>
+        <EntityType Name="C2001_04_25_schedule">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="String" Name="spec" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="release" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Double" Name="SCHED_POSITION" />
+          <Property Type="String" Name="MLS_NAME" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="TARGET_DATE" Precision="3" />
+          <Property Type="DateTime" Name="ACHIEVED_DATE" Precision="3" />
+          <Property Type="Int32" Name="MAJOR_VERSION_NB" />
+          <Property Type="Int32" Name="TECHNICAL_VERSION_NB" />
+          <Property Type="Int32" Name="EDITORIAL_VERSION_NB" />
+          <Property Type="String" Name="comment" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="MOD_TS" Precision="3" />
+          <Property Type="String" Name="MOD_BY" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="expert_provided" Precision="3" />
+          <Property Type="String" Name="mcc_remarks" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="location" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="WKI_ID" />
+          <Property Type="Boolean" Name="suppress_SDO_publication" />
+          <Property Type="Boolean" Name="suppress_from_missing__list" />
+          <Property Type="String" Name="meeting" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="Q1741_3" />
+          <Property Type="Boolean" Name="force_publication" />
+          <Property Type="Boolean" Name="M1457" />
+          <Property Type="DateTime" Name="proof" Precision="3" />
+          <Property Type="DateTime" Name="uploaded" Precision="3" />
+          <Property Type="DateTime" Name="toETSI" Precision="3" />
+          <Property Type="DateTime" Name="completed" Precision="3" />
+          <Property Type="Boolean" Name="multifile" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="C2001_11_06_filius_patris">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="String" Name="patrem" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="filius" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="createdate" Precision="3" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="C2002_04_25_WPM_title_lines">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="Boolean" Name="LTE" />
+          <Property Type="Boolean" Name="C3g" />
+          <Property Type="Boolean" Name="C2g" />
+          <Property Type="String" Name="title_1_part" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="C2002_08_06_CR_implementation_errors">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="Guid" Name="CR_record_key" />
+          <Property Type="String" Name="Spec" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CR" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Rev" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Time_of_report" Precision="3" />
+          <Property Type="String" Name="Reason_of_Error" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Remarks" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="C2003_03_04_work_plan">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="Double" Name="ID" />
+          <Property Type="Double" Name="Unique_ID" />
+          <Property Type="String" Name="Task_Name" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Acronym" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Double" Name="Outline_Level" />
+          <Property Type="String" Name="Release" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Resource_Names" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Start" Precision="3" />
+          <Property Type="DateTime" Name="Finish" Precision="3" />
+          <Property Type="Double" Name="C__Work_Complete" />
+          <Property Type="String" Name="HyPerlink" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="WI_rapporteur_name" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="last_modif" Precision="3" />
+          <Property Type="String" Name="Notes" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Stopped_at" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Early" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Double" Name="rappid" />
+          <Property Type="DateTime" Name="created" Precision="3" />
+          <Property Type="String" Name="Level_of_Approval" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Impacted_TSs_and_TRs" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="TSG_approved" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="PCG_approved" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Status_Report" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Double" Name="L1uid" />
+          <Property Type="Double" Name="L2uid" />
+          <Property Type="Double" Name="L3uid" />
+          <Property Type="Double" Name="L4uid" />
+          <Property Type="Double" Name="parent_uid" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="C2003_06_25_schedule_essentials_table">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="String" Name="spec" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="release" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Vx" />
+          <Property Type="Int32" Name="Vy" />
+          <Property Type="Int32" Name="Vz" />
+          <Property Type="DateTime" Name="available" Precision="3" />
+          <Property Type="Boolean" Name="withdrawn" />
+          <Property Type="String" Name="Version_remarks" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="URL" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="C2004_01_15_WID_history">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="Int32" Name="uid" />
+          <Property Type="String" Name="tdoc" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="when_added" Precision="3" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="C2005_06_15_TSGs">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="Int32" Name="id" />
+          <Property Type="String" Name="TSG_name" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="TSG_code_letter" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="C2006_01_08_WI_rapporteurs">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="Int32" Name="UID" />
+          <Property Type="Int32" Name="persid" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="C2006_03_17_tdocs">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="Int32" Name="doc_mtgId" />
+          <Property Type="String" Name="doc_mtg" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="doc_tdoc" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="doc_title" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="doc_source" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="doc_remarks" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="doc_hlink" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="record_added" Precision="3" />
+          <Property Type="DateTime" Name="url_checked" Precision="3" />
+          <Property Type="DateTime" Name="title_source_checked" Precision="3" />
+          <Property Type="DateTime" Name="crHarvested" Precision="3" />
+          <Property Type="Boolean" Name="crFlag" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="C2008_03_08_Specs_vs_WIs">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="String" Name="Spec" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="WI_UID" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="C2009_06_11_CRs_to_WIs">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="String" Name="wicode" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="wispec" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="wicr" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="wicrrev" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="C2010_02_08_SpecXRef">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="String" Name="referenceSpecReferencing" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="referenceSpecReferenced" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="referenceRel" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="referenceSpecRfedWdrwn" />
+          <Property Type="Boolean" Name="referenceSpecRfedWdrwnRel" />
+          <Property Type="DateTime" Name="referenceAdded" Precision="3" />
+          <Property Type="Boolean" Name="referenceOked" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="cmtee_officers">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="Int32" Name="TB_ID" />
+          <Property Type="Int32" Name="PERSON_ID" />
+          <Property Type="String" Name="role" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="elected_on" Precision="3" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="committee">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="Int32" Name="TB_ID" />
+          <Property Type="String" Name="TB_KEY1" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="TB_KEY2" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="TB_KEY3" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="TB_TITLE" MaxLength="70" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="PARENT_TB_ID" />
+          <Property Type="String" Name="WKIREF_PREFIX" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="TB_NAME" MaxLength="26" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="TB_STATUS" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="CR_categories">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="String" Name="CR_category" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="meaning" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="CR_status_values">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="String" Name="CR_status_value" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="sort_order" />
+          <Property Type="Boolean" Name="TSG" />
+          <Property Type="Boolean" Name="WG" />
+          <Property Type="String" Name="use" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="jmm_spec_series">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="String" Name="series_id" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="series_description" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="series_3g" />
+          <Property Type="Boolean" Name="series_2g" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="List_of_GSM___3G_CRs">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="String" Name="Meeting_1st_Level" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Doc_1st_Level" MaxLength="13" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Status_1st_Level" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Spec" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="CR" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Rev" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Phase" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Subject" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Cat" MaxLength="1" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Version_Current" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Version_New" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Date" Precision="3" />
+          <Property Type="String" Name="Source_1st_Level" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="WG_Responsible" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Meeting_2nd_Level" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Doc_2nd_Level" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Status_2nd_Level" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Workitem" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Remarks" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="created" Precision="3" />
+          <Property Type="String" Name="Source_2nd_Level" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Release">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="String" Name="Release_code" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Release_description" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Release_short_description" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="version_2g" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="version_3g" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="Int16" Name="sort_order" />
+          <Property Type="Boolean" Name="defunct" />
+          <Property Type="String" Name="remarks" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="wpm_code_2g" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="wpm_code_3g" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="freeze_meeting" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="PROJECT_ID" />
+          <Property Type="DateTime" Name="rel_proj_start" Precision="3" />
+          <Property Type="DateTime" Name="rel_proj_end" Precision="3" />
+          <Property Type="String" Name="ITUR_code" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="version_2g_dec" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="version_3g_dec" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="previousRelease" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Specs_GSM_3G">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="String" Name="Type" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Number" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="For_publication" />
+          <Property Type="String" Name="Title" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="former_WG" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="WG_prime" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="WG_other" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="rapporteur_id" />
+          <Property Type="String" Name="general_remarks" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="C2g" />
+          <Property Type="Boolean" Name="C3g" />
+          <Property Type="String" Name="txfer_to_3GPP_notes" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="transferred_to_3GPP" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="C2g_common" />
+          <Property Type="Boolean" Name="definitively_withdrawn" />
+          <Property Type="DateTime" Name="creation_date" Precision="3" />
+          <Property Type="DateTime" Name="update_date" Precision="3" />
+          <Property Type="DateTime" Name="title_verified" Precision="3" />
+          <Property Type="String" Name="URL" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="Q1741_2" />
+          <Property Type="Boolean" Name="M1457" />
+          <Property Type="Int32" Name="WI_UID" />
+          <Property Type="String" Name="description" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="LTE" />
+          <Property Type="Boolean" Name="ComIMS" />
+          <Property Type="Boolean" Name="EPS" />
+          <Property Type="Boolean" Name="rapporteurChairman" />
+          <Property Type="Boolean" Name="otherAx" />
+          <Property Type="Int32" Name="MCC_id" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="Specs_GSM_3G_release_info">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="String" Name="Spec" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Release" MaxLength="12" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="remarks" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="withdrawn" />
+          <Property Type="DateTime" Name="creation_date" Precision="3" />
+          <Property Type="DateTime" Name="update_date" Precision="3" />
+          <Property Type="Int32" Name="wpm_record_id" />
+          <Property Type="String" Name="freeze_meeting" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="stopped_at_meeting" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="inhibitUpgrade" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="wpm_spec_release_mapping">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="Int32" Name="WKI_ID" />
+          <Property Type="String" Name="Release_short_description" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="TmpDbContextStoreContainer" CdmEntityContainer="TmpDB" >
+          <EntitySetMapping Name="C2001_04_25_schedule">
+            <EntityTypeMapping TypeName="TmpDbContext.C2001_04_25_schedule">
+              <MappingFragment StoreEntitySet="2001-04-25_schedule">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="multifile" ColumnName="multifile" />
+                <ScalarProperty Name="completed" ColumnName="completed" />
+                <ScalarProperty Name="toETSI" ColumnName="toETSI" />
+                <ScalarProperty Name="uploaded" ColumnName="uploaded" />
+                <ScalarProperty Name="proof" ColumnName="proof" />
+                <ScalarProperty Name="M1457" ColumnName="M1457" />
+                <ScalarProperty Name="force_publication" ColumnName="force-publication" />
+                <ScalarProperty Name="Q1741_3" ColumnName="Q1741-3" />
+                <ScalarProperty Name="meeting" ColumnName="meeting" />
+                <ScalarProperty Name="suppress_from_missing__list" ColumnName="suppress-from-missing--list" />
+                <ScalarProperty Name="suppress_SDO_publication" ColumnName="suppress-SDO-publication" />
+                <ScalarProperty Name="WKI_ID" ColumnName="WKI_ID" />
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="mcc_remarks" ColumnName="mcc-remarks" />
+                <ScalarProperty Name="expert_provided" ColumnName="expert-provided" />
+                <ScalarProperty Name="MOD_BY" ColumnName="MOD_BY" />
+                <ScalarProperty Name="MOD_TS" ColumnName="MOD_TS" />
+                <ScalarProperty Name="comment" ColumnName="comment" />
+                <ScalarProperty Name="EDITORIAL_VERSION_NB" ColumnName="EDITORIAL_VERSION_NB" />
+                <ScalarProperty Name="TECHNICAL_VERSION_NB" ColumnName="TECHNICAL_VERSION_NB" />
+                <ScalarProperty Name="MAJOR_VERSION_NB" ColumnName="MAJOR_VERSION_NB" />
+                <ScalarProperty Name="ACHIEVED_DATE" ColumnName="ACHIEVED_DATE" />
+                <ScalarProperty Name="TARGET_DATE" ColumnName="TARGET_DATE" />
+                <ScalarProperty Name="MLS_NAME" ColumnName="MLS_NAME" />
+                <ScalarProperty Name="SCHED_POSITION" ColumnName="SCHED_POSITION" />
+                <ScalarProperty Name="release" ColumnName="release" />
+                <ScalarProperty Name="spec" ColumnName="spec" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C2001_11_06_filius_patris">
+            <EntityTypeMapping TypeName="TmpDbContext.C2001_11_06_filius_patris">
+              <MappingFragment StoreEntitySet="2001-11-06_filius-patris">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="createdate" ColumnName="createdate" />
+                <ScalarProperty Name="filius" ColumnName="filius" />
+                <ScalarProperty Name="patrem" ColumnName="patrem" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C2002_04_25_WPM_title_lines">
+            <EntityTypeMapping TypeName="TmpDbContext.C2002_04_25_WPM_title_lines">
+              <MappingFragment StoreEntitySet="2002-04-25_WPM-title-lines">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="title_1_part" ColumnName="title_1_part" />
+                <ScalarProperty Name="C2g" ColumnName="2g" />
+                <ScalarProperty Name="C3g" ColumnName="3g" />
+                <ScalarProperty Name="LTE" ColumnName="LTE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C2002_08_06_CR_implementation_errors">
+            <EntityTypeMapping TypeName="TmpDbContext.C2002_08_06_CR_implementation_errors">
+              <MappingFragment StoreEntitySet="2002-08-06_CR-implementation-errors">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="Reason_of_Error" ColumnName="Reason of Error" />
+                <ScalarProperty Name="Time_of_report" ColumnName="Time of report" />
+                <ScalarProperty Name="Rev" ColumnName="Rev" />
+                <ScalarProperty Name="CR" ColumnName="CR" />
+                <ScalarProperty Name="Spec" ColumnName="Spec" />
+                <ScalarProperty Name="CR_record_key" ColumnName="CR-record-key" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C2003_03_04_work_plan">
+            <EntityTypeMapping TypeName="TmpDbContext.C2003_03_04_work_plan">
+              <MappingFragment StoreEntitySet="2003-03-04_work-plan">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="parent_uid" ColumnName="parent-uid" />
+                <ScalarProperty Name="L4uid" ColumnName="L4uid" />
+                <ScalarProperty Name="L3uid" ColumnName="L3uid" />
+                <ScalarProperty Name="L2uid" ColumnName="L2uid" />
+                <ScalarProperty Name="L1uid" ColumnName="L1uid" />
+                <ScalarProperty Name="Status_Report" ColumnName="Status Report" />
+                <ScalarProperty Name="PCG_approved" ColumnName="PCG approved" />
+                <ScalarProperty Name="TSG_approved" ColumnName="TSG approved" />
+                <ScalarProperty Name="Impacted_TSs_and_TRs" ColumnName="Impacted TSs and TRs" />
+                <ScalarProperty Name="Level_of_Approval" ColumnName="Level of Approval" />
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="rappid" ColumnName="rappid" />
+                <ScalarProperty Name="Early" ColumnName="Early" />
+                <ScalarProperty Name="Stopped_at" ColumnName="Stopped-at" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="last_modif" ColumnName="last_modif" />
+                <ScalarProperty Name="WI_rapporteur_name" ColumnName="WI_rapporteur_name" />
+                <ScalarProperty Name="HyPerlink" ColumnName="HyPerlink" />
+                <ScalarProperty Name="C__Work_Complete" ColumnName="% Work Complete" />
+                <ScalarProperty Name="Finish" ColumnName="Finish" />
+                <ScalarProperty Name="Start" ColumnName="Start" />
+                <ScalarProperty Name="Resource_Names" ColumnName="Resource_Names" />
+                <ScalarProperty Name="Release" ColumnName="Release" />
+                <ScalarProperty Name="Outline_Level" ColumnName="Outline_Level" />
+                <ScalarProperty Name="Acronym" ColumnName="Acronym" />
+                <ScalarProperty Name="Task_Name" ColumnName="Task Name" />
+                <ScalarProperty Name="Unique_ID" ColumnName="Unique_ID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C2003_06_25_schedule_essentials_table">
+            <EntityTypeMapping TypeName="TmpDbContext.C2003_06_25_schedule_essentials_table">
+              <MappingFragment StoreEntitySet="2003-06-25_schedule-essentials-table">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="URL" ColumnName="URL" />
+                <ScalarProperty Name="Version_remarks" ColumnName="Version remarks" />
+                <ScalarProperty Name="withdrawn" ColumnName="withdrawn" />
+                <ScalarProperty Name="available" ColumnName="available" />
+                <ScalarProperty Name="Vz" ColumnName="Vz" />
+                <ScalarProperty Name="Vy" ColumnName="Vy" />
+                <ScalarProperty Name="Vx" ColumnName="Vx" />
+                <ScalarProperty Name="release" ColumnName="release" />
+                <ScalarProperty Name="spec" ColumnName="spec" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C2004_01_15_WID_history">
+            <EntityTypeMapping TypeName="TmpDbContext.C2004_01_15_WID_history">
+              <MappingFragment StoreEntitySet="2004-01-15_WID-history">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="when_added" ColumnName="when-added" />
+                <ScalarProperty Name="tdoc" ColumnName="tdoc" />
+                <ScalarProperty Name="uid" ColumnName="uid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C2005_06_15_TSGs">
+            <EntityTypeMapping TypeName="TmpDbContext.C2005_06_15_TSGs">
+              <MappingFragment StoreEntitySet="2005-06-15_TSGs">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="TSG_code_letter" ColumnName="TSG-code-letter" />
+                <ScalarProperty Name="TSG_name" ColumnName="TSG-name" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C2006_01_08_WI_rapporteurs">
+            <EntityTypeMapping TypeName="TmpDbContext.C2006_01_08_WI_rapporteurs">
+              <MappingFragment StoreEntitySet="2006-01-08_WI-rapporteurs">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="persid" ColumnName="persid" />
+                <ScalarProperty Name="UID" ColumnName="UID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C2006_03_17_tdocs">
+            <EntityTypeMapping TypeName="TmpDbContext.C2006_03_17_tdocs">
+              <MappingFragment StoreEntitySet="2006-03-17_tdocs">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="crFlag" ColumnName="crFlag" />
+                <ScalarProperty Name="crHarvested" ColumnName="crHarvested" />
+                <ScalarProperty Name="title_source_checked" ColumnName="title-source_checked" />
+                <ScalarProperty Name="url_checked" ColumnName="url_checked" />
+                <ScalarProperty Name="record_added" ColumnName="record_added" />
+                <ScalarProperty Name="doc_hlink" ColumnName="doc_hlink" />
+                <ScalarProperty Name="doc_remarks" ColumnName="doc_remarks" />
+                <ScalarProperty Name="doc_source" ColumnName="doc_source" />
+                <ScalarProperty Name="doc_title" ColumnName="doc_title" />
+                <ScalarProperty Name="doc_tdoc" ColumnName="doc_tdoc" />
+                <ScalarProperty Name="doc_mtg" ColumnName="doc_mtg" />
+                <ScalarProperty Name="doc_mtgId" ColumnName="doc_mtgId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C2008_03_08_Specs_vs_WIs">
+            <EntityTypeMapping TypeName="TmpDbContext.C2008_03_08_Specs_vs_WIs">
+              <MappingFragment StoreEntitySet="2008-03-08_Specs-vs-WIs">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="WI_UID" ColumnName="WI_UID" />
+                <ScalarProperty Name="Spec" ColumnName="Spec" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C2009_06_11_CRs_to_WIs">
+            <EntityTypeMapping TypeName="TmpDbContext.C2009_06_11_CRs_to_WIs">
+              <MappingFragment StoreEntitySet="2009-06-11_CRs-to-WIs">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="wicrrev" ColumnName="wicrrev" />
+                <ScalarProperty Name="wicr" ColumnName="wicr" />
+                <ScalarProperty Name="wispec" ColumnName="wispec" />
+                <ScalarProperty Name="wicode" ColumnName="wicode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C2010_02_08_SpecXRef">
+            <EntityTypeMapping TypeName="TmpDbContext.C2010_02_08_SpecXRef">
+              <MappingFragment StoreEntitySet="2010-02-08_SpecXRef">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="referenceOked" ColumnName="referenceOked" />
+                <ScalarProperty Name="referenceAdded" ColumnName="referenceAdded" />
+                <ScalarProperty Name="referenceSpecRfedWdrwnRel" ColumnName="referenceSpecRfedWdrwnRel" />
+                <ScalarProperty Name="referenceSpecRfedWdrwn" ColumnName="referenceSpecRfedWdrwn" />
+                <ScalarProperty Name="referenceRel" ColumnName="referenceRel" />
+                <ScalarProperty Name="referenceSpecReferenced" ColumnName="referenceSpecReferenced" />
+                <ScalarProperty Name="referenceSpecReferencing" ColumnName="referenceSpecReferencing" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="cmtee_officers">
+            <EntityTypeMapping TypeName="TmpDbContext.cmtee_officers">
+              <MappingFragment StoreEntitySet="cmtee-officers">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="elected_on" ColumnName="elected-on" />
+                <ScalarProperty Name="role" ColumnName="role" />
+                <ScalarProperty Name="PERSON_ID" ColumnName="PERSON_ID" />
+                <ScalarProperty Name="TB_ID" ColumnName="TB_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="committees">
+            <EntityTypeMapping TypeName="TmpDbContext.committee">
+              <MappingFragment StoreEntitySet="committees">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="TB_STATUS" ColumnName="TB_STATUS" />
+                <ScalarProperty Name="TB_NAME" ColumnName="TB_NAME" />
+                <ScalarProperty Name="WKIREF_PREFIX" ColumnName="WKIREF_PREFIX" />
+                <ScalarProperty Name="PARENT_TB_ID" ColumnName="PARENT_TB_ID" />
+                <ScalarProperty Name="TB_TITLE" ColumnName="TB_TITLE" />
+                <ScalarProperty Name="TB_KEY3" ColumnName="TB_KEY3" />
+                <ScalarProperty Name="TB_KEY2" ColumnName="TB_KEY2" />
+                <ScalarProperty Name="TB_KEY1" ColumnName="TB_KEY1" />
+                <ScalarProperty Name="TB_ID" ColumnName="TB_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CR_categories">
+            <EntityTypeMapping TypeName="TmpDbContext.CR_categories">
+              <MappingFragment StoreEntitySet="CR-categories">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="meaning" ColumnName="meaning" />
+                <ScalarProperty Name="CR_category" ColumnName="CR category" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CR_status_values">
+            <EntityTypeMapping TypeName="TmpDbContext.CR_status_values">
+              <MappingFragment StoreEntitySet="CR-status-values">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="use" ColumnName="use" />
+                <ScalarProperty Name="WG" ColumnName="WG" />
+                <ScalarProperty Name="TSG" ColumnName="TSG" />
+                <ScalarProperty Name="sort_order" ColumnName="sort order" />
+                <ScalarProperty Name="CR_status_value" ColumnName="CR status value" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="jmm_spec_series">
+            <EntityTypeMapping TypeName="TmpDbContext.jmm_spec_series">
+              <MappingFragment StoreEntitySet="jmm_spec_series">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="series_2g" ColumnName="series_2g" />
+                <ScalarProperty Name="series_3g" ColumnName="series_3g" />
+                <ScalarProperty Name="series_description" ColumnName="series_description" />
+                <ScalarProperty Name="series_id" ColumnName="series_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="List_of_GSM___3G_CRs">
+            <EntityTypeMapping TypeName="TmpDbContext.List_of_GSM___3G_CRs">
+              <MappingFragment StoreEntitySet="List_of_GSM_&amp;_3G_CRs">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="Source_2nd_Level" ColumnName="Source-2nd-Level" />
+                <ScalarProperty Name="created" ColumnName="created" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="Workitem" ColumnName="Workitem" />
+                <ScalarProperty Name="Status_2nd_Level" ColumnName="Status-2nd-Level" />
+                <ScalarProperty Name="Doc_2nd_Level" ColumnName="Doc-2nd-Level" />
+                <ScalarProperty Name="Meeting_2nd_Level" ColumnName="Meeting-2nd-Level" />
+                <ScalarProperty Name="WG_Responsible" ColumnName="WG-Responsible" />
+                <ScalarProperty Name="Source_1st_Level" ColumnName="Source-1st-Level" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Version_New" ColumnName="Version-New" />
+                <ScalarProperty Name="Version_Current" ColumnName="Version-Current" />
+                <ScalarProperty Name="Cat" ColumnName="Cat" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Phase" ColumnName="Phase" />
+                <ScalarProperty Name="Rev" ColumnName="Rev" />
+                <ScalarProperty Name="CR" ColumnName="CR" />
+                <ScalarProperty Name="Spec" ColumnName="Spec" />
+                <ScalarProperty Name="Status_1st_Level" ColumnName="Status-1st-Level" />
+                <ScalarProperty Name="Doc_1st_Level" ColumnName="Doc-1st-Level" />
+                <ScalarProperty Name="Meeting_1st_Level" ColumnName="Meeting-1st-Level" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Releases">
+            <EntityTypeMapping TypeName="TmpDbContext.Release">
+              <MappingFragment StoreEntitySet="Releases">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="previousRelease" ColumnName="previousRelease" />
+                <ScalarProperty Name="version_3g_dec" ColumnName="version_3g_dec" />
+                <ScalarProperty Name="version_2g_dec" ColumnName="version_2g_dec" />
+                <ScalarProperty Name="ITUR_code" ColumnName="ITUR_code" />
+                <ScalarProperty Name="rel_proj_end" ColumnName="rel-proj-end" />
+                <ScalarProperty Name="rel_proj_start" ColumnName="rel-proj-start" />
+                <ScalarProperty Name="PROJECT_ID" ColumnName="PROJECT_ID" />
+                <ScalarProperty Name="freeze_meeting" ColumnName="freeze meeting" />
+                <ScalarProperty Name="wpm_code_3g" ColumnName="wpm_code_3g" />
+                <ScalarProperty Name="wpm_code_2g" ColumnName="wpm_code_2g" />
+                <ScalarProperty Name="remarks" ColumnName="remarks" />
+                <ScalarProperty Name="defunct" ColumnName="defunct" />
+                <ScalarProperty Name="sort_order" ColumnName="sort-order" />
+                <ScalarProperty Name="version_3g" ColumnName="version_3g" />
+                <ScalarProperty Name="version_2g" ColumnName="version_2g" />
+                <ScalarProperty Name="Release_short_description" ColumnName="Release_short_description" />
+                <ScalarProperty Name="Release_description" ColumnName="Release_description" />
+                <ScalarProperty Name="Release_code" ColumnName="Release_code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Specs_GSM_3G">
+            <EntityTypeMapping TypeName="TmpDbContext.Specs_GSM_3G">
+              <MappingFragment StoreEntitySet="Specs_GSM+3G">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="MCC_id" ColumnName="MCC_id" />
+                <ScalarProperty Name="otherAx" ColumnName="otherAx" />
+                <ScalarProperty Name="rapporteurChairman" ColumnName="rapporteurChairman" />
+                <ScalarProperty Name="EPS" ColumnName="EPS" />
+                <ScalarProperty Name="ComIMS" ColumnName="ComIMS" />
+                <ScalarProperty Name="LTE" ColumnName="LTE" />
+                <ScalarProperty Name="description" ColumnName="description" />
+                <ScalarProperty Name="WI_UID" ColumnName="WI_UID" />
+                <ScalarProperty Name="M1457" ColumnName="M1457" />
+                <ScalarProperty Name="Q1741_2" ColumnName="Q1741-2" />
+                <ScalarProperty Name="URL" ColumnName="URL" />
+                <ScalarProperty Name="title_verified" ColumnName="title verified" />
+                <ScalarProperty Name="update_date" ColumnName="update_date" />
+                <ScalarProperty Name="creation_date" ColumnName="creation_date" />
+                <ScalarProperty Name="definitively_withdrawn" ColumnName="definitively withdrawn" />
+                <ScalarProperty Name="C2g_common" ColumnName="2g common" />
+                <ScalarProperty Name="transferred_to_3GPP" ColumnName="transferred to 3GPP" />
+                <ScalarProperty Name="txfer_to_3GPP_notes" ColumnName="txfer to 3GPP notes" />
+                <ScalarProperty Name="C3g" ColumnName="3g" />
+                <ScalarProperty Name="C2g" ColumnName="2g" />
+                <ScalarProperty Name="general_remarks" ColumnName="general_remarks" />
+                <ScalarProperty Name="rapporteur_id" ColumnName="rapporteur id" />
+                <ScalarProperty Name="WG_other" ColumnName="WG other" />
+                <ScalarProperty Name="WG_prime" ColumnName="WG prime" />
+                <ScalarProperty Name="former_WG" ColumnName="former WG" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="For_publication" ColumnName="For publication" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Specs_GSM_3G_release_info">
+            <EntityTypeMapping TypeName="TmpDbContext.Specs_GSM_3G_release_info">
+              <MappingFragment StoreEntitySet="Specs_GSM+3G_release-info">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="inhibitUpgrade" ColumnName="inhibitUpgrade" />
+                <ScalarProperty Name="stopped_at_meeting" ColumnName="stopped-at_meeting" />
+                <ScalarProperty Name="freeze_meeting" ColumnName="freeze_meeting" />
+                <ScalarProperty Name="wpm_record_id" ColumnName="wpm record id" />
+                <ScalarProperty Name="update_date" ColumnName="update_date" />
+                <ScalarProperty Name="creation_date" ColumnName="creation_date" />
+                <ScalarProperty Name="withdrawn" ColumnName="withdrawn" />
+                <ScalarProperty Name="remarks" ColumnName="remarks" />
+                <ScalarProperty Name="Release" ColumnName="Release" />
+                <ScalarProperty Name="Spec" ColumnName="Spec" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="wpm_spec_release_mapping">
+            <EntityTypeMapping TypeName="TmpDbContext.wpm_spec_release_mapping">
+              <MappingFragment StoreEntitySet="wpm_spec-release_mapping">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="Release_short_description" ColumnName="Release_short_description" />
+                <ScalarProperty Name="WKI_ID" ColumnName="WKI_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

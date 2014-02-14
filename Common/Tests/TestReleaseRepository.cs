@@ -9,6 +9,7 @@ using Tests.FakeSets;
 using Etsi.Ultimate.DomainClasses;
 using Rhino.Mocks;
 using NUnit.Framework;
+using Etsi.Ultimate.Utils;
 
 
 namespace Tests
@@ -19,7 +20,11 @@ namespace Tests
         [Test]
         public void Release_GetAll()
         {
-            var repo = new ReleaseRepository(GetUnitOfWork());
+            //var repo = new ReleaseRepository() { UoW = GetUnitOfWork() };
+            var repo = DependencyFactory.Resolve<IReleaseRepository>();
+            //DependencyFactory.Container.RegisterType<IReleaseRepository, ReleaseMockRepository>
+            repo.UoW = GetUnitOfWork(); 
+
             Assert.AreEqual(3, repo.All.ToList().Count);
         }
 
@@ -27,21 +32,21 @@ namespace Tests
         [ExpectedException(typeof(NotImplementedException))]
         public void Release_GetAllIncluding()
         {
-            var repo = new ReleaseRepository(GetUnitOfWork());
+            var repo = new ReleaseRepository() { UoW = GetUnitOfWork() };
             repo.AllIncluding();
         }
 
         [Test]
         public void Release_Find()
         {
-            var repo = new ReleaseRepository(GetUnitOfWork());
+            var repo = new ReleaseRepository() { UoW = GetUnitOfWork() };
             Assert.AreEqual("Second release", repo.Find(2).Name);
         }
 
         [Test]
         public void Release_InsertOrUpdate()
         {
-            var repo = new ReleaseRepository(GetUnitOfWork());
+            var repo = new ReleaseRepository() { UoW = GetUnitOfWork() };
             var releaseStatus = new EnumReleaseRepository(GetUnitOfWork());
             Release myRelease = new Release();
             myRelease.Name = "release number 4";
@@ -54,14 +59,14 @@ namespace Tests
         [ExpectedException(typeof(InvalidOperationException))]
         public void Release_Delete()
         {
-            var repo = new ReleaseRepository(GetUnitOfWork());  
+            var repo = new ReleaseRepository() { UoW = GetUnitOfWork() }; 
             repo.Delete(3);
         }
 
         [Test]
         public void Release_GetAllReleaseByIdReleaseStatus()
         {
-            var repo = new ReleaseRepository(GetUnitOfWork());
+            var repo = new ReleaseRepository() { UoW = GetUnitOfWork() };
             var releaseStatus = new EnumReleaseRepository(GetUnitOfWork());
             var releasesFrozen = repo.GetAllReleaseByIdReleaseStatus(releaseStatus.Find(2));
             var releasesOpen = repo.GetAllReleaseByIdReleaseStatus(releaseStatus.Find(1));
