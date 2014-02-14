@@ -28,7 +28,7 @@ namespace Etsi.Ultimate.DataAccess
         }
     
         public IDbSet<Enum_ReleaseStatus> Enum_ReleaseStatus { get; set; }
-        public IDbSet<Release> Releases { get; set; }
+        public IDbSet<Release> Release { get; set; }
         public IDbSet<View_Meetings> View_Meetings { get; set; }
     	
     	/**

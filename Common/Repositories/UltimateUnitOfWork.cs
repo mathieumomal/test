@@ -13,7 +13,7 @@ namespace Etsi.Ultimate.Repositories
             context = new UltimateContext();
         }
 
-        #region INgppUnitOfWork Members
+        #region IUltimateUnitOfWork Members
 
         public void Save()
         {
