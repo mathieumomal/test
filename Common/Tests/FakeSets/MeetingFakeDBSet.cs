@@ -6,12 +6,12 @@ using Etsi.Ultimate.DomainClasses;
 
 namespace Tests.FakeSets
 {
-    public class ReleaseFakeDBSet : FakeDBSet<Release>
+    public class MeetingFakeDBSet : FakeDBSet<Meeting>
     {
-        public override Release Find(params object[] keyValues)
+        public override Meeting Find(params object[] keyValues)
         {
             var keyValue = (int)keyValues.FirstOrDefault();
-            return this.SingleOrDefault(relea => relea.Pk_ReleaseId == keyValue);
+            return this.SingleOrDefault(m => m.MTG_ID == keyValue);
         }
     }
 }

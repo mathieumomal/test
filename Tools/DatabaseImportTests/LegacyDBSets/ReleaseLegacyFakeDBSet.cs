@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Etsi.Ultimate.DomainClasses;
+using System.Threading.Tasks;
+using Etsi.Ultimate.Tools.TmpDbDataAccess;
 
-namespace Tests.FakeSets
+namespace DatabaseImportTests.LegacyDBSets
 {
-    public class ReleaseFakeDBSet : FakeDBSet<Release>
+    class ReleaseLegacyFakeDBSet: FakeDBSet<Release>
     {
         public override Release Find(params object[] keyValues)
         {
             var keyValue = (int)keyValues.FirstOrDefault();
-            return this.SingleOrDefault(relea => relea.Pk_ReleaseId == keyValue);
+            return this.SingleOrDefault(r => r.Row_id == keyValue);
         }
     }
 }

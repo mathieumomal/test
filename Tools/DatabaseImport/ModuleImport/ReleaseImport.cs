@@ -27,6 +27,8 @@ namespace DatabaseImport.ModuleImport
 
         /// <summary>
         /// Removes all the releases from the database.
+        /// 
+        /// Also removes all the remarks that are linked to releases.
         /// </summary>
         public void CleanDatabase()
         {
@@ -167,6 +169,9 @@ namespace DatabaseImport.ModuleImport
         private void ParseRemarks(Domain.Release newRelease, OldDomain.Release legacyRelease)
         {
             var remarksField = legacyRelease.remarks;
+
+            if (remarksField == null || remarksField.Length == 0)
+                return;
 
             var remark = new Domain.Remark()
             {

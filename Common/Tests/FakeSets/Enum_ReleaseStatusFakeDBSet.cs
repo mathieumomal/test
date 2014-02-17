@@ -6,7 +6,7 @@ using Etsi.Ultimate.DomainClasses;
 
 namespace Tests.FakeSets
 {
-    class Enum_ReleaseStatusFakeDBSet : FakeDBSet<Enum_ReleaseStatus>
+    public class Enum_ReleaseStatusFakeDBSet : FakeDBSet<Enum_ReleaseStatus>
     {
         public override Enum_ReleaseStatus Find(params object[] keyValues)
         {

@@ -65,6 +65,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FakeSets\RemarkFakeDBSet.cs" />
+    <Compile Include="FakeSets\MeetingFakeDBSet.cs" />
     <Compile Include="FakeSets\Enum_ReleaseStatusFakeDBSet.cs" />
     <Compile Include="FakeSets\FakeDBSet.cs" />
     <Compile Include="FakeSets\ReleaseFakeDBSet.cs" />

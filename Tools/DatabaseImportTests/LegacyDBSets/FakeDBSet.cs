@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
-using System.Data.Entity;
-using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
-namespace Tests.FakeSets
+namespace DatabaseImportTests.LegacyDBSets
 {
-    public abstract class FakeDBSet<T> : IDbSet<T> where T : class, new ()
+    public abstract class FakeDBSet<T> : IDbSet<T> where T : class, new()
     {
         readonly ObservableCollection<T> collection;
         readonly IQueryable query;
@@ -24,11 +25,6 @@ namespace Tests.FakeSets
         {
             collection.Add(entity);
             return entity;
-        }
-
-        public List<T> All()
-        {
-            return collection.ToList();
         }
 
         public T Attach(T entity)
@@ -49,7 +45,7 @@ namespace Tests.FakeSets
         }
 
         public abstract T Find(params object[] keyValues);
-        
+
         public System.Collections.ObjectModel.ObservableCollection<T> Local
         {
             get { throw new NotImplementedException(); }

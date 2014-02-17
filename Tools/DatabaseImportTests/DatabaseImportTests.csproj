@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
@@ -53,6 +57,8 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="LegacyDBSets\FakeDBSet.cs" />
+    <Compile Include="LegacyDBSets\ReleaseLegacyFakeDBSet.cs" />
     <Compile Include="TestReleaseImport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -64,6 +70,10 @@
     <ProjectReference Include="..\..\Common\DomainClasses\DomainClasses.csproj">
       <Project>{d5bdede9-d397-411c-ae94-1646836406ba}</Project>
       <Name>DomainClasses</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Tests\Tests.csproj">
+      <Project>{a03f686e-bf8d-45cb-9d5e-83d13fa98823}</Project>
+      <Name>Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\3GPPTmpDataAccess\3GPPTmpDataAccess.csproj">
       <Project>{4abbf98f-5a6a-4409-953b-2fbf781abdbe}</Project>
