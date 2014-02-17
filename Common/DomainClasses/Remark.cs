@@ -12,16 +12,15 @@ namespace Etsi.Ultimate.DomainClasses
     using System;
     using System.Collections.Generic;
     
-    public partial class Enum_ReleaseStatus
+    public partial class Remark
     {
-        public Enum_ReleaseStatus()
-        {
-            this.Releases = new HashSet<Release>();
-        }
+        public int Pk_RemarkId { get; set; }
+        public Nullable<int> Fk_ReleaseId { get; set; }
+        public Nullable<int> Fk_PersonId { get; set; }
+        public Nullable<bool> IsPublic { get; set; }
+        public Nullable<System.DateTime> CreationDate { get; set; }
+        public string RemarkText { get; set; }
     
-        public int Enum_ReleaseStatusId { get; set; }
-        public string ReleaseStatus { get; set; }
-    
-        public virtual ICollection<Release> Releases { get; set; }
+        public virtual Release Release { get; set; }
     }
 }

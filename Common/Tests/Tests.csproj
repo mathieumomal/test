@@ -68,6 +68,7 @@
     <Compile Include="FakeSets\Enum_ReleaseStatusFakeDBSet.cs" />
     <Compile Include="FakeSets\FakeDBSet.cs" />
     <Compile Include="FakeSets\ReleaseFakeDBSet.cs" />
+    <Compile Include="MeetingTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestEnum_ReleaseStatusRepository.cs" />
     <Compile Include="TestReleaseRepository.cs" />

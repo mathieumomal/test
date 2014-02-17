@@ -54,7 +54,7 @@ using System.Linq;
 }
 #>
 
-<#=Accessibility.ForType(container)#> partial class <#=code.Escape(container)#> : DbContext
+<#=Accessibility.ForType(container)#> partial class <#=code.Escape(container)#> : DbContext, ITmpDb
 {
     public <#=code.Escape(container)#>()
         : base("name=<#=container.Name#>")
@@ -297,7 +297,7 @@ public class CodeStringGenerator
     {
         return string.Format(
             CultureInfo.InvariantCulture,
-            "{0} DbSet<{1}> {2} {{ get; set; }}",
+            "{0} IDbSet<{1}> {2} {{ get; set; }}",
             Accessibility.ForReadOnlyProperty(entitySet),
             _typeMapper.GetTypeName(entitySet.ElementType),
             _code.Escape(entitySet));

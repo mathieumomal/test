@@ -11,7 +11,7 @@ namespace Tests.FakeSets
         public override Release Find(params object[] keyValues)
         {
             var keyValue = (int)keyValues.FirstOrDefault();
-            return this.SingleOrDefault(relea => relea.ReleaseId == keyValue);
+            return this.SingleOrDefault(relea => relea.Pk_ReleaseId == keyValue);
         }
     }
 }

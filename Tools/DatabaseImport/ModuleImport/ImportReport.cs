@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DatabaseImport.ModuleImport
 {
-    class DataReport
+    public class ImportReport
     {
 
         private List<string> errorList;
@@ -15,33 +15,33 @@ namespace DatabaseImport.ModuleImport
         string CurrentModule { get; set; }
 
 
-        public DataReport()
+        public ImportReport()
         {
             errorList = new List<string>();
             warningList = new List<string>();
         }
 
-        void LogWarning(string msg)
+        public void LogWarning(string msg)
         {
             warningList.Add(msg);
         }
-        void LogWarning(string msg, string table)
+        public void LogWarning(string msg, string table)
         {
             warningList.Add("[" + table + "] " + msg);
         }
 
-        void LogError(string msg)
+        public void LogError(string msg)
         {
             errorList.Add(msg);
         }
-        void LogError(string msg, string table)
+        public void LogError(string msg, string table)
         {
             errorList.Add("[" + table + "] " + msg);
 
         }
 
 
-        string PrintReport()
+        public string PrintReport()
         {
             StringBuilder strB = new StringBuilder();
             strB.AppendLine("There are " + errorList.Count + " errors and " + warningList.Count + " warnings.");

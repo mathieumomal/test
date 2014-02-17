@@ -8,6 +8,7 @@
         <EntityContainer Name="EtsiUltimateDataAccessStoreContainer">
           <EntitySet Name="Enum_ReleaseStatus" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_ReleaseStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Releases" EntityType="Etsi.Ultimate.DataAccess.Store.Releases" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Remarks" EntityType="Etsi.Ultimate.DataAccess.Store.Remarks" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="View_Meetings" EntityType="Etsi.Ultimate.DataAccess.Store.View_Meetings" store:Type="Views" store:Schema="dbo" store:Name="View_Meetings">
             <DefiningQuery>SELECT 
       [View_Meetings].[MTG_ID] AS [MTG_ID], 
@@ -66,44 +67,67 @@
             <End Role="Enum_ReleaseStatus" EntitySet="Enum_ReleaseStatus" />
             <End Role="Releases" EntitySet="Releases" />
           </AssociationSet>
+          <AssociationSet Name="FK_Remarks_Releases" Association="Etsi.Ultimate.DataAccess.Store.FK_Remarks_Releases">
+            <End Role="Releases" EntitySet="Releases" />
+            <End Role="Remarks" EntitySet="Remarks" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
             <PropertyRef Name="Enum_ReleaseStatusId" />
           </Key>
           <Property Name="Enum_ReleaseStatusId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="ReleaseStatus" Type="nchar" MaxLength="10" />
+          <Property Name="ReleaseStatus" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="Releases">
           <Key>
-            <PropertyRef Name="ReleaseId" />
+            <PropertyRef Name="Pk_ReleaseId" />
           </Key>
-          <Property Name="ReleaseId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="nchar" MaxLength="50" />
-          <Property Name="ShortName" Type="nchar" MaxLength="20" />
-          <Property Name="Description" Type="nchar" MaxLength="200" />
+          <Property Name="Pk_ReleaseId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Code" Type="nvarchar" MaxLength="10" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="ShortName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" />
           <Property Name="Fk_ReleaseStatus" Type="int" />
           <Property Name="StartDate" Type="datetime" />
           <Property Name="Stage1FreezeDate" Type="datetime" />
+          <Property Name="Stage1FreezeMtgRef" Type="nvarchar" MaxLength="20" />
           <Property Name="Stage1FreezeMtgId" Type="int" />
           <Property Name="Stage2FreezeDate" Type="datetime" />
+          <Property Name="Stage2FreezeMtgRef" Type="nvarchar" MaxLength="20" />
           <Property Name="Stage2FreezeMtgId" Type="int" />
+          <Property Name="Stage3FreezeMtgRef" Type="nvarchar" MaxLength="20" />
           <Property Name="Stage3FreezeDate" Type="datetime" />
           <Property Name="Stage3FreezeMtgId" Type="int" />
           <Property Name="EndDate" Type="datetime" />
+          <Property Name="EndMtgRef" Type="nvarchar" MaxLength="20" />
           <Property Name="EndMtgId" Type="int" />
           <Property Name="ClosureDate" Type="datetime" />
+          <Property Name="ClosureMtgRef" Type="nvarchar" MaxLength="20" />
           <Property Name="ClosureMtgId" Type="int" />
           <Property Name="SortOrder" Type="int" />
           <Property Name="Version2g" Type="int" />
           <Property Name="Version3g" Type="int" />
-          <Property Name="WpmCode2g" Type="nchar" MaxLength="50" />
-          <Property Name="WpmCode3g" Type="nchar" MaxLength="50" />
+          <Property Name="WpmCode2g" Type="nvarchar" MaxLength="50" />
+          <Property Name="WpmCode3g" Type="nvarchar" MaxLength="50" />
           <Property Name="WpmProjectId" Type="int" />
-          <Property Name="IturCode" Type="nchar" MaxLength="20" />
+          <Property Name="IturCode" Type="nvarchar" MaxLength="20" />
+          <Property Name="LAST_MOD_BY" Type="nvarchar" MaxLength="20" />
+          <Property Name="LAST_MOD_TS" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Remarks">
+          <Key>
+            <PropertyRef Name="Pk_RemarkId" />
+          </Key>
+          <Property Name="Pk_RemarkId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Fk_ReleaseId" Type="int" />
+          <Property Name="Fk_PersonId" Type="int" />
+          <Property Name="IsPublic" Type="bit" />
+          <Property Name="CreationDate" Type="datetime" />
+          <Property Name="RemarkText" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <!--Errors Found During Generation:
-      warning 6002: The table/view '3GPPDB.dbo.View_Meetings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      warning 6002: The table/view 'U3GPPDB.dbo.View_Meetings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="View_Meetings">
           <Key>
@@ -176,6 +200,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Remarks_Releases">
+          <End Role="Releases" Type="Etsi.Ultimate.DataAccess.Store.Releases" Multiplicity="0..1" />
+          <End Role="Remarks" Type="Etsi.Ultimate.DataAccess.Store.Remarks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Releases">
+              <PropertyRef Name="Pk_ReleaseId" />
+            </Principal>
+            <Dependent Role="Remarks">
+              <PropertyRef Name="Fk_ReleaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -183,10 +219,15 @@
         <EntityContainer Name="UltimateContext" p1:LazyLoadingEnabled="true">
           <EntitySet Name="Enum_ReleaseStatus" EntityType="Etsi.Ultimate.DataAccess.Enum_ReleaseStatus" />
           <EntitySet Name="Releases" EntityType="Etsi.Ultimate.DataAccess.Release" />
-          <EntitySet Name="View_Meetings" EntityType="Etsi.Ultimate.DataAccess.View_Meetings" />
+          <EntitySet Name="Meetings" EntityType="Etsi.Ultimate.DataAccess.Meeting" />
           <AssociationSet Name="FK_Releases_Enum_ReleaseStatus" Association="Etsi.Ultimate.DataAccess.FK_Releases_Enum_ReleaseStatus">
             <End Role="Enum_ReleaseStatus" EntitySet="Enum_ReleaseStatus" />
             <End Role="Releases" EntitySet="Releases" />
+          </AssociationSet>
+          <EntitySet Name="Remarks" EntityType="Etsi.Ultimate.DataAccess.Remark" />
+          <AssociationSet Name="FK_Remarks_Releases" Association="Etsi.Ultimate.DataAccess.FK_Remarks_Releases">
+            <End Role="Release" EntitySet="Releases" />
+            <End Role="Remark" EntitySet="Remarks" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
@@ -194,17 +235,16 @@
             <PropertyRef Name="Enum_ReleaseStatusId" />
           </Key>
           <Property Name="Enum_ReleaseStatusId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-          <Property Name="ReleaseStatus" Type="String" MaxLength="10" Unicode="true" FixedLength="true" />
+          <Property Name="ReleaseStatus" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="Releases" Relationship="Etsi.Ultimate.DataAccess.FK_Releases_Enum_ReleaseStatus" FromRole="Enum_ReleaseStatus" ToRole="Releases" />
         </EntityType>
         <EntityType Name="Release">
           <Key>
-            <PropertyRef Name="ReleaseId" />
+            <PropertyRef Name="Pk_ReleaseId" />
           </Key>
-          <Property Name="ReleaseId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" Unicode="true" FixedLength="true" />
-          <Property Name="ShortName" Type="String" MaxLength="20" Unicode="true" FixedLength="true" />
-          <Property Name="Description" Type="String" MaxLength="200" Unicode="true" FixedLength="true" />
+          <Property Name="Name" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="ShortName" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="Description" Type="String" MaxLength="200" Unicode="true" FixedLength="false" />
           <Property Name="Fk_ReleaseStatus" Type="Int32" />
           <Property Name="StartDate" Type="DateTime" Precision="3" />
           <Property Name="Stage1FreezeDate" Type="DateTime" Precision="3" />
@@ -220,13 +260,23 @@
           <Property Name="SortOrder" Type="Int32" />
           <Property Name="Version2g" Type="Int32" />
           <Property Name="Version3g" Type="Int32" />
-          <Property Name="WpmCode2g" Type="String" MaxLength="50" Unicode="true" FixedLength="true" />
-          <Property Name="WpmCode3g" Type="String" MaxLength="50" Unicode="true" FixedLength="true" />
+          <Property Name="WpmCode2g" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
+          <Property Name="WpmCode3g" Type="String" MaxLength="50" Unicode="true" FixedLength="false" />
           <Property Name="WpmProjectId" Type="Int32" />
-          <Property Name="IturCode" Type="String" MaxLength="20" Unicode="true" FixedLength="true" />
+          <Property Name="IturCode" Type="String" MaxLength="20" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="Enum_ReleaseStatus" Relationship="Etsi.Ultimate.DataAccess.FK_Releases_Enum_ReleaseStatus" FromRole="Releases" ToRole="Enum_ReleaseStatus" />
+          <Property Type="String" Name="Code" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Stage1FreezeMtgRef" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Stage2FreezeMtgRef" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Stage3FreezeMtgRef" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="EndMtgRef" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="ClosureMtgRef" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Pk_ReleaseId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <NavigationProperty Name="Remarks" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_Releases" FromRole="Release" ToRole="Remark" />
+          <Property Type="String" Name="LAST_MOD_BY" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="LAST_MOD_TS" Precision="3" />
         </EntityType>
-        <EntityType Name="View_Meetings">
+        <EntityType Name="Meeting">
           <Key>
             <PropertyRef Name="MTG_ID" />
             <PropertyRef Name="LOCAL_FLG" />
@@ -297,6 +347,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Remark">
+          <Key>
+            <PropertyRef Name="Pk_RemarkId" />
+          </Key>
+          <Property Type="Int32" Name="Pk_RemarkId" Nullable="false" />
+          <Property Type="Int32" Name="Fk_ReleaseId" />
+          <Property Type="Int32" Name="Fk_PersonId" />
+          <Property Type="Boolean" Name="IsPublic" />
+          <Property Type="DateTime" Name="CreationDate" Precision="3" />
+          <NavigationProperty Name="Release" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_Releases" FromRole="Remark" ToRole="Release" />
+          <Property Type="String" Name="RemarkText" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_Remarks_Releases">
+          <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.Remark" Role="Remark" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Release">
+              <PropertyRef Name="Pk_ReleaseId" />
+            </Principal>
+            <Dependent Role="Remark">
+              <PropertyRef Name="Fk_ReleaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -314,7 +388,15 @@
           <EntitySetMapping Name="Releases">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Release">
               <MappingFragment StoreEntitySet="Releases">
-                <ScalarProperty Name="ReleaseId" ColumnName="ReleaseId" />
+                <ScalarProperty Name="LAST_MOD_TS" ColumnName="LAST_MOD_TS" />
+                <ScalarProperty Name="LAST_MOD_BY" ColumnName="LAST_MOD_BY" />
+                <ScalarProperty Name="Pk_ReleaseId" ColumnName="Pk_ReleaseId" />
+                <ScalarProperty Name="ClosureMtgRef" ColumnName="ClosureMtgRef" />
+                <ScalarProperty Name="EndMtgRef" ColumnName="EndMtgRef" />
+                <ScalarProperty Name="Stage3FreezeMtgRef" ColumnName="Stage3FreezeMtgRef" />
+                <ScalarProperty Name="Stage2FreezeMtgRef" ColumnName="Stage2FreezeMtgRef" />
+                <ScalarProperty Name="Stage1FreezeMtgRef" ColumnName="Stage1FreezeMtgRef" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ShortName" ColumnName="ShortName" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
@@ -340,8 +422,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="View_Meetings">
-            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.View_Meetings">
+          <EntitySetMapping Name="Meetings">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Meeting">
               <MappingFragment StoreEntitySet="View_Meetings">
                 <ScalarProperty Name="MTG_ID" ColumnName="MTG_ID" />
                 <ScalarProperty Name="MTG_CATEG_CODE" ColumnName="MTG_CATEG_CODE" />
@@ -393,6 +475,18 @@
                 <ScalarProperty Name="REQUEST_DATE" ColumnName="REQUEST_DATE" />
                 <ScalarProperty Name="TB_ID" ColumnName="TB_ID" />
                 <ScalarProperty Name="Creation_Date" ColumnName="Creation_Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Remarks">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Remark">
+              <MappingFragment StoreEntitySet="Remarks">
+                <ScalarProperty Name="RemarkText" ColumnName="RemarkText" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="IsPublic" ColumnName="IsPublic" />
+                <ScalarProperty Name="Fk_PersonId" ColumnName="Fk_PersonId" />
+                <ScalarProperty Name="Fk_ReleaseId" ColumnName="Fk_ReleaseId" />
+                <ScalarProperty Name="Pk_RemarkId" ColumnName="Pk_RemarkId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

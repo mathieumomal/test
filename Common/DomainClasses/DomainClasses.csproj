@@ -45,16 +45,20 @@
     <Compile Include="Enum_ReleaseStatus.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Meeting.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Meeting.Extend.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Release.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Remark.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="UltimateModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>UltimateModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="View_Meetings.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
   </ItemGroup>

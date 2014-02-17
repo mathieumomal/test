@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Etsi.Ultimate.Tools.TmpDbDataAccess;
 using Etsi.Ultimate.DataAccess;
 using domain = Etsi.Ultimate.DomainClasses;
+using DatabaseImport.ModuleImport;
 
 namespace DatabaseImport
 {
@@ -13,38 +14,53 @@ namespace DatabaseImport
     {
         static void Main(string[] args)
         {
+            var newContext = new UltimateContext();
+            var oldContext = new TmpDB();
+            var report = new ImportReport();
 
-            using (var context = new UltimateContext())
+
+            // CONFIGURE HERE
+            var operations = new List<IModuleImport>();
+            operations.Add(new ReleaseImport());
+
+            Console.WriteLine("Setting up the different classes");
+
+            // set up all contexts and reports
+            foreach (var import in operations)
             {
-                // Delete all releases
-                foreach (var rel in context.Release.ToList())
-                {
-                    context.Release.Remove(rel);
-                    Console.WriteLine("Removed " + rel.Name);
-                }
-
-
-                // Let's just create one release for each existing release in the tmp database
-                var tmpContext = new TmpDB();
-                var allTmpRelease = tmpContext.Releases;
-
-                foreach (var aRelease in allTmpRelease)
-                {
-                    var aNewRelease = new domain.Release()
-                    {
-                        Name = aRelease.Release_description,
-                        ShortName = aRelease.Release_short_description
-                    };
-
-                    Console.WriteLine("Added " + aNewRelease.Name);
-                    context.Release.Add(aNewRelease);
-                }
-
-                context.SaveChanges();
-                Console.WriteLine("Export is finished!");
-                Console.Read();
+                import.LegacyContext = oldContext;
+                import.NewContext = newContext;
+                import.Report = report;
             }
 
+            Console.WriteLine("Cleaning database");
+
+            // Clean up in reverse order
+            operations.Reverse();
+            foreach (var toClean in operations)
+            {
+                toClean.CleanDatabase();
+            }
+
+            Console.WriteLine("Filling in database");
+
+            // Load in normal order
+            operations.Reverse();
+            foreach (var toImport in operations)
+            {
+                toImport.FillDatabase();
+            }
+
+            Console.WriteLine("Saving changes");
+            // Save new context
+            newContext.SaveChanges();
+
+            Console.WriteLine("Changes saved, import is now finished!");
+
+            Console.WriteLine("------------------- REPORT ---------------------");
+            Console.WriteLine(report.PrintReport());
+
+            Console.Read();
         }
     }
 }

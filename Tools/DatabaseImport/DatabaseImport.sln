@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "..\..\Common\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DomainClasses", "..\..\Common\DomainClasses\DomainClasses.csproj", "{D5BDEDE9-D397-411C-AE94-1646836406BA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseImportTests", "..\DatabaseImportTests\DatabaseImportTests.csproj", "{A9A48CA0-95D0-4B15-AA7F-DD26239FF66D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "..\..\Common\Tests\Tests.csproj", "{A03F686E-BF8D-45CB-9D5E-83D13FA98823}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -35,6 +39,14 @@ Global
 		{D5BDEDE9-D397-411C-AE94-1646836406BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5BDEDE9-D397-411C-AE94-1646836406BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5BDEDE9-D397-411C-AE94-1646836406BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9A48CA0-95D0-4B15-AA7F-DD26239FF66D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9A48CA0-95D0-4B15-AA7F-DD26239FF66D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9A48CA0-95D0-4B15-AA7F-DD26239FF66D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9A48CA0-95D0-4B15-AA7F-DD26239FF66D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A03F686E-BF8D-45CB-9D5E-83D13FA98823}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A03F686E-BF8D-45CB-9D5E-83D13FA98823}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A03F686E-BF8D-45CB-9D5E-83D13FA98823}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A03F686E-BF8D-45CB-9D5E-83D13FA98823}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

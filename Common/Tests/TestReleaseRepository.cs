@@ -88,9 +88,9 @@ namespace Tests
 
             var dbSet_release = new ReleaseFakeDBSet();
             //Just essentials informations for the tests
-            dbSet_release.Add(new Release() { ReleaseId = 1, Name = "First release", Fk_ReleaseStatus = 1 });
-            dbSet_release.Add(new Release() { ReleaseId = 2, Name = "Second release", Fk_ReleaseStatus = 2 });
-            dbSet_release.Add(new Release() { ReleaseId = 3, Name = "Third release", Fk_ReleaseStatus = 2 });
+            dbSet_release.Add(new Release() { Pk_ReleaseId = 1, Name = "First release", Fk_ReleaseStatus = 1 });
+            dbSet_release.Add(new Release() { Pk_ReleaseId = 2, Name = "Second release", Fk_ReleaseStatus = 2 });
+            dbSet_release.Add(new Release() { Pk_ReleaseId = 3, Name = "Third release", Fk_ReleaseStatus = 2 });
 
             var dbSet_releaseStatus = new Enum_ReleaseStatusFakeDBSet();
             //Just essentials informations for the tests
@@ -100,7 +100,7 @@ namespace Tests
 
 
             iUnitOfWork.Stub(uow => uow.Context).Return(iUltimateContext);
-            iUltimateContext.Stub(ctx => ctx.Release).Return(dbSet_release);
+            iUltimateContext.Stub(ctx => ctx.Releases).Return(dbSet_release);
             iUltimateContext.Stub(ctx => ctx.Enum_ReleaseStatus).Return(dbSet_releaseStatus);
             return iUnitOfWork;
         }

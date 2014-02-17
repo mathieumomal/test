@@ -14,8 +14,9 @@ namespace Etsi.Ultimate.DataAccess
     {
 
         IDbSet<Enum_ReleaseStatus> Enum_ReleaseStatus { get; }
-        IDbSet<Release> Release { get; }
-        IDbSet<View_Meetings> View_Meetings { get; }
+        IDbSet<Release> Releases { get; }
+        IDbSet<Meeting> Meetings { get; }
+        IDbSet<Remark> Remarks { get; }
 
         void SetModified(object entity);
         void SetAdded(object entity);

@@ -24,7 +24,7 @@ namespace Etsi.Ultimate.Repositories
 
         public List<Release> GetAllReleaseByIdReleaseStatus(Enum_ReleaseStatus releaseStatus)
         {
-            return UoW.Context.Release.Where(id => id.Fk_ReleaseStatus == releaseStatus.Enum_ReleaseStatusId).ToList();
+            return UoW.Context.Releases.Where(id => id.Fk_ReleaseStatus == releaseStatus.Enum_ReleaseStatusId).ToList();
         }
 
         #endregion
@@ -33,7 +33,7 @@ namespace Etsi.Ultimate.Repositories
 
         public IQueryable<Release> All
         {
-            get { return UoW.Context.Release; }
+            get { return UoW.Context.Releases; }
         }
 
         public IQueryable<Release> AllIncluding(params System.Linq.Expressions.Expression<Func<Release, object>>[] includeProperties)
@@ -43,7 +43,7 @@ namespace Etsi.Ultimate.Repositories
 
         public Release Find(int id)
         {
-            return UoW.Context.Release.Find(id);
+            return UoW.Context.Releases.Find(id);
         }
 
         public void InsertOrUpdate(Release entity)

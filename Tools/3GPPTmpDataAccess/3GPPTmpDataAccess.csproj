@@ -102,6 +102,7 @@
     <Compile Include="CR_status_values.cs">
       <DependentUpon>TmpDbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="ITmpDb.cs" />
     <Compile Include="jmm_spec_series.cs">
       <DependentUpon>TmpDbModel.tt</DependentUpon>
     </Compile>

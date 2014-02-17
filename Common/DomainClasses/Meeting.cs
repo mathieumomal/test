@@ -12,7 +12,7 @@ namespace Etsi.Ultimate.DomainClasses
     using System;
     using System.Collections.Generic;
     
-    public partial class View_Meetings
+    public partial class Meeting
     {
         public int MTG_ID { get; set; }
         public string MTG_CATEG_CODE { get; set; }
