@@ -5,7 +5,7 @@ using System.Text;
 using System.Data.Entity;
 using System.Collections.ObjectModel;
 
-namespace Tests.FakeSets
+namespace Etsi.Ultimate.Tests.FakeSets
 {
     public abstract class FakeDBSet<T> : IDbSet<T> where T : class, new ()
     {

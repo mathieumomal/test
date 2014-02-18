@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
 using NUnit.Framework;
 
-namespace Tests
+namespace Etsi.Ultimate.Tests.DomainClasses
 {
     [Category("Domain")]
     class MeetingTest

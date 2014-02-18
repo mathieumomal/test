@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.DataAccess;
-using Tests.FakeSets;
+using Etsi.Ultimate.Tests.FakeSets;
 using Etsi.Ultimate.DomainClasses;
 using Rhino.Mocks;
 using NUnit.Framework;
 
 
-namespace Tests
+namespace Etsi.Ultimate.Tests.Repositories
 {
     //TextFixture <=> class contains Test
     [TestFixture]

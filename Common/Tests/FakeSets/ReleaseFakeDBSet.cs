@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Etsi.Ultimate.DomainClasses;
 
-namespace Tests.FakeSets
+namespace Etsi.Ultimate.Tests.FakeSets
 {
     public class ReleaseFakeDBSet : FakeDBSet<Release>
     {

@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web;
 
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.DataAccess;
-using Tests.FakeSets;
+using Etsi.Ultimate.Tests.FakeSets;
 using Etsi.Ultimate.DomainClasses;
 using Rhino.Mocks;
 using NUnit.Framework;
 using Etsi.Ultimate.Utils;
 
 
-namespace Tests
+namespace Etsi.Ultimate.Tests.Repositories
 {
     [TestFixture]
     class TestReleaseRepository
@@ -20,20 +21,33 @@ namespace Tests
         [Test]
         public void Release_GetAll()
         {
-            //var repo = new ReleaseRepository() { UoW = GetUnitOfWork() };
-            var repo = DependencyFactory.Resolve<IReleaseRepository>();
-            //DependencyFactory.Container.RegisterType<IReleaseRepository, ReleaseMockRepository>
-            repo.UoW = GetUnitOfWork(); 
+            var repo = new ReleaseRepository() { UoW = GetUnitOfWork() };
+            var results = repo.All.ToList();
 
-            Assert.AreEqual(3, repo.All.ToList().Count);
+            Assert.AreEqual(3, results.Count);
         }
 
         [Test]
-        [ExpectedException(typeof(NotImplementedException))]
+        public void Release_GetAll_ToCache()
+        {
+            var repo = new ReleaseRepository() { UoW = GetUnitOfWork() };
+            var results = repo.All.ToList();
+
+            var cachedResult = (IQueryable<Release>)HttpRuntime.Cache["ULT_REPO_RELEASES_ALL"];
+            Assert.IsNotNull(cachedResult);
+
+            //Assert.AreEqual(3, results.Count);
+        }
+
+        [Test]
         public void Release_GetAllIncluding()
         {
             var repo = new ReleaseRepository() { UoW = GetUnitOfWork() };
-            repo.AllIncluding();
+            var results = repo.AllIncluding( t => t.Enum_ReleaseStatus).ToList();
+
+            Assert.AreEqual(3, results.Count);
+            Assert.IsNotNull(results.First().Enum_ReleaseStatus);
+            Assert.AreEqual("Open",results.First().Enum_ReleaseStatus.ReleaseStatus);
         }
 
         [Test]
@@ -62,21 +76,7 @@ namespace Tests
             var repo = new ReleaseRepository() { UoW = GetUnitOfWork() }; 
             repo.Delete(3);
         }
-
-        /*[Test]
-        public void Release_GetAllReleaseByIdReleaseStatus()
-        {
-            var repo = new ReleaseRepository() { UoW = GetUnitOfWork() };
-            var releaseStatus = new EnumReleaseRepository(GetUnitOfWork());
-            var releasesFrozen = repo.GetAllReleaseByIdReleaseStatus(releaseStatus.Find(2));
-            var releasesOpen = repo.GetAllReleaseByIdReleaseStatus(releaseStatus.Find(1));
-
-            Assert.AreEqual(2, releasesFrozen.Count);
-            Assert.AreEqual(1, releasesOpen.Count);
-
-            Assert.AreEqual("First release", releasesOpen.First<Release>().Name);
-        }*/
-        
+                       
 
         /// <summary>
         /// Create Mocks to simulate DB with objects
@@ -84,11 +84,13 @@ namespace Tests
         private IUltimateUnitOfWork GetUnitOfWork()
         {
             var iUnitOfWork = MockRepository.GenerateMock<IUltimateUnitOfWork>();
-            var iUltimateContext = MockRepository.GenerateMock<IUltimateContext>();
+            var iUltimateContext = new FakeContext();
+            //var iUltimateContext = MockRepository.GenerateMock<IUltimateContext>();
 
             var dbSet_release = new ReleaseFakeDBSet();
             //Just essentials informations for the tests
-            dbSet_release.Add(new Release() { Pk_ReleaseId = 1, Name = "First release", Fk_ReleaseStatus = 1 });
+            var openStatus = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, ReleaseStatus = "Open" };
+            dbSet_release.Add(new Release() { Pk_ReleaseId = 1, Name = "First release", Fk_ReleaseStatus = 1, Enum_ReleaseStatus = openStatus  });
             dbSet_release.Add(new Release() { Pk_ReleaseId = 2, Name = "Second release", Fk_ReleaseStatus = 2 });
             dbSet_release.Add(new Release() { Pk_ReleaseId = 3, Name = "Third release", Fk_ReleaseStatus = 2 });
 
@@ -98,10 +100,10 @@ namespace Tests
             dbSet_releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, ReleaseStatus = "Frozen" });
             dbSet_releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, ReleaseStatus = "Closed" });
 
+            iUltimateContext.Releases = dbSet_release;
+            iUltimateContext.Enum_ReleaseStatus = dbSet_releaseStatus;
 
             iUnitOfWork.Stub(uow => uow.Context).Return(iUltimateContext);
-            iUltimateContext.Stub(ctx => ctx.Releases).Return(dbSet_release);
-            iUltimateContext.Stub(ctx => ctx.Enum_ReleaseStatus).Return(dbSet_releaseStatus);
             return iUnitOfWork;
         }
 

@@ -8,12 +8,23 @@ using Etsi.Ultimate.Repositories;
 
 namespace Etsi.Ultimate.Business
 {
-    class ReleaseManager
+    public class ReleaseManager
     {
+        public IUltimateUnitOfWork UoW {get; set;}
+        
+        public ReleaseManager() { }
+
+
+        /// <summary>
+        /// Retrieves all the data for the releases.
+        /// </summary>
+        /// <returns></returns>
         public List<Release> GetAllReleases()
         {
-            ReleaseRepository repo = new ReleaseRepository();
-            return repo.AllIncluding(t => t.Enum_ReleaseStatus).ToList();
+            IReleaseRepository repo = RepositoryFactory.Resolve<IReleaseRepository>();
+            return repo.All.ToList();
         }
+
+
     }
 }

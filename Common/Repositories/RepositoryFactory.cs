@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Etsi.Ultimate.Repositories;
 using Microsoft.Practices.Unity;
 
-namespace Etsi.Ultimate.Utils
+namespace Etsi.Ultimate.Repositories
 {
-    public class DependencyFactory
+    public class RepositoryFactory
     {
-        private static IUnityContainer _container;
+
+        private static UnityContainer _container;
 
         /// <summary>
         /// Public reference to the unity container which will 
         /// allow the ability to register instrances or take 
         /// other actions on the container.
         /// </summary>
-        public static IUnityContainer Container
+        public static UnityContainer Container
         {
             get
             {
@@ -33,11 +33,13 @@ namespace Etsi.Ultimate.Utils
         /// Static constructor for DependencyFactory which will 
         /// initialize the unity container.
         /// </summary>
-        static DependencyFactory()
+        static RepositoryFactory()
         {
             var container = new UnityContainer();
 
+            //Map of relation between Interfaces and classes
             container.RegisterType<IReleaseRepository, ReleaseRepository>(new TransientLifetimeManager());
+            container.RegisterType<IUltimateUnitOfWork, UltimateUnitOfWork>(new TransientLifetimeManager());
             
 
             _container = container;

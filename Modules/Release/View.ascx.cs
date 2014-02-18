@@ -28,7 +28,6 @@ using Etsi.Ultimate.Services;
 using Microsoft.Practices.ObjectBuilder2;
 using Rhino.Mocks;
 using Telerik.Web.UI;
-using DependencyFactory = Etsi.Ultimate.Utils.DependencyFactory;
 using Microsoft.Practices.Unity;
 
 namespace Etsi.Ultimate.Module.Release

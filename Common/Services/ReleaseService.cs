@@ -1,24 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
 
 namespace Etsi.Ultimate.Services
 {
+    /// <summary>
+    /// This class is the implementation in charge of all the operations concerning the releases.
+    /// </summary>
     public class ReleaseService : IReleaseService
     {
 
         #region IReleaseService Membres
 
+        /// <summary>
+        /// Returns the list of all releases.
+        /// </summary>
+        /// <returns></returns>
         public List<DomainClasses.Release> GetAllReleases()
         {
-            //Need to initialize the context
+            using (var UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var releaseManager = new ReleaseManager() { UoW = UoW };
+                var releases = releaseManager.GetAllReleases();
 
-            //Need to close the context
-            Enum_ReleaseStatus status = new Enum_ReleaseStatus();
-            status.ReleaseStatus = "FREEZE";
-            List<DomainClasses.Release> releases = new List<DomainClasses.Release>();
-            releases.Add(new DomainClasses.Release() { Pk_ReleaseId = 1, Name = "First release", Fk_ReleaseStatus = 1, StartDate = new DateTime(2010, 1, 18), Enum_ReleaseStatus = status });
-            return releases;
+                // No save needed
+                return releases;
+            }
         }
 
         #endregion
