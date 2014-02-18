@@ -10,6 +10,7 @@ using Etsi.Ultimate.Tests.FakeSets;
 using Etsi.Ultimate.DomainClasses;
 using Rhino.Mocks;
 using NUnit.Framework;
+using System.Web;
 
 
 namespace Etsi.Ultimate.Tests.Repositories
@@ -23,6 +24,9 @@ namespace Etsi.Ultimate.Tests.Repositories
         {
             var repo = new EnumReleaseRepository(GetUnitOfWork());
             Assert.AreEqual(3, repo.All.ToList().Count);
+
+            var cachedResult = (IQueryable<Enum_ReleaseStatus>)HttpRuntime.Cache["ULT_REPO_ENUM_RELEASE_STATUS_ALL"];
+            Assert.IsNotNull(cachedResult);
         }
 
         [Test]
