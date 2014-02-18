@@ -48,7 +48,12 @@ namespace Etsi.Ultimate.Module.Release
     /// -----------------------------------------------------------------------------
     public partial class View : ReleaseModuleBase, IActionable
     {
-        private static String freezeReach = "";
+        private static String freezeReach = "rgb(39, 116, 0)";
+
+        private static List<String> freezeDates = new List<string>()
+        {
+
+        };
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -122,13 +127,16 @@ namespace Etsi.Ultimate.Module.Release
                     if (now > dateStage1FreezeDate.Date)
                     {
                         TableCell freeze1 = dataItem["Stage1FreezeDate"];
-                        freeze1.Text =
+                        if (currentRelease.Stage1FreezeMtgRef != null)
+                        {
+                            freeze1.Text =
                             new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.Stage1FreezeDate))
                                 .Append(" (")
                                 .Append(currentRelease.Stage1FreezeMtgRef)
                                 .Append(")")
                                 .ToString();
-                        freeze1.CssClass = currentRelease.Enum_ReleaseStatus.ReleaseStatus.ToLower();
+                        }
+                        freeze1.CssClass = freezeReach;
                     }
                 }
                 
@@ -140,13 +148,16 @@ namespace Etsi.Ultimate.Module.Release
                     if (now > dateStage2FreezeDate.Date)
                     {
                         TableCell freeze2 = dataItem["Stage2FreezeDate"];
-                        freeze2.Text =
+                        if (currentRelease.Stage2FreezeMtgRef != null)
+                        {
+                            freeze2.Text =
                             new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.Stage2FreezeDate))
                                 .Append(" (")
                                 .Append(currentRelease.Stage2FreezeMtgRef)
                                 .Append(")")
                                 .ToString();
-                        freeze2.CssClass = currentRelease.Enum_ReleaseStatus.ReleaseStatus.ToLower();
+                        }
+                        freeze2.CssClass = freezeReach;
                     }
                 }
                
@@ -158,13 +169,16 @@ namespace Etsi.Ultimate.Module.Release
                     if (now > dateStage3FreezeDate.Date)
                     {
                         TableCell freeze3 = dataItem["Stage3FreezeDate"];
-                        freeze3.Text =
+                        if (currentRelease.Stage3FreezeMtgRef != null)
+                        {
+                            freeze3.Text =
                             new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.Stage3FreezeDate))
                                 .Append(" (")
                                 .Append(currentRelease.Stage3FreezeMtgRef)
                                 .Append(")")
                                 .ToString();
-                        freeze3.CssClass = currentRelease.Enum_ReleaseStatus.ReleaseStatus.ToLower();
+                        }
+                        freeze3.CssClass = freezeReach;
                     }
                 }
                 
