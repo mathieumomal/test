@@ -1,14 +1,14 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="Release" type="Module" version="00.00.01">
+    <package name="Release" type="Module" version="00.00.68">
       <friendlyName>Release</friendlyName>
-      <description>Christoc.com Release module</description>
+      <description>Release module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
       <owner>
-        <name>Christoc.com</name>
-        <organization>Christoc.com</organization>
-        <url>http://www.christoc.com</url>
-        <email>modules@christoc.com</email>
+        <name>Etsi</name>
+        <organization>etsi.org</organization>
+        <url>http://www.etsi.org</url>
+        <email>-</email>
       </owner>
       <license src="License.txt"></license>
       <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
@@ -46,7 +46,7 @@
           <desktopModule>
             <moduleName>Release</moduleName>
             <foldername>Release</foldername>
-            <businessControllerClass>Christoc.Modules.Release.Components.FeatureController</businessControllerClass>
+            <businessControllerClass>Etsi.Ultimate.Module.Release.Components.FeatureController</businessControllerClass>
             <supportedFeatures />
             <moduleDefinitions>
               <moduleDefinition>
@@ -92,7 +92,43 @@
         <component type="Assembly">
           <assemblies>
             <assembly>
-              <name>Release.dll</name>
+              <name>Etsi.Ultimate.Module.Release.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Services.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Business.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.DataAccess.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.DomainClasses.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Repositories.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Utils.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Practices.Unity.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Practices.Unity.Configuration.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Rhino.Mocks.dll</name>
               <path>bin</path>
             </assembly>
           </assemblies>

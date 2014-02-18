@@ -13,7 +13,7 @@
 using System;
 using DotNetNuke.Entities.Modules;
 
-namespace Christoc.Modules.Release
+namespace Etsi.Ultimate.Module.Release
 {
     public class ReleaseModuleBase : PortalModuleBase
     {

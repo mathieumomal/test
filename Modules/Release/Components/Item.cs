@@ -16,7 +16,7 @@ using DotNetNuke.Common.Utilities;
 using DotNetNuke.ComponentModel.DataAnnotations;
 using DotNetNuke.Entities.Content;
 
-namespace Christoc.Modules.Release.Components
+namespace Etsi.Ultimate.Module.Release.Components
 {
     [TableName("Release_Items")]
     //setup the primary key for table

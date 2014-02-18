@@ -12,10 +12,10 @@
 
 using System;
 using DotNetNuke.Entities.Users;
-using Christoc.Modules.Release.Components;
+using Etsi.Ultimate.Module.Release.Components;
 using DotNetNuke.Services.Exceptions;
 
-namespace Christoc.Modules.Release
+namespace Etsi.Ultimate.Module.Release
 {
     /// -----------------------------------------------------------------------------
     /// <summary>   

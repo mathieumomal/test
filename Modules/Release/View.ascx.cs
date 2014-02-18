@@ -11,16 +11,27 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Text;
+using System.Web.UI;
 using System.Web.UI.WebControls;
-using Christoc.Modules.Release.Components;
+using DotNetNuke.Services.Installer.Dependencies;
+using Etsi.Ultimate.Module.Release.Components;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.UI.Utilities;
+using Etsi.Ultimate.Services;
+using Microsoft.Practices.ObjectBuilder2;
+using Rhino.Mocks;
+using Telerik.Web.UI;
+using DependencyFactory = Etsi.Ultimate.Utils.DependencyFactory;
+using Microsoft.Practices.Unity;
 
-namespace Christoc.Modules.Release
+namespace Etsi.Ultimate.Module.Release
 {
     /// -----------------------------------------------------------------------------
     /// <summary>
@@ -37,62 +48,26 @@ namespace Christoc.Modules.Release
     /// -----------------------------------------------------------------------------
     public partial class View : ReleaseModuleBase, IActionable
     {
+        private static String freezeReach = "";
+
         protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
-                var tc = new ItemController();
-                rptItemList.DataSource = tc.GetItems(ModuleId);
-                rptItemList.DataBind();
+                //Remplace ReleaseService by a mock (fake object)
+                ServicesFactory.Container.RegisterType<IReleaseService, ReleaseServiceMock>(new TransientLifetimeManager());
+
+                IReleaseService svc;
+                svc = ServicesFactory.Resolve<IReleaseService>();//Get the mock instead service classe
+
+                List<DomainClasses.Release> releaseObjects = svc.GetAllReleases();
+                releasesTable.DataSource = releaseObjects;
+
             }
             catch (Exception exc) //Module failed to load
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
             }
-        }
-
-        protected void rptItemListOnItemDataBound(object sender, RepeaterItemEventArgs e)
-        {
-            if (e.Item.ItemType == ListItemType.AlternatingItem || e.Item.ItemType == ListItemType.Item)
-            {
-                var lnkEdit = e.Item.FindControl("lnkEdit") as HyperLink;
-                var lnkDelete = e.Item.FindControl("lnkDelete") as LinkButton;
-
-                var pnlAdminControls = e.Item.FindControl("pnlAdmin") as Panel;
-
-                var t = (Item)e.Item.DataItem;
-
-                if (IsEditable && lnkDelete != null && lnkEdit != null && pnlAdminControls != null)
-                {
-                    pnlAdminControls.Visible = true;
-                    lnkDelete.CommandArgument = t.ItemId.ToString();
-                    lnkDelete.Enabled = lnkDelete.Visible = lnkEdit.Enabled = lnkEdit.Visible = true;
-
-                    lnkEdit.NavigateUrl = EditUrl(string.Empty, string.Empty, "Edit", "tid=" + t.ItemId);
-
-                    ClientAPI.AddButtonConfirm(lnkDelete, Localization.GetString("ConfirmDelete", LocalResourceFile));
-                }
-                else
-                {
-                    pnlAdminControls.Visible = false;
-                }
-            }
-        }
-
-
-        public void rptItemListOnItemCommand(object source, RepeaterCommandEventArgs e)
-        {
-            if (e.CommandName == "Edit")
-            {
-                Response.Redirect(EditUrl(string.Empty, string.Empty, "Edit", "tid=" + e.CommandArgument));
-            }
-
-            if (e.CommandName == "Delete")
-            {
-                var tc = new ItemController();
-                tc.DeleteItem(Convert.ToInt32(e.CommandArgument), ModuleId);
-            }
-            Response.Redirect(DotNetNuke.Common.Globals.NavigateURL());
         }
 
         public ModuleActionCollection ModuleActions
@@ -109,5 +84,122 @@ namespace Christoc.Modules.Release
                 return actions;
             }
         }
+
+        protected string FormatDate(object date)
+        {
+            if (date != null)
+                return Convert.ToDateTime(date).ToString("yyyy-MM-dd");
+            return null;
+        }
+
+        public void releasesTable_ItemDataBound(object sender, Telerik.Web.UI.GridItemEventArgs e)
+        {
+            //Analyse on row
+            if (e.Item is GridDataItem)
+            {
+                GridDataItem dataItem = e.Item as GridDataItem;
+                DomainClasses.Release currentRelease = (DomainClasses.Release) e.Item.DataItem;
+                //Analyse column : Closure date
+                if (currentRelease.Enum_ReleaseStatus.ReleaseStatus.Equals("Closed"))
+                {
+                    TableCell closureDate = dataItem["ClosureDate"];
+                    closureDate.Text =
+                        new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.ClosureDate))
+                            .Append(" (")
+                            .Append(currentRelease.ClosureMtgRef)
+                            .Append(")")
+                            .ToString();
+                    closureDate.CssClass = currentRelease.Enum_ReleaseStatus.ReleaseStatus.ToLower();
+                }
+
+                DateTime now = DateTime.Now;
+
+
+                //Analyse column : Freeze 1
+                if (currentRelease.Stage1FreezeDate != null)
+                {
+                    DateTime dateStage1FreezeDate = (DateTime)currentRelease.Stage1FreezeDate;
+                    if (now > dateStage1FreezeDate.Date)
+                    {
+                        TableCell freeze1 = dataItem["Stage1FreezeDate"];
+                        freeze1.Text =
+                            new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.Stage1FreezeDate))
+                                .Append(" (")
+                                .Append(currentRelease.Stage1FreezeMtgRef)
+                                .Append(")")
+                                .ToString();
+                        freeze1.CssClass = currentRelease.Enum_ReleaseStatus.ReleaseStatus.ToLower();
+                    }
+                }
+                
+
+                //Analyse column : Freeze 2
+                if (currentRelease.Stage2FreezeDate!=null)
+                {
+                    DateTime dateStage2FreezeDate = (DateTime)currentRelease.Stage2FreezeDate;
+                    if (now > dateStage2FreezeDate.Date)
+                    {
+                        TableCell freeze2 = dataItem["Stage2FreezeDate"];
+                        freeze2.Text =
+                            new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.Stage2FreezeDate))
+                                .Append(" (")
+                                .Append(currentRelease.Stage2FreezeMtgRef)
+                                .Append(")")
+                                .ToString();
+                        freeze2.CssClass = currentRelease.Enum_ReleaseStatus.ReleaseStatus.ToLower();
+                    }
+                }
+               
+
+                //Analyse column : Freeze 3
+                if (currentRelease.Stage3FreezeDate != null)
+                {
+                    DateTime dateStage3FreezeDate = (DateTime)currentRelease.Stage3FreezeDate;
+                    if (now > dateStage3FreezeDate.Date)
+                    {
+                        TableCell freeze3 = dataItem["Stage3FreezeDate"];
+                        freeze3.Text =
+                            new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.Stage3FreezeDate))
+                                .Append(" (")
+                                .Append(currentRelease.Stage3FreezeMtgRef)
+                                .Append(")")
+                                .ToString();
+                        freeze3.CssClass = currentRelease.Enum_ReleaseStatus.ReleaseStatus.ToLower();
+                    }
+                }
+                
+                
+
+            }
+        }
     }
+
+
+    #region Useful Objects
+    public class ReleaseObjectView
+    {
+        public DomainClasses.Release release { get; set; }
+        public Properties properties { get; set; }
+
+        public ReleaseObjectView(DomainClasses.Release release, Properties properties)
+        {
+            this.release = release;
+            this.properties = properties;
+        }
+    }
+
+    public class Properties
+    {
+        public String statusColor_CSSClasse { get; set; }
+        public String closureDateColor_CSSClasse { get; set; }
+        public String closureDateCompl_String { get; set; }
+
+        public Properties()
+        {
+            this.statusColor_CSSClasse = "";
+            this.closureDateColor_CSSClasse = "";
+            this.closureDateCompl_String = "";
+        }
+    }
+    #endregion  
 }

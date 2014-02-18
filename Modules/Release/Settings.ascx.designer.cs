@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Christoc.Modules.Release
+namespace Etsi.Ultimate.Module.Release
 {
 
 
