@@ -63,7 +63,7 @@ namespace Tests
             repo.Delete(3);
         }
 
-        [Test]
+        /*[Test]
         public void Release_GetAllReleaseByIdReleaseStatus()
         {
             var repo = new ReleaseRepository() { UoW = GetUnitOfWork() };
@@ -75,7 +75,7 @@ namespace Tests
             Assert.AreEqual(1, releasesOpen.Count);
 
             Assert.AreEqual("First release", releasesOpen.First<Release>().Name);
-        }
+        }*/
         
 
         /// <summary>

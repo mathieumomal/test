@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,24 +11,9 @@ namespace Etsi.Ultimate.Repositories
 {
     public class ReleaseRepository : IReleaseRepository
     {
-        public IUltimateUnitOfWork UoW
-        {
-            get;
-            set;
-        }
+        public IUltimateUnitOfWork UoW{ get; set; }
+        public ReleaseRepository(){}
 
-        public ReleaseRepository()
-        {
-        }
-
-        #region IReleaseRepository Membres
-
-        public List<Release> GetAllReleaseByIdReleaseStatus(Enum_ReleaseStatus releaseStatus)
-        {
-            return UoW.Context.Releases.Where(id => id.Fk_ReleaseStatus == releaseStatus.Enum_ReleaseStatusId).ToList();
-        }
-
-        #endregion
 
         #region IEntityRepository<Release> Membres
 
@@ -38,7 +24,12 @@ namespace Etsi.Ultimate.Repositories
 
         public IQueryable<Release> AllIncluding(params System.Linq.Expressions.Expression<Func<Release, object>>[] includeProperties)
         {
-            throw new NotImplementedException();
+            IQueryable<Release> query = UoW.Context.Releases;
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+            return query;
         }
 
         public Release Find(int id)
@@ -48,7 +39,7 @@ namespace Etsi.Ultimate.Repositories
 
         public void InsertOrUpdate(Release entity)
         {
-            if (entity.ReleaseId == default(int))
+            if (entity.Pk_ReleaseId == default(int))
             {
                 UoW.Context.SetAdded(entity);
             }
@@ -82,6 +73,5 @@ namespace Etsi.Ultimate.Repositories
 
     public interface IReleaseRepository : IEntityRepository<Release>
     {
-        List<Release> GetAllReleaseByIdReleaseStatus(Enum_ReleaseStatus releaseStatus);
     }
 }
