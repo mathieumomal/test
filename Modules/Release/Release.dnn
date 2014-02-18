@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="Release" type="Module" version="00.00.68">
+    <package name="Release" type="Module" version="00.01.00">
       <friendlyName>Release</friendlyName>
       <description>Release module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
@@ -129,6 +129,10 @@
             </assembly>
             <assembly>
               <name>Rhino.Mocks.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>EntityFramework.dll</name>
               <path>bin</path>
             </assembly>
           </assemblies>

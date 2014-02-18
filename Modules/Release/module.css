@@ -1,0 +1,13 @@
+
+.status{
+    font-weight: bold;
+}
+.open{
+    color : rgb(93, 175, 52);
+}
+.frozen, .freezeReach{
+    color : rgb(39, 116, 0);
+}
+.closed{
+    color : rgb(128, 4, 4);
+}

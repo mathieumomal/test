@@ -47,25 +47,29 @@ namespace Etsi.Ultimate.Module.Release
     /// -----------------------------------------------------------------------------
     public partial class View : ReleaseModuleBase, IActionable
     {
-        private static String freezeReach = "rgb(39, 116, 0)";
-
-        private static List<String> freezeDates = new List<string>()
-        {
-
-        };
+        private static String freezeReach = "freezeReach";
 
         protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
                 //Remplace ReleaseService by a mock (fake object)
-                ServicesFactory.Container.RegisterType<IReleaseService, ReleaseServiceMock>(new TransientLifetimeManager());
-
-                IReleaseService svc;
-                svc = ServicesFactory.Resolve<IReleaseService>();//Get the mock instead service classe
+                //ServicesFactory.Container.RegisterType<IReleaseService, ReleaseServiceMock>(new TransientLifetimeManager());
+                //ServicesFactory.Container.RegisterType<IReleaseService, ReleaseService>(new TransientLifetimeManager());
+                IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();//Get the mock instead service classe
 
                 List<DomainClasses.Release> releaseObjects = svc.GetAllReleases();
                 releasesTable.DataSource = releaseObjects;
+
+                //Show freezes if connected
+                if (UserInfo.UserID.Equals(-1))
+                {
+                    releasesTable.MasterTableView.GetColumn("Stage1FreezeDate").Visible = false;
+                    releasesTable.MasterTableView.GetColumn("Stage2FreezeDate").Visible = false;
+                    releasesTable.MasterTableView.GetColumn("Stage3FreezeDate").Visible = false;
+                }
+                //Button new
+                newRelease.Visible = false;
 
             }
             catch (Exception exc) //Module failed to load
@@ -96,28 +100,35 @@ namespace Etsi.Ultimate.Module.Release
             return null;
         }
 
+        /**
+         * Handler data cell
+         * 
+         * */
         public void releasesTable_ItemDataBound(object sender, Telerik.Web.UI.GridItemEventArgs e)
         {
             //Analyse on row
             if (e.Item is GridDataItem)
             {
-                GridDataItem dataItem = e.Item as GridDataItem;
-                DomainClasses.Release currentRelease = (DomainClasses.Release) e.Item.DataItem;
+                GridDataItem dataItem = e.Item as GridDataItem;//Get row
+                DomainClasses.Release currentRelease = (DomainClasses.Release) e.Item.DataItem;//GET row release
+
                 //Analyse column : Closure date
                 if (currentRelease.Enum_ReleaseStatus.ReleaseStatus.Equals("Closed"))
                 {
                     TableCell closureDate = dataItem["ClosureDate"];
-                    closureDate.Text =
+                    if (currentRelease.ClosureDate != null && currentRelease.ClosureMtgRef != null)
+                    {
+                        closureDate.Text =
                         new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.ClosureDate))
                             .Append(" (")
                             .Append(currentRelease.ClosureMtgRef)
                             .Append(")")
                             .ToString();
+                    }
                     closureDate.CssClass = currentRelease.Enum_ReleaseStatus.ReleaseStatus.ToLower();
                 }
 
                 DateTime now = DateTime.Now;
-
 
                 //Analyse column : Freeze 1
                 if (currentRelease.Stage1FreezeDate != null)
@@ -180,39 +191,9 @@ namespace Etsi.Ultimate.Module.Release
                         freeze3.CssClass = freezeReach;
                     }
                 }
-                
-                
-
             }
+
+
         }
     }
-
-
-    #region Useful Objects
-    public class ReleaseObjectView
-    {
-        public DomainClasses.Release release { get; set; }
-        public Properties properties { get; set; }
-
-        public ReleaseObjectView(DomainClasses.Release release, Properties properties)
-        {
-            this.release = release;
-            this.properties = properties;
-        }
-    }
-
-    public class Properties
-    {
-        public String statusColor_CSSClasse { get; set; }
-        public String closureDateColor_CSSClasse { get; set; }
-        public String closureDateCompl_String { get; set; }
-
-        public Properties()
-        {
-            this.statusColor_CSSClasse = "";
-            this.closureDateColor_CSSClasse = "";
-            this.closureDateCompl_String = "";
-        }
-    }
-    #endregion  
 }
