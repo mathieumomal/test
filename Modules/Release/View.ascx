@@ -55,16 +55,4 @@
             <telerik:GridButtonColumn HeaderStyle-width="30px" CommandName="seeSpec" Text="See related specifications" UniqueName="seeSpec" ButtonType="ImageButton" ImageUrl="~/DesktopModules/Release/images/specifications.png"></telerik:GridButtonColumn>
         </Columns>
     </MasterTableView>
-    <ClientSettings>
-    <ClientEvents OnRowMouseOver="RowMouseOver" OnRowMouseOut="RowMouseOut" />
-    </ClientSettings>
 </telerik:RadGrid>
-
-<script type="text/javascript">
-    function RowMouseOver(sender, eventArgs) {
-        $get(eventArgs.get_id()).className = "RowMouseOver";
-    }
-    function RowMouseOut(sender, eventArgs) {
-        $get(eventArgs.get_id()).className = "RowMouseOut";
-    }
-</script>

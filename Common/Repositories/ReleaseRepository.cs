@@ -41,7 +41,7 @@ namespace Etsi.Ultimate.Repositories
             IQueryable<Release> query = UoW.Context.Releases;
             foreach (var includeProperty in includeProperties)
             {
-                query = query.Include(includeProperty);
+                query = query.Include(includeProperty).OrderByDescending(c => c.Pk_ReleaseId);
             }
             return query;
         }
