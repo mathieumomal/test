@@ -51,7 +51,7 @@
                 </ItemTemplate>                    
             </telerik:GridTemplateColumn>
             <telerik:GridButtonColumn HeaderStyle-Width="2%" CommandName="see" Text="See details" UniqueName="see" ButtonType="ImageButton" ImageUrl="~/DesktopModules/Release/images/details.png"></telerik:GridButtonColumn>
-            <telerik:GridButtonColumn HeaderStyle-width="2%" CommandName="seeSpec" Text="See related specifications" UniqueName="seeSpec" ButtonType="ImageButton" ImageUrl="~/DesktopModules/Release/images/specifications.png"></telerik:GridButtonColumn>
+            <telerik:GridButtonColumn HeaderStyle-width="2%" CommandName="seeSpec" Text="See related specifications" UniqueName="seeSpec" ButtonType="ImageButton" ImageUrl="~/DesktopModules/Release/images/specifications.jpg"></telerik:GridButtonColumn>
         </Columns>
     </MasterTableView>
 </telerik:RadGrid>
