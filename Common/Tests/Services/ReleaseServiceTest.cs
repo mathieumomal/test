@@ -23,6 +23,7 @@ namespace Etsi.Ultimate.Tests.Services
             var releaseService = new ReleaseService();
             var releases = releaseService.GetAllReleases();
 
+
             Assert.AreEqual(3, releases.Count);
             Assert.AreEqual(2, releases.Where(t => t.Enum_ReleaseStatus.ReleaseStatus == "Frozen").ToList().Count);
 

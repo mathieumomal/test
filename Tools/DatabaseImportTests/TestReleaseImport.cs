@@ -6,7 +6,7 @@ using Domain = Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Tools.TmpDbDataAccess;
 using NUnit.Framework;
 using Rhino.Mocks;
-using Tests.FakeSets;
+using Etsi.Ultimate.Tests.FakeSets;
 using System.Collections.Generic;
 using System.Data.Entity;
 

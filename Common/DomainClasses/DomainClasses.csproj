@@ -45,6 +45,7 @@
     <Compile Include="Enum_ReleaseStatus.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Enum_SecurityRights.cs" />
     <Compile Include="Meeting.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
@@ -56,6 +57,7 @@
     <Compile Include="Remark.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="SecurityRoles.cs" />
     <Compile Include="UltimateModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

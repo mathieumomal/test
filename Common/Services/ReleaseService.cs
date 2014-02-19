@@ -20,9 +20,10 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public List<DomainClasses.Release> GetAllReleases()
         {
-            using (var UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var releaseManager = new ReleaseManager() { UoW = UoW };
+                var releaseManager = new ReleaseManager();
+                releaseManager.UoW = uoW;
                 var releases = releaseManager.GetAllReleases();
 
                 // No save needed

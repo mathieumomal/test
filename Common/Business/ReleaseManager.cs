@@ -22,6 +22,8 @@ namespace Etsi.Ultimate.Business
         public List<Release> GetAllReleases()
         {
             IReleaseRepository repo = RepositoryFactory.Resolve<IReleaseRepository>();
+            repo.UoW = UoW;
+            
             return repo.All.ToList();
         }
 

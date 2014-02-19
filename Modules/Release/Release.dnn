@@ -135,6 +135,10 @@
               <name>EntityFramework.dll</name>
               <path>bin</path>
             </assembly>
+            <assembly>
+              <name>EntityFramework.SqlServer.dll</name>
+              <path>bin</path>
+            </assembly>
           </assemblies>
         </component>
       </components>
