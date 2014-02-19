@@ -48,7 +48,8 @@ namespace Etsi.Ultimate.Module.Release
     /// -----------------------------------------------------------------------------
     public partial class View : ReleaseModuleBase, IActionable
     {
-        private static String freezeReach = "freezeReach";
+        private static String FreezeReach_READONLY_CSS = "freezeReach";
+        private static String closedColor_READONLY_CSS = "closed";
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -114,20 +115,17 @@ namespace Etsi.Ultimate.Module.Release
                 DomainClasses.Release currentRelease = (DomainClasses.Release) e.Item.DataItem;//GET row release
 
                 //Analyse column : Closure date
-                if (currentRelease.Enum_ReleaseStatus.ReleaseStatus.Equals("Closed"))
+                TableCell closureDate = dataItem["ClosureDate"];
+                if (currentRelease.ClosureDate != null && currentRelease.ClosureMtgRef != null)
                 {
-                    TableCell closureDate = dataItem["ClosureDate"];
-                    if (currentRelease.ClosureDate != null && currentRelease.ClosureMtgRef != null)
-                    {
-                        closureDate.Text =
-                        new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.ClosureDate))
-                            .Append(" (")
-                            .Append(currentRelease.ClosureMtgRef)
-                            .Append(")")
-                            .ToString();
-                    }
-                    closureDate.CssClass = currentRelease.Enum_ReleaseStatus.ReleaseStatus.ToLower();
+                    closureDate.Text =
+                    new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.ClosureDate))
+                        .Append(" (")
+                        .Append(currentRelease.ClosureMtgRef)
+                        .Append(")")
+                        .ToString();
                 }
+                closureDate.CssClass = closedColor_READONLY_CSS;
 
                 DateTime now = DateTime.Now;
 
@@ -146,7 +144,7 @@ namespace Etsi.Ultimate.Module.Release
                             .ToString();
                     }
                     if (now > dateStage1FreezeDate.Date)
-                        freeze1.CssClass = freezeReach;
+                        freeze1.CssClass = FreezeReach_READONLY_CSS;
                 }
                 
 
@@ -165,7 +163,7 @@ namespace Etsi.Ultimate.Module.Release
                             .ToString();
                     }
                     if (now > dateStage2FreezeDate.Date)
-                        freeze2.CssClass = freezeReach;
+                        freeze2.CssClass = FreezeReach_READONLY_CSS;
                 }
                
 
@@ -184,7 +182,7 @@ namespace Etsi.Ultimate.Module.Release
                             .ToString();
                     }
                     if (now > dateStage3FreezeDate.Date)
-                        freeze3.CssClass = freezeReach;
+                        freeze3.CssClass = FreezeReach_READONLY_CSS;
                 }
             }
 
