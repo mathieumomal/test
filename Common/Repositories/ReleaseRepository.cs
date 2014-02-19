@@ -16,7 +16,7 @@ namespace Etsi.Ultimate.Repositories
         public IUltimateUnitOfWork UoW{ get; set; }
         public ReleaseRepository(){}
 
-        private static string CACHE_KEY = "ULT_REPO_RELEASES_ALL";
+        
 
 
         #region IEntityRepository<Release> Membres
@@ -28,13 +28,7 @@ namespace Etsi.Ultimate.Repositories
         public IQueryable<Release> All
         {
             get {
-                
-                var cachedData = (IQueryable<Release>)CacheManager.Get(CACHE_KEY);
-                if (cachedData != null)
-                    return cachedData;
-                cachedData = AllIncluding(t => t.Enum_ReleaseStatus);
-                CacheManager.Insert(CACHE_KEY, cachedData);
-                return cachedData; 
+                return AllIncluding(t => t.Enum_ReleaseStatus);
             }
         }
 
@@ -70,7 +64,6 @@ namespace Etsi.Ultimate.Repositories
             {
                 UoW.Context.SetModified(entity);
             }
-            HttpRuntime.Cache.Remove(CACHE_KEY);
         }
 
         public void Delete(int id)

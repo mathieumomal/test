@@ -28,18 +28,6 @@ namespace Etsi.Ultimate.Tests.Repositories
         }
 
         [Test]
-        public void Release_GetAll_ToCache()
-        {
-            var repo = new ReleaseRepository() { UoW = GetUnitOfWork() };
-            var results = repo.All.ToList();
-
-            var cachedResult = (IQueryable<Release>)HttpRuntime.Cache["ULT_REPO_RELEASES_ALL"];
-            Assert.IsNotNull(cachedResult);
-
-            //Assert.AreEqual(3, results.Count);
-        }
-
-        [Test]
         public void Release_GetAllIncluding()
         {
             var repo = new ReleaseRepository() { UoW = GetUnitOfWork() };
