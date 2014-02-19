@@ -34,8 +34,8 @@ namespace Etsi.Ultimate.Tests.Repositories
             var results = repo.AllIncluding( t => t.Enum_ReleaseStatus).ToList();
 
             Assert.AreEqual(3, results.Count);
-            Assert.IsNotNull(results.Last().Enum_ReleaseStatus);
-            Assert.AreEqual("Open",results.Last().Enum_ReleaseStatus.ReleaseStatus);
+            Assert.IsNotNull(results.First().Enum_ReleaseStatus);
+            Assert.AreEqual("Open",results.First().Enum_ReleaseStatus.ReleaseStatus);
         }
 
         [Test]

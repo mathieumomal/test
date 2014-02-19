@@ -16,6 +16,7 @@ using System.Data;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Linq;
 using DotNetNuke.Services.Installer.Dependencies;
 using Etsi.Ultimate.Module.Release.Components;
 using DotNetNuke.Security;
@@ -59,6 +60,8 @@ namespace Etsi.Ultimate.Module.Release
                 IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();//Get the mock instead service classe
 
                 List<DomainClasses.Release> releaseObjects = svc.GetAllReleases();
+                releaseObjects.OrderByDescending(x => x.SortOrder);
+
                 releasesTable.DataSource = releaseObjects;
 
                 //Show freezes if connected
