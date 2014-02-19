@@ -54,13 +54,11 @@ namespace Etsi.Ultimate.Module.Release
         {
             try
             {
-                //Remplace ReleaseService by a mock (fake object)
-                //ServicesFactory.Container.RegisterType<IReleaseService, ReleaseServiceMock>(new TransientLifetimeManager());
-                //ServicesFactory.Container.RegisterType<IReleaseService, ReleaseService>(new TransientLifetimeManager());
+                //Example : mock to fake service layer -> ServicesFactory.Container.RegisterType<IReleaseService, ReleaseServiceMock>(new TransientLifetimeManager());
                 IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();//Get the mock instead service classe
 
                 List<DomainClasses.Release> releaseObjects = svc.GetAllReleases();
-                releaseObjects.OrderByDescending(x => x.SortOrder);
+                releaseObjects = releaseObjects.OrderByDescending(release => release.SortOrder).ToList();
 
                 releasesTable.DataSource = releaseObjects;
 
