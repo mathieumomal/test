@@ -9,8 +9,12 @@
  <telerik:RadGrid runat="server" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" ID="releasesTable" OnItemDataBound="releasesTable_ItemDataBound" OnCol AllowPaging="false" AllowSorting="false" AllowFilteringByColumn="false" AutoGenerateColumns="false">
     <MasterTableView ClientDataKeyNames="Pk_ReleaseId">
         <Columns>
-            <telerik:GridBoundColumn DataField="Pk_ReleaseId" HeaderText="Release Code" UniqueName="Pk_ReleaseId"></telerik:GridBoundColumn>
-            <telerik:GridBoundColumn DataField="Name" HeaderText="Name" UniqueName="name"></telerik:GridBoundColumn>
+            <telerik:GridBoundColumn DataField="Code" HeaderText="Release Code" UniqueName="Code"></telerik:GridBoundColumn>
+            <telerik:GridTemplateColumn DataField="Name" HeaderText="Name" UniqueName="Name">
+                <ItemTemplate>
+                    <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Name") %></div>  
+                </ItemTemplate> 
+            </telerik:GridTemplateColumn>
             <telerik:GridTemplateColumn DataField="Status" HeaderText="Status" UniqueName="Status">
                 <ItemTemplate>
                     <span class="status <%# DataBinder.Eval(Container.DataItem,"Enum_ReleaseStatus.ReleaseStatus").ToString().ToLower() %>"><%# DataBinder.Eval(Container.DataItem,"Enum_ReleaseStatus.ReleaseStatus") %></span>  
@@ -47,8 +51,20 @@
                     <span><%# DataBinder.Eval(Container.DataItem,"ClosureDate", "{0:yyyy-MM-dd}") %></span>  
                 </ItemTemplate>                    
             </telerik:GridTemplateColumn>
-            <telerik:GridButtonColumn HeaderStyle-Width="20px" CommandName="see" Text="See details" UniqueName="see" ButtonType="ImageButton" ImageUrl="~/DesktopModules/Release/images/details.png"></telerik:GridButtonColumn>
-            <telerik:GridButtonColumn HeaderStyle-width="20px" CommandName="seeSpec" Text="See related specifications" UniqueName="seeSpec" ButtonType="ImageButton" ImageUrl="~/DesktopModules/Release/images/specifications.gif"></telerik:GridButtonColumn>
+            <telerik:GridButtonColumn HeaderStyle-Width="30px" CommandName="see" Text="See details" UniqueName="see" ButtonType="ImageButton" ImageUrl="~/DesktopModules/Release/images/details.png"></telerik:GridButtonColumn>
+            <telerik:GridButtonColumn HeaderStyle-width="30px" CommandName="seeSpec" Text="See related specifications" UniqueName="seeSpec" ButtonType="ImageButton" ImageUrl="~/DesktopModules/Release/images/specifications.png"></telerik:GridButtonColumn>
         </Columns>
     </MasterTableView>
+    <ClientSettings>
+    <ClientEvents OnRowMouseOver="RowMouseOver" OnRowMouseOut="RowMouseOut" />
+    </ClientSettings>
 </telerik:RadGrid>
+
+<script type="text/javascript">
+    function RowMouseOver(sender, eventArgs) {
+        $get(eventArgs.get_id()).className = "RowMouseOver";
+    }
+    function RowMouseOut(sender, eventArgs) {
+        $get(eventArgs.get_id()).className = "RowMouseOut";
+    }
+</script>

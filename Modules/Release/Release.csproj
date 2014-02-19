@@ -129,7 +129,6 @@
     <Content Include="Documentation\Documentation.css" />
     <Content Include="Documentation\Documentation.html" />
     <Content Include="Edit.ascx" />
-    <Content Include="images\specifications.gif" />
     <Content Include="License.txt" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Settings.ascx" />
@@ -189,6 +188,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="images\" />
     <Folder Include="skin\" />
   </ItemGroup>
   <PropertyGroup>
@@ -225,4 +225,8 @@
   <Import Project="BuildScripts\ModulePackage.Targets" />
   <Target Name="AfterBuild" DependsOnTargets="PackageModule">
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

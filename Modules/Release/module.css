@@ -9,5 +9,10 @@
     color : rgb(39, 116, 0);
 }
 .closed{
-    color : rgb(128, 4, 4);
+    color : rgb(175, 40, 40);
+}
+.text-left
+{
+	text-align:left;
+	padding: 0 15px;
 }

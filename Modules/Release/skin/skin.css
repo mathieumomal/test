@@ -3,7 +3,9 @@
 .RadGrid_Default {
     width: 100%;
 	text-align:center;
-	border: none;
+	border: solid #ccc 1px;
+	border-width: 1px 1px 1px 1px;
+	border-radius:10px;
 }
 .RadGrid_Default .rgHeader,
 .RadGrid_Default th.rgResizeCol
@@ -28,4 +30,20 @@
 {
 	border-collapse: collapse;
 	border-spacing: 0;
+}
+.RadGrid_Default .rgRow td, .RadGrid_Default .rgAltRow td{
+	border-left: solid #ccc 1px;
+	border-width: 1px 1px 1px 1px;
+}
+.RowMouseOver td
+{
+	background-color: rgb(206, 245, 203) !important;
+	border-left: solid #ccc 1px;
+	border-width: 1px 1px 1px 1px;
+}
+.RowMouseOut td
+{
+	background: #f7f7f7;
+	border-left: solid #ccc 1px;
+	border-width: 1px 1px 1px 1px;
 }
