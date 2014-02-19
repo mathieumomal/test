@@ -135,20 +135,18 @@ namespace Etsi.Ultimate.Module.Release
                 if (currentRelease.Stage1FreezeDate != null)
                 {
                     DateTime dateStage1FreezeDate = (DateTime)currentRelease.Stage1FreezeDate;
-                    if (now > dateStage1FreezeDate.Date)
+                    TableCell freeze1 = dataItem["Stage1FreezeDate"];
+                    if (currentRelease.Stage1FreezeMtgRef != null)
                     {
-                        TableCell freeze1 = dataItem["Stage1FreezeDate"];
-                        if (currentRelease.Stage1FreezeMtgRef != null)
-                        {
-                            freeze1.Text =
-                            new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.Stage1FreezeDate))
-                                .Append(" (")
-                                .Append(currentRelease.Stage1FreezeMtgRef)
-                                .Append(")")
-                                .ToString();
-                        }
-                        freeze1.CssClass = freezeReach;
+                        freeze1.Text =
+                        new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.Stage1FreezeDate))
+                            .Append(" (")
+                            .Append(currentRelease.Stage1FreezeMtgRef)
+                            .Append(")")
+                            .ToString();
                     }
+                    if (now > dateStage1FreezeDate.Date)
+                        freeze1.CssClass = freezeReach;
                 }
                 
 
@@ -156,20 +154,18 @@ namespace Etsi.Ultimate.Module.Release
                 if (currentRelease.Stage2FreezeDate!=null)
                 {
                     DateTime dateStage2FreezeDate = (DateTime)currentRelease.Stage2FreezeDate;
-                    if (now > dateStage2FreezeDate.Date)
+                    TableCell freeze2 = dataItem["Stage2FreezeDate"];
+                    if (currentRelease.Stage2FreezeMtgRef != null)
                     {
-                        TableCell freeze2 = dataItem["Stage2FreezeDate"];
-                        if (currentRelease.Stage2FreezeMtgRef != null)
-                        {
-                            freeze2.Text =
-                            new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.Stage2FreezeDate))
-                                .Append(" (")
-                                .Append(currentRelease.Stage2FreezeMtgRef)
-                                .Append(")")
-                                .ToString();
-                        }
-                        freeze2.CssClass = freezeReach;
+                        freeze2.Text =
+                        new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.Stage2FreezeDate))
+                            .Append(" (")
+                            .Append(currentRelease.Stage2FreezeMtgRef)
+                            .Append(")")
+                            .ToString();
                     }
+                    if (now > dateStage2FreezeDate.Date)
+                        freeze2.CssClass = freezeReach;
                 }
                
 
@@ -177,20 +173,18 @@ namespace Etsi.Ultimate.Module.Release
                 if (currentRelease.Stage3FreezeDate != null)
                 {
                     DateTime dateStage3FreezeDate = (DateTime)currentRelease.Stage3FreezeDate;
-                    if (now > dateStage3FreezeDate.Date)
+                    TableCell freeze3 = dataItem["Stage3FreezeDate"];
+                    if (currentRelease.Stage3FreezeMtgRef != null)
                     {
-                        TableCell freeze3 = dataItem["Stage3FreezeDate"];
-                        if (currentRelease.Stage3FreezeMtgRef != null)
-                        {
-                            freeze3.Text =
-                            new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.Stage3FreezeDate))
-                                .Append(" (")
-                                .Append(currentRelease.Stage3FreezeMtgRef)
-                                .Append(")")
-                                .ToString();
-                        }
-                        freeze3.CssClass = freezeReach;
+                        freeze3.Text =
+                        new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.Stage3FreezeDate))
+                            .Append(" (")
+                            .Append(currentRelease.Stage3FreezeMtgRef)
+                            .Append(")")
+                            .ToString();
                     }
+                    if (now > dateStage3FreezeDate.Date)
+                        freeze3.CssClass = freezeReach;
                 }
             }
 
