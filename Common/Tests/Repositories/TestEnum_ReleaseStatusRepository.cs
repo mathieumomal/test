@@ -24,9 +24,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         {
             var repo = new EnumReleaseRepository(GetUnitOfWork());
             Assert.AreEqual(3, repo.All.ToList().Count);
-
-            var cachedResult = (IQueryable<Enum_ReleaseStatus>)HttpRuntime.Cache["ULT_REPO_ENUM_RELEASE_STATUS_ALL"];
-            Assert.IsNotNull(cachedResult);
+            
         }
 
         [Test]

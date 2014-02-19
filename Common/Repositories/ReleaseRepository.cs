@@ -16,9 +16,6 @@ namespace Etsi.Ultimate.Repositories
         public IUltimateUnitOfWork UoW{ get; set; }
         public ReleaseRepository(){}
 
-        
-
-
         #region IEntityRepository<Release> Membres
 
         /// <summary>

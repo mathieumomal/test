@@ -26,13 +26,7 @@ namespace Etsi.Ultimate.Repositories
         public IQueryable<Enum_ReleaseStatus> All
         {
             get { 
-                var cachedData = (IQueryable<Enum_ReleaseStatus>) CacheManager.Get(CACHE_KEY);
-                if (cachedData == null)
-                {
-                    cachedData = context.Enum_ReleaseStatus;
-                    CacheManager.Insert(CACHE_KEY, cachedData);
-                }
-                return cachedData; 
+                return context.Enum_ReleaseStatus;
             }
         }
 
