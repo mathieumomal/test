@@ -52,9 +52,13 @@
   <ItemGroup>
     <Compile Include="EnumReleaseRepository.cs" />
     <Compile Include="IEntityRepository.cs" />
+    <Compile Include="Security_IRightsRepository.cs" />
+    <Compile Include="Security_IRolesRepository.cs" />
     <Compile Include="IUltimateUnitOfWork.cs" />
     <Compile Include="ReleaseRepository.cs" />
     <Compile Include="RepositoryFactory.cs" />
+    <Compile Include="Security_RightsRepository.cs" />
+    <Compile Include="Security_RolesRepository.cs" />
     <Compile Include="UltimateUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

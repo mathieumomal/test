@@ -40,7 +40,8 @@ namespace Etsi.Ultimate.Repositories
             //Map of relation between Interfaces and classes
             container.RegisterType<IReleaseRepository, ReleaseRepository>(new TransientLifetimeManager());
             container.RegisterType<IUltimateUnitOfWork, UltimateUnitOfWork>(new TransientLifetimeManager());
-            
+            container.RegisterType<Security_IRightsRepository, Security_RightsRepository>(new TransientLifetimeManager());
+            container.RegisterType<Security_IRolesRepository, Security_RolesRepository>(new TransientLifetimeManager());
 
             _container = container;
         }

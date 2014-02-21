@@ -10,7 +10,7 @@ namespace Etsi.Ultimate.DomainClasses
     /// <summary>
     /// List all the roles that could be handled.
     /// </summary>
-    enum SecurityRoles
+    public enum SecurityRoles
     {
         Anonymous,              // Has not logged on the portal
         EolAccountOwner,        // Has logged on the portal = delegate.
