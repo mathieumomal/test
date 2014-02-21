@@ -2,7 +2,6 @@
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="View.ascx.cs" Inherits="Etsi.Ultimate.Module.Release.View" %>
 <%@ Import Namespace="System.Drawing" %>
-<link id="Link1" href="DesktopModules/Release/skin/skin.css" rel="stylesheet" type="text/css" runat="server" />
 
 <telerik:RadButton runat="server" ID="newRelease" Text="New"></telerik:RadButton>
 
