@@ -46,10 +46,10 @@
       <HintPath>..\..\bin\DotNetNuke.dll</HintPath>
     </Reference>
     <Reference Include="DotNetNuke.HttpModules">
-      <HintPath>C:\websites\etsi.org\bin\DotNetNuke.HttpModules.dll</HintPath>
+      <HintPath>..\..\Libs\DotNetNuke.HttpModules.dll</HintPath>
     </Reference>
     <Reference Include="DotNetNuke.Web.Client">
-      <HintPath>C:\websites\etsi.org\bin\DotNetNuke.Web.Client.dll</HintPath>
+      <HintPath>..\..\Libs\DotNetNuke.Web.Client.dll</HintPath>
     </Reference>
     <Reference Include="DotNetNuke.WebUtility, Version=4.2.1.783, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
