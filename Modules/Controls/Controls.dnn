@@ -1,0 +1,39 @@
+<dotnetnuke type="Package" version="5.0">
+  <packages>
+    <package name="UltimateComponents" type="Library" version="00.00.01">
+      <friendlyName>Ultimate Components</friendlyName>
+      <description>Ultimate user web controls</description>
+      <iconFile>Images/icon_extensions.gif</iconFile>
+      <owner>
+        <name>ETSI</name>
+        <organization>ETSI</organization>
+        <url>http://www.etsi.org</url>
+        <email>helpdesk@etsi.org</email>
+      </owner>
+      <license src="License.txt"></license>
+      <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
+      <dependencies>
+        <dependency type="CoreVersion">07.00.02</dependency>
+      </dependencies>
+
+      <components>
+        <component type="Assembly">
+          <assemblies>
+            <assembly>
+              <name>Etsi.Ultimate.Controls.dll</name>
+              <path>bin</path>
+            </assembly>
+          </assemblies>
+        </component>
+        <component type="ResourceFile">
+          <resourceFiles>
+            <basePath>controls/Ultimate</basePath>
+            <resourceFile>
+              <name>Resources.zip</name>
+            </resourceFile>
+          </resourceFiles>
+        </component>
+      </components>
+    </package>
+  </packages>
+</dotnetnuke>
