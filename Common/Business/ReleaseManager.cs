@@ -12,7 +12,7 @@ namespace Etsi.Ultimate.Business
     public class ReleaseManager
     {
         // Used for the caching of the releases.
-        private static string CACHE_KEY = "ULT_REPO_RELEASES_ALL";
+        private static string CACHE_KEY = "ULT_BIZ_RELEASES_ALL";
         
         public IUltimateUnitOfWork UoW {get; set;}
         

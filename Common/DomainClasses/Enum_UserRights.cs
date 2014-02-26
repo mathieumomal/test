@@ -9,7 +9,7 @@ namespace Etsi.Ultimate.DomainClasses
     /// <summary>
     /// List all the rights that can be granted to a user.
     /// </summary>
-    public enum Enum_SecurityRights
+    public enum Enum_UserRights
     {
         // Release related rights.
         Release_ViewCompleteList,

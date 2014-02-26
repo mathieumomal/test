@@ -11,6 +11,8 @@
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Releases_Enum_ReleaseStatus" ManuallyRouted="false" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Remark" Width="1.5" PointX="8.625" PointY="5.75" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Remarks_Releases" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Users_Groups" Width="1.5" PointX="2.625" PointY="6.5" FillColor="DarkSeaGreen" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Users_AdHoc_Roles" Width="1.5" PointX="2.625" PointY="8.625" FillColor="DarkSeaGreen" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

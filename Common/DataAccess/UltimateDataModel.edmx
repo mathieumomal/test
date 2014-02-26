@@ -9,6 +9,21 @@
           <EntitySet Name="Enum_ReleaseStatus" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_ReleaseStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Releases" EntityType="Etsi.Ultimate.DataAccess.Store.Releases" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Remarks" EntityType="Etsi.Ultimate.DataAccess.Store.Remarks" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Users_AdHoc_Roles" EntityType="Etsi.Ultimate.DataAccess.Store.Users_AdHoc_Roles" store:Type="Views" store:Schema="dbo" store:Name="Users_AdHoc_Roles">
+            <DefiningQuery>SELECT 
+      [Users_AdHoc_Roles].[UserID] AS [UserID], 
+      [Users_AdHoc_Roles].[PERSON_ID] AS [PERSON_ID], 
+      [Users_AdHoc_Roles].[RoleName] AS [RoleName]
+      FROM [dbo].[Users_AdHoc_Roles] AS [Users_AdHoc_Roles]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Users_Groups" EntityType="Etsi.Ultimate.DataAccess.Store.Users_Groups" store:Type="Views" store:Schema="dbo" store:Name="Users_Groups">
+            <DefiningQuery>SELECT 
+      [Users_Groups].[PERSON_ID] AS [PERSON_ID], 
+      [Users_Groups].[PLIST_ID] AS [PLIST_ID], 
+      [Users_Groups].[TB_ID] AS [TB_ID], 
+      [Users_Groups].[PERS_ROLE_CODE] AS [PERS_ROLE_CODE]
+      FROM [dbo].[Users_Groups] AS [Users_Groups]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="View_Meetings" EntityType="Etsi.Ultimate.DataAccess.Store.View_Meetings" store:Type="Views" store:Schema="dbo" store:Name="View_Meetings">
             <DefiningQuery>SELECT 
       [View_Meetings].[MTG_ID] AS [MTG_ID], 
@@ -127,6 +142,32 @@
           <Property Name="RemarkText" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.Users_AdHoc_Roles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="Users_AdHoc_Roles">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="RoleName" />
+          </Key>
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="PERSON_ID" Type="nvarchar" MaxLength="3750" />
+          <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="50" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.Users_Groups' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="Users_Groups">
+          <Key>
+            <PropertyRef Name="PERSON_ID" />
+            <PropertyRef Name="PLIST_ID" />
+            <PropertyRef Name="PERS_ROLE_CODE" />
+          </Key>
+          <Property Name="PERSON_ID" Type="int" Nullable="false" />
+          <Property Name="PLIST_ID" Type="int" Nullable="false" />
+          <Property Name="TB_ID" Type="int" />
+          <Property Name="PERS_ROLE_CODE" Type="varchar" Nullable="false" MaxLength="12" />
+        </EntityType>
+        <!--Errors Found During Generation:
       warning 6002: The table/view 'U3GPPDB.dbo.View_Meetings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="View_Meetings">
@@ -229,6 +270,8 @@
             <End Role="Release" EntitySet="Releases" />
             <End Role="Remark" EntitySet="Remarks" />
           </AssociationSet>
+          <EntitySet Name="Users_Groups" EntityType="Etsi.Ultimate.DataAccess.Users_Groups" />
+          <EntitySet Name="Users_AdHoc_Roles" EntityType="Etsi.Ultimate.DataAccess.Users_AdHoc_Roles" />
         </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -371,6 +414,26 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Users_Groups">
+          <Key>
+            <PropertyRef Name="PERSON_ID" />
+            <PropertyRef Name="PLIST_ID" />
+            <PropertyRef Name="PERS_ROLE_CODE" />
+          </Key>
+          <Property Type="Int32" Name="PERSON_ID" Nullable="false" />
+          <Property Type="Int32" Name="PLIST_ID" Nullable="false" />
+          <Property Type="Int32" Name="TB_ID" />
+          <Property Type="String" Name="PERS_ROLE_CODE" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Users_AdHoc_Roles">
+          <Key>
+            <PropertyRef Name="UserID" />
+            <PropertyRef Name="RoleName" />
+          </Key>
+          <Property Type="Int32" Name="UserID" Nullable="false" />
+          <Property Type="String" Name="PERSON_ID" MaxLength="3750" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="RoleName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -487,6 +550,25 @@
                 <ScalarProperty Name="Fk_PersonId" ColumnName="Fk_PersonId" />
                 <ScalarProperty Name="Fk_ReleaseId" ColumnName="Fk_ReleaseId" />
                 <ScalarProperty Name="Pk_RemarkId" ColumnName="Pk_RemarkId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users_Groups">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Users_Groups">
+              <MappingFragment StoreEntitySet="Users_Groups">
+                <ScalarProperty Name="PERS_ROLE_CODE" ColumnName="PERS_ROLE_CODE" />
+                <ScalarProperty Name="TB_ID" ColumnName="TB_ID" />
+                <ScalarProperty Name="PLIST_ID" ColumnName="PLIST_ID" />
+                <ScalarProperty Name="PERSON_ID" ColumnName="PERSON_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users_AdHoc_Roles">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Users_AdHoc_Roles">
+              <MappingFragment StoreEntitySet="Users_AdHoc_Roles">
+                <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+                <ScalarProperty Name="PERSON_ID" ColumnName="PERSON_ID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

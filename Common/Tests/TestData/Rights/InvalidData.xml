@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Rights>
+  <UserRole value="Anonymous">
+    <Right value="Release_ViewPartialList" State="*" />
+  </UserRole>
+  <UserRole value="Administrator">
+    <Right value="Release_ViewPartialList" State="*" />
+    <Right value="UnesxistingRight_ShouldBeIgnored" State="*" />
+  </UserRole>
+</Rights>

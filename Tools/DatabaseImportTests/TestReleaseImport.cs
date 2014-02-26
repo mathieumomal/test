@@ -209,6 +209,7 @@ namespace DatabaseImportTests
                     freeze_meeting = "SP-21"
                 }
                 );
+
             legacyDbSet.Add(
                 new Release()      // This release has a freeze meeting that is not passed => It's open
                 {
@@ -230,6 +231,17 @@ namespace DatabaseImportTests
                     defunct = false,
                 }
                 );
+            legacyDbSet.Add(
+                new Release()      // This release has a freeze meeting, but meeting can't be found ==> Frozen.
+                {
+                    Row_id = 5,
+                    Release_code = "R5",
+                    Release_description = "Release 5",
+                    Release_short_description = "Rel 5",
+                    defunct = false,
+                    freeze_meeting = "SP-234"
+                }
+                );
             legacyContext.Stub(ctx => ctx.Releases).Return(legacyDbSet);
 
             // Report
@@ -240,7 +252,7 @@ namespace DatabaseImportTests
             import.FillDatabase();
 
             // Test results
-            Assert.AreEqual(4, newDbSet.All().Count);
+            Assert.AreEqual(5, newDbSet.All().Count);
 
             var newRelease1 = newDbSet.All().Find(r => r.Code == "R1");
             Assert.AreEqual(3, newRelease1.Fk_ReleaseStatus);
@@ -253,6 +265,9 @@ namespace DatabaseImportTests
 
             var newRelease4 = newDbSet.All().Find(r => r.Code == "R4");
             Assert.AreEqual(1, newRelease4.Fk_ReleaseStatus);
+
+            var newRelease5 = newDbSet.All().Find(r => r.Code == "R5");
+            Assert.AreEqual(2, newRelease5.Fk_ReleaseStatus);
 
         }
 

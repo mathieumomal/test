@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Rights>
+  <UserRole value="Anonymous">
+    <Right value="Release_ViewPartialList" State="*" />
+  </UserRole>
+</Rights>

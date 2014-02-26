@@ -18,7 +18,7 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void Test_GetAllReleases()
         {
-            string releaseCacheKey = "ULT_REPO_RELEASES_ALL";
+            string releaseCacheKey = "ULT_BIZ_RELEASES_ALL";
             CacheManager.Clear(releaseCacheKey);
 
             // Setup the dependency manager, let's test both Service and business
@@ -39,7 +39,7 @@ namespace Etsi.Ultimate.Tests.Services
         public void Test_GetAllReleases_Cache()
         {
             // Clear the cache to ensure the test is not wrong.
-            string releaseCacheKey = "ULT_REPO_RELEASES_ALL";
+            string releaseCacheKey = "ULT_BIZ_RELEASES_ALL";
             string fakeDescription = "A Fake description";
             CacheManager.Clear(releaseCacheKey);
 

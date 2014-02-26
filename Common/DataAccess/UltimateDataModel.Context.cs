@@ -31,6 +31,8 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<Release> Releases { get; set; }
         public IDbSet<Meeting> Meetings { get; set; }
         public IDbSet<Remark> Remarks { get; set; }
+        public IDbSet<Users_Groups> Users_Groups { get; set; }
+        public IDbSet<Users_AdHoc_Roles> Users_AdHoc_Roles { get; set; }
     	
     	/**
     	 * This code is intended to enable testability of the different layers,

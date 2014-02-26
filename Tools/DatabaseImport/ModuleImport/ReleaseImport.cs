@@ -225,7 +225,8 @@ namespace DatabaseImport.ModuleImport
                     var enumId = releaseStatuses.Where(s => s.ReleaseStatus.Contains("Closed")).FirstOrDefault();
                     newRelease.Fk_ReleaseStatus = enumId.Enum_ReleaseStatusId;
                 }
-                else if (newRelease.Stage3FreezeDate != null && newRelease.Stage3FreezeDate < DateTime.Now)
+                else if ((newRelease.Stage3FreezeDate != null && newRelease.Stage3FreezeDate < DateTime.Now)
+                    || (newRelease.Stage3FreezeDate == null && newRelease.Stage3FreezeMtgRef != null))
                 {
                     newRelease.Fk_ReleaseStatus = releaseStatuses.Where(s => s.ReleaseStatus.Contains("Frozen")).FirstOrDefault().Enum_ReleaseStatusId;
                 }

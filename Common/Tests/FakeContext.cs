@@ -25,6 +25,12 @@ namespace Etsi.Ultimate.Tests
         public System.Data.Entity.IDbSet<Ultimate.DomainClasses.Remark> Remarks
         { get; set; }
 
+        public System.Data.Entity.IDbSet<Ultimate.DomainClasses.Users_Groups> Users_Groups
+        { get; set; }
+
+        public System.Data.Entity.IDbSet<Users_AdHoc_Roles> Users_AdHoc_Roles
+        { get; set; }
+
         public void SetModified(object entity)
         {
             Releases.Add((Release)entity);
@@ -60,5 +66,6 @@ namespace Etsi.Ultimate.Tests
         }
 
         #endregion
+
     }
 }

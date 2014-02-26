@@ -17,6 +17,8 @@ namespace Etsi.Ultimate.DataAccess
         IDbSet<Release> Releases { get; }
         IDbSet<Meeting> Meetings { get; }
         IDbSet<Remark> Remarks { get; }
+        IDbSet<Users_Groups> Users_Groups { get; }
+        IDbSet<Users_AdHoc_Roles> Users_AdHoc_Roles { get; }
 
         void SetModified(object entity);
         void SetAdded(object entity);
