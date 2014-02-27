@@ -175,28 +175,7 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.IsTrue(rights.HasRight(Enum_UserRights.Release_Create));
         }
 
-        [Test]
-        public void UserRightsContainer_RetrieveCommitteeIndependentRight()
-        {
-            var aContainer = new UserRightsContainer();
-            aContainer.AddRight(Enum_UserRights.Release_Create);
-
-            Assert.IsTrue(aContainer.HasRight(Enum_UserRights.Release_Create));
-            Assert.IsFalse(aContainer.HasRight(Enum_UserRights.Release_Edit));
-        }
-
-        [Test]
-        public void UserRightsContainer_RetrieveCommitteeRight()
-        {
-            var aContainer = new UserRightsContainer();
-            aContainer.AddRight(Enum_UserRights.Release_Create);
-
-            aContainer.AddRight(Enum_UserRights.Release_Edit, 22);
-
-            Assert.IsTrue(aContainer.HasRight(Enum_UserRights.Release_Create, 22));
-            Assert.IsTrue(aContainer.HasRight(Enum_UserRights.Release_Edit, 22));
-            Assert.IsFalse(aContainer.HasRight(Enum_UserRights.Release_Edit, 23));
-        }
+        
 
 
 

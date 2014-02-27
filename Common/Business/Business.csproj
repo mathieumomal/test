@@ -44,7 +44,6 @@
     <Compile Include="ReleaseManager.cs" />
     <Compile Include="IRightsManager.cs" />
     <Compile Include="RightsManager.cs" />
-    <Compile Include="UserRightsContainer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DomainClasses\DomainClasses.csproj">

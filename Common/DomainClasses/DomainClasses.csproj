@@ -63,6 +63,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="UserRightsContainer.cs" />
     <Compile Include="Users_AdHoc_Roles.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

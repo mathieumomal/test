@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Caching;
 
 namespace Etsi.Ultimate.Utils
 {
@@ -37,6 +38,17 @@ namespace Etsi.Ultimate.Utils
         public static void Insert(string key, object value)
         {
             HttpRuntime.Cache.Insert(key, value);
+        }
+
+        /// <summary>
+        /// Insert data into the cache for a limited number of time.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <param name="minutes"></param>
+        public static void InsertForLimitedTime(string key, object value, int minutes)
+        {
+            HttpRuntime.Cache.Insert(key, value, null, DateTime.Now.AddMinutes(10), Cache.NoSlidingExpiration);
         }
 
 

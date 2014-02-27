@@ -57,7 +57,7 @@ namespace Etsi.Ultimate.Business.Security
             ComputeCommitteeRights(cacheData, personID);
 
             // Update the cache
-            CacheManager.Insert(CACHE_BASE_STR + personID.ToString(), cacheData);
+            CacheManager.InsertForLimitedTime(CACHE_BASE_STR + personID.ToString(), cacheData, 10);
             return cacheData;
 
         }

@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\RightsManagerTest.cs" />
+    <Compile Include="DomainClasses\RightsContainerTest.cs" />
     <Compile Include="FakeContext.cs" />
     <Compile Include="FakeRepositories\ReleaseFakeRepository.cs" />
     <Compile Include="FakeRepositories\RightsFakeRepository.cs" />
