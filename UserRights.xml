@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Rights>
+  <UserRole value="Anonymous">
+    <Right value="Release_ViewPartialList"/>
+	<Right value="Release_ViewLimitedDetails"/>
+  </UserRole>
+  
+  <!-- The rights that are defined with the EOL account owner role are not repeated in the subsequent roles, because all further roles
+		are limited to eol Account owners. -->
+  <UserRole value="EolAccountOwner">
+    <Right value="Release_ViewCompleteList"/>
+	<Right value="Release_ViewDetails"/>
+  </UserRole>
+  <UserRole value="StaffMember">
+	<Right value="Remarks_ViewPrivate"/>
+  </UserRole>
+  <UserRole value="CommitteeOfficial">
+  </UserRole>
+  <UserRole value="WorkPlanManager">
+	<Right value="Remarks_ViewPrivate"/>
+  </UserRole>
+  <UserRole value="SuperUser">
+	<Right value="Release_Create"/>
+	<Right value="Release_Edit"/>
+	<Right value="Release_Freeze"/>
+	<Right value="Release_Close"/>
+	<Right value="Remarks_ViewPrivate"/>
+  </UserRole>
+  <UserRole value="Administrator">
+	<Right value="Release_Create"/>
+	<Right value="Release_Edit"/>
+	<Right value="Release_Freeze"/>
+	<Right value="Release_Close"/>
+	<Right value="Remarks_ViewPrivate"/>
+  </UserRole>
+</Rights>
