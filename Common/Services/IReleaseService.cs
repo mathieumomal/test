@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Services
 {
@@ -8,6 +9,6 @@ namespace Etsi.Ultimate.Services
     /// </summary>
     public interface IReleaseService
     {
-        List<DomainClasses.Release> GetAllReleases();
+        KeyValuePair<List<DomainClasses.Release>, UserRightsContainer> GetAllReleases(int personID);
     }
 }

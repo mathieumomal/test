@@ -20,7 +20,7 @@ using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.UI.Utilities;
 
-namespace Christoc.Modules.WorkItem
+namespace Etsi.Ultimate.Module.WorkItem
 {
     /// -----------------------------------------------------------------------------
     /// <summary>
@@ -42,6 +42,7 @@ namespace Christoc.Modules.WorkItem
             try
             {
                 var tc = new ItemController();
+                
                 rptItemList.DataSource = tc.GetItems(ModuleId);
                 rptItemList.DataBind();
             }

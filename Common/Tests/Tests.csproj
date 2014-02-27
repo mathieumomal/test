@@ -120,8 +120,11 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="TestData\Rights\DuplicateData.xml" />
+    <Content Include="TestData\Rights\Exemple.xml" />
     <Content Include="TestData\Rights\InvalidData.xml" />
-    <Content Include="TestData\Rights\SimpleData.xml" />
+    <Content Include="TestData\Rights\SimpleData.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

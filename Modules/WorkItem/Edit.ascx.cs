@@ -15,7 +15,7 @@ using DotNetNuke.Entities.Users;
 using Christoc.Modules.WorkItem.Components;
 using DotNetNuke.Services.Exceptions;
 
-namespace Christoc.Modules.WorkItem
+namespace Etsi.Ultimate.Module.WorkItem
 {
     /// -----------------------------------------------------------------------------
     /// <summary>   

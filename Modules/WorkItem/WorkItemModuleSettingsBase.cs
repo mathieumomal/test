@@ -12,7 +12,7 @@
 
 using DotNetNuke.Entities.Modules;
 
-namespace Christoc.Modules.WorkItem
+namespace Etsi.Ultimate.Module.WorkItem
 {
     public class WorkItemModuleSettingsBase : ModuleSettingsBase
     {

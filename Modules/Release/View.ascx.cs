@@ -30,6 +30,7 @@ using Microsoft.Practices.ObjectBuilder2;
 using Rhino.Mocks;
 using Telerik.Web.UI;
 using Microsoft.Practices.Unity;
+using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Module.Release
 {
@@ -58,21 +59,26 @@ namespace Etsi.Ultimate.Module.Release
                 //Example : mock to fake service layer -> ServicesFactory.Container.RegisterType<IReleaseService, ReleaseServiceMock>(new TransientLifetimeManager());
                 IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();//Get the mock instead service classe
 
-                List<DomainClasses.Release> releaseObjects = svc.GetAllReleases();
-                releaseObjects = releaseObjects.OrderByDescending(release => release.SortOrder).ToList();
+                //Example : mock to fake rights manager : ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
 
-                releasesTable.DataSource = releaseObjects;
+                KeyValuePair<List<DomainClasses.Release>,UserRightsContainer> releaseRightsObjects = svc.GetAllReleases(UserInfo.UserID);
+                List<DomainClasses.Release> releaseObjectsList = releaseRightsObjects.Key.OrderByDescending(release => release.SortOrder).ToList();
+
+                releasesTable.DataSource = releaseObjectsList;
 
                 //Show freezes if connected
-                if (UserInfo.UserID.Equals(-1))
+                if (!releaseRightsObjects.Value.HasRight(Enum_UserRights.Release_ViewCompleteDetails))
                 {
                     releasesTable.MasterTableView.GetColumn("Stage1FreezeDate").Visible = false;
                     releasesTable.MasterTableView.GetColumn("Stage2FreezeDate").Visible = false;
                     releasesTable.MasterTableView.GetColumn("Stage3FreezeDate").Visible = false;
                 }
                 //Button new
-                newRelease.Visible = false;
-
+                if(releaseRightsObjects.Value.HasRight(Enum_UserRights.Release_Create)){
+                    newRelease.Visible = true;
+                }else{
+                    newRelease.Visible = false;
+                }
             }
             catch (Exception exc) //Module failed to load
             {

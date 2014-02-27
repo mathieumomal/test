@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="WorkItem" type="Module" version="00.00.01">
+    <package name="WorkItem" type="Module" version="00.00.03">
       <friendlyName>WorkItem</friendlyName>
       <description>Christoc.com WorkItem module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
@@ -92,7 +92,7 @@
         <component type="Assembly">
           <assemblies>
             <assembly>
-              <name>WorkItem.dll</name>
+              <name>Etsi.Ultimate.Module.WorkItem.dll</name>
               <path>bin</path>
             </assembly>
           </assemblies>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Business.Security;
 
 namespace Etsi.Ultimate.Services
 {
@@ -11,7 +12,7 @@ namespace Etsi.Ultimate.Services
     {
         #region IReleaseService Membres
 
-        public List<DomainClasses.Release> GetAllReleases()
+        public KeyValuePair<List<DomainClasses.Release>, UserRightsContainer> GetAllReleases(int personID)
         {
             var releases = new List<Release>();
             var statusFrozen = new Enum_ReleaseStatus() {Enum_ReleaseStatusId = 2, ReleaseStatus = "Frozen"};
@@ -61,7 +62,10 @@ namespace Etsi.Ultimate.Services
                 Enum_ReleaseStatus = statusClosed
             });
 
-            return releases;
+            UserRightsContainer userRightsContainer = new UserRightsContainer();
+            userRightsContainer.AddRight(Enum_UserRights.Release_Freeze);
+            userRightsContainer.AddRight(Enum_UserRights.Release_Close);
+            return new KeyValuePair<List<Release>,UserRightsContainer>(releases, userRightsContainer);
         }
 
         #endregion
