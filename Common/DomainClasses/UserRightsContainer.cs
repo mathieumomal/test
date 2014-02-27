@@ -98,5 +98,44 @@ namespace Etsi.Ultimate.DomainClasses
             }
 
         }
+
+        /// <summary>
+        /// Removes a right from the general rights of the users
+        /// Removes the rights for the committees right as well if removeFromCommittees is true.
+        /// </summary>
+        /// <param name="right"></param>
+        /// <param name="removeFromCommittees"></param>
+        public void RemoveRight(Enum_UserRights right, bool removeFromCommittees)
+        {
+            RemoveRight(right, null);
+
+            if (removeFromCommittees)
+            {
+                foreach (var key in committeeRights.Keys)
+                {
+                    RemoveRight(right, key);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes a right from the committee related rights of the user.
+        /// </summary>
+        /// <param name="right"></param>
+        /// <param name="committee"></param>
+        public void RemoveRight(Enum_UserRights right, int? committee)
+        {
+            if (!committee.HasValue)
+                completeRights.Remove(right);
+            else
+            {
+                int id = committee.Value;
+                if (committeeRights.ContainsKey(id) && committeeRights[id] != null)
+                {
+                    committeeRights[id].Remove(right);
+                }
+            }
+        }
+
     }
 }
