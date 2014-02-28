@@ -7,6 +7,7 @@
     <Schema Namespace="Etsi.Ultimate.DataAccess.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="EtsiUltimateDataAccessStoreContainer">
           <EntitySet Name="Enum_ReleaseStatus" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_ReleaseStatus" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="History" EntityType="Etsi.Ultimate.DataAccess.Store.History" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Releases" EntityType="Etsi.Ultimate.DataAccess.Store.Releases" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Remarks" EntityType="Etsi.Ultimate.DataAccess.Store.Remarks" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Users_AdHoc_Roles" EntityType="Etsi.Ultimate.DataAccess.Store.Users_AdHoc_Roles" store:Type="Views" store:Schema="dbo" store:Name="Users_AdHoc_Roles">
@@ -78,6 +79,10 @@
       [View_Meetings].[Creation_Date] AS [Creation_Date]
       FROM [dbo].[View_Meetings] AS [View_Meetings]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="FK_History_Releases" Association="Etsi.Ultimate.DataAccess.Store.FK_History_Releases">
+            <End Role="Releases" EntitySet="Releases" />
+            <End Role="History" EntitySet="History" />
+          </AssociationSet>
           <AssociationSet Name="FK_Releases_Enum_ReleaseStatus" Association="Etsi.Ultimate.DataAccess.Store.FK_Releases_Enum_ReleaseStatus">
             <End Role="Enum_ReleaseStatus" EntitySet="Enum_ReleaseStatus" />
             <End Role="Releases" EntitySet="Releases" />
@@ -93,6 +98,16 @@
           </Key>
           <Property Name="Enum_ReleaseStatusId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="ReleaseStatus" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="History">
+          <Key>
+            <PropertyRef Name="Pk_HistoryId" />
+          </Key>
+          <Property Name="Pk_HistoryId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Fk_ReleaseId" Type="int" />
+          <Property Name="Fk_PersonId" Type="int" />
+          <Property Name="CreationDate" Type="datetime" />
+          <Property Name="HistoryText" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="Releases">
           <Key>
@@ -229,6 +244,18 @@
           <Property Name="TB_ID" Type="int" />
           <Property Name="Creation_Date" Type="datetime" />
         </EntityType>
+        <Association Name="FK_History_Releases">
+          <End Role="Releases" Type="Etsi.Ultimate.DataAccess.Store.Releases" Multiplicity="0..1" />
+          <End Role="History" Type="Etsi.Ultimate.DataAccess.Store.History" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Releases">
+              <PropertyRef Name="Pk_ReleaseId" />
+            </Principal>
+            <Dependent Role="History">
+              <PropertyRef Name="Fk_ReleaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Releases_Enum_ReleaseStatus">
           <End Role="Enum_ReleaseStatus" Type="Etsi.Ultimate.DataAccess.Store.Enum_ReleaseStatus" Multiplicity="0..1" />
           <End Role="Releases" Type="Etsi.Ultimate.DataAccess.Store.Releases" Multiplicity="*" />
@@ -272,6 +299,11 @@
           </AssociationSet>
           <EntitySet Name="Users_Groups" EntityType="Etsi.Ultimate.DataAccess.Users_Groups" />
           <EntitySet Name="Users_AdHoc_Roles" EntityType="Etsi.Ultimate.DataAccess.Users_AdHoc_Roles" />
+          <EntitySet Name="Histories" EntityType="Etsi.Ultimate.DataAccess.History" />
+          <AssociationSet Name="FK_History_Releases" Association="Etsi.Ultimate.DataAccess.FK_History_Releases">
+            <End Role="Release" EntitySet="Releases" />
+            <End Role="History" EntitySet="Histories" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -318,6 +350,7 @@
           <NavigationProperty Name="Remarks" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_Releases" FromRole="Release" ToRole="Remark" />
           <Property Type="String" Name="LAST_MOD_BY" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="LAST_MOD_TS" Precision="3" />
+          <NavigationProperty Name="Histories" Relationship="Etsi.Ultimate.DataAccess.FK_History_Releases" FromRole="Release" ToRole="History" />
         </EntityType>
         <EntityType Name="Meeting">
           <Key>
@@ -434,6 +467,29 @@
           <Property Type="String" Name="PERSON_ID" MaxLength="3750" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="RoleName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="History">
+          <Key>
+            <PropertyRef Name="Pk_HistoryId" />
+          </Key>
+          <Property Type="Int32" Name="Pk_HistoryId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="Fk_ReleaseId" />
+          <Property Type="Int32" Name="Fk_PersonId" />
+          <Property Type="DateTime" Name="CreationDate" Precision="3" />
+          <Property Type="String" Name="HistoryText" MaxLength="255" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Release" Relationship="Etsi.Ultimate.DataAccess.FK_History_Releases" FromRole="History" ToRole="Release" />
+        </EntityType>
+        <Association Name="FK_History_Releases">
+          <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.History" Role="History" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Release">
+              <PropertyRef Name="Pk_ReleaseId" />
+            </Principal>
+            <Dependent Role="History">
+              <PropertyRef Name="Fk_ReleaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -569,6 +625,17 @@
                 <ScalarProperty Name="RoleName" ColumnName="RoleName" />
                 <ScalarProperty Name="PERSON_ID" ColumnName="PERSON_ID" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Histories">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.History">
+              <MappingFragment StoreEntitySet="History">
+                <ScalarProperty Name="HistoryText" ColumnName="HistoryText" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="Fk_PersonId" ColumnName="Fk_PersonId" />
+                <ScalarProperty Name="Fk_ReleaseId" ColumnName="Fk_ReleaseId" />
+                <ScalarProperty Name="Pk_HistoryId" ColumnName="Pk_HistoryId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -46,6 +46,9 @@
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Enum_UserRights.cs" />
+    <Compile Include="History.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Meeting.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

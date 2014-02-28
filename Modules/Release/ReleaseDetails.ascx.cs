@@ -12,6 +12,7 @@ namespace Etsi.Ultimate.Module.Release
     public partial class ReleaseDetails : ReleaseModuleBase
     {
         protected RemarksControl RemarksControlComponent;
+        protected HistoryControl HistoryControlComponent;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -34,6 +35,7 @@ namespace Etsi.Ultimate.Module.Release
             lblClosureDate.Text = releaseObject.ClosureDate.ToString();
 
             RemarksControlComponent.LoadGrid(releaseObject.Remarks.ToList());
+            HistoryControlComponent.LoadGrid(releaseObject.Histories.ToList());
         }
 
         private void RemarksControlComponent_AddRemarkHandler(object sender, EventArgs e)

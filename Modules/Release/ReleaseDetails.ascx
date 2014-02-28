@@ -1,11 +1,12 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ReleaseDetails.ascx.cs" Inherits="Etsi.Ultimate.Module.Release.ReleaseDetails" %>
 
 <%@ Register TagPrefix="ult" TagName="RemarksControl" Src="../../controls/Ultimate/RemarksControl.ascx" %>
+<%@ Register TagPrefix="ult" TagName="HistoryControl" Src="../../controls/Ultimate/HistoryControl.ascx" %>
 
-<table>
+<table style="width:100%">
     <tr>
-        <td style="text-align:right">Release Code:</td>
-        <td style="text-align:left"><asp:Label ID="lblReleaseCode" runat="server"></asp:Label></td>
+        <td style="text-align:right;width:50%">Release Code:</td>
+        <td style="text-align:left;width:50%"><asp:Label ID="lblReleaseCode" runat="server"></asp:Label></td>
         
     </tr>
     <tr>
@@ -39,6 +40,16 @@
     <tr>
         <td colspan="2">
             <ult:remarkscontrol id="RemarksControlComponent" runat="server" />
+        </td>
+    </tr>
+     <tr>
+        <td colspan="2" style="text-align:left">
+            History
+        </td>
+    </tr>
+   <tr>
+        <td colspan="2">
+            <ult:HistoryControl id="HistoryControlComponent" runat="server" />
         </td>
     </tr>
 </table>

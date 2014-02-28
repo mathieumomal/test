@@ -54,7 +54,7 @@ namespace Etsi.Ultimate.Repositories
             if (cachedData != null)
                 return cachedData;
 
-            cachedData = AllIncluding(t => t.Enum_ReleaseStatus, t => t.Remarks).Where(x => x.Pk_ReleaseId == id).FirstOrDefault();
+            cachedData = AllIncluding(t => t.Enum_ReleaseStatus, t => t.Remarks, t=> t.Histories).Where(x => x.Pk_ReleaseId == id).FirstOrDefault();
 
             // Check that cache is still empty
             if (CacheManager.Get(String.Format(CACHE_ULT_RELEASES_ID, id)) == null)

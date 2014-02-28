@@ -25,6 +25,9 @@ namespace Etsi.Ultimate.Tests
         public System.Data.Entity.IDbSet<Ultimate.DomainClasses.Remark> Remarks
         { get; set; }
 
+        public System.Data.Entity.IDbSet<Ultimate.DomainClasses.History> Histories
+        { get; set; }
+
         public System.Data.Entity.IDbSet<Ultimate.DomainClasses.Users_Groups> Users_Groups
         { get; set; }
 
@@ -44,6 +47,8 @@ namespace Etsi.Ultimate.Tests
                 Meetings.Add((Meeting)entity);
             else if (entity.GetType() == typeof(Remark))
                 Remarks.Add((Remark)entity);
+            else if (entity.GetType() == typeof(History))
+                Histories.Add((History)entity);
             else if (entity.GetType() == typeof(Enum_ReleaseStatus))
                 Enum_ReleaseStatus.Add((Enum_ReleaseStatus)entity);
 
