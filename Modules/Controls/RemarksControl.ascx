@@ -28,24 +28,30 @@
                              <telerik:GridEditCommandColumn ButtonType="ImageButton" UniqueName="EditCommandColumn">
                              </telerik:GridEditCommandColumn>
                             <telerik:GridTemplateColumn DataField="CreationDate" HeaderText="Creation Date" UniqueName="CreationDate">
-                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="25%"/> 
+                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="125px"/> 
                                 <ItemTemplate>
                                     <span><%# DataBinder.Eval(Container.DataItem,"CreationDate", "{0:yyyy-MM-dd hh:mm}") %></span>  
                                 </ItemTemplate>                    
                             </telerik:GridTemplateColumn>
                             <telerik:GridTemplateColumn DataField="CreatedBy" HeaderText="Created By" UniqueName="CreatedBy">
-                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="25%"/> 
+                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="125px"/> 
                                 <ItemTemplate>
                                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Fk_PersonId") %></div>  
                                 </ItemTemplate> 
                             </telerik:GridTemplateColumn>
                             <telerik:GridTemplateColumn DataField="RemarkText" HeaderText="Remarks" UniqueName="RemarkText">
-                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="50%"/>
+                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True"/>
                                 <ItemTemplate>
                                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"RemarkText") %></div>  
                                 </ItemTemplate>
                                 <EditItemTemplate>
                                     <div class="text-left"><asp:TextBox ID="txtRemark" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "RemarkText") %>'></asp:TextBox></div>  
+                                </EditItemTemplate>                     
+                            </telerik:GridTemplateColumn>
+                            <telerik:GridTemplateColumn DataField="IsPublic" HeaderText="Remark Type" UniqueName="IsPublic">
+                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="100px"/>
+                                <EditItemTemplate>
+                                    <div class="text-left">Remark Type</div>  
                                 </EditItemTemplate>                     
                             </telerik:GridTemplateColumn>
                         </Columns>

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Telerik.Web.UI;
 
 namespace Etsi.Ultimate.Controls
 {
@@ -18,12 +19,14 @@ namespace Etsi.Ultimate.Controls
             IsEditMode = false;
             if (!IsPostBack)
             {
-                if (IsEditMode)
+                if (!IsEditMode)
                 {
-                    //releaseDetailTable.MasterTableView.EditMode = Telerik.Web.UI.GridEditMode.EditForms;
-                }
-                else
-                {
+                    GridEditCommandColumn editButtonColumn = (GridEditCommandColumn)releaseDetailTable.MasterTableView.GetColumn("EditCommandColumn");
+                    editButtonColumn.Visible = false;
+
+                    GridTemplateColumn isPublicColumn = (GridTemplateColumn)releaseDetailTable.MasterTableView.GetColumn("IsPublic");
+                    isPublicColumn.Visible = false;
+
                     txtAddRemark.Visible = false;
                     btnAddRemark.Visible = false;
                 }
