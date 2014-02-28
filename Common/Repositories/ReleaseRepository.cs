@@ -15,6 +15,7 @@ namespace Etsi.Ultimate.Repositories
     {
         public IUltimateUnitOfWork UoW{ get; set; }
         public ReleaseRepository(){}
+        private static string CACHE_ULT_RELEASES_ID = "ULT_RELEASES_ID_{0}";
 
         #region IEntityRepository<Release> Membres
 
@@ -48,7 +49,19 @@ namespace Etsi.Ultimate.Repositories
 
         public Release Find(int id)
         {
-            return UoW.Context.Releases.Find(id);
+            // Check in the cache
+            var cachedData = (Release)CacheManager.Get(String.Format(CACHE_ULT_RELEASES_ID, id));
+            if (cachedData != null)
+                return cachedData;
+
+            cachedData = AllIncluding(t => t.Enum_ReleaseStatus, t => t.Remarks).Where(x => x.Pk_ReleaseId == id).FirstOrDefault();
+
+            // Check that cache is still empty
+            if (CacheManager.Get(String.Format(CACHE_ULT_RELEASES_ID, id)) == null)
+                CacheManager.Insert(String.Format(CACHE_ULT_RELEASES_ID, id), cachedData);
+
+            return cachedData; 
+            //return UoW.Context.Releases.Find(id);
         }
 
         public void InsertOrUpdate(Release entity)

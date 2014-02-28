@@ -97,6 +97,13 @@
     <Compile Include="Components\FeatureController.cs" />
     <Compile Include="Components\ItemController.cs" />
     <Compile Include="Components\Item.cs" />
+    <Compile Include="ReleaseDetails.ascx.cs">
+      <DependentUpon>ReleaseDetails.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReleaseDetails.ascx.designer.cs">
+      <DependentUpon>ReleaseDetails.ascx</DependentUpon>
+    </Compile>
     <Compile Include="ReleaseModuleBase.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -131,6 +138,7 @@
     <Content Include="Documentation\Documentation.html" />
     <Content Include="Edit.ascx" />
     <Content Include="License.txt" />
+    <Content Include="ReleaseDetails.ascx" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Settings.ascx" />
     <Content Include="View.ascx" />
@@ -187,6 +195,10 @@
     <ProjectReference Include="..\..\Common\Utils\Utils.csproj">
       <Project>{ad1f6a1c-95b2-4274-a0c5-1f8ca9d9bb55}</Project>
       <Name>Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Controls\Controls.csproj">
+      <Project>{1330d828-a24f-4676-9081-c41204c35072}</Project>
+      <Name>Controls</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -30,6 +30,18 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        public Release GetReleaseById(int id)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var releaseManager = new ReleaseManager();
+                releaseManager.UoW = uoW;
+                var release = releaseManager.GetReleaseById(id);
+
+                return release;
+            }
+        }
+
         #endregion
     }
 }

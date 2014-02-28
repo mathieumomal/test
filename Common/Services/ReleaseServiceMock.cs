@@ -68,6 +68,11 @@ namespace Etsi.Ultimate.Services
             return new KeyValuePair<List<Release>,UserRightsContainer>(releases, userRightsContainer);
         }
 
+        public Release GetReleaseById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

@@ -60,6 +60,10 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Telerik.Web.UI, Version=2013.2.717.40, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Telerik.Web.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,12 +74,20 @@
     <Compile Include="FakeControl.ascx.designer.cs">
       <DependentUpon>FakeControl.ascx</DependentUpon>
     </Compile>
+    <Compile Include="RemarksControl.ascx.cs">
+      <DependentUpon>RemarksControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RemarksControl.ascx.designer.cs">
+      <DependentUpon>RemarksControl.ascx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="License.txt" />
     <Content Include="module.css" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="FakeControl.ascx" />
+    <Content Include="RemarksControl.ascx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Controls.dnn" />
@@ -89,6 +101,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_LocalResources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\DomainClasses\DomainClasses.csproj">
+      <Project>{d5bdede9-d397-411c-ae94-1646836406ba}</Project>
+      <Name>DomainClasses</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

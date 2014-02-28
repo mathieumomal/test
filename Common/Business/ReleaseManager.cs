@@ -48,6 +48,11 @@ namespace Etsi.Ultimate.Business
             return new KeyValuePair<List<Release>, UserRightsContainer>(cachedData, personRights); ;
         }
 
-
+        public Release GetReleaseById(int id)
+        {
+            IReleaseRepository repo = RepositoryFactory.Resolve<IReleaseRepository>();
+            repo.UoW = UoW;
+            return repo.Find(id);
+        } 
     }
 }
