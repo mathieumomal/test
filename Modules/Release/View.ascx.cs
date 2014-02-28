@@ -138,7 +138,7 @@ namespace Etsi.Ultimate.Module.Release
                 GridDataItem dataItem = e.Item as GridDataItem;//Get row
                 DomainClasses.Release currentRelease = (DomainClasses.Release) e.Item.DataItem;//GET row release
 
-                string detailsUrl = UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL("ReleaseDetails", "mid=" + 582 + "&ReleaseId=" + currentRelease.Pk_ReleaseId), this, PortalSettings, true, false, 390, 670);
+                string detailsUrl = UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL("ReleaseDetails", "mid=" + ModuleId + "&ReleaseId=" + currentRelease.Pk_ReleaseId), this, PortalSettings, true, false, 390, 670);
                 dataItem["see"].Attributes.Add("onclick", "return " + detailsUrl);
 
                 //Analyse column : Closure date
