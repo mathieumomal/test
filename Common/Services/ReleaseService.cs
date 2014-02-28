@@ -30,6 +30,13 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+
+        public KeyValuePair<DomainClasses.Release, UserRightsContainer> GetRelease(int personID, int releaseID)
+        {
+            return new KeyValuePair<DomainClasses.Release, UserRightsContainer>(null,null);
+        }
+
+
         public Release GetReleaseById(int id)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())

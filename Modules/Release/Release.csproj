@@ -74,6 +74,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
@@ -97,12 +98,12 @@
     <Compile Include="Components\FeatureController.cs" />
     <Compile Include="Components\ItemController.cs" />
     <Compile Include="Components\Item.cs" />
-    <Compile Include="ReleaseDetails.ascx.cs">
-      <DependentUpon>ReleaseDetails.ascx</DependentUpon>
+    <Compile Include="ReleaseDetails.aspx.cs">
+      <DependentUpon>ReleaseDetails.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="ReleaseDetails.ascx.designer.cs">
-      <DependentUpon>ReleaseDetails.ascx</DependentUpon>
+    <Compile Include="ReleaseDetails.aspx.designer.cs">
+      <DependentUpon>ReleaseDetails.aspx</DependentUpon>
     </Compile>
     <Compile Include="ReleaseModuleBase.cs">
       <SubType>ASPXCodeBehind</SubType>
@@ -138,7 +139,7 @@
     <Content Include="Documentation\Documentation.html" />
     <Content Include="Edit.ascx" />
     <Content Include="License.txt" />
-    <Content Include="ReleaseDetails.ascx" />
+    <Content Include="ReleaseDetails.aspx" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Settings.ascx" />
     <Content Include="View.ascx" />
@@ -206,6 +207,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="App_LocalResources\ReleaseDetails.aspx.resx">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

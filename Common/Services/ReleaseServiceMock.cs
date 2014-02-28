@@ -12,6 +12,12 @@ namespace Etsi.Ultimate.Services
     {
         #region IReleaseService Membres
 
+        public KeyValuePair<DomainClasses.Release, UserRightsContainer> GetRelease(int personID, int releaseID)
+        {
+            KeyValuePair<List<DomainClasses.Release>, UserRightsContainer> listeReleases = GetAllReleases(personID);
+            return new KeyValuePair<DomainClasses.Release, UserRightsContainer>(listeReleases.Key.Find(x => x.Pk_ReleaseId == releaseID),listeReleases.Value);
+        }
+
         public KeyValuePair<List<DomainClasses.Release>, UserRightsContainer> GetAllReleases(int personID)
         {
             var releases = new List<Release>();

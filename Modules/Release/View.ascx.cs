@@ -52,8 +52,9 @@ namespace Etsi.Ultimate.Module.Release
     {
         private static String FreezeReach_READONLY_CSS = "freezeReach";
         private static String closedColor_READONLY_CSS = "closed";
-        
+
         public static readonly string DsId_Key = "ETSI_DS_ID";
+
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -66,13 +67,13 @@ namespace Etsi.Ultimate.Module.Release
 
                 //Example : mock to fake rights manager : ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
 
-                KeyValuePair<List<DomainClasses.Release>, UserRightsContainer> releaseRightsObjects = svc.GetAllReleases( personId );
+                KeyValuePair<List<DomainClasses.Release>,UserRightsContainer> releaseRightsObjects = svc.GetAllReleases(UserInfo.UserID);
                 List<DomainClasses.Release> releaseObjectsList = releaseRightsObjects.Key.OrderByDescending(release => release.SortOrder).ToList();
 
                 releasesTable.DataSource = releaseObjectsList;
 
                 //Show freezes if connected
-                if (!releaseRightsObjects.Value.HasRight(Enum_UserRights.Release_ViewCompleteList))
+                if (!releaseRightsObjects.Value.HasRight(Enum_UserRights.Release_ViewCompleteDetails))
                 {
                     releasesTable.MasterTableView.GetColumn("Stage1FreezeDate").Visible = false;
                     releasesTable.MasterTableView.GetColumn("Stage2FreezeDate").Visible = false;
@@ -125,6 +126,36 @@ namespace Etsi.Ultimate.Module.Release
                 return Convert.ToDateTime(date).ToString("yyyy-MM-dd");
             return null;
         }
+
+
+        /// <summary>
+        /// Open a popup window
+        /// </summary>
+        /// <param name="currentPage">Current page</param>
+        /// <param name="window">Window </param>
+        /// <param name="htmlPage">Popup page</param>
+        /// <param name="width">Width of the window</param>
+        /// <param name="height">Height of the window</param>
+        public static void OpenWindow(Page currentPage, String window, String htmlPage, Int32 width, Int32 height, Type winType)
+        {
+            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            sb.Append("popWin=window.open('");
+            sb.Append(htmlPage);
+            sb.Append("','");
+            sb.Append(window);
+            sb.Append("','width=");
+            sb.Append(width);
+            sb.Append(",height=");
+            sb.Append(height);
+            sb.Append(",toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no");
+            sb.Append("');");
+            sb.Append("popWin.focus();");
+
+            //UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL("ReleaseDetails", "mid=" + this.ModuleId + paramList), this, PortalSettings, true, false, 390, 670);
+            ScriptManager.RegisterClientScriptBlock(currentPage, winType, "OpenWindow", sb.ToString(), true);
+        }
+
+        
 
         /**
          * Handler data cell
@@ -211,9 +242,30 @@ namespace Etsi.Ultimate.Module.Release
                     if (now > dateStage3FreezeDate.Date)
                         freeze3.CssClass = FreezeReach_READONLY_CSS;
                 }
+
+                //Set ReleaseId for details
+                ImageButton details = dataItem["releaseDetails"].Controls[0] as ImageButton;
+                details.CommandArgument = currentRelease.Pk_ReleaseId.ToString();                
             }
 
 
+        }
+
+        protected void releasesTable_ItemCommand(object source, GridCommandEventArgs e)
+        {
+            if (e.CommandName == "releaseDetails")
+            {
+                System.Text.StringBuilder RedirectionURL = new System.Text.StringBuilder();
+                RedirectionURL.Append("/desktopmodules/Release/ReleaseDetails.aspx");
+                if (e.CommandArgument != null)
+                {
+                    RedirectionURL.Append("?releaseId=");
+                    RedirectionURL.Append(e.CommandArgument);
+                }
+                RedirectionURL.Append("&UserID=");
+                RedirectionURL.Append(GetUserPersonId(UserInfo).ToString());
+                OpenWindow(this.Page, "Release details window", RedirectionURL.ToString(), 800, 800, this.GetType());
+            }
         }
     }
 }

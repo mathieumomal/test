@@ -10,6 +10,8 @@ namespace Etsi.Ultimate.Services
     public interface IReleaseService
     {
         KeyValuePair<List<DomainClasses.Release>, UserRightsContainer> GetAllReleases(int personID);
-        DomainClasses.Release GetReleaseById(int id);
+
+        KeyValuePair<DomainClasses.Release, UserRightsContainer> GetRelease(int personID, int releaseID);
+
     }
 }
