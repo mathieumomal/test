@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.Business.Security;
 using Microsoft.Practices.Unity;
 
-namespace Etsi.Ultimate.Business.Security
+namespace Etsi.Ultimate.Business
 {
     public class ManagerFactory
     {

@@ -10,6 +10,7 @@ using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Tests.FakeRepositories;
 using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Business.Security;
 
 namespace Etsi.Ultimate.Tests.Services
