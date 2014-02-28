@@ -29,6 +29,7 @@ namespace Etsi.Ultimate.Services
                 var releases = releaseManager.GetAllReleases();
                 //Get user rights
                 var rightManager = ManagerFactory.Resolve<IRightsManager>();
+                rightManager.UoW = uoW;
                 var personRights = rightManager.GetRights(personID);
                 
                 // No save needed

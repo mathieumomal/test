@@ -37,6 +37,11 @@ namespace Etsi.Ultimate.Business.Security
         /// <returns></returns>
         public UserRightsContainer GetRights(int personID)
         {
+            // Check that we can do the query
+            if (UoW == null)
+                throw new InvalidOperationException("You must define UoW before calling GetRights");
+
+
             var cacheData = (UserRightsContainer)CacheManager.Get(CACHE_BASE_STR+personID.ToString());
             if (cacheData != null)
             {
@@ -92,7 +97,8 @@ namespace Etsi.Ultimate.Business.Security
             }
 
             // Let's check for the DNN Rights
-            var otherRoles = repo.GetAllAdHocRoles().Where(p => p.PERSON_ID == personID.ToString()).Select(r => r.RoleName).ToList();
+            string strPersonID = personID.ToString();
+            var otherRoles = repo.GetAllAdHocRoles().Where(p => p.PERSON_ID == strPersonID).Select(r => r.RoleName).ToList();
             if (otherRoles.Contains(ADMIN_GROUP))
                 roles.Add(Enum_UserRoles.Administrator);
             if (otherRoles.Contains(WORKPLAN_MANAGER_GROUP))

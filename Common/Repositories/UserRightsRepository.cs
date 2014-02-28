@@ -25,7 +25,7 @@ namespace Etsi.Ultimate.Repositories
 
         public UserRightsRepository()
         {
-            XmlDocumentPath = "../UserRights.xml";
+            XmlDocumentPath = ServerTopology.GetServerRootPath()+ "./UserRights.xml";
         }
 
         /// <summary>

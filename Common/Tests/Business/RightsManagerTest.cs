@@ -10,6 +10,7 @@ using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Tests.FakeRepositories;
 using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Utils;
+using Rhino.Mocks;
 
 namespace Etsi.Ultimate.Tests.Business
 {
@@ -118,6 +119,7 @@ namespace Etsi.Ultimate.Tests.Business
             RepositoryFactory.Container.RegisterType<IUserRightsRepository, RightsFakeRepository>(new TransientLifetimeManager());
 
             var rightsRetriever = new RightsManager();
+            rightsRetriever.UoW = GetUnitOfWork();
 
             var rights = rightsRetriever.GetRights(0);
             Assert.IsTrue(rights.HasRight(Enum_UserRights.Release_ViewLimitedDetails));
@@ -132,6 +134,7 @@ namespace Etsi.Ultimate.Tests.Business
             RepositoryFactory.Container.RegisterType<IUserRightsRepository, RightsFakeRepository>(new TransientLifetimeManager());
 
             var rightsRetriever = new RightsManager();
+            rightsRetriever.UoW = GetUnitOfWork();
 
             var rights = rightsRetriever.GetRights(UserRolesFakeRepository.SPECMGR_ID);
             Assert.IsTrue(rights.HasRight(Enum_UserRights.Release_ViewDetails));
@@ -146,6 +149,7 @@ namespace Etsi.Ultimate.Tests.Business
             RepositoryFactory.Container.RegisterType<IUserRightsRepository, RightsFakeRepository>(new TransientLifetimeManager());
 
             var rightsRetriever = new RightsManager();
+            rightsRetriever.UoW = GetUnitOfWork();
 
             var rights = rightsRetriever.GetRights(UserRolesFakeRepository.CHAIRMAN_ID);
             Assert.IsTrue(rights.HasRight(Enum_UserRights.Release_Close, UserRolesFakeRepository.TB_ID1));
@@ -161,6 +165,7 @@ namespace Etsi.Ultimate.Tests.Business
             RepositoryFactory.Container.RegisterType<IUserRightsRepository, RightsFakeRepository>(new TransientLifetimeManager());
 
             var rightsRetriever = new RightsManager();
+            rightsRetriever.UoW = GetUnitOfWork();
 
             var rights = rightsRetriever.GetRights(UserRolesFakeRepository.ADMINISTRATOR_ID);
             Assert.IsNotNull(CacheManager.Get(cacheKey));
@@ -175,7 +180,21 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.IsTrue(rights.HasRight(Enum_UserRights.Release_Create));
         }
 
-        
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void GetRights_UoWShouldBeInitialized()
+        {
+
+            var rightsRetriever = new RightsManager();
+            var rightsUoW = rightsRetriever.GetRights(UserRolesFakeRepository.ADMINISTRATOR_ID); 
+
+        }
+
+        private IUltimateUnitOfWork GetUnitOfWork()
+        {
+            var iUnitOfWork = MockRepository.GenerateMock<IUltimateUnitOfWork>();
+            return iUnitOfWork;
+        }
 
 
 

@@ -51,23 +51,27 @@ namespace Etsi.Ultimate.Module.Release
     {
         private static String FreezeReach_READONLY_CSS = "freezeReach";
         private static String closedColor_READONLY_CSS = "closed";
+        
+        public static readonly string DsId_Key = "ETSI_DS_ID";
 
         protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
+                int personId = GetUserPersonId(UserInfo);
+
                 //Example : mock to fake service layer -> ServicesFactory.Container.RegisterType<IReleaseService, ReleaseServiceMock>(new TransientLifetimeManager());
                 IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();//Get the mock instead service classe
 
                 //Example : mock to fake rights manager : ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
 
-                KeyValuePair<List<DomainClasses.Release>,UserRightsContainer> releaseRightsObjects = svc.GetAllReleases(UserInfo.UserID);
+                KeyValuePair<List<DomainClasses.Release>, UserRightsContainer> releaseRightsObjects = svc.GetAllReleases( personId );
                 List<DomainClasses.Release> releaseObjectsList = releaseRightsObjects.Key.OrderByDescending(release => release.SortOrder).ToList();
 
                 releasesTable.DataSource = releaseObjectsList;
 
                 //Show freezes if connected
-                if (!releaseRightsObjects.Value.HasRight(Enum_UserRights.Release_ViewCompleteDetails))
+                if (!releaseRightsObjects.Value.HasRight(Enum_UserRights.Release_ViewCompleteList))
                 {
                     releasesTable.MasterTableView.GetColumn("Stage1FreezeDate").Visible = false;
                     releasesTable.MasterTableView.GetColumn("Stage2FreezeDate").Visible = false;
@@ -84,6 +88,19 @@ namespace Etsi.Ultimate.Module.Release
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
             }
+        }
+
+        private int GetUserPersonId(DotNetNuke.Entities.Users.UserInfo UserInfo)
+        {
+            if (UserInfo.UserID < 0)
+                return 0;
+            else
+            {
+                int personID;
+                if (Int32.TryParse(UserInfo.Profile.GetPropertyValue(DsId_Key), out personID))
+                    return personID;
+            }
+             return 0;
         }
 
         public ModuleActionCollection ModuleActions
