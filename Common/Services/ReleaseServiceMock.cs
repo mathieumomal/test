@@ -74,7 +74,8 @@ namespace Etsi.Ultimate.Services
             return new KeyValuePair<List<Release>,UserRightsContainer>(releases, userRightsContainer);
         }
 
-        public Release GetReleaseById(int id)
+
+        public KeyValuePair<Release, UserRightsContainer> GetReleaseById(int personID, int releaseId)
         {
             throw new NotImplementedException();
         }

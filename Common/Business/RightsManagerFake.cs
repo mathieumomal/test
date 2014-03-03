@@ -21,6 +21,8 @@ namespace Etsi.Ultimate.Business.Security
             userRightsContainer.AddRight(Enum_UserRights.Release_Close);
             userRightsContainer.AddRight(Enum_UserRights.Release_Freeze);
             userRightsContainer.AddRight(Enum_UserRights.Release_Create);
+            userRightsContainer.AddRight(Enum_UserRights.Release_Edit);
+            userRightsContainer.AddRight(Enum_UserRights.Release_ViewCompleteDetails);
             return userRightsContainer;
         }
 

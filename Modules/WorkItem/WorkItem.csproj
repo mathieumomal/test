@@ -152,7 +152,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>63861</DevelopmentServerPort>
+          <DevelopmentServerPort>57348</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://dnndev.me/desktopmodules/WorkItem</IISUrl>
           <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>

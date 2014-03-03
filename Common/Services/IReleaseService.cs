@@ -11,7 +11,11 @@ namespace Etsi.Ultimate.Services
     {
         KeyValuePair<List<DomainClasses.Release>, UserRightsContainer> GetAllReleases(int personID);
 
-        KeyValuePair<DomainClasses.Release, UserRightsContainer> GetRelease(int personID, int releaseID);
-
+        /// <summary>
+        /// Returns the details of a release, and the associated rights that user can perform on the release.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        KeyValuePair<DomainClasses.Release, UserRightsContainer> GetReleaseById(int personID, int releaseId);
     }
 }

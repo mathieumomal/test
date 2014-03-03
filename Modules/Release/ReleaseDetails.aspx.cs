@@ -32,13 +32,13 @@ namespace Etsi.Ultimate.Module.Release
 
             //Example : mock to fake rights manager : ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
 
-            KeyValuePair<DomainClasses.Release, DomainClasses.UserRightsContainer> releaseRightsObject = svc.GetRelease(UserId, ReleaseId);            
+            KeyValuePair<DomainClasses.Release, DomainClasses.UserRightsContainer> releaseRightsObject = svc.GetReleaseById(UserId, ReleaseId);            
 
             //Mock
             var statusClosed = new Domain.Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, ReleaseStatus = "Closed" };
             Domain.Release release = releaseRightsObject.Key;            
             FillGeneralTab(release);
-            manageButtonDisplay(release);
+            ManageButtonDisplay(release);
         }
 
         protected override void Render(HtmlTextWriter writer)
@@ -108,7 +108,9 @@ namespace Etsi.Ultimate.Module.Release
             UserId = (Request.QueryString["UserID"]!=null) ? int.Parse(Request.QueryString["UserID"]) : -1;
             ReleaseId = (Request.QueryString["releaseId"]!=null) ? int.Parse(Request.QueryString["releaseId"]) : -1;
         }
-        private void manageButtonDisplay(Domain.Release release)
+
+
+        private void ManageButtonDisplay(Domain.Release release)
         {
             string status = release.Enum_ReleaseStatus.ReleaseStatus;
             switch (status)

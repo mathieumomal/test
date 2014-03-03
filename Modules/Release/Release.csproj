@@ -229,7 +229,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>56592</DevelopmentServerPort>
+          <DevelopmentServerPort>57355</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://www.etsi.org/desktopmodules/Release</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

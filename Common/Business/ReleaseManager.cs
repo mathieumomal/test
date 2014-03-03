@@ -48,11 +48,40 @@ namespace Etsi.Ultimate.Business
             return new KeyValuePair<List<Release>, UserRightsContainer>(cachedData, personRights); ;
         }
 
-        public Release GetReleaseById(int id)
+
+        /// <summary>
+        /// Retrieves the data from one single release, and computes the associated rights.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public KeyValuePair<Release, UserRightsContainer> GetReleaseById(int personId, int id)
         {
+            // Computes the rights of the user. These are independant from the releases.
+            var rightManager = ManagerFactory.Resolve<IRightsManager>();
+            rightManager.UoW = UoW;
+            var personRights = rightManager.GetRights(personId);
+
             IReleaseRepository repo = RepositoryFactory.Resolve<IReleaseRepository>();
             repo.UoW = UoW;
-            return repo.Find(id);
+            var release = repo.AllIncluding(t => t.Remarks, t => t.Histories).Where(r => r.Pk_ReleaseId == id).FirstOrDefault();
+
+            if (release == null)
+                return new KeyValuePair<Release,UserRightsContainer>(null, null);
+
+            // remove some rights depending on release status:
+            // - a frozen release cannot be frozen.
+            // - a closed release can be neither frozen nor closed
+            if (release.Enum_ReleaseStatus.ReleaseStatus == "Frozen")
+            {
+                personRights.RemoveRight(Enum_UserRights.Release_Freeze, true);
+            }
+            else if (release.Enum_ReleaseStatus.ReleaseStatus == "Closed")
+            {
+                personRights.RemoveRight(Enum_UserRights.Release_Freeze, true);
+                personRights.RemoveRight(Enum_UserRights.Release_Close, true);
+            }
+
+            return new KeyValuePair<Release,UserRightsContainer>(repo.Find(id), personRights);
         } 
     }
 }

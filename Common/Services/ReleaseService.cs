@@ -19,33 +19,24 @@ namespace Etsi.Ultimate.Services
         /// Returns the list of all releases.
         /// </summary>
         /// <returns></returns>
-        public KeyValuePair<List<DomainClasses.Release>,UserRightsContainer> GetAllReleases(int personID)
+        public KeyValuePair<List<DomainClasses.Release>,UserRightsContainer> GetAllReleases(int personId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var releaseManager = new ReleaseManager();
                 releaseManager.UoW = uoW;
                 //Get list of releases
-                return releaseManager.GetAllReleases(personID);
+                return releaseManager.GetAllReleases(personId);
             }
         }
 
-
-        public KeyValuePair<DomainClasses.Release, UserRightsContainer> GetRelease(int personID, int releaseID)
-        {
-            return new KeyValuePair<DomainClasses.Release, UserRightsContainer>(null,null);
-        }
-
-
-        public Release GetReleaseById(int id)
+        public KeyValuePair<Release, UserRightsContainer> GetReleaseById(int personId, int releaseId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var releaseManager = new ReleaseManager();
                 releaseManager.UoW = uoW;
-                var release = releaseManager.GetReleaseById(id);
-
-                return release;
+                return releaseManager.GetReleaseById(personId,releaseId); 
             }
         }
 

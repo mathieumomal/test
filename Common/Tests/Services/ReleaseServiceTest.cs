@@ -33,7 +33,7 @@ namespace Etsi.Ultimate.Tests.Services
             var releases = releaseService.GetAllReleases(1);
 
 
-            Assert.AreEqual(3, releases.Key.Count);
+            Assert.AreEqual(4, releases.Key.Count);
             Assert.AreEqual(2, releases.Key.Where(t => t.Enum_ReleaseStatus.ReleaseStatus == "Frozen").ToList().Count);
 
 
@@ -51,11 +51,61 @@ namespace Etsi.Ultimate.Tests.Services
             var releaseService = new ReleaseService();
             var releases = releaseService.GetAllReleases(1);
 
-            Assert.AreEqual(false, releases.Value.HasRight(Enum_UserRights.Release_ViewCompleteDetails));
             Assert.AreEqual(true, releases.Value.HasRight(Enum_UserRights.Release_Close));
             Assert.AreEqual(true, releases.Value.HasRight(Enum_UserRights.Release_Freeze));
 
         }
+
+        private static Dictionary<string, int> StatusToRelease = new Dictionary<string, int> { 
+            { "Open", ReleaseFakeRepository.OPENED_RELEASE_ID }, 
+            { "Frozen", ReleaseFakeRepository.FROZEN_RELEASE_ID }, 
+            { "Closed", ReleaseFakeRepository.CLOSED_RELEASE_ID } };
+
+        [TestCase("Open", true, true)]
+        [TestCase("Frozen", true, false)]
+        [TestCase("Closed", false, false)]
+        public void Test_GetRelease_Releases(string status, bool closeEnabled, bool freezeEnabled)
+        {
+            CacheManager.Clear(RELEASE_CACHE_KEY);
+
+            int releaseId = StatusToRelease[status];            
+            
+            RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
+            // The fake right manager returns all rights, so we can check all the values.
+            ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
+
+            var releaseService = new ReleaseService();
+            var releaseAndRights = releaseService.GetReleaseById(1, releaseId);
+
+            Assert.IsNotNull(releaseAndRights.Key);
+            Assert.IsNotNull(releaseAndRights.Value);
+
+            var rights = releaseAndRights.Value;
+            Assert.AreEqual(closeEnabled, rights.HasRight(Enum_UserRights.Release_Close));
+            Assert.AreEqual(freezeEnabled, rights.HasRight(Enum_UserRights.Release_Freeze));
+        }
+
+        [Test]
+        public void Test_GetRelease_ReturnsRemarksAndHistory()
+        {
+            CacheManager.Clear(RELEASE_CACHE_KEY);
+
+            int releaseId = StatusToRelease["Open"];
+
+            RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
+            // The fake right manager returns all rights, so we can check all the values.
+            ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
+
+            var releaseService = new ReleaseService();
+            var releaseAndRights = releaseService.GetReleaseById(1, releaseId);
+            Assert.IsNotNull(releaseAndRights.Key);
+
+            var release = releaseAndRights.Key;
+            Assert.AreEqual(1, release.Remarks.Count);
+            Assert.AreEqual(2, release.Histories.Count);
+        }
+
+      
 
         [Test]
         public void Test_GetAllReleases_Cache()
