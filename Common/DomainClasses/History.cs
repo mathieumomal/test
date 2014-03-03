@@ -19,6 +19,7 @@ namespace Etsi.Ultimate.DomainClasses
         public Nullable<int> Fk_PersonId { get; set; }
         public Nullable<System.DateTime> CreationDate { get; set; }
         public string HistoryText { get; set; }
+        public string PersonName { get; set; }
     
         public virtual Release Release { get; set; }
     }

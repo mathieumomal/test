@@ -1,4 +1,4 @@
-/****** Object:  Table [dbo].[History]    Script Date: 02/28/2014 18:55:14 ******/
+/****** Object:  Table [dbo].[History]    Script Date: 03/03/2014 17:09:59 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -11,6 +11,7 @@ CREATE TABLE [dbo].[History](
 	[Fk_PersonId] [int] NULL,
 	[CreationDate] [datetime] NULL,
 	[HistoryText] [nvarchar](255) NULL,
+	[PersonName]  AS ([dbo].[getPersonName]([Fk_PersonId])),
  CONSTRAINT [PK_History] PRIMARY KEY CLUSTERED 
 (
 	[Pk_HistoryId] ASC
@@ -25,5 +26,3 @@ GO
 
 ALTER TABLE [dbo].[History] CHECK CONSTRAINT [FK_History_Releases]
 GO
-
-

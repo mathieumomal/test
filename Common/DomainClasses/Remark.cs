@@ -20,6 +20,7 @@ namespace Etsi.Ultimate.DomainClasses
         public Nullable<bool> IsPublic { get; set; }
         public Nullable<System.DateTime> CreationDate { get; set; }
         public string RemarkText { get; set; }
+        public string PersonName { get; set; }
     
         public virtual Release Release { get; set; }
     }
