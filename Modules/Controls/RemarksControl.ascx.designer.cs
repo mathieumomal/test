@@ -13,13 +13,13 @@ namespace Etsi.Ultimate.Controls {
     public partial class RemarksControl {
         
         /// <summary>
-        /// releaseDetailTable control.
+        /// releaseDetailGrid control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadGrid releaseDetailTable;
+        protected global::Telerik.Web.UI.RadGrid releaseDetailGrid;
         
         /// <summary>
         /// txtAddRemark control.

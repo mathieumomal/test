@@ -39,7 +39,7 @@
     </tr>
     <tr>
         <td colspan="2">
-            <ult:remarkscontrol id="RemarksControlComponent" runat="server" />
+            <ult:remarkscontrol id="RemarksControlComponent" runat="server" IsEditMode="false"/>
         </td>
     </tr>
      <tr>
