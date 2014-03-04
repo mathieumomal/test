@@ -12,7 +12,6 @@
     .RadGrid_Default .rgEditRow td {
         border: none;
     }
-
 </style>
 
 <fieldset style="border: 1px solid grey; padding: 5px;">
@@ -24,18 +23,20 @@
                                                                  AllowSorting="false" 
                                                                  AllowFilteringByColumn="false" 
                                                                  AutoGenerateColumns="false"
+                                                                 AllowMultiRowEdit="true"
+                                                                 OnPreRender="remarksGrid_PreRender"
                                                                  OnNeedDataSource="remarksGrid_NeedDataSource"
-                                                                 OnUpdateCommand="remarksGrid_UpdateCommand"
                                                                  OnItemDataBound="remarksGrid_ItemDataBound"
                                                                  style="min-width:400px">
+                    <ClientSettings>
+                        <Scrolling AllowScroll="True" UseStaticHeaders="true" />
+                    </ClientSettings>
                     <MasterTableView clientdatakeynames="Pk_RemarkId, IsPublic" EditMode="InPlace">
                         <Columns>
-                            <telerik:GridEditCommandColumn UniqueName="EditCommandColumn" ButtonType="ImageButton">
-                            </telerik:GridEditCommandColumn>
                             <telerik:GridTemplateColumn DataField="CreationDate" HeaderText="Creation Date" UniqueName="CreationDate">
                                 <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="150px"/> 
                                 <ItemTemplate>
-                                    <span><%# DataBinder.Eval(Container.DataItem,"CreationDate", "{0:yyyy-MM-dd hh:mm}") %></span>  
+                                    <span><%# DataBinder.Eval(Container.DataItem,"CreationDate", "{0:yyyy-MM-dd hh:mm UTC}") %></span>  
                                 </ItemTemplate>                 
                             </telerik:GridTemplateColumn>
                             <telerik:GridTemplateColumn DataField="PersonName" HeaderText="Created By" UniqueName="CreatedBy">
@@ -48,18 +49,16 @@
                                 <HeaderStyle HorizontalAlign="Center" Font-Bold="True"/>
                                 <ItemTemplate>
                                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"RemarkText") %></div>  
-                                </ItemTemplate>
-                                <EditItemTemplate>
-                                    <asp:TextBox runat="server" ID="txtRemarkText" Width="100%" Text='<%# Bind("RemarkText") %>'></asp:TextBox>
-                                </EditItemTemplate>                     
+                                </ItemTemplate>                
                             </telerik:GridTemplateColumn>
                             <telerik:GridTemplateColumn DataField="IsPublic" HeaderText="Remark Type" UniqueName="IsPublic">
-                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="90px"/>
+                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="100px"/>
+                                <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                                 <ItemTemplate>  
                                     <asp:Label runat="server" ID="lblRemarkType" Text='<%# Convert.ToBoolean(Eval("IsPublic")) == true ? "Public" : "Private" %>'>></asp:Label>                  
                                 </ItemTemplate>
                                 <EditItemTemplate>
-                                    <telerik:RadDropDownList runat="server" ID="rddlRemarkType" Width="90px" DataValueField="IsPublic" SelectedValue='<%#Bind("IsPublic") %>'>
+                                    <telerik:RadDropDownList runat="server" ID="rddlRemarkType" Width="90px" DataValueField="IsPublic" AutoPostBack="true" OnSelectedIndexChanged="rddlRemarkType_SelectedIndexChanged" SelectedValue='<%#Bind("IsPublic") %>'>
                                         <Items>
                                             <telerik:DropDownListItem Text="Public" Value="True"/>  
                                             <telerik:DropDownListItem Text="Private" Value="False"/>                                  
@@ -73,9 +72,6 @@
                                 No Remarks Added
                             </div>
                         </NoRecordsTemplate>
-                        <EditFormSettings>
-                          <EditColumn UniqueName="EditCommandColumn" ButtonType="ImageButton" />
-                        </EditFormSettings>
                     </MasterTableView>
                 </telerik:RadGrid></td>
         </tr>

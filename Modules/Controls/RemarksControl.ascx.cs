@@ -1,7 +1,7 @@
 ﻿using Etsi.Ultimate.DomainClasses;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 
 namespace Etsi.Ultimate.Controls
@@ -16,8 +16,7 @@ namespace Etsi.Ultimate.Controls
         private const string CONST_REMARKS_GRID_DATA = "RemarksGridData";
         private const string CONST_PK_REMARKID = "Pk_RemarkId";
         private const string CONST_ISPUBLIC = "IsPublic";
-        private const string CONST_REMARKTEXT = "RemarkText";
-        private const string CONST_EDITCOMMANDCOLUMN = "EditCommandColumn";
+        private const int CONST_MIN_SCROLL_HEIGHT = 100;
 
         #endregion
 
@@ -27,6 +26,7 @@ namespace Etsi.Ultimate.Controls
         public bool IsEditMode { get; set; }
         public bool HidePrivateRemarks { get; set; }
         public string RemarkText { get { return this.txtAddRemark.Text; } }
+        public int ScrollHeight { get; set; }
         public List<Remark> DataSource 
         {
             get {
@@ -56,15 +56,14 @@ namespace Etsi.Ultimate.Controls
             {
                 if (!IsEditMode)
                 {
-                    GridEditCommandColumn gridEditCommandColumn = (GridEditCommandColumn)remarksGrid.MasterTableView.GetColumn(CONST_EDITCOMMANDCOLUMN);
-                    gridEditCommandColumn.Visible = false;
-
                     GridTemplateColumn isPublicColumn = (GridTemplateColumn)remarksGrid.MasterTableView.GetColumn(CONST_ISPUBLIC);
                     isPublicColumn.Visible = false;
 
                     txtAddRemark.Visible = false;
                     btnAddRemark.Visible = false;
                 }
+
+                remarksGrid.ClientSettings.Scrolling.ScrollHeight = (ScrollHeight < CONST_MIN_SCROLL_HEIGHT) ? Unit.Pixel(CONST_MIN_SCROLL_HEIGHT) : Unit.Pixel(ScrollHeight);
             }
         }
 
@@ -90,37 +89,6 @@ namespace Etsi.Ultimate.Controls
         }
 
         /// <summary>
-        /// Update Command Event of Remarks Grid
-        /// </summary>
-        /// <param name="source">Source of Event</param>
-        /// <param name="e">Event Args</param>
-        protected void remarksGrid_UpdateCommand(object source, Telerik.Web.UI.GridCommandEventArgs e)
-        {
-            GridEditableItem editedItem = e.Item as GridEditableItem;
-
-            List<Remark> dataSource = DataSource;
-            Remark changedRow = dataSource.Find(x => x.Pk_RemarkId.ToString() == editedItem.OwnerTableView.DataKeyValues[editedItem.ItemIndex][CONST_PK_REMARKID].ToString());
-            if (changedRow == null)
-            {
-                e.Canceled = true;
-                return;
-            }
-
-            Hashtable newValues = new Hashtable();
-            e.Item.OwnerTableView.ExtractValuesFromItem(newValues, editedItem);
-            try
-            {
-                changedRow.IsPublic = Convert.ToBoolean(newValues[CONST_ISPUBLIC]);
-                changedRow.RemarkText = newValues[CONST_REMARKTEXT].ToString();
-                DataSource = dataSource;
-            }
-            catch (Exception)
-            {
-                e.Canceled = true;
-            }
-        }
-
-        /// <summary>
         /// Item DataBound Event of Remarks Grid
         /// </summary>
         /// <param name="sender">Source of Event</param>
@@ -137,6 +105,58 @@ namespace Etsi.Ultimate.Controls
                         item.Display = false;
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Grid Pre Render Event
+        /// </summary>
+        /// <param name="sender">Source of Event</param>
+        /// <param name="e">Event Args</param>
+        protected void remarksGrid_PreRender(object sender, System.EventArgs e)
+        {
+            ChangeGridToEditMode();
+        }
+
+        /// <summary>
+        /// Remark Type drop down changed
+        /// </summary>
+        /// <param name="sender">Source of Event</param>
+        /// <param name="e">Event Args</param>
+        protected void rddlRemarkType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RadDropDownList dropdownlist = (RadDropDownList)sender;
+            GridDataItem editedItem = (GridDataItem)dropdownlist.NamingContainer;
+
+            List<Remark> dataSource = DataSource;
+            Remark changedRow = dataSource.Find(x => x.Pk_RemarkId.ToString() == editedItem.OwnerTableView.DataKeyValues[editedItem.ItemIndex][CONST_PK_REMARKID].ToString());
+            if (changedRow != null)
+            {
+                changedRow.IsPublic = Convert.ToBoolean(dropdownlist.SelectedValue);
+                DataSource = dataSource;
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Change all grid rows to Edit Mode
+        /// </summary>
+        private void ChangeGridToEditMode()
+        {
+            if (IsEditMode)
+            {
+                foreach (GridItem item in remarksGrid.MasterTableView.Items)
+                {
+                    if (item is GridEditableItem)
+                    {
+                        GridEditableItem editableItem = item as GridDataItem;
+                        editableItem.Edit = true;
+                    }
+                }
+                remarksGrid.Rebind();
             }
         }
 
