@@ -17,6 +17,7 @@ namespace Etsi.Ultimate.Controls
         private const string CONST_PK_REMARKID = "Pk_RemarkId";
         private const string CONST_ISPUBLIC = "IsPublic";
         private const string CONST_REMARKTEXT = "RemarkText";
+        private const string CONST_EDITCOMMANDCOLUMN = "EditCommandColumn";
 
         #endregion
 
@@ -24,6 +25,7 @@ namespace Etsi.Ultimate.Controls
 
         public event EventHandler AddRemarkHandler;
         public bool IsEditMode { get; set; }
+        public bool HidePrivateRemarks { get; set; }
         public string RemarkText { get { return this.txtAddRemark.Text; } }
         public List<Remark> DataSource 
         {
@@ -35,7 +37,7 @@ namespace Etsi.Ultimate.Controls
             }
             set {
                 ViewState[CONST_REMARKS_GRID_DATA] = value;
-                releaseDetailGrid.Rebind();
+                remarksGrid.Rebind();
             }
         }
 
@@ -54,10 +56,10 @@ namespace Etsi.Ultimate.Controls
             {
                 if (!IsEditMode)
                 {
-                    GridEditCommandColumn gridEditCommandColumn = (GridEditCommandColumn)releaseDetailGrid.MasterTableView.GetColumn("EditCommandColumn");
+                    GridEditCommandColumn gridEditCommandColumn = (GridEditCommandColumn)remarksGrid.MasterTableView.GetColumn(CONST_EDITCOMMANDCOLUMN);
                     gridEditCommandColumn.Visible = false;
 
-                    GridTemplateColumn isPublicColumn = (GridTemplateColumn)releaseDetailGrid.MasterTableView.GetColumn("IsPublic");
+                    GridTemplateColumn isPublicColumn = (GridTemplateColumn)remarksGrid.MasterTableView.GetColumn(CONST_ISPUBLIC);
                     isPublicColumn.Visible = false;
 
                     txtAddRemark.Visible = false;
@@ -82,9 +84,9 @@ namespace Etsi.Ultimate.Controls
         /// </summary>
         /// <param name="sender">Source of Event</param>
         /// <param name="e">Event Args</param>
-        protected void releaseDetailGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
+        protected void remarksGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
         {
-            releaseDetailGrid.DataSource = DataSource;
+            remarksGrid.DataSource = DataSource;
         }
 
         /// <summary>
@@ -92,7 +94,7 @@ namespace Etsi.Ultimate.Controls
         /// </summary>
         /// <param name="source">Source of Event</param>
         /// <param name="e">Event Args</param>
-        protected void releaseDetailGrid_UpdateCommand(object source, Telerik.Web.UI.GridCommandEventArgs e)
+        protected void remarksGrid_UpdateCommand(object source, Telerik.Web.UI.GridCommandEventArgs e)
         {
             GridEditableItem editedItem = e.Item as GridEditableItem;
 
@@ -115,6 +117,26 @@ namespace Etsi.Ultimate.Controls
             catch (Exception)
             {
                 e.Canceled = true;
+            }
+        }
+
+        /// <summary>
+        /// Item DataBound Event of Remarks Grid
+        /// </summary>
+        /// <param name="sender">Source of Event</param>
+        /// <param name="e">Event Args</param>
+        protected void remarksGrid_ItemDataBound(object sender, Telerik.Web.UI.GridItemEventArgs e)
+        {
+            if (HidePrivateRemarks)
+            {
+                if (e.Item is GridDataItem)
+                {
+                    GridDataItem item = (GridDataItem)e.Item;
+                    if (!Convert.ToBoolean(item.GetDataKeyValue(CONST_ISPUBLIC)))
+                    {
+                        item.Display = false;
+                    }
+                }
             }
         }
 

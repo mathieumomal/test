@@ -20,14 +20,15 @@
     <table style="width: 100%">
         <tr>
             <td colspan="2">
-                <telerik:RadGrid runat="server" ID="releaseDetailGrid"  AllowPaging="false" 
-                                                                        AllowSorting="false" 
-                                                                        AllowFilteringByColumn="false" 
-                                                                        AutoGenerateColumns="false"
-                                                                        OnNeedDataSource="releaseDetailGrid_NeedDataSource"
-                                                                        OnUpdateCommand="releaseDetailGrid_UpdateCommand"
-                                                                        style="min-width:400px">
-                    <MasterTableView clientdatakeynames="Pk_RemarkId" EditMode="InPlace">
+                <telerik:RadGrid runat="server" ID="remarksGrid" AllowPaging="false" 
+                                                                 AllowSorting="false" 
+                                                                 AllowFilteringByColumn="false" 
+                                                                 AutoGenerateColumns="false"
+                                                                 OnNeedDataSource="remarksGrid_NeedDataSource"
+                                                                 OnUpdateCommand="remarksGrid_UpdateCommand"
+                                                                 OnItemDataBound="remarksGrid_ItemDataBound"
+                                                                 style="min-width:400px">
+                    <MasterTableView clientdatakeynames="Pk_RemarkId, IsPublic" EditMode="InPlace">
                         <Columns>
                             <telerik:GridEditCommandColumn UniqueName="EditCommandColumn" ButtonType="ImageButton">
                             </telerik:GridEditCommandColumn>
