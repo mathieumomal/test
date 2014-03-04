@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="Release" type="Module" version="00.01.12">
+    <package name="Release" type="Module" version="00.01.18">
       <friendlyName>Release</friendlyName>
       <description>Release module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
@@ -94,16 +94,7 @@
                     <helpUrl />
                     <viewOrder>0</viewOrder>
                   </moduleControl>
-                  <moduleControl>
-                    <controlKey>ReleaseDetails</controlKey>
-                    <controlSrc>DesktopModules/Release/ReleaseDetails.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Release Details</controlTitle>
-                    <controlType>View</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <viewOrder>0</viewOrder>
-                  </moduleControl>
+                
                 </moduleControls>
               </moduleDefinition>
             </moduleDefinitions>

@@ -48,10 +48,10 @@ namespace Etsi.Ultimate.Module.Release
     /// 
     /// </summary>
     /// -----------------------------------------------------------------------------
-    public partial class View : ReleaseModuleBase, IActionable
+    public partial class View : ReleaseModuleBase
     {
-        private static String FreezeReach_READONLY_CSS = "freezeReach";
-        private static String closedColor_READONLY_CSS = "closed";
+        private static String readonlyCssFreezeReach = "freezeReach";
+        private static String readonlyCssClosedColor = "closed";
 
         public static readonly string DsId_Key = "ETSI_DS_ID";
 
@@ -67,24 +67,26 @@ namespace Etsi.Ultimate.Module.Release
 
                 //Example : mock to fake rights manager : ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
 
+                //Calling the service
                 KeyValuePair<List<DomainClasses.Release>,UserRightsContainer> releaseRightsObjects = svc.GetAllReleases(UserInfo.UserID);
-                List<DomainClasses.Release> releaseObjectsList = releaseRightsObjects.Key.OrderByDescending(release => release.SortOrder).ToList();
 
-                releasesTable.DataSource = releaseObjectsList;
+                //Setting up the release list
+                List<DomainClasses.Release> releasesList = releaseRightsObjects.Key.OrderByDescending(release => release.SortOrder).ToList();
+                releasesTable.DataSource = releasesList;
+
+                //Applying rights
+                UserRightsContainer userRights = releaseRightsObjects.Value;
 
                 //Show freezes if connected
-                if (!releaseRightsObjects.Value.HasRight(Enum_UserRights.Release_ViewCompleteDetails))
+                if (!userRights.HasRight(Enum_UserRights.Release_ViewCompleteDetails))
                 {
                     releasesTable.MasterTableView.GetColumn("Stage1FreezeDate").Visible = false;
                     releasesTable.MasterTableView.GetColumn("Stage2FreezeDate").Visible = false;
                     releasesTable.MasterTableView.GetColumn("Stage3FreezeDate").Visible = false;
                 }
-                //Button new
-                if(releaseRightsObjects.Value.HasRight(Enum_UserRights.Release_Create)){
-                    newRelease.Visible = true;
-                }else{
-                    newRelease.Visible = false;
-                }
+
+                //New Button
+                newRelease.Visible = userRights.HasRight(Enum_UserRights.Release_Create);
             }
             catch (Exception exc) //Module failed to load
             {
@@ -120,13 +122,6 @@ namespace Etsi.Ultimate.Module.Release
             }
         }
 
-        protected string FormatDate(object date)
-        {
-            if (date != null)
-                return Convert.ToDateTime(date).ToString("yyyy-MM-dd");
-            return null;
-        }
-
 
         /// <summary>
         /// Open a popup window
@@ -157,91 +152,42 @@ namespace Etsi.Ultimate.Module.Release
 
         
 
-        /**
-         * Handler data cell
-         * 
-         * */
+        /// <summary>
+        /// Handler data cell
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void releasesTable_ItemDataBound(object sender, Telerik.Web.UI.GridItemEventArgs e)
         {
             //Analyse on row
             if (e.Item is GridDataItem)
             {
                 GridDataItem dataItem = e.Item as GridDataItem;//Get row
-                DomainClasses.Release currentRelease = (DomainClasses.Release) e.Item.DataItem;//GET row release
+                //Get table cell
+                TableCell closureDate = dataItem["ClosureDate"];
+                TableCell stage1FreezeDateCell = dataItem["Stage1FreezeDate"];
+                TableCell stage2FreezeDateCell = dataItem["Stage2FreezeDate"];
+                TableCell stage3FreezeDateCell = dataItem["Stage3FreezeDate"];
+
+                //Get release row
+                DomainClasses.Release currentRelease = (DomainClasses.Release) e.Item.DataItem;
 
                 string detailsUrl = UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL("ReleaseDetails", "mid=" + ModuleId + "&ReleaseId=" + currentRelease.Pk_ReleaseId), this, PortalSettings, true, false, 390, 800);
                 dataItem["releaseDetails"].Attributes.Add("onclick", "return " + detailsUrl);
 
                 //Analyse column : Closure date
-                TableCell closureDate = dataItem["ClosureDate"];
                 if (currentRelease.ClosureDate != null && currentRelease.ClosureMtgRef != null)
                 {
-                    closureDate.Text =
-                    new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.ClosureDate))
-                        .Append(" (")
-                        .Append(currentRelease.ClosureMtgRef)
-                        .Append(")")
-                        .ToString();
+                    closureDate.Text = mixDateAndMtgRef((DateTime)currentRelease.ClosureDate, currentRelease.ClosureMtgRef);
                 }
-                closureDate.CssClass = closedColor_READONLY_CSS;
-
-                DateTime now = DateTime.Now;
+                closureDate.CssClass = readonlyCssClosedColor;
 
                 //Analyse column : Freeze 1
-                if (currentRelease.Stage1FreezeDate != null)
-                {
-                    DateTime dateStage1FreezeDate = (DateTime)currentRelease.Stage1FreezeDate;
-                    TableCell freeze1 = dataItem["Stage1FreezeDate"];
-                    if (currentRelease.Stage1FreezeMtgRef != null)
-                    {
-                        freeze1.Text =
-                        new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.Stage1FreezeDate))
-                            .Append(" (")
-                            .Append(currentRelease.Stage1FreezeMtgRef)
-                            .Append(")")
-                            .ToString();
-                    }
-                    if (now > dateStage1FreezeDate.Date)
-                        freeze1.CssClass = FreezeReach_READONLY_CSS;
-                }
-                
-
+                TreatFreezeDate(stage1FreezeDateCell, currentRelease.Stage1FreezeDate, currentRelease.Stage1FreezeMtgRef);
                 //Analyse column : Freeze 2
-                if (currentRelease.Stage2FreezeDate!=null)
-                {
-                    DateTime dateStage2FreezeDate = (DateTime)currentRelease.Stage2FreezeDate;
-                    TableCell freeze2 = dataItem["Stage2FreezeDate"];
-                    if (currentRelease.Stage2FreezeMtgRef != null)
-                    {
-                        freeze2.Text =
-                        new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.Stage2FreezeDate))
-                            .Append(" (")
-                            .Append(currentRelease.Stage2FreezeMtgRef)
-                            .Append(")")
-                            .ToString();
-                    }
-                    if (now > dateStage2FreezeDate.Date)
-                        freeze2.CssClass = FreezeReach_READONLY_CSS;
-                }
-               
-
+                TreatFreezeDate(stage2FreezeDateCell, currentRelease.Stage2FreezeDate, currentRelease.Stage2FreezeMtgRef);
                 //Analyse column : Freeze 3
-                if (currentRelease.Stage3FreezeDate != null)
-                {
-                    DateTime dateStage3FreezeDate = (DateTime)currentRelease.Stage3FreezeDate;
-                    TableCell freeze3 = dataItem["Stage3FreezeDate"];
-                    if (currentRelease.Stage3FreezeMtgRef != null)
-                    {
-                        freeze3.Text =
-                        new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", currentRelease.Stage3FreezeDate))
-                            .Append(" (")
-                            .Append(currentRelease.Stage3FreezeMtgRef)
-                            .Append(")")
-                            .ToString();
-                    }
-                    if (now > dateStage3FreezeDate.Date)
-                        freeze3.CssClass = FreezeReach_READONLY_CSS;
-                }
+                TreatFreezeDate(stage3FreezeDateCell, currentRelease.Stage3FreezeDate, currentRelease.Stage3FreezeMtgRef);
 
                 //Set ReleaseId for details
                 ImageButton details = dataItem["releaseDetails"].Controls[0] as ImageButton;
@@ -249,6 +195,43 @@ namespace Etsi.Ultimate.Module.Release
             }
 
 
+        }
+
+        /// <summary>
+        /// Manage date with meeting reference
+        /// </summary>
+        /// <param name="freezeCell"></param>
+        /// <param name="freezeDateObject"></param>
+        /// <param name="freezeMtg"></param>
+        private void TreatFreezeDate(TableCell freezeCell, DateTime? freezeDateObject, string freezeMtg)
+        {
+            var now = DateTime.Now;
+            if (freezeDateObject != null)
+            {
+                var freezeDate = (DateTime)freezeDateObject;
+                if (freezeMtg != null)
+                {
+                    freezeCell.Text = mixDateAndMtgRef(freezeDate, freezeMtg);
+                }
+
+                if (now > freezeDate.Date)
+                    freezeCell.CssClass = readonlyCssFreezeReach;
+            }
+        }
+
+        /// <summary>
+        /// return string of date and meeting reference
+        /// </summary>
+        /// <param name="freezeDate"></param>
+        /// <param name="freezeMtg"></param>
+        /// <returns></returns>
+        private string mixDateAndMtgRef(DateTime freezeDate, String freezeMtg)
+        {
+            return new StringBuilder().Append(String.Format("{0:yyyy-MM-dd}", freezeDate))
+                        .Append(" (")
+                        .Append(freezeMtg)
+                        .Append(")")
+                        .ToString();
         }
 
         protected void releasesTable_ItemCommand(object source, GridCommandEventArgs e)
