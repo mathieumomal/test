@@ -70,11 +70,12 @@
             </ContentTemplate>
         </telerik:RadWindow>
 
-        <telerik:RadWindow ID="RadWindow_workItemConfirmation" runat="server" Modal="true" Title="Import confirmation" Width="700" Height="370" VisibleStatusbar="false">
+        <telerik:RadWindow ID="RadWindow_workItemConfirmation" runat="server" Modal="true" Title="Import confirmation" Width="700" Height="390" VisibleStatusbar="false">
             <ContentTemplate>
                 <div class="contentModal" id="confirmation">
                     <div class="header">
-                        # Warnings found on the work plan.
+                        <div><asp:Label ID="CountErrors" runat="server" Text="#"/> Errors found on the work plan.</div>
+                        <div><asp:Label ID="CountWarnings" runat="server" Text="#"/> Warnings found on the work plan.</div>
                     </div>
                     <div>
                         <h2>Warnings</h2>

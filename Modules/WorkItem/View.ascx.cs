@@ -24,6 +24,10 @@ using Telerik.Web.UI;
 using System.Text;
 using System.IO;
 using System.Collections.Generic;
+using Etsi.Ultimate.Services;
+using Microsoft.Practices.Unity;
+using Etsi.Ultimate.DomainClasses;
+using Rhino.Mocks;
 
 namespace Etsi.Ultimate.Module.WorkItem
 {
@@ -45,6 +49,8 @@ namespace Etsi.Ultimate.Module.WorkItem
         private static string readonlyPathImportWorkPlan = "c:\\TEST_IMPORT\\";
         private static string readOnlyExtensionCsv = "csv";
         private static string readOnlyExtensionZip = "zip";
+
+        private int tokenWorkPlanAnalysed = 0;
         
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -74,19 +80,31 @@ namespace Etsi.Ultimate.Module.WorkItem
             //Update View Label of RadWindow_workItemConfirmation Modal with the suppose file path
             path_export.Text = new StringBuilder().Append(readonlyPathImportWorkPlan).Append(workplanUploaded.GetName()).ToString();
 
+
+
+            //---------- MOCK FOR VIEW TEST ERROR -------------//
+
+            /*ServicesFactory.Container.RegisterType<IWorkItemService, WorkItemServiceMock>(new TransientLifetimeManager());
+            IWorkItemService svc = ServicesFactory.Resolve<IWorkItemService>();//Get the mock instead service classe
+
+            //---------- MOCK FOR VIEW TEST ERROR -------------//
+            
+            
+            //Calling the service
+            KeyValuePair<int, ImportReport> analyseReport = svc.AnalyseWorkItemForImport("path of temp workItem upload");
+            ImportReport importReport = analyseReport.Value;
+            tokenWorkPlanAnalysed = analyseReport.Key;
+
+
             //File analyse and update list of warnings dataSource
             List<string> datasource = new List<string>();
-            datasource.Add("WpId, UID WI Unique_Id: Acronym \"Acronym name\" is duplicated on other work items with same level.");
-            datasource.Add("WpId, UID WI Unique_Id: Cannot identify release : Release name.");
-            datasource.Add("WpId, UID WI Unique_Id:Rapporteur email \"Email\" could not match an existing user in database.");
-            datasource.Add("WpId Unique_Acronym \"Acronym name\" is duplicated on other work items with same level.");
-            datasource.Add("WpIdCannotI Unique_Identify release : Releasgfe name.");
-            datasource.Add("WpId, UID WI Unique_Idteur email \"Email\" could not match an existing user in database.");
-            datasource.Add("Wue_Id: Acronym \"Acronye\" is duplicated on other work items with same level.");
-            datasource.Add("WpId, UI Unique_Id: Cannot identify release : Releasegf name.");
-            datasource.Add("W WI Unique_Id:Rapporteur email \"Email\" could not match an existing user in database.");
+            datasource.AddRange(importReport.ErrorList);
+            datasource.AddRange(importReport.WarningList);
             repeater.DataSource = datasource;
-            repeater.DataBind();
+            repeater.DataBind();*/
+
+            CountErrors.Text = "3";
+            CountWarnings.Text = "15";
 
             System.Threading.Thread.Sleep(2000);
         }

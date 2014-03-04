@@ -1,14 +1,14 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="WorkItem" type="Module" version="00.00.03">
+    <package name="WorkItem" type="Module" version="00.00.16">
       <friendlyName>WorkItem</friendlyName>
-      <description>Christoc.com WorkItem module</description>
+      <description>WorkItem module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
       <owner>
-        <name>Christoc.com</name>
-        <organization>Christoc.com</organization>
-        <url>http://www.christoc.com</url>
-        <email>modules@christoc.com</email>
+        <name>capgemini.com</name>
+        <organization>capgemini.com</organization>
+        <url>http://www.capgemini.com</url>
+        <email></email>
       </owner>
       <license src="License.txt"></license>
       <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
@@ -58,6 +58,16 @@
                     <controlSrc>DesktopModules/WorkItem/View.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
                     <controlTitle />
+                    <controlType>View</controlType>
+                    <iconFile />
+                    <helpUrl />
+                    <viewOrder>0</viewOrder>
+                  </moduleControl>
+                  <moduleControl>
+                    <controlKey>WorkPlanImport</controlKey>
+                    <controlSrc>DesktopModules/WorkItem/WorkPlanImport.ascx</controlSrc>
+                    <supportsPartialRendering>False</supportsPartialRendering>
+                    <controlTitle>Work Plan Import</controlTitle>
                     <controlType>View</controlType>
                     <iconFile />
                     <helpUrl />

@@ -112,6 +112,24 @@ namespace Etsi.Ultimate.Module.WorkItem {
         protected global::Telerik.Web.UI.RadWindow RadWindow_workItemConfirmation;
         
         /// <summary>
+        /// Contrôle CountErrors.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label CountErrors;
+        
+        /// <summary>
+        /// Contrôle CountWarnings.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label CountWarnings;
+        
+        /// <summary>
         /// Contrôle repeater.
         /// </summary>
         /// <remarks>

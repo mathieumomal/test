@@ -9,6 +9,11 @@ namespace Etsi.Ultimate.Services
     /// </summary>
     public interface IReleaseService
     {
+        /// <summary>
+        /// Abstract method to get a pair of all releases and user's rights
+        /// </summary>
+        /// <param name="personID"></param>
+        /// <returns></returns>
         KeyValuePair<List<DomainClasses.Release>, UserRightsContainer> GetAllReleases(int personID);
 
         /// <summary>

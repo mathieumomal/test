@@ -17,7 +17,7 @@ namespace Etsi.Ultimate.Services
         #region IReleaseService Membres
 
         /// <summary>
-        /// Returns the list of all releases.
+        /// Get a pair of all releases and user's rights
         /// </summary>
         /// <returns></returns>
         public KeyValuePair<List<DomainClasses.Release>,UserRightsContainer> GetAllReleases(int personId)

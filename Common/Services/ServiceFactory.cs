@@ -39,7 +39,8 @@ namespace Etsi.Ultimate.Services
             //Map of relation between Interfaces and classes
             //container.RegisterType<IReleaseService, ReleaseService>(new TransientLifetimeManager());
             //Use mock
-            container.RegisterType<IReleaseService, ReleaseService>(new TransientLifetimeManager());            
+            container.RegisterType<IReleaseService, ReleaseService>(new TransientLifetimeManager());
+            container.RegisterType<IWorkItemService, WorkItemService>(new TransientLifetimeManager());   
             _container = container;
         }
 
