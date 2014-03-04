@@ -4,6 +4,7 @@ using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
+using System.Linq;
 
 namespace Etsi.Ultimate.Services
 {
@@ -38,6 +39,23 @@ namespace Etsi.Ultimate.Services
                 releaseManager.UoW = uoW;
                 return releaseManager.GetReleaseById(personId,releaseId); 
             }
+        }
+
+        public string GetPreviousReleaseCode(int personID, int releaseId)
+        {
+            List<DomainClasses.Release> allReleases = GetAllReleases(personID).Key.OrderBy(x => x.SortOrder).ToList();
+            int nmbrOfReleases= allReleases.Count;
+            for (int i = 0; i < nmbrOfReleases; i++)
+            {
+                if (allReleases[i].Pk_ReleaseId == releaseId)
+                {
+                    if (i > 0)
+                        return allReleases[i - 1].Code;
+                    else
+                        break;
+                }
+            }
+            return String.Empty;
         }
 
         #endregion

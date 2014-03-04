@@ -14,7 +14,7 @@
     }
 </style>
 
-<fieldset style="border: 1px solid grey; padding: 5px;">
+<fieldset style="padding: 5px;">
     <legend>Remarks</legend>
     <table style="width: 100%">
         <tr>

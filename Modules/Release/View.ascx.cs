@@ -124,17 +124,17 @@ namespace Etsi.Ultimate.Module.Release
 
 
         /// <summary>
-        /// Open a popup window
+        /// Retrun javascript function to open a popup window
         /// </summary>
         /// <param name="currentPage">Current page</param>
         /// <param name="window">Window </param>
         /// <param name="htmlPage">Popup page</param>
         /// <param name="width">Width of the window</param>
         /// <param name="height">Height of the window</param>
-        public static void OpenWindow(Page currentPage, String window, String htmlPage, Int32 width, Int32 height, Type winType)
+        public static string OpenWindow(Page currentPage, String window, String htmlPage, Int32 width, Int32 height, Type winType)
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Append("popWin=window.open('");
+            sb.Append("window.open('");
             sb.Append(htmlPage);
             sb.Append("','");
             sb.Append(window);
@@ -146,8 +146,7 @@ namespace Etsi.Ultimate.Module.Release
             sb.Append("');");
             sb.Append("popWin.focus();");
 
-            //UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL("ReleaseDetails", "mid=" + this.ModuleId + paramList), this, PortalSettings, true, false, 390, 670);
-            ScriptManager.RegisterClientScriptBlock(currentPage, winType, "OpenWindow", sb.ToString(), true);
+            return sb.ToString();
         }
 
         
@@ -171,10 +170,7 @@ namespace Etsi.Ultimate.Module.Release
 
                 //Get release row
                 DomainClasses.Release currentRelease = (DomainClasses.Release) e.Item.DataItem;
-
-                string detailsUrl = UrlUtils.PopUpUrl(DotNetNuke.Common.Globals.NavigateURL("ReleaseDetails", "mid=" + ModuleId + "&ReleaseId=" + currentRelease.Pk_ReleaseId), this, PortalSettings, true, false, 390, 800);
-                dataItem["releaseDetails"].Attributes.Add("onclick", "return " + detailsUrl);
-
+                
                 //Analyse column : Closure date
                 if (currentRelease.ClosureDate != null && currentRelease.ClosureMtgRef != null)
                 {
@@ -191,7 +187,20 @@ namespace Etsi.Ultimate.Module.Release
 
                 //Set ReleaseId for details
                 ImageButton details = dataItem["releaseDetails"].Controls[0] as ImageButton;
-                details.CommandArgument = currentRelease.Pk_ReleaseId.ToString();                
+                //details.CommandArgument = currentRelease.Pk_ReleaseId.ToString();                
+                
+                System.Text.StringBuilder RedirectionURL = new System.Text.StringBuilder();
+                RedirectionURL.Append("/desktopmodules/Release/ReleaseDetails.aspx");
+                if (currentRelease != null)
+                {
+                    RedirectionURL.Append("?releaseId=");
+                    RedirectionURL.Append(currentRelease.Pk_ReleaseId);
+                }
+                RedirectionURL.Append("&UserID=");
+                RedirectionURL.Append(GetUserPersonId(UserInfo).ToString());
+
+                details.Attributes.Add("OnClick", OpenWindow(this.Page, "Release details window", RedirectionURL.ToString(), 850, 650, this.GetType()));
+                
             }
 
 
@@ -233,22 +242,6 @@ namespace Etsi.Ultimate.Module.Release
                         .Append(")")
                         .ToString();
         }
-
-        protected void releasesTable_ItemCommand(object source, GridCommandEventArgs e)
-        {
-            if (e.CommandName == "releaseDetails")
-            {
-                System.Text.StringBuilder RedirectionURL = new System.Text.StringBuilder();
-                RedirectionURL.Append("/desktopmodules/Release/ReleaseDetails.aspx");
-                if (e.CommandArgument != null)
-                {
-                    RedirectionURL.Append("?releaseId=");
-                    RedirectionURL.Append(e.CommandArgument);
-                }
-                RedirectionURL.Append("&UserID=");
-                RedirectionURL.Append(GetUserPersonId(UserInfo).ToString());
-                OpenWindow(this.Page, "Release details window", RedirectionURL.ToString(), 800, 800, this.GetType());
-            }
-        }
+       
     }
 }

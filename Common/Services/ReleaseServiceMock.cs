@@ -12,7 +12,7 @@ namespace Etsi.Ultimate.Services
     {
         #region IReleaseService Membres
 
-        public KeyValuePair<DomainClasses.Release, UserRightsContainer> GetRelease(int personID, int releaseID)
+        public KeyValuePair<DomainClasses.Release, UserRightsContainer> GetReleaseById(int personID, int releaseID)
         {
             KeyValuePair<List<DomainClasses.Release>, UserRightsContainer> listeReleases = GetAllReleases(personID);
             return new KeyValuePair<DomainClasses.Release, UserRightsContainer>(listeReleases.Key.Find(x => x.Pk_ReleaseId == releaseID),listeReleases.Value);
@@ -25,6 +25,7 @@ namespace Etsi.Ultimate.Services
             var statusClosed = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, ReleaseStatus = "Closed" };
             var statusOpen = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, ReleaseStatus = "Open" };
             releases.Add(new DomainClasses.Release() { 
+                Code= "Rel-97",
                 Pk_ReleaseId = 1, 
                 Name = "First release", 
                 Fk_ReleaseStatus = 1, 
@@ -37,6 +38,7 @@ namespace Etsi.Ultimate.Services
             });
             releases.Add(new DomainClasses.Release()
             {
+                Code = "Rel-98",
                 Pk_ReleaseId = 2, 
                 Name = "Second release", 
                 Fk_ReleaseStatus = 1, 
@@ -52,6 +54,7 @@ namespace Etsi.Ultimate.Services
             });
             releases.Add(new DomainClasses.Release()
             {
+                Code = "Rel-99",
                 Pk_ReleaseId = 3, 
                 Name = "Third release", 
                 Fk_ReleaseStatus = 1, 
@@ -74,10 +77,9 @@ namespace Etsi.Ultimate.Services
             return new KeyValuePair<List<Release>,UserRightsContainer>(releases, userRightsContainer);
         }
 
-
-        public KeyValuePair<Release, UserRightsContainer> GetReleaseById(int personID, int releaseId)
+        public string GetPreviousReleaseCode(int personID, int releaseId)
         {
-            throw new NotImplementedException();
+            return string.Empty;
         }
 
         #endregion

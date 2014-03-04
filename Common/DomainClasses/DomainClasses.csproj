@@ -57,6 +57,7 @@
     <Compile Include="Release.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Release.Extend.cs" />
     <Compile Include="Remark.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

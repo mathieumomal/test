@@ -19,3 +19,128 @@
 .rgMasterTable th:nth-last-child(1), .rgMasterTable td:nth-last-child(1){
 	border:none!important;
 }
+
+/* Release details style*/
+
+fieldset {
+    margin: 2%;
+    border: 1px solid grey !important;
+    -webkit-border-radius: 4px !important;
+    -moz-border-radius: 4px !important;
+    border-radius: 4px !important;
+}
+
+legend {
+    font-weight:bold !important;
+}
+
+.releaseDetailsWarning {
+    border: 1px solid;
+    margin: 10px 0px;
+    padding:15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    color: #9F6000;
+    background-color: #FEEFB3;
+    background-image: url('images/warning.png');
+}
+
+.releaseDetailsWarningTxt {
+    margin: 0 0 0 25%;
+}
+
+.TabContent {
+    margin: 10px;
+    font: Arial  12px Black;
+}
+
+.releaseDetailsBody {
+    margin: 5px 10px 5px 10px !important;
+}
+
+.TabContent fieldset legend span{
+    font: Arial  12px Black bold !important;
+}
+
+.releaseDetailsAction {
+    margin: 15px 0 0 0 !important; 
+}
+
+.TabLine {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.TabLineLeft {
+    width: 30%;
+    text-align: right; 
+}
+
+.TabLineLeft  span{
+    padding-right: 10px;
+}
+
+.TabLineRight {
+    width: 70%;
+    text-align: left;
+    font: italic;
+}
+
+.TabLine3colRight {
+    width: 35%;
+    text-align: left;
+}
+
+versionFieldsetTab {
+    text-align: left;
+    width: 100%;
+}
+
+
+.LinkButton {
+    text-decoration: none;
+    padding: 2px 15px;
+    background: #4479BA;
+    color: #FFF;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: solid 1px #20538D;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    /*-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);*/
+    
+    vertical-align: middle;
+	background: #75B91A; 
+	background-image: linear-gradient(#75B91A 0%,? #54AF13 100%);
+	background-image: -webkit-gradient(linear,bottom, top, #75B91A, #54AF13); 
+	background-image: -webkit-linear-gradient(bottom, #75B91A, #54AF13); 
+	background-image: -moz-linear-gradient(bottom, #75B91A, #54AF13); 
+	background-image: -ms-linear-gradient(bottom, #75B91A, #54AF13); 
+	background-image: -o-linear-gradient(bottom, #75B91A, #54AF13); 
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#75B91A', endColorstr='#54AF13',GradientType=1 ); /* IE6-9 */
+    
+    -webkit-transition-duration: 0.2s;
+    -moz-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
+
+.LinkButton:hover {
+    background: #75B91A;
+    border: solid 1px #2A4E77;
+    text-decoration: none;
+}
+/*
+.LinkButton:active {
+    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
+    -moz-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6);
+    background: #2E5481;
+    border: solid 1px #203E5F;
+}
+    */

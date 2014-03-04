@@ -17,5 +17,7 @@ namespace Etsi.Ultimate.Services
         /// <param name="id"></param>
         /// <returns></returns>
         KeyValuePair<DomainClasses.Release, UserRightsContainer> GetReleaseById(int personID, int releaseId);
+
+        string GetPreviousReleaseCode(int personID, int releaseId);
     }
 }

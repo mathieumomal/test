@@ -138,7 +138,10 @@
     <Content Include="Documentation\Documentation.css" />
     <Content Include="Documentation\Documentation.html" />
     <Content Include="Edit.ascx" />
+    <Content Include="images\ReleaseDecription.png" />
+    <Content Include="images\warning.png" />
     <Content Include="License.txt" />
+    <Content Include="module.css" />
     <Content Include="ReleaseDetails.aspx" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Settings.ascx" />
@@ -205,9 +208,7 @@
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="images\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="App_LocalResources\ReleaseDetails.aspx.resx">
       <SubType>Designer</SubType>

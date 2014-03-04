@@ -22,6 +22,24 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.HtmlControls.HtmlForm ReleaseDetailsForm;
         
         /// <summary>
+        /// Contrôle releaseWarning.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel releaseWarning;
+        
+        /// <summary>
+        /// Contrôle releaseDetailsBody.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel releaseDetailsBody;
+        
+        /// <summary>
         /// Contrôle RadScriptManager1.
         /// </summary>
         /// <remarks>
@@ -166,6 +184,15 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.WebControls.Label ReleaseStartDateVal;
         
         /// <summary>
+        /// Contrôle FreezeStagesPanel.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel FreezeStagesPanel;
+        
+        /// <summary>
         /// Contrôle FreezeMeetingLbl.
         /// </summary>
         /// <remarks>
@@ -265,6 +292,15 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.WebControls.Label ReleaseEndDateLbl;
         
         /// <summary>
+        /// Contrôle ReleaseEndDateMeetingVal.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label ReleaseEndDateMeetingVal;
+        
+        /// <summary>
         /// Contrôle ReleaseEndDateVal.
         /// </summary>
         /// <remarks>
@@ -283,6 +319,15 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.WebControls.Label ReleaseClosureDateLbl;
         
         /// <summary>
+        /// Contrôle ReleaseClosureDateMeetingVal.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label ReleaseClosureDateMeetingVal;
+        
+        /// <summary>
         /// Contrôle ReleaseClosureDateVal.
         /// </summary>
         /// <remarks>
@@ -292,13 +337,13 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.WebControls.Label ReleaseClosureDateVal;
         
         /// <summary>
-        /// Contrôle RemarksLbl.
+        /// Contrôle releaseRemarks.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label RemarksLbl;
+        protected global::System.Web.UI.UserControl releaseRemarks;
         
         /// <summary>
         /// Contrôle RadPageAdministration.
@@ -310,6 +355,168 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::Telerik.Web.UI.RadPageView RadPageAdministration;
         
         /// <summary>
+        /// Contrôle previousReleaseLbl.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label previousReleaseLbl;
+        
+        /// <summary>
+        /// Contrôle previousReleaseVal.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label previousReleaseVal;
+        
+        /// <summary>
+        /// Contrôle ITURCodeLbl.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label ITURCodeLbl;
+        
+        /// <summary>
+        /// Contrôle ITURCodeVal.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label ITURCodeVal;
+        
+        /// <summary>
+        /// Contrôle ReleaseVersionLbl.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label ReleaseVersionLbl;
+        
+        /// <summary>
+        /// Contrôle Release2GLbl.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Release2GLbl;
+        
+        /// <summary>
+        /// Contrôle Release2GVal.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Release2GVal;
+        
+        /// <summary>
+        /// Contrôle Release2GDecimalLbl.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Release2GDecimalLbl;
+        
+        /// <summary>
+        /// Contrôle Release2GDecimalVal.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Release2GDecimalVal;
+        
+        /// <summary>
+        /// Contrôle Release3GLbl.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Release3GLbl;
+        
+        /// <summary>
+        /// Contrôle Release3GVal.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Release3GVal;
+        
+        /// <summary>
+        /// Contrôle Release3GDecimalLbl.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Release3GDecimalLbl;
+        
+        /// <summary>
+        /// Contrôle Release3GDecimalVal.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Release3GDecimalVal;
+        
+        /// <summary>
+        /// Contrôle WPMCodesLbl.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label WPMCodesLbl;
+        
+        /// <summary>
+        /// Contrôle WPMCodes2GLbl.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label WPMCodes2GLbl;
+        
+        /// <summary>
+        /// Contrôle WPMCodes2GVal.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label WPMCodes2GVal;
+        
+        /// <summary>
+        /// Contrôle WPMCodes3GLbl.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label WPMCodes3GLbl;
+        
+        /// <summary>
+        /// Contrôle WPMCodes3GVal.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label WPMCodes3GVal;
+        
+        /// <summary>
         /// Contrôle RadPageHistory.
         /// </summary>
         /// <remarks>
@@ -317,6 +524,15 @@ namespace Etsi.Ultimate.Module.Release {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::Telerik.Web.UI.RadPageView RadPageHistory;
+        
+        /// <summary>
+        /// Contrôle releaseHistory.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.UserControl releaseHistory;
         
         /// <summary>
         /// Contrôle EditBtn.
