@@ -12,6 +12,7 @@ namespace Etsi.Ultimate.DomainClasses
     using System;
     using System.Collections.Generic;
     
+    [Serializable]
     public partial class Meeting
     {
         public int MTG_ID { get; set; }

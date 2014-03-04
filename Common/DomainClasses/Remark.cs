@@ -12,6 +12,7 @@ namespace Etsi.Ultimate.DomainClasses
     using System;
     using System.Collections.Generic;
     
+    [Serializable]
     public partial class Remark
     {
         public int Pk_RemarkId { get; set; }

@@ -12,6 +12,7 @@ namespace Etsi.Ultimate.DomainClasses
     using System;
     using System.Collections.Generic;
     
+    [Serializable]
     public partial class Enum_ReleaseStatus
     {
         public Enum_ReleaseStatus()

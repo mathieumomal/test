@@ -12,6 +12,7 @@ namespace Etsi.Ultimate.DomainClasses
     using System;
     using System.Collections.Generic;
     
+    [Serializable]
     public partial class History
     {
         public int Pk_HistoryId { get; set; }

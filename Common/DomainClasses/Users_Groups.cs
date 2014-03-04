@@ -12,6 +12,7 @@ namespace Etsi.Ultimate.DomainClasses
     using System;
     using System.Collections.Generic;
     
+    [Serializable]
     public partial class Users_Groups
     {
         public int PERSON_ID { get; set; }
