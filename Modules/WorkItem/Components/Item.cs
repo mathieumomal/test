@@ -16,7 +16,7 @@ using DotNetNuke.Common.Utilities;
 using DotNetNuke.ComponentModel.DataAnnotations;
 using DotNetNuke.Entities.Content;
 
-namespace Christoc.Modules.WorkItem.Components
+namespace Etsi.Ultimate.Module.WorkItem.Components
 {
     [TableName("WorkItem_Items")]
     //setup the primary key for table

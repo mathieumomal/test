@@ -12,13 +12,18 @@
 
 using System;
 using System.Web.UI.WebControls;
-using Christoc.Modules.WorkItem.Components;
+using Etsi.Ultimate.Module.WorkItem;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.UI.Utilities;
+using DotNetNuke.Common.Utilities;
+using Telerik.Web.UI;
+using System.Text;
+using System.IO;
+using System.Collections.Generic;
 
 namespace Etsi.Ultimate.Module.WorkItem
 {
@@ -37,14 +42,15 @@ namespace Etsi.Ultimate.Module.WorkItem
     /// -----------------------------------------------------------------------------
     public partial class View : WorkItemModuleBase, IActionable
     {
+        private static string readonlyPathImportWorkPlan = "c:\\TEST_IMPORT\\";
+        private static string readOnlyExtensionCsv = "csv";
+        private static string readOnlyExtensionZip = "zip";
+        
         protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
-                var tc = new ItemController();
                 
-                rptItemList.DataSource = tc.GetItems(ModuleId);
-                rptItemList.DataBind();
             }
             catch (Exception exc) //Module failed to load
             {
@@ -52,49 +58,61 @@ namespace Etsi.Ultimate.Module.WorkItem
             }
         }
 
-        protected void rptItemListOnItemDataBound(object sender, RepeaterItemEventArgs e)
+        /// <summary>
+        /// Method call by ajax when workplan is uploaded => WorkPlan Analyse
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void AsyncUpload_FileImport(object sender, FileUploadedEventArgs e)
         {
-            if (e.Item.ItemType == ListItemType.AlternatingItem || e.Item.ItemType == ListItemType.Item)
-            {
-                var lnkEdit = e.Item.FindControl("lnkEdit") as HyperLink;
-                var lnkDelete = e.Item.FindControl("lnkDelete") as LinkButton;
+            //Remove client cache
+            Context.Cache.Remove(Session.SessionID + "UploadedWorkPlan");
+            //Get workplan
+            UploadedFile workplanUploaded = e.File;
+            //Add uploaded workplan in cache
+            Context.Cache.Insert(Session.SessionID + "UploadedWorkPlan", workplanUploaded, null, DateTime.Now.AddMinutes(20), TimeSpan.Zero);
+            //Update View Label of RadWindow_workItemConfirmation Modal with the suppose file path
+            path_export.Text = new StringBuilder().Append(readonlyPathImportWorkPlan).Append(workplanUploaded.GetName()).ToString();
 
-                var pnlAdminControls = e.Item.FindControl("pnlAdmin") as Panel;
+            //File analyse and update list of warnings dataSource
+            List<string> datasource = new List<string>();
+            datasource.Add("WpId, UID WI Unique_Id: Acronym \"Acronym name\" is duplicated on other work items with same level.");
+            datasource.Add("WpId, UID WI Unique_Id: Cannot identify release : Release name.");
+            datasource.Add("WpId, UID WI Unique_Id:Rapporteur email \"Email\" could not match an existing user in database.");
+            datasource.Add("WpId Unique_Acronym \"Acronym name\" is duplicated on other work items with same level.");
+            datasource.Add("WpIdCannotI Unique_Identify release : Releasgfe name.");
+            datasource.Add("WpId, UID WI Unique_Idteur email \"Email\" could not match an existing user in database.");
+            datasource.Add("Wue_Id: Acronym \"Acronye\" is duplicated on other work items with same level.");
+            datasource.Add("WpId, UI Unique_Id: Cannot identify release : Releasegf name.");
+            datasource.Add("W WI Unique_Id:Rapporteur email \"Email\" could not match an existing user in database.");
+            repeater.DataSource = datasource;
+            repeater.DataBind();
 
-                var t = (Item)e.Item.DataItem;
-
-                if (IsEditable && lnkDelete != null && lnkEdit != null && pnlAdminControls != null)
-                {
-                    pnlAdminControls.Visible = true;
-                    lnkDelete.CommandArgument = t.ItemId.ToString();
-                    lnkDelete.Enabled = lnkDelete.Visible = lnkEdit.Enabled = lnkEdit.Visible = true;
-
-                    lnkEdit.NavigateUrl = EditUrl(string.Empty, string.Empty, "Edit", "tid=" + t.ItemId);
-
-                    ClientAPI.AddButtonConfirm(lnkDelete, Localization.GetString("ConfirmDelete", LocalResourceFile));
-                }
-                else
-                {
-                    pnlAdminControls.Visible = false;
-                }
-            }
+            System.Threading.Thread.Sleep(2000);
         }
 
-
-        public void rptItemListOnItemCommand(object source, RepeaterCommandEventArgs e)
+        /// <summary>
+        /// Method call when client confirm the import => save workplan
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void Confirmation_import_OnClick(object sender, EventArgs e)
         {
-            if (e.CommandName == "Edit")
-            {
-                Response.Redirect(EditUrl(string.Empty, string.Empty, "Edit", "tid=" + e.CommandArgument));
-            }
-
-            if (e.CommandName == "Delete")
-            {
-                var tc = new ItemController();
-                tc.DeleteItem(Convert.ToInt32(e.CommandArgument), ModuleId);
-            }
-            Response.Redirect(DotNetNuke.Common.Globals.NavigateURL());
+            //Get workplan uploaded in cache
+            var workplanUploaded = (UploadedFile)Context.Cache.Get(Session.SessionID + "UploadedWorkPlan");
+            //Save workplan on server
+            workplanUploaded.SaveAs(new StringBuilder()
+                .Append(readonlyPathImportWorkPlan)
+                .Append(workplanUploaded.GetName())
+                .ToString(), 
+            true);
+            //Update RadWindow_workItemState label with real path file 
+            path_available.Text = new StringBuilder()
+                .Append(readonlyPathImportWorkPlan)
+                .Append(workplanUploaded.GetName())
+                .ToString();
         }
+
 
         public ModuleActionCollection ModuleActions
         {
@@ -110,5 +128,6 @@ namespace Etsi.Ultimate.Module.WorkItem
                 return actions;
             }
         }
+
     }
 }

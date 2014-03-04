@@ -12,7 +12,7 @@
 using System.Collections.Generic;
 using DotNetNuke.Data;
 
-namespace Christoc.Modules.WorkItem.Components
+namespace Etsi.Ultimate.Module.WorkItem.Components
 {
     class ItemController
     {

@@ -12,8 +12,9 @@
 
 using System;
 using DotNetNuke.Entities.Users;
-using Christoc.Modules.WorkItem.Components;
+using Etsi.Ultimate.Module.WorkItem;
 using DotNetNuke.Services.Exceptions;
+using Etsi.Ultimate.Module.WorkItem.Components;
 
 namespace Etsi.Ultimate.Module.WorkItem
 {

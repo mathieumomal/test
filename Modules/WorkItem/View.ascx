@@ -1,23 +1,209 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="View.ascx.cs" Inherits="Etsi.Ultimate.Module.WorkItem.View" %>
-<asp:Repeater ID="rptItemList" runat="server" OnItemDataBound="rptItemListOnItemDataBound" OnItemCommand="rptItemListOnItemCommand">
-    <HeaderTemplate>
-        <ul class="tm_tl">
-    </HeaderTemplate>
+<%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.Client.ClientResourceManagement" Assembly="DotNetNuke.Web.Client" %>
+<%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 
-    <ItemTemplate>
-        <li class="tm_t">
-            <h3>
-                <asp:Label ID="lblitemName" runat="server" Text='<%#DataBinder.Eval(Container.DataItem,"ItemName").ToString() %>' />
-            </h3>
-            <asp:Label ID="lblItemDescription" runat="server" Text='<%#DataBinder.Eval(Container.DataItem,"ItemDescription").ToString() %>' CssClass="tm_td" />
 
-            <asp:Panel ID="pnlAdmin" runat="server" Visible="false">
-                <asp:HyperLink ID="lnkEdit" runat="server" ResourceKey="EditItem.Text" Visible="false" Enabled="false" />
-                <asp:LinkButton ID="lnkDelete" runat="server" ResourceKey="DeleteItem.Text" Visible="false" Enabled="false" CommandName="Delete" />
-            </asp:Panel>
-        </li>
-    </ItemTemplate>
-    <FooterTemplate>
-        </ul>
-    </FooterTemplate>
-</asp:Repeater>
+<telerik:RadButton ID="workItem_import" runat="server" Enabled="true" AutoPostBack="false" OnClientClicked="open_RadWindow_workItemImport" Text="Import work plan"></telerik:RadButton>
+
+<telerik:RadAjaxManager ID="RadAjaxManager" runat="server" EnablePageHeadUpdate="false">
+    <ClientEvents OnRequestStart="Start" OnResponseEnd="End" />
+    <AjaxSettings>
+        <telerik:AjaxSetting AjaxControlID="RadAjaxManager">
+            <UpdatedControls>
+                <telerik:AjaxUpdatedControl ControlID="path_export" />
+                <telerik:AjaxUpdatedControl ControlID="repeater" />
+            </UpdatedControls>
+        </telerik:AjaxSetting>
+        <telerik:AjaxSetting AjaxControlID="Confirmation_import">
+            <UpdatedControls>
+                <telerik:AjaxUpdatedControl ControlID="path_available" />
+            </UpdatedControls>
+        </telerik:AjaxSetting>
+    </AjaxSettings>
+</telerik:RadAjaxManager>
+
+
+
+<telerik:RadWindowManager ID="RadWindowManager1" runat="server" >
+    <Windows>
+        <telerik:RadWindow ID="RadWindow_workItemImport" runat="server" Modal="true" Title="Work Plan Import" Height="170" Width="500" VisibleStatusbar="false" iconUrl="false">
+            <ContentTemplate>
+                <div class="contentModal" id="import">
+                    <div class="header">
+                        You are about to update the Work Items database.<br/>Please select the work plan file to upload.
+                    </div>
+                    <div class="center">
+                        <telerik:RadAsyncUpload ID="RadAsyncUpload" runat="server" 
+                            AllowedFileExtensions="csv,zip" 
+                            Localization-Select="Browse" 
+                            MaxFileInputsCount="1" 
+                            OnClientFileUploaded="OnClientFileUploaded" 
+                            OnClientValidationFailed="OnClientValidationFailed" 
+                            OnFileUploaded="AsyncUpload_FileImport" 
+                            OnClientFileSelected="EnabledButtonImport" 
+                            OnClientFileUploadRemoved="DisabledButtonImport" 
+                            ManualUpload="true">
+                        </telerik:RadAsyncUpload>
+                    </div>
+                    <div class="footer">
+                        <telerik:RadButton ID="importButton" runat="server" Text="Import" OnClientClicked="startImport" AutoPostBack="false" Enabled="false" ></telerik:RadButton>
+                        <telerik:RadButton ID="import_cancel" runat="server" Text="Cancel" OnClientClicked="cancel" AutoPostBack="false" ></telerik:RadButton>
+                    </div>
+                    
+                </div>
+            </ContentTemplate>
+        </telerik:RadWindow>
+
+        <telerik:RadWindow ID="RadWindow_workItemAnalysis" runat="server" Modal="true" Title="Work Plan analysis - Processing ..." Width="400" Height="180" VisibleStatusbar="false">
+            <ContentTemplate>
+                <div class="contentModal" id="analysis">
+                    <div class="header">
+                        Workplan analysis is in progress.
+                    </div>
+                    <div class="center">
+                        <asp:Image ID="Image1" runat="server" ImageUrl="~/DesktopModules/WorkItem/images/hourglass.png" width="45"/>
+                    </div>
+                    <div class="footer">
+                        <telerik:RadButton ID="analysis_cancel" runat="server" Text="Cancel" OnClientClicked="cancel" AutoPostBack="false"></telerik:RadButton>
+                    </div>
+                </div>
+            </ContentTemplate>
+        </telerik:RadWindow>
+
+        <telerik:RadWindow ID="RadWindow_workItemConfirmation" runat="server" Modal="true" Title="Import confirmation" Width="700" Height="370" VisibleStatusbar="false">
+            <ContentTemplate>
+                <div class="contentModal" id="confirmation">
+                    <div class="header">
+                        # Warnings found on the work plan.
+                    </div>
+                    <div>
+                        <h2>Warnings</h2>
+                        <div class="scrollable">
+                            <ul>
+                                <asp:Repeater runat="server" ID="repeater">
+                                    <ItemTemplate>
+                                        <li> <%# Container.DataItem %> </li>
+                                    </ItemTemplate>
+                                </asp:Repeater>
+                            </ul>
+                        </div>
+                        <div>
+                            The new work plan will be exported to : 
+                            <asp:Label runat="server" ID="path_export" Text="H:/..."/>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <telerik:RadButton ID="Confirmation_import" runat="server" Text="Confirm import" AutoPostBack="true" OnClick="Confirmation_import_OnClick" ></telerik:RadButton>
+                        <telerik:RadButton ID="Confirmation_cancel" runat="server" Text="Cancel" AutoPostBack="false" OnClientClicked="cancel" ></telerik:RadButton>
+                    </div>
+                </div>
+            </ContentTemplate>
+        </telerik:RadWindow>
+
+        <telerik:RadWindow ID="RadWindow_workItemState" runat="server" Modal="true" Title="Work plan import and export successful" Width="450" Height="170" VisibleStatusbar="false">
+            <ContentTemplate>
+                <div class="contentModal" id="state">
+                    <div class="header">
+                        Work plan was successfully imported.<br/>
+                        Word and Excel version of the work plan are available on :
+                    </div>
+                    <div>
+                        <asp:Label id="path_available" runat="server" Text="H:/..." />
+                    </div>
+                    <div class="footer">
+                        <telerik:RadButton ID="state_confirmation" runat="server" Text="OK" OnClientClicked="closeAllModals" AutoPostBack="false"></telerik:RadButton>
+                    </div>
+                </div>
+            </ContentTemplate>
+        </telerik:RadWindow>
+    </Windows>
+</telerik:RadWindowManager>
+
+<script type="text/javascript">
+    //Documentation telerik -> JS method to modify radWindow : http://www.telerik.com/help/aspnet-ajax/window-programming-radwindow-methods.html
+
+    /*--- MODALS ---*/
+
+    function open_RadWindow_workItemImport(sender, eventArgs) {
+        closeAllModals();
+        window.radopen(null, "RadWindow_workItemImport");
+    }
+    function open_RadWindow_workItemAnalysis(sender, eventArgs) {
+        //Reset file to upload
+        closeAllModals();
+        window.radopen(null, "RadWindow_workItemAnalysis");
+    }
+    function open_RadWindow_workItemConfirmation(sender, eventArgs) {
+        closeAllModals();
+        window.radopen(null, "RadWindow_workItemConfirmation");
+    }
+    function open_RadWindow_workItemState(sender, eventArgs) {
+        closeAllModals();
+        window.radopen(null, "RadWindow_workItemState");
+    }
+
+    /*--- MODALS ---*/
+
+
+    /*--- EVENTS ---*/
+
+    function startImport() {
+        var upload = $find('<%= RadAsyncUpload.ClientID%>');
+        upload.startUpload();
+    }
+    function closeAllModals() {
+        var manager = GetRadWindowManager();
+        manager.closeAll();
+    }
+    function clearFilesToUpload() {
+        var upload = $find("<%= RadAsyncUpload.ClientID %>");
+        upload.deleteAllFileInputs();
+    }
+    function cancel() {
+        window.location();
+    }
+
+    /*-- TELERIK EVENTS --*/
+
+    function Start(sender, arguments) {
+        if (arguments.EventTarget == "<%= RadAjaxManager.UniqueID %>") {
+            clearFilesToUpload();
+            open_RadWindow_workItemAnalysis();
+        }
+        if (arguments.EventTarget == "<%= Confirmation_import.UniqueID %>") {
+
+        }
+    }
+    function End(sender, arguments) {
+        if (arguments.EventTarget == "<%= RadAjaxManager.UniqueID %>") {
+            open_RadWindow_workItemConfirmation();
+        } if (arguments.EventTarget == "<%= Confirmation_import.UniqueID %>") {
+            open_RadWindow_workItemState();
+        }
+    }
+    function OnClientValidationFailed() {
+        alert('Just csv and zip files are allowed here.');
+    }
+
+    function EnabledButtonImport() {
+        var but = $find("<%=importButton.ClientID %>");
+        but.set_enabled(true);
+    }
+    function DisabledButtonImport() {
+        var but = $find("<%=importButton.ClientID %>");
+        but.set_enabled(false);
+    }
+
+    /*-- TELERIK EVENTS --*/
+
+    /*--- EVENTS ---*/
+</script>
+
+
+<telerik:RadScriptBlock runat="server">
+    <script type="text/javascript">
+        function OnClientFileUploaded(sender, args) {
+            $find('<%=RadAjaxManager.ClientID %>').ajaxRequest();
+        }
+    </script>
+</telerik:RadScriptBlock>

@@ -1,0 +1,60 @@
+.contentModal{padding:10px 25px;}
+.header{margin-bottom: 10px;}
+.center{
+	margin:auto;
+	text-align: center;
+}
+.footer{
+	text-align: right;
+	margin-top: 10px;
+}
+.RadWindow_Default a.rwIcon 
+{ 
+    background-image: none !important;
+    width:0; 
+}
+
+/*IMPORT*/
+#import .inputImport{
+	width:200px;
+	margin-right: 2px;
+}
+#import .center{
+	margin:10px 0px;
+}
+#import .ruFakeInput{
+	width: 357px;
+	margin-right: 1px;
+}
+/*IMPORT*/
+
+/*ANALYSIS*/
+#analysis .header{
+	margin-bottom: 20px;
+}
+/*ANALYSIS*/
+
+/*CONFIRMATION*/
+#confirmation .scrollable {
+	height: 140px;
+	overflow: auto;
+	border: solid 1px rgb(206, 206, 206);
+	padding: 10px 20px;
+	margin-bottom: 10px;
+	background: rgb(240, 240, 240);
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	-moz-box-shadow: inset 1px 1px 5px -1px #656565;
+	-webkit-box-shadow: inset 1px 1px -2px -1px #656565;
+	-o-box-shadow: inset 1px 1px 5px -1px #656565;
+	box-shadow: inset 1px 1px 24px -11px #656565;
+	filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=134, Strength=5);
+	border-radius: 5px;
+
+}
+#confirmation h2{
+	font-size: 14px;
+	padding: 0;
+	margin: 0;
+}
+/*CONFIRMATION*/
