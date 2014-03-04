@@ -16,11 +16,14 @@
 </style>
 
 <telerik:RadGrid runat="server" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" ID="historyTable" AllowPaging="false" AllowSorting="false" AllowFilteringByColumn="false" AutoGenerateColumns="false">
+    <ClientSettings>
+       <Scrolling AllowScroll="True" UseStaticHeaders="true" />
+    </ClientSettings>
     <mastertableview clientdatakeynames="Pk_HistoryId">
         <Columns>
             <telerik:GridTemplateColumn HeaderStyle-Width="140px" DataField="CreationDate" HeaderText="Action Date" UniqueName="CreationDate">
                 <ItemTemplate>
-                    <span><%# DataBinder.Eval(Container.DataItem,"CreationDate", "{0:yyyy-mm-dd hh:mm}") %></span>  
+                    <span><%# DataBinder.Eval(Container.DataItem,"CreationDate", "{0:yyyy-mm-dd hh:mm UTC}") %></span>  
                 </ItemTemplate>                    
             </telerik:GridTemplateColumn>
             <telerik:GridTemplateColumn DataField="HistoryText" HeaderText="Action" UniqueName="HistoryText">
