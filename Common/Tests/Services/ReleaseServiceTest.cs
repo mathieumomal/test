@@ -136,5 +136,26 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsNotNull(newReleases);
             Assert.AreEqual(fakeDescription, newReleases.Key.First().Description);
         }
+
+        [TestCase(0, 1)]
+        [TestCase(0, 2)]
+        [TestCase(0, 4)]
+        public void Test_GetPreviousReleaseCode(int personID, int releaseId)
+        {
+            // Setup the dependency manager, let's test both Service and business
+            RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
+
+            // Call the code
+            var releaseService = new ReleaseService();
+            var previousCode = releaseService.GetPreviousReleaseCode(personID, releaseId);
+            if (releaseId == 1)
+            {
+                Assert.AreEqual(string.Empty, previousCode);
+            }
+            else
+            {
+                Assert.AreNotEqual(string.Empty, previousCode);
+            }
+        }
     }
 }
