@@ -15,7 +15,9 @@
 </style>
 
 <fieldset style="padding: 5px;">
-    <legend>Remarks</legend>
+    <legend>
+        <asp:Label runat="server" ID="legendLabel"></asp:Label>
+    </legend>
     <table style="width: 100%">
         <tr>
             <td colspan="2">

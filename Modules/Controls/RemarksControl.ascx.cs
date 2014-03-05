@@ -86,6 +86,7 @@ namespace Etsi.Ultimate.Controls
         protected void remarksGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
         {
             remarksGrid.DataSource = DataSource;
+            legendLabel.Text = String.Format("Remarks ({0})", (HidePrivateRemarks) ? DataSource.FindAll(x => x.IsPublic == true).Count : DataSource.Count);
         }
 
         /// <summary>
