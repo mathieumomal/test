@@ -196,8 +196,7 @@ namespace Etsi.Ultimate.Module.Release
                     RedirectionURL.Append("?releaseId=");
                     RedirectionURL.Append(currentRelease.Pk_ReleaseId);
                 }
-                RedirectionURL.Append("&UserID=");
-                RedirectionURL.Append(GetUserPersonId(UserInfo).ToString());
+                
 
                 details.Attributes.Add("OnClick", OpenWindow(this.Page, "Release details window", RedirectionURL.ToString(), 850, 650, this.GetType()));
                 

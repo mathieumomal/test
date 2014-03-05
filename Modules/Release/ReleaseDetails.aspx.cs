@@ -18,8 +18,9 @@ namespace Etsi.Ultimate.Module.Release
         private static String CONST_ADMIN_TAB = "Administration";
         private static String CONST_HISTORY_TAB = "History";
         private const string CONST_EMPTY_FIELD = " - ";
+        public static readonly string DsId_Key = "ETSI_DS_ID";
 
-        private Nullable<int> UserId;
+        private int UserId;
         private Nullable<int> ReleaseId;
         #endregion
 
@@ -28,12 +29,12 @@ namespace Etsi.Ultimate.Module.Release
         {
             if (!IsPostBack)
             {
-                getRequestParameters();
+                GetRequestParameters();
 
-                if (ReleaseId != null && UserId != null)
+                if (ReleaseId != null)
                 {
                     IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
-                    KeyValuePair<DomainClasses.Release, DomainClasses.UserRightsContainer> releaseRightsObject = svc.GetReleaseById(UserId.Value, ReleaseId.Value);
+                    KeyValuePair<DomainClasses.Release, DomainClasses.UserRightsContainer> releaseRightsObject = svc.GetReleaseById(UserId, ReleaseId.Value);
                     Domain.Release release = releaseRightsObject.Key;
                     DomainClasses.UserRightsContainer userRights = releaseRightsObject.Value;
 
@@ -52,7 +53,7 @@ namespace Etsi.Ultimate.Module.Release
                         FillGeneralTab(userRights, release);
 
                         if (userRights.HasRight(Domain.Enum_UserRights.Release_ViewCompleteDetails))
-                            FillAdminTab(release, svc.GetPreviousReleaseCode(UserId.Value, release.Pk_ReleaseId));
+                            FillAdminTab(release, svc.GetPreviousReleaseCode(UserId, release.Pk_ReleaseId));
 
                         ManageButtonDisplay(userRights);
 
@@ -72,7 +73,7 @@ namespace Etsi.Ultimate.Module.Release
                     releaseDetailsBody.Visible = false;
                     releaseWarning.Visible = true;
                 }
-            }
+            }            
         }
 
         protected override void Render(HtmlTextWriter writer)
@@ -201,9 +202,9 @@ namespace Etsi.Ultimate.Module.Release
         /// <summary>
         /// Retreive the URL parameters
         /// </summary>
-        private void getRequestParameters()
-        {
-            UserId = (Request.QueryString["UserID"]!=null) ? new Nullable<int>(int.Parse(Request.QueryString["UserID"])) : null;
+        private void GetRequestParameters()
+        {            
+            UserId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
             ReleaseId = (Request.QueryString["releaseId"]!=null) ? new Nullable<int>(int.Parse(Request.QueryString["releaseId"])) : null;
         }
 
@@ -221,6 +222,24 @@ namespace Etsi.Ultimate.Module.Release
             if(userRights.HasRight((Domain.Enum_UserRights.Release_Close)))
                 CloseReleaseBtn.Visible = true;
             
+        }
+
+        /// <summary>
+        /// Retrieve person If
+        /// </summary>
+        /// <param name="UserInfo"></param>
+        /// <returns></returns>
+        private int GetUserPersonId(DotNetNuke.Entities.Users.UserInfo UserInfo)
+        {
+            if (UserInfo.UserID < 0)
+                return 0;
+            else
+            {
+                int personID;
+                if (Int32.TryParse(UserInfo.Profile.GetPropertyValue(DsId_Key), out personID))
+                    return personID;
+            }
+            return 0;
         }
        
     }

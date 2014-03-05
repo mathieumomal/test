@@ -83,12 +83,19 @@ legend {
 .TabLineRight {
     width: 70%;
     text-align: left;
+}
+
+.TabLineRight span{
     font: italic;
 }
 
 .TabLine3colRight {
     width: 35%;
     text-align: left;
+}
+
+.TabLine3colRight span{
+    font: italic;
 }
 
 versionFieldsetTab {
