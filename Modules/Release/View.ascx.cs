@@ -78,7 +78,7 @@ namespace Etsi.Ultimate.Module.Release
                 UserRightsContainer userRights = releaseRightsObjects.Value;
 
                 //Show freezes if connected
-                if (!userRights.HasRight(Enum_UserRights.Release_ViewCompleteDetails))
+                if (!userRights.HasRight(Enum_UserRights.Release_ViewCompleteList))
                 {
                     releasesTable.MasterTableView.GetColumn("Stage1FreezeDate").Visible = false;
                     releasesTable.MasterTableView.GetColumn("Stage2FreezeDate").Visible = false;
@@ -124,34 +124,6 @@ namespace Etsi.Ultimate.Module.Release
 
 
         /// <summary>
-        /// Retrun javascript function to open a popup window
-        /// </summary>
-        /// <param name="currentPage">Current page</param>
-        /// <param name="window">Window </param>
-        /// <param name="htmlPage">Popup page</param>
-        /// <param name="width">Width of the window</param>
-        /// <param name="height">Height of the window</param>
-        public static string OpenWindow(Page currentPage, String window, String htmlPage, Int32 width, Int32 height, Type winType)
-        {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            sb.Append("window.open('");
-            sb.Append(htmlPage);
-            sb.Append("','");
-            sb.Append(window);
-            sb.Append("','width=");
-            sb.Append(width);
-            sb.Append(",height=");
-            sb.Append(height);
-            sb.Append(",toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no");
-            sb.Append("');");
-            sb.Append("popWin.focus();");
-
-            return sb.ToString();
-        }
-
-        
-
-        /// <summary>
         /// Handler data cell
         /// </summary>
         /// <param name="sender"></param>
@@ -186,20 +158,6 @@ namespace Etsi.Ultimate.Module.Release
                 TreatFreezeDate(stage3FreezeDateCell, currentRelease.Stage3FreezeDate, currentRelease.Stage3FreezeMtgRef);
 
                 //Set ReleaseId for details
-                ImageButton details = dataItem["releaseDetails"].Controls[0] as ImageButton;
-                //details.CommandArgument = currentRelease.Pk_ReleaseId.ToString();                
-                
-                System.Text.StringBuilder RedirectionURL = new System.Text.StringBuilder();
-                RedirectionURL.Append("/desktopmodules/Release/ReleaseDetails.aspx");
-                if (currentRelease != null)
-                {
-                    RedirectionURL.Append("?releaseId=");
-                    RedirectionURL.Append(currentRelease.Pk_ReleaseId);
-                }
-                
-
-                details.Attributes.Add("OnClick", OpenWindow(this.Page, "Release details window", RedirectionURL.ToString(), 850, 650, this.GetType()));
-                
             }
 
 

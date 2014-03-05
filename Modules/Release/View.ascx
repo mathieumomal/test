@@ -48,8 +48,14 @@
                     <span><%# DataBinder.Eval(Container.DataItem,"ClosureDate", "{0:yyyy-MM-dd}") %></span>  
                 </ItemTemplate>                    
             </telerik:GridTemplateColumn>
-            <telerik:GridButtonColumn HeaderStyle-Width="2%" CommandName="releaseDetails" Text="See details" UniqueName="releaseDetails" ButtonType="ImageButton" ImageUrl="~/DesktopModules/Release/images/details.png">                            
-            </telerik:GridButtonColumn>
+            <telerik:GridTemplateColumn HeaderStyle-Width="2%" UniqueName="ReleaseDetails">
+                <ItemTemplate>
+					<span></span>
+                    <img id="imgViewReleases" alt="See details" src="/DesktopModules/Release/images/details.png" 
+                        onclick="var popUp=window.open('/desktopmodules/Release/ReleaseDetails.aspx?releaseId=<%# DataBinder.Eval(Container.DataItem,"Pk_ReleaseId").ToString() %>',
+								'Rel-<%# DataBinder.Eval(Container.DataItem,"Pk_ReleaseId").ToString() %>', 'height=850,width=650,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
+                </ItemTemplate>                    
+            </telerik:GridTemplateColumn>
             <telerik:GridButtonColumn HeaderStyle-width="2%" CommandName="seeSpec" Text="See related specifications" UniqueName="seeSpec" ButtonType="ImageButton" ImageUrl="~/DesktopModules/Release/images/specifications.jpg"></telerik:GridButtonColumn>
         </Columns>
     </MasterTableView>

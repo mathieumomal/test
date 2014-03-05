@@ -75,7 +75,6 @@
     <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.Repositories.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.Utils.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     <Copy SourceFiles="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
-    <Copy SourceFiles="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.Configuration.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     <Copy SourceFiles="$(MSBuildDnnBinPath)\Rhino.Mocks.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     <Copy SourceFiles="$(MSBuildDnnBinPath)\EntityFramework.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     <Copy SourceFiles="$(MSBuildDnnBinPath)\EntityFramework.SqlServer.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
@@ -116,7 +115,6 @@
     <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.Repositories.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.Utils.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     <Copy SourceFiles="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
-    <Copy SourceFiles="$(MSBuildDnnBinPath)\Microsoft.Practices.Unity.Configuration.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     <Copy SourceFiles="$(MSBuildDnnBinPath)\Rhino.Mocks.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     <Copy SourceFiles="$(MSBuildDnnBinPath)\EntityFramework.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     <Copy SourceFiles="$(MSBuildDnnBinPath)\EntityFramework.SqlServer.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
