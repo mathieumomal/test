@@ -33,19 +33,19 @@
                     </ClientSettings>
                     <MasterTableView clientdatakeynames="Pk_RemarkId, IsPublic" EditMode="InPlace">
                         <Columns>
-                            <telerik:GridTemplateColumn DataField="CreationDate" HeaderText="Creation Date" UniqueName="CreationDate">
+                            <telerik:GridTemplateColumn DataField="CreationDate" HeaderText="Creation date" UniqueName="CreationDate">
                                 <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="150px"/> 
                                 <ItemTemplate>
                                     <span><%# DataBinder.Eval(Container.DataItem,"CreationDate", "{0:yyyy-MM-dd hh:mm UTC}") %></span>  
                                 </ItemTemplate>                 
                             </telerik:GridTemplateColumn>
-                            <telerik:GridTemplateColumn DataField="PersonName" HeaderText="Created By" UniqueName="CreatedBy">
+                            <telerik:GridTemplateColumn DataField="PersonName" HeaderText="Author" UniqueName="CreatedBy">
                                 <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="150px"/> 
                                 <ItemTemplate>
                                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"PersonName") %></div>  
                                 </ItemTemplate>
                             </telerik:GridTemplateColumn>
-                            <telerik:GridTemplateColumn DataField="RemarkText" HeaderText="Remarks" UniqueName="RemarkText">
+                            <telerik:GridTemplateColumn DataField="RemarkText" HeaderText="Remark" UniqueName="RemarkText">
                                 <HeaderStyle HorizontalAlign="Center" Font-Bold="True"/>
                                 <ItemTemplate>
                                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"RemarkText") %></div>  
