@@ -21,17 +21,20 @@
     </ClientSettings>
     <mastertableview clientdatakeynames="Pk_HistoryId">
         <Columns>
-            <telerik:GridTemplateColumn HeaderStyle-Width="140px" DataField="CreationDate" HeaderText="Action Date" UniqueName="CreationDate">
+            <telerik:GridTemplateColumn DataField="CreationDate" HeaderText="Action date" UniqueName="CreationDate">
+                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="140px"/> 
                 <ItemTemplate>
                     <span><%# DataBinder.Eval(Container.DataItem,"CreationDate", "{0:yyyy-mm-dd hh:mm UTC}") %></span>  
                 </ItemTemplate>                    
             </telerik:GridTemplateColumn>
             <telerik:GridTemplateColumn DataField="HistoryText" HeaderText="Action" UniqueName="HistoryText">
+                <HeaderStyle HorizontalAlign="Center" Font-Bold="True"/> 
                 <ItemTemplate>
                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"HistoryText") %></div>  
                 </ItemTemplate> 
             </telerik:GridTemplateColumn>
-            <telerik:GridTemplateColumn HeaderStyle-Width="140px" DataField="PersonName" HeaderText="Author" UniqueName="PersonName">
+            <telerik:GridTemplateColumn DataField="PersonName" HeaderText="Author" UniqueName="PersonName">
+                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="140px"/> 
                 <ItemTemplate>
                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"PersonName") %></div>  
                 </ItemTemplate> 
