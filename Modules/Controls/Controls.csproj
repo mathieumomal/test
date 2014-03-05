@@ -45,9 +45,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.dll</HintPath>
     </Reference>
-    <Reference Include="Ionic.Zip">
-      <HintPath>..\..\packages\DotNetZip.1.9.2\lib\net20\Ionic.Zip.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -91,7 +88,6 @@
     <Compile Include="RemarksControl.ascx.designer.cs">
       <DependentUpon>RemarksControl.ascx</DependentUpon>
     </Compile>
-    <Compile Include="Zip.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="HistoryControl.ascx" />
