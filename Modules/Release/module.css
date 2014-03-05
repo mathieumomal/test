@@ -86,7 +86,7 @@ legend {
 }
 
 .TabLineRight span{
-    font: italic;
+    font-style:italic !important;
 }
 
 .TabLine3colRight {
@@ -95,7 +95,7 @@ legend {
 }
 
 .TabLine3colRight span{
-    font: italic;
+    font-style:italic !important;
 }
 
 versionFieldsetTab {
