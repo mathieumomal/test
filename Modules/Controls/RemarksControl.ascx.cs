@@ -94,7 +94,7 @@ namespace Etsi.Ultimate.Controls
         /// </summary>
         /// <param name="sender">Source of Event</param>
         /// <param name="e">Event Args</param>
-        protected void remarksGrid_ItemDataBound(object sender, Telerik.Web.UI.GridItemEventArgs e)
+        protected void remarksGrid_ItemDataBinding(object sender, Telerik.Web.UI.GridItemEventArgs e)
         {
             if (HidePrivateRemarks)
             {
