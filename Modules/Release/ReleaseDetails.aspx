@@ -17,7 +17,7 @@
 <body class="releaseDetailBody">
     <form id="ReleaseDetailsForm" runat="server">
        <div class="containerFix">
-       <asp:Panel ID="releaseWarning" runat="server" CssClass="releaseDetailsWarning" Visible="false" Height="100%">
+       <asp:Panel ID="releaseWarning" runat="server" CssClass="releaseDetailsWarning" Visible="false">
            <span class="releaseDetailsWarningTxt">No data available for the current query.</span>
        </asp:Panel>
        <asp:Panel ID="releaseDetailsBody" runat="server" CssClass="releaseDetailsBody">

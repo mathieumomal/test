@@ -211,9 +211,10 @@ namespace Etsi.Ultimate.Module.Release
         /// Retreive the URL parameters
         /// </summary>
         private void GetRequestParameters()
-        {            
+        {
+            int output;
             UserId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
-            ReleaseId = (Request.QueryString["releaseId"]!=null) ? new Nullable<int>(int.Parse(Request.QueryString["releaseId"])) : null;
+            ReleaseId = (Request.QueryString["releaseId"] != null) ? (int.TryParse(Request.QueryString["releaseId"], out output) ? new Nullable<int>(output) : null) : null;
         }
 
         /// <summary>
