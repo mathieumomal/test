@@ -21,8 +21,10 @@ namespace Etsi.Ultimate.DomainClasses
         public Nullable<bool> IsPublic { get; set; }
         public Nullable<System.DateTime> CreationDate { get; set; }
         public string RemarkText { get; set; }
+        public Nullable<int> Fk_WorkItemId { get; set; }
         public string PersonName { get; set; }
     
         public virtual Release Release { get; set; }
+        public virtual WorkItem WorkItem { get; set; }
     }
 }

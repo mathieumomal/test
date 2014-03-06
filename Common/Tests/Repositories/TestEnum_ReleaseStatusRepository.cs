@@ -22,7 +22,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         [Test]
         public void ReleaseStatus_GetAll()
         {
-            var repo = new EnumReleaseRepository(GetUnitOfWork());
+            var repo = new Enum_ReleaseStatusRepository(GetUnitOfWork());
             Assert.AreEqual(3, repo.All.ToList().Count);
             
         }
@@ -31,14 +31,14 @@ namespace Etsi.Ultimate.Tests.Repositories
         [ExpectedException(typeof(NotImplementedException))]
         public void ReleaseStatus_AllIncluding()
         {
-            var repo = new EnumReleaseRepository(GetUnitOfWork());
+            var repo = new Enum_ReleaseStatusRepository(GetUnitOfWork());
             repo.AllIncluding();
         }
 
         [Test]
         public void ReleaseStatus_Find()
         {
-            var repo = new EnumReleaseRepository(GetUnitOfWork());
+            var repo = new Enum_ReleaseStatusRepository(GetUnitOfWork());
             Assert.AreSame("Frozen", repo.Find(2).ReleaseStatus);
         }
 
@@ -46,7 +46,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         [ExpectedException(typeof(NotImplementedException))]
         public void ReleaseStatus_InsertOrUpdate()
         {
-            var repo = new EnumReleaseRepository(GetUnitOfWork());
+            var repo = new Enum_ReleaseStatusRepository(GetUnitOfWork());
             repo.InsertOrUpdate(new Enum_ReleaseStatus());
         }
 
@@ -54,7 +54,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         [ExpectedException(typeof(InvalidOperationException))]
         public void ReleaseStatus_Delete()
         {
-            var repo = new EnumReleaseRepository(GetUnitOfWork());
+            var repo = new Enum_ReleaseStatusRepository(GetUnitOfWork());
             repo.Delete(2);
         }
 

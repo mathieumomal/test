@@ -9,40 +9,41 @@ using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Repositories
 {
-    public class EnumReleaseRepository : IEnumReleaseRepository
+    /// <summary>
+    /// Default implementation of the PersonRepository. Users the View_Persons in database.
+    /// </summary>
+    public class PersonRepository : IPersonRepository
     {
-        private static string CACHE_KEY = "ULT_REPO_ENUM_RELEASE_STATUS_ALL";
-        
         private IUltimateContext context;
-        public EnumReleaseRepository(IUltimateUnitOfWork iUoW)
+        public PersonRepository(IUltimateUnitOfWork iUoW)
         {
             context = iUoW.Context;
         }
 
-        
 
-        #region IEntityRepository<Enum_ReleaseStatus> Membres
 
-        public IQueryable<Enum_ReleaseStatus> All
+        #region IEntityRepository<PersonRepository> Membres
+
+        public IQueryable<View_Persons> All
         {
             get { 
-                return context.Enum_ReleaseStatus;
+                return context.View_Persons;
             }
         }
 
-        public IQueryable<Enum_ReleaseStatus> AllIncluding(params System.Linq.Expressions.Expression<Func<Enum_ReleaseStatus, object>>[] includeProperties)
+        public IQueryable<View_Persons> AllIncluding(params System.Linq.Expressions.Expression<Func<View_Persons, object>>[] includeProperties)
         {
             throw new NotImplementedException();
         }
 
-        public Enum_ReleaseStatus Find(int id)
+        public View_Persons Find(int id)
         {
-            return context.Enum_ReleaseStatus.Find(id);
+            return context.View_Persons.Find(id);
         }
 
-        public void InsertOrUpdate(Enum_ReleaseStatus entity)
+        public void InsertOrUpdate(View_Persons entity)
         {
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Cannot add or update a person");
         }
 
         public void Delete(int id)
@@ -65,7 +66,7 @@ namespace Etsi.Ultimate.Repositories
         public IUltimateUnitOfWork UoW { get; set; }
     }
 
-    public interface IEnumReleaseRepository : IEntityRepository<Enum_ReleaseStatus>
+    public interface IPersonRepository : IEntityRepository<View_Persons>
     {
 
     }

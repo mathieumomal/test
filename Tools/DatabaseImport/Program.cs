@@ -7,6 +7,7 @@ using Etsi.Ultimate.Tools.TmpDbDataAccess;
 using Etsi.Ultimate.DataAccess;
 using domain = Etsi.Ultimate.DomainClasses;
 using DatabaseImport.ModuleImport;
+using Etsi.Ultimate.DomainClasses;
 
 namespace DatabaseImport
 {

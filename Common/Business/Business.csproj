@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CsvHelper">
+      <HintPath>..\..\packages\CsvHelper.2.4.1\lib\net40-client\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.Unity, Version=2.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Unity.3.0.1304.1\lib\Net45\Microsoft.Practices.Unity.dll</HintPath>
@@ -49,7 +52,8 @@
     <Compile Include="ReleaseManager.cs" />
     <Compile Include="IRightsManager.cs" />
     <Compile Include="RightsManager.cs" />
-    <Compile Include="RightsManagerFake.cs" />
+    <Compile Include="WorkItemCsvParser.cs" />
+    <Compile Include="WorkItemImporter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DomainClasses\DomainClasses.csproj">
@@ -64,6 +68,9 @@
       <Project>{ad1f6a1c-95b2-4274-a0c5-1f8ca9d9bb55}</Project>
       <Name>Utils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

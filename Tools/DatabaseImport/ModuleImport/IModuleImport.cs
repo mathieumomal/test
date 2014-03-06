@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Etsi.Ultimate.DataAccess;
+using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Tools.TmpDbDataAccess;
 
 namespace DatabaseImport.ModuleImport

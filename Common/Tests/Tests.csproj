@@ -38,6 +38,9 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CsvHelper">
+      <HintPath>..\..\packages\CsvHelper.2.4.1\lib\net40-client\CsvHelper.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -67,11 +70,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Business\RightsManagerTest.cs" />
+    <Compile Include="Business\WorkItemCsvParserTest.cs" />
     <Compile Include="DomainClasses\RightsContainerTest.cs" />
     <Compile Include="FakeContext.cs" />
+    <Compile Include="FakeManagers\RightsManagerFake.cs" />
+    <Compile Include="FakeRepositories\CommunityFakeRepository.cs" />
+    <Compile Include="FakeRepositories\MeetingsFakeRepository.cs" />
+    <Compile Include="FakeRepositories\PersonFakeRepository.cs" />
+    <Compile Include="FakeRepositories\WorkItemFakeRepository.cs" />
     <Compile Include="FakeRepositories\ReleaseFakeRepository.cs" />
     <Compile Include="FakeRepositories\RightsFakeRepository.cs" />
     <Compile Include="FakeRepositories\UserRolesFakeRepository.cs" />
+    <Compile Include="FakeSets\CommunityFakeDBSet.cs" />
+    <Compile Include="FakeSets\PersonFakeDBSet.cs" />
+    <Compile Include="FakeSets\WorkItemFakeDBSet.cs" />
     <Compile Include="FakeSets\UsersAdHocRolesFakeDBSet.cs" />
     <Compile Include="FakeSets\UserGroupsFakeDBSet.cs" />
     <Compile Include="FakeSets\RemarkFakeDBSet.cs" />
@@ -81,6 +93,10 @@
     <Compile Include="FakeSets\ReleaseFakeDBSet.cs" />
     <Compile Include="DomainClasses\MeetingTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\CommunityRepositoryTest.cs" />
+    <Compile Include="Repositories\MeetingRepositoryTest.cs" />
+    <Compile Include="Repositories\PersonRepositoryTest.cs" />
+    <Compile Include="Repositories\WorkItemRepositoryTest.cs" />
     <Compile Include="Repositories\UserRolesRepositoryTest.cs" />
     <Compile Include="Repositories\RightsRepositoryTest.cs" />
     <Compile Include="Repositories\TestEnum_ReleaseStatusRepository.cs" />
@@ -90,6 +106,23 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="TestData\WorkItems\BadHierarchy.csv" />
+    <None Include="TestData\WorkItems\InvalidCommittees.csv" />
+    <None Include="TestData\WorkItems\InvalidTsgPcgDates.csv" />
+    <None Include="TestData\WorkItems\NewRemarks.csv" />
+    <None Include="TestData\WorkItems\UnknownRapporteur.csv" />
+    <None Include="TestData\WorkItems\InvalidWiDAndStatus.csv" />
+    <None Include="TestData\WorkItems\InvalidCompletion.csv" />
+    <None Include="TestData\WorkItems\InvalidDates.csv" />
+    <None Include="TestData\WorkItems\IncorrectReleases.csv" />
+    <None Include="TestData\WorkItems\DuplicateAcronymError.csv" />
+    <None Include="TestData\WorkItems\DuplicateAcronymWarning.csv" />
+    <None Include="TestData\WorkItems\HierarchyMgt.csv" />
+    <None Include="TestData\WorkItems\Nominal_WithLevel0Wi.csv" />
+    <None Include="TestData\WorkItems\UID_NonUnique.csv" />
+    <None Include="TestData\WorkItems\empty.csv" />
+    <None Include="TestData\WorkItems\OneLine_Nominal.csv" />
+    <None Include="TestData\WorkItems\WpId_NonUnique.csv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj">

@@ -12,6 +12,7 @@ using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.Tests.FakeManagers;
 
 namespace Etsi.Ultimate.Tests.Services
 {

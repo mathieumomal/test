@@ -39,10 +39,14 @@ namespace Etsi.Ultimate.Repositories
 
             //Map of relation between Interfaces and classes
             container.RegisterType<IReleaseRepository, ReleaseRepository>(new TransientLifetimeManager());
+            container.RegisterType<IWorkItemRepository, WorkItemRepository>(new TransientLifetimeManager());
             container.RegisterType<IUltimateUnitOfWork, UltimateUnitOfWork>(new TransientLifetimeManager());
             
             container.RegisterType<IUserRightsRepository, UserRightsRepository>(new TransientLifetimeManager());
             container.RegisterType<IUserRolesRepository, UserRolesRepository>(new TransientLifetimeManager());
+            container.RegisterType<IPersonRepository, PersonRepository>(new TransientLifetimeManager());
+            container.RegisterType<IMeetingRepository, MeetingRepository>(new TransientLifetimeManager());
+            container.RegisterType<ICommunityRepository, CommunityRepository>(new TransientLifetimeManager());
 
             _container = container;
         }

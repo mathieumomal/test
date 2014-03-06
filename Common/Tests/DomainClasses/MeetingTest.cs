@@ -22,6 +22,7 @@ namespace Etsi.Ultimate.Tests.DomainClasses
             Assert.AreEqual("3GPPGERAN#65", Meeting.ToFullReference("GP-65"));
             Assert.AreEqual("3GPPRAN#65", Meeting.ToFullReference("RP-65"));
             Assert.AreEqual("3GPPT#65", Meeting.ToFullReference("TP-65"));
+            Assert.AreEqual("3GPPPCG#65", Meeting.ToFullReference("PCG-65"));
         }
 
         [Test]

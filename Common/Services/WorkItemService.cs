@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
 
 namespace Etsi.Ultimate.Services
 {
@@ -14,7 +16,11 @@ namespace Etsi.Ultimate.Services
 
         public KeyValuePair<int, ImportReport> AnalyseWorkItemForImport(String path)
         {
-            throw new NotImplementedException();
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var csvImport = new WorkItemImporter() { UoW = uoW };
+                return csvImport.TryImportCsv(path);
+            }
         }
 
         public string ImportWorkItem(int token)

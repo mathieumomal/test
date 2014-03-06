@@ -20,6 +20,10 @@ namespace Etsi.Ultimate.DataAccess
         IDbSet<History> Histories { get; }
         IDbSet<Users_Groups> Users_Groups { get; }
         IDbSet<Users_AdHoc_Roles> Users_AdHoc_Roles { get; }
+        IDbSet<WorkItem> WorkItems { get; }
+        IDbSet<WorkItems_ResponsibleGroups> WorkItems_ResponsibleGroups { get; }
+        IDbSet<View_Persons> View_Persons { get; }
+        IDbSet<Community> Communities { get; }
 
         void SetModified(object entity);
         void SetAdded(object entity);

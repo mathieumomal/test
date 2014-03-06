@@ -12,9 +12,13 @@
             <UpdatedControls>
                 <telerik:AjaxUpdatedControl ControlID="path_export" />
                 <telerik:AjaxUpdatedControl ControlID="repeater" />
+                <telerik:AjaxUpdatedControl ControlID="btnConfirmImport" />
+                <telerik:AjaxUpdatedControl ControlID="divExportInfo" />
+                <telerik:AjaxUpdatedControl ControlID="CountErrors" />
+                <telerik:AjaxUpdatedControl ControlID="CountWarnings" />
             </UpdatedControls>
         </telerik:AjaxSetting>
-        <telerik:AjaxSetting AjaxControlID="Confirmation_import">
+        <telerik:AjaxSetting AjaxControlID="btnConfirmImport">
             <UpdatedControls>
                 <telerik:AjaxUpdatedControl ControlID="path_available" />
             </UpdatedControls>
@@ -33,7 +37,7 @@
                         You are about to update the Work Items database.<br/>Please select the work plan file to upload.
                     </div>
                     <div class="center">
-                        <telerik:RadAsyncUpload ID="RadAsyncUpload" runat="server" 
+                        <telerik:RadAsyncUpload ID="RdAsyncUpload" runat="server" 
                             AllowedFileExtensions="csv,zip" 
                             Localization-Select="Browse" 
                             MaxFileInputsCount="1" 
@@ -42,6 +46,8 @@
                             OnFileUploaded="AsyncUpload_FileImport" 
                             OnClientFileSelected="EnabledButtonImport" 
                             OnClientFileUploadRemoved="DisabledButtonImport" 
+                            TargetPhysicalFolder="D:\AppTrans\download\"
+                            OverwriteExistingFiles="True"
                             ManualUpload="true">
                         </telerik:RadAsyncUpload>
                     </div>
@@ -74,28 +80,28 @@
             <ContentTemplate>
                 <div class="contentModal" id="confirmation">
                     <div class="header">
-                        <div><asp:Label ID="CountErrors" runat="server" Text="#"/> Errors found on the work plan.</div>
-                        <div><asp:Label ID="CountWarnings" runat="server" Text="#"/> Warnings found on the work plan.</div>
+                        <div><asp:Label ID="CountErrors" runat="server" Text="No error were found in the work plan"/></div>
+                        <div><asp:Label ID="CountWarnings" runat="server" Text="No warning were found in the work plan"/></div>
                     </div>
                     <div>
                         <h2>Warnings</h2>
                         <div class="scrollable">
                             <ul>
-                                <asp:Repeater runat="server" ID="repeater">
+                                <asp:Repeater runat="server" ID="repeater" OnItemDataBound="rptErrorsWarning_ItemDataBound">
                                     <ItemTemplate>
-                                        <li> <%# Container.DataItem %> </li>
+                                        <li> <asp:Label ID="lblErrorOrWarning" runat="server"></asp:Label> </li>
                                     </ItemTemplate>
                                 </asp:Repeater>
                             </ul>
                         </div>
-                        <div>
+                        <div id="divExportInfo" runat="server">
                             The new work plan will be exported to : 
                             <asp:Label runat="server" ID="path_export" Text="H:/..."/>
                         </div>
                     </div>
                     <div class="footer">
-                        <telerik:RadButton ID="Confirmation_import" runat="server" Text="Confirm import" AutoPostBack="true" OnClick="Confirmation_import_OnClick" ></telerik:RadButton>
-                        <telerik:RadButton ID="Confirmation_cancel" runat="server" Text="Cancel" AutoPostBack="false" OnClientClicked="cancel" ></telerik:RadButton>
+                        <span><telerik:RadButton ID="btnConfirmImport" runat="server" Text="Confirm import" AutoPostBack="true" OnClick="Confirmation_import_OnClick" CssClass="WiInline" ></telerik:RadButton></span>
+                        <span><telerik:RadButton ID="Confirmation_cancel" runat="server" Text="Cancel" AutoPostBack="false" OnClientClicked="cancel" ></telerik:RadButton></span>
                     </div>
                 </div>
             </ContentTemplate>
@@ -149,7 +155,7 @@
     /*--- EVENTS ---*/
 
     function startImport() {
-        var upload = $find('<%= RadAsyncUpload.ClientID%>');
+        var upload = $find('<%= RdAsyncUpload.ClientID%>');
         upload.startUpload();
     }
     function closeAllModals() {
@@ -157,7 +163,7 @@
         manager.closeAll();
     }
     function clearFilesToUpload() {
-        var upload = $find("<%= RadAsyncUpload.ClientID %>");
+        var upload = $find("<%= RdAsyncUpload.ClientID %>");
         upload.deleteAllFileInputs();
     }
     function cancel() {
@@ -171,14 +177,14 @@
             clearFilesToUpload();
             open_RadWindow_workItemAnalysis();
         }
-        if (arguments.EventTarget == "<%= Confirmation_import.UniqueID %>") {
+        if (arguments.EventTarget == "<%= btnConfirmImport.UniqueID %>") {
 
         }
     }
     function End(sender, arguments) {
         if (arguments.EventTarget == "<%= RadAjaxManager.UniqueID %>") {
             open_RadWindow_workItemConfirmation();
-        } if (arguments.EventTarget == "<%= Confirmation_import.UniqueID %>") {
+        } if (arguments.EventTarget == "<%= btnConfirmImport.UniqueID %>") {
             open_RadWindow_workItemState();
         }
     }

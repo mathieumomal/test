@@ -13,6 +13,19 @@
     background-image: none !important;
     width:0; 
 }
+.footer div
+{
+    display: inline !important;
+}
+
+.ErrorItem
+{
+    color: red;
+}
+.WarningItem
+{
+    color: orange;
+}
 
 /*IMPORT*/
 #import .inputImport{

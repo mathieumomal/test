@@ -60,6 +60,10 @@ namespace Etsi.Ultimate.DomainClasses
             {
                 fullCommittee = "GSM";
             }
+            else if (commitee.ToUpper() == "PCG")
+            {
+                fullCommittee = "PCG";
+            }
             else
             {
                 throw new NotImplementedException("Subgroups are not handled yet");

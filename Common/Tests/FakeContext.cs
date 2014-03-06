@@ -34,6 +34,19 @@ namespace Etsi.Ultimate.Tests
         public System.Data.Entity.IDbSet<Users_AdHoc_Roles> Users_AdHoc_Roles
         { get; set; }
 
+        public System.Data.Entity.IDbSet<WorkItem> WorkItems
+        { get; set; }
+
+        public System.Data.Entity.IDbSet<WorkItems_ResponsibleGroups> WorkItems_ResponsibleGroups
+        { get; set; }
+
+        public System.Data.Entity.IDbSet<View_Persons> View_Persons
+        { get; set;}
+
+        public System.Data.Entity.IDbSet<Community> Communities
+        { get; set; }
+
+
         public void SetModified(object entity)
         {
             Releases.Add((Release)entity);
@@ -51,6 +64,8 @@ namespace Etsi.Ultimate.Tests
                 Histories.Add((History)entity);
             else if (entity.GetType() == typeof(Enum_ReleaseStatus))
                 Enum_ReleaseStatus.Add((Enum_ReleaseStatus)entity);
+            else if (entity.GetType() == typeof(WorkItem))
+                WorkItems.Add((WorkItem)entity);
 
             else
                 throw new NotImplementedException("Something is missing in the FakeContext");

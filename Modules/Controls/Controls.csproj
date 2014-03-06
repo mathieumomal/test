@@ -107,9 +107,7 @@
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_LocalResources\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\..\Common\DomainClasses\DomainClasses.csproj">
       <Project>{d5bdede9-d397-411c-ae94-1646836406ba}</Project>
@@ -127,7 +125,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>53383</DevelopmentServerPort>
           <DevelopmentServerVPath>

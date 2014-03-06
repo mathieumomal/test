@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.DomainClasses;
 using Domain = Etsi.Ultimate.DomainClasses;
 using OldDomain = Etsi.Ultimate.Tools.TmpDbDataAccess;
 

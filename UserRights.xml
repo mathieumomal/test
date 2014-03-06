@@ -19,6 +19,7 @@
   <UserRole value="WorkPlanManager">
 	<Right value="Remarks_ViewPrivate"/>
 	<Right value="Release_ViewCompleteDetails"/>
+	<Right value="WorkItem_ImportWorkplan"/>
   </UserRole>
   <UserRole value="SuperUser">
 	<Right value="Release_Create"/>
@@ -27,6 +28,7 @@
 	<Right value="Release_Close"/>
 	<Right value="Remarks_ViewPrivate"/>
 	<Right value="Release_ViewCompleteDetails"/>
+	<Right value="WorkItem_ImportWorkplan"/>
   </UserRole>
   <UserRole value="Administrator">
 	<Right value="Release_Create"/>
@@ -34,5 +36,6 @@
 	<Right value="Release_Freeze"/>
 	<Right value="Release_Close"/>
 	<Right value="Remarks_ViewPrivate"/>
+	<Right value="WorkItem_ImportWorkplan"/>
   </UserRole>
 </Rights>

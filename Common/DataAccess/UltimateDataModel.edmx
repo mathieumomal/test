@@ -10,6 +10,8 @@
           <EntitySet Name="History" EntityType="Etsi.Ultimate.DataAccess.Store.History" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Releases" EntityType="Etsi.Ultimate.DataAccess.Store.Releases" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Remarks" EntityType="Etsi.Ultimate.DataAccess.Store.Remarks" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="WorkItems" EntityType="Etsi.Ultimate.DataAccess.Store.WorkItems" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="WorkItems_ResponsibleGroups" EntityType="Etsi.Ultimate.DataAccess.Store.WorkItems_ResponsibleGroups" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Users_AdHoc_Roles" EntityType="Etsi.Ultimate.DataAccess.Store.Users_AdHoc_Roles" store:Type="Views" store:Schema="dbo" store:Name="Users_AdHoc_Roles">
             <DefiningQuery>SELECT 
       [Users_AdHoc_Roles].[UserID] AS [UserID], 
@@ -24,6 +26,15 @@
       [Users_Groups].[TB_ID] AS [TB_ID], 
       [Users_Groups].[PERS_ROLE_CODE] AS [PERS_ROLE_CODE]
       FROM [dbo].[Users_Groups] AS [Users_Groups]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="View_Communities" EntityType="Etsi.Ultimate.DataAccess.Store.View_Communities" store:Type="Views" store:Schema="dbo" store:Name="View_Communities">
+            <DefiningQuery>SELECT 
+      [View_Communities].[TbId] AS [TbId], 
+      [View_Communities].[TbName] AS [TbName], 
+      [View_Communities].[ParentTbId] AS [ParentTbId], 
+      [View_Communities].[ActiveCode] AS [ActiveCode], 
+      [View_Communities].[ShortName] AS [ShortName]
+      FROM [dbo].[View_Communities] AS [View_Communities]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="View_Meetings" EntityType="Etsi.Ultimate.DataAccess.Store.View_Meetings" store:Type="Views" store:Schema="dbo" store:Name="View_Meetings">
             <DefiningQuery>SELECT 
@@ -79,6 +90,17 @@
       [View_Meetings].[Creation_Date] AS [Creation_Date]
       FROM [dbo].[View_Meetings] AS [View_Meetings]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="View_Persons" EntityType="Etsi.Ultimate.DataAccess.Store.View_Persons" store:Type="Views" store:Schema="dbo" store:Name="View_Persons">
+            <DefiningQuery>SELECT 
+      [View_Persons].[PERSON_ID] AS [PERSON_ID], 
+      [View_Persons].[Username] AS [Username], 
+      [View_Persons].[Email] AS [Email], 
+      [View_Persons].[LASTNAME] AS [LASTNAME], 
+      [View_Persons].[FIRSTNAME] AS [FIRSTNAME], 
+      [View_Persons].[ORGA_ID] AS [ORGA_ID], 
+      [View_Persons].[ORGA_NAME] AS [ORGA_NAME]
+      FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
+          </EntitySet>
           <AssociationSet Name="FK_History_Releases" Association="Etsi.Ultimate.DataAccess.Store.FK_History_Releases">
             <End Role="Releases" EntitySet="Releases" />
             <End Role="History" EntitySet="History" />
@@ -90,6 +112,26 @@
           <AssociationSet Name="FK_Remarks_Releases" Association="Etsi.Ultimate.DataAccess.Store.FK_Remarks_Releases">
             <End Role="Releases" EntitySet="Releases" />
             <End Role="Remarks" EntitySet="Remarks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Remarks_WorkItems" Association="Etsi.Ultimate.DataAccess.Store.FK_Remarks_WorkItems">
+            <End Role="WorkItems" EntitySet="WorkItems" />
+            <End Role="Remarks" EntitySet="Remarks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkItems_ParentWi" Association="Etsi.Ultimate.DataAccess.Store.FK_WorkItems_ParentWi">
+            <End Role="WorkItems" EntitySet="WorkItems" />
+            <End Role="WorkItems1" EntitySet="WorkItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkItems_Releases" Association="Etsi.Ultimate.DataAccess.Store.FK_WorkItems_Releases">
+            <End Role="Releases" EntitySet="Releases" />
+            <End Role="WorkItems" EntitySet="WorkItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkItems_ResponsibleGroups_WorkItems" Association="Etsi.Ultimate.DataAccess.Store.FK_WorkItems_ResponsibleGroups_WorkItems">
+            <End Role="WorkItems" EntitySet="WorkItems" />
+            <End Role="WorkItems_ResponsibleGroups" EntitySet="WorkItems_ResponsibleGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkItems_WorkItems" Association="Etsi.Ultimate.DataAccess.Store.FK_WorkItems_WorkItems">
+            <End Role="WorkItems" EntitySet="WorkItems" />
+            <End Role="WorkItems1" EntitySet="WorkItems" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
@@ -152,11 +194,53 @@
           </Key>
           <Property Name="Pk_RemarkId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Fk_ReleaseId" Type="int" />
+          <Property Name="Fk_WorkItemId" Type="int" />
           <Property Name="Fk_PersonId" Type="int" />
           <Property Name="IsPublic" Type="bit" />
           <Property Name="CreationDate" Type="datetime" />
           <Property Name="RemarkText" Type="nvarchar" MaxLength="255" />
           <Property Name="PersonName" Type="varchar" MaxLength="50" StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="WorkItems">
+          <Key>
+            <PropertyRef Name="Pk_WorkItemUid" />
+          </Key>
+          <Property Name="Pk_WorkItemUid" Type="int" Nullable="false" />
+          <Property Name="WorkplanId" Type="int" />
+          <Property Name="Name" Type="varchar" MaxLength="255" />
+          <Property Name="Acronym" Type="varchar" MaxLength="50" />
+          <Property Name="WiLevel" Type="int" />
+          <Property Name="StartDate" Type="datetime" />
+          <Property Name="EndDate" Type="datetime" />
+          <Property Name="Completion" Type="int" />
+          <Property Name="LastModification" Type="datetime" />
+          <Property Name="CreationDate" Type="datetime" />
+          <Property Name="Fk_ParentWiId" Type="int" />
+          <Property Name="Fk_ReleaseId" Type="int" />
+          <Property Name="Wid" Type="varchar" MaxLength="20" />
+          <Property Name="RapporteurId" Type="int" />
+          <Property Name="RapporteurStr" Type="varchar" MaxLength="100" />
+          <Property Name="TsgApprovalMtgId" Type="int" />
+          <Property Name="TsgApprovalMtgRef" Type="varchar" MaxLength="20" />
+          <Property Name="PcgApprovalMtgId" Type="int" />
+          <Property Name="PcgApprovalMtgRef" Type="varchar" MaxLength="20" />
+          <Property Name="TsgStoppedMtgId" Type="int" />
+          <Property Name="TsgStoppedMtgRef" Type="varchar" MaxLength="20" />
+          <Property Name="PcgStoppedMtgId" Type="int" />
+          <Property Name="PcgStoppedMtgRef" Type="varchar" MaxLength="20" />
+          <Property Name="StatusReport" Type="varchar" MaxLength="50" />
+          <Property Name="RapporteurCompany" Type="varchar" MaxLength="100" />
+          <Property Name="TssAndTrs" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="WorkItems_ResponsibleGroups">
+          <Key>
+            <PropertyRef Name="Pk_WorkItemResponsibleGroups" />
+          </Key>
+          <Property Name="Pk_WorkItemResponsibleGroups" Type="int" Nullable="false" />
+          <Property Name="Fk_WorkItemId" Type="int" />
+          <Property Name="Fk_TbId" Type="int" />
+          <Property Name="ResponsibleGroup" Type="varchar" MaxLength="5" />
+          <Property Name="IsPrimeResponsible" Type="bit" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'U3GPPDB.dbo.Users_AdHoc_Roles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
@@ -164,7 +248,7 @@
         <EntityType Name="Users_AdHoc_Roles">
           <Key>
             <PropertyRef Name="UserID" />
-            <PropertyRef Name="RoleName" />
+            
           </Key>
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="PERSON_ID" Type="nvarchar" MaxLength="3750" />
@@ -176,13 +260,26 @@
         <EntityType Name="Users_Groups">
           <Key>
             <PropertyRef Name="PERSON_ID" />
-            <PropertyRef Name="PLIST_ID" />
-            <PropertyRef Name="PERS_ROLE_CODE" />
+            
+            
           </Key>
           <Property Name="PERSON_ID" Type="int" Nullable="false" />
           <Property Name="PLIST_ID" Type="int" Nullable="false" />
           <Property Name="TB_ID" Type="int" />
           <Property Name="PERS_ROLE_CODE" Type="varchar" Nullable="false" MaxLength="12" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.View_Communities' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="View_Communities">
+          <Key>
+            <PropertyRef Name="TbId" />
+          </Key>
+          <Property Name="TbId" Type="int" Nullable="false" />
+          <Property Name="TbName" Type="varchar" MaxLength="26" />
+          <Property Name="ParentTbId" Type="int" />
+          <Property Name="ActiveCode" Type="varchar" MaxLength="12" />
+          <Property Name="ShortName" Type="varchar" MaxLength="10" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'U3GPPDB.dbo.View_Meetings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
@@ -246,6 +343,23 @@
           <Property Name="TB_ID" Type="int" />
           <Property Name="Creation_Date" Type="datetime" />
         </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.View_Persons' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="View_Persons">
+          <Key>
+            <PropertyRef Name="PERSON_ID" />
+            
+            
+          </Key>
+          <Property Name="PERSON_ID" Type="int" Nullable="false" />
+          <Property Name="Username" Type="varchar" MaxLength="12" />
+          <Property Name="Email" Type="varchar" MaxLength="100" />
+          <Property Name="LASTNAME" Type="varchar" Nullable="false" MaxLength="30" />
+          <Property Name="FIRSTNAME" Type="varchar" MaxLength="20" />
+          <Property Name="ORGA_ID" Type="int" Nullable="false" />
+          <Property Name="ORGA_NAME" Type="varchar" MaxLength="99" />
+        </EntityType>
         <Association Name="FK_History_Releases">
           <End Role="Releases" Type="Etsi.Ultimate.DataAccess.Store.Releases" Multiplicity="0..1" />
           <End Role="History" Type="Etsi.Ultimate.DataAccess.Store.History" Multiplicity="*" />
@@ -282,6 +396,66 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Remarks_WorkItems">
+          <End Role="WorkItems" Type="Etsi.Ultimate.DataAccess.Store.WorkItems" Multiplicity="0..1" />
+          <End Role="Remarks" Type="Etsi.Ultimate.DataAccess.Store.Remarks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkItems">
+              <PropertyRef Name="Pk_WorkItemUid" />
+            </Principal>
+            <Dependent Role="Remarks">
+              <PropertyRef Name="Fk_WorkItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkItems_ParentWi">
+          <End Role="WorkItems" Type="Etsi.Ultimate.DataAccess.Store.WorkItems" Multiplicity="0..1" />
+          <End Role="WorkItems1" Type="Etsi.Ultimate.DataAccess.Store.WorkItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkItems">
+              <PropertyRef Name="Pk_WorkItemUid" />
+            </Principal>
+            <Dependent Role="WorkItems1">
+              <PropertyRef Name="Fk_ParentWiId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkItems_Releases">
+          <End Role="Releases" Type="Etsi.Ultimate.DataAccess.Store.Releases" Multiplicity="0..1" />
+          <End Role="WorkItems" Type="Etsi.Ultimate.DataAccess.Store.WorkItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Releases">
+              <PropertyRef Name="Pk_ReleaseId" />
+            </Principal>
+            <Dependent Role="WorkItems">
+              <PropertyRef Name="Fk_ReleaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkItems_ResponsibleGroups_WorkItems">
+          <End Role="WorkItems" Type="Etsi.Ultimate.DataAccess.Store.WorkItems" Multiplicity="0..1" />
+          <End Role="WorkItems_ResponsibleGroups" Type="Etsi.Ultimate.DataAccess.Store.WorkItems_ResponsibleGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkItems">
+              <PropertyRef Name="Pk_WorkItemUid" />
+            </Principal>
+            <Dependent Role="WorkItems_ResponsibleGroups">
+              <PropertyRef Name="Fk_WorkItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkItems_WorkItems">
+          <End Role="WorkItems" Type="Etsi.Ultimate.DataAccess.Store.WorkItems" Multiplicity="1" />
+          <End Role="WorkItems1" Type="Etsi.Ultimate.DataAccess.Store.WorkItems" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="WorkItems">
+              <PropertyRef Name="Pk_WorkItemUid" />
+            </Principal>
+            <Dependent Role="WorkItems1">
+              <PropertyRef Name="Pk_WorkItemUid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -306,7 +480,31 @@
             <End Role="Release" EntitySet="Releases" />
             <End Role="History" EntitySet="Histories" />
           </AssociationSet>
-        </EntityContainer>
+          <EntitySet Name="WorkItems_ResponsibleGroups" EntityType="Etsi.Ultimate.DataAccess.WorkItems_ResponsibleGroups" />
+          <EntitySet Name="View_Persons" EntityType="Etsi.Ultimate.DataAccess.View_Persons" />
+          <EntitySet Name="Communities" EntityType="Etsi.Ultimate.DataAccess.Community" />
+          <EntitySet Name="WorkItems" EntityType="Etsi.Ultimate.DataAccess.WorkItem" />
+          <AssociationSet Name="FK_WorkItems_Releases" Association="Etsi.Ultimate.DataAccess.FK_WorkItems_Releases">
+            <End Role="Release" EntitySet="Releases" />
+            <End Role="WorkItem" EntitySet="WorkItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Remarks_WorkItems" Association="Etsi.Ultimate.DataAccess.FK_Remarks_WorkItems">
+            <End Role="WorkItem" EntitySet="WorkItems" />
+            <End Role="Remark" EntitySet="Remarks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkItems_ParentWi" Association="Etsi.Ultimate.DataAccess.FK_WorkItems_ParentWi">
+            <End Role="WorkItem" EntitySet="WorkItems" />
+            <End Role="WorkItem1" EntitySet="WorkItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkItems_ResponsibleGroups_WorkItems" Association="Etsi.Ultimate.DataAccess.FK_WorkItems_ResponsibleGroups_WorkItems">
+            <End Role="WorkItem" EntitySet="WorkItems" />
+            <End Role="WorkItems_ResponsibleGroups" EntitySet="WorkItems_ResponsibleGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkItems_WorkItems" Association="Etsi.Ultimate.DataAccess.FK_WorkItems_WorkItems">
+            <End Role="WorkItem" EntitySet="WorkItems" />
+            <End Role="WorkItem1" EntitySet="WorkItems" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
             <PropertyRef Name="Enum_ReleaseStatusId" />
@@ -353,6 +551,7 @@
           <Property Type="String" Name="LAST_MOD_BY" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Type="DateTime" Name="LAST_MOD_TS" Precision="3" />
           <NavigationProperty Name="Histories" Relationship="Etsi.Ultimate.DataAccess.FK_History_Releases" FromRole="Release" ToRole="History" />
+          <NavigationProperty Name="WorkItems" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItems_Releases" FromRole="Release" ToRole="WorkItem" />
         </EntityType>
         <EntityType Name="Meeting">
           <Key>
@@ -436,7 +635,9 @@
           <Property Type="DateTime" Name="CreationDate" Precision="3" />
           <NavigationProperty Name="Release" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_Releases" FromRole="Remark" ToRole="Release" />
           <Property Type="String" Name="RemarkText" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Fk_WorkItemId" />
           <Property Type="String" Name="PersonName" MaxLength="50" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="WorkItem" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_WorkItems" FromRole="Remark" ToRole="WorkItem" />
         </EntityType>
         <Association Name="FK_Remarks_Releases">
           <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="0..1" />
@@ -453,8 +654,6 @@
         <EntityType Name="Users_Groups">
           <Key>
             <PropertyRef Name="PERSON_ID" />
-            <PropertyRef Name="PLIST_ID" />
-            <PropertyRef Name="PERS_ROLE_CODE" />
           </Key>
           <Property Type="Int32" Name="PERSON_ID" Nullable="false" />
           <Property Type="Int32" Name="PLIST_ID" Nullable="false" />
@@ -464,7 +663,6 @@
         <EntityType Name="Users_AdHoc_Roles">
           <Key>
             <PropertyRef Name="UserID" />
-            <PropertyRef Name="RoleName" />
           </Key>
           <Property Type="Int32" Name="UserID" Nullable="false" />
           <Property Type="String" Name="PERSON_ID" MaxLength="3750" FixedLength="false" Unicode="true" />
@@ -494,7 +692,136 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <EntityType Name="WorkItems_ResponsibleGroups">
+          <Key>
+            <PropertyRef Name="Pk_WorkItemResponsibleGroups" />
+          </Key>
+          <Property Type="Int32" Name="Pk_WorkItemResponsibleGroups" Nullable="false" />
+          <Property Type="Int32" Name="Fk_WorkItemId" />
+          <Property Type="String" Name="ResponsibleGroup" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="IsPrimeResponsible" />
+          <NavigationProperty Name="WorkItem" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItems_ResponsibleGroups_WorkItems" FromRole="WorkItems_ResponsibleGroups" ToRole="WorkItem" />
+          <Property Type="Int32" Name="Fk_TbId" />
+        </EntityType>
+        <EntityType Name="View_Persons">
+          <Key>
+            <PropertyRef Name="PERSON_ID" />
+          </Key>
+          <Property Type="Int32" Name="PERSON_ID" Nullable="false" />
+          <Property Type="String" Name="Username" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Email" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="LASTNAME" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="FIRSTNAME" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="ORGA_ID" Nullable="false" />
+          <Property Type="String" Name="ORGA_NAME" MaxLength="99" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Community">
+          <Key>
+            <PropertyRef Name="TbId" />
+          </Key>
+          <Property Type="Int32" Name="TbId" Nullable="false" />
+          <Property Type="String" Name="TbName" MaxLength="26" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="ParentTbId" />
+          <Property Type="String" Name="ShortName" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ActiveCode" MaxLength="12" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="WorkItem">
+          <Key>
+            <PropertyRef Name="Pk_WorkItemUid" />
+          </Key>
+          <Property Type="Int32" Name="Pk_WorkItemUid" Nullable="false" />
+          <Property Type="Int32" Name="WorkplanId" />
+          <Property Type="String" Name="Name" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Acronym" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="WiLevel" />
+          <Property Type="DateTime" Name="StartDate" Precision="3" />
+          <Property Type="DateTime" Name="EndDate" Precision="3" />
+          <Property Type="Int32" Name="Completion" />
+          <Property Type="DateTime" Name="LastModification" Precision="3" />
+          <Property Type="DateTime" Name="CreationDate" Precision="3" />
+          <Property Type="Int32" Name="Fk_ParentWiId" />
+          <Property Type="Int32" Name="Fk_ReleaseId" />
+          <Property Type="String" Name="Wid" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="RapporteurId" />
+          <Property Type="String" Name="RapporteurStr" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="TsgApprovalMtgId" />
+          <Property Type="String" Name="TsgApprovalMtgRef" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="PcgApprovalMtgId" />
+          <Property Type="String" Name="PcgApprovalMtgRef" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="TsgStoppedMtgId" />
+          <Property Type="String" Name="TsgStoppedMtgRef" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="PcgStoppedMtgId" />
+          <Property Type="String" Name="PcgStoppedMtgRef" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="StatusReport" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="RapporteurCompany" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="TssAndTrs" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Release" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItems_Releases" FromRole="WorkItem" ToRole="Release" />
+          <NavigationProperty Name="Remarks" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_WorkItems" FromRole="WorkItem" ToRole="Remark" />
+          <NavigationProperty Name="ChildWis" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItems_ParentWi" FromRole="WorkItem" ToRole="WorkItem1" />
+          <NavigationProperty Name="ParentWi" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItems_ParentWi" FromRole="WorkItem1" ToRole="WorkItem" />
+          <NavigationProperty Name="WorkItems_ResponsibleGroups" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItems_ResponsibleGroups_WorkItems" FromRole="WorkItem" ToRole="WorkItems_ResponsibleGroups" />
+        </EntityType>
+        <Association Name="FK_WorkItems_Releases">
+          <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.WorkItem" Role="WorkItem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Release">
+              <PropertyRef Name="Pk_ReleaseId" />
+            </Principal>
+            <Dependent Role="WorkItem">
+              <PropertyRef Name="Fk_ReleaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Remarks_WorkItems">
+          <End Type="Etsi.Ultimate.DataAccess.WorkItem" Role="WorkItem" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.Remark" Role="Remark" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkItem">
+              <PropertyRef Name="Pk_WorkItemUid" />
+            </Principal>
+            <Dependent Role="Remark">
+              <PropertyRef Name="Fk_WorkItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkItems_ParentWi">
+          <End Type="Etsi.Ultimate.DataAccess.WorkItem" Role="WorkItem" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.WorkItem" Role="WorkItem1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkItem">
+              <PropertyRef Name="Pk_WorkItemUid" />
+            </Principal>
+            <Dependent Role="WorkItem1">
+              <PropertyRef Name="Fk_ParentWiId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkItems_ResponsibleGroups_WorkItems">
+          <End Type="Etsi.Ultimate.DataAccess.WorkItem" Role="WorkItem" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.WorkItems_ResponsibleGroups" Role="WorkItems_ResponsibleGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkItem">
+              <PropertyRef Name="Pk_WorkItemUid" />
+            </Principal>
+            <Dependent Role="WorkItems_ResponsibleGroups">
+              <PropertyRef Name="Fk_WorkItemId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkItems_WorkItems">
+          <End Type="Etsi.Ultimate.DataAccess.WorkItem" Role="WorkItem" Multiplicity="1" />
+          <End Type="Etsi.Ultimate.DataAccess.WorkItem" Role="WorkItem1" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="WorkItem">
+              <PropertyRef Name="Pk_WorkItemUid" />
+            </Principal>
+            <Dependent Role="WorkItem1">
+              <PropertyRef Name="Pk_WorkItemUid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -604,6 +931,7 @@
           <EntitySetMapping Name="Remarks">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Remark">
               <MappingFragment StoreEntitySet="Remarks">
+                <ScalarProperty Name="Fk_WorkItemId" ColumnName="Fk_WorkItemId" />
                 <ScalarProperty Name="PersonName" ColumnName="PersonName" />
                 <ScalarProperty Name="RemarkText" ColumnName="RemarkText" />
                 <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
@@ -642,6 +970,73 @@
                 <ScalarProperty Name="Fk_PersonId" ColumnName="Fk_PersonId" />
                 <ScalarProperty Name="Fk_ReleaseId" ColumnName="Fk_ReleaseId" />
                 <ScalarProperty Name="Pk_HistoryId" ColumnName="Pk_HistoryId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkItems_ResponsibleGroups">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.WorkItems_ResponsibleGroups">
+              <MappingFragment StoreEntitySet="WorkItems_ResponsibleGroups">
+                <ScalarProperty Name="Fk_TbId" ColumnName="Fk_TbId" />
+                <ScalarProperty Name="IsPrimeResponsible" ColumnName="IsPrimeResponsible" />
+                <ScalarProperty Name="ResponsibleGroup" ColumnName="ResponsibleGroup" />
+                <ScalarProperty Name="Fk_WorkItemId" ColumnName="Fk_WorkItemId" />
+                <ScalarProperty Name="Pk_WorkItemResponsibleGroups" ColumnName="Pk_WorkItemResponsibleGroups" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="View_Persons">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.View_Persons">
+              <MappingFragment StoreEntitySet="View_Persons">
+                <ScalarProperty Name="ORGA_NAME" ColumnName="ORGA_NAME" />
+                <ScalarProperty Name="ORGA_ID" ColumnName="ORGA_ID" />
+                <ScalarProperty Name="FIRSTNAME" ColumnName="FIRSTNAME" />
+                <ScalarProperty Name="LASTNAME" ColumnName="LASTNAME" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="PERSON_ID" ColumnName="PERSON_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Communities">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Community">
+              <MappingFragment StoreEntitySet="View_Communities">
+                <ScalarProperty Name="ActiveCode" ColumnName="ActiveCode" />
+                <ScalarProperty Name="ShortName" ColumnName="ShortName" />
+                <ScalarProperty Name="ParentTbId" ColumnName="ParentTbId" />
+                <ScalarProperty Name="TbName" ColumnName="TbName" />
+                <ScalarProperty Name="TbId" ColumnName="TbId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkItems">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.WorkItem">
+              <MappingFragment StoreEntitySet="WorkItems">
+                <ScalarProperty Name="TssAndTrs" ColumnName="TssAndTrs" />
+                <ScalarProperty Name="RapporteurCompany" ColumnName="RapporteurCompany" />
+                <ScalarProperty Name="StatusReport" ColumnName="StatusReport" />
+                <ScalarProperty Name="PcgStoppedMtgRef" ColumnName="PcgStoppedMtgRef" />
+                <ScalarProperty Name="PcgStoppedMtgId" ColumnName="PcgStoppedMtgId" />
+                <ScalarProperty Name="TsgStoppedMtgRef" ColumnName="TsgStoppedMtgRef" />
+                <ScalarProperty Name="TsgStoppedMtgId" ColumnName="TsgStoppedMtgId" />
+                <ScalarProperty Name="PcgApprovalMtgRef" ColumnName="PcgApprovalMtgRef" />
+                <ScalarProperty Name="PcgApprovalMtgId" ColumnName="PcgApprovalMtgId" />
+                <ScalarProperty Name="TsgApprovalMtgRef" ColumnName="TsgApprovalMtgRef" />
+                <ScalarProperty Name="TsgApprovalMtgId" ColumnName="TsgApprovalMtgId" />
+                <ScalarProperty Name="RapporteurStr" ColumnName="RapporteurStr" />
+                <ScalarProperty Name="RapporteurId" ColumnName="RapporteurId" />
+                <ScalarProperty Name="Wid" ColumnName="Wid" />
+                <ScalarProperty Name="Fk_ReleaseId" ColumnName="Fk_ReleaseId" />
+                <ScalarProperty Name="Fk_ParentWiId" ColumnName="Fk_ParentWiId" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="LastModification" ColumnName="LastModification" />
+                <ScalarProperty Name="Completion" ColumnName="Completion" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="WiLevel" ColumnName="WiLevel" />
+                <ScalarProperty Name="Acronym" ColumnName="Acronym" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="WorkplanId" ColumnName="WorkplanId" />
+                <ScalarProperty Name="Pk_WorkItemUid" ColumnName="Pk_WorkItemUid" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

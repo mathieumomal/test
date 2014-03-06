@@ -49,7 +49,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ModuleImport\ImportReport.cs" />
     <Compile Include="ModuleImport\IModuleImport.cs" />
     <Compile Include="ModuleImport\ReleaseImport.cs" />
     <Compile Include="Program.cs" />

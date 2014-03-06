@@ -49,7 +49,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         public void Release_InsertOrUpdate()
         {
             var repo = new ReleaseRepository() { UoW = GetUnitOfWork() };
-            var releaseStatus = new EnumReleaseRepository(GetUnitOfWork());
+            var releaseStatus = new Enum_ReleaseStatusRepository(GetUnitOfWork());
             Release myRelease = new Release();
             myRelease.Name = "release number 4";
             myRelease.Enum_ReleaseStatus = releaseStatus.Find(2);

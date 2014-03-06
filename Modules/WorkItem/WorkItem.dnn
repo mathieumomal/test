@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="WorkItem" type="Module" version="00.00.16">
+    <package name="WorkItem" type="Module" version="00.00.17">
       <friendlyName>WorkItem</friendlyName>
       <description>WorkItem module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
@@ -103,6 +103,50 @@
           <assemblies>
             <assembly>
               <name>Etsi.Ultimate.Module.WorkItem.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Services.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Business.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.DataAccess.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.DomainClasses.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Repositories.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Utils.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Practices.Unity.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Rhino.Mocks.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>EntityFramework.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>EntityFramework.SqlServer.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>CsvHelper.dll</name>
               <path>bin</path>
             </assembly>
           </assemblies>

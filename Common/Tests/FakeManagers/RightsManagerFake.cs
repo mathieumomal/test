@@ -3,16 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.DomainClasses;
 
-namespace Etsi.Ultimate.Business.Security
+namespace Etsi.Ultimate.Tests.FakeManagers
 {
     public class RightsManagerFake : IRightsManager
     {
 
         #region IRightsManager Membres
 
-        public Repositories.IUltimateUnitOfWork UoW { get; set; }
+        public IUltimateUnitOfWork UoW { get; set; }
         
 
         public UserRightsContainer GetRights(int personID)

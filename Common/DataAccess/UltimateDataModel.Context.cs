@@ -34,6 +34,10 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<Users_Groups> Users_Groups { get; set; }
         public IDbSet<Users_AdHoc_Roles> Users_AdHoc_Roles { get; set; }
         public IDbSet<History> Histories { get; set; }
+        public IDbSet<WorkItems_ResponsibleGroups> WorkItems_ResponsibleGroups { get; set; }
+        public IDbSet<View_Persons> View_Persons { get; set; }
+        public IDbSet<Community> Communities { get; set; }
+        public IDbSet<WorkItem> WorkItems { get; set; }
     	
     	/**
     	 * This code is intended to enable testability of the different layers,
