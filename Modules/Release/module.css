@@ -22,16 +22,50 @@
 
 /* Release details style*/
 
+body {
+    font-family:Arial,verdana,Serif;
+    font-size: 12px;
+}
+
+td {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+}
+
+.releaseRemarks {
+    position:fixed;
+    top:370px;	
+    width: 94%;
+}
+
 fieldset {
     margin: 2%;
+    padding: 1% !important; 
     border: 1px solid grey !important;
     -webkit-border-radius: 4px !important;
     -moz-border-radius: 4px !important;
     border-radius: 4px !important;
 }
 
-legend {
+legend{
     font-weight:bold !important;
+}
+
+.releaseName {
+    font-weight:bold !important;
+}
+
+.status{
+    font-weight: bold;
+}
+.Open{
+    color : rgb(93, 175, 52);
+}
+.Frozen{
+    color : rgb(39, 116, 0);
+}
+.Closed{
+    color : rgb(175, 40, 40);
 }
 
 .releaseDetailsWarning {
@@ -56,6 +90,7 @@ legend {
 
 .releaseDetailsBody {
     margin: 5px 10px 5px 10px !important;
+    min-height: 620px;
 }
 
 .TabContent fieldset legend span{
@@ -64,6 +99,7 @@ legend {
 
 .releaseDetailsAction {
     margin: 15px 0 0 0 !important; 
+    max-height: 30px;
 }
 
 .TabLine {
@@ -85,8 +121,13 @@ legend {
     text-align: left;
 }
 
-.TabLineRight span{
-    font-style:italic !important;
+.TabLineRightFreeze {
+    width: 100%;
+    text-align: left;
+}
+
+.FirstColFreezeStages {
+    padding-right: 10px;
 }
 
 .TabLine3colRight {
@@ -94,9 +135,6 @@ legend {
     text-align: left;
 }
 
-.TabLine3colRight span{
-    font-style:italic !important;
-}
 
 versionFieldsetTab {
     text-align: left;

@@ -148,6 +148,15 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.HtmlControls.HtmlImage ReleaseDescVal;
         
         /// <summary>
+        /// Contrôle MissigDesc.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label MissigDesc;
+        
+        /// <summary>
         /// Contrôle ReleaseShortNameLbl.
         /// </summary>
         /// <remarks>

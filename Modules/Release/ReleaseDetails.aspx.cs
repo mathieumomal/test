@@ -104,9 +104,9 @@ namespace Etsi.Ultimate.Module.Release
                     {
                         PageViewID = "RadPage" + CONST_ADMIN_TAB,
                         Text = CONST_ADMIN_TAB,
-                        Selected = false
+                        Selected = false                     
                     });
-                RadPageAdministration.Visible = false;
+                RadPageAdministration.Visible = true;
             }
 
             ReleaseDetailRadTabStrip.Tabs.Add(
@@ -128,11 +128,22 @@ namespace Etsi.Ultimate.Module.Release
         {
             releaseCodeVal.Text = release.Code; 
             ReleaseStatusVal.Text = release.Enum_ReleaseStatus.ReleaseStatus;
+            ReleaseStatusVal.CssClass = "status " + ReleaseStatusVal.Text;
             ReleaseNameVal.Text = release.Name;
-            ReleaseDescVal.Attributes.Add("href" , release.Description);
+            if (release.Description != null)
+                ReleaseDescVal.Attributes.Add("href", release.Description);
+            else
+            {
+                ReleaseDescVal.Visible = false;
+                MissigDesc.Visible = true;
+                MissigDesc.Text = CONST_EMPTY_FIELD;
+            }
+
             ReleaseShortNameVal.Text = release.ShortName;
             if (release.StartDate != null)
                 ReleaseStartDateVal.Text = Convert.ToDateTime(release.StartDate).ToString("yyyy-MM-dd");
+            else
+                ReleaseStartDateVal.Text = CONST_EMPTY_FIELD;
 
             //FreezeStagesPanel
             if(!(userRights.HasRight(Domain.Enum_UserRights.Release_ViewLimitedDetails)))
