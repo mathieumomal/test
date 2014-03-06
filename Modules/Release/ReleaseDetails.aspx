@@ -15,6 +15,7 @@
 </head>
 <body>
     <form id="ReleaseDetailsForm" runat="server">
+       <div class="containerFix">
        <asp:Panel ID="releaseWarning" runat="server" CssClass="releaseDetailsWarning" Visible="false" Height="100%">
            <span class="releaseDetailsWarningTxt">No data available for the current query.</span>
        </asp:Panel>
@@ -212,7 +213,7 @@
                });
         </script>  
        </asp:Panel>
-                
+       </div>         
     </form>    
 </body>
 </html>

@@ -50,8 +50,8 @@ namespace Etsi.Ultimate.Module.Release
     /// -----------------------------------------------------------------------------
     public partial class View : ReleaseModuleBase
     {
-        private static String readonlyCssFreezeReach = "freezeReach";
-        private static String readonlyCssClosedColor = "closed";
+        private static readonly String cssFreezeReach = "freezeReach";
+        private static readonly String cssClosedColor = "closed";
 
         public static readonly string DsId_Key = "ETSI_DS_ID";
 
@@ -135,10 +135,10 @@ namespace Etsi.Ultimate.Module.Release
             {
                 GridDataItem dataItem = e.Item as GridDataItem;//Get row
                 //Get table cell
-                TableCell closureDate = dataItem["ClosureDate"];
-                TableCell stage1FreezeDateCell = dataItem["Stage1FreezeDate"];
-                TableCell stage2FreezeDateCell = dataItem["Stage2FreezeDate"];
-                TableCell stage3FreezeDateCell = dataItem["Stage3FreezeDate"];
+                TableCell tblCellClosureDate = dataItem["ClosureDate"];
+                TableCell tblCellStage1FreezeDate = dataItem["Stage1FreezeDate"];
+                TableCell tblCellStage2FreezeDate = dataItem["Stage2FreezeDate"];
+                TableCell tblCellStage3FreezeDate = dataItem["Stage3FreezeDate"];
 
                 //Get release row
                 DomainClasses.Release currentRelease = (DomainClasses.Release) e.Item.DataItem;
@@ -146,16 +146,16 @@ namespace Etsi.Ultimate.Module.Release
                 //Analyse column : Closure date
                 if (currentRelease.ClosureDate != null && currentRelease.ClosureMtgRef != null)
                 {
-                    closureDate.Text = mixDateAndMtgRef((DateTime)currentRelease.ClosureDate, currentRelease.ClosureMtgRef);
+                    tblCellClosureDate.Text = mixDateAndMtgRef((DateTime)currentRelease.ClosureDate, currentRelease.ClosureMtgRef);
                 }
-                closureDate.CssClass = readonlyCssClosedColor;
+                tblCellClosureDate.CssClass = cssClosedColor;
 
                 //Analyse column : Freeze 1
-                TreatFreezeDate(stage1FreezeDateCell, currentRelease.Stage1FreezeDate, currentRelease.Stage1FreezeMtgRef);
+                TreatFreezeDate(tblCellStage1FreezeDate, currentRelease.Stage1FreezeDate, currentRelease.Stage1FreezeMtgRef);
                 //Analyse column : Freeze 2
-                TreatFreezeDate(stage2FreezeDateCell, currentRelease.Stage2FreezeDate, currentRelease.Stage2FreezeMtgRef);
+                TreatFreezeDate(tblCellStage2FreezeDate, currentRelease.Stage2FreezeDate, currentRelease.Stage2FreezeMtgRef);
                 //Analyse column : Freeze 3
-                TreatFreezeDate(stage3FreezeDateCell, currentRelease.Stage3FreezeDate, currentRelease.Stage3FreezeMtgRef);
+                TreatFreezeDate(tblCellStage3FreezeDate, currentRelease.Stage3FreezeDate, currentRelease.Stage3FreezeMtgRef);
 
                 //Set ReleaseId for details
             }
@@ -166,10 +166,10 @@ namespace Etsi.Ultimate.Module.Release
         /// <summary>
         /// Manage date with meeting reference
         /// </summary>
-        /// <param name="freezeCell"></param>
+        /// <param name="tblCellFreezeCell"></param>
         /// <param name="freezeDateObject"></param>
         /// <param name="freezeMtg"></param>
-        private void TreatFreezeDate(TableCell freezeCell, DateTime? freezeDateObject, string freezeMtg)
+        private void TreatFreezeDate(TableCell tblCellFreezeCell, DateTime? freezeDateObject, string freezeMtg)
         {
             var now = DateTime.Now;
             if (freezeDateObject != null)
@@ -177,11 +177,11 @@ namespace Etsi.Ultimate.Module.Release
                 var freezeDate = (DateTime)freezeDateObject;
                 if (freezeMtg != null)
                 {
-                    freezeCell.Text = mixDateAndMtgRef(freezeDate, freezeMtg);
+                    tblCellFreezeCell.Text = mixDateAndMtgRef(freezeDate, freezeMtg);
                 }
 
                 if (now > freezeDate.Date)
-                    freezeCell.CssClass = readonlyCssFreezeReach;
+                    tblCellFreezeCell.CssClass = cssFreezeReach;
             }
         }
 
