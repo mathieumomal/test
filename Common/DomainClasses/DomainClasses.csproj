@@ -48,6 +48,7 @@
     <Compile Include="Enum_ReleaseStatus.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Enum_Settings.cs" />
     <Compile Include="Enum_UserRights.cs" />
     <Compile Include="History.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>

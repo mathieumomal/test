@@ -5,22 +5,20 @@
 
 <telerik:RadButton ID="workItem_import" runat="server" Enabled="true" AutoPostBack="false" OnClientClicked="open_RadWindow_workItemImport" Text="Import work plan"></telerik:RadButton>
 
-<telerik:RadAjaxManager ID="RadAjaxManager" runat="server" EnablePageHeadUpdate="false">
+<telerik:RadAjaxManager ID="wiRadAjaxManager" runat="server" EnablePageHeadUpdate="false">
     <ClientEvents OnRequestStart="Start" OnResponseEnd="End" />
     <AjaxSettings>
-        <telerik:AjaxSetting AjaxControlID="RadAjaxManager">
+        <telerik:AjaxSetting AjaxControlID="wiRadAjaxManager">
             <UpdatedControls>
-                <telerik:AjaxUpdatedControl ControlID="path_export" />
-                <telerik:AjaxUpdatedControl ControlID="repeater" />
+                <telerik:AjaxUpdatedControl ControlID="lblExportPath" />
+                <telerik:AjaxUpdatedControl ControlID="rptWarningsErrors" />
                 <telerik:AjaxUpdatedControl ControlID="btnConfirmImport" />
-                <telerik:AjaxUpdatedControl ControlID="divExportInfo" />
-                <telerik:AjaxUpdatedControl ControlID="CountErrors" />
-                <telerik:AjaxUpdatedControl ControlID="CountWarnings" />
+                <telerik:AjaxUpdatedControl ControlID="lblCountWarningErrors" />
             </UpdatedControls>
         </telerik:AjaxSetting>
         <telerik:AjaxSetting AjaxControlID="btnConfirmImport">
             <UpdatedControls>
-                <telerik:AjaxUpdatedControl ControlID="path_available" />
+                <telerik:AjaxUpdatedControl ControlID="lblExportedPath" />
             </UpdatedControls>
         </telerik:AjaxSetting>
     </AjaxSettings>
@@ -30,13 +28,13 @@
 
 <telerik:RadWindowManager ID="RadWindowManager1" runat="server" >
     <Windows>
-        <telerik:RadWindow ID="RadWindow_workItemImport" runat="server" Modal="true" Title="Work Plan Import" Height="170" Width="500" VisibleStatusbar="false" iconUrl="false">
+        <telerik:RadWindow ID="RadWindow_workItemImport" runat="server" Modal="true" Title="Work Plan Import" Height="180" Width="500" VisibleStatusbar="false" iconUrl="false" Behaviors="Close">
             <ContentTemplate>
                 <div class="contentModal" id="import">
-                    <div class="header">
+                    <div class="wiHeader">
                         You are about to update the Work Items database.<br/>Please select the work plan file to upload.
                     </div>
-                    <div class="center">
+                    <div class="wiCenter">
                         <telerik:RadAsyncUpload ID="RdAsyncUpload" runat="server" 
                             AllowedFileExtensions="csv,zip" 
                             Localization-Select="Browse" 
@@ -46,12 +44,11 @@
                             OnFileUploaded="AsyncUpload_FileImport" 
                             OnClientFileSelected="EnabledButtonImport" 
                             OnClientFileUploadRemoved="DisabledButtonImport" 
-                            TargetPhysicalFolder="D:\AppTrans\download\"
                             OverwriteExistingFiles="True"
                             ManualUpload="true">
                         </telerik:RadAsyncUpload>
                     </div>
-                    <div class="footer">
+                    <div class="wiFooter">
                         <telerik:RadButton ID="importButton" runat="server" Text="Import" OnClientClicked="startImport" AutoPostBack="false" Enabled="false" ></telerik:RadButton>
                         <telerik:RadButton ID="import_cancel" runat="server" Text="Cancel" OnClientClicked="cancel" AutoPostBack="false" ></telerik:RadButton>
                     </div>
@@ -60,46 +57,44 @@
             </ContentTemplate>
         </telerik:RadWindow>
 
-        <telerik:RadWindow ID="RadWindow_workItemAnalysis" runat="server" Modal="true" Title="Work Plan analysis - Processing ..." Width="400" Height="180" VisibleStatusbar="false">
+        <telerik:RadWindow ID="RadWindow_workItemAnalysis" runat="server" Modal="true" Title="Work Plan analysis - Processing ..." Width="400" Height="180" VisibleStatusbar="false" Behaviors="Close">
             <ContentTemplate>
                 <div class="contentModal" id="analysis">
-                    <div class="header">
+                    <div class="wiHeader">
                         Workplan analysis is in progress.
                     </div>
-                    <div class="center">
+                    <div class="wiCenter">
                         <asp:Image ID="Image1" runat="server" ImageUrl="~/DesktopModules/WorkItem/images/hourglass.png" width="45"/>
                     </div>
-                    <div class="footer">
+                    <div class="wiFooter">
                         <telerik:RadButton ID="analysis_cancel" runat="server" Text="Cancel" OnClientClicked="cancel" AutoPostBack="false"></telerik:RadButton>
                     </div>
                 </div>
             </ContentTemplate>
         </telerik:RadWindow>
 
-        <telerik:RadWindow ID="RadWindow_workItemConfirmation" runat="server" Modal="true" Title="Import confirmation" Width="700" Height="390" VisibleStatusbar="false">
+        <telerik:RadWindow ID="RadWindow_workItemConfirmation" runat="server" Modal="true" Title="Import confirmation" Width="700" Height="375" VisibleStatusbar="false" Behaviors="Close">
             <ContentTemplate>
                 <div class="contentModal" id="confirmation">
-                    <div class="header">
-                        <div><asp:Label ID="CountErrors" runat="server" Text="No error were found in the work plan"/></div>
-                        <div><asp:Label ID="CountWarnings" runat="server" Text="No warning were found in the work plan"/></div>
+                    <div class="wiHeader">
+                        <div><asp:Label ID="lblCountWarningErrors" runat="server" Text="Test" /></div>
                     </div>
                     <div>
-                        <h2>Warnings</h2>
+                        <h2>Errors and Warnings</h2>
                         <div class="scrollable">
                             <ul>
-                                <asp:Repeater runat="server" ID="repeater" OnItemDataBound="rptErrorsWarning_ItemDataBound">
+                                <asp:Repeater runat="server" ID="rptWarningsErrors" OnItemDataBound="rptErrorsWarning_ItemDataBound">
                                     <ItemTemplate>
                                         <li> <asp:Label ID="lblErrorOrWarning" runat="server"></asp:Label> </li>
                                     </ItemTemplate>
                                 </asp:Repeater>
                             </ul>
                         </div>
-                        <div id="divExportInfo" runat="server">
-                            The new work plan will be exported to : 
-                            <asp:Label runat="server" ID="path_export" Text="H:/..."/>
+                        <div>
+                            <asp:Label runat="server" ID="lblExportPath" Text=""/>
                         </div>
                     </div>
-                    <div class="footer">
+                    <div class="wiFooter">
                         <span><telerik:RadButton ID="btnConfirmImport" runat="server" Text="Confirm import" AutoPostBack="true" OnClick="Confirmation_import_OnClick" CssClass="WiInline" ></telerik:RadButton></span>
                         <span><telerik:RadButton ID="Confirmation_cancel" runat="server" Text="Cancel" AutoPostBack="false" OnClientClicked="cancel" ></telerik:RadButton></span>
                     </div>
@@ -107,17 +102,17 @@
             </ContentTemplate>
         </telerik:RadWindow>
 
-        <telerik:RadWindow ID="RadWindow_workItemState" runat="server" Modal="true" Title="Work plan import and export successful" Width="450" Height="170" VisibleStatusbar="false">
+        <telerik:RadWindow ID="RadWindow_workItemState" runat="server" Modal="true" Title="Work plan import and export successful" Width="450" Height="170" VisibleStatusbar="false" Behaviors="Close">
             <ContentTemplate>
                 <div class="contentModal" id="state">
-                    <div class="header">
+                    <div class="wiHeader">
                         Work plan was successfully imported.<br/>
                         Word and Excel version of the work plan are available on :
                     </div>
                     <div>
-                        <asp:Label id="path_available" runat="server" Text="H:/..." />
+                        <asp:Label id="lblExportedPath" runat="server" Text="" />
                     </div>
-                    <div class="footer">
+                    <div class="wiFooter">
                         <telerik:RadButton ID="state_confirmation" runat="server" Text="OK" OnClientClicked="closeAllModals" AutoPostBack="false"></telerik:RadButton>
                     </div>
                 </div>
@@ -173,7 +168,7 @@
     /*-- TELERIK EVENTS --*/
 
     function Start(sender, arguments) {
-        if (arguments.EventTarget == "<%= RadAjaxManager.UniqueID %>") {
+        if (arguments.EventTarget == "<%= wiRadAjaxManager.UniqueID %>") {
             clearFilesToUpload();
             open_RadWindow_workItemAnalysis();
         }
@@ -182,7 +177,7 @@
         }
     }
     function End(sender, arguments) {
-        if (arguments.EventTarget == "<%= RadAjaxManager.UniqueID %>") {
+        if (arguments.EventTarget == "<%= wiRadAjaxManager.UniqueID %>") {
             open_RadWindow_workItemConfirmation();
         } if (arguments.EventTarget == "<%= btnConfirmImport.UniqueID %>") {
             open_RadWindow_workItemState();
@@ -210,7 +205,7 @@
 <telerik:RadScriptBlock runat="server">
     <script type="text/javascript">
         function OnClientFileUploaded(sender, args) {
-            $find('<%=RadAjaxManager.ClientID %>').ajaxRequest();
+            $find('<%=wiRadAjaxManager.ClientID %>').ajaxRequest();
         }
     </script>
 </telerik:RadScriptBlock>

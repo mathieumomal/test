@@ -46,7 +46,8 @@ namespace Etsi.Ultimate.Module.WorkItem
     /// -----------------------------------------------------------------------------
     public partial class View : WorkItemModuleBase, IActionable
     {
-        private static readonly string  PathImportWorkPlan = "D:\\AppTrans\\download\\";
+        private static string  PathExportWorkPlan;
+        private static string PathUploadWorkPlan;
         private static readonly string  ExtensionCsv = "csv";
         private static readonly string ExtensionZip = "zip";
 
@@ -57,7 +58,11 @@ namespace Etsi.Ultimate.Module.WorkItem
         {
             try
             {
-                
+                //Get settings
+                if(Settings.Contains(Enum_Settings.WorkItem_ExportPath.ToString()))
+                    PathExportWorkPlan = Settings[Enum_Settings.WorkItem_ExportPath.ToString()].ToString();
+                if (Settings.Contains(Enum_Settings.WorkItem_UploadPath.ToString()))
+                    PathUploadWorkPlan = Settings[Enum_Settings.WorkItem_UploadPath.ToString()].ToString();
             }
             catch (Exception exc) //Module failed to load
             {
@@ -73,54 +78,60 @@ namespace Etsi.Ultimate.Module.WorkItem
         protected void AsyncUpload_FileImport(object sender, FileUploadedEventArgs e)
         {
             //Get workplan
-            UploadedFile workplanUploaded = e.File;
-            //Add uploaded workplan in cache
-            Context.Cache.Insert(Session.SessionID + "UploadedWorkPlan", workplanUploaded, null, DateTime.Now.AddMinutes(20), TimeSpan.Zero);
-            //Update View Label of RadWindow_workItemConfirmation Modal with the suppose file path
-            path_export.Text = new StringBuilder().Append(PathImportWorkPlan).Append(workplanUploaded.FileName).ToString();
+            UploadedFile workplanUploaded = e.File;      
 
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
             //var filename = RdAsyncUpload.UploadedFiles[0].
-            workplanUploaded.SaveAs(PathImportWorkPlan+ workplanUploaded.FileName);
-            var wiReport = wiService.AnalyseWorkItemForImport(PathImportWorkPlan+workplanUploaded.GetName());
+            workplanUploaded.SaveAs(new StringBuilder()
+                .Append(PathUploadWorkPlan)
+                .Append(workplanUploaded.FileName)
+                .ToString());
 
+
+            //Analyse file type (ZIP/CSV)
+
+
+            var wiReport = wiService.AnalyseWorkItemForImport(new StringBuilder()
+                .Append(PathUploadWorkPlan)
+                .Append(workplanUploaded.GetName())
+                .ToString());
+
+            //Get work plan's token to use it when user will press "confirm import" button
             tokenWorkPlanAnalysed = wiReport.Key;
+            //Get analyse report
             var report = wiReport.Value;
 
-            //---------- MOCK FOR VIEW TEST ERROR -------------//
-
-            /*ServicesFactory.Container.RegisterType<IWorkItemService, WorkItemServiceMock>(new TransientLifetimeManager());
-            IWorkItemService svc = ServicesFactory.Resolve<IWorkItemService>();//Get the mock instead service classe
-
-            //---------- MOCK FOR VIEW TEST ERROR -------------//
-            
-            
-            //Calling the service
-            KeyValuePair<int, ImportReport> analyseReport = svc.AnalyseWorkItemForImport("path of temp workItem upload");
-            ImportReport importReport = analyseReport.Value;
-            tokenWorkPlanAnalysed = analyseReport.Key;
-
-            */
-            //File analyse and update list of warnings dataSource
-            
-
-            CountErrors.Text = report.GetNumberOfErrors().ToString() + " error(s) were found in the work plan.";
-            CountWarnings.Text = report.GetNumberOfWarnings().ToString()+ " warning(s) were found in the work plan." ;
+            lblCountWarningErrors.Text = new StringBuilder()
+                .Append("Found ")
+                .Append(report.GetNumberOfErrors().ToString())
+                .Append(" error")
+                .Append(report.GetNumberOfErrors() <= 1 ? "" : "s")
+                .Append(", ")
+                .Append(report.GetNumberOfWarnings().ToString())
+                .Append(" warning")
+                .Append(report.GetNumberOfWarnings() <= 1 ? "" : "s")
+                .Append(".")
+                .ToString();
 
             if (report.GetNumberOfErrors() > 0)
             {
                 btnConfirmImport.Enabled = false;
-                divExportInfo.Visible = false;
+                lblExportPath.Text = "Errors were found. WorkPlan cannot be imported.";
                 errorNumber = report.GetNumberOfErrors();
+            }
+            else
+            {
+                lblExportPath.Text = new StringBuilder()
+                    .Append("The new work plan will be exported to : ")
+                    .Append(PathExportWorkPlan)
+                    .ToString();
             }
 
             List<string> datasource = new List<string>();
             datasource.AddRange(report.ErrorList);
             datasource.AddRange(report.WarningList);
-            repeater.DataSource = datasource;
-            repeater.DataBind();
-
-            //System.Threading.Thread.Sleep(2000);
+            rptWarningsErrors.DataSource = datasource;
+            rptWarningsErrors.DataBind();
         }
 
         /// <summary>
@@ -130,18 +141,9 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// <param name="e"></param>
         protected void Confirmation_import_OnClick(object sender, EventArgs e)
         {
-            //Get workplan uploaded in cache
-            var workplanUploaded = (UploadedFile)Context.Cache.Get(Session.SessionID + "UploadedWorkPlan");
-            //Save workplan on server
-            workplanUploaded.SaveAs(new StringBuilder()
-                .Append(PathImportWorkPlan)
-                .Append(workplanUploaded.GetName())
-                .ToString(), 
-            true);
-            //Update RadWindow_workItemState label with real path file 
-            path_available.Text = new StringBuilder()
-                .Append(PathImportWorkPlan)
-                .Append(workplanUploaded.GetName())
+            //Update RadWindow_workItemState label with real files path  
+            lblExportedPath.Text = new StringBuilder()
+                .Append(PathExportWorkPlan)
                 .ToString();
         }
 

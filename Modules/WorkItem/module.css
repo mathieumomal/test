@@ -1,10 +1,10 @@
 .contentModal{padding:10px 25px;}
-.header{margin-bottom: 10px;}
-.center{
+.wiHeader{margin: 5px 0 10px 0;}
+.wiCenter{
 	margin:auto;
 	text-align: center;
 }
-.footer{
+.wiFooter{
 	text-align: right;
 	margin-top: 10px;
 }
@@ -13,7 +13,7 @@
     background-image: none !important;
     width:0; 
 }
-.footer div
+.wiFooter div
 {
     display: inline !important;
 }
@@ -21,10 +21,6 @@
 .ErrorItem
 {
     color: red;
-}
-.WarningItem
-{
-    color: orange;
 }
 
 /*IMPORT*/
