@@ -138,6 +138,7 @@
     <Content Include="Documentation\Documentation.css" />
     <Content Include="Documentation\Documentation.html" />
     <Content Include="Edit.ascx" />
+    <Content Include="images\favicon.ico" />
     <Content Include="images\ReleaseDecription.png" />
     <Content Include="images\warning.png" />
     <Content Include="License.txt" />

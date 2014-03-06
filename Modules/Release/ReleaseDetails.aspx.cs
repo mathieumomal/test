@@ -38,10 +38,6 @@ namespace Etsi.Ultimate.Module.Release
                     Domain.Release release = releaseRightsObject.Key;
                     DomainClasses.UserRightsContainer userRights = releaseRightsObject.Value;
 
-
-                    BuildTabsDisplay(userRights);
-
-
                     if (release == null)
                     {
                         releaseDetailsBody.Visible = false;
@@ -50,6 +46,7 @@ namespace Etsi.Ultimate.Module.Release
                     }
                     else
                     {
+                        BuildTabsDisplay(userRights);
                         FillGeneralTab(userRights, release);
 
                         if (userRights.HasRight(Domain.Enum_UserRights.Release_ViewCompleteDetails))
@@ -251,6 +248,11 @@ namespace Etsi.Ultimate.Module.Release
                     return personID;
             }
             return 0;
+        }
+
+        protected void CloseReleaseDetails_Click(object sender, EventArgs e)
+        {
+            this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close()", true);
         }
        
     }

@@ -22,20 +22,22 @@
 
 /* Release details style*/
 
-body {
+.releaseDetailBody {
     font-family:Arial,verdana,Serif;
     font-size: 12px;
 }
 
-td {
+.releaseDetailBody td {
     padding-top: 5px !important;
     padding-bottom: 5px !important;
 }
 
 .releaseRemarks {
-    position: fixed;
-	top: 370px;
-	width: 623px;
+    /*position:fixed;
+    top:370px;	*/
+    position: absolute; 
+    bottom: 20px;
+    width: 623px;
 }
 
 fieldset {
@@ -144,7 +146,7 @@ versionFieldsetTab {
 
 .LinkButton {
     background-position: 0% 0%;
-	text-decoration: none;
+    text-decoration: none;
     padding: 2px 15px;
     color: #FFF;
     -webkit-border-radius: 4px;
@@ -158,18 +160,18 @@ versionFieldsetTab {
     
     vertical-align: middle;
 	-webkit-transition-duration: 0.2s;
-	-moz-transition-duration: 0.2s;
-	transition-duration: 0.2s;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	background-image: -o-linear-gradient(bottom, #75B91A, #54AF13);
+    -moz-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: -o-linear-gradient(bottom, #75B91A, #54AF13);
 /* IE6-9 */
     
     background-color: #75B91A;
-	background-repeat: repeat;
-	background-attachment: scroll;
+    background-repeat: repeat;
+    background-attachment: scroll;
 }
 
 .LinkButton:hover {
@@ -187,8 +189,14 @@ versionFieldsetTab {
 }
     */
 
-.containerFix
-{
-	width:650px;
-	height:650px;
+.containerFix {
+    height: 620px;
+    width: 650px;
+    position: relative;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.SecndColFreezeStageMeeting {
+    padding-right: 200px;
 }

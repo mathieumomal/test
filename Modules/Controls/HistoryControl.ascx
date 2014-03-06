@@ -15,9 +15,9 @@
 
 </style>
 
-<telerik:RadGrid runat="server" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" ID="historyTable" AllowPaging="false" AllowSorting="false" AllowFilteringByColumn="false" AutoGenerateColumns="false">
+<telerik:RadGrid runat="server" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" ID="historyTable" AllowPaging="false" AllowSorting="false" AllowFilteringByColumn="false" AutoGenerateColumns="false" >
     <ClientSettings>
-       <Scrolling AllowScroll="True" UseStaticHeaders="true" />
+       <Scrolling AllowScroll="True" UseStaticHeaders="true" ScrollHeight="510px"/>
     </ClientSettings>
     <mastertableview clientdatakeynames="Pk_HistoryId">
         <Columns>
