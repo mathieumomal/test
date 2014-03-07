@@ -68,7 +68,6 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerTopology.cs" />
-    <Compile Include="Zip.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

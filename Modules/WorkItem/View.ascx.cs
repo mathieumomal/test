@@ -98,6 +98,8 @@ namespace Etsi.Ultimate.Module.WorkItem
 
             //Get work plan's token to use it when user will press "confirm import" button
             tokenWorkPlanAnalysed = wiReport.Key;
+            ViewState["WiImportToken"] = tokenWorkPlanAnalysed;
+
             //Get analyse report
             var report = wiReport.Value;
 
@@ -142,12 +144,21 @@ namespace Etsi.Ultimate.Module.WorkItem
         protected void Confirmation_import_OnClick(object sender, EventArgs e)
         {
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
+            tokenWorkPlanAnalysed = (string) ViewState["WiImportToken"];
             bool success = wiService.ImportWorkPlan(tokenWorkPlanAnalysed);
-            
-            //Update RadWindow_workItemState label with real files path  
-            lblExportedPath.Text = new StringBuilder()
-                .Append(PathExportWorkPlan)
-                .ToString();
+
+            if (success)
+            {
+                //Update RadWindow_workItemState label with real files path  
+                lblExportedPath.Text = new StringBuilder()
+                    .Append(PathExportWorkPlan)
+                    .ToString();
+            }
+            else
+            {
+                lblSaveStatus.Text = "Error occured while saving the work plan. Please contact helpdesk for further investigation";
+                lblExportedPath.Text = "";
+            }
         }
 
         protected void rptErrorsWarning_ItemDataBound(Object Sender, RepeaterItemEventArgs e)

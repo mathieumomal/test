@@ -38,13 +38,34 @@ namespace Etsi.Ultimate.Repositories
 
         public void InsertOrUpdate(WorkItem entity)
         {
-            if (entity.Pk_WorkItemUid == default(int))
+            if (entity.IsNew)
             {
                 UoW.Context.SetAdded(entity);
+
+             
+
             }
             else
             {
                 UoW.Context.SetModified(entity);
+            }
+
+            // Add possibly the Responsible groups
+            foreach (var responsibleGroup in entity.WorkItems_ResponsibleGroups)
+            {
+                if (responsibleGroup.Pk_WorkItemResponsibleGroups == default(int))
+                    UoW.Context.SetAdded(responsibleGroup);
+                else
+                    UoW.Context.SetModified(responsibleGroup);
+            }
+
+            // Add possibly the remarks
+            foreach (var remark in entity.Remarks)
+            {
+                if (remark.Pk_RemarkId == default(int))
+                    UoW.Context.SetAdded(remark);
+                else
+                    UoW.Context.SetModified(remark);
             }
         }
 

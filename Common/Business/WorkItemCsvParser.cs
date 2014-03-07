@@ -76,6 +76,22 @@ namespace Etsi.Ultimate.Business
         {
             try
             {
+
+                var path = fileLocation;
+                // Treat the file
+                if (path.EndsWith("zip"))
+                {
+                    var files = Zip.Extract(path, false);
+                    if (files.Count != 1 || !files.First().EndsWith("csv"))
+                    {
+
+                    }
+                    else
+                    {
+                        path = files.First();
+                    }
+                }
+
                 if (UoW == null)
                     throw new InvalidOperationException("Cannot process with UoW defined");
 
@@ -83,7 +99,7 @@ namespace Etsi.Ultimate.Business
                 InitializeCommonData();
 
                 // Open the file.
-                using (StreamReader reader = new StreamReader(fileLocation))
+                using (StreamReader reader = new StreamReader(path))
                 {
 
                     var csv = new CsvReader(reader);
@@ -950,6 +966,7 @@ namespace Etsi.Ultimate.Business
                 aReturnWI = wi;
                 wi.Pk_WorkItemUid = UidToSearchFor;
                 IsCurrentWIModified = true;
+                wi.IsNew = true;
             }
             else
             {

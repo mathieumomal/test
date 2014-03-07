@@ -129,10 +129,6 @@
             <End Role="WorkItems" EntitySet="WorkItems" />
             <End Role="WorkItems_ResponsibleGroups" EntitySet="WorkItems_ResponsibleGroups" />
           </AssociationSet>
-          <AssociationSet Name="FK_WorkItems_WorkItems" Association="Etsi.Ultimate.DataAccess.Store.FK_WorkItems_WorkItems">
-            <End Role="WorkItems" EntitySet="WorkItems" />
-            <End Role="WorkItems1" EntitySet="WorkItems" />
-          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -236,7 +232,7 @@
           <Key>
             <PropertyRef Name="Pk_WorkItemResponsibleGroups" />
           </Key>
-          <Property Name="Pk_WorkItemResponsibleGroups" Type="int" Nullable="false" />
+          <Property Name="Pk_WorkItemResponsibleGroups" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Fk_WorkItemId" Type="int" />
           <Property Name="Fk_TbId" Type="int" />
           <Property Name="ResponsibleGroup" Type="varchar" MaxLength="5" />
@@ -444,18 +440,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_WorkItems_WorkItems">
-          <End Role="WorkItems" Type="Etsi.Ultimate.DataAccess.Store.WorkItems" Multiplicity="1" />
-          <End Role="WorkItems1" Type="Etsi.Ultimate.DataAccess.Store.WorkItems" Multiplicity="0..1" />
-          <ReferentialConstraint>
-            <Principal Role="WorkItems">
-              <PropertyRef Name="Pk_WorkItemUid" />
-            </Principal>
-            <Dependent Role="WorkItems1">
-              <PropertyRef Name="Pk_WorkItemUid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -480,7 +464,6 @@
             <End Role="Release" EntitySet="Releases" />
             <End Role="History" EntitySet="Histories" />
           </AssociationSet>
-          <EntitySet Name="WorkItems_ResponsibleGroups" EntityType="Etsi.Ultimate.DataAccess.WorkItems_ResponsibleGroups" />
           <EntitySet Name="View_Persons" EntityType="Etsi.Ultimate.DataAccess.View_Persons" />
           <EntitySet Name="Communities" EntityType="Etsi.Ultimate.DataAccess.Community" />
           <EntitySet Name="WorkItems" EntityType="Etsi.Ultimate.DataAccess.WorkItem" />
@@ -496,13 +479,14 @@
             <End Role="WorkItem" EntitySet="WorkItems" />
             <End Role="WorkItem1" EntitySet="WorkItems" />
           </AssociationSet>
-          <AssociationSet Name="FK_WorkItems_ResponsibleGroups_WorkItems" Association="Etsi.Ultimate.DataAccess.FK_WorkItems_ResponsibleGroups_WorkItems">
-            <End Role="WorkItem" EntitySet="WorkItems" />
-            <End Role="WorkItems_ResponsibleGroups" EntitySet="WorkItems_ResponsibleGroups" />
-          </AssociationSet>
           <AssociationSet Name="FK_WorkItems_WorkItems" Association="Etsi.Ultimate.DataAccess.FK_WorkItems_WorkItems">
             <End Role="WorkItem" EntitySet="WorkItems" />
             <End Role="WorkItem1" EntitySet="WorkItems" />
+          </AssociationSet>
+          <EntitySet Name="WorkItems_ResponsibleGroups" EntityType="Etsi.Ultimate.DataAccess.WorkItems_ResponsibleGroups" />
+          <AssociationSet Name="FK_WorkItems_ResponsibleGroups_WorkItems" Association="Etsi.Ultimate.DataAccess.FK_WorkItems_ResponsibleGroups_WorkItems">
+            <End Role="WorkItem" EntitySet="WorkItems" />
+            <End Role="WorkItems_ResponsibleGroups" EntitySet="WorkItems_ResponsibleGroups" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
@@ -692,17 +676,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="WorkItems_ResponsibleGroups">
-          <Key>
-            <PropertyRef Name="Pk_WorkItemResponsibleGroups" />
-          </Key>
-          <Property Type="Int32" Name="Pk_WorkItemResponsibleGroups" Nullable="false" />
-          <Property Type="Int32" Name="Fk_WorkItemId" />
-          <Property Type="String" Name="ResponsibleGroup" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Type="Boolean" Name="IsPrimeResponsible" />
-          <NavigationProperty Name="WorkItem" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItems_ResponsibleGroups_WorkItems" FromRole="WorkItems_ResponsibleGroups" ToRole="WorkItem" />
-          <Property Type="Int32" Name="Fk_TbId" />
-        </EntityType>
         <EntityType Name="View_Persons">
           <Key>
             <PropertyRef Name="PERSON_ID" />
@@ -797,18 +770,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_WorkItems_ResponsibleGroups_WorkItems">
-          <End Type="Etsi.Ultimate.DataAccess.WorkItem" Role="WorkItem" Multiplicity="0..1" />
-          <End Type="Etsi.Ultimate.DataAccess.WorkItems_ResponsibleGroups" Role="WorkItems_ResponsibleGroups" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="WorkItem">
-              <PropertyRef Name="Pk_WorkItemUid" />
-            </Principal>
-            <Dependent Role="WorkItems_ResponsibleGroups">
-              <PropertyRef Name="Fk_WorkItemId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_WorkItems_WorkItems">
           <End Type="Etsi.Ultimate.DataAccess.WorkItem" Role="WorkItem" Multiplicity="1" />
           <End Type="Etsi.Ultimate.DataAccess.WorkItem" Role="WorkItem1" Multiplicity="0..1" />
@@ -818,6 +779,29 @@
             </Principal>
             <Dependent Role="WorkItem1">
               <PropertyRef Name="Pk_WorkItemUid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="WorkItems_ResponsibleGroups">
+          <Key>
+            <PropertyRef Name="Pk_WorkItemResponsibleGroups" />
+          </Key>
+          <Property Type="Int32" Name="Pk_WorkItemResponsibleGroups" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Int32" Name="Fk_WorkItemId" />
+          <Property Type="Int32" Name="Fk_TbId" />
+          <Property Type="String" Name="ResponsibleGroup" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="IsPrimeResponsible" />
+          <NavigationProperty Name="WorkItem" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItems_ResponsibleGroups_WorkItems" FromRole="WorkItems_ResponsibleGroups" ToRole="WorkItem" />
+        </EntityType>
+        <Association Name="FK_WorkItems_ResponsibleGroups_WorkItems">
+          <End Type="Etsi.Ultimate.DataAccess.WorkItem" Role="WorkItem" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.WorkItems_ResponsibleGroups" Role="WorkItems_ResponsibleGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkItem">
+              <PropertyRef Name="Pk_WorkItemUid" />
+            </Principal>
+            <Dependent Role="WorkItems_ResponsibleGroups">
+              <PropertyRef Name="Fk_WorkItemId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -973,17 +957,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="WorkItems_ResponsibleGroups">
-            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.WorkItems_ResponsibleGroups">
-              <MappingFragment StoreEntitySet="WorkItems_ResponsibleGroups">
-                <ScalarProperty Name="Fk_TbId" ColumnName="Fk_TbId" />
-                <ScalarProperty Name="IsPrimeResponsible" ColumnName="IsPrimeResponsible" />
-                <ScalarProperty Name="ResponsibleGroup" ColumnName="ResponsibleGroup" />
-                <ScalarProperty Name="Fk_WorkItemId" ColumnName="Fk_WorkItemId" />
-                <ScalarProperty Name="Pk_WorkItemResponsibleGroups" ColumnName="Pk_WorkItemResponsibleGroups" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="View_Persons">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.View_Persons">
               <MappingFragment StoreEntitySet="View_Persons">
@@ -1037,6 +1010,17 @@
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="WorkplanId" ColumnName="WorkplanId" />
                 <ScalarProperty Name="Pk_WorkItemUid" ColumnName="Pk_WorkItemUid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkItems_ResponsibleGroups">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.WorkItems_ResponsibleGroups">
+              <MappingFragment StoreEntitySet="WorkItems_ResponsibleGroups">
+                <ScalarProperty Name="IsPrimeResponsible" ColumnName="IsPrimeResponsible" />
+                <ScalarProperty Name="ResponsibleGroup" ColumnName="ResponsibleGroup" />
+                <ScalarProperty Name="Fk_TbId" ColumnName="Fk_TbId" />
+                <ScalarProperty Name="Fk_WorkItemId" ColumnName="Fk_WorkItemId" />
+                <ScalarProperty Name="Pk_WorkItemResponsibleGroups" ColumnName="Pk_WorkItemResponsibleGroups" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

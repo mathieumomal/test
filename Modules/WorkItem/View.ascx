@@ -19,6 +19,7 @@
         <telerik:AjaxSetting AjaxControlID="btnConfirmImport">
             <UpdatedControls>
                 <telerik:AjaxUpdatedControl ControlID="lblExportedPath" />
+                <telerik:AjaxUpdatedControl ControlID="lblSaveStatus" />
             </UpdatedControls>
         </telerik:AjaxSetting>
     </AjaxSettings>
@@ -106,8 +107,7 @@
             <ContentTemplate>
                 <div class="contentModal" id="state">
                     <div class="wiHeader">
-                        Work plan was successfully imported.<br/>
-                        Word and Excel version of the work plan are available on :
+                        <asp:Label runat="server" ID="lblSaveStatus" Text="Work plan was successfully imported.<br/>Word and Excel version of the work plan are available at:" />
                     </div>
                     <div>
                         <asp:Label id="lblExportedPath" runat="server" Text="" />

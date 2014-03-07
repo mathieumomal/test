@@ -6,7 +6,7 @@ using Ionic.Zip;
 using System.IO;
 
 
-namespace Etsi.Ultimate.Controls
+namespace Etsi.Ultimate.Business
 {
     /// <summary>
     /// Compress file/Extract zip files
@@ -33,8 +33,9 @@ namespace Etsi.Ultimate.Controls
         /// <param name="zipFilePath">Full path of the zip file</param>
         /// <param name="outputPath">Full path of the output directory</param>
         /// <param name="createOwnDirectory">true to create a seperate directory for the extracted files</param>
-        public static void Extract(string zipFilePath, string outputPath, bool createOwnDirectory)
+        public static List<string> Extract(string zipFilePath, string outputPath, bool createOwnDirectory)
         {
+            var resultList = new List<string>();
             if (!string.IsNullOrEmpty(zipFilePath))
             {
                 string FileName = Path.GetFileNameWithoutExtension(zipFilePath);
@@ -45,9 +46,11 @@ namespace Etsi.Ultimate.Controls
                     foreach (var entry in zip.Entries)
                     {
                         entry.Extract(path, ExtractExistingFileAction.OverwriteSilently);
+                        resultList.Add(path + "\\"+ entry.FileName);
                     }
                 }
             }
+            return resultList;
         }
 
         /// <summary>
@@ -55,9 +58,9 @@ namespace Etsi.Ultimate.Controls
         /// </summary>
         /// <param name="zipFilePath">Full path of the zip file</param>
         /// <param name="createOwnDirectory">true to create a seperate directory for the extracted files</param>
-        public static void Extract(string zipFilePath, bool createOwnDirectory)
+        public static List<string> Extract(string zipFilePath, bool createOwnDirectory)
         {
-            Extract(zipFilePath, null, createOwnDirectory);
+            return Extract(zipFilePath, null, createOwnDirectory);
         }
     }
 }

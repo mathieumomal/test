@@ -17,9 +17,9 @@ namespace Etsi.Ultimate.DomainClasses
     {
         public int Pk_WorkItemResponsibleGroups { get; set; }
         public Nullable<int> Fk_WorkItemId { get; set; }
+        public Nullable<int> Fk_TbId { get; set; }
         public string ResponsibleGroup { get; set; }
         public Nullable<bool> IsPrimeResponsible { get; set; }
-        public Nullable<int> Fk_TbId { get; set; }
     
         public virtual WorkItem WorkItem { get; set; }
     }

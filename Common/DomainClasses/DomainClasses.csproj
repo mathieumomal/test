@@ -85,6 +85,7 @@
     <Compile Include="WorkItem.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="WorkItem.extend.cs" />
     <Compile Include="WorkItems_ResponsibleGroups.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

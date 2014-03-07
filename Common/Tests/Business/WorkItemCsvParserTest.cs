@@ -108,6 +108,8 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual("S1", wi.WorkItems_ResponsibleGroups.ElementAt(0).ResponsibleGroup);
             Assert.AreEqual(2, wi.WorkItems_ResponsibleGroups.ElementAt(0).Fk_TbId);
             Assert.IsTrue(wi.WorkItems_ResponsibleGroups.ElementAt(0).IsPrimeResponsible.GetValueOrDefault());
+
+            Assert.IsTrue(wi.IsNew);
         }
 
         [Test]

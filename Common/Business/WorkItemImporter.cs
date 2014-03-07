@@ -17,6 +17,9 @@ namespace Etsi.Ultimate.Business
 
         public KeyValuePair<string, ImportReport> TryImportCsv(string filePath)
         {
+            
+            
+
             string token = "";
 
             var csvParser = new WorkItemCsvParser();
@@ -24,7 +27,7 @@ namespace Etsi.Ultimate.Business
             var result = csvParser.ParseCsv(filePath);
             if (result.Value.GetNumberOfErrors() == 0)
             {
-                token = new Guid().ToString();
+                token = Guid.NewGuid().ToString();
                 CacheManager.InsertForLimitedTime(CACHE_KEY+token, result.Key, 10);
             }
             return new KeyValuePair<string, ImportReport>(token, result.Value);
@@ -34,7 +37,7 @@ namespace Etsi.Ultimate.Business
         public bool ImportWorkPlan(string token)
         {
             // Fetch the data in cache. If there is no data, then it's outdated.
-            var workPlan = (List<WorkItem>)CacheManager.Get(token);
+            var workPlan = (List<WorkItem>)CacheManager.Get(CACHE_KEY+ token);
             if (workPlan == null)
             {
                 return false;

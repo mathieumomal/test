@@ -15,15 +15,15 @@
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Users_AdHoc_Roles" Width="1.5" PointX="2.625" PointY="8.625" FillColor="DarkSeaGreen" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.History" Width="1.5" PointX="8.625" PointY="2.75" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_History_Releases" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.WorkItems_ResponsibleGroups" Width="1.5" PointX="4.375" PointY="12" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.View_Persons" Width="1.5" PointX="0.5" PointY="12" FillColor="DarkSeaGreen" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Community" Width="1.5" PointX="2.625" PointY="10.625" FillColor="DarkSeaGreen" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.WorkItem" Width="1.5" PointX="9.5" PointY="11.375" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WorkItems_Releases" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Remarks_WorkItems" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WorkItems_ParentWi" />
-        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WorkItems_ResponsibleGroups_WorkItems" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WorkItems_WorkItems" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.WorkItems_ResponsibleGroups" Width="1.5" PointX="5.6023676402877864" PointY="30.965353458638003" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WorkItems_ResponsibleGroups_WorkItems" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

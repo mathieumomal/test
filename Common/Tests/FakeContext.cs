@@ -49,7 +49,10 @@ namespace Etsi.Ultimate.Tests
 
         public void SetModified(object entity)
         {
-            Releases.Add((Release)entity);
+            if (entity.GetType() == typeof(Release))
+                Releases.Add((Release)entity);
+            else if (entity.GetType() == typeof(WorkItem))
+                WorkItems.Add((WorkItem)entity);
         }
 
         public void SetAdded(object entity)

@@ -149,6 +149,10 @@
               <name>CsvHelper.dll</name>
               <path>bin</path>
             </assembly>
+            <assembly>
+              <name>Ionic.Zip.dll</name>
+              <path>bin</path>
+            </assembly>
           </assemblies>
         </component>
       </components>
