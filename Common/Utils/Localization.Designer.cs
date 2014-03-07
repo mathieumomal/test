@@ -97,6 +97,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Imported file was not found at {0}. Please check the module configuration, and contact the helpdesk if necessary..
+        /// </summary>
+        public static string WorkItem_Import_FileNotFound {
+            get {
+                return ResourceManager.GetString("WorkItem_Import_FileNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}, Uid {1}: Completion is incorrect: {2}.
         /// </summary>
         public static string WorkItem_Import_Incorrect_Completion {
@@ -228,6 +237,15 @@ namespace Etsi.Ultimate.Utils {
         public static string WorkItem_Import_Invalid_WiD {
             get {
                 return ResourceManager.GetString("WorkItem_Import_Invalid_WiD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An unknown exception has occured. It has been logged by our error system. Please contact helpdesk for investigation. Uid of last successfully treated WI: {0}.
+        /// </summary>
+        public static string WorkItem_Import_Unknown_Exception {
+            get {
+                return ResourceManager.GetString("WorkItem_Import_Unknown_Exception", resourceCulture);
             }
         }
     }

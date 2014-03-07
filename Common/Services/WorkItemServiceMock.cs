@@ -11,7 +11,7 @@ namespace Etsi.Ultimate.Services
     {
         #region IWorkItemService Membres
 
-        public KeyValuePair<int, ImportReport> AnalyseWorkItemForImport(String path)
+        public KeyValuePair<string, ImportReport> AnalyseWorkPlanForImport(String path)
         {
             ImportReport myImportReport = new ImportReport();
             myImportReport.ErrorList.Add("Error 1");
@@ -20,11 +20,11 @@ namespace Etsi.Ultimate.Services
             myImportReport.WarningList.Add("Warning 1");
             myImportReport.WarningList.Add("Warning 2");
             myImportReport.WarningList.Add("Warning 3");
-            KeyValuePair<int, ImportReport> analyseWorkItemForImportResult = new KeyValuePair<int, ImportReport>(15, myImportReport);
+            var analyseWorkItemForImportResult = new KeyValuePair<string, ImportReport>("15", myImportReport);
             return analyseWorkItemForImportResult;
         }
 
-        public string ImportWorkItem(int token)
+        public bool ImportWorkPlan(string token)
         {
             throw new NotImplementedException();
         }

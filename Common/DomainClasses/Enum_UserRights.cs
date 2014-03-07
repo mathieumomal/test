@@ -22,6 +22,8 @@ namespace Etsi.Ultimate.DomainClasses
         Release_Freeze,
         Release_Close,
 
+        WorkItem_ImportWorkplan,
+
         Remarks_ViewPrivate
     }
 }

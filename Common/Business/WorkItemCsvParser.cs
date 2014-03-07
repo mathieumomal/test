@@ -74,67 +74,96 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         public KeyValuePair<List<WorkItem>, ImportReport> ParseCsv(string fileLocation)
         {
-            if (UoW == null)
-                throw new InvalidOperationException("Cannot process with UoW defined");
-            
-            // Initialize all fields
-            InitializeCommonData();
-
-            // Open the file.
-            using (StreamReader reader = new StreamReader(fileLocation))
+            try
             {
+                if (UoW == null)
+                    throw new InvalidOperationException("Cannot process with UoW defined");
 
-                var csv = new CsvReader(reader);
+                // Initialize all fields
+                InitializeCommonData();
 
-                // Configure the reader
-                csv.Configuration.Delimiter = ",";
-                csv.Configuration.DetectColumnCountChanges = true;
-                csv.Configuration.Encoding = Encoding.UTF8;
-                csv.Configuration.HasHeaderRecord = true;
-                csv.Configuration.TrimFields = false;
-
-                // For each line:
-                // - Create a new record (that might be discarded if WI already exist)
-                // - Treat the fields one by one.
-                // - Depending on whether or not the WI has been updated, store it in the list of WIs to be updated.
-                while (csv.Read())
+                // Open the file.
+                using (StreamReader reader = new StreamReader(fileLocation))
                 {
-                    IsCurrentWIModified = false;
-                    var record = csv.GetRecord<WorkItemImportClass>();
-                    var wi = new WorkItem();
 
-                    wi = TreatWiUid(record, wi);
-                    TreatWpId(record, wi);
-                    TreatLevel(record, wi);
-                    TreatName(record, wi);
-                    TreatResource(record, wi);
-                    TreatAcronym(record, wi);
-                    TreatRelease(record, wi);
-                    TreatStartDate(record, wi);
-                    TreatEndDate(record, wi);
-                    TreatCompletion(record, wi);
-                    TreatWid(record, wi);
-                    TreatStatusReport(record, wi);
-                    TreatRapporteurCompany(record, wi);
-                    TreatRapporteur(record, wi);
-                    TreatRemarks(record, wi);
-                    TreatTssAndTrs(record, wi);
-                    TreatApprovedTsgMeeting(record, wi);
-                    TreatApprovedPcgMeeting(record, wi);
-                    TreatStoppedTsgMeeting(record, wi);
-                    TreatStoppedPcgMeeting(record, wi);
-                    TreatCreationDate(record, wi);
-                    TreatLastModifiedDate(record, wi);
+                    var csv = new CsvReader(reader);
 
-                    if (IsCurrentWIModified)
-                        ModifiedWorkItems.Add(wi);
-                    TreatedWorkItems.Add(wi);
+                    // Configure the reader
+                    csv.Configuration.Delimiter = ",";
+                    csv.Configuration.DetectColumnCountChanges = true;
+                    csv.Configuration.Encoding = Encoding.UTF8;
+                    csv.Configuration.HasHeaderRecord = true;
+                    csv.Configuration.TrimFields = false;
+
+                    // For each line:
+                    // - Create a new record (that might be discarded if WI already exist)
+                    // - Treat the fields one by one.
+                    // - Depending on whether or not the WI has been updated, store it in the list of WIs to be updated.
+                    while (csv.Read())
+                    {
+                        IsCurrentWIModified = false;
+                        var record = csv.GetRecord<WorkItemImportClass>();
+                        var wi = new WorkItem();
+
+                        wi = TreatWiUid(record, wi);
+                        TreatWpId(record, wi);
+                        TreatLevel(record, wi);
+                        TreatName(record, wi);
+                        TreatResource(record, wi);
+                        TreatAcronym(record, wi);
+                        TreatRelease(record, wi);
+                        TreatStartDate(record, wi);
+                        TreatEndDate(record, wi);
+                        TreatCompletion(record, wi);
+                        TreatWid(record, wi);
+                        TreatStatusReport(record, wi);
+                        TreatRapporteurCompany(record, wi);
+                        TreatRapporteur(record, wi);
+                        TreatRemarks(record, wi);
+                        TreatTssAndTrs(record, wi);
+                        TreatApprovedTsgMeeting(record, wi);
+                        TreatApprovedPcgMeeting(record, wi);
+                        TreatStoppedTsgMeeting(record, wi);
+                        TreatStoppedPcgMeeting(record, wi);
+                        TreatCreationDate(record, wi);
+                        TreatLastModifiedDate(record, wi);
+
+                        if (IsCurrentWIModified)
+                            ModifiedWorkItems.Add(wi);
+                        TreatedWorkItems.Add(wi);
+                    }
+
                 }
 
+                // Return the list of workitems that were modified, along with the report.
+                return new KeyValuePair<List<WorkItem>, ImportReport>(ModifiedWorkItems, Report);
             }
 
-            // Return the list of workitems that were modified, along with the report.
-            return new KeyValuePair<List<WorkItem>, ImportReport>(ModifiedWorkItems, Report);
+            catch (System.IO.FileNotFoundException e)
+            {
+                // Log the error
+                Utils.LogManager.Error("Error occured in WorkplanCsvParser: cannot find file" + fileLocation);
+                var errorReport = new ImportReport();
+                errorReport.LogError(String.Format(Utils.Localization.WorkItem_Import_FileNotFound, fileLocation));
+
+                return new KeyValuePair<List<WorkItem>, ImportReport>(new List<WorkItem>(), errorReport);
+            }
+
+            catch (Exception e)
+            {
+                // Log the error
+                Utils.LogManager.Error("Error occured in WorkplanCsvParser:" + e.Message);
+                Utils.LogManager.Error("Stacktrace:" + e.StackTrace);
+
+                string lastSuccessfullyTreatedWi = "None";
+                if (lastTreatedWi != null)
+                    lastSuccessfullyTreatedWi = lastTreatedWi.Pk_WorkItemUid.ToString();
+                var errorReport = new ImportReport();
+                errorReport.LogError(String.Format(Utils.Localization.WorkItem_Import_Unknown_Exception, lastSuccessfullyTreatedWi));
+
+                return new KeyValuePair<List<WorkItem>, ImportReport>(new List<WorkItem>(), errorReport);
+
+            }
         }
 
         /// <summary>
@@ -145,7 +174,7 @@ namespace Etsi.Ultimate.Business
             // Retrieve all the existing work items.
             var wiRepo = RepositoryFactory.Resolve<IWorkItemRepository>();
             wiRepo.UoW = UoW;
-            AllWorkItems = wiRepo.All.ToList();
+            AllWorkItems = wiRepo.AllIncluding(w=> w.WorkItems_ResponsibleGroups, w => w.Remarks).ToList();
 
             // Retrieve all the persons.
             var personRepo = RepositoryFactory.Resolve<IPersonRepository>();

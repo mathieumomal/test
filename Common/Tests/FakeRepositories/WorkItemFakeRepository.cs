@@ -84,7 +84,7 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
 
         public IQueryable<Ultimate.DomainClasses.WorkItem> AllIncluding(params System.Linq.Expressions.Expression<Func<Ultimate.DomainClasses.WorkItem, object>>[] includeProperties)
         {
-            throw new NotImplementedException();
+            return GenerateList(Source);
         }
 
         public Ultimate.DomainClasses.WorkItem Find(int id)

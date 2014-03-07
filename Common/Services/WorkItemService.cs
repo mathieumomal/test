@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Services
 {
@@ -14,7 +15,7 @@ namespace Etsi.Ultimate.Services
 
         #region IWorkItemService Membres
 
-        public KeyValuePair<int, ImportReport> AnalyseWorkItemForImport(String path)
+        public KeyValuePair<string, ImportReport> AnalyseWorkPlanForImport(String path)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
@@ -23,9 +24,29 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public string ImportWorkItem(int token)
+        public bool ImportWorkPlan(string token)
         {
-            throw new NotImplementedException();
+            bool isImportSuccess = false;
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var csvImport = new WorkItemImporter() { UoW = uoW };
+                    isImportSuccess = csvImport.ImportWorkPlan(token);
+
+                    if (isImportSuccess)
+                    {
+                        uoW.Save();
+                    }
+                    return isImportSuccess;                    
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Error("Failed to import Workplan: " + e.Message+"\n"+e.StackTrace);
+                return false;
+            }
+
         }
 
         #endregion

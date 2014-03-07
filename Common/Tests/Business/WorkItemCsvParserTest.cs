@@ -28,19 +28,22 @@ namespace Etsi.Ultimate.Tests.Business
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void ImportCsv_ThrowsExceptionIfUowIsNotInitialized()
+        public void ImportCsv_ShowsUnexpectedExceptionError()
         {
             RegisterRepositories();
             var wiImporter = new WorkItemCsvParser();
 
             var result = wiImporter.ParseCsv("../../TestData/WorkItems/empty.csv");
+
+            var report = result.Value;
+            Assert.AreEqual(1, result.Value.GetNumberOfErrors());
+            Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Unknown_Exception, "None"), report.ErrorList.First());
+
         }
 
         
 
         [Test]
-        [ExpectedException(typeof(System.IO.FileNotFoundException))]
         public void ImportCsv_FileDoesNotExist()
         {
             RegisterRepositories();
@@ -48,6 +51,11 @@ namespace Etsi.Ultimate.Tests.Business
             var wiImporter = new WorkItemCsvParser() { UoW = new UltimateUnitOfWork() };
 
             var result = wiImporter.ParseCsv("../../TestData/WorkItems/nowhere.csv");
+            var report = result.Value;
+
+            Assert.AreEqual(1, report.GetNumberOfErrors());
+            Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_FileNotFound, "../../TestData/WorkItems/nowhere.csv"),
+                report.ErrorList.First());
         }
 
         [Test]

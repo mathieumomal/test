@@ -14,12 +14,13 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        KeyValuePair<int, ImportReport> AnalyseWorkItemForImport(String path);
+        KeyValuePair<string, ImportReport> AnalyseWorkPlanForImport(String path);
+
         /// <summary>
         /// Import workitems uploaded on the server
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        String ImportWorkItem(int token);
+        bool ImportWorkPlan(string token);
     }
 }

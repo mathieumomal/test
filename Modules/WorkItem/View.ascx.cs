@@ -46,12 +46,12 @@ namespace Etsi.Ultimate.Module.WorkItem
     /// -----------------------------------------------------------------------------
     public partial class View : WorkItemModuleBase, IActionable
     {
-        private static string  PathExportWorkPlan;
+        private static string PathExportWorkPlan;
         private static string PathUploadWorkPlan;
         private static readonly string  ExtensionCsv = "csv";
         private static readonly string ExtensionZip = "zip";
 
-        private int tokenWorkPlanAnalysed = 0;
+        private string tokenWorkPlanAnalysed = "";
         private int errorNumber = 0;
         
         protected void Page_Load(object sender, EventArgs e)
@@ -91,7 +91,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             //Analyse file type (ZIP/CSV)
 
 
-            var wiReport = wiService.AnalyseWorkItemForImport(new StringBuilder()
+            var wiReport = wiService.AnalyseWorkPlanForImport(new StringBuilder()
                 .Append(PathUploadWorkPlan)
                 .Append(workplanUploaded.GetName())
                 .ToString());
@@ -122,7 +122,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             else
             {
                 lblExportPath.Text = new StringBuilder()
-                    .Append("The new work plan will be exported to : ")
+                    .Append("The new work plan will be exported to: ")
                     .Append(PathExportWorkPlan)
                     .ToString();
             }
@@ -141,6 +141,9 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// <param name="e"></param>
         protected void Confirmation_import_OnClick(object sender, EventArgs e)
         {
+            var wiService = ServicesFactory.Resolve<IWorkItemService>();
+            bool success = wiService.ImportWorkPlan(tokenWorkPlanAnalysed);
+            
             //Update RadWindow_workItemState label with real files path  
             lblExportedPath.Text = new StringBuilder()
                 .Append(PathExportWorkPlan)
