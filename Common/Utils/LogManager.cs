@@ -4,29 +4,41 @@ using System;
 
 namespace Etsi.Ultimate.Utils
 {
-    public class LogManager
+    public static class LogManager
     {
         #region Properties
 
+        private static string CONFIG_FILE_PATH = String.Empty;
+        private static string LOGGER_NAME = String.Empty;
         private static ILog _ultimateLogger;
         public static ILog UltimateLogger
         {
             get
             {
                 if (_ultimateLogger == null)
-                    SetDefaultLogger();
+                    ConfigureLogger();
                 return _ultimateLogger;
             }
         }
 
         #endregion
 
-        #region Private Methods
+        #region Private Static Methods
 
-        private static void SetDefaultLogger()
+        private static void ConfigureLogger()
         {
-            XmlConfigurator.ConfigureAndWatch(new System.IO.FileInfo(ServerTopology.GetServerRootPath() + "./" + "ULTIMATE.log4net.config"));
-            _ultimateLogger = LoggerSource.Instance.GetLogger("ULTIMATELogger");
+            XmlConfigurator.ConfigureAndWatch(new System.IO.FileInfo(String.IsNullOrEmpty(CONFIG_FILE_PATH) ? ServerTopology.GetServerRootPath() + "./" + "ULTIMATE.log4net.config" : CONFIG_FILE_PATH));
+            _ultimateLogger = LoggerSource.Instance.GetLogger(String.IsNullOrEmpty(LOGGER_NAME) ? "ULTIMATELogger" : LOGGER_NAME);
+        }
+
+        #endregion
+
+        #region Public Static Methods
+
+        public static void SetConfiguration(string filePath, string loggerName)
+        {
+            CONFIG_FILE_PATH = filePath;
+            LOGGER_NAME = loggerName;
         }
 
         #endregion
