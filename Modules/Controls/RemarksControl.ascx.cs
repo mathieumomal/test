@@ -24,7 +24,7 @@ namespace Etsi.Ultimate.Controls
 
         public event EventHandler AddRemarkHandler;
         public bool IsEditMode { get; set; }
-        public bool HidePrivateRemarks { get; set; }
+        public UserRightsContainer UserRights { get; set; }
         public string RemarkText { get { return this.txtAddRemark.Text; } }
         public int ScrollHeight { get; set; }
         public List<Remark> DataSource 
@@ -85,28 +85,8 @@ namespace Etsi.Ultimate.Controls
         /// <param name="e">Event Args</param>
         protected void remarksGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
         {
-            remarksGrid.DataSource = DataSource;
-            legendLabel.Text = String.Format("Remarks ({0})", (HidePrivateRemarks) ? DataSource.FindAll(x => x.IsPublic == true).Count : DataSource.Count);
-        }
-
-        /// <summary>
-        /// Item DataBound Event of Remarks Grid
-        /// </summary>
-        /// <param name="sender">Source of Event</param>
-        /// <param name="e">Event Args</param>
-        protected void remarksGrid_ItemDataBinding(object sender, Telerik.Web.UI.GridItemEventArgs e)
-        {
-            if (HidePrivateRemarks)
-            {
-                if (e.Item is GridDataItem)
-                {
-                    GridDataItem item = (GridDataItem)e.Item;
-                    if (!Convert.ToBoolean(item.GetDataKeyValue(CONST_ISPUBLIC)))
-                    {
-                        item.Display = false;
-                    }
-                }
-            }
+            remarksGrid.DataSource = (UserRights.HasRight(Enum_UserRights.Remarks_ViewPrivate)) ? DataSource : DataSource.FindAll(x => x.IsPublic == true);
+            legendLabel.Text = String.Format("Remarks ({0})", (UserRights.HasRight(Enum_UserRights.Remarks_ViewPrivate)) ? DataSource.Count : DataSource.FindAll(x => x.IsPublic == true).Count);
         }
 
         /// <summary>

@@ -27,8 +27,7 @@
                                                                  AutoGenerateColumns="false"
                                                                  AllowMultiRowEdit="true"
                                                                  OnPreRender="remarksGrid_PreRender"
-                                                                 OnNeedDataSource="remarksGrid_NeedDataSource"
-                                                                 OnItemDataBinding="remarksGrid_ItemDataBinding"                    
+                                                                 OnNeedDataSource="remarksGrid_NeedDataSource"                                                                                 
                                                                  style="min-width:400px">
                     <ClientSettings>
                         <Scrolling AllowScroll="True" UseStaticHeaders="true" />

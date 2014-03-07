@@ -57,7 +57,7 @@ namespace Etsi.Ultimate.Module.Release
                         //Set Remarks control
                         RemarksControl rmk = releaseRemarks as RemarksControl;
                         rmk.IsEditMode = false;
-                        rmk.HidePrivateRemarks = userRights.HasRight(Domain.Enum_UserRights.Remarks_ViewPrivate);
+                        rmk.UserRights = userRights;
                         rmk.DataSource = release.Remarks.ToList();
 
                         //Set History control
