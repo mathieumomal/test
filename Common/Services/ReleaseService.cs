@@ -58,6 +58,17 @@ namespace Etsi.Ultimate.Services
             return String.Empty;
         }
 
+        public void FreezeRelease(int releaseId, DateTime endDate)
+        {
+
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var releaseManager = new ReleaseManager();
+                releaseManager.UoW = uoW;
+                releaseManager.FreezeRelease(releaseId, endDate);
+            }
+        }
+
         #endregion
     }
 }

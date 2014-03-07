@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Etsi.Ultimate.DomainClasses;
+using System;
 
 namespace Etsi.Ultimate.Services
 {
@@ -24,5 +25,7 @@ namespace Etsi.Ultimate.Services
         KeyValuePair<DomainClasses.Release, UserRightsContainer> GetReleaseById(int personID, int releaseId);
 
         string GetPreviousReleaseCode(int personID, int releaseId);
+        
+        void FreezeRelease(int releaseId, DateTime endDate);
     }
 }

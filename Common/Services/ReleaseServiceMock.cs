@@ -82,6 +82,17 @@ namespace Etsi.Ultimate.Services
             return string.Empty;
         }
 
+        public void FreezeRelease(int releaseId, DateTime endDate)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
+
+
+
+
+
+
     }
 }

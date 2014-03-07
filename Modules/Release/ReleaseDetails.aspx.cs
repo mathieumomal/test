@@ -31,46 +31,51 @@ namespace Etsi.Ultimate.Module.Release
             {
                 GetRequestParameters();
 
-                if (ReleaseId != null)
-                {
-                    IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
-                    KeyValuePair<DomainClasses.Release, DomainClasses.UserRightsContainer> releaseRightsObject = svc.GetReleaseById(UserId, ReleaseId.Value);
-                    Domain.Release release = releaseRightsObject.Key;
-                    DomainClasses.UserRightsContainer userRights = releaseRightsObject.Value;
+                LoadReleaseDetails();
+            }            
+        }
 
-                    if (release == null)
-                    {
-                        releaseDetailsBody.Visible = false;
-                        releaseWarning.Visible = true;
+        private void LoadReleaseDetails()
+        {
+            if (ReleaseId != null)
+            {
+                IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
+                KeyValuePair<DomainClasses.Release, DomainClasses.UserRightsContainer> releaseRightsObject = svc.GetReleaseById(UserId, ReleaseId.Value);
+                Domain.Release release = releaseRightsObject.Key;
+                DomainClasses.UserRightsContainer userRights = releaseRightsObject.Value;
 
-                    }
-                    else
-                    {
-                        BuildTabsDisplay(userRights);
-                        FillGeneralTab(userRights, release);
-
-                        if (userRights.HasRight(Domain.Enum_UserRights.Release_ViewCompleteDetails))
-                            FillAdminTab(release, svc.GetPreviousReleaseCode(UserId, release.Pk_ReleaseId));
-
-                        ManageButtonDisplay(userRights);
-
-                        //Set Remarks control
-                        RemarksControl rmk = releaseRemarks as RemarksControl;
-                        rmk.IsEditMode = false;
-                        rmk.UserRights = userRights;
-                        rmk.DataSource = release.Remarks.ToList();
-
-                        //Set History control
-                        HistoryControl htr = releaseHistory as HistoryControl;
-                        htr.DataSource = release.Histories.ToList();
-                    }
-                }
-                else
+                if (release == null)
                 {
                     releaseDetailsBody.Visible = false;
                     releaseWarning.Visible = true;
+
                 }
-            }            
+                else
+                {
+                    BuildTabsDisplay(userRights);
+                    FillGeneralTab(userRights, release);
+
+                    if (userRights.HasRight(Domain.Enum_UserRights.Release_ViewCompleteDetails))
+                        FillAdminTab(release, svc.GetPreviousReleaseCode(UserId, release.Pk_ReleaseId));
+
+                    ManageButtonDisplay(userRights);
+
+                    //Set Remarks control
+                    RemarksControl rmk = releaseRemarks as RemarksControl;
+                    rmk.IsEditMode = false;
+                    rmk.UserRights = userRights;
+                    rmk.DataSource = release.Remarks.ToList();
+
+                    //Set History control
+                    HistoryControl htr = releaseHistory as HistoryControl;
+                    htr.DataSource = release.Histories.ToList();
+                }
+            }
+            else
+            {
+                releaseDetailsBody.Visible = false;
+                releaseWarning.Visible = true;
+            }
         }
 
         protected override void Render(HtmlTextWriter writer)
@@ -254,6 +259,20 @@ namespace Etsi.Ultimate.Module.Release
         protected void CloseReleaseDetails_Click(object sender, EventArgs e)
         {
             this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close()", true);
+        }
+
+        
+        protected void btnConfirmFreeze_Click(object sender, EventArgs e)
+        {
+            GetRequestParameters();
+            if (ReleaseId != null)
+            {
+                IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
+                svc.FreezeRelease(ReleaseId.Value, DateTime.Now);
+
+                LoadReleaseDetails();
+            }
+
         }
        
     }

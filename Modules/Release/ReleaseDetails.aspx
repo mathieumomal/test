@@ -13,6 +13,13 @@
     <link rel="stylesheet" type="text/css" href="module.css">
     <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>    
+    <script type="text/javascript">
+
+        function closeAllModals() {
+            var manager = GetRadWindowManager();
+            manager.closeAll();
+        }
+    </script>
 </head>
 <body class="releaseDetailBody">
     <form id="ReleaseDetailsForm" runat="server">
@@ -189,7 +196,7 @@
             </telerik:RadMultiPage>     
            <div class="releaseDetailsAction">
                 <asp:LinkButton ID="EditBtn" runat="server" Text="Edit" CssClass="LinkButton" Visible="false"/>
-                <asp:LinkButton ID="FreezeReleaseBtn" runat="server" Text="Freeze Release" CssClass="LinkButton" Visible="false"/>
+                <asp:LinkButton ID="FreezeReleaseBtn" runat="server" Text="Freeze Release" CssClass="LinkButton" />
                 <asp:LinkButton ID="CloseReleaseBtn" runat="server" Text="Close Release" CssClass="LinkButton" Visible="false"/>
                 <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit" CssClass="LinkButton" OnClick="CloseReleaseDetails_Click"/>
            </div> 
@@ -219,9 +226,45 @@
                    $(window).resize(function () {                       
                        resizeElements();                       
                    });
+                   $('#FreezeReleaseBtn').click(function (event) {
+                       event.preventDefault();
+                       closeAllModals();
+                       window.radopen(null, "RadWindow_workItemImport");
+                   });
                });
         </script>  
        </asp:Panel>
+       <telerik:RadAjaxManager ID="RadAjaxManager" runat="server" EnablePageHeadUpdate="false">
+       </telerik:RadAjaxManager>
+        <telerik:RadWindowManager ID="RadWindowManager1" runat="server" >
+            <Windows>
+                <telerik:RadWindow ID="RadWindow_workItemImport"  runat="server" Modal="true" Title="Freeze Confirmation" Height="210" Width="400" VisibleStatusbar="false" iconUrl="false">
+                    <ContentTemplate>
+                        <div class="contentModal" id="import" style="padding:5px;">
+                            <div class="header">
+                                You are about to freeze the Release.
+                            </div>
+                            <br />
+                            <div class="center">
+                                <b>WARNING</b>
+                                <br />
+                                # Versions are pending upload.<br />
+                                # CRs are not in final status.<br /><br />
+                                Freeze stage 3 : <asp:DropDownList  runat="server"><asp:ListItem>Meeting 4</asp:ListItem></asp:DropDownList> 
+                                <telerik:RadDatePicker ID="RadDatePicker1"  Width="100" runat="server" MinDate="1900-01-01" AutoPostBack="false">
+                                    <Calendar ID="Calendar1" RangeMinDate="1900-01-01" runat="server">
+                                    </Calendar>
+                                </telerik:RadDatePicker>
+                            </div>
+                            <br />
+                            <div class="footer" style="text-align: right">
+                                <asp:Button ID="btnConfirmFreeze" Text ="Confirm" OnClick="btnConfirmFreeze_Click" runat="server"/><asp:Button id="btnCancelFreeze" runat="server" Text ="Cancel" />
+                            </div>
+                        </div>
+                    </ContentTemplate>
+                </telerik:RadWindow>
+            </Windows>
+        </telerik:RadWindowManager>
        </div>         
     </form>    
 </body>
