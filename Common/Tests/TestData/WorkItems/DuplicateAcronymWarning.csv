@@ -1,5 +1,5 @@
 ID,Unique_ID,Name,Acronym,Outline_Level,Release,Resource_Names,Start_Date,Finish_Date,Percent_Complete,Hyperlink,Status_Report,WI_rapporteur_name,WI_rapporteur_e_mail,Notes,Impacted_TSs_and_TRs,TSG_approved,PCG_approved,TSG_stopped,PCG_stopped,Created,last_modif
 24,630000,Isolated E-UTRAN Operation for Public Safety,IOPS,0,Rel-1,S1,07/03/2014,17/09/2014,0%,SP-140069,-,General Dynamics Broadband,-,Triggered by Rel-13 TR 22.897 Study on Isolated E-UTRAN Operation for Public Safety (FS_IOPS),Stage 1,SP-63,PCG-32,,,05/02/2014,05/02/2014
 25,630001,Isolated E-UTRAN Operation for Public Safety,IOPS,1,Rel-1,S1,07/03/2014,17/09/2014,0%,SP-140069,-,General Dynamics Broadband,-,Triggered by Rel-13 TR 22.897 Study on Isolated E-UTRAN Operation for Public Safety (FS_IOPS),Stage 1,SP-63,PCG-32,,,05/02/2014,05/02/2014
-2,0,Rel-12 Stage 1 frozen 03/2013,-,1,-,-,03/01/2000,03/01/2000,0%,-,-,-,-,-,-,,,,,19/06/2012,19/06/2012
-3,0,Rel-12 Stage 2 frozen 12/2013,-,1,-,-,03/01/2000,03/01/2000,0%,-,-,-,-,-,-,,,,,19/06/2012,19/06/2012
+26,1,Rel-12 Stage 1 frozen 03/2013,-,1,-,-,03/01/2000,03/01/2000,0%,-,-,-,-,-,-,,,,,19/06/2012,19/06/2012
+27,2,Rel-12 Stage 2 frozen 12/2013,-,1,-,-,03/01/2000,03/01/2000,0%,-,-,-,-,-,-,,,,,19/06/2012,19/06/2012

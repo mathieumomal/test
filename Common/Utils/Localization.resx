@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="WorkItem_Import_Bad_Format" xml:space="preserve">
+    <value>Workplan is not correctly formatted: {0}</value>
+  </data>
+  <data name="WorkItem_Import_Bad_Zip_File" xml:space="preserve">
+    <value>Incorrect zip file. Zip should contain only one csv file.</value>
+  </data>
   <data name="WorkItem_Import_DuplicateAcronymSameLevel" xml:space="preserve">
     <value>{0}, Uid {1}: Acronym "{2}" is duplicated on other work items with same level ({3}). Cannot proceed.</value>
   </data>
@@ -179,5 +185,8 @@
   </data>
   <data name="WorkItem_Import_Unknown_Exception" xml:space="preserve">
     <value>An unknown exception has occured. It has been logged by our error system. Please contact helpdesk for investigation. Uid of last successfully treated WI: {0}</value>
+  </data>
+  <data name="WorkItem_Import_Wrong_Order" xml:space="preserve">
+    <value>WorkplanId {0} comes after WorkplanId {1}. Possible messing in the Work items.</value>
   </data>
 </root>

@@ -41,7 +41,20 @@ namespace Etsi.Ultimate.Tests.Business
 
         }
 
-        
+        [Test]
+        public void ImportCsv_NotWellFormedWorkPlanLogsError()
+        {
+
+            RegisterRepositories();
+            var wiImporter = new WorkItemCsvParser();
+            wiImporter.UoW = new UltimateUnitOfWork();
+
+            var result = wiImporter.ParseCsv("../../TestData/WorkItems/BadFormat.csv");
+
+            var report = result.Value;
+            Assert.AreEqual(1, result.Value.GetNumberOfErrors());
+            Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Bad_Format, "An inconsistent number of columns has been detected."), report.ErrorList.First());
+        }
 
         [Test]
         public void ImportCsv_FileDoesNotExist()
@@ -86,7 +99,7 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual("SP-140070", wi.StatusReport);
             Assert.AreEqual("General Dynamics Broadband", wi.RapporteurCompany);
             Assert.AreEqual(27904, wi.RapporteurId);
-            Assert.AreEqual("mathieu.mangion@etsi.org", wi.RapporteurStr);
+            Assert.AreEqual("Mathieu Mangion(mathieu.mangion@etsi.org)", wi.RapporteurStr);
             Assert.AreEqual(1, wi.Remarks.Count);
             Assert.AreEqual("Triggered by Rel-13 TR 22.897 Study on Isolated E-UTRAN Operation for Public Safety (FS_IOPS)", wi.Remarks.First().RemarkText);
             Assert.AreEqual("Stage 1", wi.TssAndTrs);
@@ -113,6 +126,37 @@ namespace Etsi.Ultimate.Tests.Business
         }
 
         [Test]
+        public void ImportCsv_TestWrongWpOrder()
+        {
+            RegisterRepositories();
+            var wiImporter = new WorkItemCsvParser() { UoW = new UltimateUnitOfWork() };
+
+            var result = wiImporter.ParseCsv("../../TestData/WorkItems/Wrong_WpOrder.csv");
+
+            var report = result.Value;
+            Assert.AreEqual(1, report.WarningList.Count);
+
+            Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Wrong_Order, "16", "17"), report.WarningList.First());
+        }
+
+        [Test]
+        public void ImportCsv_Level0WorkItemUidGeneration()
+        {
+            RegisterRepositories();
+            RepositoryFactory.Container.RegisterType<IWorkItemRepository, WorkItemOneLineLevel0FakeRepository>(new TransientLifetimeManager());
+
+            var wiImporter = new WorkItemCsvParser() { UoW = new UltimateUnitOfWork() };
+
+            var result = wiImporter.ParseCsv("../../TestData/WorkItems/Level0_WorkItems.csv");
+
+            var wiList = result.Key;
+            var report = result.Value;
+            Assert.AreEqual(2, wiList.Count);
+            Assert.AreEqual(100000005, wiList.First().Pk_WorkItemUid);
+            Assert.AreEqual(100000006, wiList.ElementAt(1).Pk_WorkItemUid);
+        }
+
+        [Test]
         public void ImportCsv_Level0Wi()
         {
             RegisterRepositories();
@@ -127,7 +171,7 @@ namespace Etsi.Ultimate.Tests.Business
 
             // However, it means system should compute a UI. 
             var aWi = result.Key.First();
-            Assert.AreEqual(aWi.WorkplanId, aWi.Pk_WorkItemUid);
+            Assert.AreEqual(100000001, aWi.Pk_WorkItemUid);
 
         }
 
@@ -148,13 +192,13 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.IsNull(id6.Fk_ParentWiId);
 
             var id17 = wiList.Where(w => w.WorkplanId == 17).FirstOrDefault();
-            Assert.AreEqual(6, id17.Fk_ParentWiId);
+            Assert.AreEqual(100000001, id17.Fk_ParentWiId);
 
             var id20 = wiList.Where(w => w.WorkplanId == 20).FirstOrDefault();
             Assert.AreEqual(630002, id20.Fk_ParentWiId);
 
             var id21 = wiList.Where(w => w.WorkplanId == 21).FirstOrDefault();
-            Assert.AreEqual(6, id17.Fk_ParentWiId);
+            Assert.AreEqual(100000001, id17.Fk_ParentWiId);
         }
 
         [Test]
@@ -302,6 +346,7 @@ namespace Etsi.Ultimate.Tests.Business
             
         }
 
+       
         [Test]
         public void ImportCsv_CannotFindRapporteur()
         {

@@ -11,7 +11,7 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
 {
     public abstract class WorkItemFakeRepository : IWorkItemRepository
     {
-        public enum Sources { Empty, OneLine_Nominal };
+        public enum Sources { Empty, OneLine_Nominal, OneLine_Level0 };
 
         public WorkItemFakeRepository() { }
 
@@ -63,7 +63,7 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                         StatusReport = "SP-140070",
                         RapporteurCompany = "General Dynamics Broadband",
                         RapporteurId = 27904,
-                        RapporteurStr = "mathieu.mangion@etsi.org",
+                        RapporteurStr = "Mathieu Mangion(mathieu.mangion@etsi.org)",
                         Remarks = remarks,
                         TssAndTrs = "Stage 1",
                         TsgApprovalMtgRef = "SP-63",
@@ -77,6 +77,15 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                     });
                     return list;
 
+                case Sources.OneLine_Level0:
+                    var level0List = new WorkItemFakeDBSet();
+                    level0List.Add(new WorkItem()
+                    {
+                        Pk_WorkItemUid = 100000005,
+                        WorkplanId = 6,
+                        Name = "Release 13 Features",
+                    });
+                    return level0List;
             }
             return null;
 
@@ -114,6 +123,11 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         #endregion
     }
 
+    public class WorkItemOneLineLevel0FakeRepository : WorkItemFakeRepository
+    {
+        public override Sources Source { get { return Sources.OneLine_Level0; } }
+    }
+
     public class WorkItemOneLineFakeRepository : WorkItemFakeRepository
     {
         public override Sources Source { get { return Sources.OneLine_Nominal; } }
@@ -123,4 +137,5 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
     {
         public override Sources Source { get { return Sources.Empty; } }
     }
+
 }

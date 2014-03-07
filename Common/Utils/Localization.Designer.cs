@@ -61,6 +61,24 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Workplan is not correctly formatted: {0}.
+        /// </summary>
+        public static string WorkItem_Import_Bad_Format {
+            get {
+                return ResourceManager.GetString("WorkItem_Import_Bad_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Incorrect zip file. Zip should contain only one csv file..
+        /// </summary>
+        public static string WorkItem_Import_Bad_Zip_File {
+            get {
+                return ResourceManager.GetString("WorkItem_Import_Bad_Zip_File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}, Uid {1}: Acronym &quot;{2}&quot; is duplicated on other work items with same level ({3}). Cannot proceed..
         /// </summary>
         public static string WorkItem_Import_DuplicateAcronymSameLevel {
@@ -246,6 +264,15 @@ namespace Etsi.Ultimate.Utils {
         public static string WorkItem_Import_Unknown_Exception {
             get {
                 return ResourceManager.GetString("WorkItem_Import_Unknown_Exception", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to WorkplanId {0} comes after WorkplanId {1}. Possible messing in the Work items..
+        /// </summary>
+        public static string WorkItem_Import_Wrong_Order {
+            get {
+                return ResourceManager.GetString("WorkItem_Import_Wrong_Order", resourceCulture);
             }
         }
     }

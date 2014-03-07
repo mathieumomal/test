@@ -17,14 +17,26 @@ namespace Etsi.Ultimate.Business
 
         public KeyValuePair<string, ImportReport> TryImportCsv(string filePath)
         {
-            
-            
+
+            var path = filePath;
+            // Treat the file
+            if (path.EndsWith("zip"))
+            {
+                path = ExtractZipGetCsv(filePath);
+                if (String.IsNullOrEmpty(path))
+                {
+                    var report = new ImportReport();
+                    report.LogError(Utils.Localization.WorkItem_Import_Bad_Zip_File);
+                    return new KeyValuePair<string, ImportReport>("", report);
+                }
+                
+            }
 
             string token = "";
 
             var csvParser = new WorkItemCsvParser();
             csvParser.UoW = UoW ;
-            var result = csvParser.ParseCsv(filePath);
+            var result = csvParser.ParseCsv(path);
             if (result.Value.GetNumberOfErrors() == 0)
             {
                 token = Guid.NewGuid().ToString();
@@ -32,6 +44,19 @@ namespace Etsi.Ultimate.Business
             }
             return new KeyValuePair<string, ImportReport>(token, result.Value);
 
+        }
+
+        private string ExtractZipGetCsv(string filePath)
+        {
+            var files = Zip.Extract(filePath, false);
+            if (files.Count != 1 || !files.First().EndsWith("csv"))
+            {
+                return "";
+            }
+            else
+            {
+                return files.First();
+            }
         }
 
         public bool ImportWorkPlan(string token)

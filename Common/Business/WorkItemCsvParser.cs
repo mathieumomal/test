@@ -17,6 +17,8 @@ namespace Etsi.Ultimate.Business
     /// </summary>
     internal class WorkItemImportClass
     {
+
+
         public int ID { get; set; }
         public int Unique_ID { get; set; }
         public string Name { get; set; }
@@ -48,6 +50,9 @@ namespace Etsi.Ultimate.Business
     /// </summary>
     public class WorkItemCsvParser
     {
+        // Any level 0 workitem will be affected a Pk over 100 000 000
+        private static readonly int LowerBoundForLevel0Wi = 100000000;
+
         public IUltimateUnitOfWork UoW { get; set; }
 
         // Data retrieved to be able to establish references to the different objects.
@@ -59,7 +64,7 @@ namespace Etsi.Ultimate.Business
 
         // Report that is returned after parsing.
         protected ImportReport Report { get; set; }
-        
+
         // List of treated data, and references used during the parsing.
         protected Dictionary<int, WorkItem> lastWIForLevel;
         protected WorkItem lastTreatedWi;
@@ -76,22 +81,6 @@ namespace Etsi.Ultimate.Business
         {
             try
             {
-
-                var path = fileLocation;
-                // Treat the file
-                if (path.EndsWith("zip"))
-                {
-                    var files = Zip.Extract(path, false);
-                    if (files.Count != 1 || !files.First().EndsWith("csv"))
-                    {
-
-                    }
-                    else
-                    {
-                        path = files.First();
-                    }
-                }
-
                 if (UoW == null)
                     throw new InvalidOperationException("Cannot process with UoW defined");
 
@@ -99,7 +88,7 @@ namespace Etsi.Ultimate.Business
                 InitializeCommonData();
 
                 // Open the file.
-                using (StreamReader reader = new StreamReader(path))
+                using (StreamReader reader = new StreamReader(fileLocation))
                 {
 
                     var csv = new CsvReader(reader);
@@ -164,6 +153,13 @@ namespace Etsi.Ultimate.Business
 
                 return new KeyValuePair<List<WorkItem>, ImportReport>(new List<WorkItem>(), errorReport);
             }
+            catch (CsvHelper.CsvBadDataException e)
+            {
+                var errorReport = new ImportReport();
+                errorReport.LogError(String.Format(Utils.Localization.WorkItem_Import_Bad_Format, e.Message));
+
+                return new KeyValuePair<List<WorkItem>, ImportReport>(new List<WorkItem>(), errorReport);
+            }
 
             catch (Exception e)
             {
@@ -182,6 +178,7 @@ namespace Etsi.Ultimate.Business
             }
         }
 
+
         /// <summary>
         /// Sets up all the repositories
         /// </summary>
@@ -190,7 +187,7 @@ namespace Etsi.Ultimate.Business
             // Retrieve all the existing work items.
             var wiRepo = RepositoryFactory.Resolve<IWorkItemRepository>();
             wiRepo.UoW = UoW;
-            AllWorkItems = wiRepo.AllIncluding(w=> w.WorkItems_ResponsibleGroups, w => w.Remarks).ToList();
+            AllWorkItems = wiRepo.AllIncluding(w => w.WorkItems_ResponsibleGroups, w => w.Remarks).ToList();
 
             // Retrieve all the persons.
             var personRepo = RepositoryFactory.Resolve<IPersonRepository>();
@@ -214,6 +211,8 @@ namespace Etsi.Ultimate.Business
             TreatedWorkItems = new List<WorkItem>();
         }
 
+        #region Field Parsing
+
         /// <summary>
         /// Manages the resource. System parses the field against "," field, and looks for each group.
         /// </summary>
@@ -230,7 +229,7 @@ namespace Etsi.Ultimate.Business
             {
                 if (wi.WorkItems_ResponsibleGroups.Count > 0)
                 {
-                    IsCurrentWIModified=true;
+                    IsCurrentWIModified = true;
                     wi.WorkItems_ResponsibleGroups.Clear();
                 }
                 return;
@@ -238,7 +237,7 @@ namespace Etsi.Ultimate.Business
 
 
             // Check if it has changed
-            var respStr = string.Join(",",wi.WorkItems_ResponsibleGroups.Select(c => c.ResponsibleGroup).ToList());
+            var respStr = string.Join(",", wi.WorkItems_ResponsibleGroups.Select(c => c.ResponsibleGroup).ToList());
             if (respStr != resourceStr)
             {
                 IsCurrentWIModified = true;
@@ -249,8 +248,8 @@ namespace Etsi.Ultimate.Business
                 foreach (var res in resources)
                 {
                     // First check resource corresponds to a community
-                    var community = AllCommunities.Where(c => c.ShortName==res).FirstOrDefault();
-                        
+                    var community = AllCommunities.Where(c => c.ShortName == res).FirstOrDefault();
+
                     if (community == null)
                     {
                         Report.LogWarning(
@@ -259,11 +258,15 @@ namespace Etsi.Ultimate.Business
                     else
                     {
                         wi.WorkItems_ResponsibleGroups.Add(
-                            new WorkItems_ResponsibleGroups() { Fk_TbId = community.TbId, ResponsibleGroup = community.ShortName,
-                                IsPrimeResponsible = isFirst });
+                            new WorkItems_ResponsibleGroups()
+                            {
+                                Fk_TbId = community.TbId,
+                                ResponsibleGroup = community.ShortName,
+                                IsPrimeResponsible = isFirst
+                            });
                         isFirst = false;
                     }
-                        
+
                 }
             }
         }
@@ -380,7 +383,7 @@ namespace Etsi.Ultimate.Business
             if (stoppedTsgMtgRef == "-")
                 stoppedTsgMtgRef = "";
 
-            if (wi.TsgStoppedMtgRef!= stoppedTsgMtgRef)
+            if (wi.TsgStoppedMtgRef != stoppedTsgMtgRef)
             {
                 IsCurrentWIModified = true;
                 wi.TsgStoppedMtgRef = stoppedTsgMtgRef;
@@ -585,7 +588,11 @@ namespace Etsi.Ultimate.Business
             // Seek for the rapporteur by email.
             if (!string.IsNullOrEmpty(rapporteurStr))
             {
-                var person = AllPersons.Where(p => p.Email == rapporteurStr).FirstOrDefault();
+                // try to refine to get the email
+                string email = rapporteurStr;
+                email = Regex.Match(email, "[A-Za-z0-9._-]+@[[A-Za-z0-9._-]+").Value;
+
+                var person = AllPersons.Where(p => p.Email == email).FirstOrDefault();
                 if (person != null)
                 {
                     rapporteurId = person.PERSON_ID;
@@ -767,7 +774,7 @@ namespace Etsi.Ultimate.Business
         private void TreatStartDate(WorkItemImportClass record, WorkItem wi)
         {
             DateTime? startDate = null;
-            if ( !string.IsNullOrEmpty(record.Start_Date) && record.Start_Date != "-")
+            if (!string.IsNullOrEmpty(record.Start_Date) && record.Start_Date != "-")
             {
                 DateTime tmpDate;
                 if (DateTime.TryParseExact(record.Start_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture,
@@ -813,7 +820,7 @@ namespace Etsi.Ultimate.Business
             }
 
             // Check against the release shortname
-            var targetRelease = AllReleases.Where(r => r.ShortName == record.Release).FirstOrDefault();
+            var targetRelease = AllReleases.Where(r => r.Code == record.Release).FirstOrDefault();
             if (targetRelease != null)
             {
                 releaseFk = targetRelease.Pk_ReleaseId;
@@ -953,18 +960,40 @@ namespace Etsi.Ultimate.Business
         private WorkItem TreatWiUid(WorkItemImportClass record, WorkItem wi)
         {
             int UidToSearchFor = record.Unique_ID;
+
+            WorkItem searchWi;
             // Exception: if UID = 0, we are looking for UID = WorkplanId
             if (UidToSearchFor == 0)
-                UidToSearchFor = record.ID;
-
-            // Seek for the WI in the list
-            var searchWi = AllWorkItems.Where(w => w.Pk_WorkItemUid == UidToSearchFor).FirstOrDefault();
+            {
+                searchWi = AllWorkItems.Where(w => w.Name == record.Name).FirstOrDefault();
+            }
+            else
+            {
+                // Seek for the WI in the list
+                searchWi = AllWorkItems.Where(w => w.Pk_WorkItemUid == UidToSearchFor).FirstOrDefault();
+            }
 
             WorkItem aReturnWI;
-            if (searchWi == null) // Did not find wi => We need a new one. We can thus flag it as to be added
+            if (searchWi == null)
             {
+                // Did not find wi => We need a new one. We can thus flag it as to be added
+                // If ever 
                 aReturnWI = wi;
-                wi.Pk_WorkItemUid = UidToSearchFor;
+
+                if (UidToSearchFor == 0)
+                {
+                    int nextLevel0Uid = LowerBoundForLevel0Wi;
+                    if (AllWorkItems.Count > 0)
+                        nextLevel0Uid = Math.Max(nextLevel0Uid, AllWorkItems.Max(w => w.Pk_WorkItemUid));
+                    if (TreatedWorkItems.Count > 0)
+                        nextLevel0Uid = Math.Max(nextLevel0Uid, TreatedWorkItems.Max(w => w.Pk_WorkItemUid));
+
+                    wi.Pk_WorkItemUid = ++nextLevel0Uid;
+                }
+                else
+                {
+                    wi.Pk_WorkItemUid = UidToSearchFor;
+                }
                 IsCurrentWIModified = true;
                 wi.IsNew = true;
             }
@@ -1001,15 +1030,19 @@ namespace Etsi.Ultimate.Business
             }
             wi.WorkplanId = record.ID;
 
+            // Check order is correct
+            if (lastTreatedWi != null && lastTreatedWi.WorkplanId > wi.WorkplanId)
+            {
+                Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_Wrong_Order, wi.WorkplanId, lastTreatedWi.WorkplanId));
+            }
+
             // Check that no work item already has this number.
             if (TreatedWorkItems.Where(w => w.WorkplanId == wi.WorkplanId).FirstOrDefault() != null)
                 Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_DuplicateWorkplanId, wi.WorkplanId.ToString()));
 
-
-
         }
 
+        #endregion
 
-        
     }
 }

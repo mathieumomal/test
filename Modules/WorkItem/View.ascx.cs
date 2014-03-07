@@ -127,6 +127,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                     .Append("The new work plan will be exported to: ")
                     .Append(PathExportWorkPlan)
                     .ToString();
+                btnConfirmImport.Enabled = true;
             }
 
             List<string> datasource = new List<string>();

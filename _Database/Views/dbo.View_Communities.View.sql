@@ -1,7 +1,7 @@
 USE [U3GPPDB]
 GO
 
-/****** Object:  View [dbo].[View_Communities]    Script Date: 03/05/2014 14:34:39 ******/
+/****** Object:  View [dbo].[View_Communities]    Script Date: 03/07/2014 15:15:05 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -15,7 +15,7 @@ SELECT tb.TB_ID as TbId, tb.TB_NAME as TbName, tb.PARENT_TB_ID as ParentTbId, tb
 FROM DSDB..TAB_TB tb
 INNER JOIN Enum_CommunitiesShortName csn on csn.Fk_TbId = tb.TB_ID
 
-WHERE tb.TB_KEY1='3GPP' 
+WHERE tb.TB_KEY1='3GPP' or tb.TB_KEY1='SMG'
 
 
 

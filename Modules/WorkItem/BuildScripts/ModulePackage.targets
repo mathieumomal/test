@@ -79,6 +79,7 @@
     <Copy SourceFiles="$(MSBuildDnnBinPath)\EntityFramework.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     <Copy SourceFiles="$(MSBuildDnnBinPath)\EntityFramework.SqlServer.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     <Copy SourceFiles="$(MSBuildDnnBinPath)\CsvHelper.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
+    <Copy SourceFiles="$(MSBuildDnnBinPath)\Ionic.Zip.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     
     <Copy SourceFiles="@(SqlDataProviderFiles)" DestinationFolder="$(MSBuildProjectDirectory)\Package\%(RecursiveDir)" />
     <Copy SourceFiles="@(PackageManifestFiles)" DestinationFolder="$(MSBuildProjectDirectory)\Package" />
@@ -120,6 +121,7 @@
     <Copy SourceFiles="$(MSBuildDnnBinPath)\EntityFramework.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     <Copy SourceFiles="$(MSBuildDnnBinPath)\EntityFramework.SqlServer.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     <Copy SourceFiles="$(MSBuildDnnBinPath)\CsvHelper.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
+    <Copy SourceFiles="$(MSBuildDnnBinPath)\Ionic.Zip.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     
     <Copy SourceFiles="@(SqlDataProviderFiles)" DestinationFolder="$(MSBuildProjectDirectory)\Package\%(RecursiveDir)" />
     <Copy SourceFiles="@(PackageManifestFiles)" DestinationFolder="$(MSBuildProjectDirectory)\Package" />
