@@ -64,7 +64,7 @@
                         Workplan analysis is in progress.
                     </div>
                     <div class="wiCenter">
-                        <asp:Image ID="Image1" runat="server" ImageUrl="~/DesktopModules/WorkItem/images/hourglass.png" width="45"/>
+                        <asp:Image ID="imgWait" runat="server" Class="rotating" ImageUrl="~/DesktopModules/WorkItem/images/hourglass.png" width="45"/>
                     </div>
                     <div class="wiFooter">
                         <telerik:RadButton ID="analysis_cancel" runat="server" Text="Cancel" OnClientClicked="cancel" AutoPostBack="false"></telerik:RadButton>

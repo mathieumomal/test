@@ -85,13 +85,13 @@ namespace Etsi.Ultimate.Module.WorkItem {
         protected global::Telerik.Web.UI.RadWindow RadWindow_workItemAnalysis;
         
         /// <summary>
-        /// Contrôle Image1.
+        /// Contrôle imgWait.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Image Image1;
+        protected global::System.Web.UI.WebControls.Image imgWait;
         
         /// <summary>
         /// Contrôle analysis_cancel.
