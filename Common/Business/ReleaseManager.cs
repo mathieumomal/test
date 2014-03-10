@@ -15,6 +15,7 @@ namespace Etsi.Ultimate.Business
         // Used for the caching of the releases.
         private static string CACHE_KEY = "ULT_BIZ_RELEASES_ALL";
         private static string FREEZE_REL_STATUS = "Frozen";
+        private const string CLOSE_REL_STATUS = "Closed";
 
         public IUltimateUnitOfWork UoW { get; set; }
 
@@ -110,6 +111,33 @@ namespace Etsi.Ultimate.Business
 
             repo.InsertOrUpdate(updatedObj);
             repo.UoW.Save();
+        }
+
+        /// <summary>
+        /// Close Release
+        /// </summary>
+        /// <param name="releaseId">Release ID</param>
+        /// <param name="closureDate">Closure Date</param>
+        /// <param name="closureMtgRef">Closure Meeting Reference</param>
+        /// <param name="closureMtgId">Closure Meeting Reference ID</param>
+        public void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId)
+        {
+            IReleaseRepository relRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+            relRepo.UoW = UoW;
+
+            IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
+            relStatusRepo.UoW = UoW;
+
+            var updatedObj = relRepo.Find(releaseId);
+            
+            updatedObj.Fk_ReleaseStatus = relStatusRepo.All.Where(x => x.ReleaseStatus == CLOSE_REL_STATUS).FirstOrDefault().Enum_ReleaseStatusId;
+            updatedObj.Enum_ReleaseStatus = null; //Set Null to avoid referential integrity error
+            updatedObj.ClosureDate = closureDate;
+            updatedObj.ClosureMtgRef = closureMtgRef;
+            updatedObj.ClosureMtgId = closureMtgId;
+
+            relRepo.InsertOrUpdate(updatedObj);
+            relRepo.UoW.Save();
         }
     }
 }

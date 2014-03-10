@@ -73,7 +73,9 @@ namespace Etsi.Ultimate.Repositories
             else
             {
                 UoW.Context.SetModified(entity);
+                CacheManager.Clear(String.Format(CACHE_ULT_RELEASES_ID, entity.Pk_ReleaseId));
             }
+            CacheManager.Clear("ULT_BIZ_RELEASES_ALL");
         }
 
         public void Delete(int id)

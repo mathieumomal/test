@@ -69,6 +69,23 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Close Release
+        /// </summary>
+        /// <param name="releaseId">Release ID</param>
+        /// <param name="closureDate">Closure Date</param>
+        /// <param name="closureMtgRef">Closure Meeting Reference</param>
+        /// <param name="closureMtgId">Closure Meeting Reference ID</param>
+        public void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var releaseManager = new ReleaseManager();
+                releaseManager.UoW = uoW;
+                releaseManager.CloseRelease(releaseId, closureDate, closureMtgRef, closureMtgId);
+            }
+        }
+
         #endregion
     }
 }

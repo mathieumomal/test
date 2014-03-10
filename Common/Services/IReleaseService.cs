@@ -27,5 +27,14 @@ namespace Etsi.Ultimate.Services
         string GetPreviousReleaseCode(int personID, int releaseId);
         
         void FreezeRelease(int releaseId, DateTime endDate);
+
+        /// <summary>
+        /// Close Release
+        /// </summary>
+        /// <param name="releaseId">Release ID</param>
+        /// <param name="closureDate">Closure Date</param>
+        /// <param name="closureMtgRef">Closure Meeting Reference</param>
+        /// <param name="closureMtgId">Closure Meeting Reference ID</param>
+        void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId);
     }
 }

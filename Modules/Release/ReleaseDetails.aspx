@@ -196,7 +196,7 @@
             </telerik:RadMultiPage>     
            <div class="releaseDetailsAction">
                 <asp:LinkButton ID="EditBtn" runat="server" Text="Edit" CssClass="LinkButton" Visible="false"/>
-                <asp:LinkButton ID="FreezeReleaseBtn" runat="server" Text="Freeze Release" CssClass="LinkButton" />
+                <asp:LinkButton ID="FreezeReleaseBtn" runat="server" Text="Freeze Release" CssClass="LinkButton" Visible="false"/>
                 <asp:LinkButton ID="CloseReleaseBtn" runat="server" Text="Close Release" CssClass="LinkButton" Visible="false"/>
                 <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit" CssClass="LinkButton" OnClick="CloseReleaseDetails_Click"/>
            </div> 
@@ -231,6 +231,11 @@
                        closeAllModals();
                        window.radopen(null, "RadWindow_workItemImport");
                    });
+                   $('#CloseReleaseBtn').click(function (event) {
+                       event.preventDefault();
+                       closeAllModals();
+                       window.radopen(null, "RadWindow_ClosureConfirmation");
+                   });
                });
         </script>  
        </asp:Panel>
@@ -259,6 +264,37 @@
                             <br />
                             <div class="footer" style="text-align: right">
                                 <asp:Button ID="btnConfirmFreeze" Text ="Confirm" OnClick="btnConfirmFreeze_Click" runat="server"/><asp:Button id="btnCancelFreeze" runat="server" Text ="Cancel" />
+                            </div>
+                        </div>
+                    </ContentTemplate>
+                </telerik:RadWindow>
+                <telerik:RadWindow ID="RadWindow_ClosureConfirmation"  runat="server" Modal="true" Title="Closure Confirmation" Height="260" Width="400" VisibleStatusbar="false" iconUrl="false" Behaviors="Close">
+                    <ContentTemplate>
+                        <div class="contentModal" id="divClosureConfirmation" style="padding:5px;">
+                            <div class="header">
+                                You are about to close the release. It will no longer be possible to create change requests on any specification for this release.
+                            </div>
+                            <br />
+                            <div class="center">
+                                <div id="divWarnings">
+                                <img src="images/warning.png" style="vertical-align:middle"/> <b>WARNING</b>
+                                <br />
+                                # Versions are pending upload.<br />
+                                # CRs are not in final status.<br />
+                                # TDocs are not in final status.<br /><br />
+                                </div>
+                                Closure <asp:DropDownList ID="ddlClosureMeeting"  runat="server">
+                                              <asp:ListItem>Meeting 4</asp:ListItem>
+                                         </asp:DropDownList> 
+                                <telerik:RadDatePicker ID="RadDatePickerClosureDate"  Width="100" runat="server" MinDate="1900-01-01" SelectedDate = "2014-03-10" AutoPostBack="false">
+                                    <Calendar ID="radCalendar" RangeMinDate="1900-01-01" runat="server" />
+                                    <DateInput DateFormat="yyyy-MM-dd" />
+                                </telerik:RadDatePicker>
+                            </div>
+                            <br />
+                            <div class="footer" style="text-align: right">
+                                <asp:Button ID="btnConfirmClosure" runat="server" Text ="Confirm" OnClick="btnConfirmClosure_Click" />
+                                <asp:Button id="btnCancelClosure" runat="server" Text ="Cancel" OnClientClick="return close();" />
                             </div>
                         </div>
                     </ContentTemplate>

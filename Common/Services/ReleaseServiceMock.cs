@@ -87,12 +87,11 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
+        public void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
-
-
-
-
-
-
     }
 }

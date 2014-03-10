@@ -58,7 +58,7 @@ namespace Etsi.Ultimate.Module.Release
                     if (userRights.HasRight(Domain.Enum_UserRights.Release_ViewCompleteDetails))
                         FillAdminTab(release, svc.GetPreviousReleaseCode(UserId, release.Pk_ReleaseId));
 
-                    ManageButtonDisplay(userRights);
+                    ManageButtonDisplay(release, userRights);
 
                     //Set Remarks control
                     RemarksControl rmk = releaseRemarks as RemarksControl;
@@ -225,17 +225,16 @@ namespace Etsi.Ultimate.Module.Release
         /// <summary>
         /// Manage buttons' display relying on user rights
         /// </summary>
-        /// <param name="release"></param>
-        /// <param name="userRights"></param>
-        private void ManageButtonDisplay(DomainClasses.UserRightsContainer userRights)
+        /// <param name="release">Release</param>
+        /// <param name="userRights">User Rights</param>
+        private void ManageButtonDisplay(DomainClasses.Release release, DomainClasses.UserRightsContainer userRights)
         {
             if(userRights.HasRight((Domain.Enum_UserRights.Release_Edit)))
                 EditBtn.Visible = true;
-            if(userRights.HasRight((Domain.Enum_UserRights.Release_Freeze)))
+            if (userRights.HasRight((Domain.Enum_UserRights.Release_Freeze)) && (release.Enum_ReleaseStatus.ReleaseStatus.ToLower() == "open"))
                 FreezeReleaseBtn.Visible = true;
-            if(userRights.HasRight((Domain.Enum_UserRights.Release_Close)))
-                CloseReleaseBtn.Visible = true;
-            
+            if (userRights.HasRight((Domain.Enum_UserRights.Release_Close)) && (release.Enum_ReleaseStatus.ReleaseStatus.ToLower() != "closed"))
+                CloseReleaseBtn.Visible = true;            
         }
 
         /// <summary>
@@ -274,6 +273,21 @@ namespace Etsi.Ultimate.Module.Release
             }
 
         }
-       
+
+        /// <summary>
+        /// Click event of Closure Confirmation
+        /// </summary>
+        /// <param name="sender">Source of Event</param>
+        /// <param name="e">Event Args</param>
+        protected void btnConfirmClosure_Click(object sender, EventArgs e)
+        {
+            GetRequestParameters();
+            if (ReleaseId != null)
+            {
+                IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
+                svc.CloseRelease(ReleaseId.Value, DateTime.Now, "SP-65", 1);
+                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
+            }
+        }
     }
 }
