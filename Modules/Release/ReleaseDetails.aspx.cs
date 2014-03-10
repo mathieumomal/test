@@ -58,7 +58,7 @@ namespace Etsi.Ultimate.Module.Release
                     if (userRights.HasRight(Domain.Enum_UserRights.Release_ViewCompleteDetails))
                         FillAdminTab(release, svc.GetPreviousReleaseCode(UserId, release.Pk_ReleaseId));
 
-                    ManageButtonDisplay(release, userRights);
+
 
                     //Set Remarks control
                     RemarksControl rmk = releaseRemarks as RemarksControl;
@@ -69,6 +69,9 @@ namespace Etsi.Ultimate.Module.Release
                     //Set History control
                     HistoryControl htr = releaseHistory as HistoryControl;
                     htr.DataSource = release.Histories.ToList();
+                    htr.ScrollHeight = (int)ReleaseDetailRadMultiPage.Height.Value - 10;
+
+                    ManageButtonDisplay(userRights);
                 }
             }
             else
@@ -150,6 +153,8 @@ namespace Etsi.Ultimate.Module.Release
             //FreezeStagesPanel
             if(!(userRights.HasRight(Domain.Enum_UserRights.Release_ViewLimitedDetails)))
             {
+                ReleaseDetailRadMultiPage.Height = new System.Web.UI.WebControls.Unit(750, UnitType.Pixel);
+                fixContainer.Height = new System.Web.UI.WebControls.Unit(770, UnitType.Pixel); 
                 ReleaseFreezeStage1Meeting.Text = ((release.Stage1FreezeMtgRef != null) ) ? release.Stage1FreezeMtgRef : CONST_EMPTY_FIELD;
                 if (release.Stage1FreezeDate != null)
                     ReleaseFreezeStage1Date.Text = Convert.ToDateTime(release.Stage1FreezeDate).ToString("yyyy-MM-dd");
@@ -172,6 +177,8 @@ namespace Etsi.Ultimate.Module.Release
             }
             else{
                 FreezeStagesPanel.Visible= false;
+                ReleaseDetailRadMultiPage.Height = new System.Web.UI.WebControls.Unit(430, UnitType.Pixel);
+                fixContainer.Height = new System.Web.UI.WebControls.Unit(480, UnitType.Pixel); 
             }
             
 
@@ -258,6 +265,11 @@ namespace Etsi.Ultimate.Module.Release
         protected void CloseReleaseDetails_Click(object sender, EventArgs e)
         {
             this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close()", true);
+        }
+
+        protected void EditReleaseDetails_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("ReleaseEdition.aspx?releaseId=" + ReleaseId.Value+"&action=Edit");
         }
 
         

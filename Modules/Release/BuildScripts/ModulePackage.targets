@@ -25,6 +25,7 @@
       <InstallInclude Include="**\*.js" Exclude="packages\**" />
       <InstallInclude Include="**\*.txt"  Exclude="**\obj\**;**\_ReSharper*\**;packages\**;" />
       <InstallInclude Include="**\images\**" Exclude="packages\**" />
+      <InstallInclude Include="**\JS\**" Exclude="packages\**" />
       <InstallInclude Include="**\skin\**" Exclude="packages\**" />
       
     </ItemGroup>

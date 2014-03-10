@@ -85,6 +85,21 @@ legend{
     margin: 0 0 0 25%;
 }
 
+.releaseDetailsError {
+    border: 1px solid;
+    margin: 10px 0px;
+    padding:15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    color: #D8000C;
+    background-color: #FFBABA;
+    background-image: url('images/error.png');
+}
+
+.releaseDetailsErrorTxt {
+    margin: 0 0 0 25%;
+}
+
 .TabContent {
     margin: 10px;
     font: Arial  12px Black;
@@ -132,8 +147,10 @@ legend{
     padding-right: 10px;
 }
 
+
+
 .TabLine3colRight {
-    width: 35%;
+    width: 129px;
     text-align: left;
 }
 
@@ -190,7 +207,6 @@ versionFieldsetTab {
     */
 
 .containerFix {
-    height: 620px;
     width: 650px;
     position: relative;
     margin: 0 !important;
@@ -198,5 +214,10 @@ versionFieldsetTab {
 }
 
 .SecndColFreezeStageMeeting {
-    padding-right: 200px;
+    /*padding-right: 200px;*/
+}
+
+.requiredField {
+    color: red;
+    font-weight: bold;
 }
