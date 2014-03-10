@@ -71,7 +71,7 @@ namespace Etsi.Ultimate.Module.Release
                     htr.DataSource = release.Histories.ToList();
                     htr.ScrollHeight = (int)ReleaseDetailRadMultiPage.Height.Value - 10;
 
-                    ManageButtonDisplay(userRights);
+                    ManageButtonDisplay(release, userRights);
                 }
             }
             else
