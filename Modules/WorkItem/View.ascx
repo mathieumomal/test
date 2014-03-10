@@ -62,7 +62,7 @@
             <ContentTemplate>
                 <div class="contentModal" id="analysis">
                     <div class="wiHeader">
-                        Workplan analysis is in progress.
+                        Work plan analysis is in progress.
                     </div>
                     <div class="wiCenter">
                         <asp:Image ID="imgWait" runat="server" Class="rotating" ImageUrl="~/DesktopModules/WorkItem/images/hourglass.png" width="45"/>

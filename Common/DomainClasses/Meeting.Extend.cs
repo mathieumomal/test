@@ -10,7 +10,7 @@ namespace Etsi.Ultimate.DomainClasses
     {
 
         /// <summary>
-        /// Converts a short reference (example: S1-56) into a full reference (SA1#56)
+        /// Converts a short reference (example: S1-56) into a full reference (3GPPSA1#56)
         /// </summary>
         /// <param name="shortRef"></param>
         /// <returns></returns>

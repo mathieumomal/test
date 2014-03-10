@@ -13,6 +13,19 @@ namespace Etsi.Ultimate.Tests.Business
 {
     class WorkItemCsvParserTest
     {
+        [Test]
+        public void ImportCsv_LogsErrorOnNonCsvFile()
+        {
+            RegisterRepositories();
+
+            var wiImporter = new WorkItemCsvParser() { UoW = new UltimateUnitOfWork() };
+
+            var result = wiImporter.ParseCsv("../../TestData/WorkItems/empty.txt");
+
+            var report = result.Value;
+            Assert.AreEqual(1, report.GetNumberOfErrors());
+            Assert.AreEqual(Utils.Localization.WorkItem_Import_Invalid_File_Format, report.ErrorList.First());
+        }
 
         [Test]
         public void ImportCsv_EmptyFile()

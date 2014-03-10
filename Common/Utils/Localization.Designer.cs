@@ -169,6 +169,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to File format is invalid: file does not have CSV extension..
+        /// </summary>
+        public static string WorkItem_Import_Invalid_File_Format {
+            get {
+                return ResourceManager.GetString("WorkItem_Import_Invalid_File_Format", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}, Uid {1}: Workitem has level {2}, whereas parent has level {3}. Cannot process..
         /// </summary>
         public static string WorkItem_Import_Invalid_Hierarchy {

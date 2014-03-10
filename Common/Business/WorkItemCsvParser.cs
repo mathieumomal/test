@@ -51,26 +51,26 @@ namespace Etsi.Ultimate.Business
     public class WorkItemCsvParser
     {
         // Any level 0 workitem will be affected a Pk over 100 000 000
-        private static readonly int LowerBoundForLevel0Wi = 100000000;
+        private const int LowerBoundForLevel0Wi = 100000000;
 
         public IUltimateUnitOfWork UoW { get; set; }
 
         // Data retrieved to be able to establish references to the different objects.
-        protected List<WorkItem> AllWorkItems { get; set; }
-        protected List<Release> AllReleases { get; set; }
-        protected List<View_Persons> AllPersons { get; set; }
-        protected List<Meeting> AllMeetings { get; set; }
-        protected List<Community> AllCommunities { get; set; }
+        private List<WorkItem> AllWorkItems { get; set; }
+        private List<Release> AllReleases { get; set; }
+        private List<View_Persons> AllPersons { get; set; }
+        private List<Meeting> AllMeetings { get; set; }
+        private List<Community> AllCommunities { get; set; }
 
         // Report that is returned after parsing.
-        protected ImportReport Report { get; set; }
+        private ImportReport Report { get; set; }
 
         // List of treated data, and references used during the parsing.
-        protected Dictionary<int, WorkItem> lastWIForLevel;
-        protected WorkItem lastTreatedWi;
-        protected List<WorkItem> TreatedWorkItems { get; set; }
-        protected List<WorkItem> ModifiedWorkItems { get; set; }
-        protected bool IsCurrentWIModified { get; set; }
+        private Dictionary<int, WorkItem> lastWIForLevel;
+        private WorkItem lastTreatedWi;
+        private List<WorkItem> TreatedWorkItems { get; set; }
+        private List<WorkItem> ModifiedWorkItems { get; set; }
+        private bool IsCurrentWIModified { get; set; }
 
         /// <summary>
         /// Parses the CSV file.
@@ -83,9 +83,15 @@ namespace Etsi.Ultimate.Business
             {
                 if (UoW == null)
                     throw new InvalidOperationException("Cannot process with UoW defined");
-
                 // Initialize all fields
                 InitializeCommonData();
+
+                // Check the file extension
+                if (!fileLocation.EndsWith("csv"))
+                {
+                    Report.LogError(Utils.Localization.WorkItem_Import_Invalid_File_Format);
+                    return new KeyValuePair<List<WorkItem>, ImportReport>(ModifiedWorkItems, Report);
+                }
 
                 // Open the file.
                 using (StreamReader reader = new StreamReader(fileLocation))
@@ -108,9 +114,8 @@ namespace Etsi.Ultimate.Business
                     {
                         IsCurrentWIModified = false;
                         var record = csv.GetRecord<WorkItemImportClass>();
-                        var wi = new WorkItem();
 
-                        wi = TreatWiUid(record, wi);
+                        var wi = TreatWiUid(record);
                         TreatWpId(record, wi);
                         TreatLevel(record, wi);
                         TreatName(record, wi);
@@ -590,7 +595,7 @@ namespace Etsi.Ultimate.Business
             {
                 // try to refine to get the email
                 string email = rapporteurStr;
-                email = Regex.Match(email, "[A-Za-z0-9._-]+@[[A-Za-z0-9._-]+").Value;
+                email = Regex.Match(email, @"([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)").Value;
 
                 var person = AllPersons.Where(p => p.Email == email).FirstOrDefault();
                 if (person != null)
@@ -676,7 +681,7 @@ namespace Etsi.Ultimate.Business
             // Check that reference looks good
             if (!string.IsNullOrEmpty(wid))
             {
-                if (!Regex.IsMatch(wid, "[A-Za-z0-9]{2}-[0-9]{6}", RegexOptions.IgnoreCase))
+                if (!Regex.IsMatch(wid, "^[A-Za-z0-9]{2}-[0-9]{6}$", RegexOptions.IgnoreCase))
                 {
                     Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_Invalid_WiD, wi.WorkplanId, wi.Pk_WorkItemUid, wid));
                     wid = "";
@@ -957,7 +962,7 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="record"></param>
         /// <param name="wi"></param>
-        private WorkItem TreatWiUid(WorkItemImportClass record, WorkItem wi)
+        private WorkItem TreatWiUid(WorkItemImportClass record)
         {
             int UidToSearchFor = record.Unique_ID;
 
@@ -977,8 +982,7 @@ namespace Etsi.Ultimate.Business
             if (searchWi == null)
             {
                 // Did not find wi => We need a new one. We can thus flag it as to be added
-                // If ever 
-                aReturnWI = wi;
+                aReturnWI = new WorkItem();
 
                 if (UidToSearchFor == 0)
                 {
@@ -988,14 +992,14 @@ namespace Etsi.Ultimate.Business
                     if (TreatedWorkItems.Count > 0)
                         nextLevel0Uid = Math.Max(nextLevel0Uid, TreatedWorkItems.Max(w => w.Pk_WorkItemUid));
 
-                    wi.Pk_WorkItemUid = ++nextLevel0Uid;
+                    aReturnWI.Pk_WorkItemUid = ++nextLevel0Uid;
                 }
                 else
                 {
-                    wi.Pk_WorkItemUid = UidToSearchFor;
+                    aReturnWI.Pk_WorkItemUid = UidToSearchFor;
                 }
                 IsCurrentWIModified = true;
-                wi.IsNew = true;
+                aReturnWI.IsNew = true;
             }
             else
             {
