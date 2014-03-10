@@ -142,22 +142,25 @@
     <value>{0}, Uid {1}: Completion is incorrect: {2}</value>
   </data>
   <data name="WorkItem_Import_Incorrect_CreationDate" xml:space="preserve">
-    <value>{0}, Uid {1}: Creation date is incorrect: {2}</value>
+    <value>{0}, Uid {1}: Creation date is incorrect: {2}. Awaited format: DD/MM/YYYY</value>
   </data>
   <data name="WorkItem_Import_Incorrect_EndDate" xml:space="preserve">
-    <value>{0}, Uid {1}: End date is incorrect: {2}</value>
+    <value>{0}, Uid {1}: End date is incorrect: {2}	WorkItem_Import_Incorrect_CreationDate	{0}, Uid {1}: Creation date is incorrect: {2}. Awaited format: DD/MM/YYYY</value>
   </data>
   <data name="WorkItem_Import_Incorrect_LastModifiedDate" xml:space="preserve">
-    <value>{0}, Uid {1}: Last modified date is incorrect: {2}</value>
+    <value>{0}, Uid {1}: Last modified date is incorrect: {2}	WorkItem_Import_Incorrect_CreationDate	{0}, Uid {1}: Creation date is incorrect: {2}. Awaited format: DD/MM/YYYY</value>
   </data>
   <data name="WorkItem_Import_Incorrect_StartDate" xml:space="preserve">
-    <value>{0}, Uid {1}: Start date is incorrect: {2}</value>
+    <value>{0}, Uid {1}: Start date is incorrect: {2}	WorkItem_Import_Incorrect_CreationDate	{0}, Uid {1}: Creation date is incorrect: {2}. Awaited format: DD/MM/YYYY</value>
   </data>
   <data name="WorkItem_Import_Invalid_File_Format" xml:space="preserve">
     <value>File format is invalid: file does not have CSV extension.</value>
   </data>
   <data name="WorkItem_Import_Invalid_Hierarchy" xml:space="preserve">
     <value>{0}, Uid {1}: Workitem has level {2}, whereas parent has level {3}. Cannot process.</value>
+  </data>
+  <data name="WorkItem_Import_Invalid_Level" xml:space="preserve">
+    <value>{0}, Uid {1}: Level has not been recognized: {2}. Defaulted to 0.</value>
   </data>
   <data name="WorkItem_Import_Invalid_PcgApprovedMtg" xml:space="preserve">
     <value>{0}, Uid {1}: Could not retrieve PCG approval meeting {2} in database</value>

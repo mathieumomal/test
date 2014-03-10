@@ -162,7 +162,7 @@
         upload.deleteAllFileInputs();
     }
     function cancel() {
-        window.location();
+        closeAllModals();
     }
 
     /*-- TELERIK EVENTS --*/

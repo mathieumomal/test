@@ -41,6 +41,7 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
 
             dbSet.Add(new View_Persons() { PERSON_ID = 27904, Email = "mathieu.mangion@etsi.org", FIRSTNAME = "Mathieu", LASTNAME = "Mangion", ORGA_ID = 10, ORGA_NAME = "ETSI", Username = "mangion" });
             dbSet.Add(new View_Persons() { PERSON_ID = 9568, Email = "laurent.vreck@etsi.org", FIRSTNAME = "Laurent", LASTNAME = "Vreck", ORGA_ID = 10, ORGA_NAME = "ETSI", Username = "vreck" });
+            dbSet.Add(new View_Persons() { PERSON_ID = 9568, Email = "", FIRSTNAME = "Xy", LASTNAME = "Zhang", ORGA_ID = 10, ORGA_NAME = "ETSI", Username = "Xyzhang" });
 
             return dbSet.AsQueryable();
         }

@@ -133,7 +133,7 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}, Uid {1}: Creation date is incorrect: {2}.
+        ///   Looks up a localized string similar to {0}, Uid {1}: Creation date is incorrect: {2}. Awaited format: DD/MM/YYYY.
         /// </summary>
         public static string WorkItem_Import_Incorrect_CreationDate {
             get {
@@ -142,7 +142,7 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}, Uid {1}: End date is incorrect: {2}.
+        ///   Looks up a localized string similar to {0}, Uid {1}: End date is incorrect: {2}	WorkItem_Import_Incorrect_CreationDate	{0}, Uid {1}: Creation date is incorrect: {2}. Awaited format: DD/MM/YYYY.
         /// </summary>
         public static string WorkItem_Import_Incorrect_EndDate {
             get {
@@ -151,7 +151,7 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}, Uid {1}: Last modified date is incorrect: {2}.
+        ///   Looks up a localized string similar to {0}, Uid {1}: Last modified date is incorrect: {2}	WorkItem_Import_Incorrect_CreationDate	{0}, Uid {1}: Creation date is incorrect: {2}. Awaited format: DD/MM/YYYY.
         /// </summary>
         public static string WorkItem_Import_Incorrect_LastModifiedDate {
             get {
@@ -160,7 +160,7 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0}, Uid {1}: Start date is incorrect: {2}.
+        ///   Looks up a localized string similar to {0}, Uid {1}: Start date is incorrect: {2}	WorkItem_Import_Incorrect_CreationDate	{0}, Uid {1}: Creation date is incorrect: {2}. Awaited format: DD/MM/YYYY.
         /// </summary>
         public static string WorkItem_Import_Incorrect_StartDate {
             get {
@@ -183,6 +183,15 @@ namespace Etsi.Ultimate.Utils {
         public static string WorkItem_Import_Invalid_Hierarchy {
             get {
                 return ResourceManager.GetString("WorkItem_Import_Invalid_Hierarchy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}, Uid {1}: Level has not been recognized: {2}. Defaulted to 0..
+        /// </summary>
+        public static string WorkItem_Import_Invalid_Level {
+            get {
+                return ResourceManager.GetString("WorkItem_Import_Invalid_Level", resourceCulture);
             }
         }
         

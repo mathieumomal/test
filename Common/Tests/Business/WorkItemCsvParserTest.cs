@@ -139,7 +139,7 @@ namespace Etsi.Ultimate.Tests.Business
         }
 
         [Test]
-        public void ImportCsv_TestWrongWpOrder()
+        public void ImportCsv_TestWrongWpOrderShouldLogError()
         {
             RegisterRepositories();
             var wiImporter = new WorkItemCsvParser() { UoW = new UltimateUnitOfWork() };
@@ -147,9 +147,9 @@ namespace Etsi.Ultimate.Tests.Business
             var result = wiImporter.ParseCsv("../../TestData/WorkItems/Wrong_WpOrder.csv");
 
             var report = result.Value;
-            Assert.AreEqual(1, report.WarningList.Count);
+            Assert.AreEqual(1, report.ErrorList.Count);
 
-            Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Wrong_Order, "16", "17"), report.WarningList.First());
+            Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Wrong_Order, "16", "17"), report.ErrorList.First());
         }
 
         [Test]
@@ -305,6 +305,11 @@ namespace Etsi.Ultimate.Tests.Business
             var report = result.Value;
             Assert.AreEqual(1, report.GetNumberOfWarnings());
             Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Invalid_Release, "24", "630000", "Rel-21231"), report.WarningList.First());
+
+            var wiList = result.Key;
+            Assert.AreEqual(2, wiList.Count);
+            Assert.IsNull(wiList.ElementAt(0).Fk_ReleaseId);
+            Assert.IsNull(wiList.ElementAt(1).Fk_ReleaseId);
             
         }
 
@@ -370,9 +375,10 @@ namespace Etsi.Ultimate.Tests.Business
             var wiList = result.Key;
             var report = result.Value;
 
-            Assert.AreEqual(2, report.GetNumberOfWarnings());
+            Assert.AreEqual(3, report.GetNumberOfWarnings());
             Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Invalid_Rapporteur, "17", "630000", "mathieu.mang@etsi.org"), report.WarningList.First());
-            Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Invalid_Rapporteur, "18", "630001", "dsqdqsdqs"), report.WarningList[1]);
+            Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Invalid_Rapporteur, "18", "630001", "sdsq"), report.WarningList[1]);
+            Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Invalid_Rapporteur, "20", "107", "xyz"), report.WarningList[2]);
 
         }
 
@@ -446,6 +452,23 @@ namespace Etsi.Ultimate.Tests.Business
 
         }
 
+        [Test]
+        public void ImportCsv_NoLevelMeansLevel0()
+        {
+            RegisterRepositories();
+
+            var wiImporter = new WorkItemCsvParser() { UoW = new UltimateUnitOfWork() };
+
+            var result = wiImporter.ParseCsv("../../TestData/WorkItems/InvalidLevel.csv");
+
+            var wiList = result.Key;
+            var report = result.Value;
+            Assert.AreEqual(2, wiList.Count);
+            Assert.AreEqual(0, wiList.First().WiLevel);
+            Assert.AreEqual(1, report.GetNumberOfWarnings());
+            Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Invalid_Level, "18", "630001", "A"), report.WarningList.First());
+        }
+
         private void RegisterRepositories()
         {
             RepositoryFactory.Container.RegisterType<IWorkItemRepository, WorkItemEmptyFakeRepository>(new TransientLifetimeManager());
@@ -456,17 +479,5 @@ namespace Etsi.Ultimate.Tests.Business
             
         }
 
-
-        /*[Test]
-        public void ImportCsv_FullWorkplan()
-        {
-            var wiImporter = new WorkItemImporter();
-
-            var result = wiImporter.ParseCsv("../../TestData/WorkItems/Work_plan_3gpp_140222_parsed.csv");
-
-            Assert.IsNotNull(result.Key);
-            Assert.AreEqual(4047, result.Key.Count);
-        }*/
-        
     }
 }

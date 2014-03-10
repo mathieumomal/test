@@ -120,6 +120,7 @@
     <None Include="TestData\WorkItems\BadHierarchy.csv" />
     <None Include="TestData\WorkItems\BadFormat.csv" />
     <Content Include="TestData\WorkItems\empty.txt" />
+    <None Include="TestData\WorkItems\InvalidLevel.csv" />
     <None Include="TestData\WorkItems\Level0_WorkItems.csv" />
     <None Include="TestData\WorkItems\Wrong_WpOrder.csv" />
     <None Include="TestData\WorkItems\InvalidCommittees.csv" />

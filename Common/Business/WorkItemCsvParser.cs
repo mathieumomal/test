@@ -23,7 +23,7 @@ namespace Etsi.Ultimate.Business
         public int Unique_ID { get; set; }
         public string Name { get; set; }
         public string Acronym { get; set; }
-        public int Outline_Level { get; set; }
+        public string Outline_Level { get; set; }
         public string Release { get; set; }
         public string Resource_Names { get; set; }
         public string Start_Date { get; set; }
@@ -598,7 +598,7 @@ namespace Etsi.Ultimate.Business
                 email = Regex.Match(email, @"([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)").Value;
 
                 var person = AllPersons.Where(p => p.Email == email).FirstOrDefault();
-                if (person != null)
+                if (!string.IsNullOrEmpty(email) && person != null)
                 {
                     rapporteurId = person.PERSON_ID;
                 }
@@ -811,7 +811,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatRelease(WorkItemImportClass record, WorkItem wi)
         {
-            int releaseFk = 0;
+            int? releaseFk = null;
 
             if (record.Release == "-")
                 return;
@@ -909,8 +909,19 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatLevel(WorkItemImportClass record, WorkItem wi)
         {
+            // Check that the level is indeed an int. Else default it to 0.
+            int level;
+            if (String.IsNullOrEmpty(record.Outline_Level) || record.Outline_Level == "-")
+            {
+                level = 0;
+            }
+            else if (!Int32.TryParse(record.Outline_Level, out level))
+            {
+                Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_Invalid_Level, wi.WorkplanId, wi.Pk_WorkItemUid, record.Outline_Level));
+                level = 0;
+            }
+
             // Level 0 work items are the ones that correspond to milestones.
-            var level = record.Outline_Level;
             if (record.Unique_ID == 0)
                 level = 0;
 
@@ -1037,7 +1048,7 @@ namespace Etsi.Ultimate.Business
             // Check order is correct
             if (lastTreatedWi != null && lastTreatedWi.WorkplanId > wi.WorkplanId)
             {
-                Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_Wrong_Order, wi.WorkplanId, lastTreatedWi.WorkplanId));
+                Report.LogError(String.Format(Utils.Localization.WorkItem_Import_Wrong_Order, wi.WorkplanId, lastTreatedWi.WorkplanId));
             }
 
             // Check that no work item already has this number.
