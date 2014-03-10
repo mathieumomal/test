@@ -58,7 +58,7 @@ namespace Etsi.Ultimate.Module.Release
                     if (userRights.HasRight(Domain.Enum_UserRights.Release_ViewCompleteDetails))
                         FillAdminTab(release, svc.GetPreviousReleaseCode(UserId, release.Pk_ReleaseId));
 
-
+                    
 
                     //Set Remarks control
                     RemarksControl rmk = releaseRemarks as RemarksControl;
