@@ -297,7 +297,7 @@ namespace Etsi.Ultimate.Module.Release
             if (ReleaseId != null)
             {
                 IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
-                svc.CloseRelease(ReleaseId.Value, DateTime.Now, "SP-65", 1);
+                svc.CloseRelease(ReleaseId.Value, DateTime.Now, "SP-65", 1, UserId);
                 this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
             }
         }

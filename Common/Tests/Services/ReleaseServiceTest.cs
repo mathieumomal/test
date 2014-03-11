@@ -13,6 +13,10 @@ using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.Tests.FakeManagers;
+using Etsi.Ultimate.DataAccess;
+using Rhino.Mocks;
+using System.Data.Entity;
+using Etsi.Ultimate.Tests.FakeSets;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -157,6 +161,41 @@ namespace Etsi.Ultimate.Tests.Services
             {
                 Assert.AreNotEqual(string.Empty, previousCode);
             }
+        }
+
+        [Test]
+        public void Test_CloseRelease()
+        {
+            int releaseIdToTest = 1;
+            DateTime closureDate = DateTime.Now;
+            string meetingRef = "S6-25";
+            int meetingRefId = 21;
+            int personID = 12;
+
+            ReleaseFakeRepository releaseFakeRepository = new ReleaseFakeRepository();
+            var releaseStatus = new Enum_ReleaseStatusFakeDBSet();
+            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, ReleaseStatus = "Open" });
+            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, ReleaseStatus = "Frozen" });
+            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, ReleaseStatus = "Closed" });
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releaseFakeRepository.All).Repeat.Once();
+            mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)releaseStatus).Repeat.Once();
+
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var releaseService = new ReleaseService();
+            releaseService.CloseRelease(releaseIdToTest, closureDate, meetingRef, meetingRefId, personID);
+
+            mockDataContext.AssertWasCalled(x => x.SetModified(Arg<Release>.Matches(y => y.Fk_ReleaseStatus == 3 && y.Enum_ReleaseStatus == null
+                                                                                                                && y.ClosureDate == closureDate
+                                                                                                                && y.ClosureMtgRef == meetingRef
+                                                                                                                && y.ClosureMtgId == meetingRefId)));
+            mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<History>.Matches(y => y.Fk_ReleaseId == releaseIdToTest && y.Fk_PersonId == personID
+                                                                                                    && y.HistoryText == "'Rel-1' has been Closed")));
+            mockDataContext.AssertWasCalled(x => x.SaveChanges(), y => y.Repeat.Once());
+
+            mockDataContext.VerifyAllExpectations();
         }
     }
 }

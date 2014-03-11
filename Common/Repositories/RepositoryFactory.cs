@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
+using Etsi.Ultimate.DataAccess;
 
 namespace Etsi.Ultimate.Repositories
 {
@@ -42,7 +43,9 @@ namespace Etsi.Ultimate.Repositories
             container.RegisterType<IEnum_ReleaseStatusRepository, Enum_ReleaseStatusRepository>(new TransientLifetimeManager());
             container.RegisterType<IWorkItemRepository, WorkItemRepository>(new TransientLifetimeManager());
             container.RegisterType<IUltimateUnitOfWork, UltimateUnitOfWork>(new TransientLifetimeManager());
-            
+            container.RegisterType<IHistoryRepository, HistoryRepository>(new TransientLifetimeManager());
+            container.RegisterType<IUltimateContext, UltimateContext>(new TransientLifetimeManager());
+
             container.RegisterType<IUserRightsRepository, UserRightsRepository>(new TransientLifetimeManager());
             container.RegisterType<IUserRolesRepository, UserRolesRepository>(new TransientLifetimeManager());
             container.RegisterType<IPersonRepository, PersonRepository>(new TransientLifetimeManager());

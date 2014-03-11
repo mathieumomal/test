@@ -82,11 +82,6 @@ namespace Etsi.Ultimate.Repositories
             throw new InvalidOperationException("Cannot delete Release entity");
         }
 
-        public void Save()
-        {
-            UoW.Context.SaveChanges();
-        }
-
         #endregion
 
         #region IDisposable Membres

@@ -76,13 +76,15 @@ namespace Etsi.Ultimate.Services
         /// <param name="closureDate">Closure Date</param>
         /// <param name="closureMtgRef">Closure Meeting Reference</param>
         /// <param name="closureMtgId">Closure Meeting Reference ID</param>
-        public void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId)
+        /// <param name="personID">Person ID</param>
+        public void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId, int personID)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var releaseManager = new ReleaseManager();
                 releaseManager.UoW = uoW;
-                releaseManager.CloseRelease(releaseId, closureDate, closureMtgRef, closureMtgId);
+                releaseManager.CloseRelease(releaseId, closureDate, closureMtgRef, closureMtgId, personID);
+                uoW.Save();
             }
         }
 

@@ -5,12 +5,12 @@ namespace Etsi.Ultimate.Repositories
     public class UltimateUnitOfWork : IUltimateUnitOfWork   
     {
 
-        private UltimateContext context;
+        private IUltimateContext context;
            
 
         public UltimateUnitOfWork()
         {
-            context = new UltimateContext();
+            context = RepositoryFactory.Resolve<IUltimateContext>();
         }
 
         #region IUltimateUnitOfWork Members
@@ -20,7 +20,7 @@ namespace Etsi.Ultimate.Repositories
             context.SaveChanges();
         }
 
-        public UltimateContext GetContext()
+        public IUltimateContext GetContext()
         {
             return context;
         }

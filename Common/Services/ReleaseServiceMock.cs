@@ -87,7 +87,7 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
-        public void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId)
+        public void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId, int personID)
         {
             throw new NotImplementedException();
         }

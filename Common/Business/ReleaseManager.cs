@@ -121,13 +121,17 @@ namespace Etsi.Ultimate.Business
         /// <param name="closureDate">Closure Date</param>
         /// <param name="closureMtgRef">Closure Meeting Reference</param>
         /// <param name="closureMtgId">Closure Meeting Reference ID</param>
-        public void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId)
+        /// <param name="personID">Person ID</param>
+        public void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId, int personID)
         {
             IReleaseRepository relRepo = RepositoryFactory.Resolve<IReleaseRepository>();
             relRepo.UoW = UoW;
 
             IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
             relStatusRepo.UoW = UoW;
+
+            IHistoryRepository historyRepo = RepositoryFactory.Resolve<IHistoryRepository>();
+            historyRepo.UoW = UoW;
 
             var updatedObj = relRepo.Find(releaseId);
             
@@ -138,7 +142,9 @@ namespace Etsi.Ultimate.Business
             updatedObj.ClosureMtgId = closureMtgId;
 
             relRepo.InsertOrUpdate(updatedObj);
-            relRepo.UoW.Save();
+
+            History history = new History() { Fk_ReleaseId = releaseId, Fk_PersonId = personID, CreationDate = DateTime.UtcNow, HistoryText = String.Format("'{0}' has been Closed", updatedObj.Code) };
+            historyRepo.InsertOrUpdate(history);
 
             ClearCache();
         }
