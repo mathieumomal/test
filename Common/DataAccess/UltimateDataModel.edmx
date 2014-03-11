@@ -98,7 +98,8 @@
       [View_Persons].[LASTNAME] AS [LASTNAME], 
       [View_Persons].[FIRSTNAME] AS [FIRSTNAME], 
       [View_Persons].[ORGA_ID] AS [ORGA_ID], 
-      [View_Persons].[ORGA_NAME] AS [ORGA_NAME]
+      [View_Persons].[ORGA_NAME] AS [ORGA_NAME], 
+      [View_Persons].[DELETED_FLG] AS [DELETED_FLG]
       FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_History_Releases" Association="Etsi.Ultimate.DataAccess.Store.FK_History_Releases">
@@ -135,7 +136,8 @@
             <PropertyRef Name="Enum_ReleaseStatusId" />
           </Key>
           <Property Name="Enum_ReleaseStatusId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="ReleaseStatus" Type="nvarchar" MaxLength="10" />
+          <Property Name="Code" Type="varchar" MaxLength="10" />
+          <Property Name="Description" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="History">
           <Key>
@@ -347,6 +349,7 @@
             <PropertyRef Name="PERSON_ID" />
             
             
+            <PropertyRef Name="DELETED_FLG" />
           </Key>
           <Property Name="PERSON_ID" Type="int" Nullable="false" />
           <Property Name="Username" Type="varchar" MaxLength="12" />
@@ -355,6 +358,7 @@
           <Property Name="FIRSTNAME" Type="varchar" MaxLength="20" />
           <Property Name="ORGA_ID" Type="int" Nullable="false" />
           <Property Name="ORGA_NAME" Type="varchar" MaxLength="99" />
+          <Property Name="DELETED_FLG" Type="varchar" Nullable="false" MaxLength="1" />
         </EntityType>
         <Association Name="FK_History_Releases">
           <End Role="Releases" Type="Etsi.Ultimate.DataAccess.Store.Releases" Multiplicity="0..1" />
@@ -494,8 +498,9 @@
             <PropertyRef Name="Enum_ReleaseStatusId" />
           </Key>
           <Property Name="Enum_ReleaseStatusId" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
-          <Property Name="ReleaseStatus" Type="String" MaxLength="10" Unicode="true" FixedLength="false" />
           <NavigationProperty Name="Releases" Relationship="Etsi.Ultimate.DataAccess.FK_Releases_Enum_ReleaseStatus" FromRole="Enum_ReleaseStatus" ToRole="Releases" />
+          <Property Type="String" Name="Code" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Description" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Release">
           <Key>
@@ -679,6 +684,7 @@
         <EntityType Name="View_Persons">
           <Key>
             <PropertyRef Name="PERSON_ID" />
+            <PropertyRef Name="DELETED_FLG" />
           </Key>
           <Property Type="Int32" Name="PERSON_ID" Nullable="false" />
           <Property Type="String" Name="Username" MaxLength="12" FixedLength="false" Unicode="false" />
@@ -687,6 +693,7 @@
           <Property Type="String" Name="FIRSTNAME" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="ORGA_ID" Nullable="false" />
           <Property Type="String" Name="ORGA_NAME" MaxLength="99" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="DELETED_FLG" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Community">
           <Key>
@@ -814,8 +821,9 @@
           <EntitySetMapping Name="Enum_ReleaseStatus">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Enum_ReleaseStatus">
               <MappingFragment StoreEntitySet="Enum_ReleaseStatus">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="Enum_ReleaseStatusId" ColumnName="Enum_ReleaseStatusId" />
-                <ScalarProperty Name="ReleaseStatus" ColumnName="ReleaseStatus" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -960,6 +968,7 @@
           <EntitySetMapping Name="View_Persons">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.View_Persons">
               <MappingFragment StoreEntitySet="View_Persons">
+                <ScalarProperty Name="DELETED_FLG" ColumnName="DELETED_FLG" />
                 <ScalarProperty Name="ORGA_NAME" ColumnName="ORGA_NAME" />
                 <ScalarProperty Name="ORGA_ID" ColumnName="ORGA_ID" />
                 <ScalarProperty Name="FIRSTNAME" ColumnName="FIRSTNAME" />

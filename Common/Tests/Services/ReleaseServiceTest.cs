@@ -40,7 +40,7 @@ namespace Etsi.Ultimate.Tests.Services
 
 
             Assert.AreEqual(4, releases.Key.Count);
-            Assert.AreEqual(2, releases.Key.Where(t => t.Enum_ReleaseStatus.ReleaseStatus == "Frozen").ToList().Count);
+            Assert.AreEqual(2, releases.Key.Where(t => t.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Frozen).ToList().Count);
 
 
         }
@@ -176,9 +176,9 @@ namespace Etsi.Ultimate.Tests.Services
 
             ReleaseFakeRepository releaseFakeRepository = new ReleaseFakeRepository();
             var releaseStatus = new Enum_ReleaseStatusFakeDBSet();
-            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, ReleaseStatus = "Open" });
-            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, ReleaseStatus = "Frozen" });
-            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, ReleaseStatus = "Closed" });
+            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open" });
+            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, Code = "Frozen" });
+            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, Code = "Closed" });
 
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releaseFakeRepository.All).Repeat.Once();

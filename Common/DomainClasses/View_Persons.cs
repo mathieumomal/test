@@ -22,5 +22,6 @@ namespace Etsi.Ultimate.DomainClasses
         public string FIRSTNAME { get; set; }
         public int ORGA_ID { get; set; }
         public string ORGA_NAME { get; set; }
+        public string DELETED_FLG { get; set; }
     }
 }

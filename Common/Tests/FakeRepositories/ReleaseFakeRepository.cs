@@ -41,9 +41,9 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
 
             //Just essentials informations for the tests
             var releases = new ReleaseFakeDBSet();
-            var openStatus = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, ReleaseStatus = "Open" };
-            var frozenStatus = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, ReleaseStatus = "Frozen" };
-            var closedStatus = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, ReleaseStatus = "Closed" };
+            var openStatus = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open" };
+            var frozenStatus = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, Code = "Frozen" };
+            var closedStatus = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, Code = "Closed" };
             releases.Add(new Release() { Pk_ReleaseId = OPENED_RELEASE_ID, Name = "First release", Code="Rel-1", ShortName="R1", Fk_ReleaseStatus = 1, Enum_ReleaseStatus = openStatus,
                 Remarks = new List<Remark>() { aRemark }, Histories = new List<History>() { aHistory1, aHistory2 } });
             releases.Add(new Release() { Pk_ReleaseId = FROZEN_RELEASE_ID, Name = "Second release", Fk_ReleaseStatus = 2, Enum_ReleaseStatus = frozenStatus });

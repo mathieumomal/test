@@ -74,14 +74,18 @@ namespace Etsi.Ultimate.Repositories
             {
                 var roleValue = xmlRole.Attribute("value").Value;
                 if (!Enum.TryParse(roleValue, true, out tmpEnumRole))
+                {
+                    LogManager.Warn(String.Format("Could not decode Role: {0}", roleValue));
                     continue;
-
+                }
                 var rightsList = new List<Enum_UserRights>();
 
                 foreach (var xmlRight in xmlRole.Descendants("Right"))
                 {
                     if (Enum.TryParse(xmlRight.Attribute("value").Value, true, out tmpEnumRight))
                         rightsList.Add(tmpEnumRight);
+                    else
+                        LogManager.Warn(String.Format("Could not decode Right: {0}", xmlRight.Attribute("value").Value));
                 }
 
                 // Finally add it to the Dictionnary

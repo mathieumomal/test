@@ -21,9 +21,9 @@ namespace Etsi.Ultimate.Services
         public KeyValuePair<List<DomainClasses.Release>, UserRightsContainer> GetAllReleases(int personID)
         {
             var releases = new List<Release>();
-            var statusFrozen = new Enum_ReleaseStatus() {Enum_ReleaseStatusId = 2, ReleaseStatus = "Frozen"};
-            var statusClosed = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, ReleaseStatus = "Closed" };
-            var statusOpen = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, ReleaseStatus = "Open" };
+            var statusFrozen = new Enum_ReleaseStatus() {Enum_ReleaseStatusId = 2, Code = "Frozen"};
+            var statusClosed = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, Code = "Closed" };
+            var statusOpen = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open" };
             releases.Add(new DomainClasses.Release() { 
                 Code= "Rel-97",
                 Pk_ReleaseId = 1, 

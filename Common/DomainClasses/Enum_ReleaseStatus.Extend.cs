@@ -9,7 +9,7 @@ namespace Etsi.Ultimate.DomainClasses
     public partial class Enum_ReleaseStatus
     {
         // Use constants
-        public const string Opened = "Opened";
+        public const string Open = "Open";
         public const string Frozen = "Frozen";
         public const string Closed = "Closed";
 

@@ -15,7 +15,7 @@
             </telerik:GridTemplateColumn>
             <telerik:GridTemplateColumn HeaderStyle-Width="6%" DataField="Status" HeaderText="Status" UniqueName="Status">
                 <ItemTemplate>
-                    <span class="status <%# DataBinder.Eval(Container.DataItem,"Enum_ReleaseStatus.ReleaseStatus").ToString().ToLower() %>"><%# DataBinder.Eval(Container.DataItem,"Enum_ReleaseStatus.ReleaseStatus") %></span>  
+                    <span class="status <%# DataBinder.Eval(Container.DataItem,"Enum_ReleaseStatus.Description").ToString().ToLower() %>"><%# DataBinder.Eval(Container.DataItem,"Enum_ReleaseStatus.Description") %></span>  
                 </ItemTemplate>                    
             </telerik:GridTemplateColumn>
             <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="StartDate" HeaderText="Start date" UniqueName="StartDate">

@@ -14,8 +14,6 @@ namespace Etsi.Ultimate.Business
     {
         // Used for the caching of the releases.
         private static string CACHE_KEY = "ULT_BIZ_RELEASES_ALL";
-        private static string FREEZE_REL_STATUS = "Frozen";
-        private const string CLOSE_REL_STATUS = "Closed";
 
         public IUltimateUnitOfWork UoW { get; set; }
 
@@ -73,11 +71,11 @@ namespace Etsi.Ultimate.Business
             // remove some rights depending on release status:
             // - a frozen release cannot be frozen.
             // - a closed release can be neither frozen nor closed
-            if (release.Enum_ReleaseStatus.ReleaseStatus == "Frozen")
+            if (release.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Frozen)
             {
                 personRights.RemoveRight(Enum_UserRights.Release_Freeze, true);
             }
-            else if (release.Enum_ReleaseStatus.ReleaseStatus == "Closed")
+            else if (release.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Closed)
             {
                 personRights.RemoveRight(Enum_UserRights.Release_Freeze, true);
                 personRights.RemoveRight(Enum_UserRights.Release_Close, true);
@@ -100,7 +98,7 @@ namespace Etsi.Ultimate.Business
             
             IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
             relStatusRepo.UoW = UoW;
-            var frozen = relStatusRepo.All.Where(x => x.ReleaseStatus == FREEZE_REL_STATUS).FirstOrDefault();
+            var frozen = relStatusRepo.All.Where(x => x.Code == Enum_ReleaseStatus.Frozen).FirstOrDefault();
 
             var updatedObj = repo.Find(releaseId);
             updatedObj.Fk_ReleaseStatus = frozen.Enum_ReleaseStatusId;
@@ -134,8 +132,8 @@ namespace Etsi.Ultimate.Business
             historyRepo.UoW = UoW;
 
             var updatedObj = relRepo.Find(releaseId);
-            
-            updatedObj.Fk_ReleaseStatus = relStatusRepo.All.Where(x => x.ReleaseStatus == CLOSE_REL_STATUS).FirstOrDefault().Enum_ReleaseStatusId;
+
+            updatedObj.Fk_ReleaseStatus = relStatusRepo.All.Where(x => x.Code == Enum_ReleaseStatus.Closed).FirstOrDefault().Enum_ReleaseStatusId;
             updatedObj.Enum_ReleaseStatus = null; //Set Null to avoid referential integrity error
             updatedObj.ClosureDate = closureDate;
             updatedObj.ClosureMtgRef = closureMtgRef;

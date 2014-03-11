@@ -132,7 +132,7 @@ namespace Etsi.Ultimate.Module.Release
         private void FillGeneralTab(DomainClasses.UserRightsContainer userRights, Domain.Release release)
         {
             releaseCodeVal.Text = release.Code; 
-            ReleaseStatusVal.Text = release.Enum_ReleaseStatus.ReleaseStatus;
+            ReleaseStatusVal.Text = release.Enum_ReleaseStatus.Description;
             ReleaseStatusVal.CssClass = "status " + ReleaseStatusVal.Text;
             ReleaseNameVal.Text = release.Name;
             if (release.Description != null)
@@ -236,11 +236,11 @@ namespace Etsi.Ultimate.Module.Release
         /// <param name="userRights">User Rights</param>
         private void ManageButtonDisplay(DomainClasses.Release release, DomainClasses.UserRightsContainer userRights)
         {
-            if(userRights.HasRight((Domain.Enum_UserRights.Release_Edit)))
+            if(userRights.HasRight(Domain.Enum_UserRights.Release_Edit))
                 EditBtn.Visible = true;
-            if (userRights.HasRight((Domain.Enum_UserRights.Release_Freeze)) && (release.Enum_ReleaseStatus.ReleaseStatus.ToLower() == "open"))
+            if (userRights.HasRight(Domain.Enum_UserRights.Release_Freeze))
                 FreezeReleaseBtn.Visible = true;
-            if (userRights.HasRight((Domain.Enum_UserRights.Release_Close)) && (release.Enum_ReleaseStatus.ReleaseStatus.ToLower() != "closed"))
+            if (userRights.HasRight(Domain.Enum_UserRights.Release_Close))
                 CloseReleaseBtn.Visible = true;            
         }
 

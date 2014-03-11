@@ -35,7 +35,7 @@ namespace Etsi.Ultimate.Tests.Repositories
 
             Assert.AreEqual(3, results.Count);
             Assert.IsNotNull(results.First().Enum_ReleaseStatus);
-            Assert.AreEqual("Open",results.First().Enum_ReleaseStatus.ReleaseStatus);
+            Assert.AreEqual(Enum_ReleaseStatus.Open, results.First().Enum_ReleaseStatus.Code);
         }
 
         [Test]
@@ -77,16 +77,16 @@ namespace Etsi.Ultimate.Tests.Repositories
 
             var dbSet_release = new ReleaseFakeDBSet();
             //Just essentials informations for the tests
-            var openStatus = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, ReleaseStatus = "Open" };
+            var openStatus = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open" };
             dbSet_release.Add(new Release() { Pk_ReleaseId = 1, Name = "First release", Fk_ReleaseStatus = 1, Enum_ReleaseStatus = openStatus  });
             dbSet_release.Add(new Release() { Pk_ReleaseId = 2, Name = "Second release", Fk_ReleaseStatus = 2 });
             dbSet_release.Add(new Release() { Pk_ReleaseId = 3, Name = "Third release", Fk_ReleaseStatus = 2 });
 
             var dbSet_releaseStatus = new Enum_ReleaseStatusFakeDBSet();
             //Just essentials informations for the tests
-            dbSet_releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, ReleaseStatus = "Open" });
-            dbSet_releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, ReleaseStatus = "Frozen" });
-            dbSet_releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, ReleaseStatus = "Closed" });
+            dbSet_releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open" });
+            dbSet_releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, Code = "Frozen" });
+            dbSet_releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, Code = "Closed" });
 
             iUltimateContext.Releases = dbSet_release;
             iUltimateContext.Enum_ReleaseStatus = dbSet_releaseStatus;

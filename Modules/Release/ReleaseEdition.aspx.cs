@@ -155,7 +155,7 @@ namespace Etsi.Ultimate.Module.Release
         {
             releaseCodeVal.Text = release.Code;
 
-            ReleaseStatusVal.Text = release.Enum_ReleaseStatus.ReleaseStatus;
+            ReleaseStatusVal.Text = release.Enum_ReleaseStatus.Description;
             ReleaseStatusVal.CssClass = "status " + ReleaseStatusVal.Text;
 
             ReleaseNameVal.Text = release.Name;

@@ -39,7 +39,8 @@ namespace Etsi.Ultimate.Tests.Repositories
         public void ReleaseStatus_Find()
         {
             var repo = new Enum_ReleaseStatusRepository(GetUnitOfWork());
-            Assert.AreSame("Frozen", repo.Find(2).ReleaseStatus);
+            Assert.AreSame(Enum_ReleaseStatus.Frozen, repo.Find(2).Code);
+            Assert.AreSame(Enum_ReleaseStatus.Frozen, repo.Find(2).Description);
         }
 
         [Test]
@@ -67,9 +68,9 @@ namespace Etsi.Ultimate.Tests.Repositories
             var iUltimateContext = MockRepository.GenerateMock<IUltimateContext>();
 
             var dbSet = new Enum_ReleaseStatusFakeDBSet();
-            dbSet.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, ReleaseStatus = "Open" });
-            dbSet.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, ReleaseStatus = "Frozen" });
-            dbSet.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, ReleaseStatus = "Closed" });
+            dbSet.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open", Description="Open" });
+            dbSet.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, Code = "Frozen", Description="Frozen" });
+            dbSet.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, Code = "Closed", Description="Closed" });
 
             iUnitOfWork.Stub(uow => uow.Context).Return(iUltimateContext);
             iUltimateContext.Stub(ctx => ctx.Enum_ReleaseStatus).Return(dbSet);

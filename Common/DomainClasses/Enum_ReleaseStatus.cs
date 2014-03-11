@@ -21,7 +21,8 @@ namespace Etsi.Ultimate.DomainClasses
         }
     
         public int Enum_ReleaseStatusId { get; set; }
-        public string ReleaseStatus { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
     
         public virtual ICollection<Release> Releases { get; set; }
     }
