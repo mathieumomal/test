@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="Release" type="Module" version="00.01.14">
+    <package name="Release" type="Module" version="00.01.20">
       <friendlyName>Release</friendlyName>
       <description>Release module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>

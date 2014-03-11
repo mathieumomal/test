@@ -36,12 +36,7 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         static ServicesFactory()
         {
-            var container = new UnityContainer();
-
             SetDefaultDependencies();
-
-               
-            _container = container;
         }
 
         /// <summary>
