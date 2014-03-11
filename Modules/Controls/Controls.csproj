@@ -74,13 +74,6 @@
       <DependentUpon>HistoryControl.ascx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="FakeControl.ascx.cs">
-      <DependentUpon>FakeControl.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="FakeControl.ascx.designer.cs">
-      <DependentUpon>FakeControl.ascx</DependentUpon>
-    </Compile>
     <Compile Include="RemarksControl.ascx.cs">
       <DependentUpon>RemarksControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -94,7 +87,6 @@
     <Content Include="License.txt" />
     <Content Include="module.css" />
     <Content Include="ReleaseNotes.txt" />
-    <Content Include="FakeControl.ascx" />
     <Content Include="RemarksControl.ascx" />
   </ItemGroup>
   <ItemGroup>

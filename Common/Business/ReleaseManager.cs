@@ -86,31 +86,32 @@ namespace Etsi.Ultimate.Business
             return new KeyValuePair<Release, UserRightsContainer>(repo.Find(id), personRights);
         }
 
+
+        /// <summary>
+        /// Freezes the release.
+        /// </summary>
+        /// <param name="releaseId"></param>
+        /// <param name="endDate"></param>
         public void FreezeRelease(int releaseId, DateTime endDate)
         {
             IReleaseRepository repo = RepositoryFactory.Resolve<IReleaseRepository>();
             repo.UoW = UoW;
 
-            //** THIS CODE NEEDS SOME UPDATE : START **//
-            //IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
-            //relStatusRepo.UoW = UoW;
-            //var frozen = relStatusRepo.All.Where(x => x.ReleaseStatus == FREEZE_REL_STATUS).FirstOrDefault();
-            //** THIS CODE NEEDS SOME UPDATE : END **//
-
-            Enum_ReleaseStatus er = new Enum_ReleaseStatus { Enum_ReleaseStatusId = 2, ReleaseStatus = "Frozen" };
-            var updatedObj = repo.Find(releaseId);
-            updatedObj.Fk_ReleaseStatus = er.Enum_ReleaseStatusId;
-            updatedObj.Enum_ReleaseStatus = er;
             
-            //** THIS CODE NEEDS SOME UPDATE : START **//
-            //updatedObj.Fk_ReleaseStatus = frozen.Enum_ReleaseStatusId;
-            //updatedObj.Enum_ReleaseStatus = frozen;
-            //** THIS CODE NEEDS SOME UPDATE : END **//
+            IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
+            relStatusRepo.UoW = UoW;
+            var frozen = relStatusRepo.All.Where(x => x.ReleaseStatus == FREEZE_REL_STATUS).FirstOrDefault();
 
+            var updatedObj = repo.Find(releaseId);
+            updatedObj.Fk_ReleaseStatus = frozen.Enum_ReleaseStatusId;
+            updatedObj.Enum_ReleaseStatus = null;
+            
             updatedObj.EndDate = endDate;
 
             repo.InsertOrUpdate(updatedObj);
             repo.UoW.Save();
+
+            ClearCache();
         }
 
         /// <summary>
@@ -138,6 +139,16 @@ namespace Etsi.Ultimate.Business
 
             relRepo.InsertOrUpdate(updatedObj);
             relRepo.UoW.Save();
+
+            ClearCache();
+        }
+
+        /// <summary>
+        /// Clears the cache each time an action is performed on the releases.
+        /// </summary>
+        private void ClearCache()
+        {
+            CacheManager.Clear(CACHE_KEY);
         }
     }
 }
