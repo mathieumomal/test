@@ -10,7 +10,7 @@ using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Tests.Repositories
 {
-    class RightsRepositoryTest
+    class RightsRepositoryTest : BaseTest
     {
         private static readonly string CACHE_VALUE="ULT_REPO_RIGHTS_ALL";
 

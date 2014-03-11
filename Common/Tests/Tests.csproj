@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseTest.cs" />
     <Compile Include="Business\LogManagerTest.cs" />
     <Compile Include="Business\RightsManagerTest.cs" />
     <Compile Include="Business\WorkItemCsvParserTest.cs" />

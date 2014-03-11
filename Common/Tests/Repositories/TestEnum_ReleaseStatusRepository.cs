@@ -17,7 +17,7 @@ namespace Etsi.Ultimate.Tests.Repositories
 {
     //TextFixture <=> class contains Test
     [TestFixture]
-    public class TestEnum_ReleaseStatusRepository
+    public class TestEnum_ReleaseStatusRepository : BaseTest
     {
         [Test]
         public void ReleaseStatus_GetAll()

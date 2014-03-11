@@ -11,10 +11,11 @@ using Etsi.Ultimate.Tests.FakeRepositories;
 using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Utils;
 using Rhino.Mocks;
+using Etsi.Ultimate.Business;
 
 namespace Etsi.Ultimate.Tests.Business
 {
-    class RightsManagerTest
+    class RightsManagerTest: BaseTest
     {
 
         private static readonly string CACHE_STRING = "BIZ_USER_RIGHTS_";

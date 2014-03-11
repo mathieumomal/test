@@ -11,8 +11,15 @@ using Etsi.Ultimate.Tests.FakeRepositories;
 
 namespace Etsi.Ultimate.Tests.Business
 {
-    class WorkItemCsvParserTest
+    class WorkItemCsvParserTest: BaseTest
     {
+        [SetUp]
+        public override void Setup()
+        {
+            base.Setup();
+            RegisterRepositories();
+        }
+
         [Test]
         public void ImportCsv_LogsErrorOnNonCsvFile()
         {

@@ -22,6 +22,8 @@ namespace Etsi.Ultimate.Repositories
         {
             get
             {
+                if (_container == null)
+                    _container = new UnityContainer();
                 return _container;
             }
             private set
@@ -36,23 +38,7 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         static RepositoryFactory()
         {
-            var container = new UnityContainer();
-
-            //Map of relation between Interfaces and classes
-            container.RegisterType<IReleaseRepository, ReleaseRepository>(new TransientLifetimeManager());
-            container.RegisterType<IEnum_ReleaseStatusRepository, Enum_ReleaseStatusRepository>(new TransientLifetimeManager());
-            container.RegisterType<IWorkItemRepository, WorkItemRepository>(new TransientLifetimeManager());
-            container.RegisterType<IUltimateUnitOfWork, UltimateUnitOfWork>(new TransientLifetimeManager());
-            container.RegisterType<IHistoryRepository, HistoryRepository>(new TransientLifetimeManager());
-            container.RegisterType<IUltimateContext, UltimateContext>(new TransientLifetimeManager());
-
-            container.RegisterType<IUserRightsRepository, UserRightsRepository>(new TransientLifetimeManager());
-            container.RegisterType<IUserRolesRepository, UserRolesRepository>(new TransientLifetimeManager());
-            container.RegisterType<IPersonRepository, PersonRepository>(new TransientLifetimeManager());
-            container.RegisterType<IMeetingRepository, MeetingRepository>(new TransientLifetimeManager());
-            container.RegisterType<ICommunityRepository, CommunityRepository>(new TransientLifetimeManager());
-
-            _container = container;
+            SetDefaultDependencies();
         }
 
         /// <summary>
@@ -69,6 +55,24 @@ namespace Etsi.Ultimate.Repositories
             }
 
             return ret;
+        }
+
+        public static void SetDefaultDependencies()
+        {
+          
+            //Map of relation between Interfaces and classes
+            Container.RegisterType<IReleaseRepository, ReleaseRepository>(new TransientLifetimeManager());
+            Container.RegisterType<IEnum_ReleaseStatusRepository, Enum_ReleaseStatusRepository>(new TransientLifetimeManager());
+            Container.RegisterType<IWorkItemRepository, WorkItemRepository>(new TransientLifetimeManager());
+            Container.RegisterType<IUltimateUnitOfWork, UltimateUnitOfWork>(new TransientLifetimeManager());
+            Container.RegisterType<IHistoryRepository, HistoryRepository>(new TransientLifetimeManager());
+            Container.RegisterType<IUltimateContext, UltimateContext>(new TransientLifetimeManager());
+
+            Container.RegisterType<IUserRightsRepository, UserRightsRepository>(new TransientLifetimeManager());
+            Container.RegisterType<IUserRolesRepository, UserRolesRepository>(new TransientLifetimeManager());
+            Container.RegisterType<IPersonRepository, PersonRepository>(new TransientLifetimeManager());
+            Container.RegisterType<IMeetingRepository, MeetingRepository>(new TransientLifetimeManager());
+            Container.RegisterType<ICommunityRepository, CommunityRepository>(new TransientLifetimeManager());
         }
     }
 }

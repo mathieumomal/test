@@ -20,6 +20,8 @@ namespace Etsi.Ultimate.Services
         {
             get
             {
+                if (_container == null)
+                    _container = new UnityContainer();
                 return _container;
             }
             private set
@@ -36,11 +38,9 @@ namespace Etsi.Ultimate.Services
         {
             var container = new UnityContainer();
 
-            //Map of relation between Interfaces and classes
-            //container.RegisterType<IReleaseService, ReleaseService>(new TransientLifetimeManager());
-            //Use mock
-            container.RegisterType<IReleaseService, ReleaseService>(new TransientLifetimeManager());
-            container.RegisterType<IWorkItemService, WorkItemService>(new TransientLifetimeManager());   
+            SetDefaultDependencies();
+
+               
             _container = container;
         }
 
@@ -58,6 +58,12 @@ namespace Etsi.Ultimate.Services
             }
 
             return ret;
+        }
+
+        public static void SetDefaultDependencies()
+        {
+            Container.RegisterType<IReleaseService, ReleaseService>(new TransientLifetimeManager());
+            Container.RegisterType<IWorkItemService, WorkItemService>(new TransientLifetimeManager());   
         }
     }
 }

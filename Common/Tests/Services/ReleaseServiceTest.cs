@@ -20,7 +20,7 @@ using Etsi.Ultimate.Tests.FakeSets;
 
 namespace Etsi.Ultimate.Tests.Services
 {
-    class ReleaseServiceTest
+    class ReleaseServiceTest : BaseTest
     {
         private static readonly string CACHE_VALUE = "ULT_REPO_RIGHTS_ALL";
         private static readonly string RELEASE_CACHE_KEY = "ULT_BIZ_RELEASES_ALL";
@@ -32,6 +32,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             // Setup the dependency manager, let's test both Service and business
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
+            ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
 
             // Call the code
             var releaseService = new ReleaseService();
@@ -121,6 +122,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             // Setup the dependency manager, let's test both Service and business
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
+            ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
 
             // Call the code
             var releaseService = new ReleaseService();

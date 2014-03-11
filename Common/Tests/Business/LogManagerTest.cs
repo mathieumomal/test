@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Etsi.Ultimate.Tests.Business
 {
-    class LogManagerTest
+    class LogManagerTest: BaseTest
     {
         MemoryAppender memoryAppender;
 

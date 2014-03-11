@@ -17,7 +17,7 @@ namespace Etsi.Ultimate.Tests.Repositories
 {
     //TextFixture <=> class contains Test
     [TestFixture]
-    public class PersonRepositoryTest
+    public class PersonRepositoryTest : BaseTest
     {
         [Test]
         public void PersonRepository_GetAll()

@@ -8,7 +8,7 @@ using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Tests.DomainClasses
 {
-    class RightsContainerTest
+    class RightsContainerTest : BaseTest
     {
 
         [Test]

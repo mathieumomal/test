@@ -16,7 +16,7 @@ using Etsi.Ultimate.Utils;
 namespace Etsi.Ultimate.Tests.Repositories
 {
     [TestFixture]
-    class WorkItemRepositoryTest
+    class WorkItemRepositoryTest : BaseTest
     {
         [Test]
         public void WorkItem_GetAll()

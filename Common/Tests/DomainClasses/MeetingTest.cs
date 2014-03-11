@@ -9,7 +9,7 @@ using NUnit.Framework;
 namespace Etsi.Ultimate.Tests.DomainClasses
 {
     [Category("Domain")]
-    class MeetingTest
+    class MeetingTest : BaseTest
     {
         [Test]
         public void ToFullReference_OnPlenary()

@@ -21,6 +21,8 @@ namespace Etsi.Ultimate.Business
         {
             get
             {
+                if (_container == null)
+                    _container = new UnityContainer();
                 return _container;
             }
             private set
@@ -35,12 +37,8 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         static ManagerFactory()
         {
-            var container = new UnityContainer();
+            SetDefaultDependencies();
 
-            //Map of relation between Interfaces and classes
-            container.RegisterType<IRightsManager, RightsManager>(new TransientLifetimeManager());
-
-            _container = container;
         }
 
         /// <summary>
@@ -57,6 +55,12 @@ namespace Etsi.Ultimate.Business
             }
 
             return ret;
+        }
+
+        public static void SetDefaultDependencies()
+        {
+            //Map of relation between Interfaces and classes
+            Container.RegisterType<IRightsManager, RightsManager>(new TransientLifetimeManager());
         }
     }
 }

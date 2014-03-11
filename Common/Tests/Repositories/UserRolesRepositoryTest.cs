@@ -11,7 +11,7 @@ using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Tests.Repositories
 {
-    public class UserRolesRepositoryTest
+    public class UserRolesRepositoryTest : BaseTest
     {
 
         [Test]

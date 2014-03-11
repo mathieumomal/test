@@ -16,7 +16,7 @@ using System.Web;
 namespace Etsi.Ultimate.Tests.Repositories
 {
     [TestFixture]
-    public class CommunityRepositoryTest
+    public class CommunityRepositoryTest: BaseTest
     {
         [Test]
         public void CommunityRepository_GetAll()

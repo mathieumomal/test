@@ -16,7 +16,7 @@ using Etsi.Ultimate.Utils;
 namespace Etsi.Ultimate.Tests.Repositories
 {
     [TestFixture]
-    class TestReleaseRepository
+    class TestReleaseRepository : BaseTest
     {
         [Test]
         public void Release_GetAll()
