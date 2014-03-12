@@ -88,6 +88,37 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        public Dictionary<int, string> GetAllReleasesCodes(int personId)
+        {
+            Dictionary<int, string> allReleasesCodes = new Dictionary<int, string>();
+            List<DomainClasses.Release> allReleases = GetAllReleases(personId).Key.OrderBy(x => x.SortOrder).ToList();
+            foreach (Release r in allReleases)
+            {
+                allReleasesCodes.Add(r.Pk_ReleaseId, r.Code);
+            }
+            allReleasesCodes.Add(0, "No previous Release");
+            return allReleasesCodes;
+        }
+
+        public void EditRelease(Release release, int previousReleaseId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var releaseManager = new ReleaseManager();
+                releaseManager.UoW = uoW;
+                releaseManager.EditRelease(release, previousReleaseId);
+            }
+        }
+
+        public void CreateRelease(Release release, int previousReleaseId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var releaseManager = new ReleaseManager();
+                releaseManager.UoW = uoW;
+                releaseManager.CreateRelease(release, previousReleaseId);
+            }
+        }
         #endregion
     }
 }

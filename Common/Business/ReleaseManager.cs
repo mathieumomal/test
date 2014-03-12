@@ -147,6 +147,109 @@ namespace Etsi.Ultimate.Business
             ClearCache();
         }
 
+        public void CreateRelease(Release release, int previousReleaseId)
+        {
+            IReleaseRepository relRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+            relRepo.UoW = UoW;
+            List<Release> allReleases = new List<Release>();
+            Release previousRelease;            
+
+            if (previousReleaseId != 0)
+            {
+                previousRelease = relRepo.Find(previousReleaseId);
+                release.SortOrder = previousRelease.SortOrder + 10;
+                relRepo.InsertOrUpdate(release);
+                allReleases = relRepo.All.OrderBy(x => x.SortOrder).ToList();
+                foreach (Release r in allReleases)
+                {
+                    if (r.Pk_ReleaseId == release.Pk_ReleaseId)
+                        continue;
+                    if (r.SortOrder < previousRelease.SortOrder)
+                        break;
+                    if (r.SortOrder >= previousRelease.SortOrder)
+                    {
+                        r.SortOrder += 10;
+                        relRepo.InsertOrUpdate(r);
+                    }
+                }
+            }
+            else
+            {
+                var itemCount = allReleases.Count;
+                Release firstRelease = allReleases[itemCount - 1];
+                release.SortOrder = firstRelease.SortOrder;
+                relRepo.InsertOrUpdate(release);
+                foreach (Release r in allReleases)
+                {
+                    if (r.Pk_ReleaseId == release.Pk_ReleaseId)
+                        continue;
+                    else
+                    {
+                        r.SortOrder += 10;
+                        relRepo.InsertOrUpdate(r);
+                    }
+                }
+            }
+
+            relRepo.UoW.Save();
+
+            ClearCache();
+        }
+
+        public void EditRelease(Release release, int previousReleaseId)
+        {
+            IReleaseRepository relRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+            relRepo.UoW = UoW;
+            List<Release> allReleases = new List<Release>();
+            Release previousRelease;
+            Release releaseToEdit = relRepo.Find(release.Pk_ReleaseId);
+            int releaseToEditId = releaseToEdit.Pk_ReleaseId;
+            releaseToEdit = release;
+            releaseToEdit.Pk_ReleaseId = releaseToEditId;
+
+            if (previousReleaseId != 0)
+            {
+                previousRelease = relRepo.Find(previousReleaseId);
+                releaseToEdit.SortOrder = previousRelease.SortOrder + 10;
+                relRepo.InsertOrUpdate(releaseToEdit);
+                allReleases = relRepo.All.OrderBy(x => x.SortOrder).ToList();
+                foreach (Release r in allReleases)
+                {
+                    if (r.Pk_ReleaseId == releaseToEdit.Pk_ReleaseId)
+                        continue;
+                    if (r.SortOrder < previousRelease.SortOrder)
+                        break;
+                    if (r.SortOrder >= previousRelease.SortOrder)
+                    {
+                        r.SortOrder += 10;
+                        relRepo.InsertOrUpdate(r);
+                    }
+                }
+            }
+            else
+            {
+                var itemCount = allReleases.Count;
+                Release firstRelease = allReleases[itemCount-1];
+                releaseToEdit.SortOrder = firstRelease.SortOrder;
+                relRepo.InsertOrUpdate(releaseToEdit);
+                foreach (Release r in allReleases)
+                {
+                    if (r.Pk_ReleaseId == releaseToEdit.Pk_ReleaseId)
+                        continue;                    
+                    else
+                    {
+                        r.SortOrder += 10;
+                        relRepo.InsertOrUpdate(r);
+                    }
+                }
+            }
+            
+
+            relRepo.UoW.Save();
+
+            ClearCache();
+        }
+
         /// <summary>
         /// Clears the cache each time an action is performed on the releases.
         /// </summary>

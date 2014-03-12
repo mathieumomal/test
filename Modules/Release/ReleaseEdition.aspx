@@ -13,58 +13,13 @@
     <link rel="stylesheet" type="text/css" href="module.css">
     <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>  
-    <script src="JS/jquery.validate.js"></script>  
+    <script src="JS/jquery-validate.min.js"></script>  
     <script type="text/javascript">
 
         function closeAllModals() {
             var manager = GetRadWindowManager();
             manager.closeAll();
-        }
-
-        $().ready(function () {
-            
-
-            // validate signup form on keyup and submit
-            $("#ReleaseEditionForm").validate({
-                rules: {
-                    releaseCodeVal: {
-                        required: true,
-                        maxlength: 10
-                    },
-                    ReleaseNameVal: {
-                        required: true,
-                        maxlength: 50
-                    },
-                    ReleaseDescVal: {
-                        maxlength: 200
-                    },
-                    ReleaseShortNameVal: {
-                        required: true,
-                        maxlength: 20
-                    }
-                    /*previousReleaseVal: {
-                        required: true,
-                        minlength: 2
-                    }*/
-                },
-                messages: {
-                    releaseCodeVal: {
-                        required: "Please enter the release code",
-                        minlength: "10 characters max"
-                    },
-                    ReleaseNameVal: {
-                        required: "Please enter the release name",
-                        minlength: "50 characters max"
-                    },                   
-                    ReleaseShortNameVal: {
-                        required: "Please enter the release short name",
-                        minlength: "Your password must be at least 5 characters long"
-                    },
-                    
-                    ReleaseDescVal: "200 characters max"
-                }
-            });            
-        });
+        }        
     </script>
 </head>
 <body class="releaseDetailBody">
@@ -102,12 +57,11 @@
                             <td class="TabLineLeft"><asp:Label ID="ReleaseDescLbl" runat="server" ControlName="ReleaseDescLbl" Text="Release description:"></asp:Label>  </td>          
                             <td colspan="2" class="TabLineRight">
                                 <asp:TextBox runat="server" id="ReleaseDescVal" />
-                                <asp:Label ID="MissigDesc" runat="server" Visible="false"/>
                             </td>
             
                         </tr>
                         <tr>            
-                            <td class="TabLineLeft"><asp:Label ID="ReleaseShortNameLbl" runat="server" ControlName="ReleaseShortNameLbl" Text="Release short name:"></asp:Label></td>
+                            <td class="TabLineLeft"><asp:Label ID="ReleaseShortNameLbl" runat="server" ControlName="ReleaseShortNameLbl" Text="Release short name<span class='requiredField'>(*)</span>:"></asp:Label></td>
                             <td colspan="2" class="TabLineRight"><asp:TextBox ID="ReleaseShortNameVal" runat="server" ControlName="ReleaseShortNameVal"></asp:TextBox></td>
                         </tr>
                         <tr>            
@@ -126,7 +80,7 @@
                                                     <asp:Label ID="ReleaseFreezeStage1Meeting" runat="server" ControlName="ReleaseFreezeStage1Meeting" CssClass="SecndColFreezeStageMeeting"></asp:Label>                                                    
                                                 </td>
                                                 <td id="thirdColFreezeStage1">
-                                                    <telerik:RadDatePicker ID="ReleaseFreezeStage1Date" runat="server" ControlName="ReleaseFreezeStage1Date"></telerik:RadDatePicker>
+                                                    <asp:Label ID="ReleaseFreezeStage1Date" runat="server" ControlName="ReleaseFreezeStage1Date"></asp:Label>
                                                 </td>
                                             </tr>                                        
                                             <tr>
@@ -135,7 +89,7 @@
                                                     <asp:Label ID="ReleaseFreezeStage2Meeting" runat="server" ControlName="ReleaseFreezeStage2Meeting" CssClass="SecndColFreezeStageMeeting"></asp:Label>                                                    
                                                 </td>
                                                 <td id="thirdColFreezeStage2">
-                                                    <telerik:RadDatePicker ID="ReleaseFreezeStage2Date" runat="server" ControlName="ReleaseFreezeStage2Date"></telerik:RadDatePicker>
+                                                    <asp:Label ID="ReleaseFreezeStage2Date" runat="server" ControlName="ReleaseFreezeStage2Date"></asp:Label>
                                                 </td>
                                             </tr>                                        
                                             <tr>
@@ -144,7 +98,7 @@
                                                     <asp:Label ID="ReleaseFreezeStage3Meeting" runat="server" ControlName="ReleaseFreezeStage3Meeting" CssClass="SecndColFreezeStageMeeting"></asp:Label>                                                    
                                                 </td>
                                                 <td id="thirdColFreezeStage3">
-                                                    <telerik:RadDatePicker ID="ReleaseFreezeStage3Date" runat="server" ControlName="ReleaseFreezeStage3Date"></telerik:RadDatePicker>
+                                                    <asp:Label ID="ReleaseFreezeStage3Date" runat="server" ControlName="ReleaseFreezeStage3Date"></asp:Label>
                                                 </td>
                                             </tr>
                                         </table>
@@ -158,12 +112,14 @@
                         <tr>            
                             <td class="TabLineLeft"><asp:Label ID="ReleaseEndDateLbl" runat="server" ControlName="ReleaseEndDateLbl" Text="End date:"></asp:Label></td>
                             <td class="TabLine3colRight"><asp:Label ID="ReleaseEndDateMeetingVal" runat="server" ControlName="ReleaseEndDateMeetingVal"></asp:Label></td>
-                            <td class="TabLine3colRight"><telerik:RadDatePicker ID="ReleaseEndDateVal" runat="server" ControlName="ReleaseEndDateVal"></telerik:RadDatePicker></td>
-                        </tr>
+                            <td class="TabLine3colRight">
+                                <asp:Label ID="ReleaseEndDateVal" runat="server" ControlName="ReleaseEndDateVal"></asp:Label>                                
+                            </td>
+                        </tr>                       
                         <tr>            
                             <td class="TabLineLeft"><asp:Label ID="ReleaseClosureDateLbl" runat="server" ControlName="ReleaseClosureDateLbl" Text="Closure date:"></asp:Label></td>
                             <td><asp:Label ID="ReleaseClosureDateMeetingVal" runat="server" ControlName="ReleaseClosureDateMeetingVal"></asp:Label></td>
-                            <td><telerik:RadDatePicker ID="ReleaseClosureDateVal" runat="server" ControlName="ReleaseClosureDateVal"></telerik:RadDatePicker></td>
+                            <td><asp:Label ID="ReleaseClosureDateVal" runat="server" ControlName="ReleaseClosureDateVal"></asp:Label></td>
                         </tr>
                         <tr style="max-height: 150px; overflow-y: scroll; margin-top:5px"> 
                             <td colspan="3">
@@ -252,7 +208,7 @@
                  </telerik:RadPageView>              
             </telerik:RadMultiPage>     
            <div class="releaseDetailsAction">
-                <asp:LinkButton ID="SaveBtn" runat="server" Text="Save" CssClass="LinkButton" Visible="true"/>
+                <asp:Button ID="SaveBtn" runat="server" Text="Save" CssClass="LinkButton" Visible="true"/>
                 <asp:LinkButton ID="ExitBtn" runat="server" Text="Cancel" CssClass="LinkButton" OnClick="CloseReleaseDetails_Click"/>
            </div> 
            <script type="text/javascript">
@@ -283,12 +239,63 @@
                    $(window).resize(function () {
                        resizeElements();
                    });
+
                    $('#FreezeReleaseBtn').click(function (event) {
                        event.preventDefault();
                        closeAllModals();
                        window.radopen(null, "RadWindow_workItemImport");
                    });
+
+                   var validator = $("#ReleaseEditionForm").validate({
+                       onKeyup: true,
+                       invalidHandler: function() {
+                           alert( validator.numberOfInvalids() + " field(s) are invalid" );
+                       },
+                       eachValidField: function () {
+                           var frm = $("#ReleaseEditionForm"); 
+                           frm.validate();
+                           $(this).removeClass('error');
+                           
+                           if (frm.valid() == true) {
+                               $('#SaveBtn').removeAttr('disabled');
+                               $('#SaveBtn').removeClass('disabledLink');
+                               $('#SaveBtn').addClass('LinkButton');
+                           }
+                           
+                       },
+                       eachInvalidField: function () {
+                           $(this).addClass('error');
+                           $('#SaveBtn').attr('disabled', 'disabled');
+                           $('#SaveBtn').removeClass('LinkButton');
+                           $('#SaveBtn').addClass('disabledLink');
+                       },
+                       rules: {
+                           ReleaseStartDateVal$dateInput: {
+                               date: true
+                           },
+                           ReleaseFreezeStage1Date$dateInput: {
+                               date: true
+                           },
+                           ReleaseFreezeStage2Date$dateInput: {
+                               date: true
+                           },
+                           ReleaseFreezeStage3Date$dateInput: {
+                               date: true
+                           },
+                           ReleaseEndDateVal$dateInput: {
+                                   date: true
+                           },
+                           ReleaseClosureDateVal$dateInput: {
+                                   date: true
+                           }
+                        }
+	   
+                   });
+                   
                });
+
+               
+               
         </script>  
        </asp:Panel>       
        </div>        

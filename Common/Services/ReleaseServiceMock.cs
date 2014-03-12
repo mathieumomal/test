@@ -92,6 +92,20 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
+        public Dictionary<int, string> GetAllReleasesCodes(int personId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void EditRelease(Release release, int previousReleaseId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CreateRelease(Release release, int previousReleaseId)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

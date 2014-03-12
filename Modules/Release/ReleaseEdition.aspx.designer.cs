@@ -175,15 +175,6 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.WebControls.TextBox ReleaseDescVal;
         
         /// <summary>
-        /// Contrôle MissigDesc.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label MissigDesc;
-        
-        /// <summary>
         /// Contrôle ReleaseShortNameLbl.
         /// </summary>
         /// <remarks>
@@ -262,7 +253,7 @@ namespace Etsi.Ultimate.Module.Release {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadDatePicker ReleaseFreezeStage1Date;
+        protected global::System.Web.UI.WebControls.Label ReleaseFreezeStage1Date;
         
         /// <summary>
         /// Contrôle ReleaseFreezeStage2Lbl.
@@ -289,7 +280,7 @@ namespace Etsi.Ultimate.Module.Release {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadDatePicker ReleaseFreezeStage2Date;
+        protected global::System.Web.UI.WebControls.Label ReleaseFreezeStage2Date;
         
         /// <summary>
         /// Contrôle ReleaseFreezeStage3Lbl.
@@ -316,7 +307,7 @@ namespace Etsi.Ultimate.Module.Release {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadDatePicker ReleaseFreezeStage3Date;
+        protected global::System.Web.UI.WebControls.Label ReleaseFreezeStage3Date;
         
         /// <summary>
         /// Contrôle ReleaseEndDateLbl.
@@ -343,7 +334,7 @@ namespace Etsi.Ultimate.Module.Release {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadDatePicker ReleaseEndDateVal;
+        protected global::System.Web.UI.WebControls.Label ReleaseEndDateVal;
         
         /// <summary>
         /// Contrôle ReleaseClosureDateLbl.
@@ -370,7 +361,7 @@ namespace Etsi.Ultimate.Module.Release {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadDatePicker ReleaseClosureDateVal;
+        protected global::System.Web.UI.WebControls.Label ReleaseClosureDateVal;
         
         /// <summary>
         /// Contrôle releaseRemarks.
@@ -577,7 +568,7 @@ namespace Etsi.Ultimate.Module.Release {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton SaveBtn;
+        protected global::System.Web.UI.WebControls.Button SaveBtn;
         
         /// <summary>
         /// Contrôle ExitBtn.

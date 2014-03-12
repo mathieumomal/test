@@ -30,18 +30,16 @@ namespace Etsi.Ultimate.Module.Release
 
                 LoadReleaseDetails();
             }  
-        }
-    
+        }       
 
-    private void LoadReleaseDetails()
+        private void LoadReleaseDetails()
         {
             IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
             KeyValuePair<DomainClasses.Release, DomainClasses.UserRightsContainer> releaseRightsObject = svc.GetReleaseById(UserId, ReleaseId.Value);
             Domain.Release release = releaseRightsObject.Key;
             DomainClasses.UserRightsContainer userRights = releaseRightsObject.Value;
 
-            releaseCodeVal.Attributes.Add("required", "true");
-            ReleaseNameVal.Attributes.Add("required", "true");
+            dataValidationSetUp();
 
             if (action.Equals("Edit"))
             {
@@ -68,9 +66,7 @@ namespace Etsi.Ultimate.Module.Release
                             ReleaseDetailRadMultiPage.Height = new System.Web.UI.WebControls.Unit(750, UnitType.Pixel);
                             BuildTabsDisplay(action);
                             FillGeneralTab(userRights, release);
-
-                            if (userRights.HasRight(Domain.Enum_UserRights.Release_ViewCompleteDetails))
-                                FillAdminTab(release, svc.GetPreviousReleaseCode(UserId, release.Pk_ReleaseId));
+                            FillAdminTab(release, svc.GetAllReleasesCodes(UserId));
 
 
                             //Set Remarks control
@@ -81,10 +77,10 @@ namespace Etsi.Ultimate.Module.Release
 
                             //Set History control
                             HistoryControl htr = releaseHistory as HistoryControl;
-                            htr.DataSource = null;
-                            htr.ScrollHeight = (int)ReleaseDetailRadMultiPage.Height.Value - 10;
+                            htr.DataSource = release.Histories.ToList();
+                            htr.ScrollHeight = (int)ReleaseDetailRadMultiPage.Height.Value - 50;
                         }
-                    }
+                    }                    
                 }
                 else
                 {
@@ -101,6 +97,8 @@ namespace Etsi.Ultimate.Module.Release
                 rmk.IsEditMode = true;
                 rmk.UserRights = userRights;
                 rmk.DataSource = null;
+                SaveBtn.Attributes.Add("disabled", "disabled");
+                SaveBtn.CssClass = "disabledLink";
             }
             else {
                 releaseDetailsBody.Visible = false;
@@ -160,14 +158,7 @@ namespace Etsi.Ultimate.Module.Release
 
             ReleaseNameVal.Text = release.Name;
 
-            if (release.Description != null)
-                ReleaseDescVal.Attributes.Add("href", release.Description);
-            else
-            {
-                ReleaseDescVal.Visible = false;
-                MissigDesc.Visible = true;
-                MissigDesc.Text = CONST_EMPTY_FIELD;
-            }
+            ReleaseDescVal.Text = release.Description;
 
             ReleaseShortNameVal.Text = release.ShortName;
             if (release.StartDate != null)
@@ -179,37 +170,37 @@ namespace Etsi.Ultimate.Module.Release
             
             ReleaseFreezeStage1Meeting.Text = ((release.Stage1FreezeMtgRef != null) ) ? release.Stage1FreezeMtgRef : CONST_EMPTY_FIELD;
             if (release.Stage1FreezeDate != null)
-                ReleaseFreezeStage1Date.SelectedDate =release.Stage1FreezeDate;
+                ReleaseFreezeStage1Date.Text = Convert.ToDateTime(release.Stage1FreezeDate).ToString("yyyy-MM-dd");
             else
-                ReleaseFreezeStage1Date.SelectedDate = null;
+                ReleaseFreezeStage1Date.Text = CONST_EMPTY_FIELD;
 
             ReleaseFreezeStage2Meeting.Text = ((release.Stage2FreezeMtgRef != null) ) ? release.Stage2FreezeMtgRef : CONST_EMPTY_FIELD;
             if (release.Stage2FreezeDate != null)
-                ReleaseFreezeStage2Date.SelectedDate = release.Stage2FreezeDate;
+                ReleaseFreezeStage2Date.Text = Convert.ToDateTime(release.Stage2FreezeDate).ToString("yyyy-MM-dd");
             else
-                ReleaseFreezeStage2Date.SelectedDate = null;
+                ReleaseFreezeStage2Date.Text = CONST_EMPTY_FIELD;
 
             ReleaseFreezeStage3Meeting.Text = ((release.Stage3FreezeMtgRef != null) ) ? release.Stage3FreezeMtgRef : CONST_EMPTY_FIELD;
 
             if (release.Stage3FreezeDate != null)
-                ReleaseFreezeStage3Date.SelectedDate = release.Stage3FreezeDate;
+                ReleaseFreezeStage3Date.Text = Convert.ToDateTime(release.Stage3FreezeDate).ToString("yyyy-MM-dd");
             else
-                ReleaseFreezeStage3Date.SelectedDate = null;
+                ReleaseFreezeStage3Date.Text = CONST_EMPTY_FIELD;
                 
             
             
 
             if (release.EndDate != null)
-                ReleaseEndDateVal.SelectedDate = release.EndDate;
+                ReleaseEndDateVal.Text = Convert.ToDateTime(release.EndDate).ToString("yyyy-MM-dd");
             else
-                ReleaseEndDateVal.SelectedDate = null;
+                ReleaseEndDateVal.Text = CONST_EMPTY_FIELD;
 
             ReleaseEndDateMeetingVal.Text = (release.EndMtgRef == null) ? CONST_EMPTY_FIELD : release.EndMtgRef;
 
             if (release.ClosureDate != null)
-                ReleaseClosureDateVal.SelectedDate = release.ClosureDate;
+                ReleaseClosureDateVal.Text = Convert.ToDateTime(release.ClosureDate).ToString("yyyy-MM-dd"); 
             else
-                ReleaseClosureDateVal.SelectedDate = null;
+                ReleaseClosureDateVal.Text = CONST_EMPTY_FIELD;
 
             ReleaseClosureDateMeetingVal.Text = (release.ClosureMtgRef == null) ? CONST_EMPTY_FIELD : release.ClosureMtgRef;
 
@@ -221,20 +212,42 @@ namespace Etsi.Ultimate.Module.Release
         /// </summary>
         /// <param name="release"></param>
         /// <param name="previousCode"></param>
-        private void FillAdminTab(Domain.Release release, string previousCode)
+        private void FillAdminTab(Domain.Release release, Dictionary<int, string> allReleasesCodes)
         {
-            previousReleaseVal.Text = (previousCode == null) ? CONST_EMPTY_FIELD : previousCode;
-            ITURCodeVal.Text = (release.IturCode == null) ? CONST_EMPTY_FIELD : release.IturCode;
-            
-            Release2GDecimalVal.Text = (release.Version2g == null) ? CONST_EMPTY_FIELD : release.Version2g.ToString();
-            Release2GDecimalVal.Attributes.Add("type", "number");
-            Release3GDecimalVal.Text = (release.Version3g == null) ? CONST_EMPTY_FIELD : release.Version3g.ToString();
+            //previousReleaseVal.Text = (previousCode == null) ? CONST_EMPTY_FIELD : previousCode;
 
-            Release2GVal.Text = (release.Version2gBase36 == null) ? CONST_EMPTY_FIELD : release.Version2gBase36;
-            Release3GVal.Text = (release.Version3gBase36 == null) ? CONST_EMPTY_FIELD : release.Version3gBase36;
+            previousReleaseVal.DataTextField = "Value";
+            previousReleaseVal.DataValueField = "Key";
+            previousReleaseVal.DataSource = allReleasesCodes;  
+            previousReleaseVal.DataBind();
 
-            WPMCodes2GVal.Text = (release.WpmCode2g == null) ? CONST_EMPTY_FIELD : release.WpmCode2g.ToString();
-            WPMCodes3GVal.Text = (release.WpmCode3g == null) ? CONST_EMPTY_FIELD : release.WpmCode3g.ToString();
+            if (action.Equals("Edit"))
+            {
+                previousReleaseVal.SelectedValue = release.Pk_ReleaseId.ToString();
+                previousReleaseVal.SelectedIndex = previousReleaseVal.SelectedIndex - 1; 
+
+                ITURCodeVal.Text = (release.IturCode == null) ? CONST_EMPTY_FIELD : release.IturCode;
+
+                Release2GDecimalVal.Text = (release.Version2g == null) ? CONST_EMPTY_FIELD : release.Version2g.ToString();
+                Release3GDecimalVal.Text = (release.Version3g == null) ? CONST_EMPTY_FIELD : release.Version3g.ToString();
+
+                Release2GVal.Text = (release.Version2gBase36 == null) ? CONST_EMPTY_FIELD : release.Version2gBase36;
+                Release3GVal.Text = (release.Version3gBase36 == null) ? CONST_EMPTY_FIELD : release.Version3gBase36;
+
+                WPMCodes2GVal.Text = (release.WpmCode2g == null) ? CONST_EMPTY_FIELD : release.WpmCode2g.ToString();
+                WPMCodes3GVal.Text = (release.WpmCode3g == null) ? CONST_EMPTY_FIELD : release.WpmCode3g.ToString();
+            }
+        }
+
+        private void dataValidationSetUp()
+        {
+            releaseCodeVal.Attributes.Add("data-required", "true");
+
+            ReleaseNameVal.Attributes.Add("data-required", "true");
+            Release2GDecimalVal.Attributes.Add("data-pattern", "^[0-9]+$");
+            Release3GDecimalVal.Attributes.Add("data-pattern", "^[0-9]+$");
+            ReleaseShortNameVal.Attributes.Add("data-required", "true");
+            previousReleaseVal.Attributes.Add("data-required", "true");   
         }
 
         /// <summary>

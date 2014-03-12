@@ -37,5 +37,11 @@ namespace Etsi.Ultimate.Services
         /// <param name="closureMtgId">Closure Meeting Reference ID</param>
         /// <param name="personID">Person ID</param>
         void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId, int personID);
+
+        Dictionary<int, string> GetAllReleasesCodes(int personId);
+
+        void EditRelease(Release release, int previousReleaseId);
+
+        void CreateRelease(Release release, int previousReleaseId);
     }
 }

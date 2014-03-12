@@ -21,7 +21,7 @@ namespace Etsi.Ultimate.Module.Release
         public static readonly string DsId_Key = "ETSI_DS_ID";
 
         private int UserId;
-        private Nullable<int> ReleaseId;
+        public Nullable<int> ReleaseId;
         #endregion
 
         
@@ -69,7 +69,7 @@ namespace Etsi.Ultimate.Module.Release
                     //Set History control
                     HistoryControl htr = releaseHistory as HistoryControl;
                     htr.DataSource = release.Histories.ToList();
-                    htr.ScrollHeight = (int)ReleaseDetailRadMultiPage.Height.Value - 10;
+                    htr.ScrollHeight = (int)ReleaseDetailRadMultiPage.Height.Value - 50;
 
                     ManageButtonDisplay(release, userRights);
                 }
@@ -269,6 +269,7 @@ namespace Etsi.Ultimate.Module.Release
 
         protected void EditReleaseDetails_Click(object sender, EventArgs e)
         {
+            GetRequestParameters();
             Response.Redirect("ReleaseEdition.aspx?releaseId=" + ReleaseId.Value+"&action=Edit");
         }
 
