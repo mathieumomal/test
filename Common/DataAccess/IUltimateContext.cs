@@ -24,6 +24,7 @@ namespace Etsi.Ultimate.DataAccess
         IDbSet<WorkItems_ResponsibleGroups> WorkItems_ResponsibleGroups { get; }
         IDbSet<View_Persons> View_Persons { get; }
         IDbSet<Community> Communities { get; }
+        IDbSet<ShortUrl> ShortUrl { get; }
 
         void SetModified(object entity);
         void SetAdded(object entity);

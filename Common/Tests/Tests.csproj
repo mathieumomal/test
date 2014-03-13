@@ -86,12 +86,14 @@
     <Compile Include="FakeRepositories\CommunityFakeRepository.cs" />
     <Compile Include="FakeRepositories\MeetingsFakeRepository.cs" />
     <Compile Include="FakeRepositories\PersonFakeRepository.cs" />
+    <Compile Include="FakeRepositories\ShortUrlFakeRepository.cs" />
     <Compile Include="FakeRepositories\WorkItemFakeRepository.cs" />
     <Compile Include="FakeRepositories\ReleaseFakeRepository.cs" />
     <Compile Include="FakeRepositories\RightsFakeRepository.cs" />
     <Compile Include="FakeRepositories\UserRolesFakeRepository.cs" />
     <Compile Include="FakeSets\CommunityFakeDBSet.cs" />
     <Compile Include="FakeSets\PersonFakeDBSet.cs" />
+    <Compile Include="FakeSets\ShortUrlFakeDBSet.cs" />
     <Compile Include="FakeSets\WorkItemFakeDBSet.cs" />
     <Compile Include="FakeSets\UsersAdHocRolesFakeDBSet.cs" />
     <Compile Include="FakeSets\UserGroupsFakeDBSet.cs" />
@@ -105,12 +107,14 @@
     <Compile Include="Repositories\CommunityRepositoryTest.cs" />
     <Compile Include="Repositories\MeetingRepositoryTest.cs" />
     <Compile Include="Repositories\PersonRepositoryTest.cs" />
+    <Compile Include="Repositories\ShortUrlRepositoryTest.cs" />
     <Compile Include="Repositories\WorkItemRepositoryTest.cs" />
     <Compile Include="Repositories\UserRolesRepositoryTest.cs" />
     <Compile Include="Repositories\RightsRepositoryTest.cs" />
     <Compile Include="Repositories\TestEnum_ReleaseStatusRepository.cs" />
     <Compile Include="Repositories\TestReleaseRepository.cs" />
     <Compile Include="Services\ReleaseServiceTest.cs" />
+    <Compile Include="Services\UrlServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

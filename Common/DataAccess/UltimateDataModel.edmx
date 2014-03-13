@@ -10,6 +10,7 @@
           <EntitySet Name="History" EntityType="Etsi.Ultimate.DataAccess.Store.History" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Releases" EntityType="Etsi.Ultimate.DataAccess.Store.Releases" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Remarks" EntityType="Etsi.Ultimate.DataAccess.Store.Remarks" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ShortUrl" EntityType="Etsi.Ultimate.DataAccess.Store.ShortUrl" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="WorkItems" EntityType="Etsi.Ultimate.DataAccess.Store.WorkItems" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="WorkItems_ResponsibleGroups" EntityType="Etsi.Ultimate.DataAccess.Store.WorkItems_ResponsibleGroups" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Users_AdHoc_Roles" EntityType="Etsi.Ultimate.DataAccess.Store.Users_AdHoc_Roles" store:Type="Views" store:Schema="dbo" store:Name="Users_AdHoc_Roles">
@@ -178,6 +179,14 @@
           <Property Name="RemarkText" Type="nvarchar" MaxLength="255" />
           <Property Name="PersonName" Type="varchar" MaxLength="50" StoreGeneratedPattern="Computed" />
         </EntityType>
+        <EntityType Name="ShortUrl">
+          <Key>
+            <PropertyRef Name="Pk_Id" />
+          </Key>
+          <Property Name="Pk_Id" Type="int" Nullable="false" />
+          <Property Name="Token" Type="nvarchar" Nullable="false" MaxLength="10" />
+          <Property Name="Url" Type="nvarchar" Nullable="false" MaxLength="200" />
+        </EntityType>
         <EntityType Name="WorkItems">
           <Key>
             <PropertyRef Name="Pk_WorkItemUid" />
@@ -219,8 +228,8 @@
           <Property Name="ResponsibleGroup" Type="varchar" MaxLength="5" />
           <Property Name="IsPrimeResponsible" Type="bit" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.Users_AdHoc_Roles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_AdHoc_Roles » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="Users_AdHoc_Roles">
           <Key>
@@ -231,8 +240,8 @@
           <Property Name="PERSON_ID" Type="nvarchar" MaxLength="3750" />
           <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="50" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.Users_Groups' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_Groups » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="Users_Groups">
           <Key>
@@ -245,8 +254,8 @@
           <Property Name="TB_ID" Type="int" />
           <Property Name="PERS_ROLE_CODE" Type="varchar" Nullable="false" MaxLength="12" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_Communities' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Communities » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_Communities">
           <Key>
@@ -258,8 +267,8 @@
           <Property Name="ActiveCode" Type="varchar" MaxLength="12" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_Meetings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Meetings » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_Meetings">
           <Key>
@@ -296,8 +305,8 @@
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
           <Property Name="MtgShortRef" Type="varchar" MaxLength="31" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_Persons' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Persons » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_Persons">
           <Key>
@@ -447,6 +456,7 @@
             <End Role="WorkItems_ResponsibleGroups" EntitySet="WorkItems_ResponsibleGroups" />
           </AssociationSet>
           <EntitySet Name="Meetings" EntityType="Etsi.Ultimate.DataAccess.Meeting" />
+          <EntitySet Name="ShortUrls" EntityType="Etsi.Ultimate.DataAccess.ShortUrl" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -743,6 +753,14 @@
           <Property Type="String" Name="ShortName" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="MtgShortRef" MaxLength="31" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="ShortUrl">
+          <Key>
+            <PropertyRef Name="Pk_Id" />
+          </Key>
+          <Property Type="Int32" Name="Pk_Id" Nullable="false" />
+          <Property Type="String" Name="Token" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Url" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -940,6 +958,15 @@
                 <ScalarProperty Name="MTG_TYPE_CODE" ColumnName="MTG_TYPE_CODE" />
                 <ScalarProperty Name="MTG_CATEG_CODE" ColumnName="MTG_CATEG_CODE" />
                 <ScalarProperty Name="MTG_ID" ColumnName="MTG_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ShortUrls">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ShortUrl">
+              <MappingFragment StoreEntitySet="ShortUrl">
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Token" ColumnName="Token" />
+                <ScalarProperty Name="Pk_Id" ColumnName="Pk_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

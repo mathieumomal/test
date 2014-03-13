@@ -46,6 +46,12 @@ namespace Etsi.Ultimate.Tests
         public System.Data.Entity.IDbSet<Community> Communities
         { get; set; }
 
+        public System.Data.Entity.IDbSet<ShortUrl> ShortUrl
+        {
+            get;
+            set;
+        }
+
 
         public void SetModified(object entity)
         {
@@ -69,7 +75,8 @@ namespace Etsi.Ultimate.Tests
                 Enum_ReleaseStatus.Add((Enum_ReleaseStatus)entity);
             else if (entity.GetType() == typeof(WorkItem))
                 WorkItems.Add((WorkItem)entity);
-
+            else if (entity.GetType() == typeof(ShortUrl))
+                ShortUrl.Add((ShortUrl)entity);
             else
                 throw new NotImplementedException("Something is missing in the FakeContext");
         }

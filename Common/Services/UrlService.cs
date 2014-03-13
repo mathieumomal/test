@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.Business;
+using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Services
 {
@@ -17,12 +20,21 @@ namespace Etsi.Ultimate.Services
 
         public string CreateShortUrl(int moduleId, string baseAddress, Dictionary<string, string> urlParams)
         {
-            throw new NotImplementedException();
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                urlParams.Remove(Enum_WorkItemFilters.TbId.ToString());
+                var urlManager = new UrlManager();
+                return urlManager.CreateShortUrl(moduleId, baseAddress, urlParams);
+            }
         }
 
         public string GetFullUrlForToken(string token)
         {
-            throw new NotImplementedException();
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var urlManager = new UrlManager();
+                return urlManager.GetFullUrlForToken(token);
+            }
         }
 
         #endregion

@@ -59,6 +59,7 @@
     <Compile Include="IUltimateUnitOfWork.cs" />
     <Compile Include="ReleaseRepository.cs" />
     <Compile Include="RepositoryFactory.cs" />
+    <Compile Include="UrlRepository.cs" />
     <Compile Include="UserRightsRepository.cs" />
     <Compile Include="UltimateUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

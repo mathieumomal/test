@@ -51,7 +51,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IUrlBusiness.cs" />
     <Compile Include="MeetingManager.cs" />
     <Compile Include="ManagerFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

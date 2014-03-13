@@ -24,6 +24,7 @@
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WorkItems_WorkItems" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.WorkItems_ResponsibleGroups" Width="1.5" PointX="5.6023676402877864" PointY="30.965353458638003" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WorkItems_ResponsibleGroups_WorkItems" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.ShortUrl" Width="1.5" PointX="6.9469218938364286" PointY="14.412504187977175" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
