@@ -88,6 +88,13 @@
     <Compile Include="RemarksControl.ascx.designer.cs">
       <DependentUpon>RemarksControl.ascx</DependentUpon>
     </Compile>
+    <Compile Include="ShareUrlControl.ascx.cs">
+      <DependentUpon>ShareUrlControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ShareUrlControl.ascx.designer.cs">
+      <DependentUpon>ShareUrlControl.ascx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="MeetingControl.ascx" />
@@ -96,6 +103,7 @@
     <Content Include="module.css" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="RemarksControl.ascx" />
+    <Content Include="ShareUrlControl.ascx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Controls.dnn" />
@@ -129,7 +137,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>53383</DevelopmentServerPort>
           <DevelopmentServerVPath>
