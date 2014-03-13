@@ -27,7 +27,7 @@ namespace Etsi.Ultimate.Business
         {
             IMeetingRepository repo = RepositoryFactory.Resolve<IMeetingRepository>();
 
-            return repo.All.Where(x => x.MtgShortRef.Contains(SearchText)).ToList();
+            return repo.All.Where(x => x.MtgShortRef.Contains(SearchText) || x.LOC_CITY.Contains(SearchText) || x.LOC_CTY_CODE.Contains(SearchText)).ToList();
         }
 
         /// <summary>
