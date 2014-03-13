@@ -48,9 +48,6 @@
       [View_Meetings].[MTG_YEAR] AS [MTG_YEAR], 
       [View_Meetings].[MTG_SEQNO] AS [MTG_SEQNO], 
       [View_Meetings].[MTG_TITLE] AS [MTG_TITLE], 
-      [View_Meetings].[RESP_DEPT] AS [RESP_DEPT], 
-      [View_Meetings].[OWNER_ID] AS [OWNER_ID], 
-      [View_Meetings].[OWNER_DEPT] AS [OWNER_DEPT], 
       [View_Meetings].[OWNERSHIP_LEVEL] AS [OWNERSHIP_LEVEL], 
       [View_Meetings].[INVITATION_DATE] AS [INVITATION_DATE], 
       [View_Meetings].[DEADLINE_DATE] AS [DEADLINE_DATE], 
@@ -63,31 +60,13 @@
       [View_Meetings].[LOC_ZIP] AS [LOC_ZIP], 
       [View_Meetings].[LOC_CITY] AS [LOC_CITY], 
       [View_Meetings].[LOC_CTY_CODE] AS [LOC_CTY_CODE], 
-      [View_Meetings].[BUILDING] AS [BUILDING], 
-      [View_Meetings].[LOC_FREE_TEXT] AS [LOC_FREE_TEXT], 
-      [View_Meetings].[SUM_REF] AS [SUM_REF], 
-      [View_Meetings].[SUM_REC_FLG] AS [SUM_REC_FLG], 
-      [View_Meetings].[SUM_REC_DATE] AS [SUM_REC_DATE], 
-      [View_Meetings].[SUM_DESP_DATE] AS [SUM_DESP_DATE], 
-      [View_Meetings].[MAIN_REF] AS [MAIN_REF], 
-      [View_Meetings].[MAIN_REC_FLG] AS [MAIN_REC_FLG], 
-      [View_Meetings].[MAIN_REC_DATE] AS [MAIN_REC_DATE], 
-      [View_Meetings].[MAIN_DESP_DATE] AS [MAIN_DESP_DATE], 
-      [View_Meetings].[SUB_GROUP_CODE] AS [SUB_GROUP_CODE], 
       [View_Meetings].[MTGREF_MASK] AS [MTGREF_MASK], 
-      [View_Meetings].[OWNER_LIST_ID] AS [OWNER_LIST_ID], 
-      [View_Meetings].[MOD_TS] AS [MOD_TS], 
-      [View_Meetings].[MOD_BY] AS [MOD_BY], 
-      [View_Meetings].[DOC_PERCENT_PAPER] AS [DOC_PERCENT_PAPER], 
-      [View_Meetings].[DOC_PERCENT_ELECTRONIC] AS [DOC_PERCENT_ELECTRONIC], 
       [View_Meetings].[START_REGISTRATION_DATE] AS [START_REGISTRATION_DATE], 
       [View_Meetings].[LOCATION_DETAILS_URL] AS [LOCATION_DETAILS_URL], 
-      [View_Meetings].[WEB_MOD_BY] AS [WEB_MOD_BY], 
-      [View_Meetings].[WEB_MOD_TS] AS [WEB_MOD_TS], 
-      [View_Meetings].[REQUESTER_ID] AS [REQUESTER_ID], 
-      [View_Meetings].[REQUEST_DATE] AS [REQUEST_DATE], 
       [View_Meetings].[TB_ID] AS [TB_ID], 
-      [View_Meetings].[Creation_Date] AS [Creation_Date]
+      [View_Meetings].[Creation_Date] AS [Creation_Date], 
+      [View_Meetings].[ShortName] AS [ShortName], 
+      [View_Meetings].[MtgShortRef] AS [MtgShortRef]
       FROM [dbo].[View_Meetings] AS [View_Meetings]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="View_Persons" EntityType="Etsi.Ultimate.DataAccess.Store.View_Persons" store:Type="Views" store:Schema="dbo" store:Name="View_Persons">
@@ -286,9 +265,6 @@
           <Key>
             <PropertyRef Name="MTG_ID" />
             <PropertyRef Name="LOCAL_FLG" />
-            <PropertyRef Name="SUM_REC_FLG" />
-            <PropertyRef Name="MAIN_REC_FLG" />
-            <PropertyRef Name="MOD_TS" />
           </Key>
           <Property Name="MTG_ID" Type="int" Nullable="false" />
           <Property Name="MTG_CATEG_CODE" Type="varchar" MaxLength="12" />
@@ -300,9 +276,6 @@
           <Property Name="MTG_YEAR" Type="int" />
           <Property Name="MTG_SEQNO" Type="real" />
           <Property Name="MTG_TITLE" Type="varchar" MaxLength="70" />
-          <Property Name="RESP_DEPT" Type="varchar" MaxLength="3" />
-          <Property Name="OWNER_ID" Type="int" />
-          <Property Name="OWNER_DEPT" Type="varchar" MaxLength="3" />
           <Property Name="OWNERSHIP_LEVEL" Type="varchar" MaxLength="12" />
           <Property Name="INVITATION_DATE" Type="datetime" />
           <Property Name="DEADLINE_DATE" Type="datetime" />
@@ -315,31 +288,13 @@
           <Property Name="LOC_ZIP" Type="varchar" MaxLength="10" />
           <Property Name="LOC_CITY" Type="varchar" MaxLength="30" />
           <Property Name="LOC_CTY_CODE" Type="varchar" MaxLength="2" />
-          <Property Name="BUILDING" Type="varchar" MaxLength="20" />
-          <Property Name="LOC_FREE_TEXT" Type="varchar" MaxLength="255" />
-          <Property Name="SUM_REF" Type="varchar" MaxLength="40" />
-          <Property Name="SUM_REC_FLG" Type="varchar" Nullable="false" MaxLength="1" />
-          <Property Name="SUM_REC_DATE" Type="datetime" />
-          <Property Name="SUM_DESP_DATE" Type="datetime" />
-          <Property Name="MAIN_REF" Type="varchar" MaxLength="40" />
-          <Property Name="MAIN_REC_FLG" Type="varchar" Nullable="false" MaxLength="1" />
-          <Property Name="MAIN_REC_DATE" Type="datetime" />
-          <Property Name="MAIN_DESP_DATE" Type="datetime" />
-          <Property Name="SUB_GROUP_CODE" Type="varchar" MaxLength="5" />
           <Property Name="MTGREF_MASK" Type="varchar" MaxLength="8" />
-          <Property Name="OWNER_LIST_ID" Type="int" />
-          <Property Name="MOD_TS" Type="datetime" Nullable="false" />
-          <Property Name="MOD_BY" Type="varchar" MaxLength="12" />
-          <Property Name="DOC_PERCENT_PAPER" Type="int" />
-          <Property Name="DOC_PERCENT_ELECTRONIC" Type="int" />
           <Property Name="START_REGISTRATION_DATE" Type="datetime" />
           <Property Name="LOCATION_DETAILS_URL" Type="varchar" MaxLength="120" />
-          <Property Name="WEB_MOD_BY" Type="varchar" MaxLength="12" />
-          <Property Name="WEB_MOD_TS" Type="datetime" />
-          <Property Name="REQUESTER_ID" Type="int" />
-          <Property Name="REQUEST_DATE" Type="datetime" />
           <Property Name="TB_ID" Type="int" />
           <Property Name="Creation_Date" Type="datetime" />
+          <Property Name="ShortName" Type="varchar" MaxLength="10" />
+          <Property Name="MtgShortRef" Type="varchar" MaxLength="31" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'U3GPPDB.dbo.View_Persons' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
@@ -451,7 +406,6 @@
         <EntityContainer Name="UltimateContext" p1:LazyLoadingEnabled="true">
           <EntitySet Name="Enum_ReleaseStatus" EntityType="Etsi.Ultimate.DataAccess.Enum_ReleaseStatus" />
           <EntitySet Name="Releases" EntityType="Etsi.Ultimate.DataAccess.Release" />
-          <EntitySet Name="Meetings" EntityType="Etsi.Ultimate.DataAccess.Meeting" />
           <AssociationSet Name="FK_Releases_Enum_ReleaseStatus" Association="Etsi.Ultimate.DataAccess.FK_Releases_Enum_ReleaseStatus">
             <End Role="Enum_ReleaseStatus" EntitySet="Enum_ReleaseStatus" />
             <End Role="Releases" EntitySet="Releases" />
@@ -492,6 +446,7 @@
             <End Role="WorkItem" EntitySet="WorkItems" />
             <End Role="WorkItems_ResponsibleGroups" EntitySet="WorkItems_ResponsibleGroups" />
           </AssociationSet>
+          <EntitySet Name="Meetings" EntityType="Etsi.Ultimate.DataAccess.Meeting" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -541,65 +496,6 @@
           <Property Type="DateTime" Name="LAST_MOD_TS" Precision="3" />
           <NavigationProperty Name="Histories" Relationship="Etsi.Ultimate.DataAccess.FK_History_Releases" FromRole="Release" ToRole="History" />
           <NavigationProperty Name="WorkItems" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItems_Releases" FromRole="Release" ToRole="WorkItem" />
-        </EntityType>
-        <EntityType Name="Meeting">
-          <Key>
-            <PropertyRef Name="MTG_ID" />
-            <PropertyRef Name="LOCAL_FLG" />
-            <PropertyRef Name="SUM_REC_FLG" />
-            <PropertyRef Name="MAIN_REC_FLG" />
-            <PropertyRef Name="MOD_TS" />
-          </Key>
-          <Property Name="MTG_ID" Type="Int32" Nullable="false" />
-          <Property Name="MTG_CATEG_CODE" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
-          <Property Name="MTG_TYPE_CODE" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
-          <Property Name="MTGS_CODE" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
-          <Property Name="MTG_REF" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
-          <Property Name="START_DATE" Type="DateTime" Precision="3" />
-          <Property Name="END_DATE" Type="DateTime" Precision="3" />
-          <Property Name="MTG_YEAR" Type="Int32" />
-          <Property Name="MTG_SEQNO" Type="Single" />
-          <Property Name="MTG_TITLE" Type="String" MaxLength="70" Unicode="false" FixedLength="false" />
-          <Property Name="RESP_DEPT" Type="String" MaxLength="3" Unicode="false" FixedLength="false" />
-          <Property Name="OWNER_ID" Type="Int32" />
-          <Property Name="OWNER_DEPT" Type="String" MaxLength="3" Unicode="false" FixedLength="false" />
-          <Property Name="OWNERSHIP_LEVEL" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
-          <Property Name="INVITATION_DATE" Type="DateTime" Precision="3" />
-          <Property Name="DEADLINE_DATE" Type="DateTime" Precision="3" />
-          <Property Name="DURATION" Type="Int32" />
-          <Property Name="INVITED_NUMB" Type="Int32" />
-          <Property Name="ATTENDANT_NUMB" Type="Int32" />
-          <Property Name="LOCAL_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
-          <Property Name="ORGA_ID" Type="Int32" />
-          <Property Name="LOC_ADDRESS" Type="String" MaxLength="165" Unicode="false" FixedLength="false" />
-          <Property Name="LOC_ZIP" Type="String" MaxLength="10" Unicode="false" FixedLength="false" />
-          <Property Name="LOC_CITY" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
-          <Property Name="LOC_CTY_CODE" Type="String" MaxLength="2" Unicode="false" FixedLength="false" />
-          <Property Name="BUILDING" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
-          <Property Name="LOC_FREE_TEXT" Type="String" MaxLength="255" Unicode="false" FixedLength="false" />
-          <Property Name="SUM_REF" Type="String" MaxLength="40" Unicode="false" FixedLength="false" />
-          <Property Name="SUM_REC_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
-          <Property Name="SUM_REC_DATE" Type="DateTime" Precision="3" />
-          <Property Name="SUM_DESP_DATE" Type="DateTime" Precision="3" />
-          <Property Name="MAIN_REF" Type="String" MaxLength="40" Unicode="false" FixedLength="false" />
-          <Property Name="MAIN_REC_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
-          <Property Name="MAIN_REC_DATE" Type="DateTime" Precision="3" />
-          <Property Name="MAIN_DESP_DATE" Type="DateTime" Precision="3" />
-          <Property Name="SUB_GROUP_CODE" Type="String" MaxLength="5" Unicode="false" FixedLength="false" />
-          <Property Name="MTGREF_MASK" Type="String" MaxLength="8" Unicode="false" FixedLength="false" />
-          <Property Name="OWNER_LIST_ID" Type="Int32" />
-          <Property Name="MOD_TS" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="MOD_BY" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
-          <Property Name="DOC_PERCENT_PAPER" Type="Int32" />
-          <Property Name="DOC_PERCENT_ELECTRONIC" Type="Int32" />
-          <Property Name="START_REGISTRATION_DATE" Type="DateTime" Precision="3" />
-          <Property Name="LOCATION_DETAILS_URL" Type="String" MaxLength="120" Unicode="false" FixedLength="false" />
-          <Property Name="WEB_MOD_BY" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
-          <Property Name="WEB_MOD_TS" Type="DateTime" Precision="3" />
-          <Property Name="REQUESTER_ID" Type="Int32" />
-          <Property Name="REQUEST_DATE" Type="DateTime" Precision="3" />
-          <Property Name="TB_ID" Type="Int32" />
-          <Property Name="Creation_Date" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_Releases_Enum_ReleaseStatus">
           <End Role="Enum_ReleaseStatus" Type="Etsi.Ultimate.DataAccess.Enum_ReleaseStatus" Multiplicity="0..1" />
@@ -812,6 +708,41 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Meeting">
+          <Key>
+            <PropertyRef Name="MTG_ID" />
+            <PropertyRef Name="LOCAL_FLG" />
+          </Key>
+          <Property Type="Int32" Name="MTG_ID" Nullable="false" />
+          <Property Type="String" Name="MTG_CATEG_CODE" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="MTG_TYPE_CODE" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="MTGS_CODE" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="MTG_REF" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="START_DATE" Precision="3" />
+          <Property Type="DateTime" Name="END_DATE" Precision="3" />
+          <Property Type="Int32" Name="MTG_YEAR" />
+          <Property Type="Single" Name="MTG_SEQNO" />
+          <Property Type="String" Name="MTG_TITLE" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="OWNERSHIP_LEVEL" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="INVITATION_DATE" Precision="3" />
+          <Property Type="DateTime" Name="DEADLINE_DATE" Precision="3" />
+          <Property Type="Int32" Name="DURATION" />
+          <Property Type="Int32" Name="INVITED_NUMB" />
+          <Property Type="Int32" Name="ATTENDANT_NUMB" />
+          <Property Type="String" Name="LOCAL_FLG" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="ORGA_ID" />
+          <Property Type="String" Name="LOC_ADDRESS" MaxLength="165" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="LOC_ZIP" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="LOC_CITY" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="LOC_CTY_CODE" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="MTGREF_MASK" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="START_REGISTRATION_DATE" Precision="3" />
+          <Property Type="String" Name="LOCATION_DETAILS_URL" MaxLength="120" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="TB_ID" />
+          <Property Type="DateTime" Name="Creation_Date" Precision="3" />
+          <Property Type="String" Name="ShortName" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="MtgShortRef" MaxLength="31" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -861,62 +792,6 @@
                 <ScalarProperty Name="WpmCode3g" ColumnName="WpmCode3g" />
                 <ScalarProperty Name="WpmProjectId" ColumnName="WpmProjectId" />
                 <ScalarProperty Name="IturCode" ColumnName="IturCode" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Meetings">
-            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Meeting">
-              <MappingFragment StoreEntitySet="View_Meetings">
-                <ScalarProperty Name="MTG_ID" ColumnName="MTG_ID" />
-                <ScalarProperty Name="MTG_CATEG_CODE" ColumnName="MTG_CATEG_CODE" />
-                <ScalarProperty Name="MTG_TYPE_CODE" ColumnName="MTG_TYPE_CODE" />
-                <ScalarProperty Name="MTGS_CODE" ColumnName="MTGS_CODE" />
-                <ScalarProperty Name="MTG_REF" ColumnName="MTG_REF" />
-                <ScalarProperty Name="START_DATE" ColumnName="START_DATE" />
-                <ScalarProperty Name="END_DATE" ColumnName="END_DATE" />
-                <ScalarProperty Name="MTG_YEAR" ColumnName="MTG_YEAR" />
-                <ScalarProperty Name="MTG_SEQNO" ColumnName="MTG_SEQNO" />
-                <ScalarProperty Name="MTG_TITLE" ColumnName="MTG_TITLE" />
-                <ScalarProperty Name="RESP_DEPT" ColumnName="RESP_DEPT" />
-                <ScalarProperty Name="OWNER_ID" ColumnName="OWNER_ID" />
-                <ScalarProperty Name="OWNER_DEPT" ColumnName="OWNER_DEPT" />
-                <ScalarProperty Name="OWNERSHIP_LEVEL" ColumnName="OWNERSHIP_LEVEL" />
-                <ScalarProperty Name="INVITATION_DATE" ColumnName="INVITATION_DATE" />
-                <ScalarProperty Name="DEADLINE_DATE" ColumnName="DEADLINE_DATE" />
-                <ScalarProperty Name="DURATION" ColumnName="DURATION" />
-                <ScalarProperty Name="INVITED_NUMB" ColumnName="INVITED_NUMB" />
-                <ScalarProperty Name="ATTENDANT_NUMB" ColumnName="ATTENDANT_NUMB" />
-                <ScalarProperty Name="LOCAL_FLG" ColumnName="LOCAL_FLG" />
-                <ScalarProperty Name="ORGA_ID" ColumnName="ORGA_ID" />
-                <ScalarProperty Name="LOC_ADDRESS" ColumnName="LOC_ADDRESS" />
-                <ScalarProperty Name="LOC_ZIP" ColumnName="LOC_ZIP" />
-                <ScalarProperty Name="LOC_CITY" ColumnName="LOC_CITY" />
-                <ScalarProperty Name="LOC_CTY_CODE" ColumnName="LOC_CTY_CODE" />
-                <ScalarProperty Name="BUILDING" ColumnName="BUILDING" />
-                <ScalarProperty Name="LOC_FREE_TEXT" ColumnName="LOC_FREE_TEXT" />
-                <ScalarProperty Name="SUM_REF" ColumnName="SUM_REF" />
-                <ScalarProperty Name="SUM_REC_FLG" ColumnName="SUM_REC_FLG" />
-                <ScalarProperty Name="SUM_REC_DATE" ColumnName="SUM_REC_DATE" />
-                <ScalarProperty Name="SUM_DESP_DATE" ColumnName="SUM_DESP_DATE" />
-                <ScalarProperty Name="MAIN_REF" ColumnName="MAIN_REF" />
-                <ScalarProperty Name="MAIN_REC_FLG" ColumnName="MAIN_REC_FLG" />
-                <ScalarProperty Name="MAIN_REC_DATE" ColumnName="MAIN_REC_DATE" />
-                <ScalarProperty Name="MAIN_DESP_DATE" ColumnName="MAIN_DESP_DATE" />
-                <ScalarProperty Name="SUB_GROUP_CODE" ColumnName="SUB_GROUP_CODE" />
-                <ScalarProperty Name="MTGREF_MASK" ColumnName="MTGREF_MASK" />
-                <ScalarProperty Name="OWNER_LIST_ID" ColumnName="OWNER_LIST_ID" />
-                <ScalarProperty Name="MOD_TS" ColumnName="MOD_TS" />
-                <ScalarProperty Name="MOD_BY" ColumnName="MOD_BY" />
-                <ScalarProperty Name="DOC_PERCENT_PAPER" ColumnName="DOC_PERCENT_PAPER" />
-                <ScalarProperty Name="DOC_PERCENT_ELECTRONIC" ColumnName="DOC_PERCENT_ELECTRONIC" />
-                <ScalarProperty Name="START_REGISTRATION_DATE" ColumnName="START_REGISTRATION_DATE" />
-                <ScalarProperty Name="LOCATION_DETAILS_URL" ColumnName="LOCATION_DETAILS_URL" />
-                <ScalarProperty Name="WEB_MOD_BY" ColumnName="WEB_MOD_BY" />
-                <ScalarProperty Name="WEB_MOD_TS" ColumnName="WEB_MOD_TS" />
-                <ScalarProperty Name="REQUESTER_ID" ColumnName="REQUESTER_ID" />
-                <ScalarProperty Name="REQUEST_DATE" ColumnName="REQUEST_DATE" />
-                <ScalarProperty Name="TB_ID" ColumnName="TB_ID" />
-                <ScalarProperty Name="Creation_Date" ColumnName="Creation_Date" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -1030,6 +905,41 @@
                 <ScalarProperty Name="Fk_TbId" ColumnName="Fk_TbId" />
                 <ScalarProperty Name="Fk_WorkItemId" ColumnName="Fk_WorkItemId" />
                 <ScalarProperty Name="Pk_WorkItemResponsibleGroups" ColumnName="Pk_WorkItemResponsibleGroups" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Meetings">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Meeting">
+              <MappingFragment StoreEntitySet="View_Meetings">
+                <ScalarProperty Name="MtgShortRef" ColumnName="MtgShortRef" />
+                <ScalarProperty Name="ShortName" ColumnName="ShortName" />
+                <ScalarProperty Name="Creation_Date" ColumnName="Creation_Date" />
+                <ScalarProperty Name="TB_ID" ColumnName="TB_ID" />
+                <ScalarProperty Name="LOCATION_DETAILS_URL" ColumnName="LOCATION_DETAILS_URL" />
+                <ScalarProperty Name="START_REGISTRATION_DATE" ColumnName="START_REGISTRATION_DATE" />
+                <ScalarProperty Name="MTGREF_MASK" ColumnName="MTGREF_MASK" />
+                <ScalarProperty Name="LOC_CTY_CODE" ColumnName="LOC_CTY_CODE" />
+                <ScalarProperty Name="LOC_CITY" ColumnName="LOC_CITY" />
+                <ScalarProperty Name="LOC_ZIP" ColumnName="LOC_ZIP" />
+                <ScalarProperty Name="LOC_ADDRESS" ColumnName="LOC_ADDRESS" />
+                <ScalarProperty Name="ORGA_ID" ColumnName="ORGA_ID" />
+                <ScalarProperty Name="LOCAL_FLG" ColumnName="LOCAL_FLG" />
+                <ScalarProperty Name="ATTENDANT_NUMB" ColumnName="ATTENDANT_NUMB" />
+                <ScalarProperty Name="INVITED_NUMB" ColumnName="INVITED_NUMB" />
+                <ScalarProperty Name="DURATION" ColumnName="DURATION" />
+                <ScalarProperty Name="DEADLINE_DATE" ColumnName="DEADLINE_DATE" />
+                <ScalarProperty Name="INVITATION_DATE" ColumnName="INVITATION_DATE" />
+                <ScalarProperty Name="OWNERSHIP_LEVEL" ColumnName="OWNERSHIP_LEVEL" />
+                <ScalarProperty Name="MTG_TITLE" ColumnName="MTG_TITLE" />
+                <ScalarProperty Name="MTG_SEQNO" ColumnName="MTG_SEQNO" />
+                <ScalarProperty Name="MTG_YEAR" ColumnName="MTG_YEAR" />
+                <ScalarProperty Name="END_DATE" ColumnName="END_DATE" />
+                <ScalarProperty Name="START_DATE" ColumnName="START_DATE" />
+                <ScalarProperty Name="MTG_REF" ColumnName="MTG_REF" />
+                <ScalarProperty Name="MTGS_CODE" ColumnName="MTGS_CODE" />
+                <ScalarProperty Name="MTG_TYPE_CODE" ColumnName="MTG_TYPE_CODE" />
+                <ScalarProperty Name="MTG_CATEG_CODE" ColumnName="MTG_CATEG_CODE" />
+                <ScalarProperty Name="MTG_ID" ColumnName="MTG_ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

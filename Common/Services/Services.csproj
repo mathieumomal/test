@@ -48,6 +48,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IMeetingService.cs" />
+    <Compile Include="MeetingService.cs" />
     <Compile Include="IWorkItemService.cs" />
     <Compile Include="ReleaseServiceMock.cs" />
     <Compile Include="ServiceFactory.cs" />

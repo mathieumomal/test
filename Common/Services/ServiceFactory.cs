@@ -58,7 +58,8 @@ namespace Etsi.Ultimate.Services
         public static void SetDefaultDependencies()
         {
             Container.RegisterType<IReleaseService, ReleaseService>(new TransientLifetimeManager());
-            Container.RegisterType<IWorkItemService, WorkItemService>(new TransientLifetimeManager());   
+            Container.RegisterType<IWorkItemService, WorkItemService>(new TransientLifetimeManager());
+            Container.RegisterType<IMeetingService, MeetingService>(new TransientLifetimeManager());   
         }
     }
 }

@@ -25,9 +25,6 @@ namespace Etsi.Ultimate.DomainClasses
         public Nullable<int> MTG_YEAR { get; set; }
         public Nullable<float> MTG_SEQNO { get; set; }
         public string MTG_TITLE { get; set; }
-        public string RESP_DEPT { get; set; }
-        public Nullable<int> OWNER_ID { get; set; }
-        public string OWNER_DEPT { get; set; }
         public string OWNERSHIP_LEVEL { get; set; }
         public Nullable<System.DateTime> INVITATION_DATE { get; set; }
         public Nullable<System.DateTime> DEADLINE_DATE { get; set; }
@@ -40,30 +37,12 @@ namespace Etsi.Ultimate.DomainClasses
         public string LOC_ZIP { get; set; }
         public string LOC_CITY { get; set; }
         public string LOC_CTY_CODE { get; set; }
-        public string BUILDING { get; set; }
-        public string LOC_FREE_TEXT { get; set; }
-        public string SUM_REF { get; set; }
-        public string SUM_REC_FLG { get; set; }
-        public Nullable<System.DateTime> SUM_REC_DATE { get; set; }
-        public Nullable<System.DateTime> SUM_DESP_DATE { get; set; }
-        public string MAIN_REF { get; set; }
-        public string MAIN_REC_FLG { get; set; }
-        public Nullable<System.DateTime> MAIN_REC_DATE { get; set; }
-        public Nullable<System.DateTime> MAIN_DESP_DATE { get; set; }
-        public string SUB_GROUP_CODE { get; set; }
         public string MTGREF_MASK { get; set; }
-        public Nullable<int> OWNER_LIST_ID { get; set; }
-        public System.DateTime MOD_TS { get; set; }
-        public string MOD_BY { get; set; }
-        public Nullable<int> DOC_PERCENT_PAPER { get; set; }
-        public Nullable<int> DOC_PERCENT_ELECTRONIC { get; set; }
         public Nullable<System.DateTime> START_REGISTRATION_DATE { get; set; }
         public string LOCATION_DETAILS_URL { get; set; }
-        public string WEB_MOD_BY { get; set; }
-        public Nullable<System.DateTime> WEB_MOD_TS { get; set; }
-        public Nullable<int> REQUESTER_ID { get; set; }
-        public Nullable<System.DateTime> REQUEST_DATE { get; set; }
         public Nullable<int> TB_ID { get; set; }
         public Nullable<System.DateTime> Creation_Date { get; set; }
+        public string ShortName { get; set; }
+        public string MtgShortRef { get; set; }
     }
 }

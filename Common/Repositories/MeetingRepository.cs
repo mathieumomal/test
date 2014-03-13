@@ -15,16 +15,13 @@ namespace Etsi.Ultimate.Repositories
     /// </summary>
     public class MeetingRepository : IMeetingRepository
     {
-        
         private IUltimateContext context;
         public MeetingRepository(IUltimateUnitOfWork iUoW)
         {
             context = iUoW.Context;
         }
 
-
-
-        #region IEntityRepository<PersonRepository> Membres
+        #region IEntityRepository<MeetingRepository> Membres
 
         public IQueryable<Meeting> All
         {
@@ -45,12 +42,12 @@ namespace Etsi.Ultimate.Repositories
 
         public void InsertOrUpdate(Meeting entity)
         {
-            throw new InvalidOperationException("Cannot add or update a person");
+            throw new InvalidOperationException("Cannot add or update a meeting");
         }
 
         public void Delete(int id)
         {
-            throw new InvalidOperationException("Cannot delete Release status entity");
+            throw new InvalidOperationException("Cannot delete meeting status entity");
         }
 
         #endregion
@@ -63,7 +60,6 @@ namespace Etsi.Ultimate.Repositories
         }
 
         #endregion
-
         
         public IUltimateUnitOfWork UoW { get; set; }
     }

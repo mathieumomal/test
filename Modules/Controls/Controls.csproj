@@ -66,6 +66,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MeetingControl.ascx.cs">
+      <DependentUpon>MeetingControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MeetingControl.ascx.designer.cs">
+      <DependentUpon>MeetingControl.ascx</DependentUpon>
+    </Compile>
     <Compile Include="HistoryControl.ascx.cs">
       <DependentUpon>HistoryControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -83,6 +90,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="MeetingControl.ascx" />
     <Content Include="HistoryControl.ascx" />
     <Content Include="License.txt" />
     <Content Include="module.css" />
@@ -104,6 +112,10 @@
     <ProjectReference Include="..\..\Common\DomainClasses\DomainClasses.csproj">
       <Project>{d5bdede9-d397-411c-ae94-1646836406ba}</Project>
       <Name>DomainClasses</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Services\Services.csproj">
+      <Project>{4bb8a434-1ed1-4d33-ae3d-32a000d19ca5}</Project>
+      <Name>Services</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

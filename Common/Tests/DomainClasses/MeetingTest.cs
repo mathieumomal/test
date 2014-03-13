@@ -31,5 +31,26 @@ namespace Etsi.Ultimate.Tests.DomainClasses
         {
             Meeting.ToFullReference("SA75");
         }
+
+        [Test]
+        public void ToShortReference_OnPlenary()
+        {
+            Assert.AreEqual("SP-65", Meeting.ToShortReference("3GPPSA#65"));
+            Assert.AreEqual("SMG-65", Meeting.ToShortReference("3GPPSMG#65"));
+            Assert.AreEqual("GSM-65", Meeting.ToShortReference("3GPPGSM#65"));
+            Assert.AreEqual("CP-65", Meeting.ToShortReference("3GPPCT#65"));
+            Assert.AreEqual("NP-65", Meeting.ToShortReference("3GPPCN#65"));
+            Assert.AreEqual("GP-65", Meeting.ToShortReference("3GPPGERAN#65"));
+            Assert.AreEqual("RP-65", Meeting.ToShortReference("3GPPRAN#65"));
+            Assert.AreEqual("TP-65", Meeting.ToShortReference("3GPPT#65"));
+            Assert.AreEqual("PCG-65", Meeting.ToShortReference("3GPPPCG#65"));
+        }
+
+        [Test]
+        [ExpectedException(typeof(FormatException))]
+        public void ToShortReference_MustContainHash()
+        {
+            Meeting.ToShortReference("SA75");
+        }
     }
 }
