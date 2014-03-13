@@ -74,8 +74,8 @@ namespace Etsi.Ultimate.Tests.Services
         {
             CacheManager.Clear(RELEASE_CACHE_KEY);
 
-            int releaseId = StatusToRelease[status];            
-            
+            int releaseId = StatusToRelease[status];
+
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
             // The fake right manager returns all rights, so we can check all the values.
             ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
@@ -111,7 +111,7 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(2, release.Histories.Count);
         }
 
-      
+
 
         [Test]
         public void Test_GetAllReleases_Cache()
@@ -136,7 +136,7 @@ namespace Etsi.Ultimate.Tests.Services
             CacheManager.Insert(RELEASE_CACHE_KEY, cachedReleases);
 
             // Call again the code
-            
+
             var newReleases = releaseService.GetAllReleases(1);
 
             // Check that the returned releases are taken from cache
@@ -195,6 +195,40 @@ namespace Etsi.Ultimate.Tests.Services
                                                                                                                 && y.ClosureMtgId == meetingRefId)));
             mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<History>.Matches(y => y.Fk_ReleaseId == releaseIdToTest && y.Fk_PersonId == personID
                                                                                                     && y.HistoryText == Utils.Localization.History_Release_Close)));
+            mockDataContext.AssertWasCalled(x => x.SaveChanges(), y => y.Repeat.Once());
+
+            mockDataContext.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void Test_FreezeRelease()
+        {
+            int releaseIdToTest = 1;
+            DateTime FreezeDate = DateTime.Now;
+            string FreezeRef = "S6-25";
+            int FreezeRefId = 21;
+            int personID = 12;
+
+            ReleaseFakeRepository releaseFakeRepository = new ReleaseFakeRepository();
+            var releaseStatus = new Enum_ReleaseStatusFakeDBSet();
+            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open" });
+            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, Code = "Frozen" });
+            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, Code = "Closed" });
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releaseFakeRepository.All).Repeat.Once();
+            mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)releaseStatus).Repeat.Once();
+
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var releaseService = new ReleaseService();
+            releaseService.FreezeRelease(releaseIdToTest, FreezeDate, personID, FreezeRefId, FreezeRef);
+
+            mockDataContext.AssertWasCalled(x => x.SetModified(Arg<Release>.Matches(y => y.Fk_ReleaseStatus == 2 && y.Enum_ReleaseStatus == null
+                                                                                                                && y.EndDate == FreezeDate)));
+
+            mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<History>.Matches(y => y.Fk_ReleaseId == releaseIdToTest && y.Fk_PersonId == personID
+                                                                                                    && y.HistoryText == Utils.Localization.History_Release_Freeze)));
             mockDataContext.AssertWasCalled(x => x.SaveChanges(), y => y.Repeat.Once());
 
             mockDataContext.VerifyAllExpectations();

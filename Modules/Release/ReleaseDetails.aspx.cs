@@ -280,7 +280,8 @@ namespace Etsi.Ultimate.Module.Release
             if (ReleaseId != null)
             {
                 IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
-                svc.FreezeRelease(ReleaseId.Value, DateTime.Now, GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()));
+                svc.FreezeRelease(ReleaseId.Value, DateTime.Now,UserId,1, "SP-65");
+                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
 
                 LoadReleaseDetails();
             }

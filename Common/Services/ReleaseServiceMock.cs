@@ -82,7 +82,7 @@ namespace Etsi.Ultimate.Services
             return string.Empty;
         }
 
-        public void FreezeRelease(int releaseId, DateTime endDate, int personId)
+        public void FreezeRelease(int releaseId, DateTime endDate, int personId, int FreezeMtgId, string FreezeMtgRef)
         {
             throw new NotImplementedException();
         }

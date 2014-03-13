@@ -58,14 +58,15 @@ namespace Etsi.Ultimate.Services
             return String.Empty;
         }
 
-        public void FreezeRelease(int releaseId, DateTime endDate, int personId)
+        public void FreezeRelease(int releaseId, DateTime endDate, int personId, int FreezeMtgId, string FreezeMtgRef)
         {
 
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var releaseManager = new ReleaseManager();
                 releaseManager.UoW = uoW;
-                releaseManager.FreezeRelease(releaseId, endDate, personId);
+                releaseManager.FreezeRelease(releaseId, endDate, personId, FreezeMtgId, FreezeMtgRef);
+                uoW.Save();
             }
         }
 

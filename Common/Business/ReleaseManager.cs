@@ -90,7 +90,7 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="releaseId"></param>
         /// <param name="endDate"></param>
-        public void FreezeRelease(int releaseId, DateTime endDate, int personId)
+        public void FreezeRelease(int releaseId, DateTime endDate, int personId, int FreezeMtgId, string FreezeMtgRef)
         {
             IReleaseRepository repo = RepositoryFactory.Resolve<IReleaseRepository>();
             repo.UoW = UoW;
@@ -105,14 +105,16 @@ namespace Etsi.Ultimate.Business
             var updatedObj = repo.Find(releaseId);
             updatedObj.Fk_ReleaseStatus = frozen.Enum_ReleaseStatusId;
             updatedObj.Enum_ReleaseStatus = null;
-            
             updatedObj.EndDate = endDate;
+            updatedObj.EndMtgRef = FreezeMtgRef;
+            updatedObj.EndMtgId = FreezeMtgId;
+            
+
 
             repo.InsertOrUpdate(updatedObj);
 
             History history = new History() { Fk_ReleaseId = releaseId, Fk_PersonId = personId, CreationDate = DateTime.UtcNow, HistoryText = Utils.Localization.History_Release_Freeze };
             historyRepo.InsertOrUpdate(history);
-
 
             ClearCache();
         }
