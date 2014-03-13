@@ -61,6 +61,24 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Release has been closed..
+        /// </summary>
+        public static string History_Release_Close {
+            get {
+                return ResourceManager.GetString("History_Release_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Release has been frozen..
+        /// </summary>
+        public static string History_Release_Freeze {
+            get {
+                return ResourceManager.GetString("History_Release_Freeze", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Workplan is not correctly formatted: {0}.
         /// </summary>
         public static string WorkItem_Import_Bad_Format {

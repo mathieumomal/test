@@ -90,11 +90,13 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="releaseId"></param>
         /// <param name="endDate"></param>
-        public void FreezeRelease(int releaseId, DateTime endDate)
+        public void FreezeRelease(int releaseId, DateTime endDate, int personId)
         {
             IReleaseRepository repo = RepositoryFactory.Resolve<IReleaseRepository>();
             repo.UoW = UoW;
 
+            IHistoryRepository historyRepo = RepositoryFactory.Resolve<IHistoryRepository>();
+            historyRepo.UoW = UoW;
             
             IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
             relStatusRepo.UoW = UoW;
@@ -107,7 +109,10 @@ namespace Etsi.Ultimate.Business
             updatedObj.EndDate = endDate;
 
             repo.InsertOrUpdate(updatedObj);
-            repo.UoW.Save();
+
+            History history = new History() { Fk_ReleaseId = releaseId, Fk_PersonId = personId, CreationDate = DateTime.UtcNow, HistoryText = Utils.Localization.History_Release_Freeze };
+            historyRepo.InsertOrUpdate(history);
+
 
             ClearCache();
         }
@@ -141,7 +146,7 @@ namespace Etsi.Ultimate.Business
 
             relRepo.InsertOrUpdate(updatedObj);
 
-            History history = new History() { Fk_ReleaseId = releaseId, Fk_PersonId = personID, CreationDate = DateTime.UtcNow, HistoryText = String.Format("'{0}' has been Closed", updatedObj.Code) };
+            History history = new History() { Fk_ReleaseId = releaseId, Fk_PersonId = personID, CreationDate = DateTime.UtcNow, HistoryText = Utils.Localization.History_Release_Close };
             historyRepo.InsertOrUpdate(history);
 
             ClearCache();

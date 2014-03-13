@@ -184,7 +184,7 @@
         }
     }
     function OnClientValidationFailed() {
-        alert('Just csv and zip files are allowed here.');
+        alert('Only csv and zip formats are allowed.');
     }
 
     function EnabledButtonImport() {

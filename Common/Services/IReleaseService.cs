@@ -26,7 +26,7 @@ namespace Etsi.Ultimate.Services
 
         string GetPreviousReleaseCode(int personID, int releaseId);
         
-        void FreezeRelease(int releaseId, DateTime endDate);
+        void FreezeRelease(int releaseId, DateTime endDate, int personId);
 
         /// <summary>
         /// Close Release

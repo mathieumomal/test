@@ -194,7 +194,7 @@ namespace Etsi.Ultimate.Tests.Services
                                                                                                                 && y.ClosureMtgRef == meetingRef
                                                                                                                 && y.ClosureMtgId == meetingRefId)));
             mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<History>.Matches(y => y.Fk_ReleaseId == releaseIdToTest && y.Fk_PersonId == personID
-                                                                                                    && y.HistoryText == "'Rel-1' has been Closed")));
+                                                                                                    && y.HistoryText == Utils.Localization.History_Release_Close)));
             mockDataContext.AssertWasCalled(x => x.SaveChanges(), y => y.Repeat.Once());
 
             mockDataContext.VerifyAllExpectations();
