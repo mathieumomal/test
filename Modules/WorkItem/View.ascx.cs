@@ -22,6 +22,7 @@ using DotNetNuke.UI.Utilities;
 using DotNetNuke.Common.Utilities;
 using Telerik.Web.UI;
 using System.Text;
+using System.Linq;
 using System.IO;
 using System.Collections.Generic;
 using Etsi.Ultimate.Services;
@@ -46,6 +47,8 @@ namespace Etsi.Ultimate.Module.WorkItem
     /// -----------------------------------------------------------------------------
     public partial class View : WorkItemModuleBase, IActionable
     {
+        public Etsi.Ultimate.Controls.FullView ultFullView;
+
         private static string PathExportWorkPlan;
         private static string PathUploadWorkPlan;
         private static readonly string  ExtensionCsv = "csv";
@@ -58,6 +61,13 @@ namespace Etsi.Ultimate.Module.WorkItem
         {
             try
             {
+                ultFullView.ModuleId = 12;
+                ultFullView.TabId = 13;
+                var urlParams = Page.ClientQueryString.Split('&').Select(item => item.Split('=')).ToDictionary(s => s[0], s => s[1]);
+                urlParams.Remove("tabId");
+                ultFullView.UrlParams = urlParams;
+                ultFullView.BaseAddress = "";
+
                 //Get settings
                 if(Settings.Contains(Enum_Settings.WorkItem_ExportPath.ToString()))
                     PathExportWorkPlan = Settings[Enum_Settings.WorkItem_ExportPath.ToString()].ToString();
