@@ -12,6 +12,7 @@ namespace Etsi.Ultimate.DomainClasses
     /// <summary>
     ///  This object is used to store the user rights and to retrieve them
     /// </summary>
+    [Serializable]
     public class UserRightsContainer
     {
         /// <summary>

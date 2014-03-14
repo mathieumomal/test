@@ -30,7 +30,8 @@ namespace Etsi.Ultimate.Module.Release
                 GetRequestParameters();
 
                 LoadReleaseDetails();
-            }  
+            }
+            releaseRemarks.AddRemarkHandler += releaseRemarks_AddRemarkHandler;
         }       
 
         private void LoadReleaseDetails()
@@ -71,8 +72,6 @@ namespace Etsi.Ultimate.Module.Release
 
 
                             //Set Remarks control
-                            /*RemarksControl rmk = releaseRemarks as RemarksControl;*/
-                            releaseRemarks.IsEditMode = true;
                             releaseRemarks.UserRights = userRights;
                             releaseRemarks.DataSource = release.Remarks.ToList();
 
@@ -95,10 +94,9 @@ namespace Etsi.Ultimate.Module.Release
                 ReleaseDetailRadMultiPage.Height = new System.Web.UI.WebControls.Unit(750, UnitType.Pixel);
                 ReleaseStatusVal.CssClass = "status " + ReleaseStatusVal.Text;
                 ReleaseStartDateVal.SelectedDate = DateTime.Now;
-                RemarksControl rmk = releaseRemarks as RemarksControl;
-                rmk.IsEditMode = true;
-                rmk.UserRights = userRights;
-                rmk.DataSource = null;
+
+                releaseRemarks.UserRights = userRights;
+                releaseRemarks.DataSource = null;
 
                 previousReleaseVal.DataTextField = "Value";
                 previousReleaseVal.DataValueField = "Key";
@@ -116,7 +114,27 @@ namespace Etsi.Ultimate.Module.Release
 
         }
 
-     /// <summary>
+        /// <summary>
+        /// Add New Remark
+        /// </summary>
+        /// <param name="sender">source of event</param>
+        /// <param name="e">event args</param>
+        protected void releaseRemarks_AddRemarkHandler(object sender, EventArgs e)
+        {
+            List<Domain.Remark> datasource = releaseRemarks.DataSource;
+            datasource.Add(new Domain.Remark()
+            {
+                Fk_PersonId = UserId,
+                Fk_ReleaseId = ReleaseId,
+                IsPublic = true,
+                CreationDate = DateTime.UtcNow,
+                RemarkText = releaseRemarks.RemarkText
+            });
+
+            releaseRemarks.DataSource = datasource;
+        }
+
+        /// <summary>
         /// Set the tabs display
         /// </summary>
         /// <param name="userRights"></param>

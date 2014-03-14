@@ -130,7 +130,7 @@
                         </tr>
                         <tr style="max-height: 150px; overflow-y: scroll; margin-top:5px"> 
                             <td colspan="3">
-                                <ult:RemarksControl runat="server" ID="releaseRemarks" />   
+                                <ult:RemarksControl runat="server" ID="releaseRemarks" IsEditMode="true"/>   
                             </td>                                                    
                         </tr>
                    </table>

@@ -14,6 +14,9 @@ namespace Etsi.Ultimate.Controls
         #region Constants
 
         private const string CONST_REMARKS_GRID_DATA = "RemarksGridData";
+        private const string CONST_REMARKS_USER_RIGHTS = "RemarksUserRights";
+        private const string CONST_REMARK_TEXT = "RemarkText";
+        private const string CONST_CREATIONDATE = "CreationDate";
         private const string CONST_PK_REMARKID = "Pk_RemarkId";
         private const string CONST_ISPUBLIC = "IsPublic";
         private const int CONST_MIN_SCROLL_HEIGHT = 100;
@@ -24,7 +27,19 @@ namespace Etsi.Ultimate.Controls
 
         public event EventHandler AddRemarkHandler;
         public bool IsEditMode { get; set; }
-        public UserRightsContainer UserRights { get; set; }
+        public UserRightsContainer UserRights {
+            get
+            {
+                if (ViewState[CONST_REMARKS_USER_RIGHTS] == null)
+                    ViewState[CONST_REMARKS_USER_RIGHTS] = new UserRightsContainer();
+
+                return (UserRightsContainer)ViewState[CONST_REMARKS_USER_RIGHTS];
+            }
+            set
+            {
+                ViewState[CONST_REMARKS_USER_RIGHTS] = value;
+            }
+        }
         public string RemarkText { get { return this.txtAddRemark.Text; } }
         public int ScrollHeight { get; set; }
         public List<Remark> DataSource 
@@ -111,10 +126,21 @@ namespace Etsi.Ultimate.Controls
 
             List<Remark> dataSource = DataSource;
             Remark changedRow = dataSource.Find(x => x.Pk_RemarkId.ToString() == editedItem.OwnerTableView.DataKeyValues[editedItem.ItemIndex][CONST_PK_REMARKID].ToString());
-            if (changedRow != null)
+            //Existing Records
+            if ((changedRow != null) && (changedRow.Pk_RemarkId != default(int)))
             {
                 changedRow.IsPublic = Convert.ToBoolean(dropdownlist.SelectedValue);
                 DataSource = dataSource;
+            }
+            else //New Records
+            {
+                Remark newRow = dataSource.Find(x => (x.RemarkText == editedItem.OwnerTableView.DataKeyValues[editedItem.ItemIndex][CONST_REMARK_TEXT].ToString())
+                                                  && (x.CreationDate.ToString() == editedItem.OwnerTableView.DataKeyValues[editedItem.ItemIndex][CONST_CREATIONDATE].ToString()));
+                if (newRow != null)
+                {
+                    newRow.IsPublic = Convert.ToBoolean(dropdownlist.SelectedValue);
+                    DataSource = dataSource;
+                }
             }
         }
 

@@ -32,7 +32,7 @@
                     <ClientSettings>
                         <Scrolling AllowScroll="True" UseStaticHeaders="true" />
                     </ClientSettings>
-                    <MasterTableView clientdatakeynames="Pk_RemarkId, IsPublic" EditMode="InPlace">
+                    <MasterTableView clientdatakeynames="Pk_RemarkId, IsPublic, RemarkText, CreationDate" EditMode="InPlace">
                         <Columns>
                             <telerik:GridTemplateColumn DataField="CreationDate" HeaderText="Creation date" UniqueName="CreationDate">
                                 <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="150px"/> 
