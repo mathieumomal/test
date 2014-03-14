@@ -5,11 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Repositories
 {
     public class WorkItemRepository: IWorkItemRepository
     {
+        #region IWorkItemRepository Members
 
         public IUltimateUnitOfWork UoW
         {
@@ -33,7 +35,7 @@ namespace Etsi.Ultimate.Repositories
 
         public WorkItem Find(int id)
         {
-            return UoW.Context.WorkItems.Find(id);
+            return AllIncluding(t => t.Release, t => t.Remarks, t => t.ChildWis, t => t.ParentWi, t => t.WorkItems_ResponsibleGroups).Where(x => x.Pk_WorkItemUid == id).FirstOrDefault();
         }
 
         public void InsertOrUpdate(WorkItem entity)
@@ -76,6 +78,17 @@ namespace Etsi.Ultimate.Repositories
                 UoW.Context.WorkItems.Remove(wi);
         }
 
+        /// <summary>
+        /// Get the list of workitems based on the release
+        /// </summary>
+        /// <param name="releaseIds">Release Ids</param>
+        /// <returns>List of workitems</returns>
+        public List<WorkItem> GetWorkItemsByRelease(List<int> releaseIds)
+        {
+            return AllIncluding(t => t.Release, t => t.Remarks, t => t.ChildWis, t=> t.ParentWi, t=> t.WorkItems_ResponsibleGroups).Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)).ToList();
+        }
+
+        #endregion
 
         #region IDisposable Members
 
@@ -85,10 +98,14 @@ namespace Etsi.Ultimate.Repositories
 
         #endregion
     }
-    
-    
-    
+            
     public interface IWorkItemRepository : IEntityRepository<WorkItem>
     {
+        /// <summary>
+        /// Get the list of workitems based on the release
+        /// </summary>
+        /// <param name="releaseIds">Release Ids</param>
+        /// <returns>List of workitems</returns>
+        List<WorkItem> GetWorkItemsByRelease(List<int> releaseIds);
     }
 }

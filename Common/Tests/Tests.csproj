@@ -80,6 +80,7 @@
     <Compile Include="Business\LogManagerTest.cs" />
     <Compile Include="Business\RightsManagerTest.cs" />
     <Compile Include="Business\WorkItemCsvParserTest.cs" />
+    <Compile Include="Business\WorkItemManagerTest.cs" />
     <Compile Include="DomainClasses\RightsContainerTest.cs" />
     <Compile Include="FakeContext.cs" />
     <Compile Include="FakeManagers\RightsManagerFake.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Repositories\TestReleaseRepository.cs" />
     <Compile Include="Services\ReleaseServiceTest.cs" />
     <Compile Include="Services\UrlServiceTest.cs" />
+    <Compile Include="Services\WorkItemServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -127,6 +129,9 @@
     <Content Include="TestData\WorkItems\empty.txt" />
     <None Include="TestData\WorkItems\InvalidLevel.csv" />
     <None Include="TestData\WorkItems\Level0_WorkItems.csv" />
+    <Content Include="TestData\WorkItems\WorkItem.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="TestData\WorkItems\Wrong_WpOrder.csv" />
     <None Include="TestData\WorkItems\InvalidCommittees.csv" />
     <None Include="TestData\WorkItems\InvalidTsgPcgDates.csv" />

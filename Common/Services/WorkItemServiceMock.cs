@@ -29,6 +29,16 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsByRelease(int personId, List<int> releaseId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public KeyValuePair<WorkItem, UserRightsContainer> GetWorkItemById(int personId, int workItemId)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

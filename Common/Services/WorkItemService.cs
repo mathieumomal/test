@@ -12,7 +12,6 @@ namespace Etsi.Ultimate.Services
 {
     public class WorkItemService : IWorkItemService
     {
-
         #region IWorkItemService Membres
 
         public KeyValuePair<string, ImportReport> AnalyseWorkPlanForImport(String path)
@@ -49,6 +48,36 @@ namespace Etsi.Ultimate.Services
                 return false;
             }
 
+        }
+
+        /// <summary>
+        /// Get the list of workitems based on the release
+        /// </summary>
+        /// <param name="personId">Person Id</param>
+        /// <param name="releaseIds">Release Ids</param>
+        /// <returns>List of workitems along with rights container</returns>
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsByRelease(int personId, List<int> releaseIds)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var workItemManager = new WorkItemManager(uoW);
+                 return workItemManager.GetWorkItemsByRelease(personId, releaseIds);
+            }
+        }
+
+        /// <summary>
+        /// Get the workitem based on the id
+        /// </summary>
+        /// <param name="personId">Person Id</param>
+        /// <param name="workItemId">Work Item Id</param>
+        /// <returns>Work Item along with right container</returns>
+        public KeyValuePair<WorkItem, UserRightsContainer> GetWorkItemById(int personId, int workItemId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var workItemManager = new WorkItemManager(uoW);
+                return workItemManager.GetWorkItemById(personId, workItemId);
+            }
         }
 
         #endregion

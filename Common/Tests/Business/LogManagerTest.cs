@@ -20,7 +20,7 @@ namespace Etsi.Ultimate.Tests.Business
         }
 
         [SetUp]
-        public void Setup()
+        public override void Setup()
         {
             memoryAppender = ((log4net.Core.LoggerWrapperImpl)(LogManager.UltimateLogger)).Logger.Repository.GetAppenders()[0] as MemoryAppender;
         }

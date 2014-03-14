@@ -60,6 +60,7 @@
     <Compile Include="UrlManager.cs" />
     <Compile Include="WorkItemCsvParser.cs" />
     <Compile Include="WorkItemImporter.cs" />
+    <Compile Include="WorkItemManager.cs" />
     <Compile Include="Zip.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
-
-using Etsi.Ultimate.Repositories;
-using Etsi.Ultimate.DataAccess;
-using Etsi.Ultimate.Tests.FakeSets;
+﻿using Etsi.Ultimate.DataAccess;
 using Etsi.Ultimate.DomainClasses;
-using Rhino.Mocks;
+using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Tests.FakeSets;
+using Microsoft.Practices.Unity;
 using NUnit.Framework;
-using Etsi.Ultimate.Utils;
+using Rhino.Mocks;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.IO;
+using System.Linq;
 
 
 namespace Etsi.Ultimate.Tests.Repositories
@@ -60,7 +59,35 @@ namespace Etsi.Ultimate.Tests.Repositories
             repo.Delete(1);
             Assert.AreEqual(0, repo.All.ToList().Count);
         }
-                       
+
+        [Test, TestCaseSource("WorkItemData")]
+        public void GetWorkItemsByRelease(WorkItemFakeDBSet workItemData)
+        {
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(3);
+
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+
+            List<int> releaseIds = new List<int>();
+
+            //No Release Ids
+            var repo = new WorkItemRepository() { UoW = uow };
+            var workItems = repo.GetWorkItemsByRelease(releaseIds);
+            Assert.AreEqual(0, workItems.Count);
+
+            //One Release Id
+            releaseIds.Add(527);
+            workItems = repo.GetWorkItemsByRelease(releaseIds);
+            Assert.AreEqual(18, workItems.Count);
+
+            //Two Release Ids
+            releaseIds.Add(526);
+            workItems = repo.GetWorkItemsByRelease(releaseIds);
+            Assert.AreEqual(20, workItems.Count);
+
+            mockDataContext.VerifyAllExpectations();
+        }
 
         /// <summary>
         /// Create Mocks to simulate DB with objects
@@ -72,9 +99,19 @@ namespace Etsi.Ultimate.Tests.Repositories
             //var iUltimateContext = MockRepository.GenerateMock<IUltimateContext>();
 
             var wiDbSet = new WorkItemFakeDBSet();
-            wiDbSet.Add(new WorkItem() { Pk_WorkItemUid = 1, WorkplanId = 2, Acronym = "TEST", Name = "Name", 
-                Completion = 12, CreationDate = DateTime.Now.AddMonths(-1), EndDate = DateTime.Now.AddMonths(3), 
-                Fk_ParentWiId = null, Fk_ReleaseId = 1, LastModification = DateTime.Now }); 
+            wiDbSet.Add(new WorkItem()
+            {
+                Pk_WorkItemUid = 1,
+                WorkplanId = 2,
+                Acronym = "TEST",
+                Name = "Name",
+                Completion = 12,
+                CreationDate = DateTime.Now.AddMonths(-1),
+                EndDate = DateTime.Now.AddMonths(3),
+                Fk_ParentWiId = null,
+                Fk_ReleaseId = 1,
+                LastModification = DateTime.Now
+            });
             
             iUltimateContext.WorkItems = wiDbSet;
 
@@ -82,5 +119,19 @@ namespace Etsi.Ultimate.Tests.Repositories
             return iUnitOfWork;
         }
 
+        /// <summary>
+        /// Get the WorkItem Data from csv
+        /// </summary>
+        public IEnumerable<WorkItemFakeDBSet> WorkItemData
+        {
+            get
+            {
+                var workItemList = GetAllTestRecords<WorkItem>(Directory.GetCurrentDirectory() + "\\TestData\\WorkItems\\WorkItem.csv");
+                WorkItemFakeDBSet workItemFakeDBSet = new WorkItemFakeDBSet();
+                workItemList.ForEach(x => workItemFakeDBSet.Add(x));
+
+                yield return workItemFakeDBSet;
+            }
+        }
     }
 }

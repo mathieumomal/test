@@ -121,6 +121,16 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         }
 
         #endregion
+
+        #region IWorkItemRepository
+
+        public List<WorkItem> GetWorkItemsByRelease(List<int> releaseIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
     }
 
     public class WorkItemOneLineLevel0FakeRepository : WorkItemFakeRepository
