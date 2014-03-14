@@ -1,59 +1,27 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="ShareUrlControl.ascx.cs" Inherits="Etsi.Ultimate.Controls.ShareUrlControl" %>
+<%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.Client.ClientResourceManagement" Assembly="DotNetNuke.Web.Client" %>
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 
 <style>
-#divContentModalShareUrl{padding: 0px 5px;}
-#divContentModalShareUrl {
-	width: 260px;
-	height: 134px;
-	border: solid 1px rgb(201, 201, 201);
-	position: absolute;
-	z-index: 10000;
-	background: white;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	-webkit-box-shadow: 2px 2px 3px 0px rgba(50, 50, 50, 0.23);
-	-moz-box-shadow: 2px 2px 3px 0px rgba(50, 50, 50, 0.23);
-	box-shadow: 2px 2px 3px 0px rgba(50, 50, 50, 0.23);
-}
-#divContentModalShareUrl .close{
-	cursor:pointer;
-	float:right;
-	font-size: 16px;
-	color: #000;
-	text-shadow: 0 1px 0 #fff;
-	opacity: 0.4;
-	border:none;
-	background:none;
-}
-#divContentModalShareUrl .close:hover{opacity: 0.8;}
-#divContentModalShareUrl .suHeader{margin: 5px 0 10px 0;}
-#divContentModalShareUrl .suFooter
+.suHeader{margin: 5px 0 10px 0;}
+.suFooter
 {text-align: right;margin-top: 10px;padding: 0 5px;}
-#divContentModalShareUrl input[type=checkbox]{vertical-align:bottom;}
-#divContentModalShareUrl table{width: 100%;padding: 0 15px;}
-#divContentModalShareUrl input[type=text]{width:99%;}
-#divContentModalShareUrl.hidden{
-	display:none;
-}
+#suModal input[type=checkbox]{vertical-align:middle;}
+#suModal table{width: 100%;padding: 0 5px;}
+#suModal input[type=text]{width:100%;}
 </style>
 
 
-<telerik:RadButton ID="btnShareUrl" 
-    runat="server" 
-    Enabled="true" 
-    AutoPostBack="false" 
-    OnClientClicked="open_divContentModalShareUrl"
-    Text="Share url">
-    <Icon PrimaryIconUrl="images/share.png" PrimaryIconLeft="4" PrimaryIconTop="4"></Icon>
+<telerik:RadButton ID="btnShareUrl" runat="server" Width="16px" Height="16px"
+    Enabled="true" AutoPostBack="false" OnClientClicked="open_suModal">
+    <Image ImageUrl="images/share.png" DisabledImageUrl="images/share.png" />
 </telerik:RadButton>
 
 <telerik:RadAjaxManagerProxy ID="RadAjaxMngShareUrl" runat="server">
     <AjaxSettings>
-        <telerik:AjaxSetting AjaxControlID="CheckBoxShortUrl">
+        <telerik:AjaxSetting AjaxControlID="CheckBoxGetShortUrl">
             <UpdatedControls>
-                <telerik:AjaxUpdatedControl ControlID="txtShareUrl" />
+                <telerik:AjaxUpdatedControl ControlID="txtLink" />
             </UpdatedControls>
         </telerik:AjaxSetting>
     </AjaxSettings>
@@ -61,30 +29,39 @@
 
 
 
-<telerik:RadToolTip runat="server" ID="RadToolTip3" HideEvent="FromCode" Position="MiddleRight"
-    Width="150px" 
-    Height="70px" 
-    Animation="Fade" 
-    ShowEvent="OnClick" 
+<telerik:RadToolTip runat="server" ID="radTooltipShareUrl" HideEvent="LeaveTargetAndToolTip" 	
+    Position="TopCenter"
+    Width="250px" 
+    Height="60px"  
     ShowDelay="0"
-    RelativeTo="Element" 
-    TargetControlID="btnShareUrl">
-    <div class="suHeader">
+    Animation="Fade" 
+    enableshadow="true"
+    TargetControlID="btnShareUrl"
+    Skin="Silk">
+    <div id="suModal" class="suHeader">
         <table>
             <tr>
                 <td>
-                    <asp:CheckBox ID="CheckBox1" runat="server" Text="Short URL" OnCheckedChanged="CheckBoxShortUrl_CheckedChanged"></asp:CheckBox>
+                    <telerik:RadButton ID="CheckBoxGetShortUrl" 
+                        runat="server" 
+                        ToggleType="CheckBox" 
+                        ButtonType="ToggleButton" 
+                        AutoPostBack="true" 
+                        OnClick="CheckBoxGetShortUrl_CheckedChanged" 
+                        Skin="Silk">
+					    <ToggleStates>
+					     <telerik:RadButtonToggleState Text="Short URL" PrimaryIconCssClass="rbToggleCheckbox" />
+					     <telerik:RadButtonToggleState Text="Short URL" PrimaryIconCssClass="rbToggleCheckboxChecked" Selected="true"/>
+					    </ToggleStates>
+					</telerik:RadButton>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <asp:TextBox ID="TextBox1" runat="server" Text="monUrl"></asp:TextBox>
+                    <asp:TextBox ID="txtLink" runat="server" Text="http://3gpp.org/..." />
                 </td>
             </tr>
         </table>
-    </div>
-    <div class="suFooter">
-        <telerik:RadButton ID="RadButton1" runat="server" Text="Copy to clipboard" AutoPostBack="false" OnClientClicked="ClipBoard" ></telerik:RadButton>
     </div>
 </telerik:RadToolTip>
 
@@ -93,18 +70,17 @@
 
 <telerik:RadScriptBlock runat="server">
 	<script type="text/javascript">
-	    function open_divContentModalShareUrl() {
-	        var divContentModalShareUrl = $("#divContentModalShareUrl");
-	        divContentModalShareUrl.removeClass('hidden');
-	    }
-	    function ClipBoard() {
-	        var txtShareUrl = $("#txtShareUrl").html();
-	        console.log(txtShareUrl);
-	        return false;
+	    function open_suModal() {
+	        var suModal = $("#suModal");
+	        suModal.removeClass('hidden');
 	    }
 
+	    $("#<%=txtLink.ClientID %>").click(function () {
+	        this.select();
+	    });
+
 	    $(document).ready(function () {
-	        $('#divContentModalShareUrl').find('.close').click(function (e) {
+	        $('#suModal').find('.close').click(function (e) {
 	            e.preventDefault();
 	            $(this).parent().addClass('hidden');
 	        });

@@ -41,11 +41,12 @@ namespace Etsi.Ultimate.Business
 
         public string CreateShortUrl(int moduleId, string baseAddress, Dictionary<string, string> urlParams)
         {
+            urlParams.Remove(DnnTabIdGetParam);
             IUrlRepository repo = RepositoryFactory.Resolve<IUrlRepository>();
             repo.UoW = UoW;
 
             ShortUrl shortUrlDb = new ShortUrl();
-            shortUrlDb.Url = GetPageIdAndFullAddressForModule(moduleId, baseAddress, urlParams).Value;
+            shortUrlDb.Url = GetPageIdAndFullAddressForModule(moduleId, "", urlParams).Value;
             var exceptionthrown = true;
             do{
                 shortUrlDb.Token = Guid.NewGuid().ToString().Substring(0, 8);
@@ -56,13 +57,12 @@ namespace Etsi.Ultimate.Business
                 catch (Exception)
                 {
                     exceptionthrown = false;
-                    throw;
                 }
             } while (exceptionthrown);
+            shortUrlDb.Token = Guid.NewGuid().ToString().Substring(0, 8);
             
-            
-            repo.InsertOrUpdate(shortUrlDb);
-            return new StringBuilder().Append(baseAddress).Append("/shorturl/").Append(shortUrlDb.Token).ToString();
+            //repo.InsertOrUpdate(shortUrlDb);
+            return new StringBuilder().Append(baseAddress).Append("?sUrl=").Append(shortUrlDb.Token).ToString();
         }
 
         public string GetFullUrlForToken(string token)

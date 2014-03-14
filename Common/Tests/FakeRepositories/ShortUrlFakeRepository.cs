@@ -11,8 +11,9 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
 {
     public class ShortUrlFakeRepository : IUrlRepository
     {
-        public ShortUrlFakeRepository() { }
-
+        public ShortUrlFakeRepository() {  }
+        //private IQueryable<ShortUrl> GenerateListInsert = null;
+        
 
         #region IEntityRepository<ShortUrl> Membres
 
@@ -39,14 +40,9 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
 
         public void InsertOrUpdate(ShortUrl entity)
         {
-            if (entity.Pk_Id == default(int))
-            {
-                UoW.Context.SetAdded(entity);
-            }
-            else
-            {
-                UoW.Context.SetModified(entity);
-            }
+            var shorturls = new ShortUrlFakeDBSet();
+            shorturls.Add(entity);
+            GenerateList().Concat(shorturls.AsQueryable());
         }
 
         public void Delete(int id)
@@ -86,6 +82,8 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             shorturls.Add(new ShortUrl() { Token = "azer3", Pk_Id = 3, Url = "address3" });
             return shorturls.AsQueryable();
         }
+        
+
 
         public KeyValuePair<int, string> GetTabIdAndPageNameForModuleId(int moduleId)
         {

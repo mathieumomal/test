@@ -59,6 +59,19 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void CreateShortUrl()
         {
+            RepositoryFactory.Container.RegisterType<IUrlRepository, ShortUrlFakeRepository>(new TransientLifetimeManager());
+            var repo = new ShortUrlFakeRepository();
+
+            var service = new UrlService();
+
+            var urlParams = new Dictionary<string, string>() { { "p1", "v1" }, { "p2", "v2" }, { "TabID", "13" } };
+
+            var shortUrl = service.CreateShortUrl(1, "http://portal.3gpp.org", urlParams);
+
+            //get token
+            string[] el = shortUrl.Split('=');
+            var getFullUrlInDb = service.GetFullUrlForToken(el.Last());
+
             
         }
 

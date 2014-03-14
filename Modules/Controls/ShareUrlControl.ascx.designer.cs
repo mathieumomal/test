@@ -31,39 +31,30 @@ namespace Etsi.Ultimate.Controls {
         protected global::Telerik.Web.UI.RadAjaxManagerProxy RadAjaxMngShareUrl;
         
         /// <summary>
-        /// Contrôle RadToolTip3.
+        /// Contrôle radTooltipShareUrl.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadToolTip RadToolTip3;
+        protected global::Telerik.Web.UI.RadToolTip radTooltipShareUrl;
         
         /// <summary>
-        /// Contrôle CheckBox1.
+        /// Contrôle CheckBoxGetShortUrl.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox CheckBox1;
+        protected global::Telerik.Web.UI.RadButton CheckBoxGetShortUrl;
         
         /// <summary>
-        /// Contrôle TextBox1.
+        /// Contrôle txtLink.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox TextBox1;
-        
-        /// <summary>
-        /// Contrôle RadButton1.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadButton RadButton1;
+        protected global::System.Web.UI.WebControls.TextBox txtLink;
     }
 }

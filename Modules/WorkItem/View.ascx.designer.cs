@@ -22,15 +22,6 @@ namespace Etsi.Ultimate.Module.WorkItem {
         protected global::Telerik.Web.UI.RadButton workItem_import;
         
         /// <summary>
-        /// Contrôle shareUrl.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.UserControl shareUrl;
-        
-        /// <summary>
         /// Contrôle wiRadAjaxManager.
         /// </summary>
         /// <remarks>

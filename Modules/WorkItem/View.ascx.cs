@@ -29,6 +29,9 @@ using Etsi.Ultimate.Services;
 using Microsoft.Practices.Unity;
 using Etsi.Ultimate.DomainClasses;
 using Rhino.Mocks;
+using Etsi.Ultimate.Controls;
+using DotNetNuke.Entities.Tabs;
+using System.Web;
 
 namespace Etsi.Ultimate.Module.WorkItem
 {
@@ -47,7 +50,8 @@ namespace Etsi.Ultimate.Module.WorkItem
     /// -----------------------------------------------------------------------------
     public partial class View : WorkItemModuleBase, IActionable
     {
-        public Etsi.Ultimate.Controls.FullView ultFullView;
+        protected Etsi.Ultimate.Controls.FullView ultFullView;
+        protected Etsi.Ultimate.Controls.ShareUrlControl ultShareUrl;
 
         private static string PathExportWorkPlan;
         private static string PathUploadWorkPlan;
@@ -61,6 +65,9 @@ namespace Etsi.Ultimate.Module.WorkItem
         {
             try
             {
+                ManageShareUrl();
+                
+
                 ultFullView.ModuleId = 12;
                 ultFullView.TabId = 13;
                 var urlParams = Page.ClientQueryString.Split('&').Select(item => item.Split('=')).ToDictionary(s => s[0], s => s[1]);
@@ -78,6 +85,28 @@ namespace Etsi.Ultimate.Module.WorkItem
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private void ManageShareUrl()
+        {
+            ultShareUrl.ModuleId = ModuleId;
+            ultShareUrl.TabId = TabController.CurrentPage.TabID;
+
+            var address = Request.IsSecureConnection ? "https://" : "http://";
+            address += Request["HTTP_HOST"] + "/";
+            ultShareUrl.BaseAddress = address;
+
+            var nameValueCollection = HttpContext.Current.Request.QueryString;
+            var urlParams = new Dictionary<string, string>();
+            foreach (var k in nameValueCollection.AllKeys)
+            {
+                if (k != null && nameValueCollection[k] != null)
+                    urlParams.Add(k, nameValueCollection[k]);
+            }
+            ultShareUrl.UrlParams = urlParams;
         }
 
         /// <summary>

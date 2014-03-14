@@ -23,13 +23,13 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public string CreateShortUrl(int moduleId, string baseAddress, Dictionary<string, string> urlParams)
+        public string CreateShortUrl(int moduleId, string baseAddress, Dictionary<string, string> getParams)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                urlParams.Remove(Enum_WorkItemFilters.TbId.ToString());
                 var urlManager = new UrlManager();
-                return urlManager.CreateShortUrl(moduleId, baseAddress, urlParams);
+                urlManager.UoW = uoW;
+                return urlManager.CreateShortUrl(moduleId, baseAddress, getParams);
             }
         }
 
@@ -39,7 +39,14 @@ namespace Etsi.Ultimate.Services
             {
                 var urlManager = new UrlManager();
                 urlManager.UoW = uoW;
-                return urlManager.GetFullUrlForToken(token);
+                try
+                {
+                    return urlManager.GetFullUrlForToken(token);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
             }
         }
 
