@@ -20,12 +20,11 @@ namespace Etsi.Ultimate.Tests.Repositories
         public const string CacheModulePage = "ULT_REPO_MODULE_TAB";
 
         [Test]
-        [ExpectedException(typeof(KeyNotFoundException))]
         public void FindByToken_noResult()
         {
             CacheManager.Clear(CacheModulePage);
             var repo = new UrlRepository() { UoW = GetUnitOfWork() };
-            var results = repo.FindByToken(tokenExample_dontexist);
+            Assert.IsNull(repo.FindByToken(tokenExample_dontexist));
         }
 
         [Test]

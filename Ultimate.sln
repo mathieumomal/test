@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils", "Common\Utils\Utils
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controls", "Modules\Controls\Controls.csproj", "{1330D828-A24F-4676-9081-C41204C35072}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShortUrl", "Modules\ShortUrl\ShortUrl.csproj", "{DA058448-949C-4710-B6E5-AEFFFACF24E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -104,6 +106,10 @@ Global
 		{1330D828-A24F-4676-9081-C41204C35072}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1330D828-A24F-4676-9081-C41204C35072}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1330D828-A24F-4676-9081-C41204C35072}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA058448-949C-4710-B6E5-AEFFFACF24E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA058448-949C-4710-B6E5-AEFFFACF24E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA058448-949C-4710-B6E5-AEFFFACF24E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA058448-949C-4710-B6E5-AEFFFACF24E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

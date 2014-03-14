@@ -69,7 +69,12 @@ namespace Etsi.Ultimate.Business
         {
             IUrlRepository repo = RepositoryFactory.Resolve<IUrlRepository>();
             repo.UoW = UoW;
-            return repo.FindByToken(token).Url;
+
+            var shortUrl = repo.FindByToken(token);
+
+            if (shortUrl != null)
+                return shortUrl.Url;
+            return null;
         }
     }
 }

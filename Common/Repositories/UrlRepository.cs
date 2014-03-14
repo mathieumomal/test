@@ -67,11 +67,7 @@ namespace Etsi.Ultimate.Repositories
         //Find shortUrl by token
         public ShortUrl FindByToken(string token)
         {
-            //This will throw an exception if the query does not return at least one item.
-            var ShortUrl = UoW.Context.ShortUrls.Where(f => f.Token == token).FirstOrDefault();
-            if(ShortUrl == null)
-                throw new KeyNotFoundException();
-            return ShortUrl;
+            return UoW.Context.ShortUrls.Where(f => f.Token == token).FirstOrDefault();
         }
 
         /// <summary>

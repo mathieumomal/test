@@ -38,6 +38,7 @@ namespace Etsi.Ultimate.Services
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var urlManager = new UrlManager();
+                urlManager.UoW = uoW;
                 return urlManager.GetFullUrlForToken(token);
             }
         }
