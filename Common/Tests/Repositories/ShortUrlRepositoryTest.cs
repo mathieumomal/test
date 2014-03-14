@@ -69,7 +69,7 @@ namespace Etsi.Ultimate.Tests.Repositories
                 Url = "/release.ascx?params"
             });
 
-            iUltimateContext.ShortUrl = suDbSet;
+            iUltimateContext.ShortUrls = suDbSet;
 
             iUnitOfWork.Stub(uow => uow.Context).Return(iUltimateContext);
             return iUnitOfWork;

@@ -13,10 +13,10 @@ namespace Etsi.Ultimate.DomainClasses
     using System.Collections.Generic;
     
     [Serializable]
-    public partial class ShortUrl
+    public partial class View_ModulesPages
     {
-        public int Pk_Id { get; set; }
-        public string Token { get; set; }
-        public string Url { get; set; }
+        public string TabName { get; set; }
+        public string TabPath { get; set; }
+        public int ModuleID { get; set; }
     }
 }

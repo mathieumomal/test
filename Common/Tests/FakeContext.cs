@@ -46,7 +46,11 @@ namespace Etsi.Ultimate.Tests
         public System.Data.Entity.IDbSet<Community> Communities
         { get; set; }
 
-        public System.Data.Entity.IDbSet<ShortUrl> ShortUrl
+        public System.Data.Entity.IDbSet<View_ModulesPages> View_ModulesPages
+        {
+            get; set;
+        }
+        public System.Data.Entity.IDbSet<ShortUrl> ShortUrls
         {
             get;
             set;
@@ -76,7 +80,7 @@ namespace Etsi.Ultimate.Tests
             else if (entity.GetType() == typeof(WorkItem))
                 WorkItems.Add((WorkItem)entity);
             else if (entity.GetType() == typeof(ShortUrl))
-                ShortUrl.Add((ShortUrl)entity);
+                ShortUrls.Add((ShortUrl)entity);
             else
                 throw new NotImplementedException("Something is missing in the FakeContext");
         }
@@ -96,6 +100,9 @@ namespace Etsi.Ultimate.Tests
         }
 
         #endregion
+
+
+        
 
     }
 }

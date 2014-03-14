@@ -22,9 +22,10 @@
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Remarks_WorkItems" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WorkItems_ParentWi" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WorkItems_WorkItems" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.WorkItems_ResponsibleGroups" Width="1.5" PointX="5.6023676402877864" PointY="30.965353458638003" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.WorkItems_ResponsibleGroups" Width="1.5" PointX="7" PointY="22" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WorkItems_ResponsibleGroups_WorkItems" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.ShortUrl" Width="1.5" PointX="6.9469218938364286" PointY="14.412504187977175" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.ShortUrl" Width="1.5" PointX="7.25" PointY="9.75" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.View_ModulesPages" Width="1.5" PointX="0.5" PointY="10" FillColor="DarkSeaGreen" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

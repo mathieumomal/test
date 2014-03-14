@@ -18,7 +18,7 @@ namespace Etsi.Ultimate.Repositories
 
         public IQueryable<ShortUrl> All
         {
-            get { return UoW.Context.ShortUrl; }
+            get { return UoW.Context.ShortUrls; }
         }
 
         public IQueryable<ShortUrl> AllIncluding(params System.Linq.Expressions.Expression<Func<ShortUrl, object>>[] includeProperties)
@@ -65,7 +65,7 @@ namespace Etsi.Ultimate.Repositories
         public ShortUrl FindByToken(string token)
         {
             //This will throw an exception if the query does not return at least one item.
-            var ShortUrl = UoW.Context.ShortUrl.Where(f => f.Token == token).FirstOrDefault();
+            var ShortUrl = UoW.Context.ShortUrls.Where(f => f.Token == token).FirstOrDefault();
             if(ShortUrl == null)
                 throw new KeyNotFoundException();
             return ShortUrl;
