@@ -94,6 +94,7 @@
     <Compile Include="FakeRepositories\UserRolesFakeRepository.cs" />
     <Compile Include="FakeSets\CommunityFakeDBSet.cs" />
     <Compile Include="FakeSets\HistoryFakeDBSet.cs" />
+    <Compile Include="FakeSets\ModulesPagesFakeDbSet.cs" />
     <Compile Include="FakeSets\PersonFakeDBSet.cs" />
     <Compile Include="FakeSets\ShortUrlFakeDBSet.cs" />
     <Compile Include="FakeSets\WorkItemFakeDBSet.cs" />

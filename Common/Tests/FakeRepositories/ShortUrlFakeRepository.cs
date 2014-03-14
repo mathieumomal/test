@@ -86,5 +86,11 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             shorturls.Add(new ShortUrl() { Token = "azer3", Pk_Id = 3, Url = "address3" });
             return shorturls.AsQueryable();
         }
+
+        public KeyValuePair<int, string> GetTabIdAndPageNameForModuleId(int moduleId)
+        {
+            return new KeyValuePair<int,string>(0, "");
+        }
+
     }
 }

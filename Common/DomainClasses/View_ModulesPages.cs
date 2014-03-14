@@ -18,5 +18,6 @@ namespace Etsi.Ultimate.DomainClasses
         public string TabName { get; set; }
         public string TabPath { get; set; }
         public int ModuleID { get; set; }
+        public int TabID { get; set; }
     }
 }

@@ -74,7 +74,8 @@
             <DefiningQuery>SELECT 
       [View_ModulesPages].[TabName] AS [TabName], 
       [View_ModulesPages].[TabPath] AS [TabPath], 
-      [View_ModulesPages].[ModuleID] AS [ModuleID]
+      [View_ModulesPages].[ModuleID] AS [ModuleID], 
+      [View_ModulesPages].[TabID] AS [TabID]
       FROM [dbo].[View_ModulesPages] AS [View_ModulesPages]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="View_Persons" EntityType="Etsi.Ultimate.DataAccess.Store.View_Persons" store:Type="Views" store:Schema="dbo" store:Name="View_Persons">
@@ -320,10 +321,12 @@
             <PropertyRef Name="TabName" />
             <PropertyRef Name="TabPath" />
             <PropertyRef Name="ModuleID" />
+            <PropertyRef Name="TabID" />
           </Key>
           <Property Name="TabName" Type="nvarchar" Nullable="false" MaxLength="200" />
           <Property Name="TabPath" Type="nvarchar" Nullable="false" MaxLength="255" />
           <Property Name="ModuleID" Type="int" Nullable="false" />
+          <Property Name="TabID" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'U3GPPDB.dbo.View_Persons' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
@@ -787,10 +790,12 @@
             <PropertyRef Name="TabName" />
             <PropertyRef Name="TabPath" />
             <PropertyRef Name="ModuleID" />
+            <PropertyRef Name="TabID" />
           </Key>
           <Property Type="String" Name="TabName" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="TabPath" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="ModuleID" Nullable="false" />
+          <Property Type="Int32" Name="TabID" Nullable="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -1004,6 +1009,7 @@
           <EntitySetMapping Name="View_ModulesPages">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.View_ModulesPages">
               <MappingFragment StoreEntitySet="View_ModulesPages">
+                <ScalarProperty Name="TabID" ColumnName="TabID" />
                 <ScalarProperty Name="ModuleID" ColumnName="ModuleID" />
                 <ScalarProperty Name="TabPath" ColumnName="TabPath" />
                 <ScalarProperty Name="TabName" ColumnName="TabName" />

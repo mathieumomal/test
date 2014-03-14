@@ -33,6 +33,8 @@ using Microsoft.Practices.Unity;
 using Etsi.Ultimate.DomainClasses;
 using DotNetNuke.Common.Utilities;
 using System.Web.UI.HtmlControls;
+using System.Web;
+using DotNetNuke.Entities.Tabs;
 
 namespace Etsi.Ultimate.Module.Release
 {
@@ -51,6 +53,8 @@ namespace Etsi.Ultimate.Module.Release
     /// -----------------------------------------------------------------------------
     public partial class View : ReleaseModuleBase
     {
+        protected Ultimate.Controls.FullView ultFullView;
+        
         private const String cssFreezeReach = "freezeReach";
         private const String cssClosedColor = "closed";
 
@@ -63,6 +67,8 @@ namespace Etsi.Ultimate.Module.Release
         {
             try
             {
+                ManageFullView();
+
                 int personId = GetUserPersonId(UserInfo);
 
                 //Example : mock to fake service layer -> ServicesFactory.Container.RegisterType<IReleaseService, ReleaseServiceMock>(new TransientLifetimeManager());
@@ -95,6 +101,27 @@ namespace Etsi.Ultimate.Module.Release
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
             }
+        }
+
+        private void ManageFullView()
+        {
+            ultFullView.ModuleId = ModuleId;
+            ultFullView.TabId = TabController.CurrentPage.TabID;
+
+            var address = Request.IsSecureConnection ? "https://" : "http://";
+            address += Request["HTTP_HOST"] + "/";
+            ultFullView.BaseAddress = address;
+
+
+
+            var nameValueCollection = HttpContext.Current.Request.QueryString;
+            var urlParams = new Dictionary<string, string>();
+            foreach (var k in nameValueCollection.AllKeys)
+            {
+                if (k != null && nameValueCollection[k] != null)
+                    urlParams.Add (k, nameValueCollection[k]);
+            }
+            ultFullView.UrlParams = urlParams;
         }
 
         private int GetUserPersonId(DotNetNuke.Entities.Users.UserInfo UserInfo)

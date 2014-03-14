@@ -15,7 +15,12 @@ namespace Etsi.Ultimate.Services
 
         public KeyValuePair<int, string> GetPageIdAndFullAddressForModule(int moduleId, string baseAddress, Dictionary<string, string> getParams)
         {
-            throw new NotImplementedException();
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var urlManager = new UrlManager();
+                urlManager.UoW = uoW;
+                return urlManager.GetPageIdAndFullAddressForModule(moduleId, baseAddress, getParams);
+            }
         }
 
         public string CreateShortUrl(int moduleId, string baseAddress, Dictionary<string, string> urlParams)

@@ -10,6 +10,8 @@ namespace Etsi.Ultimate.Business
 {
     public class UrlManager
     {
+        public const string DnnTabIdGetParam = "TabID";
+
         public IUltimateUnitOfWork UoW { get; set; }
 
         public UrlManager() { }
@@ -17,7 +19,24 @@ namespace Etsi.Ultimate.Business
 
         public KeyValuePair<int, string> GetPageIdAndFullAddressForModule(int moduleId, string baseAddress, Dictionary<string, string> urlParams)
         {
-            throw new NotImplementedException();
+            // First, search the data concerning the module
+            var shortUrlRepo = RepositoryFactory.Resolve<IUrlRepository>();
+            shortUrlRepo.UoW = UoW;
+            var result = shortUrlRepo.GetTabIdAndPageNameForModuleId(moduleId);
+
+            if (result.Key == 0)
+                return new KeyValuePair<int, string>(0, null);
+
+            // Transform the result into something legible.
+            var address = new StringBuilder(baseAddress);
+            address.Append(result.Value.Replace("//","/")+".aspx");
+
+            // Add the UrlParams. Do not consider tabId param.
+            urlParams.Remove(DnnTabIdGetParam);
+            if (urlParams.Count > 0)
+                address.Append( "?"+ string.Join("&", urlParams.Select( x => x.Key + "=" + x.Value).ToArray()));
+
+            return new KeyValuePair<int,string>(result.Key, address.ToString());
         }
 
         public string CreateShortUrl(int moduleId, string baseAddress, Dictionary<string, string> urlParams)

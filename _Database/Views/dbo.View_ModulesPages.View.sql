@@ -1,7 +1,7 @@
 USE [U3GPPDB]
 GO
 
-/****** Object:  View [dbo].[View_ModulesPages]    Script Date: 03/13/2014 17:46:50 ******/
+/****** Object:  View [dbo].[View_ModulesPages]    Script Date: 03/14/2014 09:33:32 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -10,7 +10,7 @@ GO
 
 CREATE VIEW [dbo].[View_ModulesPages] AS
 
-SELECT t.TabName, t.TabPath, m.ModuleID
+SELECT t.TabName, t.TabPath, m.ModuleID, t.TabID
 
 FROM DNN3GPP.dbo.Tabs t
 INNER JOIN  DNN3GPP.dbo.TabModules tm ON t.TabID = tm.TabID

@@ -1,9 +1,13 @@
 ﻿<%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.Client.ClientResourceManagement" Assembly="DotNetNuke.Web.Client" %>
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
+<%@ Register TagPrefix="ult" TagName="FullView" Src="../../controls/Ultimate/FullView.ascx" %>
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="View.ascx.cs" Inherits="Etsi.Ultimate.Module.Release.View" %>
 <%@ Import Namespace="System.Drawing" %>
+
+<div style="float:right"><ult:FullView ID="ultFullView" runat="server" /></div>
 <telerik:RadButton runat="server" ID="newRelease" Text="New"></telerik:RadButton>
 
+<div style="clear:both"></div>
  <telerik:RadGrid runat="server" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" ID="releasesTable" OnItemDataBound="releasesTable_ItemDataBound"  AllowPaging="false" AllowSorting="false" AllowFilteringByColumn="false" AutoGenerateColumns="false">
     <MasterTableView ClientDataKeyNames="Pk_ReleaseId">
         <Columns>

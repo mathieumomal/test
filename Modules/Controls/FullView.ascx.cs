@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Etsi.Ultimate.Services;
 
 namespace Etsi.Ultimate.Controls
 {
@@ -24,11 +25,21 @@ namespace Etsi.Ultimate.Controls
         /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
+            lnkFullView.Visible = false;
             if (ModuleId != default(int) && TabId != default(int))
             {
-                lnkFullView.Target = "WorkItem.aspx";
-                lnkFullView.Visible = true;
+                // Create a new service
+                var urlService = ServicesFactory.Resolve<IUrlService>();
+                var result = urlService.GetPageIdAndFullAddressForModule(ModuleId, BaseAddress, UrlParams);
+
+                if (result.Key != 0 && result.Key != TabId)
+                {
+                    lnkFullView.NavigateUrl = result.Value;
+                    lnkFullView.Visible = true;
+                }
             }
+
+            
         }
     }
 }
