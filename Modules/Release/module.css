@@ -244,3 +244,7 @@ versionFieldsetTab {
 .error {
     border-color: red;
 }
+
+.RadAjaxPanel {
+    display: inline !important;
+}

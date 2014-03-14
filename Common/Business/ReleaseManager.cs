@@ -7,6 +7,7 @@ using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
+using System;
 
 namespace Etsi.Ultimate.Business
 {
@@ -154,13 +155,21 @@ namespace Etsi.Ultimate.Business
             ClearCache();
         }
 
-        public void CreateRelease(Release release, int previousReleaseId)
+        public void CreateRelease(Release release, int previousReleaseId, int personId)
         {
             IReleaseRepository relRepo = RepositoryFactory.Resolve<IReleaseRepository>();
             relRepo.UoW = UoW;
             List<Release> allReleases = new List<Release>();
             Release previousRelease;
-
+            release.Histories.Add(new History
+            {
+                Fk_ReleaseId = release.Pk_ReleaseId,
+                Fk_PersonId = personId,
+                CreationDate = DateTime.Now,
+                //Check for the used text
+                HistoryText = "",
+                PersonName = ""
+            });
 
             if (previousReleaseId != 0)
             {
@@ -182,7 +191,7 @@ namespace Etsi.Ultimate.Business
             else
             {
                 allReleases = relRepo.All.OrderByDescending(x => x.SortOrder).ToList();
-                var firstSortOrder = allReleases[allReleases.Count - 1].SortOrder;
+                var firstSortOrder = allReleases[0].SortOrder;
                 foreach (Release r in allReleases)
                 {                    
                     r.SortOrder += 10;
@@ -191,20 +200,25 @@ namespace Etsi.Ultimate.Business
                 release.SortOrder = firstSortOrder;
                 relRepo.InsertOrUpdate(release);
             }
-
-
-            relRepo.UoW.Save();
-
             ClearCache();
         }
 
-        public void EditRelease(Release release, int previousReleaseId)
+        public void EditRelease(Release release, int previousReleaseId, int personId)
         {
             IReleaseRepository relRepo = RepositoryFactory.Resolve<IReleaseRepository>();
             relRepo.UoW = UoW;
             List<Release> allReleases = new List<Release>();
             Release previousRelease;
 
+            release.Histories.Add(new History
+            {
+                Fk_ReleaseId = release.Pk_ReleaseId,
+                Fk_PersonId = personId,
+                CreationDate = DateTime.Now,
+                //Check for the used text
+                HistoryText = "",
+                PersonName = ""
+            });
 
             if (previousReleaseId != 0)
             {
@@ -228,7 +242,7 @@ namespace Etsi.Ultimate.Business
             else
             {
                 allReleases = relRepo.All.OrderByDescending(x => x.SortOrder).ToList();
-                var firstSortOrder = allReleases[allReleases.Count-1].SortOrder;                
+                var firstSortOrder = allReleases[0].SortOrder;                
                 foreach (Release r in allReleases)
                 {
                     if (r.Pk_ReleaseId == release.Pk_ReleaseId)
@@ -242,10 +256,6 @@ namespace Etsi.Ultimate.Business
                 release.SortOrder = firstSortOrder;                
                 relRepo.InsertOrUpdate(release);
             }
-            
-
-            relRepo.UoW.Save();
-
             ClearCache();
         }
 

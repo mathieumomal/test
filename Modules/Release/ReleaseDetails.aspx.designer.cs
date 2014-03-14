@@ -643,47 +643,47 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.WebControls.Button btnCancelFreeze;
         
         /// <summary>
-        /// RadWindow_ClosureConfirmation control.
+        /// Contrôle RadWindow_ClosureConfirmation.
         /// </summary>
         /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::Telerik.Web.UI.RadWindow RadWindow_ClosureConfirmation;
         
         /// <summary>
-        /// ddlClosureMeeting control.
+        /// Contrôle ddlClosureMeeting.
         /// </summary>
         /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.DropDownList ddlClosureMeeting;
         
         /// <summary>
-        /// RadDatePickerClosureDate control.
+        /// Contrôle RadDatePickerClosureDate.
         /// </summary>
         /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::Telerik.Web.UI.RadDatePicker RadDatePickerClosureDate;
         
         /// <summary>
-        /// btnConfirmClosure control.
+        /// Contrôle btnConfirmClosure.
         /// </summary>
         /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnConfirmClosure;
         
         /// <summary>
-        /// btnCancelClosure control.
+        /// Contrôle btnCancelClosure.
         /// </summary>
         /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCancelClosure;
     }

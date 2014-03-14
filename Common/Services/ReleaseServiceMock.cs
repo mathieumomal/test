@@ -77,9 +77,9 @@ namespace Etsi.Ultimate.Services
             return new KeyValuePair<List<Release>,UserRightsContainer>(releases, userRightsContainer);
         }
 
-        public string GetPreviousReleaseCode(int personID, int releaseId)
+        public KeyValuePair<int, string> GetPreviousReleaseCode(int personID, int releaseId)
         {
-            return string.Empty;
+            throw new NotImplementedException();
         }
 
         public void FreezeRelease(int releaseId, DateTime endDate, int personId, int FreezeMtgId, string FreezeMtgRef)
@@ -97,12 +97,12 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
-        public void EditRelease(Release release, int previousReleaseId)
+        public void EditRelease(Release release, int previousReleaseId, int personId)
         {
             throw new NotImplementedException();
         }
 
-        public void CreateRelease(Release release, int previousReleaseId)
+        public void CreateRelease(Release release, int previousReleaseId, int personId)
         {
             throw new NotImplementedException();
         }

@@ -31,6 +31,24 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.HtmlControls.HtmlForm ReleaseEditionForm;
         
         /// <summary>
+        /// Contrôle RadScriptManager1.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadScriptManager RadScriptManager1;
+        
+        /// <summary>
+        /// Contrôle RadAjaxManager1.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadAjaxManager RadAjaxManager1;
+        
+        /// <summary>
         /// Contrôle releaseWarning.
         /// </summary>
         /// <remarks>
@@ -65,15 +83,6 @@ namespace Etsi.Ultimate.Module.Release {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel releaseDetailsBody;
-        
-        /// <summary>
-        /// Contrôle RadScriptManager1.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadScriptManager RadScriptManager1;
         
         /// <summary>
         /// Contrôle ReleaseDetailRadTabStrip.
@@ -238,22 +247,13 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.WebControls.Label ReleaseFreezeStage1Lbl;
         
         /// <summary>
-        /// Contrôle ReleaseFreezeStage1Meeting.
+        /// Contrôle FreezeStage1Meeting.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ReleaseFreezeStage1Meeting;
-        
-        /// <summary>
-        /// Contrôle ReleaseFreezeStage1Date.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ReleaseFreezeStage1Date;
+        protected global::System.Web.UI.UserControl FreezeStage1Meeting;
         
         /// <summary>
         /// Contrôle ReleaseFreezeStage2Lbl.
@@ -265,22 +265,13 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.WebControls.Label ReleaseFreezeStage2Lbl;
         
         /// <summary>
-        /// Contrôle ReleaseFreezeStage2Meeting.
+        /// Contrôle FreezeStage2Meeting.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ReleaseFreezeStage2Meeting;
-        
-        /// <summary>
-        /// Contrôle ReleaseFreezeStage2Date.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ReleaseFreezeStage2Date;
+        protected global::System.Web.UI.UserControl FreezeStage2Meeting;
         
         /// <summary>
         /// Contrôle ReleaseFreezeStage3Lbl.
@@ -292,22 +283,13 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.WebControls.Label ReleaseFreezeStage3Lbl;
         
         /// <summary>
-        /// Contrôle ReleaseFreezeStage3Meeting.
+        /// Contrôle FreezeStage3Meeting.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ReleaseFreezeStage3Meeting;
-        
-        /// <summary>
-        /// Contrôle ReleaseFreezeStage3Date.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ReleaseFreezeStage3Date;
+        protected global::System.Web.UI.UserControl FreezeStage3Meeting;
         
         /// <summary>
         /// Contrôle ReleaseEndDateLbl.
@@ -317,24 +299,6 @@ namespace Etsi.Ultimate.Module.Release {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label ReleaseEndDateLbl;
-        
-        /// <summary>
-        /// Contrôle ReleaseEndDateMeetingVal.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ReleaseEndDateMeetingVal;
-        
-        /// <summary>
-        /// Contrôle ReleaseEndDateVal.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ReleaseEndDateVal;
         
         /// <summary>
         /// Contrôle ReleaseEndMeeting.
@@ -355,24 +319,6 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.WebControls.Label ReleaseClosureDateLbl;
         
         /// <summary>
-        /// Contrôle ReleaseClosureDateMeetingVal.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ReleaseClosureDateMeetingVal;
-        
-        /// <summary>
-        /// Contrôle ReleaseClosureDateVal.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ReleaseClosureDateVal;
-        
-        /// <summary>
         /// Contrôle ReleaseClosureMeeting.
         /// </summary>
         /// <remarks>
@@ -380,8 +326,6 @@ namespace Etsi.Ultimate.Module.Release {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.UserControl ReleaseClosureMeeting;
-        
-        
         
         /// <summary>
         /// Contrôle RadPageAdministration.

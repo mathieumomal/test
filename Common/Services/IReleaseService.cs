@@ -24,7 +24,7 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         KeyValuePair<DomainClasses.Release, UserRightsContainer> GetReleaseById(int personID, int releaseId);
 
-        string GetPreviousReleaseCode(int personID, int releaseId);
+        KeyValuePair<int, string> GetPreviousReleaseCode(int personID, int releaseId);
 
         void FreezeRelease(int releaseId, DateTime endDate, int personId, int FreezeMtgId, string FreezeMtgRef);
 
@@ -40,8 +40,8 @@ namespace Etsi.Ultimate.Services
 
         Dictionary<int, string> GetAllReleasesCodes(int personId, int releaseId);
 
-        void EditRelease(Release release, int previousReleaseId);
+        void EditRelease(Release release, int previousReleaseId, int personId);
 
-        void CreateRelease(Release release, int previousReleaseId);
+        void CreateRelease(Release release, int previousReleaseId, int personId);
     }
 }

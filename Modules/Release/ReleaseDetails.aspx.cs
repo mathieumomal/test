@@ -56,7 +56,7 @@ namespace Etsi.Ultimate.Module.Release
                     FillGeneralTab(userRights, release);
 
                     if (userRights.HasRight(Domain.Enum_UserRights.Release_ViewCompleteDetails))
-                        FillAdminTab(release, svc.GetPreviousReleaseCode(UserId, release.Pk_ReleaseId));
+                        FillAdminTab(release, svc.GetPreviousReleaseCode(UserId, release.Pk_ReleaseId).Value);
 
                     
 
@@ -206,7 +206,7 @@ namespace Etsi.Ultimate.Module.Release
         /// <param name="previousCode"></param>
         private void FillAdminTab(Domain.Release release, string previousCode)
         {
-            previousReleaseVal.Text = (previousCode == null) ? CONST_EMPTY_FIELD : previousCode;
+            previousReleaseVal.Text = (previousCode == string.Empty) ? CONST_EMPTY_FIELD : previousCode;
             ITURCodeVal.Text = (release.IturCode == null) ? CONST_EMPTY_FIELD : release.IturCode;
             
             Release2GDecimalVal.Text = (release.Version2g == null) ? CONST_EMPTY_FIELD : release.Version2g.ToString();

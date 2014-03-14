@@ -12,17 +12,17 @@ namespace Etsi.Ultimate.DomainClasses
 
         public string Version2gBase36{
             get{
-                return (Version2g != null) ? Encode((int)Version2g) : String.Empty;
+                return (Version2g != null) ? Release.Encode((int)Version2g) : String.Empty;
             }
         }
 
         public string Version3gBase36{
             get{
-                return(Version3g != null) ? Encode((int)Version3g) : String.Empty;
+                return (Version3g != null) ? Release.Encode((int)Version3g) : String.Empty;
             }
         }
 
-        private String Encode(int input)
+        public static String Encode(int input)
         {            
             char[] baseElements = base36.ToCharArray();
             var result = new Stack<char>();

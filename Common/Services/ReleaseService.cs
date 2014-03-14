@@ -41,9 +41,9 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public string GetPreviousReleaseCode(int personID, int releaseId)
+        public KeyValuePair<int, string> GetPreviousReleaseCode(int personID, int releaseId)
         {
-            List<DomainClasses.Release> allReleases = GetAllReleases(personID).Key.OrderByDescending(x => x.SortOrder).ToList();
+            List<DomainClasses.Release> allReleases = GetAllReleases(personID).Key.OrderBy(x => x.SortOrder).ToList();
             int nmbrOfReleases= allReleases.Count;
             if (nmbrOfReleases > 0)
             {
@@ -51,14 +51,14 @@ namespace Etsi.Ultimate.Services
                 {
                     if (allReleases[i].Pk_ReleaseId == releaseId)
                     {
-                        if (i > 0)
-                            return allReleases[i - 1].Code;
-                        else
+                        if (i == 0)
                             break;
+                        else
+                            return new KeyValuePair<int, string>(allReleases[i - 1].Pk_ReleaseId, allReleases[i - 1].Code);
                     }
                 }
             }
-            return String.Empty;
+            return new KeyValuePair<int, string>(0,String.Empty);
         }
 
         public void FreezeRelease(int releaseId, DateTime endDate, int personId, int FreezeMtgId, string FreezeMtgRef)
@@ -92,6 +92,13 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Get the list of all releases' ids and codes except the current one
+        /// An additional element is added for the case of a release that does not have any previous Release
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="releaseId"></param>
+        /// <returns></returns>
         public Dictionary<int, string> GetAllReleasesCodes(int personId, int releaseId)
         {
             Dictionary<int, string> allReleasesCodes = new Dictionary<int, string>();
@@ -106,23 +113,24 @@ namespace Etsi.Ultimate.Services
             return allReleasesCodes;
         }
 
-        public void EditRelease(Release release, int previousReleaseId)
+        public void EditRelease(Release release, int previousReleaseId, int personId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var releaseManager = new ReleaseManager();
                 releaseManager.UoW = uoW;
-                releaseManager.EditRelease(release, previousReleaseId);
+                releaseManager.EditRelease(release, previousReleaseId, personId);
+                uoW.Save();
             }
         }
 
-        public void CreateRelease(Release release, int previousReleaseId)
+        public void CreateRelease(Release release, int previousReleaseId, int personId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var releaseManager = new ReleaseManager();
                 releaseManager.UoW = uoW;
-                releaseManager.CreateRelease(release, previousReleaseId);
+                releaseManager.CreateRelease(release, previousReleaseId, personId);
             }
         }
         #endregion

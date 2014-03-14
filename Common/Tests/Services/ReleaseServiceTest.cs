@@ -154,7 +154,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             // Call the code
             var releaseService = new ReleaseService();
-            var previousCode = releaseService.GetPreviousReleaseCode(personID, releaseId);
+            var previousCode = releaseService.GetPreviousReleaseCode(personID, releaseId).Value;
             if (releaseId == 1)
             {
                 Assert.AreEqual(string.Empty, previousCode);
