@@ -22,7 +22,7 @@ namespace Etsi.Ultimate.Repositories
         {
             get
             {
-                return AllIncluding(t => t.Release);
+                return UoW.Context.Histories;
             }
         }
 
@@ -48,7 +48,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>History Record</returns>
         public History Find(int id)
         {
-            return All.Where(x => x.Pk_HistoryId == id).FirstOrDefault();
+            return AllIncluding(t => t.Release).Where(x => x.Pk_HistoryId == id).FirstOrDefault();
         }
 
         /// <summary>
