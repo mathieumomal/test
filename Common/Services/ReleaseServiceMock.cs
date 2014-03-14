@@ -92,7 +92,7 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
-        public Dictionary<int, string> GetAllReleasesCodes(int personId)
+        public Dictionary<int, string> GetAllReleasesCodes(int personId, int releaseId)
         {
             throw new NotImplementedException();
         }

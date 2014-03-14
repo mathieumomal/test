@@ -337,6 +337,15 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.WebControls.Label ReleaseEndDateVal;
         
         /// <summary>
+        /// Contrôle ReleaseEndMeeting.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.UserControl ReleaseEndMeeting;
+        
+        /// <summary>
         /// Contrôle ReleaseClosureDateLbl.
         /// </summary>
         /// <remarks>
@@ -364,13 +373,15 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.WebControls.Label ReleaseClosureDateVal;
         
         /// <summary>
-        /// Contrôle releaseRemarks.
+        /// Contrôle ReleaseClosureMeeting.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.UserControl releaseRemarks;
+        protected global::System.Web.UI.UserControl ReleaseClosureMeeting;
+        
+        
         
         /// <summary>
         /// Contrôle RadPageAdministration.

@@ -159,44 +159,39 @@ namespace Etsi.Ultimate.Business
             IReleaseRepository relRepo = RepositoryFactory.Resolve<IReleaseRepository>();
             relRepo.UoW = UoW;
             List<Release> allReleases = new List<Release>();
-            Release previousRelease;            
+            Release previousRelease;
+
 
             if (previousReleaseId != 0)
             {
                 previousRelease = relRepo.Find(previousReleaseId);
                 release.SortOrder = previousRelease.SortOrder + 10;
-                relRepo.InsertOrUpdate(release);
-                allReleases = relRepo.All.OrderBy(x => x.SortOrder).ToList();
+                allReleases = relRepo.All.OrderByDescending(x => x.SortOrder).ToList();
                 foreach (Release r in allReleases)
-                {
-                    if (r.Pk_ReleaseId == release.Pk_ReleaseId)
-                        continue;
-                    if (r.SortOrder < previousRelease.SortOrder)
+                {                    
+                    if (r.SortOrder <= previousRelease.SortOrder)
                         break;
-                    if (r.SortOrder >= previousRelease.SortOrder)
+                    if (r.SortOrder > previousRelease.SortOrder)
                     {
                         r.SortOrder += 10;
                         relRepo.InsertOrUpdate(r);
                     }
                 }
+                relRepo.InsertOrUpdate(release);
             }
             else
             {
-                var itemCount = allReleases.Count;
-                Release firstRelease = allReleases[itemCount - 1];
-                release.SortOrder = firstRelease.SortOrder;
-                relRepo.InsertOrUpdate(release);
+                allReleases = relRepo.All.OrderByDescending(x => x.SortOrder).ToList();
+                var firstSortOrder = allReleases[allReleases.Count - 1].SortOrder;
                 foreach (Release r in allReleases)
-                {
-                    if (r.Pk_ReleaseId == release.Pk_ReleaseId)
-                        continue;
-                    else
-                    {
-                        r.SortOrder += 10;
-                        relRepo.InsertOrUpdate(r);
-                    }
+                {                    
+                    r.SortOrder += 10;
+                    relRepo.InsertOrUpdate(r);                    
                 }
+                release.SortOrder = firstSortOrder;
+                relRepo.InsertOrUpdate(release);
             }
+
 
             relRepo.UoW.Save();
 
@@ -209,24 +204,21 @@ namespace Etsi.Ultimate.Business
             relRepo.UoW = UoW;
             List<Release> allReleases = new List<Release>();
             Release previousRelease;
-            Release releaseToEdit = relRepo.Find(release.Pk_ReleaseId);
-            int releaseToEditId = releaseToEdit.Pk_ReleaseId;
-            releaseToEdit = release;
-            releaseToEdit.Pk_ReleaseId = releaseToEditId;
+
 
             if (previousReleaseId != 0)
             {
                 previousRelease = relRepo.Find(previousReleaseId);
-                releaseToEdit.SortOrder = previousRelease.SortOrder + 10;
-                relRepo.InsertOrUpdate(releaseToEdit);
-                allReleases = relRepo.All.OrderBy(x => x.SortOrder).ToList();
+                release.SortOrder = previousRelease.SortOrder + 10;
+                relRepo.InsertOrUpdate(release);
+                allReleases = relRepo.All.OrderByDescending(x => x.SortOrder).ToList();
                 foreach (Release r in allReleases)
                 {
-                    if (r.Pk_ReleaseId == releaseToEdit.Pk_ReleaseId)
+                    if (r.Pk_ReleaseId == release.Pk_ReleaseId)
                         continue;
-                    if (r.SortOrder < previousRelease.SortOrder)
+                    if (r.Pk_ReleaseId == previousRelease.Pk_ReleaseId)
                         break;
-                    if (r.SortOrder >= previousRelease.SortOrder)
+                    if (r.SortOrder > previousRelease.SortOrder)
                     {
                         r.SortOrder += 10;
                         relRepo.InsertOrUpdate(r);
@@ -235,13 +227,11 @@ namespace Etsi.Ultimate.Business
             }
             else
             {
-                var itemCount = allReleases.Count;
-                Release firstRelease = allReleases[itemCount-1];
-                releaseToEdit.SortOrder = firstRelease.SortOrder;
-                relRepo.InsertOrUpdate(releaseToEdit);
+                allReleases = relRepo.All.OrderByDescending(x => x.SortOrder).ToList();
+                var firstSortOrder = allReleases[allReleases.Count-1].SortOrder;                
                 foreach (Release r in allReleases)
                 {
-                    if (r.Pk_ReleaseId == releaseToEdit.Pk_ReleaseId)
+                    if (r.Pk_ReleaseId == release.Pk_ReleaseId)
                         continue;                    
                     else
                     {
@@ -249,6 +239,8 @@ namespace Etsi.Ultimate.Business
                         relRepo.InsertOrUpdate(r);
                     }
                 }
+                release.SortOrder = firstSortOrder;                
+                relRepo.InsertOrUpdate(release);
             }
             
 

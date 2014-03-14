@@ -3,6 +3,7 @@
 <%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.Client.ClientResourceManagement" Assembly="DotNetNuke.Web.Client" %>
 <%@ Register TagPrefix="ult" TagName="RemarksControl" Src="../../controls/Ultimate/RemarksControl.ascx" %>
 <%@ Register TagPrefix="ult" TagName="HistoryControl" Src="../../controls/Ultimate/HistoryControl.ascx" %>
+<%@ Register TagPrefix="ult" TagName="MeetingControl" Src="../../controls/Ultimate/MeetingControl.ascx" %>
 
 <!DOCTYPE html>
 
@@ -66,7 +67,11 @@
                         </tr>
                         <tr>            
                             <td class="TabLineLeft"><asp:Label ID="ReleaseStartDateLbl" runat="server" ControlName="ReleaseStartDateLbl" Text="Start date:"></asp:Label></td>
-                            <td colspan="2" class="TabLineRight"><telerik:RadDatePicker ID="ReleaseStartDateVal" runat="server" ControlName="ReleaseStartDateVal"></telerik:RadDatePicker></td>
+                            <td colspan="2" class="TabLineRight">
+                                <telerik:RadDatePicker ID="ReleaseStartDateVal" runat="server" ControlName="ReleaseStartDateVal">
+                                    <DateInput runat="server" ID="ReleaseStartDateValInput" DateFormat="yyyy-MM-dd"></DateInput>
+                                </telerik:RadDatePicker>
+                            </td>
                         </tr>
                         <tr>
                             <td colspan="3" class="TabLineRightFreeze">
@@ -111,15 +116,17 @@
                         </tr>
                         <tr>            
                             <td class="TabLineLeft"><asp:Label ID="ReleaseEndDateLbl" runat="server" ControlName="ReleaseEndDateLbl" Text="End date:"></asp:Label></td>
-                            <td class="TabLine3colRight"><asp:Label ID="ReleaseEndDateMeetingVal" runat="server" ControlName="ReleaseEndDateMeetingVal"></asp:Label></td>
+                            <!--<td class="TabLine3colRight"><asp:Label ID="ReleaseEndDateMeetingVal" runat="server" ControlName="ReleaseEndDateMeetingVal"></asp:Label></td>
                             <td class="TabLine3colRight">
                                 <asp:Label ID="ReleaseEndDateVal" runat="server" ControlName="ReleaseEndDateVal"></asp:Label>                                
-                            </td>
+                            </td>-->
+                            <td><ult:MeetingControl runat="server" ID="ReleaseEndMeeting" /></td>
                         </tr>                       
                         <tr>            
                             <td class="TabLineLeft"><asp:Label ID="ReleaseClosureDateLbl" runat="server" ControlName="ReleaseClosureDateLbl" Text="Closure date:"></asp:Label></td>
-                            <td><asp:Label ID="ReleaseClosureDateMeetingVal" runat="server" ControlName="ReleaseClosureDateMeetingVal"></asp:Label></td>
-                            <td><asp:Label ID="ReleaseClosureDateVal" runat="server" ControlName="ReleaseClosureDateVal"></asp:Label></td>
+                            <!--<td><asp:Label ID="ReleaseClosureDateMeetingVal" runat="server" ControlName="ReleaseClosureDateMeetingVal"></asp:Label></td>
+                            <td><asp:Label ID="ReleaseClosureDateVal" runat="server" ControlName="ReleaseClosureDateVal"></asp:Label></td>-->
+                            <td><ult:MeetingControl runat="server" ID="ReleaseClosureMeeting" /></td>
                         </tr>
                         <tr style="max-height: 150px; overflow-y: scroll; margin-top:5px"> 
                             <td colspan="3">
@@ -208,7 +215,7 @@
                  </telerik:RadPageView>              
             </telerik:RadMultiPage>     
            <div class="releaseDetailsAction">
-                <asp:Button ID="SaveBtn" runat="server" Text="Save" CssClass="LinkButton" Visible="true"/>
+                <asp:Button ID="SaveBtn" runat="server" Text="Save" CssClass="LinkButton" Visible="true" OnClick="SaveEditedRelease_Click"/>
                 <asp:LinkButton ID="ExitBtn" runat="server" Text="Cancel" CssClass="LinkButton" OnClick="CloseReleaseDetails_Click"/>
            </div> 
            <script type="text/javascript">

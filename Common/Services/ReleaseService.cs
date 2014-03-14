@@ -43,16 +43,19 @@ namespace Etsi.Ultimate.Services
 
         public string GetPreviousReleaseCode(int personID, int releaseId)
         {
-            List<DomainClasses.Release> allReleases = GetAllReleases(personID).Key.OrderBy(x => x.SortOrder).ToList();
+            List<DomainClasses.Release> allReleases = GetAllReleases(personID).Key.OrderByDescending(x => x.SortOrder).ToList();
             int nmbrOfReleases= allReleases.Count;
-            for (int i = 0; i < nmbrOfReleases; i++)
+            if (nmbrOfReleases > 0)
             {
-                if (allReleases[i].Pk_ReleaseId == releaseId)
+                for (int i = 0; i < nmbrOfReleases; i++)
                 {
-                    if (i > 0)
-                        return allReleases[i - 1].Code;
-                    else
-                        break;
+                    if (allReleases[i].Pk_ReleaseId == releaseId)
+                    {
+                        if (i > 0)
+                            return allReleases[i - 1].Code;
+                        else
+                            break;
+                    }
                 }
             }
             return String.Empty;
@@ -89,12 +92,14 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public Dictionary<int, string> GetAllReleasesCodes(int personId)
+        public Dictionary<int, string> GetAllReleasesCodes(int personId, int releaseId)
         {
             Dictionary<int, string> allReleasesCodes = new Dictionary<int, string>();
-            List<DomainClasses.Release> allReleases = GetAllReleases(personId).Key.OrderBy(x => x.SortOrder).ToList();
+            List<DomainClasses.Release> allReleases = GetAllReleases(personId).Key.OrderByDescending(x => x.SortOrder).ToList();
             foreach (Release r in allReleases)
             {
+
+                if (releaseId == r.Pk_ReleaseId) continue;
                 allReleasesCodes.Add(r.Pk_ReleaseId, r.Code);
             }
             allReleasesCodes.Add(0, "No previous Release");

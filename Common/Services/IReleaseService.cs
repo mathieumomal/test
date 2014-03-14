@@ -38,7 +38,7 @@ namespace Etsi.Ultimate.Services
         /// <param name="personID">Person ID</param>
         void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId, int personID);
 
-        Dictionary<int, string> GetAllReleasesCodes(int personId);
+        Dictionary<int, string> GetAllReleasesCodes(int personId, int releaseId);
 
         void EditRelease(Release release, int previousReleaseId);
 
