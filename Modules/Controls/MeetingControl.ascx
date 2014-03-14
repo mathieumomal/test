@@ -2,7 +2,7 @@
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 
 <script language="javascript" type="text/javascript">
-    function OnClientSelectedIndexChanged(sender, eventArgs) {
+    function OnClientSelectedIndexChanged<%=lblEndDate.ClientID%>(sender, eventArgs) {
         var item = eventArgs.get_item();
         var lbl = document.getElementById('<%=lblEndDate.ClientID%>');
         if (lbl != null && typeof(lbl) != "undefined")
@@ -22,7 +22,6 @@
 
 <asp:Panel Style="display:inline;font-weight:bold" ID="pnlEndDate" runat="server">
     &nbsp;&nbsp;
-    <asp:Label runat="server" ID="lblEndDateTitle" Text="End Date : " />
     <asp:Label runat="server" ID="lblEndDate" Text="-" />
 </asp:Panel>
 

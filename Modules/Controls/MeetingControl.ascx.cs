@@ -64,6 +64,8 @@ namespace Etsi.Ultimate.Controls
                         DataSource = svc.GetLatestMeetings();
                 }
                 BindDropDownData(DataSource);
+
+                rcbMeetings.OnClientSelectedIndexChanged = "OnClientSelectedIndexChanged" + lblEndDate.ClientID;
             }
         }
         protected void rcbMeetings_ItemsRequested(object o, RadComboBoxItemsRequestedEventArgs e)
@@ -98,19 +100,9 @@ namespace Etsi.Ultimate.Controls
         #region Private
         private void BindDropDownData(List<DomainClasses.Meeting> meetingsList)
         {
-            var CustomDataSource = (from x in meetingsList
-                                    orderby x.START_DATE descending
-                                    select new
-                                    {
-                                        Value = x.MTG_ID.ToString() + "|" + x.END_DATE.Value.ToString("yyyy-MM-dd"),
-                                        Text = x.LOC_CITY.Length > 0 ? String.Format("{0} ({1} - {2}({3}))",
-                                        x.MtgShortRef, x.START_DATE.Value.ToString("yyyy-MM-dd"), x.LOC_CITY, x.LOC_CTY_CODE)
-                                        : String.Format("{0} ({1})", x.MtgShortRef, x.START_DATE.Value.ToString("yyyy-MM-dd"))
-                                    });
-            rcbMeetings.DataSource = CustomDataSource;
-            rcbMeetings.DataTextField = "Text";
-            rcbMeetings.DataValueField = "Value";
-
+            rcbMeetings.DataSource = meetingsList;
+            rcbMeetings.DataTextField = "MtgDdlText";
+            rcbMeetings.DataValueField = "MtgDdlValue";
             rcbMeetings.DataBind();
         }
         private void SetDropdownProperties()
