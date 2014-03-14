@@ -74,7 +74,7 @@ namespace Etsi.Ultimate.Repositories
             Container.RegisterType<IPersonRepository, PersonRepository>(new TransientLifetimeManager());
             Container.RegisterType<IMeetingRepository, MeetingRepository>(new TransientLifetimeManager());
             Container.RegisterType<ICommunityRepository, CommunityRepository>(new TransientLifetimeManager());
-            Container.RegisterType<IShortUrlRepository, UrlRepository>(new TransientLifetimeManager());
+            Container.RegisterType<IUrlRepository, UrlRepository>(new TransientLifetimeManager());
         }
     }
 }

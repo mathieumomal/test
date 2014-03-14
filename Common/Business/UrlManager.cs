@@ -15,36 +15,40 @@ namespace Etsi.Ultimate.Business
         public UrlManager() { }
 
 
-        public KeyValuePair<int, string> GetPageIdAndFullAddressForModule()
+        public KeyValuePair<int, string> GetPageIdAndFullAddressForModule(int moduleId, string baseAddress, Dictionary<string, string> urlParams)
         {
             throw new NotImplementedException();
         }
 
         public string CreateShortUrl(int moduleId, string baseAddress, Dictionary<string, string> urlParams)
         {
-            IShortUrlRepository repo = RepositoryFactory.Resolve<IShortUrlRepository>();
+            IUrlRepository repo = RepositoryFactory.Resolve<IUrlRepository>();
             repo.UoW = UoW;
 
-            StringBuilder url = new StringBuilder().Append(baseAddress).Append("?");
-            foreach (KeyValuePair<string, string> entry in urlParams)
-            {
-                url
-                    .Append(entry.Key)
-                    .Append("=")
-                    .Append(entry.Value)
-                    .Append("&");
-            }
+            ShortUrl shortUrlDb = new ShortUrl();
+            shortUrlDb.Url = GetPageIdAndFullAddressForModule(moduleId, baseAddress, urlParams).Value;
+            var exceptionthrown = true;
+            do{
+                shortUrlDb.Token = Guid.NewGuid().ToString().Substring(0, 8);
+                try
+                {
+                    repo.FindByToken(shortUrlDb.Token);
+                }
+                catch (Exception)
+                {
+                    exceptionthrown = false;
+                    throw;
+                }
+            } while (exceptionthrown);
             
-            ShortUrl shortUrl = new ShortUrl();
-            shortUrl.Url = url.ToString();
-            shortUrl.Token = Guid.NewGuid().ToString().Substring(0,8);
-            repo.InsertOrUpdate(shortUrl);
-            return new StringBuilder().Append(baseAddress).Append("/shorturl/").Append(shortUrl.Token).ToString();
+            
+            repo.InsertOrUpdate(shortUrlDb);
+            return new StringBuilder().Append(baseAddress).Append("/shorturl/").Append(shortUrlDb.Token).ToString();
         }
 
         public string GetFullUrlForToken(string token)
         {
-            IShortUrlRepository repo = RepositoryFactory.Resolve<IShortUrlRepository>();
+            IUrlRepository repo = RepositoryFactory.Resolve<IUrlRepository>();
             repo.UoW = UoW;
             return repo.FindByToken(token).Url;
         }

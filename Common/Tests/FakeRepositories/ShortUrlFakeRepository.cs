@@ -9,7 +9,7 @@ using Etsi.Ultimate.Tests.FakeSets;
 
 namespace Etsi.Ultimate.Tests.FakeRepositories
 {
-    public class ShortUrlFakeRepository : IShortUrlRepository
+    public class ShortUrlFakeRepository : IUrlRepository
     {
         public ShortUrlFakeRepository() { }
 
@@ -39,7 +39,14 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
 
         public void InsertOrUpdate(ShortUrl entity)
         {
-            throw new NotImplementedException();
+            if (entity.Pk_Id == default(int))
+            {
+                UoW.Context.SetAdded(entity);
+            }
+            else
+            {
+                UoW.Context.SetModified(entity);
+            }
         }
 
         public void Delete(int id)
@@ -62,7 +69,11 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
 
         public ShortUrl FindByToken(string token)
         {
-            throw new NotImplementedException();
+            //This will throw an exception if the query does not return at least one item.
+            var ShortUrl = GenerateList().Where(f => f.Token == token).FirstOrDefault();
+            if (ShortUrl == null)
+                throw new KeyNotFoundException();
+            return ShortUrl;
         }
 
         #endregion

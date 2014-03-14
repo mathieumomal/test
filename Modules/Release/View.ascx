@@ -7,8 +7,8 @@
  <telerik:RadGrid runat="server" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" ID="releasesTable" OnItemDataBound="releasesTable_ItemDataBound"  AllowPaging="false" AllowSorting="false" AllowFilteringByColumn="false" AutoGenerateColumns="false">
     <MasterTableView ClientDataKeyNames="Pk_ReleaseId">
         <Columns>
-            <telerik:GridBoundColumn HeaderStyle-Width="8%" DataField="Code" HeaderText="Release Code" UniqueName="Code"></telerik:GridBoundColumn>
-            <telerik:GridTemplateColumn HeaderStyle-Width="10%" DataField="Name" HeaderText="Name" UniqueName="Name">
+            <telerik:GridBoundColumn HeaderStyle-Width="8%" DataField="Code" HeaderText="Release Code" UniqueName="Code" ></telerik:GridBoundColumn>
+            <telerik:GridTemplateColumn HeaderStyle-Width="10%" DataField="Name" HeaderText="Name" UniqueName="Name" HeaderTooltip="Release name" >
                 <ItemTemplate>
                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Name") %></div>  
                 </ItemTemplate> 
@@ -38,7 +38,7 @@
                     <span><%# DataBinder.Eval(Container.DataItem,"Stage3FreezeDate", "{0:yyyy-MM-dd}") %></span>  
                 </ItemTemplate>                    
             </telerik:GridTemplateColumn>
-            <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="EndDate" HeaderText="End date" UniqueName="EndDate">
+            <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="EndDate" HeaderText="End date" UniqueName="EndDate" HeaderTooltip="End date of ...">
                 <ItemTemplate>
                     <span><%# DataBinder.Eval(Container.DataItem,"EndDate", "{0:yyyy-MM-dd}") %></span>  
                 </ItemTemplate>                    
@@ -60,3 +60,6 @@
         </Columns>
     </MasterTableView>
 </telerik:RadGrid>
+
+<telerik:RadToolTipManager ID="rdTooltipHeader" runat="server"  RelativeTo="Element" Position="TopCenter">
+</telerik:RadToolTipManager>

@@ -8,7 +8,7 @@ using Etsi.Ultimate.Repositories;
 
 namespace Etsi.Ultimate.Repositories
 {
-    public class UrlRepository : IShortUrlRepository
+    public class UrlRepository : IUrlRepository
     {
         public IUltimateUnitOfWork UoW { get; set; }
         public UrlRepository(){}
@@ -74,7 +74,7 @@ namespace Etsi.Ultimate.Repositories
         #endregion
     }
 
-    public interface IShortUrlRepository : IEntityRepository<ShortUrl>
+    public interface IUrlRepository : IEntityRepository<ShortUrl>
     {
         ShortUrl FindByToken(String token);
     }

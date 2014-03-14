@@ -32,6 +32,7 @@ using Telerik.Web.UI;
 using Microsoft.Practices.Unity;
 using Etsi.Ultimate.DomainClasses;
 using DotNetNuke.Common.Utilities;
+using System.Web.UI.HtmlControls;
 
 namespace Etsi.Ultimate.Module.Release
 {
@@ -50,10 +51,12 @@ namespace Etsi.Ultimate.Module.Release
     /// -----------------------------------------------------------------------------
     public partial class View : ReleaseModuleBase
     {
-        private static readonly String cssFreezeReach = "freezeReach";
-        private static readonly String cssClosedColor = "closed";
+        private const String cssFreezeReach = "freezeReach";
+        private const String cssClosedColor = "closed";
 
-        public static readonly string DsId_Key = "ETSI_DS_ID";
+        public const string DsId_Key = "ETSI_DS_ID";
+        //Decoration class for help tooltips
+        public const string cssHelpTooltip = "helpTooltip";
 
 
         protected void Page_Load(object sender, EventArgs e)
@@ -130,6 +133,34 @@ namespace Etsi.Ultimate.Module.Release
         /// <param name="e"></param>
         public void releasesTable_ItemDataBound(object sender, Telerik.Web.UI.GridItemEventArgs e)
         {
+            //Tooltip for header (just add "HeaderTooltip="Release name"" to GridTemplateColumn)
+            /**
+             * 
+             *  .helpTooltip{
+	                border-bottom: 1px gray dashed;
+	                cursor: help;
+                }
+             * */
+            if (e.Item is GridHeaderItem)
+            {
+                GridHeaderItem header = (GridHeaderItem)e.Item;
+                foreach (TableCell cell in header.Cells)
+                {
+                    if (cell.Controls.Count > 0)
+                    {
+                        if (cell.ToolTip != "")
+                        {
+                            HtmlGenericControl helpSpan = new HtmlGenericControl("span");
+                            helpSpan.Attributes.Add("class", cssHelpTooltip);
+                            helpSpan.InnerHtml = cell.Text;
+                            cell.Text = "";
+                            cell.Controls.Add(helpSpan);
+                            rdTooltipHeader.TargetControls.Add(cell.ClientID, true);
+                        }
+                    }
+                }
+
+            }
             //Analyse on row
             if (e.Item is GridDataItem)
             {
