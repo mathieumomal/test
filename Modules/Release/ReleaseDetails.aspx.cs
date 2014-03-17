@@ -287,7 +287,7 @@ namespace Etsi.Ultimate.Module.Release
                     var mtg = mtgSvc.GetMeetingById(mtgControl.SelectedMeetingId);
 
                     IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
-                    svc.FreezeRelease(ReleaseId.Value, DateTime.Now, UserId, mtg.MTG_ID, mtg.MtgShortRef);
+                    svc.FreezeRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), UserId, mtg.MTG_ID, mtg.MtgShortRef);
                     this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
                 }
             }
@@ -310,7 +310,7 @@ namespace Etsi.Ultimate.Module.Release
                     var mtg = mtgSvc.GetMeetingById(mtgControl.SelectedMeetingId);
 
                     IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
-                    svc.CloseRelease(ReleaseId.Value, DateTime.Now, mtg.MtgShortRef, mtg.MTG_ID, UserId);
+                    svc.CloseRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), mtg.MtgShortRef, mtg.MTG_ID, UserId);
                     this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
                 }
             }
