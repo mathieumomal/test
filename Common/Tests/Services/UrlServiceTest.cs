@@ -47,13 +47,13 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [Test]
-        [ExpectedException(typeof(KeyNotFoundException))]
         public void GetFullUrlForToken_dontexist()
         {
             RepositoryFactory.Container.RegisterType<IUrlRepository, ShortUrlFakeRepository>(new TransientLifetimeManager());
 
             var shorUrlService = new UrlService();
             string url = shorUrlService.GetFullUrlForToken(tokenExample_dontexist);
+            Assert.IsNull(url);
         }
 
         [Test]
