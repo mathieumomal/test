@@ -22,7 +22,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         [Test]
         public void MeetingRepository_GetAll()
         {
-            var repo = new MeetingRepository(GetUnitOfWork());
+            var repo = new MeetingRepository() { UoW = GetUnitOfWork() };
             Assert.AreEqual(1, repo.All.ToList().Count);
             
         }
@@ -31,14 +31,14 @@ namespace Etsi.Ultimate.Tests.Repositories
         [ExpectedException(typeof(NotImplementedException))]
         public void MeetingRepository_AllIncluding()
         {
-            var repo = new MeetingRepository(GetUnitOfWork());
+            var repo = new MeetingRepository() { UoW = GetUnitOfWork() };
             repo.AllIncluding();
         }
 
         [Test]
         public void MeetingRepository_Find()
         {
-            var repo = new MeetingRepository(GetUnitOfWork());
+            var repo = new MeetingRepository() { UoW = GetUnitOfWork() };
             Assert.AreEqual("3GPPSA#12", repo.Find(1).MTG_REF);
         }
 
@@ -46,7 +46,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         [ExpectedException(typeof(InvalidOperationException))]
         public void MeetingRepository_InsertOrUpdate()
         {
-            var repo = new MeetingRepository(GetUnitOfWork());
+            var repo = new MeetingRepository() { UoW = GetUnitOfWork() };
             repo.InsertOrUpdate(new Meeting());
         }
 
@@ -54,7 +54,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         [ExpectedException(typeof(InvalidOperationException))]
         public void MeetingRepository_Delete()
         {
-            var repo = new MeetingRepository(GetUnitOfWork());
+            var repo = new MeetingRepository() { UoW = GetUnitOfWork() };
             repo.Delete(2);
         }
 

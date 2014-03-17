@@ -21,6 +21,8 @@ namespace Etsi.Ultimate.Business
         public ReleaseManager() { }
 
 
+        private int personId;
+
 
         /// <summary>
         /// Retrieves all the data for the releases.
@@ -205,30 +207,25 @@ namespace Etsi.Ultimate.Business
 
         public void EditRelease(Release release, int previousReleaseId, int personId)
         {
+            this.personId = personId;
+
             IReleaseRepository relRepo = RepositoryFactory.Resolve<IReleaseRepository>();
             relRepo.UoW = UoW;
             List<Release> allReleases = new List<Release>();
             Release previousRelease;
 
-            release.Histories.Add(new History
-            {
-                Fk_ReleaseId = release.Pk_ReleaseId,
-                Fk_PersonId = personId,
-                CreationDate = DateTime.Now,
-                //Check for the used text
-                HistoryText = "",
-                PersonName = ""
-            });
+            var releaseToUpdate = relRepo.All.Where(r => r.Pk_ReleaseId ==release.Pk_ReleaseId).FirstOrDefault();
+            UpdateReleaseAndHistory(releaseToUpdate, release);
 
             if (previousReleaseId != 0)
             {
                 previousRelease = relRepo.Find(previousReleaseId);
-                release.SortOrder = previousRelease.SortOrder + 10;
-                relRepo.InsertOrUpdate(release);
+                releaseToUpdate.SortOrder = previousRelease.SortOrder + 10;
+                
                 allReleases = relRepo.All.OrderByDescending(x => x.SortOrder).ToList();
                 foreach (Release r in allReleases)
                 {
-                    if (r.Pk_ReleaseId == release.Pk_ReleaseId)
+                    if (r.Pk_ReleaseId == releaseToUpdate.Pk_ReleaseId)
                         continue;
                     if (r.Pk_ReleaseId == previousRelease.Pk_ReleaseId)
                         break;
@@ -245,7 +242,7 @@ namespace Etsi.Ultimate.Business
                 var firstSortOrder = allReleases[0].SortOrder;                
                 foreach (Release r in allReleases)
                 {
-                    if (r.Pk_ReleaseId == release.Pk_ReleaseId)
+                    if (r.Pk_ReleaseId == releaseToUpdate.Pk_ReleaseId)
                         continue;                    
                     else
                     {
@@ -253,10 +250,154 @@ namespace Etsi.Ultimate.Business
                         relRepo.InsertOrUpdate(r);
                     }
                 }
-                release.SortOrder = firstSortOrder;                
-                relRepo.InsertOrUpdate(release);
+                releaseToUpdate.SortOrder = firstSortOrder;                
             }
+
+            // Finally save the release
+            relRepo.InsertOrUpdate(releaseToUpdate);
+
+
             ClearCache();
+        }
+
+        /// <summary>
+        /// Compares the old release with the new release that has been created by the UI.
+        /// Logs an history entry if any change is detected.
+        /// </summary>
+        /// <param name="releaseToUpdate"></param>
+        /// <param name="release"></param>
+        private void UpdateReleaseAndHistory(Release releaseToUpdate, Release release)
+        {
+            // Store the list of changes
+            var changes = new List<string>();
+            var mtgMgr = new MeetingManager() { UoW = UoW };
+
+            releaseToUpdate.Code = release.Code;
+            releaseToUpdate.Description = release.Description;
+            releaseToUpdate.Name = release.Name;
+            releaseToUpdate.ShortName = release.ShortName;
+            
+            string newStartDate = release.StartDate.GetValueOrDefault().ToString("yyyy-MM-dd");
+            string oldStartDate = releaseToUpdate.StartDate.GetValueOrDefault().ToString("yyyy-MM-dd");
+            if (oldStartDate != newStartDate)
+            {
+                changes.Add("Start date: " + oldStartDate + " => " + newStartDate);
+                releaseToUpdate.StartDate = release.StartDate;
+            }
+
+            // Freeze date 1
+            releaseToUpdate.Stage1FreezeMtgId = release.Stage1FreezeMtgId;
+            if (releaseToUpdate.Stage1FreezeMtgId.GetValueOrDefault() != 0)
+            {
+                var mtg = mtgMgr.GetMeetingById(releaseToUpdate.Stage1FreezeMtgId.Value);
+                if (mtg != null)
+                {
+                    releaseToUpdate.Stage1FreezeMtgRef = mtg.MtgShortRef;
+                    releaseToUpdate.Stage1FreezeDate = mtg.END_DATE;
+                }
+            }
+
+            // Freeze stage 2
+            releaseToUpdate.Stage2FreezeMtgId = release.Stage2FreezeMtgId;
+            if (releaseToUpdate.Stage2FreezeMtgId.GetValueOrDefault() != 0)
+            {
+                var mtg = mtgMgr.GetMeetingById(releaseToUpdate.Stage2FreezeMtgId.Value);
+                if (mtg != null)
+                {
+                    releaseToUpdate.Stage2FreezeMtgRef = mtg.MtgShortRef;
+                    releaseToUpdate.Stage2FreezeDate = mtg.END_DATE;
+                }
+            }
+
+            // Freeze stage 3
+            releaseToUpdate.Stage3FreezeMtgId = release.Stage3FreezeMtgId;
+            if (releaseToUpdate.Stage3FreezeMtgId.GetValueOrDefault() != 0)
+            {
+                var mtg = mtgMgr.GetMeetingById(releaseToUpdate.Stage3FreezeMtgId.Value);
+                if (mtg != null)
+                {
+                    releaseToUpdate.Stage3FreezeMtgRef = mtg.MtgShortRef;
+                    releaseToUpdate.Stage3FreezeDate = mtg.END_DATE;
+                }
+            }
+
+            // End date ==> Logged
+            if (release.EndMtgId != releaseToUpdate.EndMtgId)
+            {
+                string oldEndDate = "None";
+                if (releaseToUpdate.EndMtgId.GetValueOrDefault() != 0)
+                    oldEndDate = releaseToUpdate.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd");
+
+                DateTime newEndDate = new DateTime();
+                string newRef = "";
+                if (release.EndMtgId.GetValueOrDefault() != 0)
+                {
+                    var mtg = mtgMgr.GetMeetingById(release.EndMtgId.Value);
+                    if (mtg != null)
+                    {
+                        newRef = mtg.MtgShortRef;
+                        newEndDate= mtg.END_DATE.GetValueOrDefault();
+                    }
+                }
+                changes.Add("End date: " + oldEndDate + " => " + newEndDate.ToString("yyyy-MM-dd"));
+
+                releaseToUpdate.EndMtgId = release.EndMtgId;
+                releaseToUpdate.EndDate = newEndDate;
+                releaseToUpdate.EndMtgRef = newRef;
+            }
+
+            // Closure date ==> Logged
+            if (releaseToUpdate.ClosureMtgId != release.ClosureMtgId)
+            {
+                string oldClosureDate = "None";
+                if (releaseToUpdate.ClosureMtgId.GetValueOrDefault() != 0)
+                    oldClosureDate = releaseToUpdate.ClosureDate.GetValueOrDefault().ToString("yyyy-MM-dd");
+
+                DateTime newClosureDate = new DateTime();
+                string newRef = "";
+                if (release.ClosureMtgId.GetValueOrDefault() != 0)
+                {
+                    var mtg = mtgMgr.GetMeetingById(release.ClosureMtgId.Value);
+                    if (mtg != null)
+                    {
+                        newRef = mtg.MtgShortRef;
+                        newClosureDate = mtg.END_DATE.GetValueOrDefault();
+                    }
+                }
+                changes.Add("Closure date: " + oldClosureDate + " => " + newClosureDate.ToString("yyyy-MM-dd"));
+
+                releaseToUpdate.ClosureDate = newClosureDate;
+                releaseToUpdate.ClosureMtgId = release.ClosureMtgId;
+                releaseToUpdate.ClosureMtgRef = newRef;
+            }
+            
+            // To uncomment afterwards (one thing at a time :P)
+            //releaseToUpdate.Remarks = release.Remarks;
+
+            // Admin tab
+            releaseToUpdate.IturCode = release.IturCode;
+            releaseToUpdate.Version2g = release.Version2g;
+            releaseToUpdate.Version3g = release.Version3g;
+            releaseToUpdate.WpmCode2g = release.WpmCode2g;
+            releaseToUpdate.WpmCode3g = release.WpmCode3g;
+
+            //releaseToUpdate.LAST_MOD_BY = personId;
+            releaseToUpdate.LAST_MOD_TS = DateTime.Now;
+
+            if (changes.Count >0)
+            {
+                var historyEntry = new History()
+                {
+                    Fk_PersonId = personId,
+                    Release = releaseToUpdate,
+                    HistoryText = "Release updated:<br /> " + string.Join("<br />", changes),
+                    CreationDate = DateTime.Now
+                };
+
+                var historyRepo = RepositoryFactory.Resolve<IHistoryRepository>();
+                historyRepo.UoW = UoW;
+                historyRepo.InsertOrUpdate(historyEntry);
+            }
         }
 
         /// <summary>

@@ -4,8 +4,28 @@
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="View.ascx.cs" Inherits="Etsi.Ultimate.Module.Release.View" %>
 <%@ Import Namespace="System.Drawing" %>
 
+
+
 <div style="float:right"><ult:FullView ID="ultFullView" runat="server" /></div>
-<telerik:RadButton runat="server" ID="newRelease" Text="New"></telerik:RadButton>
+<asp:LinkButton runat="server" ID="newRelease" Text="New" CssClass="LinkButton"></asp:LinkButton>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        var button = $("#<%= newRelease.ClientID %>");
+        button.click(openCreatePopUp);
+
+        function openCreatePopUp() {
+            var popUp = window.open('/desktopmodules/Release/ReleaseEdition.aspx?action=Creation',
+                                        'Release_Creation', 'height=690,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no');
+            popUp.focus();
+            return false;
+        }
+    });
+    
+    
+</script>
+
 
 <div style="clear:both"></div>
  <telerik:RadGrid runat="server" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" ID="releasesTable" OnItemDataBound="releasesTable_ItemDataBound"  AllowPaging="false" AllowSorting="false" AllowFilteringByColumn="false" AutoGenerateColumns="false">

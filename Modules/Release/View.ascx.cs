@@ -77,7 +77,7 @@ namespace Etsi.Ultimate.Module.Release
                 //Example : mock to fake rights manager : ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
 
                 //Calling the service
-                KeyValuePair<List<DomainClasses.Release>,UserRightsContainer> releaseRightsObjects = svc.GetAllReleases(UserInfo.UserID);
+                KeyValuePair<List<DomainClasses.Release>,UserRightsContainer> releaseRightsObjects = svc.GetAllReleases(GetUserPersonId(UserInfo));
 
                 //Setting up the release list
                 List<DomainClasses.Release> releasesList = releaseRightsObjects.Key.OrderByDescending(release => release.SortOrder).ToList();

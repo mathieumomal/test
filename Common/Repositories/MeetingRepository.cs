@@ -15,10 +15,8 @@ namespace Etsi.Ultimate.Repositories
     /// </summary>
     public class MeetingRepository : IMeetingRepository
     {
-        private IUltimateContext context;
-        public MeetingRepository(IUltimateUnitOfWork iUoW)
+        public MeetingRepository()
         {
-            context = iUoW.Context;
         }
 
         #region IEntityRepository<MeetingRepository> Membres
@@ -26,7 +24,7 @@ namespace Etsi.Ultimate.Repositories
         public IQueryable<Meeting> All
         {
             get { 
-                return context.Meetings;
+                return UoW.Context.Meetings;
             }
         }
 
@@ -37,7 +35,7 @@ namespace Etsi.Ultimate.Repositories
 
         public Meeting Find(int id)
         {
-            return context.Meetings.Find(id);
+            return UoW.Context.Meetings.Find(id);
         }
 
         public void InsertOrUpdate(Meeting entity)
@@ -56,7 +54,6 @@ namespace Etsi.Ultimate.Repositories
 
         public void Dispose()
         {
-            context.Dispose();
         }
 
         #endregion

@@ -26,6 +26,7 @@ namespace Etsi.Ultimate.Business
         public List<Meeting> GetMatchingMeetings(string SearchText)
         {
             IMeetingRepository repo = RepositoryFactory.Resolve<IMeetingRepository>();
+            repo.UoW = UoW;
 
             return repo.All.Where(x => (x.MtgShortRef != null && x.MtgShortRef.Contains(SearchText)) ||
                 (x.LOC_CITY != null && x.LOC_CITY.Contains(SearchText)) ||
@@ -39,6 +40,7 @@ namespace Etsi.Ultimate.Business
         public List<Meeting> GetLatestMeetings(int includeMeetingId)
         {
             IMeetingRepository repo = RepositoryFactory.Resolve<IMeetingRepository>();
+            repo.UoW = UoW;
 
             DateTime startDate = DateTime.UtcNow.AddDays(MEETING_START_DATE);
             var meetings = repo.All.Where(x => x.START_DATE > startDate).Take(NUMBER_OF_MEETINGS_TO_LOAD).ToList();
@@ -50,12 +52,12 @@ namespace Etsi.Ultimate.Business
             return meetings;
         }
 
-
-        public Meeting GetMeetingById(int MeetingId)
+        public Meeting GetMeetingById(int meetingId)
         {
             IMeetingRepository repo = RepositoryFactory.Resolve<IMeetingRepository>();
+            repo.UoW = UoW;
 
-            return repo.All.Where(x => x.MTG_ID == MeetingId).FirstOrDefault();
+            return repo.Find(meetingId);
         }
     }
 }

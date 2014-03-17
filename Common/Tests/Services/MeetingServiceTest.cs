@@ -27,11 +27,12 @@ namespace Etsi.Ultimate.Tests.Services
         [Test, TestCaseSource("GetMeetingsWithSearchString")]
         public void Test_GetMatchingMeetings(string SearchText, IDbSet<Meeting> meetings, int exptectedMeetingCount)
         {
+            var mockUoW = MockRepository.GenerateMock<IUltimateUnitOfWork>();
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.Meetings).Return(meetings);
+            mockUoW.Stub(s => s.Context).Return(mockDataContext);
 
-            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
-            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateUnitOfWork), mockUoW);
 
             var service = new MeetingService();
             var results = service.GetMatchingMeetings(SearchText);

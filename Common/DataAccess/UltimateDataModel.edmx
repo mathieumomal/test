@@ -281,7 +281,6 @@
         <EntityType Name="View_Meetings">
           <Key>
             <PropertyRef Name="MTG_ID" />
-            <PropertyRef Name="LOCAL_FLG" />
           </Key>
           <Property Name="MTG_ID" Type="int" Nullable="false" />
           <Property Name="MTG_CATEG_CODE" Type="varchar" MaxLength="12" />
@@ -745,7 +744,6 @@
         <EntityType Name="Meeting">
           <Key>
             <PropertyRef Name="MTG_ID" />
-            <PropertyRef Name="LOCAL_FLG" />
           </Key>
           <Property Type="Int32" Name="MTG_ID" Nullable="false" />
           <Property Type="String" Name="MTG_CATEG_CODE" MaxLength="12" FixedLength="false" Unicode="false" />

@@ -124,7 +124,10 @@
     <Build Include="dbo\Views\View_Communities.sql" />
     <Build Include="dbo\Functions\getPersonName.sql" />
     <Build Include="dbo\Tables\ShortUrl.sql" />
-    <Build Include="dbo\Views\View_ModulesPages.sql" />
+    <Build Include="dbo\Views\View_ModulesPages.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

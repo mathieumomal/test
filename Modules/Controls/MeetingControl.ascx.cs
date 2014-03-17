@@ -40,7 +40,20 @@ namespace Etsi.Ultimate.Controls
         /// <summary>
         /// Default selected meeting id
         /// </summary>
-        public int SelectedMeetingId { get; set; }
+        public int SelectedMeetingId
+        {
+            get
+            {
+                int id;
+                if (Int32.TryParse((string)ViewState["MTG_" + ID + "Selected"], out id))
+                    return id;
+                return 0;
+            }
+            set
+            {
+                ViewState["MTG_" + ID + "Selected"] = value.ToString();   
+            }
+        }
 
         /// <summary>
         /// Set style to EndDate label
@@ -104,6 +117,9 @@ namespace Etsi.Ultimate.Controls
             rcbMeetings.DataTextField = "MtgDdlText";
             rcbMeetings.DataValueField = "MtgDdlValue";
             rcbMeetings.DataBind();
+
+            if (SelectedMeetingId != 0)
+                lblEndDate.Text = meetingsList.Where(m => m.MTG_ID == SelectedMeetingId).FirstOrDefault().END_DATE.Value.ToString("yyyy-MM-dd");
         }
         private void SetDropdownProperties()
         {

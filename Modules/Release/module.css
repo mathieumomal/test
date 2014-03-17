@@ -40,9 +40,17 @@
     width: 623px;
 }
 
-fieldset {
+#ReleaseDetailRadMultiPage fieldset {
     margin: 2%;
     padding: 1% !important; 
+    border: 1px solid grey !important;
+    -webkit-border-radius: 4px !important;
+    -moz-border-radius: 4px !important;
+    border-radius: 4px !important;
+}
+
+#ReleaseEditRadMultiPage fieldset {
+    margin: 2px;
     border: 1px solid grey !important;
     -webkit-border-radius: 4px !important;
     -moz-border-radius: 4px !important;
@@ -125,12 +133,18 @@ legend{
 }
 
 .TabLineLeft {
-    width: 30%;
+    width: 180px;
     text-align: right; 
 }
 
 .TabLineLeft  span{
     padding-right: 10px;
+}
+
+.TabLineLeft span .requiredField {
+    color: red;
+    font-weight: bold;
+    padding-right: 0px;
 }
 
 .TabLineRight {
@@ -141,6 +155,16 @@ legend{
 .TabLineRightFreeze {
     width: 100%;
     text-align: left;
+}
+
+.FreezeDateLbl
+{
+    width:160px;
+    text-align:right;
+}
+.FreezeDatePicker
+{
+    padding-left:12px;
 }
 
 .FirstColFreezeStages {
@@ -236,10 +260,7 @@ versionFieldsetTab {
 }
 
 
-.requiredField {
-    color: red;
-    font-weight: bold;
-}
+
 
 .error {
     border-color: red;

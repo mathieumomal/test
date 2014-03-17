@@ -21,7 +21,13 @@ namespace Etsi.Ultimate.Module.Release
         private int UserId;
         private Nullable<int> ReleaseId;
         private string action;
-        protected RemarksControl releaseRemarks; 
+        protected RemarksControl releaseRemarks;
+
+        protected MeetingControl FreezeStage1Meeting;
+        protected MeetingControl FreezeStage2Meeting;
+        protected MeetingControl FreezeStage3Meeting;
+        protected MeetingControl ReleaseEndMeeting;
+        protected MeetingControl ReleaseClosureMeeting;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -85,6 +91,8 @@ namespace Etsi.Ultimate.Module.Release
 
             dataValidationSetUp();
 
+            ReleaseEditRadMultiPage.Height = new System.Web.UI.WebControls.Unit(530, UnitType.Pixel);
+
             if (action.Equals("Edit"))
             {
                 if (ReleaseId != null)
@@ -99,7 +107,7 @@ namespace Etsi.Ultimate.Module.Release
                     {
                         releaseDetailsBody.Visible = false;
                         releaseError.Visible = true;
-                        ErrorMsg.Text = "Sorry but you dont have the right to edit a release.";
+                        ErrorMsg.Text = "Sorry but you do not have the right to edit a release.";
                     }
                     else{
 
@@ -111,7 +119,7 @@ namespace Etsi.Ultimate.Module.Release
                         }
                         else
                         {
-                            ReleaseDetailRadMultiPage.Height = new System.Web.UI.WebControls.Unit(750, UnitType.Pixel);
+                            
                             BuildTabsDisplay(action);
                             FillGeneralTab(userRights, release);
                             FillAdminTab(release, svc.GetAllReleasesCodes(UserId, ReleaseId.Value), svc.GetPreviousReleaseCode(UserId, release.Pk_ReleaseId).Key);
@@ -124,7 +132,7 @@ namespace Etsi.Ultimate.Module.Release
                             //Set History control
                             HistoryControl htr = releaseHistory as HistoryControl;
                             htr.DataSource = release.Histories.ToList();
-                            htr.ScrollHeight = (int)ReleaseDetailRadMultiPage.Height.Value - 50;
+                            htr.ScrollHeight = (int)ReleaseEditRadMultiPage.Height.Value - 50;
                         }
                     }                    
                 }
@@ -140,7 +148,6 @@ namespace Etsi.Ultimate.Module.Release
                 DomainClasses.UserRightsContainer userRights = svc.GetAllReleases(UserId).Value;
 
                 BuildTabsDisplay(action);
-                ReleaseDetailRadMultiPage.Height = new System.Web.UI.WebControls.Unit(750, UnitType.Pixel);
                 ReleaseStatusVal.CssClass = "status " + ReleaseStatusVal.Text;
                 ReleaseStartDateVal.SelectedDate = DateTime.Now;                
 
@@ -246,17 +253,17 @@ namespace Etsi.Ultimate.Module.Release
             
 
             MeetingControl stage1Meeting = FreezeStage1Meeting as MeetingControl;
-            stage1Meeting.SelectedMeetingId = (release.EndMtgId != null) ? release.Stage1FreezeMtgId.Value : default(int);
+            stage1Meeting.SelectedMeetingId = (release.Stage1FreezeMtgId != null) ? release.Stage1FreezeMtgId.Value : default(int);
             stage1Meeting.DisplayLabel = true;
             stage1Meeting.CssClass = "meetingControl";
 
             MeetingControl stage2Meeting = FreezeStage2Meeting as MeetingControl;
-            stage2Meeting.SelectedMeetingId = (release.EndMtgId != null) ? release.Stage2FreezeMtgId.Value : default(int);
+            stage2Meeting.SelectedMeetingId = (release.Stage2FreezeMtgId != null) ? release.Stage2FreezeMtgId.Value : default(int);
             stage2Meeting.DisplayLabel = true;
             stage2Meeting.CssClass = "meetingControl";
 
             MeetingControl stage3Meeting = FreezeStage3Meeting as MeetingControl;
-            stage3Meeting.SelectedMeetingId = (release.EndMtgId != null) ? release.Stage3FreezeMtgId.Value : default(int);
+            stage3Meeting.SelectedMeetingId = (release.Stage3FreezeMtgId != null) ? release.Stage3FreezeMtgId.Value : default(int);
             stage3Meeting.DisplayLabel = true;
             stage3Meeting.CssClass = "meetingControl";
                                                    
@@ -351,7 +358,10 @@ namespace Etsi.Ultimate.Module.Release
 
         protected void CloseReleaseDetails_Click(object sender, EventArgs e)
         {
-            this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close()", true);
+            if (Request.QueryString["releaseId"] != null)
+                Response.Redirect("/DesktopModules/Release/ReleaseDetails.aspx?releaseId=" + Request.QueryString["releaseId"]);
+            else
+                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close()", true);
         }
 
         protected void SaveEditedRelease_Click(object sender, EventArgs e)
@@ -389,6 +399,11 @@ namespace Etsi.Ultimate.Module.Release
             editedRelease.Description = ReleaseDescVal.Text;
             editedRelease.ShortName = ReleaseShortNameVal.Text;
             editedRelease.StartDate = ReleaseStartDateVal.SelectedDate;
+            editedRelease.Stage1FreezeMtgId = FreezeStage1Meeting.SelectedMeetingId;
+            editedRelease.Stage2FreezeMtgId = FreezeStage2Meeting.SelectedMeetingId;
+            editedRelease.Stage3FreezeMtgId = FreezeStage3Meeting.SelectedMeetingId;
+            editedRelease.EndMtgId = ReleaseEndMeeting.SelectedMeetingId;
+            editedRelease.ClosureMtgId = ReleaseClosureMeeting.SelectedMeetingId;
             //Need to check date format
             //editedRelease.EndDate = Convert.ToDateTime(ReleaseEndDateVal.Text);
             //editedRelease.ClosureDate = Convert.ToDateTime(ReleaseClosureDateVal.Text);  

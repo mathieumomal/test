@@ -135,7 +135,7 @@ namespace Etsi.Ultimate.Module.Release
             ReleaseStatusVal.Text = release.Enum_ReleaseStatus.Description;
             ReleaseStatusVal.CssClass = "status " + ReleaseStatusVal.Text;
             ReleaseNameVal.Text = release.Name;
-            if (release.Description != null)
+            if ( !string.IsNullOrEmpty(release.Description) )
                 ReleaseDescVal.Attributes.Add("href", release.Description);
             else
             {

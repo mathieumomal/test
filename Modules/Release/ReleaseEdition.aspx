@@ -14,7 +14,7 @@
     <link rel="stylesheet" type="text/css" href="module.css">
     <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>  
-    <script src="JS/jquery-validate.min.js"></script>  
+    <script src="JS/jquery.validate.js"></script>  
     <script type="text/javascript">
 
         function closeAllModals() {
@@ -58,38 +58,38 @@
             <telerik:RadTabStrip ID="ReleaseDetailRadTabStrip" runat="server" MultiPageID="ReleaseDetailRadMultiPage" 
             AutoPostBack="false">    
             </telerik:RadTabStrip>
-            <telerik:RadMultiPage ID="ReleaseDetailRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px">
+            <telerik:RadMultiPage ID="ReleaseEditRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px">
                 <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true">        
                    <table style="width: 100%">
                         <tr>
-                            <td class="TabLineLeft" ><asp:Label ID="releaseCodeLbl" runat="server" ControlName="releaseCodeLbl" Text="Release code<span class='requiredField'>(*)</span>:"></asp:Label></td>
-                            <td colspan="2" class="TabLineRight" id="SecondColreleaseCode"><asp:TextBox ID="releaseCodeVal" runat="server" ControlName="releaseCodeVal" ></asp:TextBox></td>
+                            <td class="TabLineLeft" ><asp:Label ID="releaseCodeLbl" runat="server"  Text="Release code<span class='requiredField'>(*)</span>:"></asp:Label></td>
+                            <td colspan="2" class="TabLineRight" id="SecondColreleaseCode"><asp:TextBox ID="releaseCodeVal" runat="server"  ></asp:TextBox></td>
                         </tr>                              
                         <tr>
-                            <td class="TabLineLeft"><asp:Label ID="ReleaseStatusLbl" runat="server" ControlName="ReleaseStatusLbl" Text="Status:"></asp:Label></td>
+                            <td class="TabLineLeft"><asp:Label ID="ReleaseStatusLbl" runat="server"  Text="Status:"></asp:Label></td>
                             <td colspan="2" class="TabLineRight">
-                                <asp:Label ID="ReleaseStatusVal" runat="server" ControlName="ReleaseStatusVal" Text="Open"></asp:Label>
+                                <asp:Label ID="ReleaseStatusVal" runat="server"  Text="Open"></asp:Label>
                             </td>
                         </tr>            
                         <tr>            
-                            <td class="TabLineLeft"><asp:Label ID="ReleaseNameLbl" runat="server" ControlName="ReleaseNameLbl" Text="Release name<span class='requiredField'>(*)</span>:"></asp:Label></td>
-                            <td colspan="2" class="TabLineRight"><asp:TextBox ID="ReleaseNameVal" runat="server" ControlName="ReleaseNameVal" CssClass="releaseName"></asp:TextBox></td>
+                            <td class="TabLineLeft"><asp:Label ID="ReleaseNameLbl" runat="server"  Text="Release name<span class='requiredField'>(*)</span>:"></asp:Label></td>
+                            <td colspan="2" class="TabLineRight"><asp:TextBox ID="ReleaseNameVal" runat="server"  CssClass="releaseName"></asp:TextBox></td>
                         </tr>
                         <tr>            
-                            <td class="TabLineLeft"><asp:Label ID="ReleaseDescLbl" runat="server" ControlName="ReleaseDescLbl" Text="Release description:"></asp:Label>  </td>          
+                            <td class="TabLineLeft"><asp:Label ID="ReleaseDescLbl" runat="server"  Text="Release description:"></asp:Label>  </td>          
                             <td colspan="2" class="TabLineRight">
                                 <asp:TextBox runat="server" id="ReleaseDescVal" />
                             </td>
             
                         </tr>
                         <tr>            
-                            <td class="TabLineLeft"><asp:Label ID="ReleaseShortNameLbl" runat="server" ControlName="ReleaseShortNameLbl" Text="Release short name<span class='requiredField'>(*)</span>:"></asp:Label></td>
-                            <td colspan="2" class="TabLineRight"><asp:TextBox ID="ReleaseShortNameVal" runat="server" ControlName="ReleaseShortNameVal"></asp:TextBox></td>
+                            <td class="TabLineLeft"><asp:Label ID="ReleaseShortNameLbl" runat="server"  Text="Release short name<span class='requiredField'>(*)</span>:"></asp:Label></td>
+                            <td colspan="2" class="TabLineRight"><asp:TextBox ID="ReleaseShortNameVal" runat="server" ></asp:TextBox></td>
                         </tr>
                         <tr>            
-                            <td class="TabLineLeft"><asp:Label ID="ReleaseStartDateLbl" runat="server" ControlName="ReleaseStartDateLbl" Text="Start date:"></asp:Label></td>
+                            <td class="TabLineLeft"><asp:Label ID="ReleaseStartDateLbl" runat="server"  Text="Start date:"></asp:Label></td>
                             <td colspan="2" class="TabLineRight">
-                                <telerik:RadDatePicker ID="ReleaseStartDateVal" runat="server" ControlName="ReleaseStartDateVal">
+                                <telerik:RadDatePicker ID="ReleaseStartDateVal" runat="server" >
                                     <DateInput runat="server" ID="ReleaseStartDateValInput" DateFormat="yyyy-MM-dd"></DateInput>
                                 </telerik:RadDatePicker>
                             </td>
@@ -98,22 +98,22 @@
                             <td colspan="3" class="TabLineRightFreeze">
                                 <asp:Panel ID="FreezeStagesPanel" runat="server">
                                     <fieldset id="FreezeFieldset">
-                                        <legend><asp:Label ID="FreezeMeetingLbl" runat="server" ControlName="FreezeMeetingLbl" Text="Freeze meetings and dates"></asp:Label></legend>
+                                        <legend><asp:Label ID="FreezeMeetingLbl" runat="server"  Text="Freeze meetings and dates"></asp:Label></legend>
                                         <table style="width: 100%; vertical-align:middle" id="FrezeStagesTable">
                                             <tr>
-                                                <td style="text-align: right" id="FirstColFreezeStage1"><asp:Label ID="ReleaseFreezeStage1Lbl" runat="server" ControlName="ReleaseFreezeStage1Lbl" Text="Stage1:"></asp:Label></td>
+                                                <td class="FreezeDateLbl" id="FirstColFreezeStage1"><asp:Label ID="ReleaseFreezeStage1Lbl" runat="server"  Text="Stage1:"></asp:Label></td>
                                                 
-                                                <td><ult:MeetingControl runat="server" ID="FreezeStage1Meeting"/></td>
+                                                <td class="FreezeDatePicker"><ult:MeetingControl runat="server" ID="FreezeStage1Meeting"/></td>
                                             </tr>                                        
                                             <tr>
-                                                <td style="text-align: right" id="FirstColFreezeStage2"><asp:Label ID="ReleaseFreezeStage2Lbl" runat="server" ControlName="ReleaseFreezeStage2Lbl" Text="Stage2:"></asp:Label></td>
+                                                <td class="FreezeDateLbl" id="FirstColFreezeStage2"><asp:Label ID="ReleaseFreezeStage2Lbl" runat="server"  Text="Stage2:"></asp:Label></td>
                                                 
-                                                <td><ult:MeetingControl runat="server" ID="FreezeStage2Meeting"/></td>
+                                                <td class="FreezeDatePicker"><ult:MeetingControl runat="server" ID="FreezeStage2Meeting"/></td>
                                             </tr>                                        
                                             <tr>
-                                                <td style="text-align: right; margin-right: 13px;" id="FirstColFreezeStage3"><asp:Label ID="ReleaseFreezeStage3Lbl" runat="server" ControlName="ReleaseFreezeStage3Lbl" Text="Stage3:"></asp:Label></td>
+                                                <td class="FreezeDateLbl" id="FirstColFreezeStage3"><asp:Label ID="ReleaseFreezeStage3Lbl" runat="server"  Text="Stage3:"></asp:Label></td>
                                                 
-                                                <td><ult:MeetingControl runat="server" ID="FreezeStage3Meeting"/></td>
+                                                <td class="FreezeDatePicker"><ult:MeetingControl runat="server" ID="FreezeStage3Meeting"/></td>
                                             </tr>
                                         </table>
                                         <div>
@@ -124,16 +124,16 @@
                             </td>
                         </tr>
                         <tr>            
-                            <td class="TabLineLeft"><asp:Label ID="ReleaseEndDateLbl" runat="server" ControlName="ReleaseEndDateLbl" Text="End date:"></asp:Label></td>
+                            <td class="TabLineLeft"><asp:Label ID="ReleaseEndDateLbl" runat="server"  Text="End date:"></asp:Label></td>
                             
                             <td><ult:MeetingControl runat="server" ID="ReleaseEndMeeting" /></td>
                         </tr>                       
                         <tr>            
-                            <td class="TabLineLeft"><asp:Label ID="ReleaseClosureDateLbl" runat="server" ControlName="ReleaseClosureDateLbl" Text="Closure date:"></asp:Label></td>
+                            <td class="TabLineLeft"><asp:Label ID="ReleaseClosureDateLbl" runat="server"  Text="Closure date:"></asp:Label></td>
                             
                             <td><ult:MeetingControl runat="server" ID="ReleaseClosureMeeting" /></td>
                         </tr>
-                        <tr style="max-height: 150px; overflow-y: scroll; margin-top:5px"> 
+                        <tr style="max-height: 120px; overflow-y: scroll; margin-top:5px"> 
                             <td colspan="3">
                                 <ult:RemarksControl runat="server" ID="releaseRemarks" IsEditMode="true"/>   
                             </td>                                                    
@@ -144,43 +144,43 @@
                     <table class="TabContent" style="width:95%">
                         <tr class="TabLine">
                             <td class="TabLineLeft">                                
-                                <asp:Label ID="previousReleaseLbl" runat="server" ControlName="previousReleaseLbl" Text="Follows Release<span class='requiredField'>(*)</span>:" CssClass="TabLabel"></asp:Label>                                
+                                <asp:Label ID="previousReleaseLbl" runat="server"  Text="Follows Release<span class='requiredField'>(*)</span>:" CssClass="TabLabel"></asp:Label>                                
                             </td>
                             <td class="TabLineRight">   
-                                <asp:DropDownList ID="previousReleaseVal" runat="server" ControlName="previousReleaseVal" CssClass="TabValue"></asp:DropDownList>                                                                                                 
+                                <asp:DropDownList ID="previousReleaseVal" runat="server"  CssClass="TabValue"></asp:DropDownList>                                                                                                 
                             </td>
                         </tr>
                         <tr class="TabLine">
                             <td class="TabLineLeft">                                
-                                <asp:Label ID="ITURCodeLbl" runat="server" ControlName="ITURCodeLbl" Text="ITUR code:"></asp:Label> 
+                                <asp:Label ID="ITURCodeLbl" runat="server"  Text="ITUR code:"></asp:Label> 
                             </td>
                             <td class="TabLineRight">   
-                                <asp:TextBox ID="ITURCodeVal" runat="server" ControlName="ITURCodeVal"></asp:TextBox>
+                                <asp:TextBox ID="ITURCodeVal" runat="server" ></asp:TextBox>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="2" class="TabLineRight">
                                 <fieldset>
-                                    <legend ><asp:Label ID="ReleaseVersionLbl" runat="server" ControlName="ReleaseVersionLbl" Text="Versions"></asp:Label></legend>
+                                    <legend ><asp:Label ID="ReleaseVersionLbl" runat="server"  Text="Versions"></asp:Label></legend>
                                     <table class="versionFieldsetTab" style="width:100%">                                                                            
                                         <tr>
                                             <td style="width: 30%; padding-left: 10%">
-                                                <asp:Label ID="Release2GLbl" runat="server" ControlName="Release2GLbl" Text="2G:"></asp:Label>
-                                                <asp:Label ID="Release2GVal" runat="server" ControlName="Release2GVal"></asp:Label>
+                                                <asp:Label ID="Release2GLbl" runat="server"  Text="2G:"></asp:Label>
+                                                <asp:Label ID="Release2GVal" runat="server" ></asp:Label>
                                             </td>                                                                                        
                                             <td style="width: 70%; padding-left: 25%">
-                                                <asp:Label ID="Release2GDecimalLbl" runat="server" ControlName="Release2GDecimalLbl" Text="2G Decimal:"></asp:Label>
-                                                <asp:TextBox ID="Release2GDecimalVal" runat="server" ControlName="Release2GDecimalVal" ></asp:TextBox>
+                                                <asp:Label ID="Release2GDecimalLbl" runat="server"  Text="2G Decimal:"></asp:Label>
+                                                <asp:TextBox ID="Release2GDecimalVal" runat="server"  ></asp:TextBox>
                                             </td>                                           
                                         </tr>                                                                                                              
                                         <tr>                                            
                                             <td style="width: 30%; padding-left: 10%">
-                                                <asp:Label ID="Release3GLbl" runat="server" ControlName="Release3GLbl" Text="3G:"></asp:Label>
-                                                <asp:Label ID="Release3GVal" runat="server" ControlName="Release3GVal"></asp:Label>
+                                                <asp:Label ID="Release3GLbl" runat="server"  Text="3G:"></asp:Label>
+                                                <asp:Label ID="Release3GVal" runat="server" ></asp:Label>
                                             </td>  
                                             <td style="width: 70%; padding-left: 25%">
-                                                <asp:Label ID="Release3GDecimalLbl" runat="server" ControlName="Release3GDecimalLbl" Text="3G Decimal:"></asp:Label>
-                                                <asp:TextBox ID="Release3GDecimalVal" runat="server" ControlName="Release3GDecimalVal"></asp:TextBox>
+                                                <asp:Label ID="Release3GDecimalLbl" runat="server"  Text="3G Decimal:"></asp:Label>
+                                                <asp:TextBox ID="Release3GDecimalVal" runat="server" ></asp:TextBox>
                                             </td>                                                                                       
                                         </tr>
                                     </table>                                    
@@ -190,19 +190,19 @@
                         <tr>
                             <td colspan="2" class="TabLineRight">
                                 <fieldset>
-                                    <legend><asp:Label ID="WPMCodesLbl" runat="server" ControlName="WPMCodesLbl" Text="WPM codes" ></asp:Label></legend>
+                                    <legend><asp:Label ID="WPMCodesLbl" runat="server"  Text="WPM codes" ></asp:Label></legend>
                                     <table class="versionFieldsetTab" style="width:100%">
                                         <tr>
                                             <td style="width: 60%; padding-left: 10%">                              
-                                                <asp:Label ID="WPMCodes2GLbl" runat="server" ControlName="WPMCodes2GLbl" Text="2G:"></asp:Label>
-                                                <asp:TextBox ID="WPMCodes2GVal" runat="server" ControlName="WPMCodes2GVal" MaxLength="30"></asp:TextBox>                                                                
+                                                <asp:Label ID="WPMCodes2GLbl" runat="server"  Text="2G:"></asp:Label>
+                                                <asp:TextBox ID="WPMCodes2GVal" runat="server"  MaxLength="30"></asp:TextBox>                                                                
                                             </td>
                                             <td style="width: 40%; padding-left: 30%"></td>
                                         </tr>
                                         <tr>
                                             <td style="width: 60%; padding-left: 10%">                                
-                                                <asp:Label ID="WPMCodes3GLbl" runat="server" ControlName="WPMCodes3GLbl" Text="3G:"></asp:Label>
-                                                <asp:TextBox ID="WPMCodes3GVal" runat="server" ControlName="WPMCodes3GVal"></asp:TextBox>                                                                
+                                                <asp:Label ID="WPMCodes3GLbl" runat="server"  Text="3G:"></asp:Label>
+                                                <asp:TextBox ID="WPMCodes3GVal" runat="server" ></asp:TextBox>                                                                
                                             </td>
                                             <td style="width: 40%; padding-left: 30%"></td>
                                         </tr>
@@ -223,23 +223,7 @@
                 <asp:LinkButton ID="ExitBtn" runat="server" Text="Cancel" CssClass="LinkButton" OnClick="CloseReleaseDetails_Click"/>
            </div> 
            <script type="text/javascript">
-               function resizeElements() {
-
-                   var calWidth = $("#FreezeStagesPanel").width() - $("#SecondColreleaseCode").width() - ($("#FreezeStagesPanel").width() * 0.03) - 17;
-
-                   $("#thirdColFreezeStage1").width(($("#FrezeStagesTable").width() - calWidth) * 0.5);
-                   $("#SecndColFreezeStage1").width(($("#FrezeStagesTable").width() - calWidth) * 0.5 -20);
-                   $("#FirstColFreezeStage1").width(calWidth); 
-
-                   $("#thirdColFreezeStage2").width(($("#FrezeStagesTable").width() - calWidth) * 0.5);
-                   $("#SecndColFreezeStage2").width(($("#FrezeStagesTable").width() - calWidth) * 0.5 - 20);
-                   $("#FirstColFreezeStage2").width(calWidth);
-
-                   $("#thirdColFreezeStage3").width(($("#FrezeStagesTable").width() - calWidth) * 0.5);
-                   $("#SecndColFreezeStage3").width(($("#FrezeStagesTable").width() - calWidth) * 0.5 - 20);
-                   $("#FirstColFreezeStage3").width(calWidth);
-
-               }
+              
 
                function realPostBack(eventTarget, eventArgument) {
                    $find("<%= RadAjaxManager1.ClientID %>").__doPostBack(eventTarget, eventArgument);
@@ -248,15 +232,14 @@
                
 
                $(document).ready(function () {
-                   resizeElements();
                    setTimeout(function () {
-                       var releaseName = "Release " + $("#releaseCodeVal").html();
+
+                       var releaseName = "Create new Release";
+                       if ($("#releaseCodeVal").val() != '')
+                           releaseName = " Edit Release " + $("#releaseCodeVal").val();
+                       
                        document.title = releaseName;
                    }, 200);
-
-                   $(window).resize(function () {
-                       resizeElements();
-                   });
 
                    $('#FreezeReleaseBtn').click(function (event) {
                        event.preventDefault();
