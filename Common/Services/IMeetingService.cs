@@ -4,7 +4,7 @@ using System;
 
 namespace Etsi.Ultimate.Services
 {
-    
+
     /// <summary>
     /// Interface description all operations that are allowed regarding meetings.
     /// </summary>
@@ -13,22 +13,28 @@ namespace Etsi.Ultimate.Services
         /// <summary>
         /// Abstract method to get list of Meetings
         /// </summary>
-        /// <param name="personID"></param>
+        /// <param name="SearchText"></param>
         /// <returns></returns>
         List<DomainClasses.Meeting> GetMatchingMeetings(string SearchText);
 
         /// <summary>
         /// Abstract method to get list of latest Meetings
         /// </summary>
-        /// <param name="personID"></param>
         /// <returns></returns>
         List<DomainClasses.Meeting> GetLatestMeetings();
 
         /// <summary>
         /// Abstract method to get list of latest Meetings including given MeetingId
         /// </summary>
-        /// <param name="personID"></param>
+        /// <param name="includeMeetingId"></param>
         /// <returns></returns>
         List<Meeting> GetLatestMeetings(int includeMeetingId);
+
+        /// <summary>
+        /// Abstract method to get meeting my passed MeetingId
+        /// </summary>
+        /// <param name="MeetingId"></param>
+        /// <returns></returns>
+        Meeting GetMeetingById(int MeetingId);
     }
 }

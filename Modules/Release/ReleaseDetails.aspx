@@ -3,6 +3,7 @@
 <%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.Client.ClientResourceManagement" Assembly="DotNetNuke.Web.Client" %>
 <%@ Register TagPrefix="ult" TagName="RemarksControl" Src="../../controls/Ultimate/RemarksControl.ascx" %>
 <%@ Register TagPrefix="ult" TagName="HistoryControl" Src="../../controls/Ultimate/HistoryControl.ascx" %>
+<%@ Register TagPrefix="ult" TagName="MeetingControl" Src="../../controls/Ultimate/MeetingControl.ascx" %>
 
 <!DOCTYPE html>
 
@@ -262,11 +263,7 @@
                                 <br />
                                 # Versions are pending upload.<br />
                                 # CRs are not in final status.<br /><br />
-                                Freeze stage 3 : <asp:DropDownList  runat="server"><asp:ListItem>Meeting 4</asp:ListItem></asp:DropDownList> 
-                                <telerik:RadDatePicker ID="RadDatePicker1"  Width="100" runat="server" MinDate="1900-01-01" AutoPostBack="false">
-                                    <Calendar ID="Calendar1" RangeMinDate="1900-01-01" runat="server">
-                                    </Calendar>
-                                </telerik:RadDatePicker>
+                                Freeze stage 3 : <ult:MeetingControl runat="server" ID="mcFreeze" DisplayLabel="true" />
                             </div>
                             <br />
                             <div class="footer" style="text-align: right">
@@ -290,13 +287,7 @@
                                 # CRs are not in final status.<br />
                                 # TDocs are not in final status.<br /><br />
                                 </div>
-                                Closure <asp:DropDownList ID="ddlClosureMeeting"  runat="server">
-                                              <asp:ListItem>Meeting 4</asp:ListItem>
-                                         </asp:DropDownList> 
-                                <telerik:RadDatePicker ID="RadDatePickerClosureDate"  Width="100" runat="server" MinDate="1900-01-01" SelectedDate = "2014-03-10" AutoPostBack="false">
-                                    <Calendar ID="radCalendar" RangeMinDate="1900-01-01" runat="server" />
-                                    <DateInput DateFormat="yyyy-MM-dd" />
-                                </telerik:RadDatePicker>
+                                Closure <ult:MeetingControl runat="server" ID="mcClose" DisplayLabel="true"/>
                             </div>
                             <br />
                             <div class="footer" style="text-align: right">

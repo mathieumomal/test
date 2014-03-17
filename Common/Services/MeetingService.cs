@@ -41,6 +41,17 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        public Meeting GetMeetingById(int MeetingId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var meetingManager = new MeetingManager();
+                meetingManager.UoW = uoW;
+                
+                return meetingManager.GetMeetingById(MeetingId);
+            }
+        }
+
         #endregion
     }
 }

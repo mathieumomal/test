@@ -24,7 +24,7 @@ namespace Etsi.Ultimate.Module.Release
         public Nullable<int> ReleaseId;
         #endregion
 
-        
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -32,7 +32,7 @@ namespace Etsi.Ultimate.Module.Release
                 GetRequestParameters();
 
                 LoadReleaseDetails();
-            }            
+            }
         }
 
         private void LoadReleaseDetails()
@@ -58,7 +58,7 @@ namespace Etsi.Ultimate.Module.Release
                     if (userRights.HasRight(Domain.Enum_UserRights.Release_ViewCompleteDetails))
                         FillAdminTab(release, svc.GetPreviousReleaseCode(UserId, release.Pk_ReleaseId).Value);
 
-                    
+
 
                     //Set Remarks control
                     RemarksControl rmk = releaseRemarks as RemarksControl;
@@ -98,7 +98,7 @@ namespace Etsi.Ultimate.Module.Release
                 {
                     PageViewID = "RadPage" + CONST_GENERAL_TAB,
                     Text = CONST_GENERAL_TAB,
-                    Selected= true
+                    Selected = true
 
                 });
 
@@ -109,7 +109,7 @@ namespace Etsi.Ultimate.Module.Release
                     {
                         PageViewID = "RadPage" + CONST_ADMIN_TAB,
                         Text = CONST_ADMIN_TAB,
-                        Selected = false                     
+                        Selected = false
                     });
                 RadPageAdministration.Visible = true;
             }
@@ -131,7 +131,7 @@ namespace Etsi.Ultimate.Module.Release
         /// <param name="release"></param>
         private void FillGeneralTab(DomainClasses.UserRightsContainer userRights, Domain.Release release)
         {
-            releaseCodeVal.Text = release.Code; 
+            releaseCodeVal.Text = release.Code;
             ReleaseStatusVal.Text = release.Enum_ReleaseStatus.Description;
             ReleaseStatusVal.CssClass = "status " + ReleaseStatusVal.Text;
             ReleaseNameVal.Text = release.Name;
@@ -153,50 +153,51 @@ namespace Etsi.Ultimate.Module.Release
             fixContainer.Height = new System.Web.UI.WebControls.Unit(580, UnitType.Pixel);
             ReleaseDetailRadMultiPage.Height = new System.Web.UI.WebControls.Unit(530, UnitType.Pixel);
             //FreezeStagesPanel
-            if(!(userRights.HasRight(Domain.Enum_UserRights.Release_ViewLimitedDetails)))
+            if (!(userRights.HasRight(Domain.Enum_UserRights.Release_ViewLimitedDetails)))
             {
-                
-                
-                ReleaseFreezeStage1Meeting.Text = ((release.Stage1FreezeMtgRef != null) ) ? release.Stage1FreezeMtgRef : CONST_EMPTY_FIELD;
+
+
+                ReleaseFreezeStage1Meeting.Text = ((release.Stage1FreezeMtgRef != null)) ? release.Stage1FreezeMtgRef : CONST_EMPTY_FIELD;
                 if (release.Stage1FreezeDate != null)
                     ReleaseFreezeStage1Date.Text = Convert.ToDateTime(release.Stage1FreezeDate).ToString("yyyy-MM-dd");
                 else
                     ReleaseFreezeStage1Date.Text = CONST_EMPTY_FIELD;
 
-                ReleaseFreezeStage2Meeting.Text = ((release.Stage2FreezeMtgRef != null) ) ? release.Stage2FreezeMtgRef : CONST_EMPTY_FIELD;
+                ReleaseFreezeStage2Meeting.Text = ((release.Stage2FreezeMtgRef != null)) ? release.Stage2FreezeMtgRef : CONST_EMPTY_FIELD;
                 if (release.Stage2FreezeDate != null)
                     ReleaseFreezeStage2Date.Text = Convert.ToDateTime(release.Stage2FreezeDate).ToString("yyyy-MM-dd");
                 else
                     ReleaseFreezeStage2Date.Text = CONST_EMPTY_FIELD;
 
-                ReleaseFreezeStage3Meeting.Text = ((release.Stage3FreezeMtgRef != null) ) ? release.Stage3FreezeMtgRef : CONST_EMPTY_FIELD;
+                ReleaseFreezeStage3Meeting.Text = ((release.Stage3FreezeMtgRef != null)) ? release.Stage3FreezeMtgRef : CONST_EMPTY_FIELD;
 
                 if (release.Stage3FreezeDate != null)
                     ReleaseFreezeStage3Date.Text = Convert.ToDateTime(release.Stage3FreezeDate).ToString("yyyy-MM-dd");
-                else                   
+                else
                     ReleaseFreezeStage3Date.Text = CONST_EMPTY_FIELD;
-                
+
             }
-            else{
-                FreezeStagesPanel.Visible= false;
+            else
+            {
+                FreezeStagesPanel.Visible = false;
             }
-            
+
 
             if (release.EndDate != null)
                 ReleaseEndDateVal.Text = Convert.ToDateTime(release.EndDate).ToString("yyyy-MM-dd");
-            else                   
+            else
                 ReleaseEndDateVal.Text = CONST_EMPTY_FIELD;
 
             ReleaseEndDateMeetingVal.Text = (release.EndMtgRef == null) ? CONST_EMPTY_FIELD : release.EndMtgRef;
 
             if (release.ClosureDate != null)
                 ReleaseClosureDateVal.Text = Convert.ToDateTime(release.ClosureDate).ToString("yyyy-MM-dd");
-            else                   
+            else
                 ReleaseClosureDateVal.Text = CONST_EMPTY_FIELD;
 
             ReleaseClosureDateMeetingVal.Text = (release.ClosureMtgRef == null) ? CONST_EMPTY_FIELD : release.ClosureMtgRef;
 
-            
+
         }
 
         /// <summary>
@@ -208,7 +209,7 @@ namespace Etsi.Ultimate.Module.Release
         {
             previousReleaseVal.Text = (previousCode == string.Empty) ? CONST_EMPTY_FIELD : previousCode;
             ITURCodeVal.Text = (release.IturCode == null) ? CONST_EMPTY_FIELD : release.IturCode;
-            
+
             Release2GDecimalVal.Text = (release.Version2g == null) ? CONST_EMPTY_FIELD : release.Version2g.ToString();
             Release3GDecimalVal.Text = (release.Version3g == null) ? CONST_EMPTY_FIELD : release.Version3g.ToString();
 
@@ -236,12 +237,12 @@ namespace Etsi.Ultimate.Module.Release
         /// <param name="userRights">User Rights</param>
         private void ManageButtonDisplay(DomainClasses.Release release, DomainClasses.UserRightsContainer userRights)
         {
-            if(userRights.HasRight(Domain.Enum_UserRights.Release_Edit))
+            if (userRights.HasRight(Domain.Enum_UserRights.Release_Edit))
                 EditBtn.Visible = true;
             if (userRights.HasRight(Domain.Enum_UserRights.Release_Freeze))
                 FreezeReleaseBtn.Visible = true;
             if (userRights.HasRight(Domain.Enum_UserRights.Release_Close))
-                CloseReleaseBtn.Visible = true;            
+                CloseReleaseBtn.Visible = true;
         }
 
         /// <summary>
@@ -270,22 +271,26 @@ namespace Etsi.Ultimate.Module.Release
         protected void EditReleaseDetails_Click(object sender, EventArgs e)
         {
             GetRequestParameters();
-            Response.Redirect("ReleaseEdition.aspx?releaseId=" + ReleaseId.Value+"&action=Edit");
+            Response.Redirect("ReleaseEdition.aspx?releaseId=" + ReleaseId.Value + "&action=Edit");
         }
 
-        
+
         protected void btnConfirmFreeze_Click(object sender, EventArgs e)
         {
             GetRequestParameters();
             if (ReleaseId != null)
             {
-                IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
-                svc.FreezeRelease(ReleaseId.Value, DateTime.Now,UserId,1, "SP-65");
-                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
+                MeetingControl mtgControl = mcFreeze as MeetingControl;
+                if (mtgControl.SelectedMeetingId != default(int))
+                {
+                    IMeetingService mtgSvc = ServicesFactory.Resolve<IMeetingService>();
+                    var mtg = mtgSvc.GetMeetingById(mtgControl.SelectedMeetingId);
 
-                LoadReleaseDetails();
+                    IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
+                    svc.FreezeRelease(ReleaseId.Value, DateTime.Now, UserId, mtg.MTG_ID, mtg.MtgShortRef);
+                    this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
+                }
             }
-
         }
 
         /// <summary>
@@ -298,9 +303,16 @@ namespace Etsi.Ultimate.Module.Release
             GetRequestParameters();
             if (ReleaseId != null)
             {
-                IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
-                svc.CloseRelease(ReleaseId.Value, DateTime.Now, "SP-65", 1, UserId);
-                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
+                MeetingControl mtgControl = mcClose as MeetingControl;
+                if (mtgControl.SelectedMeetingId != default(int))
+                {
+                    IMeetingService mtgSvc = ServicesFactory.Resolve<IMeetingService>();
+                    var mtg = mtgSvc.GetMeetingById(mtgControl.SelectedMeetingId);
+
+                    IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
+                    svc.CloseRelease(ReleaseId.Value, DateTime.Now, mtg.MtgShortRef, mtg.MTG_ID, UserId);
+                    this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
+                }
             }
         }
     }

@@ -70,6 +70,20 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(exptectedMeetingCount, results.Count);
         }
 
+        [Test, TestCaseSource("GetMeetings")]
+        public void Test_GetMeetingById(IDbSet<Meeting> meetings)
+        {
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Meetings).Return(meetings);
+
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+
+            var service = new MeetingService();
+
+            Assert.AreEqual(1, service.GetMeetingById(1).MTG_ID);
+            Assert.AreEqual(default(Meeting), service.GetMeetingById(0));
+        }
         #endregion
 
         #region Data

@@ -616,13 +616,13 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::Telerik.Web.UI.RadWindow RadWindow_workItemImport;
         
         /// <summary>
-        /// RadDatePicker1 control.
+        /// mcFreeze control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadDatePicker RadDatePicker1;
+        protected global::System.Web.UI.UserControl mcFreeze;
         
         /// <summary>
         /// btnConfirmFreeze control.
@@ -652,22 +652,13 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::Telerik.Web.UI.RadWindow RadWindow_ClosureConfirmation;
         
         /// <summary>
-        /// ddlClosureMeeting control.
+        /// mcClose control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlClosureMeeting;
-        
-        /// <summary>
-        /// RadDatePickerClosureDate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadDatePicker RadDatePickerClosureDate;
+        protected global::System.Web.UI.UserControl mcClose;
         
         /// <summary>
         /// btnConfirmClosure control.

@@ -49,5 +49,13 @@ namespace Etsi.Ultimate.Business
 
             return meetings;
         }
+
+
+        public Meeting GetMeetingById(int MeetingId)
+        {
+            IMeetingRepository repo = RepositoryFactory.Resolve<IMeetingRepository>();
+
+            return repo.All.Where(x => x.MTG_ID == MeetingId).FirstOrDefault();
+        }
     }
 }
