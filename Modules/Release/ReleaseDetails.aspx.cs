@@ -150,11 +150,13 @@ namespace Etsi.Ultimate.Module.Release
             else
                 ReleaseStartDateVal.Text = CONST_EMPTY_FIELD;
 
+            fixContainer.Height = new System.Web.UI.WebControls.Unit(580, UnitType.Pixel);
+            ReleaseDetailRadMultiPage.Height = new System.Web.UI.WebControls.Unit(530, UnitType.Pixel);
             //FreezeStagesPanel
             if(!(userRights.HasRight(Domain.Enum_UserRights.Release_ViewLimitedDetails)))
             {
-                ReleaseDetailRadMultiPage.Height = new System.Web.UI.WebControls.Unit(750, UnitType.Pixel);
-                fixContainer.Height = new System.Web.UI.WebControls.Unit(770, UnitType.Pixel); 
+                
+                
                 ReleaseFreezeStage1Meeting.Text = ((release.Stage1FreezeMtgRef != null) ) ? release.Stage1FreezeMtgRef : CONST_EMPTY_FIELD;
                 if (release.Stage1FreezeDate != null)
                     ReleaseFreezeStage1Date.Text = Convert.ToDateTime(release.Stage1FreezeDate).ToString("yyyy-MM-dd");
@@ -177,8 +179,6 @@ namespace Etsi.Ultimate.Module.Release
             }
             else{
                 FreezeStagesPanel.Visible= false;
-                ReleaseDetailRadMultiPage.Height = new System.Web.UI.WebControls.Unit(430, UnitType.Pixel);
-                fixContainer.Height = new System.Web.UI.WebControls.Unit(480, UnitType.Pixel); 
             }
             
 

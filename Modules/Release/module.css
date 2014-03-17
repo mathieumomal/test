@@ -27,9 +27,9 @@
     font-size: 12px;
 }
 
-.releaseDetailBody td {
-    padding-top: 5px !important;
-    padding-bottom: 5px !important;
+#ReleaseDetailRadMultiPage td {
+    padding-top: 4px !important;
+    padding-bottom: 3px !important;
 }
 
 .releaseRemarks {
