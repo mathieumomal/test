@@ -30,14 +30,14 @@ namespace Etsi.Ultimate.Services
             return GetLatestMeetings(0);
         }
 
-        public List<Meeting> GetLatestMeetings(int MeetingId)
+        public List<Meeting> GetLatestMeetings(int includeMeetingId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var meetingManager = new MeetingManager();
                 meetingManager.UoW = uoW;
                 //Get list of meetings
-                return meetingManager.GetLatestMeetings(MeetingId);
+                return meetingManager.GetLatestMeetings(includeMeetingId);
             }
         }
 

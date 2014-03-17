@@ -27,22 +27,24 @@ namespace Etsi.Ultimate.Business
         {
             IMeetingRepository repo = RepositoryFactory.Resolve<IMeetingRepository>();
 
-            return repo.All.Where(x => x.MtgShortRef.Contains(SearchText) || x.LOC_CITY.Contains(SearchText) || x.LOC_CTY_CODE.Contains(SearchText)).ToList();
+            return repo.All.Where(x => (x.MtgShortRef != null && x.MtgShortRef.Contains(SearchText)) ||
+                (x.LOC_CITY != null && x.LOC_CITY.Contains(SearchText)) ||
+                (x.LOC_CTY_CODE != null && x.LOC_CTY_CODE.Contains(SearchText))).ToList();
         }
 
         /// <summary>
         /// Retrieves latest meetings data
         /// </summary>
         /// <returns></returns>
-        public List<Meeting> GetLatestMeetings(int MeetingId)
+        public List<Meeting> GetLatestMeetings(int includeMeetingId)
         {
             IMeetingRepository repo = RepositoryFactory.Resolve<IMeetingRepository>();
 
             DateTime startDate = DateTime.UtcNow.AddDays(MEETING_START_DATE);
             var meetings = repo.All.Where(x => x.START_DATE > startDate).Take(NUMBER_OF_MEETINGS_TO_LOAD).ToList();
-            
-            var requestedMeeting = repo.All.Where(x => x.MTG_ID == MeetingId).FirstOrDefault();
-            if (requestedMeeting != null)
+
+            var requestedMeeting = repo.All.Where(x => x.MTG_ID == includeMeetingId).FirstOrDefault();
+            if (requestedMeeting != null && !meetings.Exists(x => x.MTG_ID == requestedMeeting.MTG_ID))
                 meetings.Insert(0, requestedMeeting);
 
             return meetings;

@@ -29,6 +29,6 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="personID"></param>
         /// <returns></returns>
-        List<Meeting> GetLatestMeetings(int MeetingId);
+        List<Meeting> GetLatestMeetings(int includeMeetingId);
     }
 }
