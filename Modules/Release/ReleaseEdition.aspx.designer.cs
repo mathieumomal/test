@@ -31,6 +31,15 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::System.Web.UI.HtmlControls.HtmlForm ReleaseEditionForm;
         
         /// <summary>
+        /// Contrôle RadScriptManager1.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadScriptManager RadScriptManager1;
+        
+        /// <summary>
         /// Contrôle releaseWarning.
         /// </summary>
         /// <remarks>
@@ -65,15 +74,6 @@ namespace Etsi.Ultimate.Module.Release {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel releaseDetailsBody;
-        
-        /// <summary>
-        /// Contrôle RadScriptManager1.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadScriptManager RadScriptManager1;
         
         /// <summary>
         /// Contrôle ReleaseDetailRadTabStrip.

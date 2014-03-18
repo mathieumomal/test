@@ -42,9 +42,14 @@ namespace Etsi.Ultimate.Module.Release
             {
                 int Release2GDecimalValue, Release3GDecimalValue;
 
-                if (int.TryParse(Release2GDecimalVal.Text, out Release2GDecimalValue))
+                if (!Release2GDecimalVal.Text.Equals("") && int.TryParse(Release2GDecimalVal.Text, out Release2GDecimalValue))
                 {
                     Release2GVal.Text = Domain.Release.Encode(Release2GDecimalValue);
+                    Release2GDecimalVal.Attributes.Remove("class");
+                    checkForValidation();
+                }
+                else if (Release2GDecimalVal.Text.Equals(""))
+                {
                     Release2GDecimalVal.Attributes.Remove("class");
                     checkForValidation();
                 }
@@ -56,9 +61,14 @@ namespace Etsi.Ultimate.Module.Release
                     SaveBtn.Attributes.Add("class", "disabledLink");
                 }
 
-                if (int.TryParse(Release3GDecimalVal.Text, out Release3GDecimalValue))
+                if (!Release3GDecimalVal.Text.Equals("") &&  int.TryParse(Release3GDecimalVal.Text, out Release3GDecimalValue))
                 {
                     Release3GVal.Text = Domain.Release.Encode(Release3GDecimalValue);
+                    Release3GDecimalVal.Attributes.Remove("class");
+                    checkForValidation();
+                }
+                else if (Release3GDecimalVal.Text.Equals(""))
+                {
                     Release3GDecimalVal.Attributes.Remove("class");
                     checkForValidation();
                 }
@@ -414,8 +424,9 @@ namespace Etsi.Ultimate.Module.Release
             editedRelease.EndMtgId = ReleaseEndMeeting.SelectedMeetingId;
             editedRelease.ClosureMtgId = ReleaseClosureMeeting.SelectedMeetingId;
             editedRelease.IturCode = ITURCodeVal.Text;
-            editedRelease.Version2g = new Nullable<int>(int.Parse(Release2GDecimalVal.Text));
-            editedRelease.Version3g = new Nullable<int>(int.Parse(Release3GDecimalVal.Text));
+            int intParserBuffer = 0;
+            editedRelease.Version2g = (int.TryParse(Release2GDecimalVal.Text, out intParserBuffer)) ? new Nullable<int>(int.Parse(Release2GDecimalVal.Text)) : null;
+            editedRelease.Version3g = (int.TryParse(Release3GDecimalVal.Text, out intParserBuffer)) ? new Nullable<int>(int.Parse(Release3GDecimalVal.Text)) : null;
             editedRelease.WpmCode2g = WPMCodes2GVal.Text;
             editedRelease.WpmCode3g = WPMCodes3GVal.Text;
 

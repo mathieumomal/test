@@ -24,8 +24,7 @@
 </head>
 <body class="releaseDetailBody">
     <form id="ReleaseEditionForm" runat="server">
-
-        
+       <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />        
        <div class="containerFix">
        <asp:Panel ID="releaseWarning" runat="server" CssClass="releaseDetailsWarning" Visible="false">
            <span class="releaseDetailsWarningTxt">No data available for the current query.</span>
@@ -34,7 +33,7 @@
            <asp:Label Id="ErrorMsg" runat="server" CssClass="releaseDetailsErrorTxt" Text="Bad request."></asp:Label>
        </asp:Panel> 
        <asp:Panel ID="releaseDetailsBody" runat="server" CssClass="releaseDetailsBody">
-            <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
+            
             <telerik:RadTabStrip ID="ReleaseDetailRadTabStrip" runat="server" MultiPageID="ReleaseEditRadMultiPage" 
             AutoPostBack="false">    
             </telerik:RadTabStrip>
@@ -199,7 +198,7 @@
                  </telerik:RadPageView>              
             </telerik:RadMultiPage>     
            <div class="releaseDetailsAction">
-                <asp:LinkButton ID="SaveBtn" runat="server" Text="Save" CssClass="LinkButton" Visible="true" OnClick="SaveEditedRelease_Click"/>
+                <asp:LinkButton ID="SaveBtn" runat="server" Text="Save" CssClass="LinkButton" OnClick="SaveEditedRelease_Click"/>
                 <asp:LinkButton ID="ExitBtn" runat="server" Text="Cancel" CssClass="LinkButton" OnClick="CloseReleaseDetails_Click"/>
            </div> 
            <telerik:RadAjaxManager ID="RadAjaxManager1" runat="server">
@@ -209,7 +208,7 @@
                             <telerik:AjaxUpdatedControl ControlID="Release2GDecimalVal" /> 
                             <telerik:AjaxUpdatedControl ControlID="Release2GVal" />   
                             <telerik:AjaxUpdatedControl ControlID="Release2GDecimalLbl" /> 
-                            <telerik:AjaxUpdatedControl ControlID="Release2GLbl" />                                                               
+                            <telerik:AjaxUpdatedControl ControlID="Release2GLbl" />                                                                        
                         </UpdatedControls>
                     </telerik:AjaxSetting>
                     <telerik:AjaxSetting AjaxControlID="Release3GDecimalVal">
@@ -274,9 +273,6 @@
                    });
                    
                });
-
-               
-               
         </script>  
        </asp:Panel>       
        </div>        
