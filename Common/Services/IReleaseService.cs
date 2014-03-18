@@ -42,6 +42,6 @@ namespace Etsi.Ultimate.Services
 
         void EditRelease(Release release, int previousReleaseId, int personId);
 
-        void CreateRelease(Release release, int previousReleaseId, int personId);
+        int CreateRelease(Release release, int previousReleaseId, int personId);
     }
 }

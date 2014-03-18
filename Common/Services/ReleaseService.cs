@@ -124,13 +124,15 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public void CreateRelease(Release release, int previousReleaseId, int personId)
+        public int CreateRelease(Release release, int previousReleaseId, int personId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var releaseManager = new ReleaseManager();
                 releaseManager.UoW = uoW;
-                releaseManager.CreateRelease(release, previousReleaseId, personId);
+                var newRelease = releaseManager.CreateRelease(release, previousReleaseId, personId);
+                uoW.Save();
+                return newRelease.Pk_ReleaseId;
             }
         }
         #endregion

@@ -397,7 +397,7 @@ namespace Etsi.Ultimate.Module.Release
             else if (action.Equals("Creation"))
             {
                 setReleaseEditionValues(editedRelease);
-                svc.CreateRelease(editedRelease, int.Parse(previousReleaseVal.SelectedValue), UserId);
+                editedRelease.Pk_ReleaseId = svc.CreateRelease(editedRelease, int.Parse(previousReleaseVal.SelectedValue), UserId);
             }
             else
             {
@@ -405,7 +405,7 @@ namespace Etsi.Ultimate.Module.Release
                 releaseDetailsBody.Visible = false;
                 releaseError.Visible = true;
             }
-            Response.Redirect("ReleaseDetails.aspx?releaseId=" + ReleaseId.Value);
+            Response.Redirect("ReleaseDetails.aspx?releaseId=" + editedRelease.Pk_ReleaseId);
 
         }
 

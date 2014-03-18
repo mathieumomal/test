@@ -158,8 +158,10 @@ namespace Etsi.Ultimate.Business
             ClearCache();
         }
 
-        public void CreateRelease(Release release, int previousReleaseId, int personId)
+        public Release CreateRelease(Release release, int previousReleaseId, int personId)
         {
+            ClearCache();
+
             releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
             releaseRepo.UoW = UoW;
 
@@ -168,6 +170,11 @@ namespace Etsi.Ultimate.Business
             var aReleaseToAdd = new Release();
             UpdateReleaseAndHistory(aReleaseToAdd, release);
             aReleaseToAdd.Histories.Clear();
+
+            // Add the release status
+            var enumStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
+            enumStatusRepo.UoW = UoW;
+            aReleaseToAdd.Fk_ReleaseStatus = enumStatusRepo.All.Where(e => e.Code == Enum_ReleaseStatus.Open).FirstOrDefault().Enum_ReleaseStatusId;
             
             aReleaseToAdd.Histories.Add(new History
             {
@@ -179,42 +186,12 @@ namespace Etsi.Ultimate.Business
 
             ManageSortOrder(aReleaseToAdd, previousReleaseId);
 
+            releaseRepo.InsertOrUpdate(aReleaseToAdd);
             
-            ClearCache();
+            return aReleaseToAdd;
         }
 
-        private void ManageSortOrder(Release aReleaseToAdd, int previousReleaseId)
-        {
-            List<Release> allReleases = new List<Release>();
-            Release previousRelease;
-            if (previousReleaseId != 0)
-            {
-                previousRelease = releaseRepo.Find(previousReleaseId);
-                aReleaseToAdd.SortOrder = previousRelease.SortOrder + 10;
-                allReleases = releaseRepo.All.Where(r => r.Pk_ReleaseId != aReleaseToAdd.Pk_ReleaseId).OrderByDescending(x => x.SortOrder).ToList();
-                foreach (Release r in allReleases)
-                {
-                    if (r.SortOrder <= previousRelease.SortOrder)
-                        break;
-                    if (r.SortOrder > previousRelease.SortOrder)
-                    {
-                        r.SortOrder += 10;
-                        releaseRepo.InsertOrUpdate(r);
-                    }
-                }
-            }
-            else
-            {
-                allReleases = releaseRepo.All.OrderByDescending(x => x.SortOrder).ToList();
-                var firstSortOrder = allReleases[0].SortOrder;
-                foreach (Release r in allReleases)
-                {
-                    r.SortOrder += 10;
-                    releaseRepo.InsertOrUpdate(r);
-                }
-                aReleaseToAdd.SortOrder = firstSortOrder;
-            }
-        }
+        
 
         public void EditRelease(Release release, int previousReleaseId, int personId)
         {
@@ -411,6 +388,39 @@ namespace Etsi.Ultimate.Business
                 };
 
                 releaseToUpdate.Histories.Add(historyEntry);
+            }
+        }
+
+        private void ManageSortOrder(Release aReleaseToAdd, int previousReleaseId)
+        {
+            List<Release> allReleases = new List<Release>();
+            Release previousRelease;
+            if (previousReleaseId != 0)
+            {
+                previousRelease = releaseRepo.Find(previousReleaseId);
+                aReleaseToAdd.SortOrder = previousRelease.SortOrder + 10;
+                allReleases = releaseRepo.All.Where(r => r.Pk_ReleaseId != aReleaseToAdd.Pk_ReleaseId).OrderByDescending(x => x.SortOrder).ToList();
+                foreach (Release r in allReleases)
+                {
+                    if (r.SortOrder <= previousRelease.SortOrder)
+                        break;
+                    if (r.SortOrder > previousRelease.SortOrder)
+                    {
+                        r.SortOrder += 10;
+                        releaseRepo.InsertOrUpdate(r);
+                    }
+                }
+            }
+            else
+            {
+                allReleases = releaseRepo.All.OrderByDescending(x => x.SortOrder).ToList();
+                var firstSortOrder = allReleases[0].SortOrder;
+                foreach (Release r in allReleases)
+                {
+                    r.SortOrder += 10;
+                    releaseRepo.InsertOrUpdate(r);
+                }
+                aReleaseToAdd.SortOrder = firstSortOrder;
             }
         }
 

@@ -102,7 +102,7 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
-        public void CreateRelease(Release release, int previousReleaseId, int personId)
+        public int CreateRelease(Release release, int previousReleaseId, int personId)
         {
             throw new NotImplementedException();
         }
