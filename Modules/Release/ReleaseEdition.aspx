@@ -13,7 +13,8 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="module.css">
     <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>  
+    <script src="JS/jquery.min.js"></script>  
+    <script src="JS/jquery-validate.min.js"></script>  
     <script type="text/javascript">
 
         function closeAllModals() {
@@ -37,7 +38,7 @@
             <telerik:RadTabStrip ID="ReleaseDetailRadTabStrip" runat="server" MultiPageID="ReleaseEditRadMultiPage" 
             AutoPostBack="false">    
             </telerik:RadTabStrip>
-            <telerik:RadMultiPage ID="ReleaseEditRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px">
+            <telerik:RadMultiPage ID="ReleaseEditRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px" height="540px">
                 <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true">        
                    <table style="width: 100%">
                         <tr>
@@ -199,6 +200,7 @@
             </telerik:RadMultiPage>     
            <div class="releaseDetailsAction">
                 <asp:LinkButton ID="SaveBtn" runat="server" Text="Save" CssClass="LinkButton" OnClick="SaveEditedRelease_Click"/>
+               <asp:LinkButton ID="SaveBtnDisabled" runat="server" Text="Save" CssClass="disabledLink" OnClientClick="return false;"/>
                 <asp:LinkButton ID="ExitBtn" runat="server" Text="Cancel" CssClass="LinkButton" OnClick="CloseReleaseDetails_Click"/>
            </div> 
            <telerik:RadAjaxManager ID="RadAjaxManager1" runat="server">
@@ -219,13 +221,66 @@
                             <telerik:AjaxUpdatedControl ControlID="Release3GLbl" />                                                         
                         </UpdatedControls>
                     </telerik:AjaxSetting>
+                    <telerik:AjaxSetting AjaxControlID="FreezeStage3Meeting">
+                        <UpdatedControls>                  
+                            <telerik:AjaxUpdatedControl ControlID="FreezeStage3Meeting" /> 
+                            <telerik:AjaxUpdatedControl ControlID="ReleaseEndMeeting" />                                                         
+                        </UpdatedControls>
+                    </telerik:AjaxSetting>
+                    <telerik:AjaxSetting AjaxControlID="ReleaseEndMeeting">
+                        <UpdatedControls>                  
+                            <telerik:AjaxUpdatedControl ControlID="FreezeStage3Meeting" /> 
+                            <telerik:AjaxUpdatedControl ControlID="ReleaseEndMeeting" />                                                         
+                        </UpdatedControls>
+                    </telerik:AjaxSetting>
                 </AjaxSettings>
             </telerik:RadAjaxManager>
            <script type="text/javascript">
               
+               function validateURL(textval) {
+                   var errorClassName = 'error';
+
+                   var urlregex = new RegExp(
+                         "^(http:\/\/www.|https:\/\/www.|ftp:\/\/www.|www.){1}([0-9A-Za-z]+\.)");
+                   if (!urlregex.test(textval)) {
+                       $('#SaveBtnDisabled').show();
+                       $('#SaveBtn').hide();
+                       $("#ReleaseDescVal").addClass('error');
+                   }
+                   else {
+                       $("#ReleaseDescVal").removeClass('error');
+
+                       if (!$("#releaseCodeVal").hasClass(errorClassName) && !$("#ReleaseNameVal").hasClass(errorClassName)
+                           && !$("#ReleaseShortNameVal").hasClass(errorClassName) && !$("#previousReleaseVal").hasClass(errorClassName)
+                           && !$("#Release2GDecimalVal").hasClass(errorClassName) && !$("#Release3GDecimalVal").hasClass(errorClassName)
+                           && !$("#ReleaseDescVal").hasClass(errorClassName)) {
+
+                           $('#SaveBtn').show();
+                           $('#SaveBtnDisabled').hide();
+                       }
+                   }
+               }
 
                function realPostBack(eventTarget, eventArgument) {
-                  $find("<%= RadAjaxManager1.ClientID %>").__doPostBack(eventTarget, eventArgument);
+                   var errorClassName = 'error';
+                   var controlSelector = "#" + eventTarget;
+                   if (!$.isNumeric($(controlSelector).val())) {
+                       $(controlSelector).addClass('error');
+                       $('#SaveBtn').hide();
+                       $('#SaveBtnDisabled').show();
+                   }
+                   else if (($(controlSelector).val() == "")) {
+                       $('#Release2GVal').val("");
+                       if (!$("#releaseCodeVal").hasClass(errorClassName) && !$("#ReleaseNameVal").hasClass(errorClassName)
+                              && !$("#ReleaseShortNameVal").hasClass(errorClassName) && !$("#previousReleaseVal").hasClass(errorClassName)
+                              && !$("#Release2GDecimalVal").hasClass(errorClassName) && !$("#Release3GDecimalVal").hasClass(errorClassName) && !$("#ReleaseDescVal").hasClass(errorClassName)) {
+                           $('#SaveBtn').show();
+                           $('#SaveBtnDisabled').hide();
+                       }
+                   }
+                   else {
+                       $find("<%= RadAjaxManager1.ClientID %>").__doPostBack(eventTarget, eventArgument);
+                   }
                }
 
                
@@ -246,30 +301,26 @@
                        window.radopen(null, "RadWindow_workItemImport");
                    });
 
-                   
                    var errorClassName = 'error';
-                   var validator = $("#ReleaseEditionForm").validate({
+                   var validator = $("#ReleaseEditionForm").validate({                                             
+                       errorClass: "error",
                        onKeyup: true,                       
                        eachValidField: function () {                           
-                           $(this).removeClass('error');
-                           
-                           if (!$("releaseCodeVal").hasClass(errorClassName) && !$("ReleaseNameVal").hasClass(errorClassName)
-                               && !$("ReleaseShortNameVal").hasClass(errorClassName) && !$("previousReleaseVal").hasClass(errorClassName)
-                               && !$("Release2GDecimalVal").hasClass(errorClassName) && !$("Release3GDecimalVal").hasClass(errorClassName))
+                           $(this).removeClass('error');                           
+                           if (!$("#releaseCodeVal").hasClass(errorClassName) && !$("#ReleaseNameVal").hasClass(errorClassName)
+                               && !$("#ReleaseShortNameVal").hasClass(errorClassName) && !$("#previousReleaseVal").hasClass(errorClassName)
+                               && !$("#Release2GDecimalVal").hasClass(errorClassName) && !$("#Release3GDecimalVal").hasClass(errorClassName) && !$("#ReleaseDescVal").hasClass(errorClassName))
                            {
-                               $('#SaveBtn').removeAttr('disabled');
-                               $('#SaveBtn').removeClass('disabledLink');
-                               $('#SaveBtn').addClass('LinkButton');
+                               $('#SaveBtn').show();
+                               $('#SaveBtnDisabled').hide();
                            }
                            
                        },
                        eachInvalidField: function () {
                            $(this).addClass('error');
-                           $('#SaveBtn').attr('disabled', 'disabled');
-                           $('#SaveBtn').removeClass('LinkButton');
-                           $('#SaveBtn').addClass('disabledLink');
-                       }                       
-	   
+                           $('#SaveBtn').hide();
+                           $('#SaveBtnDisabled').show();
+                       }
                    });
                    
                });

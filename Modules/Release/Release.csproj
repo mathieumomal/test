@@ -150,6 +150,7 @@
     <Content Include="images\ReleaseDecription.png" />
     <Content Include="images\warning.png" />
     <Content Include="JS\jquery-validate.min.js" />
+    <Content Include="JS\jquery.min.js" />
     <Content Include="JS\jquery.validate.js" />
     <Content Include="License.txt" />
     <Content Include="module.css" />

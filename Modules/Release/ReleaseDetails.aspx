@@ -13,7 +13,7 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="module.css">
     <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>    
+    <script src="JS/jquery.min.js"></script>    
     <script type="text/javascript">
 
         function closeAllModals() {

@@ -413,7 +413,7 @@ namespace Etsi.Ultimate.Business
             }
             else
             {
-                allReleases = releaseRepo.All.OrderByDescending(x => x.SortOrder).ToList();
+                allReleases = releaseRepo.All.OrderBy(x => x.SortOrder).ToList();
                 var firstSortOrder = allReleases[0].SortOrder;
                 foreach (Release r in allReleases)
                 {

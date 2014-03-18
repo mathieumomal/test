@@ -46,43 +46,39 @@ namespace Etsi.Ultimate.Module.Release
                 {
                     Release2GVal.Text = Domain.Release.Encode(Release2GDecimalValue);
                     Release2GDecimalVal.Attributes.Remove("class");
-                    checkForValidation();
                 }
                 else if (Release2GDecimalVal.Text.Equals(""))
                 {
+                    Release2GVal.Text = CONST_EMPTY_FIELD;
                     Release2GDecimalVal.Attributes.Remove("class");
-                    checkForValidation();
                 }
-                else
-                {
-                    Release2GDecimalVal.Attributes.Add("class", "error");
-                    SaveBtn.Attributes.Add("disabled", "disabled");
-                    SaveBtn.Attributes.Remove("class");
-                    SaveBtn.Attributes.Add("class", "disabledLink");
-                }
+                
 
                 if (!Release3GDecimalVal.Text.Equals("") &&  int.TryParse(Release3GDecimalVal.Text, out Release3GDecimalValue))
                 {
                     Release3GVal.Text = Domain.Release.Encode(Release3GDecimalValue);
                     Release3GDecimalVal.Attributes.Remove("class");
-                    checkForValidation();
                 }
                 else if (Release3GDecimalVal.Text.Equals(""))
                 {
-                    Release3GDecimalVal.Attributes.Remove("class");
-                    checkForValidation();
+                    Release3GVal.Text = CONST_EMPTY_FIELD;
+                    Release3GDecimalVal.Attributes.Remove("class");                    
                 }
-                else
+
+                /*MeetingControl freezeStage3Meeting = FreezeStage3Meeting as MeetingControl;
+                MeetingControl endMeeting = ReleaseEndMeeting as MeetingControl;
+                if(!freezeStage3Meeting.lblEndDate.Text.equals("-") && !endMeeting.lblEndDate.Text.equals("-"))
                 {
-                    Release3GDecimalVal.Attributes.Add("class", "error");
-                    SaveBtn.Attributes.Add("disabled", "disabled");
-                    SaveBtn.Attributes.Remove("class");
-                    SaveBtn.Attributes.Add("class", "disabledLink");
-                }
-
-
+                    if( DateTime.Compare(Convert.ToDateTime(freezeStage3Meeting.lblEndDate.Text).ToString("yyyy-MM-dd") , Convert.ToDateTime(endMeeting.lblEndDate.Text).ToString("yyyy-MM-dd")) > 0)
+                    {
+                        freezeStage3Meeting.CssClass = "error";
+                        endMeeting.CssClass = "error";
+                    }
+                }*/
+               
             }
             releaseRemarks.AddRemarkHandler += releaseRemarks_AddRemarkHandler;
+            checkForValidation();
         }
 
         private void checkForValidation()
@@ -102,7 +98,7 @@ namespace Etsi.Ultimate.Module.Release
 
             dataValidationSetUp();
 
-            ReleaseEditRadMultiPage.Height = new System.Web.UI.WebControls.Unit(560, UnitType.Pixel);
+            //ReleaseEditRadMultiPage.Height = new System.Web.UI.WebControls.Unit(560, UnitType.Pixel);
 
             if (action.Equals("Edit"))
             {
@@ -145,6 +141,8 @@ namespace Etsi.Ultimate.Module.Release
                             HistoryControl htr = releaseHistory as HistoryControl;
                             htr.DataSource = release.Histories.ToList();
                             htr.ScrollHeight = (int)ReleaseEditRadMultiPage.Height.Value - 50;
+
+                            SaveBtnDisabled.Style.Add("display", "none");
                         }
                     }
                 }
@@ -172,7 +170,8 @@ namespace Etsi.Ultimate.Module.Release
                 previousReleaseVal.DataBind();
 
                 SaveBtn.Attributes.Add("disabled", "disabled");
-                SaveBtn.CssClass = "disabledLink";
+                SaveBtn.Style.Add("display","none");
+                SaveBtnDisabled.Style.Remove("display");
             }
             else
             {
@@ -256,6 +255,8 @@ namespace Etsi.Ultimate.Module.Release
             ReleaseNameVal.Text = release.Name;
 
             ReleaseDescVal.Text = release.Description;
+            ReleaseDescVal.Attributes.Add("onchange", string.Format("validateURL(\"{0}\"); return false;",
+                                                        ReleaseDescVal.UniqueID));
 
             ReleaseShortNameVal.Text = release.ShortName;
             if (release.StartDate != null)
@@ -334,12 +335,32 @@ namespace Etsi.Ultimate.Module.Release
         private void dataValidationSetUp()
         {
             releaseCodeVal.Attributes.Add("data-required", "true");
+            releaseCodeVal.MaxLength = 10;
 
             ReleaseNameVal.Attributes.Add("data-required", "true");
-            Release2GDecimalVal.Attributes.Add("data-pattern", "^[0-9]+$");
-            Release3GDecimalVal.Attributes.Add("data-pattern", "^[0-9]+$");
+            ReleaseNameVal.MaxLength = 50;
+
             ReleaseShortNameVal.Attributes.Add("data-required", "true");
+            ReleaseShortNameVal.MaxLength = 20;
+
+            ReleaseDescVal.MaxLength = 200;
+            ReleaseDescVal.Columns = 67;
+
             previousReleaseVal.Attributes.Add("data-required", "true");
+
+            Release2GDecimalVal.Attributes.Add("data-pattern", "^[0-9]+$");
+            Release2GDecimalVal.MaxLength = 3;
+
+            Release3GDecimalVal.Attributes.Add("data-pattern", "^[0-9]+$");
+            Release3GDecimalVal.MaxLength = 3;
+
+            ITURCodeVal.MaxLength = 20;
+
+            WPMCodes2GVal.MaxLength = 50;
+            WPMCodes3GVal.MaxLength = 50;
+
+            
+            
         }
 
         /// <summary>
