@@ -20,7 +20,7 @@
 	border:none!important;
 }
 
-/* Release details style*/
+/* Release details/Edit style*/
 
 .releaseDetailBody {
     font-family:Arial,verdana,Serif;
@@ -33,8 +33,6 @@
 }
 
 .releaseRemarks {
-    /*position:fixed;
-    top:370px;	*/
     position: absolute; 
     bottom: 20px;
     width: 623px;
@@ -133,7 +131,7 @@ legend{
 }
 
 .TabLineLeft {
-    width: 180px;
+    width: 184.6px;
     text-align: right; 
 }
 
@@ -148,15 +146,53 @@ legend{
 }
 
 .TabLineRight {
-    width: 70%;
+    width: 435.4px;
+    text-align: left;
+}
+
+.TabLine2colRight {
+    width: 200px;
+    text-align: left;
+}
+
+.TabLine3colRight {
+    width: 219px;
     text-align: left;
 }
 
 .TabLineRightFreeze {
-    width: 100%;
+    width: 620px;
     text-align: left;
 }
 
+.FirstColFreezeStageEdit {
+    width: 164px;
+    text-align: right; 
+}
+
+.FirstColFreezeStageEdit  span{
+    padding-right: 10px;
+}
+
+.FirstColFreezeStageDetails {
+    width: 163.2px;
+    text-align: right; 
+}
+
+.FirstColFreezeStageDetails  span{
+    padding-right: 10px;
+}
+
+.SecndColFreezeStage {
+    width: 416.4px !important;
+}
+
+.DetailsColFreezeStage {
+    width: 208.8px !important;
+}
+
+
+/* Details*/
 .FreezeDateLbl
 {
     width:160px;
@@ -172,11 +208,6 @@ legend{
 }
 
 
-
-.TabLine3colRight {
-    width: 129px;
-    text-align: left;
-}
 
 
 versionFieldsetTab {

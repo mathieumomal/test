@@ -14,7 +14,6 @@
     <link rel="stylesheet" type="text/css" href="module.css">
     <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>  
-    <script src="JS/jquery.validate.js"></script>  
     <script type="text/javascript">
 
         function closeAllModals() {
@@ -25,27 +24,8 @@
 </head>
 <body class="releaseDetailBody">
     <form id="ReleaseEditionForm" runat="server">
-        <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
-        <telerik:RadAjaxManager ID="RadAjaxManager1" runat="server">
-            <AjaxSettings>
-                <telerik:AjaxSetting AjaxControlID="Release2GDecimalVal">
-                    <UpdatedControls>                  
-                        <telerik:AjaxUpdatedControl ControlID="Release2GDecimalVal" /> 
-                        <telerik:AjaxUpdatedControl ControlID="Release2GVal" />   
-                        <telerik:AjaxUpdatedControl ControlID="Release2GDecimalLbl" /> 
-                        <telerik:AjaxUpdatedControl ControlID="Release2GLbl" />                                                               
-                    </UpdatedControls>
-                </telerik:AjaxSetting>
-                <telerik:AjaxSetting AjaxControlID="Release3GDecimalVal">
-                    <UpdatedControls>                  
-                        <telerik:AjaxUpdatedControl ControlID="Release3GDecimalVal" /> 
-                        <telerik:AjaxUpdatedControl ControlID="Release3GVal" />  
-                        <telerik:AjaxUpdatedControl ControlID="Release3GDecimalLbl" /> 
-                        <telerik:AjaxUpdatedControl ControlID="Release3GLbl" />                                                         
-                    </UpdatedControls>
-                </telerik:AjaxSetting>
-            </AjaxSettings>
-        </telerik:RadAjaxManager>
+
+        
        <div class="containerFix">
        <asp:Panel ID="releaseWarning" runat="server" CssClass="releaseDetailsWarning" Visible="false">
            <span class="releaseDetailsWarningTxt">No data available for the current query.</span>
@@ -54,8 +34,8 @@
            <asp:Label Id="ErrorMsg" runat="server" CssClass="releaseDetailsErrorTxt" Text="Bad request."></asp:Label>
        </asp:Panel> 
        <asp:Panel ID="releaseDetailsBody" runat="server" CssClass="releaseDetailsBody">
-            
-            <telerik:RadTabStrip ID="ReleaseDetailRadTabStrip" runat="server" MultiPageID="ReleaseDetailRadMultiPage" 
+            <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
+            <telerik:RadTabStrip ID="ReleaseDetailRadTabStrip" runat="server" MultiPageID="ReleaseEditRadMultiPage" 
             AutoPostBack="false">    
             </telerik:RadTabStrip>
             <telerik:RadMultiPage ID="ReleaseEditRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px">
@@ -101,19 +81,19 @@
                                         <legend><asp:Label ID="FreezeMeetingLbl" runat="server"  Text="Freeze meetings and dates"></asp:Label></legend>
                                         <table style="width: 100%; vertical-align:middle" id="FrezeStagesTable">
                                             <tr>
-                                                <td class="FreezeDateLbl" id="FirstColFreezeStage1"><asp:Label ID="ReleaseFreezeStage1Lbl" runat="server"  Text="Stage1:"></asp:Label></td>
+                                                <td class="FirstColFreezeStageEdit" id="FirstColFreezeStage1"><asp:Label ID="ReleaseFreezeStage1Lbl" runat="server"  Text="Stage1:"></asp:Label></td>
                                                 
-                                                <td class="FreezeDatePicker"><ult:MeetingControl runat="server" ID="FreezeStage1Meeting"/></td>
+                                                <td class="SecndColFreezeStage"><ult:MeetingControl runat="server" ID="FreezeStage1Meeting"/></td>
                                             </tr>                                        
                                             <tr>
-                                                <td class="FreezeDateLbl" id="FirstColFreezeStage2"><asp:Label ID="ReleaseFreezeStage2Lbl" runat="server"  Text="Stage2:"></asp:Label></td>
+                                                <td class="FirstColFreezeStageEdit" id="FirstColFreezeStage2"><asp:Label ID="ReleaseFreezeStage2Lbl" runat="server"  Text="Stage2:"></asp:Label></td>
                                                 
-                                                <td class="FreezeDatePicker"><ult:MeetingControl runat="server" ID="FreezeStage2Meeting"/></td>
+                                                <td class="SecndColFreezeStage"><ult:MeetingControl runat="server" ID="FreezeStage2Meeting"/></td>
                                             </tr>                                        
                                             <tr>
-                                                <td class="FreezeDateLbl" id="FirstColFreezeStage3"><asp:Label ID="ReleaseFreezeStage3Lbl" runat="server"  Text="Stage3:"></asp:Label></td>
+                                                <td class="FirstColFreezeStageEdit" id="FirstColFreezeStage3"><asp:Label ID="ReleaseFreezeStage3Lbl" runat="server"  Text="Stage3:"></asp:Label></td>
                                                 
-                                                <td class="FreezeDatePicker"><ult:MeetingControl runat="server" ID="FreezeStage3Meeting"/></td>
+                                                <td class="SecndColFreezeStage"><ult:MeetingControl runat="server" ID="FreezeStage3Meeting"/></td>
                                             </tr>
                                         </table>
                                         <div>
@@ -126,12 +106,12 @@
                         <tr>            
                             <td class="TabLineLeft"><asp:Label ID="ReleaseEndDateLbl" runat="server"  Text="End date:"></asp:Label></td>
                             
-                            <td><ult:MeetingControl runat="server" ID="ReleaseEndMeeting" /></td>
+                            <td class="TabLineRight"><ult:MeetingControl runat="server" ID="ReleaseEndMeeting" /></td>
                         </tr>                       
                         <tr>            
                             <td class="TabLineLeft"><asp:Label ID="ReleaseClosureDateLbl" runat="server"  Text="Closure date:"></asp:Label></td>
                             
-                            <td><ult:MeetingControl runat="server" ID="ReleaseClosureMeeting" /></td>
+                            <td class="TabLineRight"><ult:MeetingControl runat="server" ID="ReleaseClosureMeeting" /></td>
                         </tr>
                         <tr style="max-height: 120px; overflow-y: scroll; margin-top:5px"> 
                             <td colspan="3">
@@ -140,7 +120,7 @@
                         </tr>
                    </table>
                  </telerik:RadPageView>
-                <telerik:RadPageView ID="RadPageAdministration" runat="server" Height="90%">
+                <telerik:RadPageView ID="RadPageAdministration" runat="server" selected="false">
                     <table class="TabContent" style="width:95%">
                         <tr class="TabLine">
                             <td class="TabLineLeft">                                
@@ -222,11 +202,31 @@
                 <asp:LinkButton ID="SaveBtn" runat="server" Text="Save" CssClass="LinkButton" Visible="true" OnClick="SaveEditedRelease_Click"/>
                 <asp:LinkButton ID="ExitBtn" runat="server" Text="Cancel" CssClass="LinkButton" OnClick="CloseReleaseDetails_Click"/>
            </div> 
+           <telerik:RadAjaxManager ID="RadAjaxManager1" runat="server">
+                <AjaxSettings>
+                    <telerik:AjaxSetting AjaxControlID="Release2GDecimalVal">
+                        <UpdatedControls>                  
+                            <telerik:AjaxUpdatedControl ControlID="Release2GDecimalVal" /> 
+                            <telerik:AjaxUpdatedControl ControlID="Release2GVal" />   
+                            <telerik:AjaxUpdatedControl ControlID="Release2GDecimalLbl" /> 
+                            <telerik:AjaxUpdatedControl ControlID="Release2GLbl" />                                                               
+                        </UpdatedControls>
+                    </telerik:AjaxSetting>
+                    <telerik:AjaxSetting AjaxControlID="Release3GDecimalVal">
+                        <UpdatedControls>                  
+                            <telerik:AjaxUpdatedControl ControlID="Release3GDecimalVal" /> 
+                            <telerik:AjaxUpdatedControl ControlID="Release3GVal" />  
+                            <telerik:AjaxUpdatedControl ControlID="Release3GDecimalLbl" /> 
+                            <telerik:AjaxUpdatedControl ControlID="Release3GLbl" />                                                         
+                        </UpdatedControls>
+                    </telerik:AjaxSetting>
+                </AjaxSettings>
+            </telerik:RadAjaxManager>
            <script type="text/javascript">
               
 
                function realPostBack(eventTarget, eventArgument) {
-                   $find("<%= RadAjaxManager1.ClientID %>").__doPostBack(eventTarget, eventArgument);
+                  $find("<%= RadAjaxManager1.ClientID %>").__doPostBack(eventTarget, eventArgument);
                }
 
                

@@ -71,29 +71,29 @@
                                         <legend><asp:Label ID="FreezeMeetingLbl" runat="server"  Text="Freeze meetings and dates"></asp:Label></legend>
                                         <table style="width: 100%" id="FrezeStagesTable">
                                             <tr>
-                                                <td style="display: inline-block; text-align: right" id="FirstColFreezeStage1"><asp:Label ID="ReleaseFreezeStage1Lbl" runat="server"  Text="Stage1:"></asp:Label></td>
-                                                <td style="padding-left: 10px; text-align: left" id="SecndColFreezeStage1">
+                                                <td style="display: inline-block; text-align: right" class="FirstColFreezeStageDetails"><asp:Label ID="ReleaseFreezeStage1Lbl" runat="server"  Text="Stage1:"></asp:Label></td>
+                                                <td style="text-align: left" class="DetailsColFreezeStage">
                                                     <asp:Label ID="ReleaseFreezeStage1Meeting" runat="server"  CssClass="SecndColFreezeStageMeeting"></asp:Label>                                                    
                                                 </td>
-                                                <td id="thirdColFreezeStage1">
+                                                <td id="thirdColFreezeStage1" class="DetailsColFreezeStage">
                                                     <asp:Label ID="ReleaseFreezeStage1Date" runat="server" ></asp:Label>
                                                 </td>
                                             </tr>                                        
                                             <tr>
-                                                <td style="display: inline-block; text-align: right" id="FirstColFreezeStage2"><asp:Label ID="ReleaseFreezeStage2Lbl" runat="server"  Text="Stage2:"></asp:Label></td>
-                                                <td style="padding-left: 10px; text-align: left" id="SecndColFreezeStage2">
+                                                <td style="display: inline-block; text-align: right" class="FirstColFreezeStageDetails"><asp:Label ID="ReleaseFreezeStage2Lbl" runat="server"  Text="Stage2:"></asp:Label></td>
+                                                <td style="text-align: left" class="DetailsColFreezeStage">
                                                     <asp:Label ID="ReleaseFreezeStage2Meeting" runat="server"  CssClass="SecndColFreezeStageMeeting"></asp:Label>                                                    
                                                 </td>
-                                                <td id="thirdColFreezeStage2">
+                                                <td id="thirdColFreezeStage2" class="DetailsColFreezeStage">
                                                     <asp:Label ID="ReleaseFreezeStage2Date" runat="server" ></asp:Label>
                                                 </td>
                                             </tr>                                        
                                             <tr>
-                                                <td style="display: inline-block; text-align: right" id="FirstColFreezeStage3"><asp:Label ID="ReleaseFreezeStage3Lbl" runat="server"  Text="Stage3:"></asp:Label></td>
-                                                <td style="padding-left: 10px; text-align: left" id="SecndColFreezeStage3">
+                                                <td style="display: inline-block; text-align: right" class="FirstColFreezeStageDetails"><asp:Label ID="ReleaseFreezeStage3Lbl" runat="server"  Text="Stage3:"></asp:Label></td>
+                                                <td style="text-align: left" class="DetailsColFreezeStage">
                                                     <asp:Label ID="ReleaseFreezeStage3Meeting" runat="server"  CssClass="SecndColFreezeStageMeeting"></asp:Label>                                                    
                                                 </td>
-                                                <td id="thirdColFreezeStage3">
+                                                <td id="thirdColFreezeStage3" class="DetailsColFreezeStage">
                                                     <asp:Label ID="ReleaseFreezeStage3Date" runat="server" ></asp:Label>
                                                 </td>
                                             </tr>
@@ -107,13 +107,13 @@
                         </tr>
                         <tr>            
                             <td class="TabLineLeft"><asp:Label ID="ReleaseEndDateLbl" runat="server"  Text="End date:"></asp:Label></td>
-                            <td class="TabLine3colRight"><asp:Label ID="ReleaseEndDateMeetingVal" runat="server" ></asp:Label></td>
+                            <td class="TabLine2colRight"><asp:Label ID="ReleaseEndDateMeetingVal" runat="server" ></asp:Label></td>
                             <td class="TabLine3colRight"><asp:Label ID="ReleaseEndDateVal" runat="server" ></asp:Label></td>
                         </tr>
                         <tr>            
                             <td class="TabLineLeft"><asp:Label ID="ReleaseClosureDateLbl" runat="server"  Text="Closure date:"></asp:Label></td>
-                            <td><asp:Label ID="ReleaseClosureDateMeetingVal" runat="server" ></asp:Label></td>
-                            <td><asp:Label ID="ReleaseClosureDateVal" runat="server" ></asp:Label></td>
+                            <td class="TabLine2colRight"><asp:Label ID="ReleaseClosureDateMeetingVal" runat="server" ></asp:Label></td>
+                            <td class="TabLine3colRight"><asp:Label ID="ReleaseClosureDateVal" runat="server" ></asp:Label></td>
                         </tr>
                         <tr style="max-height: 150px; overflow-y: scroll; margin-top:10px"> 
                             <td colspan="3" class="releaseRemarks">
@@ -210,7 +210,7 @@
            <script type="text/javascript">
                function resizeElements() {
                   
-                   var calWidth = $("#FreezeStagesPanel").width() - $("#SecondColreleaseCode").width() - ($("#FreezeStagesPanel").width() * 0.03) - 17;
+                   /*var calWidth = $("#FreezeStagesPanel").width() - $("#SecondColreleaseCode").width() - ($("#FreezeStagesPanel").width() * 0.03) - 17;
                    
                    $("#thirdColFreezeStage1").width(($("#FrezeStagesTable").width() - calWidth) * 0.5);
                    $("#SecndColFreezeStage1").width(($("#FrezeStagesTable").width() - calWidth) * 0.5 - 20);
@@ -222,7 +222,7 @@
 
                    $("#thirdColFreezeStage3").width(($("#FrezeStagesTable").width() - calWidth) * 0.5);
                    $("#SecndColFreezeStage3").width(($("#FrezeStagesTable").width() - calWidth) * 0.5 - 20);
-                   $("#FirstColFreezeStage3").width(calWidth);                   
+                   $("#FirstColFreezeStage3").width(calWidth);    */               
                }
                $(document).ready(function () {
                    resizeElements();

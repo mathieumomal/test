@@ -37,6 +37,7 @@ namespace Etsi.Ultimate.Module.Release
 
                 LoadReleaseDetails();
             }
+
             if (IsPostBack)
             {
                 int Release2GDecimalValue, Release3GDecimalValue;
@@ -91,7 +92,7 @@ namespace Etsi.Ultimate.Module.Release
 
             dataValidationSetUp();
 
-            ReleaseEditRadMultiPage.Height = new System.Web.UI.WebControls.Unit(530, UnitType.Pixel);
+            ReleaseEditRadMultiPage.Height = new System.Web.UI.WebControls.Unit(560, UnitType.Pixel);
 
             if (action.Equals("Edit"))
             {
@@ -207,6 +208,7 @@ namespace Etsi.Ultimate.Module.Release
                     Selected = true
 
                 });
+
             ReleaseDetailRadTabStrip.Tabs.Add(
                 new RadTab()
                 {
@@ -216,8 +218,9 @@ namespace Etsi.Ultimate.Module.Release
                 });
             RadPageAdministration.Visible = true;
 
+
             if (action.Equals("Edit"))
-            {
+            {                
                 ReleaseDetailRadTabStrip.Tabs.Add(
                     new RadTab()
                     {
