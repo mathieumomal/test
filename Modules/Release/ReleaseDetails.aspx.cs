@@ -271,7 +271,7 @@ namespace Etsi.Ultimate.Module.Release
         protected void EditReleaseDetails_Click(object sender, EventArgs e)
         {
             GetRequestParameters();
-            Response.Redirect("ReleaseEdition.aspx?releaseId=" + ReleaseId.Value + "&action=Edit");
+            Response.Redirect("/DesktopModules/Release/ReleaseEdition.aspx?releaseId=" + ReleaseId.Value + "&action=Edit");
         }
 
 
