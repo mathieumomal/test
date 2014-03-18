@@ -11,6 +11,8 @@ using Rhino.Mocks;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
+using System.Linq;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -94,6 +96,98 @@ namespace Etsi.Ultimate.Tests.Services
             mockDataContext.VerifyAllExpectations();
         }
 
+        [Test]
+        public void AnalyseWorkPlanForImport_Nominal()
+        {
+            StubCsvParser("../../TestData/WorkItems/OneLine_Nominal.csv");
+
+            var wiService = new WorkItemService();
+
+            var result = wiService.AnalyseWorkPlanForImport("../../TestData/WorkItems/OneLine_Nominal.csv");
+            Assert.IsNotNullOrEmpty(result.Key);
+            Assert.IsNotNull(CacheManager.Get("WI_IMPORT_" + result.Key));
+        }
+
+        [Test]
+        public void AnalyseWorkPlanForImport_NominalWithZip()
+        {
+            string basePath = "..\\..\\TestData\\WorkItems\\";
+            string zipName = "OneLine_Nominal_Zipped.zip";
+            string fileName = "OneLine_Nominal_Zipped.csv";
+
+            // Clean csvFile
+            if (File.Exists(basePath + fileName))
+                File.Delete(basePath + fileName);
+
+            StubCsvParser(basePath + fileName);
+
+            var wiService = new WorkItemService();
+
+            var result = wiService.AnalyseWorkPlanForImport(basePath + zipName);
+            Assert.IsNotNullOrEmpty(result.Key);
+        }
+
+        [Test]
+        [ExpectedException(typeof(FileNotFoundException))]
+        public void AnalyseWorkPlanForImport_ZipDoesNotExist()
+        {
+            string basePath = "..\\..\\TestData\\WorkItems\\";
+            string zipName = "OneLine_Nominal_Zipped_Does_Not_Exist.zip";
+            string fileName = "OneLine_Nominal_Zipped.csv";
+
+            StubCsvParser(basePath + fileName);
+
+            var wiService = new WorkItemService();
+            var result = wiService.AnalyseWorkPlanForImport(basePath + zipName);
+        }
+
+       
+        [Test]
+        public void AnalyseWorkPlanForImport_ZipDoesNotContainCsv()
+        {
+            string basePath = "..\\..\\TestData\\WorkItems\\";
+            string zipName = "OneLine_Nominal_ZippedNoCsv.zip";
+            string fileName = "OneLine_Nominal_Zipped.csv";
+
+            // Clean csvFile
+            if (File.Exists(basePath + fileName))
+                File.Delete(basePath + fileName);
+
+            StubCsvParser(basePath + fileName);
+
+            var wiService = new WorkItemService();
+
+            var result = wiService.AnalyseWorkPlanForImport(basePath + zipName);
+            Assert.IsNullOrEmpty(result.Key);
+            Assert.AreEqual(1,result.Value.GetNumberOfErrors());
+            Assert.AreEqual(Utils.Localization.WorkItem_Import_Bad_Zip_File, result.Value.ErrorList.First());
+        }
+
+        [Test]
+        public void ImportWorkPlan_Nominal()
+        {
+            // Mock WIRepository
+            var wiRepositoryMock = MockRepository.GenerateMock<IWorkItemRepository>();
+            wiRepositoryMock.Expect(x => x.InsertOrUpdate(Arg<WorkItem>.Is.Anything));
+            RepositoryFactory.Container.RegisterInstance(typeof(IWorkItemRepository), wiRepositoryMock);
+
+            // Place something in the cache
+            var wiList = new List<WorkItem>() { new WorkItem() };
+            CacheManager.Insert("WI_IMPORT_"+"az12", wiList);
+
+            var wiService = new WorkItemService();
+            Assert.IsTrue(wiService.ImportWorkPlan("az12"));
+        }
+
+        [Test]
+        public void ImportWorkPlan_TokenNotFound()
+        {
+            CacheManager.Clear("WI_IMPORT_" + "az12");
+
+            var wiService = new WorkItemService();
+            Assert.IsFalse(wiService.ImportWorkPlan("az12"));
+        }
+
         /// <summary>
         /// Get the WorkItem Data from csv
         /// </summary>
@@ -107,6 +201,14 @@ namespace Etsi.Ultimate.Tests.Services
 
                 yield return workItemFakeDBSet;
             }
+        }
+
+        private void StubCsvParser(string path)
+        {
+            var wiList = new List<WorkItem>() { new WorkItem() };
+            var csvImporterMock = MockRepository.GenerateMock<IWorkItemCsvParser>();
+            csvImporterMock.Stub(x => x.ParseCsv(path)).Return(new KeyValuePair<List<WorkItem>, ImportReport>(wiList, new ImportReport()));
+            ManagerFactory.Container.RegisterInstance(typeof(IWorkItemCsvParser), csvImporterMock);
         }
     }
 }

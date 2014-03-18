@@ -34,7 +34,7 @@ namespace Etsi.Ultimate.Business
 
             string token = "";
 
-            var csvParser = new WorkItemCsvParser();
+            var csvParser = ManagerFactory.Resolve<IWorkItemCsvParser>();
             csvParser.UoW = UoW ;
             var result = csvParser.ParseCsv(path);
             if (result.Value.GetNumberOfErrors() == 0)

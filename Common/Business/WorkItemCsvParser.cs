@@ -48,7 +48,7 @@ namespace Etsi.Ultimate.Business
     /// This class is in charge of parsing the CSV file and returns the list of all work items that are modified.
     /// The system is using the CSVHelper parsing library.
     /// </summary>
-    public class WorkItemCsvParser
+    public class WorkItemCsvParser : IWorkItemCsvParser
     {
         // Any level 0 workitem will be affected a Pk over 100 000 000
         private const int LowerBoundForLevel0Wi = 100000000;
@@ -1059,5 +1059,11 @@ namespace Etsi.Ultimate.Business
 
         #endregion
 
+    }
+
+    public interface IWorkItemCsvParser
+    {
+        KeyValuePair<List<WorkItem>, ImportReport> ParseCsv(string fileLocation);
+        IUltimateUnitOfWork UoW { get; set; }
     }
 }

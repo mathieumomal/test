@@ -14,6 +14,13 @@ namespace Etsi.Ultimate.Services
     {
         #region IWorkItemService Membres
 
+        /// <summary>
+        /// Performs an analysis of the work plan in csv format. Unzips the work plan if necessary.
+        /// 
+        /// Throws FileNotFoundException if file cannot be found.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public KeyValuePair<string, ImportReport> AnalyseWorkPlanForImport(String path)
         {
            

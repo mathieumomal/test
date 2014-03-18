@@ -131,6 +131,7 @@
     <None Include="TestData\WorkItems\BadHierarchy.csv" />
     <None Include="TestData\WorkItems\BadFormat.csv" />
     <Content Include="TestData\WorkItems\empty.txt" />
+    <None Include="TestData\WorkItems\OneLine_Nominal_Zipped.csv" />
     <None Include="TestData\WorkItems\InvalidLevel.csv" />
     <None Include="TestData\WorkItems\Level0_WorkItems.csv" />
     <Content Include="TestData\WorkItems\WorkItem.csv">
