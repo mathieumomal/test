@@ -74,7 +74,7 @@
       <DependentUpon>FullView.ascx</DependentUpon>
     </Compile>
 
- <Compile Include="MeetingControl.ascx.cs">
+    <Compile Include="MeetingControl.ascx.cs">
       <DependentUpon>MeetingControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -90,6 +90,13 @@
       <DependentUpon>HistoryControl.ascx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReleaseSearchControl.ascx.cs">
+      <DependentUpon>ReleaseSearchControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReleaseSearchControl.ascx.designer.cs">
+      <DependentUpon>ReleaseSearchControl.ascx</DependentUpon>
+    </Compile>
     <Compile Include="RemarksControl.ascx.cs">
       <DependentUpon>RemarksControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -112,6 +119,7 @@
     <Content Include="License.txt" />
     <Content Include="module.css" />
     <Content Include="ReleaseNotes.txt" />
+    <Content Include="ReleaseSearchControl.ascx" />
     <Content Include="RemarksControl.ascx" />
     <Content Include="ShareUrlControl.ascx" />
   </ItemGroup>

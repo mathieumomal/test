@@ -55,9 +55,6 @@ namespace Etsi.Ultimate.Module.WorkItem
 
         private static string PathExportWorkPlan;
         private static string PathUploadWorkPlan;
-        private static readonly string  ExtensionCsv = "csv";
-        private static readonly string ExtensionZip = "zip";
-
         private string tokenWorkPlanAnalysed = "";
         private int errorNumber = 0;
         
@@ -66,14 +63,14 @@ namespace Etsi.Ultimate.Module.WorkItem
             try
             {
                 ManageShareUrl();
-                
 
-                ultFullView.ModuleId = 12;
-                ultFullView.TabId = 13;
-                var urlParams = Page.ClientQueryString.Split('&').Select(item => item.Split('=')).ToDictionary(s => s[0], s => s[1]);
-                urlParams.Remove("tabId");
-                ultFullView.UrlParams = urlParams;
-                ultFullView.BaseAddress = "";
+
+                //ultFullView.ModuleId = 12;
+                //ultFullView.TabId = 13;
+                //var urlParams = Page.ClientQueryString.Split('&').Select(item => item.Split('=')).ToDictionary(s => s[0], s => s[1]);
+                //urlParams.Remove("tabId");
+                //ultFullView.UrlParams = urlParams;
+                //ultFullView.BaseAddress = "";
 
                 //Get settings
                 if(Settings.Contains(Enum_Settings.WorkItem_ExportPath.ToString()))
@@ -219,6 +216,15 @@ namespace Etsi.Ultimate.Module.WorkItem
             }
         }
 
+        /// <summary>
+        /// Click Event of Button Search
+        /// </summary>
+        /// <param name="sender">Source of Event</param>
+        /// <param name="e">Event Arguments</param>
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+
+        }
 
         public ModuleActionCollection ModuleActions
         {
@@ -233,7 +239,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                     };
                 return actions;
             }
-        }
+    }
 
     }
 }

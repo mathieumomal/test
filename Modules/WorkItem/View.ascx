@@ -3,12 +3,74 @@
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 <%@ Register TagPrefix="ult" TagName="ShareUrlControl" Src="../../controls/Ultimate/ShareUrlControl.ascx" %>
 <%@ Register TagPrefix="ult" TagName="FullViewControl" Src="../../controls/Ultimate/FullView.ascx" %>
+<%@ Register TagPrefix="ult" TagName="ReleaseSearchControl" Src="../../controls/Ultimate/ReleaseSearchControl.ascx" %>
 
-<ult:FullViewControl id="ultFullView" runat="server"/>
-
-<telerik:RadButton ID="workItem_import" runat="server" Enabled="true" AutoPostBack="false" OnClientClicked="open_RadWindow_workItemImport" Text="Import work plan"></telerik:RadButton>
-<ult:ShareUrlControl runat="server" ID="ultShareUrl" />
-
+<table style="width:100%;">
+    <tr>
+        <td>
+            <ult:FullViewControl id="ultFullView" runat="server"/>
+            <telerik:RadButton ID="workItem_import" runat="server" Enabled="true" AutoPostBack="false" OnClientClicked="open_RadWindow_workItemImport" Text="Import work plan"></telerik:RadButton>
+            <ult:ShareUrlControl runat="server" ID="ultShareUrl" />
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <telerik:RadPanelBar runat="server" ID="rpbSearch" Width="100%">
+                <items>
+                    <telerik:RadPanelItem Expanded="True" Text="Search">
+                        <ContentTemplate>
+                            <table style="width:100%; padding:20px 50px 20px 50px">
+                                <tr>
+                                    <td>Release</td>
+                                    <td>
+                                        <ult:ReleaseSearchControl id="releaseSearchControl" runat="server"/>
+                                    </td>
+                                    <td>Granularity (Level)</td>
+                                    <td>
+                                        <telerik:RadDropDownList ID="rddGranularity" runat="server" Width="200" DropDownWidth="200px">
+                                            <Items>
+                                                <telerik:DropDownListItem Text="Feature (1st level)" />
+                                                <telerik:DropDownListItem Text="Building Block (Up to 2nd level)" />
+                                                <telerik:DropDownListItem Text="Working Task (Up to 3rd Level)" />
+                                                <telerik:DropDownListItem Text="Up to 4th level" />
+                                                <telerik:DropDownListItem Text="Up to 5th level" />
+                                            </Items>
+                                        </telerik:RadDropDownList>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Acronym</td>
+                                    <td><asp:TextBox ID="txtAcronym" runat="server" Width="200"></asp:TextBox></td>
+                                    <td>Hide Completed Items</td>
+                                    <td>
+                                        <asp:CheckBox ID="chkHideCompletedItems" runat="server"></asp:CheckBox>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Name</td>
+                                    <td><asp:TextBox ID="txtName" runat="server"  Width="200"></asp:TextBox></td>
+                                    <td/>
+                                    <td/>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" style="text-align:right; padding-right:20px">
+                                        <asp:Button ID="btnDefault" runat="server" Text="Default" Width="150px"></asp:Button>                   
+                                        <asp:Button ID="btnSearch" runat="server" Text="Search"  Width="150px" OnClick="btnSearch_Click"></asp:Button></td>
+                                </tr>
+                            </table>
+                        </ContentTemplate>
+                    </telerik:RadPanelItem>
+                </items>
+            </telerik:RadPanelBar>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <telerik:RadGrid runat="server" ID="rgWorkItems" Visible="false">
+            </telerik:RadGrid>
+        </td>
+    </tr>
+</table>
 
 <telerik:RadAjaxManager ID="wiRadAjaxManager" runat="server" EnablePageHeadUpdate="false">
     <ClientEvents OnRequestStart="Start" OnResponseEnd="End" />
