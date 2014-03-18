@@ -15,10 +15,11 @@ namespace Etsi.Ultimate.Business
     {
         // Used for the caching of the releases.
         private static string CACHE_KEY = "ULT_BIZ_RELEASES_ALL";
+        private IReleaseRepository releaseRepo;
 
         public IUltimateUnitOfWork UoW { get; set; }
 
-        public ReleaseManager() { }
+        public ReleaseManager() {}
 
 
         private int personId;
@@ -40,9 +41,9 @@ namespace Etsi.Ultimate.Business
             if (cachedData == null)
             {
                 // if nothing in the cache, ask the repository, then cache it
-                IReleaseRepository repo = RepositoryFactory.Resolve<IReleaseRepository>();
-                repo.UoW = UoW;
-                cachedData = repo.All.ToList();
+                releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+                releaseRepo.UoW = UoW;
+                cachedData = releaseRepo.All.ToList();
 
                 // Check that cache is still empty
                 if (CacheManager.Get(CACHE_KEY) == null)
@@ -64,9 +65,9 @@ namespace Etsi.Ultimate.Business
             rightManager.UoW = UoW;
             var personRights = rightManager.GetRights(personId);
 
-            IReleaseRepository repo = RepositoryFactory.Resolve<IReleaseRepository>();
-            repo.UoW = UoW;
-            var release = repo.AllIncluding(t => t.Remarks, t => t.Histories).Where(r => r.Pk_ReleaseId == id).FirstOrDefault();
+            releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+            releaseRepo.UoW = UoW;
+            var release = releaseRepo.AllIncluding(t => t.Remarks, t => t.Histories).Where(r => r.Pk_ReleaseId == id).FirstOrDefault();
 
             if (release == null)
                 return new KeyValuePair<Release, UserRightsContainer>(null, null);
@@ -84,7 +85,7 @@ namespace Etsi.Ultimate.Business
                 personRights.RemoveRight(Enum_UserRights.Release_Close, true);
             }
 
-            return new KeyValuePair<Release, UserRightsContainer>(repo.Find(id), personRights);
+            return new KeyValuePair<Release, UserRightsContainer>(releaseRepo.Find(id), personRights);
         }
 
 
@@ -95,8 +96,8 @@ namespace Etsi.Ultimate.Business
         /// <param name="endDate"></param>
         public void FreezeRelease(int releaseId, DateTime endDate, int personId, int FreezeMtgId, string FreezeMtgRef)
         {
-            IReleaseRepository repo = RepositoryFactory.Resolve<IReleaseRepository>();
-            repo.UoW = UoW;
+            releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+            releaseRepo.UoW = UoW;
 
             IHistoryRepository historyRepo = RepositoryFactory.Resolve<IHistoryRepository>();
             historyRepo.UoW = UoW;
@@ -105,16 +106,16 @@ namespace Etsi.Ultimate.Business
             relStatusRepo.UoW = UoW;
             var frozen = relStatusRepo.All.Where(x => x.Code == Enum_ReleaseStatus.Frozen).FirstOrDefault();
 
-            var updatedObj = repo.Find(releaseId);
+            var updatedObj = releaseRepo.Find(releaseId);
             updatedObj.Fk_ReleaseStatus = frozen.Enum_ReleaseStatusId;
             updatedObj.Enum_ReleaseStatus = null;
             updatedObj.EndDate = endDate;
             updatedObj.EndMtgRef = FreezeMtgRef;
             updatedObj.EndMtgId = FreezeMtgId;
-            
 
 
-            repo.InsertOrUpdate(updatedObj);
+
+            releaseRepo.InsertOrUpdate(updatedObj);
 
             History history = new History() { Fk_ReleaseId = releaseId, Fk_PersonId = personId, CreationDate = DateTime.UtcNow, HistoryText = Utils.Localization.History_Release_Freeze };
             historyRepo.InsertOrUpdate(history);
@@ -132,8 +133,8 @@ namespace Etsi.Ultimate.Business
         /// <param name="personID">Person ID</param>
         public void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId, int personID)
         {
-            IReleaseRepository relRepo = RepositoryFactory.Resolve<IReleaseRepository>();
-            relRepo.UoW = UoW;
+            releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+            releaseRepo.UoW = UoW;
 
             IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
             relStatusRepo.UoW = UoW;
@@ -141,7 +142,7 @@ namespace Etsi.Ultimate.Business
             IHistoryRepository historyRepo = RepositoryFactory.Resolve<IHistoryRepository>();
             historyRepo.UoW = UoW;
 
-            var updatedObj = relRepo.Find(releaseId);
+            var updatedObj = releaseRepo.Find(releaseId);
 
             updatedObj.Fk_ReleaseStatus = relStatusRepo.All.Where(x => x.Code == Enum_ReleaseStatus.Closed).FirstOrDefault().Enum_ReleaseStatusId;
             updatedObj.Enum_ReleaseStatus = null; //Set Null to avoid referential integrity error
@@ -149,7 +150,7 @@ namespace Etsi.Ultimate.Business
             updatedObj.ClosureMtgRef = closureMtgRef;
             updatedObj.ClosureMtgId = closureMtgId;
 
-            relRepo.InsertOrUpdate(updatedObj);
+            releaseRepo.InsertOrUpdate(updatedObj);
 
             History history = new History() { Fk_ReleaseId = releaseId, Fk_PersonId = personID, CreationDate = DateTime.UtcNow, HistoryText = Utils.Localization.History_Release_Close };
             historyRepo.InsertOrUpdate(history);
@@ -159,105 +160,80 @@ namespace Etsi.Ultimate.Business
 
         public void CreateRelease(Release release, int previousReleaseId, int personId)
         {
-            IReleaseRepository relRepo = RepositoryFactory.Resolve<IReleaseRepository>();
-            relRepo.UoW = UoW;
-            List<Release> allReleases = new List<Release>();
-            Release previousRelease;
-            release.Histories.Add(new History
+            releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+            releaseRepo.UoW = UoW;
+
+            // Synchronize the release with a new release. This will help ensure all the dates are present
+            // Then cleanup the history and add the correct entry.
+            var aReleaseToAdd = new Release();
+            UpdateReleaseAndHistory(aReleaseToAdd, release);
+            aReleaseToAdd.Histories.Clear();
+            
+            aReleaseToAdd.Histories.Add(new History
             {
                 Fk_ReleaseId = release.Pk_ReleaseId,
                 Fk_PersonId = personId,
                 CreationDate = DateTime.Now,
-                //Check for the used text
-                HistoryText = "",
-                PersonName = ""
+                HistoryText = "Release created",
             });
 
+            ManageSortOrder(aReleaseToAdd, previousReleaseId);
+
+            
+            ClearCache();
+        }
+
+        private void ManageSortOrder(Release aReleaseToAdd, int previousReleaseId)
+        {
+            List<Release> allReleases = new List<Release>();
+            Release previousRelease;
             if (previousReleaseId != 0)
             {
-                previousRelease = relRepo.Find(previousReleaseId);
-                release.SortOrder = previousRelease.SortOrder + 10;
-                allReleases = relRepo.All.OrderByDescending(x => x.SortOrder).ToList();
+                previousRelease = releaseRepo.Find(previousReleaseId);
+                aReleaseToAdd.SortOrder = previousRelease.SortOrder + 10;
+                allReleases = releaseRepo.All.Where(r => r.Pk_ReleaseId != aReleaseToAdd.Pk_ReleaseId).OrderByDescending(x => x.SortOrder).ToList();
                 foreach (Release r in allReleases)
-                {                    
+                {
                     if (r.SortOrder <= previousRelease.SortOrder)
                         break;
                     if (r.SortOrder > previousRelease.SortOrder)
                     {
                         r.SortOrder += 10;
-                        relRepo.InsertOrUpdate(r);
+                        releaseRepo.InsertOrUpdate(r);
                     }
                 }
-                relRepo.InsertOrUpdate(release);
             }
             else
             {
-                allReleases = relRepo.All.OrderByDescending(x => x.SortOrder).ToList();
+                allReleases = releaseRepo.All.OrderByDescending(x => x.SortOrder).ToList();
                 var firstSortOrder = allReleases[0].SortOrder;
                 foreach (Release r in allReleases)
-                {                    
+                {
                     r.SortOrder += 10;
-                    relRepo.InsertOrUpdate(r);                    
+                    releaseRepo.InsertOrUpdate(r);
                 }
-                release.SortOrder = firstSortOrder;
-                relRepo.InsertOrUpdate(release);
+                aReleaseToAdd.SortOrder = firstSortOrder;
             }
-            ClearCache();
         }
 
         public void EditRelease(Release release, int previousReleaseId, int personId)
         {
+            // We are in edit mode, therefore we do not want the cache to be targeted.
+            ClearCache();
+            
+            // Initializing
             this.personId = personId;
-
-            IReleaseRepository relRepo = RepositoryFactory.Resolve<IReleaseRepository>();
-            relRepo.UoW = UoW;
-            List<Release> allReleases = new List<Release>();
-            Release previousRelease;
-
-            var releaseToUpdate = relRepo.All.Where(r => r.Pk_ReleaseId ==release.Pk_ReleaseId).FirstOrDefault();
+            releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+            releaseRepo.UoW = UoW;
+            
+            // Fetch the release in database and synchronize the fields.
+            var releaseToUpdate = releaseRepo.Find(release.Pk_ReleaseId);
             UpdateReleaseAndHistory(releaseToUpdate, release);
 
-            if (previousReleaseId != 0)
-            {
-                previousRelease = relRepo.Find(previousReleaseId);
-                releaseToUpdate.SortOrder = previousRelease.SortOrder + 10;
-                
-                allReleases = relRepo.All.OrderByDescending(x => x.SortOrder).ToList();
-                foreach (Release r in allReleases)
-                {
-                    if (r.Pk_ReleaseId == releaseToUpdate.Pk_ReleaseId)
-                        continue;
-                    if (r.Pk_ReleaseId == previousRelease.Pk_ReleaseId)
-                        break;
-                    if (r.SortOrder > previousRelease.SortOrder)
-                    {
-                        r.SortOrder += 10;
-                        relRepo.InsertOrUpdate(r);
-                    }
-                }
-            }
-            else
-            {
-                allReleases = relRepo.All.OrderByDescending(x => x.SortOrder).ToList();
-                var firstSortOrder = allReleases[0].SortOrder;                
-                foreach (Release r in allReleases)
-                {
-                    if (r.Pk_ReleaseId == releaseToUpdate.Pk_ReleaseId)
-                        continue;                    
-                    else
-                    {
-                        r.SortOrder += 10;
-                        relRepo.InsertOrUpdate(r);
-                    }
-                }
-                releaseToUpdate.SortOrder = firstSortOrder;                
-            }
+            ManageSortOrder(releaseToUpdate, previousReleaseId);
 
             // Finally save the release
-            relRepo.InsertOrUpdate(releaseToUpdate);
-
-
-            ClearCache();
+            releaseRepo.InsertOrUpdate(releaseToUpdate);
         }
 
         /// <summary>
@@ -276,7 +252,7 @@ namespace Etsi.Ultimate.Business
             releaseToUpdate.Description = release.Description;
             releaseToUpdate.Name = release.Name;
             releaseToUpdate.ShortName = release.ShortName;
-            
+
             string newStartDate = release.StartDate.GetValueOrDefault().ToString("yyyy-MM-dd");
             string oldStartDate = releaseToUpdate.StartDate.GetValueOrDefault().ToString("yyyy-MM-dd");
             if (oldStartDate != newStartDate)
@@ -287,7 +263,7 @@ namespace Etsi.Ultimate.Business
 
             // Freeze date 1
             releaseToUpdate.Stage1FreezeMtgId = release.Stage1FreezeMtgId;
-            if (releaseToUpdate.Stage1FreezeMtgId.GetValueOrDefault() != 0)
+            if (releaseToUpdate.Stage1FreezeMtgId.GetValueOrDefault() > 0)
             {
                 var mtg = mtgMgr.GetMeetingById(releaseToUpdate.Stage1FreezeMtgId.Value);
                 if (mtg != null)
@@ -296,10 +272,16 @@ namespace Etsi.Ultimate.Business
                     releaseToUpdate.Stage1FreezeDate = mtg.END_DATE;
                 }
             }
+            else
+            {
+                releaseToUpdate.Stage1FreezeMtgId = null;
+                releaseToUpdate.Stage1FreezeDate = null;
+                releaseToUpdate.Stage1FreezeMtgRef = null;
+            }
 
             // Freeze stage 2
             releaseToUpdate.Stage2FreezeMtgId = release.Stage2FreezeMtgId;
-            if (releaseToUpdate.Stage2FreezeMtgId.GetValueOrDefault() != 0)
+            if (releaseToUpdate.Stage2FreezeMtgId.GetValueOrDefault() > 0)
             {
                 var mtg = mtgMgr.GetMeetingById(releaseToUpdate.Stage2FreezeMtgId.Value);
                 if (mtg != null)
@@ -308,10 +290,16 @@ namespace Etsi.Ultimate.Business
                     releaseToUpdate.Stage2FreezeDate = mtg.END_DATE;
                 }
             }
+            else
+            {
+                releaseToUpdate.Stage2FreezeMtgId = null;
+                releaseToUpdate.Stage2FreezeDate = null;
+                releaseToUpdate.Stage2FreezeMtgRef = null;
+            }
 
             // Freeze stage 3
             releaseToUpdate.Stage3FreezeMtgId = release.Stage3FreezeMtgId;
-            if (releaseToUpdate.Stage3FreezeMtgId.GetValueOrDefault() != 0)
+            if (releaseToUpdate.Stage3FreezeMtgId.GetValueOrDefault() > 0)
             {
                 var mtg = mtgMgr.GetMeetingById(releaseToUpdate.Stage3FreezeMtgId.Value);
                 if (mtg != null)
@@ -320,57 +308,85 @@ namespace Etsi.Ultimate.Business
                     releaseToUpdate.Stage3FreezeDate = mtg.END_DATE;
                 }
             }
+            else
+            {
+                releaseToUpdate.Stage3FreezeMtgId = null;
+                releaseToUpdate.Stage3FreezeDate = null;
+                releaseToUpdate.Stage3FreezeMtgRef = null;
+            }
 
             // End date ==> Logged
-            if (release.EndMtgId != releaseToUpdate.EndMtgId)
+            if (release.EndMtgId.GetValueOrDefault() != releaseToUpdate.EndMtgId)
             {
+                // Compute old end date.
                 string oldEndDate = "None";
-                if (releaseToUpdate.EndMtgId.GetValueOrDefault() != 0)
+                if (releaseToUpdate.EndMtgId.GetValueOrDefault() > 0)
                     oldEndDate = releaseToUpdate.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd");
 
-                DateTime newEndDate = new DateTime();
-                string newRef = "";
-                if (release.EndMtgId.GetValueOrDefault() != 0)
+                string newEndDateStr = "None";
+                if (release.EndMtgId.GetValueOrDefault() > 0)
                 {
                     var mtg = mtgMgr.GetMeetingById(release.EndMtgId.Value);
                     if (mtg != null)
                     {
-                        newRef = mtg.MtgShortRef;
-                        newEndDate= mtg.END_DATE.GetValueOrDefault();
+                        release.EndMtgRef = mtg.MtgShortRef;
+                        release.EndDate = mtg.END_DATE.GetValueOrDefault();
+                        newEndDateStr = release.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd");
                     }
                 }
-                changes.Add("End date: " + oldEndDate + " => " + newEndDate.ToString("yyyy-MM-dd"));
+                else
+                    release.EndMtgId = 0;
+                changes.Add("End date: " + oldEndDate + " => " + newEndDateStr);
 
                 releaseToUpdate.EndMtgId = release.EndMtgId;
-                releaseToUpdate.EndDate = newEndDate;
-                releaseToUpdate.EndMtgRef = newRef;
+                releaseToUpdate.EndDate = release.EndDate;
+                releaseToUpdate.EndMtgRef = release.EndMtgRef;
             }
 
             // Closure date ==> Logged
-            if (releaseToUpdate.ClosureMtgId != release.ClosureMtgId)
+            if (releaseToUpdate.ClosureMtgId.GetValueOrDefault() != release.ClosureMtgId)
             {
                 string oldClosureDate = "None";
-                if (releaseToUpdate.ClosureMtgId.GetValueOrDefault() != 0)
+                if (releaseToUpdate.ClosureMtgId.GetValueOrDefault() > 0)
                     oldClosureDate = releaseToUpdate.ClosureDate.GetValueOrDefault().ToString("yyyy-MM-dd");
 
-                DateTime newClosureDate = new DateTime();
-                string newRef = "";
-                if (release.ClosureMtgId.GetValueOrDefault() != 0)
+                string newClosureDateStr = "None";
+                if (release.ClosureMtgId.GetValueOrDefault() > 0)
                 {
                     var mtg = mtgMgr.GetMeetingById(release.ClosureMtgId.Value);
                     if (mtg != null)
                     {
-                        newRef = mtg.MtgShortRef;
-                        newClosureDate = mtg.END_DATE.GetValueOrDefault();
+                        release.ClosureMtgRef = mtg.MtgShortRef;
+                        release.ClosureDate = mtg.END_DATE.GetValueOrDefault();
+                        newClosureDateStr = release.ClosureDate.GetValueOrDefault().ToString("yyyy-MM-dd");
                     }
                 }
-                changes.Add("Closure date: " + oldClosureDate + " => " + newClosureDate.ToString("yyyy-MM-dd"));
+                else
+                    release.ClosureMtgId = 0;
+                changes.Add("Closure date: " + oldClosureDate + " => " + newClosureDateStr);
 
-                releaseToUpdate.ClosureDate = newClosureDate;
+                releaseToUpdate.ClosureDate = release.ClosureDate;
                 releaseToUpdate.ClosureMtgId = release.ClosureMtgId;
-                releaseToUpdate.ClosureMtgRef = newRef;
+                releaseToUpdate.ClosureMtgRef = release.ClosureMtgRef;
             }
             
+            // Manage remarks
+            foreach (var rk in release.Remarks)
+            {
+                if (rk.Pk_RemarkId != default(int))
+                {
+                    var updRk = releaseToUpdate.Remarks.Where(r => r.Pk_RemarkId == rk.Pk_RemarkId).FirstOrDefault();
+                    if (updRk != null)
+                        updRk.IsPublic = rk.IsPublic;
+                }
+                else
+                {
+                    rk.Fk_PersonId = personId;
+                    rk.Release = releaseToUpdate;
+                    rk.Fk_ReleaseId = releaseToUpdate.Pk_ReleaseId;
+                    releaseToUpdate.Remarks.Add(rk);
+                }
+            }
             // To uncomment afterwards (one thing at a time :P)
             //releaseToUpdate.Remarks = release.Remarks;
 
@@ -391,12 +407,10 @@ namespace Etsi.Ultimate.Business
                     Fk_PersonId = personId,
                     Release = releaseToUpdate,
                     HistoryText = "Release updated:<br /> " + string.Join("<br />", changes),
-                    CreationDate = DateTime.Now
+                    CreationDate = DateTime.Now.ToUniversalTime()
                 };
 
-                var historyRepo = RepositoryFactory.Resolve<IHistoryRepository>();
-                historyRepo.UoW = UoW;
-                historyRepo.InsertOrUpdate(historyEntry);
+                releaseToUpdate.Histories.Add(historyEntry);
             }
         }
 

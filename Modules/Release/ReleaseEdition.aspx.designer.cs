@@ -246,8 +246,6 @@ namespace Etsi.Ultimate.Module.Release {
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label ReleaseFreezeStage1Lbl;
         
-        
-        
         /// <summary>
         /// ReleaseFreezeStage2Lbl control.
         /// </summary>
@@ -257,7 +255,6 @@ namespace Etsi.Ultimate.Module.Release {
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label ReleaseFreezeStage2Lbl;
         
-               
         /// <summary>
         /// ReleaseFreezeStage3Lbl control.
         /// </summary>
@@ -275,7 +272,7 @@ namespace Etsi.Ultimate.Module.Release {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label ReleaseEndDateLbl;
-                
+        
         /// <summary>
         /// ReleaseClosureDateLbl control.
         /// </summary>
@@ -481,7 +478,7 @@ namespace Etsi.Ultimate.Module.Release {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button SaveBtn;
+        protected global::System.Web.UI.WebControls.LinkButton SaveBtn;
         
         /// <summary>
         /// ExitBtn control.

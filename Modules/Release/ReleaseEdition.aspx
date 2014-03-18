@@ -219,7 +219,7 @@
                  </telerik:RadPageView>              
             </telerik:RadMultiPage>     
            <div class="releaseDetailsAction">
-                <asp:Button ID="SaveBtn" runat="server" Text="Save" CssClass="LinkButton" Visible="true" OnClick="SaveEditedRelease_Click"/>
+                <asp:LinkButton ID="SaveBtn" runat="server" Text="Save" CssClass="LinkButton" Visible="true" OnClick="SaveEditedRelease_Click"/>
                 <asp:LinkButton ID="ExitBtn" runat="server" Text="Cancel" CssClass="LinkButton" OnClick="CloseReleaseDetails_Click"/>
            </div> 
            <script type="text/javascript">

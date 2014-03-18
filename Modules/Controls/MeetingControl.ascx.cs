@@ -35,7 +35,19 @@ namespace Etsi.Ultimate.Controls
         /// <summary>
         /// Display meeting EndDate label (true)
         /// </summary>
-        public bool DisplayLabel { get; set; }
+        public bool DisplayLabel {
+            get
+            {
+                bool display;
+                if (bool.TryParse((string)ViewState["MTG_" + ID + "DisplayLabel"], out display))
+                    return display;
+                return false;
+            }
+            set
+            {
+                ViewState["MTG_" + ID + "DisplayLabel"] = value.ToString();
+            }
+        }
 
         /// <summary>
         /// Default selected meeting id

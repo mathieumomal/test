@@ -50,19 +50,20 @@ namespace Etsi.Ultimate.Repositories
 
         public Release Find(int id)
         {
-            // Check in the cache
+            /*// Check in the cache
             var cachedData = (Release)CacheManager.Get(String.Format(CACHE_ULT_RELEASES_ID, id));
             if (cachedData != null)
                 return cachedData;
 
-            cachedData = AllIncluding(t => t.Enum_ReleaseStatus, t => t.Remarks, t=> t.Histories).Where(x => x.Pk_ReleaseId == id).FirstOrDefault();
+            cachedData = */
+            return AllIncluding(t => t.Enum_ReleaseStatus, t => t.Remarks, t=> t.Histories).Where(x => x.Pk_ReleaseId == id).FirstOrDefault();
 
             // Check that cache is still empty
-            if (CacheManager.Get(String.Format(CACHE_ULT_RELEASES_ID, id)) == null)
+            /*if (CacheManager.Get(String.Format(CACHE_ULT_RELEASES_ID, id)) == null)
                 CacheManager.Insert(String.Format(CACHE_ULT_RELEASES_ID, id), cachedData);
 
             return cachedData; 
-            //return UoW.Context.Releases.Find(id);
+            //return UoW.Context.Releases.Find(id);*/
         }
 
         public void InsertOrUpdate(Release entity)
@@ -76,7 +77,26 @@ namespace Etsi.Ultimate.Repositories
                 UoW.Context.SetModified(entity);
                 CacheManager.Clear(String.Format(CACHE_ULT_RELEASES_ID, entity.Pk_ReleaseId));
             }
-            CacheManager.Clear("ULT_BIZ_RELEASES_ALL");
+
+            // Add / edit remarks
+            foreach (var rk in entity.Remarks)
+            {
+                rk.Release = entity;
+                if (rk.Pk_RemarkId == default(int))
+                    UoW.Context.SetAdded(rk);
+                else
+                    UoW.Context.SetModified(rk);
+            }
+
+            // Add / edit history
+            foreach (var hi in entity.Histories)
+            {
+                if (hi.Pk_HistoryId == default(int))
+                {
+                    hi.Release = entity;
+                    UoW.Context.SetAdded(hi);
+                }
+            }
         }
 
         public void Delete(int id)
@@ -90,7 +110,6 @@ namespace Etsi.Ultimate.Repositories
 
         public void Dispose()
         {
-            UoW.Context.Dispose();
         }
 
         #endregion
