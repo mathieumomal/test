@@ -300,3 +300,9 @@ versionFieldsetTab {
 .RadAjaxPanel {
     display: inline !important;
 }
+
+
+img.imgViewReleases
+{
+	cursor:pointer;
+}

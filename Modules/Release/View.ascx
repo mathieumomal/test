@@ -34,7 +34,7 @@
             <telerik:GridBoundColumn HeaderStyle-Width="8%" DataField="Code" HeaderText="Release Code" UniqueName="Code" ></telerik:GridBoundColumn>
             <telerik:GridTemplateColumn HeaderStyle-Width="10%" DataField="Name" HeaderText="Name" UniqueName="Name" HeaderTooltip="Release name" >
                 <ItemTemplate>
-                    <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Name") %></div>  
+                    <div class="text-left"><a class="linkRelease" href="<%# DataBinder.Eval(Container.DataItem,"Description") %>"><%# DataBinder.Eval(Container.DataItem,"Name") %></a></div>  
                 </ItemTemplate> 
             </telerik:GridTemplateColumn>
             <telerik:GridTemplateColumn HeaderStyle-Width="6%" DataField="Status" HeaderText="Status" UniqueName="Status">
@@ -75,7 +75,7 @@
             <telerik:GridTemplateColumn HeaderStyle-Width="2%" UniqueName="ReleaseDetails">
                 <ItemTemplate>
 					<span></span>
-                    <img id="imgViewReleases" alt="See details" src="/DesktopModules/Release/images/details.png" 
+                    <img class="imgViewReleases" title="See details" alt="See details" src="/DesktopModules/Release/images/details.png" 
                         onclick="var popUp=window.open('/desktopmodules/Release/ReleaseDetails.aspx?releaseId=<%# DataBinder.Eval(Container.DataItem,"Pk_ReleaseId").ToString() %>',
 								'Rel-<%# DataBinder.Eval(Container.DataItem,"Pk_ReleaseId").ToString() %>', 'height=690,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
                 </ItemTemplate>                    
