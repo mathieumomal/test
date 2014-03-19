@@ -194,6 +194,7 @@ namespace Etsi.Ultimate.Module.Release
                 GridDataItem dataItem = e.Item as GridDataItem;//Get row
                 //Get table cell
                 TableCell tblCellClosureDate = dataItem["ClosureDate"];
+                TableCell tblCellEndDate = dataItem["EndDate"];
                 TableCell tblCellStage1FreezeDate = dataItem["Stage1FreezeDate"];
                 TableCell tblCellStage2FreezeDate = dataItem["Stage2FreezeDate"];
                 TableCell tblCellStage3FreezeDate = dataItem["Stage3FreezeDate"];
@@ -207,6 +208,12 @@ namespace Etsi.Ultimate.Module.Release
                     tblCellClosureDate.Text = mixDateAndMtgRef((DateTime)currentRelease.ClosureDate, currentRelease.ClosureMtgRef);
                 }
                 tblCellClosureDate.CssClass = cssClosedColor;
+                //Analyse column : End date
+                if (currentRelease.EndDate != null && currentRelease.EndMtgRef != null)
+                {
+                    tblCellEndDate.Text = mixDateAndMtgRef((DateTime)currentRelease.EndDate, currentRelease.EndMtgRef);
+                }
+                
 
                 //Analyse column : Freeze 1
                 TreatFreezeDate(tblCellStage1FreezeDate, currentRelease.Stage1FreezeDate, currentRelease.Stage1FreezeMtgRef);
