@@ -113,8 +113,6 @@ namespace Etsi.Ultimate.Business
             updatedObj.EndMtgRef = FreezeMtgRef;
             updatedObj.EndMtgId = FreezeMtgId;
 
-
-
             releaseRepo.InsertOrUpdate(updatedObj);
 
             History history = new History() { Fk_ReleaseId = releaseId, Fk_PersonId = personId, CreationDate = DateTime.UtcNow, HistoryText = Utils.Localization.History_Release_Freeze };
@@ -181,7 +179,7 @@ namespace Etsi.Ultimate.Business
                 Fk_ReleaseId = release.Pk_ReleaseId,
                 Fk_PersonId = personId,
                 CreationDate = DateTime.Now,
-                HistoryText = "Release created",
+                HistoryText = Utils.Localization.History_Release_Created,
             });
 
             ManageSortOrder(aReleaseToAdd, previousReleaseId);
@@ -383,7 +381,7 @@ namespace Etsi.Ultimate.Business
                 {
                     Fk_PersonId = personId,
                     Release = releaseToUpdate,
-                    HistoryText = "Release updated:<br /> " + string.Join("<br />", changes),
+                    HistoryText = String.Format(Utils.Localization.History_Release_Updated, string.Join("<br />", changes)),
                     CreationDate = DateTime.Now.ToUniversalTime()
                 };
 

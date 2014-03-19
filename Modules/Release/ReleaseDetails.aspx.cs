@@ -136,10 +136,10 @@ namespace Etsi.Ultimate.Module.Release
             ReleaseStatusVal.CssClass = "status " + ReleaseStatusVal.Text;
             ReleaseNameVal.Text = release.Name;
             if (!string.IsNullOrEmpty(release.Description))
-                ReleaseDescVal.Attributes.Add("href", release.Description);
+                lnkReleaseDescription.NavigateUrl = release.Description;
             else
             {
-                ReleaseDescVal.Visible = false;
+                lnkReleaseDescription.Visible = false;
                 MissigDesc.Visible = true;
                 MissigDesc.Text = CONST_EMPTY_FIELD;
             }

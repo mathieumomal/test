@@ -61,7 +61,7 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Release has been closed..
+        ///   Looks up a localized string similar to Release closed..
         /// </summary>
         public static string History_Release_Close {
             get {
@@ -70,11 +70,29 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Release has been frozen..
+        ///   Looks up a localized string similar to Release created..
+        /// </summary>
+        public static string History_Release_Created {
+            get {
+                return ResourceManager.GetString("History_Release_Created", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Release frozen..
         /// </summary>
         public static string History_Release_Freeze {
             get {
                 return ResourceManager.GetString("History_Release_Freeze", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Release updated. Changes:&lt;br /&gt;{0}.
+        /// </summary>
+        public static string History_Release_Updated {
+            get {
+                return ResourceManager.GetString("History_Release_Updated", resourceCulture);
             }
         }
         

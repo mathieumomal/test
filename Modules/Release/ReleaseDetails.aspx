@@ -51,7 +51,9 @@
                         <tr>            
                             <td class="TabLineLeft"><asp:Label ID="ReleaseDescLbl" runat="server"  Text="Release description:"></asp:Label>  </td>          
                             <td colspan="2" class="TabLineRight">
-                                <img runat="server" id="ReleaseDescVal" alt="Go to description" src="images/ReleaseDecription.png"/>
+                                <asp:hyperlink id="lnkReleaseDescription" runat="server" Target="_blank">
+                                   <img runat="server" id="ReleaseDescVal" alt="Go to description" src="images/ReleaseDecription.png"/>
+                                </asp:hyperlink>
                                 <asp:Label ID="MissigDesc" runat="server" Visible="false"/>
                             </td>
             

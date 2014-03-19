@@ -118,10 +118,16 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="History_Release_Close" xml:space="preserve">
-    <value>Release has been closed.</value>
+    <value>Release closed.</value>
+  </data>
+  <data name="History_Release_Created" xml:space="preserve">
+    <value>Release created.</value>
   </data>
   <data name="History_Release_Freeze" xml:space="preserve">
-    <value>Release has been frozen.</value>
+    <value>Release frozen.</value>
+  </data>
+  <data name="History_Release_Updated" xml:space="preserve">
+    <value>Release updated. Changes:&lt;br /&gt;{0}</value>
   </data>
   <data name="WorkItem_Import_Bad_Format" xml:space="preserve">
     <value>Workplan is not correctly formatted: {0}</value>
