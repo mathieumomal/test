@@ -164,10 +164,8 @@ namespace Etsi.Ultimate.Module.Release
                 releaseRemarks.UserRights = userRights;
                 releaseRemarks.DataSource = null;
 
-                previousReleaseVal.DataTextField = "Value";
-                previousReleaseVal.DataValueField = "Key";
-                previousReleaseVal.DataSource = svc.GetAllReleasesCodes(UserId, default(int));
-                previousReleaseVal.DataBind();
+                var allReleases= svc.GetAllReleasesCodes(UserId,default(int));
+                FillAdminTab(null, allReleases, allReleases.First().Key);
 
                 SaveBtn.Attributes.Add("disabled", "disabled");
                 SaveBtn.Style.Add("display","none");
@@ -311,6 +309,12 @@ namespace Etsi.Ultimate.Module.Release
             previousReleaseVal.DataSource = allReleasesCodes;
             previousReleaseVal.DataBind();
 
+            // Setting the call backs for 2G and 3G
+            Release2GDecimalVal.Attributes.Add("onchange", string.Format("realPostBack(\"{0}\", \"\"); return false;",
+                                                    Release2GDecimalVal.UniqueID));
+            Release3GDecimalVal.Attributes.Add("onchange", string.Format("realPostBack(\"{0}\", \"\"); return false;",
+                                                    Release3GDecimalVal.UniqueID));
+
             if (action.Equals("Edit"))
             {
                 previousReleaseVal.SelectedValue = previousReleaseID.ToString();
@@ -318,11 +322,7 @@ namespace Etsi.Ultimate.Module.Release
                 ITURCodeVal.Text = (release.IturCode == null) ? CONST_EMPTY_FIELD : release.IturCode;
 
                 Release2GDecimalVal.Text = (release.Version2g == null) ? CONST_EMPTY_FIELD : release.Version2g.ToString();
-                Release2GDecimalVal.Attributes.Add("onchange", string.Format("realPostBack(\"{0}\", \"\"); return false;",
-                                                        Release2GDecimalVal.UniqueID));
                 Release3GDecimalVal.Text = (release.Version3g == null) ? CONST_EMPTY_FIELD : release.Version3g.ToString();
-                Release3GDecimalVal.Attributes.Add("onchange", string.Format("realPostBack(\"{0}\", \"\"); return false;",
-                                                        Release3GDecimalVal.UniqueID));
 
                 Release2GVal.Text = (release.Version2gBase36 == null) ? CONST_EMPTY_FIELD : release.Version2gBase36;
                 Release3GVal.Text = (release.Version3gBase36 == null) ? CONST_EMPTY_FIELD : release.Version3gBase36;
