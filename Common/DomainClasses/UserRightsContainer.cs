@@ -138,5 +138,19 @@ namespace Etsi.Ultimate.DomainClasses
             }
         }
 
+        public UserRightsContainer Copy()
+        {
+            var newContainer = new UserRightsContainer();
+            newContainer.completeRights = new List<Enum_UserRights>(this.completeRights);
+            
+            newContainer.committeeRights = new Dictionary<int, List<Enum_UserRights>>();
+            foreach (var key in this.committeeRights.Keys)
+            {
+                newContainer.committeeRights.Add(key, new List<Enum_UserRights>( this.committeeRights[key] ));
+            }
+
+            return newContainer;
+        }
+
     }
 }

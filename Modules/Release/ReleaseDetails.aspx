@@ -208,32 +208,13 @@
                 <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit" CssClass="LinkButton" OnClick="CloseReleaseDetails_Click"/>
            </div> 
            <script type="text/javascript">
-               function resizeElements() {
-                  
-                   /*var calWidth = $("#FreezeStagesPanel").width() - $("#SecondColreleaseCode").width() - ($("#FreezeStagesPanel").width() * 0.03) - 17;
-                   
-                   $("#thirdColFreezeStage1").width(($("#FrezeStagesTable").width() - calWidth) * 0.5);
-                   $("#SecndColFreezeStage1").width(($("#FrezeStagesTable").width() - calWidth) * 0.5 - 20);
-                   $("#FirstColFreezeStage1").width(calWidth); //SecndColFreezeStage1
-
-                   $("#thirdColFreezeStage2").width(($("#FrezeStagesTable").width() - calWidth) * 0.5);
-                   $("#SecndColFreezeStage2").width(($("#FrezeStagesTable").width() - calWidth) * 0.5 - 20);
-                   $("#FirstColFreezeStage2").width(calWidth);
-
-                   $("#thirdColFreezeStage3").width(($("#FrezeStagesTable").width() - calWidth) * 0.5);
-                   $("#SecndColFreezeStage3").width(($("#FrezeStagesTable").width() - calWidth) * 0.5 - 20);
-                   $("#FirstColFreezeStage3").width(calWidth);    */               
-               }
+              
                $(document).ready(function () {
-                   resizeElements();
                    setTimeout(function () {
                        var releaseName = "Release " + $("#releaseCodeVal").html();
                        document.title = releaseName;                                              
                    }, 200);
 
-                   $(window).resize(function () {                       
-                       resizeElements();                       
-                   });
                    $('#FreezeReleaseBtn').click(function (event) {
                        event.preventDefault();
                        closeAllModals();
@@ -263,7 +244,7 @@
                                 <br />
                                 # Versions are pending upload.<br />
                                 # CRs are not in final status.<br /><br />
-                                Freeze stage 3 : <ult:MeetingControl runat="server" ID="mcFreeze" DisplayLabel="true" />
+                                End meeting: <ult:MeetingControl runat="server" ID="mcFreeze" DisplayLabel="true" />
                             </div>
                             <br />
                             <div class="footer" style="text-align: right">
@@ -287,7 +268,7 @@
                                 # CRs are not in final status.<br />
                                 # TDocs are not in final status.<br /><br />
                                 </div>
-                                Closure <ult:MeetingControl runat="server" ID="mcClose" DisplayLabel="true"/>
+                                Closure meeting: <ult:MeetingControl runat="server" ID="mcClose" DisplayLabel="true"/>
                             </div>
                             <br />
                             <div class="footer" style="text-align: right">

@@ -45,7 +45,7 @@ namespace Etsi.Ultimate.Business.Security
             var cacheData = (UserRightsContainer)CacheManager.Get(CACHE_BASE_STR+personID.ToString());
             if (cacheData != null)
             {
-                return cacheData;
+                return cacheData.Copy();
             }
 
             cacheData = new UserRightsContainer();
@@ -63,7 +63,7 @@ namespace Etsi.Ultimate.Business.Security
 
             // Update the cache
             CacheManager.InsertForLimitedTime(CACHE_BASE_STR + personID.ToString(), cacheData, 10);
-            return cacheData;
+            return cacheData.Copy();
 
         }
 

@@ -173,12 +173,35 @@ namespace Etsi.Ultimate.Tests.Business
 
             // Update the rights in cache
             var cachedRights = (UserRightsContainer) CacheManager.Get(cacheKey);
-            cachedRights.AddRight(Enum_UserRights.Release_Create);
+            cachedRights.AddRight(Enum_UserRights.Release_Create); 
+            
             CacheManager.Insert(cacheKey, cachedRights);
 
             // Ask again the system
             rights = rightsRetriever.GetRights(UserRolesFakeRepository.ADMINISTRATOR_ID);
             Assert.IsTrue(rights.HasRight(Enum_UserRights.Release_Create));
+        }
+
+        [Test]
+        public void GetRights_ReturnsCopy()
+        {
+            var cacheKey = CACHE_STRING + UserRolesFakeRepository.ADMINISTRATOR_ID;
+            CacheManager.Clear(cacheKey);
+            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
+            RepositoryFactory.Container.RegisterType<IUserRightsRepository, RightsFakeRepository>(new TransientLifetimeManager());
+
+            var rightsRetriever = new RightsManager();
+            rightsRetriever.UoW = GetUnitOfWork();
+
+            // System should have computed the rights, and put them in cache.
+            var rights = rightsRetriever.GetRights(UserRolesFakeRepository.ADMINISTRATOR_ID);
+            Assert.IsTrue(rights.HasRight(Enum_UserRights.Release_ViewDetails));
+            rights.RemoveRight(Enum_UserRights.Release_ViewDetails, true);
+
+            // Thus if we call it again, we should still have it.
+            rights = rightsRetriever.GetRights(UserRolesFakeRepository.ADMINISTRATOR_ID);
+            Assert.IsTrue(rights.HasRight(Enum_UserRights.Release_ViewDetails));
+
         }
 
         [Test]
