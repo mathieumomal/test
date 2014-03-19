@@ -57,12 +57,13 @@ namespace Etsi.Ultimate.Module.WorkItem
         private static string PathUploadWorkPlan;
         private string tokenWorkPlanAnalysed = "";
         private int errorNumber = 0;
-        private static bool getDataFromService;
         private const string CONST_WORKITEM_DATASOURCE = "WorkItemDataSource";
         private int granularity;
         private bool percentComplete;
         private string wiAcronym;
         private string wiName;
+        protected ReleaseSearchControl releaseSearchControl;
+        private static string selectedReleases;
 
         private List<DomainClasses.WorkItem> DataSource
         {
@@ -98,11 +99,6 @@ namespace Etsi.Ultimate.Module.WorkItem
                     PathExportWorkPlan = Settings[Enum_Settings.WorkItem_ExportPath.ToString()].ToString();
                 if (Settings.Contains(Enum_Settings.WorkItem_UploadPath.ToString()))
                     PathUploadWorkPlan = Settings[Enum_Settings.WorkItem_UploadPath.ToString()].ToString();
-
-                if (!IsPostBack)
-                {
-                    getDataFromService = true;
-                }
             }
             catch (Exception exc) //Module failed to load
             {
@@ -249,12 +245,14 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// <param name="e">Event Arguments</param>
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            if (getDataFromService)
+            List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
+
+            if (String.Join(",", releaseIDs) != selectedReleases)
             {
                 var wiService = ServicesFactory.Resolve<IWorkItemService>();
-                List<int> releaseIDs = new List<int> { 509, 510, 511, 512, 513, 514, 515, 516, 517, 518, 519, 520, 521, 522, 523, 524, 525, 526, 527, 528, 529 };
                 var wiData = wiService.GetWorkItemsByRelease(UserId, releaseIDs);
                 DataSource = wiData.Key;
+                selectedReleases = String.Join(",", releaseIDs);
             }
 
             granularity = Convert.ToInt32(rddGranularity.SelectedValue);
@@ -263,7 +261,20 @@ namespace Etsi.Ultimate.Module.WorkItem
             wiName = txtName.Text;
 
             rtlWorkItems.Rebind();
-            getDataFromService = false;
+        }
+
+        /// <summary>
+        /// Click Event of Button Default
+        /// </summary>
+        /// <param name="sender">Source of Event</param>
+        /// <param name="e">Event Arguments</param>
+        protected void btnDefault_Click(object sender, EventArgs e)
+        {
+            releaseSearchControl.Reset();
+            rddGranularity.SelectedValue = "0";
+            chkHideCompletedItems.Checked = false;
+            txtAcronym.Text = String.Empty;
+            txtName.Text = String.Empty;
         }
 
         /// <summary>
@@ -273,7 +284,9 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// <param name="e">Event Arguments</param>
         protected void rtlWorkItems_NeedDataSource(object sender, TreeListNeedDataSourceEventArgs e)
         {
-            rtlWorkItems.DataSource = DataSource.Where(x => x.Name.StartsWith(wiName.Trim()) && x.Acronym.StartsWith(wiAcronym.Trim())).ToList();
+            rtlWorkItems.DataSource = DataSource.Where(x => x.Name.StartsWith(wiName.Trim()) && x.Acronym.StartsWith(wiAcronym.Trim())
+                                                                                             && (x.WiLevel != null && x.WiLevel <= granularity)
+                                                                                             && (percentComplete ? (((x.Completion == null) ? 0 : x.Completion) >= 100) : true)).ToList();
         }
 
         public ModuleActionCollection ModuleActions

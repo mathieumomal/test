@@ -54,7 +54,7 @@
                                 </tr>
                                 <tr>
                                     <td colspan="4" style="text-align:right; padding-right:20px">
-                                        <asp:Button ID="btnDefault" runat="server" Text="Default" Width="150px"></asp:Button>                   
+                                        <asp:Button ID="btnDefault" runat="server" Text="Default" Width="150px" OnClick="btnDefault_Click"></asp:Button>                   
                                         <asp:Button ID="btnSearch" runat="server" Text="Search"  Width="150px" OnClick="btnSearch_Click"></asp:Button></td>
                                 </tr>
                             </table>

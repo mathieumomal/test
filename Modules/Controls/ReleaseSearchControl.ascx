@@ -19,14 +19,14 @@
 
 <telerik:RadScriptBlock runat="server">
     <script type="text/javascript">
-        $(function () {
-            $('[name$="$ReleaseGroup"]').attr("name", $('[name$="$ReleaseGroup"]').attr("name"));
+        //$(function () {
+        //    $('[name$="$ReleaseGroup"]').attr("name", $('[name$="$ReleaseGroup"]').attr("name"));
 
-            $('[name$="$ReleaseGroup"]').click(function () {
-                //set name for all to name of clicked 
-                $('[name$="$ReleaseGroup"]').attr("name", $(this).attr("name"));
-            });
-        });
+        //    $('[name$="$ReleaseGroup"]').click(function () {
+        //        //set name for all to name of clicked 
+        //        $('[name$="$ReleaseGroup"]').attr("name", $(this).attr("name"));
+        //    });
+        //});
     </script>
 </telerik:RadScriptBlock>
 
@@ -48,13 +48,6 @@
                     <NodeTemplate>
                         <asp:RadioButton ID="rbCustomSelection" runat="server" GroupName="ReleaseGroup" Text="Custom Selection" />
                     </NodeTemplate>
-                    <Nodes>
-                        <telerik:RadTreeNode Text="Rel - 1" />
-                        <telerik:RadTreeNode Text="Rel - 2" />
-                        <telerik:RadTreeNode Text="Rel - 3" />
-                        <telerik:RadTreeNode Text="Rel - 4" />
-                        <telerik:RadTreeNode Text="Rel - 5" />
-                    </Nodes>
                 </telerik:RadTreeNode>
             </Nodes>
         </telerik:RadTreeView>

@@ -29,16 +29,7 @@ namespace Etsi.Ultimate.Module.WorkItem {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Telerik.Web.UI.RadPanelBar rpbSearch;
-        
-        /// <summary>
-        /// releaseSearchControl control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UserControl releaseSearchControl;
-        
+               
         /// <summary>
         /// rddGranularity control.
         /// </summary>
