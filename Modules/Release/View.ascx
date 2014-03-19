@@ -5,9 +5,10 @@
 <%@ Import Namespace="System.Drawing" %>
 
 
-
-<div style="float:right"><ult:FullView ID="ultFullView" runat="server" /></div>
-<asp:LinkButton runat="server" ID="newRelease" Text="New" CssClass="LinkButton"></asp:LinkButton>
+<div class="headerBtnRelease">
+    <div style="float:right"><ult:FullView ID="ultFullView" runat="server" /></div>
+    <asp:LinkButton runat="server" ID="newRelease" Text="New" CssClass="LinkButton"></asp:LinkButton>
+</div>
 
 <script type="text/javascript">
     $(document).ready(function () {

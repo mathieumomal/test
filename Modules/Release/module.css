@@ -312,3 +312,7 @@ a.linkRelease
 	color: rgb(45, 90, 180) !important;
 	text-decoration: underline !important;
 }
+
+.headerBtnRelease{
+    height: 30px;
+}
