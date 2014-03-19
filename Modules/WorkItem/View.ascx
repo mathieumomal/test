@@ -66,8 +66,58 @@
     </tr>
     <tr>
         <td>
-            <telerik:RadGrid runat="server" ID="rgWorkItems" Visible="false">
-            </telerik:RadGrid>
+            <asp:UpdatePanel ID="upWorkItemsTree" runat="server">
+                <ContentTemplate>
+                    <telerik:RadTreeList ID="rtlWrokItems" runat="server" OnNeedDataSource="rtlWrokItems_NeedDataSource"
+                        ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="true">
+                        <columns>
+                        <telerik:TreeListBoundColumn DataField="Name" UniqueName="Name" HeaderText="Name">
+                            <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="200px"/> 
+                        </telerik:TreeListBoundColumn>
+                        <telerik:TreeListBoundColumn DataField="Acronym" UniqueName="Acronym" HeaderText="Acronym">
+                            <HeaderStyle HorizontalAlign="Center" Font-Bold="True"/> 
+                        </telerik:TreeListBoundColumn>
+                        <telerik:TreeListBoundColumn HeaderText="UID">
+                            <HeaderStyle HorizontalAlign="Center" Font-Bold="True"/> 
+                        </telerik:TreeListBoundColumn>
+                        <telerik:TreeListBoundColumn HeaderText="Release">
+                            <HeaderStyle HorizontalAlign="Center" Font-Bold="True"/> 
+                        </telerik:TreeListBoundColumn>
+                        <telerik:TreeListTemplateColumn DataField="StartDate" UniqueName="StartDate"  HeaderText="Start date">
+                            <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="140px"/> 
+                            <ItemTemplate>
+                                <span><%# DataBinder.Eval(Container.DataItem,"StartDate", "{0:yyyy-mm-dd hh:mm UTC}") %></span>  
+                            </ItemTemplate>      
+                        </telerik:TreeListTemplateColumn>
+                        <telerik:TreeListTemplateColumn DataField="EndDate" UniqueName="EndDate"  HeaderText="End date">
+                            <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="140px"/> 
+                            <ItemTemplate>
+                                <span><%# DataBinder.Eval(Container.DataItem,"EndDate", "{0:yyyy-mm-dd hh:mm UTC}") %></span>  
+                            </ItemTemplate>   
+                        </telerik:TreeListTemplateColumn>
+                        <telerik:TreeListBoundColumn HeaderText="Completion rate">
+                            <HeaderStyle HorizontalAlign="Center" Font-Bold="True"/> 
+                        </telerik:TreeListBoundColumn>
+                        <telerik:TreeListBoundColumn HeaderText="Responsible groups">
+                            <HeaderStyle HorizontalAlign="Center" Font-Bold="True"  Width="150px"/> 
+                        </telerik:TreeListBoundColumn>
+                        <telerik:TreeListTemplateColumn HeaderText="Latest remark">
+                            <HeaderStyle HorizontalAlign="Center" Font-Bold="True"/> 
+                        </telerik:TreeListTemplateColumn>
+                        <telerik:TreeListTemplateColumn>
+                            <HeaderStyle Width="50px"/> 
+                            <ItemTemplate>
+					            <span></span>
+                                <img id="imgViewReleases" alt="See details" src="/DesktopModules/Release/images/details.png" 
+                                    onclick="var popUp=window.open('/desktopmodules/Release/ReleaseDetails.aspx?releaseId=<%# DataBinder.Eval(Container.DataItem,"Fk_ReleaseId").ToString() %>',
+								            'Rel-<%# DataBinder.Eval(Container.DataItem,"Fk_ReleaseId").ToString() %>', 'height=690,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
+                            </ItemTemplate>      
+                        </telerik:TreeListTemplateColumn>
+                    </columns>
+                    </telerik:RadTreeList>
+                </ContentTemplate>
+            </asp:UpdatePanel>
+
         </td>
     </tr>
 </table>

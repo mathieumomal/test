@@ -94,13 +94,22 @@ namespace Etsi.Ultimate.Module.WorkItem {
         protected global::System.Web.UI.WebControls.Button btnSearch;
         
         /// <summary>
-        /// rgWorkItems control.
+        /// upWorkItemsTree control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadGrid rgWorkItems;
+        protected global::System.Web.UI.UpdatePanel upWorkItemsTree;
+        
+        /// <summary>
+        /// rtlWrokItems control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadTreeList rtlWrokItems;
         
         /// <summary>
         /// wiRadAjaxManager control.

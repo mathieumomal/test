@@ -57,7 +57,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         private static string PathUploadWorkPlan;
         private string tokenWorkPlanAnalysed = "";
         private int errorNumber = 0;
-        
+
         protected void Page_Load(object sender, EventArgs e)
         {
             try
@@ -73,7 +73,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 //ultFullView.BaseAddress = "";
 
                 //Get settings
-                if(Settings.Contains(Enum_Settings.WorkItem_ExportPath.ToString()))
+                if (Settings.Contains(Enum_Settings.WorkItem_ExportPath.ToString()))
                     PathExportWorkPlan = Settings[Enum_Settings.WorkItem_ExportPath.ToString()].ToString();
                 if (Settings.Contains(Enum_Settings.WorkItem_UploadPath.ToString()))
                     PathUploadWorkPlan = Settings[Enum_Settings.WorkItem_UploadPath.ToString()].ToString();
@@ -114,7 +114,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         protected void AsyncUpload_FileImport(object sender, FileUploadedEventArgs e)
         {
             //Get workplan
-            UploadedFile workplanUploaded = e.File;      
+            UploadedFile workplanUploaded = e.File;
 
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
             //var filename = RdAsyncUpload.UploadedFiles[0].
@@ -181,7 +181,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         protected void Confirmation_import_OnClick(object sender, EventArgs e)
         {
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
-            tokenWorkPlanAnalysed = (string) ViewState["WiImportToken"];
+            tokenWorkPlanAnalysed = (string)ViewState["WiImportToken"];
             bool success = wiService.ImportWorkPlan(tokenWorkPlanAnalysed);
 
             if (success)
@@ -223,7 +223,21 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// <param name="e">Event Arguments</param>
         protected void btnSearch_Click(object sender, EventArgs e)
         {
+            BindWorkItemTreeList();
+        }
 
+        protected void rtlWrokItems_NeedDataSource(object sender, TreeListNeedDataSourceEventArgs e)
+        {
+            if (e.RebindReason == TreeListRebindReason.PostBackEvent)
+                BindWorkItemTreeList();
+        }
+
+        private void BindWorkItemTreeList()
+        {
+            IWorkItemService svc = ServicesFactory.Resolve<IWorkItemService>();
+            var result = svc.GetWorkItemsByRelease(UserId, new List<int> { 506 });
+
+            rtlWrokItems.DataSource = result.Key;
         }
 
         public ModuleActionCollection ModuleActions
@@ -239,7 +253,9 @@ namespace Etsi.Ultimate.Module.WorkItem
                     };
                 return actions;
             }
-    }
+        }
+
+
 
     }
 }

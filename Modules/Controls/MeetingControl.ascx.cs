@@ -35,7 +35,8 @@ namespace Etsi.Ultimate.Controls
         /// <summary>
         /// Display meeting EndDate label (true)
         /// </summary>
-        public bool DisplayLabel {
+        public bool DisplayLabel
+        {
             get
             {
                 bool display;
@@ -63,7 +64,19 @@ namespace Etsi.Ultimate.Controls
             }
             set
             {
-                ViewState["MTG_" + ID + "Selected"] = value.ToString();   
+                ViewState["MTG_" + ID + "Selected"] = value.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Selected meeting object
+        /// </summary>
+        public Meeting SelectedMeeting
+        {
+            get
+            {
+                IMeetingService svc = ServicesFactory.Resolve<IMeetingService>();
+                return svc.GetMeetingById(this.SelectedMeetingId);
             }
         }
 

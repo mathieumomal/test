@@ -135,7 +135,7 @@ namespace Etsi.Ultimate.Module.Release
             ReleaseStatusVal.Text = release.Enum_ReleaseStatus.Description;
             ReleaseStatusVal.CssClass = "status " + ReleaseStatusVal.Text;
             ReleaseNameVal.Text = release.Name;
-            if ( !string.IsNullOrEmpty(release.Description) )
+            if (!string.IsNullOrEmpty(release.Description))
                 ReleaseDescVal.Attributes.Add("href", release.Description);
             else
             {
@@ -281,10 +281,9 @@ namespace Etsi.Ultimate.Module.Release
             if (ReleaseId != null)
             {
                 MeetingControl mtgControl = mcFreeze as MeetingControl;
-                if (mtgControl.SelectedMeetingId != default(int))
+                if (mtgControl.SelectedMeeting != null)
                 {
-                    IMeetingService mtgSvc = ServicesFactory.Resolve<IMeetingService>();
-                    var mtg = mtgSvc.GetMeetingById(mtgControl.SelectedMeetingId);
+                    var mtg = mtgControl.SelectedMeeting;
 
                     IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
                     svc.FreezeRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), UserId, mtg.MTG_ID, mtg.MtgShortRef);
@@ -304,10 +303,9 @@ namespace Etsi.Ultimate.Module.Release
             if (ReleaseId != null)
             {
                 MeetingControl mtgControl = mcClose as MeetingControl;
-                if (mtgControl.SelectedMeetingId != default(int))
+                if (mtgControl.SelectedMeeting != null)
                 {
-                    IMeetingService mtgSvc = ServicesFactory.Resolve<IMeetingService>();
-                    var mtg = mtgSvc.GetMeetingById(mtgControl.SelectedMeetingId);
+                    var mtg = mtgControl.SelectedMeeting;
 
                     IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
                     svc.CloseRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), mtg.MtgShortRef, mtg.MTG_ID, UserId);
