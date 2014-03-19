@@ -32,6 +32,7 @@ using Rhino.Mocks;
 using Etsi.Ultimate.Controls;
 using DotNetNuke.Entities.Tabs;
 using System.Web;
+using System.Web.UI;
 
 namespace Etsi.Ultimate.Module.WorkItem
 {
@@ -246,10 +247,39 @@ namespace Etsi.Ultimate.Module.WorkItem
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
+            var wiService = ServicesFactory.Resolve<IWorkItemService>();
+            if (wiService.GetWorkItemsCountByRelease(releaseIDs) > 10)
+            {
+                string script = "function f(){$find(\"" + RadWindow_workItemCount.ClientID + "\").show(); Sys.Application.remove_load(f);}Sys.Application.add_load(f);";
+                ScriptManager.RegisterStartupScript(Page, Page.GetType(), "customConfirmOpener", script, true);
+            }
+            else
+            {
+                loadWorkItemData(releaseIDs, wiService);
+            }
+        }
 
+        /// <summary>
+        /// Click Event of Rad Confirmation when query take long time to perform
+        /// </summary>
+        /// <param name="sender">Source of Event</param>
+        /// <param name="e">Event Arguments</param>
+        protected void rbWorkItemCountOk_Click(object sender, EventArgs e)
+        {
+            List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
+            var wiService = ServicesFactory.Resolve<IWorkItemService>();
+            loadWorkItemData(releaseIDs, wiService);
+        }
+
+        /// <summary>
+        /// Load work item data
+        /// </summary>
+        /// <param name="releaseIDs">List of Release Ids</param>
+        /// <param name="wiService">List of Service</param>
+        private void loadWorkItemData(List<int> releaseIDs, IWorkItemService wiService)
+        {
             if (String.Join(",", releaseIDs) != selectedReleases)
             {
-                var wiService = ServicesFactory.Resolve<IWorkItemService>();
                 var wiData = wiService.GetWorkItemsByRelease(UserId, releaseIDs);
                 DataSource = wiData.Key;
                 selectedReleases = String.Join(",", releaseIDs);

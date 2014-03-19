@@ -89,6 +89,32 @@ namespace Etsi.Ultimate.Tests.Repositories
             mockDataContext.VerifyAllExpectations();
         }
 
+        [Test, TestCaseSource("WorkItemData")]
+        public void GetWorkItemsCountByRelease(WorkItemFakeDBSet workItemData)
+        {
+            List<int> releaseIds = new List<int>();
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(3);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var wiRepository = new WorkItemRepository() { UoW = uow };
+
+            //No Release Ids
+            Assert.AreEqual(0, wiRepository.GetWorkItemsCountByRelease(releaseIds));
+
+            //One Release Id
+            releaseIds.Add(527);
+            Assert.AreEqual(18, wiRepository.GetWorkItemsCountByRelease(releaseIds));
+
+            //Two Release Ids
+            releaseIds.Add(526);
+            Assert.AreEqual(20, wiRepository.GetWorkItemsCountByRelease(releaseIds));
+
+            mockDataContext.VerifyAllExpectations();
+        }
+
         /// <summary>
         /// Create Mocks to simulate DB with objects
         /// </summary>

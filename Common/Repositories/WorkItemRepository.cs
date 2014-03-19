@@ -88,6 +88,16 @@ namespace Etsi.Ultimate.Repositories
             return AllIncluding(t => t.Release, t => t.Remarks, t => t.ChildWis, t=> t.ParentWi, t=> t.WorkItems_ResponsibleGroups).Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)).ToList();
         }
 
+        /// <summary>
+        /// Get count of WorkItems
+        /// </summary>
+        /// <param name="releaseIds">List of Release Ids</param>
+        /// <returns>Work Item Count</returns>
+        public int GetWorkItemsCountByRelease(List<int> releaseIds)
+        {
+            return UoW.Context.WorkItems.Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)).Count();
+        }
+
         #endregion
 
         #region IDisposable Members
@@ -107,5 +117,12 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="releaseIds">Release Ids</param>
         /// <returns>List of workitems</returns>
         List<WorkItem> GetWorkItemsByRelease(List<int> releaseIds);
+
+        /// <summary>
+        /// Get count of WorkItems
+        /// </summary>
+        /// <param name="releaseIds">List of Release Ids</param>
+        /// <returns>Work Item Count</returns>
+        int GetWorkItemsCountByRelease(List<int> releaseIds);
     }
 }

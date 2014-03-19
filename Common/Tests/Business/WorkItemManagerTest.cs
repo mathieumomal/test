@@ -95,6 +95,32 @@ namespace Etsi.Ultimate.Tests.Business
             mockDataContext.VerifyAllExpectations();
         }
 
+        [Test, TestCaseSource("WorkItemData")]
+        public void GetWorkItemsCountByRelease(WorkItemFakeDBSet workItemData)
+        {
+            List<int> releaseIds = new List<int>();
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(3);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var wiManager = new WorkItemManager(uow);
+
+            //No Release Ids
+            Assert.AreEqual(0, wiManager.GetWorkItemsCountByRelease(releaseIds));
+
+            //One Release Id
+            releaseIds.Add(527);
+            Assert.AreEqual(18, wiManager.GetWorkItemsCountByRelease(releaseIds));
+
+            //Two Release Ids
+            releaseIds.Add(526);
+            Assert.AreEqual(20, wiManager.GetWorkItemsCountByRelease(releaseIds));
+
+            mockDataContext.VerifyAllExpectations();
+        }
+
         /// <summary>
         /// Get the WorkItem Data from csv
         /// </summary>

@@ -38,5 +38,12 @@ namespace Etsi.Ultimate.Services
         /// <param name="workItemId">Work Item Id</param>
         /// <returns>Work Item along with right container</returns>
         KeyValuePair<WorkItem, UserRightsContainer> GetWorkItemById(int personId, int workItemId);
+
+        /// <summary>
+        /// Get count of WorkItems
+        /// </summary>
+        /// <param name="releaseIds">List of Release Ids</param>
+        /// <returns>Work Item Count</returns>
+        int GetWorkItemsCountByRelease(List<int> releaseIds);
     }
 }

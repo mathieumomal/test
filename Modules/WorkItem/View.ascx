@@ -235,6 +235,21 @@
                 </div>
             </ContentTemplate>
         </telerik:RadWindow>
+
+        <telerik:RadWindow ID="RadWindow_workItemCount" runat="server" Modal="true" Title="Warning.." Width="400" Height="180" VisibleStatusbar="false" Behaviors="Close">
+            <ContentTemplate>
+                <div class="contentModal" id="wiCount">
+                    <div class="wiHeader">
+                        Query might take a long time to perform..<br />
+                        Do you want to refine the search?
+                    </div>
+                    <div class="wiFooter">
+                        <telerik:RadButton ID="rbworkItemCountOk" runat="server" Text="Yes" OnClick="rbWorkItemCountOk_Click"></telerik:RadButton>
+                        <telerik:RadButton ID="rbworkItemCountCancel" runat="server" Text="No" OnClientClicked="cancel" AutoPostBack="false"></telerik:RadButton>
+                    </div>
+                </div>
+            </ContentTemplate>
+        </telerik:RadWindow>
     </Windows>
 </telerik:RadWindowManager>
 

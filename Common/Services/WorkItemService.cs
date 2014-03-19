@@ -87,6 +87,20 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Get count of WorkItems
+        /// </summary>
+        /// <param name="releaseIds">List of Release Ids</param>
+        /// <returns>Work Item Count</returns>
+        public int GetWorkItemsCountByRelease(List<int> releaseIds)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var workItemManager = new WorkItemManager(uoW);
+                return workItemManager.GetWorkItemsCountByRelease(releaseIds);
+            }
+        }
+
         #endregion
     }
 }

@@ -29,7 +29,7 @@ namespace Etsi.Ultimate.Module.WorkItem {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Telerik.Web.UI.RadPanelBar rpbSearch;
-               
+        
         /// <summary>
         /// rddGranularity control.
         /// </summary>
@@ -272,5 +272,32 @@ namespace Etsi.Ultimate.Module.WorkItem {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Telerik.Web.UI.RadButton state_confirmation;
+        
+        /// <summary>
+        /// RadWindow_workItemCount control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadWindow RadWindow_workItemCount;
+        
+        /// <summary>
+        /// rbworkItemCountOk control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadButton rbworkItemCountOk;
+        
+        /// <summary>
+        /// rbworkItemCountCancel control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadButton rbworkItemCountCancel;
     }
 }

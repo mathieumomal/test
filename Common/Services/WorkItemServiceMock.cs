@@ -39,6 +39,11 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
+        public int GetWorkItemsCountByRelease(List<int> releaseIds)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

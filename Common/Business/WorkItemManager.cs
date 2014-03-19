@@ -44,6 +44,18 @@ namespace Etsi.Ultimate.Business
             return new KeyValuePair<WorkItem, UserRightsContainer>(workItem, GetRights(personId));
         }
 
+        /// <summary>
+        /// Get count of WorkItems
+        /// </summary>
+        /// <param name="releaseIds">List of Release Ids</param>
+        /// <returns>Work Item Count</returns>
+        public int GetWorkItemsCountByRelease(List<int> releaseIds)
+        {
+            IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
+            repo.UoW = _uoW;
+            return repo.GetWorkItemsCountByRelease(releaseIds);
+        }
+
         private UserRightsContainer GetRights(int personId)
         {
             //Computes the rights of the user. These are independant from the workitems.
