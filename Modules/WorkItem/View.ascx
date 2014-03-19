@@ -23,17 +23,17 @@
                                 <tr>
                                     <td>Release</td>
                                     <td>
-                                        <ult:ReleaseSearchControl id="releaseSearchControl" runat="server"/>
+                                        <ult:ReleaseSearchControl id="releaseSearchControl" runat="server" Width="200" DropDownWidth="200"/>
                                     </td>
                                     <td>Granularity (Level)</td>
                                     <td>
-                                        <telerik:RadDropDownList ID="rddGranularity" runat="server" Width="200" DropDownWidth="200px">
+                                        <telerik:RadDropDownList ID="rddGranularity" runat="server" Width="200" DropDownWidth="200px" AutoPostBack="false">
                                             <Items>
-                                                <telerik:DropDownListItem Text="Feature (1st level)" />
-                                                <telerik:DropDownListItem Text="Building Block (Up to 2nd level)" />
-                                                <telerik:DropDownListItem Text="Working Task (Up to 3rd Level)" />
-                                                <telerik:DropDownListItem Text="Up to 4th level" />
-                                                <telerik:DropDownListItem Text="Up to 5th level" />
+                                                <telerik:DropDownListItem Text="Feature (1st level)" Value="0"/>
+                                                <telerik:DropDownListItem Text="Building Block (Up to 2nd level)" Value="1"/>
+                                                <telerik:DropDownListItem Text="Working Task (Up to 3rd Level)" Value="2"/>
+                                                <telerik:DropDownListItem Text="Up to 4th level" Value="3"/>
+                                                <telerik:DropDownListItem Text="Up to 5th level" Value="4"/>
                                             </Items>
                                         </telerik:RadDropDownList>
                                     </td>
@@ -68,7 +68,7 @@
         <td>
             <asp:UpdatePanel ID="upWorkItemsTree" runat="server">
                 <ContentTemplate>
-                    <telerik:RadTreeList ID="rtlWrokItems" runat="server" OnNeedDataSource="rtlWrokItems_NeedDataSource"
+                    <telerik:RadTreeList ID="rtlWorkItems" runat="server" OnNeedDataSource="rtlWorkItems_NeedDataSource"
                         ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="true">
                         <columns>
                         <telerik:TreeListBoundColumn DataField="Name" UniqueName="Name" HeaderText="Name">

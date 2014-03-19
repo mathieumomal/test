@@ -30,7 +30,7 @@
     </script>
 </telerik:RadScriptBlock>
 
-<telerik:RadComboBox ID="rcbReleases" runat="server" Width="200" DropDownWidth="200" CheckBoxes="true">
+<telerik:RadComboBox ID="rcbReleases" runat="server" CheckBoxes="true">
     <ItemTemplate>
         <telerik:RadTreeView ID="rtvReleases" runat="server" CheckBoxes="true" ShowLineImages="false">
             <Nodes>

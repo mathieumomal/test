@@ -103,13 +103,13 @@ namespace Etsi.Ultimate.Module.WorkItem {
         protected global::System.Web.UI.UpdatePanel upWorkItemsTree;
         
         /// <summary>
-        /// rtlWrokItems control.
+        /// rtlWorkItems control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadTreeList rtlWrokItems;
+        protected global::Telerik.Web.UI.RadTreeList rtlWorkItems;
         
         /// <summary>
         /// wiRadAjaxManager control.
