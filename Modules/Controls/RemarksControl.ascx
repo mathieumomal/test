@@ -37,7 +37,7 @@
                             <telerik:GridTemplateColumn DataField="CreationDate" HeaderText="Creation date" UniqueName="CreationDate">
                                 <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="150px"/> 
                                 <ItemTemplate>
-                                    <span><%# DataBinder.Eval(Container.DataItem,"CreationDate", "{0:yyyy-MM-dd hh:mm UTC}") %></span>  
+                                    <span><%# DataBinder.Eval(Container.DataItem,"CreationDate", "{0:yyyy-MM-dd HH:mm UTC}") %></span>  
                                 </ItemTemplate>                 
                             </telerik:GridTemplateColumn>
                             <telerik:GridTemplateColumn DataField="PersonName" HeaderText="Author" UniqueName="CreatedBy">
