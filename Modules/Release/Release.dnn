@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="Release" type="Module" version="00.02.01">
+    <package name="Release" type="Module" version="00.02.02">
       <friendlyName>Release</friendlyName>
       <description>Release module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
@@ -17,21 +17,6 @@
       </dependencies>
       
       <components>
-        <component type="Script">
-          <scripts>
-            <basePath>DesktopModules\Release</basePath>
-            <script type="Install">
-              <path>Providers\DataProviders\SqlDataProvider</path>
-              <name>00.00.01.SqlDataProvider</name>
-              <version>00.00.01</version>
-            </script>            
-            <script type="UnInstall">
-              <path>Providers\DataProviders\SqlDataProvider</path>
-              <name>Uninstall.SqlDataProvider</name>
-              <version>00.00.01</version>
-            </script>
-          </scripts>
-        </component>
 
         <component type="ResourceFile">
           <resourceFiles>

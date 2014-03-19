@@ -35,7 +35,9 @@
             <telerik:GridBoundColumn HeaderStyle-Width="8%" DataField="Code" HeaderText="Release Code" UniqueName="Code" ></telerik:GridBoundColumn>
             <telerik:GridTemplateColumn HeaderStyle-Width="10%" DataField="Name" HeaderText="Name" UniqueName="Name" HeaderTooltip="Release name" >
                 <ItemTemplate>
-                    <div class="text-left"><a class="linkRelease" href="<%# DataBinder.Eval(Container.DataItem,"Description") %>"><%# DataBinder.Eval(Container.DataItem,"Name") %></a></div>  
+                    <div class="text-left"><asp:HyperLink runat="server" ID="lnkReleaseDescription" CssClass="linkRelease" Visible="false" />
+                        <asp:Label runat="server" ID="lblReleaseName" />
+                    </div>  
                 </ItemTemplate> 
             </telerik:GridTemplateColumn>
             <telerik:GridTemplateColumn HeaderStyle-Width="6%" DataField="Status" HeaderText="Status" UniqueName="Status">

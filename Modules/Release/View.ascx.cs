@@ -202,6 +202,15 @@ namespace Etsi.Ultimate.Module.Release
                 //Get release row
                 DomainClasses.Release currentRelease = (DomainClasses.Release) e.Item.DataItem;
                 
+                // Manage release Name and link to description
+                Label lblReleaseName = e.Item.FindControl("lblReleaseName") as Label;
+                HyperLink lnkReleaseDescription = e.Item.FindControl("lnkReleaseDescription") as HyperLink;
+                lblReleaseName.Visible = string.IsNullOrEmpty(currentRelease.Description);
+                lnkReleaseDescription.Visible = ! lblReleaseName.Visible;
+                lblReleaseName.Text = currentRelease.Name;
+                lnkReleaseDescription.Text = currentRelease.Name;
+                lnkReleaseDescription.NavigateUrl = currentRelease.Description;
+
                 //Analyse column : Closure date
                 if (currentRelease.ClosureDate != null && currentRelease.ClosureMtgRef != null)
                 {
