@@ -360,6 +360,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             releaseSearchControl.Reset();
             rddGranularity.SelectedValue = "0";
             chkHideCompletedItems.Checked = false;
+            racAcronym.Entries.Clear();
             txtName.Text = String.Empty;
         }
 

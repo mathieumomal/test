@@ -18,6 +18,31 @@
 </style>
 
 <script type="text/javascript">
+
+    function ResetCheckBoxes(sender, args) {
+        if (sender.get_checked())
+        {
+            var comboBox = $find("<%= rcbReleases.ClientID %>");
+            var rtvReleases = comboBox.get_items().getItem(0).findControl("rtvReleases");
+            for (var i = 0; i < rtvReleases.get_nodes().get_count() ; i++) {
+                var node = rtvReleases.get_nodes().getNode(i);
+                var rbCustomReleases = node.findControl("rbCustomReleases");
+                if (rbCustomReleases.get_checked())
+                    rbCustomReleases.set_checked(false);
+            }
+        }
+    }
+
+    function ResetRadioButtons(sender, args) {
+        if (sender.get_checked())
+        {
+            var comboBox = $find("<%= rcbReleases.ClientID %>");
+            var rbCustomSelection = comboBox.get_items().getItem(0).findControl("rbCustomSelection");
+            if (!rbCustomSelection.get_checked())
+                rbCustomSelection.set_checked(true);
+        }
+    }
+
     function OnClientDropDownClosed(sender, eventArgs) {
         var comboBox = $find("<%= rcbReleases.ClientID %>");
         var allReleases = comboBox.get_items().getItem(0).findControl("rbAllReleases");
@@ -53,12 +78,12 @@
         <table>
             <tr>
                 <td>
-                    <telerik:RadButton ID="rbAllReleases" ToggleType="Radio" runat="server" Text="All Releases" GroupName="ReleaseGroup" ButtonType="ToggleButton" AutoPostBack="false" />
+                    <telerik:RadButton ID="rbAllReleases" ToggleType="Radio" runat="server" Text="All Releases" GroupName="ReleaseGroup" ButtonType="ToggleButton" AutoPostBack="false" OnClientClicked="ResetCheckBoxes"/>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <telerik:RadButton ID="rbOpenReleases" ToggleType="Radio" runat="server" Text="Open Releases" GroupName="ReleaseGroup" ButtonType="ToggleButton" AutoPostBack="false" />
+                    <telerik:RadButton ID="rbOpenReleases" ToggleType="Radio" runat="server" Text="Open Releases" GroupName="ReleaseGroup" ButtonType="ToggleButton" AutoPostBack="false" OnClientClicked="ResetCheckBoxes"/>
                 </td>
             </tr>
             <tr>
@@ -70,7 +95,7 @@
                 <td>
                     <telerik:RadTreeView ID="rtvReleases" runat="server" CheckBoxes="true" ShowLineImages="false">
                         <NodeTemplate>
-                            <telerik:RadButton ID="rbCustomReleases" ToggleType="CheckBox" runat="server" Text='<%# DataBinder.Eval(Container, "Text") %>' ButtonType="ToggleButton" AutoPostBack="false" />
+                            <telerik:RadButton ID="rbCustomReleases" ToggleType="CheckBox" runat="server" Text='<%# DataBinder.Eval(Container, "Text") %>' ButtonType="ToggleButton" AutoPostBack="false" OnClientClicked="ResetRadioButtons"/>
                         </NodeTemplate>
                     </telerik:RadTreeView>
                 </td>

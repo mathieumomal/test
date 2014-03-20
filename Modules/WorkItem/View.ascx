@@ -36,11 +36,11 @@
                                     <td>
                                         <telerik:RadDropDownList ID="rddGranularity" runat="server" Width="200" DropDownWidth="200px" AutoPostBack="false">
                                             <Items>
-                                                <telerik:DropDownListItem Text="Feature (1st level)" Value="0"/>
-                                                <telerik:DropDownListItem Text="Building Block (Up to 2nd level)" Value="1"/>
-                                                <telerik:DropDownListItem Text="Working Task (Up to 3rd Level)" Value="2"/>
-                                                <telerik:DropDownListItem Text="Up to 4th level" Value="3"/>
-                                                <telerik:DropDownListItem Text="Up to 5th level" Value="4"/>
+                                                <telerik:DropDownListItem Text="Feature (1st level)" Value="1"/>
+                                                <telerik:DropDownListItem Text="Building Block (Up to 2nd level)" Value="2"/>
+                                                <telerik:DropDownListItem Text="Working Task (Up to 3rd Level)" Value="3"/>
+                                                <telerik:DropDownListItem Text="Up to 4th level" Value="4"/>
+                                                <telerik:DropDownListItem Text="Up to 5th level" Value="5"/>
                                             </Items>
                                         </telerik:RadDropDownList>
                                     </td>
