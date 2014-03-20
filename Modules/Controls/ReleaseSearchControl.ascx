@@ -17,7 +17,38 @@
     }
 </style>
 
-<telerik:RadComboBox ID="rcbReleases" runat="server" CheckBoxes="true" AutoPostBack="false">
+<script type="text/javascript">
+    function OnClientDropDownClosed(sender, eventArgs) {
+        var comboBox = $find("<%= rcbReleases.ClientID %>");
+        var allReleases = comboBox.get_items().getItem(0).findControl("rbAllReleases");
+        if (allReleases.get_checked()) {
+            comboBox.set_text(allReleases.get_text());
+        }
+        else {
+            var openReleases = comboBox.get_items().getItem(0).findControl("rbOpenReleases");
+            if (openReleases.get_checked()) {
+                comboBox.set_text(openReleases.get_text());
+            }
+            else {
+                var rtvReleases = comboBox.get_items().getItem(0).findControl("rtvReleases");
+                var customRelease = "";
+                for (var i = 0; i < rtvReleases.get_nodes().get_count(); i++) {
+                    var node = rtvReleases.get_nodes().getNode(i);
+                    var rbCustomReleases = node.findControl("rbCustomReleases");
+                    if (rbCustomReleases.get_checked())
+                        customRelease = customRelease + node.get_text() + ", ";
+                }
+                if (customRelease.length > 1) {
+                    comboBox.set_text(customRelease.substring(0, customRelease.length - 2));
+                }
+                else
+                    comboBox.set_text("Custom Selection");
+            }
+        }
+    }
+</script>
+
+<telerik:RadComboBox ID="rcbReleases" runat="server" CheckBoxes="true" AutoPostBack="false" OnClientDropDownClosed="OnClientDropDownClosed">
     <Itemtemplate>
         <table>
             <tr>

@@ -73,7 +73,7 @@ namespace Etsi.Ultimate.Module.WorkItem {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox chkHideCompletedItems;
+        protected global::Telerik.Web.UI.RadButton chkHideCompletedItems;
         
         /// <summary>
         /// txtName control.
@@ -82,7 +82,7 @@ namespace Etsi.Ultimate.Module.WorkItem {
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtName;
+        protected global::Telerik.Web.UI.RadTextBox txtName;
         
         /// <summary>
         /// btnDefault control.

@@ -54,12 +54,14 @@
                                     </td>
                                     <td>Hide Completed Items</td>
                                     <td>
-                                        <asp:CheckBox ID="chkHideCompletedItems" runat="server"></asp:CheckBox>
+                                        <telerik:RadButton ID="chkHideCompletedItems" ToggleType="CheckBox" runat="server" ButtonType="ToggleButton" />
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Name</td>
-                                    <td><asp:TextBox ID="txtName" runat="server"  Width="200"></asp:TextBox></td>
+                                    <td>
+                                        <telerik:RadTextBox ID="txtName" runat="server" Width="200"></telerik:RadTextBox>
+                                    </td>
                                     <td/>
                                     <td/>
                                 </tr>
