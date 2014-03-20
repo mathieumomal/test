@@ -9,7 +9,7 @@
 
     .RadTreeView .rtTop, .RadTreeView .rtMid, .RadTreeView .rtBot
     {
-        padding: 1px 0 1px 0;
+        padding: 1px 0 1px 10px;
     }
 
     input.rcbCheckBox {
@@ -17,41 +17,35 @@
     }
 </style>
 
-<telerik:RadScriptBlock runat="server">
-    <script type="text/javascript">
-        //$(function () {
-        //    $('[name$="$ReleaseGroup"]').attr("name", $('[name$="$ReleaseGroup"]').attr("name"));
-
-        //    $('[name$="$ReleaseGroup"]').click(function () {
-        //        //set name for all to name of clicked 
-        //        $('[name$="$ReleaseGroup"]').attr("name", $(this).attr("name"));
-        //    });
-        //});
-    </script>
-</telerik:RadScriptBlock>
-
-<telerik:RadComboBox ID="rcbReleases" runat="server" CheckBoxes="true">
-    <ItemTemplate>
-        <telerik:RadTreeView ID="rtvReleases" runat="server" CheckBoxes="true" ShowLineImages="false">
-            <Nodes>
-                <telerik:RadTreeNode Checkable="false">
-                    <NodeTemplate>
-                        <asp:RadioButton ID="rbAllReleases" runat="server" GroupName="ReleaseGroup" Text="All Releases" />
-                    </NodeTemplate>
-                </telerik:RadTreeNode>
-                <telerik:RadTreeNode Checkable="false">
-                    <NodeTemplate>
-                        <asp:RadioButton ID="rbOpenReleases" runat="server" GroupName="ReleaseGroup" Text="Open Releases" />
-                    </NodeTemplate>
-                </telerik:RadTreeNode>
-                <telerik:RadTreeNode Checkable="false" Expanded="true" ExpandMode="ServerSide">
-                    <NodeTemplate>
-                        <asp:RadioButton ID="rbCustomSelection" runat="server" GroupName="ReleaseGroup" Text="Custom Selection" />
-                    </NodeTemplate>
-                </telerik:RadTreeNode>
-            </Nodes>
-        </telerik:RadTreeView>
-    </ItemTemplate>
+<telerik:RadComboBox ID="rcbReleases" runat="server" CheckBoxes="true" AutoPostBack="false">
+    <Itemtemplate>
+        <table>
+            <tr>
+                <td>
+                    <telerik:RadButton ID="rbAllReleases" ToggleType="Radio" runat="server" Text="All Releases" GroupName="ReleaseGroup" ButtonType="ToggleButton" AutoPostBack="false" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <telerik:RadButton ID="rbOpenReleases" ToggleType="Radio" runat="server" Text="Open Releases" GroupName="ReleaseGroup" ButtonType="ToggleButton" AutoPostBack="false" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <telerik:RadButton ID="rbCustomSelection" ToggleType="Radio" runat="server" Text="Custom Selection" GroupName="ReleaseGroup" ButtonType="ToggleButton" AutoPostBack="false" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <telerik:RadTreeView ID="rtvReleases" runat="server" CheckBoxes="true" ShowLineImages="false">
+                        <NodeTemplate>
+                            <telerik:RadButton ID="rbCustomReleases" ToggleType="CheckBox" runat="server" Text='<%# DataBinder.Eval(Container, "Text") %>' ButtonType="ToggleButton" AutoPostBack="false" />
+                        </NodeTemplate>
+                    </telerik:RadTreeView>
+                </td>
+            </tr>
+        </table>
+    </Itemtemplate>
     <Items>
         <telerik:RadComboBoxItem />
     </Items>
