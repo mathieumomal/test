@@ -40,6 +40,33 @@ namespace Etsi.Ultimate.Controls
             }
         }
 
+        public string SearchString
+        {
+            get
+            {
+                //Get All Releases
+                RadButton rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
+                if (rbAllReleases.Checked)
+                    return rbAllReleases.Text;
+
+                //Get Open Releases
+                RadButton rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
+                if (rbOpenReleases.Checked)
+                    return rbOpenReleases.Text;
+
+                //Get Custom Releases
+                RadTreeView rtvReleases = (RadTreeView)rcbReleases.Items[0].FindControl("rtvReleases");
+                List<string> customReleaseText = new List<string>();
+                foreach (RadTreeNode node in rtvReleases.Nodes)
+                {
+                    RadButton rbCustomReleases = (RadButton)node.FindControl("rbCustomReleases");
+                    if (rbCustomReleases.Checked)
+                        customReleaseText.Add(node.Text);
+                }
+                return String.Join(", ", customReleaseText);
+            }
+        }
+
         #endregion
 
         #region Events

@@ -5,6 +5,12 @@
 <%@ Register TagPrefix="ult" TagName="FullViewControl" Src="../../controls/Ultimate/FullView.ascx" %>
 <%@ Register TagPrefix="ult" TagName="ReleaseSearchControl" Src="../../controls/Ultimate/ReleaseSearchControl.ascx" %>
 
+<style type="text/css">
+div.RadPanelBar .rpRootGroup .rpText {
+  text-align: center;
+}
+</style>
+
 <table style="width:100%;">
     <tr>
         <td>
@@ -17,7 +23,7 @@
         <td>
             <telerik:RadPanelBar runat="server" ID="rpbSearch" Width="100%">
                 <items>
-                    <telerik:RadPanelItem Expanded="True" Text="Search">
+                    <telerik:RadPanelItem runat="server" ID="searchPanel" Expanded="True" Text=" ">
                         <ContentTemplate>
                             <table style="width:100%; padding:20px 50px 20px 50px">
                                 <tr>

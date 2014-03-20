@@ -274,7 +274,8 @@ namespace Etsi.Ultimate.Module.WorkItem
         {
             List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
-            if (wiService.GetWorkItemsCountByRelease(releaseIDs) > 10)
+            
+            if (wiService.GetWorkItemsCountByRelease(releaseIDs) > 500)
             {
                 string script = "function f(){$find(\"" + RadWindow_workItemCount.ClientID + "\").show(); Sys.Application.remove_load(f);}Sys.Application.add_load(f);";
                 ScriptManager.RegisterStartupScript(Page, Page.GetType(), "customConfirmOpener", script, true);
@@ -313,8 +314,23 @@ namespace Etsi.Ultimate.Module.WorkItem
 
             granularity = Convert.ToInt32(rddGranularity.SelectedValue);
             percentComplete = chkHideCompletedItems.Checked;
-            wiAcronym = racAcronym.Text;
+            wiAcronym = racAcronym.Text.Trim();
+            if (wiAcronym.Length > 1)
+                wiAcronym = wiAcronym.Remove(wiAcronym.Length - 1);
             wiName = txtName.Text;
+
+            StringBuilder searchString = new StringBuilder();
+            searchString.Append(releaseSearchControl.SearchString);
+            searchString.Append(", " + rddGranularity.SelectedText);
+            if (!String.IsNullOrEmpty(wiAcronym))
+                searchString.Append(", " + wiAcronym);
+            if (!String.IsNullOrEmpty(wiName))
+                searchString.Append(", " + wiName);
+            if (percentComplete)
+                searchString.Append(", hidden completed items");
+
+            searchPanel.Text = String.Format("Search form ({0})", searchString.ToString());
+            searchPanel.Expanded = false;
 
             rtlWorkItems.Rebind();
         }
