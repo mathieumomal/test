@@ -13,6 +13,15 @@ namespace Etsi.Ultimate.Module.WorkItem {
     public partial class View {
         
         /// <summary>
+        /// upWorkItemsTree control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel upWorkItemsTree;
+        
+        /// <summary>
         /// workItem_import control.
         /// </summary>
         /// <remarks>
@@ -92,15 +101,6 @@ namespace Etsi.Ultimate.Module.WorkItem {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSearch;
-        
-        /// <summary>
-        /// upWorkItemsTree control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UpdatePanel upWorkItemsTree;
         
         /// <summary>
         /// rtlWorkItems control.

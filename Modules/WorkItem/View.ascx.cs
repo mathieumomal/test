@@ -59,6 +59,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         private string tokenWorkPlanAnalysed = "";
         private int errorNumber = 0;
         private const string CONST_WORKITEM_DATASOURCE = "WorkItemDataSource";
+        private const string CONST_FILTERED_DATASOURCE = "WorkItemFilteredDataSource";
         private const string CONST_ACRONYMS_DATASOURCE = "AcronymDataSource";
         private int granularity;
         private bool percentComplete;
@@ -79,6 +80,21 @@ namespace Etsi.Ultimate.Module.WorkItem
             set
             {
                 ViewState[CONST_WORKITEM_DATASOURCE] = value;
+            }
+        }
+
+        private List<DomainClasses.WorkItem> FilteredDataSource
+        {
+            get
+            {
+                if (ViewState[CONST_FILTERED_DATASOURCE] == null)
+                    ViewState[CONST_FILTERED_DATASOURCE] = new List<DomainClasses.WorkItem>();
+
+                return (List<DomainClasses.WorkItem>)ViewState[CONST_FILTERED_DATASOURCE];
+            }
+            set
+            {
+                ViewState[CONST_FILTERED_DATASOURCE] = value;
             }
         }
 
@@ -116,7 +132,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                     PathExportWorkPlan = Settings[Enum_Settings.WorkItem_ExportPath.ToString()].ToString();
                 if (Settings.Contains(Enum_Settings.WorkItem_UploadPath.ToString()))
                     PathUploadWorkPlan = Settings[Enum_Settings.WorkItem_UploadPath.ToString()].ToString();
-                
+
                 if (!IsPostBack)
                 {
                     var wiService = ServicesFactory.Resolve<IWorkItemService>();
@@ -125,7 +141,6 @@ namespace Etsi.Ultimate.Module.WorkItem
 
                 racAcronym.DataSource = Acronyms;
                 racAcronym.DataBind();
-
             }
             catch (Exception exc) //Module failed to load
             {
@@ -274,7 +289,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         {
             List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
-            
+
             if (wiService.GetWorkItemsCountByRelease(releaseIDs) > 500)
             {
                 string script = "function f(){$find(\"" + RadWindow_workItemCount.ClientID + "\").show(); Sys.Application.remove_load(f);}Sys.Application.add_load(f);";
@@ -332,7 +347,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             searchPanel.Text = String.Format("Search form ({0})", searchString.ToString());
             searchPanel.Expanded = false;
 
-            rtlWorkItems.Rebind();
+            rtlWorkItems.ExpandAllItems();
         }
 
         /// <summary>
@@ -355,9 +370,37 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// <param name="e">Event Arguments</param>
         protected void rtlWorkItems_NeedDataSource(object sender, TreeListNeedDataSourceEventArgs e)
         {
-            rtlWorkItems.DataSource = DataSource.Where(x => x.Name.StartsWith(wiName.Trim()) && x.Acronym.StartsWith(wiAcronym.Trim())
-                                                                                             && (x.WiLevel != null && x.WiLevel <= granularity)
-                                                                                             && (percentComplete ? (((x.Completion == null) ? 0 : x.Completion) >= 100) : true)).ToList();
+            if (e.RebindReason != TreeListRebindReason.PostBackEvent && DataSource != null)
+            {
+                var list = DataSource;
+                var modlist = DataSource.Where(x => x.Name.StartsWith(wiName.Trim()) && x.Acronym.StartsWith(wiAcronym.Trim())
+                                                    && (x.WiLevel != null && x.WiLevel <= granularity)
+                                                    && (percentComplete ? (((x.Completion == null) ? 0 : x.Completion) >= 100) : true)).ToList();
+                foreach (var item in modlist)
+                {
+                    var matched = DataSource.Find(x => x.Pk_WorkItemUid == item.Pk_WorkItemUid);
+                    MarkParent(list, matched);
+                }
+
+                rtlWorkItems.DataSource = FilteredDataSource = list.Where(x => x.Include == true).ToList();
+                list.ForEach(x => x.Include = false);
+            }
+            else
+            {
+                if (FilteredDataSource != null)
+                    rtlWorkItems.DataSource = FilteredDataSource;
+            }
+        }
+
+
+        private void MarkParent(List<DomainClasses.WorkItem> list, DomainClasses.WorkItem parent)
+        {
+            if (parent != null)
+            {
+                parent.Include = true;
+                var parentObj = list.Find(x => x.Pk_WorkItemUid == parent.Fk_ParentWiId);
+                MarkParent(list, parentObj);
+            }
         }
 
         public ModuleActionCollection ModuleActions
@@ -373,7 +416,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                     };
                 return actions;
             }
-    }
+        }
 
 
 

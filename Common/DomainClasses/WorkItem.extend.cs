@@ -9,5 +9,6 @@ namespace Etsi.Ultimate.DomainClasses
     public partial class WorkItem
     {
         public bool IsNew { get; set; }
+        public bool Include { get; set; }
     }
 }

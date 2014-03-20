@@ -6,23 +6,24 @@
 <%@ Register TagPrefix="ult" TagName="ReleaseSearchControl" Src="../../controls/Ultimate/ReleaseSearchControl.ascx" %>
 
 <style type="text/css">
-div.RadPanelBar .rpRootGroup .rpText {
-  text-align: center;
-}
+    div.RadPanelBar .rpRootGroup .rpText {
+        text-align: center;
+    }
 </style>
-
-<table style="width:100%;">
-    <tr>
-        <td>
-            <ult:FullViewControl id="ultFullView" runat="server"/>
-            <telerik:RadButton ID="workItem_import" runat="server" Enabled="true" AutoPostBack="false" OnClientClicked="open_RadWindow_workItemImport" Text="Import work plan"></telerik:RadButton>
-            <ult:ShareUrlControl runat="server" ID="ultShareUrl" />
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <telerik:RadPanelBar runat="server" ID="rpbSearch" Width="100%">
-                <items>
+<asp:UpdatePanel ID="upWorkItemsTree" runat="server">
+    <ContentTemplate>
+        <table style="width: 100%;">
+            <tr>
+                <td>
+                    <ult:fullviewcontrol id="ultFullView" runat="server" />
+                    <telerik:RadButton ID="workItem_import" runat="server" Enabled="true" AutoPostBack="false" OnClientClicked="open_RadWindow_workItemImport" Text="Import work plan"></telerik:RadButton>
+                    <ult:shareurlcontrol runat="server" id="ultShareUrl" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <telerik:RadPanelBar runat="server" ID="rpbSearch" Width="100%">
+                        <items>
                     <telerik:RadPanelItem runat="server" ID="searchPanel" Expanded="True" Text=" ">
                         <ContentTemplate>
                             <table style="width:100%; padding:20px 50px 20px 50px">
@@ -71,13 +72,12 @@ div.RadPanelBar .rpRootGroup .rpText {
                         </ContentTemplate>
                     </telerik:RadPanelItem>
                 </items>
-            </telerik:RadPanelBar>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <asp:UpdatePanel ID="upWorkItemsTree" runat="server">
-                <ContentTemplate>
+                    </telerik:RadPanelBar>
+                </td>
+            </tr>
+            <tr>
+                <td>
+
                     <telerik:RadTreeList ID="rtlWorkItems" runat="server" OnNeedDataSource="rtlWorkItems_NeedDataSource"
                         ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="true">
                         <columns>
@@ -125,16 +125,14 @@ div.RadPanelBar .rpRootGroup .rpText {
                         </telerik:TreeListTemplateColumn>
                     </columns>
                     </telerik:RadTreeList>
-                </ContentTemplate>
-            </asp:UpdatePanel>
-
-        </td>
-    </tr>
-</table>
-
+                </td>
+            </tr>
+        </table>
+    </ContentTemplate>
+</asp:UpdatePanel>
 <telerik:RadAjaxManager ID="wiRadAjaxManager" runat="server" EnablePageHeadUpdate="false">
-    <ClientEvents OnRequestStart="Start" OnResponseEnd="End" />
-    <AjaxSettings>
+    <clientevents onrequeststart="Start" onresponseend="End" />
+    <ajaxsettings>
         <telerik:AjaxSetting AjaxControlID="wiRadAjaxManager">
             <UpdatedControls>
                 <telerik:AjaxUpdatedControl ControlID="lblExportPath" />
@@ -149,13 +147,13 @@ div.RadPanelBar .rpRootGroup .rpText {
                 <telerik:AjaxUpdatedControl ControlID="lblSaveStatus" />
             </UpdatedControls>
         </telerik:AjaxSetting>
-    </AjaxSettings>
+    </ajaxsettings>
 </telerik:RadAjaxManager>
 
 
 
-<telerik:RadWindowManager ID="RadWindowManager1" runat="server" >
-    <Windows>
+<telerik:RadWindowManager ID="RadWindowManager1" runat="server">
+    <windows>
         <telerik:RadWindow ID="RadWindow_workItemImport" runat="server" Modal="true" Title="Work Plan Import" Height="180" Width="500" VisibleStatusbar="false" iconUrl="false" Behaviors="Close">
             <ContentTemplate>
                 <div class="contentModal" id="import">
@@ -260,7 +258,7 @@ div.RadPanelBar .rpRootGroup .rpText {
                 </div>
             </ContentTemplate>
         </telerik:RadWindow>
-    </Windows>
+    </windows>
 </telerik:RadWindowManager>
 
 <script type="text/javascript">
@@ -341,6 +339,9 @@ div.RadPanelBar .rpRootGroup .rpText {
     /*-- TELERIK EVENTS --*/
 
     /*--- EVENTS ---*/
+
+
+
 </script>
 
 
