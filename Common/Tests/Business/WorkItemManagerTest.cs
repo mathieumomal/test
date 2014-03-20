@@ -121,6 +121,26 @@ namespace Etsi.Ultimate.Tests.Business
             mockDataContext.VerifyAllExpectations();
         }
 
+        [Test, TestCaseSource("WorkItemData")]
+        public void GetAllAcronyms(WorkItemFakeDBSet workItemData)
+        {
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var wiManager = new WorkItemManager(uow);
+
+            Assert.AreEqual(7, wiManager.GetAllAcronyms().Count);
+            Assert.Contains("UPCON", wiManager.GetAllAcronyms());
+            Assert.Contains("RSE", wiManager.GetAllAcronyms());
+            Assert.Contains("SEES", wiManager.GetAllAcronyms());
+            Assert.Contains("MCPTT", wiManager.GetAllAcronyms());
+            Assert.Contains("eWebRTCi", wiManager.GetAllAcronyms());
+            Assert.Contains("IOPS", wiManager.GetAllAcronyms());
+            Assert.Contains("UPCON-DOT", wiManager.GetAllAcronyms());
+        }
+
         /// <summary>
         /// Get the WorkItem Data from csv
         /// </summary>

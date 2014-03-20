@@ -115,6 +115,26 @@ namespace Etsi.Ultimate.Tests.Repositories
             mockDataContext.VerifyAllExpectations();
         }
 
+        [Test, TestCaseSource("WorkItemData")]
+        public void GetAllAcronyms(WorkItemFakeDBSet workItemData)
+        {
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var wiRepository = new WorkItemRepository() { UoW = uow };
+
+            Assert.AreEqual(7, wiRepository.GetAllAcronyms().Count);
+            Assert.Contains("UPCON", wiRepository.GetAllAcronyms());
+            Assert.Contains("RSE", wiRepository.GetAllAcronyms());
+            Assert.Contains("SEES", wiRepository.GetAllAcronyms());
+            Assert.Contains("MCPTT", wiRepository.GetAllAcronyms());
+            Assert.Contains("eWebRTCi", wiRepository.GetAllAcronyms());
+            Assert.Contains("IOPS", wiRepository.GetAllAcronyms());
+            Assert.Contains("UPCON-DOT", wiRepository.GetAllAcronyms());
+        }
+
         /// <summary>
         /// Create Mocks to simulate DB with objects
         /// </summary>

@@ -121,6 +121,25 @@ namespace Etsi.Ultimate.Tests.Services
             mockDataContext.VerifyAllExpectations();
         }
 
+        [Test, TestCaseSource("WorkItemData")]
+        public void GetAllAcronyms(WorkItemFakeDBSet workItemData)
+        {
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var wiService = new WorkItemService();
+
+            Assert.AreEqual(7, wiService.GetAllAcronyms().Count);
+            Assert.Contains("UPCON", wiService.GetAllAcronyms());
+            Assert.Contains("RSE", wiService.GetAllAcronyms());
+            Assert.Contains("SEES", wiService.GetAllAcronyms());
+            Assert.Contains("MCPTT", wiService.GetAllAcronyms());
+            Assert.Contains("eWebRTCi", wiService.GetAllAcronyms());
+            Assert.Contains("IOPS", wiService.GetAllAcronyms());
+            Assert.Contains("UPCON-DOT", wiService.GetAllAcronyms());
+        }
+
         [Test]
         public void AnalyseWorkPlanForImport_Nominal()
         {

@@ -134,7 +134,13 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             throw new NotImplementedException();
         }
 
+        public List<string> GetAllAcronyms()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
+
 
     }
 

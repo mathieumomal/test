@@ -40,7 +40,11 @@
                                 </tr>
                                 <tr>
                                     <td>Acronym</td>
-                                    <td><asp:TextBox ID="txtAcronym" runat="server" Width="200"></asp:TextBox></td>
+                                    <td>
+                                        <telerik:RadAutoCompleteBox ID="racAcronym" runat="server" InputType="Text" AllowCustomEntry="true" Width="200" DropDownWidth="200" DropDownHeight="150" Filter="StartsWith">
+                                            <TextSettings SelectionMode="Single" />
+                                        </telerik:RadAutoCompleteBox>
+                                    </td>
                                     <td>Hide Completed Items</td>
                                     <td>
                                         <asp:CheckBox ID="chkHideCompletedItems" runat="server"></asp:CheckBox>

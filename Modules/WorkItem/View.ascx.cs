@@ -59,6 +59,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         private string tokenWorkPlanAnalysed = "";
         private int errorNumber = 0;
         private const string CONST_WORKITEM_DATASOURCE = "WorkItemDataSource";
+        private const string CONST_ACRONYMS_DATASOURCE = "AcronymDataSource";
         private int granularity;
         private bool percentComplete;
         private string wiAcronym;
@@ -81,6 +82,21 @@ namespace Etsi.Ultimate.Module.WorkItem
             }
         }
 
+        private List<string> Acronyms
+        {
+            get
+            {
+                if (ViewState[CONST_ACRONYMS_DATASOURCE] == null)
+                    ViewState[CONST_ACRONYMS_DATASOURCE] = new List<string>();
+
+                return (List<string>)ViewState[CONST_ACRONYMS_DATASOURCE];
+            }
+            set
+            {
+                ViewState[CONST_ACRONYMS_DATASOURCE] = value;
+            }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
             try
@@ -100,6 +116,16 @@ namespace Etsi.Ultimate.Module.WorkItem
                     PathExportWorkPlan = Settings[Enum_Settings.WorkItem_ExportPath.ToString()].ToString();
                 if (Settings.Contains(Enum_Settings.WorkItem_UploadPath.ToString()))
                     PathUploadWorkPlan = Settings[Enum_Settings.WorkItem_UploadPath.ToString()].ToString();
+                
+                if (!IsPostBack)
+                {
+                    var wiService = ServicesFactory.Resolve<IWorkItemService>();
+                    Acronyms = wiService.GetAllAcronyms();
+                }
+
+                racAcronym.DataSource = Acronyms;
+                racAcronym.DataBind();
+
             }
             catch (Exception exc) //Module failed to load
             {
@@ -287,7 +313,7 @@ namespace Etsi.Ultimate.Module.WorkItem
 
             granularity = Convert.ToInt32(rddGranularity.SelectedValue);
             percentComplete = chkHideCompletedItems.Checked;
-            wiAcronym = txtAcronym.Text;
+            wiAcronym = racAcronym.Text;
             wiName = txtName.Text;
 
             rtlWorkItems.Rebind();
@@ -303,7 +329,6 @@ namespace Etsi.Ultimate.Module.WorkItem
             releaseSearchControl.Reset();
             rddGranularity.SelectedValue = "0";
             chkHideCompletedItems.Checked = false;
-            txtAcronym.Text = String.Empty;
             txtName.Text = String.Empty;
         }
 

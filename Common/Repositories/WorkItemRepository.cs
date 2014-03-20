@@ -98,6 +98,15 @@ namespace Etsi.Ultimate.Repositories
             return UoW.Context.WorkItems.Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)).Count();
         }
 
+        /// <summary>
+        /// Get list of distinct Acronyms from various releases
+        /// </summary>
+        /// <returns>List of Acronyms</returns>
+        public List<string> GetAllAcronyms()
+        {
+            return UoW.Context.WorkItems.Where(x => !String.IsNullOrEmpty(x.Acronym)).Select(y => y.Acronym).Distinct().ToList();
+        }
+
         #endregion
 
         #region IDisposable Members
@@ -124,5 +133,11 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="releaseIds">List of Release Ids</param>
         /// <returns>Work Item Count</returns>
         int GetWorkItemsCountByRelease(List<int> releaseIds);
+
+        /// <summary>
+        /// Get list of distinct Acronyms from various releases
+        /// </summary>
+        /// <returns>List of Acronyms</returns>
+        List<string> GetAllAcronyms();
     }
 }

@@ -101,6 +101,20 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Get list of distinct Acronyms from various releases
+        /// </summary>
+        /// <returns>List of Acronyms</returns>
+        public List<string> GetAllAcronyms()
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var workItemManager = new WorkItemManager(uoW);
+                return workItemManager.GetAllAcronyms();
+            }
+        }
+        
         #endregion
+
     }
 }

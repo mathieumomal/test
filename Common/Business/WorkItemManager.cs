@@ -56,6 +56,17 @@ namespace Etsi.Ultimate.Business
             return repo.GetWorkItemsCountByRelease(releaseIds);
         }
 
+        /// <summary>
+        /// Get list of distinct Acronyms from various releases
+        /// </summary>
+        /// <returns>List of Acronyms</returns>
+        public List<string> GetAllAcronyms()
+        {
+            IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
+            repo.UoW = _uoW;
+            return repo.GetAllAcronyms();
+        }
+
         private UserRightsContainer GetRights(int personId)
         {
             //Computes the rights of the user. These are independant from the workitems.

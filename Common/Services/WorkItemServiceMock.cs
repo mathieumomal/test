@@ -44,6 +44,12 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
+        public List<string> GetAllAcronyms()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
+
     }
 }

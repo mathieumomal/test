@@ -45,5 +45,11 @@ namespace Etsi.Ultimate.Services
         /// <param name="releaseIds">List of Release Ids</param>
         /// <returns>Work Item Count</returns>
         int GetWorkItemsCountByRelease(List<int> releaseIds);
+
+        /// <summary>
+        /// Get list of distinct Acronyms from various releases
+        /// </summary>
+        /// <returns>List of Acronyms</returns>
+        List<string> GetAllAcronyms();
     }
 }
