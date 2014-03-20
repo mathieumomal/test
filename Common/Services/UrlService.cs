@@ -29,7 +29,9 @@ namespace Etsi.Ultimate.Services
             {
                 var urlManager = new UrlManager();
                 urlManager.UoW = uoW;
-                return urlManager.CreateShortUrl(moduleId, baseAddress, getParams);
+                String shortUrl = urlManager.CreateShortUrl(moduleId, baseAddress, getParams);
+                uoW.Save();
+                return shortUrl;
             }
         }
 

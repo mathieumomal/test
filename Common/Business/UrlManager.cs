@@ -47,21 +47,11 @@ namespace Etsi.Ultimate.Business
 
             ShortUrl shortUrlDb = new ShortUrl();
             shortUrlDb.Url = GetPageIdAndFullAddressForModule(moduleId, "", urlParams).Value;
-            var exceptionthrown = true;
             do{
                 shortUrlDb.Token = Guid.NewGuid().ToString().Substring(0, 8);
-                try
-                {
-                    repo.FindByToken(shortUrlDb.Token);
-                }
-                catch (Exception)
-                {
-                    exceptionthrown = false;
-                }
-            } while (exceptionthrown);
-            shortUrlDb.Token = Guid.NewGuid().ToString().Substring(0, 8);
+            } while (repo.FindByToken(shortUrlDb.Token)!=null);
             
-            //repo.InsertOrUpdate(shortUrlDb);
+            repo.InsertOrUpdate(shortUrlDb);
             return new StringBuilder().Append(baseAddress).Append("?sUrl=").Append(shortUrlDb.Token).ToString();
         }
 
