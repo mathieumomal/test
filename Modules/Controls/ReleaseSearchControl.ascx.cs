@@ -107,8 +107,7 @@ namespace Etsi.Ultimate.Controls
         /// </summary>
         public void Reset()
         {
-            RadButton rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
-            rbAllReleases.Checked = true;
+            System.Web.UI.ScriptManager.RegisterStartupScript(this, this.GetType(), "Reset", "ResetToAllReleases();", true);
         }
 
         #endregion

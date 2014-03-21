@@ -19,6 +19,8 @@
 
 <script type="text/javascript">
 
+    var resetToAllReleases = false;
+
     function ResetCheckBoxes(sender, args) {
         if (sender.get_checked())
         {
@@ -31,6 +33,10 @@
                     rbCustomReleases.set_checked(false);
             }
         }
+    }
+
+    function ResetToAllReleases() {
+        resetToAllReleases = true;
     }
 
     function ResetRadioButtons(sender, args) {
@@ -48,6 +54,25 @@
     }
 
     function OnClientLoad(sender) {
+        if (resetToAllReleases)
+        {
+            var comboBox = $find("<%= rcbReleases.ClientID %>");
+            var allReleases = comboBox.get_items().getItem(0).findControl("rbAllReleases");
+            allReleases.set_checked(true);
+            var openReleases = comboBox.get_items().getItem(0).findControl("rbOpenReleases");
+            openReleases.set_checked(false);
+            var customSelectin = comboBox.get_items().getItem(0).findControl("rbCustomSelection");
+            customSelectin.set_checked(false);
+
+            var rtvReleases = comboBox.get_items().getItem(0).findControl("rtvReleases");
+            for (var i = 0; i < rtvReleases.get_nodes().get_count() ; i++) {
+                var node = rtvReleases.get_nodes().getNode(i);
+                var rbCustomReleases = node.findControl("rbCustomReleases");
+                if (rbCustomReleases.get_checked())
+                    rbCustomReleases.set_checked(false);
+            }
+            resetToAllReleases = false;
+        }
         SetComboBoxText();
     }
 
