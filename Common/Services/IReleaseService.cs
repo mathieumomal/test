@@ -24,7 +24,7 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         KeyValuePair<DomainClasses.Release, UserRightsContainer> GetReleaseById(int personID, int releaseId);
 
-        KeyValuePair<int, string> GetPreviousReleaseCode(int personID, int releaseId);
+        KeyValuePair<int, string> GetPreviousReleaseCode(int releaseId);
 
         void FreezeRelease(int releaseId, DateTime endDate, int personId, int FreezeMtgId, string FreezeMtgRef);
 
@@ -38,10 +38,16 @@ namespace Etsi.Ultimate.Services
         /// <param name="personID">Person ID</param>
         void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId, int personID);
 
-        Dictionary<int, string> GetAllReleasesCodes(int personId, int releaseId);
+        /// <summary>
+        /// Return the list of all releases' codes except the one with the identifier passed as input
+        /// </summary>
+        /// <param name="releaseId">The identifier of the release to exclude form the returned list</param>
+        /// <returns></returns>
+        Dictionary<int, string> GetAllReleasesCodes(int releaseId);
 
         void EditRelease(Release release, int previousReleaseId, int personId);
 
         int CreateRelease(Release release, int previousReleaseId, int personId);
+
     }
 }

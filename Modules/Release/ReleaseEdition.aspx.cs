@@ -39,8 +39,7 @@ namespace Etsi.Ultimate.Module.Release
                 //build view 
                 LoadReleaseDetails();
             }            
-            releaseRemarks.AddRemarkHandler += releaseRemarks_AddRemarkHandler;
-            
+            releaseRemarks.AddRemarkHandler += releaseRemarks_AddRemarkHandler;            
         }
 
         
@@ -78,7 +77,7 @@ namespace Etsi.Ultimate.Module.Release
                         {
                             BuildTabsDisplay(action);
                             FillGeneralTab(release, action);
-                            FillAdminTab(release, svc.GetAllReleasesCodes(UserId, ReleaseId.Value), svc.GetPreviousReleaseCode(UserId, release.Pk_ReleaseId).Key);
+                            FillAdminTab(release, svc.GetAllReleasesCodes(ReleaseId.Value), svc.GetPreviousReleaseCode(release.Pk_ReleaseId).Key);
 
                             //Set Remarks control
                             releaseRemarks.UserRights = userRights;
@@ -110,7 +109,7 @@ namespace Etsi.Ultimate.Module.Release
                 releaseRemarks.UserRights = userRights;
                 releaseRemarks.DataSource = null;
 
-                var allReleases= svc.GetAllReleasesCodes(UserId,default(int));
+                var allReleases= svc.GetAllReleasesCodes(default(int));
                 FillAdminTab(null, allReleases, allReleases.First().Key);
 
                 SaveBtn.Style.Add("display", "none");

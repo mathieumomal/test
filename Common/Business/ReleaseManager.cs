@@ -211,6 +211,74 @@ namespace Etsi.Ultimate.Business
             releaseRepo.InsertOrUpdate(releaseToUpdate);
         }
 
+        public Dictionary<int, string> GetAllReleasesCodes(int releaseId)
+        {
+            Dictionary<int, string> allReleasesCodes = new Dictionary<int, string>();
+            // Check in the cache
+            var cachedData = (List<Release>)CacheManager.Get(CACHE_KEY);
+            if (cachedData == null)
+            {
+                // if nothing in the cache, ask the repository, then cache it
+                releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+                releaseRepo.UoW = UoW;
+                cachedData = releaseRepo.All.ToList();                
+                // Check that cache is still empty
+                if (CacheManager.Get(CACHE_KEY) == null)
+                    CacheManager.Insert(CACHE_KEY, cachedData);
+            }
+            //Excluding the current Release and Sorting the collection
+            cachedData = cachedData.Where(r => r.Pk_ReleaseId != releaseId).OrderByDescending(r => r.SortOrder).ToList();
+            foreach (Release r in cachedData)
+            {
+                allReleasesCodes.Add(r.Pk_ReleaseId, r.Code);
+            }
+            //A rlease that does not have any previous one
+            allReleasesCodes.Add(0, "No previous Release");
+            return allReleasesCodes;
+        }
+
+        /// <summary>
+        /// Return the code of the previous Release of the current one
+        /// </summary>
+        /// <param name="personID"></param>
+        /// <param name="releaseId"></param>
+        /// <returns></returns>
+        public KeyValuePair<int, string> GetPreviousReleaseCode(int releaseId)
+        {
+            // Check in the cache
+            var cachedData = (List<Release>)CacheManager.Get(CACHE_KEY);
+            if (cachedData == null)
+            {
+                // if nothing in the cache, ask the repository, then cache it
+                releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+                releaseRepo.UoW = UoW;
+                cachedData = releaseRepo.All.ToList();
+                // Check that cache is still empty
+                if (CacheManager.Get(CACHE_KEY) == null)
+                    CacheManager.Insert(CACHE_KEY, cachedData);
+            }
+            //Sorting the collection
+            cachedData = cachedData.OrderBy(r => r.SortOrder).ToList();
+            int nmbrOfReleases = cachedData.Count;
+            if (nmbrOfReleases > 0)
+            {
+                
+                for (int i = 0; i < nmbrOfReleases; i++)
+                {
+                    if (cachedData[i].Pk_ReleaseId == releaseId)
+                    {
+                        if (i == 0)
+                            //If the current Release is the first one ==> no previous Release 
+                            break;
+                        else
+                            //Once the current Release is reached, the previous one is returned (id and code)
+                            return new KeyValuePair<int, string>(cachedData[i - 1].Pk_ReleaseId, cachedData[i - 1].Code);
+                    }
+                }
+            }
+            return new KeyValuePair<int, string>(0, String.Empty);
+        }
+
         /// <summary>
         /// Compares the old release with the new release that has been created by the UI.
         /// Logs an history entry if any change is detected.

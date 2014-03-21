@@ -56,7 +56,7 @@ namespace Etsi.Ultimate.Module.Release
                     FillGeneralTab(userRights, release);
 
                     if (userRights.HasRight(Domain.Enum_UserRights.Release_ViewCompleteDetails))
-                        FillAdminTab(release, svc.GetPreviousReleaseCode(UserId, release.Pk_ReleaseId).Value);
+                        FillAdminTab(release, svc.GetPreviousReleaseCode(release.Pk_ReleaseId).Value);
 
 
 

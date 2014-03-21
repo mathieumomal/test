@@ -41,24 +41,14 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public KeyValuePair<int, string> GetPreviousReleaseCode(int personID, int releaseId)
+        public KeyValuePair<int, string> GetPreviousReleaseCode(int releaseId)
         {
-            List<DomainClasses.Release> allReleases = GetAllReleases(personID).Key.OrderBy(x => x.SortOrder).ToList();
-            int nmbrOfReleases= allReleases.Count;
-            if (nmbrOfReleases > 0)
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                for (int i = 0; i < nmbrOfReleases; i++)
-                {
-                    if (allReleases[i].Pk_ReleaseId == releaseId)
-                    {
-                        if (i == 0)
-                            break;
-                        else
-                            return new KeyValuePair<int, string>(allReleases[i - 1].Pk_ReleaseId, allReleases[i - 1].Code);
-                    }
-                }
+                var releaseManager = new ReleaseManager();
+                releaseManager.UoW = uoW;
+                return releaseManager.GetPreviousReleaseCode(releaseId);
             }
-            return new KeyValuePair<int, string>(0,String.Empty);
         }
 
         public void FreezeRelease(int releaseId, DateTime endDate, int personId, int FreezeMtgId, string FreezeMtgRef)
@@ -93,26 +83,26 @@ namespace Etsi.Ultimate.Services
         }
 
         /// <summary>
-        /// Get the list of all releases' ids and codes except the current one
-        /// An additional element is added for the case of a release that does not have any previous Release
+        /// Return the list of all releases' codes except the one with the identifier passed as input
         /// </summary>
-        /// <param name="personId"></param>
-        /// <param name="releaseId"></param>
+        /// <param name="releaseId">The identifier of the release to exclude form the returned list</param>
         /// <returns></returns>
-        public Dictionary<int, string> GetAllReleasesCodes(int personId, int releaseId)
-        {
-            Dictionary<int, string> allReleasesCodes = new Dictionary<int, string>();
-            List<DomainClasses.Release> allReleases = GetAllReleases(personId).Key.OrderByDescending(x => x.SortOrder).ToList();
-            foreach (Release r in allReleases)
+        public Dictionary<int, string> GetAllReleasesCodes(int releaseId)
+        {            
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-
-                if (releaseId == r.Pk_ReleaseId) continue;
-                allReleasesCodes.Add(r.Pk_ReleaseId, r.Code);
+                var releaseManager = new ReleaseManager();
+                releaseManager.UoW = uoW;
+                return releaseManager.GetAllReleasesCodes(releaseId);
             }
-            allReleasesCodes.Add(0, "No previous Release");
-            return allReleasesCodes;
         }
 
+        /// <summary>
+        /// Edit an existing Release
+        /// </summary>
+        /// <param name="release">The edited Release</param>
+        /// <param name="previousReleaseId">the identifier of the selected previous Release</param>
+        /// <param name="personId">The person identifier</param>
         public void EditRelease(Release release, int previousReleaseId, int personId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -124,6 +114,12 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Insert a new Release
+        /// </summary>
+        /// <param name="release">The Release object of creation</param>
+        /// <param name="previousReleaseId">the identifier of the selected previous Release</param>
+        /// <param name="personId">The person identifier</param>
         public int CreateRelease(Release release, int previousReleaseId, int personId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -135,6 +131,7 @@ namespace Etsi.Ultimate.Services
                 return newRelease.Pk_ReleaseId;
             }
         }
+
         #endregion
     }
 }

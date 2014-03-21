@@ -77,7 +77,7 @@ namespace Etsi.Ultimate.Services
             return new KeyValuePair<List<Release>,UserRightsContainer>(releases, userRightsContainer);
         }
 
-        public KeyValuePair<int, string> GetPreviousReleaseCode(int personID, int releaseId)
+        public KeyValuePair<int, string> GetPreviousReleaseCode(int releaseId)
         {
             throw new NotImplementedException();
         }
@@ -92,7 +92,7 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
-        public Dictionary<int, string> GetAllReleasesCodes(int personId, int releaseId)
+        public Dictionary<int, string> GetAllReleasesCodes(int releaseId)
         {
             throw new NotImplementedException();
         }

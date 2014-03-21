@@ -142,29 +142,78 @@ namespace Etsi.Ultimate.Tests.Services
             // Check that the returned releases are taken from cache
             Assert.IsNotNull(newReleases);
             Assert.AreEqual(fakeDescription, newReleases.Key.First().Description);
-        }
+        }        
 
-        [TestCase(0, 1)]
-        [TestCase(0, 2)]
-        [TestCase(0, 4)]
-        public void Test_GetPreviousReleaseCode(int personID, int releaseId)
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(4)]
+        public void Test_GetReleaseById(int releaseId)
         {
+            CacheManager.Clear(RELEASE_CACHE_KEY);
+
             // Setup the dependency manager, let's test both Service and business
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
+            ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
 
             // Call the code
             var releaseService = new ReleaseService();
-            var previousCode = releaseService.GetPreviousReleaseCode(personID, releaseId).Value;
+            var allReleases = releaseService.GetAllReleases(releaseId).Key;
+            var returnedRelese = releaseService.GetReleaseById(0,releaseId).Key;
+            foreach(Release r in allReleases){
+                if (r.Pk_ReleaseId == releaseId)
+                {
+                    Assert.AreEqual(r.Pk_ReleaseId, returnedRelese.Pk_ReleaseId);
+                }
+                else
+                {
+                    Assert.AreNotEqual(r.Pk_ReleaseId, returnedRelese.Pk_ReleaseId);
+                }
+            }            
+        }
+
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(4)]
+        public void Test_GetPreviousReleaseCode(int releaseId)
+        {
+            CacheManager.Clear(RELEASE_CACHE_KEY);
+
+            // Setup the dependency manager, let's test both Service and business
+            RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());            
+
+            // Call the code
+            var releaseService = new ReleaseService();
+            
+            int previousReleaseId = releaseService.GetPreviousReleaseCode(releaseId).Key;
             if (releaseId == 1)
             {
-                Assert.AreEqual(string.Empty, previousCode);
+                Assert.AreEqual(0, previousReleaseId);
             }
             else
             {
-                Assert.AreNotEqual(string.Empty, previousCode);
+                Assert.AreNotEqual(releaseId+1, previousReleaseId);
             }
         }
 
+        [TestCase(1)]
+        [TestCase(2)]
+        [TestCase(4)]
+        public void Test_GetAllReleasesCodes(int releaseId)
+        {
+            //CacheManager.Clear(RELEASE_CACHE_KEY);
+
+            // Setup the dependency manager, let's test both Service and business
+            RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
+            ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
+
+            // Call the code
+            var releaseService = new ReleaseService();
+            var releases = releaseService.GetAllReleases(1).Key.ToList(); 
+            var releasesCodes = releaseService.GetAllReleasesCodes(releaseId);
+            Assert.AreEqual(releases.Count, releasesCodes.Count);            
+            CollectionAssert.DoesNotContain(releasesCodes.Keys, releaseId);
+        }
+        
         [Test]
         public void Test_CloseRelease()
         {
@@ -233,5 +282,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             mockDataContext.VerifyAllExpectations();
         }
+
+
     }
 }
