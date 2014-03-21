@@ -137,6 +137,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 {
                     var wiService = ServicesFactory.Resolve<IWorkItemService>();
                     Acronyms = wiService.GetAllAcronyms();
+                    selectedReleases = String.Empty;
                 }
 
                 racAcronym.DataSource = Acronyms;
@@ -358,7 +359,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         protected void btnDefault_Click(object sender, EventArgs e)
         {
             releaseSearchControl.Reset();
-            rddGranularity.SelectedValue = "0";
+            rddGranularity.SelectedValue = "1";
             chkHideCompletedItems.Checked = false;
             racAcronym.Entries.Clear();
             txtName.Text = String.Empty;

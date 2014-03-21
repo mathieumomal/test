@@ -44,6 +44,15 @@
     }
 
     function OnClientDropDownClosed(sender, eventArgs) {
+        SetComboBoxText();
+    }
+
+    function OnClientLoad(sender) {
+        SetComboBoxText();
+    }
+
+    function SetComboBoxText()
+    {
         var comboBox = $find("<%= rcbReleases.ClientID %>");
         var allReleases = comboBox.get_items().getItem(0).findControl("rbAllReleases");
         if (allReleases.get_checked()) {
@@ -73,7 +82,7 @@
     }
 </script>
 
-<telerik:RadComboBox ID="rcbReleases" runat="server" CheckBoxes="true" AutoPostBack="false" OnClientDropDownClosed="OnClientDropDownClosed">
+<telerik:RadComboBox ID="rcbReleases" runat="server" CheckBoxes="true" AutoPostBack="false" OnClientDropDownClosed="OnClientDropDownClosed" OnClientLoad="OnClientLoad">
     <Itemtemplate>
         <table>
             <tr>
