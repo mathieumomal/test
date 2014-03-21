@@ -345,7 +345,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             if (percentComplete)
                 searchString.Append(", hidden completed items");
 
-            searchPanel.Text = String.Format("Search form ({0})", searchString.ToString());
+            lblSearchHeader.Text = String.Format("Search form ({0})", searchString.ToString());            
             searchPanel.Expanded = false;
 
             rtlWorkItems.ExpandAllItems();

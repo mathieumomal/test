@@ -70,7 +70,7 @@ namespace Etsi.Ultimate.Controls
                 RadTreeView rtvReleases = (RadTreeView)this.rcbReleases.Items[0].FindControl("rtvReleases");
                 List<int> allReleaseIds = new List<int>();
                 List<int> openReleaseIds = new List<int>();
-                foreach (var release in releaseObjects.Key)
+                foreach (var release in releaseObjects.Key.OrderByDescending(x => x.SortOrder))
                 {
                     RadTreeNode newNode = new RadTreeNode();
                     newNode.Text = release.ShortName;

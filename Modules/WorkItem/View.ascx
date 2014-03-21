@@ -16,15 +16,22 @@
             <tr>
                 <td>
                     <ult:fullviewcontrol id="ultFullView" runat="server" />
-                    <telerik:RadButton ID="workItem_import" runat="server" Enabled="true" AutoPostBack="false" OnClientClicked="open_RadWindow_workItemImport" Text="Import work plan"></telerik:RadButton>
-                    <ult:shareurlcontrol runat="server" id="ultShareUrl" />
+                    <telerik:RadButton ID="workItem_import" runat="server" Enabled="true" AutoPostBack="false" OnClientClicked="open_RadWindow_workItemImport" Text="Import work plan"></telerik:RadButton>                    
                 </td>
             </tr>
             <tr>
                 <td>
                     <telerik:RadPanelBar runat="server" ID="rpbSearch" Width="100%">
                         <items>
-                    <telerik:RadPanelItem runat="server" ID="searchPanel" Expanded="True" Text=" ">
+                    <telerik:RadPanelItem runat="server" ID="searchPanel" Expanded="True">
+                        <HeaderTemplate>
+                            <table style="width:100%;vertical-align:middle" class="WorkItemSearchHeader">
+                                <tr>
+                                    <td style="width:20px;"><ult:shareurlcontrol runat="server" id="ultShareUrl" /></td>
+                                    <td style="text-align:center"><asp:Label ID="lblSearchHeader" runat="server" /></td>
+                                </tr>
+                            </table>
+                        </HeaderTemplate>
                         <ContentTemplate>
                             <table style="width:100%; padding:20px 50px 20px 50px">
                                 <tr>

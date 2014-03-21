@@ -49,6 +49,15 @@ namespace Etsi.Ultimate.Module.WorkItem {
         protected global::Telerik.Web.UI.RadPanelItem searchPanel;
         
         /// <summary>
+        /// lblSearchHeader control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSearchHeader;
+        
+        /// <summary>
         /// rddGranularity control.
         /// </summary>
         /// <remarks>
