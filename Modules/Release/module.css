@@ -146,7 +146,7 @@ legend{
 }
 
 .TabLineRight {
-    width: 435.4px;
+    width: auto;
     text-align: left;
 }
 
@@ -185,6 +185,7 @@ legend{
 
 .SecndColFreezeStage {
     width: 416.4px !important;
+    padding-left: 3px !important;
 }
 
 .DetailsColFreezeStage {

@@ -15,6 +15,7 @@
     <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon">
     <script src="JS/jquery.min.js"></script>  
     <script src="JS/jquery-validate.min.js"></script>  
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <script type="text/javascript">
 
         function closeAllModals() {
@@ -38,7 +39,7 @@
             <telerik:RadTabStrip ID="ReleaseDetailRadTabStrip" runat="server" MultiPageID="ReleaseEditRadMultiPage" 
             AutoPostBack="false">    
             </telerik:RadTabStrip>
-            <telerik:RadMultiPage ID="ReleaseEditRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px" height="540px">
+            <telerik:RadMultiPage ID="ReleaseEditRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px" height="555px">
                 <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true">        
                    <table style="width: 100%">
                         <tr>
@@ -204,117 +205,139 @@
                 <asp:LinkButton ID="ExitBtn" runat="server" Text="Cancel" CssClass="LinkButton" OnClick="CloseReleaseDetails_Click"/>
            </div> 
            <telerik:RadAjaxManager ID="RadAjaxManager1" runat="server">
-                <AjaxSettings>
-                    <telerik:AjaxSetting AjaxControlID="Release2GDecimalVal">
+                <AjaxSettings>                    
+                    <telerik:AjaxSetting AjaxControlID="RadAjaxManager1">
                         <UpdatedControls>                  
                             <telerik:AjaxUpdatedControl ControlID="Release2GDecimalVal" /> 
                             <telerik:AjaxUpdatedControl ControlID="Release2GVal" />   
                             <telerik:AjaxUpdatedControl ControlID="Release2GDecimalLbl" /> 
-                            <telerik:AjaxUpdatedControl ControlID="Release2GLbl" />                                                                        
-                        </UpdatedControls>
-                    </telerik:AjaxSetting>
-                    <telerik:AjaxSetting AjaxControlID="Release3GDecimalVal">
-                        <UpdatedControls>                  
-                            <telerik:AjaxUpdatedControl ControlID="Release3GDecimalVal" /> 
-                            <telerik:AjaxUpdatedControl ControlID="Release3GVal" />  
-                            <telerik:AjaxUpdatedControl ControlID="Release3GDecimalLbl" /> 
-                            <telerik:AjaxUpdatedControl ControlID="Release3GLbl" />                                                         
-                        </UpdatedControls>
-                    </telerik:AjaxSetting>
-                    <telerik:AjaxSetting AjaxControlID="FreezeStage3Meeting">
-                        <UpdatedControls>                  
-                            <telerik:AjaxUpdatedControl ControlID="FreezeStage3Meeting" /> 
-                            <telerik:AjaxUpdatedControl ControlID="ReleaseEndMeeting" />                                                         
-                        </UpdatedControls>
-                    </telerik:AjaxSetting>
-                    <telerik:AjaxSetting AjaxControlID="ReleaseEndMeeting">
-                        <UpdatedControls>                  
-                            <telerik:AjaxUpdatedControl ControlID="FreezeStage3Meeting" /> 
-                            <telerik:AjaxUpdatedControl ControlID="ReleaseEndMeeting" />                                                         
+                            <telerik:AjaxUpdatedControl ControlID="Release2GLbl" />  
+                            <telerik:AjaxUpdatedControl ControlID="releaseCodeVal" />                                                                           
                         </UpdatedControls>
                     </telerik:AjaxSetting>
                 </AjaxSettings>
             </telerik:RadAjaxManager>
+           <telerik:RadWindowManager ID="RadWindowManager1" runat="server" />
+           <asp:HiddenField ID="pageTitle" runat="server" />
+           
+           
            <script type="text/javascript">
-              
-               function validateURL(textval) {
+
+               // Add/Remove validation class depending on the result returned by the function "isCodeAlreadyUsed"
+               function checkIfCodeUsed(element) {
+                   var controlSelector = "#" + element;                   
                    var errorClassName = 'error';
 
-                   var urlregex = new RegExp(
-                         "^(http:\/\/www.|https:\/\/www.|ftp:\/\/www.|www.){1}([0-9A-Za-z]+\.)");
-                   if (!urlregex.test(textval)) {
+                   if (isCodeAlreadyUsed(element)) {
+                       $(controlSelector).addClass('error');
+                   }
+                   else {                       
+                       $(controlSelector).removeClass('error');                       
+                   }
+                   validateform(errorClassName);
+               }
+
+               //Check if the inserted Release code is already used
+               function isCodeAlreadyUsed(element) {
+                   
+                   var exist = false;
+                   //var oprtionSelector = "option[text=" + val + "]";
+                   $('#previousReleaseVal').find("option").filter(function (index) {
+                       var controlSelector = "#" + element;
+                       var val = $(controlSelector).val();
+                       if (val.toUpperCase() === $(this).text().toUpperCase()) {
+                           exist = true;
+                       }
+                       
+                   });
+                   return exist;                  
+               }
+
+               //Perform conversion of int to the base 36
+               function convertTo36(element) {
+                   var emptyValue = "-";
+                   var controlSelector = "#" + element
+                   var val = $(controlSelector).val();
+                   if ($.isNumeric($(controlSelector).val())) {
+                       if (element == "Release2GDecimalVal") {
+                           $("#Release2GVal").text((parseInt(val)).toString(36).toUpperCase()); 
+                       }
+                       if (element == "Release3GDecimalVal") {
+                           $("#Release3GVal").text((parseInt(val)).toString(36).toUpperCase());
+                       }
+                   }
+                   else if ($(controlSelector).val() == "") {
+                       if (element == "Release2GDecimalVal") {
+                           $("#Release2GVal").text(emptyValue);
+                       }
+                       if (element == "Release3GDecimalVal") {
+                           $("#Release3GVal").text(emptyValue);
+                       }
+                   }
+                   else {
+                       $(controlSelector).addClass('error');
+                       $('#SaveBtn').hide();
+                       $('#SaveBtnDisabled').show();
+                   }
+               }
+
+               /* Disable save Btn if URL is not valid */
+               function validateURL(element) {
+
+                   var errorClassName = 'error';
+                   if (!isURLValid(element)) {
                        $('#SaveBtnDisabled').show();
                        $('#SaveBtn').hide();
                        $("#ReleaseDescVal").addClass('error');
                    }
                    else {
                        $("#ReleaseDescVal").removeClass('error');
-
-                       if (!$("#releaseCodeVal").hasClass(errorClassName) && !$("#ReleaseNameVal").hasClass(errorClassName)
-                           && !$("#ReleaseShortNameVal").hasClass(errorClassName) && !$("#previousReleaseVal").hasClass(errorClassName)
-                           && !$("#Release2GDecimalVal").hasClass(errorClassName) && !$("#Release3GDecimalVal").hasClass(errorClassName)
-                           && !$("#ReleaseDescVal").hasClass(errorClassName)) {
-
-                           $('#SaveBtn').show();
-                           $('#SaveBtnDisabled').hide();
-                       }
+                       validateform(errorClassName);
                    }
                }
 
-               function realPostBack(eventTarget, eventArgument) {
-                   var errorClassName = 'error';
-                   var controlSelector = "#" + eventTarget;
-                   if (!$.isNumeric($(controlSelector).val())) {
-                       $(controlSelector).addClass('error');
-                       $('#SaveBtn').hide();
-                       $('#SaveBtnDisabled').show();
+               //Check if the inserted value is a valid URL */
+               function isURLValid(element) {                   
+                   var controlSelector = "#" + element
+                   var urlregex = '^(http:\/\/www.|https:\/\/www.|ftp:\/\/www.|www.){1}([0-9A-Za-z]+\.)'
+                   if ($(controlSelector).val() == "") {
+                       return true;
                    }
-                   else if (($(controlSelector).val() == "")) {
-                       $('#Release2GVal').val("");
-                       if (!$("#releaseCodeVal").hasClass(errorClassName) && !$("#ReleaseNameVal").hasClass(errorClassName)
-                              && !$("#ReleaseShortNameVal").hasClass(errorClassName) && !$("#previousReleaseVal").hasClass(errorClassName)
-                              && !$("#Release2GDecimalVal").hasClass(errorClassName) && !$("#Release3GDecimalVal").hasClass(errorClassName) && !$("#ReleaseDescVal").hasClass(errorClassName)) {
-                           $('#SaveBtn').show();
-                           $('#SaveBtnDisabled').hide();
-                       }
+                   if (!$(controlSelector).val().match(urlregex)) {
+                       return false;
                    }
                    else {
-                       $find("<%= RadAjaxManager1.ClientID %>").__doPostBack(eventTarget, eventArgument);
+                       return true;
                    }
                }
 
                
+               /* Check if all form's field are valid */
+               function validateform(errorClassName) {
+                   if (!$("#releaseCodeVal").hasClass(errorClassName) && !$("#ReleaseNameVal").hasClass(errorClassName)
+                           && !$("#ReleaseShortNameVal").hasClass(errorClassName) && !$("#previousReleaseVal").hasClass(errorClassName)
+                           && !$("#Release2GDecimalVal").hasClass(errorClassName) && !$("#Release3GDecimalVal").hasClass(errorClassName)
+                           && isURLValid("ReleaseDescVal") && !isCodeAlreadyUsed("releaseCodeVal")) {
 
-               $(document).ready(function () {
-                   setTimeout(function () {
-
-                       var releaseName = "Create new Release";
-                       if ($("#releaseCodeVal").val() != '')
-                           releaseName = " Edit Release " + $("#releaseCodeVal").val();
-                       
-                       document.title = releaseName;
-                   }, 200);
-
-                   $('#FreezeReleaseBtn').click(function (event) {
-                       event.preventDefault();
-                       closeAllModals();
-                       window.radopen(null, "RadWindow_workItemImport");
-                   });
-
+                       $('#SaveBtn').show();
+                       $('#SaveBtnDisabled').hide();
+                   }
+                   else {
+                       $('#SaveBtnDisabled').show();
+                       $('#SaveBtn').hide();
+                   }
+               }
+                               
+               //Perform a form validation on each field keyUp
+               function formValidator() {                   
                    var errorClassName = 'error';
-                   var validator = $("#ReleaseEditionForm").validate({                                             
+                   var validator = $("#ReleaseEditionForm").validate({
                        errorClass: "error",
-                       onKeyup: true,                       
-                       eachValidField: function () {                           
-                           $(this).removeClass('error');                           
-                           if (!$("#releaseCodeVal").hasClass(errorClassName) && !$("#ReleaseNameVal").hasClass(errorClassName)
-                               && !$("#ReleaseShortNameVal").hasClass(errorClassName) && !$("#previousReleaseVal").hasClass(errorClassName)
-                               && !$("#Release2GDecimalVal").hasClass(errorClassName) && !$("#Release3GDecimalVal").hasClass(errorClassName) && !$("#ReleaseDescVal").hasClass(errorClassName))
-                           {
-                               $('#SaveBtn').show();
-                               $('#SaveBtnDisabled').hide();
-                           }
-                           
+                       onsubmit: true,
+                       onKeyup: true,
+                       eachValidField: function () {
+                           $(this).removeClass('error');
+                           validateform(errorClassName);
                        },
                        eachInvalidField: function () {
                            $(this).addClass('error');
@@ -322,6 +345,34 @@
                            $('#SaveBtnDisabled').show();
                        }
                    });
+               }
+
+               $(document).ready(function () {
+                   //Update of page title
+                   setTimeout(function () {
+
+                       var releaseName = "Create new Release";
+                       if ($("#pageTitle").val() != '')
+                           releaseName = " Edit Release " + $("#releaseCodeVal").val();
+                       
+                       document.title = releaseName;
+                   }, 200);                   
+
+                   // Used for creation to tell jquery validate that those fields are non valid
+                   if ($('#releaseCodeVal').val() == "") $('#releaseCodeVal').addClass('error');
+                   if ($('#ReleaseNameVal').val() == "") $('#ReleaseNameVal').addClass('error');
+                   if ($('#ReleaseShortNameVal').val() == "") $('#ReleaseShortNameVal').addClass('error');
+
+
+                   $('#FreezeReleaseBtn').click(function (event) {
+                       event.preventDefault();
+                       closeAllModals();
+                       window.radopen(null, "RadWindow_workItemImport");
+                   });
+
+                   //Validate form
+                   formValidator();
+
                    
                });
         </script>  

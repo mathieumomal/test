@@ -18,6 +18,7 @@ namespace Etsi.Ultimate.Module.Release
         private static String CONST_HISTORY_TAB = "History";
         private const string CONST_EMPTY_FIELD = "";
         public static readonly string DsId_Key = "ETSI_DS_ID";
+        public string serverSideJSScript = "";
         private int UserId;
         private Nullable<int> ReleaseId;
         private string action;
@@ -33,78 +34,28 @@ namespace Etsi.Ultimate.Module.Release
         {
             if (!IsPostBack)
             {
+                //Getting request parameters
                 GetRequestParameters();
-
+                //build view 
                 LoadReleaseDetails();
-            }
-
-            if (IsPostBack)
-            {
-                int Release2GDecimalValue, Release3GDecimalValue;
-
-                if (!Release2GDecimalVal.Text.Equals("") && int.TryParse(Release2GDecimalVal.Text, out Release2GDecimalValue))
-                {
-                    Release2GVal.Text = Domain.Release.Encode(Release2GDecimalValue);
-                    Release2GDecimalVal.Attributes.Remove("class");
-                }
-                else if (Release2GDecimalVal.Text.Equals(""))
-                {
-                    Release2GVal.Text = CONST_EMPTY_FIELD;
-                    Release2GDecimalVal.Attributes.Remove("class");
-                }
-                
-
-                if (!Release3GDecimalVal.Text.Equals("") &&  int.TryParse(Release3GDecimalVal.Text, out Release3GDecimalValue))
-                {
-                    Release3GVal.Text = Domain.Release.Encode(Release3GDecimalValue);
-                    Release3GDecimalVal.Attributes.Remove("class");
-                }
-                else if (Release3GDecimalVal.Text.Equals(""))
-                {
-                    Release3GVal.Text = CONST_EMPTY_FIELD;
-                    Release3GDecimalVal.Attributes.Remove("class");                    
-                }
-
-                /*MeetingControl freezeStage3Meeting = FreezeStage3Meeting as MeetingControl;
-                MeetingControl endMeeting = ReleaseEndMeeting as MeetingControl;
-                if(!freezeStage3Meeting.lblEndDate.Text.equals("-") && !endMeeting.lblEndDate.Text.equals("-"))
-                {
-                    if( DateTime.Compare(Convert.ToDateTime(freezeStage3Meeting.lblEndDate.Text).ToString("yyyy-MM-dd") , Convert.ToDateTime(endMeeting.lblEndDate.Text).ToString("yyyy-MM-dd")) > 0)
-                    {
-                        freezeStage3Meeting.CssClass = "error";
-                        endMeeting.CssClass = "error";
-                    }
-                }*/
-               
-            }
+            }            
             releaseRemarks.AddRemarkHandler += releaseRemarks_AddRemarkHandler;
-            checkForValidation();
+            
         }
 
-        private void checkForValidation()
-        {
-            if (!ReleaseNameVal.CssClass.Contains("error") && !ReleaseShortNameVal.CssClass.Contains("error")
-                && !previousReleaseVal.CssClass.Contains("error") && !releaseCodeVal.CssClass.Contains("error")
-                && !Release2GDecimalVal.CssClass.Contains("error") && !Release3GDecimalVal.CssClass.Contains("error"))
-            {
-                SaveBtn.Attributes.Remove("disabled");
-                SaveBtn.Attributes.Remove("class");
-                SaveBtn.Attributes.Add("class", "LinkButton");
-            }
-        }
-
+        
+        /// <summary>
+        /// Builds Release Edit/Creation view depending on request parameters
+        /// </summary>
         private void LoadReleaseDetails()
         {
-
+            // Populate fileds of the view with basic validation rules
             dataValidationSetUp();
-
-            //ReleaseEditRadMultiPage.Height = new System.Web.UI.WebControls.Unit(560, UnitType.Pixel);
-
+            
             if (action.Equals("Edit"))
             {
                 if (ReleaseId != null)
-                {
-
+                {                    
                     IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
                     KeyValuePair<DomainClasses.Release, DomainClasses.UserRightsContainer> releaseRightsObject = svc.GetReleaseById(UserId, ReleaseId.Value);
                     Domain.Release release = releaseRightsObject.Key;
@@ -118,20 +69,16 @@ namespace Etsi.Ultimate.Module.Release
                     }
                     else
                     {
-
                         if (release == null)
                         {
                             releaseDetailsBody.Visible = false;
                             releaseWarning.Visible = true;
-
                         }
                         else
                         {
-
                             BuildTabsDisplay(action);
-                            FillGeneralTab(userRights, release);
+                            FillGeneralTab(release, action);
                             FillAdminTab(release, svc.GetAllReleasesCodes(UserId, ReleaseId.Value), svc.GetPreviousReleaseCode(UserId, release.Pk_ReleaseId).Key);
-
 
                             //Set Remarks control
                             releaseRemarks.UserRights = userRights;
@@ -158,17 +105,15 @@ namespace Etsi.Ultimate.Module.Release
                 DomainClasses.UserRightsContainer userRights = svc.GetAllReleases(UserId).Value;
 
                 BuildTabsDisplay(action);
-                ReleaseStatusVal.CssClass = "status " + ReleaseStatusVal.Text;
-                ReleaseStartDateVal.SelectedDate = DateTime.Now;
-
+                FillGeneralTab(null, action);
+                
                 releaseRemarks.UserRights = userRights;
                 releaseRemarks.DataSource = null;
 
                 var allReleases= svc.GetAllReleasesCodes(UserId,default(int));
                 FillAdminTab(null, allReleases, allReleases.First().Key);
 
-                SaveBtn.Attributes.Add("disabled", "disabled");
-                SaveBtn.Style.Add("display","none");
+                SaveBtn.Style.Add("display", "none");
                 SaveBtnDisabled.Style.Remove("display");
             }
             else
@@ -243,56 +188,55 @@ namespace Etsi.Ultimate.Module.Release
         /// </summary>
         /// <param name="userRights"></param>
         /// <param name="release"></param>
-        private void FillGeneralTab(DomainClasses.UserRightsContainer userRights, Domain.Release release)
+        private void FillGeneralTab(Domain.Release release, string action)
         {
-            releaseCodeVal.Text = release.Code;
+            //Populate fields with data
+            if (action.Equals("Edit"))
+            {
+                releaseCodeVal.Text = release.Code;
+                pageTitle.Value = releaseCodeVal.Text;
+                ReleaseStatusVal.Text = release.Enum_ReleaseStatus.Description;
+                ReleaseNameVal.Text = release.Name;  
+                ReleaseDescVal.Text = release.Description;
+                ReleaseShortNameVal.Text = release.ShortName;
+                if (release.StartDate != null)
+                    ReleaseStartDateVal.SelectedDate = release.StartDate.Value;
+                else
+                    ReleaseStartDateVal.SelectedDate = null;
+                FreezeStage1Meeting.SelectedMeetingId = (release.Stage1FreezeMtgId != null) ? release.Stage1FreezeMtgId.Value : default(int);
+                FreezeStage2Meeting.SelectedMeetingId = (release.Stage2FreezeMtgId != null) ? release.Stage2FreezeMtgId.Value : default(int);
+                FreezeStage3Meeting.SelectedMeetingId = (release.Stage3FreezeMtgId != null) ? release.Stage3FreezeMtgId.Value : default(int);
+                ReleaseClosureMeeting.SelectedMeetingId = (release.ClosureMtgId != null) ? release.ClosureMtgId.Value : default(int);
+                ReleaseEndMeeting.SelectedMeetingId = (release.EndMtgId != null) ? release.EndMtgId.Value : default(int);
+            }
 
-            ReleaseStatusVal.Text = release.Enum_ReleaseStatus.Description;
+            if (action.Equals("Creation"))
+            {                
+                ReleaseStatusVal.CssClass = "status " + ReleaseStatusVal.Text;
+                ReleaseStartDateVal.SelectedDate = DateTime.Now;                
+            }
+
+            //Set events' functions
+            releaseCodeVal.Attributes.Add("onblur", string.Format("checkIfCodeUsed(\"{0}\"); return false;",
+                                                        releaseCodeVal.UniqueID));                        
             ReleaseStatusVal.CssClass = "status " + ReleaseStatusVal.Text;
-
-            ReleaseNameVal.Text = release.Name;
-
-            ReleaseDescVal.Text = release.Description;
-            ReleaseDescVal.Attributes.Add("onchange", string.Format("validateURL(\"{0}\"); return false;",
+                      
+            ReleaseDescVal.Attributes.Add("onblur", string.Format("validateURL(\"{0}\"); return false;",
                                                         ReleaseDescVal.UniqueID));
+            ReleaseStartDateVal.DateInput.Attributes.Add("onchange", string.Format("ValidateDateTimePicker(\"{0}\"); return false;",
+                                                        ReleaseStartDateVal.UniqueID));
 
-            ReleaseShortNameVal.Text = release.ShortName;
-            if (release.StartDate != null)
-                ReleaseStartDateVal.SelectedDate = release.StartDate.Value;
-            else
-                ReleaseStartDateVal.SelectedDate = null;
-
-            //FreezeStagesPanel
-
-
-
-            MeetingControl stage1Meeting = FreezeStage1Meeting as MeetingControl;
-            stage1Meeting.SelectedMeetingId = (release.Stage1FreezeMtgId != null) ? release.Stage1FreezeMtgId.Value : default(int);
-            stage1Meeting.DisplayLabel = true;
-            stage1Meeting.CssClass = "meetingControl";
-
-            MeetingControl stage2Meeting = FreezeStage2Meeting as MeetingControl;
-            stage2Meeting.SelectedMeetingId = (release.Stage2FreezeMtgId != null) ? release.Stage2FreezeMtgId.Value : default(int);
-            stage2Meeting.DisplayLabel = true;
-            stage2Meeting.CssClass = "meetingControl";
-
-            MeetingControl stage3Meeting = FreezeStage3Meeting as MeetingControl;
-            stage3Meeting.SelectedMeetingId = (release.Stage3FreezeMtgId != null) ? release.Stage3FreezeMtgId.Value : default(int);
-            stage3Meeting.DisplayLabel = true;
-            stage3Meeting.CssClass = "meetingControl";
-
-            MeetingControl endMeeting = ReleaseEndMeeting as MeetingControl;
-            endMeeting.SelectedMeetingId = (release.EndMtgId != null) ? release.EndMtgId.Value : default(int);
-            endMeeting.DisplayLabel = true;
-            endMeeting.CssClass = "meetingControl";
-
-
-            MeetingControl closureMeeting = ReleaseClosureMeeting as MeetingControl;
-            closureMeeting.SelectedMeetingId = (release.ClosureMtgId != null) ? release.ClosureMtgId.Value : default(int);
-            closureMeeting.DisplayLabel = true;
-            closureMeeting.CssClass = "meetingControl";
-
-
+            //Configure Meeting control to display date's label
+            FreezeStage1Meeting.DisplayLabel = true;
+            FreezeStage1Meeting.CssClass = "meetingControl";            
+            FreezeStage2Meeting.DisplayLabel = true;
+            FreezeStage2Meeting.CssClass = "meetingControl";            
+            FreezeStage3Meeting.DisplayLabel = true;
+            FreezeStage3Meeting.CssClass = "meetingControl";            
+            ReleaseEndMeeting.DisplayLabel = true;
+            ReleaseEndMeeting.CssClass = "meetingControl";            
+            ReleaseClosureMeeting.DisplayLabel = true;
+            ReleaseClosureMeeting.CssClass = "meetingControl";
         }
 
         /// <summary>
@@ -302,19 +246,18 @@ namespace Etsi.Ultimate.Module.Release
         /// <param name="previousCode"></param>
         private void FillAdminTab(Domain.Release release, Dictionary<int, string> allReleasesCodes, int previousReleaseID)
         {
-
-
             previousReleaseVal.DataTextField = "Value";
             previousReleaseVal.DataValueField = "Key";
             previousReleaseVal.DataSource = allReleasesCodes;
             previousReleaseVal.DataBind();
 
             // Setting the call backs for 2G and 3G
-            Release2GDecimalVal.Attributes.Add("onchange", string.Format("realPostBack(\"{0}\", \"\"); return false;",
+            Release2GDecimalVal.Attributes.Add("onchange", string.Format("convertTo36(\"{0}\"); return false;",
                                                     Release2GDecimalVal.UniqueID));
-            Release3GDecimalVal.Attributes.Add("onchange", string.Format("realPostBack(\"{0}\", \"\"); return false;",
+            Release3GDecimalVal.Attributes.Add("onchange", string.Format("convertTo36(\"{0}\"); return false;",
                                                     Release3GDecimalVal.UniqueID));
 
+            //Populate view with Release data
             if (action.Equals("Edit"))
             {
                 previousReleaseVal.SelectedValue = previousReleaseID.ToString();
@@ -332,10 +275,13 @@ namespace Etsi.Ultimate.Module.Release
             }
         }
 
+        /// <summary>
+        /// Populate fileds of the view with basic validation rules
+        /// </summary>
         private void dataValidationSetUp()
         {
-            releaseCodeVal.Attributes.Add("data-required", "true");
             releaseCodeVal.MaxLength = 10;
+            releaseCodeVal.Attributes.Add("data-required", "true");
 
             ReleaseNameVal.Attributes.Add("data-required", "true");
             ReleaseNameVal.MaxLength = 50;
@@ -344,7 +290,9 @@ namespace Etsi.Ultimate.Module.Release
             ReleaseShortNameVal.MaxLength = 20;
 
             ReleaseDescVal.MaxLength = 200;
-            ReleaseDescVal.Columns = 67;
+            ReleaseDescVal.Columns = 60;
+
+            ReleaseStartDateVal.DateInput.Attributes.Add("disabled", "disabled");
 
             previousReleaseVal.Attributes.Add("data-required", "true");
 
@@ -358,9 +306,6 @@ namespace Etsi.Ultimate.Module.Release
 
             WPMCodes2GVal.MaxLength = 50;
             WPMCodes3GVal.MaxLength = 50;
-
-            
-            
         }
 
         /// <summary>
@@ -375,7 +320,7 @@ namespace Etsi.Ultimate.Module.Release
         }
 
         /// <summary>
-        /// Retrieve person If
+        /// Retrieve person Id
         /// </summary>
         /// <param name="UserInfo"></param>
         /// <returns></returns>
@@ -392,6 +337,11 @@ namespace Etsi.Ultimate.Module.Release
             return 0;
         }
 
+        /// <summary>
+        /// Close event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void CloseReleaseDetails_Click(object sender, EventArgs e)
         {
             if (Request.QueryString["releaseId"] != null)
@@ -400,38 +350,57 @@ namespace Etsi.Ultimate.Module.Release
                 this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close()", true);
         }
 
+        /// <summary>
+        /// Save event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void SaveEditedRelease_Click(object sender, EventArgs e)
         {
             GetRequestParameters();
 
             IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
             Domain.Release editedRelease = new Domain.Release();
-            if (ReleaseId != null)
-            {
-                if (action.Equals("Edit"))
-                {
-                    setReleaseEditionValues(editedRelease);
-                    editedRelease.Pk_ReleaseId = ReleaseId.Value;
-                    svc.EditRelease(editedRelease, int.Parse(previousReleaseVal.SelectedValue), UserId);
-                }
-            }
-            else if (action.Equals("Creation"))
-            {
-                setReleaseEditionValues(editedRelease);
-                editedRelease.Pk_ReleaseId = svc.CreateRelease(editedRelease, int.Parse(previousReleaseVal.SelectedValue), UserId);
-            }
+
+            // Validation of dates
+            string errorList = string.Empty;
+            if ((FreezeStage3Meeting.SelectedMeeting != null && ReleaseEndMeeting.SelectedMeeting != null
+                && (DateTime.Compare(FreezeStage3Meeting.SelectedMeeting.END_DATE.Value, ReleaseEndMeeting.SelectedMeeting.END_DATE.Value) > 0)))
+            {               
+                errorList += "End date must be greater than Freeze stage 3 date.";
+                RadWindowManager1.RadAlert(errorList, 400, 150, "Error", "", "images/error.png");                
+            }  
             else
             {
-                //Bad request
-                releaseDetailsBody.Visible = false;
-                releaseError.Visible = true;
+                if (ReleaseId != null)
+                {
+                    if (action.Equals("Edit"))
+                    {
+                        setReleaseEditionValues(editedRelease);
+                        editedRelease.Pk_ReleaseId = ReleaseId.Value;
+                        svc.EditRelease(editedRelease, int.Parse(previousReleaseVal.SelectedValue), UserId);
+                    }
+                }
+                else if (action.Equals("Creation"))
+                {
+                    setReleaseEditionValues(editedRelease);
+                    editedRelease.Pk_ReleaseId = svc.CreateRelease(editedRelease, int.Parse(previousReleaseVal.SelectedValue), UserId);
+                }
+                else
+                {
+                    //Bad request
+                    releaseDetailsBody.Visible = false;
+                    releaseError.Visible = true;
+                }
+                Response.Redirect("ReleaseDetails.aspx?releaseId=" + editedRelease.Pk_ReleaseId);
             }
-            Response.Redirect("ReleaseDetails.aspx?releaseId=" + editedRelease.Pk_ReleaseId);
-
         }
 
 
-
+        /// <summary>
+        /// Populates a Release object with the inserted data 
+        /// </summary>
+        /// <param name="editedRelease"></param>
         private void setReleaseEditionValues(Domain.Release editedRelease)
         {
             editedRelease.Code = releaseCodeVal.Text;
@@ -450,7 +419,6 @@ namespace Etsi.Ultimate.Module.Release
             editedRelease.Version3g = (int.TryParse(Release3GDecimalVal.Text, out intParserBuffer)) ? new Nullable<int>(int.Parse(Release3GDecimalVal.Text)) : null;
             editedRelease.WpmCode2g = WPMCodes2GVal.Text;
             editedRelease.WpmCode3g = WPMCodes3GVal.Text;
-
             editedRelease.Remarks = releaseRemarks.DataSource;
         }
     }
