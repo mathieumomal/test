@@ -20,7 +20,7 @@ namespace Etsi.Ultimate.DomainClasses
         public string EndDate { get; set; }
         public string Completion { get; set; }
         public string HyperLink { get; set; }
-        public public string StatusReport { get; set; }
+        public string StatusReport { get; set; }
         public string WIRaporteur { get; set; }
         public string WIRaporteurEmail { get; set; }
         public string Notes { get; set; }
@@ -29,21 +29,21 @@ namespace Etsi.Ultimate.DomainClasses
         private CustomizableCellStyle rowStyle ;
 
         public WorkItemForExport(WorkItem workItem){
-            Wpid = workItem.WorkplanId;
-            UID = workItem.Pk_WorkItemUid; 
+            Wpid = workItem.WorkplanId.ToString(); ;
+            UID = workItem.Pk_WorkItemUid.ToString(); 
             Name = workItem.Name;
             Acronym = workItem.Acronym;
-            Level = workItem.WiLevel;
+            Level = workItem.WiLevel.Value;
             Release = workItem.Release.Description;
-            ResponsibleGroups = workItem.WorkItems_ResponsibleGroups.Join(",", r => r.ResponsibleGroup);
+            ResponsibleGroups = string.Join(" ", workItem.WorkItems_ResponsibleGroups.Select(r => r.ResponsibleGroup).ToArray()); 
             StartDate = workItem.StartDate.GetValueOrDefault().ToString("yyyy-MM-dd");
-            EndDate = workItem.EndDate..GetValueOrDefault().ToString("yyyy-MM-dd");
-            Completion = workItem.Completion;
+            EndDate = workItem.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd");
+            Completion = workItem.Completion.ToString();
             HyperLink = workItem.Wid;
             StatusReport = workItem.StatusReport;
             WIRaporteur = workItem.RapporteurCompany;
             WIRaporteurEmail = workItem.RapporteurStr;
-            Notes =  workItem.Remarks.Join(" ", r => r.RemarkText);
+            Notes = string.Join(" ", workItem.Remarks.Select(r => r.RemarkText).ToArray()); 
             RelatedTSs_TRs = workItem.TssAndTrs;
         }
 
@@ -55,7 +55,7 @@ namespace Etsi.Ultimate.DomainClasses
             return formatedDataSource;
         }
 
-        public CustomizableCellStyle CustomizableCellStyle GetNameCellStyle(){
+        public CustomizableCellStyle GetNameCellStyle(){
             throw new NotImplementedException();
             // Depenging on the propoerties of the current object return one of the pre-defined styles
         }
