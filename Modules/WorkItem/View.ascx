@@ -29,6 +29,9 @@
                                 <tr>
                                     <td style="width:20px;"><ult:shareurlcontrol runat="server" id="ultShareUrl" /></td>
                                     <td style="text-align:center"><asp:Label ID="lblSearchHeader" runat="server" /></td>
+                                    <td style="width: 20px;"><a class="rpExpandable">
+                                        <span class="rpExpandHandle"></span>
+                                    </a></td>
                                 </tr>
                             </table>
                         </HeaderTemplate>
