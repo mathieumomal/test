@@ -250,6 +250,103 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [Test]
+        public void Test_EditRelease()
+        {
+            int releaseIdToTest = 2;
+            int previousReleaseId = 3;
+            string editedName = "Second release edited";
+            int personID = 12;
+
+            ReleaseFakeRepository releaseFakeRepository = new ReleaseFakeRepository();
+            var releaseStatus = new Enum_ReleaseStatusFakeDBSet();
+            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open" });
+            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, Code = "Frozen" });
+            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, Code = "Closed" });
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releaseFakeRepository.All);
+            mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)releaseStatus);
+
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var releaseService = new ReleaseService();
+            var ReleaseToTest = new Release()
+            {
+                Code = "Rel-98",
+                Pk_ReleaseId = 2,
+                Name = "Second release",
+                Fk_ReleaseStatus = 1,
+                StartDate = new DateTime(2008, 9, 18),
+                ClosureDate = new DateTime(2015, 10, 12),
+                Enum_ReleaseStatus = releaseStatus.ElementAt(1), //Frozen
+                Stage1FreezeDate = DateTime.Today.AddDays(-5),
+                Stage1FreezeMtgRef = "d3",
+                Stage2FreezeDate = DateTime.Today.AddDays(-3),
+                Stage2FreezeMtgRef = "d4",
+                Stage3FreezeDate = DateTime.Today.AddDays(1),
+                Stage3FreezeMtgRef = ("a pas afficher"),
+                SortOrder = 20
+            };
+            ReleaseToTest.Name = editedName;
+            releaseService.EditRelease(ReleaseToTest, previousReleaseId, personID);
+
+            mockDataContext.AssertWasCalled(x => x.SetModified(Arg<Release>.Matches(y => y.Name == editedName && y.Pk_ReleaseId == ReleaseToTest.Pk_ReleaseId)));
+            
+            mockDataContext.AssertWasCalled(x => x.SaveChanges(), y => y.Repeat.Once());
+
+            mockDataContext.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void Test_CreateRelease()
+        {
+            int previousReleaseId = 2;
+            int personID = 12;
+
+            ReleaseFakeRepository releaseFakeRepository = new ReleaseFakeRepository();
+            var releaseStatus = new Enum_ReleaseStatusFakeDBSet();
+            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open" });
+            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, Code = "Frozen" });
+            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, Code = "Closed" });
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releaseFakeRepository.All);
+            mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)releaseStatus);
+
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var releaseService = new ReleaseService();
+            var ReleaseToTest = new Release()
+            {
+                Code = "Rel-999",
+                Name = "New release",
+                Fk_ReleaseStatus = 1,
+                StartDate = new DateTime(2009, 9, 18),
+                ClosureDate = new DateTime(2016, 10, 12),
+                Enum_ReleaseStatus = releaseStatus.ElementAt(0),
+                Stage1FreezeDate = DateTime.Today.AddDays(-5),
+                Stage1FreezeMtgRef = "d3",
+                Stage2FreezeDate = DateTime.Today.AddDays(-3),
+                Stage2FreezeMtgRef = "d4",
+                Stage3FreezeDate = DateTime.Today.AddDays(1),
+                Stage3FreezeMtgRef = ("d5"),
+            };
+
+            releaseService.CreateRelease(ReleaseToTest, previousReleaseId, personID);
+
+            mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<Release>.Matches(y => y.Code == ReleaseToTest.Code && y.Name == ReleaseToTest.Name
+                                                                                && y.StartDate == ReleaseToTest.StartDate && y.ClosureDate == ReleaseToTest.ClosureDate)));
+                                                                                
+
+            mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<History>.Matches(y => y.Fk_ReleaseId == default(int) && y.Fk_PersonId == personID
+                                                                                                    && y.HistoryText == Utils.Localization.History_Release_Created)));
+            
+            mockDataContext.AssertWasCalled(x => x.SaveChanges(), y => y.Repeat.Once());
+
+            mockDataContext.VerifyAllExpectations();
+        }
+
+        [Test]
         public void Test_FreezeRelease()
         {
             int releaseIdToTest = 1;

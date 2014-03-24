@@ -35,6 +35,7 @@ namespace Etsi.Ultimate.Services
                 Stage1FreezeDate = DateTime.Today.AddDays(1),
                 Stage2FreezeDate = DateTime.Today.AddDays(2),
                 Stage3FreezeDate = DateTime.Today.AddDays(3),  
+                SortOrder= 10
             });
             releases.Add(new DomainClasses.Release()
             {
@@ -51,6 +52,7 @@ namespace Etsi.Ultimate.Services
                 Stage2FreezeMtgRef = "d4",
                 Stage3FreezeDate = DateTime.Today.AddDays(1), 
                 Stage3FreezeMtgRef = ("a pas afficher"),
+                SortOrder = 20
             });
             releases.Add(new DomainClasses.Release()
             {
@@ -68,7 +70,8 @@ namespace Etsi.Ultimate.Services
                 Stage3FreezeDate = DateTime.Today.AddDays(-1), 
                 Stage3FreezeMtgRef = ("5c"),
                 ClosureMtgRef="fdf8ddsd8", 
-                Enum_ReleaseStatus = statusClosed
+                Enum_ReleaseStatus = statusClosed,
+                SortOrder= 30
             });
 
             UserRightsContainer userRightsContainer = new UserRightsContainer();
