@@ -264,9 +264,11 @@ namespace Etsi.Ultimate.Tests.Services
             releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, Code = "Closed" });
 
             var MeetingsSet = new MeetingFakeDBSet();
-            MeetingsSet.Add(new Meeting(){MTG_ID = 1, MtgShortRef= "d5", END_DATE= DateTime.Today.AddDays(1)});
-            MeetingsSet.Add(new Meeting(){MTG_ID = 2, MtgShortRef= "d6", END_DATE= DateTime.Today.AddDays(2)});
-            MeetingsSet.Add(new Meeting(){MTG_ID = 3, MtgShortRef= "d7", END_DATE= DateTime.Today.AddDays(3)});
+            MeetingsSet.Add(new Meeting(){  MTG_ID = 1, MtgShortRef = "d5", END_DATE= DateTime.Today.AddDays(1)});
+            MeetingsSet.Add(new Meeting(){  MTG_ID = 2, MtgShortRef = "d6", END_DATE= DateTime.Today.AddDays(2)});
+            MeetingsSet.Add(new Meeting(){  MTG_ID = 3, MtgShortRef = "d7", END_DATE= DateTime.Today.AddDays(3)});
+            MeetingsSet.Add(new Meeting(){  MTG_ID = 4, MtgShortRef = "d8", END_DATE = DateTime.Today.AddDays(4) });
+            MeetingsSet.Add(new Meeting(){  MTG_ID = 5, MtgShortRef = "d9", END_DATE = DateTime.Today.AddDays(5) });
 
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releaseFakeRepository.All);
@@ -297,12 +299,17 @@ namespace Etsi.Ultimate.Tests.Services
             ReleaseToTest.Stage1FreezeMtgId = MeetingsSet.ElementAt(0).MTG_ID;
             ReleaseToTest.Stage2FreezeMtgId = MeetingsSet.ElementAt(1).MTG_ID;
             ReleaseToTest.Stage3FreezeMtgId = MeetingsSet.ElementAt(2).MTG_ID;
+            ReleaseToTest.EndMtgId = MeetingsSet.ElementAt(3).MTG_ID;
+            ReleaseToTest.ClosureMtgId = MeetingsSet.ElementAt(4).MTG_ID;
+
             releaseService.EditRelease(ReleaseToTest, previousReleaseId, personID);
 
             mockDataContext.AssertWasCalled(x => x.SetModified(Arg<Release>.Matches(y => y.Name == editedName && y.Pk_ReleaseId == ReleaseToTest.Pk_ReleaseId
                                                                 && DateTime.Compare(y.Stage1FreezeDate.Value,MeetingsSet.ElementAt(0).END_DATE.Value) == 0 
                                                                 && DateTime.Compare(y.Stage2FreezeDate.Value,MeetingsSet.ElementAt(1).END_DATE.Value) == 0 
-                                                                && DateTime.Compare(y.Stage3FreezeDate.Value,MeetingsSet.ElementAt(2).END_DATE.Value) == 0 )));
+                                                                && DateTime.Compare(y.Stage3FreezeDate.Value,MeetingsSet.ElementAt(2).END_DATE.Value) == 0
+                                                                && DateTime.Compare(y.EndDate.Value, MeetingsSet.ElementAt(3).END_DATE.Value) == 0
+                                                                && DateTime.Compare(y.ClosureDate.Value, MeetingsSet.ElementAt(4).END_DATE.Value) == 0)));
             
             mockDataContext.AssertWasCalled(x => x.SaveChanges(), y => y.Repeat.Once());
 
