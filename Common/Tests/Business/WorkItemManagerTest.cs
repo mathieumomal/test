@@ -4,6 +4,7 @@ using Etsi.Ultimate.DataAccess;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Tests.FakeSets;
+using Etsi.Ultimate.Utils;
 using Microsoft.Practices.Unity;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -139,6 +140,22 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.Contains("eWebRTCi", wiManager.GetAllAcronyms());
             Assert.Contains("IOPS", wiManager.GetAllAcronyms());
             Assert.Contains("UPCON-DOT", wiManager.GetAllAcronyms());
+        }
+
+        [Test, TestCaseSource("WorkItemData")]
+        public void ImportWorkPlan_Export(WorkItemFakeDBSet workItemData)
+        {
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var wiImporter = new WorkItemImporter();
+            wiImporter.UoW = uow;
+
+            CacheManager.Insert("WI_IMPORT_" + "az12", workItemData.All());
+            wiImporter.ImportWorkPlan("az12", string.Empty);
+
         }
 
         /// <summary>

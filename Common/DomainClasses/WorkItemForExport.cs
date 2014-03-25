@@ -9,8 +9,8 @@ namespace Etsi.Ultimate.DomainClasses
     public class WorkItemForExport
     {
         //TODO: A dictionnary that contains all possible styles (e.g. 12)
-        public string Wpid { get; set; }
-        public string UID { get; set; }
+        public Nullable<int> Wpid { get; set; }
+        public int UID { get; set; }
         public string Name { get; set; }
         public string Acronym { get; set; }
         public int Level { get; set; }
@@ -18,7 +18,7 @@ namespace Etsi.Ultimate.DomainClasses
         public string ResponsibleGroups { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
-        public string Completion { get; set; }
+        public Nullable<int> Completion { get; set; }
         public string HyperLink { get; set; }
         public string StatusReport { get; set; }
         public string WIRaporteur { get; set; }
@@ -29,22 +29,33 @@ namespace Etsi.Ultimate.DomainClasses
         private CustomizableCellStyle rowStyle ;
 
         public WorkItemForExport(WorkItem workItem){
-            Wpid = workItem.WorkplanId.ToString(); ;
-            UID = workItem.Pk_WorkItemUid.ToString(); 
-            Name = workItem.Name;
+            Wpid = workItem.WorkplanId;
+            UID = workItem.Pk_WorkItemUid;
+            Name = GetEmptyString(workItem.WiLevel.Value) + workItem.Name;
             Acronym = workItem.Acronym;
             Level = workItem.WiLevel.Value;
             Release = workItem.Release.Description;
             ResponsibleGroups = string.Join(" ", workItem.WorkItems_ResponsibleGroups.Select(r => r.ResponsibleGroup).ToArray()); 
             StartDate = workItem.StartDate.GetValueOrDefault().ToString("yyyy-MM-dd");
             EndDate = workItem.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd");
-            Completion = workItem.Completion.ToString();
+            Completion = ((workItem.Completion != null) ? workItem.Completion: 0)/100;
             HyperLink = workItem.Wid;
             StatusReport = workItem.StatusReport;
             WIRaporteur = workItem.RapporteurCompany;
             WIRaporteurEmail = workItem.RapporteurStr;
             Notes = string.Join(" ", workItem.Remarks.Select(r => r.RemarkText).ToArray()); 
             RelatedTSs_TRs = workItem.TssAndTrs;
+        }
+
+        private string GetEmptyString(int level)
+        {
+            StringBuilder space = new StringBuilder();
+            if (level > 1)
+            {
+                for (int i = 3; i <= level * 2; i++)
+                    space.Append(" ");
+            }
+            return space.ToString();
         }
 
         public static List<WorkItemForExport> GetWorkItemsListForExport(List<WorkItem> exportDataSource){

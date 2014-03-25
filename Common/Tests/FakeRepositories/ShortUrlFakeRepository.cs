@@ -67,8 +67,8 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         {
             //This will throw an exception if the query does not return at least one item.
             var ShortUrl = GenerateList().Where(f => f.Token == token).FirstOrDefault();
-            if (ShortUrl == null)
-                throw new KeyNotFoundException();
+            //if (ShortUrl == null)
+            //    throw new KeyNotFoundException();
             return ShortUrl;
         }
 

@@ -32,7 +32,7 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public bool ImportWorkPlan(string token)
+        public bool ImportWorkPlan(string token, string exportPath)
         {
             bool isImportSuccess = false;
             try
@@ -40,7 +40,7 @@ namespace Etsi.Ultimate.Services
                 using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
                 {
                     var csvImport = new WorkItemImporter() { UoW = uoW };
-                    isImportSuccess = csvImport.ImportWorkPlan(token);
+                    isImportSuccess = csvImport.ImportWorkPlan(token, exportPath);
 
                     if (isImportSuccess)
                     {

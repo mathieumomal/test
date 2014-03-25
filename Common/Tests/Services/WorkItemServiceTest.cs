@@ -220,7 +220,7 @@ namespace Etsi.Ultimate.Tests.Services
             CacheManager.Insert("WI_IMPORT_"+"az12", wiList);
 
             var wiService = new WorkItemService();
-            Assert.IsTrue(wiService.ImportWorkPlan("az12"));
+            Assert.IsTrue(wiService.ImportWorkPlan("az12", string.Empty));
         }
 
         [Test]
@@ -229,7 +229,7 @@ namespace Etsi.Ultimate.Tests.Services
             CacheManager.Clear("WI_IMPORT_" + "az12");
 
             var wiService = new WorkItemService();
-            Assert.IsFalse(wiService.ImportWorkPlan("az12"));
+            Assert.IsFalse(wiService.ImportWorkPlan("az12", string.Empty));
         }
 
         /// <summary>

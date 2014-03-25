@@ -247,7 +247,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         {
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
             tokenWorkPlanAnalysed = (string)ViewState["WiImportToken"];
-            bool success = wiService.ImportWorkPlan(tokenWorkPlanAnalysed);
+            bool success = wiService.ImportWorkPlan(tokenWorkPlanAnalysed, PathExportWorkPlan);
 
             if (success)
             {

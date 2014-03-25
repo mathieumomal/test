@@ -19,9 +19,10 @@ namespace Etsi.Ultimate.Services
         /// <summary>
         /// Import workitems uploaded on the server
         /// </summary>
-        /// <param name="token"></param>
-        /// <returns></returns>
-        bool ImportWorkPlan(string token);
+        /// <param name="token">Token</param>
+        /// <param name="exportPath">Export Path</param>
+        /// <returns>Success/Failure</returns>
+        bool ImportWorkPlan(string token, string exportPath);
 
         /// <summary>
         /// Get the list of workitems based on the release

@@ -24,7 +24,7 @@ namespace Etsi.Ultimate.Services
             return analyseWorkItemForImportResult;
         }
 
-        public bool ImportWorkPlan(string token)
+        public bool ImportWorkPlan(string token, string exportPath)
         {
             throw new NotImplementedException();
         }
