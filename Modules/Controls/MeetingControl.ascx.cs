@@ -105,6 +105,8 @@ namespace Etsi.Ultimate.Controls
 
                 rcbMeetings.OnClientSelectedIndexChanged = "OnClientSelectedIndexChanged" + lblEndDate.ClientID;
             }
+            if (!string.IsNullOrEmpty(rcbMeetings.SelectedValue) && !string.IsNullOrEmpty(rcbMeetings.SelectedValue.Split('|')[1]))
+                lblEndDate.Text = rcbMeetings.SelectedValue.Split('|')[1];
         }
         protected void rcbMeetings_ItemsRequested(object o, RadComboBoxItemsRequestedEventArgs e)
         {
@@ -123,7 +125,10 @@ namespace Etsi.Ultimate.Controls
             var combo = (RadComboBox)sender;
 
             if (!IsPostBack && SelectedMeetingId != default(int) && combo.Items.Count > 0)
-                combo.Items.FindItem(x => x.Value.StartsWith(SelectedMeetingId.ToString())).Selected = true;
+            {
+                if (combo.Items.FindItem(x => x.Value.StartsWith(SelectedMeetingId.ToString())) != null)
+                    combo.Items.FindItem(x => x.Value.StartsWith(SelectedMeetingId.ToString())).Selected = true;
+            }
 
             combo.Items.Insert(0, new RadComboBoxItem(" ", "-1|-"));
         }
@@ -143,7 +148,8 @@ namespace Etsi.Ultimate.Controls
             rcbMeetings.DataValueField = "MtgDdlValue";
             rcbMeetings.DataBind();
 
-            if (SelectedMeetingId != 0)
+            if (SelectedMeetingId != 0 && meetingsList.Where(m => m.MTG_ID == SelectedMeetingId).Count() > 0
+                && meetingsList.Where(m => m.MTG_ID == SelectedMeetingId).FirstOrDefault().END_DATE != null)
                 lblEndDate.Text = meetingsList.Where(m => m.MTG_ID == SelectedMeetingId).FirstOrDefault().END_DATE.Value.ToString("yyyy-MM-dd");
         }
         private void SetDropdownProperties()

@@ -616,13 +616,13 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::Telerik.Web.UI.RadWindowManager RadWindowManager1;
         
         /// <summary>
-        /// RadWindow_workItemImport control.
+        /// RadWindow_FreezeConfirmation control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadWindow RadWindow_workItemImport;
+        protected global::Telerik.Web.UI.RadWindow RadWindow_FreezeConfirmation;
         
         /// <summary>
         /// mcFreeze control.

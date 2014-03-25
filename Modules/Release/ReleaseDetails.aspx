@@ -220,7 +220,7 @@
                    $('#FreezeReleaseBtn').click(function (event) {
                        event.preventDefault();
                        closeAllModals();
-                       window.radopen(null, "RadWindow_workItemImport");
+                       window.radopen(null, "RadWindow_FreezeConfirmation");
                    });
                    $('#CloseReleaseBtn').click(function (event) {
                        event.preventDefault();
@@ -234,9 +234,9 @@
        </telerik:RadAjaxManager>
         <telerik:RadWindowManager ID="RadWindowManager1" runat="server" >
             <Windows>
-                <telerik:RadWindow ID="RadWindow_workItemImport"  runat="server" Modal="true" Title="Freeze Confirmation" Height="210" Width="400" VisibleStatusbar="false" iconUrl="false">
+                <telerik:RadWindow ID="RadWindow_FreezeConfirmation"  runat="server" Modal="true" Title="Freeze Confirmation" Height="210" Width="400" VisibleStatusbar="false" iconUrl="false">
                     <ContentTemplate>
-                        <div class="contentModal" id="import" style="padding:5px;">
+                        <div class="contentModal" id="divFreezeConfirmation" style="padding:5px;">
                             <div class="header">
                                 You are about to freeze the Release.
                             </div>

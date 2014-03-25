@@ -286,8 +286,14 @@ namespace Etsi.Ultimate.Module.Release
                     var mtg = mtgControl.SelectedMeeting;
 
                     IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
-                    svc.FreezeRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), UserId, mtg.MTG_ID, mtg.MtgShortRef);
-                    this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
+
+                    if ((svc.GetReleaseById(UserId, ReleaseId.Value).Key.Stage3FreezeDate ?? default(DateTime)) < mtg.END_DATE)
+                    {
+                        svc.FreezeRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), UserId, mtg.MTG_ID, mtg.MtgShortRef);
+                        this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
+                    }
+                    else
+                        RadWindowManager1.RadAlert("End date must be greater than Freeze stage 3 date.", 400, 150, "Error", "window.radopen(null, 'RadWindow_FreezeConfirmation')", "images/error.png");
                 }
             }
         }
@@ -308,9 +314,15 @@ namespace Etsi.Ultimate.Module.Release
                     var mtg = mtgControl.SelectedMeeting;
 
                     IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
-                    svc.CloseRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), mtg.MtgShortRef, mtg.MTG_ID, UserId);
-                    this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
+                    if ((svc.GetReleaseById(UserId, ReleaseId.Value).Key.Stage3FreezeDate ?? default(DateTime)) < mtg.END_DATE)
+                    {
+                        svc.CloseRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), mtg.MtgShortRef, mtg.MTG_ID, UserId);
+                        this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
+                    }
+                    else
+                        RadWindowManager1.RadAlert("End date must be greater than Freeze stage 3 date.", 400, 150, "Error", "window.radopen(null, 'RadWindow_ClosureConfirmation')", "images/error.png");
                 }
+
             }
         }
     }
