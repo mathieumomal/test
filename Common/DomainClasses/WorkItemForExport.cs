@@ -25,8 +25,7 @@ namespace Etsi.Ultimate.DomainClasses
         public string WIRaporteurEmail { get; set; }
         public string Notes { get; set; }
         public string RelatedTSs_TRs { get; set; }
-        private CustomizableCellStyle NameCellStyle { get; set; }
-        private CustomizableCellStyle rowStyle ;
+
 
         public WorkItemForExport(WorkItem workItem){
             Wpid = workItem.WorkplanId;
@@ -65,21 +64,15 @@ namespace Etsi.Ultimate.DomainClasses
             }
             return formatedDataSource;
         }
-
-        public CustomizableCellStyle GetNameCellStyle(){
-            throw new NotImplementedException();
-            // Depenging on the propoerties of the current object return one of the pre-defined styles
+       
+        public System.Drawing.Color GetCellBgColor()
+        {
+            if(Completion.Value == 1)
+                return System.Drawing.Color.FromArgb(204, 255, 204);
+            else
+                return System.Drawing.Color.White;
         }
 
-        /*public CustomizableCellStyle GetRowStyle(){
-            if(Completion.Length>1 && Completion.Substring(0,Completion.Length-2).Equals("100")){
-                rowStyle = new CustomizableCellStyle()
-                rowStyle.FillForegroundColor= new NPOI.HSSF.Util.HSSFColor.GREY_25_PERCENT.index; 
-            }
-            else{
-                rowStyle = null
-            }
-            return rowStyle; 
-        }*/
+        
     }
 }

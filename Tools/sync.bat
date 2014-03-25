@@ -1,7 +1,7 @@
 @ECHO OFF
 REM ----- FILL IN THIS AREA -----
-SET TRUNK_PATH=D:\WS\ETSI_3GPP_Ultimate\dev\Ultimate\trunk\
-SET DNN_PATH=C:\Websites\dnn3gpp.loc\
+SET TRUNK_PATH=D:\ETSI_Projects\etsi_ngpp_source_code\ULTIMATE\trunk\
+SET DNN_PATH=C:\websites\dnn3gpp.13.etsidev.org\
 
 REM ----- DON'T MODIFY ANYTHING BELOW, unless you know what you're doing -----
 
