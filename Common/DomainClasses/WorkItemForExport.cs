@@ -25,6 +25,7 @@ namespace Etsi.Ultimate.DomainClasses
         public string WIRaporteurEmail { get; set; }
         public string Notes { get; set; }
         public string RelatedTSs_TRs { get; set; }
+        public bool StoppedMeeting { get; set; }
 
 
         public WorkItemForExport(WorkItem workItem){
@@ -44,6 +45,9 @@ namespace Etsi.Ultimate.DomainClasses
             WIRaporteurEmail = workItem.RapporteurStr;
             Notes = string.Join(" ", workItem.Remarks.Select(r => r.RemarkText).ToArray()); 
             RelatedTSs_TRs = workItem.TssAndTrs;
+            StoppedMeeting = (workItem.TsgStoppedMtgId != null || !String.IsNullOrEmpty(workItem.TsgStoppedMtgRef) 
+                                                               || workItem.PcgStoppedMtgId != null 
+                                                               || !String.IsNullOrEmpty(workItem.PcgStoppedMtgRef));
         }
 
         private string GetEmptyString(int level)
@@ -51,7 +55,7 @@ namespace Etsi.Ultimate.DomainClasses
             StringBuilder space = new StringBuilder();
             if (level > 1)
             {
-                for (int i = 3; i <= level * 2; i++)
+                for (int i = 1; i <= (level * 3) - 3; i++)
                     space.Append(" ");
             }
             return space.ToString();

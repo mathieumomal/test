@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Domain = Etsi.Ultimate.DomainClasses;
-using System.IO;
-using Novacode;
-using System.Drawing;
+﻿using Novacode;
 using OfficeOpenXml;
-using System.IO;
-using System.Drawing;
 using OfficeOpenXml.Style;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using Domain = Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Business
 {
@@ -24,7 +20,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="exportPath">Export Path</param>
         public static void ExportToExcel(List<Domain.WorkItem> workPlan, string exportPath)
         {
-            if (!String.IsNullOrEmpty(exportPath))
+            if (!String.IsNullOrEmpty(exportPath) && workPlan.Count >= 1)
             {
                 //Create Empty Work Book
                 string file = exportPath + @"WorkItemExport.xlsx";
@@ -42,29 +38,47 @@ namespace Etsi.Ultimate.Business
                     /*------------*/
                     /* Set Styles */
                     /*------------*/
+                    int rowHeader = 1;
+                    int rowDataStart = 2;
+                    int rowDataEnd = exportWorkPlan.Count + 1;
+                    int columnStart = 1;
+                    int columnEnd = 17;
+                    int columnName = 3;
+                    int columnCompletion = 10;
+
                     //Set Font Style
                     wsData.Cells.Style.Font.Size = 8;
                     wsData.Cells.Style.Font.Name = "Arial";
                     //Set Header Style
-                    wsData.Cells[1, 1, 1, 16].Style.Font.Bold = true;
-                    wsData.Cells[1, 1, 1, 16].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    wsData.Cells[1, 1, 1, 16].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                    wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Font.Bold = true;
+                    wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
                     //Set Name Column as Bold
-                    wsData.Cells[1, 3, exportWorkPlan.Count + 1, 3].Style.Font.Bold = true;
+                    wsData.Cells[rowDataStart, columnName, rowDataEnd, columnName].Style.Font.Bold = true;
                     //Set Complete column with Percentage Format
-                    wsData.Cells[1, 10, exportWorkPlan.Count + 1, 10].Style.Numberformat.Format = "0%";
+                    wsData.Cells[rowDataStart, columnCompletion, rowDataEnd, columnCompletion].Style.Numberformat.Format = "0%";
                     //Set Cell Borders
-                    wsData.Cells[1, 1, exportWorkPlan.Count + 1, 16].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                    wsData.Cells[1, 1, exportWorkPlan.Count + 1, 16].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                    wsData.Cells[1, 1, exportWorkPlan.Count + 1, 16].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                    wsData.Cells[1, 1, exportWorkPlan.Count + 1, 16].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                    wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
                     //Set Filters
-                    wsData.Cells[1, 1, 1, 16].AutoFilter = true;
+                    wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].AutoFilter = true;
+
+                    //Set Column Width
+                    wsData.DefaultColWidth = 10;
+                    wsData.Column(1).Width = wsData.Column(5).Width = wsData.Column(10).Width = 5;
+                    wsData.Column(3).Width = wsData.Column(16).Width = 35;
+
+                    //Set Row Height
+                    wsData.DefaultRowHeight = 12;
+                    //Set Zoom to 85%
+                    wsData.View.ZoomScale = 85;
 
                     /*--------------*/
                     /* Add Formulas */
                     /*--------------*/
-                    ExcelAddress nameAddress = new ExcelAddress(2, 3, exportWorkPlan.Count + 1, 3);
+                    ExcelAddress nameAddress = new ExcelAddress(rowDataStart, columnName, rowDataEnd, columnName);
                     //Name should be Red if Unique ID is 0
                     var ruleNoUniqueKey = wsData.ConditionalFormatting.AddExpression(nameAddress);
                     ruleNoUniqueKey.Style.Font.Color.Color = Color.Red;
@@ -97,11 +111,13 @@ namespace Etsi.Ultimate.Business
                     ruleLevel4.Formula = "E2=4";
                     ruleLevel4.Priority = 5;
 
-                    ExcelAddress completeTableAddress = new ExcelAddress(2, 1, exportWorkPlan.Count + 1, 16);
+                    ExcelAddress completeTableAddress = new ExcelAddress(rowDataStart, columnStart, rowDataEnd, columnEnd);
+                    var stoppedMeetingIds = exportWorkPlan.Where(x => x.StoppedMeeting == true && x.Wpid != null).Select(y => y.Wpid).ToList();
+
                     //Stopped WorkItems should have light brown background
                     var ruleDeleted = wsData.ConditionalFormatting.AddExpression(completeTableAddress);
                     ruleDeleted.Style.Fill.BackgroundColor.Color = Color.FromArgb(227, 227, 227);
-                    ruleDeleted.Formula = "LEFT(TRIM($C2), LEN(\"Deleted -\")) = \"Deleted -\"";
+                    ruleDeleted.Formula = "SEARCH(CONCATENATE(\"[\",$A2,\"]\"), CONCATENATE(\"[" + String.Join("]\",\"[", stoppedMeetingIds) + "]\"))>0";
                     ruleDeleted.Priority = 6;
 
                     //100% completed workitems should have light green background
@@ -113,10 +129,26 @@ namespace Etsi.Ultimate.Business
                     //Upload Data to Excel
                     var dataRange = wsData.Cells["A1"].LoadFromCollection(
                                                   from s in exportWorkPlan
-                                                  orderby s.UID
-                                                  select s, true, OfficeOpenXml.Table.TableStyles.None);
-                    dataRange.AutoFitColumns();
-
+                                                  select new { 
+                                                      ID = s.Wpid,
+                                                      Unique_ID = s.UID,
+                                                      Name = s.Name,
+                                                      Acronym = s.Acronym,
+                                                      Outline_Level = s.Level,
+                                                      Release = s.Release,
+                                                      Resource_Names = s.ResponsibleGroups,
+                                                      Start_Date = s.StartDate,
+                                                      Finish_Date = s.EndDate,
+                                                      Percent_Complete = s.Completion,
+                                                      Hyperlink = s.HyperLink,
+                                                      Status_Report = s.StatusReport,
+                                                      WI_rapporteur_name = s.WIRaporteur,
+                                                      WI_rapporteur_e_mail = s.WIRaporteurEmail,
+                                                      Notes = s.Notes,
+                                                      Impacted_TSs_and_TRs = s.RelatedTSs_TRs,
+                                                      Special_Focus_Doc = String.Empty                                                  
+                                                  } ,
+                                                  true, OfficeOpenXml.Table.TableStyles.None);
                     pck.Save();
                 }
             }
