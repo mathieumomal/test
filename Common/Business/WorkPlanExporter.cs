@@ -10,9 +10,10 @@ using Domain = Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Business
 {
+    
     public class WorkPlanExporter
     {
-
+       
         /// <summary>
         /// Export Work Plan to Excel
         /// </summary>
@@ -162,82 +163,110 @@ namespace Etsi.Ultimate.Business
                 string file = exportPath + "WorkItemExport.docx";
                 if (File.Exists(file)) File.Delete(file);
                 List<Domain.WorkItemForExport> exportWorkPlan = new List<Domain.WorkItemForExport>();
-                workPlan.ForEach(x => exportWorkPlan.Add(new Domain.WorkItemForExport(x)));
+                exportWorkPlan = Domain.WorkItemForExport.GetWorkItemsListForExport(workPlan);
+                
                 using (DocX document = DocX.Create(file))
                 {
-                    document.MarginLeft = 0F;
-                    document.MarginRight = 0F;
-                    document.InsertParagraph("Work_plan_3gpp_" + DateTime.Now.ToString("yyMMdd"));
+                     double FONT_SIZE_HEADER = 16D;
+
+                    document.MarginLeft = 100F;
+                    document.MarginRight = 0F;                    
+
+                    var headLineFormat = new Formatting();
+                    headLineFormat.FontFamily = new FontFamily("Arial");
+                    headLineFormat.Size = FONT_SIZE_HEADER;
+                    headLineFormat.Bold = true;
+
+                    document.InsertParagraph("Work_plan_3gpp_" + DateTime.Now.ToString("yyMMdd"), false, headLineFormat);
                     document.InsertParagraph("");
 
-                    Table legendTable = document.AddTable(5, 1);
-                    legendTable.Rows[0].Cells[0].Paragraphs.First().Append("LEGEND");
-                    legendTable.Rows[1].Cells[0].Paragraphs.First().Append("ONGOING");
-                    legendTable.Rows[2].Cells[0].Paragraphs.First().Append("COMPLETED");
-                    legendTable.Rows[3].Cells[0].Paragraphs.First().Append("STOPPED");
-                    legendTable.Rows[4].Cells[0].Paragraphs.First().Append("-");
+                    Table legendTable = document.AddTable(5, 1);                    
+
+                    WorkPlanExporter.SetCellContent(legendTable.Rows[0].Cells[0], "LEGEND", Domain.DocxStylePool.STYLES_KEY.BLUE_WHITE);
+                    WorkPlanExporter.SetCellContent(legendTable.Rows[1].Cells[0], "ONGOING", Domain.DocxStylePool.STYLES_KEY.BLACK_WHITE);
+                    WorkPlanExporter.SetCellContent(legendTable.Rows[2].Cells[0], "COMPLETED", Domain.DocxStylePool.STYLES_KEY.BOLD_BLACK_GREEN);
+                    WorkPlanExporter.SetCellContent(legendTable.Rows[3].Cells[0], "STOPPED", Domain.DocxStylePool.STYLES_KEY.BOLD_BLACK_GRAY);
+                    WorkPlanExporter.SetCellContent(legendTable.Rows[4].Cells[0], "-", Domain.DocxStylePool.STYLES_KEY.BLACK_WHITE);
+                    
+
                     document.InsertTable(legendTable);
 
                     document.InsertParagraph("");
 
-                    Table t = document.AddTable(exportWorkPlan.Count, 12);
-                    t.AutoFit = AutoFit.Contents;
+                    Table t = document.AddTable(exportWorkPlan.Count, 16);                     
+                                       
+
                     for (int i = 0; i < exportWorkPlan.Count; i++)
                     {
-                        t.Rows[i].Cells[0].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[0].Paragraphs.First().Append(exportWorkPlan[i].Wpid.Value.ToString());
-
-                        t.Rows[i].Cells[1].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[1].Paragraphs.First().Append(exportWorkPlan[i].UID.ToString());
-
-                        t.Rows[i].Cells[2].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[2].Paragraphs.First().Append(exportWorkPlan[i].Name);
-
-                        t.Rows[i].Cells[3].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[3].Paragraphs.First().Append(exportWorkPlan[i].Acronym);
-
-                        t.Rows[i].Cells[4].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[4].Paragraphs.First().Append(exportWorkPlan[i].Level.ToString());
-
-                        t.Rows[i].Cells[5].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[5].Paragraphs.First().Append(exportWorkPlan[i].Release);
-
-                        t.Rows[i].Cells[6].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[6].Paragraphs.First().Append(exportWorkPlan[i].ResponsibleGroups);
-
-                        t.Rows[i].Cells[7].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[7].Paragraphs.First().Append(exportWorkPlan[i].StartDate);
-
-                        t.Rows[i].Cells[8].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[8].Paragraphs.First().Append(exportWorkPlan[i].EndDate);
-
-                        t.Rows[i].Cells[9].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[9].Paragraphs.First().Append(exportWorkPlan[i].Completion.Value.ToString());
-
-                        t.Rows[i].Cells[10].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[10].Paragraphs.First().Append(exportWorkPlan[i].HyperLink);
-
-                        t.Rows[i].Cells[11].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[11].Paragraphs.First().Append(exportWorkPlan[i].StatusReport);
-
-                        /*t.Rows[i].Cells[12].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[12].Paragraphs.First().Append(exportWorkPlan[i].WIRaporteur);
-
-                        t.Rows[i].Cells[13].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[13].Paragraphs.First().Append(exportWorkPlan[i].WIRaporteurEmail);
-
-                        t.Rows[i].Cells[14].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[14].Paragraphs.First().Append(exportWorkPlan[i].Notes);
-
-                        t.Rows[i].Cells[15].FillColor = exportWorkPlan[i].GetCellBgColor();
-                        t.Rows[i].Cells[15].Paragraphs.First().Append(exportWorkPlan[i].RelatedTSs_TRs);*/
-
+                        
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[0],exportWorkPlan[i].Wpid.ToString().Trim(), "Wpid", exportWorkPlan[i]);
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[1], exportWorkPlan[i].UID.ToString(), "UID", exportWorkPlan[i]);
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[2], exportWorkPlan[i].Name, "Name", exportWorkPlan[i]);
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[3], exportWorkPlan[i].Acronym, "Acronym", exportWorkPlan[i]);
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[4], exportWorkPlan[i].Level.ToString(), "Level", exportWorkPlan[i]);
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[5], exportWorkPlan[i].Release, "Release", exportWorkPlan[i]);
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[6], exportWorkPlan[i].ResponsibleGroups, "ResponsibleGroups", exportWorkPlan[i]);
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[7], exportWorkPlan[i].StartDate, "StartDate", exportWorkPlan[i]);
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[8], exportWorkPlan[i].EndDate, "EndDate", exportWorkPlan[i]);
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[9], (exportWorkPlan[i].Completion.Value * 100).ToString().Trim() + "%", "Completion", exportWorkPlan[i]);
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[10], exportWorkPlan[i].HyperLink, "HyperLink", exportWorkPlan[i]);
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[11], exportWorkPlan[i].StatusReport, "StatusReport", exportWorkPlan[i]);
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[12], exportWorkPlan[i].WIRaporteur, "WIRaporteur", exportWorkPlan[i]);
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[13], exportWorkPlan[i].WIRaporteurEmail, "WIRaporteurEmail", exportWorkPlan[i]);
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[14], exportWorkPlan[i].Notes, "Notes", exportWorkPlan[i]);
+                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[15], exportWorkPlan[i].RelatedTSs_TRs, "RelatedTSs_TRs", exportWorkPlan[i]);                        
                     }
+
+                    t.AutoFit = AutoFit.Window;
+                    t.Alignment = Alignment.left;    
                     // Insert the Table into the document.
                     document.InsertTable(t);
                     document.Save();
                 }
             }
+        }
+
+        private static void SetCellContent(Cell currentCell,string cellContent, string colName, Domain.WorkItemForExport row)
+        {
+            FontFamily FONT_ARIAL = new FontFamily("Arial");
+            double FONT_SIZE_PARAGRAPH = 8D;
+            currentCell.MarginLeft = 0D;
+            currentCell.MarginRight = 0D;
+            currentCell.MarginTop = 0D;            
+            currentCell.Paragraphs.First().Append(cellContent);            
+            currentCell.Paragraphs.First().Color(Domain.DocxStylePool.GetDocxStyle(row.GetCellStyle(colName)).FontColor);
+            if (cellContent != null && !cellContent.Equals(string.Empty))
+            {
+                currentCell.Paragraphs.First().Font(FONT_ARIAL);
+                currentCell.Paragraphs.First().FontSize(FONT_SIZE_PARAGRAPH);
+                if (!colName.Equals("Notes") || !colName.Equals("RelatedTSs_TRs"))
+                    currentCell.Width = (double)((cellContent.Length) * FONT_SIZE_PARAGRAPH);
+                else
+                {
+                    currentCell.Width = (double)((50) * FONT_SIZE_PARAGRAPH);
+                }
+            }
+            if (Domain.DocxStylePool.GetDocxStyle(row.GetCellStyle(colName)).IsBold) currentCell.Paragraphs.First().Bold();
+            currentCell.FillColor = Domain.DocxStylePool.GetDocxStyle(row.GetCellStyle(colName)).BgColor;
+        }
+
+        private static void SetCellContent(Cell currentCell, string cellContent, Domain.DocxStylePool.STYLES_KEY style)
+        {
+            FontFamily FONT_ARIAL = new FontFamily("Arial");
+            double FONT_SIZE_PARAGRAPH = 8D;
+            /*currentCell.MarginLeft = 0D;
+            currentCell.MarginRight = 0D;
+            currentCell.MarginTop = 0D;*/
+            currentCell.Width = (double)(cellContent.Length*FONT_SIZE_PARAGRAPH);
+            currentCell.Paragraphs.First().Append(cellContent);
+            currentCell.Paragraphs.First().Color(Domain.DocxStylePool.GetDocxStyle((int)style).FontColor);            
+            if (cellContent != null && !cellContent.Equals(string.Empty))
+            {
+                currentCell.Paragraphs.First().Font(FONT_ARIAL);
+                currentCell.Paragraphs.First().FontSize(FONT_SIZE_PARAGRAPH);
+            }
+            if (Domain.DocxStylePool.GetDocxStyle((int)style).IsBold) currentCell.Paragraphs.First().Bold();
+            currentCell.FillColor = Domain.DocxStylePool.GetDocxStyle((int)style).BgColor;
         }
 
 

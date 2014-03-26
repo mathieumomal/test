@@ -34,7 +34,7 @@ namespace Etsi.Ultimate.DomainClasses
             Name = GetEmptyString(workItem.WiLevel.Value) + workItem.Name;
             Acronym = workItem.Acronym;
             Level = workItem.WiLevel.Value;
-            Release = workItem.Release.Description;
+            Release = (workItem.Release!= null) ? workItem.Release.Description : string.Empty;
             ResponsibleGroups = string.Join(" ", workItem.WorkItems_ResponsibleGroups.Select(r => r.ResponsibleGroup).ToArray()); 
             StartDate = workItem.StartDate.GetValueOrDefault().ToString("yyyy-MM-dd");
             EndDate = workItem.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd");
@@ -66,15 +66,43 @@ namespace Etsi.Ultimate.DomainClasses
             foreach(WorkItem wi in exportDataSource){
                 formatedDataSource.Add(new WorkItemForExport(wi));
             }
-            return formatedDataSource;
+            return formatedDataSource.OrderBy(w => w.Wpid).ToList();
         }
        
-        public System.Drawing.Color GetCellBgColor()
+        public int GetCellStyle(string colName)
         {
-            if(Completion.Value == 1)
-                return System.Drawing.Color.FromArgb(204, 255, 204);
+            int index = 0;
+
+            if (colName.Equals("Name"))
+            {
+                switch (Level)
+                {
+                    case 0:
+                        index += 9;
+                        break;
+                    case 1:
+                        index += 6;
+                        break;
+                    case 2:
+                        index += 3;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (StoppedMeeting)
+            {
+                index += 3;
+            }
             else
-                return System.Drawing.Color.White;
+            {
+                if (Completion.Value == 1)
+                    index += 2;
+                else
+                    index += 1;
+            }
+            return index;
         }
 
         

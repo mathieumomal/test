@@ -33,6 +33,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocX">
+      <HintPath>..\..\Libs\DocX.dll</HintPath>
+    </Reference>
     <Reference Include="NPOI">
       <HintPath>..\..\Libs\NPOI.dll</HintPath>
     </Reference>
@@ -49,6 +52,8 @@
     <Compile Include="Community.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="DocxStyle.cs" />
+    <Compile Include="DocxStylePool.cs" />
     <Compile Include="Enum_ReleaseStatus.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

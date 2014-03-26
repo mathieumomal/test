@@ -154,7 +154,7 @@ namespace Etsi.Ultimate.Tests.Business
             wiImporter.UoW = uow;
 
             CacheManager.Insert("WI_IMPORT_" + "az12", workItemData.All());
-            wiImporter.ImportWorkPlan("az12", string.Empty);
+            wiImporter.ImportWorkPlan("az12", @"D:\");
 
         }
 
