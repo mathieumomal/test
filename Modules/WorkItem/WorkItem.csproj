@@ -83,6 +83,13 @@
     <Compile Include="Components\FeatureController.cs" />
     <Compile Include="Components\ItemController.cs" />
     <Compile Include="Components\Item.cs" />
+    <Compile Include="WorkItemDetails.aspx.cs">
+      <DependentUpon>WorkItemDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WorkItemDetails.aspx.designer.cs">
+      <DependentUpon>WorkItemDetails.aspx</DependentUpon>
+    </Compile>
     <Compile Include="WorkItemModuleBase.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -116,8 +123,15 @@
     <Content Include="Documentation\Documentation.css" />
     <Content Include="Documentation\Documentation.html" />
     <Content Include="Edit.ascx" />
+    <Content Include="images\details.png" />
+    <Content Include="images\favicon.ico" />
+    <Content Include="images\hourglass.png" />
+    <Content Include="JS\jquery-validate.min.js" />
+    <Content Include="JS\jquery.min.js" />
+    <Content Include="JS\jquery.validate.js" />
     <Content Include="License.txt" />
     <Content Include="module.css" />
+    <Content Include="WorkItemDetails.aspx" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Settings.ascx" />
     <Content Include="View.ascx" />

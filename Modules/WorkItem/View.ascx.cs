@@ -375,6 +375,13 @@ namespace Etsi.Ultimate.Module.WorkItem
                 {
                     item.BackColor = Color.LightYellow;
                 }
+
+                var wiLevel = (System.Int32)DataBinder.Eval(item.DataItem, "wiLevel");
+                if (wiLevel == 0)
+                {
+                    item["ViewWorkItem"].Visible = false;
+                }
+
             }
         }
 

@@ -132,16 +132,18 @@
                         <telerik:TreeListBoundColumn  DataField="LatestRemark" UniqueName="LatestRemark"   HeaderText="Latest remark">
                             <HeaderStyle Font-Bold="True" Width="300px"/> 
                         </telerik:TreeListBoundColumn>
-                        <telerik:TreeListTemplateColumn>
+                        <telerik:TreeListTemplateColumn UniqueName="ViewWorkItem">
                             <HeaderStyle Width="50px"/> 
                             <ItemTemplate>
 					            <span></span>
-                                <img id="imgViewReleases" alt="See details" src="/DesktopModules/Release/images/details.png" 
-                                    onclick="var popUp=window.open('/desktopmodules/Release/ReleaseDetails.aspx?releaseId=<%# DataBinder.Eval(Container.DataItem,"Fk_ReleaseId").ToString() %>',
-								            'Rel-<%# DataBinder.Eval(Container.DataItem,"Fk_ReleaseId").ToString() %>', 'height=690,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
+                                <img id="imgViewWorkItems" alt="See details" src="/DesktopModules/WorkItem/images/details.png" 
+                                    onclick="var popUp=window.open('/desktopmodules/WorkItem/WorkItemDetails.aspx?workitemId=<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>',
+								            'Rel-<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>', 'height=690,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
                             </ItemTemplate>      
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListBoundColumn DataField="Display" Visible="false" UniqueName="Display" >
+                        </telerik:TreeListBoundColumn>
+                        <telerik:TreeListBoundColumn DataField="wiLevel" Visible="false" UniqueName="wiLevel" >
                         </telerik:TreeListBoundColumn>
                     </columns>
                     </telerik:RadTreeList>

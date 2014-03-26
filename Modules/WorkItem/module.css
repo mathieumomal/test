@@ -97,3 +97,130 @@ background-image: -ms-linear-gradient(bottom, #75B91A, #54AF13);
 background-image: -o-linear-gradient(bottom, #75B91A, #54AF13);
 filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#75B91A', endColorstr='#54AF13',GradientType=1 );
 }
+
+
+
+
+/* WORKITEM DETAILS - START*/
+
+.wiDetailBody {
+    font-family:Arial,verdana,Serif;
+    font-size: 12px;
+}
+
+#wiDetailRadMultiPage td {
+    padding-top: 4px !important;
+    padding-bottom: 3px !important;
+}
+
+.wiRemarks {
+    position: relative; 
+    bottom: 20px;
+    width: 623px;
+}
+
+#wiDetailRadMultiPage fieldset {
+    margin: 2%;
+    padding: 1% !important; 
+    border: 1px solid grey !important;
+    -webkit-border-radius: 4px !important;
+    -moz-border-radius: 4px !important;
+    border-radius: 4px !important;
+}
+
+legend{
+    font-weight:bold !important;
+}
+
+.wiDetailsWarning {
+    border: 1px solid;
+    margin: 10px 0px;
+    padding:15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    color: #9F6000;
+    background-color: #FEEFB3;
+    background-image: url('images/warning.png');
+}
+
+.wiDetailsWarningTxt {
+    margin: 0 0 0 25%;
+}
+
+.TabLineLeft {
+    width: 184.6px;
+    text-align: right; 
+}
+
+.TabLineLeft  span{
+    padding-right: 10px;
+}
+
+.TabLineLeft span .requiredField {
+    color: red;
+    font-weight: bold;
+    padding-right: 0px;
+}
+
+
+/* WORKITEM DETAILS - END*/
+
+
+.LinkButton {
+    background-position: 0% 0%;
+    text-decoration: none;
+    padding: 2px 15px;
+    color: #FFF;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: solid 1px #20538D;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.4);
+    /*-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 1px 1px rgba(0, 0, 0, 0.2);*/
+    
+    vertical-align: middle;
+	-webkit-transition-duration: 0.2s;
+    -moz-transition-duration: 0.2s;
+    transition-duration: 0.2s;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-image: -o-linear-gradient(bottom, #75B91A, #54AF13);
+/* IE6-9 */
+    
+    background-color: #75B91A;
+    background-repeat: repeat;
+    background-attachment: scroll;
+}
+
+
+.LinkButton:hover {
+    background: #75B91A;
+    border: solid 1px #2A4E77;
+    text-decoration: none;
+}
+
+
+.containerFix {
+    width: 650px;
+    position: relative;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+
+.error {
+    border-color: red;
+}
+
+.RadAjaxPanel {
+    display: inline !important;
+}
+
+img.imgViewWorkItems
+{
+	cursor:pointer;
+}
