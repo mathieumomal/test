@@ -8,7 +8,36 @@ namespace Etsi.Ultimate.DomainClasses
 {
     public partial class WorkItem
     {
+        public string UID
+        {
+            get
+            {
+                return (this.WiLevel == 0) ? string.Empty : this.Pk_WorkItemUid.ToString();
+            }
+        }
         public bool IsNew { get; set; }
-        public bool Include { get; set; }
+        public DisplayStatus Display { get; set; }
+        public string LatestRemark
+        {
+            get
+            {
+                var tmpRemarks = this.Remarks.FirstOrDefault();
+                return (tmpRemarks != null) ? tmpRemarks.RemarkText : string.Empty;
+            }
+        }
+        public string ResponsibleGroups
+        {
+            get
+            {
+                return string.Join(",", this.WorkItems_ResponsibleGroups.Select(p => p.ResponsibleGroup));
+            }
+        }
+
+        public enum DisplayStatus
+        {
+            none,
+            include,
+            matched
+        }
     }
 }

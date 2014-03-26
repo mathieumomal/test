@@ -33,6 +33,7 @@ using Etsi.Ultimate.Controls;
 using DotNetNuke.Entities.Tabs;
 using System.Web;
 using System.Web.UI;
+using System.Drawing;
 
 namespace Etsi.Ultimate.Module.WorkItem
 {
@@ -142,6 +143,8 @@ namespace Etsi.Ultimate.Module.WorkItem
 
                 racAcronym.DataSource = Acronyms;
                 racAcronym.DataBind();
+
+                rtlWorkItems.ItemDataBound += rtlWorkItems_ItemDataBound;
             }
             catch (Exception exc) //Module failed to load
             {
@@ -345,10 +348,34 @@ namespace Etsi.Ultimate.Module.WorkItem
             if (percentComplete)
                 searchString.Append(", hidden completed items");
 
-            lblSearchHeader.Text = String.Format("Search form ({0})", searchString.ToString());            
+            lblSearchHeader.Text = String.Format("Search form ({0})", searchString.ToString());
             searchPanel.Expanded = false;
 
-            rtlWorkItems.ExpandAllItems();
+            if (String.IsNullOrEmpty(wiName) && String.IsNullOrEmpty(wiAcronym))
+            {
+                rtlWorkItems.CollapseAllItems();
+                rtlWorkItems.ExpandToLevel(1);
+                rtlWorkItems.Rebind();
+            }
+            else
+                rtlWorkItems.ExpandAllItems();
+
+
+        }
+
+        void rtlWorkItems_ItemDataBound(object sender, TreeListItemDataBoundEventArgs e)
+        {
+
+            if (e.Item is TreeListDataItem)
+            {
+                TreeListDataItem item = e.Item as TreeListDataItem;
+
+                var displayStatus = (DomainClasses.WorkItem.DisplayStatus)DataBinder.Eval(item.DataItem, "Display");
+                if (displayStatus == DomainClasses.WorkItem.DisplayStatus.matched)
+                {
+                    item.BackColor = Color.LightYellow;
+                }
+            }
         }
 
         /// <summary>
@@ -374,18 +401,29 @@ namespace Etsi.Ultimate.Module.WorkItem
         {
             if (e.RebindReason != TreeListRebindReason.PostBackEvent && DataSource != null)
             {
-                var list = DataSource;
-                var modlist = DataSource.Where(x => x.Name.StartsWith(wiName.Trim()) && x.Acronym.StartsWith(wiAcronym.Trim())
-                                                    && (x.WiLevel != null && x.WiLevel <= granularity)
-                                                    && (percentComplete ? (((x.Completion == null) ? 0 : x.Completion) >= 100) : true)).ToList();
-                foreach (var item in modlist)
+                if (string.IsNullOrEmpty(wiName) && string.IsNullOrEmpty(wiAcronym))
                 {
-                    var matched = DataSource.Find(x => x.Pk_WorkItemUid == item.Pk_WorkItemUid);
-                    MarkParent(list, matched);
+                    DataSource.ForEach(x => x.Display = DomainClasses.WorkItem.DisplayStatus.none);
+                    rtlWorkItems.DataSource = FilteredDataSource = DataSource.Where(x => (x.WiLevel != null && x.WiLevel <= granularity)
+                                                        && (percentComplete ? (((x.Completion == null) ? 0 : x.Completion) >= 100) : true)).ToList(); ;
                 }
+                else
+                {
+                    var list = DataSource;
+                    list.ForEach(x => x.Display = DomainClasses.WorkItem.DisplayStatus.none);
+                    var modlist = list.Where(x => x.Name.StartsWith(wiName.Trim()) && x.Acronym.StartsWith(wiAcronym.Trim())
+                                                        && (x.WiLevel != null && x.WiLevel <= granularity)
+                                                        && (percentComplete ? (((x.Completion == null) ? 0 : x.Completion) >= 100) : true)).ToList();
+                    foreach (var item in modlist)
+                    {
+                        //list.Find(x => x.Pk_WorkItemUid == item.Pk_WorkItemUid).Display = DomainClasses.WorkItem.DisplayStatus.matched;
+                        item.Display = DomainClasses.WorkItem.DisplayStatus.matched;
+                        MarkParent(list, item);
+                    }
 
-                rtlWorkItems.DataSource = FilteredDataSource = list.Where(x => x.Include == true).ToList();
-                list.ForEach(x => x.Include = false);
+                    rtlWorkItems.DataSource = FilteredDataSource = list.Where(x => x.Display == DomainClasses.WorkItem.DisplayStatus.include
+                                                                                || x.Display == DomainClasses.WorkItem.DisplayStatus.matched).ToList();
+                }
             }
             else
             {
@@ -399,9 +437,12 @@ namespace Etsi.Ultimate.Module.WorkItem
         {
             if (parent != null)
             {
-                parent.Include = true;
                 var parentObj = list.Find(x => x.Pk_WorkItemUid == parent.Fk_ParentWiId);
-                MarkParent(list, parentObj);
+                if (parentObj != null)
+                {
+                    parentObj.Display = DomainClasses.WorkItem.DisplayStatus.include;
+                    MarkParent(list, parentObj);
+                }
             }
         }
 
