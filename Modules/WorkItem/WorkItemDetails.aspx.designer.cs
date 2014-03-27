@@ -58,6 +58,15 @@ namespace Etsi.Ultimate.Module.WorkItem {
         protected global::Telerik.Web.UI.RadScriptManager RadScriptManager1;
         
         /// <summary>
+        /// lblHeaderText control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblHeaderText;
+        
+        /// <summary>
         /// wiDetailRadTabStrip control.
         /// </summary>
         /// <remarks>
@@ -175,6 +184,15 @@ namespace Etsi.Ultimate.Module.WorkItem {
         protected global::Telerik.Web.UI.RadPageView RadPageRelated;
         
         /// <summary>
+        /// lnkParentWi control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink lnkParentWi;
+        
+        /// <summary>
         /// lblParentWorkItem control.
         /// </summary>
         /// <remarks>
@@ -182,6 +200,15 @@ namespace Etsi.Ultimate.Module.WorkItem {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblParentWorkItem;
+        
+        /// <summary>
+        /// ChildWiTable control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadGrid ChildWiTable;
         
         /// <summary>
         /// lblResponsibleGroups control.
@@ -193,6 +220,15 @@ namespace Etsi.Ultimate.Module.WorkItem {
         protected global::System.Web.UI.WebControls.Label lblResponsibleGroups;
         
         /// <summary>
+        /// lnkRapporteur control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink lnkRapporteur;
+        
+        /// <summary>
         /// lblRapporteur control.
         /// </summary>
         /// <remarks>
@@ -202,40 +238,58 @@ namespace Etsi.Ultimate.Module.WorkItem {
         protected global::System.Web.UI.WebControls.Label lblRapporteur;
         
         /// <summary>
-        /// lblWiVersion control.
+        /// lnkWiVersion control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblWiVersion;
+        protected global::System.Web.UI.WebControls.HyperLink lnkWiVersion;
         
         /// <summary>
-        /// lblTsgMtg control.
+        /// lnkTsgMtg control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTsgMtg;
+        protected global::System.Web.UI.WebControls.HyperLink lnkTsgMtg;
         
         /// <summary>
-        /// lblPcgMtg control.
+        /// lnkPcgMtg control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblPcgMtg;
+        protected global::System.Web.UI.WebControls.HyperLink lnkPcgMtg;
         
         /// <summary>
-        /// lblTsgStpMtg control.
+        /// lnkTsgStpMtg control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblTsgStpMtg;
+        protected global::System.Web.UI.WebControls.HyperLink lnkTsgStpMtg;
+        
+        /// <summary>
+        /// lnkSpecifications control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink lnkSpecifications;
+        
+        /// <summary>
+        /// lnkRelatedChanges control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink lnkRelatedChanges;
         
         /// <summary>
         /// ExitBtn control.

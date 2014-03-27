@@ -28,10 +28,12 @@
             </asp:Panel>
             <asp:Panel ID="wiDetailsBody" runat="server" CssClass="wiDetailsBody">
                 <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
+                <div class="HeaderText">
+                    <asp:Label ID="lblHeaderText" runat="server"></asp:Label></div>
                 <telerik:RadTabStrip ID="wiDetailRadTabStrip" runat="server" MultiPageID="WiDetailRadMultiPage"
                     AutoPostBack="false">
                 </telerik:RadTabStrip>
-                <telerik:RadMultiPage ID="wiDetailRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px">
+                <telerik:RadMultiPage ID="wiDetailRadMultiPage" runat="server" Height="450" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px">
                     <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true">
                         <table style="width: 100%">
                             <tr>
@@ -55,7 +57,7 @@
                                     <asp:Label ID="lblType" runat="server"></asp:Label></td>
                             </tr>
                             <tr>
-                                <td class="TabLineLeft">Type:</td>
+                                <td class="TabLineLeft">Status:</td>
                                 <td class="TabLineRight">
                                     <asp:Label ID="lblStatus" runat="server"></asp:Label></td>
                             </tr>
@@ -82,15 +84,36 @@
                         </table>
                     </telerik:RadPageView>
                     <telerik:RadPageView ID="RadPageRelated" runat="server" Height="90%">
-                        <table style="width: 100%">
+                        <table style="width: 100%; padding: 10px">
                             <tr>
                                 <td class="TabLineLeft">Parent Work Item:</td>
                                 <td class="TabLineRight">
+                                    <asp:HyperLink runat="server" ID="lnkParentWi" CssClass="linkRelease" Visible="false" />
                                     <asp:Label ID="lblParentWorkItem" runat="server"></asp:Label></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">Child Work Items:</td>
-                                <td class="TabLineRight"></td>
+                                <td class="TabLineRight">
+                                    <telerik:RadGrid runat="server" ID="ChildWiTable" OnItemDataBound="ChildWiTable_ItemDataBound"
+                                        AutoGenerateColumns="false" AllowSorting="false" AllowPaging="false" AllowFilteringByColumn="false">
+                                        <ClientSettings>
+                                            <Scrolling AllowScroll="True" UseStaticHeaders="true" />
+                                        </ClientSettings>
+                                        <mastertableview clientdatakeynames="Pk_WorkItemUid">
+                                            <Columns>
+                                                <telerik:GridTemplateColumn HeaderStyle-Width="20%" DataField="Pk_WorkItemUid" HeaderText="WI UID" UniqueName="Pk_WorkItemUid">
+                                                    <HeaderStyle Font-Bold="True"/> 
+                                                    <ItemTemplate>
+                                                        <div class="text-left"><asp:HyperLink runat="server" ID="lnkWiDescription" CssClass="linkRelease" Visible="true" /></div>  
+                                                    </ItemTemplate> 
+                                                </telerik:GridTemplateColumn>
+                                                <telerik:GridBoundColumn HeaderStyle-Width="80%" DataField="Name" HeaderText="WI name" UniqueName="Name" >
+                                                    <HeaderStyle Font-Bold="True"/> 
+                                                </telerik:GridBoundColumn>
+                                            </Columns>
+                                        </mastertableview>
+                                    </telerik:RadGrid>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">Responsible group(s):</td>
@@ -100,33 +123,36 @@
                             <tr>
                                 <td class="TabLineLeft">Rapporteur(s):</td>
                                 <td class="TabLineRight">
+                                    <asp:HyperLink ID="lnkRapporteur" runat="server" NavigateUrl="#"></asp:HyperLink>
                                     <asp:Label ID="lblRapporteur" runat="server"></asp:Label></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">Latest WID version:</td>
                                 <td class="TabLineRight">
-                                    <asp:Label ID="lblWiVersion" runat="server"></asp:Label></td>
+                                    <asp:HyperLink ID="lnkWiVersion" runat="server" NavigateUrl="#">WID TDoc</asp:HyperLink></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">TSG Approval meeting:</td>
                                 <td class="TabLineRight">
-                                    <asp:Label ID="lblTsgMtg" runat="server"></asp:Label></td>
+                                    <asp:HyperLink ID="lnkTsgMtg" runat="server" NavigateUrl="#">TSG Approval meeting</asp:HyperLink></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">PCG Approval meeting:</td>
                                 <td class="TabLineRight">
-                                    <asp:Label ID="lblPcgMtg" runat="server"></asp:Label></td>
+                                    <asp:HyperLink ID="lnkPcgMtg" runat="server" NavigateUrl="#">PCG Approval meeting</asp:HyperLink></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">TSG Stopped meeting:</td>
                                 <td class="TabLineRight">
-                                    <asp:Label ID="lblTsgStpMtg" runat="server"></asp:Label></td>
+                                    <asp:HyperLink ID="lnkTsgStpMtg" runat="server" NavigateUrl="#">Stopped meeting</asp:HyperLink></td>
                             </tr>
                             <tr>
-                                <td colspan="2">See Specifications specifically resulting from this Work Item</td>
+                                <td colspan="2">
+                                    <asp:HyperLink ID="lnkSpecifications" runat="server" NavigateUrl="#">See Specifications specifically resulting from this Work Item</asp:HyperLink></td>
                             </tr>
                             <tr>
-                                <td colspan="2">See all related Change Requests related to this Work Item (all specifications)</td>
+                                <td colspan="2">
+                                    <asp:HyperLink ID="lnkRelatedChanges" runat="server" NavigateUrl="#">See all related Change Requests related to this Work Item (all specifications)</asp:HyperLink></td>
                             </tr>
                         </table>
                     </telerik:RadPageView>
@@ -137,7 +163,7 @@
                 <script type="text/javascript">
                     $(document).ready(function () {
                         setTimeout(function () {
-                            var strTitle = "WI #" + 0//$("#releaseCodeVal").html();
+                            var strTitle = "WI #" + (location.search.match(new RegExp('workitemid' + "=(.*?)($|\&)", "i")) || [])[1];
                             document.title = strTitle;
                         }, 200);
                     });

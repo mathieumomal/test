@@ -19,6 +19,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         private const string CONST_EMPTY_FIELD = " - ";
         private const string DATE_FORMAT_STRING = "yyyy-MM-dd";
         public static readonly string DsId_Key = "ETSI_DS_ID";
+        private const string CONST_BASE_URL = "/desktopmodules/WorkItem/WorkItemDetails.aspx?workitemId=";
 
         private int UserId;
         public Nullable<int> WorkItemId;
@@ -52,6 +53,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 }
                 else
                 {
+                    lblHeaderText.Text = "WI # " + workitem.Pk_WorkItemUid + ((String.IsNullOrEmpty(workitem.Acronym)) ? "" : " - " + workitem.Acronym);
                     BuildTabsDisplay();
                     FillGeneralTab(userRights, workitem);
                     FillRelatedTab(workitem);
@@ -112,18 +114,34 @@ namespace Etsi.Ultimate.Module.WorkItem
             lblAcronym.Text = workitem.Acronym;
             lblType.Text = "Work Item";
 
+            //Bind WI status
             if (workitem.TsgApprovalMtgId == null)
+            {
                 lblStatus.Text = "Awaiting approval";
+                lblStatus.CssClass = "AwaitingApproval";
+            }
             else if (workitem.TsgStoppedMtgId != null)
+            {
                 lblStatus.Text = "Stopped";
+                lblStatus.CssClass = "Stopped";
+            }
             else if (workitem.Completion != null)
             {
                 if (workitem.Completion.Value == 0)
+                {
                     lblStatus.Text = "Not started (0%)";
+                    lblStatus.CssClass = "NotStarted";
+                }
                 if (workitem.Completion.Value > 0 && workitem.Completion < 100)
+                {
                     lblStatus.Text = String.Format("Active ({0}%)", workitem.Completion.Value.ToString());
+                    lblStatus.CssClass = "Active";
+                }
                 if (workitem.Completion.Value >= 100)
+                {
                     lblStatus.Text = "Completed (100%)";
+                    lblStatus.CssClass = "Completed";
+                }
             }
 
             switch (workitem.WiLevel)
@@ -155,8 +173,45 @@ namespace Etsi.Ultimate.Module.WorkItem
 
         private void FillRelatedTab(Domain.WorkItem workitem)
         {
+            //Bind child work items
+            ChildWiTable.ClientSettings.Scrolling.ScrollHeight = Unit.Pixel(100);
+            ChildWiTable.DataSource = workitem.ChildWis;
+            ChildWiTable.DataBind();
+
+
+            //Bind lables
+            lnkRapporteur.Text = workitem.RapporteurStr;
+            lblRapporteur.Text = (String.IsNullOrEmpty(workitem.RapporteurCompany)) ? "" : String.Format("({0})", workitem.RapporteurCompany);
+
             lblResponsibleGroups.Text = workitem.ResponsibleGroups;
-            lblParentWorkItem.Text = (workitem.ParentWi != null && workitem.WiLevel > 1) ? workitem.ParentWi.Pk_WorkItemUid.ToString() : "None";
+            if (workitem.ParentWi != null && workitem.WiLevel > 1)
+            {
+                lnkParentWi.Text = workitem.Pk_WorkItemUid.ToString();
+                lnkParentWi.NavigateUrl = CONST_BASE_URL + workitem.ParentWi.Pk_WorkItemUid;
+                lnkParentWi.Visible = true;
+                lblParentWorkItem.Visible = false;
+            }
+            else
+            {
+                lnkParentWi.Visible = false;
+                lblParentWorkItem.Visible = true;
+                lblParentWorkItem.Text = "None";
+            }
+        }
+
+        public void ChildWiTable_ItemDataBound(object sender, Telerik.Web.UI.GridItemEventArgs e)
+        {
+            if (e.Item is GridDataItem)
+            {
+                //Get workitem row
+                DomainClasses.WorkItem currentWi = (DomainClasses.WorkItem)e.Item.DataItem;
+
+                // Manage WI UID and link to description               
+                HyperLink lnkWiDescription = e.Item.FindControl("lnkWiDescription") as HyperLink;
+                lnkWiDescription.Text = currentWi.Pk_WorkItemUid.ToString();
+                lnkWiDescription.NavigateUrl = CONST_BASE_URL + currentWi.Pk_WorkItemUid;
+                lnkWiDescription.Visible = true;
+            }
         }
 
         /// <summary>

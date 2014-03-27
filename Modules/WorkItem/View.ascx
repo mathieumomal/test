@@ -138,7 +138,7 @@
 					            <span></span>
                                 <img id="imgViewWorkItems" alt="See details" src="/DesktopModules/WorkItem/images/details.png" 
                                     onclick="var popUp=window.open('/desktopmodules/WorkItem/WorkItemDetails.aspx?workitemId=<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>',
-								            'Rel-<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>', 'height=690,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
+								            'Rel-<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>', 'height=550,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
                             </ItemTemplate>      
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListBoundColumn DataField="Display" Visible="false" UniqueName="Display" >
