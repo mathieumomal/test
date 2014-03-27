@@ -94,7 +94,7 @@ namespace Etsi.Ultimate.Business
                 }
 
                 // Open the file.
-                using (StreamReader reader = new StreamReader(fileLocation))
+                using (StreamReader reader = new StreamReader(fileLocation, Encoding.Default))
                 {
 
                     var csv = new CsvReader(reader);
@@ -102,7 +102,7 @@ namespace Etsi.Ultimate.Business
                     // Configure the reader
                     csv.Configuration.Delimiter = ",";
                     csv.Configuration.DetectColumnCountChanges = true;
-                    csv.Configuration.Encoding = Encoding.UTF8;
+                    //csv.Configuration.Encoding = Encoding.UTF8;
                     csv.Configuration.HasHeaderRecord = true;
                     csv.Configuration.TrimFields = false;
 

@@ -34,13 +34,13 @@ namespace Etsi.Ultimate.Tests
             {
                 if (!String.IsNullOrEmpty(csvFileLocation))
                 {
-                    using (StreamReader reader = new StreamReader(csvFileLocation))
+                    using (StreamReader reader = new StreamReader(csvFileLocation, Encoding.Default))
                     {
                         var csv = new CsvReader(reader);
 
                         csv.Configuration.Delimiter = ",";
                         csv.Configuration.DetectColumnCountChanges = true;
-                        csv.Configuration.Encoding = Encoding.UTF8;
+                        //csv.Configuration.Encoding = Encoding.UTF8;
                         csv.Configuration.HasHeaderRecord = true;
                         csv.Configuration.TrimFields = false;
                         csv.Configuration.WillThrowOnMissingField = false;

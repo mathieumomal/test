@@ -44,7 +44,7 @@ namespace Etsi.Ultimate.Business
                         int rowDataStart = 2;
                         int rowDataEnd = exportWorkPlan.Count + 1;
                         int columnStart = 1;
-                        int columnEnd = 17;
+                        int columnEnd = 16;
                         int columnName = 3;
                         int columnCompletion = 10;
 
@@ -147,8 +147,7 @@ namespace Etsi.Ultimate.Business
                                                           WI_rapporteur_name = s.WIRaporteur,
                                                           WI_rapporteur_e_mail = s.WIRaporteurEmail,
                                                           Notes = s.Notes,
-                                                          Impacted_TSs_and_TRs = s.RelatedTSs_TRs,
-                                                      Special_Focus_Doc = String.Empty                                                  
+                                                          Impacted_TSs_and_TRs = s.RelatedTSs_TRs                                                 
                                                   } ,
                                                       true, OfficeOpenXml.Table.TableStyles.None);
                         pck.Save();
