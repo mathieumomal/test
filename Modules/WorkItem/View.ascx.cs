@@ -378,9 +378,11 @@ namespace Etsi.Ultimate.Module.WorkItem
 
                 var wiLevel = (System.Int32)DataBinder.Eval(item.DataItem, "wiLevel");
                 if (wiLevel == 0)
-                {
                     item["ViewWorkItem"].Visible = false;
-                }
+
+                var LatestRemark = (string)DataBinder.Eval(item.DataItem, "LatestRemark");
+                if (LatestRemark != null && LatestRemark.Length > 30)
+                    item["LatestRemark"].Text = LatestRemark.Remove(28) + "...";
 
             }
         }

@@ -41,6 +41,14 @@ namespace Etsi.Ultimate.Services
         KeyValuePair<WorkItem, UserRightsContainer> GetWorkItemById(int personId, int workItemId);
 
         /// <summary>
+        /// Get the workitem based on the id
+        /// </summary>
+        /// <param name="personId">Person Id</param>
+        /// <param name="workItemId">Work Item Id</param>
+        /// <returns>Work Item, right container and other required properties</returns>
+        KeyValuePair<WorkItem, UserRightsContainer> GetWorkItemByIdExtend(int personId, int workItemId);
+
+        /// <summary>
         /// Get count of WorkItems
         /// </summary>
         /// <param name="releaseIds">List of Release Ids</param>

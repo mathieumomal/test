@@ -32,6 +32,7 @@ namespace Etsi.Ultimate.DomainClasses
                 return string.Join(",", this.WorkItems_ResponsibleGroups.Select(p => p.ResponsibleGroup));
             }
         }
+        public string RapporteurName { set; get; }
 
         public enum DisplayStatus
         {

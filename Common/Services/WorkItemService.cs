@@ -88,6 +88,22 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+
+        /// <summary>
+        /// Get the workitem based on the id
+        /// </summary>
+        /// <param name="personId">Person Id</param>
+        /// <param name="workItemId">Work Item Id</param>
+        /// <returns>Work Item, right container and other required properties</returns>
+        public KeyValuePair<WorkItem, UserRightsContainer> GetWorkItemByIdExtend(int personId, int workItemId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var workItemManager = new WorkItemManager(uoW);
+                return workItemManager.GetWorkItemByIdExtend(personId, workItemId);
+            }
+        }
+
         /// <summary>
         /// Get count of WorkItems
         /// </summary>

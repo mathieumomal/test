@@ -38,7 +38,7 @@ namespace Etsi.Ultimate.Repositories
 
         public View_Persons Find(int id)
         {
-            return context.View_Persons.Find(id);
+            return context.View_Persons.Find(id, "N");
         }
 
         public void InsertOrUpdate(View_Persons entity)

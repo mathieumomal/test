@@ -1,0 +1,44 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web;
+using System.Configuration;
+
+namespace Etsi.Ultimate.Utils
+{
+
+    /// <summary>
+    /// This class is an entry point for the different variables that the environment might require.
+    /// </summary>
+    public static class ConfigVariables
+    {
+        /// <summary>
+        /// Gets the Meeting Details URL
+        /// </summary>
+        public static string MeetingDetailsAddress
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["MeetingDetailsAddress"] != null)
+                    return ConfigurationManager.AppSettings["MeetingDetailsAddress"].ToString();
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Gets the Meeting Details URL
+        /// </summary>
+        public static string RapporteurDetailsAddress
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["RapporteurDetailsAddress"] != null)
+                    return ConfigurationManager.AppSettings["RapporteurDetailsAddress"].ToString();
+                return "";
+            }
+        }
+
+    }
+}

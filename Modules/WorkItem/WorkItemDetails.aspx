@@ -29,7 +29,8 @@
             <asp:Panel ID="wiDetailsBody" runat="server" CssClass="wiDetailsBody">
                 <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
                 <div class="HeaderText">
-                    <asp:Label ID="lblHeaderText" runat="server"></asp:Label></div>
+                    <asp:Label ID="lblHeaderText" runat="server"></asp:Label>
+                </div>
                 <telerik:RadTabStrip ID="wiDetailRadTabStrip" runat="server" MultiPageID="WiDetailRadMultiPage"
                     AutoPostBack="false">
                 </telerik:RadTabStrip>
@@ -96,9 +97,9 @@
                                 <td class="TabLineRight">
                                     <telerik:RadGrid runat="server" ID="ChildWiTable" OnItemDataBound="ChildWiTable_ItemDataBound"
                                         AutoGenerateColumns="false" AllowSorting="false" AllowPaging="false" AllowFilteringByColumn="false">
-                                        <ClientSettings>
+                                        <clientsettings>
                                             <Scrolling AllowScroll="True" UseStaticHeaders="true" />
-                                        </ClientSettings>
+                                        </clientsettings>
                                         <mastertableview clientdatakeynames="Pk_WorkItemUid">
                                             <Columns>
                                                 <telerik:GridTemplateColumn HeaderStyle-Width="20%" DataField="Pk_WorkItemUid" HeaderText="WI UID" UniqueName="Pk_WorkItemUid">
@@ -118,13 +119,13 @@
                             <tr>
                                 <td class="TabLineLeft">Responsible group(s):</td>
                                 <td class="TabLineRight">
-                                    <asp:Label ID="lblResponsibleGroups" runat="server"></asp:Label></td>
+                                    <asp:Label ID="lblResponsibleGroups" runat="server"> - </asp:Label></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">Rapporteur(s):</td>
                                 <td class="TabLineRight">
-                                    <asp:HyperLink ID="lnkRapporteur" runat="server" NavigateUrl="#"></asp:HyperLink>
-                                    <asp:Label ID="lblRapporteur" runat="server"></asp:Label></td>
+                                    <asp:HyperLink ID="lnkRapporteur" runat="server"></asp:HyperLink>
+                                    <asp:Label ID="lblRapporteur" runat="server"> - </asp:Label></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">Latest WID version:</td>
@@ -134,17 +135,22 @@
                             <tr>
                                 <td class="TabLineLeft">TSG Approval meeting:</td>
                                 <td class="TabLineRight">
-                                    <asp:HyperLink ID="lnkTsgMtg" runat="server" NavigateUrl="#">TSG Approval meeting</asp:HyperLink></td>
+                                    <asp:HyperLink ID="lnkTsgMtg" runat="server"> - </asp:HyperLink></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">PCG Approval meeting:</td>
                                 <td class="TabLineRight">
-                                    <asp:HyperLink ID="lnkPcgMtg" runat="server" NavigateUrl="#">PCG Approval meeting</asp:HyperLink></td>
+                                    <asp:HyperLink ID="lnkPcgMtg" runat="server"> - </asp:HyperLink></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">TSG Stopped meeting:</td>
                                 <td class="TabLineRight">
-                                    <asp:HyperLink ID="lnkTsgStpMtg" runat="server" NavigateUrl="#">Stopped meeting</asp:HyperLink></td>
+                                    <asp:HyperLink ID="lnkTsgStpMtg" runat="server"> - </asp:HyperLink></td>
+                            </tr>
+                            <tr>
+                                <td class="TabLineLeft">PCG Stopped meeting:</td>
+                                <td class="TabLineRight">
+                                    <asp:HyperLink ID="lnkPcgStpMtg" runat="server"> - </asp:HyperLink></td>
                             </tr>
                             <tr>
                                 <td colspan="2">
@@ -163,8 +169,8 @@
                 <script type="text/javascript">
                     $(document).ready(function () {
                         setTimeout(function () {
-                            var strTitle = "WI #" + (location.search.match(new RegExp('workitemid' + "=(.*?)($|\&)", "i")) || [])[1];
-                            document.title = strTitle;
+                            var workItem = (location.search.match(new RegExp('workitemid' + "=(.*?)($|\&)", "i")) || [])[1];
+                            document.title = "WI #" + workItem;
                         }, 200);
                     });
                 </script>

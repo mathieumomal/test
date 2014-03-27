@@ -59,6 +59,24 @@ namespace Etsi.Ultimate.Business
             return new KeyValuePair<WorkItem, UserRightsContainer>(workItem, GetRights(personId));
         }
 
+        public KeyValuePair<WorkItem, UserRightsContainer> GetWorkItemByIdExtend(int personId, int workItemId)
+        {
+            IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
+            IPersonRepository PersonRepo = RepositoryFactory.Resolve<IPersonRepository>();
+            repo.UoW = _uoW;
+            PersonRepo.UoW = _uoW;
+
+            var workItem = repo.Find(workItemId);
+
+            if (workItem != null & workItem.RapporteurId != null)
+            {
+                var person = PersonRepo.Find(workItem.RapporteurId.Value);
+                workItem.RapporteurName = (person != null) ? person.FIRSTNAME + " " + person.LASTNAME : workItem.RapporteurStr;
+            }
+
+            return new KeyValuePair<WorkItem, UserRightsContainer>(workItem, GetRights(personId));
+        }
+
         /// <summary>
         /// Get count of WorkItems
         /// </summary>

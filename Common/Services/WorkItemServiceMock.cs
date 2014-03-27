@@ -49,7 +49,15 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
+        public KeyValuePair<WorkItem, UserRightsContainer> GetWorkItemByIdExtend(int personId, int workItemId)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
+
+
+
 
     }
 }

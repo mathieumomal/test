@@ -94,7 +94,7 @@
                         ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="false"  AllowPaging="false"  AllowFilteringByColumn="false">
                         <columns>
                         <telerik:TreeListBoundColumn DataField="Name" UniqueName="Name" HeaderText="Name">
-                            <HeaderStyle Font-Bold="True" Width="200px"/> 
+                            <HeaderStyle Font-Bold="True" Width="300px"/> 
                         </telerik:TreeListBoundColumn>
                         <telerik:TreeListBoundColumn DataField="Acronym" UniqueName="Acronym" HeaderText="Acronym">
                             <HeaderStyle Font-Bold="True" Width="70px"/> 
@@ -130,7 +130,7 @@
                             <HeaderStyle Font-Bold="True"  Width="90px"/> 
                         </telerik:TreeListBoundColumn>
                         <telerik:TreeListBoundColumn  DataField="LatestRemark" UniqueName="LatestRemark"   HeaderText="Latest remark">
-                            <HeaderStyle Font-Bold="True" Width="300px"/> 
+                            <HeaderStyle Font-Bold="True" Width="200px"/> 
                         </telerik:TreeListBoundColumn>
                         <telerik:TreeListTemplateColumn UniqueName="ViewWorkItem">
                             <HeaderStyle Width="50px"/> 

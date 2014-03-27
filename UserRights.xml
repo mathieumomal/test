@@ -10,6 +10,7 @@
   <UserRole value="EolAccountOwner">
     <Right value="Release_ViewCompleteList"/>
 	<Right value="Release_ViewDetails"/>
+	<Right value="General_ViewPersonalData"/>
   </UserRole>
   <UserRole value="StaffMember">
 	<Right value="Remarks_ViewPrivate"/>
