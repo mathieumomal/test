@@ -16,6 +16,7 @@
             <tr>
                 <td>
                     <ult:fullviewcontrol id="ultFullView" runat="server" />
+                    
                     <telerik:RadButton ID="workItem_import" runat="server" Enabled="true" AutoPostBack="false" OnClientClicked="open_RadWindow_workItemImport" Text="Import work plan"></telerik:RadButton>                    
                 </td>
             </tr>
@@ -289,7 +290,7 @@
     /*--- MODALS ---*/
 
     function open_RadWindow_workItemImport(sender, eventArgs) {
-        closeAllModals();
+
         window.radopen(null, "RadWindow_workItemImport");
     }
     function open_RadWindow_workItemAnalysis(sender, eventArgs) {

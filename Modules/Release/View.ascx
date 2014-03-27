@@ -7,7 +7,7 @@
 
 <div class="headerBtnRelease">
     <div style="float:right"><ult:FullView ID="ultFullView" runat="server" /></div>
-    <asp:LinkButton runat="server" ID="newRelease" Text="New" CssClass="LinkButton"></asp:LinkButton>
+    <asp:LinkButton runat="server" ID="newRelease" Text="New" CssClass="btn3GPP-success"></asp:LinkButton>
 </div>
 
 <script type="text/javascript">

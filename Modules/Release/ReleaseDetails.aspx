@@ -204,10 +204,10 @@
                  </telerik:RadPageView>
             </telerik:RadMultiPage>     
            <div class="releaseDetailsAction">
-                <asp:LinkButton ID="EditBtn" runat="server" Text="Edit" CssClass="LinkButton" Visible="false" OnClick="EditReleaseDetails_Click" />
-                <asp:LinkButton ID="FreezeReleaseBtn" runat="server" Text="Freeze Release" CssClass="LinkButton" Visible="false"/>
-                <asp:LinkButton ID="CloseReleaseBtn" runat="server" Text="Close Release" CssClass="LinkButton" Visible="false"/>
-                <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit" CssClass="LinkButton" OnClick="CloseReleaseDetails_Click"/>
+                <asp:LinkButton ID="EditBtn" runat="server" Text="Edit" CssClass="btn3GPP-success" Visible="false" OnClick="EditReleaseDetails_Click" />
+                <asp:LinkButton ID="FreezeReleaseBtn" runat="server" Text="Freeze Release" CssClass="btn3GPP-success" Visible="false"/>
+                <asp:LinkButton ID="CloseReleaseBtn" runat="server" Text="Close Release" CssClass="btn3GPP-success" Visible="false"/>
+                <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit" CssClass="btn3GPP-success" OnClick="CloseReleaseDetails_Click"/>
            </div> 
            <script type="text/javascript">
               
