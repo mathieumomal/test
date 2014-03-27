@@ -33,7 +33,7 @@
     <MasterTableView ClientDataKeyNames="Pk_ReleaseId">
         <Columns>
             <telerik:GridBoundColumn HeaderStyle-Width="8%" DataField="Code" HeaderText="Release Code" UniqueName="Code" ></telerik:GridBoundColumn>
-            <telerik:GridTemplateColumn HeaderStyle-Width="10%" DataField="Name" HeaderText="Name" UniqueName="Name" HeaderTooltip="Release name" >
+            <telerik:GridTemplateColumn HeaderStyle-Width="10%" DataField="Name" HeaderText="Name" UniqueName="Name"  >
                 <ItemTemplate>
                     <div class="text-left"><asp:HyperLink runat="server" ID="lnkReleaseDescription" CssClass="linkRelease" Visible="false" />
                         <asp:Label runat="server" ID="lblReleaseName" />
@@ -65,7 +65,7 @@
                     <span><%# DataBinder.Eval(Container.DataItem,"Stage3FreezeDate", "{0:yyyy-MM-dd}") %></span>  
                 </ItemTemplate>                    
             </telerik:GridTemplateColumn>
-            <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="EndDate" HeaderText="End date" UniqueName="EndDate" HeaderTooltip="End date of ...">
+            <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="EndDate" HeaderText="End date" UniqueName="EndDate">
                 <ItemTemplate>
                     <span><%# DataBinder.Eval(Container.DataItem,"EndDate", "{0:yyyy-MM-dd}") %></span>  
                 </ItemTemplate>                    
@@ -88,5 +88,15 @@
     </MasterTableView>
 </telerik:RadGrid>
 
-<telerik:RadToolTipManager ID="rdTooltipHeader" runat="server"  RelativeTo="Element" Position="TopCenter">
-</telerik:RadToolTipManager>
+<!--
+    --- Tooltip example : ---
+    For tooltip : add 'HeaderTooltip="[text]"' to a telerik:GridTemplateColumn item 
+    AND decomment this section :
+    <telerik:RadToolTipManager ID="rdTooltipHeader" runat="server"  RelativeTo="Element" Position="TopCenter"></telerik:RadToolTipManager>
+
+    Easter eggs : add this style for dashed underline and use ? cursor on the handler tooltip element
+    .helpTooltip{
+	    border-bottom: 1px gray dashed;
+	    cursor: help;
+    }
+ -->
