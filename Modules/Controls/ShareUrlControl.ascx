@@ -9,11 +9,18 @@
 #suModal input[type=checkbox]{vertical-align:middle;}
 #suModal table{width: 100%;padding: 0 5px;}
 #suModal input[type=text]{width:100%;}
+.btnShare
+{
+    width: 20px;
+    height: 20px;
+    vertical-align: top;
+    margin:2px;
+}
 </style>
 
 
-<telerik:RadButton ID="btnShareUrl" runat="server" Width="16px" Height="16px"
-    Enabled="true" AutoPostBack="false" OnClientClicked="open_suModal">
+<telerik:RadButton ID="btnShareUrl" runat="server"
+    Enabled="true" AutoPostBack="false" OnClientClicked="open_suModal" CssClass="btnShare">
     <Image ImageUrl="images/share.png" DisabledImageUrl="images/share.png" />
 </telerik:RadButton>
 
