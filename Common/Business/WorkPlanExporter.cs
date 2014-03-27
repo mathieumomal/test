@@ -119,7 +119,7 @@ namespace Etsi.Ultimate.Business
                         //Stopped WorkItems should have light brown background
                         var ruleDeleted = wsData.ConditionalFormatting.AddExpression(completeTableAddress);
                         ruleDeleted.Style.Fill.BackgroundColor.Color = Color.FromArgb(227, 227, 227);
-                        ruleDeleted.Formula = "SEARCH(CONCATENATE(\"[\",$A2,\"]\"), CONCATENATE(\"[" + String.Join("]\",\"[", stoppedMeetingIds) + "]\"))>0";
+                        ruleDeleted.Formula = "SEARCH(CONCATENATE(\"[\",$A2,\"]\"), \"[" + String.Join("]\"&\"[", stoppedMeetingIds) + "]\")>0";
                         ruleDeleted.Priority = 6;
 
                         //100% completed workitems should have light green background
