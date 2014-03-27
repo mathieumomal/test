@@ -1,4 +1,5 @@
-﻿using Novacode;
+﻿using Etsi.Ultimate.Utils;
+using Novacode;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;
@@ -9,11 +10,9 @@ using System.Linq;
 using Domain = Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Business
-{
-    
+{    
     public class WorkPlanExporter
-    {
-       
+    {       
         /// <summary>
         /// Export Work Plan to Excel
         /// </summary>
@@ -23,134 +22,141 @@ namespace Etsi.Ultimate.Business
         {
             if (!String.IsNullOrEmpty(exportPath) && workPlan.Count >= 1)
             {
-                //Create Empty Work Book
-                string file = exportPath + @"WorkItemExport.xlsx";
-                if (File.Exists(file)) File.Delete(file);
-                FileInfo newFile = new FileInfo(file);
-
-                using (ExcelPackage pck = new ExcelPackage(newFile))
+                try
                 {
-                    List<Domain.WorkItemForExport> exportWorkPlan = new List<Domain.WorkItemForExport>();
-                    workPlan.ForEach(x => exportWorkPlan.Add(new Domain.WorkItemForExport(x)));
+                    //Create Empty Work Book
+                    string file = exportPath + @"WorkItemExport.xlsx";
+                    if (File.Exists(file)) File.Delete(file);
+                    FileInfo newFile = new FileInfo(file);
 
-                    // get the handle to the existing worksheet
-                    var wsData = pck.Workbook.Worksheets.Add("Work Items");
+                    using (ExcelPackage pck = new ExcelPackage(newFile))
+                    {
+                        List<Domain.WorkItemForExport> exportWorkPlan = new List<Domain.WorkItemForExport>();
+                        workPlan.ForEach(x => exportWorkPlan.Add(new Domain.WorkItemForExport(x)));
 
-                    /*------------*/
-                    /* Set Styles */
-                    /*------------*/
-                    int rowHeader = 1;
-                    int rowDataStart = 2;
-                    int rowDataEnd = exportWorkPlan.Count + 1;
-                    int columnStart = 1;
-                    int columnEnd = 17;
-                    int columnName = 3;
-                    int columnCompletion = 10;
+                        // get the handle to the existing worksheet
+                        var wsData = pck.Workbook.Worksheets.Add("Work Items");
 
-                    //Set Font Style
-                    wsData.Cells.Style.Font.Size = 8;
-                    wsData.Cells.Style.Font.Name = "Arial";
-                    //Set Header Style
-                    wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Font.Bold = true;
-                    wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
-                    //Set Name Column as Bold
-                    wsData.Cells[rowDataStart, columnName, rowDataEnd, columnName].Style.Font.Bold = true;
-                    //Set Complete column with Percentage Format
-                    wsData.Cells[rowDataStart, columnCompletion, rowDataEnd, columnCompletion].Style.Numberformat.Format = "0%";
-                    //Set Cell Borders
-                    wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Left.Style = ExcelBorderStyle.Thin;
-                    wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Right.Style = ExcelBorderStyle.Thin;
-                    wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Top.Style = ExcelBorderStyle.Thin;
-                    wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
-                    //Set Filters
-                    wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].AutoFilter = true;
+                        /*------------*/
+                        /* Set Styles */
+                        /*------------*/
+                        int rowHeader = 1;
+                        int rowDataStart = 2;
+                        int rowDataEnd = exportWorkPlan.Count + 1;
+                        int columnStart = 1;
+                        int columnEnd = 17;
+                        int columnName = 3;
+                        int columnCompletion = 10;
 
-                    //Set Column Width
-                    wsData.DefaultColWidth = 10;
-                    wsData.Column(1).Width = wsData.Column(5).Width = wsData.Column(10).Width = 5;
-                    wsData.Column(3).Width = wsData.Column(16).Width = 35;
+                        //Set Font Style
+                        wsData.Cells.Style.Font.Size = 8;
+                        wsData.Cells.Style.Font.Name = "Arial";
+                        //Set Header Style
+                        wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Font.Bold = true;
+                        wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                        wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+                        //Set Name Column as Bold
+                        wsData.Cells[rowDataStart, columnName, rowDataEnd, columnName].Style.Font.Bold = true;
+                        //Set Complete column with Percentage Format
+                        wsData.Cells[rowDataStart, columnCompletion, rowDataEnd, columnCompletion].Style.Numberformat.Format = "0%";
+                        //Set Cell Borders
+                        wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                        wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                        wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                        wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+                        //Set Filters
+                        wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].AutoFilter = true;
 
-                    //Set Row Height
-                    wsData.DefaultRowHeight = 12;
-                    //Set Zoom to 85%
-                    wsData.View.ZoomScale = 85;
+                        //Set Column Width
+                        wsData.DefaultColWidth = 10;
+                        wsData.Column(1).Width = wsData.Column(5).Width = wsData.Column(10).Width = 5;
+                        wsData.Column(3).Width = wsData.Column(16).Width = 35;
 
-                    /*--------------*/
-                    /* Add Formulas */
-                    /*--------------*/
-                    ExcelAddress nameAddress = new ExcelAddress(rowDataStart, columnName, rowDataEnd, columnName);
-                    //Name should be Red if Unique ID is 0
-                    var ruleNoUniqueKey = wsData.ConditionalFormatting.AddExpression(nameAddress);
-                    ruleNoUniqueKey.Style.Font.Color.Color = Color.Red;
-                    ruleNoUniqueKey.Formula = "B2=0";
-                    ruleNoUniqueKey.Priority = 1;
+                        //Set Row Height
+                        wsData.DefaultRowHeight = 12;
+                        //Set Zoom to 85%
+                        wsData.View.ZoomScale = 85;
 
-                    //Level 1 Name should be in Blue font
-                    var ruleLevel1 = wsData.ConditionalFormatting.AddExpression(nameAddress);
-                    ruleLevel1.Style.Font.Color.Color = Color.Blue;
-                    ruleLevel1.Formula = "E2=1";
-                    ruleLevel1.Priority = 2;
+                        /*--------------*/
+                        /* Add Formulas */
+                        /*--------------*/
+                        ExcelAddress nameAddress = new ExcelAddress(rowDataStart, columnName, rowDataEnd, columnName);
+                        //Name should be Red if Unique ID is 0
+                        var ruleNoUniqueKey = wsData.ConditionalFormatting.AddExpression(nameAddress);
+                        ruleNoUniqueKey.Style.Font.Color.Color = Color.Red;
+                        ruleNoUniqueKey.Formula = "B2=0";
+                        ruleNoUniqueKey.Priority = 1;
 
-                    //Level 2 Name should be in Black font
-                    var ruleLevel2 = wsData.ConditionalFormatting.AddExpression(nameAddress);
-                    ruleLevel2.Style.Font.Color.Color = Color.Black;
-                    ruleLevel2.Formula = "E2=2";
-                    ruleLevel2.Priority = 3;
+                        //Level 1 Name should be in Blue font
+                        var ruleLevel1 = wsData.ConditionalFormatting.AddExpression(nameAddress);
+                        ruleLevel1.Style.Font.Color.Color = Color.Blue;
+                        ruleLevel1.Formula = "E2=1";
+                        ruleLevel1.Priority = 2;
 
-                    //Level 3 Name should be in Black font without Bold
-                    var ruleLevel3 = wsData.ConditionalFormatting.AddExpression(nameAddress);
-                    ruleLevel3.Style.Font.Color.Color = Color.Black;
-                    ruleLevel3.Style.Font.Bold = false;
-                    ruleLevel3.Formula = "E2=3";
-                    ruleLevel3.Priority = 4;
+                        //Level 2 Name should be in Black font
+                        var ruleLevel2 = wsData.ConditionalFormatting.AddExpression(nameAddress);
+                        ruleLevel2.Style.Font.Color.Color = Color.Black;
+                        ruleLevel2.Formula = "E2=2";
+                        ruleLevel2.Priority = 3;
 
-                    //Level 4 Name should be in Black font without Bold
-                    var ruleLevel4 = wsData.ConditionalFormatting.AddExpression(nameAddress);
-                    ruleLevel4.Style.Font.Color.Color = Color.Black;
-                    ruleLevel4.Style.Font.Bold = false;
-                    ruleLevel4.Formula = "E2=4";
-                    ruleLevel4.Priority = 5;
+                        //Level 3 Name should be in Black font without Bold
+                        var ruleLevel3 = wsData.ConditionalFormatting.AddExpression(nameAddress);
+                        ruleLevel3.Style.Font.Color.Color = Color.Black;
+                        ruleLevel3.Style.Font.Bold = false;
+                        ruleLevel3.Formula = "E2=3";
+                        ruleLevel3.Priority = 4;
 
-                    ExcelAddress completeTableAddress = new ExcelAddress(rowDataStart, columnStart, rowDataEnd, columnEnd);
-                    var stoppedMeetingIds = exportWorkPlan.Where(x => x.StoppedMeeting == true && x.Wpid != null).Select(y => y.Wpid).ToList();
+                        //Level 4 Name should be in Black font without Bold
+                        var ruleLevel4 = wsData.ConditionalFormatting.AddExpression(nameAddress);
+                        ruleLevel4.Style.Font.Color.Color = Color.Black;
+                        ruleLevel4.Style.Font.Bold = false;
+                        ruleLevel4.Formula = "E2=4";
+                        ruleLevel4.Priority = 5;
 
-                    //Stopped WorkItems should have light brown background
-                    var ruleDeleted = wsData.ConditionalFormatting.AddExpression(completeTableAddress);
-                    ruleDeleted.Style.Fill.BackgroundColor.Color = Color.FromArgb(227, 227, 227);
-                    ruleDeleted.Formula = "SEARCH(CONCATENATE(\"[\",$A2,\"]\"), CONCATENATE(\"[" + String.Join("]\",\"[", stoppedMeetingIds) + "]\"))>0";
-                    ruleDeleted.Priority = 6;
+                        ExcelAddress completeTableAddress = new ExcelAddress(rowDataStart, columnStart, rowDataEnd, columnEnd);
+                        var stoppedMeetingIds = exportWorkPlan.Where(x => x.StoppedMeeting == true && x.Wpid != null).Select(y => y.Wpid).ToList();
 
-                    //100% completed workitems should have light green background
-                    var ruleCompleted = wsData.ConditionalFormatting.AddExpression(completeTableAddress);
-                    ruleCompleted.Style.Fill.BackgroundColor.Color = Color.FromArgb(204, 255, 204);
-                    ruleCompleted.Formula = "$J2=100%";
-                    ruleCompleted.Priority = 7;
+                        //Stopped WorkItems should have light brown background
+                        var ruleDeleted = wsData.ConditionalFormatting.AddExpression(completeTableAddress);
+                        ruleDeleted.Style.Fill.BackgroundColor.Color = Color.FromArgb(227, 227, 227);
+                        ruleDeleted.Formula = "SEARCH(CONCATENATE(\"[\",$A2,\"]\"), CONCATENATE(\"[" + String.Join("]\",\"[", stoppedMeetingIds) + "]\"))>0";
+                        ruleDeleted.Priority = 6;
 
-                    //Upload Data to Excel
-                    var dataRange = wsData.Cells["A1"].LoadFromCollection(
-                                                  from s in exportWorkPlan
+                        //100% completed workitems should have light green background
+                        var ruleCompleted = wsData.ConditionalFormatting.AddExpression(completeTableAddress);
+                        ruleCompleted.Style.Fill.BackgroundColor.Color = Color.FromArgb(204, 255, 204);
+                        ruleCompleted.Formula = "$J2=100%";
+                        ruleCompleted.Priority = 7;
+
+                        //Upload Data to Excel
+                        var dataRange = wsData.Cells["A1"].LoadFromCollection(
+                                                      from s in exportWorkPlan
                                                   select new { 
-                                                      ID = s.Wpid,
-                                                      Unique_ID = s.UID,
-                                                      Name = s.Name,
-                                                      Acronym = s.Acronym,
-                                                      Outline_Level = s.Level,
-                                                      Release = s.Release,
-                                                      Resource_Names = s.ResponsibleGroups,
-                                                      Start_Date = s.StartDate,
-                                                      Finish_Date = s.EndDate,
-                                                      Percent_Complete = s.Completion,
-                                                      Hyperlink = s.HyperLink,
-                                                      Status_Report = s.StatusReport,
-                                                      WI_rapporteur_name = s.WIRaporteur,
-                                                      WI_rapporteur_e_mail = s.WIRaporteurEmail,
-                                                      Notes = s.Notes,
-                                                      Impacted_TSs_and_TRs = s.RelatedTSs_TRs,
+                                                          ID = s.Wpid,
+                                                          Unique_ID = s.UID,
+                                                          Name = s.Name,
+                                                          Acronym = s.Acronym,
+                                                          Outline_Level = s.Level,
+                                                          Release = s.Release,
+                                                          Resource_Names = s.ResponsibleGroups,
+                                                          Start_Date = s.StartDate,
+                                                          Finish_Date = s.EndDate,
+                                                          Percent_Complete = s.Completion,
+                                                          Hyperlink = s.HyperLink,
+                                                          Status_Report = s.StatusReport,
+                                                          WI_rapporteur_name = s.WIRaporteur,
+                                                          WI_rapporteur_e_mail = s.WIRaporteurEmail,
+                                                          Notes = s.Notes,
+                                                          Impacted_TSs_and_TRs = s.RelatedTSs_TRs,
                                                       Special_Focus_Doc = String.Empty                                                  
                                                   } ,
-                                                  true, OfficeOpenXml.Table.TableStyles.None);
-                    pck.Save();
+                                                      true, OfficeOpenXml.Table.TableStyles.None);
+                        pck.Save();
+                    }
+                }
+                catch (IOException ex)
+                {
+                    LogManager.Error(ex.Message, ex);
                 }
             }
         }
@@ -268,8 +274,5 @@ namespace Etsi.Ultimate.Business
             if (Domain.DocxStylePool.GetDocxStyle((int)style).IsBold) currentCell.Paragraphs.First().Bold();
             currentCell.FillColor = Domain.DocxStylePool.GetDocxStyle((int)style).BgColor;
         }
-
-
     }
-
 }
