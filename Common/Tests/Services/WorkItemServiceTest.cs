@@ -13,6 +13,8 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using Etsi.Ultimate.Utils;
+using System.Linq.Expressions;
+using System;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -210,13 +212,22 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void ImportWorkPlan_Nominal()
         {
+            var wiList = new List<WorkItem>() { new WorkItem() };
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.WorkItem_ImportWorkplan);
+
+            //Mock Rights Manager
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(userRights);
+
             // Mock WIRepository
             var wiRepositoryMock = MockRepository.GenerateMock<IWorkItemRepository>();
             wiRepositoryMock.Expect(x => x.InsertOrUpdate(Arg<WorkItem>.Is.Anything));
-            RepositoryFactory.Container.RegisterInstance(typeof(IWorkItemRepository), wiRepositoryMock);
+            wiRepositoryMock.Stub(x => x.AllIncluding()).IgnoreArguments().Return(wiList.AsQueryable());
 
+            RepositoryFactory.Container.RegisterInstance(typeof(IWorkItemRepository), wiRepositoryMock);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
             // Place something in the cache
-            var wiList = new List<WorkItem>() { new WorkItem() };
             CacheManager.Insert("WI_IMPORT_"+"az12", wiList);
 
             var wiService = new WorkItemService();

@@ -2,6 +2,7 @@
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Etsi.Ultimate.Business
 {
@@ -25,6 +26,20 @@ namespace Etsi.Ultimate.Business
             IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
             repo.UoW = _uoW;
             var workItems = repo.GetWorkItemsByRelease(releaseIds);
+
+            return new KeyValuePair<List<WorkItem>, UserRightsContainer>(workItems, GetRights(personId));
+        }
+
+        /// <summary>
+        /// Get All Work Items including referenced objects
+        /// </summary>
+        /// <param name="personId">Person Id</param>
+        /// <returns>List of workitems along with rights container</returns>
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetAllWorkItems(int personId)
+        {
+            IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
+            repo.UoW = _uoW;
+            var workItems = repo.AllIncluding(x => x.Release, x => x.Remarks, x => x.ChildWis, x => x.ParentWi, x => x.WorkItems_ResponsibleGroups).ToList();
 
             return new KeyValuePair<List<WorkItem>, UserRightsContainer>(workItems, GetRights(personId));
         }

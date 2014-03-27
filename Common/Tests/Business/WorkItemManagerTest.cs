@@ -143,19 +143,53 @@ namespace Etsi.Ultimate.Tests.Business
         }
 
         [Test, TestCaseSource("WorkItemData")]
-        public void ImportWorkPlan_Export(WorkItemFakeDBSet workItemData)
+        public void ExportWorkPlan(WorkItemFakeDBSet workItemData)
         {
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.WorkItem_ImportWorkplan);
+
+            //Mock Rights Manager
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(userRights);
+
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData);
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
 
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             var wiImporter = new WorkItemImporter();
             wiImporter.UoW = uow;
 
-            CacheManager.Insert("WI_IMPORT_" + "az12", workItemData.All());
-            wiImporter.ImportWorkPlan("az12", @"D:\");
+            wiImporter.ExportWorkPlan(string.Empty);
 
+        }
+
+        [Test, TestCaseSource("WorkItemData")]
+        public void GetAllWorkItems(WorkItemFakeDBSet workItemData)
+        {
+            int personID = 12;
+
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.WorkItem_ImportWorkplan);
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Once();
+
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(personID)).Return(userRights).Repeat.Once();
+
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+
+            var wiManager = new WorkItemManager(uow);
+
+            var workItems = wiManager.GetAllWorkItems(personID);
+            Assert.AreEqual(26, workItems.Key.Count);
+            Assert.IsTrue(workItems.Value.HasRight(Enum_UserRights.WorkItem_ImportWorkplan));
+
+            mockDataContext.VerifyAllExpectations();
         }
 
         /// <summary>

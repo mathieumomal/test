@@ -63,7 +63,7 @@ namespace Etsi.Ultimate.Business
             }
         }
 
-        public bool ImportWorkPlan(string token, string exportPath)
+        public bool ImportWorkPlan(string token)
         {
             // Fetch the data in cache. If there is no data, then it's outdated.
             var workPlan = (List<WorkItem>)CacheManager.Get(CACHE_KEY+ token);
@@ -81,12 +81,19 @@ namespace Etsi.Ultimate.Business
                 wiRepo.InsertOrUpdate(wi);
             }
             
-            WorkPlanExporter.ExportToExcel(workPlan, exportPath);
-            WorkPlanExporter.ExportToWord(workPlan, exportPath);
-
             return true;
         }
 
-       
+        /// <summary>
+        /// Export Work Plan
+        /// </summary>
+        /// <param name="exportPath">Export Path</param>
+        public void ExportWorkPlan(string exportPath)
+        {
+            var workItemManager = new WorkItemManager(UoW);
+            var workItems = workItemManager.GetAllWorkItems(0);
+            WorkPlanExporter.ExportToExcel(workItems.Key, exportPath);
+            WorkPlanExporter.ExportToWord(workItems.Key, exportPath);
+        }
     }
 }

@@ -40,11 +40,12 @@ namespace Etsi.Ultimate.Services
                 using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
                 {
                     var csvImport = new WorkItemImporter() { UoW = uoW };
-                    isImportSuccess = csvImport.ImportWorkPlan(token, exportPath);
+                    isImportSuccess = csvImport.ImportWorkPlan(token);
 
                     if (isImportSuccess)
                     {
                         uoW.Save();
+                        csvImport.ExportWorkPlan(exportPath);
                     }
                     return isImportSuccess;                    
                 }
