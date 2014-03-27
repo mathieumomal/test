@@ -85,6 +85,30 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(1, service.GetMeetingById(1).MTG_ID);
             Assert.AreEqual(default(Meeting), service.GetMeetingById(0));
         }
+
+        [Test, TestCaseSource("GetMeetings")]
+        public void Test_GetMeetingOrderedByStartDate(IDbSet<Meeting> meetings)
+        {
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Meetings).Return(meetings);
+
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+
+            var service = new MeetingService();
+            List<Meeting> result = service.GetLatestMeetings();
+            Assert.AreEqual(3, result.Count());
+            Assert.AreEqual(3, result.ElementAt(0).MTG_ID);
+            Assert.AreEqual(1, result.ElementAt(1).MTG_ID);
+            Assert.AreEqual(6, result.ElementAt(2).MTG_ID);
+
+            List<Meeting> resultSearch = service.GetMatchingMeetings("S");
+            Assert.AreEqual(4, resultSearch.Count());
+            Assert.AreEqual(4, resultSearch.ElementAt(0).MTG_ID);
+            Assert.AreEqual(3, resultSearch.ElementAt(1).MTG_ID);
+            Assert.AreEqual(1, resultSearch.ElementAt(2).MTG_ID);
+            Assert.AreEqual(6, resultSearch.ElementAt(3).MTG_ID);
+        }
         #endregion
 
         #region Data
@@ -97,6 +121,7 @@ namespace Etsi.Ultimate.Tests.Services
                 yield return (IDbSet<Meeting>)meeting;
             }
         }
+        
         private IEnumerable<object[]> GetMeetingsWithSearchString
         {
             get
