@@ -153,6 +153,10 @@
               <name>Ionic.Zip.dll</name>
               <path>bin</path>
             </assembly>
+            <assembly>
+              <name>EPPlus.dll</name>
+              <path>bin</path>
+            </assembly>          
           </assemblies>
         </component>
       </components>
