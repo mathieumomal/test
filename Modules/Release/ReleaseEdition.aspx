@@ -201,7 +201,7 @@
             </telerik:RadMultiPage>     
            <div class="releaseDetailsAction">
                 <asp:LinkButton ID="SaveBtn" runat="server" Text="Save" CssClass="btn3GPP-success" OnClick="SaveEditedRelease_Click"/>
-               <asp:LinkButton ID="SaveBtnDisabled" runat="server" Text="Save" CssClass="btn3GPP-default" OnClientClick="return false;"/>
+               <asp:LinkButton ID="SaveBtnDisabled" runat="server" Text="Save" CssClass="btn3GPP-default" disabled="disabled" OnClientClick="return false;"/>
                 <asp:LinkButton ID="ExitBtn" runat="server" Text="Cancel" CssClass="btn3GPP-success" OnClick="CloseReleaseDetails_Click"/>
            </div> 
            <telerik:RadAjaxManager ID="RadAjaxManager1" runat="server">

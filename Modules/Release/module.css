@@ -1,3 +1,4 @@
+@import url("/Portals/_default/Skins/3GPP/CommonCssComponent/buttons.css");
 
 .status{
     font-weight: bold;
@@ -208,89 +209,10 @@ legend{
     padding-right: 10px;
 }
 
-
-
-
 versionFieldsetTab {
     text-align: left;
     width: 100%;
 }
-
-
-/* 3GPP button style */
-.btn3GPP-success {
-    color: #fff;
-    background-image: -webkit-linear-gradient(bottom, #75B91A, #54AF13);
-	background-image: -moz-linear-gradient(bottom, #75B91A, #54AF13);
-	background-image: -ms-linear-gradient(bottom, #75B91A, #54AF13);
-	background-image: -o-linear-gradient(bottom, #75B91A, #54AF13);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#75B91A', endColorstr='#54AF13',GradientType=1 );
-    border-color: #4cae4c;
-    display: inline-block;
-    margin-bottom: 0;
-    font-weight: 500;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    border: 1px solid transparent;
-    white-space: nowrap;
-    padding: 2px 12px;
-    font-size: 11px;
-    line-height: 1.5;
-    border-radius: 4px;
-    text-decoration: none;
-}
-
-.btn3GPP-success:hover {
-	color: #fff;
-    background-image: -webkit-linear-gradient(bottom, #64A014, #54AF13);
-	background-image: -moz-linear-gradient(bottom, #64A014, #54AF13);
-	background-image: -ms-linear-gradient(bottom, #64A014, #54AF13);
-	background-image: -o-linear-gradient(bottom, #64A014, #54AF13);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#64A014', endColorstr='#54AF13',GradientType=1 );
-}
-.btn3GPP-success:active {
-	color: #fff;
-    background: #64A014;
-}
-
-.btn3GPP-default {
-    color: #fff;
-    background-image: -webkit-linear-gradient(bottom, #B6B6B6, #A09F9F);
-	background-image: -moz-linear-gradient(bottom, #B6B6B6, #A09F9F);
-	background-image: -ms-linear-gradient(bottom, #B6B6B6, #A09F9F);
-	background-image: -o-linear-gradient(bottom, #B6B6B6, #A09F9F);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#B6B6B6', endColorstr='#A09F9F',GradientType=1 );
-    border-color: #4cae4c;
-    display: inline-block;
-    margin-bottom: 0;
-    font-weight: 500;
-    text-align: center;
-    vertical-align: middle;
-    cursor: pointer;
-    border: 1px solid transparent;
-    white-space: nowrap;
-    padding: 2px 12px;
-    font-size: 11px;
-    line-height: 1.5;
-    border-radius: 4px;
-    text-decoration: none;
-}
-
-.btn3GPP-default:hover {
-	color: #fff;
-    background-image: -webkit-linear-gradient(bottom, #8D8D8D, #A09F9F);
-	background-image: -moz-linear-gradient(bottom, #8D8D8D, #A09F9F);
-	background-image: -ms-linear-gradient(bottom, #8D8D8D, #A09F9F);
-	background-image: -o-linear-gradient(bottom, #8D8D8D, #A09F9F);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8D8D8D', endColorstr='#A09F9F',GradientType=1 );
-}
-.btn3GPP-default:active {
-	color: #fff;
-    background: #8D8D8D;
-}
-/* 3GPP button style */
-
 
 .containerFix {
     width: 650px;
@@ -299,9 +221,6 @@ versionFieldsetTab {
     padding: 0 !important;
 }
 
-
-
-
 .error {
     border-color: red;
 }
@@ -309,7 +228,6 @@ versionFieldsetTab {
 .RadAjaxPanel {
     display: inline !important;
 }
-
 
 img.imgViewReleases
 {
