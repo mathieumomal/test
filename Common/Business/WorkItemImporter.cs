@@ -83,17 +83,5 @@ namespace Etsi.Ultimate.Business
             
             return true;
         }
-
-        /// <summary>
-        /// Export Work Plan
-        /// </summary>
-        /// <param name="exportPath">Export Path</param>
-        public void ExportWorkPlan(string exportPath)
-        {
-            var workItemManager = new WorkItemManager(UoW);
-            var workItems = workItemManager.GetAllWorkItems(0);
-            WorkPlanExporter.ExportToExcel(workItems.Key, exportPath);
-            WorkPlanExporter.ExportToWord(workItems.Key, exportPath);
-        }
     }
 }

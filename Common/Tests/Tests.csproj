@@ -81,6 +81,7 @@
     <Compile Include="Business\RightsManagerTest.cs" />
     <Compile Include="Business\WorkItemCsvParserTest.cs" />
     <Compile Include="Business\WorkItemManagerTest.cs" />
+    <Compile Include="Business\WorkPlanExporterTest.cs" />
     <Compile Include="DomainClasses\RightsContainerTest.cs" />
     <Compile Include="FakeContext.cs" />
     <Compile Include="FakeManagers\RightsManagerFake.cs" />

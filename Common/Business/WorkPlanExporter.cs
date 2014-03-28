@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.Utils;
+﻿using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Utils;
 using Novacode;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -12,13 +13,50 @@ using Domain = Etsi.Ultimate.DomainClasses;
 namespace Etsi.Ultimate.Business
 {    
     public class WorkPlanExporter
-    {       
+    {
+        #region Properties
+
+        private IUltimateUnitOfWork _uoW;
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
+        /// <param name="UoW">Unit Of Work</param>
+        public WorkPlanExporter(IUltimateUnitOfWork UoW)
+        {
+            _uoW = UoW;
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Export Work Plan
+        /// </summary>
+        /// <param name="exportPath">Export Path</param>
+        public void ExportWorkPlan(string exportPath)
+        {
+            var workItemManager = new WorkItemManager(_uoW);
+            var workItems = workItemManager.GetAllWorkItems(0);
+            exportToExcel(workItems.Key, exportPath);
+            exportToWord(workItems.Key, exportPath);
+        }
+
+        #endregion
+
+        #region Private Methods
+
         /// <summary>
         /// Export Work Plan to Excel
         /// </summary>
         /// <param name="workPlan">Work Plan</param>
         /// <param name="exportPath">Export Path</param>
-        public static void ExportToExcel(List<Domain.WorkItem> workPlan, string exportPath)
+        private void exportToExcel(List<Domain.WorkItem> workPlan, string exportPath)
         {
             if (!String.IsNullOrEmpty(exportPath) && workPlan.Count >= 1)
             {
@@ -160,7 +198,12 @@ namespace Etsi.Ultimate.Business
             }
         }
 
-        public static void ExportToWord(List<Domain.WorkItem> workPlan, string exportPath)
+        /// <summary>
+        /// Export Work Plan to Word
+        /// </summary>
+        /// <param name="workPlan">Work Plan</param>
+        /// <param name="exportPath">Export Path</param>
+        private void exportToWord(List<Domain.WorkItem> workPlan, string exportPath)
         {
             if (!string.IsNullOrEmpty(exportPath))
             {
@@ -187,11 +230,11 @@ namespace Etsi.Ultimate.Business
 
                     Table legendTable = document.AddTable(5, 1);                    
 
-                    WorkPlanExporter.SetCellContent(legendTable.Rows[0].Cells[0], "LEGEND", Domain.DocxStylePool.STYLES_KEY.BLUE_WHITE);
-                    WorkPlanExporter.SetCellContent(legendTable.Rows[1].Cells[0], "ONGOING", Domain.DocxStylePool.STYLES_KEY.BLACK_WHITE);
-                    WorkPlanExporter.SetCellContent(legendTable.Rows[2].Cells[0], "COMPLETED", Domain.DocxStylePool.STYLES_KEY.BOLD_BLACK_GREEN);
-                    WorkPlanExporter.SetCellContent(legendTable.Rows[3].Cells[0], "STOPPED", Domain.DocxStylePool.STYLES_KEY.BOLD_BLACK_GRAY);
-                    WorkPlanExporter.SetCellContent(legendTable.Rows[4].Cells[0], "-", Domain.DocxStylePool.STYLES_KEY.BLACK_WHITE);
+                    setCellContent(legendTable.Rows[0].Cells[0], "LEGEND", Domain.DocxStylePool.STYLES_KEY.BLUE_WHITE);
+                    setCellContent(legendTable.Rows[1].Cells[0], "ONGOING", Domain.DocxStylePool.STYLES_KEY.BLACK_WHITE);
+                    setCellContent(legendTable.Rows[2].Cells[0], "COMPLETED", Domain.DocxStylePool.STYLES_KEY.BOLD_BLACK_GREEN);
+                    setCellContent(legendTable.Rows[3].Cells[0], "STOPPED", Domain.DocxStylePool.STYLES_KEY.BOLD_BLACK_GRAY);
+                    setCellContent(legendTable.Rows[4].Cells[0], "-", Domain.DocxStylePool.STYLES_KEY.BLACK_WHITE);
                     
 
                     document.InsertTable(legendTable);
@@ -204,22 +247,22 @@ namespace Etsi.Ultimate.Business
                     for (int i = 0; i < exportWorkPlan.Count; i++)
                     {
                         
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[0],exportWorkPlan[i].Wpid.ToString().Trim(), "Wpid", exportWorkPlan[i]);
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[1], exportWorkPlan[i].UID.ToString(), "UID", exportWorkPlan[i]);
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[2], exportWorkPlan[i].Name, "Name", exportWorkPlan[i]);
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[3], exportWorkPlan[i].Acronym, "Acronym", exportWorkPlan[i]);
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[4], exportWorkPlan[i].Level.ToString(), "Level", exportWorkPlan[i]);
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[5], exportWorkPlan[i].Release, "Release", exportWorkPlan[i]);
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[6], exportWorkPlan[i].ResponsibleGroups, "ResponsibleGroups", exportWorkPlan[i]);
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[7], exportWorkPlan[i].StartDate, "StartDate", exportWorkPlan[i]);
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[8], exportWorkPlan[i].EndDate, "EndDate", exportWorkPlan[i]);
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[9], (exportWorkPlan[i].Completion.Value * 100).ToString().Trim() + "%", "Completion", exportWorkPlan[i]);
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[10], exportWorkPlan[i].HyperLink, "HyperLink", exportWorkPlan[i]);
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[11], exportWorkPlan[i].StatusReport, "StatusReport", exportWorkPlan[i]);
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[12], exportWorkPlan[i].WIRaporteur, "WIRaporteur", exportWorkPlan[i]);
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[13], exportWorkPlan[i].WIRaporteurEmail, "WIRaporteurEmail", exportWorkPlan[i]);
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[14], exportWorkPlan[i].Notes, "Notes", exportWorkPlan[i]);
-                        WorkPlanExporter.SetCellContent(t.Rows[i].Cells[15], exportWorkPlan[i].RelatedTSs_TRs, "RelatedTSs_TRs", exportWorkPlan[i]);                        
+                        setCellContent(t.Rows[i].Cells[0],exportWorkPlan[i].Wpid.ToString().Trim(), "Wpid", exportWorkPlan[i]);
+                        setCellContent(t.Rows[i].Cells[1], exportWorkPlan[i].UID.ToString(), "UID", exportWorkPlan[i]);
+                        setCellContent(t.Rows[i].Cells[2], exportWorkPlan[i].Name, "Name", exportWorkPlan[i]);
+                        setCellContent(t.Rows[i].Cells[3], exportWorkPlan[i].Acronym, "Acronym", exportWorkPlan[i]);
+                        setCellContent(t.Rows[i].Cells[4], exportWorkPlan[i].Level.ToString(), "Level", exportWorkPlan[i]);
+                        setCellContent(t.Rows[i].Cells[5], exportWorkPlan[i].Release, "Release", exportWorkPlan[i]);
+                        setCellContent(t.Rows[i].Cells[6], exportWorkPlan[i].ResponsibleGroups, "ResponsibleGroups", exportWorkPlan[i]);
+                        setCellContent(t.Rows[i].Cells[7], exportWorkPlan[i].StartDate, "StartDate", exportWorkPlan[i]);
+                        setCellContent(t.Rows[i].Cells[8], exportWorkPlan[i].EndDate, "EndDate", exportWorkPlan[i]);
+                        setCellContent(t.Rows[i].Cells[9], (exportWorkPlan[i].Completion.Value * 100).ToString().Trim() + "%", "Completion", exportWorkPlan[i]);
+                        setCellContent(t.Rows[i].Cells[10], exportWorkPlan[i].HyperLink, "HyperLink", exportWorkPlan[i]);
+                        setCellContent(t.Rows[i].Cells[11], exportWorkPlan[i].StatusReport, "StatusReport", exportWorkPlan[i]);
+                        setCellContent(t.Rows[i].Cells[12], exportWorkPlan[i].WIRaporteur, "WIRaporteur", exportWorkPlan[i]);
+                        setCellContent(t.Rows[i].Cells[13], exportWorkPlan[i].WIRaporteurEmail, "WIRaporteurEmail", exportWorkPlan[i]);
+                        setCellContent(t.Rows[i].Cells[14], exportWorkPlan[i].Notes, "Notes", exportWorkPlan[i]);
+                        setCellContent(t.Rows[i].Cells[15], exportWorkPlan[i].RelatedTSs_TRs, "RelatedTSs_TRs", exportWorkPlan[i]);                        
                     }
 
                     t.AutoFit = AutoFit.Window;
@@ -231,7 +274,14 @@ namespace Etsi.Ultimate.Business
             }
         }
 
-        private static void SetCellContent(Cell currentCell,string cellContent, string colName, Domain.WorkItemForExport row)
+        /// <summary>
+        /// Set Cell Content for Word Table
+        /// </summary>
+        /// <param name="currentCell">Current Cell</param>
+        /// <param name="cellContent">Cell Content</param>
+        /// <param name="colName">Column Name</param>
+        /// <param name="row">Row</param>
+        private void setCellContent(Cell currentCell,string cellContent, string colName, Domain.WorkItemForExport row)
         {
             FontFamily FONT_ARIAL = new FontFamily("Arial");
             double FONT_SIZE_PARAGRAPH = 8D;
@@ -255,7 +305,13 @@ namespace Etsi.Ultimate.Business
             currentCell.FillColor = Domain.DocxStylePool.GetDocxStyle(row.GetCellStyle(colName)).BgColor;
         }
 
-        private static void SetCellContent(Cell currentCell, string cellContent, Domain.DocxStylePool.STYLES_KEY style)
+        /// <summary>
+        /// Set Cell Content for Word Table
+        /// </summary>
+        /// <param name="currentCell">Current Cell</param>
+        /// <param name="cellContent">Cell Content</param>
+        /// <param name="style">Style</param>
+        private void setCellContent(Cell currentCell, string cellContent, Domain.DocxStylePool.STYLES_KEY style)
         {
             FontFamily FONT_ARIAL = new FontFamily("Arial");
             double FONT_SIZE_PARAGRAPH = 8D;
@@ -273,5 +329,7 @@ namespace Etsi.Ultimate.Business
             if (Domain.DocxStylePool.GetDocxStyle((int)style).IsBold) currentCell.Paragraphs.First().Bold();
             currentCell.FillColor = Domain.DocxStylePool.GetDocxStyle((int)style).BgColor;
         }
+
+        #endregion
     }
 }
