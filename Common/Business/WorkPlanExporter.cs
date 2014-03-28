@@ -51,8 +51,11 @@ namespace Etsi.Ultimate.Business
                 var workItems = workItemManager.GetAllWorkItems(0);
                 ExportToExcel(workItems.Key, exportPath);
                 ExportToWord(workItems.Key, exportPath);
-                List<string> filesToCompress = new List<string>() { exportPath + DOC_TITLE + ".xlsx", exportPath + DOC_TITLE + ".docx" };
-                Zip.CompressSetOfFiles(ZIP_NAME, filesToCompress, exportPath);
+                if (!String.IsNullOrEmpty(exportPath) && workItems.Key.Count >= 1)
+                {
+                    List<string> filesToCompress = new List<string>() { exportPath + DOC_TITLE + ".xlsx", exportPath + DOC_TITLE + ".docx" };
+                    Zip.CompressSetOfFiles(ZIP_NAME, filesToCompress, exportPath);
+                }
                 return true;
             }
             catch (IOException ex)
