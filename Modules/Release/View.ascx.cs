@@ -182,7 +182,7 @@ namespace Etsi.Ultimate.Module.Release
                             helpSpan.InnerHtml = cell.Text;
                             cell.Text = "";
                             cell.Controls.Add(helpSpan);
-                            rdTooltipHeader.TargetControls.Add(cell.ClientID, true);
+                            //rdTooltipHeader.TargetControls.Add(cell.ClientID, true); //Uncomment when tooltip implemented
                         }
                     }
                 }
