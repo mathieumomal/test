@@ -117,11 +117,17 @@
     <Build Include="dbo\Tables\Enum_CommunitiesShortName.sql" />
     <Build Include="dbo\Tables\WorkItems_ResponsibleGroups.sql" />
     <Build Include="dbo\Tables\Enum_ReleaseStatus.sql" />
-    <Build Include="dbo\Views\View_Meetings.sql" />
+    <Build Include="dbo\Views\View_Meetings.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
     <Build Include="dbo\Views\Users_Groups.sql" />
     <Build Include="dbo\Views\Users_AdHoc_Roles.sql" />
     <Build Include="dbo\Views\View_Persons.sql" />
-    <Build Include="dbo\Views\View_Communities.sql" />
+    <Build Include="dbo\Views\View_Communities.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
     <Build Include="dbo\Functions\getPersonName.sql" />
     <Build Include="dbo\Tables\ShortUrl.sql" />
     <Build Include="dbo\Views\View_ModulesPages.sql">
