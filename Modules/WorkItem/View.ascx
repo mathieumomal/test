@@ -95,9 +95,12 @@
                     <telerik:RadTreeList ID="rtlWorkItems" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" runat="server" OnNeedDataSource="rtlWorkItems_NeedDataSource"
                         ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="false"  AllowPaging="false"  AllowFilteringByColumn="false">
                         <columns>
-                        <telerik:TreeListBoundColumn DataField="Name" UniqueName="Name" HeaderText="Name">
+                        <telerik:TreeListTemplateColumn  DataField="Name" UniqueName="Name" HeaderText="Name">
                             <HeaderStyle Font-Bold="True" Width="300px"/> 
-                        </telerik:TreeListBoundColumn>
+                            <ItemTemplate>
+                                <div style="text-align:left"><%# DataBinder.Eval(Container.DataItem,"Name")%></div>  
+                            </ItemTemplate>
+                        </telerik:TreeListTemplateColumn>
                         <telerik:TreeListBoundColumn DataField="Acronym" UniqueName="Acronym" HeaderText="Acronym">
                             <HeaderStyle Font-Bold="True" Width="70px"/> 
                         </telerik:TreeListBoundColumn>
@@ -113,17 +116,17 @@
                         <telerik:TreeListTemplateColumn DataField="StartDate" UniqueName="StartDate"  HeaderText="Start date">
                             <HeaderStyle Font-Bold="True" Width="140px"/> 
                             <ItemTemplate>
-                                <span><%# DataBinder.Eval(Container.DataItem,"StartDate", "{0:yyyy-mm-dd hh:mm UTC}") %></span>  
+                                <span><%# DataBinder.Eval(Container.DataItem,"StartDate", "{0:yyyy-MM-dd hh:mm UTC}") %></span>  
                             </ItemTemplate>      
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListTemplateColumn DataField="EndDate" UniqueName="EndDate"  HeaderText="End date">
                             <HeaderStyle Font-Bold="True" Width="140px"/> 
                             <ItemTemplate>
-                                <span><%# DataBinder.Eval(Container.DataItem,"EndDate", "{0:yyyy-mm-dd hh:mm UTC}") %></span>  
+                                <span><%# DataBinder.Eval(Container.DataItem,"EndDate", "{0:yyyy-MM-dd hh:mm UTC}") %></span>  
                             </ItemTemplate>   
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListTemplateColumn DataField="Completion" UniqueName="Completion"  HeaderText="Completion rate">
-                            <HeaderStyle Font-Bold="True" Width="90px"/> 
+                            <HeaderStyle Font-Bold="True" Width="70px"/> 
                             <ItemTemplate>
                                 <span><%# String.Format("{0:0'%}",  DataBinder.Eval(Container.DataItem,"Completion") )%></span>  
                             </ItemTemplate>     
@@ -131,9 +134,12 @@
                         <telerik:TreeListBoundColumn DataField="ResponsibleGroups" UniqueName="ResponsibleGroups" HeaderText="Responsible groups">
                             <HeaderStyle Font-Bold="True"  Width="90px"/> 
                         </telerik:TreeListBoundColumn>
-                        <telerik:TreeListBoundColumn  DataField="LatestRemark" UniqueName="LatestRemark"   HeaderText="Latest remark">
+                        <telerik:TreeListTemplateColumn  UniqueName="LatestRemark"   HeaderText="Latest remark">
                             <HeaderStyle Font-Bold="True" Width="200px"/> 
-                        </telerik:TreeListBoundColumn>
+                            <ItemTemplate>
+                                <div style="text-align:left"><%# DataBinder.Eval(Container.DataItem,"ShortLatestRemark")%></div>  
+                            </ItemTemplate>
+                        </telerik:TreeListTemplateColumn>
                         <telerik:TreeListTemplateColumn UniqueName="ViewWorkItem">
                             <HeaderStyle Width="50px"/> 
                             <ItemTemplate>

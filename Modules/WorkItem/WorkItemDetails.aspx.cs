@@ -231,7 +231,7 @@ namespace Etsi.Ultimate.Module.WorkItem
 
             if (workitem.ParentWi != null && workitem.WiLevel > 1)
             {
-                lnkParentWi.Text = workitem.Pk_WorkItemUid.ToString();
+                lnkParentWi.Text = workitem.ParentWi.Pk_WorkItemUid.ToString();
                 lnkParentWi.NavigateUrl = CONST_BASE_URL + workitem.ParentWi.Pk_WorkItemUid;
                 lnkParentWi.Visible = true;
                 lblParentWorkItem.Text = String.Format(" - {0}", workitem.Name);

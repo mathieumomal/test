@@ -25,6 +25,13 @@ namespace Etsi.Ultimate.DomainClasses
                 return (tmpRemarks != null) ? tmpRemarks.RemarkText : string.Empty;
             }
         }
+        public string ShortLatestRemark
+        {
+            get
+            {
+                return (this.LatestRemark != null && this.LatestRemark.Length > 28) ? this.LatestRemark.Remove(28) + "..." : this.LatestRemark;
+            }
+        }
         public string ResponsibleGroups
         {
             get
