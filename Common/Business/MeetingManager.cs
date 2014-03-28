@@ -30,9 +30,9 @@ namespace Etsi.Ultimate.Business
 
             return repo
                     .All
-                    .Where  (x => (x.MtgShortRef != null && x.MtgShortRef.Contains(SearchText)) ||
-                            (x.LOC_CITY != null && x.LOC_CITY.Contains(SearchText)) ||
-                            (x.LOC_CTY_CODE != null && x.LOC_CTY_CODE.Contains(SearchText)))
+                    .Where(x => (x.MtgShortRef != null && x.MtgShortRef.ToLower().Contains(SearchText.ToLower())) ||
+                            (x.LOC_CITY != null && x.LOC_CITY.ToLower().Contains(SearchText.ToLower())) ||
+                            (x.LOC_CTY_CODE != null && x.LOC_CTY_CODE.ToLower().Contains(SearchText.ToLower())))
                     .OrderBy(d => d.START_DATE)
                     .ToList();
         }

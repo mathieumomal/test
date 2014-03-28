@@ -109,6 +109,20 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(1, resultSearch.ElementAt(2).MTG_ID);
             Assert.AreEqual(6, resultSearch.ElementAt(3).MTG_ID);
         }
+
+        [Test, TestCaseSource("GetMeetingsWithSearchStringCaseInsensitive")]
+        public void Test_GetMeetingCaseInsensitive(String searchText, IDbSet<Meeting> meetings)
+        {
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Meetings).Return(meetings);
+
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+
+            var service = new MeetingService();
+            List<Meeting> resultSearch = service.GetMatchingMeetings(searchText);
+            Assert.AreEqual(4, resultSearch.Count());
+        }
         #endregion
 
         #region Data
@@ -121,7 +135,15 @@ namespace Etsi.Ultimate.Tests.Services
                 yield return (IDbSet<Meeting>)meeting;
             }
         }
-        
+        private IEnumerable<object[]> GetMeetingsWithSearchStringCaseInsensitive
+        {
+            get
+            {
+                var meetings = GetMeetingList();
+                yield return new object[] { "S", (IDbSet<Meeting>)meetings};
+                yield return new object[] { "s", (IDbSet<Meeting>)meetings};
+            }
+        }
         private IEnumerable<object[]> GetMeetingsWithSearchString
         {
             get
