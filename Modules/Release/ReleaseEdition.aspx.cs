@@ -404,7 +404,7 @@ namespace Etsi.Ultimate.Module.Release
         {
             editedRelease.Code = releaseCodeVal.Text;
             editedRelease.Name = ReleaseNameVal.Text;
-            editedRelease.Description = ReleaseDescVal.Text;
+            editedRelease.Description = (ReleaseDescVal.Text.StartsWith("http://") || ReleaseDescVal.Text.StartsWith("https://")) ? ReleaseDescVal.Text : "http://" + ReleaseDescVal.Text;
             editedRelease.ShortName = ReleaseShortNameVal.Text;
             editedRelease.StartDate = ReleaseStartDateVal.SelectedDate;
             editedRelease.Stage1FreezeMtgId = FreezeStage1Meeting.SelectedMeetingId;
