@@ -92,7 +92,7 @@
     --- Tooltip example : ---
     For tooltip : add 'HeaderTooltip="[text]"' to a telerik:GridTemplateColumn item 
     AND decomment this section :
-    <telerik:RadToolTipManager ID="rdTooltipHeader" runat="server"  RelativeTo="Element" Position="TopCenter"></telerik:RadToolTipManager>
+<%--    <telerik:RadToolTipManager ID="rdTooltipHeader" runat="server"  RelativeTo="Element" Position="TopCenter"></telerik:RadToolTipManager>--%>
 
     Easter eggs : add this style for dashed underline and use ? cursor on the handler tooltip element
     .helpTooltip{
