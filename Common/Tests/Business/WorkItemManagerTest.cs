@@ -140,7 +140,7 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.Contains("eWebRTCi", wiManager.GetAllAcronyms());
             Assert.Contains("IOPS", wiManager.GetAllAcronyms());
             Assert.Contains("UPCON-DOT", wiManager.GetAllAcronyms());
-        }
+        }        
 
         [Test, TestCaseSource("WorkItemData")]
         public void GetAllWorkItems(WorkItemFakeDBSet workItemData)
@@ -182,6 +182,7 @@ namespace Etsi.Ultimate.Tests.Business
 
                 yield return workItemFakeDBSet;
             }
-        }
+        }        
     }
 }
+

@@ -28,6 +28,23 @@ namespace Etsi.Ultimate.Business
         }
 
         /// <summary>
+        /// Creates a zip file for the suppplied file path
+        /// </summary>
+        /// <param name="fileToCompress">Full path of the file to compress</param>
+        /// <param name="outputPath">Full path of the output directory</param>
+        public static void CompressSetOfFiles(string saveName, List<string> filesToCompress, string outputPath)
+        {
+            using (var zip = new ZipFile())
+            {
+                foreach (string fileToCompress in filesToCompress)
+                {
+                    zip.AddFile(fileToCompress, String.Empty);
+                }
+                zip.Save(outputPath + saveName + ".zip");
+            }
+        }
+
+        /// <summary>
         /// Extract file(s) from a given zip file
         /// </summary>
         /// <param name="zipFilePath">Full path of the zip file</param>

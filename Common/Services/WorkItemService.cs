@@ -35,6 +35,7 @@ namespace Etsi.Ultimate.Services
         public bool ImportWorkPlan(string token, string exportPath)
         {
             bool isImportSuccess = false;
+            bool isExportSuccess = false;
             try
             {
                 using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -46,9 +47,9 @@ namespace Etsi.Ultimate.Services
                     {
                         uoW.Save();
                         var csvExport = new WorkPlanExporter(uoW);
-                        csvExport.ExportWorkPlan(exportPath);
+                        isExportSuccess = csvExport.ExportWorkPlan(exportPath);
                     }
-                    return isImportSuccess;                    
+                    return (isImportSuccess && isExportSuccess);                    
                 }
             }
             catch (Exception e)

@@ -33,8 +33,9 @@
     <Reference Include="CsvHelper">
       <HintPath>..\..\packages\CsvHelper.2.4.1\lib\net40-client\CsvHelper.dll</HintPath>
     </Reference>
-    <Reference Include="DocX">
-      <HintPath>..\..\Libs\DocX.dll</HintPath>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Libs\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
     <Reference Include="EPPlus">
       <HintPath>..\..\Libs\EPPlus.dll</HintPath>
@@ -56,6 +57,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MeetingManager.cs" />

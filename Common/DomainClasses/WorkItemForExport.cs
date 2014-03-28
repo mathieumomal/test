@@ -8,7 +8,7 @@ namespace Etsi.Ultimate.DomainClasses
 {
     public class WorkItemForExport
     {
-        //TODO: A dictionnary that contains all possible styles (e.g. 12)
+        private const string BLANK_CELL = "  -  ";
         public Nullable<int> Wpid { get; set; }
         public int UID { get; set; }
         public string Name { get; set; }
@@ -30,21 +30,21 @@ namespace Etsi.Ultimate.DomainClasses
 
         public WorkItemForExport(WorkItem workItem){
             Wpid = workItem.WorkplanId;
-            UID = workItem.Pk_WorkItemUid;
+            UID = (workItem.Pk_WorkItemUid >= Math.Pow(10,8)) ? 0 :workItem.Pk_WorkItemUid;
             Name = GetEmptyString(workItem.WiLevel.Value) + workItem.Name;
-            Acronym = workItem.Acronym;
+            Acronym = (workItem.Acronym.Equals(string.Empty)) ? BLANK_CELL : workItem.Acronym;
             Level = workItem.WiLevel.Value;
-            Release = (workItem.Release!= null) ? workItem.Release.Description : string.Empty;
-            ResponsibleGroups = string.Join(" ", workItem.WorkItems_ResponsibleGroups.Select(r => r.ResponsibleGroup).ToArray()); 
-            StartDate = workItem.StartDate.GetValueOrDefault().ToString("yyyy-MM-dd");
-            EndDate = workItem.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd");
+            Release = (workItem.Release != null) ? (((workItem.Release.Description != null) && (workItem.Release.Description.Equals(string.Empty))) ? workItem.Release.Description : BLANK_CELL) : BLANK_CELL;
+            ResponsibleGroups = (workItem.WorkItems_ResponsibleGroups.Count>0) ? string.Join(" ", workItem.WorkItems_ResponsibleGroups.Select(r => r.ResponsibleGroup).ToArray()).Trim() : BLANK_CELL; 
+            StartDate = (workItem.StartDate != null) ? workItem.StartDate.GetValueOrDefault().ToString("yyyy-MM-dd") : BLANK_CELL;
+            EndDate = (workItem.EndDate != null) ? workItem.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd") : BLANK_CELL;
             Completion = ((workItem.Completion != null) ? workItem.Completion: 0)/100;
-            HyperLink = workItem.Wid;
-            StatusReport = workItem.StatusReport;
-            WIRaporteur = workItem.RapporteurCompany;
-            WIRaporteurEmail = workItem.RapporteurStr;
-            Notes = string.Join(" ", workItem.Remarks.Select(r => r.RemarkText).ToArray()); 
-            RelatedTSs_TRs = workItem.TssAndTrs;
+            HyperLink = (workItem.Wid.Equals(string.Empty)) ? workItem.Wid : BLANK_CELL;
+            StatusReport = (!workItem.StatusReport.Equals(string.Empty)) ? workItem.StatusReport: BLANK_CELL;
+            WIRaporteur = (!workItem.RapporteurCompany.Equals(string.Empty)) ? workItem.RapporteurCompany: BLANK_CELL;
+            WIRaporteurEmail = (!workItem.RapporteurStr.Equals(string.Empty)) ? workItem.RapporteurStr: BLANK_CELL;
+            Notes = ((workItem.Remarks != null) && (workItem.Remarks.Count > 0)) ? string.Join(" ", workItem.Remarks.Select(r => r.RemarkText).ToArray()).Trim() : BLANK_CELL; 
+            RelatedTSs_TRs = (!workItem.TssAndTrs.Equals(string.Empty)) ? workItem.TssAndTrs: BLANK_CELL; 
             StoppedMeeting = (workItem.TsgStoppedMtgId != null || !String.IsNullOrEmpty(workItem.TsgStoppedMtgRef) 
                                                                || workItem.PcgStoppedMtgId != null 
                                                                || !String.IsNullOrEmpty(workItem.PcgStoppedMtgRef));

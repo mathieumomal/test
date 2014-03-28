@@ -23,5 +23,15 @@ namespace Etsi.Ultimate.DomainClasses
             IsBold= isBold;            
         }
 
+        public String GetFontColorHex()
+        {
+            return FontColor.R.ToString("X2") + FontColor.G.ToString("X2") + FontColor.B.ToString("X2");
+        }
+
+        public String GetBgColorHex()
+        {
+            return BgColor.R.ToString("X2") + BgColor.G.ToString("X2") + BgColor.B.ToString("X2");
+        }
+
     }
 }
