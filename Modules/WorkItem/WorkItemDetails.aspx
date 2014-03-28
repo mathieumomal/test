@@ -164,7 +164,7 @@
                     </telerik:RadPageView>
                 </telerik:RadMultiPage>
                 <div class="wiDetailsAction">
-                    <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit" CssClass="LinkButton" OnClick="CloseWorkItemDetails_Click" />
+                    <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit"  class="btn3GPP-success" OnClick="CloseWorkItemDetails_Click" />
                 </div>
                 <script type="text/javascript">
                     $(document).ready(function () {
