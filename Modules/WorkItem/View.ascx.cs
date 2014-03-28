@@ -255,6 +255,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             if (success)
             {
                 //Update RadWindow_workItemState label with real files path  
+                lblSaveStatus.Text = "Work plan was successfully imported.<br/>Word and Excel version of the work plan are available at:";
                 lblExportedPath.Text = new StringBuilder()
                     .Append(PathExportWorkPlan)
                     .ToString();

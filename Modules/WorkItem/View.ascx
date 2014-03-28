@@ -262,7 +262,7 @@
             <ContentTemplate>
                 <div class="contentModal" id="state">
                     <div class="wiHeader">
-                        <asp:Label runat="server" ID="lblSaveStatus" Text="Work plan was successfully imported.<br/>Word and Excel version of the work plan are available at:" />
+                        <asp:Label runat="server" ID="lblSaveStatus" Text="" />
                     </div>
                     <div>
                         <asp:Label id="lblExportedPath" runat="server" Text="" />
