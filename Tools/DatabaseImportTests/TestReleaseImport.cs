@@ -274,9 +274,9 @@ namespace DatabaseImportTests
         private IDbSet<Domain.Enum_ReleaseStatus> GetStatuses()
         {
             var list = new Enum_ReleaseStatusFakeDBSet();
-            list.Add(new Domain.Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, ReleaseStatus = "Open" });
-            list.Add(new Domain.Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, ReleaseStatus = "Frozen" });
-            list.Add(new Domain.Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, ReleaseStatus = "Closed" });
+            list.Add(new Domain.Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open", Description="Open" });
+            list.Add(new Domain.Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, Code="Frozen", Description="Frozen"});
+            list.Add(new Domain.Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, Code="Closed", Description = "Closed" });
 
             return list;
         }

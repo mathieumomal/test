@@ -223,16 +223,16 @@ namespace DatabaseImport.ModuleImport
                 // If release is defunct, then it's closed.
                 if (legacyRelease.defunct.GetValueOrDefault())
                 {
-                    var enumId = releaseStatuses.Where(s => s.ReleaseStatus.Contains("Closed")).FirstOrDefault();
+                    var enumId = releaseStatuses.Where(s => s.Code.Contains("Closed")).FirstOrDefault();
                     newRelease.Fk_ReleaseStatus = enumId.Enum_ReleaseStatusId;
                 }
                 else if ((newRelease.Stage3FreezeDate != null && newRelease.Stage3FreezeDate < DateTime.Now)
                     || (newRelease.Stage3FreezeDate == null && newRelease.Stage3FreezeMtgRef != null))
                 {
-                    newRelease.Fk_ReleaseStatus = releaseStatuses.Where(s => s.ReleaseStatus.Contains("Frozen")).FirstOrDefault().Enum_ReleaseStatusId;
+                    newRelease.Fk_ReleaseStatus = releaseStatuses.Where(s => s.Code.Contains("Frozen")).FirstOrDefault().Enum_ReleaseStatusId;
                 }
                 else
-                    newRelease.Fk_ReleaseStatus = releaseStatuses.Where(s => s.ReleaseStatus.Contains("Open")).FirstOrDefault().Enum_ReleaseStatusId;
+                    newRelease.Fk_ReleaseStatus = releaseStatuses.Where(s => s.Code.Contains("Open")).FirstOrDefault().Enum_ReleaseStatusId;
             }
             catch (Exception e)
             {
