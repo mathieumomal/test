@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Domain = Etsi.Ultimate.DomainClasses;
 using System.Drawing;
-using Novacode;
 
 namespace Etsi.Ultimate.DomainClasses
 {
