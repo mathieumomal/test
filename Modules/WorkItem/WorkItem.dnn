@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="WorkItem" type="Module" version="00.01.03">
+    <package name="WorkItem" type="Module" version="00.01.04">
       <friendlyName>WorkItem</friendlyName>
       <description>WorkItem module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
@@ -156,7 +156,11 @@
             <assembly>
               <name>EPPlus.dll</name>
               <path>bin</path>
-            </assembly>          
+            </assembly>
+            <assembly>
+              <name>DocumentFormat.OpenXml.dll</name>
+              <path>bin</path>
+            </assembly>
           </assemblies>
         </component>
       </components>
