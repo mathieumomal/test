@@ -90,11 +90,11 @@ namespace Etsi.Ultimate.Controls
                 //Bind All Releases
                 RadButton rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
                 rbAllReleases.Attributes.Add("Value", String.Join(",", allReleaseIds));
-                rbAllReleases.Checked = true;
 
                 //Bind Open Releases
                 RadButton rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
                 rbOpenReleases.Attributes.Add("Value", String.Join(",", openReleaseIds));
+                rbOpenReleases.Checked = true;
             }
         }
 

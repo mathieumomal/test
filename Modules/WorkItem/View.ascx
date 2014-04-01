@@ -9,15 +9,52 @@
     div.RadPanelBar .rpRootGroup .rpText {
         text-align: center;
     }
+
+    .modalBackground {
+        background-color: Gray;
+        filter: alpha(opacity=60);
+        opacity: 0.60;
+        width: 100%;
+        top: 0px;
+        left: 0px;
+        position: fixed;
+        height: 100%;
+    }
+
+    .updateProgress {
+        margin: auto;
+        font-family: Trebuchet MS;
+        filter: alpha(opacity=100);
+        opacity: 1;
+        font-size: small;
+        vertical-align: middle;
+        top: 45%;
+        position: fixed;
+        right: 45%;
+        color: #275721;
+        text-align: center;
+        background-color: White;
+        padding: 5px;
+    }
 </style>
+
+<asp:UpdateProgress ID="updateProgressWorkItemsTree" runat="server"
+    AssociatedUpdatePanelID="upWorkItemsTree" DisplayAfter="0">
+    <ProgressTemplate>
+        <div class="modalBackground">
+        </div>
+        <div class="updateProgress">Progress...</div>
+    </ProgressTemplate>
+</asp:UpdateProgress>
+
 <asp:UpdatePanel ID="upWorkItemsTree" runat="server">
     <ContentTemplate>
         <table style="width: 100%;">
             <tr>
                 <td>
                     <ult:fullviewcontrol id="ultFullView" runat="server" />
-                    
-                    
+
+
                     <a href="#" onclick="open_RadWindow_workItemImport()" class="btn3GPP-success">Import work plan</a>
                 </td>
             </tr>
@@ -93,7 +130,7 @@
                 <td>
 
                     <telerik:RadTreeList ID="rtlWorkItems" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" runat="server" OnNeedDataSource="rtlWorkItems_NeedDataSource"
-                        ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="false"  AllowPaging="false"  AllowFilteringByColumn="false">
+                        ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="false" AllowPaging="false" AllowFilteringByColumn="false">
                         <columns>
                         <telerik:TreeListTemplateColumn  DataField="Name" UniqueName="Name" HeaderText="Name">
                             <HeaderStyle Font-Bold="True" Width="300px"/> 
@@ -368,9 +405,6 @@
     /*-- TELERIK EVENTS --*/
 
     /*--- EVENTS ---*/
-
-
-
 </script>
 
 

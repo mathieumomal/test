@@ -13,6 +13,15 @@ namespace Etsi.Ultimate.Module.WorkItem {
     public partial class View {
         
         /// <summary>
+        /// updateProgressWorkItemsTree control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdateProgress updateProgressWorkItemsTree;
+        
+        /// <summary>
         /// upWorkItemsTree control.
         /// </summary>
         /// <remarks>

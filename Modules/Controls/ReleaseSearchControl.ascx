@@ -58,9 +58,9 @@
         {
             var comboBox = $find("<%= rcbReleases.ClientID %>");
             var allReleases = comboBox.get_items().getItem(0).findControl("rbAllReleases");
-            allReleases.set_checked(true);
+            allReleases.set_checked(false);
             var openReleases = comboBox.get_items().getItem(0).findControl("rbOpenReleases");
-            openReleases.set_checked(false);
+            openReleases.set_checked(true);
             var customSelectin = comboBox.get_items().getItem(0).findControl("rbCustomSelection");
             customSelectin.set_checked(false);
 

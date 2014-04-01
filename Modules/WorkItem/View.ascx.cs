@@ -139,6 +139,8 @@ namespace Etsi.Ultimate.Module.WorkItem
                     var wiService = ServicesFactory.Resolve<IWorkItemService>();
                     Acronyms = wiService.GetAllAcronyms();
                     selectedReleases = String.Empty;
+
+                    releaseSearchControl.Load += releaseSearchControl_Load;
                 }
 
                 racAcronym.DataSource = Acronyms;
@@ -150,6 +152,14 @@ namespace Etsi.Ultimate.Module.WorkItem
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
             }
+        }
+
+        void releaseSearchControl_Load(object sender, EventArgs e)
+        {
+            var wiService = ServicesFactory.Resolve<IWorkItemService>();
+            List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
+
+            loadWorkItemData(releaseIDs, wiService);
         }
 
         /// <summary>
@@ -340,7 +350,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             wiName = txtName.Text;
 
             StringBuilder searchString = new StringBuilder();
-            searchString.Append(releaseSearchControl.SearchString);
+            searchString.Append(String.IsNullOrEmpty(releaseSearchControl.SearchString) ? "Open Releases" : releaseSearchControl.SearchString);
             searchString.Append(", " + rddGranularity.SelectedText);
             if (!String.IsNullOrEmpty(wiAcronym))
                 searchString.Append(", " + wiAcronym);
@@ -355,7 +365,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             if (String.IsNullOrEmpty(wiName) && String.IsNullOrEmpty(wiAcronym))
             {
                 rtlWorkItems.CollapseAllItems();
-                rtlWorkItems.ExpandToLevel(1);
+                rtlWorkItems.ExpandToLevel(Convert.ToInt32(rddGranularity.SelectedValue ?? "1"));
                 rtlWorkItems.Rebind();
             }
             else
@@ -409,8 +419,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 if (string.IsNullOrEmpty(wiName) && string.IsNullOrEmpty(wiAcronym))
                 {
                     DataSource.ForEach(x => x.Display = DomainClasses.WorkItem.DisplayStatus.none);
-                    rtlWorkItems.DataSource = FilteredDataSource = DataSource.Where(x => (x.WiLevel != null && x.WiLevel <= granularity)
-                                                        && (percentComplete ? (((x.Completion == null) ? 0 : x.Completion) >= 100) : true)).ToList(); ;
+                    rtlWorkItems.DataSource = FilteredDataSource = DataSource;
                 }
                 else
                 {
