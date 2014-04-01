@@ -151,15 +151,15 @@
                             </ItemTemplate>      
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListTemplateColumn DataField="StartDate" UniqueName="StartDate"  HeaderText="Start date">
-                            <HeaderStyle Font-Bold="True" Width="140px"/> 
+                            <HeaderStyle Font-Bold="True" Width="120px"/> 
                             <ItemTemplate>
-                                <span><%# DataBinder.Eval(Container.DataItem,"StartDate", "{0:yyyy-MM-dd hh:mm UTC}") %></span>  
+                                <span><%# DataBinder.Eval(Container.DataItem,"StartDate", "{0:yyyy-MM-dd hh:mm}") %></span>  
                             </ItemTemplate>      
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListTemplateColumn DataField="EndDate" UniqueName="EndDate"  HeaderText="End date">
-                            <HeaderStyle Font-Bold="True" Width="140px"/> 
+                            <HeaderStyle Font-Bold="True" Width="120px"/> 
                             <ItemTemplate>
-                                <span><%# DataBinder.Eval(Container.DataItem,"EndDate", "{0:yyyy-MM-dd hh:mm UTC}") %></span>  
+                                <span><%# DataBinder.Eval(Container.DataItem,"EndDate", "{0:yyyy-MM-dd hh:mm}") %></span>  
                             </ItemTemplate>   
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListTemplateColumn DataField="Completion" UniqueName="Completion"  HeaderText="Completion rate">

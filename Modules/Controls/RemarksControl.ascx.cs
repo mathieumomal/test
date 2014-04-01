@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
+using System.Linq;
 
 namespace Etsi.Ultimate.Controls
 {
@@ -27,7 +28,8 @@ namespace Etsi.Ultimate.Controls
 
         public event EventHandler AddRemarkHandler;
         public bool IsEditMode { get; set; }
-        public UserRightsContainer UserRights {
+        public UserRightsContainer UserRights
+        {
             get
             {
                 if (ViewState[CONST_REMARKS_USER_RIGHTS] == null)
@@ -42,15 +44,17 @@ namespace Etsi.Ultimate.Controls
         }
         public string RemarkText { get { return this.txtAddRemark.Text; } }
         public int ScrollHeight { get; set; }
-        public List<Remark> DataSource 
+        public List<Remark> DataSource
         {
-            get {
+            get
+            {
                 if (ViewState[CONST_REMARKS_GRID_DATA] == null)
                     ViewState[CONST_REMARKS_GRID_DATA] = new List<Remark>();
 
                 return (List<Remark>)ViewState[CONST_REMARKS_GRID_DATA];
             }
-            set {
+            set
+            {
                 ViewState[CONST_REMARKS_GRID_DATA] = value;
                 remarksGrid.Rebind();
             }
@@ -100,7 +104,8 @@ namespace Etsi.Ultimate.Controls
         /// <param name="e">Event Args</param>
         protected void remarksGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
         {
-            remarksGrid.DataSource = (UserRights.HasRight(Enum_UserRights.Remarks_ViewPrivate)) ? DataSource : DataSource.FindAll(x => x.IsPublic == true);
+            var remarks = (UserRights.HasRight(Enum_UserRights.Remarks_ViewPrivate)) ? DataSource : DataSource.FindAll(x => x.IsPublic == true);
+            remarksGrid.DataSource = remarks.OrderByDescending(x=>x.CreationDate);
             legendLabel.Text = String.Format("Remarks ({0})", (UserRights.HasRight(Enum_UserRights.Remarks_ViewPrivate)) ? DataSource.Count : DataSource.FindAll(x => x.IsPublic == true).Count);
         }
 

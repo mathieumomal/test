@@ -71,10 +71,17 @@ namespace Etsi.Ultimate.Module.Release
                     htr.DataSource = release.Histories.ToList();
                     htr.ScrollHeight = (int)ReleaseDetailRadMultiPage.Height.Value - 50;
 
+                    //Set Meeting in Freeze window
                     if (release.EndMtgId != null)
                     {
                         MeetingControl mtgFreeze = mcFreeze as MeetingControl;
                         mtgFreeze.SelectedMeetingId = release.EndMtgId.Value;
+                    }
+                    //Set Meeting in Close window
+                    if (release.ClosureMtgId != null)
+                    {
+                        MeetingControl mtgClose = mcClose as MeetingControl;
+                        mtgClose.SelectedMeetingId = release.ClosureMtgId.Value;
                     }
 
                     ManageButtonDisplay(release, userRights);
