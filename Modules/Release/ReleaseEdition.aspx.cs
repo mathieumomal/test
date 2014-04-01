@@ -222,8 +222,8 @@ namespace Etsi.Ultimate.Module.Release
                       
             ReleaseDescVal.Attributes.Add("onblur", string.Format("validateURL(\"{0}\"); return false;",
                                                         ReleaseDescVal.UniqueID));
-            ReleaseStartDateVal.DateInput.Attributes.Add("onchange", string.Format("ValidateDateTimePicker(\"{0}\"); return false;",
-                                                        ReleaseStartDateVal.UniqueID));
+            /*ReleaseStartDateVal.DateInput.Attributes.Add("onchange", string.Format("ValidateDateTimePicker(\"{0}\"); return false;",
+                                                        ReleaseStartDateVal.UniqueID));*/
 
             //Configure Meeting control to display date's label
             FreezeStage1Meeting.DisplayLabel = true;
@@ -291,7 +291,7 @@ namespace Etsi.Ultimate.Module.Release
             ReleaseDescVal.MaxLength = 200;
             ReleaseDescVal.Columns = 60;
 
-            ReleaseStartDateVal.DateInput.Attributes.Add("disabled", "disabled");
+            //ReleaseStartDateVal.DateInput.Attributes.Add("disabled", "disabled");
 
             previousReleaseVal.Attributes.Add("data-required", "true");
 
@@ -403,10 +403,13 @@ namespace Etsi.Ultimate.Module.Release
         private void setReleaseEditionValues(Domain.Release editedRelease)
         {
             editedRelease.Code = releaseCodeVal.Text;
-            editedRelease.Name = ReleaseNameVal.Text;
-            editedRelease.Description = (ReleaseDescVal.Text.StartsWith("http://") || ReleaseDescVal.Text.StartsWith("https://")) ? ReleaseDescVal.Text : "http://" + ReleaseDescVal.Text;
+            editedRelease.Name = ReleaseNameVal.Text;            
+            editedRelease.Description = (ReleaseDescVal.Text.Equals(string.Empty) || ReleaseDescVal.Text.StartsWith("http://") || ReleaseDescVal.Text.StartsWith("https://")) ? ReleaseDescVal.Text : "http://" + ReleaseDescVal.Text;
             editedRelease.ShortName = ReleaseShortNameVal.Text;
-            editedRelease.StartDate = ReleaseStartDateVal.SelectedDate;
+            if (ReleaseStartDateVal.SelectedDate.HasValue)
+            editedRelease.StartDate = ReleaseStartDateVal.SelectedDate; 
+            else
+                editedRelease.StartDate = null;
             editedRelease.Stage1FreezeMtgId = FreezeStage1Meeting.SelectedMeetingId;
             editedRelease.Stage2FreezeMtgId = FreezeStage2Meeting.SelectedMeetingId;
             editedRelease.Stage3FreezeMtgId = FreezeStage3Meeting.SelectedMeetingId;

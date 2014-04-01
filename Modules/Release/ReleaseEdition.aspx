@@ -26,7 +26,8 @@
 </head>
 <body class="releaseDetailBody">
     <form id="ReleaseEditionForm" runat="server">
-       <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />        
+       <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />  
+        <telerik:RadAjaxPanel ID="RadAjaxPanel1" runat="server">        
        <div class="containerFix">
        <asp:Panel ID="releaseWarning" runat="server" CssClass="releaseDetailsWarning" Visible="false">
            <span class="releaseDetailsWarningTxt">No data available for the current query.</span>
@@ -69,10 +70,12 @@
                         </tr>
                         <tr>            
                             <td class="TabLineLeft"><asp:Label ID="ReleaseStartDateLbl" runat="server"  Text="Start date:"></asp:Label></td>
-                            <td colspan="2" class="TabLineRight">
+                            <td colspan="2" class="TabLineRight">                                                              
                                 <telerik:RadDatePicker ID="ReleaseStartDateVal" runat="server" >
-                                    <DateInput runat="server" ID="ReleaseStartDateValInput" DateFormat="yyyy-MM-dd"></DateInput>
-                                </telerik:RadDatePicker>
+                                    <DateInput ID="ReleaseStartDateValInput" DateFormat="yyyy-MM-dd"></DateInput>
+                                </telerik:RadDatePicker>  
+                                <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator1" ControlToValidate="ReleaseStartDateVal"
+                                    ErrorMessage="Enter a valid date!"></asp:RequiredFieldValidator>                                                            
                             </td>
                         </tr>
                         <tr>
@@ -377,7 +380,8 @@
                });
         </script>  
        </asp:Panel>       
-       </div>        
+       </div>  
+            </telerik:RadAjaxPanel>        
     </form>    
 </body>
 </html>

@@ -34,6 +34,7 @@ using DotNetNuke.Entities.Tabs;
 using System.Web;
 using System.Web.UI;
 using System.Drawing;
+using Domain = Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Module.WorkItem
 {
@@ -134,14 +135,21 @@ namespace Etsi.Ultimate.Module.WorkItem
                 if (Settings.Contains(Enum_Settings.WorkItem_UploadPath.ToString()))
                     PathUploadWorkPlan = Settings[Enum_Settings.WorkItem_UploadPath.ToString()].ToString();
 
+                var wiService = ServicesFactory.Resolve<IWorkItemService>();
                 if (!IsPostBack)
                 {
-                    var wiService = ServicesFactory.Resolve<IWorkItemService>();
+                    
                     Acronyms = wiService.GetAllAcronyms();
                     selectedReleases = String.Empty;
 
                     releaseSearchControl.Load += releaseSearchControl_Load;
                 }
+                List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
+                var userRights = wiService.GetWorkItemsByRelease(UserId, releaseIDs).Value;
+                if (userRights.HasRight(Domain.Enum_UserRights.WorkItem_ImportWorkplan))
+                    WorkPlanImport_Btn.Visible = true;
+                else
+                    WorkPlanImport_Btn.Visible = false;
 
                 racAcronym.DataSource = Acronyms;
                 racAcronym.DataBind();
