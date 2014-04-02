@@ -61,6 +61,7 @@ namespace Etsi.Ultimate.Services
             Container.RegisterType<IWorkItemService, WorkItemService>(new TransientLifetimeManager());
             Container.RegisterType<IMeetingService, MeetingService>(new TransientLifetimeManager());
             Container.RegisterType<IUrlService, UrlService>(new TransientLifetimeManager());
+            Container.RegisterType<IPersonService, PersonService>(new TransientLifetimeManager());
         }
     }
 }

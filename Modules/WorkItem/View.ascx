@@ -55,9 +55,7 @@
             <tr>
                 <td>
                     <ult:fullviewcontrol id="ultFullView" runat="server" />
-
-
-                    <asp:LinkButton ID="WorkPlanImport_Btn" runat="server" OnClientClick="open_RadWindow_workItemImport()" CssClass="btn3GPP-success">Import work plan</asp:LinkButton>
+                    <asp:LinkButton ID="WorkPlanImport_Btn" runat="server" OnClientClick="open_RadWindow_workItemImport()" Text="Import work plan"/>
                 </td>
             </tr>
             <tr>

@@ -63,6 +63,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         private const string CONST_WORKITEM_DATASOURCE = "WorkItemDataSource";
         private const string CONST_FILTERED_DATASOURCE = "WorkItemFilteredDataSource";
         private const string CONST_ACRONYMS_DATASOURCE = "AcronymDataSource";
+        public static readonly string DsId_Key = "ETSI_DS_ID";
         private int granularity;
         private bool percentComplete;
         private string wiAcronym;
@@ -144,17 +145,25 @@ namespace Etsi.Ultimate.Module.WorkItem
 
                     releaseSearchControl.Load += releaseSearchControl_Load;
                 }
-                List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
-                var userRights = wiService.GetWorkItemsByRelease(UserId, releaseIDs).Value;
-                if (userRights.HasRight(Domain.Enum_UserRights.WorkItem_ImportWorkplan))
-                    WorkPlanImport_Btn.Visible = true;
-                else
-                    WorkPlanImport_Btn.Visible = false;
+                
 
                 racAcronym.DataSource = Acronyms;
                 racAcronym.DataBind();
 
                 rtlWorkItems.ItemDataBound += rtlWorkItems_ItemDataBound;
+
+                // Display or not import WI
+                List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
+                var userRights = wiService.GetWorkItemsByRelease(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), releaseIDs).Value;
+                if (userRights.HasRight(Domain.Enum_UserRights.WorkItem_ImportWorkplan))
+                {
+                    WorkPlanImport_Btn.CssClass = "btn3GPP-success";
+                    WorkPlanImport_Btn.Visible = true;                    
+                }
+                else
+                {
+                    WorkPlanImport_Btn.Visible = false;
+                }
             }
             catch (Exception exc) //Module failed to load
             {
@@ -471,6 +480,24 @@ namespace Etsi.Ultimate.Module.WorkItem
                     MarkParent(list, parentObj);
                 }
             }
+        }
+
+        /// <summary>
+        /// Retrieve person Id
+        /// </summary>
+        /// <param name="UserInfo"></param>
+        /// <returns></returns>
+        private int GetUserPersonId(DotNetNuke.Entities.Users.UserInfo UserInfo)
+        {
+            if (UserInfo.UserID < 0)
+                return 0;
+            else
+            {
+                int personID;
+                if (Int32.TryParse(UserInfo.Profile.GetPropertyValue(DsId_Key), out personID))
+                    return personID;
+            }
+            return 0;
         }
 
         public ModuleActionCollection ModuleActions

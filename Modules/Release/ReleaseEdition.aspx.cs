@@ -19,7 +19,7 @@ namespace Etsi.Ultimate.Module.Release
         private const string CONST_EMPTY_FIELD = "";
         public static readonly string DsId_Key = "ETSI_DS_ID";
         public string serverSideJSScript = "";
-        private int UserId;
+        private int UserId;        
         private Nullable<int> ReleaseId;
         private string action;
         private int selectedTab;
@@ -131,15 +131,19 @@ namespace Etsi.Ultimate.Module.Release
         /// <param name="sender">source of event</param>
         /// <param name="e">event args</param>
         protected void releaseRemarks_AddRemarkHandler(object sender, EventArgs e)
-        {
+        {            
             List<Domain.Remark> datasource = releaseRemarks.DataSource;
+            //Get display name
+            IPersonService svc = ServicesFactory.Resolve<IPersonService>();
+            string personDisplayName = svc.GetPersonDisplayName(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()));
             datasource.Add(new Domain.Remark()
             {
                 Fk_PersonId = UserId,
                 Fk_ReleaseId = ReleaseId,
                 IsPublic = true,
                 CreationDate = DateTime.UtcNow,
-                RemarkText = releaseRemarks.RemarkText
+                RemarkText = releaseRemarks.RemarkText,
+                PersonName = personDisplayName
             });
 
             releaseRemarks.DataSource = datasource;
@@ -225,8 +229,6 @@ namespace Etsi.Ultimate.Module.Release
 
             ReleaseDescVal.Attributes.Add("onblur", string.Format("validateURL(\"{0}\"); return false;",
                                                         ReleaseDescVal.UniqueID));
-            /*ReleaseStartDateVal.DateInput.Attributes.Add("onchange", string.Format("ValidateDateTimePicker(\"{0}\"); return false;",
-                                                        ReleaseStartDateVal.UniqueID));*/
 
             //Configure Meeting control to display date's label
             FreezeStage1Meeting.DisplayLabel = true;
@@ -294,8 +296,6 @@ namespace Etsi.Ultimate.Module.Release
             ReleaseDescVal.MaxLength = 200;
             ReleaseDescVal.Columns = 60;
 
-            //ReleaseStartDateVal.DateInput.Attributes.Add("disabled", "disabled");
-
             previousReleaseVal.Attributes.Add("data-required", "true");
 
             Release2GDecimalVal.Attributes.Add("data-pattern", "^[0-9]+$");
@@ -316,7 +316,7 @@ namespace Etsi.Ultimate.Module.Release
         private void GetRequestParameters()
         {
             int output;
-            UserId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
+            UserId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());            
             ReleaseId = (Request.QueryString["releaseId"] != null) ? (int.TryParse(Request.QueryString["releaseId"], out output) ? new Nullable<int>(output) : null) : null;
             action = (Request.QueryString["action"] != null) ? Request.QueryString["action"] : string.Empty;
             selectedTab = (Request.QueryString["selectedTab"] != null) ? Convert.ToInt32(Request.QueryString["selectedTab"]) : 0;
