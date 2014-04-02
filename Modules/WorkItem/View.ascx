@@ -34,16 +34,18 @@
         color: #275721;
         text-align: center;
         background-color: White;
-        padding: 5px;
+        padding: 10px;
+        -moz-border-radius: 15px;
+        border-radius: 15px;
     }
 </style>
 
 <asp:UpdateProgress ID="updateProgressWorkItemsTree" runat="server"
-    AssociatedUpdatePanelID="upWorkItemsTree" DisplayAfter="0">
+    AssociatedUpdatePanelID="upWorkItemsTree" DisplayAfter="200">
     <ProgressTemplate>
         <div class="modalBackground">
         </div>
-        <div class="updateProgress">Progress...</div>
+        <div class="updateProgress"><asp:Image ID="imgProgress" runat="server" Class="rotating" ImageUrl="~/DesktopModules/WorkItem/images/hourglass.png" width="45"/></div>
     </ProgressTemplate>
 </asp:UpdateProgress>
 
@@ -116,8 +118,8 @@
                                 </tr>
                                 <tr>
                                     <td colspan="4" style="text-align:right; padding-right:20px">
-                                        <asp:Button ID="btnDefault" runat="server" Text="Default" Width="150px" OnClick="btnDefault_Click"></asp:Button>                   
-                                        <asp:Button ID="btnSearch" runat="server" Text="Search"  Width="150px" OnClick="btnSearch_Click"></asp:Button></td>
+                                        <asp:Button ID="btnDefault" runat="server" Text="Default" Width="150px" OnClick="btnDefault_Click" OnClientClick="collapseItem()"></asp:Button>                   
+                                        <asp:Button ID="btnSearch" runat="server" Text="Search"  Width="150px" OnClick="btnSearch_Click" OnClientClick="collapseItem()"></asp:Button></td>
                                 </tr>
                             </table>
                         </ContentTemplate>
@@ -153,13 +155,13 @@
                         <telerik:TreeListTemplateColumn DataField="StartDate" UniqueName="StartDate"  HeaderText="Start date">
                             <HeaderStyle Font-Bold="True" Width="120px"/> 
                             <ItemTemplate>
-                                <span><%# DataBinder.Eval(Container.DataItem,"StartDate", "{0:yyyy-MM-dd hh:mm}") %></span>  
+                                <span><%# DataBinder.Eval(Container.DataItem,"StartDate", "{0:yyyy-MM-dd}") %></span>  
                             </ItemTemplate>      
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListTemplateColumn DataField="EndDate" UniqueName="EndDate"  HeaderText="End date">
                             <HeaderStyle Font-Bold="True" Width="120px"/> 
                             <ItemTemplate>
-                                <span><%# DataBinder.Eval(Container.DataItem,"EndDate", "{0:yyyy-MM-dd hh:mm}") %></span>  
+                                <span><%# DataBinder.Eval(Container.DataItem,"EndDate", "{0:yyyy-MM-dd}") %></span>  
                             </ItemTemplate>   
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListTemplateColumn DataField="Completion" UniqueName="Completion"  HeaderText="Completion rate">
@@ -405,6 +407,13 @@
     /*-- TELERIK EVENTS --*/
 
     /*--- EVENTS ---*/
+    function collapseItem() {
+        var panelBar = $find("<%= rpbSearch.ClientID %>");
+            var item = panelBar.get_items().getItem(0);
+            if (item) {
+                item.collapse();
+            }
+        }
 </script>
 
 

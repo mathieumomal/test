@@ -413,6 +413,11 @@ namespace Etsi.Ultimate.Module.WorkItem
             chkHideCompletedItems.Checked = false;
             racAcronym.Entries.Clear();
             txtName.Text = String.Empty;
+
+            var wiService = ServicesFactory.Resolve<IWorkItemService>();
+            List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
+
+            loadWorkItemData(releaseIDs, wiService);
         }
 
         /// <summary>
@@ -433,7 +438,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 {
                     var list = DataSource;
                     list.ForEach(x => x.Display = DomainClasses.WorkItem.DisplayStatus.none);
-                    var modlist = list.Where(x => x.Name.StartsWith(wiName.Trim()) && x.Acronym.StartsWith(wiAcronym.Trim())
+                    var modlist = list.Where(x => x.Name.ToLower().Contains(wiName.ToLower().Trim()) && x.Acronym.ToLower().Contains(wiAcronym.ToLower().Trim())
                                                         && (x.WiLevel != null && x.WiLevel <= granularity)
                                                         && (percentComplete ? (((x.Completion == null) ? 0 : x.Completion) >= 100) : true)).ToList();
                     foreach (var item in modlist)
