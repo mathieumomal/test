@@ -21,6 +21,7 @@ namespace Etsi.Ultimate.Module.Release
         public static readonly string DsId_Key = "ETSI_DS_ID";
 
         private int UserId;
+        private bool fromEdit;
         public Nullable<int> ReleaseId;
         #endregion
 
@@ -30,8 +31,12 @@ namespace Etsi.Ultimate.Module.Release
             if (!IsPostBack)
             {
                 GetRequestParameters();
-
+                
                 LoadReleaseDetails();
+
+                //Load parent page to reflect changes
+                if (fromEdit)
+                    this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Refresh", "window.opener.location.reload(true);", true);
             }
         }
 
@@ -241,6 +246,7 @@ namespace Etsi.Ultimate.Module.Release
             int output;
             UserId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
             ReleaseId = (Request.QueryString["releaseId"] != null) ? (int.TryParse(Request.QueryString["releaseId"], out output) ? new Nullable<int>(output) : null) : null;
+            fromEdit = (Request.QueryString["fromEdit"] != null) ? Convert.ToBoolean(Request.QueryString["fromEdit"]) : false;
         }
 
         /// <summary>

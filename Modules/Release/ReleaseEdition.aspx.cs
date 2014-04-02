@@ -395,7 +395,8 @@ namespace Etsi.Ultimate.Module.Release
                     releaseDetailsBody.Visible = false;
                     releaseError.Visible = true;
                 }
-                Response.Redirect("ReleaseDetails.aspx?releaseId=" + editedRelease.Pk_ReleaseId);
+                
+                Response.Redirect("ReleaseDetails.aspx?releaseId=" + editedRelease.Pk_ReleaseId + "&fromEdit=true");
             }
         }
 
