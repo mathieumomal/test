@@ -318,3 +318,8 @@ legend {
 img.imgViewWorkItems {
     cursor: pointer;
 }
+
+#imgViewWorkItems
+{
+	cursor:pointer;
+}
