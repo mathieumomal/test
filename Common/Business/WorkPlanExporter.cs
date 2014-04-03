@@ -187,6 +187,7 @@ namespace Etsi.Ultimate.Business
                         //Upload Data to Excel
                         var dataRange = wsData.Cells["A1"].LoadFromCollection(
                                                       from s in exportWorkPlan
+                                                      orderby s.Wpid
                                                   select new { 
                                                           ID = s.Wpid,
                                                           Unique_ID = s.UID,
