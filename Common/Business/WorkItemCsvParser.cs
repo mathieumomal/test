@@ -551,7 +551,7 @@ namespace Etsi.Ultimate.Business
                 if (wi.Remarks.Count == 0)
                 {
                     IsCurrentWIModified = true;
-                    wi.Remarks.Add(new Remark() { Fk_PersonId = 0, CreationDate = DateTime.Now, RemarkText = remarkStr });
+                    wi.Remarks.Add(new Remark() { CreationDate = DateTime.Now, RemarkText = remarkStr, IsPublic = true });
                 }
                 else
                 {
@@ -569,7 +569,7 @@ namespace Etsi.Ultimate.Business
                     if (match.Success && match.Length > 1)
                     {
                         IsCurrentWIModified = true;
-                        wi.Remarks.Add(new Remark() { Fk_PersonId = 0, CreationDate = DateTime.Now, RemarkText = match.Value });
+                        wi.Remarks.Add(new Remark() { CreationDate = DateTime.Now, RemarkText = match.Value, IsPublic = true });
                     }
 
                 }
