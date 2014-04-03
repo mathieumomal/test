@@ -119,6 +119,7 @@
     <Compile Include="Repositories\TestEnum_ReleaseStatusRepository.cs" />
     <Compile Include="Repositories\TestReleaseRepository.cs" />
     <Compile Include="Services\MeetingServiceTest.cs" />
+    <Compile Include="Services\PersonServiceTest.cs" />
     <Compile Include="Services\ReleaseServiceTest.cs" />
     <Compile Include="Services\UrlServiceTest.cs" />
     <Compile Include="Services\WorkItemServiceTest.cs" />

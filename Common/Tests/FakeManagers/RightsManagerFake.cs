@@ -28,6 +28,11 @@ namespace Etsi.Ultimate.Tests.FakeManagers
             return userRightsContainer;
         }
 
+        public bool IsUserMCCMember(int personID)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

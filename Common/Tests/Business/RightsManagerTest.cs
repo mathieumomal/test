@@ -204,6 +204,22 @@ namespace Etsi.Ultimate.Tests.Business
 
         }
 
+        [TestCase(53388, false)] 
+        [TestCase(27900, true)]  //MCC_MEMBER
+        [TestCase(27904, false)]   
+        [TestCase(27905, true)] //MCC_MEMBER
+        [TestCase(13, false)]
+        public void IsUserMCCMember(int personID, bool result)
+        {
+            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
+
+            var rightsManager = new RightsManager();
+            rightsManager.UoW = GetUnitOfWork();
+            bool isUserMCCMember = rightsManager.IsUserMCCMember(personID);
+
+            Assert.AreEqual(result, isUserMCCMember);
+        }
+
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
         public void GetRights_UoWShouldBeInitialized()

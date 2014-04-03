@@ -181,6 +181,20 @@ namespace Etsi.Ultimate.Business.Security
             }
         }
 
+        /// <summary>
+        /// Check whether the user is MCC member or not
+        /// </summary>
+        /// <param name="personID">Person ID</param>
+        /// <returns>true/false</returns>
+        public bool IsUserMCCMember(int personID)
+        {
+            // Check whether the user is MCC
+            IUserRolesRepository repo = RepositoryFactory.Resolve<IUserRolesRepository>();
+            repo.UoW = UoW;
+            var records = repo.GetAllEtsiBasedRoles().Where(p => p.PERSON_ID == personID && p.PLIST_ID == MCC_LIST_ID).FirstOrDefault();
+            return (records != null);
+        }
+
         public IUltimateUnitOfWork UoW
         {
             get; set;
