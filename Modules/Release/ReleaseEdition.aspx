@@ -50,7 +50,7 @@
                                     <td class="TabLineLeft">
                                         <asp:Label ID="releaseCodeLbl" runat="server" Text="Release code<span class='requiredField'>(*)</span>:"></asp:Label></td>
                                     <td colspan="2" class="TabLineRight" id="SecondColreleaseCode">
-                                        <asp:TextBox ID="releaseCodeVal" runat="server"></asp:TextBox></td>
+                                        <asp:TextBox ID="releaseCodeVal" runat="server" CssClass="homogenDisabledStyle"></asp:TextBox></td>
                                 </tr>
                                 <tr>
                                     <td class="TabLineLeft">
@@ -63,14 +63,14 @@
                                     <td class="TabLineLeft">
                                         <asp:Label ID="ReleaseNameLbl" runat="server" Text="Release name<span class='requiredField'>(*)</span>:"></asp:Label></td>
                                     <td colspan="2" class="TabLineRight">
-                                        <asp:TextBox ID="ReleaseNameVal" runat="server" CssClass="releaseName"></asp:TextBox></td>
+                                        <asp:TextBox ID="ReleaseNameVal" runat="server" CssClass="releaseName homogenDisabledStyle"></asp:TextBox></td>
                                 </tr>
                                 <tr>
                                     <td class="TabLineLeft">
                                         <asp:Label ID="ReleaseDescLbl" runat="server" Text="Release description:"></asp:Label>
                                     </td>
                                     <td colspan="2" class="TabLineRight">
-                                        <asp:TextBox runat="server" ID="ReleaseDescVal" />
+                                        <asp:TextBox runat="server" ID="ReleaseDescVal" CssClass="homogenDisabledStyle" />
                                     </td>
 
                                 </tr>
@@ -78,7 +78,7 @@
                                     <td class="TabLineLeft">
                                         <asp:Label ID="ReleaseShortNameLbl" runat="server" Text="Release short name<span class='requiredField'>(*)</span>:"></asp:Label></td>
                                     <td colspan="2" class="TabLineRight">
-                                        <asp:TextBox ID="ReleaseShortNameVal" runat="server"></asp:TextBox></td>
+                                        <asp:TextBox ID="ReleaseShortNameVal" runat="server" CssClass="homogenDisabledStyle"></asp:TextBox></td>
                                 </tr>
                                 <tr>
                                     <td class="TabLineLeft">

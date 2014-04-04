@@ -14,7 +14,7 @@ namespace Etsi.Ultimate.DomainClasses
     {
         Anonymous,              // Has not logged on the portal
         EolAccountOwner,        // Has logged on the portal = delegate.
-        StaffMember,            // is member of the staff, hence can perform additional operations
+        StaffMember,            // is member of the staff, hence can perform additional operations (MCC member)
         CommitteeOfficial,       // Has specific rights within a commitee (chairman, vice chairman, ...)
 
         WorkPlanManager,        

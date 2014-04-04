@@ -256,12 +256,21 @@ namespace Etsi.Ultimate.Module.Release
         /// <param name="userRights">User Rights</param>
         private void ManageButtonDisplay(DomainClasses.Release release, DomainClasses.UserRightsContainer userRights)
         {
-            if (userRights.HasRight(Domain.Enum_UserRights.Release_Edit))
+            if (userRights.HasRight(Domain.Enum_UserRights.Release_Edit_Remarks))
+            {
                 EditBtn.Visible = true;
+                EditBtn.Text = "Add Remarks";
+            }
+            if (userRights.HasRight(Domain.Enum_UserRights.Release_Edit))
+            {
+                EditBtn.Visible = true;
+                EditBtn.Text = "Edit";
+            }
             if (userRights.HasRight(Domain.Enum_UserRights.Release_Freeze))
                 FreezeReleaseBtn.Visible = true;
             if (userRights.HasRight(Domain.Enum_UserRights.Release_Close))
                 CloseReleaseBtn.Visible = true;
+            
         }
 
         /// <summary>

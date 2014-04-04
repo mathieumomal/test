@@ -243,3 +243,11 @@ a.linkRelease
 .headerBtnRelease{
     height: 30px;
 }
+
+.homogenDisabledStyle:disabled
+{
+	background: white;
+	border: rgb(207, 207, 207) 1px solid;
+	color: #C0BFBF;
+	cursor: default;
+}
