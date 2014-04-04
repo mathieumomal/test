@@ -47,6 +47,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         {
             var repo = new WorkItemRepository() { UoW = GetUnitOfWork() };
             var newWi = new WorkItem();
+            newWi.IsNew = true;
             newWi.Name = "release number 4";
             repo.InsertOrUpdate(newWi);
             Assert.AreEqual(2, repo.All.ToList().Count);

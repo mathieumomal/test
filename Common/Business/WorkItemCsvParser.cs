@@ -235,7 +235,7 @@ namespace Etsi.Ultimate.Business
                 if (wi.WorkItems_ResponsibleGroups.Count > 0)
                 {
                     IsCurrentWIModified = true;
-                    wi.WorkItems_ResponsibleGroups.Clear();
+                    wi.WorkItems_ResponsibleGroups.ToList().ForEach(x => x.IsDeleted = true);
                 }
                 return;
             }
@@ -246,7 +246,7 @@ namespace Etsi.Ultimate.Business
             if (respStr != resourceStr)
             {
                 IsCurrentWIModified = true;
-                wi.WorkItems_ResponsibleGroups.Clear();
+                wi.WorkItems_ResponsibleGroups.ToList().ForEach(x => x.IsDeleted = true);
 
                 var resources = record.Resource_Names.Split(',');
                 bool isFirst = true;
@@ -1014,6 +1014,13 @@ namespace Etsi.Ultimate.Business
             }
             else
             {
+                //Remove Reference Objects to avoid Referential Integrity Errors
+                searchWi.Release = null;
+                searchWi.ParentWi = null;
+                searchWi.ChildWis.Clear();
+                searchWi.WorkItems_ResponsibleGroups.ToList().ForEach(x => x.WorkItem = null);
+                searchWi.Remarks.ToList().ForEach(x => x.WorkItem = null);
+
                 aReturnWI = searchWi;
             }
 

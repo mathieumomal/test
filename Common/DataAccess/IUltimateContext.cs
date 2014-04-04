@@ -30,6 +30,7 @@ namespace Etsi.Ultimate.DataAccess
 
         void SetModified(object entity);
         void SetAdded(object entity);
+        void SetDeleted(object entity);
         int SaveChanges();
     }
 }

@@ -101,6 +101,7 @@
     <Compile Include="WorkItems_ResponsibleGroups.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="WorkItems_ResponsibleGroups.Extend.cs" />
     <Compile Include="WorkPlanFile.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

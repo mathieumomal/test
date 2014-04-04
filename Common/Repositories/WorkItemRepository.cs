@@ -40,35 +40,31 @@ namespace Etsi.Ultimate.Repositories
 
         public void InsertOrUpdate(WorkItem entity)
         {
-            if (entity.IsNew)
+            //[1] Add Existing Childs First
+            entity.WorkItems_ResponsibleGroups.ToList().ForEach(x =>
             {
-                UoW.Context.SetAdded(entity);
+                if (x.Pk_WorkItemResponsibleGroups != default(int))
+                    UoW.Context.SetModified(x);
+            });
 
-             
-
-            }
-            else
+            entity.Remarks.ToList().ForEach(x =>
             {
+                if (x.Pk_RemarkId != default(int))
+                    UoW.Context.SetModified(x);
+            });
+
+            //[2] Add the Entity (It will add the childs as well)
+            UoW.Context.SetAdded(entity);
+
+            if (!entity.IsNew)
                 UoW.Context.SetModified(entity);
-            }
 
-            // Add possibly the Responsible groups
-            foreach (var responsibleGroup in entity.WorkItems_ResponsibleGroups)
+            //[3] Set Deleted status for deleted records
+            entity.WorkItems_ResponsibleGroups.ToList().ForEach(x =>
             {
-                if (responsibleGroup.Pk_WorkItemResponsibleGroups == default(int))
-                    UoW.Context.SetAdded(responsibleGroup);
-                else
-                    UoW.Context.SetModified(responsibleGroup);
-            }
-
-            // Add possibly the remarks
-            foreach (var remark in entity.Remarks)
-            {
-                if (remark.Pk_RemarkId == default(int))
-                    UoW.Context.SetAdded(remark);
-                else
-                    UoW.Context.SetModified(remark);
-            }
+                if (x.IsDeleted)
+                    UoW.Context.SetDeleted(x);
+            });
         }
 
         public void Delete(int id)

@@ -10,7 +10,6 @@ namespace Etsi.Ultimate.Tests
 {
     class FakeContext: IUltimateContext
     {
-
         #region IUltimateContext Members
 
         public System.Data.Entity.IDbSet<Ultimate.DomainClasses.Enum_ReleaseStatus> Enum_ReleaseStatus
@@ -93,6 +92,11 @@ namespace Etsi.Ultimate.Tests
                 throw new NotImplementedException("Something is missing in the FakeContext");
         }
 
+        public void SetDeleted(object entity)
+        {
+            throw new NotImplementedException();
+        }
+
         public int SaveChanges()
         {
             throw new NotImplementedException();
@@ -108,9 +112,5 @@ namespace Etsi.Ultimate.Tests
         }
 
         #endregion
-
-
-        
-
     }
 }
