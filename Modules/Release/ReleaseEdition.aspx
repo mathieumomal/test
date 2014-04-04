@@ -171,7 +171,7 @@
                                         <asp:Label ID="ITURCodeLbl" runat="server" Text="ITUR code:"></asp:Label>
                                     </td>
                                     <td class="TabLineRight">
-                                        <asp:TextBox ID="ITURCodeVal" runat="server"></asp:TextBox>
+                                        <asp:TextBox ID="ITURCodeVal" runat="server" CssClass="homogenDisabledStyle"></asp:TextBox>
                                     </td>
                                 </tr>
                                 <tr>
@@ -187,7 +187,7 @@
                                                     </td>
                                                     <td style="width: 70%; padding-left: 25%">
                                                         <asp:Label ID="Release2GDecimalLbl" runat="server" Text="2G Decimal:"></asp:Label>
-                                                        <asp:TextBox ID="Release2GDecimalVal" runat="server"></asp:TextBox>
+                                                        <asp:TextBox ID="Release2GDecimalVal" runat="server" CssClass="homogenDisabledStyle"></asp:TextBox>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -197,7 +197,7 @@
                                                     </td>
                                                     <td style="width: 70%; padding-left: 25%">
                                                         <asp:Label ID="Release3GDecimalLbl" runat="server" Text="3G Decimal:"></asp:Label>
-                                                        <asp:TextBox ID="Release3GDecimalVal" runat="server"></asp:TextBox>
+                                                        <asp:TextBox ID="Release3GDecimalVal" runat="server" CssClass="homogenDisabledStyle"></asp:TextBox>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -213,14 +213,14 @@
                                                 <tr>
                                                     <td style="width: 60%; padding-left: 10%">
                                                         <asp:Label ID="WPMCodes2GLbl" runat="server" Text="2G:"></asp:Label>
-                                                        <asp:TextBox ID="WPMCodes2GVal" runat="server" MaxLength="30"></asp:TextBox>
+                                                        <asp:TextBox ID="WPMCodes2GVal" runat="server" MaxLength="30" CssClass="homogenDisabledStyle"></asp:TextBox>
                                                     </td>
                                                     <td style="width: 40%; padding-left: 30%"></td>
                                                 </tr>
                                                 <tr>
                                                     <td style="width: 60%; padding-left: 10%">
                                                         <asp:Label ID="WPMCodes3GLbl" runat="server" Text="3G:"></asp:Label>
-                                                        <asp:TextBox ID="WPMCodes3GVal" runat="server"></asp:TextBox>
+                                                        <asp:TextBox ID="WPMCodes3GVal" runat="server" CssClass="homogenDisabledStyle"></asp:TextBox>
                                                     </td>
                                                     <td style="width: 40%; padding-left: 30%"></td>
                                                 </tr>
