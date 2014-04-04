@@ -198,7 +198,7 @@
           <Key>
             <PropertyRef Name="Pk_Id" />
           </Key>
-          <Property Name="Pk_Id" Type="int" Nullable="false" />
+          <Property Name="Pk_Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Token" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="Url" Type="varchar" Nullable="false" MaxLength="200" />
         </EntityType>

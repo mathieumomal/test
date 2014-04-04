@@ -50,9 +50,17 @@ namespace Etsi.Ultimate.Business
             do{
                 shortUrlDb.Token = Guid.NewGuid().ToString().Substring(0, 8);
             } while (repo.FindByToken(shortUrlDb.Token)!=null);
-            
-            repo.InsertOrUpdate(shortUrlDb);
-            return new StringBuilder().Append(baseAddress).Append("?sUrl=").Append(shortUrlDb.Token).ToString();
+
+            ShortUrl existingShortUrl = repo.All.Where(x => x.Url == shortUrlDb.Url).FirstOrDefault();
+            if (existingShortUrl == default(ShortUrl))
+            {
+                repo.InsertOrUpdate(shortUrlDb);
+                return new StringBuilder().Append(baseAddress).Append("?sUrl=").Append(shortUrlDb.Token).ToString();
+            }
+            else
+            {
+                return new StringBuilder().Append(baseAddress).Append("?sUrl=").Append(existingShortUrl.Token).ToString();
+            }
         }
 
         public string GetFullUrlForToken(string token)

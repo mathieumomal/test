@@ -32,6 +32,8 @@ namespace Etsi.Ultimate.Services
         /// <returns>List of workitems along with rights container</returns>
         KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsByRelease(int personId, List<int> releaseIds);
 
+        KeyValuePair<List<WorkItem>, UserRightsContainer> GetAllWorkItems(int personId);
+
         /// <summary>
         /// Get the workitem based on the id
         /// </summary>

@@ -25,9 +25,53 @@ namespace Etsi.Ultimate.Business
         {
             IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
             repo.UoW = _uoW;
-            var workItems = repo.GetWorkItemsByRelease(releaseIds);
+
+            List<WorkItem> workItems = new List<WorkItem>();
+
+            var workItemsOfSearchCriteria = repo.GetWorkItemsByRelease(releaseIds);
+            workItems.AddRange(workItemsOfSearchCriteria);
+            //Get Parents
+            List<WorkItem> parentWorkItems = new List<WorkItem>();
+            foreach (var workItem in workItemsOfSearchCriteria)
+            {
+                GetParentWorkItems(workItem, workItems, parentWorkItems, repo);
+            }
+
+            workItems.AddRange(parentWorkItems);
+
+            List<WorkItem> childWorkItems = new List<WorkItem>();
+            foreach (var workItem in workItemsOfSearchCriteria)
+            {
+                GetChildWorkItems(workItem, workItems, childWorkItems, repo);
+            }
+            workItems.AddRange(childWorkItems);
 
             return new KeyValuePair<List<WorkItem>, UserRightsContainer>(workItems, GetRights(personId));
+        }
+
+        private void GetParentWorkItems(WorkItem workItem, List<WorkItem> workItems, List<WorkItem> parentWorkItems, IWorkItemRepository repo)
+        {
+            if (workItem.ParentWi != null)
+            {
+                if ((!workItems.Exists(x => x.Pk_WorkItemUid == workItem.ParentWi.Pk_WorkItemUid)) &&
+                (!parentWorkItems.Exists(x => x.Pk_WorkItemUid == workItem.ParentWi.Pk_WorkItemUid)))
+                    parentWorkItems.Add(repo.Find(workItem.ParentWi.Pk_WorkItemUid));
+                GetParentWorkItems(workItem.ParentWi, workItems, parentWorkItems, repo);
+            }
+        }
+
+        private void GetChildWorkItems(WorkItem workItem, List<WorkItem> workItems, List<WorkItem> childWorkItems, IWorkItemRepository repo)
+        {
+            if (workItem.ChildWis != null)
+            {
+                foreach (var childWorkItem in workItem.ChildWis)
+                {
+                    if ((!workItems.Exists(x => x.Pk_WorkItemUid == childWorkItem.Pk_WorkItemUid)) &&
+                    (!childWorkItems.Exists(x => x.Pk_WorkItemUid == childWorkItem.Pk_WorkItemUid)))
+                        childWorkItems.Add(repo.Find(childWorkItem.Pk_WorkItemUid));
+                    GetChildWorkItems(childWorkItem, workItems, childWorkItems, repo);
+                }
+            }
         }
 
         /// <summary>

@@ -35,6 +35,7 @@ using System.Web;
 using System.Web.UI;
 using System.Drawing;
 using Domain = Etsi.Ultimate.DomainClasses;
+using System.Web.Caching;
 
 namespace Etsi.Ultimate.Module.WorkItem
 {
@@ -53,54 +54,44 @@ namespace Etsi.Ultimate.Module.WorkItem
     /// -----------------------------------------------------------------------------
     public partial class View : WorkItemModuleBase, IActionable
     {
+        #region Fields
         protected Etsi.Ultimate.Controls.FullView ultFullView;
         protected Etsi.Ultimate.Controls.ShareUrlControl ultShareUrl;
+        protected Etsi.Ultimate.Controls.ReleaseSearchControl releaseSearchControl;
 
         private static string PathExportWorkPlan;
         private static string PathUploadWorkPlan;
-        private string tokenWorkPlanAnalysed = "";
-        private int errorNumber = 0;
+        private static string selectedReleases;
+
         private const string CONST_WORKITEM_DATASOURCE = "WorkItemDataSource";
         private const string CONST_FILTERED_DATASOURCE = "WorkItemFilteredDataSource";
         private const string CONST_ACRONYMS_DATASOURCE = "AcronymDataSource";
-        public static readonly string DsId_Key = "ETSI_DS_ID";
+        private const string CONST_DSID_KEY = "ETSI_DS_ID";
+
+        private int errorNumber = 0;
         private int granularity;
-        private bool percentComplete;
+        private string tokenWorkPlanAnalysed = "";
         private string wiAcronym;
         private string wiName;
-        protected ReleaseSearchControl releaseSearchControl;
-        private static string selectedReleases;
+        private bool fromShortUrl;
+        private bool percentComplete;
+        #endregion
 
-        private List<DomainClasses.WorkItem> DataSource
-        {
-            get
-            {
-                if (ViewState[CONST_WORKITEM_DATASOURCE] == null)
-                    ViewState[CONST_WORKITEM_DATASOURCE] = new List<DomainClasses.WorkItem>();
-
-                return (List<DomainClasses.WorkItem>)ViewState[CONST_WORKITEM_DATASOURCE];
-            }
-            set
-            {
-                ViewState[CONST_WORKITEM_DATASOURCE] = value;
-            }
-        }
-
+        #region Properties
+        private List<DomainClasses.WorkItem> DataSource { get; set; }
         private List<DomainClasses.WorkItem> FilteredDataSource
         {
             get
             {
-                if (ViewState[CONST_FILTERED_DATASOURCE] == null)
-                    ViewState[CONST_FILTERED_DATASOURCE] = new List<DomainClasses.WorkItem>();
-
-                return (List<DomainClasses.WorkItem>)ViewState[CONST_FILTERED_DATASOURCE];
+                if (Cache["FilteredDataSource" + UserId] != null)
+                    return (List<DomainClasses.WorkItem>)Cache["FilteredDataSource" + UserId];
+                return default(List<DomainClasses.WorkItem>);
             }
             set
             {
-                ViewState[CONST_FILTERED_DATASOURCE] = value;
+                Cache.Insert("FilteredDataSource" + UserId, value, null, System.Web.Caching.Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(1));
             }
         }
-
         private List<string> Acronyms
         {
             get
@@ -115,13 +106,28 @@ namespace Etsi.Ultimate.Module.WorkItem
                 ViewState[CONST_ACRONYMS_DATASOURCE] = value;
             }
         }
+        public ModuleActionCollection ModuleActions
+        {
+            get
+            {
+                var actions = new ModuleActionCollection
+                    {
+                        {
+                            GetNextActionID(), Localization.GetString("EditModule", LocalResourceFile), "", "", "",
+                            EditUrl(), false, SecurityAccessLevel.Edit, true, false
+                        }
+                    };
+                return actions;
+            }
+        }
+        #endregion
 
+        #region Events
         protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
-                ManageShareUrl();
-
+                GetRequestParameters();
 
                 //ultFullView.ModuleId = 12;
                 //ultFullView.TabId = 13;
@@ -139,13 +145,13 @@ namespace Etsi.Ultimate.Module.WorkItem
                 var wiService = ServicesFactory.Resolve<IWorkItemService>();
                 if (!IsPostBack)
                 {
-                    
+
                     Acronyms = wiService.GetAllAcronyms();
                     selectedReleases = String.Empty;
 
                     releaseSearchControl.Load += releaseSearchControl_Load;
                 }
-                
+
 
                 racAcronym.DataSource = Acronyms;
                 racAcronym.DataBind();
@@ -158,7 +164,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 if (userRights.HasRight(Domain.Enum_UserRights.WorkItem_ImportWorkplan))
                 {
                     WorkPlanImport_Btn.CssClass = "btn3GPP-success";
-                    WorkPlanImport_Btn.Visible = true;                    
+                    WorkPlanImport_Btn.Visible = true;
                 }
                 else
                 {
@@ -169,36 +175,6 @@ namespace Etsi.Ultimate.Module.WorkItem
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
             }
-        }
-
-        void releaseSearchControl_Load(object sender, EventArgs e)
-        {
-            var wiService = ServicesFactory.Resolve<IWorkItemService>();
-            List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
-
-            loadWorkItemData(releaseIDs, wiService);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        private void ManageShareUrl()
-        {
-            ultShareUrl.ModuleId = ModuleId;
-            ultShareUrl.TabId = TabController.CurrentPage.TabID;
-
-            var address = Request.IsSecureConnection ? "https://" : "http://";
-            address += Request["HTTP_HOST"] + "/";
-            ultShareUrl.BaseAddress = address;
-
-            var nameValueCollection = HttpContext.Current.Request.QueryString;
-            var urlParams = new Dictionary<string, string>();
-            foreach (var k in nameValueCollection.AllKeys)
-            {
-                if (k != null && nameValueCollection[k] != null)
-                    urlParams.Add(k, nameValueCollection[k]);
-            }
-            ultShareUrl.UrlParams = urlParams;
         }
 
         /// <summary>
@@ -301,24 +277,6 @@ namespace Etsi.Ultimate.Module.WorkItem
             }
         }
 
-        protected void rptErrorsWarning_ItemDataBound(Object Sender, RepeaterItemEventArgs e)
-        {
-            string item = (String)e.Item.DataItem;
-            if (item != null)
-            {
-                Label lbl = e.Item.FindControl("lblErrorOrWarning") as Label;
-                lbl.Text = item;
-                if (errorNumber > 0)
-                {
-                    lbl.CssClass = "ErrorItem";
-                    errorNumber--;
-                }
-                else
-                    lbl.CssClass = "WarningItem";
-
-            }
-        }
-
         /// <summary>
         /// Click Event of Button Search
         /// </summary>
@@ -336,6 +294,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             }
             else
             {
+                fromShortUrl = false;
                 loadWorkItemData(releaseIDs, wiService);
             }
         }
@@ -350,71 +309,6 @@ namespace Etsi.Ultimate.Module.WorkItem
             List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
             loadWorkItemData(releaseIDs, wiService);
-        }
-
-        /// <summary>
-        /// Load work item data
-        /// </summary>
-        /// <param name="releaseIDs">List of Release Ids</param>
-        /// <param name="wiService">List of Service</param>
-        private void loadWorkItemData(List<int> releaseIDs, IWorkItemService wiService)
-        {
-            if (String.Join(",", releaseIDs) != selectedReleases)
-            {
-                var wiData = wiService.GetWorkItemsByRelease(UserId, releaseIDs);
-                DataSource = wiData.Key;
-                selectedReleases = String.Join(",", releaseIDs);
-            }
-
-            granularity = Convert.ToInt32(rddGranularity.SelectedValue);
-            percentComplete = chkHideCompletedItems.Checked;
-            wiAcronym = racAcronym.Text.Trim();
-            if (wiAcronym.Length > 1)
-                wiAcronym = wiAcronym.Remove(wiAcronym.Length - 1);
-            wiName = txtName.Text;
-
-            StringBuilder searchString = new StringBuilder();
-            searchString.Append(String.IsNullOrEmpty(releaseSearchControl.SearchString) ? "Open Releases" : releaseSearchControl.SearchString);
-            searchString.Append(", " + rddGranularity.SelectedText);
-            if (!String.IsNullOrEmpty(wiAcronym))
-                searchString.Append(", " + wiAcronym);
-            if (!String.IsNullOrEmpty(wiName))
-                searchString.Append(", " + wiName);
-            if (percentComplete)
-                searchString.Append(", hidden completed items");
-
-            lblSearchHeader.Text = String.Format("Search form ({0})", searchString.ToString());
-            searchPanel.Expanded = false;
-
-            if (String.IsNullOrEmpty(wiName) && String.IsNullOrEmpty(wiAcronym))
-            {
-                rtlWorkItems.CollapseAllItems();
-                rtlWorkItems.ExpandToLevel(Convert.ToInt32(rddGranularity.SelectedValue ?? "1"));
-                rtlWorkItems.Rebind();
-            }
-            else
-                rtlWorkItems.ExpandAllItems();
-
-
-        }
-
-        void rtlWorkItems_ItemDataBound(object sender, TreeListItemDataBoundEventArgs e)
-        {
-
-            if (e.Item is TreeListDataItem)
-            {
-                TreeListDataItem item = e.Item as TreeListDataItem;
-
-                var displayStatus = (DomainClasses.WorkItem.DisplayStatus)DataBinder.Eval(item.DataItem, "Display");
-                if (displayStatus == DomainClasses.WorkItem.DisplayStatus.matched)
-                {
-                    item.BackColor = Color.LightYellow;
-                }
-
-                var wiLevel = (System.Int32)DataBinder.Eval(item.DataItem, "wiLevel");
-                if (wiLevel == 0)
-                    item["ViewWorkItem"].Visible = false;
-            }
         }
 
         /// <summary>
@@ -436,6 +330,9 @@ namespace Etsi.Ultimate.Module.WorkItem
             loadWorkItemData(releaseIDs, wiService);
         }
 
+
+
+
         /// <summary>
         /// Need data source event for WorkItems Tree List
         /// </summary>
@@ -443,39 +340,181 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// <param name="e">Event Arguments</param>
         protected void rtlWorkItems_NeedDataSource(object sender, TreeListNeedDataSourceEventArgs e)
         {
-            if (e.RebindReason != TreeListRebindReason.PostBackEvent && DataSource != null)
+            if (e.RebindReason != TreeListRebindReason.PostBackEvent)
             {
-                if (string.IsNullOrEmpty(wiName) && string.IsNullOrEmpty(wiAcronym))
-                {
-                    DataSource.ForEach(x => x.Display = DomainClasses.WorkItem.DisplayStatus.none);
-                    rtlWorkItems.DataSource = FilteredDataSource = DataSource;
-                }
-                else
-                {
-                    var list = DataSource;
-                    list.ForEach(x => x.Display = DomainClasses.WorkItem.DisplayStatus.none);
-                    var modlist = list.Where(x => x.Name.ToLower().Contains(wiName.ToLower().Trim()) && x.Acronym.ToLower().Contains(wiAcronym.ToLower().Trim())
-                                                        && (x.WiLevel != null && x.WiLevel <= granularity)
-                                                        && (percentComplete ? (((x.Completion == null) ? 0 : x.Completion) >= 100) : true)).ToList();
-                    foreach (var item in modlist)
-                    {
-                        //list.Find(x => x.Pk_WorkItemUid == item.Pk_WorkItemUid).Display = DomainClasses.WorkItem.DisplayStatus.matched;
-                        item.Display = DomainClasses.WorkItem.DisplayStatus.matched;
-                        MarkParent(list, item);
-                    }
-
-                    rtlWorkItems.DataSource = FilteredDataSource = list.Where(x => x.Display == DomainClasses.WorkItem.DisplayStatus.include
-                                                                                || x.Display == DomainClasses.WorkItem.DisplayStatus.matched).ToList();
-                }
+                LoadData();
             }
             else
             {
                 if (FilteredDataSource != null)
                     rtlWorkItems.DataSource = FilteredDataSource;
+                else
+                    LoadData();
             }
         }
 
+        private void LoadData()
+        {
+            if (DataSource == null)
+            {
+                var wiService = ServicesFactory.Resolve<IWorkItemService>();
+                List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
 
+                var wiData = wiService.GetWorkItemsByRelease(UserId, releaseIDs);
+                DataSource = wiData.Key;
+            }
+
+            if (string.IsNullOrEmpty(wiName) && string.IsNullOrEmpty(wiAcronym))
+            {
+                DataSource.ForEach(x => x.Display = DomainClasses.WorkItem.DisplayStatus.none);
+                rtlWorkItems.DataSource = FilteredDataSource = DataSource;
+            }
+            else
+            {
+                var list = DataSource;
+                list.ForEach(x => x.Display = DomainClasses.WorkItem.DisplayStatus.none);
+                var modlist = list.Where(x => x.Name.ToLower().Contains(wiName.ToLower().Trim()) && x.Acronym.ToLower().Contains(wiAcronym.ToLower().Trim())
+                                                    && (x.WiLevel != null && x.WiLevel <= granularity)
+                                                    && (percentComplete ? (((x.Completion == null) ? 0 : x.Completion) >= 100) : true)).ToList();
+                foreach (var item in modlist)
+                {
+                    item.Display = DomainClasses.WorkItem.DisplayStatus.matched;
+                    MarkParent(list, item);
+                }
+
+                rtlWorkItems.DataSource = FilteredDataSource = list.Where(x => x.Display == DomainClasses.WorkItem.DisplayStatus.include
+                                                                            || x.Display == DomainClasses.WorkItem.DisplayStatus.matched).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Used to loadWorkItemData only after the releaseSearchControl control is rendered
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void releaseSearchControl_Load(object sender, EventArgs e)
+        {
+            var wiService = ServicesFactory.Resolve<IWorkItemService>();
+            List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
+
+            loadWorkItemData(releaseIDs, wiService);
+        }
+
+        /// <summary>
+        /// Format WIs once the data is bound
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void rtlWorkItems_ItemDataBound(object sender, TreeListItemDataBoundEventArgs e)
+        {
+
+            if (e.Item is TreeListDataItem)
+            {
+                TreeListDataItem item = e.Item as TreeListDataItem;
+
+                var displayStatus = (DomainClasses.WorkItem.DisplayStatus)DataBinder.Eval(item.DataItem, "Display");
+                if (displayStatus == DomainClasses.WorkItem.DisplayStatus.matched)
+                {
+                    item.BackColor = Color.LightYellow;
+                }
+
+                var wiLevel = (System.Int32)DataBinder.Eval(item.DataItem, "wiLevel");
+                if (wiLevel == 0)
+                    item["ViewWorkItem"].Visible = false;
+            }
+        }
+
+        protected void rptErrorsWarning_ItemDataBound(Object Sender, RepeaterItemEventArgs e)
+        {
+            string item = (String)e.Item.DataItem;
+            if (item != null)
+            {
+                Label lbl = e.Item.FindControl("lblErrorOrWarning") as Label;
+                lbl.Text = item;
+                if (errorNumber > 0)
+                {
+                    lbl.CssClass = "ErrorItem";
+                    errorNumber--;
+                }
+                else
+                    lbl.CssClass = "WarningItem";
+
+            }
+        }
+        #endregion
+
+        #region Private methods
+        /// <summary>
+        /// Load work item data
+        /// </summary>
+        /// <param name="releaseIDs">List of Release Ids</param>
+        /// <param name="wiService">List of Service</param>
+        private void loadWorkItemData(List<int> releaseIDs, IWorkItemService wiService)
+        {
+            if (fromShortUrl)
+            {
+                if (Request.QueryString["releaseId"] != null)
+                    releaseIDs = releaseSearchControl.SelectedReleaseIds = Request.QueryString["releaseId"].Split(',').Select(n => int.Parse(n)).ToList();
+
+                if (Request.QueryString["granularity"] != null)
+                {
+                    granularity = Convert.ToInt32(Request.QueryString["granularity"]);
+                    rddGranularity.SelectedValue = Request.QueryString["granularity"].ToString();
+                }
+                if (Request.QueryString["hideCompleted"] != null)
+                    percentComplete = chkHideCompletedItems.Checked = Convert.ToBoolean(Request.QueryString["hideCompleted"]);
+
+                wiAcronym = (Request.QueryString["acronym"] != null) ? Request.QueryString["acronym"].ToString() : String.Empty;
+                racAcronym.Entries.Clear();
+                racAcronym.Entries.Add(new AutoCompleteBoxEntry(wiAcronym, ""));
+
+                wiName = txtName.Text = (Request.QueryString["name"] != null) ? Request.QueryString["name"].ToString() : String.Empty;
+            }
+            else
+            {
+                granularity = Convert.ToInt32(rddGranularity.SelectedValue);
+                percentComplete = chkHideCompletedItems.Checked;
+                wiAcronym = racAcronym.Text.Trim().TrimEnd(';');
+                wiName = txtName.Text;
+            }
+
+            if (String.Join(",", releaseIDs) != selectedReleases)
+            {
+                var wiData = wiService.GetWorkItemsByRelease(UserId, releaseIDs);
+                DataSource = wiData.Key;
+                selectedReleases = String.Join(",", releaseIDs);
+            }
+
+            StringBuilder searchString = new StringBuilder();
+            searchString.Append(String.IsNullOrEmpty(releaseSearchControl.SearchString) ? "Open Releases" : releaseSearchControl.SearchString);
+            searchString.Append(", " + rddGranularity.SelectedText);
+            if (!String.IsNullOrEmpty(wiAcronym))
+                searchString.Append(", " + wiAcronym);
+            if (!String.IsNullOrEmpty(wiName))
+                searchString.Append(", " + wiName);
+            if (percentComplete)
+                searchString.Append(", hidden completed items");
+
+            ManageShareUrl(selectedReleases);
+
+            lblSearchHeader.Text = String.Format("Search form ({0})", searchString.ToString());
+            searchPanel.Expanded = false;
+
+            if (String.IsNullOrEmpty(wiName) && String.IsNullOrEmpty(wiAcronym))
+            {
+                rtlWorkItems.CollapseAllItems();
+                rtlWorkItems.ExpandToLevel(granularity);
+                rtlWorkItems.Rebind();
+            }
+            else
+                rtlWorkItems.ExpandAllItems();
+        }
+
+        /// <summary>
+        /// Recursive method for adding parent WI of matching WIs
+        /// </summary>
+        /// <param name="list">List of all WIs</param>
+        /// <param name="parent">Parent of a matched WI</param>
         private void MarkParent(List<DomainClasses.WorkItem> list, DomainClasses.WorkItem parent)
         {
             if (parent != null)
@@ -483,7 +522,8 @@ namespace Etsi.Ultimate.Module.WorkItem
                 var parentObj = list.Find(x => x.Pk_WorkItemUid == parent.Fk_ParentWiId);
                 if (parentObj != null)
                 {
-                    parentObj.Display = DomainClasses.WorkItem.DisplayStatus.include;
+                    if (parentObj.Display != Domain.WorkItem.DisplayStatus.matched)
+                        parentObj.Display = DomainClasses.WorkItem.DisplayStatus.include;
                     MarkParent(list, parentObj);
                 }
             }
@@ -501,28 +541,59 @@ namespace Etsi.Ultimate.Module.WorkItem
             else
             {
                 int personID;
-                if (Int32.TryParse(UserInfo.Profile.GetPropertyValue(DsId_Key), out personID))
+                if (Int32.TryParse(UserInfo.Profile.GetPropertyValue(CONST_DSID_KEY), out personID))
                     return personID;
             }
             return 0;
         }
 
-        public ModuleActionCollection ModuleActions
+        /// <summary>
+        /// Populate ShareUrl using search parameters
+        /// </summary>
+        /// <param name="selectedReleases"></param>
+        private void ManageShareUrl(string selectedReleases)
         {
-            get
+            ultShareUrl.ModuleId = ModuleId;
+            ultShareUrl.TabId = TabController.CurrentPage.TabID;
+
+            var address = Request.IsSecureConnection ? "https://" : "http://";
+            address += Request["HTTP_HOST"];
+            ultShareUrl.BaseAddress = address;
+
+            var nameValueCollection = HttpContext.Current.Request.QueryString;
+            var urlParams = new Dictionary<string, string>();
+
+            if (!fromShortUrl)
             {
-                var actions = new ModuleActionCollection
-                    {
-                        {
-                            GetNextActionID(), Localization.GetString("EditModule", LocalResourceFile), "", "", "",
-                            EditUrl(), false, SecurityAccessLevel.Edit, true, false
-                        }
-                    };
-                return actions;
+                urlParams.Add("shortUrl", "True");
+                if (!string.IsNullOrEmpty(selectedReleases))
+                    urlParams.Add("releaseId", selectedReleases);
+                urlParams.Add("granularity", rddGranularity.SelectedValue);
+                urlParams.Add("hideCompleted", chkHideCompletedItems.Checked.ToString());
+                if (!String.IsNullOrEmpty(racAcronym.Text.Trim().TrimEnd(';')))
+                    urlParams.Add("acronym", racAcronym.Text.Trim().TrimEnd(';'));
+                if (!String.IsNullOrEmpty(txtName.Text.Trim()))
+                    urlParams.Add("name", txtName.Text);
             }
+            else
+            {
+                foreach (var k in nameValueCollection.AllKeys)
+                {
+                    if (k != null && nameValueCollection[k] != null)
+                        urlParams.Add(k, nameValueCollection[k]);
+                }
+            }
+
+            ultShareUrl.UrlParams = urlParams;
         }
 
-
-
+        /// <summary>
+        /// Populate fields with available query strings
+        /// </summary>
+        private void GetRequestParameters()
+        {
+            fromShortUrl = (Request.QueryString["shortUrl"] != null) ? Convert.ToBoolean(Request.QueryString["shortUrl"]) : false;
+        }
+        #endregion
     }
 }

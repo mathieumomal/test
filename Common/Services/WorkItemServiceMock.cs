@@ -54,10 +54,12 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetAllWorkItems(int personId)
+        {
+            throw new NotImplementedException();
+        }
+
+
         #endregion
-
-
-
-
     }
 }

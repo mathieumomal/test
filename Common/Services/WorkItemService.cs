@@ -77,6 +77,20 @@ namespace Etsi.Ultimate.Services
         }
 
         /// <summary>
+        /// Get all the list workitems
+        /// </summary>
+        /// <param name="personId">Person Id</param>
+        /// <returns>List of workitems along with rights container</returns>
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetAllWorkItems(int personId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var workItemManager = new WorkItemManager(uoW);
+                return workItemManager.GetAllWorkItems(personId);
+            }
+        }
+
+        /// <summary>
         /// Get the workitem based on the id
         /// </summary>
         /// <param name="personId">Person Id</param>

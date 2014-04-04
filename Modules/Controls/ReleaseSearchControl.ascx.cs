@@ -24,7 +24,7 @@ namespace Etsi.Ultimate.Controls
 
                 //Get Open Releases
                 RadButton rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
-                if(rbOpenReleases.Checked)
+                if (rbOpenReleases.Checked)
                     return rbOpenReleases.Attributes["Value"].Split(',').Select(int.Parse).ToList();
 
                 //Get Custom Releases
@@ -38,12 +38,72 @@ namespace Etsi.Ultimate.Controls
                 }
                 return customReleaseIds;
             }
+            set
+            {
+                var releaseIds = value;
+
+                RadButton rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
+                RadButton rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
+                RadButton rbCustomSelection = (RadButton)rcbReleases.Items[0].FindControl("rbCustomSelection");
+                rbAllReleases.Checked = rbOpenReleases.Checked = rbAllReleases.Checked = false;
+
+                var AllReleases = rbAllReleases.Attributes["Value"].Split(',').Select(int.Parse).ToList();
+                if (releaseIds.OrderBy(x => x).SequenceEqual(AllReleases.OrderBy(x => x)))
+                    rbAllReleases.Checked = true;
+                else
+                {
+                    var OpenReleases = rbOpenReleases.Attributes["Value"].Split(',').Select(int.Parse).ToList();
+                    if (releaseIds.OrderBy(x => x).SequenceEqual(OpenReleases.OrderBy(x => x)))
+                        rbAllReleases.Checked = true;
+                    else
+                    {
+                        rbCustomSelection.Checked = true;
+
+                        RadTreeView rtvReleases = (RadTreeView)this.rcbReleases.Items[0].FindControl("rtvReleases");
+                        foreach (RadTreeNode node in rtvReleases.Nodes)
+                        {
+                            RadButton rbCustomReleases = (RadButton)node.FindControl("rbCustomReleases");
+                            rbCustomReleases.Checked = releaseIds.Exists(x => x == Convert.ToInt32((node.Value ?? "0")));
+                        }
+                    }
+                }
+            }
         }
 
         public string SearchString
         {
             get
             {
+                RadButton rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
+                if (rbAllReleases.Checked)
+                {
+                    return rbAllReleases.Text;
+                }
+                else
+                {
+                    RadButton rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
+                    if (rbOpenReleases.Checked)
+                    {
+                        return rbOpenReleases.Text;
+                    }
+                    else
+                    {
+                        RadButton rbCustomSelection = (RadButton)rcbReleases.Items[0].FindControl("rbCustomSelection");
+                        if (rbCustomSelection.Checked)
+                        {
+                            var searchString = string.Empty;
+                            RadTreeView rtvReleases = (RadTreeView)this.rcbReleases.Items[0].FindControl("rtvReleases");
+                            foreach (RadTreeNode node in rtvReleases.Nodes)
+                            {
+                                RadButton rbCustomReleases = (RadButton)node.FindControl("rbCustomReleases");
+                                if (rbCustomReleases.Checked)
+                                    searchString += rbCustomReleases.Text + ", ";
+                            }
+                            return searchString.Trim().TrimEnd(',');
+                        }
+
+                    }
+                }
                 return rcbReleases.Text;
             }
         }
@@ -109,7 +169,6 @@ namespace Etsi.Ultimate.Controls
         {
             System.Web.UI.ScriptManager.RegisterStartupScript(this, this.GetType(), "Reset", "ResetToAllReleases();", true);
         }
-
         #endregion
     }
 }
