@@ -28,7 +28,6 @@
 <body class="releaseDetailBody">
     <form id="ReleaseEditionForm" runat="server">
         <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
-        <telerik:RadAjaxPanel ID="RadAjaxPanel1" runat="server">
             <div class="containerFix">
                 <asp:Panel ID="releaseWarning" runat="server" CssClass="releaseDetailsWarning" Visible="false">
                     <span class="releaseDetailsWarningTxt">No data available for the current query.</span>
@@ -41,6 +40,7 @@
                     <telerik:RadTabStrip ID="ReleaseDetailRadTabStrip" runat="server" MultiPageID="ReleaseEditRadMultiPage"
                         AutoPostBack="false">
                     </telerik:RadTabStrip>
+                    <telerik:RadAjaxPanel ID="RadAjaxPanel1" runat="server">
                     <telerik:RadMultiPage ID="ReleaseEditRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px" height="555px">
                         <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true">
                             <asp:UpdatePanel ID="upReleaseRemarks" runat="server">
@@ -147,9 +147,7 @@
                                 </tr>
                                 <tr style="max-height: 120px; overflow-y: scroll; margin-top: 5px">
                                     <td colspan="3">
-
-                                                <ult:RemarksControl runat="server" ID="releaseRemarks" IsEditMode="true" />
- 
+                                        <ult:RemarksControl runat="server" ID="releaseRemarks" IsEditMode="true" />
                                     </td>
                                 </tr>
                             </table>
@@ -236,10 +234,12 @@
                             </div>
                         </telerik:RadPageView>
                     </telerik:RadMultiPage>
+                    </telerik:RadAjaxPanel>
                     <div class="releaseDetailsAction">
                         <asp:LinkButton ID="SaveBtn" runat="server" Text="Save" CssClass="btn3GPP-success" OnClick="SaveEditedRelease_Click" />
                         <asp:LinkButton ID="SaveBtnDisabled" runat="server" Text="Save" CssClass="btn3GPP-default" disabled="disabled" OnClientClick="return false;" />
                         <asp:LinkButton ID="ExitBtn" runat="server" Text="Cancel" CssClass="btn3GPP-success" OnClick="CloseReleaseDetails_Click" />
+                        
                     </div>
                     <telerik:RadAjaxManager ID="RadAjaxManager1" runat="server">
                         <ajaxsettings>                    
@@ -415,7 +415,6 @@
                     </script>
                 </asp:Panel>
             </div>
-        </telerik:RadAjaxPanel>
     </form>
 </body>
 </html>

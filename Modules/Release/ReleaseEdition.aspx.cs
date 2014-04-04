@@ -13,6 +13,9 @@ namespace Etsi.Ultimate.Module.Release
 {
     public partial class ReleaseEdition : System.Web.UI.Page
     {
+        private const String CREATION_MODE = "Creation";
+        private const String EDIT_MODE = "Edit";
+
         private static String CONST_GENERAL_TAB = "General";
         private static String CONST_ADMIN_TAB = "Administration";
         private static String CONST_HISTORY_TAB = "History";
@@ -52,7 +55,7 @@ namespace Etsi.Ultimate.Module.Release
             // Populate fileds of the view with basic validation rules
             dataValidationSetUp();
 
-            if (action.Equals("Edit"))
+            if (action.Equals(EDIT_MODE))
             {
                 if (ReleaseId != null)
                 {
@@ -102,7 +105,7 @@ namespace Etsi.Ultimate.Module.Release
                     releaseWarning.Visible = true;
                 }
             }
-            else if (action.Equals("Creation"))
+            else if (action.Equals(CREATION_MODE))
             {
                 IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
                 DomainClasses.UserRightsContainer userRights = svc.GetAllReleases(UserId).Value;
@@ -205,7 +208,7 @@ namespace Etsi.Ultimate.Module.Release
             RadPageAdministration.Visible = true;
 
 
-            if (action.Equals("Edit"))
+            if (action.Equals(EDIT_MODE))
             {
                 ReleaseDetailRadTabStrip.Tabs.Add(
                     new RadTab()
@@ -228,7 +231,7 @@ namespace Etsi.Ultimate.Module.Release
         private void FillGeneralTab(Domain.Release release, string action)
         {
             //Populate fields with data
-            if (action.Equals("Edit"))
+            if (action.Equals(EDIT_MODE))
             {
                 releaseCodeVal.Text = release.Code;
                 pageTitle.Value = releaseCodeVal.Text;
@@ -247,7 +250,7 @@ namespace Etsi.Ultimate.Module.Release
                 ReleaseEndMeeting.SelectedMeetingId = (release.EndMtgId != null) ? release.EndMtgId.Value : default(int);
             }
 
-            if (action.Equals("Creation"))
+            if (action.Equals(CREATION_MODE))
             {
                 ReleaseStatusVal.CssClass = "status " + ReleaseStatusVal.Text;
                 ReleaseStartDateVal.SelectedDate = DateTime.Now;
@@ -293,7 +296,7 @@ namespace Etsi.Ultimate.Module.Release
                                                     Release3GDecimalVal.UniqueID));
 
             //Populate view with Release data
-            if (action.Equals("Edit"))
+            if (action.Equals(EDIT_MODE))
             {
                 previousReleaseVal.SelectedValue = previousReleaseID.ToString();
 
@@ -408,14 +411,14 @@ namespace Etsi.Ultimate.Module.Release
             {
                 if (ReleaseId != null)
                 {
-                    if (action.Equals("Edit"))
+                    if (action.Equals(EDIT_MODE))
                     {
                         setReleaseEditionValues(editedRelease);
                         editedRelease.Pk_ReleaseId = ReleaseId.Value;
                         svc.EditRelease(editedRelease, int.Parse(previousReleaseVal.SelectedValue), UserId);
                     }
                 }
-                else if (action.Equals("Creation"))
+                else if (action.Equals(CREATION_MODE))
                 {
                     setReleaseEditionValues(editedRelease);
                     editedRelease.Pk_ReleaseId = svc.CreateRelease(editedRelease, int.Parse(previousReleaseVal.SelectedValue), UserId);
