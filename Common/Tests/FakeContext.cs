@@ -56,6 +56,12 @@ namespace Etsi.Ultimate.Tests
             set;
         }
 
+        public System.Data.Entity.IDbSet<WorkPlanFile> WorkPlanFiles
+        {
+            get;
+            set;
+        }
+
 
         public void SetModified(object entity)
         {
@@ -81,6 +87,8 @@ namespace Etsi.Ultimate.Tests
                 WorkItems.Add((WorkItem)entity);
             else if (entity.GetType() == typeof(ShortUrl))
                 ShortUrls.Add((ShortUrl)entity);
+            else if (entity.GetType() == typeof(WorkPlanFile))
+                WorkPlanFiles.Add((WorkPlanFile)entity);
             else
                 throw new NotImplementedException("Something is missing in the FakeContext");
         }

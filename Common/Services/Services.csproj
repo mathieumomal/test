@@ -51,6 +51,7 @@
     <Compile Include="IMeetingService.cs" />
     <Compile Include="IPersonService.cs" />
     <Compile Include="IUrlService.cs" />
+    <Compile Include="IWorkPlanFileService.cs" />
     <Compile Include="MeetingService.cs" />
     <Compile Include="IWorkItemService.cs" />
     <Compile Include="PersonService.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="UrlService.cs" />
     <Compile Include="WorkItemService.cs" />
     <Compile Include="WorkItemServiceMock.cs" />
+    <Compile Include="WorkPlanFileService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj">

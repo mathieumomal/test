@@ -277,10 +277,17 @@ namespace Etsi.Ultimate.Module.WorkItem
         {
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
             tokenWorkPlanAnalysed = (string)ViewState["WiImportToken"];
-            bool success = wiService.ImportWorkPlan(tokenWorkPlanAnalysed, PathExportWorkPlan);
+            bool success = wiService.ImportWorkPlan(tokenWorkPlanAnalysed, PathExportWorkPlan);            
 
             if (success)
             {
+                //Store Last exported version date and path
+                var wpSvc = ServicesFactory.Resolve<IWorkPlanFileService>();
+                WorkPlanFile wpf = new WorkPlanFile();
+                wpf.CreationDate = DateTime.Now;
+                wpf.WorkPlanFilePath = PathExportWorkPlan + "/Work_plan_3gpp_" + DateTime.Now.ToString("yyMMdd");
+                //wpSvc.AddWorkPlanFile(wpf);
+
                 //Update RadWindow_workItemState label with real files path  
                 lblSaveStatus.Text = "Work plan was successfully imported.<br/>Word and Excel version of the work plan are available at:";
                 lblExportedPath.Text = new StringBuilder()

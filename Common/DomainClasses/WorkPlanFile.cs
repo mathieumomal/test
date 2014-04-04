@@ -13,10 +13,10 @@ namespace Etsi.Ultimate.DomainClasses
     using System.Collections.Generic;
     
     [Serializable]
-    public partial class Users_AdHoc_Roles
+    public partial class WorkPlanFile
     {
-        public int UserID { get; set; }
-        public string PERSON_ID { get; set; }
-        public string RoleName { get; set; }
+        public int Pk_WorkPlanFileId { get; set; }
+        public System.DateTime CreationDate { get; set; }
+        public string WorkPlanFilePath { get; set; }
     }
 }

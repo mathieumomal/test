@@ -13,6 +13,13 @@
           <EntitySet Name="ShortUrl" EntityType="Etsi.Ultimate.DataAccess.Store.ShortUrl" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="WorkItems" EntityType="Etsi.Ultimate.DataAccess.Store.WorkItems" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="WorkItems_ResponsibleGroups" EntityType="Etsi.Ultimate.DataAccess.Store.WorkItems_ResponsibleGroups" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="WorkPlanFiles" EntityType="Etsi.Ultimate.DataAccess.Store.WorkPlanFiles" store:Type="Tables" store:Schema="dbo" store:Name="WorkPlanFiles">
+            <DefiningQuery>SELECT 
+      [WorkPlanFiles].[Pk_WorkPlanFileId] AS [Pk_WorkPlanFileId], 
+      [WorkPlanFiles].[CreationDate] AS [CreationDate], 
+      [WorkPlanFiles].[WorkPlanFilePath] AS [WorkPlanFilePath]
+      FROM [dbo].[WorkPlanFiles] AS [WorkPlanFiles]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="Users_AdHoc_Roles" EntityType="Etsi.Ultimate.DataAccess.Store.Users_AdHoc_Roles" store:Type="Views" store:Schema="dbo" store:Name="Users_AdHoc_Roles">
             <DefiningQuery>SELECT 
       [Users_AdHoc_Roles].[UserID] AS [UserID], 
@@ -236,8 +243,21 @@
           <Property Name="ResponsibleGroup" Type="varchar" MaxLength="5" />
           <Property Name="IsPrimeResponsible" Type="bit" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.Users_AdHoc_Roles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.WorkPlanFiles » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+      -->
+        <EntityType Name="WorkPlanFiles">
+          <Key>
+            <PropertyRef Name="Pk_WorkPlanFileId" />
+            <PropertyRef Name="CreationDate" />
+            <PropertyRef Name="WorkPlanFilePath" />
+          </Key>
+          <Property Name="Pk_WorkPlanFileId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="WorkPlanFilePath" Type="nvarchar" Nullable="false" MaxLength="255" />
+        </EntityType>
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_AdHoc_Roles » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="Users_AdHoc_Roles">
           <Key>
@@ -248,8 +268,8 @@
           <Property Name="PERSON_ID" Type="nvarchar" MaxLength="3750" />
           <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="50" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.Users_Groups' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_Groups » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="Users_Groups">
           <Key>
@@ -262,8 +282,8 @@
           <Property Name="TB_ID" Type="int" />
           <Property Name="PERS_ROLE_CODE" Type="varchar" Nullable="false" MaxLength="12" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_Communities' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Communities » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_Communities">
           <Key>
@@ -275,12 +295,13 @@
           <Property Name="ActiveCode" Type="varchar" MaxLength="12" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_Meetings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Meetings » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_Meetings">
           <Key>
             <PropertyRef Name="MTG_ID" />
+            
           </Key>
           <Property Name="MTG_ID" Type="int" Nullable="false" />
           <Property Name="MTG_CATEG_CODE" Type="varchar" MaxLength="12" />
@@ -312,8 +333,8 @@
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
           <Property Name="MtgShortRef" Type="varchar" MaxLength="31" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_ModulesPages' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_ModulesPages » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_ModulesPages">
           <Key>
@@ -327,8 +348,8 @@
           <Property Name="ModuleID" Type="int" Nullable="false" />
           <Property Name="TabID" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_Persons' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Persons » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_Persons">
           <Key>
@@ -480,6 +501,7 @@
           <EntitySet Name="Meetings" EntityType="Etsi.Ultimate.DataAccess.Meeting" />
           <EntitySet Name="ShortUrls" EntityType="Etsi.Ultimate.DataAccess.ShortUrl" />
           <EntitySet Name="View_ModulesPages" EntityType="Etsi.Ultimate.DataAccess.View_ModulesPages" />
+          <EntitySet Name="WorkPlanFiles" EntityType="Etsi.Ultimate.DataAccess.WorkPlanFile" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -795,6 +817,16 @@
           <Property Type="Int32" Name="ModuleID" Nullable="false" />
           <Property Type="Int32" Name="TabID" Nullable="false" />
         </EntityType>
+        <EntityType Name="WorkPlanFile">
+          <Key>
+            <PropertyRef Name="Pk_WorkPlanFileId" />
+            <PropertyRef Name="CreationDate" />
+            <PropertyRef Name="WorkPlanFilePath" />
+          </Key>
+          <Property Type="Int32" Name="Pk_WorkPlanFileId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="DateTime" Name="CreationDate" Nullable="false" Precision="3" />
+          <Property Type="String" Name="WorkPlanFilePath" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1011,6 +1043,15 @@
                 <ScalarProperty Name="ModuleID" ColumnName="ModuleID" />
                 <ScalarProperty Name="TabPath" ColumnName="TabPath" />
                 <ScalarProperty Name="TabName" ColumnName="TabName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkPlanFiles">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.WorkPlanFile">
+              <MappingFragment StoreEntitySet="WorkPlanFiles">
+                <ScalarProperty Name="WorkPlanFilePath" ColumnName="WorkPlanFilePath" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="Pk_WorkPlanFileId" ColumnName="Pk_WorkPlanFileId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

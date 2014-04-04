@@ -26,6 +26,7 @@
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WorkItems_ResponsibleGroups_WorkItems" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.ShortUrl" Width="1.5" PointX="7.25" PointY="9.75" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.View_ModulesPages" Width="1.5" PointX="0.5" PointY="10" FillColor="DarkSeaGreen" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.WorkPlanFile" Width="1.5" PointX="12" PointY="8.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

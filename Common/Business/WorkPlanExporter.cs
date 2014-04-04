@@ -20,7 +20,7 @@ namespace Etsi.Ultimate.Business
 
         private IUltimateUnitOfWork _uoW;
         private string DOC_TITLE = "Work_plan_3gpp_" + DateTime.Now.ToString("yyMMdd");
-        private string ZIP_NAME = "Work_plan_3gpp_" + DateTime.Now.ToString("yyMMdd"); //TOEDIT
+        private string ZIP_NAME = "Work_plan_3gpp_" + DateTime.Now.ToString("yyMMdd"); 
 
         #endregion
 

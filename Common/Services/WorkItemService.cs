@@ -47,10 +47,11 @@ namespace Etsi.Ultimate.Services
                     {
                         uoW.Save();
                         var csvExport = new WorkPlanExporter(uoW);
-                        isExportSuccess = csvExport.ExportWorkPlan(exportPath);
+                        isExportSuccess = csvExport.ExportWorkPlan(exportPath);                        
                     }
-                    return (isImportSuccess && isExportSuccess);                    
-                }
+                                     
+                }                
+                return (isImportSuccess && isExportSuccess);   
             }
             catch (Exception e)
             {

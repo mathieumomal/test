@@ -26,6 +26,7 @@ namespace Etsi.Ultimate.DataAccess
         IDbSet<Community> Communities { get; }
         IDbSet<View_ModulesPages> View_ModulesPages { get; }
         IDbSet<ShortUrl> ShortUrls { get; }
+        IDbSet<WorkPlanFile> WorkPlanFiles { get; }
 
         void SetModified(object entity);
         void SetAdded(object entity);

@@ -1,4 +1,4 @@
-﻿// Default code generation is disabled for model 'D:\WS\ETSI_3GPP_Ultimate\dev\Ultimate\trunk\Common\DataAccess\UltimateDataModel.edmx'. 
-// To enable default code generation, change the value of the 'Code Generation Strategy' designer
-// property to an alternate value. This property is available in the Properties Window when the model is
-// open in the designer.
+﻿// La génération de code par défaut est désactivée pour le modèle 'D:\ETSI_Projects\etsi_ngpp_source_code\ULTIMATE\trunk\Common\DataAccess\UltimateDataModel.edmx'. 
+// Pour l'activer, modifiez la valeur du concepteur 'Stratégie de génération de code'.
+// Cette propriété est disponible dans la fenêtre Propriétés, lorsque le modèle est ouvert
+// dans le concepteur.
