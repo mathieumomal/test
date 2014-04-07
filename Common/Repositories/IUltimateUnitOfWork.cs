@@ -19,6 +19,12 @@ namespace Etsi.Ultimate.Repositories
         IUltimateContext Context { get; }
 
         /// <summary>
+        /// Cuts of the "auto-detect" change feature that the Context might use.
+        /// </summary>
+        /// <param name="detect"></param>
+        void SetAutoDetectChanges(bool detect);
+
+        /// <summary>
         /// Performs a save of the modifications in context inside the database.
         /// </summary>
         void Save();

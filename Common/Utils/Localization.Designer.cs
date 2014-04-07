@@ -97,6 +97,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}, Uid {1}: Acronym {2} is more than 50 characters. It has been truncated..
+        /// </summary>
+        public static string WorkItem_Import_Acronym_Too_Long {
+            get {
+                return ResourceManager.GetString("WorkItem_Import_Acronym_Too_Long", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Workplan is not correctly formatted: {0}.
         /// </summary>
         public static string WorkItem_Import_Bad_Format {
@@ -309,6 +318,15 @@ namespace Etsi.Ultimate.Utils {
         public static string WorkItem_Import_Invalid_WiD {
             get {
                 return ResourceManager.GetString("WorkItem_Import_Invalid_WiD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0}, Uid {1}: &quot;TSs and TRs&quot; field is more than 50 characters. It has been truncated..
+        /// </summary>
+        public static string WorkItem_Import_TsTr_Too_Long {
+            get {
+                return ResourceManager.GetString("WorkItem_Import_TsTr_Too_Long", resourceCulture);
             }
         }
         

@@ -75,10 +75,17 @@ namespace Etsi.Ultimate.Business
             // Else, call the repository
             var wiRepo = RepositoryFactory.Resolve<IWorkItemRepository>();
             wiRepo.UoW = UoW;
-
-            foreach (var wi in workPlan)
+            try
             {
-                wiRepo.InsertOrUpdate(wi);
+                UoW.SetAutoDetectChanges(false);
+                foreach (var wi in workPlan)
+                {
+                    wiRepo.InsertOrUpdate(wi);
+                }
+            }
+            finally
+            {
+                UoW.SetAutoDetectChanges(true);
             }
             
             return true;

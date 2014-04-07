@@ -97,6 +97,11 @@ namespace Etsi.Ultimate.Tests
             throw new NotImplementedException();
         }
 
+        public void SetAutoDetectChanges(bool detect)
+        {
+            throw new NotImplementedException();
+        }
+
         public int SaveChanges()
         {
             throw new NotImplementedException();

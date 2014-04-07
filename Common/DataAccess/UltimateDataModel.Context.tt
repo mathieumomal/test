@@ -98,6 +98,11 @@ if (!loader.IsLazyLoadingEnabled(container))
 	{
 		Entry(entity).State = EntityState.Added;
 	}
+
+	public void SetAutoDetectChanges(bool detect)
+    {
+        Configuration.AutoDetectChangesEnabled = detect;
+    }
   
 <#
 

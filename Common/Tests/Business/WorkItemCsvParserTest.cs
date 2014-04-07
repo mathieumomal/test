@@ -476,6 +476,40 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Invalid_Level, "18", "630001", "A"), report.WarningList.First());
         }
 
+        [Test]
+        public void ImportCsv_TrimsAcronyms()
+        {
+            RegisterRepositories();
+
+            var wiImporter = new WorkItemCsvParser() { UoW = new UltimateUnitOfWork() };
+
+            var result = wiImporter.ParseCsv("../../TestData/WorkItems/AcronymTooLong.csv");
+
+            var wiList = result.Key;
+            var report = result.Value;
+            Assert.AreEqual(1, wiList.Count);
+            Assert.AreEqual(50, wiList.First().Acronym.Length);
+            Assert.AreEqual(1, report.GetNumberOfWarnings());
+            Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Acronym_Too_Long, "17", "630000", "ABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJABCDEFGHIJ"), report.WarningList.First());
+        }
+
+        [Test]
+        public void ImportCsv_TrimsTsAndTrs()
+        {
+            RegisterRepositories();
+
+            var wiImporter = new WorkItemCsvParser() { UoW = new UltimateUnitOfWork() };
+
+            var result = wiImporter.ParseCsv("../../TestData/WorkItems/TSsAndTRsTooLong.csv");
+
+            var wiList = result.Key;
+            var report = result.Value;
+            Assert.AreEqual(1, wiList.Count);
+            Assert.AreEqual(50, wiList.First().TssAndTrs.Length);
+            Assert.AreEqual(1, report.GetNumberOfWarnings());
+            Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_TsTr_Too_Long, "17", "630000"), report.WarningList.First());
+        }
+
         private void RegisterRepositories()
         {
             RepositoryFactory.Container.RegisterType<IWorkItemRepository, WorkItemEmptyFakeRepository>(new TransientLifetimeManager());

@@ -22,7 +22,6 @@ namespace Etsi.Ultimate.Tests.Services
 {
     class ReleaseServiceTest : BaseTest
     {
-        private static readonly string CACHE_VALUE = "ULT_REPO_RIGHTS_ALL";
         private static readonly string RELEASE_CACHE_KEY = "ULT_BIZ_RELEASES_ALL";
 
         [Test]

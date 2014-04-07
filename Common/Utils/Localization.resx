@@ -129,6 +129,9 @@
   <data name="History_Release_Updated" xml:space="preserve">
     <value>Release updated. Changes:&lt;br /&gt;{0}</value>
   </data>
+  <data name="WorkItem_Import_Acronym_Too_Long" xml:space="preserve">
+    <value>{0}, Uid {1}: Acronym {2} is more than 50 characters. It has been truncated.</value>
+  </data>
   <data name="WorkItem_Import_Bad_Format" xml:space="preserve">
     <value>Workplan is not correctly formatted: {0}</value>
   </data>
@@ -200,6 +203,9 @@
   </data>
   <data name="WorkItem_Import_Invalid_WiD" xml:space="preserve">
     <value>{0}, Uid {1}: WID format has not been recognized: {2}</value>
+  </data>
+  <data name="WorkItem_Import_TsTr_Too_Long" xml:space="preserve">
+    <value>{0}, Uid {1}: "TSs and TRs" field is more than 50 characters. It has been truncated.</value>
   </data>
   <data name="WorkItem_Import_Unknown_Exception" xml:space="preserve">
     <value>An unknown exception has occured. It has been logged by our error system. Please contact helpdesk for investigation. Uid of last successfully treated WI: {0}</value>

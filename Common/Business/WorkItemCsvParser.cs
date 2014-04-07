@@ -288,7 +288,7 @@ namespace Etsi.Ultimate.Business
             if (!string.IsNullOrEmpty(record.last_modif) && record.last_modif != "-")
             {
                 DateTime tmpDate;
-                if (DateTime.TryParseExact(record.last_modif, "dd/MM/yyyy", CultureInfo.InvariantCulture,
+                if (DateTime.TryParseExact(record.last_modif, "d/M/yyyy", CultureInfo.InvariantCulture,
                         DateTimeStyles.None, out tmpDate))
                 {
                     lastModifiedDate = tmpDate;
@@ -320,7 +320,7 @@ namespace Etsi.Ultimate.Business
             if (!string.IsNullOrEmpty(record.Created) && record.Created != "-")
             {
                 DateTime tmpDate;
-                if (DateTime.TryParseExact(record.Created, "dd/MM/yyyy", CultureInfo.InvariantCulture,
+                if (DateTime.TryParseExact(record.Created, "d/M/yyyy", CultureInfo.InvariantCulture,
                         DateTimeStyles.None, out tmpDate))
                 {
                     creationDate = tmpDate;
@@ -521,6 +521,12 @@ namespace Etsi.Ultimate.Business
 
             if (tsAndTr == "-")
                 tsAndTr = "";
+
+            if (tsAndTr.Length > 50)
+            {
+                Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_TsTr_Too_Long, wi.WorkplanId, wi.Pk_WorkItemUid));
+                tsAndTr = tsAndTr.Substring(0, 50);
+            }
 
             if (wi.TssAndTrs != tsAndTr)
             {
@@ -749,7 +755,7 @@ namespace Etsi.Ultimate.Business
             if (!string.IsNullOrEmpty(record.Finish_Date) && record.Finish_Date != "-")
             {
                 DateTime tmpDate;
-                if (DateTime.TryParseExact(record.Finish_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture,
+                if (DateTime.TryParseExact(record.Finish_Date, "d/M/yyyy", CultureInfo.InvariantCulture,
                         DateTimeStyles.None, out tmpDate))
                 {
                     endDate = tmpDate;
@@ -782,7 +788,7 @@ namespace Etsi.Ultimate.Business
             if (!string.IsNullOrEmpty(record.Start_Date) && record.Start_Date != "-")
             {
                 DateTime tmpDate;
-                if (DateTime.TryParseExact(record.Start_Date, "dd/MM/yyyy", CultureInfo.InvariantCulture,
+                if (DateTime.TryParseExact(record.Start_Date, "d/M/yyyy", CultureInfo.InvariantCulture,
                         DateTimeStyles.None, out tmpDate))
                 {
                     startDate = tmpDate;
@@ -849,6 +855,12 @@ namespace Etsi.Ultimate.Business
             string acronym = record.Acronym;
             if (acronym == "-")
                 acronym = "";
+
+            if (acronym.Length > 50)
+            {
+                Report.LogWarning( String.Format(Utils.Localization.WorkItem_Import_Acronym_Too_Long, wi.WorkplanId, wi.Pk_WorkItemUid, acronym));
+                acronym = acronym.Substring(0,50);
+            }
 
             if (!string.IsNullOrEmpty(acronym))
             {

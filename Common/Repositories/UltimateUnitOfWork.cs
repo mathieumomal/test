@@ -25,6 +25,10 @@ namespace Etsi.Ultimate.Repositories
             return context;
         }
 
+        public void SetAutoDetectChanges(bool detect)
+        {
+            context.SetAutoDetectChanges(detect);
+        }
         #endregion
 
       
