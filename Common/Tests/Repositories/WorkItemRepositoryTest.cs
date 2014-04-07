@@ -62,10 +62,10 @@ namespace Etsi.Ultimate.Tests.Repositories
         }
 
         [Test, TestCaseSource("WorkItemData")]
-        public void GetWorkItemsByRelease(WorkItemFakeDBSet workItemData)
+        public void GetWorkItemsBySearchCriteria(WorkItemFakeDBSet workItemData)
         {
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
-            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(3);
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(6);
 
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
@@ -74,44 +74,65 @@ namespace Etsi.Ultimate.Tests.Repositories
 
             //No Release Ids
             var repo = new WorkItemRepository() { UoW = uow };
-            var workItems = repo.GetWorkItemsByRelease(releaseIds);
+            var workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty);
             Assert.AreEqual(0, workItems.Count);
 
-            //One Release Id
+            //----------------------
+            //Test with 1 Release Id
+            //----------------------
             releaseIds.Add(527);
-            workItems = repo.GetWorkItemsByRelease(releaseIds);
+            //Show All Records
+            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty);
             Assert.AreEqual(18, workItems.Count);
+            //Hide 100% records
+            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty);
+            Assert.AreEqual(13, workItems.Count);
 
-            //Two Release Ids
+            //-----------------------
+            //Test with 2 Release Ids
+            //-----------------------
             releaseIds.Add(526);
-            workItems = repo.GetWorkItemsByRelease(releaseIds);
+            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty);
             Assert.AreEqual(20, workItems.Count);
+            //Name search
+            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, false, String.Empty, "Stage");
+            Assert.AreEqual(12, workItems.Count);
+            //Acronym search
+            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, false, "UPCON", String.Empty);
+            Assert.AreEqual(3, workItems.Count);
 
             mockDataContext.VerifyAllExpectations();
         }
 
         [Test, TestCaseSource("WorkItemData")]
-        public void GetWorkItemsCountByRelease(WorkItemFakeDBSet workItemData)
+        public void GetWorkItemsCountBySearchCriteria(WorkItemFakeDBSet workItemData)
         {
             List<int> releaseIds = new List<int>();
 
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
-            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(3);
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(6);
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             var wiRepository = new WorkItemRepository() { UoW = uow };
 
             //No Release Ids
-            Assert.AreEqual(0, wiRepository.GetWorkItemsCountByRelease(releaseIds));
+            Assert.AreEqual(0, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty));
 
-            //One Release Id
+            //----------------------
+            //Test with 1 Release Id
+            //----------------------
             releaseIds.Add(527);
-            Assert.AreEqual(18, wiRepository.GetWorkItemsCountByRelease(releaseIds));
-
-            //Two Release Ids
+            Assert.AreEqual(18, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty));
+            //Hide 100% records
+            Assert.AreEqual(13, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty));
+            //-----------------------
+            //Test with 2 Release Ids
+            //-----------------------
             releaseIds.Add(526);
-            Assert.AreEqual(20, wiRepository.GetWorkItemsCountByRelease(releaseIds));
+            Assert.AreEqual(20, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty));
+            Assert.AreEqual(12, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, "Stage"));
+            Assert.AreEqual(3, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, "UPCON", String.Empty));
 
             mockDataContext.VerifyAllExpectations();
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Etsi.Ultimate.DomainClasses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,5 +22,12 @@ namespace Etsi.Ultimate.Services
         /// <param name="personID">Person ID</param>
         /// <returns>true/false</returns>
         bool IsUserMCCMember(int personID);
+
+        /// <summary>
+        /// Get Rights for the user
+        /// </summary>
+        /// <param name="personId">Person Id</param>
+        /// <returns>User Rights</returns>
+        UserRightsContainer GetRights(int personId);
     }
 }

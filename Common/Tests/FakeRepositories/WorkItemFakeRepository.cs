@@ -124,12 +124,12 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
 
         #region IWorkItemRepository
 
-        public List<WorkItem> GetWorkItemsByRelease(List<int> releaseIds)
+        public List<WorkItem> GetWorkItemsBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName)
         {
             throw new NotImplementedException();
         }
 
-        public int GetWorkItemsCountByRelease(List<int> releaseIds)
+        public int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName)
         {
             throw new NotImplementedException();
         }

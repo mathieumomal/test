@@ -29,7 +29,7 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
-        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsByRelease(int personId, List<int> releaseId)
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName)
         {
             throw new NotImplementedException();
         }
@@ -39,7 +39,7 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
-        public int GetWorkItemsCountByRelease(List<int> releaseIds)
+        public int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName)
         {
             throw new NotImplementedException();
         }

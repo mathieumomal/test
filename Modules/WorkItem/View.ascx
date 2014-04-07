@@ -103,7 +103,7 @@
                                     </td>
                                     <td>Hide Completed Items</td>
                                     <td>
-                                        <telerik:RadButton ID="chkHideCompletedItems" ToggleType="CheckBox" runat="server" ButtonType="ToggleButton" />
+                                        <telerik:RadButton ID="chkHideCompletedItems" ToggleType="CheckBox" runat="server" ButtonType="ToggleButton" AutoPostBack="false"/>
                                     </td>
                                 </tr>
                                 <tr>
@@ -186,8 +186,6 @@
 								            'Rel-<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>', 'height=550,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
                             </ItemTemplate>      
                         </telerik:TreeListTemplateColumn>
-                        <telerik:TreeListBoundColumn DataField="Display" Visible="false" UniqueName="Display" >
-                        </telerik:TreeListBoundColumn>
                         <telerik:TreeListBoundColumn DataField="wiLevel" Visible="false" UniqueName="wiLevel" >
                         </telerik:TreeListBoundColumn>
                     </columns>

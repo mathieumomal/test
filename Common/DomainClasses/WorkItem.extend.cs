@@ -16,7 +16,6 @@ namespace Etsi.Ultimate.DomainClasses
             }
         }
         public bool IsNew { get; set; }
-        public DisplayStatus Display { get; set; }
         public string LatestRemark
         {
             get
@@ -40,12 +39,5 @@ namespace Etsi.Ultimate.DomainClasses
             }
         }
         public string RapporteurName { set; get; }
-
-        public enum DisplayStatus
-        {
-            none,
-            include,
-            matched
-        }
     }
 }

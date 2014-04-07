@@ -78,20 +78,37 @@ namespace Etsi.Ultimate.Repositories
         /// Get the list of workitems based on the release
         /// </summary>
         /// <param name="releaseIds">Release Ids</param>
+        /// <param name="granularity">Granularity Level</param>
+        /// <param name="hidePercentComplete">Percentage Complete</param>
+        /// <param name="wiAcronym">Acronym</param>
+        /// <param name="wiName">Name</param>
         /// <returns>List of workitems</returns>
-        public List<WorkItem> GetWorkItemsByRelease(List<int> releaseIds)
+        public List<WorkItem> GetWorkItemsBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName)
         {
-            return AllIncluding(t => t.Release, t => t.Remarks, t => t.ChildWis, t=> t.ParentWi, t=> t.WorkItems_ResponsibleGroups).Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)).ToList();
+            return AllIncluding(t => t.Release, t => t.Remarks, t => t.ChildWis, t=> t.ParentWi, t=> t.WorkItems_ResponsibleGroups)
+                .Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)
+                            && (x.Name.ToLower().Contains(wiName.Trim().ToLower()) || String.IsNullOrEmpty(wiName.Trim()))
+                            && (x.Acronym.ToLower().Contains(wiAcronym.Trim().ToLower()) || (String.IsNullOrEmpty(wiAcronym.Trim())))
+                            && (x.WiLevel != null && x.WiLevel <= granularity)
+                            && (hidePercentComplete ? x.Completion < 100 : true )).ToList();
         }
 
         /// <summary>
         /// Get count of WorkItems
         /// </summary>
         /// <param name="releaseIds">List of Release Ids</param>
+        /// <param name="granularity">Granularity Level</param>
+        /// <param name="hidePercentComplete">Percentage Complete</param>
+        /// <param name="wiAcronym">Acronym</param>
+        /// <param name="wiName">Name</param>
         /// <returns>Work Item Count</returns>
-        public int GetWorkItemsCountByRelease(List<int> releaseIds)
+        public int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName)
         {
-            return UoW.Context.WorkItems.Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)).Count();
+            return UoW.Context.WorkItems.Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)
+                            && (x.Name.ToLower().Contains(wiName.Trim().ToLower()) || String.IsNullOrEmpty(wiName.Trim()))
+                            && (x.Acronym.ToLower().Contains(wiAcronym.Trim().ToLower()) || (String.IsNullOrEmpty(wiAcronym.Trim())))
+                            && (x.WiLevel != null && x.WiLevel <= granularity)
+                            && (hidePercentComplete ? x.Completion < 100 : true)).Count();
         }
 
         /// <summary>
@@ -120,15 +137,23 @@ namespace Etsi.Ultimate.Repositories
         /// Get the list of workitems based on the release
         /// </summary>
         /// <param name="releaseIds">Release Ids</param>
+        /// <param name="granularity">Granularity Level</param>
+        /// <param name="hidePercentComplete">Percentage Complete</param>
+        /// <param name="wiAcronym">Acronym</param>
+        /// <param name="wiName">Name</param>
         /// <returns>List of workitems</returns>
-        List<WorkItem> GetWorkItemsByRelease(List<int> releaseIds);
+        List<WorkItem> GetWorkItemsBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName);
 
         /// <summary>
         /// Get count of WorkItems
         /// </summary>
         /// <param name="releaseIds">List of Release Ids</param>
+        /// <param name="granularity">Granularity Level</param>
+        /// <param name="hidePercentComplete">Percentage Complete</param>
+        /// <param name="wiAcronym">Acronym</param>
+        /// <param name="wiName">Name</param>
         /// <returns>Work Item Count</returns>
-        int GetWorkItemsCountByRelease(List<int> releaseIds);
+        int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName);
 
         /// <summary>
         /// Get list of distinct Acronyms from various releases

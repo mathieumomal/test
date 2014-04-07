@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Etsi.Ultimate.Business;
-using Etsi.Ultimate.Repositories;
+﻿using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
 
 namespace Etsi.Ultimate.Services
 {
@@ -33,6 +29,21 @@ namespace Etsi.Ultimate.Services
                 var rightsManager = new RightsManager();
                 rightsManager.UoW = uoW;
                 return rightsManager.IsUserMCCMember(personID);
+            }
+        }
+
+        /// <summary>
+        /// Get Rights for the user
+        /// </summary>
+        /// <param name="personId">Person Id</param>
+        /// <returns>User Rights</returns>
+        public UserRightsContainer GetRights(int personId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var rightManager = ManagerFactory.Resolve<IRightsManager>();
+                rightManager.UoW = uoW;
+                return rightManager.GetRights(personId);
             }
         }
     }

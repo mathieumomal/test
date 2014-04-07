@@ -1,6 +1,7 @@
 ﻿using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -20,35 +21,49 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="personId">Person Id</param>
         /// <param name="releaseIds">Release Ids</param>
+        /// <param name="granularity">Granularity Level</param>
+        /// <param name="hidePercentComplete">Percentage Complete</param>
+        /// <param name="wiAcronym">Acronym</param>
+        /// <param name="wiName">Name</param>
         /// <returns>List of workitems along with rights container</returns>
-        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsByRelease(int personId, List<int> releaseIds)
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName)
         {
             IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
             repo.UoW = _uoW;
 
-            List<WorkItem> workItems = new List<WorkItem>();
+            List<WorkItem> AllWorkItems = new List<WorkItem>();
 
-            var workItemsOfSearchCriteria = repo.GetWorkItemsByRelease(releaseIds);
-            workItems.AddRange(workItemsOfSearchCriteria);
+            var workItemsOfSearchCriteria = repo.GetWorkItemsBySearchCriteria(releaseIds, granularity, hidePercentComplete, wiAcronym, wiName);
+            AllWorkItems.AddRange(workItemsOfSearchCriteria);
+
             //Get Parents
             List<WorkItem> parentWorkItems = new List<WorkItem>();
             foreach (var workItem in workItemsOfSearchCriteria)
             {
-                GetParentWorkItems(workItem, workItems, parentWorkItems, repo);
+                GetParentWorkItems(workItem, AllWorkItems, parentWorkItems, repo);
             }
+            AllWorkItems.AddRange(parentWorkItems);
 
-            workItems.AddRange(parentWorkItems);
-
+            //Get Required Childs
             List<WorkItem> childWorkItems = new List<WorkItem>();
             foreach (var workItem in workItemsOfSearchCriteria)
             {
-                GetChildWorkItems(workItem, workItems, childWorkItems, repo);
+                GetChildWorkItems(workItem, AllWorkItems, childWorkItems, repo);
             }
-            workItems.AddRange(childWorkItems);
+            AllWorkItems.AddRange(childWorkItems.Where(x => ((x.Name.ToLower().Contains(wiName.Trim().ToLower()) || String.IsNullOrEmpty(wiName.Trim()))
+                                                             && (x.Acronym.ToLower().Contains(wiAcronym.Trim().ToLower()) || (String.IsNullOrEmpty(wiAcronym.Trim())))
+                                                             && (hidePercentComplete ? x.Completion < 100 : true))));
 
-            return new KeyValuePair<List<WorkItem>, UserRightsContainer>(workItems, GetRights(personId));
+            return new KeyValuePair<List<WorkItem>, UserRightsContainer>(AllWorkItems, GetRights(personId));
         }
 
+        /// <summary>
+        /// Get Parent WorkItems for the given list of work items
+        /// </summary>
+        /// <param name="workItem">Work item to search for parent record</param>
+        /// <param name="workItems">List of all work items</param>
+        /// <param name="parentWorkItems">List of collected parent work items</param>
+        /// <param name="repo">Work item repository</param>
         private void GetParentWorkItems(WorkItem workItem, List<WorkItem> workItems, List<WorkItem> parentWorkItems, IWorkItemRepository repo)
         {
             if (workItem.ParentWi != null)
@@ -60,6 +75,13 @@ namespace Etsi.Ultimate.Business
             }
         }
 
+        /// <summary>
+        /// Get the child work items for the given work item
+        /// </summary>
+        /// <param name="workItem">Work item to search for child records</param>
+        /// <param name="workItems">List of all work items</param>
+        /// <param name="childWorkItems">List of collected child work items</param>
+        /// <param name="repo">Work item repository</param>
         private void GetChildWorkItems(WorkItem workItem, List<WorkItem> workItems, List<WorkItem> childWorkItems, IWorkItemRepository repo)
         {
             if (workItem.ChildWis != null)
@@ -125,12 +147,16 @@ namespace Etsi.Ultimate.Business
         /// Get count of WorkItems
         /// </summary>
         /// <param name="releaseIds">List of Release Ids</param>
+        /// <param name="granularity">Granularity Level</param>
+        /// <param name="hidePercentComplete">Percentage Complete</param>
+        /// <param name="wiAcronym">Acronym</param>
+        /// <param name="wiName">Name</param>
         /// <returns>Work Item Count</returns>
-        public int GetWorkItemsCountByRelease(List<int> releaseIds)
+        public int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName)
         {
             IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
             repo.UoW = _uoW;
-            return repo.GetWorkItemsCountByRelease(releaseIds);
+            return repo.GetWorkItemsCountBySearchCriteria(releaseIds, granularity, hidePercentComplete, wiAcronym, wiName);
         }
 
         /// <summary>

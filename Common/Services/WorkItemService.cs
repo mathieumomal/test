@@ -66,13 +66,17 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="personId">Person Id</param>
         /// <param name="releaseIds">Release Ids</param>
+        /// <param name="granularity">Granularity Level</param>
+        /// <param name="hidePercentComplete">Percentage Complete</param>
+        /// <param name="wiAcronym">Acronym</param>
+        /// <param name="wiName">Name</param>
         /// <returns>List of workitems along with rights container</returns>
-        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsByRelease(int personId, List<int> releaseIds)
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var workItemManager = new WorkItemManager(uoW);
-                 return workItemManager.GetWorkItemsByRelease(personId, releaseIds);
+                return workItemManager.GetWorkItemsBySearchCriteria(personId, releaseIds, granularity, hidePercentComplete, wiAcronym, wiName);
             }
         }
 
@@ -125,13 +129,17 @@ namespace Etsi.Ultimate.Services
         /// Get count of WorkItems
         /// </summary>
         /// <param name="releaseIds">List of Release Ids</param>
+        /// <param name="granularity">Granularity Level</param>
+        /// <param name="hidePercentComplete">Percentage Complete</param>
+        /// <param name="wiAcronym">Acronym</param>
+        /// <param name="wiName">Name</param>
         /// <returns>Work Item Count</returns>
-        public int GetWorkItemsCountByRelease(List<int> releaseIds)
+        public int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var workItemManager = new WorkItemManager(uoW);
-                return workItemManager.GetWorkItemsCountByRelease(releaseIds);
+                return workItemManager.GetWorkItemsCountBySearchCriteria(releaseIds, granularity, hidePercentComplete, wiAcronym, wiName);
             }
         }
 
