@@ -56,6 +56,11 @@ namespace Etsi.Ultimate.DataAccess
     		Entry(entity).State = EntityState.Added;
     	}
     
+    	public void SetDeleted(object entity)
+        {
+            Entry(entity).State = EntityState.Deleted;
+        }
+    
     	public void SetAutoDetectChanges(bool detect)
         {
             Configuration.AutoDetectChangesEnabled = detect;
