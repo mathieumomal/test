@@ -35,7 +35,7 @@ namespace Etsi.Ultimate.Tests.Business
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             var wiExporter = new WorkPlanExporter(uow);
 
-            wiExporter.ExportWorkPlan(string.Empty);
+            Assert.IsTrue( wiExporter.ExportWorkPlan(".") );
         }
 
         #endregion

@@ -28,15 +28,20 @@
         opacity: 1;
         font-size: small;
         vertical-align: middle;
-        top: 45%;
-        position: fixed;
-        right: 45%;
+        
         color: #275721;
         text-align: center;
         background-color: White;
         padding: 10px;
         -moz-border-radius: 15px;
         border-radius: 15px;
+    }
+
+    .updateProgress .Fixed
+    {
+        top: 45%;
+        position: fixed;
+        right: 45%;
     }
 </style>
 
@@ -45,7 +50,7 @@
     <ProgressTemplate>
         <div class="modalBackground">
         </div>
-        <div class="updateProgress"><asp:Image ID="imgProgress" runat="server" Class="rotating" ImageUrl="~/DesktopModules/WorkItem/images/hourglass.png" width="45"/></div>
+        <div class="updateProgress fixed"><asp:Image ID="imgProgress" runat="server" Class="rotating" ImageUrl="~/DesktopModules/WorkItem/images/hourglass.png" width="45"/></div>
     </ProgressTemplate>
 </asp:UpdateProgress>
 
@@ -208,6 +213,7 @@
         </telerik:AjaxSetting>
         <telerik:AjaxSetting AjaxControlID="btnConfirmImport">
             <UpdatedControls>
+                <telerik:AjaxUpdatedControl ControlID="rptWarningsErrors" />
                 <telerik:AjaxUpdatedControl ControlID="lblExportedPath" />
                 <telerik:AjaxUpdatedControl ControlID="lblSaveStatus" />
             </UpdatedControls>
@@ -286,6 +292,7 @@
                         </div>
                     </div>
                     <div class="wiFooter">
+                        <span class="updateProgress" id="importProgressIcon" style="visibility:hidden"><asp:Image ID="imgProgressImport"  runat="server" Class="rotating" ImageUrl="~/DesktopModules/WorkItem/images/hourglass.png" width="45"/></span>
                         <span><telerik:RadButton ID="btnConfirmImport" runat="server" Text="Confirm import" AutoPostBack="true" OnClick="Confirmation_import_OnClick" CssClass="WiInline" ></telerik:RadButton></span>
                         <span><telerik:RadButton ID="Confirmation_cancel" runat="server" Text="Cancel" AutoPostBack="false" OnClientClicked="cancel" ></telerik:RadButton></span>
                     </div>
@@ -377,7 +384,7 @@
             open_RadWindow_workItemAnalysis();
         }
         if (arguments.EventTarget == "<%= btnConfirmImport.UniqueID %>") {
-
+            $("#importProgressIcon").css("visibility", "visible");
         }
     }
     function End(sender, arguments) {
