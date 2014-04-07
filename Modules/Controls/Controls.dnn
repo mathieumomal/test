@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="UltimateComponents" type="Library" version="00.01.02">
+    <package name="UltimateComponents" type="Library" version="00.02.00">
       <friendlyName>Ultimate Components</friendlyName>
       <description>Ultimate user web controls</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
