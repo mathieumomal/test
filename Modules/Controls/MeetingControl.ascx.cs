@@ -33,12 +33,6 @@ namespace Etsi.Ultimate.Controls
         public List<Meeting> DataSource { get; set; }
 
         /// <summary>
-        /// Disabled radComboBox
-        /// </summary>
-        [System.ComponentModel.DefaultValue(true)]
-        public Boolean Enabled { get; set; }
-
-        /// <summary>
         /// Display meeting EndDate label (true)
         /// </summary>
         public bool DisplayLabel
@@ -113,9 +107,6 @@ namespace Etsi.Ultimate.Controls
             }
             if (!string.IsNullOrEmpty(rcbMeetings.SelectedValue) && !string.IsNullOrEmpty(rcbMeetings.SelectedValue.Split('|')[1]))
                 lblEndDate.Text = rcbMeetings.SelectedValue.Split('|')[1];
-            
-            //Enabled radComboBox
-            rcbMeetings.Enabled = this.Enabled;
             
         }
         protected void rcbMeetings_ItemsRequested(object o, RadComboBoxItemsRequestedEventArgs e)
