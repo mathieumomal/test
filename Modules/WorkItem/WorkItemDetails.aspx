@@ -119,7 +119,7 @@
                             <tr>
                                 <td class="TabLineLeft">Responsible group(s):</td>
                                 <td class="TabLineRight">
-                                    <asp:Label ID="lblResponsibleGroups" runat="server"> - </asp:Label></td>
+                                    <asp:Label ID="lblResponsibleGroups" runat="server" target="_blank"> - </asp:Label></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">Rapporteur(s):</td>
@@ -135,22 +135,22 @@
                             <tr>
                                 <td class="TabLineLeft">TSG Approval meeting:</td>
                                 <td class="TabLineRight">
-                                    <asp:HyperLink ID="lnkTsgMtg" runat="server"> - </asp:HyperLink></td>
+                                    <asp:HyperLink ID="lnkTsgMtg" target="_blank" runat="server"> - </asp:HyperLink></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">PCG Approval meeting:</td>
                                 <td class="TabLineRight">
-                                    <asp:HyperLink ID="lnkPcgMtg" runat="server"> - </asp:HyperLink></td>
+                                    <asp:HyperLink ID="lnkPcgMtg" target="_blank" runat="server"> - </asp:HyperLink></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">TSG Stopped meeting:</td>
                                 <td class="TabLineRight">
-                                    <asp:HyperLink ID="lnkTsgStpMtg" runat="server"> - </asp:HyperLink></td>
+                                    <asp:HyperLink ID="lnkTsgStpMtg" target="_blank" runat="server"> - </asp:HyperLink></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">PCG Stopped meeting:</td>
                                 <td class="TabLineRight">
-                                    <asp:HyperLink ID="lnkPcgStpMtg" runat="server"> - </asp:HyperLink></td>
+                                    <asp:HyperLink ID="lnkPcgStpMtg" target="_blank" runat="server"> - </asp:HyperLink></td>
                             </tr>
                             <tr>
                                 <td colspan="2">

@@ -40,5 +40,25 @@ namespace Etsi.Ultimate.DomainClasses
         }
         public string RapporteurName { set; get; }
         public bool IsLevel0Record { get { return (WiLevel == 0); } }
+        public string GetStyleBasedOnLevel
+        {
+            get
+            {
+                string style = string.Empty;
+                switch (this.WiLevel)
+                {
+                    case 0:
+                        style = "color: red;font-weight: bold;";
+                        break;
+                    case 1:
+                        style = "color: blue;font-weight: bold;";
+                        break;
+                    case 2:
+                        style = "color: black;font-weight: bold;";
+                        break;
+                }
+                return style;
+            }
+        }
     }
 }

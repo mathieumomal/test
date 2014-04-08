@@ -28,7 +28,6 @@
         opacity: 1;
         font-size: small;
         vertical-align: middle;
-        
         color: #275721;
         text-align: center;
         background-color: White;
@@ -37,12 +36,12 @@
         border-radius: 15px;
     }
 
-    .updateProgress .Fixed
-    {
-        top: 45%;
-        position: fixed;
-        right: 45%;
-    }
+        .updateProgress .Fixed {
+            top: 45%;
+            position: fixed;
+            right: 45%;
+        }
+
 </style>
 
 <asp:UpdateProgress ID="updateProgressWorkItemsTree" runat="server"
@@ -50,7 +49,8 @@
     <ProgressTemplate>
         <div class="modalBackground">
         </div>
-        <div class="updateProgress fixed"><asp:Image ID="imgProgress" runat="server" Class="rotating" ImageUrl="~/DesktopModules/WorkItem/images/hourglass.png" width="45"/></div>
+        <div class="updateProgress fixed">
+            <asp:Image ID="imgProgress" runat="server" Class="rotating" ImageUrl="~/DesktopModules/WorkItem/images/hourglass.png" Width="45" /></div>
     </ProgressTemplate>
 </asp:UpdateProgress>
 
@@ -60,10 +60,10 @@
             <tr>
                 <td>
                     <ult:fullviewcontrol id="ultFullView" runat="server" />
-                    <asp:LinkButton ID="WorkPlanImport_Btn" runat="server" OnClientClick="open_RadWindow_workItemImport()" Text="Import work plan"/>
-                    <span style="float:right">
-                        <asp:Label Visible="false" ID="lblLatestUpdated" runat="server"/>
-                        <asp:HyperLink Visible="false" ID="lnkFtpDownload" runat="server" Text="Download from FTP"/>
+                    <asp:LinkButton ID="WorkPlanImport_Btn" runat="server" OnClientClick="open_RadWindow_workItemImport()" Text="Import work plan" />
+                    <span style="float: right">
+                        <asp:Label Visible="false" ID="lblLatestUpdated" runat="server" />
+                        <asp:HyperLink Visible="false" ID="lnkFtpDownload" runat="server" Text="Download from FTP" />
                     </span>
                 </td>
             </tr>
@@ -142,9 +142,9 @@
                         ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="false" AllowPaging="false" AllowFilteringByColumn="false">
                         <columns>
                         <telerik:TreeListTemplateColumn  DataField="Name" UniqueName="Name" HeaderText="Name">
-                            <HeaderStyle Font-Bold="True" Width="250px"/> 
+                            <HeaderStyle Font-Bold="True" Width="20%"/> 
                             <ItemTemplate>
-                                <div style="text-align:left"><%# DataBinder.Eval(Container.DataItem,"Name")%></div>  
+                                <div style="text-align:left;<%# DataBinder.Eval(Container.DataItem,"GetStyleBasedOnLevel")%>"><%# DataBinder.Eval(Container.DataItem,"Name")%></div>  
                             </ItemTemplate>
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListBoundColumn DataField="Acronym" UniqueName="Acronym" HeaderText="Acronym">
@@ -181,7 +181,7 @@
                             <HeaderStyle Font-Bold="True"/> 
                         </telerik:TreeListBoundColumn>
                         <telerik:TreeListTemplateColumn  UniqueName="LatestRemark"   HeaderText="Latest remark">
-                            <HeaderStyle Font-Bold="True" Width="200px"/> 
+                            <HeaderStyle Font-Bold="True" Width="16%"/> 
                             <ItemTemplate>
                                 <div style="text-align:left"><%# DataBinder.Eval(Container.DataItem,"ShortLatestRemark")%></div>  
                             </ItemTemplate>
@@ -418,11 +418,11 @@
     /*--- EVENTS ---*/
     function collapseItem() {
         var panelBar = $find("<%= rpbSearch.ClientID %>");
-            var item = panelBar.get_items().getItem(0);
-            if (item) {
-                item.collapse();
-            }
+        var item = panelBar.get_items().getItem(0);
+        if (item) {
+            item.collapse();
         }
+    }
 </script>
 
 
