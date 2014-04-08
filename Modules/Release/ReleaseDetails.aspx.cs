@@ -63,7 +63,7 @@ namespace Etsi.Ultimate.Module.Release
                     if (userRights.HasRight(Domain.Enum_UserRights.Release_ViewCompleteDetails))
                         FillAdminTab(release, svc.GetPreviousReleaseCode(release.Pk_ReleaseId).Value);
 
-
+                    
 
                     //Set Remarks control
                     RemarksControl rmk = releaseRemarks as RemarksControl;
@@ -256,11 +256,6 @@ namespace Etsi.Ultimate.Module.Release
         /// <param name="userRights">User Rights</param>
         private void ManageButtonDisplay(DomainClasses.Release release, DomainClasses.UserRightsContainer userRights)
         {
-            if (userRights.HasRight(Domain.Enum_UserRights.Release_Edit_Remarks))
-            {
-                EditBtn.Visible = true;
-                EditBtn.Text = "Add Remarks";
-            }
             if (userRights.HasRight(Domain.Enum_UserRights.Release_Edit))
             {
                 EditBtn.Visible = true;
@@ -270,7 +265,6 @@ namespace Etsi.Ultimate.Module.Release
                 FreezeReleaseBtn.Visible = true;
             if (userRights.HasRight(Domain.Enum_UserRights.Release_Close))
                 CloseReleaseBtn.Visible = true;
-            
         }
 
         /// <summary>

@@ -50,7 +50,7 @@
                                     <td class="TabLineLeft">
                                         <asp:Label ID="releaseCodeLbl" runat="server" Text="Release code<span class='requiredField'>(*)</span>:"></asp:Label></td>
                                     <td colspan="2" class="TabLineRight" id="SecondColreleaseCode">
-                                        <asp:TextBox ID="releaseCodeVal" runat="server" CssClass="homogenDisabledStyle"></asp:TextBox></td>
+                                        <asp:TextBox ID="releaseCodeVal" runat="server"></asp:TextBox></td>
                                 </tr>
                                 <tr>
                                     <td class="TabLineLeft">
@@ -63,14 +63,14 @@
                                     <td class="TabLineLeft">
                                         <asp:Label ID="ReleaseNameLbl" runat="server" Text="Release name<span class='requiredField'>(*)</span>:"></asp:Label></td>
                                     <td colspan="2" class="TabLineRight">
-                                        <asp:TextBox ID="ReleaseNameVal" runat="server" CssClass="releaseName homogenDisabledStyle"></asp:TextBox></td>
+                                        <asp:TextBox ID="ReleaseNameVal" runat="server" CssClass="releaseName"></asp:TextBox></td>
                                 </tr>
                                 <tr>
                                     <td class="TabLineLeft">
                                         <asp:Label ID="ReleaseDescLbl" runat="server" Text="Release description:"></asp:Label>
                                     </td>
                                     <td colspan="2" class="TabLineRight">
-                                        <asp:TextBox runat="server" ID="ReleaseDescVal" CssClass="homogenDisabledStyle" />
+                                        <asp:TextBox runat="server" ID="ReleaseDescVal" />
                                     </td>
 
                                 </tr>
@@ -78,7 +78,7 @@
                                     <td class="TabLineLeft">
                                         <asp:Label ID="ReleaseShortNameLbl" runat="server" Text="Release short name<span class='requiredField'>(*)</span>:"></asp:Label></td>
                                     <td colspan="2" class="TabLineRight">
-                                        <asp:TextBox ID="ReleaseShortNameVal" runat="server" CssClass="homogenDisabledStyle"></asp:TextBox></td>
+                                        <asp:TextBox ID="ReleaseShortNameVal" runat="server"></asp:TextBox></td>
                                 </tr>
                                 <tr>
                                     <td class="TabLineLeft">
@@ -169,7 +169,7 @@
                                         <asp:Label ID="ITURCodeLbl" runat="server" Text="ITUR code:"></asp:Label>
                                     </td>
                                     <td class="TabLineRight">
-                                        <asp:TextBox ID="ITURCodeVal" runat="server" CssClass="homogenDisabledStyle"></asp:TextBox>
+                                        <asp:TextBox ID="ITURCodeVal" runat="server"></asp:TextBox>
                                     </td>
                                 </tr>
                                 <tr>
@@ -185,7 +185,7 @@
                                                     </td>
                                                     <td style="width: 70%; padding-left: 25%">
                                                         <asp:Label ID="Release2GDecimalLbl" runat="server" Text="2G Decimal:"></asp:Label>
-                                                        <asp:TextBox ID="Release2GDecimalVal" runat="server" CssClass="homogenDisabledStyle"></asp:TextBox>
+                                                        <asp:TextBox ID="Release2GDecimalVal" runat="server"></asp:TextBox>
                                                     </td>
                                                 </tr>
                                                 <tr>
@@ -195,7 +195,7 @@
                                                     </td>
                                                     <td style="width: 70%; padding-left: 25%">
                                                         <asp:Label ID="Release3GDecimalLbl" runat="server" Text="3G Decimal:"></asp:Label>
-                                                        <asp:TextBox ID="Release3GDecimalVal" runat="server" CssClass="homogenDisabledStyle"></asp:TextBox>
+                                                        <asp:TextBox ID="Release3GDecimalVal" runat="server"></asp:TextBox>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -211,14 +211,14 @@
                                                 <tr>
                                                     <td style="width: 60%; padding-left: 10%">
                                                         <asp:Label ID="WPMCodes2GLbl" runat="server" Text="2G:"></asp:Label>
-                                                        <asp:TextBox ID="WPMCodes2GVal" runat="server" MaxLength="30" CssClass="homogenDisabledStyle"></asp:TextBox>
+                                                        <asp:TextBox ID="WPMCodes2GVal" runat="server" MaxLength="30"></asp:TextBox>
                                                     </td>
                                                     <td style="width: 40%; padding-left: 30%"></td>
                                                 </tr>
                                                 <tr>
                                                     <td style="width: 60%; padding-left: 10%">
                                                         <asp:Label ID="WPMCodes3GLbl" runat="server" Text="3G:"></asp:Label>
-                                                        <asp:TextBox ID="WPMCodes3GVal" runat="server" CssClass="homogenDisabledStyle"></asp:TextBox>
+                                                        <asp:TextBox ID="WPMCodes3GVal" runat="server"></asp:TextBox>
                                                     </td>
                                                     <td style="width: 40%; padding-left: 30%"></td>
                                                 </tr>

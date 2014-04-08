@@ -64,7 +64,7 @@ namespace Etsi.Ultimate.Module.Release
                     Domain.Release release = releaseRightsObject.Key;
                     DomainClasses.UserRightsContainer userRights = releaseRightsObject.Value;
 
-                    if (userRights.HasRight(Domain.Enum_UserRights.Release_Edit) || userRights.HasRight(Domain.Enum_UserRights.Release_Edit_Remarks))
+                    if (userRights.HasRight(Domain.Enum_UserRights.Release_Edit))
                     {
                         if (release == null)
                         {
@@ -76,9 +76,6 @@ namespace Etsi.Ultimate.Module.Release
                             BuildTabsDisplay(action);
                             FillGeneralTab(release, action);
                             FillAdminTab(release, svc.GetAllReleasesCodes(ReleaseId.Value), svc.GetPreviousReleaseCode(release.Pk_ReleaseId).Key);
-
-                            //Particulary case : Only Release_Edit_Remarks
-                            HandlerEnabledInputs(userRights.HasRight(Domain.Enum_UserRights.Release_Edit));
                             
                             //Set Remarks control
                             releaseRemarks.UserRights = userRights;
@@ -130,32 +127,6 @@ namespace Etsi.Ultimate.Module.Release
             }
 
 
-        }
-
-        /// <summary>
-        /// In particular case of a Release_Edit_Just_Public_Remarks right, we disable all inputs.
-        /// </summary>
-        protected void HandlerEnabledInputs(Boolean enabled)
-        {
-            //General
-            releaseCodeVal.Enabled = enabled;
-            ReleaseNameVal.Enabled = enabled;
-            ReleaseDescVal.Enabled = enabled;
-            ReleaseShortNameVal.Enabled = enabled;
-            ReleaseStartDateVal.Enabled = enabled;
-            FreezeStage1Meeting.Enabled = enabled;
-            FreezeStage2Meeting.Enabled = enabled;
-            FreezeStage3Meeting.Enabled = enabled;
-            ReleaseEndMeeting.Enabled = enabled;
-            ReleaseClosureMeeting.Enabled = enabled;
-
-            //Administration
-            previousReleaseVal.Enabled = enabled;
-            ITURCodeVal.Enabled = enabled;
-            Release2GDecimalVal.Enabled = enabled;
-            Release3GDecimalVal.Enabled = enabled;
-            WPMCodes2GVal.Enabled = enabled;
-            WPMCodes3GVal.Enabled = enabled;
         }
 
         /// <summary>

@@ -19,7 +19,6 @@ namespace Etsi.Ultimate.DomainClasses
         Release_ViewDetails,
         Release_Create,
         Release_Edit,
-        Release_Edit_Remarks,
         Release_Freeze,
         Release_Close,
 
