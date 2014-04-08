@@ -51,7 +51,7 @@ namespace Etsi.Ultimate.Module.Release
     /// 
     /// </summary>
     /// -----------------------------------------------------------------------------
-    public partial class View : ReleaseModuleBase
+    public partial class View : PortalModuleBase
     {
         protected Ultimate.Controls.FullView ultFullView;
         

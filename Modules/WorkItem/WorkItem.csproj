@@ -80,28 +80,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\FeatureController.cs" />
-    <Compile Include="Components\ItemController.cs" />
-    <Compile Include="Components\Item.cs" />
+    <Compile Include="FeatureController.cs" />
     <Compile Include="WorkItemDetails.aspx.cs">
       <DependentUpon>WorkItemDetails.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="WorkItemDetails.aspx.designer.cs">
       <DependentUpon>WorkItemDetails.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="WorkItemModuleBase.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="WorkItemModuleSettingsBase.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Edit.ascx.cs">
-      <DependentUpon>Edit.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Edit.ascx.designer.cs">
-      <DependentUpon>Edit.ascx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings.ascx.cs">
@@ -120,9 +105,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Documentation\Documentation.css" />
-    <Content Include="Documentation\Documentation.html" />
-    <Content Include="Edit.ascx" />
     <Content Include="images\details.png" />
     <Content Include="images\favicon.ico" />
     <Content Include="images\hourglass.png" />
@@ -151,12 +133,7 @@
     <Content Include="App_LocalResources\View.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_LocalResources\Edit.ascx.resx" />
     <Content Include="App_LocalResources\Settings.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Providers\DataProviders\SqlDataProvider\00.00.01.SqlDataProvider" />
-    <Content Include="Providers\DataProviders\SqlDataProvider\Uninstall.SqlDataProvider" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

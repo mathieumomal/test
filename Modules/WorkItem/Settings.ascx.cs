@@ -39,7 +39,7 @@ namespace Etsi.Ultimate.Module.WorkItem
     /// defined there, as well as properties from DNN such as PortalId, ModuleId, TabId, UserId and many more.
     /// </summary>
     /// -----------------------------------------------------------------------------
-    public partial class Settings : WorkItemModuleSettingsBase
+    public partial class Settings : ModuleSettingsBase
     {
         private static readonly string regexPath = @"(.*)\\$";
 

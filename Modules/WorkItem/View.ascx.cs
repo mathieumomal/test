@@ -44,7 +44,7 @@ namespace Etsi.Ultimate.Module.WorkItem
     /// 
     /// </summary>
     /// -----------------------------------------------------------------------------
-    public partial class View : WorkItemModuleBase, IActionable
+    public partial class View : PortalModuleBase, IActionable
     {
         #region Fields
 
