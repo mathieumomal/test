@@ -138,43 +138,43 @@
                         ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="false" AllowPaging="false" AllowFilteringByColumn="false">
                         <columns>
                         <telerik:TreeListTemplateColumn  DataField="Name" UniqueName="Name" HeaderText="Name">
-                            <HeaderStyle Font-Bold="True" Width="300px"/> 
+                            <HeaderStyle Font-Bold="True" Width="250px"/> 
                             <ItemTemplate>
                                 <div style="text-align:left"><%# DataBinder.Eval(Container.DataItem,"Name")%></div>  
                             </ItemTemplate>
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListBoundColumn DataField="Acronym" UniqueName="Acronym" HeaderText="Acronym">
-                            <HeaderStyle Font-Bold="True" Width="70px"/> 
+                            <HeaderStyle Font-Bold="True"/> 
                         </telerik:TreeListBoundColumn>
                         <telerik:TreeListBoundColumn DataField="UID" UniqueName="UID"  HeaderText="UID">
-                            <HeaderStyle Font-Bold="True" Width="50px"/> 
+                            <HeaderStyle Font-Bold="True"/> 
                         </telerik:TreeListBoundColumn>
                         <telerik:TreeListTemplateColumn DataField="Release" UniqueName="Release" HeaderText="Release">
-                            <HeaderStyle Font-Bold="True" Width="50px"/> 
+                            <HeaderStyle Font-Bold="True"/> 
                             <ItemTemplate>
                                 <span><%# DataBinder.Eval(Container.DataItem,"Release.Code") %></span>  
                             </ItemTemplate>      
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListTemplateColumn DataField="StartDate" UniqueName="StartDate"  HeaderText="Start date">
-                            <HeaderStyle Font-Bold="True" Width="120px"/> 
+                            <HeaderStyle Font-Bold="True"/> 
                             <ItemTemplate>
                                 <span><%# DataBinder.Eval(Container.DataItem,"StartDate", "{0:yyyy-MM-dd}") %></span>  
                             </ItemTemplate>      
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListTemplateColumn DataField="EndDate" UniqueName="EndDate"  HeaderText="End date">
-                            <HeaderStyle Font-Bold="True" Width="120px"/> 
+                            <HeaderStyle Font-Bold="True"/> 
                             <ItemTemplate>
                                 <span><%# DataBinder.Eval(Container.DataItem,"EndDate", "{0:yyyy-MM-dd}") %></span>  
                             </ItemTemplate>   
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListTemplateColumn DataField="Completion" UniqueName="Completion"  HeaderText="Completion rate">
-                            <HeaderStyle Font-Bold="True" Width="70px"/> 
+                            <HeaderStyle Font-Bold="True"/> 
                             <ItemTemplate>
                                 <span><%# String.Format("{0:0'%}",  DataBinder.Eval(Container.DataItem,"Completion") )%></span>  
                             </ItemTemplate>     
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListBoundColumn DataField="ResponsibleGroups" UniqueName="ResponsibleGroups" HeaderText="Responsible groups">
-                            <HeaderStyle Font-Bold="True"  Width="90px"/> 
+                            <HeaderStyle Font-Bold="True"/> 
                         </telerik:TreeListBoundColumn>
                         <telerik:TreeListTemplateColumn  UniqueName="LatestRemark"   HeaderText="Latest remark">
                             <HeaderStyle Font-Bold="True" Width="200px"/> 
@@ -186,13 +186,11 @@
                             <HeaderStyle Width="50px"/> 
                             <ItemTemplate>
 					            <span></span>
-                                <img id="imgViewWorkItems" alt="See details" src="/DesktopModules/WorkItem/images/details.png" 
+                                <img id="imgViewWorkItems" alt="See details" src="/DesktopModules/WorkItem/images/details.png" style='display: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsLevel0Record")) ? "none" : "block" %>'
                                     onclick="var popUp=window.open('/desktopmodules/WorkItem/WorkItemDetails.aspx?workitemId=<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>',
 								            'Rel-<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>', 'height=550,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
                             </ItemTemplate>      
                         </telerik:TreeListTemplateColumn>
-                        <telerik:TreeListBoundColumn DataField="wiLevel" Visible="false" UniqueName="wiLevel" >
-                        </telerik:TreeListBoundColumn>
                     </columns>
                     </telerik:RadTreeList>
                 </td>

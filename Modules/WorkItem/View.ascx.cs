@@ -129,8 +129,6 @@ namespace Etsi.Ultimate.Module.WorkItem
                 racAcronym.DataSource = Acronyms;
                 racAcronym.DataBind();
 
-                rtlWorkItems.ItemDataBound += rtlWorkItems_ItemDataBound;
-
                 // Display or not import WI
                 List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
                 var personService = ServicesFactory.Resolve<IPersonService>();
@@ -335,22 +333,6 @@ namespace Etsi.Ultimate.Module.WorkItem
             }
 
             loadWorkItemData();
-        }
-
-        /// <summary>
-        /// Format WIs once the data is bound
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        protected void rtlWorkItems_ItemDataBound(object sender, TreeListItemDataBoundEventArgs e)
-        {
-            if (e.Item is TreeListDataItem)
-            {
-                TreeListDataItem item = e.Item as TreeListDataItem;
-                var wiLevel = (System.Int32)DataBinder.Eval(item.DataItem, "wiLevel");
-                if (wiLevel == 0)
-                    item["ViewWorkItem"].Visible = false;
-            }
         }
 
         protected void rptErrorsWarning_ItemDataBound(Object Sender, RepeaterItemEventArgs e)
