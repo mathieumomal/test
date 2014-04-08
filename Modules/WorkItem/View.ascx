@@ -61,6 +61,10 @@
                 <td>
                     <ult:fullviewcontrol id="ultFullView" runat="server" />
                     <asp:LinkButton ID="WorkPlanImport_Btn" runat="server" OnClientClick="open_RadWindow_workItemImport()" Text="Import work plan"/>
+                    <span style="float:right">
+                        <asp:Label Visible="false" ID="lblLatestUpdated" runat="server"/>
+                        <asp:HyperLink Visible="false" ID="lnkFtpDownload" runat="server" Text="Download from FTP"/>
+                    </span>
                 </td>
             </tr>
             <tr>

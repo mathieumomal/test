@@ -18,18 +18,11 @@ using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Services.Localization;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
+using Etsi.Ultimate.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Linq;
-using System.IO;
-using System.Collections.Generic;
-using Etsi.Ultimate.Services;
-using Microsoft.Practices.Unity;
-using Etsi.Ultimate.DomainClasses;
-using Etsi.Ultimate.Controls;
-using DotNetNuke.Entities.Tabs;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -95,7 +88,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 var actions = new ModuleActionCollection
                     {
                         {
-                            GetNextActionID(), Localization.GetString("EditModule", LocalResourceFile), "", "", "",
+                            GetNextActionID(), DotNetNuke.Services.Localization.Localization.GetString("EditModule", LocalResourceFile), "", "", "",
                             EditUrl(), false, SecurityAccessLevel.Edit, true, false
                         }
                     };
@@ -113,15 +106,26 @@ namespace Etsi.Ultimate.Module.WorkItem
             {
                 GetRequestParameters();
 
-                //Get settings
-                if (Settings.Contains(Enum_Settings.WorkItem_ExportPath.ToString()))
-                    PathExportWorkPlan = Settings[Enum_Settings.WorkItem_ExportPath.ToString()].ToString();
-                if (Settings.Contains(Enum_Settings.WorkItem_UploadPath.ToString()))
-                    PathUploadWorkPlan = Settings[Enum_Settings.WorkItem_UploadPath.ToString()].ToString();
-
                 var wiService = ServicesFactory.Resolve<IWorkItemService>();
                 if (!IsPostBack)
                 {
+                    //Get settings
+                    if (Settings.Contains(Enum_Settings.WorkItem_ExportPath.ToString()))
+                        PathExportWorkPlan = Settings[Enum_Settings.WorkItem_ExportPath.ToString()].ToString();
+                    if (Settings.Contains(Enum_Settings.WorkItem_UploadPath.ToString()))
+                        PathUploadWorkPlan = Settings[Enum_Settings.WorkItem_UploadPath.ToString()].ToString();
+
+                    var wpSvc = ServicesFactory.Resolve<IWorkPlanFileService>();
+                    var workPlanFile = wpSvc.GetLastWorkPlanFile();
+                    if (workPlanFile != null)
+                    {
+                        lblLatestUpdated.Visible = true;
+                        lblLatestUpdated.Text = "Latest Updated " + workPlanFile.CreationDate.ToString("yyyy-MM-dd");
+
+                        lnkFtpDownload.Visible = true;
+                        lnkFtpDownload.NavigateUrl = ConfigVariables.FtpExportAddress + workPlanFile.WorkPlanFilePath;
+                    }
+
                     Acronyms = wiService.GetAllAcronyms();
                     releaseSearchControl.Load += releaseSearchControl_Load;
                 }
@@ -167,10 +171,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 .Append(workplanUploaded.FileName)
                 .ToString());
 
-
             //Analyse file type (ZIP/CSV)
-
-
             var wiReport = wiService.AnalyseWorkPlanForImport(new StringBuilder()
                 .Append(PathUploadWorkPlan)
                 .Append(workplanUploaded.GetName())
@@ -226,7 +227,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         {
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
             tokenWorkPlanAnalysed = (string)ViewState["WiImportToken"];
-            bool success = wiService.ImportWorkPlan(tokenWorkPlanAnalysed, PathExportWorkPlan);            
+            bool success = wiService.ImportWorkPlan(tokenWorkPlanAnalysed, PathExportWorkPlan);
 
             if (success)
             {
@@ -234,8 +235,8 @@ namespace Etsi.Ultimate.Module.WorkItem
                 var wpSvc = ServicesFactory.Resolve<IWorkPlanFileService>();
                 WorkPlanFile wpf = new WorkPlanFile();
                 wpf.CreationDate = DateTime.Now;
-                wpf.WorkPlanFilePath = PathExportWorkPlan + "/Work_plan_3gpp_" + DateTime.Now.ToString("yyMMdd");
-                //wpSvc.AddWorkPlanFile(wpf);
+                wpf.WorkPlanFilePath = "Work_plan_3gpp_" + DateTime.Now.ToString("yyMMdd") + ".zip";
+                wpSvc.AddWorkPlanFile(wpf);
 
                 //Update RadWindow_workItemState label with real files path  
                 lblSaveStatus.Text = "Work plan was successfully imported.<br/>Word and Excel version of the work plan are available at:";
@@ -378,7 +379,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 searchString.Append(", " + wiName);
             if (hidePercentComplete)
                 searchString.Append(", hidden completed items");
-            
+
             lblSearchHeader.Text = String.Format("Search form ({0})", searchString.ToString());
             searchPanel.Expanded = false;
 

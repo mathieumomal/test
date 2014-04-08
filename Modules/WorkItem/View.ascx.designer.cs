@@ -40,6 +40,24 @@ namespace Etsi.Ultimate.Module.WorkItem {
         protected global::System.Web.UI.WebControls.LinkButton WorkPlanImport_Btn;
         
         /// <summary>
+        /// lblLatestUpdated control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblLatestUpdated;
+        
+        /// <summary>
+        /// lnkFtpDownload control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink lnkFtpDownload;
+        
+        /// <summary>
         /// rpbSearch control.
         /// </summary>
         /// <remarks>

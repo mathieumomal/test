@@ -40,5 +40,17 @@ namespace Etsi.Ultimate.Utils
             }
         }
 
+        /// <summary>
+        /// Gets FTP path for downloading export zips
+        /// </summary>
+        public static string FtpExportAddress
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["FtpExportAddress"] != null)
+                    return ConfigurationManager.AppSettings["FtpExportAddress"].ToString();
+                return "";
+            }
+        }
     }
 }
