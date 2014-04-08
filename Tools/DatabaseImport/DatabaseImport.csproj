@@ -34,10 +34,23 @@
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer">
-      <HintPath>packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Etsi.Ultimate.Business">
+      <HintPath>..\..\bin\Etsi.Ultimate.Business.dll</HintPath>
+    </Reference>
+    <Reference Include="Etsi.Ultimate.Repositories, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Etsi.Ultimate.Repositories.dll</HintPath>
+    </Reference>
+    <Reference Include="Etsi.Ultimate.Services">
+      <HintPath>..\..\bin\Etsi.Ultimate.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="Etsi.Ultimate.Tests">
+      <HintPath>..\..\Common\Tests\bin\Debug\Etsi.Ultimate.Tests.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -51,6 +64,7 @@
   <ItemGroup>
     <Compile Include="ModuleImport\IModuleImport.cs" />
     <Compile Include="ModuleImport\ReleaseImport.cs" />
+    <Compile Include="ModuleImport\WorkItemImport.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

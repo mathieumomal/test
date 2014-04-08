@@ -13,17 +13,20 @@ namespace DatabaseImport.ModuleImport
     {
         public Etsi.Ultimate.DataAccess.IUltimateContext NewContext
         {
-            get; set;
+            get;
+            set;
         }
 
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext
         {
-            get; set;
+            get;
+            set;
         }
 
         public ImportReport Report
         {
-            get; set;
+            get;
+            set;
         }
 
         /// <summary>
@@ -36,9 +39,12 @@ namespace DatabaseImport.ModuleImport
             foreach (var aRelease in NewContext.Releases.ToList())
             {
                 // Remove associated remarks
-                var remarks = NewContext.Remarks.Where(r => r.Fk_ReleaseId != null).ToList();
+                var remarks = NewContext.Remarks.Where(r => r.Fk_ReleaseId == aRelease.Pk_ReleaseId).ToList();
                 for (int i = 0; i < remarks.Count; ++i)
                     NewContext.Remarks.Remove(remarks[i]);
+                var histories = NewContext.Histories.Where(h => h.Fk_ReleaseId == aRelease.Pk_ReleaseId).ToList();
+                for (int i = 0; i < histories.Count; ++i)
+                    NewContext.Histories.Remove(histories[i]);                
 
                 NewContext.Releases.Remove(aRelease);
             }
@@ -61,12 +67,14 @@ namespace DatabaseImport.ModuleImport
                 // Retrieve general information
                 RetrieveGeneralInfo(newRelease, legacyRelease);
 
-                // Try to fill the freeze dates
+                // Try to fill the freeze, closure and end dates
                 GetFreezeMeeting(newRelease, legacyRelease);
-                
+                GetCloureMeeting(newRelease, legacyRelease);
+                GetEndMeeting(newRelease, legacyRelease);
+
                 // Release status
                 ComputeReleaseStatus(newRelease, legacyRelease);
-                
+
 
                 // Retrieve wpm technical info
                 RetrieveTechnicalInfo(newRelease, legacyRelease);
@@ -113,7 +121,7 @@ namespace DatabaseImport.ModuleImport
 
             // Release start date and closure date
             newRelease.StartDate = legacyRelease.rel_proj_start;
-            newRelease.ClosureDate = legacyRelease.rel_proj_end;
+            //newRelease.ClosureDate = legacyRelease.rel_proj_end;
 
         }
 
@@ -180,7 +188,7 @@ namespace DatabaseImport.ModuleImport
                 IsPublic = true,
                 RemarkText = remarksField,
                 Release = newRelease
-                
+
             };
 
             NewContext.Remarks.Add(remark);
@@ -193,19 +201,95 @@ namespace DatabaseImport.ModuleImport
         /// <param name="legacyRelease"></param>
         private void GetFreezeMeeting(Domain.Release newRelease, OldDomain.Release legacyRelease)
         {
-            if (!string.IsNullOrEmpty(legacyRelease.freeze_meeting) && legacyRelease.freeze_meeting != "-")
-            {
-                var fullRef =  Domain.Meeting.ToFullReference(legacyRelease.freeze_meeting);
+            if (!string.IsNullOrEmpty(legacyRelease.Stage1_freeze) && legacyRelease.Stage1_freeze != "-")
+            {                
+                var fullRef = Domain.Meeting.ToFullReference(legacyRelease.Stage1_freeze);
                 var mtg = NewContext.Meetings.Where(m => m.MTG_REF == fullRef).FirstOrDefault();
 
                 if (mtg == null)
-                    Report.LogWarning("Release " + newRelease.Code + ": could not find freeze meeting " + legacyRelease.freeze_meeting);
+                    Report.LogWarning("Release " + newRelease.Code + ": could not find freeze meeting " + legacyRelease.Stage1_freeze);
+                else
+                {
+                    newRelease.Stage1FreezeMtgId = mtg.MTG_ID;
+                    newRelease.Stage1FreezeDate = mtg.END_DATE;
+                }
+                newRelease.Stage1FreezeMtgRef = legacyRelease.Stage1_freeze;
+            }
+
+            if (!string.IsNullOrEmpty(legacyRelease.Stage2_freeze) && legacyRelease.Stage2_freeze != "-")
+            {                
+                var fullRef = Domain.Meeting.ToFullReference(legacyRelease.Stage2_freeze);
+                var mtg = NewContext.Meetings.Where(m => m.MTG_REF == fullRef).FirstOrDefault();
+
+                if (mtg == null)
+                    Report.LogWarning("Release " + newRelease.Code + ": could not find freeze meeting " + legacyRelease.Stage2_freeze);
+                else
+                {
+                    newRelease.Stage2FreezeMtgId = mtg.MTG_ID;
+                    newRelease.Stage2FreezeDate = mtg.END_DATE;
+                }
+                newRelease.Stage2FreezeMtgRef = legacyRelease.Stage2_freeze;
+            }
+
+            if (!string.IsNullOrEmpty(legacyRelease.Stage3_freeze) && legacyRelease.Stage3_freeze != "-")
+            {                
+                var fullRef = Domain.Meeting.ToFullReference(legacyRelease.Stage3_freeze);
+                var mtg = NewContext.Meetings.Where(m => m.MTG_REF == fullRef).FirstOrDefault();
+
+                if (mtg == null)
+                    Report.LogWarning("Release " + newRelease.Code + ": could not find freeze meeting " + legacyRelease.Stage3_freeze);
                 else
                 {
                     newRelease.Stage3FreezeMtgId = mtg.MTG_ID;
                     newRelease.Stage3FreezeDate = mtg.END_DATE;
                 }
-                newRelease.Stage3FreezeMtgRef = legacyRelease.freeze_meeting;
+                newRelease.Stage3FreezeMtgRef = legacyRelease.Stage3_freeze;
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the closure meeting, tries to parse it, and fill in the new release accordingly.
+        /// </summary>
+        /// <param name="newRelease"></param>
+        /// <param name="legacyRelease"></param>
+        private void GetCloureMeeting(Domain.Release newRelease, OldDomain.Release legacyRelease)
+        {
+            if (!string.IsNullOrEmpty(legacyRelease.Closed) && legacyRelease.Closed != "-")
+            {                
+                var fullRef = Domain.Meeting.ToFullReference(legacyRelease.Closed);
+                var mtg = NewContext.Meetings.Where(m => m.MTG_REF == fullRef).FirstOrDefault();
+
+                if (mtg == null)
+                    Report.LogWarning("Release " + newRelease.Code + ": could not find Closure meeting " + legacyRelease.Closed);
+                else
+                {
+                    newRelease.ClosureMtgId = mtg.MTG_ID;
+                    newRelease.ClosureDate = mtg.END_DATE;
+                }
+                newRelease.ClosureMtgRef = legacyRelease.Closed;
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the end meeting, tries to parse it, and fill in the new release accordingly.
+        /// </summary>
+        /// <param name="newRelease"></param>
+        /// <param name="legacyRelease"></param>
+        private void GetEndMeeting(Domain.Release newRelease, OldDomain.Release legacyRelease)
+        {
+            if (!string.IsNullOrEmpty(legacyRelease.Protocols_freeze) && legacyRelease.Protocols_freeze != "-")
+            {                
+                var fullRef = Domain.Meeting.ToFullReference(legacyRelease.Protocols_freeze);
+                var mtg = NewContext.Meetings.Where(m => m.MTG_REF == fullRef).FirstOrDefault();
+
+                if (mtg == null)
+                    Report.LogWarning("Release " + newRelease.Code + ": could not find End meeting " + legacyRelease.Protocols_freeze);
+                else
+                {
+                    newRelease.EndMtgId = mtg.MTG_ID;
+                    newRelease.EndDate = mtg.END_DATE;
+                }
+                newRelease.EndMtgRef = legacyRelease.Protocols_freeze;
             }
         }
 
@@ -239,8 +323,5 @@ namespace DatabaseImport.ModuleImport
                 Report.LogError("While retrieving status for release " + newRelease.Code + ": " + e.Message, "Releases");
             }
         }
-
-        
-
     }
 }

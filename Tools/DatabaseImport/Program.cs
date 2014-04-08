@@ -22,7 +22,10 @@ namespace DatabaseImport
 
             // CONFIGURE HERE
             var operations = new List<IModuleImport>();
+            
+            
             operations.Add(new ReleaseImport());
+            operations.Add(new WorkItemImport());
 
             Console.WriteLine("Setting up the different classes");
 
@@ -59,7 +62,7 @@ namespace DatabaseImport
             Console.WriteLine("Changes saved, import is now finished!");
 
             Console.WriteLine("------------------- REPORT ---------------------");
-            Console.WriteLine(report.PrintReport());
+            Console.WriteLine(report.PrintReport());            
 
             Console.Read();
         }

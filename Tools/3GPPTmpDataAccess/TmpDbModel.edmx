@@ -322,6 +322,11 @@
           <Property Name="version_2g_dec" Type="nvarchar" MaxLength="10" />
           <Property Name="version_3g_dec" Type="nvarchar" MaxLength="10" />
           <Property Name="previousRelease" Type="nvarchar" MaxLength="50" />
+          <Property Name="Stage1_freeze" Type="nvarchar" MaxLength="255" />
+          <Property Name="Stage2_freeze" Type="nvarchar" MaxLength="255" />
+          <Property Name="Stage3_freeze" Type="nvarchar" MaxLength="255" />
+          <Property Name="Protocols_freeze" Type="nvarchar" MaxLength="255" />
+          <Property Name="Closed" Type="nvarchar" MaxLength="255" />
           <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="Specs_GSM+3G">
@@ -705,6 +710,11 @@
           <Property Type="String" Name="version_3g_dec" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="previousRelease" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Stage1_freeze" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Stage2_freeze" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Stage3_freeze" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Protocols_freeze" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Closed" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Specs_GSM_3G">
           <Key>
@@ -1063,6 +1073,11 @@
           <EntitySetMapping Name="Releases">
             <EntityTypeMapping TypeName="TmpDbContext.Release">
               <MappingFragment StoreEntitySet="Releases">
+                <ScalarProperty Name="Closed" ColumnName="Closed" />
+                <ScalarProperty Name="Protocols_freeze" ColumnName="Protocols_freeze" />
+                <ScalarProperty Name="Stage3_freeze" ColumnName="Stage3_freeze" />
+                <ScalarProperty Name="Stage2_freeze" ColumnName="Stage2_freeze" />
+                <ScalarProperty Name="Stage1_freeze" ColumnName="Stage1_freeze" />
                 <ScalarProperty Name="Row_id" ColumnName="Row_id" />
                 <ScalarProperty Name="previousRelease" ColumnName="previousRelease" />
                 <ScalarProperty Name="version_3g_dec" ColumnName="version_3g_dec" />
