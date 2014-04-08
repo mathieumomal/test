@@ -56,6 +56,19 @@ namespace Etsi.Ultimate.Services
             catch (Exception e)
             {
                 LogManager.Error("Failed to import Workplan: " + e.Message+"\n"+e.StackTrace);
+                Exception e2 = e;
+                while (e2 != null)
+                {
+                    if (e2.InnerException != null)
+                    {
+                        LogManager.Error("Workplan import innerException: "+ e2.InnerException.Message);
+                        e2 = e2.InnerException;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
                 return false;
             }
 

@@ -28,7 +28,7 @@ namespace Etsi.Ultimate.Business.Security
         private static readonly string SUPERUSER_GROUP = "Specification Managers";
 
 
-        #region IRightsRetriever Membres
+        #region IRightsManager Membres
 
         /// <summary>
         /// Returns the rights of the user given his ID.
