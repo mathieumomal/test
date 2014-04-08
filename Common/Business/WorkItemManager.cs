@@ -56,6 +56,16 @@ namespace Etsi.Ultimate.Business
                 workItemsToRemove.ForEach(x => AllWorkItems.Remove(x));
             }
 
+            //Get child records for the given granularity
+            List<WorkItem> childRecordsForGranularityLevel = new List<WorkItem>();
+            AllWorkItems.Where(x => x.WiLevel == granularity).ToList().ForEach(x =>
+                {
+                    GetChildWorkItems(x, childRecordsForGranularityLevel, repo); //Collect Child records
+                });
+
+            AllWorkItems.AddRange(childRecordsForGranularityLevel.Where(x => x.Name.ToLower().Contains(wiName.Trim().ToLower()) || String.IsNullOrEmpty(wiName.Trim())
+                && (x.Acronym.ToLower().Contains(wiAcronym.Trim().ToLower()) || (String.IsNullOrEmpty(wiAcronym.Trim())))));
+ 
             return new KeyValuePair<List<WorkItem>, UserRightsContainer>(AllWorkItems, GetRights(personId));
         }
 
