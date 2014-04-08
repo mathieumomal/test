@@ -348,9 +348,27 @@
                             }
                         }
 
+                        //Check if the inserted value is not empty or composed by spaces
+                        function isEmpty(element) {
+                            var controlSelector = "#" + element;
+                            $(controlSelector).removeClass('error');
+                            if ($.trim($(controlSelector).val()).length == 0) {
+                                $(controlSelector).addClass('error');
+                                return true;
+                            }
+                            return false;
+                        }
+
+                        function validateformTrim() {
+                            isEmpty("releaseCodeVal");
+                            isEmpty("ReleaseNameVal");
+                            isEmpty("ReleaseShortNameVal");
+
+                        }
 
                         /* Check if all form's field are valid */
                         function validateform(errorClassName) {
+                            validateformTrim();
                             if (!$("#releaseCodeVal").hasClass(errorClassName) && !$("#ReleaseNameVal").hasClass(errorClassName)
                                     && !$("#ReleaseShortNameVal").hasClass(errorClassName) && !$("#previousReleaseVal").hasClass(errorClassName)
                                     && !$("#Release2GDecimalVal").hasClass(errorClassName) && !$("#Release3GDecimalVal").hasClass(errorClassName)
@@ -375,6 +393,7 @@
                                 eachValidField: function () {
                                     $(this).removeClass('error');
                                     validateform(errorClassName);
+                                    validateformTrim();
                                 },
                                 eachInvalidField: function () {
                                     $(this).addClass('error');
