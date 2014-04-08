@@ -65,7 +65,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         public void GetWorkItemsBySearchCriteria(WorkItemFakeDBSet workItemData)
         {
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
-            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(6);
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(5);
 
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
@@ -74,7 +74,7 @@ namespace Etsi.Ultimate.Tests.Repositories
 
             //No Release Ids
             var repo = new WorkItemRepository() { UoW = uow };
-            var workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty);
+            var workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, String.Empty, String.Empty);
             Assert.AreEqual(0, workItems.Count);
 
             //----------------------
@@ -82,23 +82,20 @@ namespace Etsi.Ultimate.Tests.Repositories
             //----------------------
             releaseIds.Add(527);
             //Show All Records
-            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty);
+            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, String.Empty, String.Empty);
             Assert.AreEqual(18, workItems.Count);
-            //Hide 100% records
-            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty);
-            Assert.AreEqual(13, workItems.Count);
 
             //-----------------------
             //Test with 2 Release Ids
             //-----------------------
             releaseIds.Add(526);
-            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty);
+            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, String.Empty, String.Empty);
             Assert.AreEqual(20, workItems.Count);
             //Name search
-            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, false, String.Empty, "Stage");
+            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, String.Empty, "Stage");
             Assert.AreEqual(12, workItems.Count);
             //Acronym search
-            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, false, "UPCON", String.Empty);
+            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, "UPCON", String.Empty);
             Assert.AreEqual(3, workItems.Count);
 
             mockDataContext.VerifyAllExpectations();
@@ -124,8 +121,8 @@ namespace Etsi.Ultimate.Tests.Repositories
             //----------------------
             releaseIds.Add(527);
             Assert.AreEqual(18, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty));
-            //Hide 100% records
-            Assert.AreEqual(13, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty));
+            //Hide 100% records at level 1
+            Assert.AreEqual(17, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty));
             //-----------------------
             //Test with 2 Release Ids
             //-----------------------

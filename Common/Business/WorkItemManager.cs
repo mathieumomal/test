@@ -33,7 +33,7 @@ namespace Etsi.Ultimate.Business
 
             List<WorkItem> AllWorkItems = new List<WorkItem>();
 
-            var workItemsOfSearchCriteria = repo.GetWorkItemsBySearchCriteria(releaseIds, granularity, hidePercentComplete, wiAcronym, wiName);
+            var workItemsOfSearchCriteria = repo.GetWorkItemsBySearchCriteria(releaseIds, granularity, wiAcronym, wiName);
             AllWorkItems.AddRange(workItemsOfSearchCriteria);
 
             //Get Parents
@@ -44,15 +44,17 @@ namespace Etsi.Ultimate.Business
             }
             AllWorkItems.AddRange(parentWorkItems);
 
-            //Get Required Childs
-            List<WorkItem> childWorkItems = new List<WorkItem>();
-            foreach (var workItem in workItemsOfSearchCriteria)
+            //Remove 100% records at Level 1
+            if (hidePercentComplete)
             {
-                GetChildWorkItems(workItem, AllWorkItems, childWorkItems, repo);
+                List<WorkItem> workItemsToRemove = new List<WorkItem>();
+                AllWorkItems.Where(x => x.WiLevel == 1 && x.Completion >= 100).ToList().ForEach(x => 
+                    {
+                        workItemsToRemove.Add(x); //Collect Level 1 records
+                        GetChildWorkItems(x, workItemsToRemove, repo); //Collect Child records
+                    });
+                workItemsToRemove.ForEach(x => AllWorkItems.Remove(x));
             }
-            AllWorkItems.AddRange(childWorkItems.Where(x => ((x.Name.ToLower().Contains(wiName.Trim().ToLower()) || String.IsNullOrEmpty(wiName.Trim()))
-                                                             && (x.Acronym.ToLower().Contains(wiAcronym.Trim().ToLower()) || (String.IsNullOrEmpty(wiAcronym.Trim())))
-                                                             && (hidePercentComplete ? x.Completion < 100 : true))));
 
             return new KeyValuePair<List<WorkItem>, UserRightsContainer>(AllWorkItems, GetRights(personId));
         }
@@ -79,19 +81,17 @@ namespace Etsi.Ultimate.Business
         /// Get the child work items for the given work item
         /// </summary>
         /// <param name="workItem">Work item to search for child records</param>
-        /// <param name="workItems">List of all work items</param>
         /// <param name="childWorkItems">List of collected child work items</param>
         /// <param name="repo">Work item repository</param>
-        private void GetChildWorkItems(WorkItem workItem, List<WorkItem> workItems, List<WorkItem> childWorkItems, IWorkItemRepository repo)
+        private void GetChildWorkItems(WorkItem workItem, List<WorkItem> childWorkItems, IWorkItemRepository repo)
         {
             if (workItem.ChildWis != null)
             {
                 foreach (var childWorkItem in workItem.ChildWis)
                 {
-                    if ((!workItems.Exists(x => x.Pk_WorkItemUid == childWorkItem.Pk_WorkItemUid)) &&
-                    (!childWorkItems.Exists(x => x.Pk_WorkItemUid == childWorkItem.Pk_WorkItemUid)))
+                    if (!childWorkItems.Exists(x => x.Pk_WorkItemUid == childWorkItem.Pk_WorkItemUid))
                         childWorkItems.Add(repo.Find(childWorkItem.Pk_WorkItemUid));
-                    GetChildWorkItems(childWorkItem, workItems, childWorkItems, repo);
+                    GetChildWorkItems(childWorkItem, childWorkItems, repo);
                 }
             }
         }

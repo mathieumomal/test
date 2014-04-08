@@ -79,18 +79,16 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <param name="releaseIds">Release Ids</param>
         /// <param name="granularity">Granularity Level</param>
-        /// <param name="hidePercentComplete">Percentage Complete</param>
         /// <param name="wiAcronym">Acronym</param>
         /// <param name="wiName">Name</param>
         /// <returns>List of workitems</returns>
-        public List<WorkItem> GetWorkItemsBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName)
+        public List<WorkItem> GetWorkItemsBySearchCriteria(List<int> releaseIds, int granularity, string wiAcronym, string wiName)
         {
             return AllIncluding(t => t.Release, t => t.Remarks, t => t.ChildWis, t=> t.ParentWi, t=> t.WorkItems_ResponsibleGroups)
                 .Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)
                             && (x.Name.ToLower().Contains(wiName.Trim().ToLower()) || String.IsNullOrEmpty(wiName.Trim()))
                             && (x.Acronym.ToLower().Contains(wiAcronym.Trim().ToLower()) || (String.IsNullOrEmpty(wiAcronym.Trim())))
-                            && (x.WiLevel != null && x.WiLevel <= granularity)
-                            && (hidePercentComplete ? x.Completion < 100 : true )).ToList();
+                            && (x.WiLevel != null && x.WiLevel <= granularity)).ToList();
         }
 
         /// <summary>
@@ -108,7 +106,7 @@ namespace Etsi.Ultimate.Repositories
                             && (x.Name.ToLower().Contains(wiName.Trim().ToLower()) || String.IsNullOrEmpty(wiName.Trim()))
                             && (x.Acronym.ToLower().Contains(wiAcronym.Trim().ToLower()) || (String.IsNullOrEmpty(wiAcronym.Trim())))
                             && (x.WiLevel != null && x.WiLevel <= granularity)
-                            && (hidePercentComplete ? x.Completion < 100 : true)).Count();
+                            && (hidePercentComplete ? !(x.Completion >= 100 && x.WiLevel == 1) : true)).Count();
         }
 
         /// <summary>
@@ -138,11 +136,10 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <param name="releaseIds">Release Ids</param>
         /// <param name="granularity">Granularity Level</param>
-        /// <param name="hidePercentComplete">Percentage Complete</param>
         /// <param name="wiAcronym">Acronym</param>
         /// <param name="wiName">Name</param>
         /// <returns>List of workitems</returns>
-        List<WorkItem> GetWorkItemsBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName);
+        List<WorkItem> GetWorkItemsBySearchCriteria(List<int> releaseIds, int granularity, string wiAcronym, string wiName);
 
         /// <summary>
         /// Get count of WorkItems

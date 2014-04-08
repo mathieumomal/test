@@ -51,9 +51,9 @@ namespace Etsi.Ultimate.Tests.Business
             workItems = wiManager.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, false, String.Empty, String.Empty);
             Assert.AreEqual(18, workItems.Key.Count);
             Assert.IsTrue(workItems.Value.HasRight(Enum_UserRights.WorkItem_ImportWorkplan));
-            //Hide 100% records
+            //Hide 100% records at level 1
             workItems = wiManager.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, true, String.Empty, String.Empty);
-            Assert.AreEqual(13, workItems.Key.Count);
+            Assert.AreEqual(17, workItems.Key.Count);
             Assert.IsTrue(workItems.Value.HasRight(Enum_UserRights.WorkItem_ImportWorkplan));
 
             //-----------------------
@@ -136,8 +136,8 @@ namespace Etsi.Ultimate.Tests.Business
             releaseIds.Add(527);
             //Show All Records
             Assert.AreEqual(18, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty));
-            //Hide 100% records
-            Assert.AreEqual(13, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty));
+            //Hide 100% records at level 1
+            Assert.AreEqual(17, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty));
 
             //-----------------------
             //Test with 2 Release Ids
