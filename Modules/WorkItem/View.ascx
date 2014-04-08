@@ -314,16 +314,15 @@
             </ContentTemplate>
         </telerik:RadWindow>
 
-        <telerik:RadWindow ID="RadWindow_workItemCount" runat="server" Modal="true" Title="Warning.." Width="400" Height="180" VisibleStatusbar="false" Behaviors="Close">
+        <telerik:RadWindow ID="RadWindow_workItemCount" runat="server" Modal="true" Title="Warning." Width="400" Height="180" VisibleStatusbar="false" Behaviors="Close">
             <ContentTemplate>
                 <div class="contentModal" id="wiCount">
                     <div class="wiHeader">
-                        Query might take a long time to perform..<br />
-                        Do you want to refine the search?
+                        Query will return many records and might therefore be long to display.
                     </div>
                     <div class="wiFooter">
-                        <telerik:RadButton ID="rbworkItemCountOk" runat="server" Text="Yes" OnClick="rbWorkItemCountOk_Click"></telerik:RadButton>
-                        <telerik:RadButton ID="rbworkItemCountCancel" runat="server" Text="No" OnClientClicked="cancel" AutoPostBack="false"></telerik:RadButton>
+                        <telerik:RadButton ID="rbworkItemCountOk" runat="server" Text="Confirm" OnClick="rbWorkItemCountOk_Click"></telerik:RadButton>
+                        <telerik:RadButton ID="rbworkItemCountCancel" runat="server" Text="Cancel" OnClientClicked="cancel" AutoPostBack="false"></telerik:RadButton>
                     </div>
                 </div>
             </ContentTemplate>
@@ -372,6 +371,11 @@
     }
     function cancel() {
         closeAllModals();
+        var panelBar = $find("<%= rpbSearch.ClientID %>");
+        var item = panelBar.get_items().getItem(0);
+        if (item) {
+            item.expand();
+        }
     }
 
     /*-- TELERIK EVENTS --*/
