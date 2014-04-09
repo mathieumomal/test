@@ -14,12 +14,14 @@
   </UserRole>
   <UserRole value="StaffMember">
 	<Right value="Remarks_ViewPrivate"/>
+	<Right value="Remarks_AddPrivateByDefault"/>
 	<Right value="Release_Edit_Remarks"/>
   </UserRole>
   <UserRole value="CommitteeOfficial">
   </UserRole>
   <UserRole value="WorkPlanManager">
 	<Right value="Remarks_ViewPrivate"/>
+	<Right value="Remarks_AddPrivateByDefault"/>
 	<Right value="Release_ViewCompleteDetails"/>
 	<Right value="WorkItem_ImportWorkplan"/>
   </UserRole>
@@ -29,6 +31,7 @@
 	<Right value="Release_Freeze"/>
 	<Right value="Release_Close"/>
 	<Right value="Remarks_ViewPrivate"/>
+	<Right value="Remarks_AddPrivateByDefault"/>
 	<Right value="Release_ViewCompleteDetails"/>
 	<Right value="WorkItem_ImportWorkplan"/>
   </UserRole>
@@ -38,6 +41,7 @@
 	<Right value="Release_Freeze"/>
 	<Right value="Release_Close"/>
 	<Right value="Remarks_ViewPrivate"/>
+	<Right value="Remarks_AddPrivateByDefault"/>
 	<Right value="WorkItem_ImportWorkplan"/>
   </UserRole>
 </Rights>

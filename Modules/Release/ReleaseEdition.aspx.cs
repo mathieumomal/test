@@ -140,12 +140,11 @@ namespace Etsi.Ultimate.Module.Release
             //Get display name
             IPersonService svc = ServicesFactory.Resolve<IPersonService>();
             string personDisplayName = svc.GetPersonDisplayName(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()));
-            bool isUserMCCMember = svc.IsUserMCCMember(UserId);
             datasource.Add(new Domain.Remark()
             {
                 Fk_PersonId = UserId,
                 Fk_ReleaseId = ReleaseId,
-                IsPublic = isUserMCCMember ? false : true,
+                IsPublic = releaseRemarks.UserRights != null ? releaseRemarks.UserRights.HasRight(Domain.Enum_UserRights.Remarks_AddPrivateByDefault): false,
                 CreationDate = DateTime.UtcNow,
                 RemarkText = releaseRemarks.RemarkText,
                 PersonName = personDisplayName

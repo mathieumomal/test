@@ -18,21 +18,6 @@ namespace Etsi.Ultimate.Services
         }
 
         /// <summary>
-        /// Check whether the user is MCC member or not
-        /// </summary>
-        /// <param name="personID">Person ID</param>
-        /// <returns>true/false</returns>
-        public bool IsUserMCCMember(int personID)
-        {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
-            {
-                var rightsManager = new RightsManager();
-                rightsManager.UoW = uoW;
-                return rightsManager.IsUserMCCMember(personID);
-            }
-        }
-
-        /// <summary>
         /// Get Rights for the user
         /// </summary>
         /// <param name="personId">Person Id</param>

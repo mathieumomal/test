@@ -20,7 +20,7 @@ namespace Etsi.Ultimate.DomainClasses
         {
             get
             {
-                var tmpRemarks = this.Remarks.FirstOrDefault();
+                var tmpRemarks = this.Remarks.LastOrDefault();
                 return (tmpRemarks != null) ? tmpRemarks.RemarkText : string.Empty;
             }
         }

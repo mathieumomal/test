@@ -82,6 +82,7 @@
     <Compile Include="Business\WorkItemCsvParserTest.cs" />
     <Compile Include="Business\WorkItemManagerTest.cs" />
     <Compile Include="Business\WorkPlanExporterTest.cs" />
+    <Compile Include="DomainClasses\WorkItemTest.cs" />
     <Compile Include="DomainClasses\RightsContainerTest.cs" />
     <Compile Include="FakeContext.cs" />
     <Compile Include="FakeManagers\RightsManagerFake.cs" />
@@ -119,7 +120,6 @@
     <Compile Include="Repositories\TestEnum_ReleaseStatusRepository.cs" />
     <Compile Include="Repositories\TestReleaseRepository.cs" />
     <Compile Include="Services\MeetingServiceTest.cs" />
-    <Compile Include="Services\PersonServiceTest.cs" />
     <Compile Include="Services\ReleaseServiceTest.cs" />
     <Compile Include="Services\UrlServiceTest.cs" />
     <Compile Include="Services\WorkItemServiceTest.cs" />

@@ -25,6 +25,7 @@ namespace Etsi.Ultimate.DomainClasses
         WorkItem_ImportWorkplan,
         General_ViewPersonalData,
 
-        Remarks_ViewPrivate
+        Remarks_ViewPrivate,
+        Remarks_AddPrivateByDefault,
     }
 }

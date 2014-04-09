@@ -398,6 +398,7 @@
             open_RadWindow_workItemConfirmation();
         } if (arguments.EventTarget == "<%= btnConfirmImport.UniqueID %>") {
             open_RadWindow_workItemState();
+            $("#importProgressIcon").css("visibility", "hidden");
         }
     }
     function OnClientValidationFailed() {
