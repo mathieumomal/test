@@ -42,6 +42,20 @@
             right: 45%;
         }
 
+    .workItem_0 {
+        color: red;
+        font-weight: bold;
+    }
+
+    .workItem_1 {
+        color: blue;
+        font-weight: bold;
+    }
+
+    .workItem_2 {
+        color: black;
+        font-weight: bold;
+    }
 </style>
 
 <asp:UpdateProgress ID="updateProgressWorkItemsTree" runat="server"
@@ -50,7 +64,8 @@
         <div class="modalBackground">
         </div>
         <div class="updateProgress fixed">
-            <asp:Image ID="imgProgress" runat="server" Class="rotating" ImageUrl="~/DesktopModules/WorkItem/images/hourglass.png" Width="45" /></div>
+            <asp:Image ID="imgProgress" runat="server" Class="rotating" ImageUrl="~/DesktopModules/WorkItem/images/hourglass.png" Width="45" />
+        </div>
     </ProgressTemplate>
 </asp:UpdateProgress>
 
@@ -144,7 +159,7 @@
                         <telerik:TreeListTemplateColumn  DataField="Name" UniqueName="Name" HeaderText="Name">
                             <HeaderStyle Font-Bold="True" Width="20%"/> 
                             <ItemTemplate>
-                                <div style="text-align:left;<%# DataBinder.Eval(Container.DataItem,"GetStyleBasedOnLevel")%>"><%# DataBinder.Eval(Container.DataItem,"Name")%></div>  
+                                <div class="workItem_<%# DataBinder.Eval(Container.DataItem,"WiLevel")%>" style="text-align:left;"><%# DataBinder.Eval(Container.DataItem,"Name")%></div>  
                             </ItemTemplate>
                         </telerik:TreeListTemplateColumn>
                         <telerik:TreeListBoundColumn DataField="Acronym" UniqueName="Acronym" HeaderText="Acronym">
