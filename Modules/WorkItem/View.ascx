@@ -62,10 +62,6 @@
     .breakWord {
         word-break: break-all !important;
     }
-    .RadTreeList .rtlHeader
-    {
-        width:98.8%;
-    }
 </style>
 
 <asp:UpdateProgress ID="updateProgressWorkItemsTree" runat="server"
@@ -131,9 +127,10 @@
                                 <tr>
                                     <td>Acronym</td>
                                     <td>
-                                        <telerik:RadAutoCompleteBox ID="racAcronym" runat="server" InputType="Text" AllowCustomEntry="true" Width="200" DropDownWidth="200" DropDownHeight="150" Filter="StartsWith">
+                                        <telerik:RadAutoCompleteBox ID="racAcronym" OnClientTextChanged="racAcronym_TextChanged" runat="server" InputType="Text" AllowCustomEntry="true" Width="200" DropDownWidth="200" DropDownHeight="150" Filter="StartsWith">
                                             <TextSettings SelectionMode="Single" />
                                         </telerik:RadAutoCompleteBox>
+                                        <asp:HiddenField ID="hidAcronym" runat="server"/>
                                     </td>
                                     <td>Hide Completed Items</td>
                                     <td>
@@ -165,9 +162,9 @@
 
                     <telerik:RadTreeList ID="rtlWorkItems" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" runat="server" OnNeedDataSource="rtlWorkItems_NeedDataSource"
                         ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="false" AllowPaging="false" AllowFilteringByColumn="false">
-                        <ClientSettings>
+                        <clientsettings>
                             <Scrolling AllowScroll="true" UseStaticHeaders="true" />
-                        </ClientSettings>
+                        </clientsettings>
                         <columns>
                         <telerik:TreeListTemplateColumn  DataField="Name" UniqueName="Name" HeaderText="Name" ItemStyle-CssClass="breakWord">
                             <HeaderStyle Font-Bold="True" Width="20%"/> 
@@ -400,6 +397,8 @@
     function closeAllModals() {
         var manager = GetRadWindowManager();
         manager.closeAll();
+
+        clearTimeout(timeout);
     }
     function clearFilesToUpload() {
         var upload = $find("<%= RdAsyncUpload.ClientID %>");
@@ -457,11 +456,15 @@
         }
     }
 
+    var timeout;
+
     function autoConfirmSearch() {
-        setTimeout(function () { $('#<%=rbworkItemCountOk.ClientID %>').click(); }, 10000)
+        timeout = window.setTimeout(function () { $('#<%=rbworkItemCountOk.ClientID %>').click(); }, 10000)
     }
 
-    //rbworkItemCountOk
+    function racAcronym_TextChanged(sender, eventArgs){
+        $('#<%=hidAcronym.ClientID %>').val(eventArgs.get_text());
+    }
 </script>
 
 

@@ -144,7 +144,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 racAcronym.DataBind();
 
                 // Display or not import WI
-                List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
+                //List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
                 var personService = ServicesFactory.Resolve<IPersonService>();
 
                 var userRights = personService.GetRights(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()));
@@ -300,7 +300,7 @@ namespace Etsi.Ultimate.Module.WorkItem
 
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
 
-            if (wiService.GetWorkItemsCountBySearchCriteria(releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, racAcronym.Text.Trim().TrimEnd(';'), txtName.Text) > 0)
+            if (wiService.GetWorkItemsCountBySearchCriteria(releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, racAcronym.Text.Trim().TrimEnd(';'), txtName.Text) > 500)
             {
                 string script = "function f(){$find(\"" + RadWindow_workItemCount.ClientID + "\").show(); Sys.Application.remove_load(f);}Sys.Application.add_load(f);autoConfirmSearch();";
                 ScriptManager.RegisterStartupScript(Page, Page.GetType(), "customConfirmOpener", script, true);
@@ -347,7 +347,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         protected void rtlWorkItems_NeedDataSource(object sender, TreeListNeedDataSourceEventArgs e)
         {
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
-            var wiData = wiService.GetWorkItemsBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, racAcronym.Text.Trim().TrimEnd(';'), txtName.Text);
+            var wiData = wiService.GetWorkItemsBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, hidAcronym.Value.Trim().TrimEnd(';'), txtName.Text);
             rtlWorkItems.DataSource = wiData.Key;
         }
 
@@ -371,7 +371,10 @@ namespace Etsi.Ultimate.Module.WorkItem
 
                 racAcronym.Entries.Clear();
                 if (!String.IsNullOrEmpty(Request.QueryString["acronym"]))
+                {
                     racAcronym.Entries.Add(new AutoCompleteBoxEntry(Request.QueryString["acronym"].ToString(), String.Empty));
+                    hidAcronym.Value = Request.QueryString["acronym"].ToString();
+                }
             }
 
             loadWorkItemData();
@@ -408,7 +411,8 @@ namespace Etsi.Ultimate.Module.WorkItem
             string releaseIds = String.Join(",", releaseSearchControl.SelectedReleaseIds);
             int granularity = Convert.ToInt32(rddGranularity.SelectedValue);
             bool hidePercentComplete = chkHideCompletedItems.Checked;
-            string wiAcronym = racAcronym.Text.Trim().TrimEnd(';');
+            string wiAcronym = hidAcronym.Value.Trim().TrimEnd(';');
+            racAcronym.Entries.Add(new AutoCompleteBoxEntry(wiAcronym, String.Empty));
             string wiName = txtName.Text;
 
             StringBuilder searchString = new StringBuilder();
@@ -474,7 +478,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 urlParams.Add("granularity", rddGranularity.SelectedValue);
                 urlParams.Add("hideCompleted", chkHideCompletedItems.Checked.ToString());
                 if (!String.IsNullOrEmpty(racAcronym.Text.Trim().TrimEnd(';')))
-                    urlParams.Add("acronym", racAcronym.Text.Trim().TrimEnd(';'));
+                    urlParams.Add("acronym", hidAcronym.Value.Trim().TrimEnd(';'));
                 if (!String.IsNullOrEmpty(txtName.Text.Trim()))
                     urlParams.Add("name", txtName.Text);
             }
