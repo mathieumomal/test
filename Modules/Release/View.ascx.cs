@@ -210,6 +210,7 @@ namespace Etsi.Ultimate.Module.Release
                 lblReleaseName.Text = currentRelease.Name;
                 lnkReleaseDescription.Text = currentRelease.Name;
                 lnkReleaseDescription.NavigateUrl = currentRelease.Description;
+                lnkReleaseDescription.Target = "_blank";
 
                 //Analyse column : Closure date
                 if (currentRelease.ClosureDate != null && currentRelease.ClosureMtgRef != null)
