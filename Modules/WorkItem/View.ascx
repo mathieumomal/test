@@ -56,6 +56,10 @@
         color: black;
         font-weight: bold;
     }
+
+    .breakWord {
+        word-break:break-all !important;
+    }
 </style>
 
 <asp:UpdateProgress ID="updateProgressWorkItemsTree" runat="server"
@@ -156,46 +160,46 @@
                     <telerik:RadTreeList ID="rtlWorkItems" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" runat="server" OnNeedDataSource="rtlWorkItems_NeedDataSource"
                         ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="false" AllowPaging="false" AllowFilteringByColumn="false">
                         <columns>
-                        <telerik:TreeListTemplateColumn  DataField="Name" UniqueName="Name" HeaderText="Name">
+                        <telerik:TreeListTemplateColumn  DataField="Name" UniqueName="Name" HeaderText="Name" ItemStyle-CssClass="breakWord">
                             <HeaderStyle Font-Bold="True" Width="20%"/> 
                             <ItemTemplate>
                                 <div class="workItem_<%# DataBinder.Eval(Container.DataItem,"WiLevel")%>" style="text-align:left;"><%# DataBinder.Eval(Container.DataItem,"Name")%></div>  
                             </ItemTemplate>
                         </telerik:TreeListTemplateColumn>
-                        <telerik:TreeListBoundColumn DataField="Acronym" UniqueName="Acronym" HeaderText="Acronym">
+                        <telerik:TreeListBoundColumn DataField="Acronym" UniqueName="Acronym" HeaderText="Acronym" ItemStyle-CssClass="breakWord">
                             <HeaderStyle Font-Bold="True"/> 
                         </telerik:TreeListBoundColumn>
-                        <telerik:TreeListBoundColumn DataField="UID" UniqueName="UID"  HeaderText="UID">
+                        <telerik:TreeListBoundColumn DataField="UID" UniqueName="UID"  HeaderText="UID" ItemStyle-CssClass="breakWord">
                             <HeaderStyle Font-Bold="True"/> 
                         </telerik:TreeListBoundColumn>
-                        <telerik:TreeListTemplateColumn DataField="Release" UniqueName="Release" HeaderText="Release">
+                        <telerik:TreeListTemplateColumn DataField="Release" UniqueName="Release" HeaderText="Release" ItemStyle-CssClass="breakWord">
                             <HeaderStyle Font-Bold="True"/> 
                             <ItemTemplate>
                                 <span><%# DataBinder.Eval(Container.DataItem,"Release.Code") %></span>  
                             </ItemTemplate>      
                         </telerik:TreeListTemplateColumn>
-                        <telerik:TreeListTemplateColumn DataField="StartDate" UniqueName="StartDate"  HeaderText="Start date">
+                        <telerik:TreeListTemplateColumn DataField="StartDate" UniqueName="StartDate"  HeaderText="Start date" ItemStyle-CssClass="breakWord">
                             <HeaderStyle Font-Bold="True"/> 
                             <ItemTemplate>
                                 <span><%# DataBinder.Eval(Container.DataItem,"StartDate", "{0:yyyy-MM-dd}") %></span>  
                             </ItemTemplate>      
                         </telerik:TreeListTemplateColumn>
-                        <telerik:TreeListTemplateColumn DataField="EndDate" UniqueName="EndDate"  HeaderText="End date">
+                        <telerik:TreeListTemplateColumn DataField="EndDate" UniqueName="EndDate"  HeaderText="End date" ItemStyle-CssClass="breakWord">
                             <HeaderStyle Font-Bold="True"/> 
                             <ItemTemplate>
                                 <span><%# DataBinder.Eval(Container.DataItem,"EndDate", "{0:yyyy-MM-dd}") %></span>  
                             </ItemTemplate>   
                         </telerik:TreeListTemplateColumn>
-                        <telerik:TreeListTemplateColumn DataField="Completion" UniqueName="Completion"  HeaderText="Completion rate">
+                        <telerik:TreeListTemplateColumn DataField="Completion" UniqueName="Completion"  HeaderText="Completion rate" ItemStyle-CssClass="breakWord">
                             <HeaderStyle Font-Bold="True"/> 
                             <ItemTemplate>
                                 <span><%# String.Format("{0:0'%}",  DataBinder.Eval(Container.DataItem,"Completion") )%></span>  
                             </ItemTemplate>     
                         </telerik:TreeListTemplateColumn>
-                        <telerik:TreeListBoundColumn DataField="ResponsibleGroups" UniqueName="ResponsibleGroups" HeaderText="Responsible groups">
+                        <telerik:TreeListBoundColumn DataField="ResponsibleGroups" UniqueName="ResponsibleGroups" HeaderText="Responsible groups" ItemStyle-CssClass="breakWord">
                             <HeaderStyle Font-Bold="True"/> 
                         </telerik:TreeListBoundColumn>
-                        <telerik:TreeListTemplateColumn  UniqueName="LatestRemark"   HeaderText="Latest remark">
+                        <telerik:TreeListTemplateColumn  UniqueName="LatestRemark"   HeaderText="Latest remark" ItemStyle-CssClass="breakWord">
                             <HeaderStyle Font-Bold="True" Width="16%"/> 
                             <ItemTemplate>
                                 <div style="text-align:left"><%# DataBinder.Eval(Container.DataItem,"ShortLatestRemark")%></div>  
