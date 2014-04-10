@@ -19,6 +19,7 @@
         left: 0px;
         position: fixed;
         height: 100%;
+        z-index:3000;
     }
 
     .updateProgress {
@@ -33,6 +34,7 @@
         background-color: White;
         padding: 10px;
         -moz-border-radius: 15px;
+        z-index:3001;
         border-radius: 15px;
     }
 

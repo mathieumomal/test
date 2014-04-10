@@ -202,7 +202,6 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [Test]
-        [ExpectedException(typeof(FileNotFoundException))]
         public void AnalyseWorkPlanForImport_ZipDoesNotExist()
         {
             string basePath = "..\\..\\TestData\\WorkItems\\";
@@ -213,6 +212,8 @@ namespace Etsi.Ultimate.Tests.Services
 
             var wiService = new WorkItemService();
             var result = wiService.AnalyseWorkPlanForImport(basePath + zipName);
+            Assert.AreEqual(1, result.Value.GetNumberOfErrors());
+            Assert.AreEqual(Utils.Localization.WorkItem_Import_Error_Analysis, result.Value.ErrorList.First());
         }
 
        

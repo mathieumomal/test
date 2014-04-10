@@ -65,7 +65,7 @@
             </tr>
             <tr>
                 <td>
-                    <asp:TextBox ID="txtLink" runat="server" Text="http://3gpp.org/..." />
+                    <asp:TextBox ID="txtLink" runat="server" Text="http://3gpp.org/..." onclick="this.setSelectionRange(0, this.value.length)" />
                 </td>
             </tr>
         </table>
