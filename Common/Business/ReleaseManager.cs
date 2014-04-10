@@ -162,6 +162,7 @@ namespace Etsi.Ultimate.Business
             releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
             releaseRepo.UoW = UoW;
 
+            this.personId = personId;
             // Synchronize the release with a new release. This will help ensure all the dates are present
             // Then cleanup the history and add the correct entry.
             var aReleaseToAdd = new Release();
