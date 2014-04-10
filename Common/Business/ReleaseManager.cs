@@ -361,11 +361,15 @@ namespace Etsi.Ultimate.Business
             if (release.EndMtgId.GetValueOrDefault() != releaseToUpdate.EndMtgId)
             {
                 // Compute old end date.
-                string oldEndDate = "None";
+                string oldEndDate = "";
+                string oldEndMeeting = "None";
                 if (releaseToUpdate.EndMtgId.GetValueOrDefault() > 0)
+                {
                     oldEndDate = releaseToUpdate.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd");
-
-                string newEndDateStr = "None";
+                    oldEndMeeting = releaseToUpdate.EndMtgRef;
+                }
+                string newEndDateStr = "";
+                string newEndMtgStr = "None";
                 if (release.EndMtgId.GetValueOrDefault() > 0)
                 {
                     var mtg = mtgMgr.GetMeetingById(release.EndMtgId.Value);
@@ -374,11 +378,13 @@ namespace Etsi.Ultimate.Business
                         release.EndMtgRef = mtg.MtgShortRef;
                         release.EndDate = mtg.END_DATE.GetValueOrDefault();
                         newEndDateStr = release.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd");
+                        newEndMtgStr = release.EndMtgRef;
                     }
                 }
                 else
                     release.EndMtgId = 0;
-                changes.Add("End date: " + oldEndDate + " => " + newEndDateStr);
+                changes.Add(String.Format("End date: {0} ({1}) => {2} ({3})",
+                    oldEndDate, oldEndMeeting, newEndDateStr, newEndMtgStr));
 
                 releaseToUpdate.EndMtgId = release.EndMtgId;
                 releaseToUpdate.EndDate = release.EndDate;
@@ -388,11 +394,16 @@ namespace Etsi.Ultimate.Business
             // Closure date ==> Logged
             if (releaseToUpdate.ClosureMtgId.GetValueOrDefault() != release.ClosureMtgId)
             {
-                string oldClosureDate = "None";
+                string oldClosureDate = "";
+                string oldClosureMtg = "None";
                 if (releaseToUpdate.ClosureMtgId.GetValueOrDefault() > 0)
+                {
                     oldClosureDate = releaseToUpdate.ClosureDate.GetValueOrDefault().ToString("yyyy-MM-dd");
+                    oldClosureMtg = releaseToUpdate.ClosureMtgRef;
+                }
 
-                string newClosureDateStr = "None";
+                string newClosureDateStr = "";
+                string newClosureMtgStr = "None";
                 if (release.ClosureMtgId.GetValueOrDefault() > 0)
                 {
                     var mtg = mtgMgr.GetMeetingById(release.ClosureMtgId.Value);
@@ -401,11 +412,13 @@ namespace Etsi.Ultimate.Business
                         release.ClosureMtgRef = mtg.MtgShortRef;
                         release.ClosureDate = mtg.END_DATE.GetValueOrDefault();
                         newClosureDateStr = release.ClosureDate.GetValueOrDefault().ToString("yyyy-MM-dd");
+                        newClosureMtgStr = release.ClosureMtgRef;
                     }
                 }
                 else
                     release.ClosureMtgId = 0;
-                changes.Add("Closure date: " + oldClosureDate + " => " + newClosureDateStr);
+                changes.Add(String.Format("Closure date: {0} ({1}) => {2} ({3})",
+                    oldClosureDate, oldClosureMtg, newClosureDateStr, newClosureMtgStr));
 
                 releaseToUpdate.ClosureDate = release.ClosureDate;
                 releaseToUpdate.ClosureMtgId = release.ClosureMtgId;

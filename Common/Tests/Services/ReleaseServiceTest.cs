@@ -292,6 +292,8 @@ namespace Etsi.Ultimate.Tests.Services
                 Stage2FreezeMtgRef = "d4",
                 Stage3FreezeDate = DateTime.Today.AddDays(1),
                 Stage3FreezeMtgRef = ("a pas afficher"),
+                EndMtgRef = "SP-12",
+                EndDate = new DateTime(2014,4,7),
                 SortOrder = 20
             };
             ReleaseToTest.Name = editedName;
@@ -308,7 +310,9 @@ namespace Etsi.Ultimate.Tests.Services
                                                                 && DateTime.Compare(y.Stage2FreezeDate.Value,MeetingsSet.ElementAt(1).END_DATE.Value) == 0 
                                                                 && DateTime.Compare(y.Stage3FreezeDate.Value,MeetingsSet.ElementAt(2).END_DATE.Value) == 0
                                                                 && DateTime.Compare(y.EndDate.Value, MeetingsSet.ElementAt(3).END_DATE.Value) == 0
-                                                                && DateTime.Compare(y.ClosureDate.Value, MeetingsSet.ElementAt(4).END_DATE.Value) == 0)));
+                                                                && DateTime.Compare(y.ClosureDate.Value, MeetingsSet.ElementAt(4).END_DATE.Value) == 0
+                                                                && y.Histories.Count == 1
+                                                                && y.Histories.First().HistoryText.Contains("End date"))));
             
             mockDataContext.AssertWasCalled(x => x.SaveChanges(), y => y.Repeat.Once());
 

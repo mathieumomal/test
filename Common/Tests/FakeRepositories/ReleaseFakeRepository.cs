@@ -46,7 +46,7 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             var closedStatus = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, Code = "Closed" };
             releases.Add(new Release() { Pk_ReleaseId = OPENED_RELEASE_ID, Name = "First release", Code="Rel-1", ShortName="R1", Fk_ReleaseStatus = 1, Enum_ReleaseStatus = openStatus, 
                 Remarks = new List<Remark>() { aRemark }, Histories = new List<History>() { aHistory1, aHistory2 } });
-            releases.Add(new Release() { Pk_ReleaseId = FROZEN_RELEASE_ID, Name = "Second release", Fk_ReleaseStatus = 2, Enum_ReleaseStatus = frozenStatus, Code = "Rel-2"});
+            releases.Add(new Release() { Pk_ReleaseId = FROZEN_RELEASE_ID, Name = "Second release", Fk_ReleaseStatus = 2, Enum_ReleaseStatus = frozenStatus, Code = "Rel-2", EndDate=new DateTime(2014,04,10), EndMtgRef="Test"});
             releases.Add(new Release() { Pk_ReleaseId = 3, Name = "Third release", Fk_ReleaseStatus = 2, Enum_ReleaseStatus = frozenStatus, Code = "Rel-3"});
             releases.Add(new Release() { Pk_ReleaseId = CLOSED_RELEASE_ID, Name = "Fourth release", Fk_ReleaseStatus = 3, Enum_ReleaseStatus = closedStatus, Code = "Rel-4"});
 
