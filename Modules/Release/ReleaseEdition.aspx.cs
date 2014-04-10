@@ -376,6 +376,9 @@ namespace Etsi.Ultimate.Module.Release
             {
                 errorList += "End date must be greater than Freeze stage 3 date.";
                 RadWindowManager1.RadAlert(errorList, 400, 150, "Error", "", "images/error.png");
+                
+                SaveBtnDisabled.Style.Add("display", "none");
+                SaveBtn.Style.Remove("display");
             }
             else
             {
