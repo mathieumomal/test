@@ -62,6 +62,10 @@
     .breakWord {
         word-break: break-all !important;
     }
+    .RadTreeList .rtlHeader
+    {
+        width:98.8%;
+    }
 </style>
 
 <asp:UpdateProgress ID="updateProgressWorkItemsTree" runat="server"
@@ -465,6 +469,31 @@
     function racAcronym_TextChanged(sender, eventArgs){
         $('#<%=hidAcronym.ClientID %>').val(eventArgs.get_text());
     }
+
+    //--- Adapt workItem's list height
+
+    //Catch the "contentHeight" event (in the mainpage.ascx)
+    $("#content").on('contentHeight', function (event, hContent) {
+        resizeTree(hContent);
+    });
+
+    function resizeTree(hContent) {
+        var tree = $('#<%= rtlWorkItems.ClientID %>');
+        /*console.log(tree);*/
+        var treeDiv = tree.find(".rtlDataDiv")[0];
+        /*console.log(treeDiv);*/
+        /*console.log(hContent);*/
+        if ($('.livetabssouthstreet ').length == 0) {
+            var securityValue = 120;
+        } else {
+            var securityValue = 225;
+        }
+
+        treeDiv.style.height = (hContent - securityValue) + "px";
+        /*console.log(hContent+"-"+treeDiv.style.height);*/
+    }
+
+    //--- Adapt workItem's list height
 </script>
 
 
