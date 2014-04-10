@@ -307,6 +307,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             else
             {
                 fromShortUrl = false;
+                ultShareUrl.IsShortUrlChecked = false;
                 loadWorkItemData();
             }
         }

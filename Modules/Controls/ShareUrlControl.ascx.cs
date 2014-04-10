@@ -34,6 +34,11 @@ namespace Etsi.Ultimate.Controls
             }
         }
         public int TabId { get; set; }
+        public bool IsShortUrlChecked
+        {
+            get { return CheckBoxGetShortUrl.Checked; }
+            set { CheckBoxGetShortUrl.Checked = value; }
+        }
 
         public Dictionary<string, string> UrlParams
         {
