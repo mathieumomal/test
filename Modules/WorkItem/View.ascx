@@ -62,6 +62,10 @@
     .breakWord {
         word-break:break-all !important;
     }
+    .RadTreeList .rtlHeader
+    {
+        width:98.8%;
+    }
 </style>
 
 <asp:UpdateProgress ID="updateProgressWorkItemsTree" runat="server"
@@ -160,7 +164,10 @@
                 <td>
 
                     <telerik:RadTreeList ID="rtlWorkItems" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" runat="server" OnNeedDataSource="rtlWorkItems_NeedDataSource"
-                        ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="false" AllowPaging="false" AllowFilteringByColumn="false" Height="375" ClientSettings-Scrolling-AllowScroll="True">
+                        ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="false" AllowPaging="false" AllowFilteringByColumn="false">
+                        <ClientSettings>
+                            <Scrolling AllowScroll="true" UseStaticHeaders="true" />
+                        </ClientSettings>
                         <columns>
                         <telerik:TreeListTemplateColumn  DataField="Name" UniqueName="Name" HeaderText="Name" ItemStyle-CssClass="breakWord">
                             <HeaderStyle Font-Bold="True" Width="20%"/> 
