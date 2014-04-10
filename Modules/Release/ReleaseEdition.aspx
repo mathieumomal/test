@@ -87,8 +87,10 @@
                                         <telerik:RadDatePicker ID="ReleaseStartDateVal" runat="server">
                                             <dateinput id="ReleaseStartDateValInput" dateformat="yyyy-MM-dd"></dateinput>
                                         </telerik:RadDatePicker>
-                                        <asp:RequiredFieldValidator runat="server" ID="RequiredFieldValidator1" ControlToValidate="ReleaseStartDateVal"
-                                            ErrorMessage="Enter a valid date!"></asp:RequiredFieldValidator>
+                                        <asp:CompareValidator ID="dateValidator" runat="server" ControlToValidate ="ReleaseStartDateVal" Operator="DataTypeCheck" Type="Date" 
+                                            ErrorMessage="Enter a valid date!" ></asp:CompareValidator>
+
+                                        
                                     </td>
                                 </tr>
                                 <tr>
@@ -236,7 +238,7 @@
                     </telerik:RadMultiPage>
                     </telerik:RadAjaxPanel>
                     <div class="releaseDetailsAction">
-                        <asp:LinkButton ID="SaveBtn" runat="server" Text="Save" CssClass="btn3GPP-success" OnClick="SaveEditedRelease_Click" />
+                        <asp:LinkButton ID="SaveBtn" runat="server" Text="Save" CssClass="btn3GPP-success" OnClick="SaveEditedRelease_Click"/>
                         <asp:LinkButton ID="SaveBtnDisabled" runat="server" Text="Save" CssClass="btn3GPP-default" disabled="disabled" OnClientClick="return false;" />
                         <asp:LinkButton ID="ExitBtn" runat="server" Text="Cancel" CssClass="btn3GPP-success" OnClick="CloseReleaseDetails_Click" />
                         
