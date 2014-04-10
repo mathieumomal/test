@@ -300,7 +300,7 @@ namespace Etsi.Ultimate.Module.WorkItem
 
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
 
-            if (wiService.GetWorkItemsCountBySearchCriteria(releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, racAcronym.Text.Trim().TrimEnd(';'), txtName.Text) > 500)
+            if (wiService.GetWorkItemsCountBySearchCriteria(releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, hidAcronym.Value.Trim().TrimEnd(';'), txtName.Text) > 500)
             {
                 string script = "function f(){$find(\"" + RadWindow_workItemCount.ClientID + "\").show(); Sys.Application.remove_load(f);}Sys.Application.add_load(f);autoConfirmSearch();";
                 ScriptManager.RegisterStartupScript(Page, Page.GetType(), "customConfirmOpener", script, true);
