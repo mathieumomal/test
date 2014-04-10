@@ -24,7 +24,6 @@ namespace Etsi.Ultimate.Services
         public KeyValuePair<string, ImportReport> AnalyseWorkPlanForImport(String path)
         {
            
-            
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var csvImport = new WorkItemImporter() { UoW = uoW };

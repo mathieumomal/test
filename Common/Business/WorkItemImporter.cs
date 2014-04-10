@@ -21,32 +21,41 @@ namespace Etsi.Ultimate.Business
 
         public KeyValuePair<string, ImportReport> TryImportCsv(string filePath)
         {
-
-            var path = filePath;
-            // Treat the file
-            if (path.EndsWith("zip"))
+            try
             {
-                path = ExtractZipGetCsv(filePath);
-                if (String.IsNullOrEmpty(path))
+                var path = filePath;
+                // Treat the file
+                if (path.EndsWith("zip"))
                 {
-                    var report = new ImportReport();
-                    report.LogError(Utils.Localization.WorkItem_Import_Bad_Zip_File);
-                    return new KeyValuePair<string, ImportReport>("", report);
+                    path = ExtractZipGetCsv(filePath);
+                    if (String.IsNullOrEmpty(path))
+                    {
+                        var report = new ImportReport();
+                        report.LogError(Utils.Localization.WorkItem_Import_Bad_Zip_File);
+                        return new KeyValuePair<string, ImportReport>("", report);
+                    }
+
                 }
-                
+
+                string token = "";
+
+                var csvParser = ManagerFactory.Resolve<IWorkItemCsvParser>();
+                csvParser.UoW = UoW;
+                var result = csvParser.ParseCsv(path);
+                if (result.Value.GetNumberOfErrors() == 0)
+                {
+                    token = Guid.NewGuid().ToString();
+                    CacheManager.InsertForLimitedTime(CACHE_KEY + token, result.Key, 10);
+                }
+                return new KeyValuePair<string, ImportReport>(token, result.Value);
             }
-
-            string token = "";
-
-            var csvParser = ManagerFactory.Resolve<IWorkItemCsvParser>();
-            csvParser.UoW = UoW ;
-            var result = csvParser.ParseCsv(path);
-            if (result.Value.GetNumberOfErrors() == 0)
+            catch (Exception e)
             {
-                token = Guid.NewGuid().ToString();
-                CacheManager.InsertForLimitedTime(CACHE_KEY+token, result.Key, 10);
+                Utils.LogManager.Error("Error while analysing workplan: " + e.Message);
+                var report = new ImportReport();
+                report.LogError(Utils.Localization.WorkItem_Import_Error_Analysis);
+                return new KeyValuePair<string, ImportReport>("", report);
             }
-            return new KeyValuePair<string, ImportReport>(token, result.Value);
 
         }
 

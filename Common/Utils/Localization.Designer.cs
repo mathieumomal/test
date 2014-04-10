@@ -160,6 +160,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error occured while analysing workplan. Please check that your login on the site has not expired, and that the settings of the modules are defined. If problem persists, please contact helpdesk..
+        /// </summary>
+        public static string WorkItem_Import_Error_Analysis {
+            get {
+                return ResourceManager.GetString("WorkItem_Import_Error_Analysis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Imported file was not found at {0}. Please check the module configuration, and contact the helpdesk if necessary..
         /// </summary>
         public static string WorkItem_Import_FileNotFound {

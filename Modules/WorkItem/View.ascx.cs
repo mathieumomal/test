@@ -121,7 +121,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                     if (workPlanFile != null)
                     {
                         lblLatestUpdated.Visible = true;
-                        lblLatestUpdated.Text = "Latest Updated " + workPlanFile.CreationDate.ToString("yyyy-MM-dd");
+                        lblLatestUpdated.Text = "Latest Update: " + workPlanFile.CreationDate.ToString("yyyy-MM-dd");
 
                         lnkFtpDownload.Visible = true;
 

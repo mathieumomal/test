@@ -150,6 +150,9 @@
   <data name="WorkItem_Import_DuplicateWorkplanId" xml:space="preserve">
     <value>Workplan id {0} already exist. There might be conflicts when displaying.</value>
   </data>
+  <data name="WorkItem_Import_Error_Analysis" xml:space="preserve">
+    <value>Error occured while analysing workplan. Please check that your login on the site has not expired, and that the settings of the modules are defined. If problem persists, please contact helpdesk.</value>
+  </data>
   <data name="WorkItem_Import_FileNotFound" xml:space="preserve">
     <value>Imported file was not found at {0}. Please check the module configuration, and contact the helpdesk if necessary.</value>
   </data>
