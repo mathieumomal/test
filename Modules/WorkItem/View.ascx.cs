@@ -178,8 +178,8 @@ namespace Etsi.Ultimate.Module.WorkItem
                 HttpWebResponse response = request.GetResponse() as HttpWebResponse;
 
                 // get the status code
-                HttpStatusCode status = response.StatusCode;
-                return status == HttpStatusCode.OK;
+                HttpStatusCode status = response.StatusCode ;
+                return status == HttpStatusCode.OK || status == HttpStatusCode.NotModified;
             }
             catch (Exception e)
             {
