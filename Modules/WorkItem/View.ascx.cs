@@ -28,6 +28,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using Domain = Etsi.Ultimate.DomainClasses;
+using System.Net;
 
 namespace Etsi.Ultimate.Module.WorkItem
 {
@@ -123,7 +124,15 @@ namespace Etsi.Ultimate.Module.WorkItem
                         lblLatestUpdated.Text = "Latest Updated " + workPlanFile.CreationDate.ToString("yyyy-MM-dd");
 
                         lnkFtpDownload.Visible = true;
-                        lnkFtpDownload.NavigateUrl = ConfigVariables.FtpExportAddress + workPlanFile.WorkPlanFilePath;
+
+                        if (IsFileOnFtp(ConfigVariables.FtpExportAddress + workPlanFile.WorkPlanFilePath))
+                        {
+                            lnkFtpDownload.NavigateUrl = ConfigVariables.FtpExportAddress + workPlanFile.WorkPlanFilePath;
+                        }
+                        else
+                        {
+                            lnkFtpDownload.NavigateUrl = ConfigVariables.FtpExportAddress;
+                        }
                     }
 
                     Acronyms = wiService.GetAllAcronyms();
@@ -151,6 +160,30 @@ namespace Etsi.Ultimate.Module.WorkItem
             catch (Exception exc) //Module failed to load
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
+            }
+        }
+
+        private bool IsFileOnFtp(string url)
+        {
+            try
+            {
+            // create the request
+            HttpWebRequest request = WebRequest.Create(url.Replace("ftp://","http://")) as HttpWebRequest;
+
+            // instruct the server to return headers only
+            request.Method = "HEAD";
+
+            // make the connection
+            
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+
+                // get the status code
+                HttpStatusCode status = response.StatusCode;
+                return status == HttpStatusCode.OK;
+            }
+            catch (Exception e)
+            {
+                return false;
             }
         }
 
