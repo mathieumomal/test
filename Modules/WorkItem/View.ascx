@@ -19,7 +19,7 @@
         left: 0px;
         position: fixed;
         height: 100%;
-        z-index:3000;
+        z-index: 3000;
     }
 
     .updateProgress {
@@ -34,7 +34,7 @@
         background-color: White;
         padding: 10px;
         -moz-border-radius: 15px;
-        z-index:3001;
+        z-index: 3001;
         border-radius: 15px;
     }
 
@@ -60,7 +60,7 @@
     }
 
     .breakWord {
-        word-break:break-all !important;
+        word-break: break-all !important;
     }
     .RadTreeList .rtlHeader
     {
@@ -348,15 +348,19 @@
 
         <telerik:RadWindow ID="RadWindow_workItemCount" runat="server" Modal="true" Title="Warning." Width="400" Height="180" VisibleStatusbar="false" Behaviors="Close">
             <ContentTemplate>
+                <asp:UpdatePanel ID="upWorkItemCount" runat="server" UpdateMode="Always">
+                <ContentTemplate>
                 <div class="contentModal" id="wiCount">
                     <div class="wiHeader">
                         Query will return many records and might therefore be long to display.
                     </div>
                     <div class="wiFooter">
-                        <telerik:RadButton ID="rbworkItemCountOk" runat="server" Text="Confirm" OnClick="rbWorkItemCountOk_Click"></telerik:RadButton>
+                        <telerik:RadButton ID="rbworkItemCountOk" runat="server" Text="Confirm" OnClientClicked="closeAllModals" OnClick="rbWorkItemCountOk_Click"></telerik:RadButton>
                         <telerik:RadButton ID="rbworkItemCountCancel" runat="server" Text="Cancel" OnClientClicked="cancel" AutoPostBack="false"></telerik:RadButton>
                     </div>
                 </div>
+                            </ContentTemplate>
+                </asp:UpdatePanel>
             </ContentTemplate>
         </telerik:RadWindow>
     </windows>
@@ -452,6 +456,12 @@
             item.collapse();
         }
     }
+
+    function autoConfirmSearch() {
+        setTimeout(function () { $('#<%=rbworkItemCountOk.ClientID %>').click(); }, 10000)
+    }
+
+    //rbworkItemCountOk
 </script>
 
 

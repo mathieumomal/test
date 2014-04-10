@@ -29,6 +29,7 @@ using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using Domain = Etsi.Ultimate.DomainClasses;
 using System.Net;
+using System.Reflection;
 
 namespace Etsi.Ultimate.Module.WorkItem
 {
@@ -167,18 +168,18 @@ namespace Etsi.Ultimate.Module.WorkItem
         {
             try
             {
-            // create the request
-            HttpWebRequest request = WebRequest.Create(url.Replace("ftp://","http://")) as HttpWebRequest;
+                // create the request
+                HttpWebRequest request = WebRequest.Create(url.Replace("ftp://", "http://")) as HttpWebRequest;
 
-            // instruct the server to return headers only
-            request.Method = "HEAD";
+                // instruct the server to return headers only
+                request.Method = "HEAD";
 
-            // make the connection
-            
+                // make the connection
+
                 HttpWebResponse response = request.GetResponse() as HttpWebResponse;
 
                 // get the status code
-                HttpStatusCode status = response.StatusCode ;
+                HttpStatusCode status = response.StatusCode;
                 return status == HttpStatusCode.OK || status == HttpStatusCode.NotModified;
             }
             catch (Exception e)
@@ -299,9 +300,9 @@ namespace Etsi.Ultimate.Module.WorkItem
 
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
 
-            if (wiService.GetWorkItemsCountBySearchCriteria(releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, racAcronym.Text.Trim().TrimEnd(';'), txtName.Text) > 500)
+            if (wiService.GetWorkItemsCountBySearchCriteria(releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, racAcronym.Text.Trim().TrimEnd(';'), txtName.Text) > 0)
             {
-                string script = "function f(){$find(\"" + RadWindow_workItemCount.ClientID + "\").show(); Sys.Application.remove_load(f);}Sys.Application.add_load(f);";
+                string script = "function f(){$find(\"" + RadWindow_workItemCount.ClientID + "\").show(); Sys.Application.remove_load(f);}Sys.Application.add_load(f);autoConfirmSearch();";
                 ScriptManager.RegisterStartupScript(Page, Page.GetType(), "customConfirmOpener", script, true);
             }
             else
@@ -496,6 +497,29 @@ namespace Etsi.Ultimate.Module.WorkItem
         {
             fromShortUrl = (Request.QueryString["shortUrl"] != null) ? Convert.ToBoolean(Request.QueryString["shortUrl"]) : false;
         }
+
+        #region FIX : Cannot unregister UpdatePanel...
+        protected override void OnInit(EventArgs e)
+        {
+            base.OnInit(e);
+            if (this.upWorkItemCount != null)
+                this.upWorkItemCount.Unload += new EventHandler(UpdatePanel_Unload);
+        }
+        void UpdatePanel_Unload(object sender, EventArgs e)
+        {
+            this.RegisterUpdatePanel(sender as UpdatePanel);
+        }
+        public void RegisterUpdatePanel(UpdatePanel panel)
+        {
+            foreach (MethodInfo methodInfo in typeof(ScriptManager).GetMethods(BindingFlags.NonPublic | BindingFlags.Instance))
+            {
+                if (methodInfo.Name.Equals("System.Web.UI.IScriptManagerInternal.RegisterUpdatePanel"))
+                {
+                    methodInfo.Invoke(ScriptManager.GetCurrent(Page), new object[] { upWorkItemCount });
+                }
+            }
+        }
+        #endregion
 
         #endregion
     }
