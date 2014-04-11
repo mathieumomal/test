@@ -430,6 +430,7 @@ namespace Etsi.Ultimate.Module.WorkItem
 
             //Set Short URL
             ManageShareUrl(releaseIds);
+            ManageFullView(releaseIds);
 
             rtlWorkItems.Rebind();
             rtlWorkItems.CollapseAllItems();
@@ -467,6 +468,25 @@ namespace Etsi.Ultimate.Module.WorkItem
             address += Request["HTTP_HOST"];
             ultShareUrl.BaseAddress = address;
 
+
+            ultShareUrl.UrlParams = ManageUrlParams(selectedReleases);
+        }
+
+        private void ManageFullView(string selectedReleases)
+        {
+            ultFullView.ModuleId = ModuleId;
+            ultFullView.TabId = TabController.CurrentPage.TabID;
+
+            var address = Request.IsSecureConnection ? "https://" : "http://";
+            address += Request["HTTP_HOST"];
+            ultFullView.BaseAddress = address;
+
+            ultFullView.UrlParams = ManageUrlParams(selectedReleases);
+            ultFullView.Display();
+        }
+
+        private Dictionary<string,string> ManageUrlParams(string selectedReleases)
+        {
             var nameValueCollection = HttpContext.Current.Request.QueryString;
             var urlParams = new Dictionary<string, string>();
 
@@ -490,9 +510,9 @@ namespace Etsi.Ultimate.Module.WorkItem
                         urlParams.Add(k, nameValueCollection[k]);
                 }
             }
-
-            ultShareUrl.UrlParams = urlParams;
+            return urlParams;
         }
+
 
         /// <summary>
         /// Populate fields with available query strings

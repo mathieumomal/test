@@ -11,5 +11,5 @@
 }
 
 </style>
-<asp:HyperLink runat="server" Text="" ID="lnkFullView" Visible="false" Title="Full view" CssClass="FullViewLnk">
+<asp:HyperLink runat="server" Text="" ID="lnkFullView" Visible="false" Title="Full view" CssClass="FullViewLnk" Target="_blank">
 </asp:HyperLink>

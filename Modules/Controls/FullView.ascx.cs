@@ -25,6 +25,11 @@ namespace Etsi.Ultimate.Controls
         /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
+            Display();
+        }
+
+        public void Display()
+        {
             lnkFullView.Visible = false;
             if (ModuleId != default(int) && TabId != default(int))
             {
@@ -38,8 +43,6 @@ namespace Etsi.Ultimate.Controls
                     lnkFullView.Visible = true;
                 }
             }
-
-            
         }
     }
 }

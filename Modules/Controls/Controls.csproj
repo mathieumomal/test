@@ -66,14 +66,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-<Compile Include="FullView.ascx.cs">
+    <Compile Include="FullView.ascx.cs">
       <DependentUpon>FullView.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="FullView.ascx.designer.cs">
       <DependentUpon>FullView.ascx</DependentUpon>
     </Compile>
-
     <Compile Include="MeetingControl.ascx.cs">
       <DependentUpon>MeetingControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -81,7 +80,6 @@
     <Compile Include="MeetingControl.ascx.designer.cs">
       <DependentUpon>MeetingControl.ascx</DependentUpon>
     </Compile>
-  
     <Compile Include="HistoryControl.ascx.cs">
       <DependentUpon>HistoryControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -124,7 +122,9 @@
     <Content Include="ShareUrlControl.ascx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Controls.dnn" />
+    <Content Include="Controls.dnn">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="BuildScripts\ModulePackage.targets" />

@@ -83,12 +83,14 @@
         <table style="width: 100%;">
             <tr>
                 <td>
-                    <ult:fullviewcontrol id="ultFullView" runat="server" />
+                    
                     <asp:LinkButton ID="WorkPlanImport_Btn" runat="server" OnClientClick="open_RadWindow_workItemImport(); return false;" Text="Import work plan" />
-                    <span style="float: right">
+                    <span style="float: right; padding-bottom:2px;">
                         <asp:Label Visible="false" ID="lblLatestUpdated" runat="server" />
                         <asp:HyperLink Visible="false" ID="lnkFtpDownload" runat="server" Text="Download from FTP" Target="_blank" />
+                        &nbsp; <ult:FullViewControl id="ultFullView" runat="server" />
                     </span>
+                    
                 </td>
             </tr>
             <tr>
