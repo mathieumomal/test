@@ -33,8 +33,9 @@ namespace Etsi.Ultimate.Services
         /// <param name="hidePercentComplete">Percentage Complete</param>
         /// <param name="wiAcronym">Acronym</param>
         /// <param name="wiName">Name</param>
+        /// <param name="tbIds">List of Technical Bodies</param>
         /// <returns>List of workitems along with rights container</returns>
-        KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName);
+        KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName, List<int> tbIds);
 
         KeyValuePair<List<WorkItem>, UserRightsContainer> GetAllWorkItems(int personId);
 
@@ -62,8 +63,9 @@ namespace Etsi.Ultimate.Services
         /// <param name="hidePercentComplete">Percentage Complete</param>
         /// <param name="wiAcronym">Acronym</param>
         /// <param name="wiName">Name</param>
+        /// <param name="tbIds">List of Technical Bodies</param>
         /// <returns>Work Item Count</returns>
-        int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName);
+        int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName, List<int> tbIds);
 
         /// <summary>
         /// Get list of distinct Acronyms from various releases

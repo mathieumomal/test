@@ -64,6 +64,9 @@ namespace Etsi.Ultimate.Module.WorkItem
         private string tokenWorkPlanAnalysed = "";
         private bool fromShortUrl;
 
+        private static string tbId;
+        private static string subTBId;
+
         #endregion
 
         #region Properties
@@ -141,6 +144,9 @@ namespace Etsi.Ultimate.Module.WorkItem
 
                     Acronyms = wiService.GetAllAcronyms();
                     releaseSearchControl.Load += releaseSearchControl_Load;
+
+                    tbId = Request.QueryString["tbid"];
+                    subTBId = Request.QueryString["SubTB"];
                 }
 
                 racAcronym.DataSource = Acronyms;
@@ -308,8 +314,15 @@ namespace Etsi.Ultimate.Module.WorkItem
             RadWindow_workItemState.Visible = false;
 
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
+            List<int> tbList = new List<int>();
+            int value;
+            if (!String.IsNullOrEmpty(subTBId))
+            {
+                tbList = subTBId.Split(',').Select(x => int.TryParse(x, out value) ? value : -1).ToList();
+                tbList.RemoveAll(x => x == -1);
+            }
 
-            if (wiService.GetWorkItemsCountBySearchCriteria(releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, hidAcronym.Value.Trim().TrimEnd(';'), txtName.Text) > 500)
+            if (wiService.GetWorkItemsCountBySearchCriteria(releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, hidAcronym.Value.Trim().TrimEnd(';'), txtName.Text, tbList) > 500)
             {
                 string script = "function f(){$find(\"" + RadWindow_workItemCount.ClientID + "\").show(); Sys.Application.remove_load(f);}Sys.Application.add_load(f);autoConfirmSearch();";
                 ScriptManager.RegisterStartupScript(Page, Page.GetType(), "customConfirmOpener", script, true);
@@ -357,7 +370,15 @@ namespace Etsi.Ultimate.Module.WorkItem
         protected void rtlWorkItems_NeedDataSource(object sender, TreeListNeedDataSourceEventArgs e)
         {
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
-            var wiData = wiService.GetWorkItemsBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, hidAcronym.Value.Trim().TrimEnd(';'), txtName.Text);
+            List<int> tbList = new List<int>();
+            int value;
+            if (!String.IsNullOrEmpty(subTBId))
+            {
+                tbList = subTBId.Split(',').Select(x => int.TryParse(x, out value) ? value : -1).ToList();
+                tbList.RemoveAll(x => x == -1);
+            }
+
+            var wiData = wiService.GetWorkItemsBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, hidAcronym.Value.Trim().TrimEnd(';'), txtName.Text, tbList);
             rtlWorkItems.DataSource = wiData.Key;
         }
 
@@ -505,6 +526,10 @@ namespace Etsi.Ultimate.Module.WorkItem
             if (!fromShortUrl)
             {
                 urlParams.Add("shortUrl", "True");
+                if (!String.IsNullOrEmpty(tbId))
+                    urlParams.Add("tbid", tbId);
+                if (!String.IsNullOrEmpty(subTBId))
+                    urlParams.Add("SubTB", subTBId);
                 if (!string.IsNullOrEmpty(selectedReleases))
                     urlParams.Add("releaseId", selectedReleases);
                 urlParams.Add("granularity", rddGranularity.SelectedValue);

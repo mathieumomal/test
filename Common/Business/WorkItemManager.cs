@@ -25,15 +25,16 @@ namespace Etsi.Ultimate.Business
         /// <param name="hidePercentComplete">Percentage Complete</param>
         /// <param name="wiAcronym">Acronym</param>
         /// <param name="wiName">Name</param>
+        /// <param name="tbIds">List of Technical Bodies</param>
         /// <returns>List of workitems along with rights container</returns>
-        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName)
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName, List<int> tbIds)
         {
             IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
             repo.UoW = _uoW;
 
             List<WorkItem> AllWorkItems = new List<WorkItem>();
 
-            var workItemsOfSearchCriteria = repo.GetWorkItemsBySearchCriteria(releaseIds, granularity, wiAcronym, wiName);
+            var workItemsOfSearchCriteria = repo.GetWorkItemsBySearchCriteria(releaseIds, granularity, wiAcronym, wiName, tbIds);
             AllWorkItems.AddRange(workItemsOfSearchCriteria);
 
             //Get Parents
@@ -63,8 +64,9 @@ namespace Etsi.Ultimate.Business
                     GetChildWorkItems(x, childRecordsForGranularityLevel, repo); //Collect Child records
                 });
 
-            AllWorkItems.AddRange(childRecordsForGranularityLevel.Where(x => x.Name.ToLower().Contains(wiName.Trim().ToLower()) || String.IsNullOrEmpty(wiName.Trim())
-                && (x.Acronym.ToLower().Contains(wiAcronym.Trim().ToLower()) || (String.IsNullOrEmpty(wiAcronym.Trim())))));
+            AllWorkItems.AddRange(childRecordsForGranularityLevel.Where(x => (x.Name.ToLower().Contains(wiName.Trim().ToLower()) || String.IsNullOrEmpty(wiName.Trim()))
+                                                                          && (x.Acronym.ToLower().Contains(wiAcronym.Trim().ToLower()) || (String.IsNullOrEmpty(wiAcronym.Trim())))
+                                                                          && (tbIds.Count == 0 || x.WorkItems_ResponsibleGroups.Any(y => tbIds.Contains(y.Fk_TbId.Value)))));
  
             return new KeyValuePair<List<WorkItem>, UserRightsContainer>(AllWorkItems, GetRights(personId));
         }
@@ -161,12 +163,13 @@ namespace Etsi.Ultimate.Business
         /// <param name="hidePercentComplete">Percentage Complete</param>
         /// <param name="wiAcronym">Acronym</param>
         /// <param name="wiName">Name</param>
+        /// <param name="tbIds">List of Technical Bodies</param>
         /// <returns>Work Item Count</returns>
-        public int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName)
+        public int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName, List<int> tbIds)
         {
             IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
             repo.UoW = _uoW;
-            return repo.GetWorkItemsCountBySearchCriteria(releaseIds, granularity, hidePercentComplete, wiAcronym, wiName);
+            return repo.GetWorkItemsCountBySearchCriteria(releaseIds, granularity, hidePercentComplete, wiAcronym, wiName, tbIds);
         }
 
         /// <summary>

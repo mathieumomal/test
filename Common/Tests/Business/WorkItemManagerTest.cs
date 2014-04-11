@@ -39,7 +39,7 @@ namespace Etsi.Ultimate.Tests.Business
             var wiManager = new WorkItemManager(uow);
 
             //No Release Ids
-            var workItems = wiManager.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, true, String.Empty, String.Empty);
+            var workItems = wiManager.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, true, String.Empty, String.Empty, new List<int>());
             Assert.AreEqual(0, workItems.Key.Count);
             Assert.IsTrue(workItems.Value.HasRight(Enum_UserRights.WorkItem_ImportWorkplan));
 
@@ -48,11 +48,11 @@ namespace Etsi.Ultimate.Tests.Business
             //----------------------
             releaseIds.Add(527);
             //Show All Records
-            workItems = wiManager.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, false, String.Empty, String.Empty);
+            workItems = wiManager.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, false, String.Empty, String.Empty, new List<int>());
             Assert.AreEqual(18, workItems.Key.Count);
             Assert.IsTrue(workItems.Value.HasRight(Enum_UserRights.WorkItem_ImportWorkplan));
             //Hide 100% records at level 1
-            workItems = wiManager.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, true, String.Empty, String.Empty);
+            workItems = wiManager.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, true, String.Empty, String.Empty, new List<int>());
             Assert.AreEqual(17, workItems.Key.Count);
             Assert.IsTrue(workItems.Value.HasRight(Enum_UserRights.WorkItem_ImportWorkplan));
 
@@ -60,15 +60,15 @@ namespace Etsi.Ultimate.Tests.Business
             //Test with 2 Release Ids
             //-----------------------
             releaseIds.Add(526);
-            workItems = wiManager.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, false, String.Empty, String.Empty);
+            workItems = wiManager.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, false, String.Empty, String.Empty, new List<int>());
             Assert.AreEqual(20, workItems.Key.Count);
             Assert.IsTrue(workItems.Value.HasRight(Enum_UserRights.WorkItem_ImportWorkplan));
             //Name search
-            workItems = wiManager.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, false, String.Empty, "Stage");
+            workItems = wiManager.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, false, String.Empty, "Stage", new List<int>());
             Assert.AreEqual(12, workItems.Key.Count);
             Assert.IsTrue(workItems.Value.HasRight(Enum_UserRights.WorkItem_ImportWorkplan));
             //Acronym search
-            workItems = wiManager.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, false, "UPCON", String.Empty);
+            workItems = wiManager.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, false, "UPCON", String.Empty, new List<int>());
             Assert.AreEqual(3, workItems.Key.Count);
             Assert.IsTrue(workItems.Value.HasRight(Enum_UserRights.WorkItem_ImportWorkplan));
 
@@ -128,26 +128,26 @@ namespace Etsi.Ultimate.Tests.Business
             var wiManager = new WorkItemManager(uow);
 
             //No Release Ids
-            Assert.AreEqual(0, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty));
+            Assert.AreEqual(0, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty, new List<int>()));
 
             //----------------------
             //Test with 1 Release Id
             //----------------------
             releaseIds.Add(527);
             //Show All Records
-            Assert.AreEqual(18, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty));
+            Assert.AreEqual(18, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty, new List<int>()));
             //Hide 100% records at level 1
-            Assert.AreEqual(17, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty));
+            Assert.AreEqual(17, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty, new List<int>()));
 
             //-----------------------
             //Test with 2 Release Ids
             //-----------------------
             releaseIds.Add(526);
-            Assert.AreEqual(20, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty));
+            Assert.AreEqual(20, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty, new List<int>()));
             //Name search
-            Assert.AreEqual(12, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, "Stage"));
+            Assert.AreEqual(12, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, "Stage", new List<int>()));
             //Acronym search
-            Assert.AreEqual(3, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, "UPCON", String.Empty));
+            Assert.AreEqual(3, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, "UPCON", String.Empty, new List<int>()));
 
             mockDataContext.VerifyAllExpectations();
         }

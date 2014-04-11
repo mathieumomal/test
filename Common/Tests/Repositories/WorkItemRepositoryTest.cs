@@ -74,7 +74,7 @@ namespace Etsi.Ultimate.Tests.Repositories
 
             //No Release Ids
             var repo = new WorkItemRepository() { UoW = uow };
-            var workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, String.Empty, String.Empty);
+            var workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, String.Empty, String.Empty, new List<int>());
             Assert.AreEqual(0, workItems.Count);
 
             //----------------------
@@ -82,20 +82,20 @@ namespace Etsi.Ultimate.Tests.Repositories
             //----------------------
             releaseIds.Add(527);
             //Show All Records
-            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, String.Empty, String.Empty);
+            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, String.Empty, String.Empty, new List<int>());
             Assert.AreEqual(18, workItems.Count);
 
             //-----------------------
             //Test with 2 Release Ids
             //-----------------------
             releaseIds.Add(526);
-            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, String.Empty, String.Empty);
+            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, String.Empty, String.Empty, new List<int>());
             Assert.AreEqual(20, workItems.Count);
             //Name search
-            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, String.Empty, "Stage");
+            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, String.Empty, "Stage", new List<int>());
             Assert.AreEqual(12, workItems.Count);
             //Acronym search
-            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, "UPCON", String.Empty);
+            workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, "UPCON", String.Empty, new List<int>());
             Assert.AreEqual(3, workItems.Count);
 
             mockDataContext.VerifyAllExpectations();
@@ -114,22 +114,22 @@ namespace Etsi.Ultimate.Tests.Repositories
             var wiRepository = new WorkItemRepository() { UoW = uow };
 
             //No Release Ids
-            Assert.AreEqual(0, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty));
+            Assert.AreEqual(0, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty, new List<int>()));
 
             //----------------------
             //Test with 1 Release Id
             //----------------------
             releaseIds.Add(527);
-            Assert.AreEqual(18, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty));
+            Assert.AreEqual(18, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty, new List<int>()));
             //Hide 100% records at level 1
-            Assert.AreEqual(17, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty));
+            Assert.AreEqual(17, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, true, String.Empty, String.Empty, new List<int>()));
             //-----------------------
             //Test with 2 Release Ids
             //-----------------------
             releaseIds.Add(526);
-            Assert.AreEqual(20, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty));
-            Assert.AreEqual(12, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, "Stage"));
-            Assert.AreEqual(3, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, "UPCON", String.Empty));
+            Assert.AreEqual(20, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty, new List<int>()));
+            Assert.AreEqual(12, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, "Stage", new List<int>()));
+            Assert.AreEqual(3, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, "UPCON", String.Empty, new List<int>()));
 
             mockDataContext.VerifyAllExpectations();
         }
