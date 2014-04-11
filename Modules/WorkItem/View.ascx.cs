@@ -203,11 +203,17 @@ namespace Etsi.Ultimate.Module.WorkItem
 
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
             //var filename = RdAsyncUpload.UploadedFiles[0].
-            workplanUploaded.SaveAs(new StringBuilder()
-                .Append(PathUploadWorkPlan)
-                .Append(workplanUploaded.FileName)
-                .ToString());
-
+            try
+            {
+                workplanUploaded.SaveAs(new StringBuilder()
+                    .Append(PathUploadWorkPlan)
+                    .Append(workplanUploaded.FileName)
+                    .ToString());
+            }
+            catch (Exception exc)
+            {
+                LogManager.Error("Could not save work plan file: " + exc.Message);
+            }
             //Analyse file type (ZIP/CSV)
             var wiReport = wiService.AnalyseWorkPlanForImport(new StringBuilder()
                 .Append(PathUploadWorkPlan)
