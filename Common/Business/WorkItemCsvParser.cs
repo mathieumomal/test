@@ -659,7 +659,7 @@ namespace Etsi.Ultimate.Business
             // Check that reference looks good
             if (!string.IsNullOrEmpty(statusReport))
             {
-                if (!Regex.IsMatch(statusReport, "^[A-Za-z0-9]{2}-[0-9]{6}$", RegexOptions.IgnoreCase))
+                if (!Regex.IsMatch(statusReport, "^[A-Za-z0-9]{2}-[0-9]{5,6}$", RegexOptions.IgnoreCase))
                 {
                     Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_Invalid_StatusReport, wi.WorkplanId, wi.Pk_WorkItemUid, statusReport));
                     statusReport = "";
@@ -687,7 +687,7 @@ namespace Etsi.Ultimate.Business
             // Check that reference looks good
             if (!string.IsNullOrEmpty(wid))
             {
-                if (!Regex.IsMatch(wid, "^[A-Za-z0-9]{2}-[0-9]{6}$", RegexOptions.IgnoreCase))
+                if (!Regex.IsMatch(wid, "^[A-Za-z0-9]{2}-[0-9]{5,6}$", RegexOptions.IgnoreCase))
                 {
                     Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_Invalid_WiD, wi.WorkplanId, wi.Pk_WorkItemUid, wid));
                     wid = "";
