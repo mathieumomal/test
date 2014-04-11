@@ -144,9 +144,8 @@ namespace Etsi.Ultimate.Tests.Repositories
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             var wiRepository = new WorkItemRepository() { UoW = uow };
 
-            Assert.AreEqual(7, wiRepository.GetAllAcronyms().Count);
+            Assert.AreEqual(6, wiRepository.GetAllAcronyms().Count);
             Assert.Contains("UPCON", wiRepository.GetAllAcronyms());
-            Assert.Contains("RSE", wiRepository.GetAllAcronyms());
             Assert.Contains("SEES", wiRepository.GetAllAcronyms());
             Assert.Contains("MCPTT", wiRepository.GetAllAcronyms());
             Assert.Contains("eWebRTCi", wiRepository.GetAllAcronyms());

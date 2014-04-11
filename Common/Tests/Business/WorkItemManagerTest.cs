@@ -162,9 +162,8 @@ namespace Etsi.Ultimate.Tests.Business
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             var wiManager = new WorkItemManager(uow);
 
-            Assert.AreEqual(7, wiManager.GetAllAcronyms().Count);
+            Assert.AreEqual(6, wiManager.GetAllAcronyms().Count);
             Assert.Contains("UPCON", wiManager.GetAllAcronyms());
-            Assert.Contains("RSE", wiManager.GetAllAcronyms());
             Assert.Contains("SEES", wiManager.GetAllAcronyms());
             Assert.Contains("MCPTT", wiManager.GetAllAcronyms());
             Assert.Contains("eWebRTCi", wiManager.GetAllAcronyms());

@@ -115,7 +115,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>List of Acronyms</returns>
         public List<string> GetAllAcronyms()
         {
-            return UoW.Context.WorkItems.Where(x => !String.IsNullOrEmpty(x.Acronym)).Select(y => y.Acronym).Distinct().ToList();
+            return UoW.Context.WorkItems.Where(x => ((!String.IsNullOrEmpty(x.Acronym)) && (x.Fk_ReleaseId != null))).Select(y => y.Acronym).Distinct().ToList();
         }
 
         #endregion

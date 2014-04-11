@@ -68,8 +68,7 @@
     }
 </style>
 
-<asp:UpdateProgress ID="updateProgressWorkItemsTree" runat="server"
-    AssociatedUpdatePanelID="upWorkItemsTree" DisplayAfter="200">
+<asp:UpdateProgress ID="updateProgressWorkItemsTree" runat="server" DisplayAfter="200">
     <ProgressTemplate>
         <div class="modalBackground">
         </div>

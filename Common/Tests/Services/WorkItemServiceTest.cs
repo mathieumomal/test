@@ -160,9 +160,8 @@ namespace Etsi.Ultimate.Tests.Services
 
             var wiService = new WorkItemService();
 
-            Assert.AreEqual(7, wiService.GetAllAcronyms().Count);
+            Assert.AreEqual(6, wiService.GetAllAcronyms().Count);
             Assert.Contains("UPCON", wiService.GetAllAcronyms());
-            Assert.Contains("RSE", wiService.GetAllAcronyms());
             Assert.Contains("SEES", wiService.GetAllAcronyms());
             Assert.Contains("MCPTT", wiService.GetAllAcronyms());
             Assert.Contains("eWebRTCi", wiService.GetAllAcronyms());
