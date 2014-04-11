@@ -54,7 +54,7 @@ namespace Etsi.Ultimate.Controls
                 {
                     var OpenReleases = rbOpenReleases.Attributes["Value"].Split(',').Select(int.Parse).ToList();
                     if (releaseIds.OrderBy(x => x).SequenceEqual(OpenReleases.OrderBy(x => x)))
-                        rbAllReleases.Checked = true;
+                        rbOpenReleases.Checked = true;
                     else
                     {
                         rbCustomSelection.Checked = true;
@@ -168,6 +168,8 @@ namespace Etsi.Ultimate.Controls
         public void Reset()
         {
             System.Web.UI.ScriptManager.RegisterStartupScript(this, this.GetType(), "Reset", "ResetToAllReleases();", true);
+            RadButton rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
+            this.SelectedReleaseIds = rbOpenReleases.Attributes["Value"].Split(',').Select(int.Parse).ToList();
         }
         #endregion
     }

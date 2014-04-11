@@ -334,6 +334,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             rddGranularity.SelectedValue = "1";
             chkHideCompletedItems.Checked = false;
             racAcronym.Entries.Clear();
+            hidAcronym.Value = String.Empty;
             txtName.Text = String.Empty;
 
             loadWorkItemData();
@@ -370,6 +371,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                     txtName.Text = Request.QueryString["name"].ToString();
 
                 racAcronym.Entries.Clear();
+                hidAcronym.Value = String.Empty;
                 if (!String.IsNullOrEmpty(Request.QueryString["acronym"]))
                 {
                     racAcronym.Entries.Add(new AutoCompleteBoxEntry(Request.QueryString["acronym"].ToString(), String.Empty));
@@ -416,7 +418,8 @@ namespace Etsi.Ultimate.Module.WorkItem
             string wiName = txtName.Text;
 
             StringBuilder searchString = new StringBuilder();
-            searchString.Append(String.IsNullOrEmpty(releaseSearchControl.SearchString) ? "Open Releases" : releaseSearchControl.SearchString);
+            string releaseText = releaseSearchControl.SearchString;
+            searchString.Append(String.IsNullOrEmpty(releaseText) ? "Open Releases" : releaseText);
             searchString.Append(", " + rddGranularity.SelectedText);
             if (!String.IsNullOrEmpty(wiAcronym))
                 searchString.Append(", " + wiAcronym);
@@ -497,7 +500,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                     urlParams.Add("releaseId", selectedReleases);
                 urlParams.Add("granularity", rddGranularity.SelectedValue);
                 urlParams.Add("hideCompleted", chkHideCompletedItems.Checked.ToString());
-                if (!String.IsNullOrEmpty(racAcronym.Text.Trim().TrimEnd(';')))
+                if (!String.IsNullOrEmpty(hidAcronym.Value.Trim().TrimEnd(';')))
                     urlParams.Add("acronym", hidAcronym.Value.Trim().TrimEnd(';'));
                 if (!String.IsNullOrEmpty(txtName.Text.Trim()))
                     urlParams.Add("name", txtName.Text);
