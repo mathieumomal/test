@@ -33,57 +33,50 @@
         margin: 2px;
     }
 </style>
+<asp:UpdatePanel ID="upShareUrl" runat="server">
+    <ContentTemplate>
+        <telerik:RadToolTip runat="server" ID="radTooltipShareUrl" HideEvent="LeaveTargetAndToolTip"
+            Position="TopRight"
+            Width="250px"
+            Height="60px"
+            ShowDelay="0"
+            enableshadow="true"
+            TargetControlID="btnShareUrl"
+            OnClientShow="clientShow"
+            Skin="Silk">
+            <div id="suModal" class="suHeader">
 
-<telerik:RadToolTip runat="server" ID="radTooltipShareUrl" HideEvent="LeaveTargetAndToolTip"
-    Position="TopRight"
-    Width="250px"
-    Height="60px"
-    ShowDelay="0"
-    enableshadow="true"
-    TargetControlID="btnShareUrl"
-    OnClientShow="clientShow"
-    Skin="Silk">
-    <div id="suModal" class="suHeader">
-
-        <table>
-            <tr>
-                <td>
-                    <telerik:RadButton ID="CheckBoxGetShortUrl"
-                        runat="server"
-                        ToggleType="CheckBox"
-                        ButtonType="ToggleButton"
-                        AutoPostBack="true"
-                        OnClick="CheckBoxGetShortUrl_CheckedChanged"
-                        Skin="Silk">
-                        <togglestates>
+                <table>
+                    <tr>
+                        <td>
+                            <telerik:RadButton ID="CheckBoxGetShortUrl"
+                                runat="server"
+                                ToggleType="CheckBox"
+                                ButtonType="ToggleButton"
+                                AutoPostBack="true"
+                                OnClick="CheckBoxGetShortUrl_CheckedChanged"
+                                Skin="Silk">
+                                <togglestates>
 					     <telerik:RadButtonToggleState Text="Short URL" PrimaryIconCssClass="rbToggleCheckbox" />
 					     <telerik:RadButtonToggleState Text="Short URL" PrimaryIconCssClass="rbToggleCheckboxChecked" Selected="true"/>
 					    </togglestates>
-                    </telerik:RadButton>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <asp:TextBox ID="txtLink" runat="server" Text="http://3gpp.org/..." onclick="this.setSelectionRange(0, this.value.length)" />
-                </td>
-            </tr>
-        </table>
-    </div>
-</telerik:RadToolTip>
-<telerik:RadButton ID="btnShareUrl" runat="server"
-    Enabled="true" AutoPostBack="false" OnClientClicked="open_suModal" CssClass="btnShare">
-    <image imageurl="images/share.png" disabledimageurl="images/share.png" />
-</telerik:RadButton>
-
-<telerik:RadAjaxManagerProxy ID="RadAjaxMngShareUrl" runat="server">
-    <ajaxsettings>
-        <telerik:AjaxSetting AjaxControlID="CheckBoxGetShortUrl">
-            <UpdatedControls>
-                <telerik:AjaxUpdatedControl ControlID="txtLink" />
-            </UpdatedControls>
-        </telerik:AjaxSetting>
-    </ajaxsettings>
-</telerik:RadAjaxManagerProxy>
+                            </telerik:RadButton>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <asp:TextBox ID="txtLink" runat="server" Text="http://3gpp.org/..." onclick="this.setSelectionRange(0, this.value.length)" />
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </telerik:RadToolTip>
+        <telerik:RadButton ID="btnShareUrl" runat="server"
+            Enabled="true" AutoPostBack="false" OnClientClicked="open_suModal" CssClass="btnShare">
+            <image imageurl="images/share.png" disabledimageurl="images/share.png" />
+        </telerik:RadButton>
+    </ContentTemplate>
+</asp:UpdatePanel>
 
 <script type="text/javascript">
     function open_suModal() {

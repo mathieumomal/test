@@ -13,6 +13,15 @@ namespace Etsi.Ultimate.Controls {
     public partial class ShareUrlControl {
         
         /// <summary>
+        /// upShareUrl control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel upShareUrl;
+        
+        /// <summary>
         /// radTooltipShareUrl control.
         /// </summary>
         /// <remarks>
@@ -47,14 +56,5 @@ namespace Etsi.Ultimate.Controls {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Telerik.Web.UI.RadButton btnShareUrl;
-        
-        /// <summary>
-        /// RadAjaxMngShareUrl control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadAjaxManagerProxy RadAjaxMngShareUrl;
     }
 }
