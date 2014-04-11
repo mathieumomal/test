@@ -165,6 +165,7 @@
                         ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="false" AllowPaging="false" AllowFilteringByColumn="false">
                         <clientsettings>
                             <Scrolling AllowScroll="true" />
+                            <ClientEvents OnTreeListCreated="TreeListCreated" />
                         </clientsettings>
                         <columns>
                         <telerik:TreeListTemplateColumn  DataField="Name" UniqueName="Name" HeaderText="Name" ItemStyle-CssClass="breakWord">
@@ -477,6 +478,10 @@
     }
 
     //--- Adapt workItem's list height
+
+    function TreeListCreated(sender, eventArgs) {
+        adaptContentHeight();
+    }
 
     //Catch the "contentHeight" event (in the mainpage.ascx)
     $("#content").on('contentHeight', function (event, hContent) {
