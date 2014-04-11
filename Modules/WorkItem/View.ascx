@@ -62,10 +62,6 @@
     .breakWord {
         word-break: break-all !important;
     }
-    .RadTreeList .rtlHeader
-    {
-        width:98.8%;
-    }
 </style>
 
 <asp:UpdateProgress ID="updateProgressWorkItemsTree" runat="server" DisplayAfter="200">
@@ -168,7 +164,7 @@
                     <telerik:RadTreeList ID="rtlWorkItems" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" runat="server" OnNeedDataSource="rtlWorkItems_NeedDataSource"
                         ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="false" AllowPaging="false" AllowFilteringByColumn="false">
                         <clientsettings>
-                            <Scrolling AllowScroll="true" UseStaticHeaders="true" />
+                            <Scrolling AllowScroll="true" />
                         </clientsettings>
                         <columns>
                         <telerik:TreeListTemplateColumn  DataField="Name" UniqueName="Name" HeaderText="Name" ItemStyle-CssClass="breakWord">
@@ -487,7 +483,7 @@
         if ($('.livetabssouthstreet ').length == 0) {
             var securityValue = 120;
         } else {
-            var securityValue = 225;
+            var securityValue = 205;
         }
 
         treeDiv.style.height = (hContent - securityValue) + "px";
