@@ -1,14 +1,14 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="Versions" type="Module" version="00.00.01">
+    <package name="Versions" type="Module" version="00.00.02">
       <friendlyName>Versions</friendlyName>
-      <description>Christoc.com Versions module</description>
+      <description>Versions module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
       <owner>
-        <name>Christoc.com</name>
-        <organization>Christoc.com</organization>
-        <url>http://www.christoc.com</url>
-        <email>modules@christoc.com</email>
+        <name>capgemini.com</name>
+        <organization>capgemini.com</organization>
+        <url>http://www.capgemini.com</url>
+        <email></email>
       </owner>
       <license src="License.txt"></license>
       <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
@@ -55,7 +55,7 @@
                 <moduleControls>
                   <moduleControl>
                     <controlKey />
-                    <controlSrc>DesktopModules/Versions/View.ascx</controlSrc>
+                    <controlSrc>DesktopModules/Versions/VersionsList.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
                     <controlTitle />
                     <controlType>View</controlType>
@@ -64,19 +64,8 @@
                     <viewOrder>0</viewOrder>
                   </moduleControl>
                   <moduleControl>
-                    <controlKey>Edit</controlKey>
-                    <controlSrc>DesktopModules/Versions/Edit.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Edit Content</controlTitle>
-                    <controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <viewOrder>0</viewOrder>
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
                     <controlKey>Settings</controlKey>
-                    <controlSrc>DesktopModules/Versions/Settings.ascx</controlSrc>
+                    <controlSrc>DesktopModules/Versions/VersionsSettings.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
                     <controlTitle>Versions Settings</controlTitle>
                     <controlType>Edit</controlType>
@@ -92,7 +81,7 @@
         <component type="Assembly">
           <assemblies>
             <assembly>
-              <name>Versions.dll</name>
+              <name>Etsi.Ultimate.Module.Versions.dll</name>
               <path>bin</path>
             </assembly>
           </assemblies>

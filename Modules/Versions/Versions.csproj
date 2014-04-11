@@ -69,44 +69,30 @@
     <Compile Include="Components\FeatureController.cs" />
     <Compile Include="Components\ItemController.cs" />
     <Compile Include="Components\Item.cs" />
-    <Compile Include="VersionsModuleBase.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="VersionsModuleSettingsBase.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Edit.ascx.cs">
-      <DependentUpon>Edit.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Edit.ascx.designer.cs">
-      <DependentUpon>Edit.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.ascx.cs">
-      <DependentUpon>Settings.ascx</DependentUpon>
+    <Compile Include="VersionsSettings.ascx.cs">
+      <DependentUpon>VersionsSettings.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Settings.ascx.designer.cs">
-      <DependentUpon>Settings.ascx</DependentUpon>
+    <Compile Include="VersionsSettings.ascx.designer.cs">
+      <DependentUpon>VersionsSettings.ascx</DependentUpon>
     </Compile>
-    <Compile Include="View.ascx.cs">
-      <DependentUpon>View.ascx</DependentUpon>
+    <Compile Include="VersionsList.ascx.cs">
+      <DependentUpon>VersionsList.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="View.ascx.designer.cs">
-      <DependentUpon>View.ascx</DependentUpon>
+    <Compile Include="VersionsList.ascx.designer.cs">
+      <DependentUpon>VersionsList.ascx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Documentation\Documentation.css" />
     <Content Include="Documentation\Documentation.html" />
-    <Content Include="Edit.ascx" />
     <Content Include="License.txt" />
     <Content Include="module.css" />
     <Content Include="ReleaseNotes.txt" />
-    <Content Include="Settings.ascx" />
-    <Content Include="View.ascx" />
+    <Content Include="VersionsSettings.ascx" />
+    <Content Include="VersionsList.ascx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Versions.dnn" />
@@ -151,9 +137,9 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>53436</DevelopmentServerPort>
           <DevelopmentServerVPath>
           </DevelopmentServerVPath>
           <IISUrl>http://dnndev.me/desktopmodules/Versions</IISUrl>

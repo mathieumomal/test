@@ -13,8 +13,10 @@
 using System;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
+using System.Text.RegularExpressions;
+using System.Text;
 
-namespace Christoc.Modules.Versions
+namespace Etsi.Ultimate.Module.Versions
 {
     /// -----------------------------------------------------------------------------
     /// <summary>
@@ -36,7 +38,7 @@ namespace Christoc.Modules.Versions
     /// defined there, as well as properties from DNN such as PortalId, ModuleId, TabId, UserId and many more.
     /// </summary>
     /// -----------------------------------------------------------------------------
-    public partial class Settings : VersionsModuleSettingsBase
+    public partial class Settings : ModuleSettingsBase
     {
         #region Base Method Implementations
 
