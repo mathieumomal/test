@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="Settings.ascx.cs" Inherits="Etsi.Ultimate.Module.Specifications.Settings" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="SpecificationsSettings.ascx.cs" Inherits="Etsi.Ultimate.Module.Specifications.Settings" %>
 
 
 <!-- uncomment the code below to start using the DNN Form pattern to create and update settings -->

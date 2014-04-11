@@ -69,44 +69,30 @@
     <Compile Include="Components\FeatureController.cs" />
     <Compile Include="Components\ItemController.cs" />
     <Compile Include="Components\Item.cs" />
-    <Compile Include="SpecificationsModuleBase.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="SpecificationsModuleSettingsBase.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Edit.ascx.cs">
-      <DependentUpon>Edit.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Edit.ascx.designer.cs">
-      <DependentUpon>Edit.ascx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.ascx.cs">
-      <DependentUpon>Settings.ascx</DependentUpon>
+    <Compile Include="SpecificationsSettings.ascx.cs">
+      <DependentUpon>SpecificationsSettings.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Settings.ascx.designer.cs">
-      <DependentUpon>Settings.ascx</DependentUpon>
+    <Compile Include="SpecificationsSettings.ascx.designer.cs">
+      <DependentUpon>SpecificationsSettings.ascx</DependentUpon>
     </Compile>
-    <Compile Include="View.ascx.cs">
-      <DependentUpon>View.ascx</DependentUpon>
+    <Compile Include="SpecificationsList.ascx.cs">
+      <DependentUpon>SpecificationsList.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="View.ascx.designer.cs">
-      <DependentUpon>View.ascx</DependentUpon>
+    <Compile Include="SpecificationsList.ascx.designer.cs">
+      <DependentUpon>SpecificationsList.ascx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Documentation\Documentation.css" />
     <Content Include="Documentation\Documentation.html" />
-    <Content Include="Edit.ascx" />
     <Content Include="License.txt" />
     <Content Include="module.css" />
     <Content Include="ReleaseNotes.txt" />
-    <Content Include="Settings.ascx" />
-    <Content Include="View.ascx" />
+    <Content Include="SpecificationsSettings.ascx" />
+    <Content Include="SpecificationsList.ascx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Specifications.dnn" />
@@ -151,9 +137,9 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>53340</DevelopmentServerPort>
           <DevelopmentServerVPath>
           </DevelopmentServerVPath>
           <IISUrl>http://dnndev.me/desktopmodules/Specifications</IISUrl>
