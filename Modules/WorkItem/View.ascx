@@ -81,7 +81,7 @@
                 <td>
                     
                     <asp:LinkButton ID="WorkPlanImport_Btn" runat="server" OnClientClick="open_RadWindow_workItemImport(); return false;" Text="Import work plan" />
-                    <span style="float: right; padding-bottom:2px;">
+                    <span style="float: right; padding-bottom:2px; white-space:nowrap ">
                         <asp:Label Visible="false" ID="lblLatestUpdated" runat="server" />
                         <asp:HyperLink Visible="false" ID="lnkFtpDownload" runat="server" Text="Download from FTP" Target="_blank" />
                         &nbsp; <ult:FullViewControl id="ultFullView" runat="server" />
@@ -417,19 +417,28 @@
     /*-- TELERIK EVENTS --*/
 
     function Start(sender, arguments) {
+        $(".modalBackground").hide();
+        $(".updateProgress").hide();
         if (arguments.EventTarget == "<%= wiRadAjaxManager.UniqueID %>") {
             clearFilesToUpload();
             open_RadWindow_workItemAnalysis();
         }
         if (arguments.EventTarget == "<%= btnConfirmImport.UniqueID %>") {
+            $("#importProgressIcon").show();
             $("#importProgressIcon").css("visibility", "visible");
         }
+        
+
     }
     function End(sender, arguments) {
+        $(".modalBackground").show();
+        $(".updateProgress").show();
         if (arguments.EventTarget == "<%= wiRadAjaxManager.UniqueID %>") {
             open_RadWindow_workItemConfirmation();
-        } if (arguments.EventTarget == "<%= btnConfirmImport.UniqueID %>") {
+        }
+        if (arguments.EventTarget == "<%= btnConfirmImport.UniqueID %>") {
             open_RadWindow_workItemState();
+            $("#importProgressIcon").hide();
             $("#importProgressIcon").css("visibility", "hidden");
         }
     }

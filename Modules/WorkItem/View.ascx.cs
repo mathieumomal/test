@@ -107,6 +107,9 @@ namespace Etsi.Ultimate.Module.WorkItem
             try
             {
                 GetRequestParameters();
+                
+                // init the full view component.
+                ManageFullView("");
 
                 var wiService = ServicesFactory.Resolve<IWorkItemService>();
                 if (!IsPostBack)
