@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="WorkItem" type="Module" version="00.02.05">
+    <package name="WorkItem" type="Module" version="00.03.00">
       <friendlyName>WorkItem</friendlyName>
       <description>WorkItem module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
@@ -30,7 +30,7 @@
           <desktopModule>
             <moduleName>WorkItem</moduleName>
             <foldername>WorkItem</foldername>
-            <businessControllerClass>Christoc.Modules.WorkItem.Components.FeatureController</businessControllerClass>
+            <businessControllerClass>Etsi.Ultimate.Module.WorkItem.Components.FeatureController</businessControllerClass>
             <supportedFeatures />
             <moduleDefinitions>
               <moduleDefinition>

@@ -35,7 +35,7 @@ namespace Etsi.Ultimate.DomainClasses
             Acronym = (workItem.Acronym.Equals(string.Empty)) ? BLANK_CELL : workItem.Acronym;
             Level = workItem.WiLevel.Value;
             Release = (workItem.Release != null) ? (((workItem.Release.Description != null) && (workItem.Release.Description.Equals(string.Empty))) ? workItem.Release.Description : BLANK_CELL) : BLANK_CELL;
-            ResponsibleGroups = (workItem.WorkItems_ResponsibleGroups.Count>0) ? string.Join(" ", workItem.WorkItems_ResponsibleGroups.Select(r => r.ResponsibleGroup).ToArray()).Trim() : BLANK_CELL; 
+            ResponsibleGroups = (workItem.WorkItems_ResponsibleGroups.Count>0) ? string.Join(",", workItem.WorkItems_ResponsibleGroups.Select(r => r.ResponsibleGroup).ToArray()).Trim() : BLANK_CELL; 
             StartDate = (workItem.StartDate != null) ? workItem.StartDate.GetValueOrDefault().ToString("yyyy-MM-dd") : BLANK_CELL;
             EndDate = (workItem.EndDate != null) ? workItem.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd") : BLANK_CELL;
             Completion = ((workItem.Completion != null) ? workItem.Completion: 0)/100;
