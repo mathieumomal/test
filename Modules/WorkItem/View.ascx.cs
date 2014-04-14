@@ -307,12 +307,6 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// <param name="e">Event Arguments</param>
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            //Hide RadWindow
-            RadWindow_workItemAnalysis.Visible = false;
-            RadWindow_workItemConfirmation.Visible = false;
-            RadWindow_workItemImport.Visible = false;
-            RadWindow_workItemState.Visible = false;
-
             var wiService = ServicesFactory.Resolve<IWorkItemService>();
             List<int> tbList = new List<int>();
             int value;
