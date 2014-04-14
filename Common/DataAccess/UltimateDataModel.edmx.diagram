@@ -43,6 +43,14 @@
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.Raporteur_FK_SpecificationID" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.Release_FK_SpecificationID" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WorkItemID" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_CommunitiesShortName" Width="1.5" PointX="1.5182974941648066" PointY="29.318756504598426" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_SpecificationStage" Width="1.5" PointX="10.211247692914331" PointY="5.0378095978115729" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SpecificationResponsibleGroup" Width="1.5" PointX="6.9688855591085206" PointY="5.3394983882734079" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SpecificationTechnology" Width="1.5" PointX="11.467963713904826" PointY="29.395785866955194" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_SpecificationStageID" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Enum_Technology" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Specification" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.RG_FK_SpecificationID" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

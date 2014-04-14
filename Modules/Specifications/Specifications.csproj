@@ -54,6 +54,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
@@ -64,12 +65,27 @@
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Telerik.Web.UI, Version=2013.2.717.40, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Telerik.Web.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.Web.UI.Skins, Version=2013.2.717.40, Culture=neutral, PublicKeyToken=121fae78165ba3d4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Telerik.Web.UI.Skins.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\FeatureController.cs" />
     <Compile Include="Components\ItemController.cs" />
     <Compile Include="Components\Item.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SpecificationDetails.aspx.cs">
+      <DependentUpon>SpecificationDetails.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SpecificationDetails.aspx.designer.cs">
+      <DependentUpon>SpecificationDetails.aspx</DependentUpon>
+    </Compile>
     <Compile Include="SpecificationsSettings.ascx.cs">
       <DependentUpon>SpecificationsSettings.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -91,6 +107,7 @@
     <Content Include="License.txt" />
     <Content Include="module.css" />
     <Content Include="ReleaseNotes.txt" />
+    <Content Include="SpecificationDetails.aspx" />
     <Content Include="SpecificationsSettings.ascx" />
     <Content Include="SpecificationsList.ascx" />
   </ItemGroup>
@@ -125,6 +142,20 @@
     <None Include="web.Release.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\DomainClasses\DomainClasses.csproj">
+      <Project>{d5bdede9-d397-411c-ae94-1646836406ba}</Project>
+      <Name>DomainClasses</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Services\Services.csproj">
+      <Project>{4bb8a434-1ed1-4d33-ae3d-32a000d19ca5}</Project>
+      <Name>Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Controls\Controls.csproj">
+      <Project>{1330d828-a24f-4676-9081-c41204c35072}</Project>
+      <Name>Controls</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

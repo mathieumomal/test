@@ -48,6 +48,9 @@
     </Compile>
     <Compile Include="DocxStyle.cs" />
     <Compile Include="DocxStylePool.cs" />
+    <Compile Include="Enum_CommunitiesShortName.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Enum_EntityStatus.cs" />
     <Compile Include="Enum_ReleaseStatus.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
@@ -57,6 +60,9 @@
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Enum_Settings.cs" />
+    <Compile Include="Enum_SpecificationStage.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Enum_Technology.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
@@ -89,6 +95,12 @@
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="SpecificationRapporteur.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SpecificationResponsibleGroup.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SpecificationTechnology.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Specification_Release.cs">

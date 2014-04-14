@@ -13,11 +13,14 @@ namespace Etsi.Ultimate.DomainClasses
     using System.Collections.Generic;
     
     [Serializable]
-    public partial class Users_AdHoc_Roles
+    public partial class SpecificationResponsibleGroup
     {
-        public int UserID { get; set; }
-        public string PERSON_ID { get; set; }
-        public string RoleName { get; set; }
+        public int Pk_SpecificationResponsibleGroupId { get; set; }
+        public int Fk_SpecificationId { get; set; }
+        public int Fk_commityId { get; set; }
+        public bool IsPrime { get; set; }
+    
+        public virtual Specification Specification { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

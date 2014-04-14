@@ -61,6 +61,48 @@ namespace Etsi.Ultimate.Tests
             set;
         }
 
+        public System.Data.Entity.IDbSet<Enum_Serie> Enum_Serie
+        {
+            get;
+            set;
+        }
+
+        public System.Data.Entity.IDbSet<Enum_Technology> Enum_Technology
+        {
+            get;
+            set;
+        }
+
+        public System.Data.Entity.IDbSet<SpecifcationsGenealogy> SpecifcationsGenealogies
+        {
+            get;
+            set;
+        }
+
+        public System.Data.Entity.IDbSet<Specification> Specifications
+        {
+            get;
+            set;
+        }
+
+        public System.Data.Entity.IDbSet<Specification_Release> Specification_Release
+        {
+            get;
+            set;
+        }
+
+        public System.Data.Entity.IDbSet<Specification_WorkItem> Specification_WorkItem
+        {
+            get;
+            set;
+        }
+
+        public System.Data.Entity.IDbSet<SpecificationRapporteur> SpecificationRapporteurs
+        {
+            get;
+            set;
+        }
+
 
         public void SetModified(object entity)
         {

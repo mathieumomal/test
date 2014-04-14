@@ -13,11 +13,11 @@ namespace Etsi.Ultimate.DomainClasses
     using System.Collections.Generic;
     
     [Serializable]
-    public partial class Users_AdHoc_Roles
+    public partial class Enum_CommunitiesShortName
     {
-        public int UserID { get; set; }
-        public string PERSON_ID { get; set; }
-        public string RoleName { get; set; }
+        public int Pk_EnumCommunitiesShortNames { get; set; }
+        public Nullable<int> Fk_TbId { get; set; }
+        public string ShortName { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

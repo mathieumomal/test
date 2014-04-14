@@ -5,9 +5,9 @@
       <description>Specifications module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
       <owner>
-        <name>capgemini.com</name>
-        <organization>capgemini.com</organization>
-        <url>http://www.capgemini.com</url>
+        <name>Etsi</name>
+        <organization>etsi.org</organization>
+        <url>http://www.etsi.org</url>
         <email></email>
       </owner>
       <license src="License.txt"></license>

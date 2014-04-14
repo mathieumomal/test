@@ -48,6 +48,10 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<Specification_Release> Specification_Release { get; set; }
         public IDbSet<Specification_WorkItem> Specification_WorkItem { get; set; }
         public IDbSet<SpecificationRapporteur> SpecificationRapporteurs { get; set; }
+        public IDbSet<Enum_CommunitiesShortName> Enum_CommunitiesShortName { get; set; }
+        public IDbSet<Enum_SpecificationStage> Enum_SpecificationStage { get; set; }
+        public IDbSet<SpecificationResponsibleGroup> SpecificationResponsibleGroups { get; set; }
+        public IDbSet<SpecificationTechnology> SpecificationTechnologies { get; set; }
     	
     	/**
     	 * This code is intended to enable testability of the different layers,
