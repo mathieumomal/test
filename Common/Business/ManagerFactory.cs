@@ -61,6 +61,7 @@ namespace Etsi.Ultimate.Business
         {
             //Map of relation between Interfaces and classes
             Container.RegisterType<IRightsManager, RightsManager>(new TransientLifetimeManager());
+            Container.RegisterType<IPersonManager, PersonManager>(new TransientLifetimeManager());
             Container.RegisterType<IWorkItemCsvParser, WorkItemCsvParser>(new TransientLifetimeManager());
         }
     }

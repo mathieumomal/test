@@ -1,28 +1,23 @@
-﻿using Etsi.Ultimate.DomainClasses;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
 
-namespace Etsi.Ultimate.Services
+namespace Etsi.Ultimate.Business
 {
-    public interface IPersonService
+    public interface IPersonManager
     {
+        IUltimateUnitOfWork UoW { get; set; }
+
         /// <summary>
         /// Returns the name to dislay for a User
         /// </summary>
-        /// <param name="personID">Identifier of the user</param>
+        /// <param name="personID"></param>
         /// <returns></returns>
         string GetPersonDisplayName(int personID);
-
-      
-        /// <summary>
-        /// Get Rights for the user
-        /// </summary>
-        /// <param name="personId">Person Id</param>
-        /// <returns>User Rights</returns>
-        UserRightsContainer GetRights(int personId);
 
 
         #region Rapporteur control methods
