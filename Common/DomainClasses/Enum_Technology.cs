@@ -13,17 +13,10 @@ namespace Etsi.Ultimate.DomainClasses
     using System.Collections.Generic;
     
     [Serializable]
-    public partial class History
+    public partial class Enum_Technology
     {
-        public int Pk_HistoryId { get; set; }
-        public Nullable<int> Fk_ReleaseId { get; set; }
-        public Nullable<int> Fk_PersonId { get; set; }
-        public Nullable<System.DateTime> CreationDate { get; set; }
-        public string HistoryText { get; set; }
-        public string PersonName { get; set; }
-        public Nullable<int> Fk_SpecificationId { get; set; }
-    
-        public virtual Release Release { get; set; }
-        public virtual Specification Specification { get; set; }
+        public int Pk_Enum_TechnologyId { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
     }
 }

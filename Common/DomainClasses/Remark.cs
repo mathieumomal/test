@@ -23,8 +23,12 @@ namespace Etsi.Ultimate.DomainClasses
         public string RemarkText { get; set; }
         public Nullable<int> Fk_WorkItemId { get; set; }
         public string PersonName { get; set; }
+        public Nullable<int> Fk_SpecificationId { get; set; }
+        public Nullable<int> Fk_SpecificationReleaseId { get; set; }
     
         public virtual Release Release { get; set; }
         public virtual WorkItem WorkItem { get; set; }
+        public virtual Specification Specification { get; set; }
+        public virtual Specification_Release Specification_Release { get; set; }
     }
 }

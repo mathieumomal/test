@@ -20,6 +20,7 @@ namespace Etsi.Ultimate.DomainClasses
             this.Remarks = new HashSet<Remark>();
             this.ChildWis = new HashSet<WorkItem>();
             this.WorkItems_ResponsibleGroups = new HashSet<WorkItems_ResponsibleGroups>();
+            this.Specification_WorkItem = new HashSet<Specification_WorkItem>();
         }
     
         public int Pk_WorkItemUid { get; set; }
@@ -54,5 +55,6 @@ namespace Etsi.Ultimate.DomainClasses
         public virtual ICollection<WorkItem> ChildWis { get; set; }
         public virtual WorkItem ParentWi { get; set; }
         public virtual ICollection<WorkItems_ResponsibleGroups> WorkItems_ResponsibleGroups { get; set; }
+        public virtual ICollection<Specification_WorkItem> Specification_WorkItem { get; set; }
     }
 }

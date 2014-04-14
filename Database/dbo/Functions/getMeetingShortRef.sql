@@ -1,3 +1,4 @@
+﻿
 CREATE FUNCTION [dbo].[getMeetingShortRef](@shortName varchar(50), @meetingTitle varchar(100), @SeqNumb varchar(50))
 RETURNS varchar(50)
 AS

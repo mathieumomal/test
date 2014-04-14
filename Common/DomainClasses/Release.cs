@@ -20,6 +20,7 @@ namespace Etsi.Ultimate.DomainClasses
             this.Remarks = new HashSet<Remark>();
             this.Histories = new HashSet<History>();
             this.WorkItems = new HashSet<WorkItem>();
+            this.Specification_Release = new HashSet<Specification_Release>();
         }
     
         public string Name { get; set; }
@@ -58,5 +59,6 @@ namespace Etsi.Ultimate.DomainClasses
         public virtual ICollection<Remark> Remarks { get; set; }
         public virtual ICollection<History> Histories { get; set; }
         public virtual ICollection<WorkItem> WorkItems { get; set; }
+        public virtual ICollection<Specification_Release> Specification_Release { get; set; }
     }
 }

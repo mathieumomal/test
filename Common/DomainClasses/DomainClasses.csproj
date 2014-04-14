@@ -52,7 +52,13 @@
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Enum_ReleaseStatus.Extend.cs" />
+    <Compile Include="Enum_Serie.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Enum_Settings.cs" />
+    <Compile Include="Enum_Technology.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Enum_UserRights.cs" />
     <Compile Include="Enum_WorkItemFilters.cs" />
     <Compile Include="History.cs">
@@ -73,6 +79,21 @@
     </Compile>
     <Compile Include="Enum_UserRoles.cs" />
     <Compile Include="ShortUrl.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SpecifcationsGenealogy.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Specification.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SpecificationRapporteur.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Specification_Release.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Specification_WorkItem.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="UltimateModel.cs">

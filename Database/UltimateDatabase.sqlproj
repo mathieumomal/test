@@ -135,6 +135,16 @@
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
     <Build Include="dbo\Tables\WorkPlanFiles.sql" />
+    <Build Include="dbo\Tables\SpecificationTechnologies.sql" />
+    <Build Include="dbo\Tables\SpecificationResponsibleGroup.sql" />
+    <Build Include="dbo\Tables\SpecificationRapporteur.sql" />
+    <Build Include="dbo\Tables\Specification_WorkItem.sql" />
+    <Build Include="dbo\Tables\Specification_Release.sql" />
+    <Build Include="dbo\Tables\Specification.sql" />
+    <Build Include="dbo\Tables\SpecifcationsGenealogy.sql" />
+    <Build Include="dbo\Tables\Enum_Technology.sql" />
+    <Build Include="dbo\Tables\Enum_Serie.sql" />
+    <Build Include="dbo\Functions\getMeetingShortRef.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

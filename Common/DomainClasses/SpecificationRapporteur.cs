@@ -13,17 +13,13 @@ namespace Etsi.Ultimate.DomainClasses
     using System.Collections.Generic;
     
     [Serializable]
-    public partial class History
+    public partial class SpecificationRapporteur
     {
-        public int Pk_HistoryId { get; set; }
-        public Nullable<int> Fk_ReleaseId { get; set; }
-        public Nullable<int> Fk_PersonId { get; set; }
-        public Nullable<System.DateTime> CreationDate { get; set; }
-        public string HistoryText { get; set; }
-        public string PersonName { get; set; }
-        public Nullable<int> Fk_SpecificationId { get; set; }
+        public int Pk_SpecificationRapporteurId { get; set; }
+        public int Fk_SpecificationId { get; set; }
+        public int Fk_RapporteurId { get; set; }
+        public bool IsPrime { get; set; }
     
-        public virtual Release Release { get; set; }
         public virtual Specification Specification { get; set; }
     }
 }
