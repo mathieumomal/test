@@ -48,6 +48,7 @@
     </Compile>
     <Compile Include="DocxStyle.cs" />
     <Compile Include="DocxStylePool.cs" />
+    <Compile Include="Enum_EntityStatus.cs" />
     <Compile Include="Enum_ReleaseStatus.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
