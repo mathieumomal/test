@@ -38,28 +38,20 @@ namespace Etsi.Ultimate.Business
 
         #region IPersonManager Membres
 
-        public List<View_Persons> GetByIds(List<KeyValuePair<int, bool>> rapporteurIdAndIsPrimary)
+        public List<View_Persons> GetByIds(List<int> rapporteurId)
         {
             IPersonRepository repo = RepositoryFactory.Resolve<IPersonRepository>();
             repo.UoW = UoW;
             List<View_Persons> listPersonsFound = new List<View_Persons>();
-            View_Persons personPrimary = null;
 
-            foreach (KeyValuePair<int, Boolean> idsWithPrimary in rapporteurIdAndIsPrimary)
+            foreach (int id in rapporteurId)
             {
-                var id = idsWithPrimary.Key;
-                var primaryState = idsWithPrimary.Value;
-
                 try
                 {
                     View_Persons person = repo.Find(id);
-                    if (person != null && !primaryState)
+                    if (person != null)
                     {
                         listPersonsFound.Add(person);
-                    }
-                    else if (person != null && primaryState)
-                    {
-                        personPrimary = person;
                     }
                 }
                 catch (Exception ex)
@@ -67,12 +59,6 @@ namespace Etsi.Ultimate.Business
                     LogManager.Error("Finding person using id failed", ex);
                 }
             }
-            //Add primary person to the end of the list
-            if (personPrimary != null)
-            {
-                listPersonsFound.Add(personPrimary);
-            }
-            //We inverse the list to have the primary person (if he exists) to the top of the list
             listPersonsFound.Reverse();
             return listPersonsFound;  
         }

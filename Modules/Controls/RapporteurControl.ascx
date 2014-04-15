@@ -18,18 +18,18 @@
                                                                             AllowSorting="false" 
                                                                             AllowFilteringByColumn="false" 
                                                                             AutoGenerateColumns="false"
-                                                                            OnPreRender="rdGridRapporteurs_PreRender"
-                                                                            OnNeedDataSource="rdGridRapporteurs_NeedDataSource"
+                                                                            OnDeleteCommand="RdGridRapporteurs_DeleteCommand"
+                                                                            AllowAutomaticDeletes="true"
                                                                             Height="140px">
                         <ClientSettings>
                             <Scrolling AllowScroll="True" UseStaticHeaders="true" />
                         </ClientSettings>
-                        <MasterTableView>
+                        <MasterTableView AutoGenerateColumns="False" DataKeyNames="PERSON_ID"> 
                             <Columns>
                                 <telerik:GridTemplateColumn DataField="name" HeaderText="Name" UniqueName="name">
                                     <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="30%"/> 
                                     <ItemTemplate>
-                                        <div><%# DataBinder.Eval(Container.DataItem,"LASTNAME") %></div>  
+                                        <div><%# DataBinder.Eval(Container.DataItem,"FIRSTNAME") %></div>  
                                     </ItemTemplate>
                                 </telerik:GridTemplateColumn>
                                 <telerik:GridTemplateColumn DataField="company" HeaderText="Company" UniqueName="company">
@@ -44,18 +44,12 @@
                                         <div><%# DataBinder.Eval(Container.DataItem,"Email") %></div>  
                                     </ItemTemplate>                
                                 </telerik:GridTemplateColumn>
-                                <telerik:GridTemplateColumn DataField="delete" HeaderText="Delete" UniqueName="delete">
-                                    <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="10%"/>
-                                    <ItemTemplate>
-                                        <div class="center">
-                                            <asp:ImageButton runat="server" ID="imgBtnDeleteRapporteur" ImageUrl="~/images/delete.gif" />
-                                        </div>  
-                                    </ItemTemplate>                
-                                </telerik:GridTemplateColumn>
+                                <telerik:GridButtonColumn CommandName="Delete" Text="Delete" UniqueName="DeleteColumn" />
                             </Columns>
+                            
                             <NoRecordsTemplate>
                                 <div style="text-align:center">
-                                    No Person Added
+                                    No Rapporteur Added
                                 </div>
                             </NoRecordsTemplate>
                         </MasterTableView>
@@ -73,14 +67,15 @@
                         AllowCustomText="true"
                         EnableLoadOnDemand="True"
                         Width="95%"
-                        OnItemsRequested="rdcbRapporteurs_ItemsRequested"
+                        OnItemsRequested="RdcbRapporteurs_ItemsRequested"
                         CssClass="center">  
                     </telerik:RadComboBox>
                 </td>
                 <td>
-                    <asp:Button ID="btnAddRapporteur" runat="server" Text="Add" Width="95%" CssClass="center" />
+                    <asp:Button ID="btnAddRapporteur" OnClick="BtnAddRapporteur_onClick" runat="server" Text="Add" Width="95%" CssClass="center" />
                 </td>
             </tr>
         </table>
     </fieldset>
 </div>
+<telerik:RadWindowManager ID="RadWindowAlert" runat="server" />

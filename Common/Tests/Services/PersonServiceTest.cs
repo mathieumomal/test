@@ -23,8 +23,8 @@ namespace Etsi.Ultimate.Tests.Services
     public class PersonServiceTest : BaseTest
     {
         #region Tests
-        [Test, TestCaseSource("GetPersonsWithIdsListNoPrimary")]
-        public void GetByIdsTest_TestUknownIdAndNoPrimary(List<KeyValuePair<int,bool>> idsList,IDbSet<View_Persons> persons, int countExpected)
+        [Test, TestCaseSource("GetPersonsWithIdsList")]
+        public void GetByIdsTest_TestUknownIdAndNoPrimary(List<int> idsList,IDbSet<View_Persons> persons, int countExpected)
         {
             var mockUoW = MockRepository.GenerateMock<IUltimateUnitOfWork>();
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
@@ -39,9 +39,8 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(countExpected, results.Count);
         }
 
-
-        [Test, TestCaseSource("GetPersonsWithIdsListWithPrimary")]
-        public void GetByIdsTest_WithPrimary(List<KeyValuePair<int,bool>> idsList,IDbSet<View_Persons> persons, int firstIdExpected)
+        [Test, TestCaseSource("GetPersonsWithIdsListVerifyOrder")]
+        public void GetByIdsTest_TestUknownIdAndNoPrimary(List<int> idsList, IDbSet<View_Persons> persons, List<int> listId)
         {
             var mockUoW = MockRepository.GenerateMock<IUltimateUnitOfWork>();
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
@@ -53,9 +52,14 @@ namespace Etsi.Ultimate.Tests.Services
             var service = new PersonService();
             var results = service.GetByIds(idsList);
 
-            Assert.AreEqual(firstIdExpected, results.First().PERSON_ID);
+            var temp = new List<int>();
+            foreach (View_Persons person in results)
+            {
+                temp.Add(person.PERSON_ID);
+            }
+            temp.Reverse();
+            Assert.AreEqual(listId, temp);
         }
-
 
         [Test, TestCaseSource("GetPersonsBySearch")]
         public void LookForTest(String keywords, IDbSet<View_Persons> persons, int personFoundExpected)
@@ -75,30 +79,22 @@ namespace Etsi.Ultimate.Tests.Services
         #endregion
 
         #region Datas
-        private IEnumerable<object[]> GetPersonsWithIdsListNoPrimary
+        private IEnumerable<object[]> GetPersonsWithIdsList
         {
             get
             {
                 var persons = GetPersonList();
-                var idsListTree = new List<KeyValuePair<int, bool>>()
+                var idsListTree = new List<int>()
                 {
-                    new KeyValuePair<int, bool>(1, false),
-                    new KeyValuePair<int, bool>(4, false),
-                    new KeyValuePair<int, bool>(6, false)
+                    1,4,6
                 };
-                var idsListFour = new List<KeyValuePair<int, bool>>()
+                var idsListFour = new List<int>()
                 {
-                    new KeyValuePair<int, bool>(1, false),
-                    new KeyValuePair<int, bool>(4, false),
-                    new KeyValuePair<int, bool>(2, false),
-                    new KeyValuePair<int, bool>(6, false)
+                    1,4,2,6
                 };
-                var idsListWithUnknownId = new List<KeyValuePair<int, bool>>()
+                var idsListWithUnknownId = new List<int>()
                 {
-                    new KeyValuePair<int, bool>(78, false),
-                    new KeyValuePair<int, bool>(4, false),
-                    new KeyValuePair<int, bool>(800, true),
-                    new KeyValuePair<int, bool>(90, false)
+                    78,4,800,90
                 };
                 yield return new object[] { idsListTree, (IDbSet<View_Persons>)persons, 3 };
                 yield return new object[] { idsListFour, (IDbSet<View_Persons>)persons, 4 };
@@ -106,34 +102,26 @@ namespace Etsi.Ultimate.Tests.Services
             }
         }
 
-        private IEnumerable<object[]> GetPersonsWithIdsListWithPrimary
+        private IEnumerable<object[]> GetPersonsWithIdsListVerifyOrder
         {
             get
             {
                 var persons = GetPersonList();
-                var idsListTree = new List<KeyValuePair<int, bool>>()
+                var idsListTree = new List<int>()
                 {
-                    new KeyValuePair<int, bool>(1, false),
-                    new KeyValuePair<int, bool>(4, false),
-                    new KeyValuePair<int, bool>(6, true)
+                    1,4,6
                 };
-                var idsListFour = new List<KeyValuePair<int, bool>>()
+                var idsListFour = new List<int>()
                 {
-                    new KeyValuePair<int, bool>(1, false),
-                    new KeyValuePair<int, bool>(4, false),
-                    new KeyValuePair<int, bool>(2, true),
-                    new KeyValuePair<int, bool>(6, false)
+                    1,4,2,6
                 };
-                var idsListWithUnknownId = new List<KeyValuePair<int, bool>>()
+                var idsListWithUnknownId = new List<int>()
                 {
-                    new KeyValuePair<int, bool>(3, false),
-                    new KeyValuePair<int, bool>(4, true),
-                    new KeyValuePair<int, bool>(800, true),
-                    new KeyValuePair<int, bool>(1, true)
+                    78,4,800,90
                 };
-                yield return new object[] { idsListTree, (IDbSet<View_Persons>)persons, 6 };
-                yield return new object[] { idsListFour, (IDbSet<View_Persons>)persons, 2 };
-                yield return new object[] { idsListWithUnknownId, (IDbSet<View_Persons>)persons, 1 };
+                yield return new object[] { idsListTree, (IDbSet<View_Persons>)persons, new List<int>(){1,4,6} };
+                yield return new object[] { idsListFour, (IDbSet<View_Persons>)persons, new List<int>() { 1, 4, 2, 6 } };
+                yield return new object[] { idsListWithUnknownId, (IDbSet<View_Persons>)persons, new List<int>() { 4 } };
             }
         }
 

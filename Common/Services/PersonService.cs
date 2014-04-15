@@ -34,13 +34,13 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public List<View_Persons> GetByIds(List<KeyValuePair<int, bool>> rapporteurIdAndIsPrimary)
+        public List<View_Persons> GetByIds(List<int> rapporteurId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var personManager = ManagerFactory.Resolve<IPersonManager>();
                 personManager.UoW = uoW;
-                return personManager.GetByIds(rapporteurIdAndIsPrimary);
+                return personManager.GetByIds(rapporteurId);
             }
         }
 

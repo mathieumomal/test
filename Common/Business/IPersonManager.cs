@@ -27,7 +27,7 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="rapporteurIdAndIsPrimary"></param>
         /// <returns></returns>
-        List<View_Persons> GetByIds(List<KeyValuePair<int, bool>> rapporteurIdAndIsPrimary);
+        List<View_Persons> GetByIds(List<int> rapporteurId);
 
         /// <summary>
         /// Find rapporteurs by a keywords which match to their firstname/lastname/email
