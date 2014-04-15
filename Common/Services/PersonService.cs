@@ -34,9 +34,7 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        #region Rapporteur control methods
-
-        public System.Collections.Generic.List<View_Persons> GetByIds(List<KeyValuePair<int, Boolean>> rapporteurIdAndIsPrimary)
+        public List<View_Persons> GetByIds(List<KeyValuePair<int, bool>> rapporteurIdAndIsPrimary)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
@@ -46,7 +44,7 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public System.Collections.Generic.List<View_Persons> LookFor(string keywords)
+        public List<View_Persons> LookFor(string keywords)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
@@ -55,7 +53,5 @@ namespace Etsi.Ultimate.Services
                 return personManager.LookFor(keywords);
             }
         }
-
-        #endregion
     }
 }

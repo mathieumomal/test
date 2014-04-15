@@ -11,4 +11,11 @@
 	border-radius: 4px !important;
 }
 
+#divRapporteurControl .rgMasterTable{text-align:left;} 
+
+#divRapporteurControl .searchBar td:nth-child(1){width:20%}
+#divRapporteurControl .searchBar td:nth-child(2){width:60%}
+#divRapporteurControl .searchBar td:nth-child(3){width:20%}
+
+#divRapporteurControl .center{text-align:center;}
 /* Rapporteur Control */

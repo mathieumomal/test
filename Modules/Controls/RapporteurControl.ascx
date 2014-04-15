@@ -19,57 +19,66 @@
                                                                             AllowFilteringByColumn="false" 
                                                                             AutoGenerateColumns="false"
                                                                             OnPreRender="rdGridRapporteurs_PreRender"
-                                                                            OnNeedDataSource="rdGridRapporteurs_NeedDataSource">
+                                                                            OnNeedDataSource="rdGridRapporteurs_NeedDataSource"
+                                                                            Height="140px">
                         <ClientSettings>
                             <Scrolling AllowScroll="True" UseStaticHeaders="true" />
                         </ClientSettings>
                         <MasterTableView>
                             <Columns>
                                 <telerik:GridTemplateColumn DataField="name" HeaderText="Name" UniqueName="name">
-                                    <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="150px"/> 
+                                    <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="30%"/> 
                                     <ItemTemplate>
                                         <div><%# DataBinder.Eval(Container.DataItem,"LASTNAME") %></div>  
                                     </ItemTemplate>
                                 </telerik:GridTemplateColumn>
                                 <telerik:GridTemplateColumn DataField="company" HeaderText="Company" UniqueName="company">
-                                    <HeaderStyle HorizontalAlign="Center" Font-Bold="True"/>
+                                    <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="20%"/>
                                     <ItemTemplate>
                                         <div><%# DataBinder.Eval(Container.DataItem,"ORGA_NAME") %></div>  
                                     </ItemTemplate>                
                                 </telerik:GridTemplateColumn>
                                 <telerik:GridTemplateColumn DataField="email" HeaderText="Email" UniqueName="email">
-                                    <HeaderStyle HorizontalAlign="Center" Font-Bold="True"/>
+                                    <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="40%"/>
                                     <ItemTemplate>
                                         <div><%# DataBinder.Eval(Container.DataItem,"Email") %></div>  
                                     </ItemTemplate>                
                                 </telerik:GridTemplateColumn>
                                 <telerik:GridTemplateColumn DataField="delete" HeaderText="Delete" UniqueName="delete">
-                                    <HeaderStyle HorizontalAlign="Center" Font-Bold="True"/>
+                                    <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="10%"/>
                                     <ItemTemplate>
-                                        <div>
-                                            <asp:Button runat="server" Text="Delete"/>
+                                        <div class="center">
+                                            <asp:ImageButton runat="server" ID="imgBtnDeleteRapporteur" ImageUrl="~/images/delete.gif" />
                                         </div>  
                                     </ItemTemplate>                
                                 </telerik:GridTemplateColumn>
                             </Columns>
                             <NoRecordsTemplate>
                                 <div style="text-align:center">
-                                    No Remarks Added
+                                    No Person Added
                                 </div>
                             </NoRecordsTemplate>
                         </MasterTableView>
                     </telerik:RadGrid>
                 </td>
             </tr>
-            <tr>
-                <td>
+            <tr class="searchBar">
+                <td class="center">
                     <asp:Label ID="lblAddRapporteur" runat="server" Text="Add rapporteur"/>
                 </td>
                 <td>
-                    <asp:TextBox ID="txtAddRemark" runat="server" Width="100%"></asp:TextBox>
+                    <telerik:RadComboBox
+                        id="rdcbRapporteurs"
+                        runat="server"
+                        AllowCustomText="true"
+                        EnableLoadOnDemand="True"
+                        Width="95%"
+                        OnItemsRequested="rdcbRapporteurs_ItemsRequested"
+                        CssClass="center">  
+                    </telerik:RadComboBox>
                 </td>
                 <td>
-                    <asp:Button ID="btnAddRapporteur" runat="server" Text="Add" Width="100%" />
+                    <asp:Button ID="btnAddRapporteur" runat="server" Text="Add" Width="95%" CssClass="center" />
                 </td>
             </tr>
         </table>

@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="UltimateComponents" type="Library" version="00.02.03">
+    <package name="UltimateComponents" type="Library" version="00.02.07">
       <friendlyName>Ultimate Components</friendlyName>
       <description>Ultimate user web controls</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
@@ -21,6 +21,30 @@
           <assemblies>
             <assembly>
               <name>Etsi.Ultimate.Controls.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Services.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Business.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.DataAccess.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.DomainClasses.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Repositories.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Utils.dll</name>
               <path>bin</path>
             </assembly>
           </assemblies>

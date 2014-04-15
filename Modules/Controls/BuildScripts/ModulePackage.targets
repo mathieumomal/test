@@ -70,6 +70,13 @@
     <Copy SourceFiles="@(SqlDataProviderFiles)" DestinationFolder="$(MSBuildProjectDirectory)\Package\%(RecursiveDir)" />
     <Copy SourceFiles="@(PackageManifestFiles)" DestinationFolder="$(MSBuildProjectDirectory)\Package" />
     <Copy SourceFiles="@(PackageTxtFiles)" DestinationFolder="$(MSBuildProjectDirectory)\Package" />
+
+    <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.Services.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
+    <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.Business.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
+    <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.DataAccess.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
+    <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.DomainClasses.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
+    <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.Repositories.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
+    <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.Utils.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
     
     
     <!-- create the INSTALL RESOURCES.ZIP file -->
@@ -98,6 +105,13 @@
     <Copy SourceFiles="@(SqlDataProviderFiles)" DestinationFolder="$(MSBuildProjectDirectory)\Package\%(RecursiveDir)" />
     <Copy SourceFiles="@(PackageManifestFiles)" DestinationFolder="$(MSBuildProjectDirectory)\Package" />
     <Copy SourceFiles="@(PackageTxtFiles)" DestinationFolder="$(MSBuildProjectDirectory)\Package" />
+
+    <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.Services.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
+    <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.Business.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
+    <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.DataAccess.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
+    <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.DomainClasses.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
+    <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.Repositories.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
+    <Copy SourceFiles="$(MSBuildDnnBinPath)\Etsi.Ultimate.Utils.dll" DestinationFolder="$(MSBuildProjectDirectory)\Package\bin"/>
 
     <!-- create the SOURCE RESOURCES.ZIP file -->
     <Copy SourceFiles="@(SourceInclude)" DestinationFolder="$(MSBuildProjectDirectory)\ResourcesZip\%(RecursiveDir)" />

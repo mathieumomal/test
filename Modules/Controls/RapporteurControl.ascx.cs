@@ -22,28 +22,28 @@ namespace Etsi.Ultimate.Controls
         #region public properties
         public Boolean isPrimarySelectable { get; set; }
         public Boolean isMultiple { get; set; }
-        public List<KeyValuePair<int, bool>> listIdPersonsSelect 
-        {
-            get
-            {
-                return listIdPersonsSelect;
-            }
-            set 
-            {
-                var personService = ServicesFactory.Resolve<IPersonService>();
-                listPersonsSelect = personService.GetByIds(value);
-                listIdPersonsSelect = value;
-            } 
-        }
+        public List<KeyValuePair<int, bool>> listIdPersonsSelect { get; set; }
         public List<View_Persons> listPersonsSelect { get; set; }
         #endregion
 
         #region events
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            var exampleListId = new List<KeyValuePair<int, bool>>()
+                {
+                    new KeyValuePair<int, bool>(14, false),
+                    new KeyValuePair<int, bool>(23, false),
+                    new KeyValuePair<int, bool>(25, false),
+                    new KeyValuePair<int, bool>(10, false),
+                    new KeyValuePair<int, bool>(14, false),
+                    new KeyValuePair<int, bool>(6, false)
+                };
+            listIdPersonsSelect = exampleListId;
+            var personService = ServicesFactory.Resolve<IPersonService>();
+            listPersonsSelect = personService.GetByIds(listIdPersonsSelect);
         }
 
+        //Table
         protected void rdGridRapporteurs_PreRender(object sender, System.EventArgs e)
         {
             rdGridRapporteurs.Rebind();
@@ -53,10 +53,27 @@ namespace Etsi.Ultimate.Controls
         {
             rdGridRapporteurs.DataSource = listPersonsSelect;
         }
+
+        //Search
+        protected void rdcbRapporteurs_ItemsRequested(object o, RadComboBoxItemsRequestedEventArgs e)
+        {
+            if (e.Text.Length > 1)
+            {
+                var svc = ServicesFactory.Resolve<IPersonService>();
+                var personsFound = svc.LookFor(e.Text);
+                BindDropDownData(personsFound);
+            }
+        }
         #endregion
 
         #region private methods
-
+        private void BindDropDownData(List<DomainClasses.View_Persons> personsList)
+        {
+            rdcbRapporteurs.DataSource = personsList;
+            rdcbRapporteurs.DataTextField = "PersonSearchTxt";
+            rdcbRapporteurs.DataValueField = "Email";
+            rdcbRapporteurs.DataBind();
+        }
         #endregion
     }
 }

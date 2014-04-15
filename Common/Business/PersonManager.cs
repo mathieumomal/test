@@ -36,10 +36,9 @@ namespace Etsi.Ultimate.Business
             }
         }
 
+        #region IPersonManager Membres
 
-        #region Rapporteur control methods
-
-        public List<View_Persons> GetByIds(List<KeyValuePair<int, Boolean>> rapporteurIdAndIsPrimary)
+        public List<View_Persons> GetByIds(List<KeyValuePair<int, bool>> rapporteurIdAndIsPrimary)
         {
             IPersonRepository repo = RepositoryFactory.Resolve<IPersonRepository>();
             repo.UoW = UoW;
@@ -50,7 +49,7 @@ namespace Etsi.Ultimate.Business
             {
                 var id = idsWithPrimary.Key;
                 var primaryState = idsWithPrimary.Value;
-                
+
                 try
                 {
                     View_Persons person = repo.Find(id);
