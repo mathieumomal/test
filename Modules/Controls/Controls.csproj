@@ -70,6 +70,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommunityControl.ascx.cs">
+      <DependentUpon>CommunityControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommunityControl.ascx.designer.cs">
+      <DependentUpon>CommunityControl.ascx</DependentUpon>
+    </Compile>
     <Compile Include="FullView.ascx.cs">
       <DependentUpon>FullView.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -122,6 +129,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="images\edit_16X16.png" />
+    <Content Include="images\fullview.png" />
+    <Content Include="images\share.png" />
+    <Content Include="CommunityControl.ascx" />
     <Content Include="FullView.ascx" />
     <Content Include="MeetingControl.ascx" />
     <Content Include="HistoryControl.ascx" />

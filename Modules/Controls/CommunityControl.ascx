@@ -1,0 +1,104 @@
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="CommunityControl.ascx.cs" Inherits="Etsi.Ultimate.Controls.CommunityControl" %>
+<%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
+
+<script type="text/javascript">
+    function openCommunitySelector(sender, eventArgs) {
+        var radWindowCommunity = $find("<%= rwCommunity.ClientID %>");
+        radWindowCommunity.show();
+    }
+
+    function closeCommunitySelector(sender, eventArgs) {
+        var radWindowCommunity = $find("<%= rwCommunity.ClientID %>");
+        radWindowCommunity.close();
+    }
+
+    function clientNodeChecked(sender, eventArgs) {
+        var childNodes = eventArgs.get_node().get_nodes();
+        var isChecked = eventArgs.get_node().get_checked();
+        UpdateAllChildren(childNodes, isChecked);
+        UpdateParent(eventArgs.get_node(), isChecked);
+    }
+
+    function UpdateAllChildren(nodes, checked) {
+        for (var i = 0; i < nodes.get_count() ; i++) {
+            if (checked) {
+                nodes.getNode(i).check();
+            }
+            else {
+                nodes.getNode(i).set_checked(false);
+            }
+
+            if (nodes.getNode(i).get_nodes().get_count() > 0) {
+                UpdateAllChildren(nodes.getNode(i).get_nodes(), checked);
+            }
+        }
+    }
+
+    function UpdateParent(node, checked) {
+        if (node.get_parent() != node.get_treeView()) {
+            if (checked) {
+                var siblings = node.get_parent().get_nodes();
+                var checkedCount = 0;
+                for (var i = 0; i < siblings.get_count() ; i++) {
+                    if (siblings.getNode(i).get_checked())
+                        checkedCount++;
+                }
+
+                if (siblings.get_count() == checkedCount)
+                    node.get_parent().check();
+            }
+            else {
+                node.get_parent().set_checked(false);
+            }
+            UpdateParent(node.get_parent(), checked);
+        }
+    }
+
+    function UpdateNodes(checked) {
+        var tree = $find("<%= rtvCommunitySelector.ClientID %>");
+        for (var i = 0; i < tree.get_allNodes().length; i++) {
+            tree.get_allNodes()[i].set_checked(checked);
+        }
+    }
+</script>
+
+<div>
+    <telerik:RadComboBox
+        ID="rcbCommunity"
+        runat="server"
+        AllowCustomText="false" />
+    <asp:ImageButton ID="imgBtnCommunity" runat="server" ImageUrl="images/edit_16X16.png" OnClientClick="openCommunitySelector(); return false;" />
+    <asp:Label ID="lblCommunity" runat="server" Text="S1, S2, S3" />
+</div>
+
+<telerik:RadWindowManager ID="rwmCommunity" runat="server">
+    <Windows>
+        <telerik:RadWindow ID="rwCommunity" runat="server" Width="400" Height="500" Behaviors="None" Modal="true" VisibleStatusbar="false" Title="Responsible group(s)">
+            <ContentTemplate>
+                <table style="width: 350px">
+                    <tr>
+                        <td>Select the Responsible group(s)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <telerik:RadTreeView ID="rtvCommunitySelector" runat="server" CheckBoxes="True" OnClientNodeChecked="clientNodeChecked">
+                                <DataBindings>
+                                    <telerik:RadTreeNodeBinding Expanded="True"></telerik:RadTreeNodeBinding>
+                                </DataBindings>
+                            </telerik:RadTreeView>
+                        </td>
+                    </tr>
+                    <tr style="height: 35px"></tr>
+                </table>
+                <div style="position: fixed; bottom: 0; height: 30px; width: 350px; padding-top: 5px; padding-left: 15px; margin-bottom: 8px; background-color: white;">
+                    <telerik:RadButton ID="btnConfirm" runat="server" Text="Confirm" Width="60" OnClick="btnConfirm_Click"/>
+                    <telerik:RadButton ID="btnAll" runat="server" Text="All" Width="60" OnClientClicked="function(button, args) { UpdateNodes(true); }" AutoPostBack="false"/>
+                    <telerik:RadButton ID="btnDefault" runat="server" Text="Default" Width="60" />
+                    <telerik:RadButton ID="btnClear" runat="server" Text="Clear" Width="60" OnClientClicked="function(button, args) { UpdateNodes(false); }" AutoPostBack="false" />
+                    <telerik:RadButton ID="btnCancel" runat="server" Text="Cancel" Width="60" OnClientClicked="closeCommunitySelector" AutoPostBack="false" />
+                    <asp:Label Visible="false" ID="Label1" runat="server" />
+                </div>
+            </ContentTemplate>
+        </telerik:RadWindow>
+    </Windows>
+</telerik:RadWindowManager>

@@ -44,12 +44,12 @@ namespace Etsi.Ultimate.Repositories
 
         public void InsertOrUpdate(Community entity)
         {
-            throw new InvalidOperationException("Cannot add or update a person");
+            throw new InvalidOperationException("Cannot add or update a community");
         }
 
         public void Delete(int id)
         {
-            throw new InvalidOperationException("Cannot delete Release status entity");
+            throw new InvalidOperationException("Cannot delete community entity");
         }
 
         #endregion

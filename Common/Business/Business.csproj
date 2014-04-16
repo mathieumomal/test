@@ -60,6 +60,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommunityManager.cs" />
     <Compile Include="IPersonManager.cs" />
     <Compile Include="MeetingManager.cs" />
     <Compile Include="ManagerFactory.cs" />
