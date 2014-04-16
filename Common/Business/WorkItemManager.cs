@@ -49,7 +49,7 @@ namespace Etsi.Ultimate.Business
             if (hidePercentComplete)
             {
                 List<WorkItem> workItemsToRemove = new List<WorkItem>();
-                AllWorkItems.Where(x => x.WiLevel == 1 && x.Completion >= 100).ToList().ForEach(x => 
+                AllWorkItems.Where(x => x.WiLevel == 1 && x.Completion >= 100).ToList().ForEach(x =>
                     {
                         workItemsToRemove.Add(x); //Collect Level 1 records
                         GetChildWorkItems(x, workItemsToRemove, repo); //Collect Child records
@@ -67,7 +67,7 @@ namespace Etsi.Ultimate.Business
             AllWorkItems.AddRange(childRecordsForGranularityLevel.Where(x => (x.Name.ToLower().Contains(wiName.Trim().ToLower()) || String.IsNullOrEmpty(wiName.Trim()))
                                                                           && (x.Acronym.ToLower().Contains(wiAcronym.Trim().ToLower()) || (String.IsNullOrEmpty(wiAcronym.Trim())))
                                                                           && (tbIds.Count == 0 || x.WorkItems_ResponsibleGroups.Any(y => tbIds.Contains(y.Fk_TbId.Value)))));
- 
+
             return new KeyValuePair<List<WorkItem>, UserRightsContainer>(AllWorkItems, GetRights(personId));
         }
 
@@ -106,6 +106,14 @@ namespace Etsi.Ultimate.Business
                     GetChildWorkItems(childWorkItem, childWorkItems, repo);
                 }
             }
+        }
+
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, string searchString)
+        {
+            IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
+            repo.UoW = _uoW;
+
+            return new KeyValuePair<List<WorkItem>, UserRightsContainer>(repo.GetWorkItemsBySearchCriteria(searchString), GetRights(personId));
         }
 
         /// <summary>

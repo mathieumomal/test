@@ -37,6 +37,14 @@ namespace Etsi.Ultimate.Services
         /// <returns>List of workitems along with rights container</returns>
         KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName, List<int> tbIds);
 
+        /// <summary>
+        /// Get the list of workitems based on searchString
+        /// </summary>
+        /// <param name="personId">Person Id</param>
+        /// <param name="searchString">Search String</param>
+        KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, string searchString);
+
+
         KeyValuePair<List<WorkItem>, UserRightsContainer> GetAllWorkItems(int personId);
 
         /// <summary>

@@ -40,5 +40,6 @@ namespace Etsi.Ultimate.DomainClasses
         }
         public string RapporteurName { set; get; }
         public bool IsLevel0Record { get { return (WiLevel == 0); } }
+        public bool IsPrimary { get; set; }
     }
 }

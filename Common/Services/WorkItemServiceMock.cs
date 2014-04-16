@@ -59,7 +59,11 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
-
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, string searchString)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
+
     }
 }

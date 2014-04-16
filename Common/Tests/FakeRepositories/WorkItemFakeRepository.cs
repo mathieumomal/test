@@ -139,7 +139,15 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             throw new NotImplementedException();
         }
 
+        public List<WorkItem> GetWorkItemsBySearchCriteria(string searchString)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
+
+
+
 
 
     }

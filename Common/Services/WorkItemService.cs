@@ -93,6 +93,15 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, string searchString)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var workItemManager = new WorkItemManager(uoW);
+                return workItemManager.GetWorkItemsBySearchCriteria(personId, searchString);
+            }
+        }
+
         /// <summary>
         /// Get all the list workitems
         /// </summary>
@@ -171,6 +180,9 @@ namespace Etsi.Ultimate.Services
         }
         
         #endregion
+
+
+
 
     }
 }

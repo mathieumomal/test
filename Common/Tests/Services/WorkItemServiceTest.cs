@@ -29,10 +29,10 @@ namespace Etsi.Ultimate.Tests.Services
             userRights.AddRight(Enum_UserRights.WorkItem_ImportWorkplan);
 
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
-            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(6);
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(9);
 
             var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
-            mockRightsManager.Stub(x => x.GetRights(personID)).Return(userRights).Repeat.Times(6);
+            mockRightsManager.Stub(x => x.GetRights(personID)).Return(userRights).Repeat.Times(9);
 
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
             ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
@@ -72,6 +72,20 @@ namespace Etsi.Ultimate.Tests.Services
             workItems = wiService.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, false, "UPCON", String.Empty, new List<int>());
             Assert.AreEqual(3, workItems.Key.Count);
             Assert.IsTrue(workItems.Value.HasRight(Enum_UserRights.WorkItem_ImportWorkplan));
+
+            //-----------------------
+            //Test overloaded method (search string)
+            //-----------------------
+            workItems = wiService.GetWorkItemsBySearchCriteria(personID, "UPCON");
+            Assert.AreEqual(3, workItems.Key.Count);
+            Assert.IsTrue(workItems.Value.HasRight(Enum_UserRights.WorkItem_ImportWorkplan));
+            //Exclude level= 0 records
+            workItems = wiService.GetWorkItemsBySearchCriteria(personID, "Rel-12 Stage 1");
+            Assert.AreEqual(0, workItems.Key.Count);
+            //Search by WorkItem id
+            workItems = wiService.GetWorkItemsBySearchCriteria(personID, "113");
+            Assert.AreEqual(1, workItems.Key.Count);
+
 
             mockDataContext.VerifyAllExpectations();
         }

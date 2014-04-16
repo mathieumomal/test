@@ -7,15 +7,17 @@ using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Utils;
 
+
 namespace Etsi.Ultimate.Repositories
 {
-    public class WorkItemRepository: IWorkItemRepository
+    public class WorkItemRepository : IWorkItemRepository
     {
         #region IWorkItemRepository Members
 
         public IUltimateUnitOfWork UoW
         {
-            get; set;
+            get;
+            set;
         }
 
         public IQueryable<WorkItem> All
@@ -85,12 +87,29 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>List of workitems</returns>
         public List<WorkItem> GetWorkItemsBySearchCriteria(List<int> releaseIds, int granularity, string wiAcronym, string wiName, List<int> tbIds)
         {
-            return AllIncluding(t => t.Release, t => t.Remarks, t => t.ChildWis, t=> t.ParentWi, t=> t.WorkItems_ResponsibleGroups)
+            return AllIncluding(t => t.Release, t => t.Remarks, t => t.ChildWis, t => t.ParentWi, t => t.WorkItems_ResponsibleGroups)
                 .Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)
                             && (x.Name.ToLower().Contains(wiName.Trim().ToLower()) || String.IsNullOrEmpty(wiName.Trim()))
                             && (x.Acronym.ToLower().Contains(wiAcronym.Trim().ToLower()) || (String.IsNullOrEmpty(wiAcronym.Trim())))
                             && (x.WiLevel != null && x.WiLevel <= granularity)
                             && (tbIds.Count == 0 || x.WorkItems_ResponsibleGroups.Any(y => tbIds.Contains(y.Fk_TbId.Value)))).ToList();
+        }
+
+        /// <summary>
+        /// Get the list of workitems based on
+        /// </summary>
+        /// <param name="searchString"></param>
+        /// <returns>List of WorkItems</returns>
+        public List<WorkItem> GetWorkItemsBySearchCriteria(string searchString)
+        {
+            int WorkItemId = -1;
+            int.TryParse(searchString, out WorkItemId);
+
+            return AllIncluding(t => t.Release, t => t.Remarks, t => t.ChildWis, t => t.ParentWi, t => t.WorkItems_ResponsibleGroups)
+                .Where(x => (x.Name.ToLower().Contains(searchString.ToLower())
+                    || x.Acronym.ToLower().Contains(searchString.ToLower())
+                    || x.Pk_WorkItemUid == WorkItemId)
+                    && x.WiLevel != 0).ToList();
         }
 
         /// <summary>
@@ -132,7 +151,7 @@ namespace Etsi.Ultimate.Repositories
 
         #endregion
     }
-            
+
     public interface IWorkItemRepository : IEntityRepository<WorkItem>
     {
         /// <summary>
@@ -145,6 +164,13 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="tbIds">List of Technical Bodies</param>
         /// <returns>List of workitems</returns>
         List<WorkItem> GetWorkItemsBySearchCriteria(List<int> releaseIds, int granularity, string wiAcronym, string wiName, List<int> tbIds);
+
+        /// <summary>
+        ///Get the list of workitems based on searchString
+        /// </summary>
+        /// <param name="searchString"></param>
+        /// <returns>List of workitems</returns>
+        List<WorkItem> GetWorkItemsBySearchCriteria(string searchString);
 
         /// <summary>
         /// Get count of WorkItems
