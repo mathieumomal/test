@@ -12,20 +12,35 @@
 	border-radius: 4px !important;
 	max-width: 1000px;
 }
-
+#divRapporteurControl .RadGrid_Default .rgHeader{
+	text-shadow:0 0 #444 !important;
+	font-weight: bold;
+	font-family: arial, verdana, sans-serif;
+	font-size: 12px;
+}
+#divRapporteurControl .RadGrid_Default .rgRow:hover, #divRapporteurControl .RadGrid_Default .rgAltRow:hover{
+	background-image:none !important;
+	background-color: rgba(196, 196, 196, 0.49) !important;
+}
+#divRapporteurControl .RadGrid_Default .rgSelectedRow td{
+	border-bottom-color: transparent;
+}
+#divRapporteurControl .searchBar td:nth-child(1){
+	width: 15%;
+	text-align: right;
+	padding-right: 10px;
+	font-weight: bold;
+}
 #divRapporteurControl .rgMasterTable{text-align:left;} 
-
-
-
 #divRapporteurControl .center{text-align:center;}
 #divRapporteurControl .rdcbRapporteurStyle{padding-top: 4px;}
+
 
 /* --- Viewmode --- */
 
 	/* One person mode */
 #divRapporteurControl .viewModeOnePersonMode td:nth-child(1){width:0%;}
 #divRapporteurControl .viewModeOnePersonMode td:nth-child(2){width:100%;}
-
 #divRapporteurControl .viewModeOnePersonMode .RadComboBox .rcbDisabled{width:100%;opacity:1;}
 
 	/* Multi person mode */
@@ -37,14 +52,8 @@
 /* --- Edit mode --- */
 
 	/* Multi person mode */
-#divRapporteurControl .editModeMultiPersonMode .searchBar td:nth-child(1){
-	width: 15%;
-	text-align: right;
-	padding-right: 20px;
-}
 #divRapporteurControl .editModeMultiPersonMode .searchBar td:nth-child(2){width:60%}
 #divRapporteurControl .editModeMultiPersonMode .searchBar td:nth-child(3){width:20%}
-
 #divRapporteurControl .editMode .rdcbRapporteurStyle{width:130%;}
 
 /* --- Edit mode --- */
