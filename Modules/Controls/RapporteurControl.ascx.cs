@@ -15,6 +15,28 @@ namespace Etsi.Ultimate.Controls
 {
     public partial class RapporteurControl : System.Web.UI.UserControl
     {
+        ///--- About this control ---
+        /// This control provide two main mode to select person(s) :
+        ///- Edit MODE
+        ///- View MODE
+        ///To choose it we need to use the 'IsEditMode' attribute
+        ///
+        ///Moreover you can choose : 
+        ///- A 'choice' mode (One person (SINGLEMODE) or more than one (MULTIMODE))
+        ///- A multiple select mode (IN CASE OF CHOICE MODE => MULTIMODE ; we can choose to select one 
+        ///('SelectableMode' = CONST_RAPPORTEURS_SELECTABLEMODE.single) 
+        ///or more than one person 
+        ///('SelectableMode' = CONST_RAPPORTEURS_SELECTABLEMODE.multi) )
+        ///OR no one 
+        ///('SelectableMode' = CONST_RAPPORTEURS_SELECTABLEMODE.none) )
+        ///
+        ///To initialize this control with person(s) : 
+        ///- IN SINGLEMODE : set 'IdPersonSelected_SINGLEMODE' by an id
+        ///- IN MULTIMODE : set 'ListIdPersonsSelected_MULTIMODE' by a list of ids
+        ///
+        ///To get results : 
+        ///we can use this last same attributes
+
 
         #region constants
         //ViewStates
@@ -42,7 +64,7 @@ namespace Etsi.Ultimate.Controls
 
         public enum CONST_RAPPORTEURS_SELECTABLEMODE{
             multi,
-            simple,
+            single,
             none
         }
         #endregion
@@ -227,7 +249,7 @@ namespace Etsi.Ultimate.Controls
             if (IsEditMode)//EDIT MODE CONFIG
             {
                 #region Selection system manager
-                if (SelectableMode.Equals(CONST_RAPPORTEURS_SELECTABLEMODE.simple.ToString()))
+                if (SelectableMode.Equals(CONST_RAPPORTEURS_SELECTABLEMODE.single.ToString()))
                 {
                     selectableColumn.Visible = true;
                     rdGridRapporteurs.AllowMultiRowSelection = false;
