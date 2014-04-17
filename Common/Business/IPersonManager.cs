@@ -36,6 +36,13 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         List<View_Persons> LookFor(string keywords);
 
+        /// <summary>
+        /// Find one person by his own id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        View_Persons FindPerson(int id);
+
         #endregion
     }
 }

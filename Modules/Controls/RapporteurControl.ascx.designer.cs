@@ -13,6 +13,15 @@ namespace Etsi.Ultimate.Controls {
     public partial class RapporteurControl {
         
         /// <summary>
+        /// Contrôle panelRapporteurControl.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel panelRapporteurControl;
+        
+        /// <summary>
         /// Contrôle lblLegendRapporteur.
         /// </summary>
         /// <remarks>

@@ -53,5 +53,16 @@ namespace Etsi.Ultimate.Services
                 return personManager.LookFor(keywords);
             }
         }
+
+        public View_Persons FindPerson(int id)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var personManager = ManagerFactory.Resolve<IPersonManager>();
+                personManager.UoW = uoW;
+                return personManager.FindPerson(id);
+            }
+        }
+
     }
 }

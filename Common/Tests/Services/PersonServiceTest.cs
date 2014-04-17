@@ -61,6 +61,22 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(listId, temp);
         }
 
+        [Test, TestCaseSource("GetPersonsBySearchNoDeleted")]
+        public void LookForTestNoDeletedPerson(String keywords, IDbSet<View_Persons> persons, int personFoundExpected)
+        {
+            var mockUoW = MockRepository.GenerateMock<IUltimateUnitOfWork>();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.View_Persons).Return(persons);
+            mockUoW.Stub(s => s.Context).Return(mockDataContext);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateUnitOfWork), mockUoW);
+
+
+            var service = new PersonService();
+            var results = service.LookFor(keywords);
+
+            Assert.AreEqual(personFoundExpected, results.Count);
+        }
+
         [Test, TestCaseSource("GetPersonsBySearch")]
         public void LookForTest(String keywords, IDbSet<View_Persons> persons, int personFoundExpected)
         {
@@ -75,6 +91,22 @@ namespace Etsi.Ultimate.Tests.Services
             var results = service.LookFor(keywords);
 
             Assert.AreEqual(personFoundExpected, results.Count);
+        }
+
+        [Test, TestCaseSource("GetPersonById")]
+        public void FindPersonTest(int id, IDbSet<View_Persons> persons, String nameExpected)
+        {
+            var mockUoW = MockRepository.GenerateMock<IUltimateUnitOfWork>();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.View_Persons).Return(persons);
+            mockUoW.Stub(s => s.Context).Return(mockDataContext);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateUnitOfWork), mockUoW);
+
+
+            var service = new PersonService();
+            var results = service.FindPerson(id);
+
+            Assert.AreEqual(nameExpected, results.LASTNAME);
         }
         #endregion
 
@@ -138,15 +170,34 @@ namespace Etsi.Ultimate.Tests.Services
             }
         }
 
+        private IEnumerable<object[]> GetPersonsBySearchNoDeleted
+        {
+            get
+            {
+                var persons = GetPersonList();
+                yield return new object[] { "franck", (IDbSet<View_Persons>)persons, 1 };
+            }
+        }
+
+        private IEnumerable<object[]> GetPersonById
+        {
+            get
+            {
+                var persons = GetPersonList();
+                yield return new object[] { 3, (IDbSet<View_Persons>)persons, "bernard" };
+            }
+        }
+
         private static PersonFakeDBSet GetPersonList()
         {
             var persons = new PersonFakeDBSet { 
-                new View_Persons { PERSON_ID = 1, FIRSTNAME = "Un", LASTNAME = "Martine", Email = "martine@capgemini.com" },
-                new View_Persons { PERSON_ID = 2, FIRSTNAME = "Deux", LASTNAME = "paul", Email = "paul@capgemini.com" },
-                new View_Persons { PERSON_ID = 3, FIRSTNAME = "Trois", LASTNAME = "bernard", Email = "bernard@capgemini.com" },
-                new View_Persons { PERSON_ID = 4, FIRSTNAME = "Quatre", LASTNAME = "justine", Email = "justine@capgemini.com" },
-                new View_Persons { PERSON_ID = 5, FIRSTNAME = "Cinq", LASTNAME = "pauline", Email = "pauline@capgemini.com" },
-                new View_Persons { PERSON_ID = 6, FIRSTNAME = "Six", LASTNAME = "franck", Email = "franck@capgemini.com" },
+                new View_Persons { PERSON_ID = 1, FIRSTNAME = "Un", LASTNAME = "Martine", Email = "martine@capgemini.com", DELETED_FLG="N"  },
+                new View_Persons { PERSON_ID = 2, FIRSTNAME = "Deux", LASTNAME = "paul", Email = "paul@capgemini.com", DELETED_FLG="N"  },
+                new View_Persons { PERSON_ID = 3, FIRSTNAME = "Trois", LASTNAME = "bernard", Email = "bernard@capgemini.com", DELETED_FLG="N"  },
+                new View_Persons { PERSON_ID = 4, FIRSTNAME = "Quatre", LASTNAME = "justine", Email = "justine@capgemini.com", DELETED_FLG="N"  },
+                new View_Persons { PERSON_ID = 5, FIRSTNAME = "Cinq", LASTNAME = "pauline", Email = "pauline@capgemini.com", DELETED_FLG="N"  },
+                new View_Persons { PERSON_ID = 6, FIRSTNAME = "Six", LASTNAME = "franck", Email = "franck@capgemini.com", DELETED_FLG="N" },
+                new View_Persons { PERSON_ID = 7, FIRSTNAME = "sept", LASTNAME = "franck", Email = "delete@capgemini.com", DELETED_FLG="Y" }
             };
             return persons;
         }

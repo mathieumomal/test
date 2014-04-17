@@ -70,10 +70,19 @@ namespace Etsi.Ultimate.Business
 
             return repo
                     .All
-                    .Where(x => (x.FIRSTNAME != null && x.FIRSTNAME.ToLower().Contains(keywords.ToLower())) ||
-                            (x.LASTNAME != null && x.LASTNAME.ToLower().Contains(keywords.ToLower())) ||
-                            (x.Email != null && x.Email.ToLower().Contains(keywords.ToLower())))
+                    .Where(x => (x.FIRSTNAME != null && x.FIRSTNAME.ToLower().Contains(keywords.ToLower()) && x.DELETED_FLG.Equals("N")) ||
+                            (x.LASTNAME != null && x.LASTNAME.ToLower().Contains(keywords.ToLower()) && x.DELETED_FLG.Equals("N")) ||
+                            (x.Email != null && x.Email.ToLower().Contains(keywords.ToLower())) && x.DELETED_FLG.Equals("N"))
                     .ToList();
+        }
+
+        public View_Persons FindPerson(int id)
+        {
+            IPersonRepository repo = RepositoryFactory.Resolve<IPersonRepository>();
+            repo.UoW = UoW;
+
+            return repo
+                    .Find(id);
         }
 
         #endregion

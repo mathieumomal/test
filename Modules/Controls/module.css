@@ -3,19 +3,54 @@
 
 #divRapporteurControl fieldset
 {
+	max-width: 
 	margin: 2%;
 	padding: 1% !important;
 	border: 1px solid grey !important;
 	-webkit-border-radius: 4px !important;
 	-moz-border-radius: 4px !important;
 	border-radius: 4px !important;
+	max-width: 1000px;
 }
 
 #divRapporteurControl .rgMasterTable{text-align:left;} 
 
-#divRapporteurControl .searchBar td:nth-child(1){width:20%}
-#divRapporteurControl .searchBar td:nth-child(2){width:60%}
-#divRapporteurControl .searchBar td:nth-child(3){width:20%}
+
 
 #divRapporteurControl .center{text-align:center;}
+#divRapporteurControl .rdcbRapporteurStyle{padding-top: 4px;}
+
+/* --- Viewmode --- */
+
+	/* One person mode */
+#divRapporteurControl .viewModeOnePersonMode td:nth-child(1){width:0%;}
+#divRapporteurControl .viewModeOnePersonMode td:nth-child(2){width:100%;}
+
+#divRapporteurControl .viewModeOnePersonMode .RadComboBox .rcbDisabled{width:100%;opacity:1;}
+
+	/* Multi person mode */
+
+/* --- Viewmode --- */
+
+
+
+/* --- Edit mode --- */
+
+	/* Multi person mode */
+#divRapporteurControl .editModeMultiPersonMode .searchBar td:nth-child(1){
+	width: 15%;
+	text-align: right;
+	padding-right: 20px;
+}
+#divRapporteurControl .editModeMultiPersonMode .searchBar td:nth-child(2){width:60%}
+#divRapporteurControl .editModeMultiPersonMode .searchBar td:nth-child(3){width:20%}
+
+#divRapporteurControl .editMode .rdcbRapporteurStyle{width:130%;}
+
+/* --- Edit mode --- */
+
+
+
+
+
 /* Rapporteur Control */
