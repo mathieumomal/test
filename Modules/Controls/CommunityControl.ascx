@@ -60,6 +60,23 @@
             tree.get_allNodes()[i].set_checked(checked);
         }
     }
+
+    function SetDefaultItems(sender, eventArgs) {
+        var defaultTBIds = $("#<%= defaultTbIds.ClientID %>").val();
+        var tbIDsList = defaultTBIds.split(",");
+
+        var tree = $find("<%= rtvCommunitySelector.ClientID %>");
+        for (var i = 0; i < tree.get_allNodes().length; i++) {
+            var node = tree.get_allNodes()[i];
+            node.set_checked(false);
+            var nodeValue = node.get_value();
+            for (var j = 0; j < tbIDsList.length; j++) {
+                if (nodeValue == tbIDsList[j])
+                    node.set_checked(true);
+            }                        
+        }
+    }
+
 </script>
 
 <div>
@@ -68,36 +85,40 @@
         runat="server"
         AllowCustomText="false" />
     <asp:ImageButton ID="imgBtnCommunity" runat="server" ImageUrl="images/edit_16X16.png" OnClientClick="openCommunitySelector(); return false;" />
-    <asp:Label ID="lblCommunity" runat="server" Text="S1, S2, S3" />
+    <asp:Label ID="lblCommunity" runat="server" />
 </div>
 
 <telerik:RadWindowManager ID="rwmCommunity" runat="server">
     <Windows>
         <telerik:RadWindow ID="rwCommunity" runat="server" Width="400" Height="500" Behaviors="None" Modal="true" VisibleStatusbar="false" Title="Responsible group(s)">
             <ContentTemplate>
-                <table style="width: 350px">
-                    <tr>
-                        <td>Select the Responsible group(s)</td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <telerik:RadTreeView ID="rtvCommunitySelector" runat="server" CheckBoxes="True" OnClientNodeChecked="clientNodeChecked">
-                                <DataBindings>
-                                    <telerik:RadTreeNodeBinding Expanded="True"></telerik:RadTreeNodeBinding>
-                                </DataBindings>
-                            </telerik:RadTreeView>
-                        </td>
-                    </tr>
-                    <tr style="height: 35px"></tr>
-                </table>
-                <div style="position: fixed; bottom: 0; height: 30px; width: 350px; padding-top: 5px; padding-left: 15px; margin-bottom: 8px; background-color: white;">
+                <asp:UpdatePanel ID="upCommunityPanel" runat="server" UpdateMode="Always">
+                    <ContentTemplate>
+                        <table style="width: 350px">
+                            <tr>
+                                <td>Select the Responsible group(s)</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <telerik:RadTreeView ID="rtvCommunitySelector" runat="server" CheckBoxes="True" OnClientNodeChecked="clientNodeChecked">
+                                        <DataBindings>
+                                            <telerik:RadTreeNodeBinding Expanded="True"></telerik:RadTreeNodeBinding>
+                                        </DataBindings>
+                                    </telerik:RadTreeView>
+                                </td>
+                            </tr>
+                            <tr style="height: 35px"></tr>
+                        </table>
+                        <div style="position: fixed; bottom: 0; height: 30px; width: 350px; padding-top: 5px; padding-left: 15px; margin-bottom: 8px; background-color: white;">
                     <telerik:RadButton ID="btnConfirm" runat="server" Text="Confirm" Width="60" OnClick="btnConfirm_Click"/>
-                    <telerik:RadButton ID="btnAll" runat="server" Text="All" Width="60" OnClientClicked="function(button, args) { UpdateNodes(true); }" AutoPostBack="false"/>
-                    <telerik:RadButton ID="btnDefault" runat="server" Text="Default" Width="60" />
-                    <telerik:RadButton ID="btnClear" runat="server" Text="Clear" Width="60" OnClientClicked="function(button, args) { UpdateNodes(false); }" AutoPostBack="false" />
-                    <telerik:RadButton ID="btnCancel" runat="server" Text="Cancel" Width="60" OnClientClicked="closeCommunitySelector" AutoPostBack="false" />
-                    <asp:Label Visible="false" ID="Label1" runat="server" />
-                </div>
+                            <telerik:RadButton ID="btnAll" runat="server" Text="All" Width="60" OnClientClicked="function(button, args) { UpdateNodes(true); }" AutoPostBack="false" />
+                            <telerik:RadButton ID="btnDefault" runat="server" Text="Default" Width="60" OnClientClicked="SetDefaultItems" AutoPostBack="false"/>
+                            <telerik:RadButton ID="btnClear" runat="server" Text="Clear" Width="60" OnClientClicked="function(button, args) { UpdateNodes(false); }" AutoPostBack="false" />
+                            <telerik:RadButton ID="btnCancel" runat="server" Text="Cancel" Width="60" OnClientClicked="closeCommunitySelector" AutoPostBack="false" />
+                            <asp:HiddenField ID="defaultTbIds" runat="server" />
+                        </div>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
             </ContentTemplate>
         </telerik:RadWindow>
     </Windows>

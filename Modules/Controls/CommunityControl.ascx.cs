@@ -3,6 +3,8 @@ using Etsi.Ultimate.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Web.UI;
 using Telerik.Web.UI;
 
 namespace Etsi.Ultimate.Controls
@@ -18,6 +20,13 @@ namespace Etsi.Ultimate.Controls
             {
                 if (_selectedCommunityIds == null)
                     _selectedCommunityIds = new List<int>();
+
+                _selectedCommunityIds.Clear();
+                foreach (RadTreeNode node in rtvCommunitySelector.CheckedNodes)
+                {
+                    _selectedCommunityIds.Add(Convert.ToInt32(node.Value));
+                }
+
                 return _selectedCommunityIds;
             }
             set
@@ -31,6 +40,14 @@ namespace Etsi.Ultimate.Controls
         {
             get { return Convert.ToInt32(rcbCommunity.SelectedValue); }
             set { _selectedCommunityID = value; }
+        }
+
+        public List<int> TBSelectorIds
+        {
+            set
+            {
+                defaultTbIds.Value = String.Join(",", value);
+            }
         }
 
         public bool IsSingleSelection { get; set; }
@@ -62,7 +79,7 @@ namespace Etsi.Ultimate.Controls
                         rcbCommunity.Visible = true;
                         lblCommunity.Visible = false;
 
-                        rcbCommunity.DataSource = dataSource;
+                        rcbCommunity.DataSource = dataSource.OrderBy(x => x.TbId);
                         rcbCommunity.DataTextField = "TbName";
                         rcbCommunity.DataValueField = "TbId";
                         rcbCommunity.DataBind();
@@ -78,7 +95,7 @@ namespace Etsi.Ultimate.Controls
                         if (_selectedCommunityID != default(int))
                         {
                             var selectedCommunity = dataSource.Find(x => x.TbId == _selectedCommunityID);
-                            lblCommunity.Text = (selectedCommunity == null) ? String.Empty : selectedCommunity.ShortName;
+                            lblCommunity.Text = (selectedCommunity == null) ? String.Empty : selectedCommunity.TbName;
                         }
                     }
                 }
@@ -90,8 +107,8 @@ namespace Etsi.Ultimate.Controls
 
                     if (_selectedCommunityIds != null)
                     {
-                        var selectedCommunityShortNames = dataSource.FindAll(x => _selectedCommunityIds.Contains(x.TbId)).Select(x => x.ShortName).ToList();
-                        lblCommunity.Text = String.Join(", ", selectedCommunityShortNames);
+                        var selectedCommunityNames = dataSource.FindAll(x => _selectedCommunityIds.Contains(x.TbId)).Select(x => x.TbName).ToList();
+                        lblCommunity.Text = String.Join(", ", selectedCommunityNames);
                     }
 
                     if (IsEditMode)
@@ -102,16 +119,42 @@ namespace Etsi.Ultimate.Controls
                         rtvCommunitySelector.DataValueField = "TbId";
                         rtvCommunitySelector.DataFieldID = "TbId";
                         rtvCommunitySelector.DataFieldParentID = "ParentCommunityId";
-                        rtvCommunitySelector.DataSource = dataSource;
+                        rtvCommunitySelector.DataSource = dataSource.OrderBy(x => x.TbId);
                         rtvCommunitySelector.DataBind();
 
                         if (_selectedCommunityIds != null)
                         {
-                          //TODO::
+                            foreach (RadTreeNode node in rtvCommunitySelector.GetAllNodes().ToList())
+                            {
+                                int nodeValue = Convert.ToInt32(node.Value);
+                                if (_selectedCommunityIds.Exists(x => x == nodeValue))
+                                {
+                                    node.Checked = true;
+                                }
+                            }
                         }
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// OnInit Event
+        /// </summary>
+        /// <param name="e">Event Arguments</param>
+        protected override void OnInit(EventArgs e)
+        {
+            //Fix for adding Update panel on Rad window
+            ScriptManager sm = ScriptManager.GetCurrent(Page);
+            MethodInfo m = (
+            from methods in typeof(ScriptManager).GetMethods(
+                BindingFlags.NonPublic | BindingFlags.Instance
+                )
+            where methods.Name.Equals("System.Web.UI.IScriptManagerInternal.RegisterUpdatePanel")
+            select methods).First<MethodInfo>();
+
+            m.Invoke(sm, new object[] { upCommunityPanel });
+            base.OnInit(e);
         }
 
         /// <summary>
@@ -122,15 +165,12 @@ namespace Etsi.Ultimate.Controls
         protected void btnConfirm_Click(object sender, EventArgs e)
         {
             List<string> tbNames = new List<string>();
-            List<int> tbIds = new List<int>();
             foreach (RadTreeNode node in rtvCommunitySelector.CheckedNodes)
             {
                 tbNames.Add(node.Text);
-                tbIds.Add(Convert.ToInt32(node.Value));
             }
 
             lblCommunity.Text = String.Join(", ", tbNames);
-            SelectedCommunityIds = tbIds;
         }
 
         #endregion

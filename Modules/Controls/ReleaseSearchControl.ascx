@@ -2,12 +2,12 @@
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 
 <style type="text/css">
-    .RadTreeView_Default .rtPlus, .RadTreeView_Default .rtMinus
+    <%= rcbReleases.ClientID %> .RadTreeView_Default .rtPlus, <%= rcbReleases.ClientID %> .RadTreeView_Default .rtMinus
     {
         display: none !important;
     }
 
-    .RadTreeView .rtTop, .RadTreeView .rtMid, .RadTreeView .rtBot
+    <%= rcbReleases.ClientID %> .RadTreeView .rtTop, <%= rcbReleases.ClientID %> .RadTreeView .rtMid, <%= rcbReleases.ClientID %> .RadTreeView .rtBot
     {
         padding: 1px 0 1px 10px;
     }
