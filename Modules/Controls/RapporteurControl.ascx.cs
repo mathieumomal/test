@@ -22,7 +22,7 @@ namespace Etsi.Ultimate.Controls
         ///To choose it we need to use the 'IsEditMode' attribute
         ///
         ///Moreover you can choose : 
-        ///- A 'choice' mode (One person (SINGLEMODE) or more than one (MULTIMODE))
+        ///- A 'choice' mode (One person (SINGLEMODE) or more than one (MULTIMODE)) defined by 'IsSinglePersonMode' attribute
         ///- A multiple select mode (IN CASE OF CHOICE MODE => MULTIMODE ; we can choose to select one 
         ///('SelectableMode' = CONST_RAPPORTEURS_SELECTABLEMODE.single) 
         ///or more than one person 
@@ -147,6 +147,27 @@ namespace Etsi.Ultimate.Controls
             }
         }
 
+        /// <summary>
+        /// IN SELECTABLEMODE (SINGLE) set header title
+        /// </summary>
+        public string SelectableColumnName
+        {
+            get
+            {
+                if (selectableColumnName == null)
+                {
+                    selectableColumnName = "Primary";
+                    return selectableColumnName;
+                }
+                return selectableColumnName;
+            }
+            set
+            {
+                selectableColumnName = value;
+            }
+        }
+        private string selectableColumnName { get; set; }
+
         #endregion
 
         #region--- Single mode attribute ---
@@ -254,6 +275,7 @@ namespace Etsi.Ultimate.Controls
                     selectableColumn.Visible = true;
                     rdGridRapporteurs.AllowMultiRowSelection = false;
                     rdGridRapporteurs.ClientSettings.EnablePostBackOnRowClick = true;
+                    selectableColumn.HeaderText = SelectableColumnName;
                 }
                 else if (SelectableMode.Equals(CONST_RAPPORTEURS_SELECTABLEMODE.multi.ToString()))
                 {
@@ -474,8 +496,41 @@ namespace Etsi.Ultimate.Controls
         /// </summary>
         private void RefreshDisplay_MULTIMODE()
         {
+            if (!IsEditMode)
+            {
+                if (ListIdPersonSelect.Count() != 0)
+                {
+                    foreach (View_Persons person in DataSource_MULTIMODE)
+                    {
+                        if (ListIdPersonSelect.Contains(person.PERSON_ID))
+                        {
+                            person.RapporteurDetailsAddress = new StringBuilder()
+                                .Append("<strong>")
+                                .Append(SelectableColumnName)
+                                .Append(" ")
+                                .Append(person.RapporteurDetailsAddress)
+                                .Append("</strong>")
+                                .ToString();
+                        }
+                    }
+                }
+            }
             rdGridRapporteurs.DataSource = DataSource_MULTIMODE;
             rdGridRapporteurs.Rebind();
+            if (IsEditMode)
+            {
+                if (ListIdPersonSelect.Count() != 0 && !SelectableMode.Equals(CONST_RAPPORTEURS_SELECTABLEMODE.none))
+                {
+                    foreach (GridDataItem item in rdGridRapporteurs.MasterTableView.Items)
+                    {
+                        var ID = ConvertStringToInt(item.OwnerTableView.DataKeyValues[item.ItemIndex]["PERSON_ID"].ToString());
+                        if (ListIdPersonSelect.Contains(ID))
+                        {
+                            item.Selected = true;
+                        }
+                    }
+                }
+            }
         }
         #endregion
 
