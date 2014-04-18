@@ -30,7 +30,7 @@
                             </ClientSettings>
                             <MasterTableView AutoGenerateColumns="False" DataKeyNames="PERSON_ID"> 
                                 <Columns>
-                                    <telerik:GridClientSelectColumn UniqueName="selectable" HeaderText="Primary" Visible="false" >
+                                    <telerik:GridClientSelectColumn UniqueName="selectable" Visible="false" >
                                     </telerik:GridClientSelectColumn>
                                     <telerik:GridTemplateColumn DataField="nameHyperLink" HeaderText="Name" UniqueName="nameHyperLink" Visible="false">
                                         <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="30%"/> 

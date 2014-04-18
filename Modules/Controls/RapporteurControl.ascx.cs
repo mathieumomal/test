@@ -221,19 +221,19 @@ namespace Etsi.Ultimate.Controls
                 InitControl();
             }
         }
-        /*
-        private void TempInitialize()
+        
+        /*private void TempInitialize()
         {
-            IsEditMode = true;
+            IsEditMode = false;
             //IdPersonSelected_SINGLEMODE = 14;
             IsSinglePersonMode = false;
-            SelectableMode = CONST_RAPPORTEURS_SELECTABLEMODE.simple.ToString();
+            SelectableMode = CONST_RAPPORTEURS_SELECTABLEMODE.single.ToString();
             ListIdPersonsSelected_MULTIMODE = new List<int>()
             {
                 14,23,25,10,6
             };
-        }
-        */
+        }*/
+        
 
         /// <summary>
         /// Initialization of control

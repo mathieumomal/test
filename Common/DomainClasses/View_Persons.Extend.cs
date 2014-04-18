@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.DomainClasses
 {
@@ -28,21 +27,6 @@ namespace Etsi.Ultimate.DomainClasses
             }
         }
 
-        public string RapporteurDetailsAddress
-        {
-            get
-            {
-                return new StringBuilder()
-                    .Append("<a href='")
-                    .Append(ConfigVariables.RapporteurDetailsAddress)
-                    .Append(this.PERSON_ID.ToString())
-                    .Append("'>")
-                    .Append(this.FIRSTNAME)
-                    .Append(" ")
-                    .Append(this.LASTNAME)
-                    .Append("</a>")
-                    .ToString();
-            }
-        }
+        public string RapporteurDetailsAddress { get; set; }
     }
 }

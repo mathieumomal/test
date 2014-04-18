@@ -44,6 +44,7 @@
 #divRapporteurControl .viewModeOnePersonMode .RadComboBox .rcbDisabled{width:100%;opacity:1;}
 
 	/* Multi person mode */
+#divRapporteurControl .viewModeMultiPersonMode .rgMasterTable a{color: rgb(44, 102, 189);}
 
 /* --- Viewmode --- */
 

@@ -51,6 +51,16 @@ namespace Etsi.Ultimate.Business
                     View_Persons person = repo.Find(id);
                     if (person != null)
                     {
+                        person.RapporteurDetailsAddress = new StringBuilder()
+                                                            .Append("<a href='")
+                                                            .Append(ConfigVariables.RapporteurDetailsAddress)
+                                                            .Append(person.PERSON_ID.ToString())
+                                                            .Append("'>")
+                                                            .Append(person.FIRSTNAME)
+                                                            .Append(" ")
+                                                            .Append(person.LASTNAME)
+                                                            .Append("</a>")
+                                                            .ToString();
                         listPersonsFound.Add(person);
                     }
                 }
@@ -80,9 +90,18 @@ namespace Etsi.Ultimate.Business
         {
             IPersonRepository repo = RepositoryFactory.Resolve<IPersonRepository>();
             repo.UoW = UoW;
-
-            return repo
-                    .Find(id);
+            var person = repo.Find(id);
+            person.RapporteurDetailsAddress = new StringBuilder()
+                                                .Append("<a href='")
+                                                .Append(ConfigVariables.RapporteurDetailsAddress)
+                                                .Append(person.PERSON_ID.ToString())
+                                                .Append("'>")
+                                                .Append(person.FIRSTNAME)
+                                                .Append(" ")
+                                                .Append(person.LASTNAME)
+                                                .Append("</a>")
+                                                .ToString();
+            return person;
         }
 
         #endregion
