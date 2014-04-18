@@ -27,6 +27,12 @@
     #<%=relatedWiGrid_Edit.ClientID %>.RadGrid_Default .rgSelectedRow td {
         border-bottom-color: transparent;
     }
+
+    .floatRight
+    {
+        float: right;
+    }
+
 </style>
 <script type="text/javascript">
     function closeAllModals() {
@@ -75,14 +81,14 @@
     function setSearchProgress(flag) {
         if (flag)
             $("#<%=btnSearchWi.ClientID %>").val('Searching...');
-    else
-        $("#<%=btnSearchWi.ClientID %>").val('Search');
-}
+        else
+            $("#<%=btnSearchWi.ClientID %>").val('Search');
+    }
 
-function setDeleteProgress(sender) {
-    var gifImg = "/controls/Ultimate/images/busy.gif";
-    sender.src = gifImg;
-}
+    function setDeleteProgress(sender) {
+        var gifImg = "/controls/Ultimate/images/busy.gif";
+        sender.src = gifImg;
+    }
 </script>
 
 <telerik:RadAjaxManagerProxy ID="wiRadAjaxManagerProxy" runat="server">
@@ -196,8 +202,8 @@ function setDeleteProgress(sender) {
                         </telerik:RadGrid></td>
                 </tr>
                 <tr>
-                    <td colspan="2" style="padding-right: 5px; float: right">
-                        <asp:Button ID="btnShowWiEditWindow" runat="server" Text="Add" OnClientClick="open_RadWindow_workItemEdit()" />
+                    <td colspan="2">
+                        <asp:Button ID="btnShowWiEditWindow" class="floatRight" Width="100" runat="server" Text="Add/Remove" OnClientClick="open_RadWindow_workItemEdit()" />
                         <asp:HiddenField runat="server" ID="hidSelectedWis" />
                         <asp:HiddenField runat="server" ID="hidPrimaryWi" />
                     </td>
@@ -282,7 +288,7 @@ function setDeleteProgress(sender) {
                                 <td style="padding-right: 5px">Search Work Items<asp:TextBox Style="width: 250px; margin: 0px 0px 0px 10px;" ID="txtSearchText" runat="server" Width="50%"></asp:TextBox>
                                 </td>
                                 <td>
-                                    <asp:Button ID="btnSearchWi" runat="server" Text="Search" OnClientClick="setSearchProgress(true)" OnClick="btnSearchWi_Click" />
+                                    <asp:Button ID="btnSearchWi" Width="100" CssClass="floatRight" runat="server" Text="Search" OnClientClick="setSearchProgress(true)" OnClick="btnSearchWi_Click" />
                                 </td>
                             </tr>
                             <tr>
@@ -337,16 +343,16 @@ function setDeleteProgress(sender) {
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <div style="float: right">
-                                        <asp:Button ID="btnAddWisToGrid" runat="server" Text="Add" OnClientClick="GetSelectedWis_relatedWiGrid();" OnClick="btnAddWisToGrid_Click" />
+                                    <div class="floatRight">
+                                        <asp:Button ID="btnAddWisToGrid" runat="server" Width="100" Text="Add" OnClientClick="GetSelectedWis_relatedWiGrid();" OnClick="btnAddWisToGrid_Click" />
                                     </div>
                                 </td>
                             </tr>
                         </table>
                     </fieldset>
 
-                    <asp:Button ID="btnAddToRelatedWiGrid" runat="server" Text="Done" OnClientClick="closeAllModals();" OnClick="btnAddToRelatedWiGrid_Click" />
-                    <asp:Button ID="btnRevertChanges" runat="server" Text="Cancel" OnClientClick="closeAllModals();" OnClick="btnRevertChanges_Click" />
+                    <asp:Button ID="btnAddToRelatedWiGrid" runat="server" Width="100" Text="Done" OnClientClick="closeAllModals();" OnClick="btnAddToRelatedWiGrid_Click" />
+                    <asp:Button ID="btnRevertChanges" runat="server" Width="100" Text="Cancel" OnClientClick="closeAllModals();" OnClick="btnRevertChanges_Click" />
                 </div>
             </ContentTemplate>
         </telerik:RadWindow>

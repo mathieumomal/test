@@ -24,7 +24,7 @@ namespace Etsi.Ultimate.Controls
 
         #endregion
 
-        #region Public Properties
+        #region Properties
 
         public bool IsEditMode { get; set; }
         public int ScrollHeight { get; set; }

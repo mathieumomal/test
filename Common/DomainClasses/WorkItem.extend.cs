@@ -40,6 +40,9 @@ namespace Etsi.Ultimate.DomainClasses
         }
         public string RapporteurName { set; get; }
         public bool IsLevel0Record { get { return (WiLevel == 0); } }
+
+        //For RelatedWiControl
         public bool IsPrimary { get; set; }
+        public bool IsUserAddedWi { get; set; }
     }
 }
