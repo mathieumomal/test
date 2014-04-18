@@ -29,7 +29,6 @@ namespace Etsi.Ultimate.DataAccess
         IDbSet<WorkPlanFile> WorkPlanFiles { get; }
         IDbSet<Enum_Serie> Enum_Serie { get; set; }
         IDbSet<Enum_Technology> Enum_Technology { get; set; }
-        IDbSet<SpecifcationsGenealogy> SpecifcationsGenealogies { get; set; }
         IDbSet<Specification> Specifications { get; set; }
         IDbSet<Specification_Release> Specification_Release { get; set; }
         IDbSet<Specification_WorkItem> Specification_WorkItem { get; set; }

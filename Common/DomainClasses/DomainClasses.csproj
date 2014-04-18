@@ -90,12 +90,10 @@
     <Compile Include="ShortUrl.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="SpecifcationsGenealogy.cs">
-      <DependentUpon>UltimateModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Specification.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Specification.Extend.cs" />
     <Compile Include="SpecificationRapporteur.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

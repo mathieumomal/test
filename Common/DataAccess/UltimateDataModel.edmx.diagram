@@ -29,28 +29,31 @@
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.WorkPlanFile" Width="1.5" PointX="12" PointY="8.75" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_Serie" Width="1.5" PointX="8.5068801960474261" PointY="13.702939442220581" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_Technology" Width="1.5" PointX="8.769884279356285" PointY="13.421570217898847" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" Width="1.5" PointX="4.4400805032067376" PointY="1.9890769729339877" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Specification" Width="1.5" PointX="1.5375395610637681" PointY="6.7109880627649785" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Specification" Width="2.25" PointX="15.75" PointY="1" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Specification_Release" Width="1.5" PointX="10.423757760982847" PointY="14.285139775967757" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Specification_WorkItem" Width="1.5" PointX="9.2940226054256883" PointY="1.0391841535638944" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SpecificationRapporteur" Width="1.5" PointX="8.34107796491174" PointY="12.426801612799428" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_SerieID" />
-        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_History_Specification" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_History_Specification" ManuallyRouted="false" >
+        </AssociationConnector>
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_ReleaseID" />
-        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Remarks_Specification" />
-        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Remarks_Specification_Release" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Remarks_Specification" ManuallyRouted="false" >
+        </AssociationConnector>
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Remarks_Specification_Release" ></AssociationConnector>
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_SpecificationID" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.Raporteur_FK_SpecificationID" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.Release_FK_SpecificationID" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WorkItemID" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_CommunitiesShortName" Width="1.5" PointX="1.5182974941648066" PointY="29.318756504598426" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_CommunitiesShortName" Width="1.5" PointX="8.25" PointY="25.875" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_SpecificationStage" Width="1.5" PointX="10.211247692914331" PointY="5.0378095978115729" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SpecificationResponsibleGroup" Width="1.5" PointX="6.9688855591085206" PointY="5.3394983882734079" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SpecificationTechnology" Width="1.5" PointX="11.467963713904826" PointY="29.395785866955194" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SpecificationResponsibleGroup" Width="1.5" PointX="13.5" PointY="5.75" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SpecificationTechnology" Width="2.375" PointX="11.5" PointY="29.375" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_SpecificationStageID" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Enum_Technology" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Specification" />
-        <AssociationConnector Association="Etsi.Ultimate.DataAccess.RG_FK_SpecificationID" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.RG_FK_SpecificationID" ManuallyRouted="false" >
+        </AssociationConnector>
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

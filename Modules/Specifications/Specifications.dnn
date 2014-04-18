@@ -84,6 +84,46 @@
               <name>Etsi.Ultimate.Module.Specifications.dll</name>
               <path>bin</path>
             </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Services.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Business.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.DataAccess.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.DomainClasses.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Repositories.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Utils.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Microsoft.Practices.Unity.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Rhino.Mocks.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>EntityFramework.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>EntityFramework.SqlServer.dll</name>
+              <path>bin</path>
+            </assembly>
           </assemblies>
         </component>
       </components>

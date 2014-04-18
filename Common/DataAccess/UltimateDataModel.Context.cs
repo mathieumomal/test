@@ -43,7 +43,6 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<WorkPlanFile> WorkPlanFiles { get; set; }
         public IDbSet<Enum_Serie> Enum_Serie { get; set; }
         public IDbSet<Enum_Technology> Enum_Technology { get; set; }
-        public IDbSet<SpecifcationsGenealogy> SpecifcationsGenealogies { get; set; }
         public IDbSet<Specification> Specifications { get; set; }
         public IDbSet<Specification_Release> Specification_Release { get; set; }
         public IDbSet<Specification_WorkItem> Specification_WorkItem { get; set; }

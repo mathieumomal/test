@@ -27,5 +27,11 @@ namespace Etsi.Ultimate.DomainClasses
 
         Remarks_ViewPrivate,
         Remarks_AddPrivateByDefault,
+
+        Specification_ViewDetails,
+        Specification_Create,
+        Specification_EditLimitted,
+        Specification_EditFull,
+        Specification_Withdraw
     }
 }

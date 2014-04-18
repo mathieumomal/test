@@ -14,9 +14,10 @@ namespace Etsi.Ultimate.Repositories
 {
     public class SpecificationRepository : ISpecificationRepository
     {
-        public IUltimateUnitOfWork UoW{ get; set; }
+        public IUltimateUnitOfWork UoW { get; set; }
         public SpecificationRepository(IUltimateUnitOfWork iUoW) 
-        { 
+        {
+            UoW = iUoW;
         }
 
         #region IEntityRepository<Specification> Membres
@@ -49,6 +50,11 @@ namespace Etsi.Ultimate.Repositories
                 t=>t.Specification_Release).Where(x => x.Pk_SpecificationId == id).FirstOrDefault();
         }
 
+        public void InsertOrUpdate(Specification specification)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Delete(int id)
         {
             throw new InvalidOperationException("Cannot delete Specification entity");
@@ -65,7 +71,8 @@ namespace Etsi.Ultimate.Repositories
         #endregion
     }
 
-    public interface ISpecificationRepository
+    public interface ISpecificationRepository : IEntityRepository<Specification>
     {
+        
     }
 }

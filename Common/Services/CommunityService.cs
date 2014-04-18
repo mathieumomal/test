@@ -22,6 +22,20 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Return short name of a community by id
+        /// </summary>
+        /// <param name="id">Identifier of the community</param>
+        /// <returns>Short name of the community</returns>
+        public string GetCommmunityshortNameById(int id)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var communityManager = new CommunityManager(uoW);
+                return communityManager.GetCommmunityshortNameById(id);
+            }
+        }
+
         #endregion
     }
 }

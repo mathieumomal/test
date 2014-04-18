@@ -80,6 +80,7 @@
     <Compile Include="Business\CommunityManagerTest.cs" />
     <Compile Include="Business\LogManagerTest.cs" />
     <Compile Include="Business\RightsManagerTest.cs" />
+    <Compile Include="Services\SpecificationServiceTest.cs" />
     <Compile Include="Business\WorkItemCsvParserTest.cs" />
     <Compile Include="Business\WorkItemManagerTest.cs" />
     <Compile Include="Business\WorkPlanExporterTest.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="FakeSets\ModulesPagesFakeDbSet.cs" />
     <Compile Include="FakeSets\PersonFakeDBSet.cs" />
     <Compile Include="FakeSets\ShortUrlFakeDBSet.cs" />
+    <Compile Include="FakeSets\SpecificationFakeDBSet.cs" />
     <Compile Include="FakeSets\WorkItemFakeDBSet.cs" />
     <Compile Include="FakeSets\UsersAdHocRolesFakeDBSet.cs" />
     <Compile Include="FakeSets\UserGroupsFakeDBSet.cs" />
@@ -115,6 +117,7 @@
     <Compile Include="Repositories\MeetingRepositoryTest.cs" />
     <Compile Include="Repositories\PersonRepositoryTest.cs" />
     <Compile Include="Repositories\ShortUrlRepositoryTest.cs" />
+    <Compile Include="Repositories\SpecificationRepositoryTest.cs" />
     <Compile Include="Repositories\WorkItemRepositoryTest.cs" />
     <Compile Include="Repositories\UserRolesRepositoryTest.cs" />
     <Compile Include="Repositories\RightsRepositoryTest.cs" />

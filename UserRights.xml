@@ -11,11 +11,13 @@
     <Right value="Release_ViewCompleteList"/>
 	<Right value="Release_ViewDetails"/>
 	<Right value="General_ViewPersonalData"/>
+	<Right value="Specification_ViewDetails"/>
   </UserRole>
   <UserRole value="StaffMember">
 	<Right value="Remarks_ViewPrivate"/>
 	<Right value="Remarks_AddPrivateByDefault"/>
 	<Right value="Release_Edit_Remarks"/>
+	<Right value="Specification_EditLimitted"/>
   </UserRole>
   <UserRole value="CommitteeOfficial">
   </UserRole>
@@ -34,6 +36,9 @@
 	<Right value="Remarks_AddPrivateByDefault"/>
 	<Right value="Release_ViewCompleteDetails"/>
 	<Right value="WorkItem_ImportWorkplan"/>
+	<Right value="Specification_Create"/>	
+	<Right value="Specification_EditFull"/>
+	<Right value="Specification_Withdraw"/>
   </UserRole>
   <UserRole value="Administrator">
 	<Right value="Release_Create"/>

@@ -73,12 +73,6 @@ namespace Etsi.Ultimate.Tests
             set;
         }
 
-        public System.Data.Entity.IDbSet<SpecifcationsGenealogy> SpecifcationsGenealogies
-        {
-            get;
-            set;
-        }
-
         public System.Data.Entity.IDbSet<Specification> Specifications
         {
             get;

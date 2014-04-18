@@ -141,11 +141,11 @@
     <Build Include="dbo\Tables\Specification_WorkItem.sql" />
     <Build Include="dbo\Tables\Specification_Release.sql" />
     <Build Include="dbo\Tables\Specification.sql" />
-    <Build Include="dbo\Tables\SpecifcationsGenealogy.sql" />
     <Build Include="dbo\Tables\Enum_Technology.sql" />
     <Build Include="dbo\Tables\Enum_Serie.sql" />
     <Build Include="dbo\Functions\getMeetingShortRef.sql" />
     <Build Include="dbo\Tables\Enum_SpecificationStage.sql" />
+    <Build Include="dbo\Tables\SpecifcationsGenealogy.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

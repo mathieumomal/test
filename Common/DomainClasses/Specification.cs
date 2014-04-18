@@ -24,6 +24,8 @@ namespace Etsi.Ultimate.DomainClasses
             this.Specification_Release = new HashSet<Specification_Release>();
             this.SpecificationTechnologies = new HashSet<SpecificationTechnology>();
             this.SpecificationResponsibleGroups = new HashSet<SpecificationResponsibleGroup>();
+            this.SpecificationChilds = new HashSet<Specification>();
+            this.SpecificationParents = new HashSet<Specification>();
         }
     
         public int Pk_SpecificationId { get; set; }
@@ -56,6 +58,8 @@ namespace Etsi.Ultimate.DomainClasses
         public virtual Enum_SpecificationStage Enum_SpecificationStage { get; set; }
         public virtual ICollection<SpecificationTechnology> SpecificationTechnologies { get; set; }
         public virtual ICollection<SpecificationResponsibleGroup> SpecificationResponsibleGroups { get; set; }
+        public virtual ICollection<Specification> SpecificationChilds { get; set; }
+        public virtual ICollection<Specification> SpecificationParents { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

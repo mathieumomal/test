@@ -54,6 +54,18 @@ namespace Etsi.Ultimate.Business
             return cachedData;
         }
 
+        /// <summary>
+        /// Return short name of a community by id
+        /// </summary>
+        /// <param name="id">Identifier of the community</param>
+        /// <returns>Short name of the community</returns>
+        public string GetCommmunityshortNameById(int id)
+        {
+            ICommunityRepository repo = RepositoryFactory.Resolve<ICommunityRepository>();
+            repo.UoW = _uoW;
+            return repo.All.Where(c => c.TbId == id).ToList().FirstOrDefault().ShortName;
+        }
+
         #endregion
     }
 }

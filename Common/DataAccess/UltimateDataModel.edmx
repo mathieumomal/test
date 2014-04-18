@@ -147,9 +147,17 @@
             <End Role="Specification" EntitySet="Specification" />
             <End Role="SpecificationTechnologies" EntitySet="SpecificationTechnologies" />
           </AssociationSet>
+          <AssociationSet Name="FK_SpecificationChild" Association="Etsi.Ultimate.DataAccess.Store.FK_SpecificationChild">
+            <End Role="Specification" EntitySet="Specification" />
+            <End Role="SpecifcationsGenealogy" EntitySet="SpecifcationsGenealogy" />
+          </AssociationSet>
           <AssociationSet Name="FK_SpecificationID" Association="Etsi.Ultimate.DataAccess.Store.FK_SpecificationID">
             <End Role="Specification" EntitySet="Specification" />
             <End Role="Specification_WorkItem" EntitySet="Specification_WorkItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SpecificationParent" Association="Etsi.Ultimate.DataAccess.Store.FK_SpecificationParent">
+            <End Role="Specification" EntitySet="Specification" />
+            <End Role="SpecifcationsGenealogy" EntitySet="SpecifcationsGenealogy" />
           </AssociationSet>
           <AssociationSet Name="FK_SpecificationStageID" Association="Etsi.Ultimate.DataAccess.Store.FK_SpecificationStageID">
             <End Role="Enum_SpecificationStage" EntitySet="Enum_SpecificationStage" />
@@ -297,10 +305,10 @@
         </EntityType>
         <EntityType Name="SpecifcationsGenealogy">
           <Key>
-            <PropertyRef Name="Fk_SpecificationId" />
+            <PropertyRef Name="Fk_SpecificationChildId" />
             <PropertyRef Name="Fk_SpecificationParentId" />
           </Key>
-          <Property Name="Fk_SpecificationId" Type="int" Nullable="false" />
+          <Property Name="Fk_SpecificationChildId" Type="int" Nullable="false" />
           <Property Name="Fk_SpecificationParentId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Specification">
@@ -670,6 +678,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SpecificationChild">
+          <End Role="Specification" Type="Etsi.Ultimate.DataAccess.Store.Specification" Multiplicity="1" />
+          <End Role="SpecifcationsGenealogy" Type="Etsi.Ultimate.DataAccess.Store.SpecifcationsGenealogy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Specification">
+              <PropertyRef Name="Pk_SpecificationId" />
+            </Principal>
+            <Dependent Role="SpecifcationsGenealogy">
+              <PropertyRef Name="Fk_SpecificationChildId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SpecificationID">
           <End Role="Specification" Type="Etsi.Ultimate.DataAccess.Store.Specification" Multiplicity="1" />
           <End Role="Specification_WorkItem" Type="Etsi.Ultimate.DataAccess.Store.Specification_WorkItem" Multiplicity="*" />
@@ -679,6 +699,18 @@
             </Principal>
             <Dependent Role="Specification_WorkItem">
               <PropertyRef Name="Fk_SpecificationId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SpecificationParent">
+          <End Role="Specification" Type="Etsi.Ultimate.DataAccess.Store.Specification" Multiplicity="1" />
+          <End Role="SpecifcationsGenealogy" Type="Etsi.Ultimate.DataAccess.Store.SpecifcationsGenealogy" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Specification">
+              <PropertyRef Name="Pk_SpecificationId" />
+            </Principal>
+            <Dependent Role="SpecifcationsGenealogy">
+              <PropertyRef Name="Fk_SpecificationParentId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -839,7 +871,6 @@
           <EntitySet Name="WorkPlanFiles" EntityType="Etsi.Ultimate.DataAccess.WorkPlanFile" />
           <EntitySet Name="Enum_Serie" EntityType="Etsi.Ultimate.DataAccess.Enum_Serie" />
           <EntitySet Name="Enum_Technology" EntityType="Etsi.Ultimate.DataAccess.Enum_Technology" />
-          <EntitySet Name="SpecifcationsGenealogies" EntityType="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" />
           <EntitySet Name="Specifications" EntityType="Etsi.Ultimate.DataAccess.Specification" />
           <EntitySet Name="Specification_Release" EntityType="Etsi.Ultimate.DataAccess.Specification_Release" />
           <EntitySet Name="Specification_WorkItem" EntityType="Etsi.Ultimate.DataAccess.Specification_WorkItem" />
@@ -899,6 +930,10 @@
           <AssociationSet Name="RG_FK_SpecificationID" Association="Etsi.Ultimate.DataAccess.RG_FK_SpecificationID">
             <End Role="Specification" EntitySet="Specifications" />
             <End Role="SpecificationResponsibleGroup" EntitySet="SpecificationResponsibleGroups" />
+          </AssociationSet>
+          <AssociationSet Name="SpecifcationsGenealogy" Association="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy">
+            <End Role="Specification" EntitySet="Specifications" />
+            <End Role="Specification1" EntitySet="Specifications" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
@@ -1250,14 +1285,6 @@
           <Property Type="String" Name="Description" MaxLength="150" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="SpecificationTechnologies" Relationship="Etsi.Ultimate.DataAccess.FK_Enum_Technology" FromRole="Enum_Technology" ToRole="SpecificationTechnology" />
         </EntityType>
-        <EntityType Name="SpecifcationsGenealogy">
-          <Key>
-            <PropertyRef Name="Fk_SpecificationId" />
-            <PropertyRef Name="Fk_SpecificationParentId" />
-          </Key>
-          <Property Type="Int32" Name="Fk_SpecificationId" Nullable="false" />
-          <Property Type="Int32" Name="Fk_SpecificationParentId" Nullable="false" />
-        </EntityType>
         <EntityType Name="Specification">
           <Key>
             <PropertyRef Name="Pk_SpecificationId" />
@@ -1291,6 +1318,8 @@
           <NavigationProperty Name="Enum_SpecificationStage" Relationship="Etsi.Ultimate.DataAccess.FK_SpecificationStageID" FromRole="Specification" ToRole="Enum_SpecificationStage" />
           <NavigationProperty Name="SpecificationTechnologies" Relationship="Etsi.Ultimate.DataAccess.FK_Specification" FromRole="Specification" ToRole="SpecificationTechnology" />
           <NavigationProperty Name="SpecificationResponsibleGroups" Relationship="Etsi.Ultimate.DataAccess.RG_FK_SpecificationID" FromRole="Specification" ToRole="SpecificationResponsibleGroup" />
+          <NavigationProperty Name="SpecificationChilds" Relationship="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" FromRole="Specification" ToRole="Specification1" />
+          <NavigationProperty Name="SpecificationParents" Relationship="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" FromRole="Specification1" ToRole="Specification" />
         </EntityType>
         <EntityType Name="Specification_Release">
           <Key>
@@ -1522,6 +1551,10 @@
               <PropertyRef Name="Fk_SpecificationId" />
             </Dependent>
           </ReferentialConstraint>
+        </Association>
+        <Association Name="SpecifcationsGenealogy">
+          <End Type="Etsi.Ultimate.DataAccess.Specification" Role="Specification" Multiplicity="*" />
+          <End Type="Etsi.Ultimate.DataAccess.Specification" Role="Specification1" Multiplicity="*" />
         </Association>
         </Schema>
     </edmx:ConceptualModels>
@@ -1773,14 +1806,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SpecifcationsGenealogies">
-            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy">
-              <MappingFragment StoreEntitySet="SpecifcationsGenealogy">
-                <ScalarProperty Name="Fk_SpecificationParentId" ColumnName="Fk_SpecificationParentId" />
-                <ScalarProperty Name="Fk_SpecificationId" ColumnName="Fk_SpecificationId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Specifications">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Specification">
               <MappingFragment StoreEntitySet="Specification">
@@ -1879,6 +1904,14 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <AssociationSetMapping Name="SpecifcationsGenealogy" TypeName="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" StoreEntitySet="SpecifcationsGenealogy">
+            <EndProperty Name="Specification1">
+              <ScalarProperty Name="Pk_SpecificationId" ColumnName="Fk_SpecificationParentId" />
+            </EndProperty>
+            <EndProperty Name="Specification">
+              <ScalarProperty Name="Pk_SpecificationId" ColumnName="Fk_SpecificationChildId" />
+            </EndProperty>
+          </AssociationSetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

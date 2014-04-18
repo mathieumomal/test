@@ -1,0 +1,345 @@
+﻿using Domain = Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Etsi.Ultimate.Services
+{
+    public class SpecificationServiceMock : ISpecificationService
+    {
+        public KeyValuePair<Domain.Specification, Domain.UserRightsContainer> GetSpecificationDetailsById(int personID, int specificationId)
+        {
+            KeyValuePair<List<Domain.Specification>, Domain.UserRightsContainer> listSpecifications = GetAllSpecification(personID);
+            return new KeyValuePair<Domain.Specification, Domain.UserRightsContainer>(listSpecifications.Key.Find(x => x.Pk_SpecificationId == specificationId), listSpecifications.Value);
+        }
+
+        public KeyValuePair<List<Domain.Specification>, Domain.UserRightsContainer> GetAllSpecification(int personID)
+        {
+            var specifications = new List<Domain.Specification>();
+            var technlogies = new List<Domain.Enum_Technology>()
+            {
+                new Domain.Enum_Technology(){
+                    Pk_Enum_TechnologyId = 1,
+                    Code= "2G",
+                    Description = "Second generation"
+                },
+                new Domain.Enum_Technology(){
+                    Pk_Enum_TechnologyId = 2,
+                    Code= "3G",
+                    Description = "third generation"
+                },
+                new Domain.Enum_Technology(){
+                    Pk_Enum_TechnologyId = 3,
+                    Code= "LTE",
+                    Description = "Long Term Evolution"
+                }
+
+            };
+            var specTechnologies = new List<Domain.SpecificationTechnology>()
+            {
+                new Domain.SpecificationTechnology(){
+                    Pk_SpecificationTechnologyId = 1,
+                    Fk_Enum_Technology = 1,
+                    Fk_Specification = 1,
+                    Enum_Technology = new Domain.Enum_Technology()
+                    {
+                        Pk_Enum_TechnologyId = 1,
+                        Code= "2G",
+                        Description = "Second generation"
+                    }
+                },
+                new Domain.SpecificationTechnology(){
+                    Pk_SpecificationTechnologyId = 2,
+                    Fk_Enum_Technology = 2,
+                    Fk_Specification = 1,
+                    Enum_Technology = new Domain.Enum_Technology()
+                    {
+                        Pk_Enum_TechnologyId = 3,
+                        Code= "LTE",
+                        Description = "Long Term Evolution"
+                    }
+                }
+            };
+
+            var remarks = new List<Domain.Remark>
+            {
+                new Domain.Remark(){
+                    Pk_RemarkId =1,
+                    RemarkText= "Remark1",
+                    IsPublic = true,
+                    CreationDate = DateTime.Now,
+                    PersonName = "Author 1"
+                },
+                new Domain.Remark(){
+                    Pk_RemarkId =2,
+                    RemarkText= "Remark2",
+                    IsPublic= true,
+                    CreationDate = DateTime.Now,
+                    PersonName = "Author 2"
+                }
+            };
+
+            var histories = new List<Domain.History>
+            {
+                new Domain.History(){
+                    Pk_HistoryId = 1,
+                    PersonName = "Author 1",
+                    HistoryText = "Text 1"
+                },
+                new Domain.History(){
+                    Pk_HistoryId = 2,
+                    PersonName = "Author 1",
+                    HistoryText = "Text 2"
+                }
+            };
+
+            specifications.Add(
+                new Domain.Specification()
+                {
+                    Pk_SpecificationId = 1,
+                    Number = "00.01U",
+                    Title = "First specification",
+                    Type = new Nullable<bool>(true),
+
+                    IsActive = true,
+                    IsUnderChangeControl = new Nullable<bool>(false),
+
+                    Enum_SpecificationStage = new Domain.Enum_SpecificationStage()
+                    {
+                        Pk_Enum_SpecificationStage = 1,
+                        Code = "Stage 3",
+                        Description = "Third stage"
+                    },
+                    IsForPublication = new Nullable<bool>(false),
+                    Remarks = new List<Domain.Remark>
+                    {
+                        new Domain.Remark(){
+                            Pk_RemarkId =1,
+                            RemarkText= "Remark1",
+                            IsPublic = true,
+                            CreationDate = DateTime.Now,
+                            PersonName = "Author 1"
+                        },
+                        new Domain.Remark(){
+                            Pk_RemarkId =2,
+                            RemarkText= "Remark2",
+                            IsPublic= true,
+                            CreationDate = DateTime.Now,
+                            PersonName = "Author 2"
+                        }
+                    },
+                    SpecificationTechnologies = new List<Domain.SpecificationTechnology>()
+                    {
+                        new Domain.SpecificationTechnology(){
+                            Pk_SpecificationTechnologyId = 1,
+                            Fk_Enum_Technology = 1,
+                            Fk_Specification = 1,
+                            Enum_Technology = new Domain.Enum_Technology()
+                            {
+                                Pk_Enum_TechnologyId = 1,
+                                Code= "2G",
+                                Description = "Second generation"
+                            }
+                        },
+                        new Domain.SpecificationTechnology(){
+                            Pk_SpecificationTechnologyId = 2,
+                            Fk_Enum_Technology = 2,
+                            Fk_Specification = 1,
+                            Enum_Technology = new Domain.Enum_Technology()
+                            {
+                                Pk_Enum_TechnologyId = 3,
+                                Code= "LTE",
+                                Description = "Long Term Evolution"
+                            }
+                        }
+                    },
+                    SpecificationResponsibleGroups = new List<Domain.SpecificationResponsibleGroup>()
+                    {
+                        new Domain.SpecificationResponsibleGroup(){
+                            Pk_SpecificationResponsibleGroupId = 1,
+                            Fk_commityId = 12,
+                            Fk_SpecificationId = 1
+                        }
+                    },
+                    Enum_Serie = new Domain.Enum_Serie() { Pk_Enum_SerieId = 1, Code = "S1", Description = "Serie 1" },
+                    ComIMS = new Nullable<bool>(true),
+                    EPS = null,
+                    C_2gCommon = null,
+                    DefinitivelyWithdrawn = new Nullable<bool>(true),
+                    CreationDate = null,
+                    UpdateDate = null,
+                    TitleVerified = null,
+                    Fk_SerieId = 1,
+                    Fk_SpecificationStageId = 1,
+                    Histories = new List<Domain.History>
+                    {
+                        new Domain.History(){
+                            Pk_HistoryId = 1,
+                            PersonName = "Author 1",
+                            HistoryText = "Text 1"
+                        },
+                        new Domain.History(){
+                            Pk_HistoryId = 2,
+                            PersonName = "Author 1",
+                            HistoryText = "Text 2"
+                        }
+                    },
+                    SpecificationChilds = new List<Domain.Specification>(),
+                    SpecificationParents = new List<Domain.Specification>(){
+                        new Domain.Specification()
+                        {
+                            Pk_SpecificationId = 3,
+                            Number = "00.02U",
+                            Title = "Third specification",
+                            Type = new Nullable<bool>(true),
+
+                            IsActive= true,
+                            IsUnderChangeControl = new Nullable<bool>(false),
+
+                            Enum_SpecificationStage = new Domain.Enum_SpecificationStage(){
+                                Pk_Enum_SpecificationStage =1,
+                                Code ="Stage 2",
+                                Description = "Second stage"
+                            },
+                            IsForPublication = new Nullable<bool>(false),
+                            Remarks = remarks,
+                            SpecificationTechnologies = specTechnologies,  
+                            Enum_Serie = new Domain.Enum_Serie(){ Pk_Enum_SerieId= 1, Code ="S1", Description="Serie 1"},
+                            ComIMS = new Nullable<bool>(true),
+                            EPS = null,
+                            C_2gCommon = null ,
+                            DefinitivelyWithdrawn = new Nullable<bool>(true),
+                            CreationDate =null,
+                            UpdateDate =null,
+                            TitleVerified =null,               
+                            Fk_SerieId = 1,
+                            Fk_SpecificationStageId  = 1,
+                            Histories = histories,
+                            PrimeResponsibleGroupShortName = "SP",
+                            SecondaryResponsibleGroupsShortNames = "S1, S2, S3"
+             
+                        }   ,
+                        new Domain.Specification()
+                        {
+                            Pk_SpecificationId = 3,
+                            Number = "00.03U",
+                            Title = "Third specification",
+                            Type = new Nullable<bool>(true),
+
+                            IsActive= true,
+                            IsUnderChangeControl = new Nullable<bool>(false),
+
+                            Enum_SpecificationStage = new Domain.Enum_SpecificationStage(){
+                                Pk_Enum_SpecificationStage =1,
+                                Code ="Stage 2",
+                                Description = "Second stage"
+                            },
+                            IsForPublication = new Nullable<bool>(false),
+                            Remarks = remarks,
+                            SpecificationTechnologies = specTechnologies,  
+                            Enum_Serie = new Domain.Enum_Serie(){ Pk_Enum_SerieId= 1, Code ="S1", Description="Serie 1"},
+                            ComIMS = new Nullable<bool>(true),
+                            EPS = null,
+                            C_2gCommon = null ,
+                            DefinitivelyWithdrawn = new Nullable<bool>(true),
+                            CreationDate =null,
+                            UpdateDate =null,
+                            TitleVerified =null,               
+                            Fk_SerieId = 1,
+                            Fk_SpecificationStageId  = 1,
+                            Histories = histories,
+                            PrimeResponsibleGroupShortName = "SP",
+                            SecondaryResponsibleGroupsShortNames = "S1, S2, S3"
+             
+                        }
+                    },
+                    PrimeResponsibleGroupShortName = "SP",
+                    SecondaryResponsibleGroupsShortNames = "S1, S2, S3",
+                    Specification_WorkItem = new List<Domain.Specification_WorkItem>()
+                    {
+                        new Domain.Specification_WorkItem(){
+                            Pk_Specification_WorkItemId = 1,
+                            isPrime = true,
+                            WorkItem = new Domain.WorkItem(){
+                                Pk_WorkItemUid = 1,
+                                Acronym = "acro1",
+                                WorkItems_ResponsibleGroups = new List<Domain.WorkItems_ResponsibleGroups>(){
+                                    new Domain.WorkItems_ResponsibleGroups(){
+                                        Pk_WorkItemResponsibleGroups =1,
+                                        ResponsibleGroup = "S1",
+                                        IsPrimeResponsible = true
+                                    },
+                                    new Domain.WorkItems_ResponsibleGroups(){
+                                        Pk_WorkItemResponsibleGroups =2,
+                                        ResponsibleGroup = "S2"
+                                    }
+                                }
+                            }
+                        },
+                        new Domain.Specification_WorkItem(){
+                            Pk_Specification_WorkItemId = 2,
+                            isPrime = false,
+                            WorkItem = new Domain.WorkItem(){
+                                Pk_WorkItemUid = 2,
+                                Acronym = "acro2",
+                               WorkItems_ResponsibleGroups = new List<Domain.WorkItems_ResponsibleGroups>(){
+                                    new Domain.WorkItems_ResponsibleGroups(){
+                                        Pk_WorkItemResponsibleGroups =1,
+                                        ResponsibleGroup = "S1"
+                                    },
+                                    new Domain.WorkItems_ResponsibleGroups(){
+                                        Pk_WorkItemResponsibleGroups =2,
+                                        ResponsibleGroup = "S2",
+                                        IsPrimeResponsible = true
+                                    }
+                                }
+                            }  
+                        }
+                    }                    
+                });
+
+
+            specifications.Add(new Domain.Specification()
+            {
+                Pk_SpecificationId = 4,
+                Number = "00.04U",
+                Title = "4th specification",
+                Type = new Nullable<bool>(true),
+
+                IsActive= true,
+                IsUnderChangeControl = new Nullable<bool>(false),
+
+                Enum_SpecificationStage = new Domain.Enum_SpecificationStage(){
+                    Pk_Enum_SpecificationStage =1,
+                    Code ="Stage 3",
+                    Description = "Third stage"
+                },
+                IsForPublication = new Nullable<bool>(false),
+                Remarks = remarks,
+                SpecificationTechnologies = specTechnologies,  
+                Enum_Serie = new Domain.Enum_Serie(){ Pk_Enum_SerieId= 1, Code ="S1", Description="Serie 1"},
+                ComIMS = new Nullable<bool>(true),
+                EPS = null,
+                C_2gCommon = null ,
+                DefinitivelyWithdrawn = new Nullable<bool>(true),
+                CreationDate =null,
+                UpdateDate =null,
+                TitleVerified =null,               
+                Fk_SerieId = 1,
+                Fk_SpecificationStageId  = 1,
+                Histories = histories
+             
+            });
+
+            Domain.UserRightsContainer userRightsContainer = new Domain.UserRightsContainer();
+            userRightsContainer.AddRight(Domain.Enum_UserRights.Specification_ViewDetails);
+            userRightsContainer.AddRight(Domain.Enum_UserRights.Specification_EditFull);
+            userRightsContainer.AddRight(Domain.Enum_UserRights.Specification_Withdraw);
+            return new KeyValuePair<List<Domain.Specification>, Domain.UserRightsContainer>(specifications, userRightsContainer);
+
+        }
+    }
+}

@@ -31,6 +31,24 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.WebControls.Panel fixContainer;
         
         /// <summary>
+        /// Contrôle specificationMessages.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel specificationMessages;
+        
+        /// <summary>
+        /// Contrôle specificationMessagesTxt.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label specificationMessagesTxt;
+        
+        /// <summary>
         /// Contrôle specificationDetailsBody.
         /// </summary>
         /// <remarks>
@@ -326,6 +344,7 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label RelatedWorkItemsLbl;
+        
         
         /// <summary>
         /// Contrôle RadPageReleases.

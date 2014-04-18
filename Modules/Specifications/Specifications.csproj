@@ -49,7 +49,23 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\bin\DotNetNuke.WebUtility.dll</HintPath>
     </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Practices.Unity, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Rhino.Mocks, Version=3.6.0.0, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\bin\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -86,6 +102,13 @@
     <Compile Include="SpecificationDetails.aspx.designer.cs">
       <DependentUpon>SpecificationDetails.aspx</DependentUpon>
     </Compile>
+    <Compile Include="SpecificationListControl.ascx.cs">
+      <DependentUpon>SpecificationListControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SpecificationListControl.ascx.designer.cs">
+      <DependentUpon>SpecificationListControl.ascx</DependentUpon>
+    </Compile>
     <Compile Include="SpecificationsSettings.ascx.cs">
       <DependentUpon>SpecificationsSettings.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -104,10 +127,16 @@
   <ItemGroup>
     <Content Include="Documentation\Documentation.css" />
     <Content Include="Documentation\Documentation.html" />
+    <Content Include="images\details.png" />
+    <Content Include="images\error.png" />
+    <Content Include="images\favicon.ico" />
+    <Content Include="images\warning.png" />
+    <Content Include="JS\jquery.min.js" />
     <Content Include="License.txt" />
     <Content Include="module.css" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="SpecificationDetails.aspx" />
+    <Content Include="SpecificationListControl.ascx" />
     <Content Include="SpecificationsSettings.ascx" />
     <Content Include="SpecificationsList.ascx" />
   </ItemGroup>
@@ -144,13 +173,29 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Business\Business.csproj">
+      <Project>{b01c6fdf-c992-4d87-b67e-41afd677ea5f}</Project>
+      <Name>Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\DataAccess\DataAccess.csproj">
+      <Project>{638f46a5-c23c-452d-a1f4-d0c49ea28f5b}</Project>
+      <Name>DataAccess</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Common\DomainClasses\DomainClasses.csproj">
       <Project>{d5bdede9-d397-411c-ae94-1646836406ba}</Project>
       <Name>DomainClasses</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Common\Repositories\Repositories.csproj">
+      <Project>{c8f93426-67f5-4a75-803b-34ad1c5730e5}</Project>
+      <Name>Repositories</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Common\Services\Services.csproj">
       <Project>{4bb8a434-1ed1-4d33-ae3d-32a000d19ca5}</Project>
       <Name>Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Utils\Utils.csproj">
+      <Project>{ad1f6a1c-95b2-4274-a0c5-1f8ca9d9bb55}</Project>
+      <Name>Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\Controls\Controls.csproj">
       <Project>{1330d828-a24f-4676-9081-c41204c35072}</Project>
