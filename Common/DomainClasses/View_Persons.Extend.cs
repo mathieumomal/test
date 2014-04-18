@@ -15,10 +15,10 @@ namespace Etsi.Ultimate.DomainClasses
                 StringBuilder sb = new StringBuilder();
                 if (!String.IsNullOrEmpty(this.FIRSTNAME))
                     sb.Append(this.FIRSTNAME).Append(" ");
-                if (!String.IsNullOrEmpty(this.ORGA_NAME))
+                if (!String.IsNullOrEmpty(this.ORGA_SHORT))
                 {
                     sb.Append("(");
-                    sb.Append(this.ORGA_NAME);
+                    sb.Append(this.ORGA_SHORT);
                     sb.Append(") ");
                 }
                 if (!String.IsNullOrEmpty(this.Email))

@@ -23,6 +23,7 @@ namespace Etsi.Ultimate.DomainClasses
         public int ORGA_ID { get; set; }
         public string ORGA_NAME { get; set; }
         public string DELETED_FLG { get; set; }
+        public string ORGA_SHORT { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

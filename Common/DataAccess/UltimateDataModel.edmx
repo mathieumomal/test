@@ -99,6 +99,7 @@
       [View_Persons].[FIRSTNAME] AS [FIRSTNAME], 
       [View_Persons].[ORGA_ID] AS [ORGA_ID], 
       [View_Persons].[ORGA_NAME] AS [ORGA_NAME], 
+      [View_Persons].[ORGA_SHORT] AS [ORGA_SHORT], 
       [View_Persons].[DELETED_FLG] AS [DELETED_FLG]
       FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           </EntitySet>
@@ -534,6 +535,7 @@
           <Property Name="FIRSTNAME" Type="varchar" MaxLength="20" />
           <Property Name="ORGA_ID" Type="int" Nullable="false" />
           <Property Name="ORGA_NAME" Type="varchar" MaxLength="99" />
+          <Property Name="ORGA_SHORT" Type="varchar" MaxLength="30" />
           <Property Name="DELETED_FLG" Type="varchar" Nullable="false" MaxLength="1" />
         </EntityType>
         <Association Name="FK_Enum_Technology">
@@ -1048,6 +1050,7 @@
           <Property Type="Int32" Name="ORGA_ID" Nullable="false" />
           <Property Type="String" Name="ORGA_NAME" MaxLength="99" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="DELETED_FLG" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ORGA_SHORT" MaxLength="30" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Community">
           <Key>
@@ -1623,6 +1626,7 @@
           <EntitySetMapping Name="View_Persons">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.View_Persons">
               <MappingFragment StoreEntitySet="View_Persons">
+                <ScalarProperty Name="ORGA_SHORT" ColumnName="ORGA_SHORT" />
                 <ScalarProperty Name="DELETED_FLG" ColumnName="DELETED_FLG" />
                 <ScalarProperty Name="ORGA_NAME" ColumnName="ORGA_NAME" />
                 <ScalarProperty Name="ORGA_ID" ColumnName="ORGA_ID" />

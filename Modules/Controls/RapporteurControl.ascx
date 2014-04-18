@@ -30,33 +30,37 @@
                             </ClientSettings>
                             <MasterTableView AutoGenerateColumns="False" DataKeyNames="PERSON_ID"> 
                                 <Columns>
-                                    <telerik:GridClientSelectColumn UniqueName="selectable" Visible="false" >
+                                    <telerik:GridClientSelectColumn UniqueName="selectable" Visible="false" HeaderStyle-CssClass="selectStyleColumn" ItemStyle-CssClass="selectStyleColumn">
                                     </telerik:GridClientSelectColumn>
                                     <telerik:GridTemplateColumn DataField="nameHyperLink" HeaderText="Name" UniqueName="nameHyperLink" Visible="false">
-                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="30%"/> 
+                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" CssClass="hyperlinkStyleColumn"/> 
+                                        <ItemStyle CssClass="hyperlinkStyleColumn" />
                                         <ItemTemplate>
                                             <div><%# DataBinder.Eval(Container.DataItem,"RapporteurDetailsAddress") %></div>  
                                         </ItemTemplate>
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn DataField="name" HeaderText="Name" UniqueName="name">
-                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="30%"/> 
+                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" CssClass="nameStyleColumn"/> 
+                                        <ItemStyle CssClass="nameStyleColumn" />
                                         <ItemTemplate>
                                             <div><%# DataBinder.Eval(Container.DataItem,"FIRSTNAME") %> <%# DataBinder.Eval(Container.DataItem,"LASTNAME") %></div>  
                                         </ItemTemplate>
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn DataField="company" HeaderText="Company" UniqueName="company">
-                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="20%"/>
+                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" CssClass="companyStyleColumn"/>
+                                        <ItemStyle CssClass="companyStyleColumn" />
                                         <ItemTemplate>
-                                            <div><%# DataBinder.Eval(Container.DataItem,"ORGA_NAME") %></div>  
+                                            <div><%# DataBinder.Eval(Container.DataItem,"ORGA_SHORT") %></div>  
                                         </ItemTemplate>                
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn DataField="email" HeaderText="Email" UniqueName="email">
-                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="40%"/>
+                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" CssClass="emailStyleColumn"/>
+                                        <ItemStyle CssClass="emailStyleColumn" />
                                         <ItemTemplate>
                                             <div><%# DataBinder.Eval(Container.DataItem,"Email") %></div>  
                                         </ItemTemplate>                
                                     </telerik:GridTemplateColumn>
-                                    <telerik:GridButtonColumn CommandName="Delete" HeaderText="Delete" UniqueName="delete" ImageUrl="~/images/delete.gif" ButtonType="ImageButton" />
+                                    <telerik:GridButtonColumn CommandName="Delete" HeaderText="Delete" UniqueName="delete" ImageUrl="~/images/delete.gif" ButtonType="ImageButton" HeaderStyle-CssClass="deleteStyleColumn" ItemStyle-CssClass="deleteStyleColumn" />
                                 </Columns>
                             
                                 <NoRecordsTemplate>

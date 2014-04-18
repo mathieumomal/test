@@ -35,6 +35,7 @@
 #divRapporteurControl .center{text-align:center;}
 #divRapporteurControl .rdcbRapporteurStyle{padding-top: 4px;}
 
+#divRapporteurControl .rgDataDiv{overflow-x: hidden !important;}
 
 /* --- Viewmode --- */
 
@@ -45,6 +46,8 @@
 
 	/* Multi person mode */
 #divRapporteurControl .viewModeMultiPersonMode .rgMasterTable a{color: rgb(44, 102, 189);}
+#divRapporteurControl .viewModeMultiPersonMode .hyperlinkStyleColumn{width:55%;}
+#divRapporteurControl .viewModeMultiPersonMode .companyStyleColumn{width:45%;}
 
 /* --- Viewmode --- */
 
@@ -53,6 +56,12 @@
 /* --- Edit mode --- */
 
 	/* Multi person mode */
+#divRapporteurControl .editModeMultiPersonMode .selectStyleColumn{width:3%;}
+#divRapporteurControl .editModeMultiPersonMode .nameStyleColumn{width:20%;}
+#divRapporteurControl .editModeMultiPersonMode .companyStyleColumn{width:30%;}
+#divRapporteurControl .editModeMultiPersonMode .emailStyleColumn{width:30%;}
+#divRapporteurControl .editModeMultiPersonMode .deleteStyleColumn{width:5%;}
+
 #divRapporteurControl .editModeMultiPersonMode .searchBar td:nth-child(2){width:60%}
 #divRapporteurControl .editModeMultiPersonMode .searchBar td:nth-child(3){width:20%}
 #divRapporteurControl .editMode .rdcbRapporteurStyle{width:130%;}
