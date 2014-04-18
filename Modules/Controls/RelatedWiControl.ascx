@@ -11,6 +11,13 @@
     .RadGrid_Default .rgEditRow td {
         border: none;
     }
+
+    .floatRight
+    {
+        float: right;
+    }
+
+    /*Following style modifies the way grid shows the selected column (by making text bold)*/
     #<%=relatedWiGrid.ClientID %>.RadGrid_Default .rgSelectedRow.rgRow,
     #<%=relatedWiGrid_Edit.ClientID %>.RadGrid_Default .rgSelectedRow.rgRow {
         font-weight:bold;
@@ -28,24 +35,21 @@
         border-bottom-color: transparent;
     }
 
-    .floatRight
-    {
-        float: right;
-    }
-
 </style>
 <script type="text/javascript">
     function closeAllModals() {
         var manager = GetRadWindowManager();
         manager.closeAll();
     }
-
+    
     function open_RadWindow_workItemEdit(sender, eventArgs) {
         closeAllModals();
         window.radopen(null, "RadWindow_wiEdit");
         $("#<%=txtSearchText.ClientID %>").val('');
     }
 
+    //On adding the WIs from Search grid, set all the selected 
+    //WIs to hidden field; when can beaccessed in .cs page 
     function GetSelectedWis_relatedWiGrid() {
         var selectedWis = $("#<%=hidSelectedWis.ClientID %>").val();
 
@@ -62,6 +66,7 @@
             $("#<%=hidSelectedWis.ClientID %>").val(selectedWis);
     }
 
+    //Update the PrimaryWi hidden field on row selection changed
     function OnRowSelected_relatedWiGrid_Edit(sender, eventArgs) {
         var MasterTable = eventArgs._tableView;
         var selectedRows = MasterTable.get_selectedItems();
@@ -78,6 +83,7 @@
         }
     }
 
+    //Visual response to search click 
     function setSearchProgress(flag) {
         if (flag)
             $("#<%=btnSearchWi.ClientID %>").val('Searching...');
@@ -85,6 +91,7 @@
             $("#<%=btnSearchWi.ClientID %>").val('Search');
     }
 
+    //Visual response to WI removal 
     function setDeleteProgress(sender) {
         var gifImg = "/controls/Ultimate/images/busy.gif";
         sender.src = gifImg;
@@ -260,13 +267,15 @@
                                                         <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"ResponsibleGroups") %></div>
                                                     </ItemTemplate>
                                                 </telerik:GridTemplateColumn>
-                                                <telerik:GridTemplateColumn HeaderText="Delete">
+                                                <telerik:GridTemplateColumn HeaderText="Delete" UniqueName="Delete">
                                                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="50px" />
                                                     <ItemTemplate>
                                                         <asp:ImageButton ID="btnRemoveWis" CommandArgument='<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid") %>' ImageUrl="/controls/Ultimate/images/delete.png" runat="server" OnClientClick="setDeleteProgress(this)" OnClick="btnRemoveWis_Click" />
                                                     </ItemTemplate>
                                                 </telerik:GridTemplateColumn>
                                                 <telerik:GridBoundColumn Display="false" DataField="IsPrimary" UniqueName="IsPrimary">
+                                                </telerik:GridBoundColumn>
+                                                <telerik:GridBoundColumn Display="false" DataField="IsUserAddedWi" UniqueName="IsUserAddedWi">
                                                 </telerik:GridBoundColumn>
                                             </Columns>
                                             <NoRecordsTemplate>

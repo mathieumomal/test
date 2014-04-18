@@ -72,18 +72,19 @@ namespace Etsi.Ultimate.Controls
         {
             if (!IsPostBack)
             {
-                //update this to !IsEditMode during checkin
-                if (IsEditMode)
+                if (!IsEditMode)
                 {
                     btnShowWiEditWindow.Visible = false;
                     ScrollHeight += 25;
                 }
                 else
                 {
+                    //set datasource only if the user has edit rights
                     relatedWiGrid_Edit.DataSource = DataSource;
                     relatedWiGrid_Search.DataSource = String.Empty;
                 }
 
+                //Set values of hiddn fields (IsPrimary & Associated Wis) from DataSoruce
                 SetHiddenWisValue(DataSource);
                 SetHidPrimaryWi(DataSource);
 
@@ -110,9 +111,13 @@ namespace Etsi.Ultimate.Controls
         /// <param name="e"></param>
         protected void btnSearchWi_Click(object sender, EventArgs e)
         {
+            //Get the list of matching WIs
             IWorkItemService svc = ServicesFactory.Resolve<IWorkItemService>();
             var matchedWis = svc.GetWorkItemsBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), txtSearchText.Text);
 
+            //modifiedDataSource is a list of WIs that are added/removed/modified in EDIT mode
+            // - Remove those WIs from search result
+            // - Else remove WIs that are alrey in assigned DataSource
             if (modifiedDataSource.Count > 0)
                 matchedWis.Key.RemoveAll(x => modifiedDataSource.Any(y => y.Pk_WorkItemUid == x.Pk_WorkItemUid));
             else
@@ -166,6 +171,7 @@ namespace Etsi.Ultimate.Controls
             var WiIdStr = ((ImageButton)sender).CommandArgument;
             if (!string.IsNullOrEmpty(WiIdStr) && int.TryParse(((ImageButton)sender).CommandArgument, out WiId))
             {
+                //If modifiedDataSource is set; then remove from it else take data from DataSource to modifiedDataSource & remove
                 if (modifiedDataSource.Count > 0)
                 {
                     var removedWi = modifiedDataSource.FirstOrDefault(x => x.Pk_WorkItemUid == WiId);
@@ -220,6 +226,7 @@ namespace Etsi.Ultimate.Controls
 
             BindGrid(relatedWiGrid, this.DataSource);
 
+            //Reset WorkItem search panel
             txtSearchText.Text = "";
             BindGrid(relatedWiGrid_Search, String.Empty);
         }
@@ -231,6 +238,7 @@ namespace Etsi.Ultimate.Controls
         /// <param name="e"></param>
         protected void btnRevertChanges_Click(object sender, EventArgs e)
         {
+            //Reset all to the original state
             modifiedDataSource = null;
             SetHiddenWisValue(DataSource);
             SetHidPrimaryWi(DataSource);
@@ -248,6 +256,7 @@ namespace Etsi.Ultimate.Controls
         {
             if (e.Item is GridDataItem)
             {
+                //Select the row if the WI is a primary WorkItem
                 GridDataItem item = (GridDataItem)e.Item;
                 if (item["IsPrimary"].Text != null && item["IsPrimary"].Text.ToLower() == "true")
                 {
@@ -265,6 +274,7 @@ namespace Etsi.Ultimate.Controls
         {
             if (e.Item is GridDataItem)
             {
+                //Select the row if the WI is a primary WorkItem
                 GridDataItem item = (GridDataItem)e.Item;
                 if (item["IsPrimary"].Text != null && item["IsPrimary"].Text.ToLower() == "true")
                 {
@@ -273,6 +283,14 @@ namespace Etsi.Ultimate.Controls
                 else if (hidPrimaryWi.Value != null && hidPrimaryWi.Value == item["UID"].Text)
                 {
                     item.Selected = true;
+                }
+
+
+                //Hide the REMOVE button if the WI is a system assigned WI
+                if (item["IsUserAddedWi"].Text != null && item["IsUserAddedWi"].Text.ToLower() == "false")
+                {
+                    ImageButton btn = (ImageButton)item["Delete"].FindControl("btnRemoveWis");
+                    btn.Visible = false;
                 }
             }
         }
