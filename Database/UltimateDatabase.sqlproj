@@ -108,6 +108,8 @@
     <Folder Include="dbo\Views\" />
     <Folder Include="dbo\Functions\" />
     <Folder Include="Common" />
+    <Folder Include="Scripts" />
+    <Folder Include="Scripts\Post-Deployment" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Releases.sql" />
@@ -145,12 +147,14 @@
     <Build Include="dbo\Tables\Enum_Serie.sql" />
     <Build Include="dbo\Functions\getMeetingShortRef.sql" />
     <Build Include="dbo\Tables\Enum_SpecificationStage.sql" />
-    <Build Include="dbo\Tables\SpecifcationsGenealogy.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />
     <None Include="Common\DSDB.dacpac" />
     <None Include="Common\DNN3GPP.dacpac" />
+    <None Include="Scripts\Post-Deployment\Enum_CommunitiesShortNames.data.sql" />
+    <None Include="Scripts\Post-Deployment\Enum_ReleaseStatus.data.sql" />
+    <None Include="UltimateDatabase.publish.xml" />
   </ItemGroup>
   <ItemGroup>
     <SqlCmdVariable Include="DNN3GPP">
@@ -173,5 +177,8 @@
       <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
       <DatabaseSqlCmdVariable>DSDB</DatabaseSqlCmdVariable>
     </ArtifactReference>
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Scripts\Post-Deployment\Script.PostDeployment.sql" />
   </ItemGroup>
 </Project>
