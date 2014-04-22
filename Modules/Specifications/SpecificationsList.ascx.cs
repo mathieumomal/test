@@ -25,6 +25,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Net;
 using System.Reflection;
+using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
@@ -41,12 +42,19 @@ namespace Etsi.Ultimate.Module.Specifications
     /// 
     /// </summary>
     /// -----------------------------------------------------------------------------
-    public partial class View : PortalModuleBase
+    public partial class SpecificationsList : PortalModuleBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
+                if (!IsPostBack)
+                {
+                    //TODO:: Remove the below code after implementation with real data
+                    List<Specification> specifications = new List<Specification>();
+                    rgSpecificationList.DataSource = specifications;
+                    rgSpecificationList.DataBind();
+                }
             }
             catch (Exception exc) //Module failed to load
             {
