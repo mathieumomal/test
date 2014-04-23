@@ -50,8 +50,8 @@ namespace Etsi.Ultimate.Business
             var meetings = repo
                             .All
                             .Where(x => x.START_DATE > startDate)
-                            .Take(NUMBER_OF_MEETINGS_TO_LOAD)
                             .OrderBy(d => d.START_DATE)
+                            .Take(NUMBER_OF_MEETINGS_TO_LOAD)
                             .ToList();
 
             var requestedMeeting = repo.All.Where(x => x.MTG_ID == includeMeetingId).FirstOrDefault();

@@ -29,7 +29,9 @@
 
 <div style="clear:both"></div>
 <div id="releaseList">
-    <telerik:RadGrid runat="server" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" ID="releasesTable" OnItemDataBound="releasesTable_ItemDataBound"  AllowPaging="false" AllowSorting="false" AllowFilteringByColumn="false" AutoGenerateColumns="false">
+     <telerik:RadGrid runat="server" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" ID="releasesTable" OnItemDataBound="releasesTable_ItemDataBound"  
+         AllowPaging="false" AllowSorting="false" AllowFilteringByColumn="false" AutoGenerateColumns="false"
+         EnableViewState="false">
         <MasterTableView ClientDataKeyNames="Pk_ReleaseId">
             <Columns>
                 <telerik:GridBoundColumn HeaderStyle-Width="8%" DataField="Code" HeaderText="Release Code" UniqueName="Code" ></telerik:GridBoundColumn>

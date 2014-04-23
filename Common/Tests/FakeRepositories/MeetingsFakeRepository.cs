@@ -45,10 +45,10 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         {
             var dbSet = new MeetingFakeDBSet();
 
-            dbSet.Add(new Meeting() { MTG_ID = SA63_MTG_ID, MTG_REF = "3GPPSA#63" });
-            dbSet.Add(new Meeting() { MTG_ID = PCG32_MTG_ID, MTG_REF = "3GPPPCG#32" });
-            dbSet.Add(new Meeting() { MTG_ID = SA64_MTG_ID, MTG_REF = "3GPPSA#64" });
-            dbSet.Add(new Meeting() { MTG_ID = PCG33_MTG_ID, MTG_REF = "3GPPPCG#33" });
+            dbSet.Add(new Meeting() { MTG_ID = SA63_MTG_ID, MTG_REF = "3GPPSA#63", MtgShortRef="SP-63" });
+            dbSet.Add(new Meeting() { MTG_ID = PCG32_MTG_ID, MTG_REF = "3GPPPCG#32", MtgShortRef="PCG-32" });
+            dbSet.Add(new Meeting() { MTG_ID = SA64_MTG_ID, MTG_REF = "3GPPSA#64", MtgShortRef="SP-64" });
+            dbSet.Add(new Meeting() { MTG_ID = PCG33_MTG_ID, MTG_REF = "3GPPPCG#33", MtgShortRef="PCG-33" });
 
 
             return dbSet.AsQueryable();

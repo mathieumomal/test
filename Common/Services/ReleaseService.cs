@@ -51,7 +51,7 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public void FreezeRelease(int releaseId, DateTime endDate, int personId, int FreezeMtgId, string FreezeMtgRef)
+        public void FreezeRelease(int releaseId, DateTime? endDate, int personId, int? FreezeMtgId, string FreezeMtgRef)
         {
 
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -71,7 +71,7 @@ namespace Etsi.Ultimate.Services
         /// <param name="closureMtgRef">Closure Meeting Reference</param>
         /// <param name="closureMtgId">Closure Meeting Reference ID</param>
         /// <param name="personID">Person ID</param>
-        public void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId, int personID)
+        public void CloseRelease(int releaseId, DateTime? closureDate, string closureMtgRef, int? closureMtgId, int personID)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {

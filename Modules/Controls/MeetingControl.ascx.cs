@@ -104,6 +104,7 @@ namespace Etsi.Ultimate.Controls
                 BindDropDownData(DataSource);
 
                 rcbMeetings.OnClientSelectedIndexChanged = "OnClientSelectedIndexChanged" + lblEndDate.ClientID;
+                rcbMeetings.OnClientTextChange = "OnClientTextChanged" + lblEndDate.ClientID;
             }
             if (!string.IsNullOrEmpty(rcbMeetings.SelectedValue) && !string.IsNullOrEmpty(rcbMeetings.SelectedValue.Split('|')[1]))
                 lblEndDate.Text = rcbMeetings.SelectedValue.Split('|')[1];

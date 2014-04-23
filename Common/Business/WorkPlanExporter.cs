@@ -11,6 +11,7 @@ using Domain = Etsi.Ultimate.DomainClasses;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml.Packaging;
+using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Business
 {    
@@ -87,8 +88,7 @@ namespace Etsi.Ultimate.Business
 
                     using (ExcelPackage pck = new ExcelPackage(newFile))
                     {
-                        List<Domain.WorkItemForExport> exportWorkPlan = new List<Domain.WorkItemForExport>();
-                        workPlan.ForEach(x => exportWorkPlan.Add(new Domain.WorkItemForExport(x)));
+                        List<Domain.WorkItemForExport> exportWorkPlan = WorkItemForExport.GetWorkItemsListForExport(workPlan);
 
                         // get the handle to the existing worksheet
                         var wsData = pck.Workbook.Worksheets.Add("Work Items");

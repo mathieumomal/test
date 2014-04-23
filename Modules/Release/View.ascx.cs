@@ -82,6 +82,7 @@ namespace Etsi.Ultimate.Module.Release
                 //Setting up the release list
                 List<DomainClasses.Release> releasesList = releaseRightsObjects.Key.OrderByDescending(release => release.SortOrder).ToList();
                 releasesTable.DataSource = releasesList;
+                releasesTable.DataBind();
 
                 //Applying rights
                 UserRightsContainer userRights = releaseRightsObjects.Value;

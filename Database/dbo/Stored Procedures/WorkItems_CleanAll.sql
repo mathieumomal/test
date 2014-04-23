@@ -3,7 +3,7 @@
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-CREATE PROCEDURE WorkItems_CleanAll 
+CREATE PROCEDURE [dbo].[WorkItems_CleanAll] 
 AS
 BEGIN
 	-- SET NOCOUNT ON added to prevent extra result sets from

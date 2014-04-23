@@ -8,6 +8,17 @@
         if (lbl != null && typeof(lbl) != "undefined")
             lbl.innerHTML = item.get_value().split("|")[1];
     }
+    function OnClientTextChanged<%=lblEndDate.ClientID%>(sender, eventArgs) {
+        var text = sender.get_text();
+
+        var combo = $find("<%= rcbMeetings.ClientID %>");
+        var item = combo.findItemByText(" ");
+        if (item) {
+            item.select();
+        }
+
+    
+    }
 </script>
 <telerik:RadComboBox
     id="rcbMeetings"
@@ -16,8 +27,12 @@
     EnableLoadOnDemand="True"
     OnItemsRequested="rcbMeetings_ItemsRequested"
     onclientselectedindexchanged="OnClientSelectedIndexChanged"
-    OnSelectedIndexChanged="rcbMeetings_SelectedIndexChanged" 
-    OnDataBound="rcbMeetings_DataBound">  
+    OnSelectedIndexChanged="rcbMeetings_SelectedIndexChanged"
+    OnClientTextChange="OnClientTextChanged" 
+    
+    OnDataBound="rcbMeetings_DataBound"
+    MarkFirstMatch="True"
+>  
 </telerik:RadComboBox>
 
 <asp:Panel Style="display:inline;font-weight:bold" ID="pnlEndDate" runat="server">

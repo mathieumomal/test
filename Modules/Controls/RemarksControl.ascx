@@ -1,6 +1,9 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="RemarksControl.ascx.cs" Inherits="Etsi.Ultimate.Controls.RemarksControl" %>
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 
+
+
+
 <style type="text/css">
     .RadGrid_Default th.rgHeader
     {
@@ -9,7 +12,8 @@
         border-bottom: 1px solid grey;
     }
 
-    .RadGrid_Default .rgEditRow td {
+    .RadGrid_Default .rgEditRow td
+    {
         border: none;
     }
 </style>
@@ -21,18 +25,18 @@
     <table style="width: 100%">
         <tr>
             <td colspan="2">
-                <telerik:RadGrid runat="server" ID="remarksGrid" AllowPaging="false" 
-                                                                 AllowSorting="false" 
-                                                                 AllowFilteringByColumn="false" 
-                                                                 AutoGenerateColumns="false"
-                                                                 AllowMultiRowEdit="true"
-                                                                 OnPreRender="remarksGrid_PreRender"
-                                                                 OnNeedDataSource="remarksGrid_NeedDataSource"                                                                                 
-                                                                 style="min-width:400px">
-                    <ClientSettings>
+                <telerik:RadGrid runat="server" ID="remarksGrid" AllowPaging="false"
+                    AllowSorting="false"
+                    AllowFilteringByColumn="false"
+                    AutoGenerateColumns="false"
+                    AllowMultiRowEdit="true"
+                    OnPreRender="remarksGrid_PreRender"
+                    OnNeedDataSource="remarksGrid_NeedDataSource"
+                    style="min-width: 400px">
+                    <clientsettings>
                         <Scrolling AllowScroll="True" UseStaticHeaders="true" />
-                    </ClientSettings>
-                    <MasterTableView clientdatakeynames="Pk_RemarkId, IsPublic, RemarkText, CreationDate" EditMode="InPlace">
+                    </clientsettings>
+                    <mastertableview clientdatakeynames="Pk_RemarkId, IsPublic, RemarkText, CreationDate" editmode="InPlace">
                         <Columns>
                             <telerik:GridTemplateColumn DataField="CreationDate" HeaderText="Creation date" UniqueName="CreationDate">
                                 <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="150px"/> 
@@ -73,16 +77,40 @@
                                 No Remarks Added
                             </div>
                         </NoRecordsTemplate>
-                    </MasterTableView>
+                    </mastertableview>
                 </telerik:RadGrid></td>
         </tr>
         <tr>
-            <td style="padding-right:5px">
+            <td style="padding-right: 5px">
                 <asp:TextBox ID="txtAddRemark" runat="server" Width="100%"></asp:TextBox>
-                </td>
+            </td>
             <td>
                 <asp:Button ID="btnAddRemark" runat="server" Text="Add" Width="100%" OnClick="btnAddRemark_Click" />
             </td>
         </tr>
     </table>
 </fieldset>
+
+<script type="text/javascript">
+    Sys.WebForms.PageRequestManager.getInstance().add_endRequest(EndRequest);
+    function EndRequest(sender, args)
+    {
+        if (args.get_error() == undefined) {
+            BindEvents();
+        }
+    }
+
+
+    function BindEvents()
+    {
+        $("#<%=txtAddRemark.ClientID %>").keyup(function () {
+            console.log($(this).val());
+            if ($(this).val().trim().length > 0) {
+                $("#<%=btnAddRemark.ClientID %>").removeAttr('disabled', 'enabled');
+            }
+            else
+                $("#<%=btnAddRemark.ClientID %>").attr('disabled', 'disabled');
+        });
+    }
+    BindEvents();
+</script>

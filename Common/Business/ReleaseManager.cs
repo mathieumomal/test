@@ -93,7 +93,7 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="releaseId"></param>
         /// <param name="endDate"></param>
-        public void FreezeRelease(int releaseId, DateTime endDate, int personId, int FreezeMtgId, string FreezeMtgRef)
+        public void FreezeRelease(int releaseId, DateTime? endDate, int personId, int? FreezeMtgId, string FreezeMtgRef)
         {
             releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
             releaseRepo.UoW = UoW;
@@ -106,6 +106,14 @@ namespace Etsi.Ultimate.Business
             var frozen = relStatusRepo.All.Where(x => x.Code == Enum_ReleaseStatus.Frozen).FirstOrDefault();
 
             var updatedObj = releaseRepo.Find(releaseId);
+
+            string oldEndDate = (updatedObj.EndDate != null) ? updatedObj.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd") : String.Empty;
+            string newEndDate = (endDate != null) ? endDate.GetValueOrDefault().ToString("yyyy-MM-dd") : String.Empty;
+            string historyText = String.Format(Utils.Localization.History_Release_Freeze,
+                ((oldEndDate != newEndDate) || (updatedObj.EndMtgRef != FreezeMtgRef))
+                ? String.Format("Changes:<br />End date: {0} ({1}) => {2} ({3})", oldEndDate, updatedObj.EndMtgRef ?? "None", newEndDate, FreezeMtgRef ?? "None")
+                : String.Empty);
+
             updatedObj.Fk_ReleaseStatus = frozen.Enum_ReleaseStatusId;
             updatedObj.Enum_ReleaseStatus = null;
             updatedObj.EndDate = endDate;
@@ -114,7 +122,7 @@ namespace Etsi.Ultimate.Business
 
             releaseRepo.InsertOrUpdate(updatedObj);
 
-            History history = new History() { Fk_ReleaseId = releaseId, Fk_PersonId = personId, CreationDate = DateTime.UtcNow, HistoryText = Utils.Localization.History_Release_Freeze };
+            History history = new History() { Fk_ReleaseId = releaseId, Fk_PersonId = personId, CreationDate = DateTime.UtcNow, HistoryText = historyText };
             historyRepo.InsertOrUpdate(history);
 
             ClearCache();
@@ -128,7 +136,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="closureMtgRef">Closure Meeting Reference</param>
         /// <param name="closureMtgId">Closure Meeting Reference ID</param>
         /// <param name="personID">Person ID</param>
-        public void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId, int personID)
+        public void CloseRelease(int releaseId, DateTime? closureDate, string closureMtgRef, int? closureMtgId, int personID)
         {
             releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
             releaseRepo.UoW = UoW;
@@ -141,6 +149,13 @@ namespace Etsi.Ultimate.Business
 
             var updatedObj = releaseRepo.Find(releaseId);
 
+            string oldClosureDate = (updatedObj.ClosureDate != null) ? updatedObj.ClosureDate.GetValueOrDefault().ToString("yyyy-MM-dd") : String.Empty;
+            string newClosureDate = (closureDate != null) ? closureDate.GetValueOrDefault().ToString("yyyy-MM-dd") : String.Empty;
+            string historyText = String.Format(Utils.Localization.History_Release_Close,
+                ((oldClosureDate != newClosureDate) || (updatedObj.ClosureMtgRef != closureMtgRef))
+                ? String.Format("Changes:<br />Closure date: {0} ({1}) => {2} ({3})", oldClosureDate, updatedObj.ClosureMtgRef ?? "None" , newClosureDate, closureMtgRef ?? "None")
+                : String.Empty);
+
             updatedObj.Fk_ReleaseStatus = relStatusRepo.All.Where(x => x.Code == Enum_ReleaseStatus.Closed).FirstOrDefault().Enum_ReleaseStatusId;
             updatedObj.Enum_ReleaseStatus = null; //Set Null to avoid referential integrity error
             updatedObj.ClosureDate = closureDate;
@@ -149,7 +164,7 @@ namespace Etsi.Ultimate.Business
 
             releaseRepo.InsertOrUpdate(updatedObj);
 
-            History history = new History() { Fk_ReleaseId = releaseId, Fk_PersonId = personID, CreationDate = DateTime.UtcNow, HistoryText = Utils.Localization.History_Release_Close };
+            History history = new History() { Fk_ReleaseId = releaseId, Fk_PersonId = personID, CreationDate = DateTime.UtcNow, HistoryText = historyText };
             historyRepo.InsertOrUpdate(history);
 
             ClearCache();
@@ -359,7 +374,7 @@ namespace Etsi.Ultimate.Business
             }
 
             // End date ==> Logged
-            if (release.EndMtgId.GetValueOrDefault() != releaseToUpdate.EndMtgId)
+            if (release.EndMtgId.GetValueOrDefault() != releaseToUpdate.EndMtgId.GetValueOrDefault())
             {
                 // Compute old end date.
                 string oldEndDate = "";
@@ -393,7 +408,7 @@ namespace Etsi.Ultimate.Business
             }
 
             // Closure date ==> Logged
-            if (releaseToUpdate.ClosureMtgId.GetValueOrDefault() != release.ClosureMtgId)
+            if (releaseToUpdate.ClosureMtgId.GetValueOrDefault() != release.ClosureMtgId.GetValueOrDefault())
             {
                 string oldClosureDate = "";
                 string oldClosureMtg = "None";

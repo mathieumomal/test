@@ -203,8 +203,7 @@ namespace DatabaseImport.ModuleImport
         {
             if (!string.IsNullOrEmpty(legacyRelease.Stage1_freeze) && legacyRelease.Stage1_freeze != "-")
             {                
-                var fullRef = Domain.Meeting.ToFullReference(legacyRelease.Stage1_freeze);
-                var mtg = NewContext.Meetings.Where(m => m.MTG_REF == fullRef).FirstOrDefault();
+                var mtg = NewContext.Meetings.Where(m => m.MtgShortRef == legacyRelease.Stage1_freeze).FirstOrDefault();
 
                 if (mtg == null)
                     Report.LogWarning("Release " + newRelease.Code + ": could not find freeze meeting " + legacyRelease.Stage1_freeze);
@@ -218,8 +217,7 @@ namespace DatabaseImport.ModuleImport
 
             if (!string.IsNullOrEmpty(legacyRelease.Stage2_freeze) && legacyRelease.Stage2_freeze != "-")
             {                
-                var fullRef = Domain.Meeting.ToFullReference(legacyRelease.Stage2_freeze);
-                var mtg = NewContext.Meetings.Where(m => m.MTG_REF == fullRef).FirstOrDefault();
+                var mtg = NewContext.Meetings.Where(m => m.MtgShortRef == legacyRelease.Stage2_freeze).FirstOrDefault();
 
                 if (mtg == null)
                     Report.LogWarning("Release " + newRelease.Code + ": could not find freeze meeting " + legacyRelease.Stage2_freeze);
@@ -233,8 +231,7 @@ namespace DatabaseImport.ModuleImport
 
             if (!string.IsNullOrEmpty(legacyRelease.Stage3_freeze) && legacyRelease.Stage3_freeze != "-")
             {                
-                var fullRef = Domain.Meeting.ToFullReference(legacyRelease.Stage3_freeze);
-                var mtg = NewContext.Meetings.Where(m => m.MTG_REF == fullRef).FirstOrDefault();
+                var mtg = NewContext.Meetings.Where(m => m.MtgShortRef == legacyRelease.Stage3_freeze).FirstOrDefault();
 
                 if (mtg == null)
                     Report.LogWarning("Release " + newRelease.Code + ": could not find freeze meeting " + legacyRelease.Stage3_freeze);
@@ -256,8 +253,7 @@ namespace DatabaseImport.ModuleImport
         {
             if (!string.IsNullOrEmpty(legacyRelease.Closed) && legacyRelease.Closed != "-")
             {                
-                var fullRef = Domain.Meeting.ToFullReference(legacyRelease.Closed);
-                var mtg = NewContext.Meetings.Where(m => m.MTG_REF == fullRef).FirstOrDefault();
+                var mtg = NewContext.Meetings.Where(m => m.MtgShortRef == legacyRelease.Closed).FirstOrDefault();
 
                 if (mtg == null)
                     Report.LogWarning("Release " + newRelease.Code + ": could not find Closure meeting " + legacyRelease.Closed);
@@ -279,8 +275,7 @@ namespace DatabaseImport.ModuleImport
         {
             if (!string.IsNullOrEmpty(legacyRelease.Protocols_freeze) && legacyRelease.Protocols_freeze != "-")
             {                
-                var fullRef = Domain.Meeting.ToFullReference(legacyRelease.Protocols_freeze);
-                var mtg = NewContext.Meetings.Where(m => m.MTG_REF == fullRef).FirstOrDefault();
+                var mtg = NewContext.Meetings.Where(m => m.MtgShortRef == legacyRelease.Protocols_freeze).FirstOrDefault();
 
                 if (mtg == null)
                     Report.LogWarning("Release " + newRelease.Code + ": could not find End meeting " + legacyRelease.Protocols_freeze);

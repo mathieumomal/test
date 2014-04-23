@@ -26,7 +26,7 @@ namespace Etsi.Ultimate.Services
 
         KeyValuePair<int, string> GetPreviousReleaseCode(int releaseId);
 
-        void FreezeRelease(int releaseId, DateTime endDate, int personId, int FreezeMtgId, string FreezeMtgRef);
+        void FreezeRelease(int releaseId, DateTime? endDate, int personId, int? FreezeMtgId, string FreezeMtgRef);
 
         /// <summary>
         /// Close Release
@@ -36,7 +36,7 @@ namespace Etsi.Ultimate.Services
         /// <param name="closureMtgRef">Closure Meeting Reference</param>
         /// <param name="closureMtgId">Closure Meeting Reference ID</param>
         /// <param name="personID">Person ID</param>
-        void CloseRelease(int releaseId, DateTime closureDate, string closureMtgRef, int closureMtgId, int personID);
+        void CloseRelease(int releaseId, DateTime? closureDate, string closureMtgRef, int? closureMtgId, int personID);
 
         /// <summary>
         /// Return the list of all releases' codes except the one with the identifier passed as input

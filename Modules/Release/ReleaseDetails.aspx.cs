@@ -303,20 +303,20 @@ namespace Etsi.Ultimate.Module.Release
             if (ReleaseId != null)
             {
                 MeetingControl mtgControl = mcFreeze as MeetingControl;
-                if (mtgControl.SelectedMeeting != null)
+                var mtg = mtgControl.SelectedMeeting;
+
+                IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
+
+                if ((mtg == null) || ((svc.GetReleaseById(UserId, ReleaseId.Value).Key.Stage3FreezeDate ?? default(DateTime)) <= mtg.END_DATE))
                 {
-                    var mtg = mtgControl.SelectedMeeting;
-
-                    IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
-
-                    if ((svc.GetReleaseById(UserId, ReleaseId.Value).Key.Stage3FreezeDate ?? default(DateTime)) < mtg.END_DATE)
-                    {
-                        svc.FreezeRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), UserId, mtg.MTG_ID, mtg.MtgShortRef);
-                        this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
-                    }
+                    if (mtg == null)
+                        svc.FreezeRelease(ReleaseId.Value, null, UserId, null, null);
                     else
-                        RadWindowManager1.RadAlert("End date must be greater than Freeze stage 3 date.", 400, 150, "Error", "window.radopen(null, 'RadWindow_FreezeConfirmation')", "images/error.png");
+                        svc.FreezeRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), UserId, mtg.MTG_ID, mtg.MtgShortRef);
+                    this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
                 }
+                else
+                    RadWindowManager1.RadAlert("End date must be greater than Freeze stage 3 date.", 400, 150, "Error", "window.radopen(null, 'RadWindow_FreezeConfirmation')", "images/error.png");
             }
         }
 
@@ -331,20 +331,15 @@ namespace Etsi.Ultimate.Module.Release
             if (ReleaseId != null)
             {
                 MeetingControl mtgControl = mcClose as MeetingControl;
-                if (mtgControl.SelectedMeeting != null)
-                {
-                    var mtg = mtgControl.SelectedMeeting;
+                var mtg = mtgControl.SelectedMeeting;
 
-                    IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
-                    if ((svc.GetReleaseById(UserId, ReleaseId.Value).Key.Stage3FreezeDate ?? default(DateTime)) < mtg.END_DATE)
-                    {
-                        svc.CloseRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), mtg.MtgShortRef, mtg.MTG_ID, UserId);
-                        this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
-                    }
-                    else
-                        RadWindowManager1.RadAlert("End date must be greater than Freeze stage 3 date.", 400, 150, "Error", "window.radopen(null, 'RadWindow_ClosureConfirmation')", "images/error.png");
-                }
+                IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
 
+                if (mtg == null)
+                    svc.CloseRelease(ReleaseId.Value, null, null, null, UserId);
+                else
+                    svc.CloseRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), mtg.MtgShortRef, mtg.MTG_ID, UserId);
+                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
             }
         }
     }

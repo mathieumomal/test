@@ -338,7 +338,7 @@
                         //Check if the inserted value is a valid URL */
                         function isURLValid(element) {
                             var controlSelector = "#" + element
-                            var urlregex = '^(http:\/\/www.|https:\/\/www.|ftp:\/\/www.|www.){1}([0-9A-Za-z]+\.)'
+                            var urlregex = '^(http:\/\/|https:\/\/|ftp:\/\/){1}([0-9A-Za-z]+\.)'
                             if ($(controlSelector).val() == "") {
                                 return true;
                             }

@@ -177,11 +177,13 @@ legend {
 
 .HeaderText {
     position: absolute;
-    width: 100%;
+    right:20px;
+    width: 350px;
     text-align: right;
     font-size: 18px;
     font-weight: bold;
     color: gray;
+    z-index:2000;
 }
 
 .wiDetailsAction {

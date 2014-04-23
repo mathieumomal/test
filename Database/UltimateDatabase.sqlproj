@@ -110,6 +110,7 @@
     <Folder Include="Common" />
     <Folder Include="Scripts" />
     <Folder Include="Scripts\Post-Deployment" />
+    <Folder Include="dbo\Stored Procedures\" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Releases.sql" />
@@ -147,6 +148,7 @@
     <Build Include="dbo\Tables\Enum_Serie.sql" />
     <Build Include="dbo\Functions\getMeetingShortRef.sql" />
     <Build Include="dbo\Tables\Enum_SpecificationStage.sql" />
+    <Build Include="dbo\Stored Procedures\WorkItems_CleanAll.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

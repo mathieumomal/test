@@ -119,13 +119,13 @@
                             <tr>
                                 <td class="TabLineLeft">Responsible group(s):</td>
                                 <td class="TabLineRight">
-                                    <asp:Label ID="lblResponsibleGroups" runat="server" target="_blank"> - </asp:Label></td>
+                                    <asp:Label ID="lblResponsibleGroups" runat="server"> - </asp:Label></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">Rapporteur(s):</td>
                                 <td class="TabLineRight">
-                                    <asp:HyperLink ID="lnkRapporteur" runat="server"></asp:HyperLink>
-                                    <asp:Label ID="lblRapporteur" runat="server"> - </asp:Label></td>
+                                    <asp:HyperLink ID="lnkRapporteur" runat="server" target="_blank"></asp:HyperLink>
+                                    <asp:Label ID="lblRapporteur" runat="server"></asp:Label></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">Latest WID version:</td>

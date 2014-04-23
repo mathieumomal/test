@@ -180,16 +180,16 @@ namespace Etsi.Ultimate.Module.WorkItem
                     lblWiLevel.Text = "Feature (1st level)";
                     break;
                 case 2:
-                    lblWiLevel.Text = "Building Block (Up to 2nd level)";
+                    lblWiLevel.Text = "Building Block (2nd level)";
                     break;
                 case 3:
-                    lblWiLevel.Text = "Working Task (Up to 3rd Level)";
+                    lblWiLevel.Text = "Working Task (3rd Level)";
                     break;
                 case 4:
-                    lblWiLevel.Text = "Up to 4th level";
+                    lblWiLevel.Text = "4th level";
                     break;
                 case 5:
-                    lblWiLevel.Text = "Up to 5th level";
+                    lblWiLevel.Text = "5th level";
                     break;
                 default:
                     lblWiLevel.Text = CONST_EMPTY_FIELD;
@@ -212,20 +212,40 @@ namespace Etsi.Ultimate.Module.WorkItem
             ChildWiTable.DataSource = workitem.ChildWis;
             ChildWiTable.DataBind();
 
-            //Bind lables
-            if (userRights.HasRight(Domain.Enum_UserRights.General_ViewPersonalData))
+            // Rapporteur:
+            // - if rapporteur is found in DB, put a link
+            // - else, put the rapporteurStr, but only if user has right to View Personal data.
+            if (workitem.RapporteurId.GetValueOrDefault() != default(int))
             {
                 lnkRapporteur.Text = workitem.RapporteurName;
-                lblRapporteur.Text = (String.IsNullOrEmpty(workitem.RapporteurCompany)) ? "" : String.Format("({0})", workitem.RapporteurCompany);
-                if (workitem.RapporteurId != null)
-                    lnkRapporteur.NavigateUrl = ConfigVariables.RapporteurDetailsAddress + workitem.RapporteurId.ToString();
+                lnkRapporteur.NavigateUrl = ConfigVariables.RapporteurDetailsAddress + workitem.RapporteurId.ToString();
             }
-
+            else
+            {
+                lnkRapporteur.Visible = false;
+                if (userRights.HasRight(Domain.Enum_UserRights.General_ViewPersonalData))
+                {
+                    lblRapporteur.Text = workitem.RapporteurStr;
+                }
+            }
+            if (!string.IsNullOrEmpty(workitem.RapporteurCompany))
+            {
+                if (string.IsNullOrEmpty(lblRapporteur.Text) && string.IsNullOrEmpty(lnkRapporteur.Text))
+                {
+                    lblRapporteur.Text = workitem.RapporteurCompany;
+                }
+                else
+                {
+                    lblRapporteur.Text += " (" + workitem.RapporteurCompany + ")";
+                }
+            }
+           
+            // Responsible groups
             if (!string.IsNullOrEmpty(workitem.ResponsibleGroups))
                 lblResponsibleGroups.Text = workitem.ResponsibleGroups;
 
             SetMeetingLink(lnkTsgMtg, workitem.TsgApprovalMtgRef, workitem.TsgApprovalMtgId);
-            SetMeetingLink(lnkPcgMtg, workitem.PcgApprovalMtgRef, workitem.PcgStoppedMtgId);
+            SetMeetingLink(lnkPcgMtg, workitem.PcgApprovalMtgRef, workitem.PcgApprovalMtgId);
             SetMeetingLink(lnkTsgStpMtg, workitem.TsgStoppedMtgRef, workitem.TsgStoppedMtgId);
             SetMeetingLink(lnkPcgStpMtg, workitem.PcgStoppedMtgRef, workitem.PcgStoppedMtgId);
 

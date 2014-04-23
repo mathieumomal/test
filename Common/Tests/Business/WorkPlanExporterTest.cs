@@ -38,6 +38,15 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.IsTrue( wiExporter.ExportWorkPlan(".") );
         }
 
+        [Test]
+        public void ExportWorkItemMustHandleRelease()
+        {
+            var wi = new WorkItem() { WiLevel = 1, Release = new Release() { Code = "Rel-13", Description = "Release 13" } };
+
+            var wiForExport = new WorkItemForExport(wi);
+            Assert.AreEqual("Rel-13", wiForExport.Release);
+        }
+
         #endregion
 
         #region Test Data

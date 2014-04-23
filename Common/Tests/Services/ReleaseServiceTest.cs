@@ -242,7 +242,7 @@ namespace Etsi.Ultimate.Tests.Services
                                                                                                                 && y.ClosureMtgRef == meetingRef
                                                                                                                 && y.ClosureMtgId == meetingRefId)));
             mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<History>.Matches(y => y.Fk_ReleaseId == releaseIdToTest && y.Fk_PersonId == personID
-                                                                                                    && y.HistoryText == Utils.Localization.History_Release_Close)));
+                                                                                                    && y.HistoryText == String.Format("Release closed. Changes:<br />Closure date:  (None) => {0} (S6-25)", closureDate.ToString("yyyy-MM-dd")))));
             mockDataContext.AssertWasCalled(x => x.SaveChanges(), y => y.Repeat.Once());
 
             mockDataContext.VerifyAllExpectations();
@@ -331,9 +331,13 @@ namespace Etsi.Ultimate.Tests.Services
             releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, Code = "Frozen" });
             releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, Code = "Closed" });
 
+            var meetings = new MeetingFakeDBSet();
+            meetings.Add(new Meeting() { MTG_ID = 12, MTG_REF = "SP-25" });
+
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releaseFakeRepository.All);
             mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)releaseStatus);
+            mockDataContext.Stub(x => x.Meetings).Return(meetings);
 
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
@@ -345,6 +349,7 @@ namespace Etsi.Ultimate.Tests.Services
                 Fk_ReleaseStatus = 1,
                 StartDate = new DateTime(2009, 9, 18),
                 ClosureDate = new DateTime(2016, 10, 12),
+                ClosureMtgId = 12,
                 Enum_ReleaseStatus = releaseStatus.ElementAt(0),
                 Stage1FreezeDate = DateTime.Today.AddDays(-5),
                 Stage1FreezeMtgRef = "d3",
@@ -356,8 +361,9 @@ namespace Etsi.Ultimate.Tests.Services
 
             releaseService.CreateRelease(ReleaseToTest, previousReleaseId, personID);
 
+            // Check that Release that was inserted has correct Values.
             mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<Release>.Matches(y => y.Code == ReleaseToTest.Code && y.Name == ReleaseToTest.Name
-                                                                                && y.StartDate == ReleaseToTest.StartDate && y.ClosureDate == ReleaseToTest.ClosureDate)));
+                                                                    && y.StartDate == ReleaseToTest.StartDate && y.ClosureDate == ReleaseToTest.ClosureDate)));
                                                                                 
 
             mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<History>.Matches(y => y.Fk_ReleaseId == default(int) && y.Fk_PersonId == personID
@@ -396,7 +402,7 @@ namespace Etsi.Ultimate.Tests.Services
                                                                                                                 && y.EndDate == FreezeDate)));
 
             mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<History>.Matches(y => y.Fk_ReleaseId == releaseIdToTest && y.Fk_PersonId == personID
-                                                                                                    && y.HistoryText == Utils.Localization.History_Release_Freeze)));
+                                                                                                    && y.HistoryText == String.Format("Release frozen. Changes:<br />End date:  (None) => {0} (S6-25)", FreezeDate.ToString("yyyy-MM-dd")))));
             mockDataContext.AssertWasCalled(x => x.SaveChanges(), y => y.Repeat.Once());
 
             mockDataContext.VerifyAllExpectations();

@@ -356,6 +356,13 @@ namespace Etsi.Ultimate.Business
             if (wi.PcgStoppedMtgRef != stoppedPcgMtgRef)
             {
                 IsCurrentWIModified = true;
+
+                if (stoppedPcgMtgRef.Length > 20)
+                {
+                    Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_PcgStoppedMtgRef_Too_Long, wi.WorkplanId, wi.Pk_WorkItemUid));
+                    stoppedPcgMtgRef = stoppedPcgMtgRef.Substring(0, 20);
+                }
+
                 wi.PcgStoppedMtgRef = stoppedPcgMtgRef;
 
                 // Search for corresponding meeting, but only if ref is not empty
@@ -391,6 +398,11 @@ namespace Etsi.Ultimate.Business
             if (wi.TsgStoppedMtgRef != stoppedTsgMtgRef)
             {
                 IsCurrentWIModified = true;
+                if (stoppedTsgMtgRef.Length > 20)
+                {
+                    Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_TsgStoppedMtgRef_Too_Long, wi.WorkplanId, wi.Pk_WorkItemUid));
+                    stoppedTsgMtgRef = stoppedTsgMtgRef.Substring(0, 20);
+                }
                 wi.TsgStoppedMtgRef = stoppedTsgMtgRef;
 
                 // Search for corresponding meeting, but only if ref is not empty
@@ -426,6 +438,11 @@ namespace Etsi.Ultimate.Business
             if (wi.PcgApprovalMtgRef != approvedPcgMtgRef)
             {
                 IsCurrentWIModified = true;
+                if (approvedPcgMtgRef.Length > 20)
+                {
+                    Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_PcgApprovalMtgRef_Too_Long, wi.WorkplanId, wi.Pk_WorkItemUid));
+                    approvedPcgMtgRef = approvedPcgMtgRef.Substring(0, 20);
+                }
                 wi.PcgApprovalMtgRef = approvedPcgMtgRef;
 
                 // Search for corresponding meeting, but only if ref is not empty
@@ -461,6 +478,13 @@ namespace Etsi.Ultimate.Business
             if (wi.TsgApprovalMtgRef != approvedTSGMtgRef)
             {
                 IsCurrentWIModified = true;
+
+                if (approvedTSGMtgRef.Length > 20)
+                {
+                    Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_TsgApprovalMtgRef_Too_Long, wi.WorkplanId, wi.Pk_WorkItemUid));
+                    approvedTSGMtgRef = approvedTSGMtgRef.Substring(0, 20);
+                }
+
                 wi.TsgApprovalMtgRef = approvedTSGMtgRef;
 
                 // Search for corresponding meeting, but only if ref is not empty
@@ -493,8 +517,7 @@ namespace Etsi.Ultimate.Business
             // Try to fetch the meeting ID
             try
             {
-                fullMtgRef = Meeting.ToFullReference(mtgRef);
-                var mtg = AllMeetings.Where(m => m.MTG_REF == fullMtgRef).FirstOrDefault();
+                var mtg = AllMeetings.Where(m => m.MtgShortRef == mtgRef).FirstOrDefault();
                 if (mtg == null)
                 {
                     return -1;
@@ -620,6 +643,13 @@ namespace Etsi.Ultimate.Business
             if (wi.RapporteurStr != rapporteurStr)
             {
                 IsCurrentWIModified = true;
+
+                if (rapporteurStr.Length > 100)
+                {
+                    Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_RapporteurStr_Too_Long, wi.WorkplanId, wi.Pk_WorkItemUid));
+                    rapporteurStr = rapporteurStr.Substring(0, 100);
+                }
+
                 wi.RapporteurStr = rapporteurStr;
             }
 
@@ -646,6 +676,11 @@ namespace Etsi.Ultimate.Business
             if (wi.RapporteurCompany != rapporteurCompanyName)
             {
                 IsCurrentWIModified = true;
+                if (rapporteurCompanyName.Length > 100)
+                {
+                    Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_RapporteurCompany_Too_Long, wi.WorkplanId, wi.Pk_WorkItemUid));
+                    rapporteurCompanyName = rapporteurCompanyName.Substring(0, 100);
+                }
                 wi.RapporteurCompany = rapporteurCompanyName;
             }
         }
@@ -669,6 +704,11 @@ namespace Etsi.Ultimate.Business
             if (statusReport != wi.StatusReport)
             {
                 IsCurrentWIModified = true;
+                if (statusReport.Length > 50)
+                {
+                    Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_StatusReport_Too_Long, wi.WorkplanId, wi.Pk_WorkItemUid));
+                    statusReport = statusReport.Substring(0, 50);
+                }
                 wi.StatusReport = statusReport;
             }
         }
@@ -697,6 +737,11 @@ namespace Etsi.Ultimate.Business
             if (wid != wi.Wid)
             {
                 IsCurrentWIModified = true;
+                if (wid.Length > 20)
+                {
+                    Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_Wid_Too_Long, wi.WorkplanId, wi.Pk_WorkItemUid));
+                    wid = wid.Substring(0, 20);
+                }
                 wi.Wid = wid;
             }
         }
@@ -971,10 +1016,16 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatName(WorkItemImportClass record, WorkItem wi)
         {
-            if (wi.Name != record.Name)
+            string name = record.Name;
+            if (wi.Name != name)
             {
                 IsCurrentWIModified = true;
-                wi.Name = record.Name;
+                if (name.Length > 255)
+                {
+                    Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_Name_Too_Long, wi.WorkplanId, wi.Pk_WorkItemUid));
+                    name = name.Substring(0, 255);
+                }
+                wi.Name = name;
             }
         }
 

@@ -110,7 +110,6 @@
     <Compile Include="FakeSets\Enum_ReleaseStatusFakeDBSet.cs" />
     <Compile Include="FakeSets\FakeDBSet.cs" />
     <Compile Include="FakeSets\ReleaseFakeDBSet.cs" />
-    <Compile Include="DomainClasses\MeetingTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\CommunityRepositoryTest.cs" />
     <Compile Include="Repositories\HistoryRepositoryTest.cs" />

@@ -16,7 +16,6 @@
   <UserRole value="StaffMember">
 	<Right value="Remarks_ViewPrivate"/>
 	<Right value="Remarks_AddPrivateByDefault"/>
-	<Right value="Release_Edit_Remarks"/>
 	<Right value="Specification_EditLimitted"/>
   </UserRole>
   <UserRole value="CommitteeOfficial">

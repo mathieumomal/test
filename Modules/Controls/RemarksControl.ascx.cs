@@ -71,6 +71,7 @@ namespace Etsi.Ultimate.Controls
         /// <param name="e">Event Args</param>
         protected void Page_Load(object sender, EventArgs e)
         {
+            btnAddRemark.Enabled = false;
             if (!IsPostBack)
             {
                 if (!IsEditMode)

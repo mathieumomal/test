@@ -44,13 +44,22 @@ SET RELEASESOURCES=%TRUNK_PATH%Modules\Release\
 SET RELEASEDEST=%DNN_PATH%DesktopModules\Release\
 xcopy %RELEASESOURCES%*.ascx %RELEASEDEST% /b/v/y
 xcopy %RELEASESOURCES%*.aspx %RELEASEDEST% /b/v/y
+xcopy %RELEASESOURCES%*.css %RELEASEDEST% /b/v/y
 
 SET aUIUSERSOURCE=%TRUNK_PATH%Modules\Controls\
 SET aUIUSERDEST=%DNN_PATH%controls\Ultimate\
 xcopy %aUIUSERSOURCE%*.ascx %aUIUSERDEST% /b/v/y
+xcopy %aUIUSERSOURCE%*.css %aUIUSERDEST% /b/v/y
 
 
 SET UIUSERSOURCE1=%TRUNK_PATH%Modules\WorkItem\
 SET UIUSERDEST1=%DNN_PATH%DesktopModules\WorkItem\
 xcopy %UIUSERSOURCE1%*.ascx %UIUSERDEST1% /b/v/y
 xcopy %UIUSERSOURCE1%*.aspx %UIUSERDEST1% /b/v/y
+xcopy %UIUSERSOURCE1%*.css %UIUSERDEST1% /b/v/y
+
+SET SPECSOURCES=%TRUNK_PATH%Modules\Specification\
+SET SPECSOURCESDEST=%DNN_PATH%DesktopModules\Specification\
+xcopy %SPECSOURCES%*.ascx %SPECSOURCESDEST% /b/v/y
+xcopy %SPECSOURCES%*.aspx %SPECSOURCESDEST% /b/v/y
+xcopy %SPECSOURCES%*.css %SPECSOURCESDEST% /b/v/y

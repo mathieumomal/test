@@ -42,6 +42,10 @@ namespace Etsi.Ultimate.Repositories
 
         public void InsertOrUpdate(WorkItem entity)
         {
+            //Remove generated proxies to avoid Referential Integrity Errors
+            entity.Release = null;
+            entity.ParentWi = null;
+
             //[1] Add Existing Childs First
             entity.WorkItems_ResponsibleGroups.ToList().ForEach(x =>
             {
