@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 
 namespace Etsi.Ultimate.Controls
@@ -12,6 +13,7 @@ namespace Etsi.Ultimate.Controls
     public partial class CommunityControl : System.Web.UI.UserControl
     {
         #region Properties
+        private const int CONST_SELECT_WIDTH = 100;
 
         private List<int> _selectedCommunityIds;
         public List<int> SelectedCommunityIds
@@ -53,6 +55,14 @@ namespace Etsi.Ultimate.Controls
         public bool IsSingleSelection { get; set; }
         public bool IsEditMode { get; set; }
 
+        public int Width
+        {
+            set {
+                var width = (value >CONST_SELECT_WIDTH) ? value : CONST_SELECT_WIDTH;
+                pnlCover.Width = Unit.Pixel(width);
+            }
+        }
+
         #endregion
 
         #region Events
@@ -67,11 +77,11 @@ namespace Etsi.Ultimate.Controls
             if (!IsPostBack)
             {
                 ICommunityService svc = ServicesFactory.Resolve<ICommunityService>();
-                List<Community>  dataSource = svc.GetCommunities();
+                List<Community> dataSource = svc.GetCommunities();
                 AddMissingParent(dataSource);
 
                 if (IsSingleSelection)
-                {                
+                {
                     imgBtnCommunity.Visible = false;
 
                     if (IsEditMode)
@@ -95,7 +105,7 @@ namespace Etsi.Ultimate.Controls
                         if (_selectedCommunityID != default(int))
                         {
                             var selectedCommunity = dataSource.Find(x => x.TbId == _selectedCommunityID);
-                            lblCommunity.Text = (selectedCommunity == null) ? String.Empty : selectedCommunity.TbName;
+                            lblCommunity.Text = pnlCover.ToolTip = (selectedCommunity == null) ? String.Empty : selectedCommunity.TbName;
                         }
                     }
                 }
@@ -108,7 +118,7 @@ namespace Etsi.Ultimate.Controls
                     if (_selectedCommunityIds != null)
                     {
                         var selectedCommunityNames = dataSource.FindAll(x => _selectedCommunityIds.Contains(x.TbId)).Select(x => x.TbName).ToList();
-                        lblCommunity.Text = String.Join(", ", selectedCommunityNames);
+                        lblCommunity.Text = pnlCover.ToolTip = String.Join(", ", selectedCommunityNames);
                     }
 
                     if (IsEditMode)
@@ -170,7 +180,7 @@ namespace Etsi.Ultimate.Controls
                 tbNames.Add(node.Text);
             }
 
-            lblCommunity.Text = String.Join(", ", tbNames);
+            lblCommunity.Text = pnlCover.ToolTip = String.Join(", ", tbNames);
         }
 
         #endregion
