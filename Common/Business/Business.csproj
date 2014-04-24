@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommunityManager.cs" />
+    <Compile Include="ICommunityManager.cs" />
     <Compile Include="IPersonManager.cs" />
     <Compile Include="ISpecificationManager.cs" />
     <Compile Include="MeetingManager.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="IRightsManager.cs" />
     <Compile Include="RightsManager.cs" />
     <Compile Include="SpecificationManager.cs" />
+    <Compile Include="SpecificationTechnologiesManager.cs" />
     <Compile Include="UrlManager.cs" />
     <Compile Include="WorkItemCsvParser.cs" />
     <Compile Include="WorkItemImporter.cs" />

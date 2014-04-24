@@ -18,14 +18,41 @@ namespace Etsi.Ultimate.Services
                 var specificationManager = new SpecificationManager();
                 specificationManager.UoW = uoW;  
                 var communityManager = new CommunityManager(uoW);
-                KeyValuePair<Specification, UserRightsContainer> result = specificationManager.GetSpecificationById(personId, specificationId);
+                KeyValuePair<Specification, UserRightsContainer> result = specificationManager.GetSpecificationById(personId, specificationId);                
                 List<string> secondaryRGShortName = new List<string>();
-                result.Key.SpecificationResponsibleGroups.ToList().ForEach(g => secondaryRGShortName.Add(communityManager.GetCommmunityshortNameById(g.Fk_commityId)));                
-                result.Key.SecondaryResponsibleGroupsShortNames= string.Join(",", secondaryRGShortName.ToArray());
-                result.Key.SpecificationParents.ToList().ForEach(s => s.PrimeResponsibleGroupShortName  = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId));
-                result.Key.SpecificationChilds.ToList().ForEach(s => s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId)); 
+                if (result.Key.SpecificationResponsibleGroups != null && result.Key.SpecificationResponsibleGroups.Count > 0)
+                {
+                    if (result.Key.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().Count > 0)
+                    {
+                        result.Key.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().ForEach(g => secondaryRGShortName.Add(communityManager.GetCommmunityshortNameById(g.Fk_commityId)));
+                        result.Key.SecondaryResponsibleGroupsShortNames = string.Join(",", secondaryRGShortName.ToArray());
+                    }
+                    if (result.Key.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().Count > 0)
+                    {
+                        result.Key.PrimeResponsibleGroupShortName 
+                            = communityManager.GetCommmunityshortNameById(result.Key.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().FirstOrDefault().Fk_commityId);
+                    }
+                }
+                if (result.Key.SpecificationParents != null && result.Key.SpecificationParents.Count > 0)
+                {
+                    result.Key.SpecificationParents.ToList().ForEach(s => s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId));
+                }
+                if (result.Key.SpecificationChilds != null && result.Key.SpecificationChilds.Count > 0)
+                {
+                    result.Key.SpecificationChilds.ToList().ForEach(s => s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId));
+                }
                 return specificationManager.GetSpecificationById(personId, specificationId);
             }        
+        }
+
+        public List<Enum_Technology> GetAllSpecificationTechnologies()
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specTechnologiesManager = new SpecificationTechnologiesManager();
+                specTechnologiesManager.UoW = uoW;
+                return specTechnologiesManager.GetAllSpecificationTechnologies();
+            }
         }
 
 

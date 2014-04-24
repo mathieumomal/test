@@ -13,39 +13,58 @@ namespace Etsi.Ultimate.Module.Specifications
 {
     public partial class SpecificationDetails : System.Web.UI.Page
     {
+        // Custom controls
         protected HistoryControl specificationHistory;
         protected RemarksControl specificationRemarks;
         protected RapporteurControl specificationRapporteurs;
-        //protected RelatedWiControl SpecificationRelatedWorkItems;
+        protected RelatedWiControl SpecificationRelatedWorkItems;
         protected SpecificationListControl parentSpecifications;
         protected SpecificationListControl childSpecifications;
 
+        //Static fields
         private static String CONST_GENERAL_TAB = "General";
         private static String CONST_RESPONSIBILITY_TAB = "Responsibility";
         private static String CONST_RELATED_TAB = "Related";
         private static String CONST_RELEASES_TAB = "Releases";
         private static String CONST_HISTORY_TAB = "History";
         private const string CONST_EMPTY_FIELD = " - ";
-
+        private const string SPEC_HEADER = "Specification #: ";
+        private List<string> LIST_OF_TABS = new List<string>() {};
         public static readonly string DsId_Key = "ETSI_DS_ID";
+        //Properties
         private int UserId;
-        private bool fromEdit;
+        private string selectedTab;
         public Nullable<int> SpecificationId;
 
+        /// <summary>
+        /// Main event of the page
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
+                
                 GetRequestParameters();
+
+                SetViewLayout();
             
-                LoadReleaseDetails();                
+                LoadReleaseDetails();
+                
             }
         }
 
+        
+        /// <summary>
+        /// Loads the content of the page 
+        /// </summary>
         private void LoadReleaseDetails()
         {
+
             if (SpecificationId != null)
             {
+                // Retrieve data
                 ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
                 KeyValuePair<DomainClasses.Specification, DomainClasses.UserRightsContainer> specificationRightsObject = svc.GetSpecificationDetailsById(UserId, SpecificationId.Value);
                 Domain.Specification specification = specificationRightsObject.Key;
@@ -70,33 +89,23 @@ namespace Etsi.Ultimate.Module.Specifications
                         specificationMessagesTxt.CssClass = "ErrorTxt";
                     }
                     else
-                    {
+                    {                        
+                        lblHeaderText.Text = SPEC_HEADER + ((String.IsNullOrEmpty(specification.Number)) ? CONST_EMPTY_FIELD : specification.Number); 
                         BuildTabsDisplay();
-                        SetRadioTechnologiesItems(new List<Domain.Enum_Technology>(){
-                            new Domain.Enum_Technology()
-                            {
-                                Pk_Enum_TechnologyId = 1,
-                                Code = "2G",
-                                Description = "Second generation"
-                            },
-                            new Domain.Enum_Technology()
-                            {
-                                Pk_Enum_TechnologyId = 2,
-                                Code = "3G",
-                                Description = "third generation"
-                            },
-                            new Domain.Enum_Technology()
-                            {
-                                Pk_Enum_TechnologyId = 3,
-                                Code = "LTE",
-                                Description = "Long Term Evolution"
-                            }
-                        });
+                        SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
                         FillGeneralTab(userRights, specification);
                         FillResponsiblityTab(specification);
-                        FillRelatedSpecificationsTab(specification);
+                        FillRelatedSpecificationsTab(specification, selectedTab);
                         FillHistoryTab(specification);
                         ManageButtonDisplay(userRights);
+                        // Check if selectedTab is specified then select the according Tab and View page
+                        SpecificationDetailsRadTabStrip.Tabs.ToList().ForEach(t => LIST_OF_TABS.Add(t.Text));
+                        if (string.IsNullOrEmpty(selectedTab) != null && LIST_OF_TABS.Contains(selectedTab))
+                        {
+                            SpecificationDetailsRadTabStrip.Tabs[LIST_OF_TABS.IndexOf(selectedTab)].Selected = true;
+                            SpecificationDetailsRadTabStrip.Tabs[LIST_OF_TABS.IndexOf(selectedTab)].PageView.Selected = true;
+                        }
+                        
                     }
                 }
             }
@@ -169,9 +178,9 @@ namespace Etsi.Ultimate.Module.Specifications
                 referenceVal.Text = string.IsNullOrEmpty(specification.Number) ? CONST_EMPTY_FIELD : specification.Number;
                 titleVal.Text = string.IsNullOrEmpty(specification.Title) ? CONST_EMPTY_FIELD : specification.Title;
                 statusVal.Text =string.IsNullOrEmpty(specification.Status) ? CONST_EMPTY_FIELD :  specification.Status;
-                typeVal.Text = string.IsNullOrEmpty(specification.SpecificationType) ? CONST_EMPTY_FIELD : specification.SpecificationType;
+                typeVal.Text = string.IsNullOrEmpty(specification.SpecificationTypeFullText) ? CONST_EMPTY_FIELD : specification.SpecificationTypeFullText;
                 stageVal.Text = specification.Enum_SpecificationStage == null ? CONST_EMPTY_FIELD : specification.Enum_SpecificationStage.Code;
-                initialPlannedReleaseVal.Text = ""; //TODO Calculate initil release
+                initialPlannedReleaseVal.Text = string.IsNullOrEmpty(specification.SpecificationInitialRelease) ? CONST_EMPTY_FIELD : specification.SpecificationInitialRelease; 
                 internalVal.Checked = specification.IsForPublication == null ? true : !specification.IsForPublication.Value;
                 commonIMSVal.Checked = specification.ComIMS == null ? false : specification.ComIMS.Value;
                 
@@ -196,13 +205,14 @@ namespace Etsi.Ultimate.Module.Specifications
         /// Fill the related Tab with the retrieved data 
         /// </summary>
         /// <param name="specification">The retrieved specification</param>
-        private void FillRelatedSpecificationsTab(Domain.Specification specification)
+        private void FillRelatedSpecificationsTab(Domain.Specification specification, string selectedTab)
         {
             if (specification != null)
             {
 
                 parentSpecifications.IsEditMode = false;
                 parentSpecifications.IsParentList = true;
+                parentSpecifications.SelectedTab = CONST_RELATED_TAB;
 
                 if (specification.SpecificationChilds != null)
                     parentSpecifications.DataSource = specification.SpecificationParents.ToList();
@@ -211,16 +221,19 @@ namespace Etsi.Ultimate.Module.Specifications
 
                 childSpecifications.IsEditMode = false;
                 childSpecifications.IsParentList = false;
+                childSpecifications.SelectedTab = CONST_RELATED_TAB;
 
                 if (specification.SpecificationChilds != null)
                     childSpecifications.DataSource = specification.SpecificationChilds.ToList();
                 else
                     childSpecifications.DataSource = null;
 
-                /*List<Domain.WorkItem> workItemsSource = new List<Domain.WorkItem>();
-                specification.Specification_WorkItem.ToList().ForEach(s => workItemsSource.Add(s.WorkItem));
+                List<Domain.WorkItem> workItemsSource = new List<Domain.WorkItem>();
+                if (specification.Specification_WorkItem != null && specification.Specification_WorkItem.ToList().Count>0)
+                    specification.Specification_WorkItem.ToList().ForEach(s => workItemsSource.Add(s.WorkItem));
                 SpecificationRelatedWorkItems.IsEditMode = false;
-                SpecificationRelatedWorkItems.DataSource = workItemsSource;*/
+                SpecificationRelatedWorkItems.ScrollHeight = 140;
+                SpecificationRelatedWorkItems.DataSource = workItemsSource;
                
             }
             
@@ -234,6 +247,7 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if(specification != null){
                 specificationHistory.DataSource = specification.Histories.ToList();
+                specificationHistory.ScrollHeight = 590;
             }
             else{
                 specificationHistory.DataSource = null;
@@ -250,17 +264,19 @@ namespace Etsi.Ultimate.Module.Specifications
             specificationRapporteurs.IsSinglePersonMode = false;
             if (specification != null)
             {
-                PrimaryResponsibleGroupVal.Text = specification.PrimeResponsibleGroupShortName;
-                SecondaryResponsibleGroupsVal.Text= specification.SecondaryResponsibleGroupsShortNames;
+                PrimaryResponsibleGroupVal.Text = (string.IsNullOrEmpty(specification.PrimeResponsibleGroupShortName)) ? CONST_EMPTY_FIELD : specification.PrimeResponsibleGroupShortName;
+                SecondaryResponsibleGroupsVal.Text = (string.IsNullOrEmpty(specification.SecondaryResponsibleGroupsShortNames)) ? CONST_EMPTY_FIELD : specification.SecondaryResponsibleGroupsShortNames;
+
                 specificationRapporteurs.ListIdPersonSelect = specification.PrimeSpecificationRapporteurs;
-                specificationRapporteurs.ListIdPersonsSelected_MULTIMODE = specification.FullSpecificationRapporteurs;                
+                specificationRapporteurs.ListIdPersonsSelected_MULTIMODE = specification.FullSpecificationRapporteurs;             
             }
             else
             {
                 PrimaryResponsibleGroupVal.Text = CONST_EMPTY_FIELD;
                 SecondaryResponsibleGroupsVal.Text = CONST_EMPTY_FIELD;
-                specificationRapporteurs.ListIdPersonSelect = null;
-                specificationRapporteurs.ListIdPersonsSelected_MULTIMODE = null;
+
+                specificationRapporteurs.ListIdPersonSelect = specification.PrimeSpecificationRapporteurs;
+                specificationRapporteurs.ListIdPersonsSelected_MULTIMODE = specification.FullSpecificationRapporteurs;  
             }
         }
 
@@ -270,6 +286,7 @@ namespace Etsi.Ultimate.Module.Specifications
         /// <param name="technologies">List of Enum_technologie in DB</param>
         private void SetRadioTechnologiesItems(List<Domain.Enum_Technology> technologies)
         {
+            radioTechnologyVals.Style.Add("border-spacing","0");
             foreach (Domain.Enum_Technology technology in technologies)
             {
                 radioTechnologyVals.Items.Add(new ListItem() { 
@@ -297,7 +314,7 @@ namespace Etsi.Ultimate.Module.Specifications
             int output;
             UserId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
             SpecificationId = (Request.QueryString["specificationId"] != null) ? (int.TryParse(Request.QueryString["specificationId"], out output) ? new Nullable<int>(output) : null) : null;
-            fromEdit = (Request.QueryString["fromEdit"] != null) ? Convert.ToBoolean(Request.QueryString["fromEdit"]) : false;
+            selectedTab = (Request.QueryString["selectedTab"] != null) ? Request.QueryString["selectedTab"]  : string.Empty;
         }
 
         /// <summary>
@@ -329,6 +346,15 @@ namespace Etsi.Ultimate.Module.Specifications
 
             if (!userRights.HasRight(Domain.Enum_UserRights.Specification_Withdraw))
                 WithdrawBtn.Visible = false;
+        }
+
+        /// <summary>
+        /// Set the view boxes layouts
+        /// </summary>
+        private void SetViewLayout()
+        {
+            fixContainer.Height = new System.Web.UI.WebControls.Unit(700, UnitType.Pixel);
+            SpecificationDetailsRadMultiPage.Height = new System.Web.UI.WebControls.Unit(650, UnitType.Pixel);
         }
 
         protected void EditSpecificationDetails_Click(object sender, EventArgs e)

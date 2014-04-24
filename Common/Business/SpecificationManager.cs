@@ -42,10 +42,14 @@ namespace Etsi.Ultimate.Business
 
             // remove some rights depending on release status:
             // - a withdrawn specification can be withdrawn
-            if (specification.DefinitivelyWithdrawn != null &&  specification.DefinitivelyWithdrawn.Value)
+            if (!specification.IsActive)
             {
                 personRights.RemoveRight(Enum_UserRights.Specification_Withdraw, true);
             }
+
+            //Set the initial release
+            specification.SpecificationInitialRelease = (specification.Specification_Release != null && specification.Specification_Release.Count > 0) ?
+                specification.Specification_Release.ToList().OrderBy(r => r.CreationDate).FirstOrDefault().Release.Name : string.Empty;
            
 
             return new KeyValuePair<Specification, UserRightsContainer>(specification, personRights);

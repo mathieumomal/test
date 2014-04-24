@@ -15,17 +15,32 @@ namespace Etsi.Ultimate.Module.Specifications
         #region Constants
 
         private const string CONST_SPECIFICATION_GRID_DATA = "SpecificationsGridData";
-        private const int CONST_MIN_SCROLL_HEIGHT = 100;
+        private const string CONST_SELECTED_TAB = "SPEC_SELECTED_TAB";
+        private const int CONST_MIN_SCROLL_HEIGHT = 80;
 
         #endregion
-
+        public string SelectedTab
+        {
+            get
+            {
+                if (ViewState[CONST_SELECTED_TAB] == null)
+                    return string.Empty;
+                else
+                    return ViewState[CONST_SELECTED_TAB].ToString();
+                
+            }
+            set
+            {
+                ViewState[CONST_SELECTED_TAB] = value;                
+            }
+        }
         #region Public Properties
 
         public event EventHandler AddSpecificationHandler;
         public bool IsEditMode { get; set; }
         public bool IsParentList {get; set;}
-
         public int ScrollHeight { get; set; }
+
         public List<Specification> DataSource
         {
             get
@@ -43,7 +58,8 @@ namespace Etsi.Ultimate.Module.Specifications
         }
         #endregion
         protected void Page_Load(object sender, EventArgs e)
-        {
+        {            
+
             if (!IsPostBack)
             {                
                 if (!IsEditMode)

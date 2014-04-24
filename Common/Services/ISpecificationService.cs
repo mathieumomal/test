@@ -16,6 +16,11 @@ namespace Etsi.Ultimate.Services
         KeyValuePair<Specification, UserRightsContainer>  GetSpecificationDetailsById(int personId, int specificationId);
 
         /// <summary>
+        /// Return the list of all possible specification's technologies
+        /// </summary>
+        /// <returns>List of Enum_Technology</returns>
+        List<Enum_Technology> GetAllSpecificationTechnologies();
+        
         /// Returns TRUE and nothing if the specification number is valid and FALSE and the list of the errors if the specification is not valid :
         /// - correctly formatted (ERR-002)
         /// - not already exist in database (ERR-003)

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Etsi.Ultimate.Business
 {
-    public class CommunityManager
+    public class CommunityManager : ICommunityManager
     {
         #region Constants
 
@@ -17,6 +17,10 @@ namespace Etsi.Ultimate.Business
         #region Properties
 
         private IUltimateUnitOfWork _uoW;
+        public IUltimateUnitOfWork _UoW { 
+            get {return _uoW;} 
+            set{_uoW = value;}
+        }
 
         #endregion
 
@@ -63,7 +67,8 @@ namespace Etsi.Ultimate.Business
         {
             ICommunityRepository repo = RepositoryFactory.Resolve<ICommunityRepository>();
             repo.UoW = _uoW;
-            return repo.All.Where(c => c.TbId == id).ToList().FirstOrDefault().ShortName;
+            //return repo.All.Where(c => c.TbId == id).ToList().FirstOrDefault().ShortName;
+            return GetCommunities().Where(c => c.TbId == id).ToList().FirstOrDefault().ShortName;
         }
 
         #endregion

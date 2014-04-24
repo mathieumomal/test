@@ -14,6 +14,7 @@ using System.Data.Entity;
 using Rhino.Mocks;
 using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Services;
+using Etsi.Ultimate.Tests.FakeRepositories;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -22,26 +23,41 @@ namespace Etsi.Ultimate.Tests.Services
         [Test, TestCaseSource("SpecificationData")]
         public void GetSpecificationDetailsById(SpecificationFakeDBSet specificationData)
         {
-            //UserRightsContainer userRights = new UserRightsContainer();
-            //userRights.AddRight(Enum_UserRights.Specification_Withdraw);
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Specification_Withdraw);            
 
-            ////Mock Rights Manager
-            //var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
-            //mockRightsManager.Stub(x => x.GetRights(0)).Return(userRights);
+            //Mock Rights Manager
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(userRights);
+             Assert.IsTrue(mockRightsManager.GetRights(0).HasRight(Enum_UserRights.Specification_Withdraw));
 
-            //Assert.IsTrue(mockRightsManager.GetRights(0).HasRight(Enum_UserRights.Specification_Withdraw));
+            Community c = new Community() { TbId = 1, ActiveCode = "ACTIVE", ParentTbId = 0, ShortName = "SP", TbName = "3GPP SA" };
+            Community c1 = new Community() { TbId = 2, ActiveCode = "ACTIVE", ParentTbId = 1, ShortName = "S1", TbName = "3GPP SA 1" };
+            Community c2 = new Community() { TbId = 3, ActiveCode = "ACTIVE", ParentTbId = 1, ShortName = "S2", TbName = "3GPP SA 2" };
 
-            //var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
-            //mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specificationData);
-            //RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
-            //ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+            List<Community> communitiesSet = new List<Community>() { c, c1, c2 };
+            //Mock Comminities
+            var mockCommunitiesManager = MockRepository.GenerateMock<ICommunityManager>();
+            mockCommunitiesManager.Stub(x => x.GetCommmunityshortNameById(1)).Return(c.ShortName);
+            mockCommunitiesManager.Stub(x => x.GetCommmunityshortNameById(2)).Return(c1.ShortName);
+            mockCommunitiesManager.Stub(x => x.GetCommmunityshortNameById(3)).Return(c2.ShortName);
+            mockCommunitiesManager.Stub(x => x.GetCommunities()).Return(communitiesSet);
+          
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specificationData);
+            CommunityFakeRepository fakeRepo = new CommunityFakeRepository();            
+            mockDataContext.Stub(x => x.Communities).Return((IDbSet<Community>)fakeRepo.All).Repeat.Once();
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+            ManagerFactory.Container.RegisterInstance(typeof(ICommunityManager), mockCommunitiesManager);
 
-            ////var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
-            //var specSVC = new SpecificationService();
-            ////specSVC.UoW = uow;
-            //KeyValuePair<Specification, UserRightsContainer> result = specSVC.GetSpecificationDetailsById(0, 1);
-            //Assert.IsFalse(result.Value.HasRight(Enum_UserRights.Specification_Withdraw));
-            //Assert.AreEqual("Withdrawn before change control", result.Key.Status);
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var specSVC = new SpecificationService();
+            KeyValuePair<Specification, UserRightsContainer> result = specSVC.GetSpecificationDetailsById(0, 1);
+            Assert.IsFalse(result.Value.HasRight(Enum_UserRights.Specification_Withdraw));
+            Assert.AreEqual("Withdrawn before change control", result.Key.Status);
+            Assert.AreEqual("SP", result.Key.PrimeResponsibleGroupShortName);
+            Assert.AreEqual("S1,S2", result.Key.SecondaryResponsibleGroupsShortNames);
         }
 
 
@@ -156,15 +172,7 @@ namespace Etsi.Ultimate.Tests.Services
                                 Description = "Long Term Evolution"
                             }
                         }
-                    },
-                    SpecificationResponsibleGroups = new List<SpecificationResponsibleGroup>()
-                    {
-                        new SpecificationResponsibleGroup(){
-                            Pk_SpecificationResponsibleGroupId = 1,
-                            Fk_commityId = 12,
-                            Fk_SpecificationId = 1
-                        }
-                    },
+                    },                    
                     Enum_Serie = new Enum_Serie() { Pk_Enum_SerieId = 1, Code = "S1", Description = "Serie 1" },
                     ComIMS = new Nullable<bool>(true),
                     EPS = null,
@@ -185,6 +193,26 @@ namespace Etsi.Ultimate.Tests.Services
                             Pk_HistoryId = 2,
                             PersonName = "Author 1",
                             HistoryText = "Text 2"
+                        }
+                    },
+                    SpecificationResponsibleGroups = new List<SpecificationResponsibleGroup>(){
+                        new SpecificationResponsibleGroup(){
+                            Pk_SpecificationResponsibleGroupId = 1,
+                            IsPrime = true,
+                            Fk_commityId = 1,
+                            Fk_SpecificationId = 1
+                        },
+                        new SpecificationResponsibleGroup(){
+                            Pk_SpecificationResponsibleGroupId = 2,
+                            IsPrime = false,
+                            Fk_commityId = 2,
+                            Fk_SpecificationId = 1
+                        },
+                        new SpecificationResponsibleGroup(){
+                            Pk_SpecificationResponsibleGroupId = 3,
+                            IsPrime = false,
+                            Fk_commityId = 3,
+                            Fk_SpecificationId = 1
                         }
                     }
                 });

@@ -86,7 +86,7 @@ namespace Etsi.Ultimate.Controls
 
                 //Set values of hiddn fields (IsPrimary & Associated Wis) from DataSoruce
                 SetHiddenWisValue(DataSource);
-                SetHidPrimaryWi(DataSource);
+                //SetHidPrimaryWi(DataSource);
 
                 relatedWiGrid.DataSource = DataSource;
                 relatedWiGrid.ClientSettings.Scrolling.ScrollHeight = (ScrollHeight < CONST_MIN_SCROLL_HEIGHT) ? Unit.Pixel(CONST_MIN_SCROLL_HEIGHT) : Unit.Pixel(ScrollHeight);

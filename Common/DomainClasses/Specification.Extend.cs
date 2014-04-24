@@ -29,6 +29,17 @@ namespace Etsi.Ultimate.DomainClasses
             get;
             set;
 
+        }        
+
+        public List<int> FullSpecificationRapporteurs
+        {
+            get
+            {
+                List<int> result = new List<int>();
+                if (SpecificationRapporteurs != null && SpecificationRapporteurs.Count > 0)
+                    SpecificationRapporteurs.ToList().ForEach(r => result.Add(r.Fk_RapporteurId));
+                return result;
+            }
         }
 
         public List<int> PrimeSpecificationRapporteurs
@@ -36,17 +47,8 @@ namespace Etsi.Ultimate.DomainClasses
             get
             {
                 List<int> result = new List<int>();
-                SpecificationRapporteurs.Where(r => r.IsPrime).ToList().ForEach(r => result.Add(r.Fk_RapporteurId));
-                return result;
-            }
-        }
-
-        public List<int> FullSpecificationRapporteurs
-        {
-            get
-            {
-                List<int> result = new List<int>();
-                SpecificationRapporteurs.ToList().ForEach(r => result.Add(r.Fk_RapporteurId));
+                if (SpecificationRapporteurs != null && SpecificationRapporteurs.Where(r => r.IsPrime).ToList().Count >0 )
+                    SpecificationRapporteurs.Where(r => r.IsPrime).ToList().ForEach(r => result.Add(r.Fk_RapporteurId));
                 return result;
             }
         }
@@ -82,6 +84,25 @@ namespace Etsi.Ultimate.DomainClasses
                     return specificationType;
                 if (IsTS.Value)
                 {
+                    specificationType = "TS";
+                }
+                else
+                {
+                    specificationType = "TR";
+                }
+                return specificationType;
+            }
+        }
+
+        public string SpecificationTypeFullText
+        {
+            get
+            {
+                string specificationType = string.Empty;
+                if (IsTS == null)
+                    return specificationType;
+                if (IsTS.Value)
+                {
                     specificationType = "Technical specification (TS)";
                 }
                 else
@@ -91,5 +112,7 @@ namespace Etsi.Ultimate.DomainClasses
                 return specificationType;
             }
         }
+
+        public string SpecificationInitialRelease { get; set; }
     }
 }

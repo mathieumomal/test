@@ -25,6 +25,9 @@
        </asp:Panel>
         <asp:Panel ID="specificationDetailsBody" runat="server" CssClass="specificationDetailsBody">
             <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
+            <div class="HeaderText">
+                    <asp:Label ID="lblHeaderText" runat="server"></asp:Label>
+                </div>
             <telerik:RadTabStrip ID="SpecificationDetailsRadTabStrip" runat="server" MultiPageID="SpecificationDetailsRadMultiPage" 
             AutoPostBack="false">    
             </telerik:RadTabStrip>
@@ -68,7 +71,7 @@
                             <td class="TabLineRight"><asp:CheckBoxList ID="radioTechnologyVals" runat="server" RepeatDirection="Horizontal"></asp:CheckBoxList></td>
                         </tr>
                         <tr style="max-height: 150px; overflow-y: scroll; margin-top:10px"> 
-                            <td colspan="2" class="specificationRemark">
+                            <td colspan="2" class="specificationRemarks">
                                 <ult:RemarksControl runat="server" ID="specificationRemarks" />   
                             </td>                                                    
                         </tr>
@@ -93,29 +96,27 @@
                 </telerik:RadPageView>
                 <telerik:RadPageView ID="RadPageRelated" runat="server">  
                     <asp:Panel ID="RelatedSpecificationsPanel" runat="server">
-                        <div style="max-height: 200px; overflow-y: scroll">
+                        <div style="max-height: 190px;">
                             <fieldset id="ParentFieldset">
                                 <legend><asp:Label ID="ParentSpecLbl" runat="server"  Text="Parent Specifications"></asp:Label></legend>
                                 <spec:SpecificationListControl runat="server" ID="parentSpecifications"/>
                             </fieldset>
                         </div>
-                        <div style="max-height: 200px; overflow-y: scroll">
+                        <div style="max-height: 190px;">
                             <fieldset id="ChildFieldset">
                                 <legend><asp:Label ID="ChildSpecLbl" runat="server"  Text="Child Specifications"></asp:Label></legend>
                                 <spec:SpecificationListControl runat="server" ID="childSpecifications"/>
                             </fieldset>
                         </div>
-                        <div style="max-height: 300px; overflow-y: scroll">
-                            <fieldset id="WorkItemsFieldSet">
-                                <legend><asp:Label ID="RelatedWorkItemsLbl" runat="server"  Text="Related Work Items"></asp:Label></legend>
-                                 <!-- ID="SpecificationRelatedWorkItems" -->   
-                            </fieldset>
+                        <div style="max-height: 250px;">                            
+                            <!-- ID="SpecificationRelatedWorkItems" -->  
+                            <ult:RelatedWiControl ID="SpecificationRelatedWorkItems" runat="server" />                            
                         </div>
                     </asp:Panel>                   
                 </telerik:RadPageView>
                 <telerik:RadPageView ID="RadPageReleases" runat="server" >   
                 </telerik:RadPageView>
-                <telerik:RadPageView ID="RadPageHistory" runat="server" Selected="true">   
+                <telerik:RadPageView ID="RadPageHistory" runat="server">   
                     <div class="TabContent" style="overflow-y: auto; overflow-x: auto">
                         <ult:HistoryControl runat="server" ID="specificationHistory" />
                     </div>
@@ -130,10 +131,11 @@
               
                 $(document).ready(function () {
                     setTimeout(function () {
-                        var specificationNumber = "Specification ";
-                        if ($("#referenceVal").html())
+                        var specificationNumber = "Specification ";                        
+                        if ($("#referenceVal").html() != "undefined" && $("#referenceVal").html() != "") {
                             specificationNumber += $("#referenceVal").html();
-                        document.title = releaseName;
+                            document.title = specificationNumber;
+                        }
                     }, 200);
                 });
             </script>

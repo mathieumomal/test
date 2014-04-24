@@ -33,7 +33,7 @@
 .specificationRemarks {
     position: absolute; 
     bottom: 20px;
-    width: 623px;
+    width: 690px;
 }
 
 
@@ -102,17 +102,23 @@ legend{
 
 /* SPECIFICATION SEARCH */
 .SpecificationSearchHeader {
+    background-position: 0% 0%;
     color: white;
     font-family: arial, verdana, sans-serif;
     font-weight: bold;
     text-decoration: none;
     text-shadow: 1px 1px 1px #44760f !important;
-    background: #75B91A;
-    background-image: linear-gradient(#75B91A 0%,? #54AF13 100%);
-    background-image: -webkit-gradient(linear,bottom, top, #75B91A, #54AF13);
-    background-image: -webkit-linear-gradient(bottom, #75B91A, #54AF13);
-    background-image: -moz-linear-gradient(bottom, #75B91A, #54AF13);
-    background-image: -ms-linear-gradient(bottom, #75B91A, #54AF13);
     background-image: -o-linear-gradient(bottom, #75B91A, #54AF13);
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#75B91A', endColorstr='#54AF13',GradientType=1 );
+    background-color: #75B91A;
+    background-repeat: repeat;
+    background-attachment: scroll;
+}
+
+.HeaderText {
+    position: absolute;
+    width: 100%;
+    text-align: right;
+    font-size: 18px;
+    font-weight: bold;
+    color: gray;
 }

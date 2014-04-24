@@ -8,6 +8,7 @@
         border: none;
         border-bottom: 1px solid grey;
         min-height: 50px;
+        background-color: #eaeaea !important;
     }
 
     .RadGrid_Default .rgEditRow td {
@@ -64,15 +65,15 @@
                             <telerik:GridTemplateColumn DataField="SpecificationActions" HeaderText="" UniqueName="SpecificationActions">
                                 <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="50px"/>
                                 <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
-                                <ItemTemplate>  
-                                       <img id="imgViewSpecifications" alt="See details" src="images/details.png"  style="display: block"
-                                           onclick="var popUp=window.open('SpecificationDetails.aspx?specificationId=<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>',
-								           'height=550,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />       
+                                <ItemTemplate> 
+                                    <a href="SpecificationDetails.aspx?specificationId=<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>&selectedTab=<%# SelectedTab %>">
+                                       <img id="imgViewSpecifications" alt="See details" src="images/details.png"  style="display: block"/>  
+                                    </a>                                         
                                 </ItemTemplate>
                                 <EditItemTemplate>
                                         <img id="imgViewSpecifications" alt="See details" src="images/details.png"  style="display: block"
-                                        onclick="var popUp=window.open('SpecificationDetails.aspx?specificationId=<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>',
-								        'height=550,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />                        
+                                           onclick="var popUp=window.open('SpecificationDetails.aspx?specificationId=<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>&selectedTab=<%# SelectedTab %>',
+								           'height=550,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />                         
                                 </EditItemTemplate>                   
                             </telerik:GridTemplateColumn>
                         </Columns>

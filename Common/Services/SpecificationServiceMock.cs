@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Services
 {
@@ -14,6 +15,15 @@ namespace Etsi.Ultimate.Services
         {
             KeyValuePair<List<Domain.Specification>, Domain.UserRightsContainer> listSpecifications = GetAllSpecification(personID);
             return new KeyValuePair<Domain.Specification, Domain.UserRightsContainer>(listSpecifications.Key.Find(x => x.Pk_SpecificationId == specificationId), listSpecifications.Value);
+        }
+
+        public List<Enum_Technology> GetAllSpecificationTechnologies()
+        {
+            return new List<Enum_Technology>(){
+                new Enum_Technology(){ Pk_Enum_TechnologyId=1, Code="2G", Description="2G"},
+                new Enum_Technology(){ Pk_Enum_TechnologyId=2, Code="3G", Description="3G"},
+                new Enum_Technology(){ Pk_Enum_TechnologyId=3, Code="LTE", Description="LTE"}
+            };
         }
 
         public KeyValuePair<List<Domain.Specification>, Domain.UserRightsContainer> GetAllSpecification(int personID)
@@ -102,7 +112,7 @@ namespace Etsi.Ultimate.Services
                     Pk_SpecificationId = 1,
                     Number = "00.01U",
                     Title = "First specification",
-                    Type = new Nullable<bool>(true),
+                    IsTS = new Nullable<bool>(true),
 
                     IsActive = true,
                     IsUnderChangeControl = new Nullable<bool>(false),
@@ -168,9 +178,8 @@ namespace Etsi.Ultimate.Services
                     ComIMS = new Nullable<bool>(true),
                     EPS = null,
                     C_2gCommon = null,
-                    DefinitivelyWithdrawn = new Nullable<bool>(true),
                     CreationDate = null,
-                    UpdateDate = null,
+                    MOD_TS = null,
                     TitleVerified = null,
                     Fk_SerieId = 1,
                     Fk_SpecificationStageId = 1,
@@ -187,14 +196,40 @@ namespace Etsi.Ultimate.Services
                             HistoryText = "Text 2"
                         }
                     },
+                    SpecificationRapporteurs = new List<SpecificationRapporteur>(){
+                        new SpecificationRapporteur(){
+                            Pk_SpecificationRapporteurId = 1,
+                            Fk_SpecificationId = 1,
+                            IsPrime = true,
+                            Fk_RapporteurId = 31
+                        },
+                        new SpecificationRapporteur(){
+                            Pk_SpecificationRapporteurId = 2,
+                            Fk_SpecificationId = 1,
+                            IsPrime = false,
+                            Fk_RapporteurId = 32
+                        },
+                        new SpecificationRapporteur(){
+                            Pk_SpecificationRapporteurId = 3,
+                            Fk_SpecificationId = 1,
+                            IsPrime = false,
+                            Fk_RapporteurId = 37
+                        },
+                        new SpecificationRapporteur(){
+                            Pk_SpecificationRapporteurId = 4,
+                            Fk_SpecificationId = 1,
+                            IsPrime = false,
+                            Fk_RapporteurId = 44
+                        }
+                    },
                     SpecificationChilds = new List<Domain.Specification>(),
                     SpecificationParents = new List<Domain.Specification>(){
                         new Domain.Specification()
                         {
-                            Pk_SpecificationId = 3,
+                            Pk_SpecificationId = 4,
                             Number = "00.02U",
                             Title = "Third specification",
-                            Type = new Nullable<bool>(true),
+                            IsTS = new Nullable<bool>(true),
 
                             IsActive= true,
                             IsUnderChangeControl = new Nullable<bool>(false),
@@ -211,9 +246,8 @@ namespace Etsi.Ultimate.Services
                             ComIMS = new Nullable<bool>(true),
                             EPS = null,
                             C_2gCommon = null ,
-                            DefinitivelyWithdrawn = new Nullable<bool>(true),
                             CreationDate =null,
-                            UpdateDate =null,
+                            MOD_TS =null,
                             TitleVerified =null,               
                             Fk_SerieId = 1,
                             Fk_SpecificationStageId  = 1,
@@ -227,7 +261,7 @@ namespace Etsi.Ultimate.Services
                             Pk_SpecificationId = 3,
                             Number = "00.03U",
                             Title = "Third specification",
-                            Type = new Nullable<bool>(true),
+                            IsTS = new Nullable<bool>(true),
 
                             IsActive= true,
                             IsUnderChangeControl = new Nullable<bool>(false),
@@ -244,9 +278,8 @@ namespace Etsi.Ultimate.Services
                             ComIMS = new Nullable<bool>(true),
                             EPS = null,
                             C_2gCommon = null ,
-                            DefinitivelyWithdrawn = new Nullable<bool>(true),
                             CreationDate =null,
-                            UpdateDate =null,
+                            MOD_TS =null,
                             TitleVerified =null,               
                             Fk_SerieId = 1,
                             Fk_SpecificationStageId  = 1,
@@ -256,6 +289,7 @@ namespace Etsi.Ultimate.Services
              
                         }
                     },
+                    SpecificationInitialRelease = "Release 03",
                     PrimeResponsibleGroupShortName = "SP",
                     SecondaryResponsibleGroupsShortNames = "S1, S2, S3",
                     Specification_WorkItem = new List<Domain.Specification_WorkItem>()
@@ -274,7 +308,7 @@ namespace Etsi.Ultimate.Services
                                     },
                                     new Domain.WorkItems_ResponsibleGroups(){
                                         Pk_WorkItemResponsibleGroups =2,
-                                        ResponsibleGroup = "S2"
+                                        ResponsibleGroup = "S3"
                                     }
                                 }
                             }
@@ -288,7 +322,26 @@ namespace Etsi.Ultimate.Services
                                WorkItems_ResponsibleGroups = new List<Domain.WorkItems_ResponsibleGroups>(){
                                     new Domain.WorkItems_ResponsibleGroups(){
                                         Pk_WorkItemResponsibleGroups =1,
-                                        ResponsibleGroup = "S1"
+                                        ResponsibleGroup = "S2"
+                                    },
+                                    new Domain.WorkItems_ResponsibleGroups(){
+                                        Pk_WorkItemResponsibleGroups =2,
+                                        ResponsibleGroup = "S1",
+                                        IsPrimeResponsible = true
+                                    }
+                                }
+                            }  
+                        },
+                        new Domain.Specification_WorkItem(){
+                            Pk_Specification_WorkItemId = 3,
+                            isPrime = false,
+                            WorkItem = new Domain.WorkItem(){
+                                Pk_WorkItemUid = 3,
+                                Acronym = "acro3",
+                               WorkItems_ResponsibleGroups = new List<Domain.WorkItems_ResponsibleGroups>(){
+                                    new Domain.WorkItems_ResponsibleGroups(){
+                                        Pk_WorkItemResponsibleGroups =1,
+                                        ResponsibleGroup = "S3"
                                     },
                                     new Domain.WorkItems_ResponsibleGroups(){
                                         Pk_WorkItemResponsibleGroups =2,
@@ -307,7 +360,7 @@ namespace Etsi.Ultimate.Services
                 Pk_SpecificationId = 4,
                 Number = "00.04U",
                 Title = "4th specification",
-                Type = new Nullable<bool>(true),
+                IsTS = new Nullable<bool>(true),
 
                 IsActive= true,
                 IsUnderChangeControl = new Nullable<bool>(false),
@@ -324,15 +377,16 @@ namespace Etsi.Ultimate.Services
                 ComIMS = new Nullable<bool>(true),
                 EPS = null,
                 C_2gCommon = null ,
-                DefinitivelyWithdrawn = new Nullable<bool>(true),
                 CreationDate =null,
-                UpdateDate =null,
+                MOD_TS =null,
                 TitleVerified =null,               
                 Fk_SerieId = 1,
                 Fk_SpecificationStageId  = 1,
                 Histories = histories
              
             });
+
+
 
             Domain.UserRightsContainer userRightsContainer = new Domain.UserRightsContainer();
             userRightsContainer.AddRight(Domain.Enum_UserRights.Specification_ViewDetails);
