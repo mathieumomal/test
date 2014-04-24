@@ -17,7 +17,7 @@
 	text-align:left;
 	padding: 0 15px;
 }
-.rgMasterTable th:nth-last-child(1), .rgMasterTable td:nth-last-child(1){
+#releaseList .rgMasterTable th:nth-last-child(1), #releaseList .rgMasterTable td:nth-last-child(1){
 	border:none!important;
 }
 

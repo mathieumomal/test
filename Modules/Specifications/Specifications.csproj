@@ -127,9 +127,15 @@
   <ItemGroup>
     <Content Include="Documentation\Documentation.css" />
     <Content Include="Documentation\Documentation.html" />
+    <Content Include="images\2g.png" />
+    <Content Include="images\3g.png" />
+    <Content Include="images\cr.png" />
     <Content Include="images\details.png" />
     <Content Include="images\error.png" />
     <Content Include="images\favicon.ico" />
+    <Content Include="images\ims.png" />
+    <Content Include="images\lock.png" />
+    <Content Include="images\lte.png" />
     <Content Include="images\warning.png" />
     <Content Include="JS\jquery.min.js" />
     <Content Include="License.txt" />

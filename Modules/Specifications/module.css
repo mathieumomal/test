@@ -4,9 +4,6 @@
 	text-align:left;
 	padding: 0 15px;
 }
-.rgMasterTable th:nth-last-child(1), .rgMasterTable td:nth-last-child(1){
-	border:none!important;
-}
 
 .containerFix {
     width: 650px;
@@ -122,3 +119,15 @@ legend{
     font-weight: bold;
     color: gray;
 }
+
+#specAdditionalDetails {
+    table-layout:fixed !important;
+    width:120px;
+}
+
+#specAdditionalDetails td {
+    border: none !important;
+    width:16px;
+}
+
+

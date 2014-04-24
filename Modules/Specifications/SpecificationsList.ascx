@@ -51,19 +51,38 @@
     </tr>
     <tr>
         <td>
-            <telerik:RadGrid ID="rgSpecificationList" runat="server" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" AllowPaging="true" AllowSorting="false" AllowFilteringByColumn="false" AutoGenerateColumns="false">
+            <telerik:RadGrid ID="rgSpecificationList" runat="server" 
+                EnableEmbeddedSkins="false"
+                EnableEmbeddedBaseStylesheet="false" 
+                Skin="Ultimate"
+                AllowPaging="true"
+                PageSize="1"
+                AllowFilteringByColumn="false" 
+                AutoGenerateColumns="false"                
+                OnNeedDataSource="rgSpecificationList_NeedDataSource"
+                OnItemDataBound="rgSpecificationList_ItemDataBound">
+                <PagerStyle AlwaysVisible="true" Mode="NextPrevAndNumeric" PageButtonCount="10"/>
                 <MasterTableView ClientDataKeyNames="Pk_SpecificationId">
                     <Columns>
                         <telerik:GridBoundColumn HeaderStyle-Width="10%" DataField="Number" HeaderText="Specification Number" UniqueName="Number"></telerik:GridBoundColumn>
-                        <telerik:GridBoundColumn HeaderStyle-Width="5%" DataField="Type" HeaderText="Type" UniqueName="Type"></telerik:GridBoundColumn>
-                        <telerik:GridBoundColumn HeaderStyle-Width="40%" DataField="Title" HeaderText="Title" UniqueName="Title"></telerik:GridBoundColumn>
-                        <telerik:GridBoundColumn HeaderStyle-Width="10%" DataField="IsActive" HeaderText="Status" UniqueName="IsActive"></telerik:GridBoundColumn>
-                        <telerik:GridBoundColumn HeaderStyle-Width="10%" DataField="ITU_Description" HeaderText="Primary Responsible Group" UniqueName="ITU_Description"></telerik:GridBoundColumn>
-                        <telerik:GridTemplateColumn HeaderStyle-Width="25%" UniqueName="SpecificationDetails">
+                        <telerik:GridBoundColumn HeaderStyle-Width="5%" DataField="SpecificationTypeShortName" HeaderText="Type" UniqueName="Type"></telerik:GridBoundColumn>
+                        <telerik:GridBoundColumn DataField="Title" HeaderText="Title" UniqueName="Title"></telerik:GridBoundColumn>
+                        <telerik:GridBoundColumn HeaderStyle-Width="10%" DataField="Status" HeaderText="Status" UniqueName="Status"></telerik:GridBoundColumn>
+                        <telerik:GridBoundColumn HeaderStyle-Width="10%" DataField="PrimeResponsibleGroupShortName" HeaderText="Primary Responsible Group" UniqueName="PrimeResponsibleGroupShortName"></telerik:GridBoundColumn>
+                        <telerik:GridTemplateColumn HeaderStyle-Width="120px" UniqueName="SpecificationAdditionalDetails">
                             <ItemTemplate>
-                                <img class="imgViewSpecifications" title="See details" alt="See details" src="/DesktopModules/Specifications/images/details.png"
-                                    onclick="var popUp=window.open('/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>', 
-                            'height=690,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
+                                <table id="specAdditionalDetails">
+                                    <tr>
+                                        <td><img id="imgViewSpecifications" title="View Specification" class="imgViewSpecifications" alt="View Specification" src="/DesktopModules/Specifications/images/details.png"
+                                                onclick="var popUp=window.open('/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>', 'height=550,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" /></td>
+                                        <td><img id="imgLock" title="Internal" alt="Internal" src="/DesktopModules/Specifications/images/lock.png" style='display: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsForPublication")) ? "none" : "block" %>' /></td>
+                                        <td><img id="imgIMS" title="Common IMS" alt="Common IMS" src="/DesktopModules/Specifications/images/ims.png" style='display: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"ComIMS")) ? "block" : "none" %>' /></td>
+                                        <td><asp:Image ID="img2G" runat="server" ToolTip="2nd Generation" AlternateText="2nd Generation" ImageUrl="/DesktopModules/Specifications/images/2g.png" /></td>
+                                        <td><asp:Image ID="img3G" runat="server" ToolTip="3rd Generation" AlternateText="3rd Generation" ImageUrl="/DesktopModules/Specifications/images/3g.png" /></td>
+                                        <td><asp:Image ID="imgLTE" runat="server" ToolTip="Long-Term Evolution" AlternateText="Long-Term Evolution" ImageUrl="/DesktopModules/Specifications/images/lte.png" /></td>
+                                        <td><img id="imgCR" title="CR is pending implementation" class="imgCR" alt="CR is pending implementation" src="/DesktopModules/Specifications/images/cr.png" /></td>
+                                    </tr>
+                                </table>
                             </ItemTemplate>
                         </telerik:GridTemplateColumn>
                     </Columns>

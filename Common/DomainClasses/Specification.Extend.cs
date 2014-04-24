@@ -117,5 +117,16 @@ namespace Etsi.Ultimate.DomainClasses
 
         public List<Enum_Technology> SpecificationTechnologiesList { get; set; }
         public List<WorkItem> SpecificationWIsList { get; set; }
+
+        public string SpecificationTypeShortName
+        {
+            get
+            {
+                if (Type == null)
+                    return String.Empty;
+                else
+                    return (this.Type.Value) ? "TS" : "TR";
+            }
+        }
     }
 }
