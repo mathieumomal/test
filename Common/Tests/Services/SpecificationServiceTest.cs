@@ -42,14 +42,28 @@ namespace Etsi.Ultimate.Tests.Services
             mockCommunitiesManager.Stub(x => x.GetCommmunityshortNameById(2)).Return(c1.ShortName);
             mockCommunitiesManager.Stub(x => x.GetCommmunityshortNameById(3)).Return(c2.ShortName);
             mockCommunitiesManager.Stub(x => x.GetCommunities()).Return(communitiesSet);
-          
+
+            Enum_Technology e = new Enum_Technology() { Pk_Enum_TechnologyId = 1, Code = "2G", Description = "2G" };
+            Enum_Technology e1 = new Enum_Technology(){ Pk_Enum_TechnologyId = 2, Code = "3G", Description = "3G"};
+            Enum_Technology e2 = new Enum_Technology() { Pk_Enum_TechnologyId = 3, Code = "LTE", Description = "LTE" };
+            List<Enum_Technology> techSet = new List<Enum_Technology>() { e, e1, e2 };
+
+            var mockTechnologiesManager = MockRepository.GenerateMock<ISpecificationTechnologiesManager>();
+            mockTechnologiesManager.Stub(x => x.GetASpecificationTechnologiesBySpecId(1)).Return(techSet);
+
+
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specificationData);
             CommunityFakeRepository fakeRepo = new CommunityFakeRepository();            
             mockDataContext.Stub(x => x.Communities).Return((IDbSet<Community>)fakeRepo.All).Repeat.Once();
+            Enum_TechnologiesFakeRepository fakeRepo2 = new Enum_TechnologiesFakeRepository();  
+            mockDataContext.Stub(x => x.SpecificationTechnologies).Return((IDbSet<SpecificationTechnology>)fakeRepo2.All).Repeat.Once();
+            SpecificationWIFakeRepository fakeRepo3 = new SpecificationWIFakeRepository();
+            mockDataContext.Stub(x => x.Specification_WorkItem).Return((IDbSet<Specification_WorkItem>)fakeRepo3.All).Repeat.Once();
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
             ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
             ManagerFactory.Container.RegisterInstance(typeof(ICommunityManager), mockCommunitiesManager);
+            ManagerFactory.Container.RegisterInstance(typeof(ISpecificationTechnologiesManager), mockTechnologiesManager);
 
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             var specSVC = new SpecificationService();

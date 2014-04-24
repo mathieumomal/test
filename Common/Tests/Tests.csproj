@@ -80,10 +80,14 @@
     <Compile Include="Business\CommunityManagerTest.cs" />
     <Compile Include="Business\LogManagerTest.cs" />
     <Compile Include="Business\RightsManagerTest.cs" />
+    <Compile Include="FakeRepositories\Enum_TechnologiesFakeRepository.cs" />
+    <Compile Include="FakeRepositories\SpecificationWIFakeRepository.cs" />
     <Compile Include="FakeSets\Enum_SerieFakeDBSet.cs" />
     <Compile Include="FakeSets\Enum_TechnologyFakeDBSet.cs" />
     <Compile Include="FakeSets\SpecificationDBSet.cs" />
     <Compile Include="FakeSets\SpecificationTechnologyFakeDBSet.cs" />
+    <Compile Include="FakeSets\SpecificationWorkItemFakeDBSet.cs" />
+    <Compile Include="FakeSets\TechnologiesFakeDBSet.cs" />
     <Compile Include="Services\SpecificationServiceTest.cs" />
     <Compile Include="Business\WorkItemCsvParserTest.cs" />
     <Compile Include="Business\WorkItemManagerTest.cs" />

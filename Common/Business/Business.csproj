@@ -64,6 +64,7 @@
     <Compile Include="ICommunityManager.cs" />
     <Compile Include="IPersonManager.cs" />
     <Compile Include="ISpecificationManager.cs" />
+    <Compile Include="ISpecificationTechnologiesManager.cs" />
     <Compile Include="MeetingManager.cs" />
     <Compile Include="ManagerFactory.cs" />
     <Compile Include="PersonManager.cs" />

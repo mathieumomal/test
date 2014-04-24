@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Etsi.Ultimate.Business
 {
-    public class SpecificationTechnologiesManager
+    public class SpecificationTechnologiesManager : ISpecificationTechnologiesManager
     {
         public IUltimateUnitOfWork UoW{get; set;}
 
