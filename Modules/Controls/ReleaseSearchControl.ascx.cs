@@ -155,6 +155,20 @@ namespace Etsi.Ultimate.Controls
                 RadButton rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
                 rbOpenReleases.Attributes.Add("Value", String.Join(",", openReleaseIds));
                 rbOpenReleases.Checked = true;
+
+
+
+                //Assign javascript events - this.ClientId is added to make the js method unique to the calling control
+                rcbReleases.OnClientDropDownClosed = "OnClientDropDownClosed" + this.ClientID;
+                rcbReleases.OnClientDropDownOpened = "OnClientDropDownOpened" + this.ClientID;
+                rcbReleases.OnClientLoad = "OnClientLoad" + this.ClientID;
+                rbAllReleases.OnClientClicked = "ResetCheckBoxes" + this.ClientID;
+                rbOpenReleases.OnClientClicked = "ResetCheckBoxes" + this.ClientID;
+                foreach (RadTreeNode item in rtvReleases.Nodes)
+                {
+                    if (item.FindControl("rbCustomReleases") != null)
+                        ((RadButton)item.FindControl("rbCustomReleases")).OnClientClicked = "ResetRadioButtons" + this.ClientID;
+                }
             }
         }
 

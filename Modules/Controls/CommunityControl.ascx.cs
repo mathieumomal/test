@@ -45,6 +45,18 @@ namespace Etsi.Ultimate.Controls
             set
             {
                 _selectedCommunityIds = value;
+                if (_selectedCommunityIds != null && _selectedCommunityIds.Count > 0)
+                {
+                    foreach (RadTreeNode node in rtvCommunitySelector.GetAllNodes().ToList())
+                    {
+                        int nodeValue = Convert.ToInt32(node.Value);
+                        if (_selectedCommunityIds.Exists(x => x == nodeValue))
+                        {
+                            node.Checked = true;
+                        }
+                    }
+                }
+                BindLabelText();
             }
         }
 
@@ -200,6 +212,11 @@ namespace Etsi.Ultimate.Controls
         /// <param name="sender">source of event</param>
         /// <param name="e">event args</param>
         protected void btnConfirm_Click(object sender, EventArgs e)
+        {
+            BindLabelText();
+        }
+
+        private void BindLabelText()
         {
             List<string> tbNames = new List<string>();
             foreach (RadTreeNode node in rtvCommunitySelector.CheckedNodes)

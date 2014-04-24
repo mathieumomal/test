@@ -409,5 +409,21 @@ namespace Etsi.Ultimate.Services
         }
 
         #endregion
+
+
+        public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Enum_Technology> GetTechnologyList()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Enum_Serie> GetSeries()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

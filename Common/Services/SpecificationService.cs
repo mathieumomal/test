@@ -35,7 +35,7 @@ namespace Etsi.Ultimate.Services
                 }
                 if (result.Key.SpecificationParents != null && result.Key.SpecificationParents.Count > 0)
                 {
-                    result.Key.SpecificationParents.ToList().ForEach(s => s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId));
+                result.Key.SpecificationParents.ToList().ForEach(s => s.PrimeResponsibleGroupShortName  = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId));
                 }
                 if (result.Key.SpecificationChilds != null && result.Key.SpecificationChilds.Count > 0)
                 {
@@ -46,6 +46,41 @@ namespace Etsi.Ultimate.Services
                 //return specificationManager.GetSpecificationById(personId, specificationId);
                 return result;
             }        
+        }
+
+        public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObject)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specificationManager = new SpecificationManager();
+                specificationManager.UoW = uoW;
+                var communityManager = new CommunityManager(uoW);
+                KeyValuePair<List<Specification>, UserRightsContainer> result = specificationManager.GetSpecificationBySearchCriteria(personId, searchObject);
+                result.Key.ForEach(x => x.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(x.PrimeResponsibleGroup.Fk_commityId));
+                return specificationManager.GetSpecificationBySearchCriteria(personId, searchObject);
+            }
+        }
+
+
+        public List<Enum_Technology> GetTechnologyList()
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specificationManager = new SpecificationManager();
+                specificationManager.UoW = uoW;
+                return specificationManager.GetTechnologyList();
+            }
+        }
+
+
+        public List<Enum_Serie> GetSeries()
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specificationManager = new SpecificationManager();
+                specificationManager.UoW = uoW;
+                return specificationManager.GetSeries();
+            }
         }
 
         public List<Enum_Technology> GetAllSpecificationTechnologies()
@@ -105,3 +140,4 @@ namespace Etsi.Ultimate.Services
         #endregion
     }
 }
+

@@ -2,12 +2,22 @@
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 <%@ Register TagPrefix="ult" TagName="ShareUrlControl" Src="../../controls/Ultimate/ShareUrlControl.ascx" %>
 <%@ Register TagPrefix="ult" TagName="FullViewControl" Src="../../controls/Ultimate/FullView.ascx" %>
+<%@ Register TagPrefix="ult" TagName="ReleaseSearchControl" Src="../../controls/Ultimate/ReleaseSearchControl.ascx" %>
+<%@ Register TagPrefix="ult" TagName="CommunityControl" Src="../../controls/Ultimate/CommunityControl.ascx" %>
 
-<table style="width: 100%;">
-    <tr>
-        <td>
-            <telerik:RadPanelBar runat="server" ID="rpbSpecSearch" Width="100%">
-                <Items>
+<style>
+    td {
+        vertical-align: top;
+        text-align: left;
+    }
+</style>
+<asp:UpdatePanel ID="upSpecificationGrid" runat="server" UpdateMode="Always">
+    <ContentTemplate>
+        <table style="width: 100%;">
+            <tr>
+                <td>
+                    <telerik:RadPanelBar runat="server" ID="rpbSpecSearch" Width="100%">
+                        <items>
                     <telerik:RadPanelItem runat="server" ID="searchPanel" Expanded="True">
                         <HeaderTemplate>
                             <table style="width: 100%; vertical-align: middle" class="SpecificationSearchHeader">
@@ -26,31 +36,85 @@
                             </table>
                         </HeaderTemplate>
                         <ContentTemplate>
-                            <table style="width: 100%; padding: 20px 50px 20px 50px">
+                            <table style="width:100%;padding: 20px 50px 20px 50px;">
                                 <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
-                                    <td></td>
+                                    <td style="width:50%;">
+                                        <table style="width:100%;">
+                                            <tr>
+                                                <td style="width:40%;">Title/Specification number</td>
+                                                <td style="width:60%;"><asp:TextBox ID="txtTitle" Width="196px" runat="server"></asp:TextBox></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Series</td>
+                                                <td><telerik:RadComboBox ID="rcbSeries" runat="server" Width="200px" CheckBoxes="true"></telerik:RadComboBox></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Type</td>
+                                                <td><asp:CheckBox ID="cbTechnicalSpecification" runat="server" Text="Technical Specification (TS)"></asp:CheckBox><br />
+                                                    <asp:CheckBox ID="cbTechnicalReport" runat="server" Text="Technical Report (TR)"></asp:CheckBox>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Number not yet allocated</td>
+                                                <td><asp:CheckBox ID="cbNumNotYetAllocated" runat="server"></asp:CheckBox></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Primary responsible group(s)</td>
+                                                <td><ult:CommunityControl id="CommunityCtrl" Width="200" IsSingleSelection="false" IsEditMode="true" runat="server"/></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td style="width:50%;">
+                                         <table style="width:100%;">
+                                            <tr>
+                                                <td style="width:40%;">Release</td>
+                                                <td style="width:60%;"><ult:ReleaseSearchControl id="ReleaseCtrl" runat="server" Width="200" DropDownWidth="200"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Status</td>
+                                                <td><asp:CheckBox ID="cbDraft" runat="server" Text="Draft"></asp:CheckBox><br />
+                                                    <asp:CheckBox ID="cbUnderCC" runat="server" Text="Under change control"></asp:CheckBox><br />
+                                                    <asp:CheckBox ID="cbWithdrawnBeforeCC" runat="server" Text="Withdrawn before change control"></asp:CheckBox><br />
+                                                    <asp:CheckBox ID="cbWithdrawnAfterCC" runat="server" Text="Withdrawn under change control"></asp:CheckBox>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Publication</td>
+                                                <td><asp:CheckBox ID="cbInternal" runat="server" Text="Internal"></asp:CheckBox><br />
+                                                    <asp:CheckBox ID="cbForPublication" runat="server" Text="For Publication"></asp:CheckBox>
+                                                </td>
+                                            </tr>
+                                             <tr>
+                                                 <td>Technology</td>
+                                                <td><asp:CheckBoxList ID="cblTechnology" runat="server" RepeatDirection="Horizontal"></asp:CheckBoxList>
+                                                </td>
+                                             </tr>
+                                             <tr>
+                                                <td colspan="2" style="text-align:right; padding-right:20px">
+                                                <asp:Button ID="btnDefault" Visible="false" runat="server" Text="Default" Width="150px" OnClientClick="collapseItem()"></asp:Button>
+                                                <asp:Button ID="btnSearch" runat="server" Text="Search"  Width="150px" OnClick="btnSearch_Click" OnClientClick="collapseItem()"></asp:Button></td>
+                                             </tr>
+                                        </table>
+                                    </td>
                                 </tr>
                             </table>
                         </ContentTemplate>
                     </telerik:RadPanelItem>
-                </Items>
-            </telerik:RadPanelBar>
-        </td>
-    </tr>
-    <tr>
-        <td>
-            <telerik:RadButton ID="rbNewSpecification" runat="server" Text="New Specification" />
-            <span style="float: right; padding-bottom: 2px; white-space: nowrap">
-                <asp:HyperLink ID="lnkManageITURecommendations" runat="server" Text="Manage ITU Recommendations" Target="_blank" />
-                <ult:fullviewcontrol id="ultFullView" runat="server" />
-            </span>
-        </td>
-    </tr>
-    <tr>
-        <td>
+                </items>
+                    </telerik:RadPanelBar>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <telerik:RadButton ID="rbNewSpecification" runat="server" Text="New Specification" />
+                    <span style="float: right; padding-bottom: 2px; white-space: nowrap">
+                        <asp:HyperLink ID="lnkManageITURecommendations" runat="server" Text="Manage ITU Recommendations" Target="_blank" />
+                        <ult:fullviewcontrol id="ultFullView" runat="server" />
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>
             <telerik:RadGrid ID="rgSpecificationList" runat="server" 
                 EnableEmbeddedSkins="false"
                 EnableEmbeddedBaseStylesheet="false" 
@@ -62,7 +126,7 @@
                 OnNeedDataSource="rgSpecificationList_NeedDataSource"
                 OnItemDataBound="rgSpecificationList_ItemDataBound">
                 <PagerStyle AlwaysVisible="true" Mode="NextPrevAndNumeric" PageButtonCount="10"/>
-                <MasterTableView ClientDataKeyNames="Pk_SpecificationId">
+                        <mastertableview clientdatakeynames="Pk_SpecificationId">
                     <Columns>
                         <telerik:GridBoundColumn HeaderStyle-Width="10%" DataField="Number" HeaderText="Specification Number" UniqueName="Number"></telerik:GridBoundColumn>
                         <telerik:GridBoundColumn HeaderStyle-Width="5%" DataField="SpecificationTypeShortName" HeaderText="Type" UniqueName="Type"></telerik:GridBoundColumn>
@@ -86,8 +150,19 @@
                             </ItemTemplate>
                         </telerik:GridTemplateColumn>
                     </Columns>
-                </MasterTableView>
-            </telerik:RadGrid>
-        </td>
-    </tr>
-</table>
+                </mastertableview>
+                    </telerik:RadGrid>
+                </td>
+            </tr>
+        </table>
+    </ContentTemplate>
+</asp:UpdatePanel>
+<script type="text/javascript">
+    function collapseItem() {
+        var panelBar = $find("<%= rpbSpecSearch.ClientID %>");
+        var item = panelBar.get_items().getItem(0);
+        if (item) {
+            item.collapse();
+        }
+    }
+</script>

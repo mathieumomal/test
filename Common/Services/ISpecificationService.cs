@@ -16,6 +16,26 @@ namespace Etsi.Ultimate.Services
         KeyValuePair<Specification, UserRightsContainer>  GetSpecificationDetailsById(int personId, int specificationId);
 
         /// <summary>
+        /// Returns list of specifications including related remarks, history, Parent/Child specification, and releases
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="searchObj">Object with all search parameters</param>
+        /// <returns></returns>
+        KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj);
+
+        /// <summary>
+        /// Returns list of technologies
+        /// </summary>
+        /// <returns></returns>
+        List<Enum_Technology> GetTechnologyList();
+
+        /// <summary>
+        /// Returns list of series
+        /// </summary>
+        /// <returns></returns>
+        List<Enum_Serie> GetSeries();
+
+        /// <summary>
         /// Return the list of all possible specification's technologies
         /// </summary>
         /// <returns>List of Enum_Technology</returns>

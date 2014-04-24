@@ -55,8 +55,35 @@ namespace Etsi.Ultimate.Business
             return new KeyValuePair<Specification, UserRightsContainer>(specification, personRights);
         }
 
+        public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj)
+        {
+            // Computes the rights of the user. These are independant from the releases.
+            var rightManager = ManagerFactory.Resolve<IRightsManager>();
+            rightManager.UoW = UoW;
+            var personRights = rightManager.GetRights(personId);
 
+            specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            specificationRepo.UoW = UoW;
 
+            var specifications = specificationRepo.GetSpecificationBySearchCriteria(searchObj);
+
+            return new KeyValuePair<List<Specification>, UserRightsContainer>(specifications, personRights);
+        }
+
+        public List<Enum_Technology> GetTechnologyList()
+        {
+            specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            specificationRepo.UoW = UoW;
+            return specificationRepo.GetTechnologyList();
+        }
+
+        public List<Enum_Serie> GetSeries()
+        {
+            specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            specificationRepo.UoW = UoW;
+            return specificationRepo.GetSeries();
+        }
+    
         #region ISpecificationManager Membres
 
 
