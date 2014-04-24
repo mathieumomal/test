@@ -356,7 +356,7 @@
           <Key>
             <PropertyRef Name="Pk_SpecificationRapporteurId" />
           </Key>
-          <Property Name="Pk_SpecificationRapporteurId" Type="int" Nullable="false" />
+          <Property Name="Pk_SpecificationRapporteurId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Fk_SpecificationId" Type="int" Nullable="false" />
           <Property Name="Fk_RapporteurId" Type="int" Nullable="false" />
           <Property Name="IsPrime" Type="bit" Nullable="false" />
@@ -365,7 +365,7 @@
           <Key>
             <PropertyRef Name="Pk_SpecificationResponsibleGroupId" />
           </Key>
-          <Property Name="Pk_SpecificationResponsibleGroupId" Type="int" Nullable="false" />
+          <Property Name="Pk_SpecificationResponsibleGroupId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Fk_SpecificationId" Type="int" Nullable="false" />
           <Property Name="Fk_commityId" Type="int" Nullable="false" />
           <Property Name="IsPrime" Type="bit" Nullable="false" />
@@ -779,6 +779,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="CleanAllTablesForImport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="getMeetingShortRef" ReturnType="varchar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="shortName" Type="varchar" Mode="In" />
           <Parameter Name="meetingTitle" Type="varchar" Mode="In" />
@@ -904,6 +905,7 @@
             <End Role="Specification" EntitySet="Specifications" />
             <End Role="Specification1" EntitySet="Specifications" />
           </AssociationSet>
+          <FunctionImport Name="CleanAllTablesForImport" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -1883,6 +1885,7 @@
               <ScalarProperty Name="Pk_SpecificationId" ColumnName="Fk_SpecificationParentId" />
             </EndProperty>
           </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="CleanAllTablesForImport" FunctionName="Etsi.Ultimate.DataAccess.Store.CleanAllTablesForImport" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

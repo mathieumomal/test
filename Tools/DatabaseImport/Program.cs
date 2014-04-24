@@ -30,6 +30,9 @@ namespace DatabaseImport
             operations.Add(new Enum_SerieImport());
             operations.Add(new Enum_TechnologyImport());
             operations.Add(new SpecificationImport());//+SpecificationTechnologies
+            operations.Add(new SpecificationResponsibleGroupImport());
+            operations.Add(new SpecificationsGenealogyImport());
+            operations.Add(new SpecificationRapporteurImport());
             //---> (First to CLEANDATABASE)
 
             Console.WriteLine("Setting up the different classes");
@@ -46,6 +49,7 @@ namespace DatabaseImport
 
             // Clean up in reverse order
             operations.Reverse();
+            newContext.Database.ExecuteSqlCommand("CleanAllTablesForImport");
             foreach (var toClean in operations)
             {
                 toClean.CleanDatabase();

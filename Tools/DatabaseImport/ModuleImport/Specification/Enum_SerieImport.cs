@@ -24,10 +24,7 @@ namespace DatabaseImport.ModuleImport
 
         public void CleanDatabase()
         {
-            foreach (var enum_Serie in NewContext.Enum_Serie.ToList())
-            {
-                NewContext.Enum_Serie.Remove(enum_Serie);
-            }
+            //Procedure does this work
         }
 
         public void FillDatabase()

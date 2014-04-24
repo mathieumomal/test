@@ -67,11 +67,14 @@
     <Compile Include="ModuleImport\Specification\Enum_SerieImport.cs" />
     <Compile Include="ModuleImport\Specification\Enum_TechnologyImport.cs" />
     <Compile Include="ModuleImport\Specification\SpecificationImport.cs" />
-    <Compile Include="ModuleImport\Specification\SpecificationsGenealogy.cs" />
-    <Compile Include="ModuleImport\Specification\Speification_WorkitemImport.cs" />
+    <Compile Include="ModuleImport\Specification\SpecificationRapporteurImport.cs" />
+    <Compile Include="ModuleImport\Specification\SpecificationResponsibleGroupImport.cs" />
+    <Compile Include="ModuleImport\Specification\SpecificationsGenealogyImport.cs" />
+    <Compile Include="ModuleImport\Specification\Specification_WorkitemImport.cs" />
     <Compile Include="ModuleImport\WorkItemImport.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">

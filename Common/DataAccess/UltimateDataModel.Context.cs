@@ -14,6 +14,9 @@ namespace Etsi.Ultimate.DataAccess
     using System.Data.Entity.Infrastructure;
     
     using Etsi.Ultimate.DomainClasses;
+    using System.Data.Objects;
+    using System.Data.Objects.DataClasses;
+    using System.Linq;
     
     public partial class UltimateContext : DbContext, IUltimateContext
     {
@@ -76,5 +79,10 @@ namespace Etsi.Ultimate.DataAccess
             Configuration.AutoDetectChangesEnabled = detect;
         }
       
+    
+        public virtual int CleanAllTablesForImport()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CleanAllTablesForImport");
+        }
     }
 }

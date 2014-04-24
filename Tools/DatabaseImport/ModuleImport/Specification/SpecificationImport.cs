@@ -29,13 +29,7 @@ namespace DatabaseImport.ModuleImport
 
         public void CleanDatabase()
         {
-            foreach (var specification in NewContext.Specifications.ToList())
-            {
-                var specTech = NewContext.SpecificationTechnologies.Where(r => r.Fk_Specification == specification.Pk_SpecificationId).ToList();
-                for (int i = 0; i < specTech.Count; ++i)
-                    NewContext.SpecificationTechnologies.Remove(specTech[i]);
-                NewContext.Specifications.Remove(specification);
-            }
+            //Procedure does this work
         }
 
         public void FillDatabase()
@@ -57,9 +51,9 @@ namespace DatabaseImport.ModuleImport
 
                 IsTsCase(newSpec, legacySpec);
 
-                newSpec.Number = CheckString(legacySpec.Number, 20, "Spec Number", newSpec.Number);
+                newSpec.Number = Utils.CheckString(legacySpec.Number, 20, "Spec Number", newSpec.Number, Report);
 
-                newSpec.IsActive = NullBooleanCheck(legacySpec.definitively_withdrawn, "IsActive (<=> OLD DefinitivelyWithdrawn)", false);
+                newSpec.IsActive = Utils.NullBooleanCheck(legacySpec.definitively_withdrawn, "IsActive (<=> OLD DefinitivelyWithdrawn)", false, Report);
 
                 IsUnderChangeControlCase(newSpec, legacySpec);
 
@@ -67,7 +61,7 @@ namespace DatabaseImport.ModuleImport
 
                 newSpec.IsForPublication = legacySpec.For_publication;
 
-                newSpec.Title = CheckString(legacySpec.Title, 2000, "Spec Title", newSpec.Number);
+                newSpec.Title = Utils.CheckString(legacySpec.Title, 2000, "Spec Title", newSpec.Number, Report);
 
                 newSpec.ComIMS = legacySpec.ComIMS;
 
@@ -79,13 +73,13 @@ namespace DatabaseImport.ModuleImport
 
                 newSpec.MOD_TS = legacySpec.update_date;
 
-                newSpec.MOD_BY = CheckString(null, 20, "Spec MOD_BY", newSpec.Number);
+                newSpec.MOD_BY = Utils.CheckString(null, 20, "Spec MOD_BY", newSpec.Number, Report);
 
                 newSpec.TitleVerified = legacySpec.title_verified;
 
                 newSpec.URL = URLCase(legacySpec.URL);
 
-                newSpec.ITU_Description = CheckString(legacySpec.description, 1000, "Spec ITU_Description", newSpec.Number);
+                newSpec.ITU_Description = Utils.CheckString(legacySpec.description, 1000, "Spec ITU_Description", newSpec.Number, Report);
 
                 SerieCase(newSpec, legacySpec);
 
@@ -94,6 +88,7 @@ namespace DatabaseImport.ModuleImport
                 TechnologieCase(newSpec, legacySpec);
 
                 RemarksCase(newSpec, legacySpec);
+
 
 
                 NewContext.Specifications.Add(newSpec);
@@ -143,7 +138,7 @@ namespace DatabaseImport.ModuleImport
             var isPromoteInhibitedCase = false;
             foreach (var spec_release in spec_releases)
             {
-                if (NullBooleanCheck(spec_release.inhibitUpgrade, "IsPromoteInhibited", false))
+                if (Utils.NullBooleanCheck(spec_release.inhibitUpgrade, "IsPromoteInhibited", false, Report))
                     isPromoteInhibitedCase = true;
                 else
                     isPromoteInhibitedCase = false;
@@ -159,7 +154,7 @@ namespace DatabaseImport.ModuleImport
         private void TechnologieCase(Domain.Specification newSpec, OldDomain.Specs_GSM_3G legacySpec)
         {
             //SpecificationTechnologies relation table creation
-            if (NullBooleanCheck(legacySpec.C3g, "C3g", false))
+            if (Utils.NullBooleanCheck(legacySpec.C3g, "C3g", false, Report))
             {
                 Domain.Enum_Technology enumTechno = NewContext.Enum_Technology.Where(x => x.Code.Equals(Enum_TechnologyImport._3gCode)).FirstOrDefault();
                 Domain.SpecificationTechnology relationSpecTechno = new SpecificationTechnology()
@@ -170,7 +165,7 @@ namespace DatabaseImport.ModuleImport
                 NewContext.SpecificationTechnologies.Add(relationSpecTechno);
                 newSpec.SpecificationTechnologies.Add(relationSpecTechno);
             }
-            if (NullBooleanCheck(legacySpec.C2g, "C2g", false))
+            if (Utils.NullBooleanCheck(legacySpec.C2g, "C2g", false, Report))
             {
                 Domain.Enum_Technology enumTechno = NewContext.Enum_Technology.Where(x => x.Code.Equals(Enum_TechnologyImport._2gCode)).FirstOrDefault();
                 Domain.SpecificationTechnology relationSpecTechno = new SpecificationTechnology()
@@ -181,7 +176,7 @@ namespace DatabaseImport.ModuleImport
                 NewContext.SpecificationTechnologies.Add(relationSpecTechno);
                 newSpec.SpecificationTechnologies.Add(relationSpecTechno);
             }
-            if (NullBooleanCheck(legacySpec.LTE, "LTE", false))
+            if (Utils.NullBooleanCheck(legacySpec.LTE, "LTE", false, Report))
             {
                 Domain.Enum_Technology enumTechno = NewContext.Enum_Technology.Where(x => x.Code.Equals(Enum_TechnologyImport._lteCode)).FirstOrDefault();
                 Domain.SpecificationTechnology relationSpecTechno = new SpecificationTechnology()
@@ -207,7 +202,7 @@ namespace DatabaseImport.ModuleImport
             }
             else
             {
-                Report.LogWarning("Serie not found : " + serie + ", for Spec : " + legacySpec.Number);
+                Report.LogWarning("Serie not found : " + serie + " for Spec : " + legacySpec.Number);
             }
         }
 
@@ -251,48 +246,6 @@ namespace DatabaseImport.ModuleImport
             }
         }
 
-
-
-
-
-        /// <summary>
-        /// Convert bool? to bool and delivered a warning message, if the default value is applied, which contains a specific message that we could, partialy, defined (logDescriptionCase)
-        /// </summary>
-        /// <param name="boo"></param>
-        /// <param name="logDescriptionCase"></param>
-        /// <param name="defaultvalue"></param>
-        /// <returns></returns>
-        private bool NullBooleanCheck(bool? boo,string logDescriptionCase, bool defaultValue)
-        {
-            if (!boo.HasValue)
-            {
-                Report.LogWarning(logDescriptionCase + " not defined as true or false. By default convert to " + defaultValue.ToString() + ".");
-                boo = defaultValue;
-            }
-            return (bool)boo;
-        }
-
-        /// <summary>
-        /// Check string length + check null + Trim
-        /// </summary>
-        /// <param name="str"></param>
-        /// <param name="lenght"></param>
-        /// <param name="logDescriptionCase"></param>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        private string CheckString(string str, int lenght, string logDescriptionCase, string id)
-        {
-            if (String.IsNullOrEmpty(str))
-            {
-                return "";
-            }
-            else if (str.Length > lenght)
-            {
-                Report.LogWarning(logDescriptionCase + " : string too long for : " + id);
-                return "";
-            }
-            return str.Trim();
-        }
         #endregion
     }
 }

@@ -103,6 +103,12 @@ namespace Etsi.Ultimate.Tests
             set;
         }
 
+        public System.Data.Entity.IDbSet<SpecificationResponsibleGroup> SpecificationResponsibleGroups
+        {
+            get;
+            set;
+        }
+
 
         public void SetModified(object entity)
         {

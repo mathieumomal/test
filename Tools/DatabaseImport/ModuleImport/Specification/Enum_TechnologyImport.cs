@@ -29,10 +29,7 @@ namespace DatabaseImport.ModuleImport
 
         public void CleanDatabase()
         {
-            foreach (var enum_Technology in NewContext.Enum_Technology.ToList())
-            {
-                NewContext.Enum_Technology.Remove(enum_Technology);
-            }
+            //Procedure does this work
         }
 
         public void FillDatabase()

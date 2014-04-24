@@ -12,7 +12,7 @@ using Etsi.Ultimate.Business;
 
 namespace DatabaseImport.ModuleImport.Specification
 {
-    public class Speification_WorkitemImport : IModuleImport
+    public class Specification_WorkitemImport : IModuleImport
     {
         #region IModuleImport Membres
 

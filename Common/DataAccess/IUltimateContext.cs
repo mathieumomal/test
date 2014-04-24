@@ -34,6 +34,7 @@ namespace Etsi.Ultimate.DataAccess
         IDbSet<Specification_WorkItem> Specification_WorkItem { get; set; }
         IDbSet<SpecificationRapporteur> SpecificationRapporteurs { get; set; }
         IDbSet<SpecificationTechnology> SpecificationTechnologies { get; set; }
+        IDbSet<SpecificationResponsibleGroup> SpecificationResponsibleGroups { get; set; }
 
         void SetModified(object entity);
         void SetAdded(object entity);
