@@ -10,12 +10,23 @@ using Telerik.Web.UI;
 
 namespace Etsi.Ultimate.Controls
 {
+    /// <summary>
+    /// Community Control - Display the list of Communities
+    ///     Single Selection - View Mode - Selected community will display in label
+    ///                      - Edit Mode - Combobox will allow to select one community
+    ///     Multi Selection  - View Mode - Selected communities will display in label
+    ///                      - Edit Mode - Pencil icon will allow to open a popup & allow to select multiple communities
+    /// </summary>
     public partial class CommunityControl : System.Web.UI.UserControl
     {
         #region Properties
         private const int CONST_SELECT_WIDTH = 100;
 
         private List<int> _selectedCommunityIds;
+        /// <summary>
+        /// SelectedCommunityIds will be used in Multi Selection mode
+        /// to get/set the communitiy ids
+        /// </summary>
         public List<int> SelectedCommunityIds
         {
             get
@@ -38,12 +49,20 @@ namespace Etsi.Ultimate.Controls
         }
 
         private int _selectedCommunityID;
+        /// <summary>
+        /// SelectedCommunityID will be used in Single Selection mode
+        /// to get/set the community id
+        /// </summary>
         public int SelectedCommunityID
         {
             get { return Convert.ToInt32(rcbCommunity.SelectedValue); }
             set { _selectedCommunityID = value; }
         }
 
+        /// <summary>
+        /// TBSelectorIds will be used in Multi Selection mode
+        /// to get/set the default communities (usually it should be from TSG selector)
+        /// </summary>
         public List<int> TBSelectorIds
         {
             set
@@ -52,7 +71,15 @@ namespace Etsi.Ultimate.Controls
             }
         }
 
+        /// <summary>
+        /// True - Control will be rendered in Single Selection
+        /// False - Control will be rendered in Multi Selection
+        /// </summary>
         public bool IsSingleSelection { get; set; }
+        /// <summary>
+        /// True - Control will be rendered in Edit Mode
+        /// False - Control will be rendered in View Mode
+        /// </summary>
         public bool IsEditMode { get; set; }
 
         public int Width
@@ -78,9 +105,9 @@ namespace Etsi.Ultimate.Controls
             {
                 ICommunityService svc = ServicesFactory.Resolve<ICommunityService>();
                 List<Community> dataSource = svc.GetCommunities();
-                AddMissingParent(dataSource);
+                AddMissingParent(dataSource); // Add missing parents dynamically
 
-                if (IsSingleSelection)
+                if (IsSingleSelection) //Single Selection
                 {
                     imgBtnCommunity.Visible = false;
 
@@ -109,7 +136,7 @@ namespace Etsi.Ultimate.Controls
                         }
                     }
                 }
-                else
+                else // Multi Selection
                 {
                     rcbCommunity.Visible = false;
                     imgBtnCommunity.Visible = false;
@@ -197,10 +224,10 @@ namespace Etsi.Ultimate.Controls
 
             foreach (var community in DataSource)
             {
-                if (community.ParentTbId != null && community.ParentTbId != 0)
+                if (community.ParentTbId != null && community.ParentTbId != 0) //Don't process the root nodes
                 {
                     var parentCommunity = DataSource.Find(x => x.TbId == community.ParentTbId);
-                    if ((parentCommunity == null) && (!missingParentCommunities.Exists(x => x.TbId == community.ParentCommunityId)))
+                    if ((parentCommunity == null) && (!missingParentCommunities.Exists(x => x.TbId == community.ParentCommunityId))) //If parent missing, add the same
                     {
                         Community missingParentCommunity = new Community();
                         missingParentCommunity.TbId = community.ParentCommunityId;

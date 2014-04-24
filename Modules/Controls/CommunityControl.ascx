@@ -2,16 +2,23 @@
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 
 <script type="text/javascript">
+    //Open Community Selector
     function openCommunitySelector(sender, eventArgs) {
         var radWindowCommunity = $find("<%= rwCommunity.ClientID %>");
         radWindowCommunity.show();
     }
 
+    //Close Community Selector
     function closeCommunitySelector(sender, eventArgs) {
         var radWindowCommunity = $find("<%= rwCommunity.ClientID %>");
         radWindowCommunity.close();
     }
 
+    //If tree node checked/unchecked, then update the parent & child records as follows
+    //Node Checked   - Parent => Should be checked if all siblings checked
+    //               - Childs => All children should be checked
+    //Node UnChecked - Parent => Should be unchecked
+    //               - Childs => All children should be unchecked
     function clientNodeChecked(sender, eventArgs) {
         var childNodes = eventArgs.get_node().get_nodes();
         var isChecked = eventArgs.get_node().get_checked();
@@ -19,6 +26,8 @@
         UpdateParent(eventArgs.get_node(), isChecked);
     }
 
+    //Node Checked   - All children should be checked
+    //Node UnChecked - All children should be unchecked
     function UpdateAllChildren(nodes, checked) {
         for (var i = 0; i < nodes.get_count() ; i++) {
             if (checked) {
@@ -34,6 +43,8 @@
         }
     }
 
+    //Node Checked   - Parent should be checked if all siblings checked
+    //Node UnChecked - Parent should be unchecked
     function UpdateParent(node, checked) {
         if (node.get_parent() != node.get_treeView()) {
             if (checked) {
@@ -54,6 +65,7 @@
         }
     }
 
+    //Update all nodes with checked/unchecked
     function UpdateNodes(checked) {
         var tree = $find("<%= rtvCommunitySelector.ClientID %>");
         for (var i = 0; i < tree.get_allNodes().length; i++) {
@@ -61,6 +73,7 @@
         }
     }
 
+    //Set Default TBs checked
     function SetDefaultItems(sender, eventArgs) {
         var defaultTBIds = $("#<%= defaultTbIds.ClientID %>").val();
         var tbIDsList = defaultTBIds.split(",");
