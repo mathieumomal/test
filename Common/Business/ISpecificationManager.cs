@@ -1,19 +1,16 @@
-﻿using Etsi.Ultimate.DomainClasses;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
 
-namespace Etsi.Ultimate.Services
+namespace Etsi.Ultimate.Business
 {
-    public interface ISpecificationService
+    public interface ISpecificationManager
     {
-        /// <summary>
-        /// Returns A specification details including related remarks, history, Parent/Child specification, and releases
-        /// </summary>
-        /// <param name="specificationId">The identifier of the requested specification</param>
-        KeyValuePair<Specification, UserRightsContainer>  GetSpecificationDetailsById(int personId, int specificationId);
+        IUltimateUnitOfWork UoW { get; set; }
 
         /// <summary>
         /// Returns TRUE and nothing if the specification number is valid and FALSE and the list of the errors if the specification is not valid :
@@ -31,5 +28,11 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         bool CheckInhibitedToPromote(string specNumber);
 
+        /// <summary>
+        /// Find specifications by a keywords which match to their Number
+        /// </summary>
+        /// <param name="keywords"></param>
+        /// <returns></returns>
+        public List<Specification> LookForNumber(string specNumber);
     }
 }

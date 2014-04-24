@@ -64,6 +64,9 @@ namespace Etsi.Ultimate.Services
             Container.RegisterType<IUrlService, UrlService>(new TransientLifetimeManager());
             Container.RegisterType<IPersonService, PersonService>(new TransientLifetimeManager());
             Container.RegisterType<ISpecificationService, SpecificationServiceMock>(new TransientLifetimeManager());
+
+            Container.RegisterType<ISpecificationService, SpecificationService>(new TransientLifetimeManager());
+
             Container.RegisterType<ICommunityService, CommunityService>(new TransientLifetimeManager());
         }
     }

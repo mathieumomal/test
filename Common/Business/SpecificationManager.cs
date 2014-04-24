@@ -7,10 +7,11 @@ using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Business.Security;
+using System.Text.RegularExpressions;
 
 namespace Etsi.Ultimate.Business
 {
-    public class SpecificationManager
+    public class SpecificationManager : ISpecificationManager
     {
 
         private ISpecificationRepository specificationRepo;
@@ -49,5 +50,55 @@ namespace Etsi.Ultimate.Business
 
             return new KeyValuePair<Specification, UserRightsContainer>(specification, personRights);
         }
+
+
+
+        #region ISpecificationManager Membres
+
+
+        public KeyValuePair<bool, List<string>> CheckNumber(string specNumber)
+        {
+            #region local variable
+            var state = true;
+            var errors = new List<string>();
+            #endregion
+
+            #region Format verification
+            //Match match = Regex.Match(specNumber, @"^[0-9]{2}\.[a-zA-Z0-9]{1,3}(\-(p|s|P|S)){0,2}$");
+            Match match = Regex.Match(specNumber, @"^[0-9]{2}\.(\w|\-)*$");
+            if (!match.Success)
+            {
+                errors.Add(Localization.Specification_ERR002_Number_Invalid_Format);
+            }
+            #endregion
+
+            #region Existence verification
+            
+
+            #endregion
+
+
+            if (errors.Count() > 0)
+                state = false;
+            return new KeyValuePair<bool, List<string>>(state, errors);
+        }
+
+        public bool CheckInhibitedToPromote(string specNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<Specification> LookForNumber(string specNumber)
+        {
+            ISpecificationRepository repo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            repo.UoW = UoW;
+
+            return repo
+                    .All
+                    .Where(x => (x.IsActive && x.Number.Contains(specNumber)))
+                    .ToList();
+        }
+
+        #endregion
     }
 }

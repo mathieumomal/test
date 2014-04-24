@@ -339,7 +339,21 @@ namespace Etsi.Ultimate.Services
             userRightsContainer.AddRight(Domain.Enum_UserRights.Specification_EditFull);
             userRightsContainer.AddRight(Domain.Enum_UserRights.Specification_Withdraw);
             return new KeyValuePair<List<Domain.Specification>, Domain.UserRightsContainer>(specifications, userRightsContainer);
-
         }
+
+        #region ISpecificationService Membres
+
+
+        public KeyValuePair<bool, List<string>> CheckNumber(string specNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool CheckInhibitedToPromote(string specNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

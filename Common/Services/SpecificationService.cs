@@ -27,5 +27,32 @@ namespace Etsi.Ultimate.Services
                 return specificationManager.GetSpecificationById(personId, specificationId);
             }        
         }
+
+
+
+        #region ISpecificationService Membres
+
+
+        public KeyValuePair<bool, List<string>> CheckNumber(string specNumber)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specificationManager = new SpecificationManager();
+                specificationManager.UoW = uoW;
+                return specificationManager.CheckNumber(specNumber);
+            }
+        }
+
+        public bool CheckInhibitedToPromote(string specNumber)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specificationManager = new SpecificationManager();
+                specificationManager.UoW = uoW;
+                return specificationManager.CheckInhibitedToPromote(specNumber);
+            }
+        }
+
+        #endregion
     }
 }

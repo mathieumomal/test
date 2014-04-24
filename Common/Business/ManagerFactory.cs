@@ -63,6 +63,7 @@ namespace Etsi.Ultimate.Business
             Container.RegisterType<IRightsManager, RightsManager>(new TransientLifetimeManager());
             Container.RegisterType<IPersonManager, PersonManager>(new TransientLifetimeManager());
             Container.RegisterType<IWorkItemCsvParser, WorkItemCsvParser>(new TransientLifetimeManager());
+            Container.RegisterType<ISpecificationManager, SpecificationManager>(new TransientLifetimeManager());
         }
     }
 }
