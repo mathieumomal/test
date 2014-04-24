@@ -153,6 +153,19 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.Contains("UPCON-DOT", wiRepository.GetAllAcronyms());
         }
 
+        [Test, TestCaseSource("WorkItemData")]
+        public void GetWorkItemsByReleaseId(WorkItemFakeDBSet workItemData)
+        {
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var wiRepository = new WorkItemRepository() { UoW = uow };
+
+            Assert.AreEqual(18, wiRepository.GetAllWorkItemsForReleases(new List<int>() { 527 }).Count);
+        }
+
         /// <summary>
         /// Create Mocks to simulate DB with objects
         /// </summary>

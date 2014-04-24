@@ -117,6 +117,18 @@ namespace Etsi.Ultimate.Repositories
         }
 
         /// <summary>
+        /// Gets the list of all workitems for a given list of release, regardless of any other criteria.
+        /// </summary>
+        /// <param name="releaseIds">List of releases IDs</param>
+        /// <returns>List of work items.</returns>
+        public List<WorkItem> GetAllWorkItemsForReleases(List<int> releaseIds)
+        {
+            return AllIncluding(t => t.Release, t => t.Remarks, t => t.WorkItems_ResponsibleGroups)
+                .Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value))
+                .ToList();
+        }
+
+        /// <summary>
         /// Get count of WorkItems
         /// </summary>
         /// <param name="releaseIds">List of Release Ids</param>
@@ -177,6 +189,13 @@ namespace Etsi.Ultimate.Repositories
         List<WorkItem> GetWorkItemsBySearchCriteria(string searchString);
 
         /// <summary>
+        /// Gets the list of all workitems for a given list of release, regardless of any other criteria.
+        /// </summary>
+        /// <param name="releaseIds">List of releases IDs</param>
+        /// <returns>List of work items.</returns>
+        List<WorkItem> GetAllWorkItemsForReleases(List<int> releaseIds);
+
+        /// <summary>
         /// Get count of WorkItems
         /// </summary>
         /// <param name="releaseIds">List of Release Ids</param>
@@ -187,6 +206,7 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="tbIds">List of Technical Bodies</param>
         /// <returns>Work Item Count</returns>
         int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName, List<int> tbIds);
+
 
         /// <summary>
         /// Get list of distinct Acronyms from various releases

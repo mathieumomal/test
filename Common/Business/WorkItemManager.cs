@@ -32,6 +32,15 @@ namespace Etsi.Ultimate.Business
             IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
             repo.UoW = _uoW;
 
+            // Search simplification:
+            // In case only the Releases and the granularity are specified, we anyway will need to retrieve all the work items
+            // from the releases. Thus, we retrieve them directly, to speed up performances.
+            // We might want here to refine the algorithm to the TSG selection as well.
+            if (string.IsNullOrEmpty(wiAcronym) && string.IsNullOrEmpty(wiName) && tbIds.Count == 0 && !hidePercentComplete)
+            {
+                return new KeyValuePair<List<WorkItem>, UserRightsContainer>(repo.GetAllWorkItemsForReleases(releaseIds), GetRights(personId));
+            }
+
             List<WorkItem> AllWorkItems = new List<WorkItem>();
 
             var workItemsOfSearchCriteria = repo.GetWorkItemsBySearchCriteria(releaseIds, granularity, wiAcronym, wiName, tbIds);
