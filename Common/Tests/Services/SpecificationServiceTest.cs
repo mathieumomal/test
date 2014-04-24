@@ -72,14 +72,8 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual("Withdrawn before change control", result.Key.Status);
             Assert.AreEqual("SP", result.Key.PrimeResponsibleGroupShortName);
             Assert.AreEqual("S1,S2", result.Key.SecondaryResponsibleGroupsShortNames);
+            Assert.AreEqual("S1,S2", result.Key.SecondaryResponsibleGroupsShortNames);
         }
-
-
-
-
-
-
-
 
         [Test, TestCaseSource("GetSpecificicationNumbersTestFormat")]
         public void TestCheckNumberIsValid(string specNumber, bool expectResult, int messageCount)
