@@ -56,7 +56,7 @@
                 EnableEmbeddedBaseStylesheet="false" 
                 Skin="Ultimate"
                 AllowPaging="true"
-                PageSize="1"
+                PageSize="50"
                 AllowFilteringByColumn="false" 
                 AutoGenerateColumns="false"                
                 OnNeedDataSource="rgSpecificationList_NeedDataSource"

@@ -122,10 +122,10 @@ namespace Etsi.Ultimate.DomainClasses
         {
             get
             {
-                if (Type == null)
+                if (IsTS == null)
                     return String.Empty;
                 else
-                    return (this.Type.Value) ? "TS" : "TR";
+                    return (IsTS.Value) ? "TS" : "TR";
             }
         }
     }
