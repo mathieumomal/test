@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="WorkItem" type="Module" version="00.03.03">
+    <package name="WorkItem" type="Module" version="00.04.00">
       <friendlyName>WorkItem</friendlyName>
       <description>WorkItem module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
