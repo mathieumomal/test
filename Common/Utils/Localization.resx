@@ -129,6 +129,12 @@
   <data name="History_Release_Updated" xml:space="preserve">
     <value>Release updated. Changes:&lt;br /&gt;{0}</value>
   </data>
+  <data name="Specification_ERR002_Number_Invalid_Format" xml:space="preserve">
+    <value>Invalid format for specification number. Should be “ab.xyz”.</value>
+  </data>
+  <data name="Specification_ERR003_Number_Already_Use" xml:space="preserve">
+    <value>Specification number already in use by “{0}”.</value>
+  </data>
   <data name="WorkItem_Import_Acronym_Too_Long" xml:space="preserve">
     <value>{0}, Uid {1}: Acronym {2} is more than 50 characters. It has been truncated.</value>
   </data>

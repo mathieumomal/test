@@ -29,7 +29,6 @@ namespace Etsi.Ultimate.DomainClasses
         }
     
         public int Pk_SpecificationId { get; set; }
-        public Nullable<bool> Type { get; set; }
         public string Number { get; set; }
         public bool IsActive { get; set; }
         public Nullable<bool> IsUnderChangeControl { get; set; }
@@ -39,15 +38,15 @@ namespace Etsi.Ultimate.DomainClasses
         public Nullable<bool> ComIMS { get; set; }
         public Nullable<bool> EPS { get; set; }
         public Nullable<bool> C_2gCommon { get; set; }
-        public Nullable<bool> DefinitivelyWithdrawn { get; set; }
         public Nullable<System.DateTime> CreationDate { get; set; }
-        public Nullable<System.DateTime> UpdateDate { get; set; }
-        public byte[] UpdateBy { get; set; }
         public Nullable<System.DateTime> TitleVerified { get; set; }
         public string URL { get; set; }
         public string ITU_Description { get; set; }
         public Nullable<int> Fk_SerieId { get; set; }
         public Nullable<int> Fk_SpecificationStageId { get; set; }
+        public Nullable<bool> IsTS { get; set; }
+        public Nullable<System.DateTime> MOD_TS { get; set; }
+        public string MOD_BY { get; set; }
     
         public virtual Enum_Serie Enum_Serie { get; set; }
         public virtual ICollection<History> Histories { get; set; }

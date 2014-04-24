@@ -147,17 +147,9 @@
             <End Role="Specification" EntitySet="Specification" />
             <End Role="SpecificationTechnologies" EntitySet="SpecificationTechnologies" />
           </AssociationSet>
-          <AssociationSet Name="FK_SpecificationChild" Association="Etsi.Ultimate.DataAccess.Store.FK_SpecificationChild">
-            <End Role="Specification" EntitySet="Specification" />
-            <End Role="SpecifcationsGenealogy" EntitySet="SpecifcationsGenealogy" />
-          </AssociationSet>
           <AssociationSet Name="FK_SpecificationID" Association="Etsi.Ultimate.DataAccess.Store.FK_SpecificationID">
             <End Role="Specification" EntitySet="Specification" />
             <End Role="Specification_WorkItem" EntitySet="Specification_WorkItem" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SpecificationParent" Association="Etsi.Ultimate.DataAccess.Store.FK_SpecificationParent">
-            <End Role="Specification" EntitySet="Specification" />
-            <End Role="SpecifcationsGenealogy" EntitySet="SpecifcationsGenealogy" />
           </AssociationSet>
           <AssociationSet Name="FK_SpecificationStageID" Association="Etsi.Ultimate.DataAccess.Store.FK_SpecificationStageID">
             <End Role="Enum_SpecificationStage" EntitySet="Enum_SpecificationStage" />
@@ -214,7 +206,9 @@
           </Key>
           <Property Name="Pk_Enum_SerieId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Code" Type="varchar" Nullable="false" MaxLength="20" />
-          <Property Name="Description" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Description" Type="varchar" Nullable="false" MaxLength="100" />
+          <Property Name="Series_2g" Type="bit" />
+          <Property Name="Series_3g" Type="bit" />
         </EntityType>
         <EntityType Name="Enum_SpecificationStage">
           <Key>
@@ -305,10 +299,10 @@
         </EntityType>
         <EntityType Name="SpecifcationsGenealogy">
           <Key>
-            <PropertyRef Name="Fk_SpecificationChildId" />
+            <PropertyRef Name="Fk_SpecificationId" />
             <PropertyRef Name="Fk_SpecificationParentId" />
           </Key>
-          <Property Name="Fk_SpecificationChildId" Type="int" Nullable="false" />
+          <Property Name="Fk_SpecificationId" Type="int" Nullable="false" />
           <Property Name="Fk_SpecificationParentId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Specification">
@@ -316,7 +310,7 @@
             <PropertyRef Name="Pk_SpecificationId" />
           </Key>
           <Property Name="Pk_SpecificationId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Type" Type="bit" />
+          <Property Name="IsTS" Type="bit" />
           <Property Name="Number" Type="varchar" MaxLength="20" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="IsUnderChangeControl" Type="bit" />
@@ -326,13 +320,12 @@
           <Property Name="ComIMS" Type="bit" />
           <Property Name="EPS" Type="bit" />
           <Property Name="_2gCommon" Type="bit" />
-          <Property Name="DefinitivelyWithdrawn" Type="bit" />
           <Property Name="CreationDate" Type="datetime" />
-          <Property Name="UpdateDate" Type="datetime" />
-          <Property Name="UpdateBy" Type="varbinary" MaxLength="50" />
+          <Property Name="MOD_TS" Type="datetime" />
+          <Property Name="MOD_BY" Type="nvarchar" MaxLength="20" />
           <Property Name="TitleVerified" Type="datetime" />
           <Property Name="URL" Type="varchar" MaxLength="256" />
-          <Property Name="ITU_Description" Type="varchar" MaxLength="200" />
+          <Property Name="ITU_Description" Type="varchar" MaxLength="1000" />
           <Property Name="Fk_SerieId" Type="int" />
           <Property Name="Fk_SpecificationStageId" Type="int" />
         </EntityType>
@@ -678,18 +671,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SpecificationChild">
-          <End Role="Specification" Type="Etsi.Ultimate.DataAccess.Store.Specification" Multiplicity="1" />
-          <End Role="SpecifcationsGenealogy" Type="Etsi.Ultimate.DataAccess.Store.SpecifcationsGenealogy" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Specification">
-              <PropertyRef Name="Pk_SpecificationId" />
-            </Principal>
-            <Dependent Role="SpecifcationsGenealogy">
-              <PropertyRef Name="Fk_SpecificationChildId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_SpecificationID">
           <End Role="Specification" Type="Etsi.Ultimate.DataAccess.Store.Specification" Multiplicity="1" />
           <End Role="Specification_WorkItem" Type="Etsi.Ultimate.DataAccess.Store.Specification_WorkItem" Multiplicity="*" />
@@ -699,18 +680,6 @@
             </Principal>
             <Dependent Role="Specification_WorkItem">
               <PropertyRef Name="Fk_SpecificationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SpecificationParent">
-          <End Role="Specification" Type="Etsi.Ultimate.DataAccess.Store.Specification" Multiplicity="1" />
-          <End Role="SpecifcationsGenealogy" Type="Etsi.Ultimate.DataAccess.Store.SpecifcationsGenealogy" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Specification">
-              <PropertyRef Name="Pk_SpecificationId" />
-            </Principal>
-            <Dependent Role="SpecifcationsGenealogy">
-              <PropertyRef Name="Fk_SpecificationParentId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1273,8 +1242,10 @@
           </Key>
           <Property Type="Int32" Name="Pk_Enum_SerieId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="Code" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Description" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Specifications" Relationship="Etsi.Ultimate.DataAccess.FK_SerieID" FromRole="Enum_Serie" ToRole="Specification" />
+          <Property Type="Boolean" Name="Series_2g" />
+          <Property Type="Boolean" Name="Series_3g" />
         </EntityType>
         <EntityType Name="Enum_Technology">
           <Key>
@@ -1290,7 +1261,6 @@
             <PropertyRef Name="Pk_SpecificationId" />
           </Key>
           <Property Type="Int32" Name="Pk_SpecificationId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Boolean" Name="Type" />
           <Property Type="String" Name="Number" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Type="Boolean" Name="IsActive" Nullable="false" />
           <Property Type="Boolean" Name="IsUnderChangeControl" />
@@ -1300,13 +1270,10 @@
           <Property Type="Boolean" Name="ComIMS" />
           <Property Type="Boolean" Name="EPS" />
           <Property Type="Boolean" Name="C_2gCommon" />
-          <Property Type="Boolean" Name="DefinitivelyWithdrawn" />
           <Property Type="DateTime" Name="CreationDate" Precision="3" />
-          <Property Type="DateTime" Name="UpdateDate" Precision="3" />
-          <Property Type="Binary" Name="UpdateBy" MaxLength="50" FixedLength="false" />
           <Property Type="DateTime" Name="TitleVerified" Precision="3" />
           <Property Type="String" Name="URL" MaxLength="256" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="ITU_Description" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ITU_Description" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="Fk_SerieId" />
           <NavigationProperty Name="Enum_Serie" Relationship="Etsi.Ultimate.DataAccess.FK_SerieID" FromRole="Specification" ToRole="Enum_Serie" />
           <NavigationProperty Name="Histories" Relationship="Etsi.Ultimate.DataAccess.FK_History_Specification" FromRole="Specification" ToRole="History" />
@@ -1320,6 +1287,9 @@
           <NavigationProperty Name="SpecificationResponsibleGroups" Relationship="Etsi.Ultimate.DataAccess.RG_FK_SpecificationID" FromRole="Specification" ToRole="SpecificationResponsibleGroup" />
           <NavigationProperty Name="SpecificationChilds" Relationship="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" FromRole="Specification" ToRole="Specification1" />
           <NavigationProperty Name="SpecificationParents" Relationship="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" FromRole="Specification1" ToRole="Specification" />
+          <Property Type="Boolean" Name="IsTS" />
+          <Property Type="DateTime" Name="MOD_TS" Precision="3" />
+          <Property Type="String" Name="MOD_BY" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Specification_Release">
           <Key>
@@ -1791,6 +1761,8 @@
           <EntitySetMapping Name="Enum_Serie">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Enum_Serie">
               <MappingFragment StoreEntitySet="Enum_Serie">
+                <ScalarProperty Name="Series_3g" ColumnName="Series_3g" />
+                <ScalarProperty Name="Series_2g" ColumnName="Series_2g" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="Pk_Enum_SerieId" ColumnName="Pk_Enum_SerieId" />
@@ -1809,15 +1781,15 @@
           <EntitySetMapping Name="Specifications">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Specification">
               <MappingFragment StoreEntitySet="Specification">
+                <ScalarProperty Name="MOD_BY" ColumnName="MOD_BY" />
+                <ScalarProperty Name="MOD_TS" ColumnName="MOD_TS" />
+                <ScalarProperty Name="IsTS" ColumnName="IsTS" />
                 <ScalarProperty Name="Fk_SpecificationStageId" ColumnName="Fk_SpecificationStageId" />
                 <ScalarProperty Name="Fk_SerieId" ColumnName="Fk_SerieId" />
                 <ScalarProperty Name="ITU_Description" ColumnName="ITU_Description" />
                 <ScalarProperty Name="URL" ColumnName="URL" />
                 <ScalarProperty Name="TitleVerified" ColumnName="TitleVerified" />
-                <ScalarProperty Name="UpdateBy" ColumnName="UpdateBy" />
-                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
                 <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
-                <ScalarProperty Name="DefinitivelyWithdrawn" ColumnName="DefinitivelyWithdrawn" />
                 <ScalarProperty Name="C_2gCommon" ColumnName="_2gCommon" />
                 <ScalarProperty Name="EPS" ColumnName="EPS" />
                 <ScalarProperty Name="ComIMS" ColumnName="ComIMS" />
@@ -1827,7 +1799,6 @@
                 <ScalarProperty Name="IsUnderChangeControl" ColumnName="IsUnderChangeControl" />
                 <ScalarProperty Name="IsActive" ColumnName="IsActive" />
                 <ScalarProperty Name="Number" ColumnName="Number" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="Pk_SpecificationId" ColumnName="Pk_SpecificationId" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1905,11 +1876,11 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <AssociationSetMapping Name="SpecifcationsGenealogy" TypeName="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" StoreEntitySet="SpecifcationsGenealogy">
+            <EndProperty Name="Specification">
+              <ScalarProperty Name="Pk_SpecificationId" ColumnName="Fk_SpecificationId" />
+            </EndProperty>
             <EndProperty Name="Specification1">
               <ScalarProperty Name="Pk_SpecificationId" ColumnName="Fk_SpecificationParentId" />
-            </EndProperty>
-            <EndProperty Name="Specification">
-              <ScalarProperty Name="Pk_SpecificationId" ColumnName="Fk_SpecificationChildId" />
             </EndProperty>
           </AssociationSetMapping>
         </EntityContainerMapping>

@@ -64,6 +64,11 @@
   <ItemGroup>
     <Compile Include="ModuleImport\IModuleImport.cs" />
     <Compile Include="ModuleImport\ReleaseImport.cs" />
+    <Compile Include="ModuleImport\Specification\Enum_SerieImport.cs" />
+    <Compile Include="ModuleImport\Specification\Enum_TechnologyImport.cs" />
+    <Compile Include="ModuleImport\Specification\SpecificationImport.cs" />
+    <Compile Include="ModuleImport\Specification\SpecificationsGenealogy.cs" />
+    <Compile Include="ModuleImport\Specification\Speification_WorkitemImport.cs" />
     <Compile Include="ModuleImport\WorkItemImport.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

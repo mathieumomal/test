@@ -23,6 +23,8 @@ namespace Etsi.Ultimate.DomainClasses
         public int Pk_Enum_SerieId { get; set; }
         public string Code { get; set; }
         public string Description { get; set; }
+        public Nullable<bool> Series_2g { get; set; }
+        public Nullable<bool> Series_3g { get; set; }
     
         public virtual ICollection<Specification> Specifications { get; set; }
     

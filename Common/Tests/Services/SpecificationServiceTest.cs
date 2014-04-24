@@ -44,6 +44,51 @@ namespace Etsi.Ultimate.Tests.Services
             //Assert.AreEqual("Withdrawn before change control", result.Key.Status);
         }
 
+
+
+
+
+
+
+
+        [Test, TestCaseSource("GetSpecificicationNumbersTestFormat")]
+        public void TestCheckNumberIsValid(string specNumber, bool expectResult, int messageCount)
+        {
+            var service = new SpecificationService();
+            var results = service.CheckNumber(specNumber.ToString());
+
+            Assert.AreEqual(expectResult, results.Key);
+            if (!results.Key)
+            {
+                Assert.AreEqual(messageCount, results.Value.Count());
+            }
+        }
+
+
+        #region data
+        private IEnumerable<object[]> GetSpecificicationNumbersTestFormat
+        {
+            get
+            {
+                //Good format
+                yield return new object[] { "01.0", true, 0 };
+                yield return new object[] { "01.00U", true, 0 };
+                yield return new object[] { "42.0UU-P", true, 0 };
+                yield return new object[] { "99.Uu-P-s", true, 0 };
+                yield return new object[] { "00.abc-P-", true, 0 };
+                yield return new object[] { "01.abc-P-s-", true, 0 };
+                //Bad format
+                yield return new object[] { "test", false, 1 };
+                yield return new object[] { "9.A.", false, 1 };
+                yield return new object[] { "9.A.-", false, 1 };
+                yield return new object[] { "xy.abc-", false, 1 };
+                yield return new object[] { "xy.abc-", false, 1 };
+                
+            }
+        }
+
+
+
         /// <summary>
         /// Get the WorkItem Data from csv
         /// </summary>
@@ -58,7 +103,7 @@ namespace Etsi.Ultimate.Tests.Services
                     Pk_SpecificationId = 1,
                     Number = "00.01U",
                     Title = "First specification",
-                    Type = new Nullable<bool>(true),
+                    IsTS = new Nullable<bool>(true),
 
                     IsActive = false,
                     IsUnderChangeControl = new Nullable<bool>(false),
@@ -124,9 +169,8 @@ namespace Etsi.Ultimate.Tests.Services
                     ComIMS = new Nullable<bool>(true),
                     EPS = null,
                     C_2gCommon = null,
-                    DefinitivelyWithdrawn = new Nullable<bool>(true),
                     CreationDate = null,
-                    UpdateDate = null,
+                    MOD_TS = null,
                     TitleVerified = null,
                     Fk_SerieId = 1,
                     Fk_SpecificationStageId = 1,
@@ -148,6 +192,8 @@ namespace Etsi.Ultimate.Tests.Services
                 yield return specificationFakeDBSet;
             }
         }
+        #endregion
+
     }
 
 }

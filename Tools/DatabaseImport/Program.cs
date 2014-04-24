@@ -16,6 +16,7 @@ namespace DatabaseImport
         static void Main(string[] args)
         {
             var newContext = new UltimateContext();
+            
             var oldContext = new TmpDB();
             var report = new ImportReport();
 
@@ -23,9 +24,13 @@ namespace DatabaseImport
             // CONFIGURE HERE
             var operations = new List<IModuleImport>();
             
-            
+            //---> (First to FILLDATABASE)
             operations.Add(new ReleaseImport());
             operations.Add(new WorkItemImport());
+            operations.Add(new Enum_SerieImport());
+            operations.Add(new Enum_TechnologyImport());
+            operations.Add(new SpecificationImport());//+SpecificationTechnologies
+            //---> (First to CLEANDATABASE)
 
             Console.WriteLine("Setting up the different classes");
 
@@ -63,7 +68,9 @@ namespace DatabaseImport
 
             Console.WriteLine("------------------- REPORT ---------------------");
             Console.WriteLine(report.PrintReport());            
-
+            
+            Console.Read();
+            Console.Read();
             Console.Read();
         }
     }

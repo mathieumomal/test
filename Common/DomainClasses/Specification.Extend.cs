@@ -78,9 +78,9 @@ namespace Etsi.Ultimate.DomainClasses
         {
             get{
                 string specificationType = string.Empty;
-                if (Type == null)
+                if (IsTS == null)
                     return specificationType;
-                if (Type.Value)
+                if (IsTS.Value)
                 {
                     specificationType = "Technical specification (TS)";
                 }

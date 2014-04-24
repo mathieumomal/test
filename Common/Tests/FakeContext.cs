@@ -97,6 +97,12 @@ namespace Etsi.Ultimate.Tests
             set;
         }
 
+        public System.Data.Entity.IDbSet<SpecificationTechnology> SpecificationTechnologies
+        {
+            get;
+            set;
+        }
+
 
         public void SetModified(object entity)
         {
