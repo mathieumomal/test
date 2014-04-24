@@ -41,7 +41,10 @@ namespace Etsi.Ultimate.Services
                 {
                     result.Key.SpecificationChilds.ToList().ForEach(s => s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId));
                 }
-                return specificationManager.GetSpecificationById(personId, specificationId);
+                result.Key.SpecificationTechnologiesList = GetASpecificationTechnologiesBySpecId(result.Key.Pk_SpecificationId);
+                result.Key.SpecificationWIsList = GetSpecificationWorkItemsBySpecId(result.Key.Pk_SpecificationId);
+                //return specificationManager.GetSpecificationById(personId, specificationId);
+                return result;
             }        
         }
 
@@ -55,6 +58,25 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        public List<Enum_Technology> GetASpecificationTechnologiesBySpecId(int id)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specTechnologiesManager = new SpecificationTechnologiesManager();
+                specTechnologiesManager.UoW = uoW;
+                return specTechnologiesManager.GetASpecificationTechnologiesBySpecId(id);
+            }
+        }
+
+        public List<WorkItem> GetSpecificationWorkItemsBySpecId(int id)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specWorkItemsManager = new SpecificationWorkItemManager();
+                specWorkItemsManager.UoW = uoW;
+                return specWorkItemsManager.GetSpecificationWorkItemsBySpecId(id);
+            }
+        }
 
 
         #region ISpecificationService Membres

@@ -61,6 +61,8 @@
     <Compile Include="ReleaseRepository.cs" />
     <Compile Include="RepositoryFactory.cs" />
     <Compile Include="SpecificationRepository.cs" />
+    <Compile Include="SpecificationTechnologiesRepository.cs" />
+    <Compile Include="SpecificationWorkItemRepository.cs" />
     <Compile Include="UrlRepository.cs" />
     <Compile Include="UserRightsRepository.cs" />
     <Compile Include="UltimateUnitOfWork.cs" />

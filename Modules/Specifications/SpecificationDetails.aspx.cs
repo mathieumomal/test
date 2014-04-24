@@ -183,14 +183,16 @@ namespace Etsi.Ultimate.Module.Specifications
                 initialPlannedReleaseVal.Text = string.IsNullOrEmpty(specification.SpecificationInitialRelease) ? CONST_EMPTY_FIELD : specification.SpecificationInitialRelease; 
                 internalVal.Checked = specification.IsForPublication == null ? true : !specification.IsForPublication.Value;
                 commonIMSVal.Checked = specification.ComIMS == null ? false : specification.ComIMS.Value;
-                
-                foreach (Domain.SpecificationTechnology technology in specification.SpecificationTechnologies)
+                if (specification.SpecificationTechnologiesList != null && specification.SpecificationTechnologiesList.Count > 0)
                 {
-                    if (technology.Enum_Technology != null && radioTechnologyVals.Items.FindByValue(technology.Enum_Technology.Pk_Enum_TechnologyId.ToString()) != null)
+                    foreach (Domain.Enum_Technology technology in specification.SpecificationTechnologiesList)
                     {
-                        radioTechnologyVals.Items.FindByValue(technology.Enum_Technology.Pk_Enum_TechnologyId.ToString()).Selected = true;
-                    }
+                        if (technology != null && radioTechnologyVals.Items.FindByValue(technology.Pk_Enum_TechnologyId.ToString()) != null)
+                        {
+                            radioTechnologyVals.Items.FindByValue(technology.Pk_Enum_TechnologyId.ToString()).Selected = true;
+                        }
 
+                    }
                 }
                 disableAllCheckBoxes();
 
@@ -228,12 +230,12 @@ namespace Etsi.Ultimate.Module.Specifications
                 else
                     childSpecifications.DataSource = null;
 
-                List<Domain.WorkItem> workItemsSource = new List<Domain.WorkItem>();
-                if (specification.Specification_WorkItem != null && specification.Specification_WorkItem.ToList().Count>0)
-                    specification.Specification_WorkItem.ToList().ForEach(s => workItemsSource.Add(s.WorkItem));
+                /*List<Domain.WorkItem> workItemsSource = new List<Domain.WorkItem>();
+                if (specification.SpecificationWIsList != null && specification.SpecificationWIsList.Count > 0)
+                    specification.Specification_WorkItem.ToList().ForEach(s => workItemsSource.Add(s.WorkItem));*/
                 SpecificationRelatedWorkItems.IsEditMode = false;
                 SpecificationRelatedWorkItems.ScrollHeight = 140;
-                SpecificationRelatedWorkItems.DataSource = workItemsSource;
+                SpecificationRelatedWorkItems.DataSource = specification.SpecificationWIsList;
                
             }
             

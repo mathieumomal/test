@@ -73,6 +73,7 @@
     <Compile Include="RightsManager.cs" />
     <Compile Include="SpecificationManager.cs" />
     <Compile Include="SpecificationTechnologiesManager.cs" />
+    <Compile Include="SpecificationWorkItemManager.cs" />
     <Compile Include="UrlManager.cs" />
     <Compile Include="WorkItemCsvParser.cs" />
     <Compile Include="WorkItemImporter.cs" />

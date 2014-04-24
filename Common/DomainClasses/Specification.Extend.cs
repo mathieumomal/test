@@ -66,7 +66,7 @@ namespace Etsi.Ultimate.DomainClasses
 
                 else
                 {
-                    if (!IsUnderChangeControl.Value)
+                    if (IsUnderChangeControl == null || !IsUnderChangeControl.Value)
                         specificationStatus = "Withdrawn before change control";
                     else
                         specificationStatus = "Withdrawn after change control";
@@ -114,5 +114,8 @@ namespace Etsi.Ultimate.DomainClasses
         }
 
         public string SpecificationInitialRelease { get; set; }
+
+        public List<Enum_Technology> SpecificationTechnologiesList { get; set; }
+        public List<WorkItem> SpecificationWIsList { get; set; }
     }
 }

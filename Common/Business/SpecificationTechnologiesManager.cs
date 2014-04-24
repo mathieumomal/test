@@ -21,5 +21,14 @@ namespace Etsi.Ultimate.Business
             repo.UoW = UoW;
             return repo.All.ToList();
         }
+
+        public List<Enum_Technology> GetASpecificationTechnologiesBySpecId(int id)
+        {
+            List<Enum_Technology> result = new List<Enum_Technology>();
+            ISpecificationTechnologiesRepository repo = RepositoryFactory.Resolve<ISpecificationTechnologiesRepository>();
+            repo.UoW = UoW;
+            repo.All.Where(s => s.Fk_Specification == id).ToList().ForEach(e => result.Add(e.Enum_Technology));
+            return result;
+        }
     }
 }
