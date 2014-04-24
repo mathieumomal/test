@@ -33,6 +33,6 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="keywords"></param>
         /// <returns></returns>
-        public List<Specification> LookForNumber(string specNumber);
+        List<Specification> LookForNumber(string specNumber);
     }
 }
