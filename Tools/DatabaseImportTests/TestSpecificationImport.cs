@@ -43,10 +43,12 @@ namespace DatabaseImportTests
             var newDbSet = new SpecificationFakeDBSet();
             var techSpecSet = new SpecificationTechnologyFakeDBSet();
             var serieSpecSet = new Enum_SerieFakeDBSet();
+            var remarkSet = new RemarkFakeDbSet();
             newContext.Stub(ctx => ctx.Specifications).Return(newDbSet);
             newContext.Stub(ctx => ctx.SpecificationTechnologies).Return(techSpecSet);
             newContext.Stub(ctx => ctx.Enum_Technology).Return(GetTechnos());
             newContext.Stub(ctx => ctx.Enum_Serie).Return(GetSeries());
+            newContext.Stub(ctx => ctx.Remarks).Return(remarkSet);
 
             // Legacy context mock
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
@@ -57,6 +59,7 @@ namespace DatabaseImportTests
             //Values to test
             var updateDate = DateTime.Now;
             var url = "#http://www.3gpp.org/ftp/Specs/archive/02_series/02.72/#";
+            var remark = "test remarks. test remarks 2...";
 
 
             legacyDbSet.Add(
@@ -71,7 +74,7 @@ namespace DatabaseImportTests
                     WG_prime = "S1",
                     WG_other = "-",
                     rapporteur_id = 26063,
-                    general_remarks = null,
+                    general_remarks = remark,
                     C2g = true,
                     C3g = false,
                     txfer_to_3GPP_notes = null,
@@ -164,7 +167,9 @@ namespace DatabaseImportTests
 
             //SERIE
             Assert.AreEqual(2, newSpec.Fk_SerieId);
-            
+
+            //REMARKS
+            Assert.AreEqual(2, newSpec.Remarks.Count);
         }
 
 

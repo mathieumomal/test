@@ -93,6 +93,8 @@ namespace DatabaseImport.ModuleImport
 
                 TechnologieCase(newSpec, legacySpec);
 
+                RemarksCase(newSpec, legacySpec);
+
 
                 NewContext.Specifications.Add(newSpec);
                 count++;
@@ -218,6 +220,40 @@ namespace DatabaseImport.ModuleImport
         {
             return URL.Replace("#", "");
         }
+
+        /// <summary>
+        /// Handled specification remarks
+        /// </summary>
+        /// <param name="newSpec"></param>
+        /// <param name="legacySpec"></param>
+        private void RemarksCase(Domain.Specification newSpec, OldDomain.Specs_GSM_3G legacySpec)
+        {
+            var remarksField = legacySpec.general_remarks;
+
+            if (remarksField == null || remarksField.Length == 0)
+                return;
+
+            var remarks = remarksField.Split('.');
+            foreach (var remark in remarks)
+            {
+                if (String.IsNullOrEmpty(remark))
+                {
+                    break;
+                }
+                var rmk = new Domain.Remark()
+                {
+                    CreationDate = DateTime.Now,
+                    IsPublic = true,
+                    RemarkText = remark,
+                    Specification = newSpec
+                };
+                newSpec.Remarks.Add(rmk);
+            }
+        }
+
+
+
+
 
         /// <summary>
         /// Convert bool? to bool and delivered a warning message, if the default value is applied, which contains a specific message that we could, partialy, defined (logDescriptionCase)
