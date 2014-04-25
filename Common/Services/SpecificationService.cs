@@ -59,7 +59,7 @@ namespace Etsi.Ultimate.Services
                 specificationManager.UoW = uoW;
                 var communityManager = new CommunityManager(uoW);
                 KeyValuePair<List<Specification>, UserRightsContainer> result = specificationManager.GetSpecificationBySearchCriteria(personId, searchObject);
-                result.Key.ForEach(x => x.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(x.PrimeResponsibleGroup.Fk_commityId));
+                result.Key.ForEach(x => x.PrimeResponsibleGroupShortName = (x.PrimeResponsibleGroup == null) ? String.Empty : communityManager.GetCommmunityshortNameById(x.PrimeResponsibleGroup.Fk_commityId));
                 return specificationManager.GetSpecificationBySearchCriteria(personId, searchObject);
             }
         }

@@ -63,7 +63,8 @@ namespace Etsi.Ultimate.Repositories
 
         public List<Specification> GetSpecificationBySearchCriteria(SpecificationSearch searchObject)
         {
-            return AllIncluding().ToList();
+            return AllIncluding(x => x.SpecificationTechnologies.Select(y => y.Enum_Technology)).ToList();
+            //return AllIncluding(t => t.SpecificationTechnologies).ToList();
             //return AllIncluding(x => (x.Title.ToLower().Contains(searchObject.Title.ToLower()) || x.Number.ToLower().Contains(searchObject.Title.ToLower()))
             //    && x.Specification_Release.All(y => searchObject.SelectedReleaseIds.Contains(y.Pk_Specification_ReleaseId))
             //    && (searchObject.IsUnderCC ? (x.IsActive && x.IsUnderChangeControl.Value) : false ||

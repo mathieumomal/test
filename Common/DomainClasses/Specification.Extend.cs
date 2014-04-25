@@ -60,7 +60,7 @@ namespace Etsi.Ultimate.DomainClasses
                 string specificationStatus = string.Empty;
                 if (IsActive){
                     specificationStatus = "Draft";
-                    if(IsUnderChangeControl.Value)
+                    if ((IsUnderChangeControl != null) && (IsUnderChangeControl.Value))
                         specificationStatus = "under change control";
                 }
 

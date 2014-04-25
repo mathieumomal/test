@@ -109,6 +109,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 if (!IsPostBack)
                 {
                     var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                    searchObj = new SpecificationSearch();
                     Technologies = specSvc.GetTechnologyList();
                     Series = specSvc.GetSeries();
                     BindControls();
@@ -150,8 +151,6 @@ namespace Etsi.Ultimate.Module.Specifications
             //Load search control state if the request is from ShortURL
             if (fromShortUrl)
             {
-                searchObj = new SpecificationSearch();
-
                 if (!String.IsNullOrEmpty(Request.QueryString["title"]))
                     txtTitle.Text = searchObj.Title = Request.QueryString["title"];
 
@@ -217,7 +216,6 @@ namespace Etsi.Ultimate.Module.Specifications
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             fromSearch = true;
-            searchObj = new SpecificationSearch();
 
             if (!String.IsNullOrEmpty(txtTitle.Text))
                 searchObj.Title = txtTitle.Text;
@@ -270,11 +268,7 @@ namespace Etsi.Ultimate.Module.Specifications
             ManageShareUrl();
             fromSearch = true;
             ManageFullView();
-
-            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            var result = specSvc.GetSpecificationBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
-            rgSpecificationList.DataSource = result.Key;
-            rgSpecificationList.DataBind();
+            rgSpecificationList.Rebind();
         }
 
         private int GetUserPersonId(DotNetNuke.Entities.Users.UserInfo UserInfo)
@@ -389,11 +383,9 @@ namespace Etsi.Ultimate.Module.Specifications
         /// <param name="e">Event Args</param>
         protected void rgSpecificationList_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
-            ////TODO:: Remove the below code after implementation with real data
-            //Etsi.Ultimate.Services.SpecificationServiceMock specMock = new Etsi.Ultimate.Services.SpecificationServiceMock();
-            //var specDetails = specMock.GetSpecificationDetails(0);
-
-            //rgSpecificationList.DataSource = specDetails.Key;
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var result = specSvc.GetSpecificationBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
+            rgSpecificationList.DataSource = result.Key.OrderBy(x => x.Number);
         }
     }
 }
