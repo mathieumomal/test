@@ -100,7 +100,7 @@ namespace Etsi.Ultimate.Module.Specifications
         #endregion
 
         #region Events
-        
+
         protected void Page_Load(object sender, EventArgs e)
         {
             try
@@ -257,7 +257,6 @@ namespace Etsi.Ultimate.Module.Specifications
             if (cbForPublication.Checked != cbInternal.Checked)
                 searchObj.IsForPublication = (cbForPublication.Checked) ? true : ((cbInternal.Checked) ? (bool?)false : null);
 
-
             LoadGridData();
         }
 
@@ -281,6 +280,7 @@ namespace Etsi.Ultimate.Module.Specifications
             ManageShareUrl();
             fromSearch = true;
             ManageFullView();
+            SetSearchLabel();
             rgSpecificationList.Rebind();
         }
 
@@ -335,6 +335,47 @@ namespace Etsi.Ultimate.Module.Specifications
             ultFullView.Display();
         }
 
+        private void SetSearchLabel()
+        {
+            if (searchObj != null)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                if (!String.IsNullOrEmpty(searchObj.Title))
+                    sb.Append(searchObj.Title + ", ");
+                if (searchObj.Series.Count > 0)
+                    sb.Append("Series(" + searchObj.Series.Count + "), ");
+                if (searchObj.Type != null)
+                    sb.Append(((bool)searchObj.Type ? "TS" : "TR") + ", ");
+                if (searchObj.NumberNotYetAllocated != null && (bool)searchObj.NumberNotYetAllocated)
+                    sb.Append("No. not yet allocated, ");
+                if (searchObj.SelectedCommunityIds.Count > 0)
+                    sb.Append("Primary responsible groups(" + searchObj.SelectedCommunityIds.Count + "), ");
+                if (searchObj.SelectedReleaseIds.Count > 0)
+                    sb.Append("Releases(" + searchObj.SelectedReleaseIds.Count + "), ");
+                if (searchObj.IsDraft || searchObj.IsUnderCC || searchObj.IsWithACC || searchObj.IsWithBCC)
+                {
+                    StringBuilder tempSb = new StringBuilder();
+                    tempSb.Append("(");
+                    tempSb.Append(searchObj.IsDraft ? "Draft, " : string.Empty);
+                    tempSb.Append(searchObj.IsUnderCC ? "Under change control, " : string.Empty);
+                    tempSb.Append(searchObj.IsWithACC ? "Withdrawn before change control, " : string.Empty);
+                    tempSb.Append(searchObj.IsWithBCC ? "Withdrawn under change control, " : string.Empty);
+
+                    sb.Append(tempSb.ToString().Trim().Trim(',') + "), ");
+                }
+                if (searchObj.IsForPublication != null)
+                    sb.Append((bool)searchObj.IsForPublication ? "Internal" : "For Publication" + ", ");
+                if (searchObj.Technologies.Count > 0)
+                    sb.Append("Technologies(" + searchObj.Technologies.Count + "), ");
+
+                if (sb.Length == 0)
+                    sb.Append("Open Releases");
+
+                lblSearchHeader.Text = String.Format("Search form ({0})", (sb.Length > 100) ? sb.ToString().Trim().TrimEnd(',').Substring(0, 100) + "..." : sb.ToString().Trim().TrimEnd(','));
+            }
+        }
+
         private Dictionary<string, string> ManageUrlParams()
         {
             var nameValueCollection = HttpContext.Current.Request.QueryString;
@@ -379,14 +420,14 @@ namespace Etsi.Ultimate.Module.Specifications
                         urlParams.Add(k, nameValueCollection[k]);
                 }
             }
-            
+
             return urlParams;
         }
 
         private void GetRequestParameters()
         {
             fromShortUrl = (Request.QueryString["shortUrl"] != null) ? Convert.ToBoolean(Request.QueryString["shortUrl"]) : false;
-        } 
+        }
         #endregion
     }
 }

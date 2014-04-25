@@ -30,7 +30,9 @@ namespace Etsi.Ultimate.Controls
 
         public void Display()
         {
-            lnkFullView.Visible = false;
+            if (!IsPostBack)
+                lnkFullView.Visible = false;
+
             if (ModuleId != default(int) && TabId != default(int))
             {
                 // Create a new service

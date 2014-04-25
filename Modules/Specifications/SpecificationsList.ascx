@@ -27,7 +27,7 @@
                 <td>
                     <telerik:RadPanelBar runat="server" ID="rpbSpecSearch" Width="100%">
                         <items>
-                    <telerik:RadPanelItem runat="server" ID="searchPanel" Expanded="True">
+                    <telerik:RadPanelItem runat="server" ID="searchPanel">
                         <HeaderTemplate>
                             <table style="width: 100%; vertical-align: middle" class="SpecificationSearchHeader">
                                 <tr>
