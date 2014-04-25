@@ -42,7 +42,7 @@ namespace DatabaseImport
             }
             else if (lenght != 0 && str.Length > lenght)
             {
-                report.LogWarning(logDescriptionCase + " : string too long for : " + id);
+                report.LogWarning("String validation error : " + logDescriptionCase + " : string too long for : " + id);
                 return "";
             }
             return str.Trim();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,16 @@ namespace DatabaseImport.ModuleImport
         public void FillDatabase()
         {
             CreateTable();
-            NewContext.SaveChanges();
+            try
+            {
+                NewContext.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+                var test = ex;
+                Console.WriteLine(ex.InnerException);
+                Console.ReadLine();
+            }
         }
 
         #endregion

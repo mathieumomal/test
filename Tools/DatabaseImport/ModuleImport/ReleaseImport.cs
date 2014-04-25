@@ -36,7 +36,7 @@ namespace DatabaseImport.ModuleImport
         /// </summary>
         public void CleanDatabase()
         {
-            foreach (var aRelease in NewContext.Releases.ToList())
+            /*foreach (var aRelease in NewContext.Releases.ToList())
             {
                 // Remove associated remarks
                 var remarks = NewContext.Remarks.Where(r => r.Fk_ReleaseId == aRelease.Pk_ReleaseId).ToList();
@@ -47,7 +47,7 @@ namespace DatabaseImport.ModuleImport
                     NewContext.Histories.Remove(histories[i]);                
 
                 NewContext.Releases.Remove(aRelease);
-            }
+            }*/
         }
 
         /// <summary>

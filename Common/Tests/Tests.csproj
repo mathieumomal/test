@@ -92,10 +92,12 @@
     <Compile Include="FakeSets\Enum_TechnologyFakeDBSet.cs" />
     <Compile Include="FakeSets\SpecificationDBSet.cs" />
     <Compile Include="FakeSets\SpecificationRapporteurFakeDbSet.cs" />
+    <Compile Include="FakeSets\SpecificationReleaseFakeDBSet.cs" />
     <Compile Include="FakeSets\SpecificationResponsibleGroupFakeDbSet.cs" />
     <Compile Include="FakeSets\SpecificationTechnologyFakeDBSet.cs" />
     <Compile Include="FakeSets\SpecificationWorkItemFakeDBSet.cs" />
     <Compile Include="FakeSets\TechnologiesFakeDBSet.cs" />
+    <Compile Include="FakeSets\ViewPersonFakeDBSet.cs" />
     <Compile Include="Services\SpecificationServiceTest.cs" />
     <Compile Include="Business\WorkItemCsvParserTest.cs" />
     <Compile Include="Business\WorkItemManagerTest.cs" />

@@ -13,11 +13,13 @@ using System.Data.Entity.Validation;
 
 namespace DatabaseImport.ModuleImport
 {
+    
     /// <summary>
     /// Generate Specification and SpecificationTechnologies table datas
     /// </summary>
     public class SpecificationImport : IModuleImport
     {
+        public const string RefImportForLog = "[Specification]";
         /// <summary>
         /// Old table(s) : 
         /// Specs_GSM+3G and for IsUnderChangeControlCase : 2001-04-25_schedule
@@ -51,9 +53,9 @@ namespace DatabaseImport.ModuleImport
 
                 IsTsCase(newSpec, legacySpec);
 
-                newSpec.Number = Utils.CheckString(legacySpec.Number, 20, "Spec Number", newSpec.Number, Report);
+                newSpec.Number = Utils.CheckString(legacySpec.Number, 20, RefImportForLog + " Number", newSpec.Number, Report);
 
-                newSpec.IsActive = Utils.NullBooleanCheck(legacySpec.definitively_withdrawn, "IsActive (<=> OLD DefinitivelyWithdrawn)", false, Report);
+                newSpec.IsActive = Utils.NullBooleanCheck(legacySpec.definitively_withdrawn, RefImportForLog + "IsActive (<=> OLD DefinitivelyWithdrawn)", false, Report);
 
                 IsUnderChangeControlCase(newSpec, legacySpec);
 
@@ -61,7 +63,7 @@ namespace DatabaseImport.ModuleImport
 
                 newSpec.IsForPublication = legacySpec.For_publication;
 
-                newSpec.Title = Utils.CheckString(legacySpec.Title, 2000, "Spec Title", newSpec.Number, Report);
+                newSpec.Title = Utils.CheckString(legacySpec.Title, 2000, RefImportForLog + " Title", newSpec.Number, Report);
 
                 newSpec.ComIMS = legacySpec.ComIMS;
 
@@ -73,13 +75,13 @@ namespace DatabaseImport.ModuleImport
 
                 newSpec.MOD_TS = legacySpec.update_date;
 
-                newSpec.MOD_BY = Utils.CheckString(null, 20, "Spec MOD_BY", newSpec.Number, Report);
+                newSpec.MOD_BY = Utils.CheckString(null, 20, RefImportForLog + " MOD_BY", newSpec.Number, Report);
 
                 newSpec.TitleVerified = legacySpec.title_verified;
 
                 newSpec.URL = URLCase(legacySpec.URL);
 
-                newSpec.ITU_Description = Utils.CheckString(legacySpec.description, 1000, "Spec ITU_Description", newSpec.Number, Report);
+                newSpec.ITU_Description = Utils.CheckString(legacySpec.description, 1000, RefImportForLog + " ITU_Description", newSpec.Number, Report);
 
                 SerieCase(newSpec, legacySpec);
 
@@ -93,7 +95,7 @@ namespace DatabaseImport.ModuleImport
 
                 NewContext.Specifications.Add(newSpec);
                 count++;
-                Console.WriteLine(String.Format("Spec {0}/{1}", count, total));
+                Console.Write(String.Format("\r" + RefImportForLog + " {0}/{1}  ", count, total));
             }
         }
 
@@ -113,7 +115,7 @@ namespace DatabaseImport.ModuleImport
                     newSpec.IsTS = false;
                     break;
                 default:
-                    Report.LogError("Specification type is not TS or TR but (" + legacySpec.Type + ").");
+                    Report.LogError(RefImportForLog + " type is not TS or TR but (" + legacySpec.Type + ").");
                     break;
             }
         }
@@ -127,8 +129,6 @@ namespace DatabaseImport.ModuleImport
                 if (schedule.MAJOR_VERSION_NB > 2)
                     isUnderChangeControl = true;
             }
-            if (!isUnderChangeControl)
-                //Report.LogWarning("Default value : FALSE, attributed for spec : " + newSpec.Number + " because MAJOR_VERSION_NB > 2 not found.");
             newSpec.IsUnderChangeControl = isUnderChangeControl;
         }
 
@@ -138,7 +138,7 @@ namespace DatabaseImport.ModuleImport
             var isPromoteInhibitedCase = false;
             foreach (var spec_release in spec_releases)
             {
-                if (Utils.NullBooleanCheck(spec_release.inhibitUpgrade, "IsPromoteInhibited", false, Report))
+                if (Utils.NullBooleanCheck(spec_release.inhibitUpgrade, RefImportForLog + "IsPromoteInhibited", false, Report))
                     isPromoteInhibitedCase = true;
                 else
                     isPromoteInhibitedCase = false;
@@ -154,7 +154,7 @@ namespace DatabaseImport.ModuleImport
         private void TechnologieCase(Domain.Specification newSpec, OldDomain.Specs_GSM_3G legacySpec)
         {
             //SpecificationTechnologies relation table creation
-            if (Utils.NullBooleanCheck(legacySpec.C3g, "C3g", false, Report))
+            if (Utils.NullBooleanCheck(legacySpec.C3g, RefImportForLog + "C3g", false, Report))
             {
                 Domain.Enum_Technology enumTechno = NewContext.Enum_Technology.Where(x => x.Code.Equals(Enum_TechnologyImport._3gCode)).FirstOrDefault();
                 Domain.SpecificationTechnology relationSpecTechno = new SpecificationTechnology()
@@ -165,7 +165,7 @@ namespace DatabaseImport.ModuleImport
                 NewContext.SpecificationTechnologies.Add(relationSpecTechno);
                 newSpec.SpecificationTechnologies.Add(relationSpecTechno);
             }
-            if (Utils.NullBooleanCheck(legacySpec.C2g, "C2g", false, Report))
+            if (Utils.NullBooleanCheck(legacySpec.C2g, RefImportForLog + "C2g", false, Report))
             {
                 Domain.Enum_Technology enumTechno = NewContext.Enum_Technology.Where(x => x.Code.Equals(Enum_TechnologyImport._2gCode)).FirstOrDefault();
                 Domain.SpecificationTechnology relationSpecTechno = new SpecificationTechnology()
@@ -176,7 +176,7 @@ namespace DatabaseImport.ModuleImport
                 NewContext.SpecificationTechnologies.Add(relationSpecTechno);
                 newSpec.SpecificationTechnologies.Add(relationSpecTechno);
             }
-            if (Utils.NullBooleanCheck(legacySpec.LTE, "LTE", false, Report))
+            if (Utils.NullBooleanCheck(legacySpec.LTE, RefImportForLog + "LTE", false, Report))
             {
                 Domain.Enum_Technology enumTechno = NewContext.Enum_Technology.Where(x => x.Code.Equals(Enum_TechnologyImport._lteCode)).FirstOrDefault();
                 Domain.SpecificationTechnology relationSpecTechno = new SpecificationTechnology()
@@ -202,7 +202,7 @@ namespace DatabaseImport.ModuleImport
             }
             else
             {
-                Report.LogWarning("Serie not found : " + serie + " for Spec : " + legacySpec.Number);
+                Report.LogWarning(RefImportForLog + "Serie not found : " + serie + " for Spec : " + legacySpec.Number);
             }
         }
 

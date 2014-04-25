@@ -14,7 +14,7 @@ namespace DatabaseImport.ModuleImport
 {
     public class SpecificationsGenealogyImport : IModuleImport
     {
-
+        public const string RefImportForLog = "[Specification/Genealogy]";
         /// <summary>
         /// Old table(s) : 
         /// 2001-11-06_filius-patris
@@ -56,9 +56,9 @@ namespace DatabaseImport.ModuleImport
                     else
                     {
                         if(child == null)
-                            Report.LogWarning("[Spec Genealogy] Spec : " + legacyGenealogie.filius + "not found.");
+                            Report.LogWarning(RefImportForLog + " Spec : " + legacyGenealogie.filius + "not found.");
                         if(parent == null)
-                            Report.LogWarning("[Spec Genealogy] Spec : " + legacyGenealogie.patrem + "not found.");
+                            Report.LogWarning(RefImportForLog + " Spec : " + legacyGenealogie.patrem + "not found.");
                     }
                 }
                 else
@@ -66,7 +66,7 @@ namespace DatabaseImport.ModuleImport
                     countTooSmallNumber++;
                 }
             }
-            Report.LogWarning("[Spec Genealogy] TOTAL Spec Number not valid (lgth<4 or null): " + countTooSmallNumber + ".");
+            Report.LogWarning(RefImportForLog + "!!! TOTAL !!! Spec Number not valid (lgth<4 or null): " + countTooSmallNumber + ".");
         }
         #endregion
     }

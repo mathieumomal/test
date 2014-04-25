@@ -39,7 +39,7 @@ namespace DatabaseImport.ModuleImport
         /// </summary>
         public void CleanDatabase()
         {
-            foreach (var aWorkItem in NewContext.WorkItems.ToList())
+            /*foreach (var aWorkItem in NewContext.WorkItems.ToList())
             {
                 // Remove associated remarks
                 var remarks = NewContext.Remarks.Where(r => r.Fk_WorkItemId == aWorkItem.Pk_WorkItemUid).ToList();
@@ -51,13 +51,13 @@ namespace DatabaseImport.ModuleImport
                     NewContext.WorkItems_ResponsibleGroups.Remove(workItemResponsibles[i]);
 
                 NewContext.WorkItems.Remove(aWorkItem);
-            }
+            }*/
         }
 
         public void FillDatabase()
         {
             Console.WriteLine("Saving previous transactions .....");
-            NewContext.SaveChanges();
+            //NewContext.SaveChanges();
             Console.WriteLine("Please perform the WI import using WorkItem Module and press Enter to continue");
             Console.Read();            
         }

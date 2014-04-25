@@ -64,6 +64,7 @@
     <Compile Include="LegacyDBSets\ReleaseLegacyFakeDBSet.cs" />
     <Compile Include="LegacyDBSets\ScheduleLegacyFakeDBSet.cs" />
     <Compile Include="LegacyDBSets\SpecificationLegacyFakeDBSet.cs" />
+    <Compile Include="LegacyDBSets\SpecificationWILegacyFakeDBSet.cs" />
     <Compile Include="TestReleaseImport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestSpecificationImport.cs" />

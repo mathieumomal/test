@@ -68,9 +68,10 @@
     <Compile Include="ModuleImport\Specification\Enum_TechnologyImport.cs" />
     <Compile Include="ModuleImport\Specification\SpecificationImport.cs" />
     <Compile Include="ModuleImport\Specification\SpecificationRapporteurImport.cs" />
+    <Compile Include="ModuleImport\Specification\SpecificationReleaseImport.cs" />
     <Compile Include="ModuleImport\Specification\SpecificationResponsibleGroupImport.cs" />
     <Compile Include="ModuleImport\Specification\SpecificationsGenealogyImport.cs" />
-    <Compile Include="ModuleImport\Specification\Specification_WorkitemImport.cs" />
+    <Compile Include="ModuleImport\Specification\SpecificationWorkitemImport.cs" />
     <Compile Include="ModuleImport\WorkItemImport.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

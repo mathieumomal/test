@@ -19,6 +19,7 @@ namespace DatabaseImport.ModuleImport
     /// </summary>
     public class SpecificationResponsibleGroupImport : IModuleImport
     {
+        public const string RefImportForLog = "[Specification/ResponsibleGroup]";
         /// <summary>
         /// Old table(s) : 
         /// Specs_GSM+3G (WG prim and other)
@@ -58,7 +59,7 @@ namespace DatabaseImport.ModuleImport
                 ResponsibleGroupCase(legacySpecifification, false);
 
                 count++;
-                Console.WriteLine(String.Format("Responsible Group {0}/{1}", count, total));
+                Console.Write(String.Format("\r" + RefImportForLog + " {0}/{1}  ", count, total));
             }
 
         }
@@ -67,15 +68,15 @@ namespace DatabaseImport.ModuleImport
         {
             string groupsCode = "";
             if(isPrime)
-                groupsCode = Utils.CheckString(legacySpecifification.WG_prime, 0, "PrimeResponGroup", "", Report);
+                groupsCode = Utils.CheckString(legacySpecifification.WG_prime, 0, RefImportForLog + "PrimeResponGroup", "", Report);
             else
-                groupsCode = Utils.CheckString(legacySpecifification.WG_other, 0, "PrimeResponGroup", "", Report);
+                groupsCode = Utils.CheckString(legacySpecifification.WG_other, 0, RefImportForLog + "PrimeResponGroup", "", Report);
             if (!String.IsNullOrEmpty(groupsCode) && !groupsCode.Equals("-"))
             {
                 String[] respGroups = null;
                 if (groupsCode.Contains(',') && groupsCode.Contains('/'))
                 {
-                    Report.LogWarning("[Responsible group] too many kind of separator.");
+                    Report.LogWarning(RefImportForLog + " too many kind of separator.");
                 }
                 else if (groupsCode.Contains(','))
                 {
@@ -87,7 +88,7 @@ namespace DatabaseImport.ModuleImport
                 }
                 foreach (var respGroup in respGroups)
                 {
-                    var cleanRespGroup = Utils.CheckString(respGroup, 0, "ResponGroup", "", Report);
+                    var cleanRespGroup = Utils.CheckString(respGroup, 0, RefImportForLog, "", Report);
                     if (!String.IsNullOrEmpty(cleanRespGroup))
                     {
                         var communityGroup = NewContext.Communities.Where(x => x.ShortName == cleanRespGroup).FirstOrDefault();
@@ -96,7 +97,7 @@ namespace DatabaseImport.ModuleImport
                             var spec = NewContext.Specifications.Where(x => x.Number == legacySpecifification.Number).FirstOrDefault();
                             if (spec == null)
                             {
-                                Report.LogWarning("[Responsible group] Spec : " + legacySpecifification.Number + " not found.");
+                                Report.LogWarning(RefImportForLog + " Spec : " + legacySpecifification.Number + " not found.");
                             }
                             else
                             {
@@ -112,7 +113,7 @@ namespace DatabaseImport.ModuleImport
                         }
                         else
                         {
-                            Report.LogWarning("[Responsible group] Group : " + cleanRespGroup + " not found in community table.");
+                            Report.LogWarning(RefImportForLog + " Group : " + cleanRespGroup + " not found in community table.");
                         }
                     }
                 }

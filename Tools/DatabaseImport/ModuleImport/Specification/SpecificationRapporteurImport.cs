@@ -17,6 +17,7 @@ namespace DatabaseImport.ModuleImport
 {
     public class SpecificationRapporteurImport : IModuleImport
     {
+        public const string RefImportForLog = "[Specification/Rapporteur]";
         #region IModuleImport Membres
 
         /// <summary>
@@ -38,13 +39,15 @@ namespace DatabaseImport.ModuleImport
             NewContext.SetAutoDetectChanges(false);
             CreateDatas();
             NewContext.SetAutoDetectChanges(true);
-            NewContext.SaveChanges();
-            /*catch (DbUpdateException ex)
+            try{
+                NewContext.SaveChanges();
+            }
+            catch (DbUpdateException ex)
             {
                 var test = ex;
                 Console.WriteLine(ex.InnerException);
                 Console.ReadLine();
-            }*/
+            }
         }
 
         #endregion
@@ -56,26 +59,32 @@ namespace DatabaseImport.ModuleImport
             var count = 0;
             foreach (var legacySpecifification in LegacyContext.Specs_GSM_3G)
             {
-                var rapporteur = new SpecificationRapporteur();
+                var specRapporteur = new SpecificationRapporteur();
 
                 if (legacySpecifification.rapporteur_id != null)
                 {
                     var spec = NewContext.Specifications.Where(x => x.Number == legacySpecifification.Number).FirstOrDefault();
+                    var person = NewContext.View_Persons.Where(x => x.PERSON_ID == legacySpecifification.rapporteur_id).FirstOrDefault();
                     if (spec == null)
                     {
-                        Report.LogWarning("[Prime Rapporteur] Spec : " + legacySpecifification.Number + " not found.");
+                        Report.LogWarning(RefImportForLog + " Spec : " + legacySpecifification.Number + " not found.");
+                    }
+                    else if (person == null)
+                    {
+                        Report.LogWarning(RefImportForLog + " Rapporteur id : " + legacySpecifification.rapporteur_id + " not found.");
                     }
                     else
                     {
-                        rapporteur.IsPrime = true;
-                        rapporteur.Fk_SpecificationId = spec.Pk_SpecificationId;
-                        rapporteur.Fk_RapporteurId = Utils.CheckInt(legacySpecifification.rapporteur_id,"Rapporteur id undefined", spec.Number, Report);
+                        specRapporteur.IsPrime = true;
+                        specRapporteur.Fk_SpecificationId = spec.Pk_SpecificationId;
+                        specRapporteur.Fk_RapporteurId = Utils.CheckInt(legacySpecifification.rapporteur_id, RefImportForLog + "Rapporteur id undefined", spec.Number, Report);
+                        NewContext.SpecificationRapporteurs.Add(specRapporteur);
                     }
                 }
 
-                NewContext.SpecificationRapporteurs.Add(rapporteur);
+                
                 count++;
-                Console.WriteLine(String.Format("Prime rapporteur {0}/{1}", count, total));
+                Console.Write(String.Format("\r" + RefImportForLog + " {0}/{1}  ", count, total));
             }
         }
         #endregion

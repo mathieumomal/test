@@ -8,15 +8,17 @@ using Etsi.Ultimate.DataAccess;
 using domain = Etsi.Ultimate.DomainClasses;
 using DatabaseImport.ModuleImport;
 using Etsi.Ultimate.DomainClasses;
+using System.IO;
 
 namespace DatabaseImport
 {
     class Program
     {
+        private const string logPath = "../../../import.log";
         static void Main(string[] args)
         {
             var newContext = new UltimateContext();
-            
+
             var oldContext = new TmpDB();
             var report = new ImportReport();
 
@@ -33,6 +35,8 @@ namespace DatabaseImport
             operations.Add(new SpecificationResponsibleGroupImport());
             operations.Add(new SpecificationsGenealogyImport());
             operations.Add(new SpecificationRapporteurImport());
+            operations.Add(new SpecificationWorkitemImport());
+            operations.Add(new SpecificationReleaseImport());
             //---> (First to CLEANDATABASE)
 
             Console.WriteLine("Setting up the different classes");
@@ -71,7 +75,11 @@ namespace DatabaseImport
             Console.WriteLine("Changes saved, import is now finished!");
 
             Console.WriteLine("------------------- REPORT ---------------------");
-            Console.WriteLine(report.PrintReport());            
+            using (TextWriter writer = File.CreateText(logPath))
+            {
+                writer.Write(report.PrintReport());
+            }
+            Console.WriteLine("You could find the log file : 'import.log' in " + logPath);          
             
             Console.Read();
             Console.Read();

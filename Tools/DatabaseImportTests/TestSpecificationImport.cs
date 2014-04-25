@@ -16,6 +16,7 @@ namespace DatabaseImportTests
     {
         #region Values to test
         public DateTime updateDate = DateTime.Now;
+        public DateTime createDate = DateTime.Now.AddDays(-1);
         public const string url = "#http://www.3gpp.org/ftp/Specs/archive/02_series/02.72/#";
         public const string remark = "test remarks. test remarks 2...";
         #endregion
@@ -183,6 +184,7 @@ namespace DatabaseImportTests
             var newContext = MockRepository.GenerateMock<IUltimateContext>();
             var newDbSet = new SpecificationFakeDBSet();
             var specRapporteurDbSet = new SpecificationRapporteurFakeDbSet();
+            var personDbSet = new ViewPersonFakeDBSet();
             foreach (var elt in GetSpecs())
             {
                 newDbSet.Add(elt);
@@ -191,6 +193,7 @@ namespace DatabaseImportTests
             // New context mock
             newContext.Stub(ctx => ctx.Specifications).Return(newDbSet);
             newContext.Stub(ctx => ctx.SpecificationRapporteurs).Return(specRapporteurDbSet);
+            newContext.Stub(ctx => ctx.View_Persons).Return(GetPersons());
 
             // Legacy context mock
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
@@ -211,13 +214,93 @@ namespace DatabaseImportTests
             
         }
 
+        [Test]
+        public void Test_FillDatabase_SpecificationWorkItem()
+        {
+            var newContext = MockRepository.GenerateMock<IUltimateContext>();
+            var newDbSet = new SpecificationFakeDBSet();
+            var specWorkItemDbSet = new SpecificationWorkItemFakeDBSet();
+            foreach (var elt in GetSpecs())
+            {
+                newDbSet.Add(elt);
+            }
+            // --- Fill datas ---
+            // New context mock
+            newContext.Stub(ctx => ctx.Specifications).Return(newDbSet);
+            newContext.Stub(ctx => ctx.Specification_WorkItem).Return(specWorkItemDbSet);
+            newContext.Stub(ctx => ctx.WorkItems).Return(GetWorkItems());
+
+            // Legacy context mock
+            var legacyContext = MockRepository.GenerateMock<ITmpDb>();
+            legacyContext.Stub(ctx => ctx.Specs_GSM_3G).Return(GetSpecs_Legacy());
+            legacyContext.Stub(ctx => ctx.C2008_03_08_Specs_vs_WIs).Return(GetSpecWorkItem_legacy());
+
+
+
+            //Report
+            var report = new Domain.ImportReport();
+            // Execute
+            var import_fill = new SpecificationWorkitemImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
+            import_fill.FillDatabase();
+
+            Assert.AreEqual(1, specWorkItemDbSet.All().Count);
+            Assert.AreEqual(true, specWorkItemDbSet.All()[0].isPrime);
+        }
+
+        [Test]
+        public void Test_FillDatabase_SpecificationRelease()
+        {
+            var newContext = MockRepository.GenerateMock<IUltimateContext>();
+            var newDbSet = new SpecificationFakeDBSet();
+            var releaseDbSet = new ReleaseFakeDBSet();
+            var specReleaseDbSet = new SpecificationReleaseFakeDBSet();
+            var meetingsDbSet = new MeetingFakeDBSet();
+            foreach (var elt in GetSpecs())
+                newDbSet.Add(elt);
+            foreach (var elt in GetReleases())
+                releaseDbSet.Add(elt);
+            foreach (var elt in GetMeetings())
+                meetingsDbSet.Add(elt);
+            // --- Fill datas ---
+            // New context mock
+            newContext.Stub(ctx => ctx.Specifications).Return(newDbSet);
+            newContext.Stub(ctx => ctx.Releases).Return(releaseDbSet);
+            newContext.Stub(ctx => ctx.Specification_Release).Return(specReleaseDbSet);
+            newContext.Stub(ctx => ctx.Meetings).Return(meetingsDbSet);
+
+            // Legacy context mock
+            var legacyContext = MockRepository.GenerateMock<ITmpDb>();
+            legacyContext.Stub(ctx => ctx.Specs_GSM_3G_release_info).Return(GetReleaseInfos_legacy());
+
+
+            //Report
+            var report = new Domain.ImportReport();
+            // Execute
+            var import_fill = new SpecificationReleaseImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
+            import_fill.FillDatabase();
+
+            Assert.AreEqual(1, specReleaseDbSet.All().Count);
+
+            Assert.AreEqual(45, specReleaseDbSet.All()[0].Fk_ReleaseId);
+            Assert.AreEqual(4, specReleaseDbSet.All()[0].Fk_SpecificationId);
+            Assert.AreEqual(true, specReleaseDbSet.All()[0].isWithdrawn);
+            Assert.AreEqual(createDate, specReleaseDbSet.All()[0].CreationDate);
+            Assert.AreEqual(updateDate, specReleaseDbSet.All()[0].UpdateDate);
+            Assert.AreEqual(67, specReleaseDbSet.All()[0].FreezeMeetingId);
+            Assert.AreEqual(23, specReleaseDbSet.All()[0].WithdrawMeetingId);
+            //Assert.AreEqual(true, specWorkItemDbSet.All()[0].isPrime);
+        }
+
+
+
+
 
 
         #region New datas
         private IDbSet<Domain.Specification> GetSpecs()
         {
             var list = new SpecificationFakeDBSet();
-            list.Add(new Domain.Specification() { Pk_SpecificationId = 1, Number = "01.01",  });
+            list.Add(new Domain.Specification() { Pk_SpecificationId = 1, Number = "01.01" });
             list.Add(new Domain.Specification() { Pk_SpecificationId = 2, Number = "01.02" });
             list.Add(new Domain.Specification() { Pk_SpecificationId = 3, Number = "01.03" });
             list.Add(new Domain.Specification() { Pk_SpecificationId = 4, Number = "02.72" });
@@ -252,11 +335,58 @@ namespace DatabaseImportTests
 
             return list;
         }
+
+        private IDbSet<Domain.View_Persons> GetPersons()
+        {
+            var list = new ViewPersonFakeDBSet();
+            list.Add(new Domain.View_Persons() { PERSON_ID = 26063 });
+            //list.Add(new Domain.View_Persons() { PERSON_ID = 26064 });
+
+            return list;
+        }
+
+        private IDbSet<Domain.WorkItem> GetWorkItems()
+        {
+            var list = new WorkItemFakeDBSet();
+            list.Add(new Domain.WorkItem() { Pk_WorkItemUid = 14012 });
+            list.Add(new Domain.WorkItem() { Pk_WorkItemUid = 14013 });
+            list.Add(new Domain.WorkItem() { Pk_WorkItemUid = 14045 });
+            return list;
+        }
+
+        private IDbSet<Domain.Release> GetReleases()
+        {
+            var list = new ReleaseFakeDBSet();
+            list.Add(new Domain.Release() { Pk_ReleaseId = 1, Code = "Ph2" });
+            list.Add(new Domain.Release() { Pk_ReleaseId = 2, Code = "Ph1" });
+            list.Add(new Domain.Release() { Pk_ReleaseId = 45, Code = "R98" });
+            return list;
+        }
+        private IDbSet<Domain.Meeting> GetMeetings()
+        {
+            var list = new MeetingFakeDBSet();
+            list.Add(new Domain.Meeting() { MTG_ID = 23, MtgShortRef = "ABC" });
+            list.Add(new Domain.Meeting() { MTG_ID = 67, MtgShortRef = "ABCD" });
+            list.Add(new Domain.Meeting() { MTG_ID = 230, MtgShortRef = "EFG" });
+            list.Add(new Domain.Meeting() { MTG_ID = 15, MtgShortRef = "EFGH" });
+            return list;
+        }
+
         #endregion
 
 
 
         #region legacy datas
+        private IDbSet<C2008_03_08_Specs_vs_WIs> GetSpecWorkItem_legacy()
+        {
+            var list = new SpecificationWILegacyFakeDBSet();
+            list.Add(new C2008_03_08_Specs_vs_WIs() { Row_id = 1, Spec = "02.72", WI_UID = 14012 });
+            list.Add(new C2008_03_08_Specs_vs_WIs() { Row_id = 2, Spec = "01.01", WI_UID = 14013 });
+            list.Add(new C2008_03_08_Specs_vs_WIs() { Row_id = 3, Spec = "02.02", WI_UID = 14014 });
+
+            return list;
+        }
+
         private IDbSet<C2001_11_06_filius_patris> GetFilius_legacy()
         {
             var list = new FiliusPatrisFakeDBSet();
@@ -273,7 +403,13 @@ namespace DatabaseImportTests
                 {
                     Row_id = 15,
                     Spec = "02.72",
-                    inhibitUpgrade = false
+                    inhibitUpgrade = false,
+                    Release = "Ph24",
+                    withdrawn = true,
+                    update_date = updateDate,
+                    creation_date = createDate,
+                    freeze_meeting = "EFG",
+                    stopped_at_meeting = "EFGH"
                 }
             );
             list.Add(
@@ -281,7 +417,13 @@ namespace DatabaseImportTests
                 {
                     Row_id = 67,
                     Spec = "02.72",
-                    inhibitUpgrade = true
+                    inhibitUpgrade = true,
+                    Release = "R98",
+                    withdrawn = true,
+                    update_date = updateDate,
+                    creation_date = createDate,
+                    freeze_meeting = "ABCD",
+                    stopped_at_meeting = "ABC"
                 }
             );
             return list;
@@ -334,7 +476,7 @@ namespace DatabaseImportTests
                     URL = url,
                     Q1741_2 = false,
                     M1457 = false,
-                    WI_UID = null,
+                    WI_UID = 14012,
                     description = null,
                     LTE = false,
                     ComIMS = false,
