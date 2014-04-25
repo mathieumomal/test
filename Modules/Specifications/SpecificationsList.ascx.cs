@@ -258,7 +258,19 @@ namespace Etsi.Ultimate.Module.Specifications
 
 
             LoadGridData();
-        } 
+        }
+
+        /// <summary>
+        /// Need DataSource event for Specification List
+        /// </summary>
+        /// <param name="sender">Source of Event</param>
+        /// <param name="e">Event Args</param>
+        protected void rgSpecificationList_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
+        {
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var result = specSvc.GetSpecificationBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
+            rgSpecificationList.DataSource = result.Key.OrderBy(x => x.Number);
+        }
 
         #endregion
 
@@ -375,17 +387,5 @@ namespace Etsi.Ultimate.Module.Specifications
             fromShortUrl = (Request.QueryString["shortUrl"] != null) ? Convert.ToBoolean(Request.QueryString["shortUrl"]) : false;
         } 
         #endregion
-
-        /// <summary>
-        /// Need DataSource event for Specification List
-        /// </summary>
-        /// <param name="sender">Source of Event</param>
-        /// <param name="e">Event Args</param>
-        protected void rgSpecificationList_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
-        {
-            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            var result = specSvc.GetSpecificationBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
-            rgSpecificationList.DataSource = result.Key.OrderBy(x => x.Number);
-        }
     }
 }

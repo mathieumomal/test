@@ -22,6 +22,24 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.UpdatePanel upSpecificationGrid;
         
         /// <summary>
+        /// rbNewSpecification control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadButton rbNewSpecification;
+        
+        /// <summary>
+        /// lnkManageITURecommendations control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink lnkManageITURecommendations;
+        
+        /// <summary>
         /// rpbSpecSearch control.
         /// </summary>
         /// <remarks>
@@ -173,24 +191,6 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnSearch;
-        
-        /// <summary>
-        /// rbNewSpecification control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadButton rbNewSpecification;
-        
-        /// <summary>
-        /// lnkManageITURecommendations control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkManageITURecommendations;
         
         /// <summary>
         /// rgSpecificationList control.

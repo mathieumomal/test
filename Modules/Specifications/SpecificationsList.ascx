@@ -15,6 +15,15 @@
     <ContentTemplate>
         <table style="width: 100%;">
             <tr>
+                <td style="line-height:22px;">
+                    <telerik:RadButton ID="rbNewSpecification" runat="server" Text="New Specification" />
+                    <span style="float: right; padding-bottom: 2px; white-space: nowrap">
+                        <asp:HyperLink ID="lnkManageITURecommendations" runat="server" Text="Manage ITU Recommendations" Target="_blank" />
+                        <ult:fullviewcontrol id="ultFullView" runat="server" />
+                    </span>
+                </td>
+            </tr>
+            <tr>
                 <td>
                     <telerik:RadPanelBar runat="server" ID="rpbSpecSearch" Width="100%">
                         <items>
@@ -106,15 +115,6 @@
             </tr>
             <tr>
                 <td>
-                    <telerik:RadButton ID="rbNewSpecification" runat="server" Text="New Specification" />
-                    <span style="float: right; padding-bottom: 2px; white-space: nowrap">
-                        <asp:HyperLink ID="lnkManageITURecommendations" runat="server" Text="Manage ITU Recommendations" Target="_blank" />
-                        <ult:fullviewcontrol id="ultFullView" runat="server" />
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td>
             <telerik:RadGrid ID="rgSpecificationList" runat="server" 
                 EnableEmbeddedSkins="false"
                 EnableEmbeddedBaseStylesheet="false" 
@@ -125,15 +125,18 @@
                 AutoGenerateColumns="false"                
                 OnNeedDataSource="rgSpecificationList_NeedDataSource"
                 OnItemDataBound="rgSpecificationList_ItemDataBound">
+                <ClientSettings>
+                    <Scrolling AllowScroll="True" UseStaticHeaders="True" SaveScrollPosition="true"></Scrolling>
+                </ClientSettings>
                 <PagerStyle AlwaysVisible="true" Mode="NextPrevAndNumeric" PageButtonCount="10"/>
-                        <mastertableview clientdatakeynames="Pk_SpecificationId">
+                        <mastertableview clientdatakeynames="Pk_SpecificationId" Width="100%">
                     <Columns>
-                        <telerik:GridBoundColumn HeaderStyle-Width="10%" DataField="Number" HeaderText="Specification Number" UniqueName="Number"></telerik:GridBoundColumn>
-                        <telerik:GridBoundColumn HeaderStyle-Width="5%" DataField="SpecificationTypeShortName" HeaderText="Type" UniqueName="Type"></telerik:GridBoundColumn>
-                        <telerik:GridBoundColumn DataField="Title" HeaderText="Title" UniqueName="Title"></telerik:GridBoundColumn>
-                        <telerik:GridBoundColumn HeaderStyle-Width="10%" DataField="Status" HeaderText="Status" UniqueName="Status"></telerik:GridBoundColumn>
-                        <telerik:GridBoundColumn HeaderStyle-Width="10%" DataField="PrimeResponsibleGroupShortName" HeaderText="Primary Responsible Group" UniqueName="PrimeResponsibleGroupShortName"></telerik:GridBoundColumn>
-                        <telerik:GridTemplateColumn HeaderStyle-Width="120px" UniqueName="SpecificationAdditionalDetails">
+                        <telerik:GridBoundColumn HeaderStyle-Width="8%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="Number" HeaderText="Specification Number" UniqueName="Number"></telerik:GridBoundColumn>
+                        <telerik:GridBoundColumn HeaderStyle-Width="5%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="SpecificationTypeShortName" HeaderText="Type" UniqueName="Type"></telerik:GridBoundColumn>
+                        <telerik:GridBoundColumn HeaderStyle-Width="50%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Left" DataField="Title"  HeaderText="Title" UniqueName="Title"></telerik:GridBoundColumn>
+                        <telerik:GridBoundColumn HeaderStyle-Width="10%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="Status" HeaderText="Status" UniqueName="Status"></telerik:GridBoundColumn>
+                        <telerik:GridBoundColumn HeaderStyle-Width="10%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="PrimeResponsibleGroupShortName" HeaderText="Primary Responsible Group" UniqueName="PrimeResponsibleGroupShortName"></telerik:GridBoundColumn>
+                        <telerik:GridTemplateColumn HeaderStyle-Width="17%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Left" UniqueName="SpecificationAdditionalDetails">
                             <ItemTemplate>
                                 <table id="specAdditionalDetails">
                                     <tr>
