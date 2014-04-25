@@ -24,7 +24,7 @@ namespace Etsi.Ultimate.DomainClasses
         public string Title { get; set; }
         public List<int> Series { get; set; }
         public bool? Type { get; set; }
-        public bool? NumberNotYetAllocated { get; set; }
+        public bool NumberNotYetAllocated { get; set; }
         public List<int> SelectedCommunityIds { get; set; }
 
         public List<int> SelectedReleaseIds { get; set;}

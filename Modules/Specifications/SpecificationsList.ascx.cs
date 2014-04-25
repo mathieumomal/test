@@ -67,6 +67,9 @@ namespace Etsi.Ultimate.Module.Specifications
 
         #region Properties
 
+        /// <summary>
+        /// DataSource of rcbSeries
+        /// </summary>
         private List<Enum_Serie> Series
         {
             get
@@ -82,6 +85,9 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
+        /// <summary>
+        /// DataSource for cblTechnology
+        /// </summary>
         private List<Enum_Technology> Technologies
         {
             get
@@ -112,7 +118,9 @@ namespace Etsi.Ultimate.Module.Specifications
                     searchObj = new SpecificationSearch();
                     Technologies = specSvc.GetTechnologyList();
                     Series = specSvc.GetSeries();
+
                     BindControls();
+
                     ReleaseCtrl.Load += ReleaseCtrl_Load;
                 }
             }
@@ -146,6 +154,11 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
+        /// <summary>
+        /// Load Specification list after the ReleaseCtrl load; if the request is from ShortURL
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void ReleaseCtrl_Load(object sender, EventArgs e)
         {
             //Load search control state if the request is from ShortURL
@@ -164,9 +177,6 @@ namespace Etsi.Ultimate.Module.Specifications
                             item.Checked = searchObj.Series.Contains(itemVal);
                     }
                 }
-
-                if (!String.IsNullOrEmpty(Request.QueryString["title"]))
-                    txtTitle.Text = searchObj.Title = Request.QueryString["title"];
 
                 if (!String.IsNullOrEmpty(Request.QueryString["type"]))
                 {
@@ -191,9 +201,9 @@ namespace Etsi.Ultimate.Module.Specifications
                 if (!String.IsNullOrEmpty(Request.QueryString["withBCC"]))
                     cbWithdrawnBeforeCC.Checked = searchObj.IsWithBCC = Convert.ToBoolean(Request.QueryString["withBCC"]);
 
-                if (!String.IsNullOrEmpty(Request.QueryString["forPublication"]))
+                if (!String.IsNullOrEmpty(Request.QueryString["publication"]))
                 {
-                    searchObj.IsForPublication = Convert.ToBoolean(Request.QueryString["forPublication"]);
+                    searchObj.IsForPublication = Convert.ToBoolean(Request.QueryString["publication"]);
                     cbForPublication.Checked = searchObj.IsForPublication.Value;
                 }
 
@@ -213,8 +223,14 @@ namespace Etsi.Ultimate.Module.Specifications
             LoadGridData();
         }
 
+        /// <summary>
+        /// On search btn click populate searchObj
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void btnSearch_Click(object sender, EventArgs e)
         {
+            //flag used in ShortURL generation
             fromSearch = true;
             searchObj = new SpecificationSearch();
 
@@ -245,7 +261,6 @@ namespace Etsi.Ultimate.Module.Specifications
             searchObj.IsWithACC = cbWithdrawnAfterCC.Checked;
             searchObj.IsWithBCC = cbWithdrawnBeforeCC.Checked;
 
-            //Set selected technologies
             foreach (ListItem item in cblTechnology.Items)
                 if (item.Selected)
                 {
@@ -275,6 +290,10 @@ namespace Etsi.Ultimate.Module.Specifications
         #endregion
 
         #region Helper methods
+
+        /// <summary>
+        /// Load Specification list data
+        /// </summary>
         private void LoadGridData()
         {
             ManageShareUrl();
@@ -283,7 +302,12 @@ namespace Etsi.Ultimate.Module.Specifications
             SetSearchLabel();
             rgSpecificationList.Rebind();
         }
-
+        
+        /// <summary>
+        /// Retrieve person Id
+        /// </summary>
+        /// <param name="UserInfo"></param>
+        /// <returns></returns>
         private int GetUserPersonId(DotNetNuke.Entities.Users.UserInfo UserInfo)
         {
             if (UserInfo.UserID < 0)
@@ -297,6 +321,9 @@ namespace Etsi.Ultimate.Module.Specifications
             return 0;
         }
 
+        /// <summary>
+        /// Bind ddl & list in the search panel
+        /// </summary>
         private void BindControls()
         {
             cblTechnology.DataSource = Technologies;
@@ -310,6 +337,9 @@ namespace Etsi.Ultimate.Module.Specifications
             rcbSeries.DataBind();
         }
 
+        /// <summary>
+        /// Construct ShortUrl
+        /// </summary>
         private void ManageShareUrl()
         {
             ultShareUrl.ModuleId = ModuleId;
@@ -322,6 +352,9 @@ namespace Etsi.Ultimate.Module.Specifications
             ultShareUrl.UrlParams = ManageUrlParams();
         }
 
+        /// <summary>
+        /// Construct FullUrl
+        /// </summary>
         private void ManageFullView()
         {
             ultFullView.ModuleId = ModuleId;
@@ -335,6 +368,9 @@ namespace Etsi.Ultimate.Module.Specifications
             ultFullView.Display();
         }
 
+        /// <summary>
+        /// Set searched values into SearchPanel header
+        /// </summary>
         private void SetSearchLabel()
         {
             if (searchObj != null)
@@ -347,7 +383,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     sb.Append("Series(" + searchObj.Series.Count + "), ");
                 if (searchObj.Type != null)
                     sb.Append(((bool)searchObj.Type ? "TS" : "TR") + ", ");
-                if (searchObj.NumberNotYetAllocated != null && (bool)searchObj.NumberNotYetAllocated)
+                if (searchObj.NumberNotYetAllocated)
                     sb.Append("No. not yet allocated, ");
                 if (searchObj.SelectedCommunityIds.Count > 0)
                     sb.Append("Primary responsible groups(" + searchObj.SelectedCommunityIds.Count + "), ");
@@ -376,6 +412,10 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
+        /// <summary>
+        /// Generate Url parameters for Short/FullView Url
+        /// </summary>
+        /// <returns></returns>
         private Dictionary<string, string> ManageUrlParams()
         {
             var nameValueCollection = HttpContext.Current.Request.QueryString;
@@ -407,7 +447,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 urlParams.Add("withBCC", searchObj.IsWithBCC.ToString());
 
                 if (searchObj.IsForPublication != null)
-                    urlParams.Add("forPublication", searchObj.IsForPublication.ToString());
+                    urlParams.Add("publication", searchObj.IsForPublication.ToString());
 
                 if (searchObj.Technologies != null && searchObj.Technologies.Count > 0)
                     urlParams.Add("tech", String.Join(",", searchObj.Technologies));
@@ -424,10 +464,14 @@ namespace Etsi.Ultimate.Module.Specifications
             return urlParams;
         }
 
+        /// <summary>
+        /// Extract query strings from Url (other than ShortUrl params)
+        /// </summary>
         private void GetRequestParameters()
         {
             fromShortUrl = (Request.QueryString["shortUrl"] != null) ? Convert.ToBoolean(Request.QueryString["shortUrl"]) : false;
         }
+
         #endregion
     }
 }
