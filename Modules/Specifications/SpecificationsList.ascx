@@ -179,12 +179,12 @@
                         <MasterTableView ClientDataKeyNames="Pk_SpecificationId" Width="100%">
                             <SortExpressions>
                                 <telerik:GridSortExpression FieldName="Number" SortOrder="Ascending" />
-                                <telerik:GridSortExpression FieldName="Title" SortOrder="Ascending" />
+                                <telerik:GridSortExpression FieldName="Title" SortOrder="None" />
                             </SortExpressions>
                     <Columns>
-                        <telerik:GridBoundColumn HeaderStyle-Width="8%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="Number" HeaderText="Specification Number" UniqueName="Number"></telerik:GridBoundColumn>
+                        <telerik:GridBoundColumn HeaderStyle-Width="8%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" ShowSortIcon="false" DataField="Number" HeaderText="Specification Number" UniqueName="Number"></telerik:GridBoundColumn>
                         <telerik:GridBoundColumn HeaderStyle-Width="5%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="SpecificationTypeShortName" HeaderText="Type" UniqueName="Type"></telerik:GridBoundColumn>
-                        <telerik:GridBoundColumn HeaderStyle-Width="50%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Left" DataField="Title"  HeaderText="Title" UniqueName="Title"></telerik:GridBoundColumn>
+                        <telerik:GridBoundColumn HeaderStyle-Width="50%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Left" ShowSortIcon="false" DataField="Title"  HeaderText="Title" UniqueName="Title"></telerik:GridBoundColumn>
                         <telerik:GridBoundColumn HeaderStyle-Width="10%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="Status" HeaderText="Status" UniqueName="Status"></telerik:GridBoundColumn>
                         <telerik:GridBoundColumn HeaderStyle-Width="10%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="PrimeResponsibleGroupShortName" HeaderText="Primary Responsible Group" UniqueName="PrimeResponsibleGroupShortName"></telerik:GridBoundColumn>
                         <telerik:GridTemplateColumn HeaderStyle-Width="17%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Left" UniqueName="SpecificationAdditionalDetails">
