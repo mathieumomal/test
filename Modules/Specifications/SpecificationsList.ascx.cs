@@ -216,6 +216,7 @@ namespace Etsi.Ultimate.Module.Specifications
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             fromSearch = true;
+            searchObj = new SpecificationSearch();
 
             if (!String.IsNullOrEmpty(txtTitle.Text))
                 searchObj.Title = txtTitle.Text;

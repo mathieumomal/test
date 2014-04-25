@@ -63,19 +63,22 @@ namespace Etsi.Ultimate.Repositories
 
         public List<Specification> GetSpecificationBySearchCriteria(SpecificationSearch searchObject)
         {
-            return AllIncluding(x => x.SpecificationTechnologies.Select(y => y.Enum_Technology)).ToList();
-            //return AllIncluding(t => t.SpecificationTechnologies).ToList();
-            //return AllIncluding(x => (x.Title.ToLower().Contains(searchObject.Title.ToLower()) || x.Number.ToLower().Contains(searchObject.Title.ToLower()))
-            //    && x.Specification_Release.All(y => searchObject.SelectedReleaseIds.Contains(y.Pk_Specification_ReleaseId))
-            //    && (searchObject.IsUnderCC ? (x.IsActive && x.IsUnderChangeControl.Value) : false ||
-            //         searchObject.IsDraft ? (x.IsActive && !x.IsUnderChangeControl.Value) : false ||
-            //         searchObject.IsWithACC ? (!x.IsActive && x.IsUnderChangeControl.Value) : false ||
-            //         searchObject.IsWithBCC ? (!x.IsActive && !x.IsUnderChangeControl.Value) : false)
-            //         && (searchObject.Type != null ? x.Type.Value == searchObject.Type.Value : false)
-            //         && (searchObject.NumberNotYetAllocated != null ? x.Type.Value == searchObject.NumberNotYetAllocated.Value : false)
-            //         && (searchObject.IsForPublication != null ? x.IsForPublication.Value == searchObject.IsForPublication.Value : false)
-            //         && (searchObject.Technologies.Count > 0 ? x.SpecificationTechnologies.All(y => searchObject.Technologies.Contains(y.Pk_SpecificationTechnologyId)) : false)
-            //         && (searchObject.SelectedCommunityIds.Count > 0 ? x.SpecificationResponsibleGroups.All(y => searchObject.SelectedCommunityIds.Contains(y.Pk_SpecificationResponsibleGroupId)) : false)).ToList();
+            return AllIncluding(x => x.SpecificationTechnologies.Select(y => y.Enum_Technology))
+                .Where(x => ((String.IsNullOrEmpty(searchObject.Title) || (x.Title.ToLower().Trim().Contains(searchObject.Title.ToLower().Trim()) || x.Number.ToLower().Trim().Contains(searchObject.Title.ToLower().Trim())))
+                  && ((searchObject.Type == null) || (x.IsTS == searchObject.Type.Value))                                      //Type Search
+                  && ((searchObject.IsForPublication == null) || (x.IsForPublication == searchObject.IsForPublication.Value))  //Publication Search
+                  && ((!(searchObject.IsUnderCC || searchObject.IsDraft || searchObject.IsWithACC || searchObject.IsWithBCC))  //Status Search
+                  || ((searchObject.IsUnderCC && searchObject.IsDraft && searchObject.IsWithACC && searchObject.IsWithBCC))
+                  ||(searchObject.IsUnderCC ? (x.IsActive && x.IsUnderChangeControl.Value) : false ||
+                     searchObject.IsDraft ? (x.IsActive && !x.IsUnderChangeControl.Value) : false ||
+                     searchObject.IsWithACC ? (!x.IsActive && x.IsUnderChangeControl.Value) : false ||
+                     searchObject.IsWithBCC ? (!x.IsActive && !x.IsUnderChangeControl.Value) : false))
+                  && ((searchObject.Technologies.Count == 0) || x.SpecificationTechnologies.Any(y => searchObject.Technologies.Contains(y.Fk_Enum_Technology))) //Technology Search
+                  && ((searchObject.Series.Count == 0) || searchObject.Series.Contains(x.Enum_Serie.Pk_Enum_SerieId)) //Series Search
+                  //&& ((searchObject.SelectedReleaseIds.Count == 0) || x.Specification_Release.Any(y=> searchObject.SelectedReleaseIds.Contains(y.Fk_ReleaseId))) //Release Search
+                  //&& ((searchObject.SelectedCommunityIds.Count == 0) || x.SpecificationResponsibleGroups.Any(y => searchObject.SelectedCommunityIds.Contains(y.Fk_commityId))) //Community Search
+                  ))
+                .ToList();
         }
 
         public List<Enum_Technology> GetTechnologyList()
