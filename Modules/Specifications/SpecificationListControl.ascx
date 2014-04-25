@@ -33,19 +33,19 @@
                     <MasterTableView clientdatakeynames="Pk_SpecificationId" EditMode="InPlace">
                         <Columns>
                             <telerik:GridTemplateColumn DataField="Number" HeaderText="Specification Number" UniqueName="Number">
-                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="100px"/> 
+                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="70px"/> 
                                 <ItemTemplate>
                                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Number") %></div>   
                                 </ItemTemplate>                 
                             </telerik:GridTemplateColumn>
                             <telerik:GridTemplateColumn DataField="SpecificationType" HeaderText="Type" UniqueName="SpecificationType">
-                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="50px"/> 
+                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="30px"/> 
                                 <ItemTemplate>
                                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"SpecificationType") %></div>  
                                 </ItemTemplate>
                             </telerik:GridTemplateColumn>
                             <telerik:GridTemplateColumn DataField="Title" HeaderText="Title" UniqueName="Title">
-                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="140px"/>
+                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="210px"/>
                                 <ItemTemplate>
                                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Title") %></div>  
                                 </ItemTemplate>                
@@ -63,7 +63,7 @@
                                 </ItemTemplate>                
                             </telerik:GridTemplateColumn>
                             <telerik:GridTemplateColumn DataField="SpecificationActions" HeaderText="" UniqueName="SpecificationActions">
-                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="50px"/>
+                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="30px"/>
                                 <ItemStyle HorizontalAlign="Center" VerticalAlign="Middle" />
                                 <ItemTemplate> 
                                     <a href="SpecificationDetails.aspx?specificationId=<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>&selectedTab=<%# SelectedTab %>">

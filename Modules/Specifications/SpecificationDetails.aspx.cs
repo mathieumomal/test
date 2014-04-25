@@ -289,7 +289,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private void SetRadioTechnologiesItems(List<Domain.Enum_Technology> technologies)
         {
             radioTechnologyVals.Style.Add("border-spacing","0");
-            foreach (Domain.Enum_Technology technology in technologies)
+            foreach (Domain.Enum_Technology technology in technologies.OrderBy(t => t.Code))
             {
                 radioTechnologyVals.Items.Add(new ListItem() { 
                     Value = technology.Pk_Enum_TechnologyId.ToString() ,
