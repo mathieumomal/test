@@ -506,8 +506,6 @@ namespace Etsi.Ultimate.Controls
                         {
                             person.RapporteurDetailsAddress = new StringBuilder()
                                 .Append("<strong>")
-                                .Append(SelectableColumnName)
-                                .Append(" ")
                                 .Append(person.RapporteurDetailsAddress)
                                 .Append("</strong>")
                                 .ToString();
