@@ -10,7 +10,53 @@
         vertical-align: top;
         text-align: left;
     }
+
+    .modalBackground {
+        background-color: Gray;
+        filter: alpha(opacity=60);
+        opacity: 0.60;
+        width: 100%;
+        top: 0px;
+        left: 0px;
+        position: fixed;
+        height: 100%;
+        z-index: 3000;
+    }
+
+    .updateProgress {
+        margin: auto;
+        font-family: Trebuchet MS;
+        filter: alpha(opacity=100);
+        opacity: 1;
+        font-size: small;
+        vertical-align: middle;
+        color: #275721;
+        text-align: center;
+        background-color: White;
+        padding: 10px;
+        -moz-border-radius: 15px;
+        z-index: 3001;
+        border-radius: 15px;
+    }
+
+    .updateProgress .Fixed {
+        top: 45%;
+        position: fixed;
+        right: 45%;
+    }
+
 </style>
+
+<asp:UpdateProgress ID="updateProgressSpecificationGrid" runat="server" DisplayAfter="200">
+    <ProgressTemplate>
+        <div class="modalBackground">
+        </div>
+        <div class="updateProgress fixed">
+            <asp:Image ID="imgProgress" runat="server" Class="rotating" ImageUrl="~/DesktopModules/WorkItem/images/hourglass.png" Width="45" />
+        </div>
+    </ProgressTemplate>
+</asp:UpdateProgress>
+
 <asp:UpdatePanel ID="upSpecificationGrid" runat="server" UpdateMode="Always">
     <ContentTemplate>
         <table style="width: 100%;">

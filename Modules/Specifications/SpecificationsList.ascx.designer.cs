@@ -13,6 +13,15 @@ namespace Etsi.Ultimate.Module.Specifications {
     public partial class SpecificationsList {
         
         /// <summary>
+        /// updateProgressSpecificationGrid control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdateProgress updateProgressSpecificationGrid;
+        
+        /// <summary>
         /// upSpecificationGrid control.
         /// </summary>
         /// <remarks>
