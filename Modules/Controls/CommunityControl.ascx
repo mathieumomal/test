@@ -129,7 +129,7 @@
                             </tr>
                             <tr style="height: 35px"></tr>
                         </table>
-                        <div style="position: fixed; bottom: 0; height: 30px; width: 350px; padding-top: 5px; padding-left: 15px; margin-bottom: 8px; background-color: white;">
+                        <div style="position: absolute; bottom: 0; height: 30px; width: 350px; padding-top: 5px; padding-left: 15px; margin-bottom: 8px; background-color: white;">
                             <telerik:RadButton ID="btnConfirm" runat="server" Text="Confirm" Width="60" OnClick="btnConfirm_Click"/>
                             <telerik:RadButton ID="btnAll" runat="server" Text="All" Width="60" OnClientClicked="function(button, args) { UpdateNodes(true); }" AutoPostBack="false" />
                             <telerik:RadButton ID="btnDefault" runat="server" Text="Default" Width="60" OnClientClicked="SetDefaultItems" AutoPostBack="false"/>
