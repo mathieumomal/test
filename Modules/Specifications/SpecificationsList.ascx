@@ -6,10 +6,6 @@
 <%@ Register TagPrefix="ult" TagName="CommunityControl" Src="../../controls/Ultimate/CommunityControl.ascx" %>
 
 <style>
-    td {
-        vertical-align: top;
-        text-align: left;
-    }
 
     .modalBackground {
         background-color: Gray;
@@ -93,7 +89,7 @@
                         <ContentTemplate>
                             <table style="width:100%;padding: 20px 50px 20px 50px;">
                                 <tr>
-                                    <td style="width:50%;">
+                                    <td style="width:50%; vertical-align:top;">
                                         <table style="width:100%;">
                                             <tr>
                                                 <td style="width:40%;">Title/Specification number</td>
@@ -119,7 +115,7 @@
                                             </tr>
                                         </table>
                                     </td>
-                                    <td style="width:50%;">
+                                    <td style="width:50%; vertical-align:top;">
                                          <table style="width:100%;">
                                             <tr>
                                                 <td style="width:40%;">Release</td>
