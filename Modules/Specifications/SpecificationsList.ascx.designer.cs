@@ -112,6 +112,33 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.WebControls.CheckBox cbTechnicalReport;
         
         /// <summary>
+        /// cbInternal control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbInternal;
+        
+        /// <summary>
+        /// cbForPublication control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox cbForPublication;
+        
+        /// <summary>
+        /// trNumberNotYetAllocated control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlTableRow trNumberNotYetAllocated;
+        
+        /// <summary>
         /// cbNumNotYetAllocated control.
         /// </summary>
         /// <remarks>
@@ -155,24 +182,6 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox cbWithdrawnAfterCC;
-        
-        /// <summary>
-        /// cbInternal control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbInternal;
-        
-        /// <summary>
-        /// cbForPublication control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox cbForPublication;
         
         /// <summary>
         /// cblTechnology control.

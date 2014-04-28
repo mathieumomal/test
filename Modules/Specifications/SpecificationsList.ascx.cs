@@ -114,6 +114,12 @@ namespace Etsi.Ultimate.Module.Specifications
                 GetRequestParameters();
                 if (!IsPostBack)
                 {
+                    // Display or not NumberNotYetAllocated
+                    var personService = ServicesFactory.Resolve<IPersonService>();
+
+                    var userRights = personService.GetRights(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()));
+                    trNumberNotYetAllocated.Visible = userRights.HasRight(Enum_UserRights.Specification_View_UnAllocated_Number);
+
                     var specSvc = ServicesFactory.Resolve<ISpecificationService>();
                     searchObj = new SpecificationSearch();
                     Technologies = specSvc.GetTechnologyList();
@@ -146,11 +152,11 @@ namespace Etsi.Ultimate.Module.Specifications
                 Image imgLTE = (Image)dataItem.FindControl("imgLTE");
 
                 if (img2G != null)
-                    img2G.Visible = (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "2g").FirstOrDefault() != null);
+                    img2G.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "2g").FirstOrDefault() != null) ? "opacity:1" : "opacity:0.1");
                 if (img3G != null)
-                    img3G.Visible = (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "3g").FirstOrDefault() != null);
+                    img3G.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "3g").FirstOrDefault() != null) ? "opacity:1" : "opacity:0.1");
                 if (imgLTE != null)
-                    imgLTE.Visible = (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "lte").FirstOrDefault() != null);
+                    imgLTE.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "lte").FirstOrDefault() != null) ? "opacity:1" : "opacity:0.1");
             }
         }
 
@@ -248,7 +254,7 @@ namespace Etsi.Ultimate.Module.Specifications
             if (cbTechnicalSpecification.Checked != cbTechnicalReport.Checked)
                 searchObj.Type = (cbTechnicalSpecification.Checked) ? true : ((cbTechnicalReport.Checked) ? (bool?)false : null);
 
-            if (cbNumNotYetAllocated.Visible)
+            if (trNumberNotYetAllocated.Visible)
                 searchObj.NumberNotYetAllocated = cbNumNotYetAllocated.Checked;
 
             if (CommunityCtrl.SelectedCommunityIds.Count > 0)
@@ -302,7 +308,7 @@ namespace Etsi.Ultimate.Module.Specifications
             SetSearchLabel();
             rgSpecificationList.Rebind();
         }
-        
+
         /// <summary>
         /// Retrieve person Id
         /// </summary>

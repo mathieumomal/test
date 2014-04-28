@@ -6,7 +6,6 @@
 <%@ Register TagPrefix="ult" TagName="CommunityControl" Src="../../controls/Ultimate/CommunityControl.ascx" %>
 
 <style>
-
     .modalBackground {
         background-color: Gray;
         filter: alpha(opacity=60);
@@ -35,12 +34,11 @@
         border-radius: 15px;
     }
 
-    .updateProgress .Fixed {
-        top: 45%;
-        position: fixed;
-        right: 45%;
-    }
-
+        .updateProgress .Fixed {
+            top: 45%;
+            position: fixed;
+            right: 45%;
+        }
 </style>
 
 <asp:UpdateProgress ID="updateProgressSpecificationGrid" runat="server" DisplayAfter="200">
@@ -57,7 +55,7 @@
     <ContentTemplate>
         <table style="width: 100%;">
             <tr>
-                <td style="line-height:22px;">
+                <td style="line-height: 22px;">
                     <telerik:RadButton ID="rbNewSpecification" runat="server" Text="New Specification" />
                     <span style="float: right; padding-bottom: 2px; white-space: nowrap">
                         <asp:HyperLink ID="lnkManageITURecommendations" runat="server" Text="Manage ITU Recommendations" Target="_blank" />
@@ -106,12 +104,18 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>Number not yet allocated</td>
-                                                <td><asp:CheckBox ID="cbNumNotYetAllocated" runat="server"></asp:CheckBox></td>
+                                                <td>Publication</td>
+                                                <td><asp:CheckBox ID="cbInternal" runat="server" Text="Internal"></asp:CheckBox><br />
+                                                    <asp:CheckBox ID="cbForPublication" runat="server" Text="For Publication"></asp:CheckBox>
+                                                </td>
                                             </tr>
                                             <tr>
                                                 <td>Primary responsible group(s)</td>
                                                 <td><ult:CommunityControl id="CommunityCtrl" Width="200" IsSingleSelection="false" IsEditMode="true" runat="server"/></td>
+                                            </tr>
+                                            <tr runat="server" ID="trNumberNotYetAllocated" Visible="false">
+                                                    <td>Number not yet allocated</td>
+                                                    <td><asp:CheckBox ID="cbNumNotYetAllocated" runat="server"></asp:CheckBox></td>
                                             </tr>
                                         </table>
                                     </td>
@@ -129,16 +133,14 @@
                                                     <asp:CheckBox ID="cbWithdrawnAfterCC" runat="server" Text="Withdrawn under change control"></asp:CheckBox>
                                                 </td>
                                             </tr>
-                                            <tr>
-                                                <td>Publication</td>
-                                                <td><asp:CheckBox ID="cbInternal" runat="server" Text="Internal"></asp:CheckBox><br />
-                                                    <asp:CheckBox ID="cbForPublication" runat="server" Text="For Publication"></asp:CheckBox>
-                                                </td>
-                                            </tr>
                                              <tr>
                                                  <td>Technology</td>
                                                 <td><asp:CheckBoxList ID="cblTechnology" runat="server" RepeatDirection="Horizontal"></asp:CheckBoxList>
                                                 </td>
+                                             </tr>
+                                             <tr>
+                                                <td>&nbsp;</td>
+                                                <td>&nbsp;</td>
                                              </tr>
                                              <tr>
                                                 <td colspan="2" style="text-align:right; padding-right:20px">
@@ -157,22 +159,22 @@
             </tr>
             <tr>
                 <td>
-            <telerik:RadGrid ID="rgSpecificationList" runat="server" 
-                EnableEmbeddedSkins="false"
-                EnableEmbeddedBaseStylesheet="false" 
-                Skin="Ultimate"
-                AllowSorting="true"
-                AllowPaging="true"
-                PageSize="50"
-                AllowFilteringByColumn="false" 
-                AutoGenerateColumns="false"                
-                OnNeedDataSource="rgSpecificationList_NeedDataSource"
-                OnItemDataBound="rgSpecificationList_ItemDataBound">
-                <ClientSettings>
+                    <telerik:RadGrid ID="rgSpecificationList" runat="server"
+                        EnableEmbeddedSkins="false"
+                        EnableEmbeddedBaseStylesheet="false"
+                        Skin="Ultimate"
+                        AllowSorting="true"
+                        AllowPaging="true"
+                        PageSize="50"
+                        AllowFilteringByColumn="false"
+                        AutoGenerateColumns="false"
+                        OnNeedDataSource="rgSpecificationList_NeedDataSource"
+                        OnItemDataBound="rgSpecificationList_ItemDataBound">
+                        <clientsettings>
                     <Scrolling AllowScroll="True" UseStaticHeaders="True" SaveScrollPosition="true"></Scrolling>
-                </ClientSettings>
-                <PagerStyle AlwaysVisible="true" Mode="NextPrevAndNumeric" PageButtonCount="10"/>
-                        <MasterTableView ClientDataKeyNames="Pk_SpecificationId" Width="100%" AllowNaturalSort="false">
+                </clientsettings>
+                        <pagerstyle alwaysvisible="true" mode="NextPrevAndNumeric" pagebuttoncount="10" />
+                        <mastertableview clientdatakeynames="Pk_SpecificationId" width="100%" allownaturalsort="false">
                             <SortExpressions>
                                 <telerik:GridSortExpression FieldName="Title" SortOrder="None" />
                                 <telerik:GridSortExpression FieldName="Number" SortOrder="Ascending" />
@@ -189,18 +191,18 @@
                                     <tr>
                                         <td><img id="imgViewSpecifications" title="View Specification" class="imgViewSpecifications" alt="View Specification" src="/DesktopModules/Specifications/images/details.png"
                                                 onclick="var popUp=window.open('/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>', 'Specification-<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>', 'height=650,width=750,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" /></td>
-                                        <td><img id="imgLock" title="Internal" alt="Internal" src="/DesktopModules/Specifications/images/lock.png" style='display: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsForPublication")) ? "none" : "block" %>' /></td>
-                                        <td><img id="imgIMS" title="Common IMS" alt="Common IMS" src="/DesktopModules/Specifications/images/ims.png" style='display: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"ComIMS")) ? "block" : "none" %>' /></td>
-                                        <td><asp:Image ID="img2G" runat="server" ToolTip="2nd Generation" AlternateText="2nd Generation" ImageUrl="/DesktopModules/Specifications/images/2g.png" /></td>
-                                        <td><asp:Image ID="img3G" runat="server" ToolTip="3rd Generation" AlternateText="3rd Generation" ImageUrl="/DesktopModules/Specifications/images/3g.png" /></td>
-                                        <td><asp:Image ID="imgLTE" runat="server" ToolTip="Long-Term Evolution" AlternateText="Long-Term Evolution" ImageUrl="/DesktopModules/Specifications/images/lte.png" /></td>
-                                        <td><img id="imgCR" title="CR is pending implementation" class="imgCR" alt="CR is pending implementation" src="/DesktopModules/Specifications/images/cr.png" /></td>
+                                        <td><img id="imgLock" title="<%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsForPublication")) ? "" : "Internal" %>" alt="Internal" src="/DesktopModules/Specifications/images/lock.png" style='opacity: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsForPublication")) ? "0.1" : "1" %>' /></td>
+                                        <td><img id="imgIMS" title="Common IMS" alt="Common IMS" src="/DesktopModules/Specifications/images/ims.png" style='opacity: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"ComIMS")) ? "1" : "0.1" %>' /></td>
+                                        <td><asp:Image ID="img2G" runat="server" ToolTip="2g" AlternateText="2g" ImageUrl="/DesktopModules/Specifications/images/2g.png" /></td>
+                                        <td><asp:Image ID="img3G" runat="server" ToolTip="3g" AlternateText="3g" ImageUrl="/DesktopModules/Specifications/images/3g.png" /></td>
+                                        <td><asp:Image ID="imgLTE" runat="server" ToolTip="LTE" AlternateText="LTE" ImageUrl="/DesktopModules/Specifications/images/lte.png" /></td>
+                                        <td><img id="imgCR" title="Related CRs - Pending implementation" class="imgCR" alt="Related CRs" src="/DesktopModules/Specifications/images/cr.png" /></td>
                                     </tr>
                                 </table>
                             </ItemTemplate>
                         </telerik:GridTemplateColumn>
                     </Columns>
-                </MasterTableView>
+                </mastertableview>
                     </telerik:RadGrid>
                 </td>
             </tr>

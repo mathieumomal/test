@@ -38,6 +38,7 @@
 	<Right value="Specification_Create"/>	
 	<Right value="Specification_EditFull"/>
 	<Right value="Specification_Withdraw"/>
+	<Right value="Specification_View_UnAllocated_Number"/>
   </UserRole>
   <UserRole value="Administrator">
 	<Right value="Release_Create"/>
