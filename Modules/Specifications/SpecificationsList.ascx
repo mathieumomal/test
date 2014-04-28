@@ -176,10 +176,10 @@
                     <Scrolling AllowScroll="True" UseStaticHeaders="True" SaveScrollPosition="true"></Scrolling>
                 </ClientSettings>
                 <PagerStyle AlwaysVisible="true" Mode="NextPrevAndNumeric" PageButtonCount="10"/>
-                        <MasterTableView ClientDataKeyNames="Pk_SpecificationId" Width="100%">
+                        <MasterTableView ClientDataKeyNames="Pk_SpecificationId" Width="100%" AllowNaturalSort="false">
                             <SortExpressions>
-                                <telerik:GridSortExpression FieldName="Number" SortOrder="Ascending" />
                                 <telerik:GridSortExpression FieldName="Title" SortOrder="None" />
+                                <telerik:GridSortExpression FieldName="Number" SortOrder="Ascending" />
                             </SortExpressions>
                     <Columns>
                         <telerik:GridBoundColumn HeaderStyle-Width="8%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" ShowSortIcon="false" DataField="Number" HeaderText="Specification Number" UniqueName="Number"></telerik:GridBoundColumn>
