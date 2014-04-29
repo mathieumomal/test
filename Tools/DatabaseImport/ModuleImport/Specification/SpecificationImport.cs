@@ -154,9 +154,9 @@ namespace DatabaseImport.ModuleImport
         private void TechnologieCase(Domain.Specification newSpec, OldDomain.Specs_GSM_3G legacySpec)
         {
             //SpecificationTechnologies relation table creation
-            if (Utils.NullBooleanCheck(legacySpec.C3g, RefImportForLog + "C3g", false, Report))
+            if (Utils.NullBooleanCheck(legacySpec.C2g, RefImportForLog + "C2g", false, Report))
             {
-                Domain.Enum_Technology enumTechno = NewContext.Enum_Technology.Where(x => x.Code.Equals(Enum_TechnologyImport._3gCode)).FirstOrDefault();
+                Domain.Enum_Technology enumTechno = NewContext.Enum_Technology.Where(x => x.Code.Equals(Enum_TechnologyImport._2gCode)).FirstOrDefault();
                 Domain.SpecificationTechnology relationSpecTechno = new SpecificationTechnology()
                 {
                     Enum_Technology = enumTechno,
@@ -165,9 +165,9 @@ namespace DatabaseImport.ModuleImport
                 NewContext.SpecificationTechnologies.Add(relationSpecTechno);
                 newSpec.SpecificationTechnologies.Add(relationSpecTechno);
             }
-            if (Utils.NullBooleanCheck(legacySpec.C2g, RefImportForLog + "C2g", false, Report))
+            if (Utils.NullBooleanCheck(legacySpec.C3g, RefImportForLog + "C3g", false, Report))
             {
-                Domain.Enum_Technology enumTechno = NewContext.Enum_Technology.Where(x => x.Code.Equals(Enum_TechnologyImport._2gCode)).FirstOrDefault();
+                Domain.Enum_Technology enumTechno = NewContext.Enum_Technology.Where(x => x.Code.Equals(Enum_TechnologyImport._3gCode)).FirstOrDefault();
                 Domain.SpecificationTechnology relationSpecTechno = new SpecificationTechnology()
                 {
                     Enum_Technology = enumTechno,

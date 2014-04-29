@@ -43,22 +43,24 @@ namespace DatabaseImport.ModuleImport
         #region migration methods
         private void CreateDatas()
         {
-            var _3g = new Domain.Enum_Technology(){
-                Code = _3gCode,
-                Description = _3gCode
-            };
             var _2g = new Domain.Enum_Technology()
             {
                 Code = _2gCode,
                 Description = _2gCode
             };
+            
+            var _3g = new Domain.Enum_Technology(){
+                Code = _3gCode,
+                Description = _3gCode
+            };
+            
             var _lte = new Domain.Enum_Technology()
             {
                 Code = _lteCode,
                 Description = _lteCode
             };
-            NewContext.Enum_Technology.Add(_3g);
             NewContext.Enum_Technology.Add(_2g);
+            NewContext.Enum_Technology.Add(_3g);
             NewContext.Enum_Technology.Add(_lte);
         }
         #endregion
