@@ -74,7 +74,8 @@ namespace Etsi.Ultimate.Repositories
                      searchObject.IsDraft ? (x.IsActive && !x.IsUnderChangeControl.Value) : false ||
                      searchObject.IsWithACC ? (!x.IsActive && x.IsUnderChangeControl.Value) : false ||
                      searchObject.IsWithBCC ? (!x.IsActive && !x.IsUnderChangeControl.Value) : false))
-                  && ((searchObject.Technologies.Count == 0) || searchObject.Technologies.All(y => x.SpecificationTechnologies.Any(z => z.Fk_Enum_Technology == y)))    //x.SpecificationTechnologies.Any(y => !searchObject.Technologies.Contains(y.Fk_Enum_Technology))) //Technology Search
+                  //&& ((searchObject.Technologies.Count == 0) || searchObject.Technologies.All(y => x.SpecificationTechnologies.Any(z => z.Fk_Enum_Technology == y)))    //Technology Search
+                  && ((searchObject.Technologies.Count == 0) || x.SpecificationTechnologies.Any(y => searchObject.Technologies.Contains(y.Fk_Enum_Technology)))  //Technology Search
                   && ((searchObject.Series.Count == 0) || searchObject.Series.Contains(x.Enum_Serie.Pk_Enum_SerieId)) //Series Search
                   && ((searchObject.SelectedReleaseIds.Count == 0) || x.Specification_Release.Any(y=> searchObject.SelectedReleaseIds.Contains(y.Fk_ReleaseId))) //Release Search
                   && ((searchObject.SelectedCommunityIds.Count == 0) || x.SpecificationResponsibleGroups.Any(y => searchObject.SelectedCommunityIds.Contains(y.Fk_commityId))) //Community Search
