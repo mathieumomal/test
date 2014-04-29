@@ -123,6 +123,8 @@ legend{
     font-size: 18px;
     font-weight: bold;
     color: gray;
+    z-index:2000;
+	right:20px;
 }
 
 #specAdditionalDetails {
