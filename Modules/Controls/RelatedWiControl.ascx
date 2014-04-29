@@ -182,7 +182,7 @@
                                             <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Name") %></div>
                                         </ItemTemplate>
                                     </telerik:GridTemplateColumn>
-                                    <telerik:GridTemplateColumn DataField="ResponsibleGroups" HeaderText="Responsible" UniqueName="ResponsibleGroups">
+                                    <telerik:GridTemplateColumn DataField="ResponsibleGroups" HeaderText="Responsible group(s)" UniqueName="ResponsibleGroups">
                                         <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="20%" />
                                         <ItemTemplate>
                                             <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"ResponsibleGroups") %></div>

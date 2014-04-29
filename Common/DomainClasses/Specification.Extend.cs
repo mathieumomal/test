@@ -20,7 +20,7 @@ namespace Etsi.Ultimate.DomainClasses
         {
             get
             {
-                return SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().FirstOrDefault();
+                return (SpecificationResponsibleGroups != null && SpecificationResponsibleGroups.Count> 0) ? SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().FirstOrDefault() : null;
             }
         }
 
@@ -61,7 +61,7 @@ namespace Etsi.Ultimate.DomainClasses
                 if (IsActive){
                     specificationStatus = "Draft";
                     if ((IsUnderChangeControl != null) && (IsUnderChangeControl.Value))
-                        specificationStatus = "under change control";
+                        specificationStatus = "Under change control";
                 }
 
                 else

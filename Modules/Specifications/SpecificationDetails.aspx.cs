@@ -179,6 +179,11 @@ namespace Etsi.Ultimate.Module.Specifications
                 referenceVal.Text = string.IsNullOrEmpty(specification.Number) ? CONST_EMPTY_FIELD : specification.Number;
                 titleVal.Text = string.IsNullOrEmpty(specification.Title) ? CONST_EMPTY_FIELD : specification.Title;
                 statusVal.Text =string.IsNullOrEmpty(specification.Status) ? CONST_EMPTY_FIELD :  specification.Status;
+                if (statusVal.Text.Trim().Equals("Under change control"))
+                {
+                    lnkChangeRequest.Visible = true;
+                    lnkChangeRequest.NavigateUrl = "#";
+                }
                 typeVal.Text = string.IsNullOrEmpty(specification.SpecificationTypeFullText) ? CONST_EMPTY_FIELD : specification.SpecificationTypeFullText;
                 stageVal.Text = specification.Enum_SpecificationStage == null ? CONST_EMPTY_FIELD : specification.Enum_SpecificationStage.Code;
                 initialPlannedReleaseVal.Text = string.IsNullOrEmpty(specification.SpecificationInitialRelease) ? CONST_EMPTY_FIELD : specification.SpecificationInitialRelease; 

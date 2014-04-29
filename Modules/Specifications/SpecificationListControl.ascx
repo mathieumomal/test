@@ -56,7 +56,7 @@
                                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Status") %></div>  
                                 </ItemTemplate>                
                             </telerik:GridTemplateColumn>
-                            <telerik:GridTemplateColumn DataField="PrimeResponsibleGroupShortName" HeaderText="Prime responsible" UniqueName="PrimeResponsibleGroupShortName">
+                            <telerik:GridTemplateColumn DataField="PrimeResponsibleGroupShortName" HeaderText="Primary responsible group" UniqueName="PrimeResponsibleGroupShortName">
                                 <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="60px"/>
                                 <ItemTemplate>
                                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"PrimeResponsibleGroupShortName") %></div>  

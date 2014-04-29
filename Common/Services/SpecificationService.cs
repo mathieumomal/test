@@ -37,11 +37,25 @@ namespace Etsi.Ultimate.Services
                     }
                     if (result.Key.SpecificationParents != null && result.Key.SpecificationParents.Count > 0)
                     {
-                        result.Key.SpecificationParents.ToList().ForEach(s => s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId));
+                        foreach (Specification s in result.Key.SpecificationParents)
+                        {
+                            if (s.SpecificationResponsibleGroups != null && s.SpecificationResponsibleGroups.Count > 0 && s.PrimeResponsibleGroup != null)
+                            {
+                                s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId);
+                            }
+                        }
+                        //result.Key.SpecificationParents.Where(s => s.SpecificationResponsibleGroups != null ).ToList().ForEach(s => s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId));
                     }
                     if (result.Key.SpecificationChilds != null && result.Key.SpecificationChilds.Count > 0)
                     {
-                        result.Key.SpecificationChilds.ToList().ForEach(s => s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId));
+                        foreach (Specification s in result.Key.SpecificationChilds)
+                        {
+                            if (s.SpecificationResponsibleGroups != null && s.SpecificationResponsibleGroups.Count > 0 && s.PrimeResponsibleGroup != null)
+                            {
+                                s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId);
+                            }
+                        }
+                        //result.Key.SpecificationChilds.Where(s => s.SpecificationResponsibleGroups != null).ToList().ForEach(s => s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId));
                     }
                     result.Key.SpecificationTechnologiesList = GetASpecificationTechnologiesBySpecId(result.Key.Pk_SpecificationId);
                     result.Key.SpecificationWIsList = GetSpecificationWorkItemsBySpecId(result.Key.Pk_SpecificationId);

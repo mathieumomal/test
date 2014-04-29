@@ -101,7 +101,7 @@ namespace Etsi.Ultimate.Controls
         protected void relatedWiGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
         {
             relatedWiGrid.DataSource = DataSource;
-            legendLabel.Text = String.Format("Related Work Items ({0})", DataSource.Count);
+            legendLabel.Text = "Related Work Items";
         }
 
         /// <summary>

@@ -44,7 +44,12 @@
                         </tr>            
                         <tr>            
                             <td class="TabLineLeft"><asp:Label ID="statusLbl" runat="server"  Text="Status:"></asp:Label></td>
-                            <td class="TabLineRight"><asp:Label ID="statusVal" runat="server" ></asp:Label></td>
+                            <td class="TabLineRight">
+                                <asp:Label ID="statusVal" runat="server" ></asp:Label>
+                                <asp:hyperlink id="lnkChangeRequest" runat="server" Target="_blank" Visible="false" NavigateUrl="#">
+                                   <img runat="server" id="lnkChangeRequestImg" alt="Go to change request" src="images/cr.png"/>
+                                </asp:hyperlink>
+                            </td>
                         </tr>
                         <tr>            
                             <td class="TabLineLeft"><asp:Label ID="typeLbl" runat="server"  Text="Type:"></asp:Label></td>
