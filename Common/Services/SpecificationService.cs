@@ -20,6 +20,7 @@ namespace Etsi.Ultimate.Services
                 var communityManager = new CommunityManager(uoW);
                 KeyValuePair<Specification, UserRightsContainer> result = specificationManager.GetSpecificationById(personId, specificationId);                
                 List<string> secondaryRGShortName = new List<string>();
+
                 if (result.Key != null)
                 {
                     if (result.Key.SpecificationResponsibleGroups != null && result.Key.SpecificationResponsibleGroups.Count > 0)
@@ -29,12 +30,14 @@ namespace Etsi.Ultimate.Services
                             result.Key.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().ForEach(g => secondaryRGShortName.Add(communityManager.GetCommmunityshortNameById(g.Fk_commityId)));
                             result.Key.SecondaryResponsibleGroupsShortNames = string.Join(",", secondaryRGShortName.ToArray());
                         }
+
                         if (result.Key.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList() != null & result.Key.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().Count > 0)
                         {
                             result.Key.PrimeResponsibleGroupShortName
                                 = communityManager.GetCommmunityshortNameById(result.Key.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().FirstOrDefault().Fk_commityId);
                         }
                     }
+
                     if (result.Key.SpecificationParents != null && result.Key.SpecificationParents.Count > 0)
                     {
                         foreach (Specification s in result.Key.SpecificationParents)
@@ -43,9 +46,9 @@ namespace Etsi.Ultimate.Services
                             {
                                 s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId);
                             }
-                        }
-                        //result.Key.SpecificationParents.Where(s => s.SpecificationResponsibleGroups != null ).ToList().ForEach(s => s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId));
+                        }                        
                     }
+
                     if (result.Key.SpecificationChilds != null && result.Key.SpecificationChilds.Count > 0)
                     {
                         foreach (Specification s in result.Key.SpecificationChilds)
@@ -54,12 +57,25 @@ namespace Etsi.Ultimate.Services
                             {
                                 s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId);
                             }
-                        }
-                        //result.Key.SpecificationChilds.Where(s => s.SpecificationResponsibleGroups != null).ToList().ForEach(s => s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId));
+                        }                       
                     }
-                    result.Key.SpecificationTechnologiesList = GetASpecificationTechnologiesBySpecId(result.Key.Pk_SpecificationId);
-                    result.Key.SpecificationWIsList = GetSpecificationWorkItemsBySpecId(result.Key.Pk_SpecificationId);
-                    //return specificationManager.GetSpecificationById(personId, specificationId);
+
+                    // Getting list of current specification technologies
+                    var specTechnologiesManager = new SpecificationTechnologiesManager();
+                    specTechnologiesManager.UoW = uoW;
+                    result.Key.SpecificationTechnologiesList = specTechnologiesManager.GetASpecificationTechnologiesBySpecId(result.Key.Pk_SpecificationId);
+
+                    // Getting list of specification workItems including responsible groups
+                    List<WorkItem> workItemsList = new List<WorkItem>();
+                    WorkItem WIBuffer;
+                    var workItemsManager = new WorkItemManager(uoW);
+                    foreach (Specification_WorkItem item in result.Key.Specification_WorkItem.ToList())
+                    {
+                        WIBuffer = workItemsManager.GetWorkItemById(personId,item.Fk_WorkItemId).Key;
+                        if (WIBuffer != null)
+                            workItemsList.Add(WIBuffer);
+                    }
+                    result.Key.SpecificationWIsList = workItemsList;
                 }
                 return result;
             }        
@@ -108,28 +124,7 @@ namespace Etsi.Ultimate.Services
                 specTechnologiesManager.UoW = uoW;
                 return specTechnologiesManager.GetAllSpecificationTechnologies();
             }
-        }
-
-        public List<Enum_Technology> GetASpecificationTechnologiesBySpecId(int id)
-        {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
-            {
-                var specTechnologiesManager = new SpecificationTechnologiesManager();
-                specTechnologiesManager.UoW = uoW;
-                return specTechnologiesManager.GetASpecificationTechnologiesBySpecId(id);
-            }
-        }
-
-        public List<WorkItem> GetSpecificationWorkItemsBySpecId(int id)
-        {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
-            {
-                var specWorkItemsManager = new SpecificationWorkItemManager();
-                specWorkItemsManager.UoW = uoW;
-                return specWorkItemsManager.GetSpecificationWorkItemsBySpecId(id);
-            }
-        }
-
+        }              
 
         #region ISpecificationService Membres
 

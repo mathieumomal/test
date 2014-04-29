@@ -10,7 +10,7 @@ namespace Etsi.Ultimate.Business
 {
     public class SpecificationWorkItemManager
     {
-        public IUltimateUnitOfWork UoW{get; set;}
+        public IUltimateUnitOfWork UoW {get; set;}
 
         public SpecificationWorkItemManager()
         {
@@ -22,7 +22,7 @@ namespace Etsi.Ultimate.Business
             List<WorkItem> result = new List<WorkItem>();
             ISpecificationWorkItemRepository repo = RepositoryFactory.Resolve<ISpecificationWorkItemRepository>();
             repo.UoW = UoW;
-            repo.All.Where(s => s.Fk_SpecificationId == id).ToList().ForEach(e => result.Add(e.WorkItem));
+            repo.All.ToList().Where(s => s.Fk_SpecificationId == id).ToList().ForEach(e => result.Add(e.WorkItem));
             return result;
         }
     }

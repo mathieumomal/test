@@ -76,16 +76,16 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.WebControls.Label lblSearchHeader;
         
         /// <summary>
-        /// pnlSearchContainer control.
+        /// Contrôle pnlSearchContainer.
         /// </summary>
         /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel pnlSearchContainer;
         
         /// <summary>
-        /// txtTitle control.
+        /// Contrôle txtTitle.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.

@@ -6,7 +6,7 @@
 }
 
 .containerFix {
-    width: 650px;
+    width: 650px !important;
     position: relative;
     margin: 0 !important;
     padding: 0 !important;
@@ -30,7 +30,7 @@
 .specificationRemarks {
     position: absolute; 
     bottom: 20px;
-    width: 690px;
+    width: 650px;
 }
 
 
@@ -89,6 +89,11 @@ legend{
 .TabLineRight {
     width: auto;
     text-align: left;
+}
+
+.TabLineRight img
+{
+    vertical-align:top;
 }
 
 

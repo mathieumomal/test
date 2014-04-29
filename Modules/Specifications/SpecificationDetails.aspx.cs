@@ -255,7 +255,7 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if(specification != null){
                 specificationHistory.DataSource = specification.Histories.ToList();
-                specificationHistory.ScrollHeight = 590;
+                specificationHistory.ScrollHeight = 640;
             }
             else{
                 specificationHistory.DataSource = null;
@@ -362,8 +362,8 @@ namespace Etsi.Ultimate.Module.Specifications
         /// </summary>
         private void SetViewLayout()
         {
-            fixContainer.Height = new System.Web.UI.WebControls.Unit(700, UnitType.Pixel);
-            SpecificationDetailsRadMultiPage.Height = new System.Web.UI.WebControls.Unit(650, UnitType.Pixel);
+            fixContainer.Height = new System.Web.UI.WebControls.Unit(730, UnitType.Pixel);
+            SpecificationDetailsRadMultiPage.Height = new System.Web.UI.WebControls.Unit(690, UnitType.Pixel);
         }
 
         protected void EditSpecificationDetails_Click(object sender, EventArgs e)

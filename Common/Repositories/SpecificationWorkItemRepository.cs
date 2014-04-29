@@ -22,14 +22,25 @@ namespace Etsi.Ultimate.Repositories
         }
 
         #region IEntityRepository<SpecificationWorkItemRepository> Membres
-
+        
+        /// <summary>
+        /// Returns the list of all Specification_WorkItem, including the work items.
+        /// </summary>
         public IQueryable<Specification_WorkItem> All
         {
-            get {
-                return AllIncluding(e => e.WorkItem);
+            get
+            {
+                return AllIncluding(t => t.WorkItem);
             }
         }
 
+        /// <summary>
+        /// Returns the list of all Specification_WorkItem, including additional data that might be needed.
+        /// 
+        /// This performs no caching.
+        /// </summary>
+        /// <param name="includeProperties"></param>
+        /// <returns></returns>
         public IQueryable<Specification_WorkItem> AllIncluding(params System.Linq.Expressions.Expression<Func<Specification_WorkItem, object>>[] includeProperties)
         {
             IQueryable<Specification_WorkItem> query = UoW.Context.Specification_WorkItem;
@@ -52,7 +63,7 @@ namespace Etsi.Ultimate.Repositories
 
         public void Delete(int id)
         {
-            throw new InvalidOperationException("Cannot delete Release status entity");
+            throw new NotImplementedException();
         }
 
         #endregion

@@ -19,7 +19,7 @@
 </head>
 <body>
     <form id="specificationDetailsForm" runat="server">
-    <asp:Panel runat="server" ID="fixContainer" CssClass="containerFix" Width="700px">
+    <asp:Panel runat="server" ID="fixContainer" CssClass="containerFix" Width="750px">
         <asp:Panel ID="specificationMessages" runat="server" Visible="false">
            <asp:Label runat="server" ID="specificationMessagesTxt"></asp:Label>
        </asp:Panel>

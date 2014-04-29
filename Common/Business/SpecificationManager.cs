@@ -49,7 +49,7 @@ namespace Etsi.Ultimate.Business
 
             //Set the initial release
             specification.SpecificationInitialRelease = (specification.Specification_Release != null && specification.Specification_Release.Count > 0) ?
-                specification.Specification_Release.ToList().OrderBy(r => r.CreationDate).FirstOrDefault().Release.Name : string.Empty;
+                specification.Specification_Release.ToList().OrderBy(r => r.Pk_Specification_ReleaseId).FirstOrDefault().Release.Name : string.Empty;
 
 
             return new KeyValuePair<Specification, UserRightsContainer>(specification, personRights);
