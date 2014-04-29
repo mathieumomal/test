@@ -75,18 +75,23 @@
 
     //Set Default TBs checked
     function SetDefaultItems<%= this.ClientID%>(sender, eventArgs) {
+        UpdateNodes<%= this.ClientID%>(false);
         var defaultTBIds = $("#<%= defaultTbIds.ClientID %>").val();
         var tbIDsList = defaultTBIds.split(",");
 
         var tree = $find("<%= rtvCommunitySelector.ClientID %>");
         for (var i = 0; i < tree.get_allNodes().length; i++) {
             var node = tree.get_allNodes()[i];
-            node.set_checked(false);
-            var nodeValue = node.get_value();
-            for (var j = 0; j < tbIDsList.length; j++) {
-                if (nodeValue == tbIDsList[j])
-                    node.set_checked(true);
-            }                        
+
+            if (node.get_nodes().get_count() == 0) {
+                var nodeValue = node.get_value();
+                for (var j = 0; j < tbIDsList.length; j++) {
+                    if (nodeValue == tbIDsList[j]) {
+                        node.set_checked(true);
+                        UpdateParent<%= this.ClientID%>(node, true);
+                    }
+                }
+            }
         }
     }
 

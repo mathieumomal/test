@@ -191,14 +191,14 @@
                             <ItemTemplate>
                                 <table id="specAdditionalDetails">
                                     <tr>
-                                        <td><img id="imgViewSpecifications" title="View Specification" class="imgViewSpecifications" alt="View Specification" src="/DesktopModules/Specifications/images/details.png"
+                                        <td><img id="imgViewSpecifications" title="See details" class="imgViewSpecifications" alt="See details" src="/DesktopModules/Specifications/images/details.png"
                                                 onclick="var popUp=window.open('/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>', 'Specification-<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>', 'height=750,width=750,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" /></td>
-                                        <td><img id="imgLock" title="<%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsForPublication")) ? "" : "Internal" %>" alt="Internal" src="/DesktopModules/Specifications/images/lock.png" style='opacity: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsForPublication")) ? "0.1" : "1" %>' /></td>
+                                        <td><img id="imgLock" title="<%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsForPublication")) ? "For publication" : "Internal" %>" alt="Internal" src="/DesktopModules/Specifications/images/lock.png" style='opacity: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsForPublication")) ? "0.1" : "1" %>' /></td>
                                         <td><img id="imgIMS" title="Common IMS" alt="Common IMS" src="/DesktopModules/Specifications/images/ims.png" style='opacity: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"ComIMS")) ? "1" : "0.1" %>' /></td>
-                                        <td><asp:Image ID="img2G" runat="server" ToolTip="2g" AlternateText="2g" ImageUrl="/DesktopModules/Specifications/images/2g.png" /></td>
-                                        <td><asp:Image ID="img3G" runat="server" ToolTip="3g" AlternateText="3g" ImageUrl="/DesktopModules/Specifications/images/3g.png" /></td>
+                                        <td><asp:Image ID="img2G" runat="server" ToolTip="2G" AlternateText="2G" ImageUrl="/DesktopModules/Specifications/images/2g.png" /></td>
+                                        <td><asp:Image ID="img3G" runat="server" ToolTip="3G" AlternateText="3G" ImageUrl="/DesktopModules/Specifications/images/3g.png" /></td>
                                         <td><asp:Image ID="imgLTE" runat="server" ToolTip="LTE" AlternateText="LTE" ImageUrl="/DesktopModules/Specifications/images/lte.png" /></td>
-                                        <td><img id="imgCR" title="Related CRs - Pending implementation" class="imgCR" alt="Related CRs" src="/DesktopModules/Specifications/images/cr.png" /></td>
+                                        <td><img id="imgCR" title="Related CRs - pending implementation" class="imgCR" alt="Related CRs - pending implementation" src="/DesktopModules/Specifications/images/cr.png" /></td>
                                     </tr>
                                 </table>
                             </ItemTemplate>

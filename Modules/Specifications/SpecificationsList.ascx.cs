@@ -126,7 +126,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     Series = specSvc.GetSeries();
 
                     BindControls();
-
+                    SetTSGToCommunityControl();
                     ReleaseCtrl.Load += ReleaseCtrl_Load;
                 }
             }
@@ -477,6 +477,25 @@ namespace Etsi.Ultimate.Module.Specifications
         private void GetRequestParameters()
         {
             fromShortUrl = (Request.QueryString["shortUrl"] != null) ? Convert.ToBoolean(Request.QueryString["shortUrl"]) : false;
+        }
+
+        /// <summary>
+        /// Set TSG values to Community Control
+        /// </summary>
+        private void SetTSGToCommunityControl()
+        {
+            //Set TSG values to community control only when it is Multi Selection Edit Mode
+            if ((!CommunityCtrl.IsSingleSelection) && CommunityCtrl.IsEditMode)
+            {
+                string subTBId = Request.QueryString["SubTB"];
+                if (!String.IsNullOrEmpty(subTBId))
+                {
+                    int value;
+                    var tbList = subTBId.Split(',').Select(x => int.TryParse(x, out value) ? value : -1).ToList();
+                    tbList.RemoveAll(x => x == -1);
+                    CommunityCtrl.TBSelectorIds = tbList;
+                }
+            }
         }
 
         #endregion

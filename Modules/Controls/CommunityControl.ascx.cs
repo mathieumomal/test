@@ -37,7 +37,8 @@ namespace Etsi.Ultimate.Controls
                 _selectedCommunityIds.Clear();
                 foreach (RadTreeNode node in rtvCommunitySelector.CheckedNodes)
                 {
-                    _selectedCommunityIds.Add(Convert.ToInt32(node.Value));
+                    if (node.Nodes.Count == 0)
+                        _selectedCommunityIds.Add(Convert.ToInt32(node.Value));
                 }
 
                 return _selectedCommunityIds;
@@ -117,19 +118,25 @@ namespace Etsi.Ultimate.Controls
             if (!IsPostBack)
             {
                 ICommunityService svc = ServicesFactory.Resolve<ICommunityService>();
-                List<Community> dataSource = svc.GetCommunities();
-                AddMissingParent(dataSource); // Add missing parents dynamically
+                List<Community> communityList = svc.GetCommunities();
 
+                List<Community> dataSource = new List<Community>(); //Create deep copy of list to avoid cache modifications
+                dataSource.AddRange(communityList.Select(x => new Community() { TbId = x.TbId, TbName = x.TbName, ParentTbId = x.ParentTbId, Order = x.Order }));
+                
                 if (IsSingleSelection) //Single Selection
                 {
                     imgBtnCommunity.Visible = false;
+
+                    var rootNodes = dataSource.Where(x => x.ParentTbId == 0);
+                    rootNodes.ToList().ForEach(x => dataSource.FindAll(y => y.ParentTbId == x.TbId).ForEach(z => z.TbName = "Plenary " + z.TbName));
+                    dataSource.RemoveAll(x => rootNodes.Contains(x));
 
                     if (IsEditMode)
                     {
                         rcbCommunity.Visible = true;
                         lblCommunity.Visible = false;
 
-                        rcbCommunity.DataSource = dataSource.OrderBy(x => x.TbId);
+                        rcbCommunity.DataSource = dataSource.OrderBy(x => x.Order);
                         rcbCommunity.DataTextField = "TbName";
                         rcbCommunity.DataValueField = "TbId";
                         rcbCommunity.DataBind();
@@ -157,7 +164,7 @@ namespace Etsi.Ultimate.Controls
 
                     if (_selectedCommunityIds != null)
                     {
-                        var selectedCommunityNames = dataSource.FindAll(x => _selectedCommunityIds.Contains(x.TbId)).Select(x => x.TbName).ToList();
+                        var selectedCommunityNames = dataSource.FindAll(x => _selectedCommunityIds.Contains(x.TbId)).Select(x => dataSource.Any(y => y.ParentTbId == x.TbId) ? "Plenary " + x.TbName : x.TbName).ToList();
                         lblCommunity.Text = pnlCover.ToolTip = String.Join(", ", selectedCommunityNames);
                     }
 
@@ -165,11 +172,13 @@ namespace Etsi.Ultimate.Controls
                     {
                         imgBtnCommunity.Visible = true;
 
+                        AddPlenaryRecords(dataSource);
+
                         rtvCommunitySelector.DataTextField = "TbName";
                         rtvCommunitySelector.DataValueField = "TbId";
                         rtvCommunitySelector.DataFieldID = "TbId";
                         rtvCommunitySelector.DataFieldParentID = "ParentCommunityId";
-                        rtvCommunitySelector.DataSource = dataSource.OrderBy(x => x.TbId);
+                        rtvCommunitySelector.DataSource = dataSource.OrderBy(x => x.Order);
                         rtvCommunitySelector.DataBind();
 
                         if (_selectedCommunityIds != null)
@@ -179,7 +188,11 @@ namespace Etsi.Ultimate.Controls
                                 int nodeValue = Convert.ToInt32(node.Value);
                                 if (_selectedCommunityIds.Exists(x => x == nodeValue))
                                 {
-                                    node.Checked = true;
+                                    if (node.Nodes.Count == 0)
+                                    {
+                                        node.Checked = true;
+                                        UpdateParent(node);
+                                    }
                                 }
                             }
                         }
@@ -225,48 +238,64 @@ namespace Etsi.Ultimate.Controls
             BindLabelText();
         }
 
-        private void BindLabelText()
-        {
-            List<string> tbNames = new List<string>();
-            foreach (RadTreeNode node in rtvCommunitySelector.CheckedNodes)
-            {
-                tbNames.Add(node.Text);
-            }
-
-            lblCommunity.Text = pnlCover.ToolTip = String.Join(", ", tbNames);
-        }
-
         #endregion
 
         #region Private Methods
 
         /// <summary>
-        /// Add missing parent record
+        /// Add Plenary TSG records
         /// </summary>
         /// <param name="DataSource">Datasource</param>
-        private void AddMissingParent(List<Community> DataSource)
+        private void AddPlenaryRecords(List<Community> DataSource)
         {
-            List<Community> missingParentCommunities = new List<Community>();
-
-            foreach (var community in DataSource)
+            List<Community> plenaryCommunities = new List<Community>();
+            var rootNodes = DataSource.Where(x => x.ParentTbId == 0);
+            rootNodes.ToList().ForEach(rootNode => DataSource.FindAll(node => node.ParentTbId == rootNode.TbId).ForEach(level1node =>
             {
-                if (community.ParentTbId != null && community.ParentTbId != 0) //Don't process the root nodes
+                if (DataSource.Any(x => x.ParentTbId == level1node.TbId))
                 {
-                    var parentCommunity = DataSource.Find(x => x.TbId == community.ParentTbId);
-                    if ((parentCommunity == null) && (!missingParentCommunities.Exists(x => x.TbId == community.ParentCommunityId))) //If parent missing, add the same
-                    {
-                        Community missingParentCommunity = new Community();
-                        missingParentCommunity.TbId = community.ParentCommunityId;
-                        missingParentCommunity.ParentTbId = 0;
-                        missingParentCommunity.TbName = community.TbName.Split(' ')[0];
-                        missingParentCommunity.ShortName = community.TbName.Split(' ')[0];
-                        missingParentCommunity.ActiveCode = "ACTIVE";
-                        missingParentCommunities.Add(missingParentCommunity);
-                    }
+                    Community plenaryCommunity = new Community();
+                    plenaryCommunity.TbId = level1node.TbId;
+                    plenaryCommunity.ParentTbId = level1node.TbId;
+                    plenaryCommunity.TbName = "Plenary " + level1node.TbName;
+                    plenaryCommunity.ShortName = level1node.ShortName;
+                    plenaryCommunity.ActiveCode = "ACTIVE";
+                    plenaryCommunities.Add(plenaryCommunity);
                 }
+            }));
+
+            DataSource.AddRange(plenaryCommunities);
+        }
+
+        /// <summary>
+        /// Bind Label of Community Control
+        /// </summary>
+        private void BindLabelText()
+        {
+            List<string> tbNames = new List<string>();
+            foreach (RadTreeNode node in rtvCommunitySelector.CheckedNodes)
+            {
+                if (node.Nodes.Count == 0)
+                    tbNames.Add(node.Text);
             }
 
-            DataSource.AddRange(missingParentCommunities);
+            lblCommunity.Text = pnlCover.ToolTip = String.Join(", ", tbNames);
+        }
+
+        /// <summary>
+        /// Update Parent node to checked, if all sibling nodes checked
+        /// </summary>
+        /// <param name="node">Tree Node</param>
+        private void UpdateParent(RadTreeNode node)
+        {
+            if (node.ParentNode != null)
+            {
+                if (node.ParentNode.Nodes.Cast<RadTreeNode>().All(x => x.Checked))
+                {
+                    node.ParentNode.Checked = true;
+                    UpdateParent(node.ParentNode);
+                }
+            }
         }
 
         #endregion
