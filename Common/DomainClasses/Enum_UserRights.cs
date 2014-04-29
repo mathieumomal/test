@@ -33,6 +33,7 @@ namespace Etsi.Ultimate.DomainClasses
         Specification_EditLimitted,
         Specification_EditFull,
         Specification_Withdraw,
-        Specification_View_UnAllocated_Number
+        Specification_View_UnAllocated_Number,
+        Specification_ManageITURecommendations
     }
 }

@@ -119,6 +119,8 @@ namespace Etsi.Ultimate.Module.Specifications
 
                     var userRights = personService.GetRights(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()));
                     trNumberNotYetAllocated.Visible = userRights.HasRight(Enum_UserRights.Specification_View_UnAllocated_Number);
+                    lnkManageITURecommendations.Visible = userRights.HasRight(Enum_UserRights.Specification_ManageITURecommendations);
+                    rbNewSpecification.Visible = userRights.HasRight(Enum_UserRights.Specification_Create);
 
                     var specSvc = ServicesFactory.Resolve<ISpecificationService>();
                     searchObj = new SpecificationSearch();
@@ -224,6 +226,10 @@ namespace Etsi.Ultimate.Module.Specifications
                     }
                 }
 
+            }
+            else
+            {
+                searchObj.SelectedReleaseIds = ReleaseCtrl.SelectedReleaseIds;
             }
 
             LoadGridData();

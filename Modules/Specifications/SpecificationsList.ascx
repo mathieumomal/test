@@ -198,7 +198,7 @@
                                         <td><asp:Image ID="img2G" runat="server" ToolTip="2G" AlternateText="2G" ImageUrl="/DesktopModules/Specifications/images/2g.png" /></td>
                                         <td><asp:Image ID="img3G" runat="server" ToolTip="3G" AlternateText="3G" ImageUrl="/DesktopModules/Specifications/images/3g.png" /></td>
                                         <td><asp:Image ID="imgLTE" runat="server" ToolTip="LTE" AlternateText="LTE" ImageUrl="/DesktopModules/Specifications/images/lte.png" /></td>
-                                        <td><img id="imgCR" title="Related CRs - pending implementation" class="imgCR" alt="Related CRs - pending implementation" src="/DesktopModules/Specifications/images/cr.png" /></td>
+                                        <td><img id="imgCR" title="Related CRs - pending implementation" class="imgCR" alt="Related CRs - pending implementation" src="/DesktopModules/Specifications/images/cr.png"  style='opacity: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsActive")) && Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsUnderChangeControl")) ? "1" : "0.1" %>'/></td>
                                     </tr>
                                 </table>
                             </ItemTemplate>
