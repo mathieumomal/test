@@ -24,18 +24,20 @@ namespace DatabaseImportTests
             var remarkSet = new RemarkFakeDbSet();
             remarkSet.Add(new Domain.Remark() { Pk_RemarkId = 27, RemarkText = "test", Fk_ReleaseId = 25 });
             remarkSet.Add(new Domain.Remark() { Pk_RemarkId = 29, RemarkText = "test2" });
-            var historySet = new HistoryFakeDBSet();
-
+            var historiesSet = new HistoryFakeDBSet();
+            historiesSet.Add(new Domain.History() { Pk_HistoryId = 1, HistoryText = "test1 history", Fk_ReleaseId = 25 });
+            historiesSet.Add(new Domain.History() { Pk_HistoryId = 2, HistoryText = "test2 history", Fk_SpecificationId = 1 });
             newContext.Stub(ctx => ctx.Releases).Return(newDbSet);
             newContext.Stub(ctx => ctx.Enum_ReleaseStatus).Return(GetStatuses());
             newContext.Stub(ctx => ctx.Remarks).Return(remarkSet);
-            newContext.Stub(ctx => ctx.Histories).Return(historySet);
+            newContext.Stub(ctx => ctx.Histories).Return(historiesSet);
 
             var import = new ReleaseImport() { LegacyContext = null, NewContext = newContext, Report = null };
             import.CleanDatabase();
 
             Assert.AreEqual(0, newDbSet.All().Count);
             Assert.AreEqual(1, remarkSet.All().Count);  // only one remark deleted, the other is not linked to a remark.
+            Assert.AreEqual(1, historiesSet.All().Count);  // only one history deleted, the other is not linked to a specification.
         }
 
 
@@ -46,7 +48,7 @@ namespace DatabaseImportTests
             string releaseDescr = "Release 1";
             string releaseShortDescr = "Rel 1";
             DateTime startDate = DateTime.Now.AddMonths(-1);
-            DateTime closureDate = DateTime.Now.AddMonths(1);
+            
 
             // Set up the mocks
 
@@ -71,8 +73,7 @@ namespace DatabaseImportTests
                     Release_short_description = releaseShortDescr,
                     ITUR_code = "zzzz",
                     previousRelease = null,
-                    rel_proj_start = startDate,
-                    rel_proj_end = closureDate
+                    rel_proj_start = startDate,                    
                 }
                     );
             legacyContext.Stub(ctx => ctx.Releases).Return(legacyDbSet);
@@ -93,7 +94,6 @@ namespace DatabaseImportTests
             Assert.AreEqual(releaseDescr, newRelease.Name);
             Assert.AreEqual(releaseShortDescr, newRelease.ShortName);
             Assert.AreEqual(startDate, newRelease.StartDate);
-            Assert.AreEqual(closureDate, newRelease.ClosureDate);
 
             Assert.AreEqual(0, remarkSet.All().Count);
         }
@@ -111,7 +111,8 @@ namespace DatabaseImportTests
             var newDbSet = new ReleaseFakeDBSet();
             var remarkSet = new RemarkFakeDbSet();
             var meetingSet = new MeetingFakeDBSet();
-            meetingSet.Add(new Domain.Meeting() { MTG_ID = meetingId, MTG_REF = "3GPPSA#21", END_DATE = meetingDate });
+            meetingSet.Add(new Domain.Meeting() { MTG_ID = meetingId, MTG_REF = "3GPPSA#21", MtgShortRef= "SP-21", END_DATE = meetingDate });
+
 
             newContext.Stub(ctx => ctx.Releases).Return(newDbSet);
             newContext.Stub(ctx => ctx.Enum_ReleaseStatus).Return(GetStatuses());
@@ -128,7 +129,7 @@ namespace DatabaseImportTests
                     Release_code = "R1",
                     Release_description = "Release 1",
                     Release_short_description = "Rel 1",
-                    freeze_meeting = meetingRef
+                    Stage3_freeze = meetingRef
                 }
                     );
             legacyDbSet.Add(
@@ -138,7 +139,7 @@ namespace DatabaseImportTests
                     Release_code = "R2",
                     Release_description = "Release 2",
                     Release_short_description = "Rel 2",
-                    freeze_meeting = "SMG-10"
+                    Stage3_freeze = "SMG-10"
                 }
                 );
             legacyContext.Stub(ctx => ctx.Releases).Return(legacyDbSet);
@@ -177,8 +178,8 @@ namespace DatabaseImportTests
             var newDbSet = new ReleaseFakeDBSet();
             var remarkSet = new RemarkFakeDbSet();
             var meetingSet = new MeetingFakeDBSet();
-            meetingSet.Add(new Domain.Meeting() { MTG_ID = 21, MTG_REF = "3GPPSA#21", END_DATE = DateTime.Now.AddMonths(-1) });
-            meetingSet.Add(new Domain.Meeting() { MTG_ID = 22, MTG_REF = "3GPPSA#22", END_DATE = DateTime.Now.AddMonths(1) });
+            meetingSet.Add(new Domain.Meeting() { MTG_ID = 21, MTG_REF = "3GPPSA#21", MtgShortRef= "SP-21", END_DATE = DateTime.Now.AddMonths(-1) });
+            meetingSet.Add(new Domain.Meeting() { MTG_ID = 22, MTG_REF = "3GPPSA#22", MtgShortRef = "SP-22", END_DATE = DateTime.Now.AddMonths(1) });
 
             var statusList = GetStatuses();
 
@@ -208,7 +209,7 @@ namespace DatabaseImportTests
                     Release_description = "Release 2",
                     Release_short_description = "Rel 2",
                     defunct = false,
-                    freeze_meeting = "SP-21"
+                    Stage3_freeze = "SP-21"
                 }
                 );
 
@@ -220,7 +221,7 @@ namespace DatabaseImportTests
                     Release_description = "Release 3",
                     Release_short_description = "Rel 3",
                     defunct = false,
-                    freeze_meeting = "SP-22"
+                    Stage3_freeze = "SP-22"
                 }
                 );
             legacyDbSet.Add(
@@ -241,7 +242,7 @@ namespace DatabaseImportTests
                     Release_description = "Release 5",
                     Release_short_description = "Rel 5",
                     defunct = false,
-                    freeze_meeting = "SP-234"
+                    Stage3_freeze = "SP-234"
                 }
                 );
             legacyContext.Stub(ctx => ctx.Releases).Return(legacyDbSet);
