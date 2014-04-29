@@ -96,8 +96,9 @@ namespace Etsi.Ultimate.Controls
 
         public int Width
         {
-            set {
-                var width = (value >CONST_SELECT_WIDTH) ? value : CONST_SELECT_WIDTH;
+            set
+            {
+                var width = (value > CONST_SELECT_WIDTH) ? value : CONST_SELECT_WIDTH;
                 pnlCover.Width = Unit.Pixel(width);
             }
         }
@@ -184,6 +185,14 @@ namespace Etsi.Ultimate.Controls
                         }
                     }
                 }
+
+                //Assign javascript events - this.ClientId is added to make the js method unique to the calling control
+                imgBtnCommunity.OnClientClick = "openCommunitySelector" + this.ClientID + "(); return false;";
+                rtvCommunitySelector.OnClientNodeChecked = "clientNodeChecked" + this.ClientID;
+                btnAll.OnClientClicked = "function(button, args) { UpdateNodes" + this.ClientID + "(true); }";
+                btnDefault.OnClientClicked = "SetDefaultItems" + this.ClientID;
+                btnClear.OnClientClicked = "function(button, args) { UpdateNodes" + this.ClientID + "(false); }";
+                btnCancel.OnClientClicked = "closeCommunitySelector" + this.ClientID;
             }
         }
 
