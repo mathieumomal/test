@@ -278,6 +278,7 @@ namespace Etsi.Ultimate.Module.Specifications
             if (cbForPublication.Checked != cbInternal.Checked)
                 searchObj.IsForPublication = (cbForPublication.Checked) ? true : ((cbInternal.Checked) ? (bool?)false : null);
 
+            ultShareUrl.IsShortUrlChecked = false;
             LoadGridData();
         }
 
