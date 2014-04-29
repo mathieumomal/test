@@ -85,7 +85,8 @@
                             </table>
                         </HeaderTemplate>
                         <ContentTemplate>
-                            <table style="width:100%;padding: 20px 50px 20px 50px;">
+                            <asp:Panel id="pnlSearchContainer" runat="server" DefaultButton="btnSearch">
+                                <table style="width:100%;padding: 20px 50px 20px 50px;">
                                 <tr>
                                     <td style="width:50%; vertical-align:top;">
                                         <table style="width:100%;">
@@ -151,6 +152,7 @@
                                     </td>
                                 </tr>
                             </table>
+                            </asp:Panel>
                         </ContentTemplate>
                     </telerik:RadPanelItem>
                 </items>

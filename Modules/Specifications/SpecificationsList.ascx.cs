@@ -408,7 +408,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     sb.Append(tempSb.ToString().Trim().Trim(',') + "), ");
                 }
                 if (searchObj.IsForPublication != null)
-                    sb.Append((bool)searchObj.IsForPublication ? "Internal" : "For Publication" + ", ");
+                    sb.Append((bool)searchObj.IsForPublication ? "For Publication" : "Internal" + ", ");
                 if (searchObj.Technologies.Count > 0)
                     sb.Append("Technologies(" + searchObj.Technologies.Count + "), ");
 
