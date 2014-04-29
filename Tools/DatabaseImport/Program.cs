@@ -53,7 +53,6 @@ namespace DatabaseImport
 
             // Clean up in reverse order
             operations.Reverse();
-            newContext.Database.ExecuteSqlCommand("CleanAllTablesForImport");
             foreach (var toClean in operations)
             {
                 toClean.CleanDatabase();
@@ -75,10 +74,7 @@ namespace DatabaseImport
             Console.WriteLine("Changes saved, import is now finished!");
 
             Console.WriteLine("------------------- REPORT ---------------------");
-            using (TextWriter writer = File.CreateText(logPath))
-            {
-                writer.Write(report.PrintReport());
-            }
+            File.WriteAllText(logPath, report.PrintReport());
             Console.WriteLine("You could find the log file : 'import.log' in " + logPath);          
             
             Console.Read();

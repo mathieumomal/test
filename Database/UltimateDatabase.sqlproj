@@ -149,6 +149,13 @@
     <Build Include="dbo\Functions\getMeetingShortRef.sql" />
     <Build Include="dbo\Tables\Enum_SpecificationStage.sql" />
     <Build Include="dbo\Stored Procedures\WorkItems_CleanAll.sql" />
+    <Build Include="dbo\Tables\SpecifcationsGenealogy.sql">
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\Specifications_CleanAll.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

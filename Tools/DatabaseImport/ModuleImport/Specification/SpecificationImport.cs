@@ -31,7 +31,7 @@ namespace DatabaseImport.ModuleImport
 
         public void CleanDatabase()
         {
-            //Procedure does this work
+            NewContext.Specifications_CleanAll();
         }
 
         public void FillDatabase()

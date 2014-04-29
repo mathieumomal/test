@@ -41,5 +41,9 @@ namespace Etsi.Ultimate.DataAccess
         void SetDeleted(object entity);
         void SetAutoDetectChanges(bool detect);
         int SaveChanges();
+
+        // ---- STORED PROCEDURES calls -----------
+        int Specifications_CleanAll();
+        int WorkItems_CleanAll();
     }
 }

@@ -9,6 +9,7 @@ using Domain = Etsi.Ultimate.DomainClasses;
 using OldDomain = Etsi.Ultimate.Tools.TmpDbDataAccess;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Business;
+using System.IO;
 
 namespace DatabaseImport.ModuleImport
 {
@@ -39,27 +40,35 @@ namespace DatabaseImport.ModuleImport
         /// </summary>
         public void CleanDatabase()
         {
-            /*foreach (var aWorkItem in NewContext.WorkItems.ToList())
-            {
-                // Remove associated remarks
-                var remarks = NewContext.Remarks.Where(r => r.Fk_WorkItemId == aWorkItem.Pk_WorkItemUid).ToList();
-                for (int i = 0; i < remarks.Count; ++i)
-                    NewContext.Remarks.Remove(remarks[i]);
-
-                var workItemResponsibles = NewContext.WorkItems_ResponsibleGroups.Where(g => g.Fk_WorkItemId == aWorkItem.Pk_WorkItemUid).ToList();
-                for (int i = 0; i < workItemResponsibles.Count; ++i)
-                    NewContext.WorkItems_ResponsibleGroups.Remove(workItemResponsibles[i]);
-
-                NewContext.WorkItems.Remove(aWorkItem);
-            }*/
+            NewContext.WorkItems_CleanAll();
         }
 
         public void FillDatabase()
         {
             Console.WriteLine("Saving previous transactions .....");
-            //NewContext.SaveChanges();
-            Console.WriteLine("Please perform the WI import using WorkItem Module and press Enter to continue");
-            Console.Read();            
+            NewContext.SaveChanges();
+
+            if (File.Exists("../../referenceWorkPlan.csv"))
+            {
+                Console.WriteLine("Importing workplan from reference file");
+                var csvParser = new WorkItemCsvParser();
+                csvParser.UoW = new UltimateUnitOfWork();
+                var result = csvParser.ParseCsv("../../referenceWorkPlan.csv");
+                var workItemList = result.Key;
+
+                NewContext.SetAutoDetectChanges(false);
+                Console.WriteLine("Found " + workItemList.Count + " work items");
+                foreach (var wi in workItemList)
+                {
+                    NewContext.SetAdded(wi);
+                }
+                NewContext.SaveChanges();
+            }
+            else
+            {
+                Console.WriteLine("Please perform the WI import using WorkItem Module and press Enter to continue");
+                Console.Read();
+            }
         }
     }
 }

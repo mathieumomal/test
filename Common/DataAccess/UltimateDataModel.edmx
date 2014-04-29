@@ -779,7 +779,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Function Name="CleanAllTablesForImport" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="getMeetingShortRef" ReturnType="varchar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="shortName" Type="varchar" Mode="In" />
           <Parameter Name="meetingTitle" Type="varchar" Mode="In" />
@@ -788,6 +787,8 @@
         <Function Name="getPersonName" ReturnType="varchar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="personId" Type="int" Mode="In" />
         </Function>
+        <Function Name="Specifications_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="WorkItems_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -905,7 +906,8 @@
             <End Role="Specification" EntitySet="Specifications" />
             <End Role="Specification1" EntitySet="Specifications" />
           </AssociationSet>
-          <FunctionImport Name="CleanAllTablesForImport" />
+          <FunctionImport Name="Specifications_CleanAll" />
+          <FunctionImport Name="WorkItems_CleanAll" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -1885,7 +1887,8 @@
               <ScalarProperty Name="Pk_SpecificationId" ColumnName="Fk_SpecificationParentId" />
             </EndProperty>
           </AssociationSetMapping>
-          <FunctionImportMapping FunctionImportName="CleanAllTablesForImport" FunctionName="Etsi.Ultimate.DataAccess.Store.CleanAllTablesForImport" />
+          <FunctionImportMapping FunctionImportName="Specifications_CleanAll" FunctionName="Etsi.Ultimate.DataAccess.Store.Specifications_CleanAll" />
+          <FunctionImportMapping FunctionImportName="WorkItems_CleanAll" FunctionName="Etsi.Ultimate.DataAccess.Store.WorkItems_CleanAll" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

@@ -165,5 +165,20 @@ namespace Etsi.Ultimate.Tests
         }
 
         #endregion
+
+        #region IUltimateContext Members
+
+
+        public int Specifications_CleanAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int WorkItems_CleanAll()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

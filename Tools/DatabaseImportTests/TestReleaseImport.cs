@@ -24,10 +24,12 @@ namespace DatabaseImportTests
             var remarkSet = new RemarkFakeDbSet();
             remarkSet.Add(new Domain.Remark() { Pk_RemarkId = 27, RemarkText = "test", Fk_ReleaseId = 25 });
             remarkSet.Add(new Domain.Remark() { Pk_RemarkId = 29, RemarkText = "test2" });
+            var historySet = new HistoryFakeDBSet();
 
             newContext.Stub(ctx => ctx.Releases).Return(newDbSet);
             newContext.Stub(ctx => ctx.Enum_ReleaseStatus).Return(GetStatuses());
             newContext.Stub(ctx => ctx.Remarks).Return(remarkSet);
+            newContext.Stub(ctx => ctx.Histories).Return(historySet);
 
             var import = new ReleaseImport() { LegacyContext = null, NewContext = newContext, Report = null };
             import.CleanDatabase();

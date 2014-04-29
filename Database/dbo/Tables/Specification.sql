@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[Specification] (
     [Pk_SpecificationId]      INT            IDENTITY (1, 1) NOT NULL,
-    [Type]                    BIT            NULL,
+    [IsTS]                    BIT            NULL,
     [Number]                  VARCHAR (20)   NULL,
     [IsActive]                BIT            NOT NULL,
     [IsUnderChangeControl]    BIT            NULL,
@@ -10,19 +10,20 @@
     [ComIMS]                  BIT            NULL,
     [EPS]                     BIT            NULL,
     [_2gCommon]               BIT            NULL,
-    [DefinitivelyWithdrawn]   BIT            NULL,
     [CreationDate]            DATETIME       NULL,
-    [UpdateDate]              DATETIME       NULL,
-    [UpdateBy]                VARBINARY (50) NULL,
+    [MOD_TS]                  DATETIME       NULL,
+    [MOD_BY]                  NVARCHAR (20)  NULL,
     [TitleVerified]           DATETIME       NULL,
     [URL]                     VARCHAR (256)  NULL,
-    [ITU_Description]         VARCHAR (200)  NULL,
+    [ITU_Description]         VARCHAR (1000) NULL,
     [Fk_SerieId]              INT            NULL,
     [Fk_SpecificationStageId] INT            NULL,
     CONSTRAINT [PK_Specification] PRIMARY KEY CLUSTERED ([Pk_SpecificationId] ASC),
     CONSTRAINT [FK_SerieID] FOREIGN KEY ([Fk_SerieId]) REFERENCES [dbo].[Enum_Serie] ([Pk_Enum_SerieId]),
     CONSTRAINT [FK_SpecificationStageID] FOREIGN KEY ([Fk_SpecificationStageId]) REFERENCES [dbo].[Enum_SpecificationStage] ([Pk_Enum_SpecificationStage])
 );
+
+
 
 
 
