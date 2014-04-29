@@ -147,7 +147,9 @@
     <Content Include="SpecificationsList.ascx" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Specifications.dnn" />
+    <Content Include="Specifications.dnn">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="BuildScripts\ModulePackage.targets" />

@@ -13,29 +13,30 @@ using System.Text;
 
 namespace Etsi.Ultimate.Controls
 {
+    ///--- About this control ---
+    /// This control provide two main mode to select person(s) :
+    ///- Edit MODE
+    ///- View MODE
+    ///To choose it we need to use the 'IsEditMode' attribute
+    ///
+    ///Moreover you can choose : 
+    ///- A 'choice' mode (One person (SINGLEMODE) or more than one (MULTIMODE)) defined by 'IsSinglePersonMode' attribute
+    ///- A multiple select mode (IN CASE OF CHOICE MODE => MULTIMODE ; we can choose to select one 
+    ///('SelectableMode' = CONST_RAPPORTEURS_SELECTABLEMODE.single) 
+    ///or more than one person 
+    ///('SelectableMode' = CONST_RAPPORTEURS_SELECTABLEMODE.multi) )
+    ///OR no one 
+    ///('SelectableMode' = CONST_RAPPORTEURS_SELECTABLEMODE.none) )
+    ///
+    ///To initialize this control with person(s) : 
+    ///- IN SINGLEMODE : set 'IdPersonSelected_SINGLEMODE' by an id
+    ///- IN MULTIMODE : set 'ListIdPersonsSelected_MULTIMODE' by a list of ids
+    ///
+    ///To get results : 
+    ///we can use this last same attributes
     public partial class RapporteurControl : System.Web.UI.UserControl
     {
-        ///--- About this control ---
-        /// This control provide two main mode to select person(s) :
-        ///- Edit MODE
-        ///- View MODE
-        ///To choose it we need to use the 'IsEditMode' attribute
-        ///
-        ///Moreover you can choose : 
-        ///- A 'choice' mode (One person (SINGLEMODE) or more than one (MULTIMODE)) defined by 'IsSinglePersonMode' attribute
-        ///- A multiple select mode (IN CASE OF CHOICE MODE => MULTIMODE ; we can choose to select one 
-        ///('SelectableMode' = CONST_RAPPORTEURS_SELECTABLEMODE.single) 
-        ///or more than one person 
-        ///('SelectableMode' = CONST_RAPPORTEURS_SELECTABLEMODE.multi) )
-        ///OR no one 
-        ///('SelectableMode' = CONST_RAPPORTEURS_SELECTABLEMODE.none) )
-        ///
-        ///To initialize this control with person(s) : 
-        ///- IN SINGLEMODE : set 'IdPersonSelected_SINGLEMODE' by an id
-        ///- IN MULTIMODE : set 'ListIdPersonsSelected_MULTIMODE' by a list of ids
-        ///
-        ///To get results : 
-        ///we can use this last same attributes
+        
 
 
         #region constants
@@ -47,6 +48,7 @@ namespace Etsi.Ultimate.Controls
         private const string CONST_RAPPORTEURS_VIEWSTATE_IDPERSONSELECTEDSINGLEMODE = "IdPersonSelected_SINGLEMODE";
         private const string CONST_RAPPORTEURS_VIEWSTATE_SELECTABLEMODE = "SelectableMode";
         private const string CONST_RAPPORTEURS_VIEWSTATE_LISTIDPERSONSELECTED = "ListIdPersonSelect";
+        private const string CONST_RAPPORTEURS_VIEWSTATE_BASEADDRESS = "RapporteurLinkBaseAddress";
 
         //Columns
         private const string CONST_RAPPORTEURS_COLUMN_SELECTABLE = "selectable";
@@ -62,7 +64,8 @@ namespace Etsi.Ultimate.Controls
         private const string CONST_RAPPORTEURS_CSSCLASS_EDITMODE_MULTIPERSONMODE = "editModeMultiPersonMode";
         private const string CONST_RAPPORTEURS_CSSCLASS_VIEWMODE_MULTIPERSONMODE = "viewModeMultiPersonMode";
 
-        public enum CONST_RAPPORTEURS_SELECTABLEMODE{
+        public enum CONST_RAPPORTEURS_SELECTABLEMODE
+        {
             multi,
             single,
             none
@@ -71,7 +74,6 @@ namespace Etsi.Ultimate.Controls
 
         #region public properties
 
-        #region --- Modes ---
         /// <summary>
         /// Provide the edit current mode ; EDIT MODE (true) or VIEW MODE (false)
         /// </summary>
@@ -107,14 +109,12 @@ namespace Etsi.Ultimate.Controls
                 ViewState[CONST_RAPPORTEURS_VIEWSTATE_ISSINGLEPERSONMODE] = value;
             }
         }
-        #endregion
 
-        #region--- 'Selectabled' attributes ---
 
         /// <summary>
         /// This module provides a selection system
         /// </summary>
-        public string SelectableMode 
+        public string SelectableMode
         {
             get
             {
@@ -132,7 +132,7 @@ namespace Etsi.Ultimate.Controls
         /// <summary>
         /// List of selected persons
         /// </summary>
-        public List<int> ListIdPersonSelect 
+        public List<int> ListIdPersonSelect
         {
             get
             {
@@ -168,14 +168,11 @@ namespace Etsi.Ultimate.Controls
         }
         private string selectableColumnName { get; set; }
 
-        #endregion
-
-        #region--- Single mode attribute ---
-
         /// <summary>
         /// For the Single selected mode, this attribute provides the last person's id choosen
         /// </summary>
-        public int IdPersonSelected_SINGLEMODE {
+        public int IdPersonSelected_SINGLEMODE
+        {
             get
             {
                 if (ViewState[CONST_RAPPORTEURS_VIEWSTATE_IDPERSONSELECTEDSINGLEMODE] == null)
@@ -188,14 +185,12 @@ namespace Etsi.Ultimate.Controls
                 ViewState[CONST_RAPPORTEURS_VIEWSTATE_IDPERSONSELECTEDSINGLEMODE] = value;
             }
         }
-        #endregion
 
-        #region--- Multiple mode attributes ---
 
         /// <summary>
         /// List of choosen person's id
         /// </summary>
-        public List<int> ListIdPersonsSelected_MULTIMODE 
+        public List<int> ListIdPersonsSelected_MULTIMODE
         {
             get
             {
@@ -226,15 +221,27 @@ namespace Etsi.Ultimate.Controls
                 ViewState[CONST_RAPPORTEURS_VIEWSTATE_DATASOURCE] = value;
             }
         }
-        #endregion
 
+
+        public string PersonLinkBaseAddress { 
+            get
+            {
+                if (ViewState[CONST_RAPPORTEURS_VIEWSTATE_BASEADDRESS] == null)
+                    return "";
+
+                return (string)ViewState[CONST_RAPPORTEURS_VIEWSTATE_BASEADDRESS];
+            }
+            set
+            {
+                ViewState[CONST_RAPPORTEURS_VIEWSTATE_BASEADDRESS] = value;
+            }
+        }
         #endregion
 
 
 
         #region Events
 
-        #region --- Init methods ---
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -242,26 +249,12 @@ namespace Etsi.Ultimate.Controls
                 InitControl();
             }
         }
-        
-        /*private void TempInitialize()
-        {
-            IsEditMode = false;
-            //IdPersonSelected_SINGLEMODE = 14;
-            IsSinglePersonMode = false;
-            SelectableMode = CONST_RAPPORTEURS_SELECTABLEMODE.single.ToString();
-            ListIdPersonsSelected_MULTIMODE = new List<int>()
-            {
-                14,23,25,10,6
-            };
-        }*/
-        
 
         /// <summary>
         /// Initialization of control
         /// </summary>
         private void InitControl()
         {
-            //TempInitialize();
             var selectableColumn = (GridClientSelectColumn)rdGridRapporteurs.MasterTableView.GetColumn(CONST_RAPPORTEURS_COLUMN_SELECTABLE);
             var deletedColumn = (GridButtonColumn)rdGridRapporteurs.MasterTableView.GetColumn(CONST_RAPPORTEURS_COLUMN_DELETE);
             var emailColumn = (GridTemplateColumn)rdGridRapporteurs.MasterTableView.GetColumn(CONST_RAPPORTEURS_COLUMN_EMAIL);
@@ -269,7 +262,6 @@ namespace Etsi.Ultimate.Controls
             var nameHyperLinkColumn = (GridTemplateColumn)rdGridRapporteurs.MasterTableView.GetColumn(CONST_RAPPORTEURS_COLUMN_NAMEHYPERLINK);
             if (IsEditMode)//EDIT MODE CONFIG
             {
-                #region Selection system manager
                 if (SelectableMode.Equals(CONST_RAPPORTEURS_SELECTABLEMODE.single.ToString()))
                 {
                     selectableColumn.Visible = true;
@@ -283,9 +275,7 @@ namespace Etsi.Ultimate.Controls
                     rdGridRapporteurs.AllowMultiRowSelection = true;
                     rdGridRapporteurs.ClientSettings.EnablePostBackOnRowClick = true;
                 }
-                #endregion
 
-                #region Single or multi mode manager
                 if (!IsSinglePersonMode)
                 {
                     panelRapporteurControl.CssClass = CONST_RAPPORTEURS_CSSCLASS_EDITMODE_MULTIPERSONMODE;
@@ -298,11 +288,9 @@ namespace Etsi.Ultimate.Controls
                     rdGridRapporteurs.Visible = false;
                     RefreshDisplay_SINGLEMODE();
                 }
-                #endregion
             }
             else//VIEW MODE CONFIG
             {
-                #region Single or multi mode manager
                 if (!IsSinglePersonMode)//MULTI PERSON MODE
                 {
                     panelRapporteurControl.CssClass = CONST_RAPPORTEURS_CSSCLASS_VIEWMODE_MULTIPERSONMODE;
@@ -331,12 +319,10 @@ namespace Etsi.Ultimate.Controls
                     lblAddRapporteur.Visible = false;
                     RefreshDisplay_SINGLEMODE();
                 }
-                #endregion
             }
         }
-        #endregion
+        
 
-        #region--- ADD/DELETE/SELECTABLE PART (MULTIPLE) ---
         /// <summary>
         /// Add button for the multiple mode
         /// </summary>
@@ -386,8 +372,8 @@ namespace Etsi.Ultimate.Controls
         protected void RdGridRapporteurs_SelectedIndexChanged(object o, EventArgs e)
         {
             var temp = new List<int>();
-            foreach (GridDataItem item in   rdGridRapporteurs.MasterTableView.Items) 
-            { 
+            foreach (GridDataItem item in rdGridRapporteurs.MasterTableView.Items)
+            {
                 if (item.Selected)
                 {
                     var ID = ConvertStringToInt(item.OwnerTableView.DataKeyValues[item.ItemIndex]["PERSON_ID"].ToString());
@@ -396,9 +382,6 @@ namespace Etsi.Ultimate.Controls
             }
             ListIdPersonSelect = temp;
         }
-        #endregion
-
-        #region--- Search PART (SINGLE/MULTIPLE) ---
 
         /// <summary>
         /// Function run when we begin to write a keyword in the combobox
@@ -429,7 +412,6 @@ namespace Etsi.Ultimate.Controls
                 IdPersonSelected_SINGLEMODE = ConvertStringToInt(e.Value);
             }
         }
-        #endregion
 
         #endregion
 
@@ -437,7 +419,6 @@ namespace Etsi.Ultimate.Controls
 
         #region private methods
 
-        #region--- Search PART ---
         /// <summary>
         /// Binding for the search combobox
         /// </summary>
@@ -458,9 +439,7 @@ namespace Etsi.Ultimate.Controls
         {
             return ConvertStringToInt(rdcbRapporteurs.SelectedValue);
         }
-        #endregion
 
-        #region--- MULTIMODE PART ---
         /// <summary>
         /// Refresh the Datasource attribute thanks to the list of persons' ids (MULTIMODE)
         /// </summary>
@@ -488,7 +467,7 @@ namespace Etsi.Ultimate.Controls
         {
             var personService = ServicesFactory.Resolve<IPersonService>();
             ListIdPersonsSelected_MULTIMODE.Remove(id);
-            DataSource_MULTIMODE.Remove(DataSource_MULTIMODE.SingleOrDefault( s => s.PERSON_ID == id));
+            DataSource_MULTIMODE.Remove(DataSource_MULTIMODE.SingleOrDefault(s => s.PERSON_ID == id));
         }
 
         /// <summary>
@@ -504,9 +483,14 @@ namespace Etsi.Ultimate.Controls
                     {
                         if (ListIdPersonSelect.Contains(person.PERSON_ID))
                         {
-                            person.RapporteurDetailsAddress = new StringBuilder()
+                            person.FIRSTNAME = new StringBuilder()
                                 .Append("<strong>")
-                                .Append(person.RapporteurDetailsAddress)
+                                .Append(person.FIRSTNAME)
+                                .Append("</strong>")
+                                .ToString();
+                            person.LASTNAME = new StringBuilder()
+                                .Append("<strong>")
+                                .Append(person.LASTNAME)
                                 .Append("</strong>")
                                 .ToString();
                         }
@@ -530,9 +514,7 @@ namespace Etsi.Ultimate.Controls
                 }
             }
         }
-        #endregion
 
-        #region--- SINGLEMODE PART ---
         /// <summary>
         /// Refresh ComboBox in SINGLE MODE with the person stored by his id in the IdPersonSelected_SINGLEMODE attribute
         /// </summary>
@@ -544,9 +526,7 @@ namespace Etsi.Ultimate.Controls
                 rdcbRapporteurs.Text = personService.FindPerson(IdPersonSelected_SINGLEMODE).PersonSearchTxt;
             }
         }
-        #endregion
 
-        #region--- Others methods ---
         /// <summary>
         /// Convert int to string, to convert the value of the search combobox to an id
         /// </summary>
@@ -554,14 +534,9 @@ namespace Etsi.Ultimate.Controls
         /// <returns></returns>
         private int ConvertStringToInt(string rdcbValueSelected)
         {
-            if (rdcbValueSelected.Length < 0)
-                return 0;
-            else
-            {
-                int personID;
-                if (Int32.TryParse(rdcbValueSelected, out personID))
-                    return personID;
-            }
+            int personID;
+            if (Int32.TryParse(rdcbValueSelected, out personID))
+                return personID;
             return 0;
         }
 
@@ -569,10 +544,10 @@ namespace Etsi.Ultimate.Controls
         /// Launch an alert popup
         /// </summary>
         /// <param name="errorText"></param>
-        private void LaunchAlert(string errorText){
+        private void LaunchAlert(string errorText)
+        {
             RadWindowAlert.RadAlert(errorText, 400, 150, "Error", "", "images/error.png");
         }
-        #endregion
 
         #endregion
     }

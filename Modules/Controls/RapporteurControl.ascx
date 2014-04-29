@@ -36,7 +36,8 @@
                                         <HeaderStyle HorizontalAlign="Left" Font-Bold="True" CssClass="hyperlinkStyleColumn"/> 
                                         <ItemStyle CssClass="hyperlinkStyleColumn" />
                                         <ItemTemplate>
-                                            <div><%# DataBinder.Eval(Container.DataItem,"RapporteurDetailsAddress") %></div>  
+                                            <a href="<%# PersonLinkBaseAddress %><%# DataBinder.Eval(Container.DataItem,"PERSON_ID")  %>" target="_blank">
+                                            <%# DataBinder.Eval(Container.DataItem,"FIRSTNAME") %> <%# DataBinder.Eval(Container.DataItem,"LASTNAME") %> </a>
                                         </ItemTemplate>
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn DataField="name" HeaderText="Name" UniqueName="name">

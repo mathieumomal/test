@@ -27,6 +27,5 @@ namespace Etsi.Ultimate.DomainClasses
             }
         }
 
-        public string RapporteurDetailsAddress { get; set; }
     }
 }

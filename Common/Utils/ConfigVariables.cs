@@ -28,7 +28,7 @@ namespace Etsi.Ultimate.Utils
         }
 
         /// <summary>
-        /// Gets the Meeting Details URL
+        /// Gets the Rapporteur base address
         /// </summary>
         public static string RapporteurDetailsAddress
         {

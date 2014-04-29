@@ -8,6 +8,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using Domain = Etsi.Ultimate.DomainClasses;
+using System.Configuration;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
@@ -264,6 +265,7 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             specificationRapporteurs.IsEditMode = false;
             specificationRapporteurs.IsSinglePersonMode = false;
+            specificationRapporteurs.PersonLinkBaseAddress = ConfigurationManager.AppSettings["RapporteurDetailsAddress"];
             if (specification != null)
             {
                 PrimaryResponsibleGroupVal.Text = (string.IsNullOrEmpty(specification.PrimeResponsibleGroupShortName)) ? CONST_EMPTY_FIELD : specification.PrimeResponsibleGroupShortName;
