@@ -222,7 +222,9 @@ namespace Etsi.Ultimate.Controls
             }
         }
 
-
+        /// <summary>
+        /// Enables to set the address of the external link to the person, if a link should be displayed.
+        /// </summary>
         public string PersonLinkBaseAddress { 
             get
             {
