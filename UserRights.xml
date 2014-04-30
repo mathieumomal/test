@@ -3,6 +3,7 @@
   <UserRole value="Anonymous">
     <Right value="Release_ViewPartialList"/>
 	<Right value="Release_ViewLimitedDetails"/>
+	<Right value="Specification_ViewDetails"/>
   </UserRole>
   
   <!-- The rights that are defined with the EOL account owner role are not repeated in the subsequent roles, because all further roles

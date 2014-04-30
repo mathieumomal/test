@@ -118,13 +118,13 @@ legend{
 
 .HeaderText {
     position: absolute;
-    width: 100%;
+    width: 220px;
     text-align: right;
     font-size: 18px;
     font-weight: bold;
     color: gray;
     z-index:2000;
-	right:20px;
+	right:2px;
 }
 
 #specAdditionalDetails {
