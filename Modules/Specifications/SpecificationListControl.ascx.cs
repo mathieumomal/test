@@ -13,7 +13,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
         private const string CONST_SPECIFICATION_GRID_DATA = "SpecificationsGridData";
         private const string CONST_SELECTED_TAB = "SPEC_SELECTED_TAB";
-        private const int CONST_MIN_SCROLL_HEIGHT = 80;
+        private const int CONST_MIN_SCROLL_HEIGHT = 50;
 
         #endregion
         public string SelectedTab

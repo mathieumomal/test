@@ -184,8 +184,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     lnkChangeRequest.Visible = true;
                     lnkChangeRequest.NavigateUrl = "#";
                 }
-                typeVal.Text = string.IsNullOrEmpty(specification.SpecificationTypeFullText) ? CONST_EMPTY_FIELD : specification.SpecificationTypeFullText;
-                stageVal.Text = specification.Enum_SpecificationStage == null ? CONST_EMPTY_FIELD : specification.Enum_SpecificationStage.Code;
+                typeVal.Text = string.IsNullOrEmpty(specification.SpecificationTypeFullText) ? CONST_EMPTY_FIELD : specification.SpecificationTypeFullText;                
                 initialPlannedReleaseVal.Text = string.IsNullOrEmpty(specification.SpecificationInitialRelease) ? CONST_EMPTY_FIELD : specification.SpecificationInitialRelease; 
                 internalVal.Checked = specification.IsForPublication == null ? true : !specification.IsForPublication.Value;
                 commonIMSVal.Checked = specification.ComIMS == null ? false : specification.ComIMS.Value;
@@ -221,6 +220,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 parentSpecifications.IsEditMode = false;
                 parentSpecifications.IsParentList = true;
                 parentSpecifications.SelectedTab = CONST_RELATED_TAB;
+                parentSpecifications.ScrollHeight = 70;
 
                 if (specification.SpecificationChilds != null)
                     parentSpecifications.DataSource = specification.SpecificationParents.ToList();
@@ -230,6 +230,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 childSpecifications.IsEditMode = false;
                 childSpecifications.IsParentList = false;
                 childSpecifications.SelectedTab = CONST_RELATED_TAB;
+                childSpecifications.ScrollHeight = 70;
 
                 if (specification.SpecificationChilds != null)
                     childSpecifications.DataSource = specification.SpecificationChilds.ToList();
@@ -240,7 +241,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 if (specification.SpecificationWIsList != null && specification.SpecificationWIsList.Count > 0)
                     specification.Specification_WorkItem.ToList().ForEach(s => workItemsSource.Add(s.WorkItem));*/
                 SpecificationRelatedWorkItems.IsEditMode = false;
-                SpecificationRelatedWorkItems.ScrollHeight = 140;
+                SpecificationRelatedWorkItems.ScrollHeight = 110;
                 SpecificationRelatedWorkItems.DataSource = specification.SpecificationWIsList;
                
             }
@@ -255,7 +256,8 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if(specification != null){
                 specificationHistory.DataSource = specification.Histories.ToList();
-                specificationHistory.ScrollHeight = 640;
+                specificationHistory.ScrollHeight = (int)SpecificationDetailsRadMultiPage.Height.Value - 50;
+                //specificationHistory.ScrollHeight = 640;
             }
             else{
                 specificationHistory.DataSource = null;
@@ -362,8 +364,8 @@ namespace Etsi.Ultimate.Module.Specifications
         /// </summary>
         private void SetViewLayout()
         {
-            fixContainer.Height = new System.Web.UI.WebControls.Unit(730, UnitType.Pixel);
-            SpecificationDetailsRadMultiPage.Height = new System.Web.UI.WebControls.Unit(690, UnitType.Pixel);
+            fixContainer.Height = new System.Web.UI.WebControls.Unit(600, UnitType.Pixel);
+            SpecificationDetailsRadMultiPage.Height = new System.Web.UI.WebControls.Unit(560, UnitType.Pixel);
         }
 
         protected void EditSpecificationDetails_Click(object sender, EventArgs e)

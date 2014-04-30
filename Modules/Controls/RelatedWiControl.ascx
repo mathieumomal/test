@@ -145,7 +145,7 @@
             </legend>
             <table style="width: 100%">
                 <tr>
-                    <td colspan="2">
+                    <td>
                         <telerik:RadGrid runat="server" ID="relatedWiGrid" AllowPaging="false"
                             AllowSorting="false"
                             AllowFilteringByColumn="false"
@@ -165,27 +165,27 @@
                                         </ItemTemplate>
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn DataField="UID" HeaderText="UID" UniqueName="UID">
-                                        <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="20%" />
+                                        <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="10%" />
                                         <ItemTemplate>
                                             <span><%# DataBinder.Eval(Container.DataItem,"UID") %></span>
                                         </ItemTemplate>
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn DataField="Acronym" HeaderText="Acronym" UniqueName="Acronym">
-                                        <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="20%" />
+                                        <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="15%" />
                                         <ItemTemplate>
                                             <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Acronym") %></div>
                                         </ItemTemplate>
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn DataField="Name" HeaderText="Title" UniqueName="Name">
-                                        <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="40%" />
+                                        <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="45%" />
                                         <ItemTemplate>
                                             <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Name") %></div>
                                         </ItemTemplate>
                                     </telerik:GridTemplateColumn>
-                                    <telerik:GridTemplateColumn DataField="ResponsibleGroups" HeaderText="Responsible group(s)" UniqueName="ResponsibleGroups">
-                                        <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="20%" />
+                                    <telerik:GridTemplateColumn DataField="ResponsibleGroups" HeaderText="Resp. grp(s)" UniqueName="ResponsibleGroups">
+                                        <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="30%" />
                                         <ItemTemplate>
-                                            <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"ResponsibleGroups") %></div>
+                                            <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"ResponsibleGroups").ToString().Replace(",",", ") %></div>
                                         </ItemTemplate>
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn UniqueName="ViewWorkItem">
@@ -209,7 +209,7 @@
                         </telerik:RadGrid></td>
                 </tr>
                 <tr>
-                    <td colspan="2">
+                    <td>
                         <asp:Button ID="btnShowWiEditWindow" class="floatRight" Width="100" runat="server" Text="Add/Remove" OnClientClick="open_RadWindow_workItemEdit()" />
                         <asp:HiddenField runat="server" ID="hidSelectedWis" />
                         <asp:HiddenField runat="server" ID="hidPrimaryWi" />

@@ -76,6 +76,30 @@ namespace Etsi.Ultimate.DomainClasses
             }
         }
 
+        public string ShortStatus
+        {
+            get
+            {
+                string specificationStatus = string.Empty;
+                if (IsActive)
+                {
+                    specificationStatus = "Draft";
+                    if ((IsUnderChangeControl != null) && (IsUnderChangeControl.Value))
+                        specificationStatus = "UCC";
+                }
+
+                else
+                {
+                    if (IsUnderChangeControl == null || !IsUnderChangeControl.Value)
+                        specificationStatus = "Wdrn";
+                    else
+                        specificationStatus = "Wdrn(CC)";
+                }
+
+                return specificationStatus;
+            }
+        }
+
         public string SpecificationType
         {
             get{

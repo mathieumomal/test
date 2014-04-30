@@ -56,10 +56,6 @@
                             <td class="TabLineRight"><asp:Label ID="typeVal" runat="server" ></asp:Label></td>
                         </tr>
                         <tr>            
-                            <td class="TabLineLeft"><asp:Label ID="stageLbl" runat="server"  Text="Stage:"></asp:Label></td>
-                            <td class="TabLineRight"><asp:Label ID="stageVal" runat="server" ></asp:Label></td>
-                        </tr>
-                        <tr>            
                             <td class="TabLineLeft"><asp:Label ID="initialPlannedReleaseLbl" runat="server"  Text="Initial planned Release:"></asp:Label></td>
                             <td class="TabLineRight"><asp:Label ID="initialPlannedReleaseVal" runat="server" ></asp:Label></td>
                         </tr>
@@ -101,20 +97,19 @@
                 </telerik:RadPageView>
                 <telerik:RadPageView ID="RadPageRelated" runat="server">  
                     <asp:Panel ID="RelatedSpecificationsPanel" runat="server">
-                        <div style="max-height: 190px;">
+                        <div style="max-height: 160px;">
                             <fieldset id="ParentFieldset">
                                 <legend><asp:Label ID="ParentSpecLbl" runat="server"  Text="Parent Specifications"></asp:Label></legend>
                                 <spec:SpecificationListControl runat="server" ID="parentSpecifications"/>
                             </fieldset>
                         </div>
-                        <div style="max-height: 190px;">
+                        <div style="max-height: 160px;">
                             <fieldset id="ChildFieldset">
                                 <legend><asp:Label ID="ChildSpecLbl" runat="server"  Text="Child Specifications"></asp:Label></legend>
                                 <spec:SpecificationListControl runat="server" ID="childSpecifications"/>
                             </fieldset>
                         </div>
-                        <div style="max-height: 250px;">                            
-                            <!-- ID="SpecificationRelatedWorkItems" -->  
+                        <div style="max-height: 220px;">                            
                             <ult:RelatedWiControl ID="SpecificationRelatedWorkItems" runat="server" />                            
                         </div>
                     </asp:Panel>                   

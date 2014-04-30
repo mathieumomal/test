@@ -32,7 +32,7 @@
                     </ClientSettings>
                     <MasterTableView clientdatakeynames="Pk_SpecificationId" EditMode="InPlace">
                         <Columns>
-                            <telerik:GridTemplateColumn DataField="Number" HeaderText="Specification Number" UniqueName="Number">
+                            <telerik:GridTemplateColumn DataField="Number" HeaderText=" Spec #" UniqueName="Number">
                                 <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="70px"/> 
                                 <ItemTemplate>
                                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Number") %></div>   
@@ -45,7 +45,7 @@
                                 </ItemTemplate>
                             </telerik:GridTemplateColumn>
                             <telerik:GridTemplateColumn DataField="Title" HeaderText="Title" UniqueName="Title">
-                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="210px"/>
+                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="200px"/>
                                 <ItemTemplate>
                                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Title") %></div>  
                                 </ItemTemplate>                
@@ -53,11 +53,13 @@
                             <telerik:GridTemplateColumn DataField="Status" HeaderText="Status" UniqueName="Status">
                                 <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="50px"/>
                                 <ItemTemplate>
-                                    <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Status") %></div>  
+                                    <div class="text-left">                                        
+                                        <span title="<%# DataBinder.Eval(Container.DataItem,"Status") %>"><%# DataBinder.Eval(Container.DataItem,"ShortStatus") %></span>
+                                    </div>  
                                 </ItemTemplate>                
                             </telerik:GridTemplateColumn>
-                            <telerik:GridTemplateColumn DataField="PrimeResponsibleGroupShortName" HeaderText="Primary responsible group" UniqueName="PrimeResponsibleGroupShortName">
-                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="60px"/>
+                            <telerik:GridTemplateColumn DataField="PrimeResponsibleGroupShortName" HeaderText="Prime grp" UniqueName="PrimeResponsibleGroupShortName">
+                                <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="70px"/>
                                 <ItemTemplate>
                                     <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"PrimeResponsibleGroupShortName") %></div>  
                                 </ItemTemplate>                
