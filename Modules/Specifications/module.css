@@ -137,4 +137,7 @@ legend{
     width:16px;
 }
 
-
+.imgViewSpecifications, .imgCR
+{
+	cursor:pointer;
+}

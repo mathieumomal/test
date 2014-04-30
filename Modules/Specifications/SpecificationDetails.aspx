@@ -47,7 +47,7 @@
                             <td class="TabLineRight">
                                 <asp:Label ID="statusVal" runat="server" ></asp:Label>
                                 <asp:hyperlink id="lnkChangeRequest" runat="server" Target="_blank" Visible="false" NavigateUrl="#">
-                                   <img runat="server" id="lnkChangeRequestImg" alt="Go to change request" src="images/cr.png"/>
+                                   <img runat="server" id="lnkChangeRequestImg" alt="Go to change request" title="All CRs for this specification" src="images/cr.png"/>
                                 </asp:hyperlink>
                             </td>
                         </tr>
