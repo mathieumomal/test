@@ -10,6 +10,24 @@
 
     //Close Community Selector
     function closeCommunitySelector<%= this.ClientID%>(sender, eventArgs) {
+        //Set TreeView to initial state, before calling cancel to close the window
+        UpdateNodes<%= this.ClientID%>(false);
+        var communityNamesList = $("#<%= lblCommunity.ClientID %>").text().split(", ");        
+        var tree = $find("<%= rtvCommunitySelector.ClientID %>");
+        for (var i = 0; i < tree.get_allNodes().length; i++) {
+            var node = tree.get_allNodes()[i];
+            //treat only leaf nodes
+            if (node.get_nodes().get_count() == 0) {
+                var nodeText = node.get_text();
+                for (var j = 0; j < communityNamesList.length; j++) {
+                    if (nodeText == communityNamesList[j]) {
+                        node.set_checked(true);
+                        UpdateParent<%= this.ClientID%>(node, true);
+                    }
+                }
+            }
+        }
+
         var radWindowCommunity = $find("<%= rwCommunity.ClientID %>");
         radWindowCommunity.close();
     }
