@@ -231,25 +231,31 @@ namespace Etsi.Ultimate.Business
 
                 try
                 {
+                    // Get file's full path and delete it if already exists
                     string file = exportPath + DOC_TITLE + ".docx";
                     if (File.Exists(file)) File.Delete(file);
+                    //Get number of rows that should be appended to the WIs table
                     int rowsNumber = exportWorkPlan.Count;
+                    //Generation start
                     using (WordprocessingDocument theDoc = WordprocessingDocument.Create(file, WordprocessingDocumentType.Document))
-                    {                        
+                    {        
+                        //Build of structure of the document and get the main part of the document (That would be populated with data)
                         MainDocumentPart mainPart = theDoc.AddMainDocumentPart();
                         mainPart.Document = new Document();
                         Body body = new Body();
                         mainPart.Document.Append(body);
                         var doc = theDoc.MainDocumentPart.Document;
 
-                        //Title 
+                        //Title as a pragraph
                         string doc_tile = DOC_TITLE;
                         Domain.DocxStyle docx = Domain.DocxStylePool.GetDocxStyle((int)Domain.DocxStylePool.STYLES_KEY.BOLD_BLACK_WHITE);
                         Paragraph titleParagraph = SetParagraphContent(docx, doc_tile, "Arial", "32");
                         doc.Body.Append(titleParagraph);
                         doc.Body.Append(new Paragraph());
 
+                        //Initialize legends table then add it to document body
                         Table legTable = new Table();
+                        //Set table style
                         SetTableStyle(legTable);
 
                         for (var i = 0; i < 5; i++)
@@ -269,6 +275,7 @@ namespace Etsi.Ultimate.Business
                         doc.Body.Append(legTable);
                         doc.Body.Append(new Paragraph());
 
+                        //Initialize content table then add it to document body
                         Table table = new Table();                        
                         SetTableStyle(table);
 
@@ -295,6 +302,7 @@ namespace Etsi.Ultimate.Business
                             SetCellContent(tr, new TableCell(), " Impacted TSs and TRs ", Domain.DocxStylePool.STYLES_KEY.BOLD_BLACK_GRAY);                                                      
                         }
 
+                        //Table body
                         for (var i = 0; i < rowsNumber; i++)
                         {
                             var tr = new TableRow();
@@ -331,21 +339,40 @@ namespace Etsi.Ultimate.Business
             }
         }
 
+        /// <summary>
+        /// Set the content of a cell in content table
+        /// </summary>
+        /// <param name="tableRow">Table row </param>
+        /// <param name="currentCell">Row's cell (Property of WorkItemForExport)</param>
+        /// <param name="cellContent">Value of a property of WorkItemForExport</param>
+        /// <param name="colName">Name of a property of WorkItemForExport</param>
+        /// <param name="row">WorkItemForExport object</param>
         private void SetCellContent(TableRow tableRow, TableCell currentCell, string cellContent, string colName, WorkItemForExport row)
         {
+            //Get cell style relying on colName
             Domain.DocxStyle docx = Domain.DocxStylePool.GetDocxStyle(row.GetCellStyle(colName));
+            //Set the cell's content and content's style
             Paragraph cellParagraph = SetParagraphContent(docx, cellContent, "Arial", "16");
             currentCell.Append(cellParagraph);
+            //Set the cell's style
             TableCellProperties tcp = new TableCellProperties();
             GridSpan griedSpan = new GridSpan();
             griedSpan.Val = 4;
             tcp.Append(new Shading() { Val = ShadingPatternValues.Clear, Color = docx.GetFontColorHex(), Fill = docx.GetBgColorHex() });
             tcp.Append(griedSpan);
             currentCell.Append(tcp);
+            //Add cell to the row
             tableRow.Append(currentCell);
 
         }
 
+        /// <summary>
+        /// Set the content of a cell in legends table
+        /// </summary>
+        /// <param name="tableRow">Table row </param>
+        /// <param name="currentCell">Row's cell</param>
+        /// <param name="cellContent">Cell's content</param>
+        /// <param name="colName">Content style</param>
         private void SetCellContent(TableRow tableRow, TableCell currentCell, string cellContent, Domain.DocxStylePool.STYLES_KEY style)
         {
             Domain.DocxStyle docx = Domain.DocxStylePool.GetDocxStyle((int)style);
@@ -360,6 +387,14 @@ namespace Etsi.Ultimate.Business
             tableRow.Append(currentCell);
         }
 
+        /// <summary>
+        /// Set a paragraph content and style
+        /// </summary>
+        /// <param name="docx">Style</param>
+        /// <param name="text">Content</param>
+        /// <param name="fontStyle">Content font</param>
+        /// <param name="fontSizeValue">Content font size</param>
+        /// <returns>A paragraph object</returns>
         private Paragraph SetParagraphContent(Domain.DocxStyle docx, string text, string fontStyle, string fontSizeValue)
         {
             Paragraph contentParagraph = new Paragraph();
@@ -374,6 +409,13 @@ namespace Etsi.Ultimate.Business
             return contentParagraph;
         }
 
+        /// <summary>
+        /// Used to set the style of a paragraph
+        /// </summary>
+        /// <param name="docx">Style</param>
+        /// <param name="fontStyle">Content font</param>
+        /// <param name="fontSizeValue">Content font size</param>
+        /// <returns>RunProperties object that contains all paragraph styling</returns>
         private RunProperties SetParagraphStyle(Domain.DocxStyle docx, string fontStyle, string fontSizeValue)
         {
             RunProperties cellParagraph_runPro = new RunProperties();
@@ -388,6 +430,10 @@ namespace Etsi.Ultimate.Business
             return cellParagraph_runPro;
         }
 
+        /// <summary>
+        /// Used to set general style of a table
+        /// </summary>
+        /// <param name="table">Edited table</param>
         private void SetTableStyle(Table table)
         {
             TableProperties props = new TableProperties(
