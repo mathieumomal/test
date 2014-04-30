@@ -11,7 +11,7 @@ using Domain = Etsi.Ultimate.DomainClasses;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml.Packaging;
-using Etsi.Ultimate.DomainClasses;
+using System.Text;
 
 namespace Etsi.Ultimate.Business
 {    
@@ -50,8 +50,11 @@ namespace Etsi.Ultimate.Business
             {
                 var workItemManager = new WorkItemManager(_uoW);
                 var workItems = workItemManager.GetAllWorkItems(0);
-                ExportToExcel(workItems.Key, exportPath);
-                ExportToWord(workItems.Key, exportPath);
+                List<WorkItemForExport> workItemExportObjects = new List<WorkItemForExport>();
+                workItemExportObjects.AddRange(workItems.Key.OrderBy(x => x.WorkplanId).ToList().Select(y => new WorkItemForExport(y)));
+
+                ExportToExcel(workItemExportObjects, exportPath);
+                ExportToWord(workItemExportObjects, exportPath);
                 if (!String.IsNullOrEmpty(exportPath) && workItems.Key.Count >= 1)
                 {
                     List<string> filesToCompress = new List<string>() { exportPath + DOC_TITLE + ".xlsx", exportPath + DOC_TITLE + ".docx" };
@@ -73,11 +76,11 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Export Work Plan to Excel
         /// </summary>
-        /// <param name="workPlan">Work Plan</param>
+        /// <param name="exportWorkPlan">Work Plan</param>
         /// <param name="exportPath">Export Path</param>
-        private void ExportToExcel(List<Domain.WorkItem> workPlan, string exportPath)
+        private void ExportToExcel(List<WorkItemForExport> exportWorkPlan, string exportPath)
         {
-            if (!String.IsNullOrEmpty(exportPath) && workPlan.Count >= 1)
+            if (!String.IsNullOrEmpty(exportPath) && exportWorkPlan.Count >= 1)
             {
                 try
                 {
@@ -88,8 +91,6 @@ namespace Etsi.Ultimate.Business
 
                     using (ExcelPackage pck = new ExcelPackage(newFile))
                     {
-                        List<Domain.WorkItemForExport> exportWorkPlan = WorkItemForExport.GetWorkItemsListForExport(workPlan);
-
                         // get the handle to the existing worksheet
                         var wsData = pck.Workbook.Worksheets.Add("Work Items");
 
@@ -221,9 +222,9 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Export Work Plan to Word
         /// </summary>
-        /// <param name="workPlan">Work Plan</param>
+        /// <param name="exportWorkPlan">Work Plan</param>
         /// <param name="exportPath">Export Path</param>
-        private void ExportToWord(List<Domain.WorkItem> workPlan, string exportPath)
+        private void ExportToWord(List<WorkItemForExport> exportWorkPlan, string exportPath)
         {
             if (!string.IsNullOrEmpty(exportPath))
             {
@@ -232,8 +233,6 @@ namespace Etsi.Ultimate.Business
                 {
                     string file = exportPath + DOC_TITLE + ".docx";
                     if (File.Exists(file)) File.Delete(file);
-                    List<Domain.WorkItemForExport> exportWorkPlan = new List<Domain.WorkItemForExport>();
-                    exportWorkPlan = Domain.WorkItemForExport.GetWorkItemsListForExport(workPlan);
                     int rowsNumber = exportWorkPlan.Count;
                     using (WordprocessingDocument theDoc = WordprocessingDocument.Create(file, WordprocessingDocumentType.Document))
                     {                        
@@ -332,7 +331,7 @@ namespace Etsi.Ultimate.Business
             }
         }
 
-        private void SetCellContent(TableRow tableRow, TableCell currentCell, string cellContent, string colName, Domain.WorkItemForExport row)
+        private void SetCellContent(TableRow tableRow, TableCell currentCell, string cellContent, string colName, WorkItemForExport row)
         {
             Domain.DocxStyle docx = Domain.DocxStylePool.GetDocxStyle(row.GetCellStyle(colName));
             Paragraph cellParagraph = SetParagraphContent(docx, cellContent, "Arial", "16");
@@ -429,6 +428,153 @@ namespace Etsi.Ultimate.Business
                         }
                         ));
             table.AppendChild<TableProperties>(props);            
+        }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Format WorkItem object which is suitable for export
+    /// </summary>
+    internal class WorkItemForExport
+    {
+        #region Properties
+
+        private const string BLANK_CELL = "  -  ";
+        public Nullable<int> Wpid { get; set; }
+        public int UID { get; set; }
+        public string Name { get; set; }
+        public string Acronym { get; set; }
+        public int Level { get; set; }
+        public string Release { get; set; }
+        public string ResponsibleGroups { get; set; }
+        public string StartDate { get; set; }
+        public string EndDate { get; set; }
+        public Nullable<int> Completion { get; set; }
+        public string HyperLink { get; set; }
+        public string StatusReport { get; set; }
+        public string WIRaporteur { get; set; }
+        public string WIRaporteurEmail { get; set; }
+        public string Notes { get; set; }
+        public string RelatedTSs_TRs { get; set; }
+        public bool StoppedMeeting { get; set; }
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Constructor to format & convert WorkItem properties
+        ///   - Empty Records      :: '  -  '
+        ///   - UID >= 100000000   :: 0
+        ///   - Name               :: Prefix with empty string based on level
+        ///   - Responsible Groups :: Comma separated
+        ///   - Date               :: yyyy-MM-dd
+        /// </summary>
+        /// <param name="workItem">Work Item</param>
+        public WorkItemForExport(Domain.WorkItem workItem)
+        {
+            Wpid = workItem.WorkplanId;
+            UID = (workItem.Pk_WorkItemUid >= Math.Pow(10, 8)) ? 0 : workItem.Pk_WorkItemUid;
+            Name = GetEmptyString(workItem.WiLevel ?? 0) + workItem.Name;
+            Acronym = string.IsNullOrEmpty(workItem.Acronym) ? BLANK_CELL : workItem.Acronym;
+            Level = workItem.WiLevel ?? 0;
+            Release = (workItem.Release != null) && !string.IsNullOrEmpty(workItem.Release.Code) ? workItem.Release.Code : BLANK_CELL;
+            ResponsibleGroups = (workItem.WorkItems_ResponsibleGroups.Count > 0) ? string.Join(",", workItem.WorkItems_ResponsibleGroups.Select(r => r.ResponsibleGroup).ToArray()).Trim() : BLANK_CELL;
+            StartDate = (workItem.StartDate != null) ? workItem.StartDate.GetValueOrDefault().ToString("yyyy-MM-dd") : BLANK_CELL;
+            EndDate = (workItem.EndDate != null) ? workItem.EndDate.GetValueOrDefault().ToString("yyyy-MM-dd") : BLANK_CELL;
+            Completion = ((workItem.Completion != null) ? workItem.Completion : 0) / 100;
+            HyperLink = !string.IsNullOrEmpty(workItem.Wid) ? workItem.Wid : BLANK_CELL;
+            StatusReport = !string.IsNullOrEmpty(workItem.StatusReport) ? workItem.StatusReport : BLANK_CELL;
+            WIRaporteur = !string.IsNullOrEmpty(workItem.RapporteurCompany) ? workItem.RapporteurCompany : BLANK_CELL;
+            WIRaporteurEmail = !string.IsNullOrEmpty(workItem.RapporteurStr) ? workItem.RapporteurStr : BLANK_CELL;
+            Notes = ((workItem.Remarks != null) && (workItem.Remarks.Count > 0)) ? string.Join(" ", workItem.Remarks.Select(r => r.RemarkText).ToArray()).Trim() : BLANK_CELL;
+            RelatedTSs_TRs = string.IsNullOrEmpty(workItem.TssAndTrs) ? workItem.TssAndTrs : BLANK_CELL;
+            StoppedMeeting = (workItem.TsgStoppedMtgId != null || !String.IsNullOrEmpty(workItem.TsgStoppedMtgRef)
+                                                               || workItem.PcgStoppedMtgId != null
+                                                               || !String.IsNullOrEmpty(workItem.PcgStoppedMtgRef));
+        }
+
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Provide the index to format cell style for word export
+        /// Index Range: 1 to 12
+        ///     1: STYLES_KEY.BLACK_WHITE
+        ///     2: STYLES_KEY.BLACK_GREEN
+        ///     3: STYLES_KEY.BLACK_GRAY
+        ///     4: STYLES_KEY.BOLD_BLACK_WHITE
+        ///     5: STYLES_KEY.BOLD_BLACK_GREEN
+        ///     6: STYLES_KEY.BOLD_BLACK_GRAY
+        ///     7: STYLES_KEY.BLUE_WHITE
+        ///     8: STYLES_KEY.BLUE_GREEN
+        ///     9: STYLES_KEY.BLUE_GRAY
+        ///    10: STYLES_KEY.RED_WHITE
+        ///    11: STYLES_KEY.RED_GREEN
+        ///    12: STYLES_KEY.RED_GRAY
+        /// </summary>
+        /// <param name="colName">Column Name</param>
+        /// <returns>Index</returns>
+        public int GetCellStyle(string colName)
+        {
+            int index = 0;
+
+            if (colName.Equals("Name"))
+            {
+                switch (Level)
+                {
+                    case 0:
+                        index += 9;
+                        break;
+                    case 1:
+                        index += 6;
+                        break;
+                    case 2:
+                        index += 3;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            if (StoppedMeeting)
+            {
+                index += 3;
+            }
+            else
+            {
+                if (Completion.Value == 1)
+                    index += 2;
+                else
+                    index += 1;
+            }
+            return index;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Provide empty string to format (based on level)
+        /// Level1
+        ///    Level2
+        ///       Level3
+        ///          Level4
+        /// </summary>
+        /// <param name="level">Level</param>
+        /// <returns>Empty string</returns>
+        private string GetEmptyString(int level)
+        {
+            StringBuilder space = new StringBuilder();
+            if (level > 1)
+            {
+                for (int i = 1; i <= (level * 3) - 3; i++)
+                    space.Append(" ");
+            }
+            return space.ToString();
         }
 
         #endregion
