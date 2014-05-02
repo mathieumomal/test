@@ -85,7 +85,11 @@
 								    'Rel-<%# DataBinder.Eval(Container.DataItem,"Pk_ReleaseId").ToString() %>', 'height=690,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
                     </ItemTemplate>                    
                 </telerik:GridTemplateColumn>
-                <telerik:GridButtonColumn HeaderStyle-width="2%" CommandName="seeSpec" Text="See related specifications" UniqueName="seeSpec" ButtonType="ImageButton" ImageUrl="~/DesktopModules/Release/images/specifications.jpg"></telerik:GridButtonColumn>
+                <telerik:GridTemplateColumn HeaderStyle-Width="2%" UniqueName="seeSpec">
+                    <ItemTemplate>
+                        <a target="_blank" href="./Specifications.aspx?ShortUrl=True&releases=<%# DataBinder.Eval(Container.DataItem, "Pk_ReleaseId").ToString() %>"><img border="0" src="/DesktopModules/Release/images/specifications.jpg" title="See related specifications" /></a>
+                    </ItemTemplate>                    
+                </telerik:GridTemplateColumn>
             </Columns>
         </MasterTableView>
     </telerik:RadGrid>
