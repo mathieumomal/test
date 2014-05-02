@@ -39,6 +39,74 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(2, repo.Find(1).Histories.ToList().Count);
         }
 
+        [Test]
+        public void SpecificationGetAllSearchCriteria_SearchesOnWid()
+        {
+            var repo = new SpecificationRepository(GetSimplifiedUnitOfWork());
+
+            // By default, returns all
+            var searchCriteria0 = new SpecificationSearch();
+            Assert.AreEqual(2, repo.GetSpecificationBySearchCriteria(searchCriteria0).Value);
+
+            // Search on dedicated, non existing WiD returns nothing.
+            var searchCriteria1 = new SpecificationSearch() { WiUid = 123456789};
+            Assert.AreEqual(0, repo.GetSpecificationBySearchCriteria(searchCriteria1).Value);
+
+            // Search on dedicated WI.
+            var searchCriteria2 = new SpecificationSearch() { WiUid = 1 };
+            Assert.AreEqual(1, repo.GetSpecificationBySearchCriteria(searchCriteria2).Value);
+
+            // Search on dedicated WI, but that is not userAdded.
+            var searchCriteria3 = new SpecificationSearch() { WiUid = 2 };
+            Assert.AreEqual(0, repo.GetSpecificationBySearchCriteria(searchCriteria3).Value);
+
+        }
+
+
+        private IUltimateUnitOfWork GetSimplifiedUnitOfWork()
+        {
+            var unitOfWork = MockRepository.GenerateMock<IUltimateUnitOfWork>();
+            var ultimateContext = new FakeContext();
+            unitOfWork.Stub(u => u.Context).Return(ultimateContext);
+            var specDbSet = new SpecificationFakeDBSet();
+            ultimateContext.Specifications = specDbSet;
+
+            // Now create the Specs.
+
+            // Spec 1 is associated to no work item.
+            var spec1 = new Specification()
+            {
+                Pk_SpecificationId = 1,
+                Number = "00.01",
+                Title = "Spec 1",
+                IsTS = true,
+                IsActive = true,
+                IsUnderChangeControl = true
+
+            };
+            specDbSet.Add(spec1);
+
+            // Spec2 is associated to wiUid 1
+            var spec2 = new Specification()
+            {
+                Pk_SpecificationId = 1,
+                Number = "00.01",
+                Title = "Spec 1",
+                IsTS = true,
+                IsActive = true,
+                IsUnderChangeControl = true,
+                Specification_WorkItem = new List<Specification_WorkItem>() { 
+                    new Specification_WorkItem() { Pk_Specification_WorkItemId =1, Fk_WorkItemId = 1, Fk_SpecificationId = 2, IsSetByUser = true },
+                    new Specification_WorkItem() { Pk_Specification_WorkItemId =2, Fk_WorkItemId = 2, Fk_SpecificationId = 2, IsSetByUser = false},
+                }
+            };
+            specDbSet.Add(spec2);
+            
+
+
+            return unitOfWork;
+        }
+
 
         /// <summary>
         /// Create Mocks to simulate DB with objects
@@ -55,7 +123,7 @@ namespace Etsi.Ultimate.Tests.Repositories
                 Pk_SpecificationId = 1,
                 Number = "00.01U",
                 Title = "First specification",
-                IsTS = new Nullable<bool>(true),
+                IsTS = true,
 
                 IsActive = true,
                 IsUnderChangeControl = new Nullable<bool>(false),

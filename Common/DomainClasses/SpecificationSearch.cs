@@ -36,5 +36,10 @@ namespace Etsi.Ultimate.DomainClasses
         public bool IsWithBCC { get; set; }
         public int SkipRecords { get; set; }
         public int PazeSize { get; set; }
+
+        /// <summary>
+        /// The unique ID of one specific work item.
+        /// </summary>
+        public int WiUid { get; set; }
     }
 }

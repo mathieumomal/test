@@ -81,6 +81,13 @@ namespace Etsi.Ultimate.Repositories
                       && ((searchObject.SelectedCommunityIds.Count == 0) || x.SpecificationResponsibleGroups.Any(y => searchObject.SelectedCommunityIds.Contains(y.Fk_commityId))) //Community Search
                       ));
 
+            // Treat case WiUid is not empty
+            if (searchObject.WiUid != default(int))
+            {
+                query = query.Where(s => s.Specification_WorkItem.Any(wi => wi.Fk_WorkItemId == searchObject.WiUid && wi.IsSetByUser.GetValueOrDefault()));
+            }
+
+
             return new KeyValuePair<List<Specification>,int>(query.OrderBy(order => order.Number).Skip(searchObject.SkipRecords).Take(searchObject.PazeSize).ToList(), query.Count());                
         }
 
@@ -106,6 +113,11 @@ namespace Etsi.Ultimate.Repositories
 
     public interface ISpecificationRepository : IEntityRepository<Specification>
     {
+        /// <summary>
+        /// Returns a page of specifications that are matching the search criteria, along with the total number of specifications matching this criteria.
+        /// </summary>
+        /// <param name="searchObj"></param>
+        /// <returns></returns>
         KeyValuePair<List<Specification>, int> GetSpecificationBySearchCriteria(SpecificationSearch searchObj);
 
         List<Enum_Technology> GetTechnologyList();
