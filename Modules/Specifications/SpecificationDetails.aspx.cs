@@ -380,6 +380,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
         protected void ExitSpecificationDetails_Click(object sender, EventArgs e)
         {
+            this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close()", true);
         }
     }
 
