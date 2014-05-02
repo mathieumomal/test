@@ -295,9 +295,13 @@ namespace Etsi.Ultimate.Module.Specifications
         /// <param name="e">Event Args</param>
         protected void rgSpecificationList_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
+            searchObj.SkipRecords = rgSpecificationList.CurrentPageIndex * rgSpecificationList.PageSize;
+            searchObj.PazeSize = rgSpecificationList.PageSize;
+
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
             var result = specSvc.GetSpecificationBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
-            rgSpecificationList.DataSource = result.Key.OrderBy(x => x.Number);
+            rgSpecificationList.VirtualItemCount = result.Key.Value;
+            rgSpecificationList.DataSource = result.Key.Key;
         }
 
         #endregion

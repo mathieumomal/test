@@ -34,5 +34,7 @@ namespace Etsi.Ultimate.DomainClasses
         public bool IsUnderCC { get; set; }
         public bool IsWithACC { get; set; }
         public bool IsWithBCC { get; set; }
+        public int SkipRecords { get; set; }
+        public int PazeSize { get; set; }
     }
 }

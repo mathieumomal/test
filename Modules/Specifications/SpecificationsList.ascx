@@ -167,6 +167,7 @@
                         Skin="Ultimate"
                         AllowSorting="true"
                         AllowPaging="true"
+                        AllowCustomPaging="true"
                         PageSize="50"
                         AllowFilteringByColumn="false"
                         AutoGenerateColumns="false"

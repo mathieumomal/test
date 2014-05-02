@@ -411,7 +411,7 @@ namespace Etsi.Ultimate.Services
         #endregion
 
 
-        public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj)
+        public KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj)
         {
             throw new NotImplementedException();
         }

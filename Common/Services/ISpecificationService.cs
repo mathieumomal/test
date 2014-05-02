@@ -21,7 +21,7 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId"></param>
         /// <param name="searchObj">Object with all search parameters</param>
         /// <returns></returns>
-        KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj);
+        KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj);
 
         /// <summary>
         /// Returns list of technologies

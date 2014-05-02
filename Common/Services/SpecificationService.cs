@@ -81,16 +81,16 @@ namespace Etsi.Ultimate.Services
             }        
         }
 
-        public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObject)
+        public KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObject)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var specificationManager = new SpecificationManager();
                 specificationManager.UoW = uoW;
                 var communityManager = new CommunityManager(uoW);
-                KeyValuePair<List<Specification>, UserRightsContainer> result = specificationManager.GetSpecificationBySearchCriteria(personId, searchObject);
-                result.Key.ForEach(x => x.PrimeResponsibleGroupShortName = (x.PrimeResponsibleGroup == null) ? String.Empty : communityManager.GetCommmunityshortNameById(x.PrimeResponsibleGroup.Fk_commityId));
-                return specificationManager.GetSpecificationBySearchCriteria(personId, searchObject);
+                KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> result = specificationManager.GetSpecificationBySearchCriteria(personId, searchObject);
+                result.Key.Key.ForEach(x => x.PrimeResponsibleGroupShortName = (x.PrimeResponsibleGroup == null) ? String.Empty : communityManager.GetCommmunityshortNameById(x.PrimeResponsibleGroup.Fk_commityId));
+                return result;
             }
         }
 

@@ -61,26 +61,27 @@ namespace Etsi.Ultimate.Repositories
         }
 
 
-        public List<Specification> GetSpecificationBySearchCriteria(SpecificationSearch searchObject)
+        public KeyValuePair<List<Specification>, int> GetSpecificationBySearchCriteria(SpecificationSearch searchObject)
         {
-            return AllIncluding(x => x.SpecificationTechnologies.Select(y => y.Enum_Technology))
-                .Where(x => ((String.IsNullOrEmpty(searchObject.Title) || (x.Title.ToLower().Trim().Contains(searchObject.Title.ToLower().Trim()) || x.Number.ToLower().Trim().Contains(searchObject.Title.ToLower().Trim())))
-                  && ((searchObject.Type == null) || (x.IsTS == searchObject.Type.Value))                                      //Type Search
-                  && ((searchObject.IsForPublication == null) || (x.IsForPublication == searchObject.IsForPublication.Value))  //Publication Search
-                  && (searchObject.NumberNotYetAllocated ? (String.IsNullOrEmpty(x.Number)) : true)  //Number not yet allocated
-                  && ((!(searchObject.IsUnderCC || searchObject.IsDraft || searchObject.IsWithACC || searchObject.IsWithBCC))  //Status Search
-                  || ((searchObject.IsUnderCC && searchObject.IsDraft && searchObject.IsWithACC && searchObject.IsWithBCC))
-                  ||(searchObject.IsUnderCC ? (x.IsActive && x.IsUnderChangeControl.Value) : false ||
-                     searchObject.IsDraft ? (x.IsActive && !x.IsUnderChangeControl.Value) : false ||
-                     searchObject.IsWithACC ? (!x.IsActive && x.IsUnderChangeControl.Value) : false ||
-                     searchObject.IsWithBCC ? (!x.IsActive && !x.IsUnderChangeControl.Value) : false))
-                  //&& ((searchObject.Technologies.Count == 0) || searchObject.Technologies.All(y => x.SpecificationTechnologies.Any(z => z.Fk_Enum_Technology == y)))    //Technology Search
-                  && ((searchObject.Technologies.Count == 0) || x.SpecificationTechnologies.Any(y => searchObject.Technologies.Contains(y.Fk_Enum_Technology)))  //Technology Search
-                  && ((searchObject.Series.Count == 0) || searchObject.Series.Contains(x.Enum_Serie.Pk_Enum_SerieId)) //Series Search
-                  && ((searchObject.SelectedReleaseIds.Count == 0) || x.Specification_Release.Any(y=> searchObject.SelectedReleaseIds.Contains(y.Fk_ReleaseId))) //Release Search
-                  && ((searchObject.SelectedCommunityIds.Count == 0) || x.SpecificationResponsibleGroups.Any(y => searchObject.SelectedCommunityIds.Contains(y.Fk_commityId))) //Community Search
-                  ))
-                .ToList();
+            IQueryable<Specification> query = AllIncluding(x => x.SpecificationResponsibleGroups, x => x.SpecificationTechnologies.Select(y => y.Enum_Technology))
+                    .Where(x => ((String.IsNullOrEmpty(searchObject.Title) || (x.Title.ToLower().Trim().Contains(searchObject.Title.ToLower().Trim()) || x.Number.ToLower().Trim().Contains(searchObject.Title.ToLower().Trim())))
+                      && ((searchObject.Type == null) || (x.IsTS == searchObject.Type.Value))                                      //Type Search
+                      && ((searchObject.IsForPublication == null) || (x.IsForPublication == searchObject.IsForPublication.Value))  //Publication Search
+                      && (searchObject.NumberNotYetAllocated ? (String.IsNullOrEmpty(x.Number)) : true)  //Number not yet allocated
+                      && ((!(searchObject.IsUnderCC || searchObject.IsDraft || searchObject.IsWithACC || searchObject.IsWithBCC))  //Status Search
+                      || ((searchObject.IsUnderCC && searchObject.IsDraft && searchObject.IsWithACC && searchObject.IsWithBCC))
+                      ||(searchObject.IsUnderCC ? (x.IsActive && x.IsUnderChangeControl.Value) : false ||
+                         searchObject.IsDraft ? (x.IsActive && !x.IsUnderChangeControl.Value) : false ||
+                         searchObject.IsWithACC ? (!x.IsActive && x.IsUnderChangeControl.Value) : false ||
+                         searchObject.IsWithBCC ? (!x.IsActive && !x.IsUnderChangeControl.Value) : false))
+                      //&& ((searchObject.Technologies.Count == 0) || searchObject.Technologies.All(y => x.SpecificationTechnologies.Any(z => z.Fk_Enum_Technology == y)))    //Technology Search
+                      && ((searchObject.Technologies.Count == 0) || x.SpecificationTechnologies.Any(y => searchObject.Technologies.Contains(y.Fk_Enum_Technology)))  //Technology Search
+                      && ((searchObject.Series.Count == 0) || searchObject.Series.Contains(x.Enum_Serie.Pk_Enum_SerieId)) //Series Search
+                      && ((searchObject.SelectedReleaseIds.Count == 0) || x.Specification_Release.Any(y=> searchObject.SelectedReleaseIds.Contains(y.Fk_ReleaseId))) //Release Search
+                      && ((searchObject.SelectedCommunityIds.Count == 0) || x.SpecificationResponsibleGroups.Any(y => searchObject.SelectedCommunityIds.Contains(y.Fk_commityId))) //Community Search
+                      ));
+
+            return new KeyValuePair<List<Specification>,int>(query.OrderBy(order => order.Number).Skip(searchObject.SkipRecords).Take(searchObject.PazeSize).ToList(), query.Count());                
         }
 
         public List<Enum_Technology> GetTechnologyList()
@@ -105,7 +106,7 @@ namespace Etsi.Ultimate.Repositories
 
     public interface ISpecificationRepository : IEntityRepository<Specification>
     {
-        List<Specification> GetSpecificationBySearchCriteria(SpecificationSearch searchObj);
+        KeyValuePair<List<Specification>, int> GetSpecificationBySearchCriteria(SpecificationSearch searchObj);
 
         List<Enum_Technology> GetTechnologyList();
 
