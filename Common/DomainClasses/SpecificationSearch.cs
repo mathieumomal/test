@@ -11,6 +11,7 @@ namespace Etsi.Ultimate.DomainClasses
     /// </summary>
     public class SpecificationSearch
     {
+        public enum SpecificationOrder { Number, NumberDesc, Title, TitleDesc };
 
         public SpecificationSearch()
         {
@@ -36,6 +37,8 @@ namespace Etsi.Ultimate.DomainClasses
         public bool IsWithBCC { get; set; }
         public int SkipRecords { get; set; }
         public int PazeSize { get; set; }
+
+        public SpecificationOrder Order { get; set; }
 
         /// <summary>
         /// The unique ID of one specific work item.

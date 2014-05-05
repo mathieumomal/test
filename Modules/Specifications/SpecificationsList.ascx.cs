@@ -307,6 +307,29 @@ namespace Etsi.Ultimate.Module.Specifications
             searchObj.SkipRecords = rgSpecificationList.CurrentPageIndex * rgSpecificationList.PageSize;
             searchObj.PazeSize = rgSpecificationList.PageSize;
 
+            // Fetching the sort order:
+            if (rgSpecificationList.MasterTableView.SortExpressions.Count != 0) 
+            { 
+                string name = rgSpecificationList.MasterTableView.SortExpressions[0].FieldName; 
+                GridSortOrder order = rgSpecificationList.MasterTableView.SortExpressions[0].SortOrder;
+
+                if (name == "Number")
+                {
+                    if (order == GridSortOrder.Ascending)
+                        searchObj.Order = SpecificationSearch.SpecificationOrder.Number;
+                    else if (order == GridSortOrder.Descending)
+                        searchObj.Order = SpecificationSearch.SpecificationOrder.NumberDesc;
+                }
+                else if (name == "Title")
+                {
+                    if (order == GridSortOrder.Ascending)
+                        searchObj.Order = SpecificationSearch.SpecificationOrder.Title;
+                    else if (order == GridSortOrder.Descending)
+                        searchObj.Order = SpecificationSearch.SpecificationOrder.TitleDesc;
+                }
+            }
+            
+
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
             var result = specSvc.GetSpecificationBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
             rgSpecificationList.VirtualItemCount = result.Key.Value;

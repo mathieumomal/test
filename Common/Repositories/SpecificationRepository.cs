@@ -74,7 +74,6 @@ namespace Etsi.Ultimate.Repositories
                          searchObject.IsDraft ? (x.IsActive && !x.IsUnderChangeControl.Value) : false ||
                          searchObject.IsWithACC ? (!x.IsActive && x.IsUnderChangeControl.Value) : false ||
                          searchObject.IsWithBCC ? (!x.IsActive && !x.IsUnderChangeControl.Value) : false))
-                      //&& ((searchObject.Technologies.Count == 0) || searchObject.Technologies.All(y => x.SpecificationTechnologies.Any(z => z.Fk_Enum_Technology == y)))    //Technology Search
                       && ((searchObject.Technologies.Count == 0) || x.SpecificationTechnologies.Any(y => searchObject.Technologies.Contains(y.Fk_Enum_Technology)))  //Technology Search
                       && ((searchObject.Series.Count == 0) || searchObject.Series.Contains(x.Enum_Serie.Pk_Enum_SerieId)) //Series Search
                       && ((searchObject.SelectedReleaseIds.Count == 0) || x.Specification_Release.Any(y=> searchObject.SelectedReleaseIds.Contains(y.Fk_ReleaseId))) //Release Search
@@ -87,8 +86,25 @@ namespace Etsi.Ultimate.Repositories
                 query = query.Where(s => s.Specification_WorkItem.Any(wi => wi.Fk_WorkItemId == searchObject.WiUid && wi.IsSetByUser != null && wi.IsSetByUser == true));
             }
 
+            // Manage the order
+            switch (searchObject.Order)
+            {
+                case SpecificationSearch.SpecificationOrder.NumberDesc:
+                    query = query.OrderByDescending(s => s.Number);
+                    break;
+                case SpecificationSearch.SpecificationOrder.Title:
+                    query = query.OrderBy(s => s.Title);
+                    break;
+                case SpecificationSearch.SpecificationOrder.TitleDesc:
+                    query = query.OrderByDescending(s => s.Title);
+                    break;
+                default:
+                    query = query.OrderBy(s => s.Number);
+                    break;
+            }
 
-            return new KeyValuePair<List<Specification>,int>(query.OrderBy(order => order.Number).Skip(searchObject.SkipRecords).Take(searchObject.PazeSize).ToList(), query.Count());                
+
+            return new KeyValuePair<List<Specification>,int>(query.Skip(searchObject.SkipRecords).Take(searchObject.PazeSize).ToList(), query.Count());                
         }
 
         public List<Enum_Technology> GetTechnologyList()

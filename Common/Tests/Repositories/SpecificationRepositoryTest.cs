@@ -62,6 +62,25 @@ namespace Etsi.Ultimate.Tests.Repositories
 
         }
 
+        [Test]
+        public void SpecificationGetAllSearchCriteria_HandlesOrderingCorrectly()
+        {
+            var repo = new SpecificationRepository(GetSimplifiedUnitOfWork());
+
+            // Check that with no order, but 1 record per page, only specification 1 is output
+            var searchCriteria = new SpecificationSearch() { PazeSize = 1 };
+            var speclist = repo.GetSpecificationBySearchCriteria(searchCriteria).Key;
+            Assert.AreEqual(1, speclist.Count);
+            Assert.AreEqual(1, speclist.First().Pk_SpecificationId);
+
+            // Now reverse the order, and check that specification 2 is output
+            var searchCriteria2 = new SpecificationSearch() { PazeSize = 1, Order = SpecificationSearch.SpecificationOrder.NumberDesc };
+            var specList2 = repo.GetSpecificationBySearchCriteria(searchCriteria2).Key;
+            Assert.AreEqual(1, specList2.Count);
+            Assert.AreEqual(2, specList2.First().Pk_SpecificationId);
+
+        }
+
 
         private IUltimateUnitOfWork GetSimplifiedUnitOfWork()
         {
@@ -89,9 +108,9 @@ namespace Etsi.Ultimate.Tests.Repositories
             // Spec2 is associated to wiUid 1
             var spec2 = new Specification()
             {
-                Pk_SpecificationId = 1,
-                Number = "00.01",
-                Title = "Spec 1",
+                Pk_SpecificationId = 2,
+                Number = "00.02",
+                Title = "Spec 2",
                 IsTS = true,
                 IsActive = true,
                 IsUnderChangeControl = true,
@@ -115,7 +134,6 @@ namespace Etsi.Ultimate.Tests.Repositories
         {
             var iUnitOfWork = MockRepository.GenerateMock<IUltimateUnitOfWork>();
             var iUltimateContext = new FakeContext();
-            //var iUltimateContext = MockRepository.GenerateMock<IUltimateContext>();
 
             var specDbSet = new SpecificationFakeDBSet();
             specDbSet.Add(new Specification()
