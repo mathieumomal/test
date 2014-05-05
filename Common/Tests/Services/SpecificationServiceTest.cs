@@ -20,6 +20,9 @@ namespace Etsi.Ultimate.Tests.Services
 {
     class SpecificationServiceTest : BaseTest
     {
+        private const int NO_EDIT_RIGHT_USER = 2;
+        private const int EDIT_RIGHT_USER = 3;
+
         [Test, TestCaseSource("SpecificationData")]
         public void GetSpecificationDetailsById(SpecificationFakeDBSet specificationData)
         {
@@ -86,6 +89,28 @@ namespace Etsi.Ultimate.Tests.Services
             {
                 Assert.AreEqual(messageCount, results.Value.Count());
             }
+        }
+
+        [Test]
+        public void CreateSpecification_Returns0IfExistingPk()
+        {
+            var specification = new Specification() { Pk_SpecificationId = 14 };
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            Assert.AreEqual(0,specSvc.CreateSpecification(0,specification));
+        }
+
+        [Test]
+        public void CreationSpecification_Returns0IfUserDoesNotHaveRight()
+        {
+            // Create the user rights repository.
+            var userRights = MockRepository.GenerateMock<IRightsManager>();
+            userRights.Stub(r => r.GetRights(NO_EDIT_RIGHT_USER)).Return(new UserRightsContainer());
+            ManagerFactory.Container.RegisterInstance<IRightsManager>(userRights);
+
+            var specification = new Specification() { Pk_SpecificationId = 0 };
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            Assert.AreEqual(0, specSvc.CreateSpecification(NO_EDIT_RIGHT_USER, specification));
+
         }
 
 

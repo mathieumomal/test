@@ -45,8 +45,16 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         Dictionary<int, string> GetAllReleasesCodes(int releaseId);
 
+
         void EditRelease(Release release, int previousReleaseId, int personId);
 
+        /// <summary>
+        /// Creates a new release.
+        /// </summary>
+        /// <param name="release">The release details</param>
+        /// <param name="previousReleaseId">The id of the previous release in the timeline.</param>
+        /// <param name="personId">The ID of the user requesting release creation</param>
+        /// <returns>The id of the release that has been created.</returns>
         int CreateRelease(Release release, int previousReleaseId, int personId);
 
     }

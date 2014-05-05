@@ -150,6 +150,36 @@ namespace Etsi.Ultimate.Services
         }
 
         #endregion
+
+        #region ISpecificationService Members
+
+
+        public int CreateSpecification(int personId, Specification spec)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var createAction = new SpecificationCreateAction();
+                createAction.UoW = uoW;
+
+                try
+                {
+                    return createAction.Create(personId, spec);
+                }
+                catch (Exception e)
+                {
+                    Utils.LogManager.Error("Error while creating specification: "+e.Message);
+                    return 0;
+                }
+
+            }
+        }
+
+        public bool EditSpecification(int personId, Specification spec)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }
 

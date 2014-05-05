@@ -24,6 +24,30 @@ namespace Etsi.Ultimate.Services
         KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj);
 
         /// <summary>
+        /// Creates a specification. 
+        /// 
+        /// Checks the rights of the user and the specification data, then push it to the database.
+        ///
+        /// In particular, the creation will fail if the specification has a primary key already defined. Call EditSpecification instead.
+        /// </summary>
+        /// <param name="personId">The ID of the person requesting the specification.</param>
+        /// <param name="spec">The details of the specification that has been created.</param>
+        /// <returns>The Primary key of the specification. 0 if creation failed.</returns>
+        int CreateSpecification(int personId, Specification spec);
+
+        /// <summary>
+        /// Updates the data concerning a specification.
+        /// 
+        /// Checks the rights of the user and the specification data, then push the data to the database.
+        /// 
+        /// In particular, method will check that primary key of the specification is already defined. Else, consider using CreateSpecification instead.
+        /// </summary>
+        /// <param name="personId">The ID of the person requesting the specification.</param>
+        /// <param name="spec">The details of the specification that has been created.</param>
+        /// <returns>True if update went well, else false.</returns>
+        bool EditSpecification(int personId, Specification spec);
+
+        /// <summary>
         /// Returns list of technologies
         /// </summary>
         /// <returns></returns>
