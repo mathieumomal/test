@@ -10,9 +10,15 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
+	Declare @Error int
+
+
     -- Insert statements for procedure here
 	DELETE FROM WorkItems_ResponsibleGroups;
 	DELETE FROM Remarks WHERE Fk_WorkItemId IS NOT NULL;
 	DELETE FROM WorkItems;
 	DELETE FROM WorkPlanFiles;
+
+	Select @Error = @@error
+	Return @Error
 END
