@@ -84,7 +84,7 @@ namespace Etsi.Ultimate.Repositories
             // Treat case WiUid is not empty
             if (searchObject.WiUid != default(int))
             {
-                query = query.Where(s => s.Specification_WorkItem.Any(wi => wi.Fk_WorkItemId == searchObject.WiUid && wi.IsSetByUser.GetValueOrDefault()));
+                query = query.Where(s => s.Specification_WorkItem.Any(wi => wi.Fk_WorkItemId == searchObject.WiUid && wi.IsSetByUser != null && wi.IsSetByUser == true));
             }
 
 

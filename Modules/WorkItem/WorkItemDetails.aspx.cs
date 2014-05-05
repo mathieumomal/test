@@ -99,6 +99,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                     rmk.IsEditMode = false;
                     rmk.UserRights = userRights;
                     rmk.DataSource = workitem.Remarks.ToList();
+
                 }
             }
             else
@@ -261,6 +262,10 @@ namespace Etsi.Ultimate.Module.WorkItem
                 lnkParentWi.Visible = false;
                 lblParentWorkItem.Text = "None";
             }
+
+            // Link to specifications
+            lnkSpecifications.Target = "_blank";
+            lnkSpecifications.NavigateUrl = "/Specifications.aspx?ShortUrl=True&WiUid=" + workitem.Pk_WorkItemUid;
         }
 
         /// <summary>

@@ -226,6 +226,15 @@ namespace Etsi.Ultimate.Module.Specifications
                     }
                 }
 
+                // Management of the WiUid
+                // Add it to the search object only if string is an integer
+                if (!String.IsNullOrEmpty(Request.QueryString["WiUid"]))
+                {
+                    int tmpUid;
+                    if (Int32.TryParse(Request.QueryString["WiUid"], out tmpUid))
+                        searchObj.WiUid = tmpUid;
+                }
+
             }
             else
             {
