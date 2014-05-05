@@ -430,6 +430,10 @@ namespace Etsi.Ultimate.Module.Specifications
                     sb.Append((bool)searchObj.IsForPublication ? "For Publication" : "Internal" + ", ");
                 if (searchObj.Technologies.Count > 0)
                     sb.Append("Technologies(" + searchObj.Technologies.Count + "), ");
+                
+                // WiUid case
+                if (searchObj.WiUid != default(int))
+                    sb.Append("WI #" + searchObj.WiUid + ",");
 
                 if (sb.Length == 0)
                     sb.Append("Open Releases");
