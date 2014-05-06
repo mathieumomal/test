@@ -62,7 +62,7 @@ namespace Etsi.Ultimate.Module.WorkItem
 
         private int errorNumber = 0;
         private string tokenWorkPlanAnalysed = "";
-        private bool fromShortUrl;
+        private bool isUrlSearch;
 
         private static string tbId;
         private static string subTBId;
@@ -323,7 +323,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             }
             else
             {
-                fromShortUrl = false;
+                isUrlSearch = false;
                 ultShareUrl.IsShortUrlChecked = false;
                 loadWorkItemData();
             }
@@ -383,7 +383,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// <param name="e"></param>
         protected void releaseSearchControl_Load(object sender, EventArgs e)
         {
-            if (fromShortUrl)
+            if (isUrlSearch)
             {
                 if (!String.IsNullOrEmpty(Request.QueryString["releaseId"]))
                     releaseSearchControl.SelectedReleaseIds = Request.QueryString["releaseId"].Split(',').Select(n => int.Parse(n)).ToList();
@@ -517,9 +517,9 @@ namespace Etsi.Ultimate.Module.WorkItem
             var nameValueCollection = HttpContext.Current.Request.QueryString;
             var urlParams = new Dictionary<string, string>();
 
-            if (!fromShortUrl)
+            if (!isUrlSearch)
             {
-                urlParams.Add("shortUrl", "True");
+                urlParams.Add("s", "y");
                 if (!String.IsNullOrEmpty(tbId))
                     urlParams.Add("tbid", tbId);
                 if (!String.IsNullOrEmpty(subTBId))
@@ -550,7 +550,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// </summary>
         private void GetRequestParameters()
         {
-            fromShortUrl = (Request.QueryString["shortUrl"] != null) ? Convert.ToBoolean(Request.QueryString["shortUrl"]) : false;
+            isUrlSearch = (Request.QueryString["s"] != null) ? Request.QueryString["s"] == "y" : false;
         }
 
         #region FIX : Cannot unregister UpdatePanel...

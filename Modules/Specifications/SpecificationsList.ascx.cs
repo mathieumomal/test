@@ -54,7 +54,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private const string CONST_SERIES_DATASOURCE = "SeriesDataSource";
         private const string CONST_TECH_DATASOURCE = "TechDataSource";
 
-        private bool fromShortUrl;
+        private bool isUrlSearch;
         private bool fromSearch;
         private static SpecificationSearch searchObj;
 
@@ -120,7 +120,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     var userRights = personService.GetRights(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()));
                     trNumberNotYetAllocated.Visible = userRights.HasRight(Enum_UserRights.Specification_View_UnAllocated_Number);
                     lnkManageITURecommendations.Visible = userRights.HasRight(Enum_UserRights.Specification_ManageITURecommendations);
-                    rbNewSpecification.Visible = userRights.HasRight(Enum_UserRights.Specification_Create);
+                    btnNewSpecification.Visible = userRights.HasRight(Enum_UserRights.Specification_Create);
 
                     var specSvc = ServicesFactory.Resolve<ISpecificationService>();
                     searchObj = new SpecificationSearch();
@@ -170,7 +170,7 @@ namespace Etsi.Ultimate.Module.Specifications
         protected void ReleaseCtrl_Load(object sender, EventArgs e)
         {
             //Load search control state if the request is from ShortURL
-            if (fromShortUrl)
+            if (isUrlSearch)
             {
                 if (!String.IsNullOrEmpty(Request.QueryString["title"]))
                     txtTitle.Text = searchObj.Title = Request.QueryString["title"];
@@ -308,9 +308,9 @@ namespace Etsi.Ultimate.Module.Specifications
             searchObj.PazeSize = rgSpecificationList.PageSize;
 
             // Fetching the sort order:
-            if (rgSpecificationList.MasterTableView.SortExpressions.Count != 0) 
-            { 
-                string name = rgSpecificationList.MasterTableView.SortExpressions[0].FieldName; 
+            if (rgSpecificationList.MasterTableView.SortExpressions.Count != 0)
+            {
+                string name = rgSpecificationList.MasterTableView.SortExpressions[0].FieldName;
                 GridSortOrder order = rgSpecificationList.MasterTableView.SortExpressions[0].SortOrder;
 
                 if (name == "Number")
@@ -328,7 +328,7 @@ namespace Etsi.Ultimate.Module.Specifications
                         searchObj.Order = SpecificationSearch.SpecificationOrder.TitleDesc;
                 }
             }
-            
+
 
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
             var result = specSvc.GetSpecificationBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
@@ -453,7 +453,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     sb.Append((bool)searchObj.IsForPublication ? "For Publication" : "Internal" + ", ");
                 if (searchObj.Technologies.Count > 0)
                     sb.Append("Technologies(" + searchObj.Technologies.Count + "), ");
-                
+
                 // WiUid case
                 if (searchObj.WiUid != default(int))
                     sb.Append("WI #" + searchObj.WiUid + ",");
@@ -478,7 +478,7 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 fromSearch = false;
 
-                urlParams.Add("shortUrl", "True");
+                urlParams.Add("s", "y");
                 if (!String.IsNullOrEmpty(searchObj.Title))
                     urlParams.Add("title", searchObj.Title.Trim());
 
@@ -522,7 +522,7 @@ namespace Etsi.Ultimate.Module.Specifications
         /// </summary>
         private void GetRequestParameters()
         {
-            fromShortUrl = (Request.QueryString["shortUrl"] != null) ? Convert.ToBoolean(Request.QueryString["shortUrl"]) : false;
+            isUrlSearch = (Request.QueryString["s"] != null) ? Request.QueryString["s"] == "y" : false;
         }
 
         /// <summary>

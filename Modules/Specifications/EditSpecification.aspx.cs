@@ -2,18 +2,18 @@
 using Etsi.Ultimate.Services;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using Domain = Etsi.Ultimate.DomainClasses;
-using System.Configuration;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
     public partial class EditSpecification : System.Web.UI.Page
     {
+        #region Fields
+
         // Custom controls
         protected HistoryControl specificationHistory;
         protected RemarksControl specificationRemarks;
@@ -32,10 +32,15 @@ namespace Etsi.Ultimate.Module.Specifications
         private const string SPEC_HEADER = "Specification #: ";
         private List<string> LIST_OF_TABS = new List<string>() { };
         public static readonly string DsId_Key = "ETSI_DS_ID";
+        
         //Properties
         private int userId;
         private string selectedTab;
-        public static Nullable<int> SpecificationId;
+        public static Nullable<int> SpecificationId; 
+
+        #endregion
+
+        #region Events
 
         /// <summary>
         /// Main event of the page
@@ -52,7 +57,45 @@ namespace Etsi.Ultimate.Module.Specifications
             specificationRemarks.AddRemarkHandler += specificationRemarks_AddRemarkHandler;
         }
 
-        void specificationRemarks_AddRemarkHandler(object sender, EventArgs e)
+        /// <summary>
+        /// Create/Save Specification
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void SaveSpec_Click(object sender, EventArgs e)
+        {
+            //Domain.Specification spec = new Domain.Specification();
+
+            ////General tab
+            //spec.Number = txtReference.Text;
+            //spec.Title = txtTitle.Text;
+            //spec.IsTS = Convert.ToBoolean(ddlType.SelectedValue);
+            //spec.SpecificationInitialRelease = ddlPlannedRelease.SelectedItem.Text;
+            //spec.IsForPublication = !chkInternal.Checked;
+            //spec.ComIMS = chkCommonIMSSpec.Checked;
+            ////cblRadioTechnology
+            //spec.Remarks = specificationRemarks.DataSource;
+        }
+
+        /// <summary>
+        /// Close Create/Edit spec popup
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void ExitSpecEdit_Click(object sender, EventArgs e)
+        {
+            if (SpecificationId != null)
+                Response.Redirect("SpecificationDetails.aspx?specificationId=" + SpecificationId, true);
+            else
+                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close()", true);
+        }
+
+        /// <summary>
+        /// Add event handler for specificationRemarks
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void specificationRemarks_AddRemarkHandler(object sender, EventArgs e)
         {
             List<Domain.Remark> datasource = specificationRemarks.DataSource;
             //Get display name
@@ -68,7 +111,11 @@ namespace Etsi.Ultimate.Module.Specifications
                 PersonName = personDisplayName
             });
             specificationRemarks.DataSource = datasource;
-        }
+        } 
+        
+        #endregion
+
+        #region Helper methods
 
         /// <summary>
         /// Loads the content of the page 
@@ -370,30 +417,8 @@ namespace Etsi.Ultimate.Module.Specifications
                     return personID;
             }
             return 0;
-        }
+        } 
 
-        protected void SaveSpec_Click(object sender, EventArgs e)
-        {
-            //Domain.Specification spec = new Domain.Specification();
-
-            ////General tab
-            //spec.Number = txtReference.Text;
-            //spec.Title = txtTitle.Text;
-            //spec.IsTS = Convert.ToBoolean(ddlType.SelectedValue);
-            //spec.SpecificationInitialRelease = ddlPlannedRelease.SelectedItem.Text;
-            //spec.IsForPublication = !chkInternal.Checked;
-            //spec.ComIMS = chkCommonIMSSpec.Checked;
-            ////cblRadioTechnology
-            //spec.Remarks = specificationRemarks.DataSource;
-        }
-
-        protected void ExitSpecEdit_Click(object sender, EventArgs e)
-        {
-            if (SpecificationId != null)
-                Response.Redirect("SpecificationDetails.aspx?specificationId=" + SpecificationId, true);
-            else
-                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close()", true);
-        }
+        #endregion
     }
-
 }

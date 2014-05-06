@@ -27,6 +27,8 @@
             </asp:Panel>
             <asp:Panel ID="specBody" runat="server" CssClass="specificationDetailsBody">
                 <telerik:RadScriptManager runat="server" ID="rsmSpecificationEdit" />
+                <telerik:RadAjaxManager ID="wiRadAjaxManager" runat="server" EnablePageHeadUpdate="false" UpdatePanelsRenderMode="Inline">
+                </telerik:RadAjaxManager>
                 <div class="HeaderText">
                     <asp:Label ID="lblHeaderText" runat="server"></asp:Label>
                 </div>
@@ -161,19 +163,6 @@
                     <asp:LinkButton ID="btnExit" runat="server" Text="Exit" CssClass="btn3GPP-success" OnClick="ExitSpecEdit_Click" />
                 </div>
 
-                <telerik:RadAjaxManager ID="wiRadAjaxManager" runat="server" EnablePageHeadUpdate="false" UpdatePanelsRenderMode="Inline">
-                </telerik:RadAjaxManager>
-                <script type="text/javascript">
-                    //$(document).ready(function () {
-                    //    setTimeout(function () {
-                    //        var specificationNumber = "Specification ";
-                    //        if (!$("#referenceVal").html() === "undefined") {
-                    //            specificationNumber += $("#referenceVal").html();
-                    //        }
-                    //        document.title = specificationNumber;
-                    //    }, 2000);
-                    //});
-                </script>
             </asp:Panel>
         </asp:Panel>
     </form>
