@@ -125,10 +125,15 @@
             <div class="specificationDetailsAction">
                     <asp:LinkButton ID="EditBtn" runat="server" Text="Edit" CssClass="btn3GPP-success" OnClick="EditSpecificationDetails_Click" />
                     <asp:LinkButton ID="WithdrawBtn" runat="server" Text="Definitively withdraw" CssClass="btn3GPP-success" OnClick="WithdrawSpecificatione_Click"/>
-                    <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit" CssClass="btn3GPP-success" OnClick="ExitSpecificationDetails_Click"/>
+                    <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit" CssClass="btn3GPP-success" OnClientClick="  return closePopUpWindow()"/>
             </div> 
             <script type="text/javascript">
               
+                /* Exit function */
+                function closePopUpWindow() {                    
+                    window.close();
+                }
+
                 $(document).ready(function () {
                     setTimeout(function () {
                         var specificationNumber = "Specification ";                        

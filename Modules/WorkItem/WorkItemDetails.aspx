@@ -164,9 +164,14 @@
                     </telerik:RadPageView>
                 </telerik:RadMultiPage>
                 <div class="wiDetailsAction">
-                    <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit"  class="btn3GPP-success" OnClick="CloseWorkItemDetails_Click" />
+                    <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit"  class="btn3GPP-success"  OnClientClick="  return closePopUpWindow()" />
                 </div>
                 <script type="text/javascript">
+                    /* Exit function */
+                    function closePopUpWindow() {
+                        window.close();
+                    }
+
                     $(document).ready(function () {
                         setTimeout(function () {
                             var workItem = (location.search.match(new RegExp('workitemid' + "=(.*?)($|\&)", "i")) || [])[1];

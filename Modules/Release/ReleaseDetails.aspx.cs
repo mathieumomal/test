@@ -285,11 +285,6 @@ namespace Etsi.Ultimate.Module.Release
             return 0;
         }
 
-        protected void CloseReleaseDetails_Click(object sender, EventArgs e)
-        {
-            this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close()", true);
-        }
-
         protected void EditReleaseDetails_Click(object sender, EventArgs e)
         {
             GetRequestParameters();

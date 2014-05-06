@@ -207,10 +207,14 @@
                 <asp:LinkButton ID="EditBtn" runat="server" Text="Edit" CssClass="btn3GPP-success" Visible="false" OnClick="EditReleaseDetails_Click" />
                 <asp:LinkButton ID="FreezeReleaseBtn" runat="server" Text="Freeze Release" CssClass="btn3GPP-success" Visible="false"/>
                 <asp:LinkButton ID="CloseReleaseBtn" runat="server" Text="Close Release" CssClass="btn3GPP-success" Visible="false"/>
-                <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit" CssClass="btn3GPP-success" OnClick="CloseReleaseDetails_Click"/>
+                <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit" CssClass="btn3GPP-success" OnClientClick="  return closePopUpWindow()"/>
            </div> 
            <script type="text/javascript">
-              
+               /* Exit function */
+               function closePopUpWindow() {
+                   window.close();
+               }
+
                $(document).ready(function () {
                    setTimeout(function () {
                        var releaseName = "Release " + $("#releaseCodeVal").html();

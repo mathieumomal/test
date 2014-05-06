@@ -51,12 +51,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 lnkWiDescription.NavigateUrl = CONST_BASE_URL + currentWi.Pk_WorkItemUid;
                 lnkWiDescription.Visible = true;
             }
-        }
-
-        protected void CloseWorkItemDetails_Click(object sender, EventArgs e)
-        {
-            this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close()", true);
-        }
+        }        
 
         #endregion
 
