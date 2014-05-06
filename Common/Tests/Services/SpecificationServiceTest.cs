@@ -24,6 +24,12 @@ namespace Etsi.Ultimate.Tests.Services
         private const int NO_EDIT_RIGHT_USER = 2;
         private const int EDIT_RIGHT_USER = 3;
 
+        public override void Setup()
+        {
+            base.Setup();
+            _editSpecInstance = null;
+        }
+
         [Test, TestCaseSource("SpecificationData")]
         public void GetSpecificationDetailsById(SpecificationFakeDBSet specificationData)
         {
@@ -167,13 +173,83 @@ namespace Etsi.Ultimate.Tests.Services
 
             Assert.AreEqual(0, report.WarningList.Count);
             Assert.AreEqual(0, report.ErrorList.Count);
+        }
 
+        [Test]
+        public void EditSpecification_ReturnsFalseWhenUserHasNoRight()
+        {
+            RegisterAllMocks();
 
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var report = specSvc.EditSpecification(NO_EDIT_RIGHT_USER, GetCorrectSpecificationForEdit(false));
+            Assert.IsFalse(report.Key);
+            Assert.AreEqual(1, report.Value.GetNumberOfErrors());
+        }
 
+        [Test]
+        public void EditSpecification_NonExistingSpecificationReturnsError()
+        {
+            RegisterAllMocks();
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var spec = GetCorrectSpecificationForEdit(false);
+            spec.Pk_SpecificationId = 0;
+            var report = specSvc.EditSpecification(EDIT_RIGHT_USER, spec);
+            Assert.IsFalse(report.Key);
+            Assert.AreEqual(1, report.Value.GetNumberOfErrors());
         }
 
 
+        [Test]
+        public void EditSpecification_NominalCase()
+        {
+            RegisterAllMocks();
 
+            // Get a fresh copy of the spec.
+            var specToEdit = GetCorrectSpecificationForEdit(true);
+            specToEdit.Title = "New title";
+
+            // Change spec technology
+            specToEdit.SpecificationTechnologies.Remove(specToEdit.SpecificationTechnologies.First()); // Remove 2G
+            specToEdit.SpecificationTechnologies.Add(new SpecificationTechnology() { Pk_SpecificationTechnologyId = 13, Fk_Enum_Technology = 3 }); // Let's say it's LTE
+
+            // Change remarks
+            specToEdit.Remarks.First().IsPublic = false;
+            specToEdit.Remarks.Add(new Remark() { IsPublic = false, Fk_PersonId = 12 });
+
+            // Change responsible groups
+            specToEdit.SpecificationResponsibleGroups.Remove(specToEdit.SpecificationResponsibleGroups.Last()); // Remove group 2
+            specToEdit.SpecificationResponsibleGroups.First().IsPrime = false;  // Remove prime on group 1
+            specToEdit.SpecificationResponsibleGroups.Add(new SpecificationResponsibleGroup() { Pk_SpecificationResponsibleGroupId = 3, Fk_commityId = 3, IsPrime = true }); // Set prime on group 3
+
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit ).Key);
+
+            // From white box testing, we know that:
+            // - spec that will be modified is the one provided by the Repository
+            // - we can get it via GetCorrectSpecificationForEdit(true)
+            // Thus we will test on it.
+            var modifiedSpec = GetCorrectSpecificationForEdit(false);
+            Assert.AreEqual(specToEdit.Title, modifiedSpec.Title);
+            
+            // Test specification technologies
+            Assert.AreEqual(3, modifiedSpec.SpecificationTechnologies.Count);
+            Assert.IsTrue(modifiedSpec.SpecificationTechnologies.First().EntityStatus == Enum_EntityStatus.Deleted);
+            
+            // Test remarks
+            Assert.AreEqual(2, modifiedSpec.Remarks.Count);
+            Assert.IsFalse(modifiedSpec.Remarks.First().IsPublic.GetValueOrDefault());
+            
+            // Test responsible groups
+            Assert.AreEqual(3, modifiedSpec.SpecificationResponsibleGroups.Count);
+            Assert.IsFalse(modifiedSpec.SpecificationResponsibleGroups.Where(g => g.Fk_commityId==1).FirstOrDefault().IsPrime);
+            Assert.AreEqual(Enum_EntityStatus.Deleted, modifiedSpec.SpecificationResponsibleGroups.Where(g => g.Fk_commityId == 2).FirstOrDefault().EntityStatus);
+
+            var createHistoryEntry = string.Format(Utils.Localization.History_Specification_Changed_Prime_Group, "RAN 2", "RAN 1");
+            Assert.AreEqual(1, modifiedSpec.Histories.Where(h => h.HistoryText == createHistoryEntry).Count());
+
+
+        }
+        
 
         #region data
         private IEnumerable<object[]> GetSpecificicationNumbersTestFormat
@@ -314,15 +390,53 @@ namespace Etsi.Ultimate.Tests.Services
                 yield return specificationFakeDBSet;
             }
         }
-        
+
 
         private Specification GetCorrectSpecificationForCreation()
         {
-            return new Specification() { 
-                Pk_SpecificationId = 0, 
+            return new Specification()
+            {
+                Pk_SpecificationId = 0,
                 Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
-                Number="12.123",
+                Number = "12.123",
             };
+        }
+
+        private Specification _editSpecInstance;
+        private Specification GetCorrectSpecificationForEdit(bool clone)
+        {
+            var spec = new Specification()
+                {
+                    Pk_SpecificationId = 12,
+                    Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                    Number = "12.123",
+                    SpecificationTechnologies = new List<SpecificationTechnology>() { 
+                        new SpecificationTechnology() { Pk_SpecificationTechnologyId = 11, Fk_Enum_Technology=1 }, // Let's say it's 2G
+                        new SpecificationTechnology() { Pk_SpecificationTechnologyId = 12, Fk_Enum_Technology=2 }, // Let's say it's 3G
+                    },
+                    Remarks = new List<Remark>() {
+                        new Remark() { Pk_RemarkId = 1, Fk_PersonId=12, IsPublic = true }
+                    },
+                    SpecificationResponsibleGroups = new List<SpecificationResponsibleGroup>()
+                    {
+                        new SpecificationResponsibleGroup() { Pk_SpecificationResponsibleGroupId=1, Fk_commityId=1, IsPrime = true },
+                        new SpecificationResponsibleGroup() { Pk_SpecificationResponsibleGroupId=2, Fk_commityId=2, IsPrime = false },
+                    },
+
+                };
+            
+            if (clone)
+            {
+                return spec;
+            }
+            else
+            {
+
+                if (_editSpecInstance == null)
+                    _editSpecInstance = spec;
+                return _editSpecInstance;
+                
+            }
         }
         #endregion
 
@@ -330,6 +444,7 @@ namespace Etsi.Ultimate.Tests.Services
         {
             var rights = new UserRightsContainer();
             rights.AddRight(Enum_UserRights.Specification_Create);
+            rights.AddRight(Enum_UserRights.Specification_EditFull);
             var userRights = MockRepository.GenerateMock<IRightsManager>();
             userRights.Stub(r => r.GetRights(EDIT_RIGHT_USER)).Return(rights);
             ManagerFactory.Container.RegisterInstance<IRightsManager>(userRights);
@@ -338,10 +453,17 @@ namespace Etsi.Ultimate.Tests.Services
             // Repository: set up the attribution of the Pk
             var repo = MockRepository.GenerateMock<ISpecificationRepository>();
             repo.Expect(r => r.InsertOrUpdate(Arg<Specification>.Is.Anything));
-            repo.Stub(r => r.GetSeries()).Return( new List<Enum_Serie>() { new Enum_Serie() { Pk_Enum_SerieId= 1, Code="SER_12", Description="Serie12" } });
+            repo.Stub(r => r.GetSeries()).Return(new List<Enum_Serie>() { new Enum_Serie() { Pk_Enum_SerieId = 1, Code = "SER_12", Description = "Serie12" } });
+            repo.Stub(r => r.Find(12)).Return(GetCorrectSpecificationForEdit(false));
             RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(repo);
 
-            
+            var communityManager = MockRepository.GenerateMock<ICommunityManager>();
+            communityManager.Stub(c => c.GetCommunities()).Return(
+                new List<Community>() {
+                    new Community() { TbId = 1, TbName ="RAN 1" },
+                    new Community() { TbId = 3, TbName ="RAN 2" },
+                });
+            ManagerFactory.Container.RegisterInstance<ICommunityManager>(communityManager);
 
             // Need a release repository
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
@@ -351,7 +473,7 @@ namespace Etsi.Ultimate.Tests.Services
             uow.Expect(r => r.Save());
             RepositoryFactory.Container.RegisterInstance<IUltimateUnitOfWork>(uow);
 
-            
+
         }
 
     }

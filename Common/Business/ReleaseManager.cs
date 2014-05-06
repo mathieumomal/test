@@ -458,8 +458,6 @@ namespace Etsi.Ultimate.Business
                     releaseToUpdate.Remarks.Add(rk);
                 }
             }
-            // To uncomment afterwards (one thing at a time :P)
-            //releaseToUpdate.Remarks = release.Remarks;
 
             // Admin tab
             releaseToUpdate.IturCode = release.IturCode;

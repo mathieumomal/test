@@ -26,7 +26,8 @@ namespace Etsi.Ultimate.Tests.Business
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
-            var manager = new CommunityManager(uow);
+            var manager = ManagerFactory.Resolve<ICommunityManager>();
+            manager.UoW = uow;
             Assert.AreEqual(3, manager.GetCommunities().Count);
 
             mockDataContext.VerifyAllExpectations();
@@ -42,7 +43,8 @@ namespace Etsi.Ultimate.Tests.Business
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
-            var manager = new CommunityManager(uow);
+            var manager = ManagerFactory.Resolve<ICommunityManager>();
+            manager.UoW = uow;
 
             Assert.AreEqual(3, manager.GetCommunities().Count);
             Assert.IsNotNull(CacheManager.Get(cacheKey));

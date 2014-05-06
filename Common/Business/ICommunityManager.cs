@@ -10,7 +10,7 @@ namespace Etsi.Ultimate.Business
 {
     public interface ICommunityManager
     {
-        IUltimateUnitOfWork _UoW { get; set; }
+        IUltimateUnitOfWork UoW { get; set; }
 
         /// <summary>
         /// Get All Communities

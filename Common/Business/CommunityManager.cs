@@ -16,25 +16,14 @@ namespace Etsi.Ultimate.Business
 
         #region Properties
 
-        private IUltimateUnitOfWork _uoW;
-        public IUltimateUnitOfWork _UoW { 
-            get {return _uoW;} 
-            set{_uoW = value;}
-        }
+       
+        public IUltimateUnitOfWork UoW { get; set; } 
 
         #endregion
 
         #region Constructor
 
-        /// <summary>
-        /// Default Constructor
-        /// </summary>
-        /// <param name="UoW">Unit Of Work</param>
-        public CommunityManager(IUltimateUnitOfWork UoW)
-        {
-            _uoW = UoW;
-        }
-
+       
         #endregion
 
         #region Public Methods
@@ -50,7 +39,7 @@ namespace Etsi.Ultimate.Business
             if (cachedData == null)
             {
                 ICommunityRepository repo = RepositoryFactory.Resolve<ICommunityRepository>();
-                repo.UoW = _uoW;
+                repo.UoW = UoW;
                 cachedData = repo.All.ToList();
                 //Data Issue: Root Node Missing for 3GPP. Hence, adding dynamically
                 AddMissingParent(cachedData);
@@ -76,7 +65,7 @@ namespace Etsi.Ultimate.Business
         public string GetCommmunityshortNameById(int id)
         {
             ICommunityRepository repo = RepositoryFactory.Resolve<ICommunityRepository>();
-            repo.UoW = _uoW;
+            repo.UoW = UoW;
             //return repo.All.Where(c => c.TbId == id).ToList().FirstOrDefault().ShortName;
             return GetCommunities().Where(c => c.TbId == id).ToList().FirstOrDefault().ShortName;
         }

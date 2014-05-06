@@ -73,6 +73,7 @@
     <Compile Include="IRightsManager.cs" />
     <Compile Include="RightsManager.cs" />
     <Compile Include="SpecificationCreateAction.cs" />
+    <Compile Include="SpecificationEditAction.cs" />
     <Compile Include="SpecificationManager.cs" />
     <Compile Include="SpecificationTechnologiesManager.cs" />
     <Compile Include="SpecificationWorkItemManager.cs" />

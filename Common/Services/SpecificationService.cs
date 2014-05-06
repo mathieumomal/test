@@ -16,8 +16,10 @@ namespace Etsi.Ultimate.Services
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var specificationManager = new SpecificationManager();
-                specificationManager.UoW = uoW;  
-                var communityManager = new CommunityManager(uoW);
+                specificationManager.UoW = uoW;
+                var communityManager = ManagerFactory.Resolve<ICommunityManager>();
+                communityManager.UoW = uoW;
+
                 KeyValuePair<Specification, UserRightsContainer> result = specificationManager.GetSpecificationById(personId, specificationId);                
                 List<string> secondaryRGShortName = new List<string>();
 
@@ -87,7 +89,8 @@ namespace Etsi.Ultimate.Services
             {
                 var specificationManager = new SpecificationManager();
                 specificationManager.UoW = uoW;
-                var communityManager = new CommunityManager(uoW);
+                var communityManager = ManagerFactory.Resolve<ICommunityManager>();
+                communityManager.UoW = uoW;
                 KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> result = specificationManager.GetSpecificationBySearchCriteria(personId, searchObject);
                 result.Key.Key.ForEach(x => x.PrimeResponsibleGroupShortName = (x.PrimeResponsibleGroup == null) ? String.Empty : communityManager.GetCommmunityshortNameById(x.PrimeResponsibleGroup.Fk_commityId));
                 return result;
@@ -176,9 +179,34 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public bool EditSpecification(int personId, Specification spec)
+        /// <summary>
+        /// See interface definition
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="spec"></param>
+        /// <returns></returns>
+        public KeyValuePair<bool, ImportReport> EditSpecification(int personId, Specification spec)
         {
-            throw new NotImplementedException();
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var editAction = new SpecificationEditAction();
+                editAction.UoW = uoW;
+                try
+                {
+                    var status = editAction.EditSpecification(personId, spec);
+                    if (!status)
+                        throw new Exception("Could not update specification");
+                    uoW.Save();
+                    return new KeyValuePair<bool, ImportReport>(true, null);
+                }
+                catch (Exception e)
+                {
+                    Utils.LogManager.Error("Error while editing specification: " + e.Message);
+                    var report = new ImportReport();
+                    report.LogError(e.Message);
+                    return new KeyValuePair<bool, ImportReport>(false, report);
+                }
+            }
         }
 
     }

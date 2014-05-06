@@ -17,7 +17,8 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var communityManager = new CommunityManager(uoW);
+                var communityManager = ManagerFactory.Resolve<ICommunityManager>();
+                communityManager.UoW = uoW ;
                 return communityManager.GetCommunities();
             }
         }
@@ -31,7 +32,8 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var communityManager = new CommunityManager(uoW);
+                var communityManager = ManagerFactory.Resolve<ICommunityManager>();
+                communityManager.UoW = uoW;
                 return communityManager.GetCommmunityshortNameById(id);
             }
         }

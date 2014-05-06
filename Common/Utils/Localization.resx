@@ -252,4 +252,7 @@
   <data name="History_Specification_Created" xml:space="preserve">
     <value>Specification has been created for release {0}</value>
   </data>
+  <data name="History_Specification_Changed_Prime_Group" xml:space="preserve">
+    <value>Prime responsible group has been changed from {0}. Previous: {1} </value>
+  </data>
 </root>
