@@ -19,7 +19,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         [Test]
         public void Specifications_GetAll()
         {
-            var repo = new SpecificationRepository(GetUnitOfWork());
+            var repo = new SpecificationRepository() { UoW = GetUnitOfWork() };
             var results = repo.All.ToList();
 
             Assert.AreEqual(1, results.Count);
@@ -31,7 +31,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         [Test]
         public void Specification_Find()
         {
-            var repo = new SpecificationRepository(GetUnitOfWork());
+            var repo = new SpecificationRepository() { UoW = GetUnitOfWork() };
             Assert.AreEqual("00.01U", repo.Find(1).Number);
             Assert.AreEqual(1, repo.Find(1).SpecificationResponsibleGroups.ToList().Count);
             Assert.AreEqual(2, repo.Find(1).SpecificationTechnologies.ToList().Count);
@@ -42,7 +42,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         [Test]
         public void SpecificationGetAllSearchCriteria_SearchesOnWid()
         {
-            var repo = new SpecificationRepository(GetSimplifiedUnitOfWork());
+            var repo = new SpecificationRepository() { UoW = GetSimplifiedUnitOfWork() };
 
             // By default, returns all
             var searchCriteria0 = new SpecificationSearch();
@@ -65,7 +65,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         [Test]
         public void SpecificationGetAllSearchCriteria_HandlesOrderingCorrectly()
         {
-            var repo = new SpecificationRepository(GetSimplifiedUnitOfWork());
+            var repo = new SpecificationRepository() { UoW = GetSimplifiedUnitOfWork() };
 
             // Check that with no order, but 1 record per page, only specification 1 is output
             var searchCriteria = new SpecificationSearch() { PazeSize = 1 };
@@ -79,6 +79,15 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(1, specList2.Count);
             Assert.AreEqual(2, specList2.First().Pk_SpecificationId);
 
+        }
+
+        [Test]
+        public void Specification_InsertOrUpdate()
+        {
+            var repo = new SpecificationRepository() { UoW = GetSimplifiedUnitOfWork() };
+            var spec = new Specification() { Pk_SpecificationId = 0, Number = "12.234" };
+            repo.InsertOrUpdate(spec);
+            Assert.AreEqual(3, repo.All.ToList().Count);
         }
 
 

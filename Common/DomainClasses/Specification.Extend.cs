@@ -137,6 +137,9 @@ namespace Etsi.Ultimate.DomainClasses
             }
         }
 
+        /// <summary>
+        /// Name of the release initially targeted by the specification.
+        /// </summary>
         public string SpecificationInitialRelease { get; set; }
 
         public List<Enum_Technology> SpecificationTechnologiesList { get; set; }

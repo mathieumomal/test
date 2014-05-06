@@ -136,6 +136,8 @@ namespace Etsi.Ultimate.Tests
                 ShortUrls.Add((ShortUrl)entity);
             else if (entity.GetType() == typeof(WorkPlanFile))
                 WorkPlanFiles.Add((WorkPlanFile)entity);
+            else if (entity.GetType() == typeof(Specification))
+                Specifications.Add((Specification)entity);
             else
                 throw new NotImplementedException("Something is missing in the FakeContext");
         }

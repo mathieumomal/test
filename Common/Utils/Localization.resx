@@ -249,4 +249,7 @@
   <data name="WorkItem_Import_Wrong_Order" xml:space="preserve">
     <value>WorkplanId {0} comes after WorkplanId {1}. Possible messing in the Work items.</value>
   </data>
+  <data name="History_Specification_Created" xml:space="preserve">
+    <value>Specification has been created for release {0}</value>
+  </data>
 </root>

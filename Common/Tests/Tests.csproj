@@ -97,6 +97,7 @@
     <Compile Include="BaseTest.cs" />
     <Compile Include="Business\CommunityManagerTest.cs" />
     <Compile Include="Business\LogManagerTest.cs" />
+    <Compile Include="Business\MailManagerTest.cs" />
     <Compile Include="Business\RightsManagerTest.cs" />
     <Compile Include="FakeRepositories\Enum_TechnologiesFakeRepository.cs" />
     <Compile Include="FakeRepositories\SpecificationWIFakeRepository.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Services\ReleaseServiceTest.cs" />
     <Compile Include="Services\UrlServiceTest.cs" />
     <Compile Include="Services\WorkItemServiceTest.cs" />
+    <Compile Include="Business\ConfigVariableTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

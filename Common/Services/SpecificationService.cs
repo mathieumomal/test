@@ -126,9 +126,6 @@ namespace Etsi.Ultimate.Services
             }
         }              
 
-        #region ISpecificationService Membres
-
-
         public KeyValuePair<bool, List<string>> CheckNumber(string specNumber)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -149,12 +146,13 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        #endregion
-
-        #region ISpecificationService Members
-
-
-        public int CreateSpecification(int personId, Specification spec)
+        /// <summary>
+        /// See Interface definition.
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="spec"></param>
+        /// <returns></returns>
+        public KeyValuePair<int, ImportReport> CreateSpecification(int personId, Specification spec)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
@@ -163,12 +161,16 @@ namespace Etsi.Ultimate.Services
 
                 try
                 {
-                    return createAction.Create(personId, spec);
+                    var newSpec = createAction.Create(personId, spec);
+                    uoW.Save();
+                    return new KeyValuePair<int,ImportReport>(newSpec.Key.Pk_SpecificationId, newSpec.Value);
                 }
                 catch (Exception e)
                 {
                     Utils.LogManager.Error("Error while creating specification: "+e.Message);
-                    return 0;
+                    var report = new ImportReport();
+                    report.LogError(e.Message);
+                    return new KeyValuePair<int, ImportReport>(-1, report);
                 }
 
             }
@@ -179,7 +181,6 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
-        #endregion
     }
 }
 

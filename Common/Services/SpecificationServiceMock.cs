@@ -426,19 +426,16 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
-        #region ISpecificationService Members
-
-
-        public int CreateSpecification(int personId, Specification spec)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool EditSpecification(int personId, Specification spec)
         {
             throw new NotImplementedException();
         }
 
-        #endregion
+
+        KeyValuePair<int, ImportReport> ISpecificationService.CreateSpecification(int personId, Specification spec)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

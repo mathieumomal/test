@@ -52,6 +52,8 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -62,6 +64,7 @@
   <ItemGroup>
     <Compile Include="CacheManager.cs" />
     <Compile Include="ConfigVariables.cs" />
+    <Compile Include="MailManager.cs" />
     <Compile Include="LogManager.cs" />
     <Compile Include="Localization.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -70,15 +73,64 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerTopology.cs" />
+    <Compile Include="Service References\WcfMailService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
+    <None Include="Service References\WcfMailService\Arrays.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\WcfMailService\Capgemini.Etsi.Ngpp.Business.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\WcfMailService\service.wsdl" />
+    <None Include="Service References\WcfMailService\service.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\WcfMailService\service1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\WcfMailService\System.Globalization.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\WcfMailService\System.Net.Mail.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\WcfMailService\System.Net.Mime.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\WcfMailService\System.Text.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Localization.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\WcfMailService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\WcfMailService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\WcfMailService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\WcfMailService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

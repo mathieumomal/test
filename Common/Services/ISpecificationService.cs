@@ -28,12 +28,16 @@ namespace Etsi.Ultimate.Services
         /// 
         /// Checks the rights of the user and the specification data, then push it to the database.
         ///
-        /// In particular, the creation will fail if the specification has a primary key already defined. Call EditSpecification instead.
+        /// In particular, the creation will fail if the specification: <ul>
+        /// <li>has a primary key already defined. Call EditSpecification instead.</li>
+        /// <li>has no release attached as initial release.</li>
         /// </summary>
         /// <param name="personId">The ID of the person requesting the specification.</param>
         /// <param name="spec">The details of the specification that has been created.</param>
-        /// <returns>The Primary key of the specification. 0 if creation failed.</returns>
-        int CreateSpecification(int personId, Specification spec);
+        /// <returns>Key value pair containing:
+        /// - as Key: The Primary key of the specification. -1 if creation failed.
+        /// - as Value: The list of errors and warnings to take into account.</returns>
+        KeyValuePair<int, ImportReport> CreateSpecification(int personId, Specification spec);
 
         /// <summary>
         /// Updates the data concerning a specification.

@@ -15,6 +15,7 @@ using Rhino.Mocks;
 using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Tests.FakeRepositories;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -27,12 +28,12 @@ namespace Etsi.Ultimate.Tests.Services
         public void GetSpecificationDetailsById(SpecificationFakeDBSet specificationData)
         {
             UserRightsContainer userRights = new UserRightsContainer();
-            userRights.AddRight(Enum_UserRights.Specification_Withdraw);            
+            userRights.AddRight(Enum_UserRights.Specification_Withdraw);
 
             //Mock Rights Manager
             var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
             mockRightsManager.Stub(x => x.GetRights(0)).Return(userRights);
-             Assert.IsTrue(mockRightsManager.GetRights(0).HasRight(Enum_UserRights.Specification_Withdraw));
+            Assert.IsTrue(mockRightsManager.GetRights(0).HasRight(Enum_UserRights.Specification_Withdraw));
 
             Community c = new Community() { TbId = 1, ActiveCode = "ACTIVE", ParentTbId = 0, ShortName = "SP", TbName = "3GPP SA" };
             Community c1 = new Community() { TbId = 2, ActiveCode = "ACTIVE", ParentTbId = 1, ShortName = "S1", TbName = "3GPP SA 1" };
@@ -47,7 +48,7 @@ namespace Etsi.Ultimate.Tests.Services
             mockCommunitiesManager.Stub(x => x.GetCommunities()).Return(communitiesSet);
 
             Enum_Technology e = new Enum_Technology() { Pk_Enum_TechnologyId = 1, Code = "2G", Description = "2G" };
-            Enum_Technology e1 = new Enum_Technology(){ Pk_Enum_TechnologyId = 2, Code = "3G", Description = "3G"};
+            Enum_Technology e1 = new Enum_Technology() { Pk_Enum_TechnologyId = 2, Code = "3G", Description = "3G" };
             Enum_Technology e2 = new Enum_Technology() { Pk_Enum_TechnologyId = 3, Code = "LTE", Description = "LTE" };
             List<Enum_Technology> techSet = new List<Enum_Technology>() { e, e1, e2 };
 
@@ -57,9 +58,9 @@ namespace Etsi.Ultimate.Tests.Services
 
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specificationData);
-            CommunityFakeRepository fakeRepo = new CommunityFakeRepository();            
+            CommunityFakeRepository fakeRepo = new CommunityFakeRepository();
             mockDataContext.Stub(x => x.Communities).Return((IDbSet<Community>)fakeRepo.All).Repeat.Once();
-            Enum_TechnologiesFakeRepository fakeRepo2 = new Enum_TechnologiesFakeRepository();  
+            Enum_TechnologiesFakeRepository fakeRepo2 = new Enum_TechnologiesFakeRepository();
             mockDataContext.Stub(x => x.SpecificationTechnologies).Return((IDbSet<SpecificationTechnology>)fakeRepo2.All).Repeat.Once();
             SpecificationWIFakeRepository fakeRepo3 = new SpecificationWIFakeRepository();
             mockDataContext.Stub(x => x.Specification_WorkItem).Return((IDbSet<Specification_WorkItem>)fakeRepo3.All).Repeat.Once();
@@ -92,15 +93,15 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [Test]
-        public void CreateSpecification_Returns0IfExistingPk()
+        public void CreateSpecification_ReturnsErrorIfExistingPk()
         {
             var specification = new Specification() { Pk_SpecificationId = 14 };
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            Assert.AreEqual(0,specSvc.CreateSpecification(0,specification));
+            Assert.AreEqual(-1, specSvc.CreateSpecification(0, specification).Key);
         }
 
         [Test]
-        public void CreationSpecification_Returns0IfUserDoesNotHaveRight()
+        public void CreationSpecification_ReturnsErrorIfUserDoesNotHaveRight()
         {
             // Create the user rights repository.
             var userRights = MockRepository.GenerateMock<IRightsManager>();
@@ -109,9 +110,69 @@ namespace Etsi.Ultimate.Tests.Services
 
             var specification = new Specification() { Pk_SpecificationId = 0 };
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            Assert.AreEqual(0, specSvc.CreateSpecification(NO_EDIT_RIGHT_USER, specification));
+            Assert.AreEqual(-1, specSvc.CreateSpecification(NO_EDIT_RIGHT_USER, specification).Key);
+        }
+
+        [Test]
+        public void CreateSpecification_ReturnsErrorIfUserDidNotDefineRelease()
+        {
+            // Create the user rights repository.
+            RegisterAllMocks();
+
+            var specification = GetCorrectSpecificationForCreation();
+            specification.Specification_Release.Clear();
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            Assert.AreEqual(-1, specSvc.CreateSpecification(EDIT_RIGHT_USER, specification).Key);
+        }
+
+        [Test]
+        public void CreateSpecification_ReturnsErrorIfSpecNumberIsInvalid()
+        {
+            RegisterAllMocks();
+            var specification = GetCorrectSpecificationForCreation();
+            specification.Number = "12aaa";
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            Assert.AreEqual(-1, specSvc.CreateSpecification(EDIT_RIGHT_USER, specification).Key);
+        }
+
+        [Test]
+        public void CreateSpecification_NominalCase()
+        {
+            // Set up the rights
+            RegisterAllMocks();
+
+            // Specific mock for the email, because we want to check the call made to it.
+            /*var mailMgr = MockRepository.GenerateMock<IMailManager>();
+            mailMgr.Stub(r => r.SendEmail(
+                Arg<string>.Is.Anything,
+                Arg<List<string>>.Is.Anything,
+                Arg<List<string>>.Is.Anything,
+                Arg<List<string>>.Is.Anything,
+                Arg<string>.Is.Anything,
+                Arg<string>.Is.Anything
+                )).Return(true);
+            MailManager.Instance = mailMgr;*/
+
+
+            var specification = GetCorrectSpecificationForCreation();
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var report = specSvc.CreateSpecification(EDIT_RIGHT_USER, specification).Value; // We can't change PK and check it, because it's assigned by EF in principle
+
+            Assert.AreEqual(1, specification.Histories.Count);
+            Assert.AreEqual(String.Format(Utils.Localization.History_Specification_Created, "R1"), specification.Histories.First().HistoryText);
+            Assert.IsTrue(specification.IsActive);
+            Assert.IsTrue(specification.IsUnderChangeControl.HasValue && !specification.IsUnderChangeControl.Value);
+            Assert.IsTrue(specification.IsTS.GetValueOrDefault());
+            Assert.AreEqual(1, specification.Fk_SerieId);
+
+            Assert.AreEqual(0, report.WarningList.Count);
+            Assert.AreEqual(0, report.ErrorList.Count);
+
+
 
         }
+
+
 
 
         #region data
@@ -132,7 +193,7 @@ namespace Etsi.Ultimate.Tests.Services
                 yield return new object[] { "9.A.-", false, 1 };
                 yield return new object[] { "xy.abc-", false, 1 };
                 yield return new object[] { "xy.abc-", false, 1 };
-                
+
             }
         }
 
@@ -205,7 +266,7 @@ namespace Etsi.Ultimate.Tests.Services
                                 Description = "Long Term Evolution"
                             }
                         }
-                    },                    
+                    },
                     Enum_Serie = new Enum_Serie() { Pk_Enum_SerieId = 1, Code = "S1", Description = "Serie 1" },
                     ComIMS = new Nullable<bool>(true),
                     EPS = null,
@@ -253,7 +314,45 @@ namespace Etsi.Ultimate.Tests.Services
                 yield return specificationFakeDBSet;
             }
         }
+        
+
+        private Specification GetCorrectSpecificationForCreation()
+        {
+            return new Specification() { 
+                Pk_SpecificationId = 0, 
+                Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                Number="12.123",
+            };
+        }
         #endregion
+
+        private void RegisterAllMocks()
+        {
+            var rights = new UserRightsContainer();
+            rights.AddRight(Enum_UserRights.Specification_Create);
+            var userRights = MockRepository.GenerateMock<IRightsManager>();
+            userRights.Stub(r => r.GetRights(EDIT_RIGHT_USER)).Return(rights);
+            ManagerFactory.Container.RegisterInstance<IRightsManager>(userRights);
+
+
+            // Repository: set up the attribution of the Pk
+            var repo = MockRepository.GenerateMock<ISpecificationRepository>();
+            repo.Expect(r => r.InsertOrUpdate(Arg<Specification>.Is.Anything));
+            repo.Stub(r => r.GetSeries()).Return( new List<Enum_Serie>() { new Enum_Serie() { Pk_Enum_SerieId= 1, Code="SER_12", Description="Serie12" } });
+            RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(repo);
+
+            
+
+            // Need a release repository
+            RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
+
+            // Mock the UoW
+            var uow = MockRepository.GenerateMock<IUltimateUnitOfWork>();
+            uow.Expect(r => r.Save());
+            RepositoryFactory.Container.RegisterInstance<IUltimateUnitOfWork>(uow);
+
+            
+        }
 
     }
 

@@ -52,5 +52,31 @@ namespace Etsi.Ultimate.Utils
                 return "";
             }
         }
+
+        /// <summary>
+        /// Default "From" address for the email
+        /// </summary>
+        public static string EmailDefaultFrom
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["EmailDefaultFrom"] != null)
+                    return ConfigurationManager.AppSettings["EmailDefaultFrom"].ToString();
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Default Bcc address for the email
+        /// </summary>
+        public static string EmailDefaultBcc
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["EmailDefaultBcc"] != null)
+                    return ConfigurationManager.AppSettings["EmailDefaultBcc"].ToString();
+                return "";
+            }
+        }
     }
 }
