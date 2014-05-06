@@ -12,7 +12,7 @@ using System.Configuration;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
-    public partial class SpecificationDetails : System.Web.UI.Page
+    public partial class EditSpecification : System.Web.UI.Page
     {
         // Custom controls
         protected HistoryControl specificationHistory;
@@ -33,7 +33,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private List<string> LIST_OF_TABS = new List<string>() { };
         public static readonly string DsId_Key = "ETSI_DS_ID";
         //Properties
-        private int UserId;
+        private int userId;
         private string selectedTab;
         public static Nullable<int> SpecificationId;
 
@@ -46,16 +46,29 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if (!IsPostBack)
             {
-
                 GetRequestParameters();
-
-                SetViewLayout();
-
                 LoadReleaseDetails();
-
             }
+            specificationRemarks.AddRemarkHandler += specificationRemarks_AddRemarkHandler;
         }
 
+        void specificationRemarks_AddRemarkHandler(object sender, EventArgs e)
+        {
+            List<Domain.Remark> datasource = specificationRemarks.DataSource;
+            //Get display name
+            IPersonService svc = ServicesFactory.Resolve<IPersonService>();
+            string personDisplayName = svc.GetPersonDisplayName(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()));
+            datasource.Add(new Domain.Remark()
+            {
+                Fk_PersonId = userId,
+                Fk_SpecificationId = SpecificationId,
+                IsPublic = specificationRemarks.UserRights != null ? specificationRemarks.UserRights.HasRight(Domain.Enum_UserRights.Remarks_AddPrivateByDefault) : false,
+                CreationDate = DateTime.UtcNow,
+                RemarkText = specificationRemarks.RemarkText,
+                PersonName = personDisplayName
+            });
+            specificationRemarks.DataSource = datasource;
+        }
 
         /// <summary>
         /// Loads the content of the page 
@@ -63,48 +76,51 @@ namespace Etsi.Ultimate.Module.Specifications
         private void LoadReleaseDetails()
         {
 
+            ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
+            IReleaseService relSvc = ServicesFactory.Resolve<IReleaseService>();
+            var releases = relSvc.GetAllReleases(userId).Key;
             if (SpecificationId != null)
             {
                 // Retrieve data
-                ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
-                KeyValuePair<DomainClasses.Specification, DomainClasses.UserRightsContainer> specificationRightsObject = svc.GetSpecificationDetailsById(UserId, SpecificationId.Value);
+                KeyValuePair<DomainClasses.Specification, DomainClasses.UserRightsContainer> specificationRightsObject = svc.GetSpecificationDetailsById(userId, SpecificationId.Value);
                 Domain.Specification specification = specificationRightsObject.Key;
                 DomainClasses.UserRightsContainer userRights = specificationRightsObject.Value;
 
                 if (specification == null)
                 {
-                    specificationDetailsBody.Visible = false;
-                    specificationMessages.Visible = true;
-                    specificationMessagesTxt.Text = "No avaible data for the requested query";
-                    specificationMessages.CssClass = "Warning";
-                    specificationMessagesTxt.CssClass = "WarningTxt";
+                    specBody.Visible = false;
+                    specMsg.Visible = true;
+                    specMsgTxt.Text = "No avaible data for the requested query";
+                    specMsg.CssClass = "Warning";
+                    specMsgTxt.CssClass = "WarningTxt";
                 }
                 else
                 {
                     if (!userRights.HasRight(Domain.Enum_UserRights.Specification_ViewDetails))
                     {
-                        specificationDetailsBody.Visible = false;
-                        specificationMessages.Visible = true;
-                        specificationMessagesTxt.Text = "You dont have the right to visualize this content";
-                        specificationMessages.CssClass = "Error";
-                        specificationMessagesTxt.CssClass = "ErrorTxt";
+                        specBody.Visible = false;
+                        specMsg.Visible = true;
+                        specMsgTxt.Text = "You dont have the right to visualize this content";
+                        specMsg.CssClass = "Error";
+                        specMsgTxt.CssClass = "ErrorTxt";
                     }
                     else
                     {
                         lblHeaderText.Text = SPEC_HEADER + ((String.IsNullOrEmpty(specification.Number)) ? CONST_EMPTY_FIELD : specification.Number);
+
                         BuildTabsDisplay();
                         SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
-                        FillGeneralTab(userRights, specification);
+                        FillGeneralTab(userRights, specification, releases);
                         FillResponsiblityTab(specification);
                         FillRelatedSpecificationsTab(specification, selectedTab);
                         FillHistoryTab(specification);
-                        ManageButtonDisplay(userRights);
+
                         // Check if selectedTab is specified then select the according Tab and View page
-                        SpecificationDetailsRadTabStrip.Tabs.ToList().ForEach(t => LIST_OF_TABS.Add(t.Text));
+                        rtsSpecEdit.Tabs.ToList().ForEach(t => LIST_OF_TABS.Add(t.Text));
                         if (!string.IsNullOrEmpty(selectedTab) && LIST_OF_TABS.Contains(selectedTab))
                         {
-                            SpecificationDetailsRadTabStrip.Tabs[LIST_OF_TABS.IndexOf(selectedTab)].Selected = true;
-                            SpecificationDetailsRadTabStrip.Tabs[LIST_OF_TABS.IndexOf(selectedTab)].PageView.Selected = true;
+                            rtsSpecEdit.Tabs[LIST_OF_TABS.IndexOf(selectedTab)].Selected = true;
+                            rtsSpecEdit.Tabs[LIST_OF_TABS.IndexOf(selectedTab)].PageView.Selected = true;
                         }
 
                     }
@@ -112,11 +128,12 @@ namespace Etsi.Ultimate.Module.Specifications
             }
             else
             {
-                specificationDetailsBody.Visible = false;
-                specificationMessages.Visible = true;
-                specificationMessagesTxt.Text = "No avaible data for the requested query";
-                specificationMessages.CssClass = "Warning";
-                specificationMessagesTxt.CssClass = "WarningTxt";
+                BuildTabsDisplay();
+                SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
+                FillGeneralTab(null, null, releases);
+                FillResponsiblityTab(null);
+                FillRelatedSpecificationsTab(null, null);
+                FillHistoryTab(null);
             }
         }
 
@@ -127,7 +144,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private void BuildTabsDisplay()
         {
 
-            SpecificationDetailsRadTabStrip.Tabs.Add(
+            rtsSpecEdit.Tabs.Add(
                 new RadTab()
                 {
                     PageViewID = "RadPage" + CONST_GENERAL_TAB,
@@ -135,7 +152,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     Selected = true
                 });
 
-            SpecificationDetailsRadTabStrip.Tabs.Add(
+            rtsSpecEdit.Tabs.Add(
                 new RadTab()
                 {
                     PageViewID = "RadPage" + CONST_RESPONSIBILITY_TAB,
@@ -143,7 +160,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     Selected = false
                 });
 
-            SpecificationDetailsRadTabStrip.Tabs.Add(
+            rtsSpecEdit.Tabs.Add(
                 new RadTab()
                 {
                     PageViewID = "RadPage" + CONST_RELATED_TAB,
@@ -151,7 +168,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     Selected = false
                 });
 
-            SpecificationDetailsRadTabStrip.Tabs.Add(
+            rtsSpecEdit.Tabs.Add(
                 new RadTab()
                 {
                     PageViewID = "RadPage" + CONST_RELEASES_TAB,
@@ -159,7 +176,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     Selected = false
                 });
 
-            SpecificationDetailsRadTabStrip.Tabs.Add(
+            rtsSpecEdit.Tabs.Add(
                 new RadTab()
                 {
                     PageViewID = "RadPage" + CONST_HISTORY_TAB,
@@ -169,44 +186,73 @@ namespace Etsi.Ultimate.Module.Specifications
         }
 
         /// <summary>
+        /// Build Rediotechnologies check list relying on Enum_Technology possible values
+        /// </summary>
+        /// <param name="technologies">List of Enum_technologie in DB</param>
+        private void SetRadioTechnologiesItems(List<Domain.Enum_Technology> technologies)
+        {
+            cblRadioTechnology.Style.Add("border-spacing", "0");
+            foreach (Domain.Enum_Technology technology in technologies.OrderBy(t => t.Code))
+            {
+                cblRadioTechnology.Items.Add(new ListItem()
+                {
+                    Value = technology.Pk_Enum_TechnologyId.ToString(),
+                    Text = technology.Code
+                });
+            }
+        }
+
+        /// <summary>
         /// Fill General Tab with retrieved data
         /// </summary>
         /// <param name="userRights">Current user rights</param>
         /// <param name="specification">The retrieved specification</param>
-        private void FillGeneralTab(Domain.UserRightsContainer userRights, Domain.Specification specification)
+        private void FillGeneralTab(Domain.UserRightsContainer userRights, Domain.Specification specification, List<Domain.Release> releases)
         {
+            specificationRemarks.IsEditMode = true;
+
+            //update actual datasource
+            if (releases != null)
+            {
+                ddlPlannedRelease.DataSource = releases.Where(x => x.Enum_ReleaseStatus.Description == Domain.Enum_ReleaseStatus.Open
+                                                                || x.Enum_ReleaseStatus.Description == Domain.Enum_ReleaseStatus.Frozen).ToList();
+                ddlPlannedRelease.DataValueField = "Pk_ReleaseId";
+                ddlPlannedRelease.DataTextField = "Name";
+                ddlPlannedRelease.DataBind();
+            }
+
             if (specification != null && userRights != null)
             {
-                referenceVal.Text = string.IsNullOrEmpty(specification.Number) ? CONST_EMPTY_FIELD : specification.Number;
-                titleVal.Text = string.IsNullOrEmpty(specification.Title) ? CONST_EMPTY_FIELD : specification.Title;
-                statusVal.Text = string.IsNullOrEmpty(specification.Status) ? CONST_EMPTY_FIELD : specification.Status;
+                txtTitle.Text = string.IsNullOrEmpty(specification.Number) ? CONST_EMPTY_FIELD : specification.Number;
+                txtTitle.Text = string.IsNullOrEmpty(specification.Title) ? CONST_EMPTY_FIELD : specification.Title;
+                lblStatus.Text = string.IsNullOrEmpty(specification.Status) ? CONST_EMPTY_FIELD : specification.Status;
                 if (specification.IsUnderChangeControl ?? false)
                 {
                     lnkChangeRequest.Visible = true;
                     lnkChangeRequest.NavigateUrl = "#";
                 }
-                typeVal.Text = string.IsNullOrEmpty(specification.SpecificationTypeFullText) ? CONST_EMPTY_FIELD : specification.SpecificationTypeFullText;
-                initialPlannedReleaseVal.Text = string.IsNullOrEmpty(specification.SpecificationInitialRelease) ? CONST_EMPTY_FIELD : specification.SpecificationInitialRelease;
-                internalVal.Checked = specification.IsForPublication == null ? true : !specification.IsForPublication.Value;
-                commonIMSVal.Checked = specification.ComIMS == null ? false : specification.ComIMS.Value;
+                if (specification.IsTS != null)
+                    ddlType.SelectedIndex = specification.IsTS.Value ? 0 : 1;
+
+                //typeVal.Text = string.IsNullOrEmpty(specification.SpecificationTypeFullText) ? CONST_EMPTY_FIELD : specification.SpecificationTypeFullText;                
+                //initialPlannedReleaseVal.Text = string.IsNullOrEmpty(specification.SpecificationInitialRelease) ? CONST_EMPTY_FIELD : specification.SpecificationInitialRelease; 
+                chkInternal.Checked = specification.IsForPublication == null ? true : !specification.IsForPublication.Value;
+                chkCommonIMSSpec.Checked = specification.ComIMS == null ? false : specification.ComIMS.Value;
                 if (specification.SpecificationTechnologiesList != null && specification.SpecificationTechnologiesList.Count > 0)
                 {
                     foreach (Domain.Enum_Technology technology in specification.SpecificationTechnologiesList)
                     {
-                        if (technology != null && radioTechnologyVals.Items.FindByValue(technology.Pk_Enum_TechnologyId.ToString()) != null)
+                        if (technology != null && cblRadioTechnology.Items.FindByValue(technology.Pk_Enum_TechnologyId.ToString()) != null)
                         {
-                            radioTechnologyVals.Items.FindByValue(technology.Pk_Enum_TechnologyId.ToString()).Selected = true;
+                            cblRadioTechnology.Items.FindByValue(technology.Pk_Enum_TechnologyId.ToString()).Selected = true;
                         }
 
                     }
                 }
-                disableAllCheckBoxes();
 
-                specificationRemarks.IsEditMode = false;
                 specificationRemarks.UserRights = userRights;
                 specificationRemarks.DataSource = specification.Remarks.ToList();
             }
-
         }
 
         /// <summary>
@@ -215,23 +261,25 @@ namespace Etsi.Ultimate.Module.Specifications
         /// <param name="specification">The retrieved specification</param>
         private void FillRelatedSpecificationsTab(Domain.Specification specification, string selectedTab)
         {
+            parentSpecifications.IsEditMode = true;
+            parentSpecifications.IsParentList = true;
+            parentSpecifications.SelectedTab = CONST_RELATED_TAB;
+            parentSpecifications.ScrollHeight = 70;
+
+            childSpecifications.IsEditMode = true;
+            childSpecifications.IsParentList = false;
+            childSpecifications.SelectedTab = CONST_RELATED_TAB;
+            childSpecifications.ScrollHeight = 70;
+
+            SpecificationRelatedWorkItems.IsEditMode = true;
+            SpecificationRelatedWorkItems.ScrollHeight = 110;
+
             if (specification != null)
             {
-
-                parentSpecifications.IsEditMode = false;
-                parentSpecifications.IsParentList = true;
-                parentSpecifications.SelectedTab = CONST_RELATED_TAB;
-                parentSpecifications.ScrollHeight = 70;
-
                 if (specification.SpecificationChilds != null)
                     parentSpecifications.DataSource = specification.SpecificationParents.ToList();
                 else
                     parentSpecifications.DataSource = null;
-
-                childSpecifications.IsEditMode = false;
-                childSpecifications.IsParentList = false;
-                childSpecifications.SelectedTab = CONST_RELATED_TAB;
-                childSpecifications.ScrollHeight = 70;
 
                 if (specification.SpecificationChilds != null)
                     childSpecifications.DataSource = specification.SpecificationChilds.ToList();
@@ -241,12 +289,13 @@ namespace Etsi.Ultimate.Module.Specifications
                 /*List<Domain.WorkItem> workItemsSource = new List<Domain.WorkItem>();
                 if (specification.SpecificationWIsList != null && specification.SpecificationWIsList.Count > 0)
                     specification.Specification_WorkItem.ToList().ForEach(s => workItemsSource.Add(s.WorkItem));*/
-                SpecificationRelatedWorkItems.IsEditMode = false;
-                SpecificationRelatedWorkItems.ScrollHeight = 110;
-                SpecificationRelatedWorkItems.DataSource = specification.SpecificationWIsList;
+
+                if (specification.SpecificationWIsList != null)
+                    SpecificationRelatedWorkItems.DataSource = specification.SpecificationWIsList;
+                else
+                    SpecificationRelatedWorkItems.DataSource = null;
 
             }
-
         }
 
         /// <summary>
@@ -258,12 +307,12 @@ namespace Etsi.Ultimate.Module.Specifications
             if (specification != null)
             {
                 specificationHistory.DataSource = specification.Histories.ToList();
-                specificationHistory.ScrollHeight = (int)SpecificationDetailsRadMultiPage.Height.Value - 50;
+                specificationHistory.ScrollHeight = (int)rmpSpecEdit.Height.Value - 50;
                 //specificationHistory.ScrollHeight = 640;
             }
             else
             {
-                specificationHistory.DataSource = null;
+                specificationHistory.DataSource = new List<Domain.History>();
             }
         }
 
@@ -273,52 +322,25 @@ namespace Etsi.Ultimate.Module.Specifications
         /// <param name="specification">The retrieved specification</param>
         private void FillResponsiblityTab(Domain.Specification specification)
         {
-            specificationRapporteurs.IsEditMode = false;
+            specificationRapporteurs.IsEditMode = true;
             specificationRapporteurs.IsSinglePersonMode = false;
             specificationRapporteurs.PersonLinkBaseAddress = ConfigurationManager.AppSettings["RapporteurDetailsAddress"];
             if (specification != null)
             {
-                PrimaryResponsibleGroupVal.Text = (string.IsNullOrEmpty(specification.PrimeResponsibleGroupShortName)) ? CONST_EMPTY_FIELD : specification.PrimeResponsibleGroupShortName;
-                SecondaryResponsibleGroupsVal.Text = (string.IsNullOrEmpty(specification.SecondaryResponsibleGroupsShortNames)) ? CONST_EMPTY_FIELD : specification.SecondaryResponsibleGroupsShortNames;
+                //PrimaryResponsibleGroupVal.Text = (string.IsNullOrEmpty(specification.PrimeResponsibleGroupShortName)) ? CONST_EMPTY_FIELD : specification.PrimeResponsibleGroupShortName;
+                //SecondaryResponsibleGroupsVal.Text = (string.IsNullOrEmpty(specification.SecondaryResponsibleGroupsShortNames)) ? CONST_EMPTY_FIELD : specification.SecondaryResponsibleGroupsShortNames;
 
                 specificationRapporteurs.ListIdPersonSelect = specification.PrimeSpecificationRapporteurs;
                 specificationRapporteurs.ListIdPersonsSelected_MULTIMODE = specification.FullSpecificationRapporteurs;
             }
             else
             {
-                PrimaryResponsibleGroupVal.Text = CONST_EMPTY_FIELD;
-                SecondaryResponsibleGroupsVal.Text = CONST_EMPTY_FIELD;
+                //PrimaryResponsibleGroupVal.Text = CONST_EMPTY_FIELD;
+                //SecondaryResponsibleGroupsVal.Text = CONST_EMPTY_FIELD;
 
-                specificationRapporteurs.ListIdPersonSelect = specification.PrimeSpecificationRapporteurs;
-                specificationRapporteurs.ListIdPersonsSelected_MULTIMODE = specification.FullSpecificationRapporteurs;
+                //specificationRapporteurs.ListIdPersonSelect = specification.PrimeSpecificationRapporteurs;
+                //specificationRapporteurs.ListIdPersonsSelected_MULTIMODE = specification.FullSpecificationRapporteurs;
             }
-        }
-
-        /// <summary>
-        /// Build Rediotechnologies check list relying on Enum_Technology possible values
-        /// </summary>
-        /// <param name="technologies">List of Enum_technologie in DB</param>
-        private void SetRadioTechnologiesItems(List<Domain.Enum_Technology> technologies)
-        {
-            radioTechnologyVals.Style.Add("border-spacing", "0");
-            foreach (Domain.Enum_Technology technology in technologies.OrderBy(t => t.Code))
-            {
-                radioTechnologyVals.Items.Add(new ListItem()
-                {
-                    Value = technology.Pk_Enum_TechnologyId.ToString(),
-                    Text = technology.Code
-                });
-            }
-        }
-
-        /// <summary>
-        /// Disable all check boxes in the view mode
-        /// </summary>
-        private void disableAllCheckBoxes()
-        {
-            commonIMSVal.Enabled = false;
-            internalVal.Enabled = false;
-            radioTechnologyVals.Enabled = false;
         }
 
         /// <summary>
@@ -327,7 +349,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private void GetRequestParameters()
         {
             int output;
-            UserId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
+            userId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
             SpecificationId = (Request.QueryString["specificationId"] != null) ? (int.TryParse(Request.QueryString["specificationId"], out output) ? new Nullable<int>(output) : null) : null;
             selectedTab = (Request.QueryString["selectedTab"] != null) ? Request.QueryString["selectedTab"] : string.Empty;
         }
@@ -350,43 +372,27 @@ namespace Etsi.Ultimate.Module.Specifications
             return 0;
         }
 
-        /// <summary>
-        /// Manage buttons' display relying on user rights
-        /// </summary>
-        /// <param name="userRights">User Rights</param>
-        private void ManageButtonDisplay(Domain.UserRightsContainer userRights)
+        protected void SaveSpec_Click(object sender, EventArgs e)
         {
-            if ((!userRights.HasRight(Domain.Enum_UserRights.Specification_EditFull)) && (!userRights.HasRight(Domain.Enum_UserRights.Specification_EditLimitted)))
-                EditBtn.Visible = false;
+            //Domain.Specification spec = new Domain.Specification();
 
-            if (!userRights.HasRight(Domain.Enum_UserRights.Specification_Withdraw))
-                WithdrawBtn.Visible = false;
+            ////General tab
+            //spec.Number = txtReference.Text;
+            //spec.Title = txtTitle.Text;
+            //spec.IsTS = Convert.ToBoolean(ddlType.SelectedValue);
+            //spec.SpecificationInitialRelease = ddlPlannedRelease.SelectedItem.Text;
+            //spec.IsForPublication = !chkInternal.Checked;
+            //spec.ComIMS = chkCommonIMSSpec.Checked;
+            ////cblRadioTechnology
+            //spec.Remarks = specificationRemarks.DataSource;
         }
 
-        /// <summary>
-        /// Set the view boxes layouts
-        /// </summary>
-        private void SetViewLayout()
-        {
-            fixContainer.Height = new System.Web.UI.WebControls.Unit(600, UnitType.Pixel);
-            SpecificationDetailsRadMultiPage.Height = new System.Web.UI.WebControls.Unit(560, UnitType.Pixel);
-        }
-
-        protected void EditSpecificationDetails_Click(object sender, EventArgs e)
+        protected void ExitSpecEdit_Click(object sender, EventArgs e)
         {
             if (SpecificationId != null)
-                Response.Redirect("EditSpecification.aspx?specificationId=" + SpecificationId, true);
-        }
-
-
-        protected void WithdrawSpecificatione_Click(object sender, EventArgs e)
-        {
-        }
-
-
-        protected void ExitSpecificationDetails_Click(object sender, EventArgs e)
-        {
-            this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close()", true);
+                Response.Redirect("SpecificationDetails.aspx?specificationId=" + SpecificationId, true);
+            else
+                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close()", true);
         }
     }
 

@@ -141,6 +141,7 @@ namespace Etsi.Ultimate.Controls
 
                 //Get list of WIs added in the UI
                 var selectedWiUid = hidSelectedWis.Value.Trim(',').Split(',').Select(x => int.TryParse(x, out value) ? value : -1).ToList();
+                var systemWis = hidSystemWis.Value.Trim(',').Split(',').Select(x => int.TryParse(x, out value) ? value : -1).ToList();
 
                 //Add WIs from DataSource/modifiedDataSource if missing in searched Wis
                 if (modifiedDataSource.Count > 0)
@@ -149,6 +150,7 @@ namespace Etsi.Ultimate.Controls
                     matchedWis.Key.AddRange(DataSource.Where(x => !matchedWis.Key.Any(y => x.Pk_WorkItemUid == y.Pk_WorkItemUid)));
 
                 var WiList = matchedWis.Key.Where(x => selectedWiUid.Any(y => x.Pk_WorkItemUid == y)).ToList();
+                WiList.Where(x => systemWis.All(y => y != x.Pk_WorkItemUid)).ToList().ForEach(x => x.IsUserAddedWi = true);
                 BindGrid(relatedWiGrid_Edit, WiList);
 
                 hidSelectedWis.Value = hidSelectedWis.Value.Trim(',') + ",";
@@ -315,11 +317,12 @@ namespace Etsi.Ultimate.Controls
         private void SetHiddenWisValue(List<WorkItem> WiList)
         {
             hidSelectedWis.Value = (WiList.Count > 0) ? (String.Join(",", WiList.Select(x => x.Pk_WorkItemUid).ToList()) + ",") : String.Empty;
+            hidSystemWis.Value = (WiList.Count > 0) ? (String.Join(",", WiList.Where(x => x.IsUserAddedWi == false).Select(x => x.Pk_WorkItemUid).ToList()) + ",") : String.Empty;
         }
 
-        private void SetHidPrimaryWi(List<WorkItem> lsit)
+        private void SetHidPrimaryWi(List<WorkItem> list)
         {
-            hidPrimaryWi.Value = (lsit.First(x => x.IsPrimary == true) != null) ? lsit.First(x => x.IsPrimary == true).Pk_WorkItemUid.ToString() : "-1";
+            hidPrimaryWi.Value = (list.FirstOrDefault(x => x.IsPrimary == true) != null) ? list.FirstOrDefault(x => x.IsPrimary == true).Pk_WorkItemUid.ToString() : "-1";
         }
 
         private void BindGrid(RadGrid radGrid, Object obj)

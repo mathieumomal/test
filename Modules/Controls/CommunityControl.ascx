@@ -118,6 +118,7 @@
     .hideOverflow {
         height: 25px;
         overflow: hidden;
+        display:inline;
     }
 </style>
 <div>

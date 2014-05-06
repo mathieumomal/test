@@ -96,10 +96,27 @@ legend{
     vertical-align:top;
 }
 
-
 .specificationDetailsAction {
     margin: 15px 0 0 0 !important; 
     max-height: 30px;
+}
+
+/*SPEC EDIT/CREATE*/
+.LeftColumn {
+    width: 130.6px;
+    text-align: right; 
+    padding:5px;
+}
+
+.RightColumn img
+{
+    vertical-align:top;
+}
+
+.RightColumn {
+    width: 184.6px;
+    text-align: left; 
+    padding:5px;
 }
 
 /* SPECIFICATION SEARCH */

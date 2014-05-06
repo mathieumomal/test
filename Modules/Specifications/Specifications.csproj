@@ -94,6 +94,13 @@
     <Compile Include="Components\FeatureController.cs" />
     <Compile Include="Components\ItemController.cs" />
     <Compile Include="Components\Item.cs" />
+    <Compile Include="EditSpecification.aspx.cs">
+      <DependentUpon>EditSpecification.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="EditSpecification.aspx.designer.cs">
+      <DependentUpon>EditSpecification.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SpecificationDetails.aspx.cs">
       <DependentUpon>SpecificationDetails.aspx</DependentUpon>
@@ -125,6 +132,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="EditSpecification.aspx" />
     <Content Include="Documentation\Documentation.css" />
     <Content Include="Documentation\Documentation.html" />
     <Content Include="images\2g.png" />

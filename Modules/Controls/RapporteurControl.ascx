@@ -41,27 +41,29 @@
                                         </ItemTemplate>
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn DataField="name" HeaderText="Name" UniqueName="name">
-                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" CssClass="nameStyleColumn"/> 
+                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="30%" CssClass="nameStyleColumn"/> 
                                         <ItemStyle CssClass="nameStyleColumn" />
                                         <ItemTemplate>
                                             <div><%# DataBinder.Eval(Container.DataItem,"FIRSTNAME") %> <%# DataBinder.Eval(Container.DataItem,"LASTNAME") %></div>  
                                         </ItemTemplate>
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn DataField="company" HeaderText="Company" UniqueName="company">
-                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" CssClass="companyStyleColumn"/>
+                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="25%" CssClass="companyStyleColumn"/>
                                         <ItemStyle CssClass="companyStyleColumn" />
                                         <ItemTemplate>
                                             <div><%# DataBinder.Eval(Container.DataItem,"ORGA_SHORT") %></div>  
                                         </ItemTemplate>                
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn DataField="email" HeaderText="Email" UniqueName="email">
-                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" CssClass="emailStyleColumn"/>
+                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="35%" CssClass="emailStyleColumn"/>
                                         <ItemStyle CssClass="emailStyleColumn" />
                                         <ItemTemplate>
                                             <div><%# DataBinder.Eval(Container.DataItem,"Email") %></div>  
                                         </ItemTemplate>                
                                     </telerik:GridTemplateColumn>
-                                    <telerik:GridButtonColumn CommandName="Delete" HeaderText="Delete" UniqueName="delete" ImageUrl="~/images/delete.gif" ButtonType="ImageButton" HeaderStyle-CssClass="deleteStyleColumn" ItemStyle-CssClass="deleteStyleColumn" />
+                                    <telerik:GridButtonColumn CommandName="Delete" HeaderText="Delete" UniqueName="delete" ImageUrl="/controls/Ultimate/images/delete.png" ButtonType="ImageButton" HeaderStyle-CssClass="deleteStyleColumn" ItemStyle-CssClass="deleteStyleColumn" >
+                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True"/>
+                                    </telerik:GridButtonColumn>
                                 </Columns>
                             
                                 <NoRecordsTemplate>
@@ -87,7 +89,8 @@
                             OnItemsRequested="RdcbRapporteurs_ItemsRequested"
                             CssClass="rdcbRapporteurStyle"
                             OnSelectedIndexChanged="RdcbRapporteurs_SelectedIndexChanged"
-                            AutoPostBack="true">  
+                            AutoPostBack="true"
+                            EmptyMessage="Search Rapporteurs...">  
                         </telerik:RadComboBox>
                     </td>
                     <td>

@@ -38,13 +38,14 @@
 </style>
 <script type="text/javascript">
     function closeAllModals() {
-        var manager = GetRadWindowManager();
+        var manager = $find("<%=relatedWi_RadWindowManager.ClientID %>");
         manager.closeAll();
     }
     
     function open_RadWindow_workItemEdit(sender, eventArgs) {
         closeAllModals();
-        window.radopen(null, "RadWindow_wiEdit");
+        var manager = $find("<%=relatedWi_RadWindowManager.ClientID %>");
+        manager.open(null, "RadWindow_wiEdit");
         $("#<%=txtSearchText.ClientID %>").val('');
     }
 
@@ -141,7 +142,7 @@
     <ContentTemplate>
         <fieldset style="padding: 5px;">
             <legend>
-                <asp:Label runat="server" ID="legendLabel"></asp:Label>
+                <asp:Label runat="server" ID="legendLabel" Text="Related Work Items"></asp:Label>
             </legend>
             <table style="width: 100%">
                 <tr>
@@ -212,6 +213,7 @@
                     <td>
                         <asp:Button ID="btnShowWiEditWindow" class="floatRight" Width="100" runat="server" Text="Add/Remove" OnClientClick="open_RadWindow_workItemEdit()" />
                         <asp:HiddenField runat="server" ID="hidSelectedWis" />
+                        <asp:HiddenField runat="server" ID="hidSystemWis" />
                         <asp:HiddenField runat="server" ID="hidPrimaryWi" />
                     </td>
                 </tr>
@@ -221,7 +223,7 @@
 </asp:UpdatePanel>
 <telerik:RadWindowManager ID="relatedWi_RadWindowManager" runat="server">
     <Windows>
-        <telerik:RadWindow ID="RadWindow_wiEdit" runat="server" Modal="true" Title="Related Work Items" Width="550" Height="525" VisibleStatusbar="false" Behaviors="Close">
+        <telerik:RadWindow ID="RadWindow_wiEdit" runat="server" Modal="true" Title="Related Work Items" Width="550" Height="530" VisibleStatusbar="false" Behaviors="Close">
             <ContentTemplate>
                 <div>
                     <fieldset style="padding: 5px;">
