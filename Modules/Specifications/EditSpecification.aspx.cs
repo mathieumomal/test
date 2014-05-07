@@ -66,52 +66,33 @@ namespace Etsi.Ultimate.Module.Specifications
         /// <param name="e"></param>
         protected void SaveSpec_Click(object sender, EventArgs e)
         {
-            Domain.Specification spec = new Domain.Specification();
-
-            //General tab
-            spec.Number = txtReference.Text;
-            spec.Title = txtTitle.Text;
-            spec.IsTS = Convert.ToBoolean(ddlType.SelectedValue);
-
-            int releaseId;
-            if (int.TryParse(ddlPlannedRelease.SelectedItem.Value, out releaseId))
-                spec.Specification_Release.Add(new Domain.Specification_Release() { Fk_ReleaseId = releaseId });
-
-            spec.IsForPublication = !chkInternal.Checked;
-            spec.ComIMS = chkCommonIMSSpec.Checked;
-
-            foreach (ListItem item in cblRadioTechnology.Items)
-            {
-                int Pk_Enum_TechnologyId;
-                if (item.Selected && int.TryParse(item.Value, out Pk_Enum_TechnologyId))
-                    spec.SpecificationTechnologies.Add(new Domain.SpecificationTechnology() { Fk_Enum_Technology = Pk_Enum_TechnologyId });
-            }
-            spec.Remarks = specificationRemarks.DataSource;
-
-            //Responsibility
-            spec.SpecificationResponsibleGroups.Add(new Domain.SpecificationResponsibleGroup() { Fk_commityId = PrimaryResGrpCtrl.SelectedCommunityID, IsPrime = true });
-
-            foreach (var communityId in SecondaryResGrpCtrl.SelectedCommunityIds)
-                spec.SpecificationResponsibleGroups.Add(new Domain.SpecificationResponsibleGroup() { Fk_commityId = communityId, IsPrime = false });
-
-            foreach (var rapporteurId in specificationRapporteurs.ListIdPersonSelect)
-                spec.SpecificationRapporteurs.Add(new Domain.SpecificationRapporteur() { Fk_RapporteurId = rapporteurId });
-
-            //Related
-            foreach (Domain.WorkItem wi in SpecificationRelatedWorkItems.DataSource)
-                spec.Specification_WorkItem.Add(new Domain.Specification_WorkItem() { Fk_WorkItemId = wi.Pk_WorkItemUid, isPrime = wi.IsPrimary, IsSetByUser = wi.IsUserAddedWi });
-
             ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
-            var result = svc.CreateSpecification(userId, spec);
+            Domain.Specification spec;
+            Domain.ImportReport result;
 
-            if (result.Value.ErrorList.Count > 0)
+            if (SpecificationId != null)
+            {
+                spec = svc.GetSpecificationDetailsById(userId, SpecificationId.Value).Key;
+                FillSpecificationObject(spec, false);
+                result = svc.EditSpecification(userId, spec).Value;
+            }
+            else
+            {
+                spec = new Domain.Specification();
+                FillSpecificationObject(spec, true);
+                result = svc.CreateSpecification(userId, spec).Value;
+            }
+
+            if (result.ErrorList.Count > 0)
             {
                 specMsg.Visible = true;
-                specMsg.CssClass = "Error";
+                specMsg.CssClass = "Spec_Edit_Error";
                 specMsgTxt.CssClass = "ErrorTxt";
 
-                foreach (string errorMessage in result.Value.ErrorList)
+                foreach (string errorMessage in result.ErrorList)
                     specMsgTxt.Text = errorMessage + "<br/>";
+
+                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "setTimeout(function(){ $('#" + specMsg.ClientID + "').hide('slow');} , 3000);", true);
             }
 
         }
@@ -445,6 +426,48 @@ namespace Etsi.Ultimate.Module.Specifications
                     return personID;
             }
             return 0;
+        }
+
+        /// <summary>
+        /// Fill spec object from form elements
+        /// </summary>
+        /// <param name="spec">new/existing spec object</param>
+        /// <param name="isNewSpec">flag to determine new/existing spec</param>
+        private void FillSpecificationObject(Domain.Specification spec, bool isNewSpec)
+        {
+            //General tab
+            spec.Number = txtReference.Text;
+
+            spec.Title = txtTitle.Text;
+            spec.IsTS = Convert.ToBoolean(ddlType.SelectedValue);
+
+            int releaseId;
+            if (int.TryParse(ddlPlannedRelease.SelectedItem.Value, out releaseId))
+                spec.Specification_Release.Add(new Domain.Specification_Release() { Fk_ReleaseId = releaseId });
+
+            spec.IsForPublication = !chkInternal.Checked;
+            spec.ComIMS = chkCommonIMSSpec.Checked;
+
+            foreach (ListItem item in cblRadioTechnology.Items)
+            {
+                int Pk_Enum_TechnologyId;
+                if (item.Selected && int.TryParse(item.Value, out Pk_Enum_TechnologyId))
+                    spec.SpecificationTechnologies.Add(new Domain.SpecificationTechnology() { Fk_Enum_Technology = Pk_Enum_TechnologyId });
+            }
+            spec.Remarks = specificationRemarks.DataSource;
+
+            //Responsibility
+            spec.SpecificationResponsibleGroups.Add(new Domain.SpecificationResponsibleGroup() { Fk_commityId = PrimaryResGrpCtrl.SelectedCommunityID, IsPrime = true });
+
+            foreach (var communityId in SecondaryResGrpCtrl.SelectedCommunityIds)
+                spec.SpecificationResponsibleGroups.Add(new Domain.SpecificationResponsibleGroup() { Fk_commityId = communityId, IsPrime = false });
+
+            foreach (var rapporteurId in specificationRapporteurs.ListIdPersonSelect)
+                spec.SpecificationRapporteurs.Add(new Domain.SpecificationRapporteur() { Fk_RapporteurId = rapporteurId });
+
+            //Related
+            foreach (Domain.WorkItem wi in SpecificationRelatedWorkItems.DataSource)
+                spec.Specification_WorkItem.Add(new Domain.Specification_WorkItem() { Fk_WorkItemId = wi.Pk_WorkItemUid, isPrime = wi.IsPrimary, IsSetByUser = wi.IsUserAddedWi });
         }
 
         #endregion

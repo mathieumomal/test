@@ -1,8 +1,8 @@
 @import url("/Portals/_default/Skins/3GPP/CommonCssComponent/buttons.css");
-.text-left
-{
-	text-align:left;
-	padding: 0 3px;
+
+.text-left {
+    text-align: left;
+    padding: 0 3px;
 }
 
 .containerFix {
@@ -13,7 +13,7 @@
 }
 
 .specificationDetailsBody {
-    font-family:Arial,verdana,Serif;
+    font-family: Arial,verdana,Serif;
     font-size: 12px;
 }
 
@@ -24,11 +24,11 @@
 
 .TabContent {
     margin: 10px;
-    font: Arial  12px Black;
+    font: Arial 12px Black;
 }
 
 .specificationRemarks {
-    position: absolute; 
+    position: absolute;
     bottom: 20px;
     width: 650px;
 }
@@ -36,21 +36,21 @@
 
 #SpecificationDetailsRadMultiPage fieldset {
     margin: 2%;
-    padding: 1% !important; 
+    padding: 1% !important;
     border: 1px solid grey !important;
     -webkit-border-radius: 4px !important;
     -moz-border-radius: 4px !important;
     border-radius: 4px !important;
 }
 
-legend{
-    font-weight:bold !important;
+legend {
+    font-weight: bold !important;
 }
 
 .Warning {
     border: 1px solid;
     margin: 10px 0px;
-    padding:15px 10px 15px 50px;
+    padding: 15px 10px 15px 50px;
     background-repeat: no-repeat;
     background-position: 10px center;
     color: #9F6000;
@@ -65,7 +65,7 @@ legend{
 .Error {
     border: 1px solid;
     margin: 10px 0px;
-    padding:15px 10px 15px 50px;
+    padding: 15px 10px 15px 50px;
     background-repeat: no-repeat;
     background-position: 10px center;
     color: #D8000C;
@@ -79,44 +79,53 @@ legend{
 
 .TabLineLeft {
     width: 184.6px;
-    text-align: right; 
+    text-align: right;
 }
 
-.TabLineLeft  span{
-    padding-right: 10px;
-}
+    .TabLineLeft span {
+        padding-right: 10px;
+    }
 
 .TabLineRight {
     width: auto;
     text-align: left;
 }
 
-.TabLineRight img
-{
-    vertical-align:top;
-}
+    .TabLineRight img {
+        vertical-align: top;
+    }
 
 .specificationDetailsAction {
-    margin: 15px 0 0 0 !important; 
+    margin: 15px 0 0 0 !important;
     max-height: 30px;
 }
 
 /*SPEC EDIT/CREATE*/
 .LeftColumn {
     width: 130.6px;
-    text-align: right; 
-    padding:5px;
+    text-align: right;
+    padding: 5px;
 }
 
-.RightColumn img
-{
-    vertical-align:top;
+.RightColumn img {
+    vertical-align: top;
 }
 
 .RightColumn {
     width: 184.6px;
-    text-align: left; 
-    padding:5px;
+    text-align: left;
+    padding: 5px;
+}
+
+.Spec_Edit_Error {
+    border: 1px solid;
+    margin: 5px 0px;
+    padding: 5px 5px 5px 5px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    color: #D8000C;
+    background-color: #FFBABA;
+    background-image: url('images/error.png');
 }
 
 /* SPECIFICATION SEARCH */
@@ -140,21 +149,20 @@ legend{
     font-size: 17px;
     font-weight: bold;
     color: gray;
-    z-index:2000;
-	right:2px;
+    z-index: 2000;
+    right: 2px;
 }
 
 #specAdditionalDetails {
-    table-layout:fixed !important;
-    width:120px;
+    table-layout: fixed !important;
+    width: 120px;
 }
 
-#specAdditionalDetails td {
-    border: none !important;
-    width:16px;
-}
+    #specAdditionalDetails td {
+        border: none !important;
+        width: 16px;
+    }
 
-.imgViewSpecifications, .imgCR
-{
-	cursor:pointer;
+.imgViewSpecifications, .imgCR {
+    cursor: pointer;
 }
