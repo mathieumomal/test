@@ -32,13 +32,18 @@ namespace Etsi.Ultimate.Module.Specifications
         private static String CONST_HISTORY_TAB = "History";
         private const string CONST_EMPTY_FIELD = " - ";
         private const string SPEC_HEADER = "Specification #: ";
+        private const String CREATION_MODE = "create";
+        private const String EDIT_MODE = "edit";
         private List<string> LIST_OF_TABS = new List<string>() { };
         public static readonly string DsId_Key = "ETSI_DS_ID";
+        
 
         //Properties
         private int userId;
         private string selectedTab;
         public static Nullable<int> SpecificationId;
+        private static String action;
+        
 
         #endregion
 
@@ -54,7 +59,7 @@ namespace Etsi.Ultimate.Module.Specifications
             if (!IsPostBack)
             {
                 GetRequestParameters();
-                LoadReleaseDetails();
+                LoadSpecificationDetails();
             }
             specificationRemarks.AddRemarkHandler += specificationRemarks_AddRemarkHandler;
         }
@@ -71,16 +76,16 @@ namespace Etsi.Ultimate.Module.Specifications
             Domain.ImportReport result;
 
             userId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
-            if (SpecificationId != null)
+            if (action.Equals(EDIT_MODE))
             {
                 spec = svc.GetSpecificationDetailsById(userId, SpecificationId.Value).Key;
-                FillSpecificationObject(spec, false);
+                FillSpecificationObject(spec);
                 result = svc.EditSpecification(userId, spec).Value;
             }
             else
             {
                 spec = new Domain.Specification();
-                FillSpecificationObject(spec, true);
+                FillSpecificationObject(spec);
                 result = svc.CreateSpecification(userId, spec).Value;
             }
 
@@ -105,7 +110,7 @@ namespace Etsi.Ultimate.Module.Specifications
         /// <param name="e"></param>
         protected void ExitSpecEdit_Click(object sender, EventArgs e)
         {
-            if (SpecificationId != null)
+            if (action.Equals(EDIT_MODE))
                 Response.Redirect("SpecificationDetails.aspx?specificationId=" + SpecificationId, true);
             else
                 this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close()", true);
@@ -141,13 +146,14 @@ namespace Etsi.Ultimate.Module.Specifications
         /// <summary>
         /// Loads the content of the page 
         /// </summary>
-        private void LoadReleaseDetails()
+        private void LoadSpecificationDetails()
         {
 
             ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
             IReleaseService relSvc = ServicesFactory.Resolve<IReleaseService>();
-            var releases = relSvc.GetAllReleases(userId).Key;
-            if (SpecificationId != null)
+            var releases = relSvc.GetAllReleases(userId).Key.Where(x=>x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Open 
+                                                                   || x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Frozen).OrderByDescending(x=>x.StartDate).ToList();
+            if (action.Equals(EDIT_MODE))
             {
                 // Retrieve data
                 KeyValuePair<DomainClasses.Specification, DomainClasses.UserRightsContainer> specificationRightsObject = svc.GetSpecificationDetailsById(userId, SpecificationId.Value);
@@ -191,10 +197,12 @@ namespace Etsi.Ultimate.Module.Specifications
                             rtsSpecEdit.Tabs[LIST_OF_TABS.IndexOf(selectedTab)].PageView.Selected = true;
                         }
 
+                        btnSaveDisabled.Style.Add("display", "none");
                     }
                 }
             }
-            else
+
+            if (action.Equals(CREATION_MODE))
             {
                 BuildTabsDisplay();
                 SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
@@ -202,6 +210,8 @@ namespace Etsi.Ultimate.Module.Specifications
                 FillResponsiblityTab(null);
                 FillRelatedSpecificationsTab(null, null);
                 FillHistoryTab(null);
+
+                btnSave.Style.Add("display", "none");
             }
         }
 
@@ -236,21 +246,24 @@ namespace Etsi.Ultimate.Module.Specifications
                     Selected = false
                 });
 
-            rtsSpecEdit.Tabs.Add(
-                new RadTab()
-                {
-                    PageViewID = "RadPage" + CONST_RELEASES_TAB,
-                    Text = CONST_RELEASES_TAB,
-                    Selected = false
-                });
+            if (action.Equals(EDIT_MODE))
+            {
+                rtsSpecEdit.Tabs.Add(
+                    new RadTab()
+                    {
+                        PageViewID = "RadPage" + CONST_RELEASES_TAB,
+                        Text = CONST_RELEASES_TAB,
+                        Selected = false
+                    });
 
-            rtsSpecEdit.Tabs.Add(
-                new RadTab()
-                {
-                    PageViewID = "RadPage" + CONST_HISTORY_TAB,
-                    Text = CONST_HISTORY_TAB,
-                    Selected = false
-                });
+                rtsSpecEdit.Tabs.Add(
+                    new RadTab()
+                    {
+                        PageViewID = "RadPage" + CONST_HISTORY_TAB,
+                        Text = CONST_HISTORY_TAB,
+                        Selected = false
+                    });
+            }
         }
 
         /// <summary>
@@ -291,14 +304,9 @@ namespace Etsi.Ultimate.Module.Specifications
 
             if (specification != null && userRights != null)
             {
-                txtTitle.Text = string.IsNullOrEmpty(specification.Number) ? CONST_EMPTY_FIELD : specification.Number;
+                txtReference.Text = string.IsNullOrEmpty(specification.Number) ? CONST_EMPTY_FIELD : specification.Number;
                 txtTitle.Text = string.IsNullOrEmpty(specification.Title) ? CONST_EMPTY_FIELD : specification.Title;
                 lblStatus.Text = string.IsNullOrEmpty(specification.Status) ? CONST_EMPTY_FIELD : specification.Status;
-                if (specification.IsUnderChangeControl ?? false)
-                {
-                    lnkChangeRequest.Visible = true;
-                    lnkChangeRequest.NavigateUrl = "#";
-                }
                 if (specification.IsTS != null)
                     ddlType.SelectedIndex = specification.IsTS.Value ? 0 : 1;
 
@@ -334,6 +342,7 @@ namespace Etsi.Ultimate.Module.Specifications
             specificationRapporteurs.IsEditMode = true;
             specificationRapporteurs.IsSinglePersonMode = false;
             specificationRapporteurs.PersonLinkBaseAddress = ConfigurationManager.AppSettings["RapporteurDetailsAddress"];
+            
             if (specification != null)
             {
                 PrimaryResGrpCtrl.SelectedCommunityID = specification.PrimeResponsibleGroup.Fk_commityId;
@@ -379,7 +388,6 @@ namespace Etsi.Ultimate.Module.Specifications
                     SpecificationRelatedWorkItems.DataSource = specification.SpecificationWIsList;
                 else
                     SpecificationRelatedWorkItems.DataSource = null;
-
             }
         }
 
@@ -409,6 +417,7 @@ namespace Etsi.Ultimate.Module.Specifications
             userId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
             SpecificationId = (Request.QueryString["specificationId"] != null) ? (int.TryParse(Request.QueryString["specificationId"], out output) ? new Nullable<int>(output) : null) : null;
             selectedTab = (Request.QueryString["selectedTab"] != null) ? Request.QueryString["selectedTab"] : string.Empty;
+            action = (Request.QueryString["action"] != null) ? Request.QueryString["action"] : string.Empty;
         }
 
         /// <summary>
@@ -434,7 +443,7 @@ namespace Etsi.Ultimate.Module.Specifications
         /// </summary>
         /// <param name="spec">new/existing spec object</param>
         /// <param name="isNewSpec">flag to determine new/existing spec</param>
-        private void FillSpecificationObject(Domain.Specification spec, bool isNewSpec)
+        private void FillSpecificationObject(Domain.Specification spec)
         {
             //General tab
             spec.Number = txtReference.Text;

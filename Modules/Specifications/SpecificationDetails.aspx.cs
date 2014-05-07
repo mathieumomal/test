@@ -375,7 +375,7 @@ namespace Etsi.Ultimate.Module.Specifications
         protected void EditSpecificationDetails_Click(object sender, EventArgs e)
         {
             if (SpecificationId != null)
-                Response.Redirect("EditSpecification.aspx?specificationId=" + SpecificationId, true);
+                Response.Redirect("EditSpecification.aspx?specificationId=" + SpecificationId + "&action=edit", true);
         }
 
 

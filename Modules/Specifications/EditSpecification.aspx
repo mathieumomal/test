@@ -18,6 +18,8 @@
     <link rel="stylesheet" type="text/css" href="module.css">
     <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon">
     <script src="JS/jquery.min.js"></script>
+    <script src="JS/jquery-validate.min.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
 </head>
 <body>
     <form id="specEditForm" runat="server">
@@ -39,13 +41,13 @@
                     <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true">
                         <table style="width: 100%">
                             <tr>
-                                <td class="LeftColumn">Reference:</td>
+                                <td class="LeftColumn">Reference</td>
                                 <td class="RightColumn">
                                     <asp:TextBox ID="txtReference" Width="198" runat="server"></asp:TextBox>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="LeftColumn">Title:</td>
+                                <td class="LeftColumn">Title<span class='requiredField'>(*)</span></td>
                                 <td class="RightColumn">
                                     <asp:TextBox ID="txtTitle" Width="350" runat="server"></asp:TextBox>
                                 </td>
@@ -54,14 +56,10 @@
                                 <td class="LeftColumn">Status:</td>
                                 <td class="RightColumn">
                                     <asp:Label ID="lblStatus" runat="server">-</asp:Label>
-                                    <asp:HyperLink ID="lnkChangeRequest" runat="server" Target="_blank" Visible="false" NavigateUrl="#">
-                                        <img runat="server" id="lnkChangeRequestImg" border="0" alt="Go to change request" title="All CRs for this specification" src="images/cr.png" />
-                                    </asp:HyperLink>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="LeftColumn">Type:
-                                </td>
+                                <td class="LeftColumn">Type</td>
                                 <td class="RightColumn">
                                     <asp:DropDownList ID="ddlType" Width="200" runat="server">
                                         <asp:ListItem Selected="True" Text="Technical Specification (TS)" Value="true" />
@@ -70,24 +68,24 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="LeftColumn">Initial planned Release:
+                                <td class="LeftColumn">Initial planned Release
                                 </td>
                                 <td class="RightColumn">
                                     <asp:DropDownList ID="ddlPlannedRelease" Width="200" runat="server"></asp:DropDownList>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="LeftColumn">Internal:</td>
+                                <td class="LeftColumn">Internal</td>
                                 <td class="RightColumn">
                                     <asp:CheckBox ID="chkInternal" runat="server"></asp:CheckBox></td>
                             </tr>
                             <tr>
-                                <td class="LeftColumn">Common IMS Specification:</td>
+                                <td class="LeftColumn">Common IMS Specification</td>
                                 <td class="RightColumn">
                                     <asp:CheckBox ID="chkCommonIMSSpec" runat="server"></asp:CheckBox></td>
                             </tr>
                             <tr>
-                                <td class="LeftColumn">Radio technology:</td>
+                                <td class="LeftColumn">Radio technology</td>
                                 <td class="RightColumn">
                                     <asp:CheckBoxList ID="cblRadioTechnology" runat="server" RepeatDirection="Horizontal"></asp:CheckBoxList></td>
                             </tr>
@@ -107,13 +105,13 @@
                             <ContentTemplate>
                                 <table style="width: 100%">
                                     <tr>
-                                        <td class="LeftColumn">Primary responsible group:</td>
+                                        <td class="LeftColumn">Primary responsible group</td>
                                         <td class="RightColumn">
                                             <ult:communitycontrol id="PrimaryResGrpCtrl" width="200" issingleselection="true" iseditmode="true" runat="server" />
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="LeftColumn">Secondary responsible groups:</td>
+                                        <td class="LeftColumn">Secondary responsible groups</td>
                                         <td class="RightColumn">
                                             <ult:communitycontrol id="SecondaryResGrpCtrl" width="200" issingleselection="false" iseditmode="true" runat="server" />
                                         </td>
@@ -160,9 +158,87 @@
                 </telerik:RadMultiPage>
                 <div class="specificationDetailsAction">
                     <asp:LinkButton ID="btnSave" runat="server" Text="Save" CssClass="btn3GPP-success" OnClick="SaveSpec_Click" />
+                    <asp:LinkButton ID="btnSaveDisabled" runat="server" Text="Save" CssClass="btn3GPP-default" disabled="disabled" OnClientClick="return false;" />
                     <asp:LinkButton ID="btnExit" runat="server" Text="Exit" CssClass="btn3GPP-success" OnClick="ExitSpecEdit_Click" />
                 </div>
 
+                <script type="text/javascript">
+
+
+                    //Check if the inserted value is a valid URL */
+                    function isURLValid(element) {
+                        var controlSelector = "#" + element
+                        var urlregex = '^(http:\/\/|https:\/\/|ftp:\/\/){1}([0-9A-Za-z]+\.)'
+                        if ($(controlSelector).val() == "") {
+                            return true;
+                        }
+                        if (!$(controlSelector).val().match(urlregex)) {
+                            return false;
+                        }
+                        else {
+                            return true;
+                        }
+                    }
+
+                    //Check if the inserted value is not empty or composed by spaces
+                    function isEmpty(element) {
+                        var controlSelector = "#" + element;
+                        $(controlSelector).removeClass('required');
+                        if ($.trim($(controlSelector).val()).length == 0) {
+                            $(controlSelector).addClass('required');
+                            return true;
+                        }
+                        return false;
+                    }
+
+                    function validateformTrim() {
+                        isEmpty("txtTitle");
+                    }
+
+                    /* Check if all form's field are valid */
+                    function validateform(errorClassName) {
+                        validateformTrim();
+                        if (!$("#txtTitle").hasClass(errorClassName)) {
+                            $('#btnSave').show();
+                            $('#btnSaveDisabled').hide();
+                        }
+                        else {
+                            $('#btnSaveDisabled').show();
+                            $('#btnSave').hide();
+                        }
+                    }
+
+                    //Perform a form validation on each field keyUp
+                    function formValidator() {
+                        var errorClassName = 'required';
+                        var validator = $("#specEditForm").validate({
+                            errorClass: "required",
+                            onsubmit: true,
+                            onKeyup: true,
+                            eachValidField: function () {
+                                $(this).removeClass('required');
+                                validateform(errorClassName);
+                                validateformTrim();
+                            },
+                            eachInvalidField: function () {
+                                $(this).addClass('required');
+                                $('#btnSave').hide();
+                                $('#btnSaveDisabled').show();
+                            }
+                        });
+                    }
+
+                    $(document).ready(function () {
+
+                        // Used for creation to tell jquery validate that those fields are non valid
+                        if ($('#txtTitle').val() == "") $('#txtTitle').addClass('required');
+
+                        //Validate form
+                        formValidator();
+
+
+                    });
+                </script>
             </asp:Panel>
         </asp:Panel>
     </form>

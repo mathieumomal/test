@@ -56,7 +56,7 @@
         <table style="width: 100%;">
             <tr>
                 <td style="line-height: 22px;">
-                    <asp:LinkButton ID="btnNewSpecification" class="btn3GPP-success" runat="server" OnClientClick="var popUp=window.open('/desktopmodules/Specifications/EditSpecification.aspx', 'Specification-Create', 'height=690,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();return false;" Text="New Specification" />
+                    <asp:LinkButton ID="btnNewSpecification" class="btn3GPP-success" runat="server" OnClientClick="var popUp=window.open('/desktopmodules/Specifications/EditSpecification.aspx?action=create', 'Specification-Create', 'height=690,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();return false;" Text="New Specification" />
                     <span style="float: right; padding-bottom: 2px; white-space: nowrap">
                         <asp:HyperLink ID="lnkManageITURecommendations" runat="server" Text="Manage ITU Recommendations" Target="_blank" />
                         <ult:fullviewcontrol id="ultFullView" runat="server" />
