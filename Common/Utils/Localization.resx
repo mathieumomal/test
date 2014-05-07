@@ -255,4 +255,7 @@
   <data name="History_Specification_Changed_Prime_Group" xml:space="preserve">
     <value>Prime responsible group has been changed from {0}. Previous: {1} </value>
   </data>
+  <data name="History_Specification_Changed_Prime_Rapporteur" xml:space="preserve">
+    <value>Prime Rapporteur has been changed to {0}. Previous: {1}</value>
+  </data>
 </root>

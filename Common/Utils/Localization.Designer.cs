@@ -106,6 +106,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prime Rapporteur has been changed to {0}. Previous: {1}.
+        /// </summary>
+        public static string History_Specification_Changed_Prime_Rapporteur {
+            get {
+                return ResourceManager.GetString("History_Specification_Changed_Prime_Rapporteur", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Specification has been created for release {0}.
         /// </summary>
         public static string History_Specification_Created {

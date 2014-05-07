@@ -207,20 +207,7 @@ namespace Etsi.Ultimate.Tests.Services
             // Get a fresh copy of the spec.
             var specToEdit = GetCorrectSpecificationForEdit(true);
             specToEdit.Title = "New title";
-
-            // Change spec technology
-            specToEdit.SpecificationTechnologies.Remove(specToEdit.SpecificationTechnologies.First()); // Remove 2G
-            specToEdit.SpecificationTechnologies.Add(new SpecificationTechnology() { Pk_SpecificationTechnologyId = 13, Fk_Enum_Technology = 3 }); // Let's say it's LTE
-
-            // Change remarks
-            specToEdit.Remarks.First().IsPublic = false;
-            specToEdit.Remarks.Add(new Remark() { IsPublic = false, Fk_PersonId = 12 });
-
-            // Change responsible groups
-            specToEdit.SpecificationResponsibleGroups.Remove(specToEdit.SpecificationResponsibleGroups.Last()); // Remove group 2
-            specToEdit.SpecificationResponsibleGroups.First().IsPrime = false;  // Remove prime on group 1
-            specToEdit.SpecificationResponsibleGroups.Add(new SpecificationResponsibleGroup() { Pk_SpecificationResponsibleGroupId = 3, Fk_commityId = 3, IsPrime = true }); // Set prime on group 3
-
+            
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
             Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit ).Key);
 
@@ -230,24 +217,137 @@ namespace Etsi.Ultimate.Tests.Services
             // Thus we will test on it.
             var modifiedSpec = GetCorrectSpecificationForEdit(false);
             Assert.AreEqual(specToEdit.Title, modifiedSpec.Title);
+           
+        }
+
+        [Test]
+        public void SpecificationEdit_TestRemarksChange()
+        {
+            RegisterAllMocks();
+
+            // Get a fresh copy of the spec.
+            var specToEdit = GetCorrectSpecificationForEdit(true);
+
+            // Change remarks
+            specToEdit.Remarks.First().IsPublic = false;
+            specToEdit.Remarks.Add(new Remark() { IsPublic = false, Fk_PersonId = 12 });
+
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
+
+            // Test remarks
+            var modifiedSpec = GetCorrectSpecificationForEdit(false);
+            Assert.AreEqual(2, modifiedSpec.Remarks.Count);
+            Assert.IsFalse(modifiedSpec.Remarks.First().IsPublic.GetValueOrDefault());
+        }
+
+        [Test]
+        public void SpecificationEdit_TestTechnoChange()
+        {
+            RegisterAllMocks();
+
+            // Get a fresh copy of the spec.
+            var specToEdit = GetCorrectSpecificationForEdit(true);
+
+            // Change spec technology
+            specToEdit.SpecificationTechnologies.Remove(specToEdit.SpecificationTechnologies.First()); // Remove 2G
+            specToEdit.SpecificationTechnologies.Add(new SpecificationTechnology() { Pk_SpecificationTechnologyId = 13, Fk_Enum_Technology = 3 }); // Let's say it's LTE
+
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
+            var modifiedSpec = GetCorrectSpecificationForEdit(false);
             
             // Test specification technologies
             Assert.AreEqual(3, modifiedSpec.SpecificationTechnologies.Count);
             Assert.IsTrue(modifiedSpec.SpecificationTechnologies.First().EntityStatus == Enum_EntityStatus.Deleted);
-            
-            // Test remarks
-            Assert.AreEqual(2, modifiedSpec.Remarks.Count);
-            Assert.IsFalse(modifiedSpec.Remarks.First().IsPublic.GetValueOrDefault());
-            
+        }
+
+        [Test]
+        public void SpecificationEdit_TestResponsibleGroupsChange()
+        {
+            RegisterAllMocks();
+
+            // Get a fresh copy of the spec.
+            var specToEdit = GetCorrectSpecificationForEdit(true);
+
+            // Change responsible groups
+            specToEdit.SpecificationResponsibleGroups.Remove(specToEdit.SpecificationResponsibleGroups.Last()); // Remove group 2
+            specToEdit.SpecificationResponsibleGroups.First().IsPrime = false;  // Remove prime on group 1
+            specToEdit.SpecificationResponsibleGroups.Add(new SpecificationResponsibleGroup() { Pk_SpecificationResponsibleGroupId = 3, Fk_commityId = 3, IsPrime = true }); // Set prime on group 3
+
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
+            var modifiedSpec = GetCorrectSpecificationForEdit(false);
+
             // Test responsible groups
             Assert.AreEqual(3, modifiedSpec.SpecificationResponsibleGroups.Count);
-            Assert.IsFalse(modifiedSpec.SpecificationResponsibleGroups.Where(g => g.Fk_commityId==1).FirstOrDefault().IsPrime);
+            Assert.IsFalse(modifiedSpec.SpecificationResponsibleGroups.Where(g => g.Fk_commityId == 1).FirstOrDefault().IsPrime);
             Assert.AreEqual(Enum_EntityStatus.Deleted, modifiedSpec.SpecificationResponsibleGroups.Where(g => g.Fk_commityId == 2).FirstOrDefault().EntityStatus);
 
             var createHistoryEntry = string.Format(Utils.Localization.History_Specification_Changed_Prime_Group, "RAN 2", "RAN 1");
             Assert.AreEqual(1, modifiedSpec.Histories.Where(h => h.HistoryText == createHistoryEntry).Count());
+        }
 
+        [Test]
+        public void EditSpecification_TestRapporteurChange()
+        {
+            RegisterAllMocks();
 
+            // Get a fresh copy of the spec.
+            var specToEdit = GetCorrectSpecificationForEdit(true);
+
+            // Changes to rapporteur
+            // Remove rapporteur 2, change rapporteur 3 to be prime rapporteur
+            specToEdit.SpecificationRapporteurs.Remove(specToEdit.SpecificationRapporteurs.Last());
+            specToEdit.SpecificationRapporteurs.First().IsPrime = false;
+            specToEdit.SpecificationRapporteurs.Add(new SpecificationRapporteur() { Pk_SpecificationRapporteurId = 3, Fk_RapporteurId = 3, IsPrime = true });
+
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
+
+            // From white box testing, we know that:
+            // - spec that will be modified is the one provided by the Repository
+            // - we can get it via GetCorrectSpecificationForEdit(true)
+            // Thus we will test on it.
+            var modifiedSpec = GetCorrectSpecificationForEdit(false);
+            
+            // Check changes to rapporteur
+            Assert.AreEqual(3, modifiedSpec.SpecificationRapporteurs.Count);
+            Assert.IsFalse(modifiedSpec.SpecificationRapporteurs.Where(r => r.Fk_RapporteurId == 1).FirstOrDefault().IsPrime);
+            Assert.AreEqual(Enum_EntityStatus.Deleted, modifiedSpec.SpecificationRapporteurs.Where(r => r.Fk_RapporteurId == 2).FirstOrDefault().EntityStatus);
+
+            var createHistoryEntry = string.Format(Utils.Localization.History_Specification_Changed_Prime_Rapporteur, "User 3", "User 1");
+            Assert.AreEqual(1, modifiedSpec.Histories.Where(h => h.HistoryText == createHistoryEntry).Count());
+
+        }
+
+        [Test]
+        public void EditSpecification_TestWorkItemChanges()
+        {
+            RegisterAllMocks();
+
+            // Get a fresh copy of the spec.
+            var specToEdit = GetCorrectSpecificationForEdit(true);
+
+            // Changes to work items
+            // remove WI 2, add WI 3.
+            specToEdit.Specification_WorkItem.First().isPrime = false;
+            specToEdit.Specification_WorkItem.Remove(specToEdit.Specification_WorkItem.Last());
+            specToEdit.Specification_WorkItem.Add(new Specification_WorkItem() { Fk_WorkItemId = 3, isPrime = true });
+          
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
+
+            // From white box testing, we know that:
+            // - spec that will be modified is the one provided by the Repository
+            // - we can get it via GetCorrectSpecificationForEdit(true)
+            // Thus we will test on it.
+            var modifiedSpec = GetCorrectSpecificationForEdit(false);
+
+            // Check changes to work items
+            Assert.AreEqual(3, modifiedSpec.Specification_WorkItem.Count);
+            Assert.IsFalse(modifiedSpec.Specification_WorkItem.Where(r => r.Fk_WorkItemId == 1).FirstOrDefault().isPrime.GetValueOrDefault());
+            Assert.AreEqual(Enum_EntityStatus.Deleted, modifiedSpec.Specification_WorkItem.Where(r => r.Fk_WorkItemId == 2).FirstOrDefault().EntityStatus);
         }
         
 
@@ -422,6 +522,16 @@ namespace Etsi.Ultimate.Tests.Services
                         new SpecificationResponsibleGroup() { Pk_SpecificationResponsibleGroupId=1, Fk_commityId=1, IsPrime = true },
                         new SpecificationResponsibleGroup() { Pk_SpecificationResponsibleGroupId=2, Fk_commityId=2, IsPrime = false },
                     },
+                    SpecificationRapporteurs = new List<SpecificationRapporteur>()
+                    {
+                        new SpecificationRapporteur() { Pk_SpecificationRapporteurId = 1, Fk_RapporteurId=1, IsPrime = true },
+                        new SpecificationRapporteur() { Pk_SpecificationRapporteurId = 2, Fk_RapporteurId=2, IsPrime = false },
+                    },
+                    Specification_WorkItem = new List<Specification_WorkItem>()
+                    {
+                        new Specification_WorkItem() { Pk_Specification_WorkItemId = 1, Fk_SpecificationId = 12, Fk_WorkItemId = 1, isPrime = true },
+                        new Specification_WorkItem() { Pk_Specification_WorkItemId = 2, Fk_SpecificationId = 12, Fk_WorkItemId = 2, isPrime = false },
+                    },
 
                 };
             
@@ -464,6 +574,11 @@ namespace Etsi.Ultimate.Tests.Services
                     new Community() { TbId = 3, TbName ="RAN 2" },
                 });
             ManagerFactory.Container.RegisterInstance<ICommunityManager>(communityManager);
+
+            var personManager = MockRepository.GenerateMock<IPersonManager>();
+            personManager.Stub(p => p.FindPerson(1)).Return(new View_Persons() { PERSON_ID = 1, FIRSTNAME = "User", LASTNAME = "1" });
+            personManager.Stub(p => p.FindPerson(3)).Return(new View_Persons() { PERSON_ID = 3, FIRSTNAME = "User", LASTNAME = "3" });
+            ManagerFactory.Container.RegisterInstance<IPersonManager>(personManager);
 
             // Need a release repository
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());

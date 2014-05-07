@@ -149,6 +149,103 @@ namespace Etsi.Ultimate.Business
                     group.EntityStatus = Enum_EntityStatus.Deleted;
                 }
             }
+
+
+
+            // Manage rapporteurs
+            var newPrimeRapporteur = newSpec.SpecificationRapporteurs.Where(r => r.IsPrime).FirstOrDefault();
+            var oldPrimeRapporteur = currentSpec.SpecificationRapporteurs.Where(r => r.IsPrime).FirstOrDefault();
+
+            int? newPrimeRapporteurId = null;
+            int? oldPrimeRapporteurId = null;
+
+            if (newPrimeRapporteur != null)
+                newPrimeRapporteurId = newPrimeRapporteur.Fk_RapporteurId;
+            if (oldPrimeRapporteur != null)
+                oldPrimeRapporteurId = oldPrimeRapporteur.Fk_RapporteurId;
+
+            // Check rapporteur change
+            if (newPrimeRapporteurId.GetValueOrDefault() != oldPrimeRapporteurId.GetValueOrDefault())
+            {
+                var personManager = ManagerFactory.Resolve<IPersonManager>();
+                personManager.UoW = UoW ;
+                var newRapporteurName = "(None)";
+                var oldRapporteurName = "(None)";
+
+                if (newPrimeRapporteurId.GetValueOrDefault() != 0)
+                {
+                    var newRappPerson = personManager.FindPerson(newPrimeRapporteurId.Value);
+                    newRapporteurName = newRappPerson.FIRSTNAME + " " + newRappPerson.LASTNAME;
+                }
+                if (oldPrimeRapporteurId.GetValueOrDefault() != 0)
+                {
+                    var oldRappPerson = personManager.FindPerson(oldPrimeRapporteurId.Value);
+                    oldRapporteurName = oldRappPerson.FIRSTNAME + " " + oldRappPerson.LASTNAME;
+                }
+
+                currentSpec.Histories.Add(new History()
+                {
+                    Fk_PersonId = personId,
+                    HistoryText = String.Format(Utils.Localization.History_Specification_Changed_Prime_Rapporteur, newRapporteurName, oldRapporteurName),
+                    CreationDate = DateTime.UtcNow,
+                    Fk_SpecificationId = currentSpec.Pk_SpecificationId
+
+                });
+
+            }
+
+            // Check rapporteur addition           
+            foreach (var rapp in newSpec.SpecificationRapporteurs)
+            {
+                var currentRapp = currentSpec.SpecificationRapporteurs.Where(g => g.Fk_RapporteurId == rapp.Fk_RapporteurId).FirstOrDefault();
+                if (currentRapp == null)
+                {
+                    rapp.Fk_SpecificationId = currentSpec.Pk_SpecificationId;
+                    currentSpec.SpecificationRapporteurs.Add(rapp);
+                }
+                else
+                {
+                    currentRapp.IsPrime = rapp.IsPrime;
+                }
+            }
+
+            //  Check rapporteur deletion
+            foreach (var rapp in currentSpec.SpecificationRapporteurs)
+            {
+                var newRapp = newSpec.SpecificationRapporteurs.Where(g => g.Fk_RapporteurId== rapp.Fk_RapporteurId).FirstOrDefault();
+                if (newRapp == null)
+                {
+                    rapp.EntityStatus = Enum_EntityStatus.Deleted;
+                }
+            }
+
+
+            // ------------ Check work items -------------
+            // Check work item addition           
+            foreach (var wi in newSpec.Specification_WorkItem)
+            {
+                var newWi = currentSpec.Specification_WorkItem.Where(g => g.Fk_WorkItemId == wi.Fk_WorkItemId).FirstOrDefault();
+                if (newWi == null)
+                {
+                    wi.Fk_SpecificationId = currentSpec.Pk_SpecificationId;
+                    currentSpec.Specification_WorkItem.Add(wi);
+                }
+                else
+                {
+                    newWi.isPrime = wi.isPrime;
+                }
+            }
+
+            //  Check work item deletion
+            foreach (var wi in currentSpec.Specification_WorkItem)
+            {
+                var newWi = newSpec.Specification_WorkItem.Where(g => g.Fk_WorkItemId== wi.Fk_WorkItemId).FirstOrDefault();
+                if (newWi == null)
+                {
+                    wi.EntityStatus = Enum_EntityStatus.Deleted;
+                }
+            }
+
         }
     }
 }

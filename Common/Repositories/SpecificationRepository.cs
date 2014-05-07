@@ -98,7 +98,28 @@ namespace Etsi.Ultimate.Repositories
             if (specification.Pk_SpecificationId != default(int))
                 UoW.Context.SetModified(specification);
             
-            
+            //[3] Manage object deletion
+            specification.SpecificationTechnologies.ToList().ForEach(x =>
+            {
+                if (x.EntityStatus == Enum_EntityStatus.Deleted)
+                    UoW.Context.SetDeleted(x);
+            });
+            specification.SpecificationRapporteurs.ToList().ForEach(x =>
+            {
+                if (x.EntityStatus == Enum_EntityStatus.Deleted)
+                    UoW.Context.SetDeleted(x);
+            });
+            specification.SpecificationResponsibleGroups.ToList().ForEach(x =>
+            {
+                if (x.EntityStatus == Enum_EntityStatus.Deleted)
+                    UoW.Context.SetDeleted(x);
+            });
+            specification.Specification_WorkItem.ToList().ForEach(x =>
+            {
+                if (x.EntityStatus == Enum_EntityStatus.Deleted)
+                    UoW.Context.SetDeleted(x);
+            });
+
         }
 
         public void Delete(int id)
