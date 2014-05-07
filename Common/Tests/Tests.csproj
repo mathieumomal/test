@@ -111,6 +111,8 @@
     <Compile Include="FakeSets\SpecificationWorkItemFakeDBSet.cs" />
     <Compile Include="FakeSets\TechnologiesFakeDBSet.cs" />
     <Compile Include="FakeSets\ViewPersonFakeDBSet.cs" />
+    <Compile Include="Services\RightsService.cs" />
+    <Compile Include="Services\RightsServiceTest.cs" />
     <Compile Include="Services\SpecificationServiceTest.cs" />
     <Compile Include="Business\WorkItemCsvParserTest.cs" />
     <Compile Include="Business\WorkItemManagerTest.cs" />

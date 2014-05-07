@@ -52,6 +52,7 @@
     <Compile Include="ICommunityService.cs" />
     <Compile Include="IMeetingService.cs" />
     <Compile Include="IPersonService.cs" />
+    <Compile Include="IRightsService.cs" />
     <Compile Include="ISpecificationService.cs" />
     <Compile Include="IUrlService.cs" />
     <Compile Include="IWorkPlanFileService.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="IWorkItemService.cs" />
     <Compile Include="PersonService.cs" />
     <Compile Include="ReleaseServiceMock.cs" />
+    <Compile Include="RightsService.cs" />
     <Compile Include="ServicesFactory.cs" />
     <Compile Include="IReleaseService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
