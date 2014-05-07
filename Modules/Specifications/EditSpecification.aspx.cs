@@ -70,6 +70,7 @@ namespace Etsi.Ultimate.Module.Specifications
             Domain.Specification spec;
             Domain.ImportReport result;
 
+            userId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
             if (SpecificationId != null)
             {
                 spec = svc.GetSpecificationDetailsById(userId, SpecificationId.Value).Key;
