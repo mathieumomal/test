@@ -438,5 +438,9 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
+        public List<Specification> GetSpecificationBySearchCriteria(int personId, string searchString)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

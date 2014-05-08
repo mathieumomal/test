@@ -1,4 +1,5 @@
 ﻿using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,12 @@ namespace Etsi.Ultimate.Module.Specifications
         private const int CONST_MIN_SCROLL_HEIGHT = 50;
 
         #endregion
+
+        #region Public Properties
+
+        public bool IsEditMode { get; set; }
+        public bool IsParentList { get; set; }
+        public int ScrollHeight { get; set; }
         public string SelectedTab
         {
             get
@@ -24,20 +31,13 @@ namespace Etsi.Ultimate.Module.Specifications
                     return string.Empty;
                 else
                     return ViewState[CONST_SELECTED_TAB].ToString();
-                
+
             }
             set
             {
-                ViewState[CONST_SELECTED_TAB] = value;                
+                ViewState[CONST_SELECTED_TAB] = value;
             }
         }
-        #region Public Properties
-
-        public event EventHandler AddSpecificationHandler;
-        public bool IsEditMode { get; set; }
-        public bool IsParentList {get; set;}
-        public int ScrollHeight { get; set; }
-
         public List<Specification> DataSource
         {
             get
@@ -53,25 +53,28 @@ namespace Etsi.Ultimate.Module.Specifications
                 specificationsGrid.Rebind();
             }
         }
+
         #endregion
+
+        #region Events
+
         protected void Page_Load(object sender, EventArgs e)
-        {            
+        {
 
             if (!IsPostBack)
-            {                
+            {
                 if (!IsEditMode)
                 {
-                    AddSpecificationLbl.Visible = false;                
-                    txtAddSpecification.Visible = false;
+                    lblAddSpecification.Visible = false;
+                    rcbAddSpecification.Visible = false;
                     btnAddSpecification.Visible = false;
                 }
-                else{
-                    if(IsParentList){
-                        AddSpecificationLbl.Text = "Add parent specification";
-                    }
-                    else{
-                        AddSpecificationLbl.Text = "Add child specification"; 
-                    }
+                else
+                {
+                    if (IsParentList)
+                        lblAddSpecification.Text = "Add parent specification";
+                    else
+                        lblAddSpecification.Text = "Add child specification";
                 }
                 specificationsGrid.ClientSettings.Scrolling.ScrollHeight = (ScrollHeight < CONST_MIN_SCROLL_HEIGHT) ? Unit.Pixel(CONST_MIN_SCROLL_HEIGHT) : Unit.Pixel(ScrollHeight);
             }
@@ -79,35 +82,124 @@ namespace Etsi.Ultimate.Module.Specifications
 
         protected void specificationsGrid_PreRender(object sender, System.EventArgs e)
         {
-            ChangeGridToEditMode();
+            //ChangeGridToEditMode();
         }
 
         protected void specificationsGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
         {
-            var specifications = DataSource ;
-            specificationsGrid.DataSource = specifications.OrderByDescending(s=>s.Number);            
+            var specifications = DataSource;
+            specificationsGrid.DataSource = specifications.OrderByDescending(s => s.Number);
         }
+
+        protected void btnRemoveSpec_Click(object sender, System.Web.UI.ImageClickEventArgs e)
+        {
+            //int WiId;
+            //var WiIdStr = ((ImageButton)sender).CommandArgument;
+            //if (!string.IsNullOrEmpty(WiIdStr) && int.TryParse(((ImageButton)sender).CommandArgument, out WiId))
+            //{
+            //    //If modifiedDataSource is set; then remove from it else take data from DataSource to modifiedDataSource & remove
+            //    if (modifiedDataSource.Count > 0)
+            //    {
+            //        var removedWi = modifiedDataSource.FirstOrDefault(x => x.Pk_WorkItemUid == WiId);
+            //        modifiedDataSource.RemoveAll(x => x.Pk_WorkItemUid == WiId);
+
+            //        SetHiddenWisValue(modifiedDataSource);
+            //        BindGrid(relatedWiGrid_Edit, modifiedDataSource);
+            //    }
+            //    else
+            //    {
+            //        modifiedDataSource = DataSource.ToList();
+            //        modifiedDataSource.RemoveAll(x => x.Pk_WorkItemUid == WiId);
+
+            //        SetHiddenWisValue(modifiedDataSource);
+            //        BindGrid(relatedWiGrid_Edit, modifiedDataSource);
+            //    }
+            //}
+
+        }
+
+        #endregion
+
+        protected void specificationsGrid_ItemDataBound(object sender, GridItemEventArgs e)
+        {
+            if (e.Item is GridDataItem)
+            {
+                GridDataItem item = (GridDataItem)e.Item;
+                if (IsEditMode && item["SpecificationActions"].FindControl("btnRemoveSpec") != null)
+                    ((ImageButton)item["SpecificationActions"].FindControl("btnRemoveSpec")).Visible = true;
+            }
+        }
+
+        protected void btnAddSpecification_Click(object sender, EventArgs e)
+        {
+            int specId;
+            if (int.TryParse(rcbAddSpecification.SelectedValue, out specId))
+            {
+                ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
+                DataSource.Add(svc.GetSpecificationDetailsById(0, specId).Key);
+
+                rcbAddSpecification.Text = "";
+                rcbAddSpecification.ClearSelection();
+
+                specificationsGrid.DataSource = DataSource;
+                specificationsGrid.Rebind();
+            }
+            else
+            {
+                LaunchAlert("Select a specification to add to the list.");
+            }
+        }
+
+        protected void rcbAddSpecification_ItemsRequested(object sender, RadComboBoxItemsRequestedEventArgs e)
+        {
+            if (e.Text.Length > 1)
+            {
+                var svc = ServicesFactory.Resolve<ISpecificationService>();
+                var specList = svc.GetSpecificationBySearchCriteria(0, e.Text );
+                BindDropDownData(specList);
+            }
+
+        }
+
+
 
         #region Private Methods
 
-        /// <summary>
-        /// Change all grid rows to Edit Mode
-        /// </summary>
-        private void ChangeGridToEditMode()
+        private void BindDropDownData(List<Specification> specList)
         {
-            if (IsEditMode)
-            {
-                foreach (GridItem item in specificationsGrid.MasterTableView.Items)
-                {
-                    if (item is GridEditableItem)
-                    {
-                        GridEditableItem editableItem = item as GridDataItem;
-                        editableItem.Edit = true;
-                    }
-                }
-                specificationsGrid.Rebind();
-            }
+            rcbAddSpecification.DataSource = specList;
+            rcbAddSpecification.DataTextField = "Title";
+            rcbAddSpecification.DataValueField = "Pk_SpecificationId";
+            rcbAddSpecification.DataBind();
         }
+
+        /// <summary>
+        /// Launch an alert popup
+        /// </summary>
+        /// <param name="errorText"></param>
+        private void LaunchAlert(string errorText)
+        {
+            RadWindowAlert.RadAlert(errorText, 400, 150, "Error", "", "images/error.png");
+        }
+
+        ///// <summary>
+        ///// Change all grid rows to Edit Mode
+        ///// </summary>
+        //private void ChangeGridToEditMode()
+        //{
+        //    if (IsEditMode)
+        //    {
+        //        foreach (GridItem item in specificationsGrid.MasterTableView.Items)
+        //        {
+        //            if (item is GridEditableItem)
+        //            {
+        //                GridEditableItem editableItem = item as GridDataItem;
+        //                editableItem.Edit = true;
+        //            }
+        //        }
+        //        specificationsGrid.Rebind();
+        //    }
+        //}
 
         #endregion
     }

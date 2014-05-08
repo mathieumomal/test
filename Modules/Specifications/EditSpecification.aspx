@@ -49,7 +49,7 @@
                             <tr>
                                 <td class="LeftColumn">Title<span class='requiredField'>(*)</span></td>
                                 <td class="RightColumn">
-                                    <asp:TextBox ID="txtTitle" Width="350" runat="server"></asp:TextBox>
+                                    <asp:TextBox ID="txtTitle" Width="350" runat="server" autocomplete="off"></asp:TextBox>
                                 </td>
                             </tr>
                             <tr>
@@ -127,25 +127,29 @@
                     </telerik:RadPageView>
                     <telerik:RadPageView ID="RadPageRelated" runat="server">
                         <asp:Panel ID="RelatedSpecificationsPanel" runat="server">
-                            <div style="max-height: 160px;">
-                                <fieldset id="ParentFieldset">
-                                    <legend>
-                                        <asp:Label ID="ParentSpecLbl" runat="server" Text="Parent Specifications"></asp:Label></legend>
-                                    <spec:SpecificationListControl runat="server" ID="parentSpecifications" />
-                                </fieldset>
-                            </div>
-                            <br />
-                            <div style="max-height: 160px;">
-                                <fieldset id="ChildFieldset">
-                                    <legend>
-                                        <asp:Label ID="ChildSpecLbl" runat="server" Text="Child Specifications"></asp:Label></legend>
-                                    <spec:SpecificationListControl runat="server" ID="childSpecifications" />
-                                </fieldset>
-                            </div>
-                            <br />
-                            <div style="max-height: 220px;">
-                                <ult:relatedwicontrol id="SpecificationRelatedWorkItems" runat="server" />
-                            </div>
+                            <asp:UpdatePanel ID="upSpecRelated" runat="server">
+                                <ContentTemplate>
+                                    <div style="max-height: 160px;">
+                                        <fieldset id="ParentFieldset">
+                                            <legend>
+                                                <asp:Label ID="ParentSpecLbl" runat="server" Text="Parent Specifications"></asp:Label></legend>
+                                            <spec:SpecificationListControl runat="server" ID="parentSpecifications" />
+                                        </fieldset>
+                                    </div>
+                                    <br />
+                                    <div style="max-height: 160px;">
+                                        <fieldset id="ChildFieldset">
+                                            <legend>
+                                                <asp:Label ID="ChildSpecLbl" runat="server" Text="Child Specifications"></asp:Label></legend>
+                                            <spec:SpecificationListControl runat="server" ID="childSpecifications" />
+                                        </fieldset>
+                                    </div>
+                                    <br />
+                                    <div style="max-height: 220px;">
+                                        <ult:relatedwicontrol id="SpecificationRelatedWorkItems" runat="server" />
+                                    </div>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
                         </asp:Panel>
                     </telerik:RadPageView>
                     <telerik:RadPageView ID="RadPageReleases" runat="server">

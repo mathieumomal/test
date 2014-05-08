@@ -97,7 +97,7 @@ namespace Etsi.Ultimate.Repositories
 
             if (specification.Pk_SpecificationId != default(int))
                 UoW.Context.SetModified(specification);
-            
+
             //[3] Manage object deletion
             specification.SpecificationTechnologies.ToList().ForEach(x =>
             {
@@ -137,13 +137,13 @@ namespace Etsi.Ultimate.Repositories
                       && (searchObject.NumberNotYetAllocated ? (String.IsNullOrEmpty(x.Number)) : true)  //Number not yet allocated
                       && ((!(searchObject.IsUnderCC || searchObject.IsDraft || searchObject.IsWithACC || searchObject.IsWithBCC))  //Status Search
                       || ((searchObject.IsUnderCC && searchObject.IsDraft && searchObject.IsWithACC && searchObject.IsWithBCC))
-                      ||(searchObject.IsUnderCC ? (x.IsActive && x.IsUnderChangeControl.Value) : false ||
+                      || (searchObject.IsUnderCC ? (x.IsActive && x.IsUnderChangeControl.Value) : false ||
                          searchObject.IsDraft ? (x.IsActive && !x.IsUnderChangeControl.Value) : false ||
                          searchObject.IsWithACC ? (!x.IsActive && x.IsUnderChangeControl.Value) : false ||
                          searchObject.IsWithBCC ? (!x.IsActive && !x.IsUnderChangeControl.Value) : false))
                       && ((searchObject.Technologies.Count == 0) || x.SpecificationTechnologies.Any(y => searchObject.Technologies.Contains(y.Fk_Enum_Technology)))  //Technology Search
                       && ((searchObject.Series.Count == 0) || searchObject.Series.Contains(x.Enum_Serie.Pk_Enum_SerieId)) //Series Search
-                      && ((searchObject.SelectedReleaseIds.Count == 0) || x.Specification_Release.Any(y=> searchObject.SelectedReleaseIds.Contains(y.Fk_ReleaseId))) //Release Search
+                      && ((searchObject.SelectedReleaseIds.Count == 0) || x.Specification_Release.Any(y => searchObject.SelectedReleaseIds.Contains(y.Fk_ReleaseId))) //Release Search
                       && ((searchObject.SelectedCommunityIds.Count == 0) || x.SpecificationResponsibleGroups.Any(y => searchObject.SelectedCommunityIds.Contains(y.Fk_commityId))) //Community Search
                       ));
 
@@ -171,7 +171,16 @@ namespace Etsi.Ultimate.Repositories
             }
 
 
-            return new KeyValuePair<List<Specification>,int>(query.Skip(searchObject.SkipRecords).Take(searchObject.PazeSize).ToList(), query.Count());                
+            return new KeyValuePair<List<Specification>, int>(query.Skip(searchObject.SkipRecords).Take(searchObject.PazeSize).ToList(), query.Count());
+        }
+
+        public List<Specification> GetSpecificationBySearchCriteria(string searchString)
+        {
+            IQueryable<Specification> query = AllIncluding(x => x.SpecificationResponsibleGroups, x => x.SpecificationTechnologies.Select(y => y.Enum_Technology))
+                    .Where(x => (String.IsNullOrEmpty(searchString) || (x.Title.ToLower().Trim().Contains(searchString.ToLower().Trim())
+                        || x.Number.ToLower().Trim().Contains(searchString.ToLower().Trim()))));
+
+            return query.ToList();
         }
 
         public List<Enum_Technology> GetTechnologyList()
@@ -192,6 +201,9 @@ namespace Etsi.Ultimate.Repositories
         }
 
         #endregion
+
+
+
     }
 
     public interface ISpecificationRepository : IEntityRepository<Specification>
@@ -202,6 +214,8 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="searchObj"></param>
         /// <returns></returns>
         KeyValuePair<List<Specification>, int> GetSpecificationBySearchCriteria(SpecificationSearch searchObj);
+
+        List<Specification> GetSpecificationBySearchCriteria(String searchString);
 
         List<Enum_Technology> GetTechnologyList();
 

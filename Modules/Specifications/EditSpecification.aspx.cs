@@ -312,7 +312,10 @@ namespace Etsi.Ultimate.Module.Specifications
 
                 foreach (ListItem item in ddlPlannedRelease.Items)
                     if (item.Text == specification.SpecificationInitialRelease)
+                    {
                         item.Selected = true;
+                        break;
+                    }
 
                 chkInternal.Checked = specification.IsForPublication == null ? true : !specification.IsForPublication.Value;
                 chkCommonIMSSpec.Checked = specification.ComIMS == null ? false : specification.ComIMS.Value;

@@ -97,6 +97,16 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        public List<Specification> GetSpecificationBySearchCriteria(int personId, String searchString)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specificationManager = new SpecificationManager();
+                specificationManager.UoW = uoW;
+                return specificationManager.GetSpecificationBySearchCriteria(personId, searchString);
+            }
+        }
+
 
         public List<Enum_Technology> GetTechnologyList()
         {

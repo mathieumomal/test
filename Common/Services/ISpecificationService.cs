@@ -24,6 +24,14 @@ namespace Etsi.Ultimate.Services
         KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj);
 
         /// <summary>
+        /// Returns list of specifications including related remarks, history, Parent/Child specification, and releases
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="searchString">Search string for searching Spec Title/Number</param>
+        /// <returns></returns>
+        List<Specification> GetSpecificationBySearchCriteria(int personId, String searchString);
+
+        /// <summary>
         /// Creates a specification. 
         /// 
         /// Checks the rights of the user and the specification data, then push it to the database.

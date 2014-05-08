@@ -229,6 +229,15 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.WebControls.Panel RelatedSpecificationsPanel;
         
         /// <summary>
+        /// upSpecRelated control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UpdatePanel upSpecRelated;
+        
+        /// <summary>
         /// ParentSpecLbl control.
         /// </summary>
         /// <remarks>
