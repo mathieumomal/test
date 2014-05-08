@@ -20,7 +20,6 @@ namespace Etsi.Ultimate.Business
 
         public SpecificationManager() { }
 
-
         private int personId;
 
         public KeyValuePair<Specification, UserRightsContainer> GetSpecificationById(int personId, int id)
@@ -53,6 +52,19 @@ namespace Etsi.Ultimate.Business
 
 
             return new KeyValuePair<Specification, UserRightsContainer>(specification, personRights);
+        }
+
+        public List<Specification> GetAllSpecifications(int personId)
+        {
+            specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            specificationRepo.UoW = UoW;
+
+            var specification = specificationRepo.All;
+
+            if (specification == null)
+                return new List<Specification>();
+
+            return specification.ToList();
         }
 
         public KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj)

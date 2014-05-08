@@ -92,5 +92,7 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         bool CheckInhibitedToPromote(string specNumber);
 
+        bool ExportSpecification(string exportPath);
+
     }
 }

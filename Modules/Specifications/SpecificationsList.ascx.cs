@@ -11,11 +11,10 @@
 */
 
 using DotNetNuke.Entities.Modules;
-using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Entities.Tabs;
-using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
-using DotNetNuke.Services.Localization;
+using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,11 +22,6 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using System.Net;
-using System.Reflection;
-using Etsi.Ultimate.DomainClasses;
-using Etsi.Ultimate.Controls;
-using Etsi.Ultimate.Services;
 using Telerik.Web.UI;
 
 
@@ -57,6 +51,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private bool isUrlSearch;
         private bool fromSearch;
         private static SpecificationSearch searchObj;
+        private static string PathExportSpec;
 
         protected Etsi.Ultimate.Controls.FullView ultFullView;
         protected Etsi.Ultimate.Controls.ShareUrlControl ultShareUrl;
@@ -116,6 +111,9 @@ namespace Etsi.Ultimate.Module.Specifications
                 {
                     // Display or not NumberNotYetAllocated
                     var personService = ServicesFactory.Resolve<IPersonService>();
+
+                    if (Settings.Contains(Enum_Settings.Spec_ExportPath.ToString()))
+                        PathExportSpec = Settings[Enum_Settings.Spec_ExportPath.ToString()].ToString();
 
                     var userRights = personService.GetRights(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()));
                     trNumberNotYetAllocated.Visible = userRights.HasRight(Enum_UserRights.Specification_View_UnAllocated_Number);
@@ -545,5 +543,12 @@ namespace Etsi.Ultimate.Module.Specifications
         }
 
         #endregion
+
+        protected void btnSpecExport_Click(object sender, ImageClickEventArgs e)
+        {
+            PathExportSpec = (PathExportSpec ?? Request.PhysicalApplicationPath);
+            ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
+            svc.ExportSpecification(PathExportSpec);
+        }
     }
 }

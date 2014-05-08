@@ -15,6 +15,11 @@ namespace Etsi.Ultimate.DomainClasses
             set;
         }
 
+        public string PrimeSpecificationRapporteurName
+        {
+            get;
+            set;
+        }
 
         public SpecificationResponsibleGroup PrimeResponsibleGroup
         {

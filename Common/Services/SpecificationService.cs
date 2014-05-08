@@ -11,6 +11,17 @@ namespace Etsi.Ultimate.Services
 {
     public class SpecificationService : ISpecificationService
     {
+        public bool ExportSpecification(string exportPath)
+        {
+            bool isExportSuccess;
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var csvExport = new SpecificationExporter(uoW);
+                isExportSuccess = csvExport.ExportSpecification(exportPath);
+            }
+            return isExportSuccess;
+        }
+
         public KeyValuePair<Specification, UserRightsContainer> GetSpecificationDetailsById(int personId, int specificationId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -20,7 +31,7 @@ namespace Etsi.Ultimate.Services
                 var communityManager = ManagerFactory.Resolve<ICommunityManager>();
                 communityManager.UoW = uoW;
 
-                KeyValuePair<Specification, UserRightsContainer> result = specificationManager.GetSpecificationById(personId, specificationId);                
+                KeyValuePair<Specification, UserRightsContainer> result = specificationManager.GetSpecificationById(personId, specificationId);
                 List<string> secondaryRGShortName = new List<string>();
 
                 if (result.Key != null)
@@ -48,7 +59,7 @@ namespace Etsi.Ultimate.Services
                             {
                                 s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId);
                             }
-                        }                        
+                        }
                     }
 
                     if (result.Key.SpecificationChilds != null && result.Key.SpecificationChilds.Count > 0)
@@ -59,7 +70,7 @@ namespace Etsi.Ultimate.Services
                             {
                                 s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId);
                             }
-                        }                       
+                        }
                     }
 
                     // Getting list of current specification technologies
@@ -73,14 +84,14 @@ namespace Etsi.Ultimate.Services
                     var workItemsManager = new WorkItemManager(uoW);
                     foreach (Specification_WorkItem item in result.Key.Specification_WorkItem.ToList())
                     {
-                        WIBuffer = workItemsManager.GetWorkItemById(personId,item.Fk_WorkItemId).Key;
+                        WIBuffer = workItemsManager.GetWorkItemById(personId, item.Fk_WorkItemId).Key;
                         if (WIBuffer != null)
                             workItemsList.Add(WIBuffer);
                     }
                     result.Key.SpecificationWIsList = workItemsList;
                 }
                 return result;
-            }        
+            }
         }
 
         public KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObject)
@@ -137,7 +148,7 @@ namespace Etsi.Ultimate.Services
                 specTechnologiesManager.UoW = uoW;
                 return specTechnologiesManager.GetAllSpecificationTechnologies();
             }
-        }              
+        }
 
         public KeyValuePair<bool, List<string>> CheckNumber(string specNumber)
         {
@@ -176,11 +187,11 @@ namespace Etsi.Ultimate.Services
                 {
                     var newSpec = createAction.Create(personId, spec);
                     uoW.Save();
-                    return new KeyValuePair<int,ImportReport>(newSpec.Key.Pk_SpecificationId, newSpec.Value);
+                    return new KeyValuePair<int, ImportReport>(newSpec.Key.Pk_SpecificationId, newSpec.Value);
                 }
                 catch (Exception e)
                 {
-                    Utils.LogManager.Error("Error while creating specification: "+e.Message);
+                    Utils.LogManager.Error("Error while creating specification: " + e.Message);
                     var report = new ImportReport();
                     report.LogError(e.Message);
                     return new KeyValuePair<int, ImportReport>(-1, report);

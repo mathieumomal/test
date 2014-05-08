@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommunityManager.cs" />
+    <Compile Include="SpecificationExporter.cs" />
     <Compile Include="ICommunityManager.cs" />
     <Compile Include="IPersonManager.cs" />
     <Compile Include="ISpecificationManager.cs" />

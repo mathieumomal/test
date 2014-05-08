@@ -140,6 +140,7 @@
     <Content Include="images\cr.png" />
     <Content Include="images\details.png" />
     <Content Include="images\error.png" />
+    <Content Include="images\excel_export.png" />
     <Content Include="images\favicon.ico" />
     <Content Include="images\ims.png" />
     <Content Include="images\lock.png" />

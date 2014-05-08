@@ -82,7 +82,7 @@
         </tr>
         <tr>
             <td style="padding-right: 5px">
-                <asp:TextBox ID="txtAddRemark" runat="server" Width="100%"></asp:TextBox>
+                <asp:TextBox ID="txtAddRemark" runat="server" Width="100%" AutoComplete="off"></asp:TextBox>
             </td>
             <td>
                 <asp:Button ID="btnAddRemark" runat="server" Text="Add" Width="100%" OnClick="btnAddRemark_Click" />

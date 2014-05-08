@@ -18,6 +18,9 @@ namespace Etsi.Ultimate.DomainClasses
     {
         //WorkItem settings
         WorkItem_UploadPath,
-        WorkItem_ExportPath
+        WorkItem_ExportPath,
+        
+        //Specification settings
+        Spec_ExportPath
     }
 }

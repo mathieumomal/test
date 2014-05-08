@@ -15,6 +15,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using System.Text.RegularExpressions;
 using System.Text;
+using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
@@ -40,6 +41,8 @@ namespace Etsi.Ultimate.Module.Specifications
     /// -----------------------------------------------------------------------------
     public partial class Settings : ModuleSettingsBase
     {
+        private static readonly string regexPath = @"(.*)\\$";
+
         #region Base Method Implementations
 
         /// -----------------------------------------------------------------------------
@@ -53,18 +56,9 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 if (Page.IsPostBack == false)
                 {
-                    //Check for existing settings and use those on this page
-                    //Settings["SettingName"]
-
-                    /* uncomment to load saved settings in the text boxes
-                    if(Settings.Contains("Setting1"))
-                        txtSetting1.Text = Settings["Setting1"].ToString();
-			
-                    if (Settings.Contains("Setting2"))
-                        txtSetting2.Text = Settings["Setting2"].ToString();
-
-                    */
-
+                    //Set settings with save values
+                    if (Settings.Contains(Enum_Settings.Spec_ExportPath.ToString()))
+                        txtExportPath.Text = Settings[Enum_Settings.Spec_ExportPath.ToString()].ToString();
                 }
             }
             catch (Exception exc) //Module failed to load
@@ -82,16 +76,10 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             try
             {
-                var modules = new ModuleController();
+                var module = new ModuleController();
 
-                //the following are two sample Module Settings, using the text boxes that are commented out in the ASCX file.
-                //module settings
-                //modules.UpdateModuleSetting(ModuleId, "Setting1", txtSetting1.Text);
-                //modules.UpdateModuleSetting(ModuleId, "Setting2", txtSetting2.Text);
-
-                //tab module settings
-                //modules.UpdateTabModuleSetting(TabModuleId, "Setting1",  txtSetting1.Text);
-                //modules.UpdateTabModuleSetting(TabModuleId, "Setting2",  txtSetting2.Text);
+                //Update settings
+                module.UpdateModuleSetting(ModuleId, Enum_Settings.Spec_ExportPath.ToString(), getFormatPath(txtExportPath.Text));
             }
             catch (Exception exc) //Module failed to load
             {
@@ -99,6 +87,15 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
+        private string getFormatPath(String pathNoFormat)
+        {
+            System.Text.RegularExpressions.Regex testPathRegex = new Regex(regexPath);
+            if (!testPathRegex.IsMatch(pathNoFormat))
+            {
+                return new StringBuilder().Append(pathNoFormat).Append(@"\").ToString();
+            }
+            return pathNoFormat;
+        }
         #endregion
     }
 }

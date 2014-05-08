@@ -442,5 +442,11 @@ namespace Etsi.Ultimate.Services
         {
             throw new NotImplementedException();
         }
+
+
+        public bool ExportSpecification(string exportPath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
