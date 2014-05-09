@@ -93,28 +93,14 @@ namespace Etsi.Ultimate.Module.Specifications
 
         protected void btnRemoveSpec_Click(object sender, System.Web.UI.ImageClickEventArgs e)
         {
-            //int WiId;
-            //var WiIdStr = ((ImageButton)sender).CommandArgument;
-            //if (!string.IsNullOrEmpty(WiIdStr) && int.TryParse(((ImageButton)sender).CommandArgument, out WiId))
-            //{
-            //    //If modifiedDataSource is set; then remove from it else take data from DataSource to modifiedDataSource & remove
-            //    if (modifiedDataSource.Count > 0)
-            //    {
-            //        var removedWi = modifiedDataSource.FirstOrDefault(x => x.Pk_WorkItemUid == WiId);
-            //        modifiedDataSource.RemoveAll(x => x.Pk_WorkItemUid == WiId);
-
-            //        SetHiddenWisValue(modifiedDataSource);
-            //        BindGrid(relatedWiGrid_Edit, modifiedDataSource);
-            //    }
-            //    else
-            //    {
-            //        modifiedDataSource = DataSource.ToList();
-            //        modifiedDataSource.RemoveAll(x => x.Pk_WorkItemUid == WiId);
-
-            //        SetHiddenWisValue(modifiedDataSource);
-            //        BindGrid(relatedWiGrid_Edit, modifiedDataSource);
-            //    }
-            //}
+            int specId;
+            if (Int32.TryParse(((ImageButton)sender).CommandArgument, out specId))
+            {
+                var tmpSrc= DataSource;
+                tmpSrc.Remove( tmpSrc.Where(s => s.Pk_SpecificationId == specId).FirstOrDefault());
+                DataSource = tmpSrc;
+            }
+            specificationsGrid.DataBind();
 
         }
 

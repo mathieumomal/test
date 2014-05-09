@@ -367,7 +367,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 PrimaryResGrpCtrl.SelectedCommunityID = specification.PrimeResponsibleGroup.Fk_commityId;
                 SecondaryResGrpCtrl.SelectedCommunityIds = specification.SpecificationResponsibleGroups.Where(x => !x.IsPrime).Select(x => x.Fk_commityId).ToList();
 
-                specificationRapporteurs.ListIdPersonSelect = specification.PrimeSpecificationRapporteurs;
+                specificationRapporteurs.ListIdPersonSelect = specification.PrimeSpecificationRapporteurIds;
                 specificationRapporteurs.ListIdPersonsSelected_multimode = specification.FullSpecificationRapporteurs;
             }
         }
@@ -493,12 +493,21 @@ namespace Etsi.Ultimate.Module.Specifications
             foreach (var communityId in SecondaryResGrpCtrl.SelectedCommunityIds)
                 spec.SpecificationResponsibleGroups.Add(new Domain.SpecificationResponsibleGroup() { Fk_commityId = communityId, IsPrime = false });
 
-            foreach (var rapporteurId in specificationRapporteurs.ListIdPersonSelect)
-                spec.SpecificationRapporteurs.Add(new Domain.SpecificationRapporteur() { Fk_RapporteurId = rapporteurId });
+            foreach (var rapporteur in specificationRapporteurs.DataSource_multimode)
+            {
+                spec.SpecificationRapporteurs.Add (new Domain.SpecificationRapporteur() { 
+                    Fk_RapporteurId = rapporteur.PERSON_ID, 
+                    IsPrime = specificationRapporteurs.ListIdPersonSelect.Contains(rapporteur.PERSON_ID) 
+                });
+            }
 
             //Related
             foreach (Domain.WorkItem wi in SpecificationRelatedWorkItems.DataSource)
                 spec.Specification_WorkItem.Add(new Domain.Specification_WorkItem() { Fk_WorkItemId = wi.Pk_WorkItemUid, isPrime = wi.IsPrimary, IsSetByUser = wi.IsUserAddedWi });
+            foreach (Domain.Specification sp in parentSpecifications.DataSource)
+                spec.SpecificationParents.Add(sp);
+            foreach (Domain.Specification sp in childSpecifications.DataSource)
+                spec.SpecificationParents.Add(sp);
         }
 
         #endregion

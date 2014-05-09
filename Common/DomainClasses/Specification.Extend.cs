@@ -47,13 +47,17 @@ namespace Etsi.Ultimate.DomainClasses
             }
         }
 
-        public List<int> PrimeSpecificationRapporteurs
+
+        /// <summary>
+        /// Returns the list of IDs of all the rapporteurs specified as prime.
+        /// </summary>
+        public List<int> PrimeSpecificationRapporteurIds
         {
             get
             {
                 List<int> result = new List<int>();
                 if (SpecificationRapporteurs != null && SpecificationRapporteurs.Where(r => r.IsPrime).ToList().Count >0 )
-                    SpecificationRapporteurs.Where(r => r.IsPrime).ToList().ForEach(r => result.Add(r.Fk_RapporteurId));
+                    result.AddRange(SpecificationRapporteurs.Where(r => r.IsPrime).Select(r => r.Fk_RapporteurId).ToList());
                 return result;
             }
         }

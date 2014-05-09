@@ -47,6 +47,7 @@ namespace Etsi.Ultimate.Business
 
             // Compare the fields of the two specifications.
             CompareSpecs(spec, oldSpec, personId);
+            specRepo.InsertOrUpdate(oldSpec);
 
             return true;
         }
@@ -247,6 +248,26 @@ namespace Etsi.Ultimate.Business
                 }
             }
 
+
+            // -------------- Check parent specs
+            // Parent spec addition
+            foreach (var sp in newSpec.SpecificationParents)
+            {
+                var newSp = currentSpec.SpecificationParents.Where(g => g.Pk_SpecificationId == sp.Pk_SpecificationId).FirstOrDefault();
+                if (newSp == null)
+                    currentSpec.SpecificationParents.Add(sp);
+            }
+            if (newSpec.SpecificationParents != null)
+            {
+                var specTodelete = new List<Specification>();
+                foreach (var sp in currentSpec.SpecificationParents)
+                {
+                    var newSp = newSpec.SpecificationParents.Where(g => g.Pk_SpecificationId == sp.Pk_SpecificationId).FirstOrDefault();
+                    if (newSp == null)
+                        specTodelete.Add(sp);
+                }
+                specTodelete.ForEach(x => currentSpec.SpecificationParents.Remove(x));
+            }
         }
     }
 }

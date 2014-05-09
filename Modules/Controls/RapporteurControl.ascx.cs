@@ -262,14 +262,14 @@ namespace Etsi.Ultimate.Controls
             var nameHyperLinkColumn = (GridTemplateColumn)rdGridRapporteurs.MasterTableView.GetColumn(RAPPORTEURS_COLUMN_NAMEHYPERLINK);
             if (IsEditMode)//EDIT MODE CONFIG
             {
-                if (SelectableMode.Equals(RapporteursSelectablemode.Single.ToString()))
+                if (SelectableMode.Equals(RapporteursSelectablemode.Single))
                 {
                     selectableColumn.Visible = true;
                     rdGridRapporteurs.AllowMultiRowSelection = false;
                     rdGridRapporteurs.ClientSettings.EnablePostBackOnRowClick = true;
                     selectableColumn.HeaderText = SelectableColumnName;
                 }
-                else if (SelectableMode.Equals(RapporteursSelectablemode.Multi.ToString()))
+                else if (SelectableMode.Equals(RapporteursSelectablemode.Multi))
                 {
                     selectableColumn.Visible = true;
                     rdGridRapporteurs.AllowMultiRowSelection = true;
@@ -359,7 +359,6 @@ namespace Etsi.Ultimate.Controls
         protected void RdGridRapporteurs_DeleteCommand(object o, Telerik.Web.UI.GridCommandEventArgs e)
         {
             var ID = ConvertStringToInt(e.Item.OwnerTableView.DataKeyValues[e.Item.ItemIndex]["PERSON_ID"].ToString());
-            var temp = new List<int>();
             RemovePerson_MULTIMODE(ID);
             RefreshDisplay_MULTIMODE();
         }
@@ -501,7 +500,7 @@ namespace Etsi.Ultimate.Controls
             rdGridRapporteurs.Rebind();
             if (IsEditMode)
             {
-                if (ListIdPersonSelect.Count() != 0 && !SelectableMode.Equals(RapporteursSelectablemode.None))
+                if (ListIdPersonSelect.Count() != 0 && SelectableMode != RapporteursSelectablemode.None)
                 {
                     foreach (GridDataItem item in rdGridRapporteurs.MasterTableView.Items)
                     {

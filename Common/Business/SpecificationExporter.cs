@@ -57,7 +57,7 @@ namespace Etsi.Ultimate.Business
 
                 var specs = specManager.GetAllSpecifications(0);
                 specs.ForEach(x => x.PrimeResponsibleGroupShortName = (x.PrimeResponsibleGroup == null) ? String.Empty : communityManager.GetCommmunityshortNameById(x.PrimeResponsibleGroup.Fk_commityId));
-                specs.ForEach(x => x.PrimeSpecificationRapporteurName = (x.PrimeResponsibleGroup == null) ? String.Empty : personManager.GetPersonDisplayName(x.PrimeSpecificationRapporteurs.FirstOrDefault()));
+                specs.ForEach(x => x.PrimeSpecificationRapporteurName = (x.PrimeResponsibleGroup == null) ? String.Empty : personManager.GetPersonDisplayName(x.PrimeSpecificationRapporteurIds.FirstOrDefault()));
 
                 List<SpecificationForExport> specExportObjects = new List<SpecificationForExport>();
                 specExportObjects.AddRange(specs.OrderBy(x => x.Title).ToList().Select(y => new SpecificationForExport(y)));
