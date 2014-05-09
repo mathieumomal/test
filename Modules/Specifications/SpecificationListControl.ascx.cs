@@ -168,7 +168,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private void BindDropDownData(List<Specification> specList)
         {
             rcbAddSpecification.DataSource = specList;
-            rcbAddSpecification.DataTextField = "Title";
+            rcbAddSpecification.DataTextField = "SpecNumberAndTitle";
             rcbAddSpecification.DataValueField = "Pk_SpecificationId";
             rcbAddSpecification.DataBind();
         }

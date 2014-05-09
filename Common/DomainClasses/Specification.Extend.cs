@@ -58,6 +58,14 @@ namespace Etsi.Ultimate.DomainClasses
             }
         }
 
+        public string SpecNumberAndTitle
+        {
+            get
+            {
+                return Number + " " + Title;
+            }
+        }
+
         public string Status
         {
             get
