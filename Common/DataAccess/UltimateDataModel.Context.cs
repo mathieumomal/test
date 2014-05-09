@@ -90,5 +90,10 @@ namespace Etsi.Ultimate.DataAccess
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("WorkItems_CleanAll1");
         }
+    
+        public virtual int Versions_CleanAll()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Versions_CleanAll");
+        }
     }
 }

@@ -857,6 +857,7 @@
           <Parameter Name="personId" Type="int" Mode="In" />
         </Function>
         <Function Name="Specifications_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Versions_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="WorkItems_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -988,6 +989,7 @@
           <EntitySet Name="ETSI_WorkItem" EntityType="Etsi.Ultimate.DataAccess.ETSI_WorkItem" />
           <FunctionImport Name="Specifications_CleanAll1" />
           <FunctionImport Name="WorkItems_CleanAll1" />
+          <FunctionImport Name="Versions_CleanAll" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -2046,6 +2048,7 @@
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="Specifications_CleanAll1" FunctionName="Etsi.Ultimate.DataAccess.Store.Specifications_CleanAll" />
           <FunctionImportMapping FunctionImportName="WorkItems_CleanAll1" FunctionName="Etsi.Ultimate.DataAccess.Store.WorkItems_CleanAll" />
+          <FunctionImportMapping FunctionImportName="Versions_CleanAll" FunctionName="Etsi.Ultimate.DataAccess.Store.Versions_CleanAll" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

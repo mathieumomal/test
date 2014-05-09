@@ -58,5 +58,26 @@ namespace DatabaseImport
                 
             return val.Value;
         }
+
+        public static string CheckIntToString(int? val, int lenght, string logDescriptionCase, string id, ImportReport report)
+        {
+            if (val != null)
+            {
+                string str = val.ToString();
+
+                if (String.IsNullOrEmpty(str))
+                {
+                    return "";
+                }
+                else if (lenght != 0 && str.Length > lenght)
+                {
+                    report.LogWarning("String validation error : " + logDescriptionCase + " : string too long for : " + id);
+                    return "";
+                }
+                return str.Trim();
+            }
+            report.LogWarning(logDescriptionCase + " : int null for : " + id);
+            return "";
+        }
     }
 }

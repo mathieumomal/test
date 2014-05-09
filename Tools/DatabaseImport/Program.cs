@@ -27,6 +27,7 @@ namespace DatabaseImport
             var operations = new List<IModuleImport>();
             
             //---> (First to FILLDATABASE)
+            operations.Add(new VersionImport());
             operations.Add(new ReleaseImport());
             operations.Add(new WorkItemImport());
             operations.Add(new Enum_SerieImport());
@@ -37,6 +38,7 @@ namespace DatabaseImport
             operations.Add(new SpecificationRapporteurImport());
             operations.Add(new SpecificationWorkitemImport());
             operations.Add(new SpecificationReleaseImport());
+            
             //---> (First to CLEANDATABASE)
 
             Console.WriteLine("Setting up the different classes");
