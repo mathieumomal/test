@@ -84,7 +84,8 @@ namespace DatabaseImport.ModuleImport
 
                 
                 count++;
-                Console.Write(String.Format("\r" + RefImportForLog + " {0}/{1}  ", count, total));
+                if (count % 100 == 0)
+                    Console.Write(String.Format("\r" + RefImportForLog + " {0}/{1}  ", count, total));
             }
         }
         #endregion

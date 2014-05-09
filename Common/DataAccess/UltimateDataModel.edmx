@@ -458,8 +458,8 @@
           <Property Name="CreationDate" Type="datetime" Nullable="false" />
           <Property Name="WorkPlanFilePath" Type="nvarchar" Nullable="false" MaxLength="255" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.ETSI_WorkItem' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.ETSI_WorkItem » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="ETSI_WorkItem">
           <Key>
@@ -468,8 +468,8 @@
           <Property Name="WKI_ID" Type="int" Nullable="false" />
           <Property Name="WKI_REFERENCE" Type="varchar" MaxLength="30" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.Users_AdHoc_Roles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_AdHoc_Roles » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="Users_AdHoc_Roles">
           <Key>
@@ -480,8 +480,8 @@
           <Property Name="PERSON_ID" Type="nvarchar" MaxLength="3750" />
           <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="50" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.Users_Groups' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_Groups » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="Users_Groups">
           <Key>
@@ -494,8 +494,8 @@
           <Property Name="TB_ID" Type="int" />
           <Property Name="PERS_ROLE_CODE" Type="varchar" Nullable="false" MaxLength="12" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_Communities' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Communities » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_Communities">
           <Key>
@@ -507,8 +507,8 @@
           <Property Name="ActiveCode" Type="varchar" MaxLength="12" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_Meetings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Meetings » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_Meetings">
           <Key>
@@ -545,8 +545,8 @@
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
           <Property Name="MtgShortRef" Type="varchar" MaxLength="50" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_ModulesPages' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_ModulesPages » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_ModulesPages">
           <Key>
@@ -560,8 +560,8 @@
           <Property Name="ModuleID" Type="int" Nullable="false" />
           <Property Name="TabID" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_Persons' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Persons » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_Persons">
           <Key>
@@ -986,6 +986,8 @@
             <End Role="Version" EntitySet="SpecVersions" />
           </AssociationSet>
           <EntitySet Name="ETSI_WorkItem" EntityType="Etsi.Ultimate.DataAccess.ETSI_WorkItem" />
+          <FunctionImport Name="Specifications_CleanAll1" />
+          <FunctionImport Name="WorkItems_CleanAll1" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -2042,8 +2044,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="Specifications_CleanAll" FunctionName="Etsi.Ultimate.DataAccess.Store.Specifications_CleanAll" />
-          <FunctionImportMapping FunctionImportName="WorkItems_CleanAll" FunctionName="Etsi.Ultimate.DataAccess.Store.WorkItems_CleanAll" />
+          <FunctionImportMapping FunctionImportName="Specifications_CleanAll1" FunctionName="Etsi.Ultimate.DataAccess.Store.Specifications_CleanAll" />
+          <FunctionImportMapping FunctionImportName="WorkItems_CleanAll1" FunctionName="Etsi.Ultimate.DataAccess.Store.WorkItems_CleanAll" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

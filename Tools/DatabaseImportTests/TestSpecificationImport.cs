@@ -22,30 +22,7 @@ namespace DatabaseImportTests
         #endregion
 
         [Test]
-        public void Specification_Test_Clean()
-        {
-            /*var newContext = MockRepository.GenerateMock<IUltimateContext>();
-            var newDbSet = new SpecificationFakeDBSet();
-            newDbSet.Add(new Domain.Specification() { Pk_SpecificationId = 1 });
-            var specTechDbSet = new SpecificationTechnologyFakeDBSet();
-            specTechDbSet.Add(new Domain.SpecificationTechnology() { Pk_SpecificationTechnologyId = 1, Fk_Specification = 1 });
-            specTechDbSet.Add(new Domain.SpecificationTechnology() { Pk_SpecificationTechnologyId = 2, Fk_Specification = 2 });
-            var remarkSet = new RemarkFakeDbSet();
-            remarkSet.Add(new Domain.Remark() { Fk_SpecificationId = 1, Pk_RemarkId = 1});
-            remarkSet.Add(new Domain.Remark() { Fk_SpecificationId = 15, Pk_RemarkId = 2 });
-
-            newContext.Stub(ctx => ctx.Specifications).Return(newDbSet);
-            newContext.Stub(ctx => ctx.SpecificationTechnologies).Return(specTechDbSet);
-            newContext.Stub(ctx => ctx.Remarks).Return(remarkSet);
-
-            var import = new SpecificationImport() { LegacyContext = null, NewContext = newContext, Report = null };
-            import.CleanDatabase();
-
-            Assert.AreEqual(0, newDbSet.All().Count);
-            Assert.AreEqual(1, specTechDbSet.All().Count);
-            Assert.AreEqual(1, remarkSet.All().Count);*/
-        }
-
+        public void Specification_Test_Clean(){}
 
         [Test]
         public void Specification_Test_FillDatabase()
@@ -100,7 +77,7 @@ namespace DatabaseImportTests
             Assert.AreEqual(2, newSpec.Fk_SerieId);
 
             //REMARKS
-            Assert.AreEqual(2, newSpec.Remarks.Count);
+            Assert.AreEqual(1, newSpec.Remarks.Count);
         }
 
         [Test]
@@ -110,11 +87,6 @@ namespace DatabaseImportTests
             var newContext = MockRepository.GenerateMock<IUltimateContext>();
             var newDbSet = new SpecificationResponsibleGroupFakeDbSet();
             newContext.Stub(ctx => ctx.SpecificationResponsibleGroups).Return(newDbSet);
-            /*newDbSet.Add(new Domain.SpecificationResponsibleGroup() { Pk_SpecificationResponsibleGroupId = 1 });
-            var import_clean = new SpecificationResponsibleGroupImport() { LegacyContext = null, NewContext = newContext, Report = null };
-            import_clean.CleanDatabase();
-
-            Assert.AreEqual(0, newDbSet.All().Count);*/
 
             // --- Fill datas ---
             // New context mock
@@ -126,8 +98,6 @@ namespace DatabaseImportTests
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
             var legacyDbSet = new SpecificationLegacyFakeDBSet();
             legacyContext.Stub(ctx => ctx.Specs_GSM_3G).Return(GetSpecs_Legacy());
-
-
 
             // Report
             var report = new Domain.ImportReport();

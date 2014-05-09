@@ -68,21 +68,18 @@ namespace DatabaseImport.ModuleImport
                 }
                 else
                 {
-                    if (spec == null && work == null)
-                    {
-                        Report.LogWarning(RefImportForLog + " Specification and WorkItem not found (Spec Number : " + old_spec_work.Spec + ", for WorkItem UID : " + old_spec_work.WI_UID + ")");
-                    }
-                    else if (spec == null)
+                    if (spec == null)
                     {
                         Report.LogWarning(RefImportForLog + " Specification not found (Spec Number : " + old_spec_work.Spec + ", for WorkItem UID : " + old_spec_work.WI_UID + ")");
                     }
-                    else if (work == null)
+                    if (work == null)
                     {
                         Report.LogWarning(RefImportForLog + " WorkItem not found (Spec Number : " + old_spec_work.Spec + ", for WorkItem UID : " + old_spec_work.WI_UID + ")");
                     }
                 }
                 count++;
-                Console.Write(String.Format("\r" + RefImportForLog + " {0}/{1}  ", count, total));
+                if(count%100 == 0)
+                    Console.Write(String.Format("\r" + RefImportForLog + " {0}/{1}  ", count, total));
             }
         }
         #endregion

@@ -154,11 +154,8 @@
     <Build Include="dbo\Tables\Version.sql" />
     <Build Include="dbo\Views\ETSI_WorkItem.sql" />
     <Build Include="dbo\Functions\getETSI_WKI_Ref.sql" />
-    <Build Include="dbo\Stored Procedures\WorkItems_CleanAll_1.sql" />
-    <Build Include="dbo\Stored Procedures\Specifications_CleanAll_1.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
+    <Build Include="dbo\Stored Procedures\Specifications_CleanAll.sql" />
+    <Build Include="dbo\Stored Procedures\WorkItems_CleanAll.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

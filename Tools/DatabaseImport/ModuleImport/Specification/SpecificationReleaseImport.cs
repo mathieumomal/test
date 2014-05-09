@@ -72,32 +72,27 @@ namespace DatabaseImport.ModuleImport
                 }
                 else
                 {
-                    if (spec == null && release == null)
-                    {
-                        Report.LogWarning(RefImportForLog + " Specification and Release not found (Spec : " + legacySpecInfo.Spec + ", Release : " + legacySpecInfo.Release + ")");
-                    }
-                    else if (spec == null)
+                    if (spec == null)
                     {
                         Report.LogWarning(RefImportForLog + " Specification not found (Spec : " + legacySpecInfo.Spec + ", for Release : " + legacySpecInfo.Release + ")");
                     }
-                    else if (release == null)
+                    if (release == null)
                     {
                         Report.LogWarning(RefImportForLog + " Release not found (Release : " + legacySpecInfo.Release + ", for Spec : " + legacySpecInfo.Spec + ")");
                     }
                 }
                 
                 count++;
-                Console.Write(String.Format("\r" + RefImportForLog + " {0}/{1}         ", count, total));
+                if(count%100 == 0)
+                    Console.Write(String.Format("\r" + RefImportForLog + " {0}/{1}         ", count, total));
             }
 
         }
 
-        
-
         private void WithdrawnMeetingCase(Domain.Specification_Release newSpecRelease, OldDomain.Specs_GSM_3G_release_info legacySpecInfo)
         {
             var withdrawnMeetingId = Utils.CheckString(legacySpecInfo.stopped_at_meeting, 0, RefImportForLog + " WithdrawnMeeting", legacySpecInfo.Release, Report);
-            if (!withdrawnMeetingId.Equals("") && !withdrawnMeetingId.Equals("-"))
+            if (withdrawnMeetingId != "" && withdrawnMeetingId != "-")
             {
                 var mtg = tmpMeetings.Where(m => m.MtgShortRef.Equals(withdrawnMeetingId)).FirstOrDefault();
 

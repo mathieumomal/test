@@ -271,6 +271,7 @@
                             OnClientFileSelected="EnabledButtonImport" 
                             OnClientFileUploadRemoved="DisabledButtonImport" 
                             OverwriteExistingFiles="True"
+                            
                             ManualUpload="true">
                         </telerik:RadAsyncUpload>
                     </div>
@@ -303,7 +304,7 @@
             <ContentTemplate>
                 <div class="contentModal" id="confirmation">
                     <div class="wiHeader">
-                        <div><asp:Label ID="lblCountWarningErrors" runat="server" Text="Test" /></div>
+                        <div><asp:Label ID="lblCountWarningErrors" runat="server" Text="Operation timed out" /></div>
                     </div>
                     <div>
                         <h2>Errors and Warnings</h2>

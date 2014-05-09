@@ -93,7 +93,8 @@ namespace DatabaseImport.ModuleImport
 
                 NewContext.Specifications.Add(newSpec);
                 count++;
-                Console.Write(String.Format("\r" + RefImportForLog + " {0}/{1}  ", count, total));
+                if(count%100 == 0)
+                    Console.Write(String.Format("\r" + RefImportForLog + " {0}/{1}  ", count, total));
             }
         }
 
@@ -113,26 +114,21 @@ namespace DatabaseImport.ModuleImport
                     newSpec.IsTS = false;
                     break;
                 default:
-                    Report.LogError(RefImportForLog + " type is not TS or TR but (" + legacySpec.Type + ").");
+                    newSpec.IsTS = true;
+                    Report.LogError(RefImportForLog + " type is not TS or TR but (" + legacySpec.Type + ") (We applied TS by default).");
                     break;
             }
         }
 
         private void IsUnderChangeControlCase(Domain.Specification newSpec, OldDomain.Specs_GSM_3G legacySpec)
         {
-            var schedules = LegacyContext.C2001_04_25_schedule.Where(x => x.spec.Equals(newSpec.Number)).ToList();
-            var isUnderChangeControl = false;
-            foreach (var schedule in schedules)
-            {
-                if (schedule.MAJOR_VERSION_NB > 2)
-                    isUnderChangeControl = true;
-            }
-            newSpec.IsUnderChangeControl = isUnderChangeControl;
+            var schedules = LegacyContext.C2001_04_25_schedule.Where(x => x.spec == newSpec.Number && x.MAJOR_VERSION_NB > 2).FirstOrDefault();
+            newSpec.IsUnderChangeControl = (schedules != null);
         }
 
         private void IsPromoteInhibitedCase(Domain.Specification newSpec, OldDomain.Specs_GSM_3G legacySpec)
         {
-            var spec_releases = LegacyContext.Specs_GSM_3G_release_info.Where(x => x.Spec.Equals(newSpec.Number)).OrderBy(x => x.Row_id).ToList();
+            var spec_releases = LegacyContext.Specs_GSM_3G_release_info.Where(x => x.Spec == newSpec.Number).OrderBy(x => x.Row_id).ToList();
             var isPromoteInhibitedCase = false;
             foreach (var spec_release in spec_releases)
             {
@@ -221,24 +217,16 @@ namespace DatabaseImport.ModuleImport
         /// <param name="legacySpec"></param>
         private void RemarksCase(Domain.Specification newSpec, OldDomain.Specs_GSM_3G legacySpec)
         {
-            var remarksField = legacySpec.general_remarks;
-
-            if (remarksField == null || remarksField.Length == 0)
-                return;
-
-            var remarks = remarksField.Split('.');
-            foreach (var remark in remarks)
+            var remarksField = Utils.CheckString(legacySpec.general_remarks, 255, RefImportForLog + " remarks text", newSpec.Number, Report);
+            
+            if (!String.IsNullOrEmpty(remarksField))
             {
-                if (String.IsNullOrEmpty(remark))
-                {
-                    break;
-                }
                 var rmk = new Domain.Remark()
                 {
                     CreationDate = DateTime.Now,
                     IsPublic = true,
-                    RemarkText = remark,
-                    Specification = newSpec
+                    RemarkText = remarksField,
+                    Fk_SpecificationId = newSpec.Pk_SpecificationId
                 };
                 newSpec.Remarks.Add(rmk);
             }
