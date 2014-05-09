@@ -41,30 +41,31 @@ namespace Etsi.Ultimate.Controls
 
         #region constants
         //ViewStates
-        private const string CONST_RAPPORTEURS_VIEWSTATE_DATASOURCE = "RapporteursDataSource";
-        private const string CONST_RAPPORTEURS_VIEWSTATE_ID = "RapporteursIds";
-        private const string CONST_RAPPORTEURS_VIEWSTATE_ISSINGLEPERSONMODE = "IsSinglePersonMode";
-        private const string CONST_RAPPORTEURS_VIEWSTATE_ISEDITMODE = "IsEditMode";
-        private const string CONST_RAPPORTEURS_VIEWSTATE_IDPERSONSELECTEDSINGLEMODE = "IdPersonSelected_SINGLEMODE";
-        private const string CONST_RAPPORTEURS_VIEWSTATE_SELECTABLEMODE = "SelectableMode";
-        private const string CONST_RAPPORTEURS_VIEWSTATE_LISTIDPERSONSELECTED = "ListIdPersonSelect";
-        private const string CONST_RAPPORTEURS_VIEWSTATE_BASEADDRESS = "RapporteurLinkBaseAddress";
+        private const string RAPPORTEURS_VIEWSTATE_DATASOURCE = "RapporteursDataSource";
+        private const string RAPPORTEURS_VIEWSTATE_ID = "RapporteursIds";
+        private const string RAPPORTEURS_VIEWSTATE_ISSINGLEPERSONMODE = "IsSinglePersonMode";
+        private const string RAPPORTEURS_VIEWSTATE_ISEDITMODE = "IsEditMode";
+        private const string RAPPORTEURS_VIEWSTATE_IDPERSONSELECTEDSINGLEMODE = "IdPersonSelected_SINGLEMODE";
+        private const string RAPPORTEURS_VIEWSTATE_SELECTABLEMODE = "SelectableMode";
+        private const string RAPPORTEURS_VIEWSTATE_LISTIDPERSONSELECTED = "ListIdPersonSelect";
+        private const string RAPPORTEURS_VIEWSTATE_BASEADDRESS = "RapporteurLinkBaseAddress";
+        private const string RAPPORTEURS_VIEWSTATE_COLUMNNAME = "SelectableColumnName";
 
         //Columns
-        private const string CONST_RAPPORTEURS_COLUMN_SELECTABLE = "selectable";
-        private const string CONST_RAPPORTEURS_COLUMN_DELETE = "delete";
-        private const string CONST_RAPPORTEURS_COLUMN_EMAIL = "email";
-        private const string CONST_RAPPORTEURS_COLUMN_NAME = "name";
-        private const string CONST_RAPPORTEURS_COLUMN_NAMEHYPERLINK = "nameHyperLink";
+        private const string RAPPORTEURS_COLUMN_SELECTABLE = "selectable";
+        private const string RAPPORTEURS_COLUMN_DELETE = "delete";
+        private const string RAPPORTEURS_COLUMN_EMAIL = "email";
+        private const string RAPPORTEURS_COLUMN_NAME = "name";
+        private const string RAPPORTEURS_COLUMN_NAMEHYPERLINK = "nameHyperLink";
 
         //CssClass
-        private const string CONST_RAPPORTEURS_CSSCLASS_EDITMODE_ONEPERSONMODE = "editModeOnePersonMode";
-        private const string CONST_RAPPORTEURS_CSSCLASS_VIEWMODE_ONEPERSONMODE = "viewModeOnePersonMode";
+        private const string RAPPORTEURS_CSSCLASS_EDITMODE_ONEPERSONMODE = "editModeOnePersonMode";
+        private const string RAPPORTEURS_CSSCLASS_VIEWMODE_ONEPERSONMODE = "viewModeOnePersonMode";
 
-        private const string CONST_RAPPORTEURS_CSSCLASS_EDITMODE_MULTIPERSONMODE = "editModeMultiPersonMode";
-        private const string CONST_RAPPORTEURS_CSSCLASS_VIEWMODE_MULTIPERSONMODE = "viewModeMultiPersonMode";
+        private const string RAPPORTEURS_CSSCLASS_EDITMODE_MULTIPERSONMODE = "editModeMultiPersonMode";
+        private const string RAPPORTEURS_CSSCLASS_VIEWMODE_MULTIPERSONMODE = "viewModeMultiPersonMode";
 
-        public enum CONST_RAPPORTEURS_SELECTABLEMODE
+        public enum Rapporteurs_selectablemode
         {
             multi,
             single,
@@ -77,36 +78,36 @@ namespace Etsi.Ultimate.Controls
         /// <summary>
         /// Provide the edit current mode ; EDIT MODE (true) or VIEW MODE (false)
         /// </summary>
-        public Boolean IsEditMode
+        public bool IsEditMode
         {
             get
             {
-                if (ViewState[CONST_RAPPORTEURS_VIEWSTATE_ISEDITMODE] == null)
-                    ViewState[CONST_RAPPORTEURS_VIEWSTATE_ISEDITMODE] = false;
+                if (ViewState[ClientID + RAPPORTEURS_VIEWSTATE_ISEDITMODE] == null)
+                    ViewState[ClientID + RAPPORTEURS_VIEWSTATE_ISEDITMODE] = false;
 
-                return (Boolean)ViewState[CONST_RAPPORTEURS_VIEWSTATE_ISEDITMODE];
+                return (bool)ViewState[ClientID + RAPPORTEURS_VIEWSTATE_ISEDITMODE];
             }
             set
             {
-                ViewState[CONST_RAPPORTEURS_VIEWSTATE_ISEDITMODE] = value;
+                ViewState[ClientID + RAPPORTEURS_VIEWSTATE_ISEDITMODE] = value;
             }
         }
 
         /// <summary>
         /// One person could be selected (isOneMode = true) or multiple persons could be selected (isOneMode = false)
         /// </summary>
-        public Boolean IsSinglePersonMode
+        public bool IsSinglePersonMode
         {
             get
             {
-                if (ViewState[CONST_RAPPORTEURS_VIEWSTATE_ISSINGLEPERSONMODE] == null)
-                    ViewState[CONST_RAPPORTEURS_VIEWSTATE_ISSINGLEPERSONMODE] = false;
+                if (ViewState[ClientID + RAPPORTEURS_VIEWSTATE_ISSINGLEPERSONMODE] == null)
+                    ViewState[ClientID + RAPPORTEURS_VIEWSTATE_ISSINGLEPERSONMODE] = false;
 
-                return (Boolean)ViewState[CONST_RAPPORTEURS_VIEWSTATE_ISSINGLEPERSONMODE];
+                return (bool)ViewState[ClientID + RAPPORTEURS_VIEWSTATE_ISSINGLEPERSONMODE];
             }
             set
             {
-                ViewState[CONST_RAPPORTEURS_VIEWSTATE_ISSINGLEPERSONMODE] = value;
+                ViewState[ClientID + RAPPORTEURS_VIEWSTATE_ISSINGLEPERSONMODE] = value;
             }
         }
 
@@ -118,14 +119,14 @@ namespace Etsi.Ultimate.Controls
         {
             get
             {
-                if (ViewState[CONST_RAPPORTEURS_VIEWSTATE_SELECTABLEMODE] == null)
-                    ViewState[CONST_RAPPORTEURS_VIEWSTATE_SELECTABLEMODE] = "none";
+                if (ViewState[ClientID + RAPPORTEURS_VIEWSTATE_SELECTABLEMODE] == null)
+                    ViewState[ClientID + RAPPORTEURS_VIEWSTATE_SELECTABLEMODE] = "none";
 
-                return (String)ViewState[CONST_RAPPORTEURS_VIEWSTATE_SELECTABLEMODE];
+                return (String)ViewState[ClientID + RAPPORTEURS_VIEWSTATE_SELECTABLEMODE];
             }
             set
             {
-                ViewState[CONST_RAPPORTEURS_VIEWSTATE_SELECTABLEMODE] = value;
+                ViewState[ClientID + RAPPORTEURS_VIEWSTATE_SELECTABLEMODE] = value;
             }
         }
 
@@ -136,14 +137,14 @@ namespace Etsi.Ultimate.Controls
         {
             get
             {
-                if (ViewState[CONST_RAPPORTEURS_VIEWSTATE_LISTIDPERSONSELECTED] == null)
-                    ViewState[CONST_RAPPORTEURS_VIEWSTATE_LISTIDPERSONSELECTED] = new List<int>();
+                if (ViewState[ClientID + RAPPORTEURS_VIEWSTATE_LISTIDPERSONSELECTED] == null)
+                    ViewState[ClientID + RAPPORTEURS_VIEWSTATE_LISTIDPERSONSELECTED] = new List<int>();
 
-                return (List<int>)ViewState[CONST_RAPPORTEURS_VIEWSTATE_LISTIDPERSONSELECTED];
+                return (List<int>)ViewState[ClientID + RAPPORTEURS_VIEWSTATE_LISTIDPERSONSELECTED];
             }
             set
             {
-                ViewState[CONST_RAPPORTEURS_VIEWSTATE_LISTIDPERSONSELECTED] = value;
+                ViewState[ClientID + RAPPORTEURS_VIEWSTATE_LISTIDPERSONSELECTED] = value;
             }
         }
 
@@ -154,35 +155,32 @@ namespace Etsi.Ultimate.Controls
         {
             get
             {
-                if (selectableColumnName == null)
-                {
-                    selectableColumnName = "Primary";
-                    return selectableColumnName;
-                }
-                return selectableColumnName;
+                if (ViewState[ClientID + RAPPORTEURS_VIEWSTATE_COLUMNNAME] == null)
+                    ViewState[ClientID + RAPPORTEURS_VIEWSTATE_COLUMNNAME] = "Primary";
+
+                return (String)ViewState[ClientID + RAPPORTEURS_VIEWSTATE_COLUMNNAME];
             }
             set
             {
-                selectableColumnName = value;
+                ViewState[ClientID + RAPPORTEURS_VIEWSTATE_COLUMNNAME] = value;
             }
         }
-        private string selectableColumnName { get; set; }
 
         /// <summary>
         /// For the Single selected mode, this attribute provides the last person's id choosen
         /// </summary>
-        public int IdPersonSelected_SINGLEMODE
+        public int IdPersonSelected_singlemode
         {
             get
             {
-                if (ViewState[CONST_RAPPORTEURS_VIEWSTATE_IDPERSONSELECTEDSINGLEMODE] == null)
-                    ViewState[CONST_RAPPORTEURS_VIEWSTATE_IDPERSONSELECTEDSINGLEMODE] = 0;
+                if (ViewState[ClientID + RAPPORTEURS_VIEWSTATE_IDPERSONSELECTEDSINGLEMODE] == null)
+                    ViewState[ClientID + RAPPORTEURS_VIEWSTATE_IDPERSONSELECTEDSINGLEMODE] = 0;
 
-                return (int)ViewState[CONST_RAPPORTEURS_VIEWSTATE_IDPERSONSELECTEDSINGLEMODE];
+                return (int)ViewState[ClientID + RAPPORTEURS_VIEWSTATE_IDPERSONSELECTEDSINGLEMODE];
             }
             set
             {
-                ViewState[CONST_RAPPORTEURS_VIEWSTATE_IDPERSONSELECTEDSINGLEMODE] = value;
+                ViewState[ClientID + RAPPORTEURS_VIEWSTATE_IDPERSONSELECTEDSINGLEMODE] = value;
             }
         }
 
@@ -190,35 +188,35 @@ namespace Etsi.Ultimate.Controls
         /// <summary>
         /// List of choosen person's id
         /// </summary>
-        public List<int> ListIdPersonsSelected_MULTIMODE
+        public List<int> ListIdPersonsSelected_multimode
         {
             get
             {
-                if (ViewState[CONST_RAPPORTEURS_VIEWSTATE_ID] == null)
-                    ViewState[CONST_RAPPORTEURS_VIEWSTATE_ID] = new List<int>();
+                if (ViewState[ClientID + RAPPORTEURS_VIEWSTATE_ID] == null)
+                    ViewState[ClientID + RAPPORTEURS_VIEWSTATE_ID] = new List<int>();
 
-                return (List<int>)ViewState[CONST_RAPPORTEURS_VIEWSTATE_ID];
+                return (List<int>)ViewState[ClientID + RAPPORTEURS_VIEWSTATE_ID];
             }
             set
             {
-                ViewState[CONST_RAPPORTEURS_VIEWSTATE_ID] = value;
+                ViewState[ClientID + RAPPORTEURS_VIEWSTATE_ID] = value;
             }
         }
         /// <summary>
         /// Datasource for the radgrid which contains the list of persons (MODELS)
         /// </summary>
-        public List<View_Persons> DataSource_MULTIMODE
+        public List<View_Persons> DataSource_multimode
         {
             get
             {
-                if (ViewState[CONST_RAPPORTEURS_VIEWSTATE_DATASOURCE] == null)
-                    ViewState[CONST_RAPPORTEURS_VIEWSTATE_DATASOURCE] = new List<View_Persons>();
+                if (ViewState[ClientID + RAPPORTEURS_VIEWSTATE_DATASOURCE] == null)
+                    ViewState[ClientID + RAPPORTEURS_VIEWSTATE_DATASOURCE] = new List<View_Persons>();
 
-                return (List<View_Persons>)ViewState[CONST_RAPPORTEURS_VIEWSTATE_DATASOURCE];
+                return (List<View_Persons>)ViewState[ClientID + RAPPORTEURS_VIEWSTATE_DATASOURCE];
             }
             set
             {
-                ViewState[CONST_RAPPORTEURS_VIEWSTATE_DATASOURCE] = value;
+                ViewState[ClientID + RAPPORTEURS_VIEWSTATE_DATASOURCE] = value;
             }
         }
 
@@ -228,14 +226,14 @@ namespace Etsi.Ultimate.Controls
         public string PersonLinkBaseAddress { 
             get
             {
-                if (ViewState[CONST_RAPPORTEURS_VIEWSTATE_BASEADDRESS] == null)
+                if (ViewState[ClientID + RAPPORTEURS_VIEWSTATE_BASEADDRESS] == null)
                     return "";
 
-                return (string)ViewState[CONST_RAPPORTEURS_VIEWSTATE_BASEADDRESS];
+                return (string)ViewState[ClientID + RAPPORTEURS_VIEWSTATE_BASEADDRESS];
             }
             set
             {
-                ViewState[CONST_RAPPORTEURS_VIEWSTATE_BASEADDRESS] = value;
+                ViewState[ClientID + RAPPORTEURS_VIEWSTATE_BASEADDRESS] = value;
             }
         }
         #endregion
@@ -257,21 +255,21 @@ namespace Etsi.Ultimate.Controls
         /// </summary>
         private void InitControl()
         {
-            var selectableColumn = (GridClientSelectColumn)rdGridRapporteurs.MasterTableView.GetColumn(CONST_RAPPORTEURS_COLUMN_SELECTABLE);
-            var deletedColumn = (GridButtonColumn)rdGridRapporteurs.MasterTableView.GetColumn(CONST_RAPPORTEURS_COLUMN_DELETE);
-            var emailColumn = (GridTemplateColumn)rdGridRapporteurs.MasterTableView.GetColumn(CONST_RAPPORTEURS_COLUMN_EMAIL);
-            var nameColumn = (GridTemplateColumn)rdGridRapporteurs.MasterTableView.GetColumn(CONST_RAPPORTEURS_COLUMN_NAME);
-            var nameHyperLinkColumn = (GridTemplateColumn)rdGridRapporteurs.MasterTableView.GetColumn(CONST_RAPPORTEURS_COLUMN_NAMEHYPERLINK);
+            var selectableColumn = (GridClientSelectColumn)rdGridRapporteurs.MasterTableView.GetColumn(RAPPORTEURS_COLUMN_SELECTABLE);
+            var deletedColumn = (GridButtonColumn)rdGridRapporteurs.MasterTableView.GetColumn(RAPPORTEURS_COLUMN_DELETE);
+            var emailColumn = (GridTemplateColumn)rdGridRapporteurs.MasterTableView.GetColumn(RAPPORTEURS_COLUMN_EMAIL);
+            var nameColumn = (GridTemplateColumn)rdGridRapporteurs.MasterTableView.GetColumn(RAPPORTEURS_COLUMN_NAME);
+            var nameHyperLinkColumn = (GridTemplateColumn)rdGridRapporteurs.MasterTableView.GetColumn(RAPPORTEURS_COLUMN_NAMEHYPERLINK);
             if (IsEditMode)//EDIT MODE CONFIG
             {
-                if (SelectableMode.Equals(CONST_RAPPORTEURS_SELECTABLEMODE.single.ToString()))
+                if (SelectableMode.Equals(Rapporteurs_selectablemode.single.ToString()))
                 {
                     selectableColumn.Visible = true;
                     rdGridRapporteurs.AllowMultiRowSelection = false;
                     rdGridRapporteurs.ClientSettings.EnablePostBackOnRowClick = true;
                     selectableColumn.HeaderText = SelectableColumnName;
                 }
-                else if (SelectableMode.Equals(CONST_RAPPORTEURS_SELECTABLEMODE.multi.ToString()))
+                else if (SelectableMode.Equals(Rapporteurs_selectablemode.multi.ToString()))
                 {
                     selectableColumn.Visible = true;
                     rdGridRapporteurs.AllowMultiRowSelection = true;
@@ -280,13 +278,13 @@ namespace Etsi.Ultimate.Controls
 
                 if (!IsSinglePersonMode)
                 {
-                    panelRapporteurControl.CssClass = CONST_RAPPORTEURS_CSSCLASS_EDITMODE_MULTIPERSONMODE;
+                    panelRapporteurControl.CssClass = RAPPORTEURS_CSSCLASS_EDITMODE_MULTIPERSONMODE;
                     RefreshDataSourceFromListIds_MULTIMODE();
                     RefreshDisplay_MULTIMODE();
                 }
                 else
                 {
-                    panelRapporteurControl.CssClass = CONST_RAPPORTEURS_CSSCLASS_EDITMODE_ONEPERSONMODE;
+                    panelRapporteurControl.CssClass = RAPPORTEURS_CSSCLASS_EDITMODE_ONEPERSONMODE;
                     rdGridRapporteurs.Visible = false;
                     RefreshDisplay_SINGLEMODE();
                 }
@@ -295,7 +293,7 @@ namespace Etsi.Ultimate.Controls
             {
                 if (!IsSinglePersonMode)//MULTI PERSON MODE
                 {
-                    panelRapporteurControl.CssClass = CONST_RAPPORTEURS_CSSCLASS_VIEWMODE_MULTIPERSONMODE;
+                    panelRapporteurControl.CssClass = RAPPORTEURS_CSSCLASS_VIEWMODE_MULTIPERSONMODE;
 
                     nameHyperLinkColumn.Visible = true;
                     nameColumn.Visible = false;
@@ -311,7 +309,7 @@ namespace Etsi.Ultimate.Controls
                 }
                 else//ONE PERSON MODE
                 {
-                    panelRapporteurControl.CssClass = CONST_RAPPORTEURS_CSSCLASS_VIEWMODE_ONEPERSONMODE;
+                    panelRapporteurControl.CssClass = RAPPORTEURS_CSSCLASS_VIEWMODE_ONEPERSONMODE;
 
                     rdGridRapporteurs.Visible = false;
 
@@ -339,7 +337,7 @@ namespace Etsi.Ultimate.Controls
             }
             else
             {
-                if (!ListIdPersonsSelected_MULTIMODE.Contains(personIdToAdd))
+                if (!ListIdPersonsSelected_multimode.Contains(personIdToAdd))
                 {
                     AddPerson_MULTIMODE(personIdToAdd);
                     rdcbRapporteurs.Text = "";
@@ -411,7 +409,7 @@ namespace Etsi.Ultimate.Controls
         {
             if (IsSinglePersonMode)
             {
-                IdPersonSelected_SINGLEMODE = ConvertStringToInt(e.Value);
+                IdPersonSelected_singlemode = ConvertStringToInt(e.Value);
             }
         }
 
@@ -448,7 +446,7 @@ namespace Etsi.Ultimate.Controls
         private void RefreshDataSourceFromListIds_MULTIMODE()
         {
             var personService = ServicesFactory.Resolve<IPersonService>();
-            DataSource_MULTIMODE = personService.GetByIds(ListIdPersonsSelected_MULTIMODE);
+            DataSource_multimode = personService.GetByIds(ListIdPersonsSelected_multimode);
         }
 
         /// <summary>
@@ -457,8 +455,8 @@ namespace Etsi.Ultimate.Controls
         private void AddPerson_MULTIMODE(int id)
         {
             var personService = ServicesFactory.Resolve<IPersonService>();
-            ListIdPersonsSelected_MULTIMODE.Add(id);
-            DataSource_MULTIMODE.Add(personService.FindPerson(id));
+            ListIdPersonsSelected_multimode.Add(id);
+            DataSource_multimode.Add(personService.FindPerson(id));
         }
 
         /// <summary>
@@ -468,8 +466,8 @@ namespace Etsi.Ultimate.Controls
         private void RemovePerson_MULTIMODE(int id)
         {
             var personService = ServicesFactory.Resolve<IPersonService>();
-            ListIdPersonsSelected_MULTIMODE.Remove(id);
-            DataSource_MULTIMODE.Remove(DataSource_MULTIMODE.SingleOrDefault(s => s.PERSON_ID == id));
+            ListIdPersonsSelected_multimode.Remove(id);
+            DataSource_multimode.Remove(DataSource_multimode.SingleOrDefault(s => s.PERSON_ID == id));
         }
 
         /// <summary>
@@ -481,7 +479,7 @@ namespace Etsi.Ultimate.Controls
             {
                 if (ListIdPersonSelect.Count() != 0)
                 {
-                    foreach (View_Persons person in DataSource_MULTIMODE)
+                    foreach (View_Persons person in DataSource_multimode)
                     {
                         if (ListIdPersonSelect.Contains(person.PERSON_ID))
                         {
@@ -499,11 +497,11 @@ namespace Etsi.Ultimate.Controls
                     }
                 }
             }
-            rdGridRapporteurs.DataSource = DataSource_MULTIMODE;
+            rdGridRapporteurs.DataSource = DataSource_multimode;
             rdGridRapporteurs.Rebind();
             if (IsEditMode)
             {
-                if (ListIdPersonSelect.Count() != 0 && !SelectableMode.Equals(CONST_RAPPORTEURS_SELECTABLEMODE.none))
+                if (ListIdPersonSelect.Count() != 0 && !SelectableMode.Equals(Rapporteurs_selectablemode.none))
                 {
                     foreach (GridDataItem item in rdGridRapporteurs.MasterTableView.Items)
                     {
@@ -523,9 +521,9 @@ namespace Etsi.Ultimate.Controls
         private void RefreshDisplay_SINGLEMODE()
         {
             var personService = ServicesFactory.Resolve<IPersonService>();
-            if (IdPersonSelected_SINGLEMODE != 0)
+            if (IdPersonSelected_singlemode != 0)
             {
-                rdcbRapporteurs.Text = personService.FindPerson(IdPersonSelected_SINGLEMODE).PersonSearchTxt;
+                rdcbRapporteurs.Text = personService.FindPerson(IdPersonSelected_singlemode).PersonSearchTxt;
             }
         }
 

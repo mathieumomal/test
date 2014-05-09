@@ -282,7 +282,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 SecondaryResponsibleGroupsVal.Text = (string.IsNullOrEmpty(specification.SecondaryResponsibleGroupsShortNames)) ? CONST_EMPTY_FIELD : specification.SecondaryResponsibleGroupsShortNames;
 
                 specificationRapporteurs.ListIdPersonSelect = specification.PrimeSpecificationRapporteurs;
-                specificationRapporteurs.ListIdPersonsSelected_MULTIMODE = specification.FullSpecificationRapporteurs;
+                specificationRapporteurs.ListIdPersonsSelected_multimode = specification.FullSpecificationRapporteurs;
             }
             else
             {
@@ -290,7 +290,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 SecondaryResponsibleGroupsVal.Text = CONST_EMPTY_FIELD;
 
                 specificationRapporteurs.ListIdPersonSelect = specification.PrimeSpecificationRapporteurs;
-                specificationRapporteurs.ListIdPersonsSelected_MULTIMODE = specification.FullSpecificationRapporteurs;
+                specificationRapporteurs.ListIdPersonsSelected_multimode = specification.FullSpecificationRapporteurs;
             }
         }
 

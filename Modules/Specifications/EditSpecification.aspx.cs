@@ -352,7 +352,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 SecondaryResGrpCtrl.SelectedCommunityIds = specification.SpecificationResponsibleGroups.Select(x => x.Fk_commityId).ToList();
 
                 specificationRapporteurs.ListIdPersonSelect = specification.PrimeSpecificationRapporteurs;
-                specificationRapporteurs.ListIdPersonsSelected_MULTIMODE = specification.FullSpecificationRapporteurs;
+                specificationRapporteurs.ListIdPersonsSelected_multimode = specification.FullSpecificationRapporteurs;
             }
         }
 
