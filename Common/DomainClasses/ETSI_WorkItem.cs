@@ -13,11 +13,10 @@ namespace Etsi.Ultimate.DomainClasses
     using System.Collections.Generic;
     
     [Serializable]
-    public partial class Users_AdHoc_Roles
+    public partial class ETSI_WorkItem
     {
-        public int UserID { get; set; }
-        public string PERSON_ID { get; set; }
-        public string RoleName { get; set; }
+        public int WKI_ID { get; set; }
+        public string WKI_REFERENCE { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

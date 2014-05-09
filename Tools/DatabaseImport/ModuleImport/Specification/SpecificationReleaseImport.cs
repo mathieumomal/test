@@ -66,9 +66,6 @@ namespace DatabaseImport.ModuleImport
                     new_specRelease.CreationDate = legacySpecInfo.creation_date;
                     new_specRelease.UpdateDate = legacySpecInfo.update_date;
 
-                    //No necessary useful ETSI QUESTION
-                    FreezeMeetingCase(new_specRelease, legacySpecInfo);
-
                     WithdrawnMeetingCase(new_specRelease, legacySpecInfo);
 
                     NewContext.Specification_Release.Add(new_specRelease);
@@ -95,21 +92,7 @@ namespace DatabaseImport.ModuleImport
 
         }
 
-        private void FreezeMeetingCase(Domain.Specification_Release newSpecRelease, OldDomain.Specs_GSM_3G_release_info legacySpecInfo)
-        {
-            var freezeMeeting = Utils.CheckString(legacySpecInfo.freeze_meeting, 0, RefImportForLog + " FreezeMeeting", legacySpecInfo.Release, Report);
-            if (!freezeMeeting.Equals("") && !freezeMeeting.Equals("-"))
-            {
-                var mtg = tmpMeetings.Where(m => m.MtgShortRef.Equals(freezeMeeting)).FirstOrDefault();
-
-                if (mtg == null)
-                    Report.LogWarning(RefImportForLog + "Release " + legacySpecInfo.Release + ": could not find freeze meeting " + freezeMeeting);
-                else
-                {
-                    newSpecRelease.FreezeMeetingId = mtg.MTG_ID;
-                }
-            }
-        }
+        
 
         private void WithdrawnMeetingCase(Domain.Specification_Release newSpecRelease, OldDomain.Specs_GSM_3G_release_info legacySpecInfo)
         {

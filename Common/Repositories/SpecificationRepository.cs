@@ -44,7 +44,7 @@ namespace Etsi.Ultimate.Repositories
 
         public Specification Find(int id)
         {
-            return AllIncluding(t => t.Enum_Serie, t => t.Enum_SpecificationStage, t => t.Remarks, t => t.Histories,
+            return AllIncluding(t => t.Enum_Serie, t => t.Remarks, t => t.Histories,
                 t => t.SpecificationTechnologies, t => t.SpecificationResponsibleGroups, t => t.SpecificationRapporteurs,
                 t => t.Specification_Release).Where(x => x.Pk_SpecificationId == id).FirstOrDefault();
         }

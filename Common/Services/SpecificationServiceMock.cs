@@ -117,12 +117,7 @@ namespace Etsi.Ultimate.Services
                     IsActive = true,
                     IsUnderChangeControl = new Nullable<bool>(false),
 
-                    Enum_SpecificationStage = new Domain.Enum_SpecificationStage()
-                    {
-                        Pk_Enum_SpecificationStage = 1,
-                        Code = "Stage 3",
-                        Description = "Third stage"
-                    },
+                    
                     IsForPublication = new Nullable<bool>(false),
                     Remarks = new List<Domain.Remark>
                     {
@@ -182,7 +177,6 @@ namespace Etsi.Ultimate.Services
                     MOD_TS = null,
                     TitleVerified = null,
                     Fk_SerieId = 1,
-                    Fk_SpecificationStageId = 1,
                     Histories = new List<Domain.History>
                     {
                         new Domain.History(){
@@ -234,11 +228,7 @@ namespace Etsi.Ultimate.Services
                             IsActive= true,
                             IsUnderChangeControl = new Nullable<bool>(false),
 
-                            Enum_SpecificationStage = new Domain.Enum_SpecificationStage(){
-                                Pk_Enum_SpecificationStage =1,
-                                Code ="Stage 2",
-                                Description = "Second stage"
-                            },
+                            
                             IsForPublication = new Nullable<bool>(false),
                             Remarks = remarks,
                             SpecificationTechnologies = specTechnologies,  
@@ -250,7 +240,6 @@ namespace Etsi.Ultimate.Services
                             MOD_TS =null,
                             TitleVerified =null,               
                             Fk_SerieId = 1,
-                            Fk_SpecificationStageId  = 1,
                             Histories = histories,
                             PrimeResponsibleGroupShortName = "SP",
                             SecondaryResponsibleGroupsShortNames = "S1, S2, S3"
@@ -266,11 +255,7 @@ namespace Etsi.Ultimate.Services
                             IsActive= true,
                             IsUnderChangeControl = new Nullable<bool>(false),
 
-                            Enum_SpecificationStage = new Domain.Enum_SpecificationStage(){
-                                Pk_Enum_SpecificationStage =1,
-                                Code ="Stage 2",
-                                Description = "Second stage"
-                            },
+                            
                             IsForPublication = new Nullable<bool>(false),
                             Remarks = remarks,
                             SpecificationTechnologies = specTechnologies,  
@@ -282,7 +267,6 @@ namespace Etsi.Ultimate.Services
                             MOD_TS =null,
                             TitleVerified =null,               
                             Fk_SerieId = 1,
-                            Fk_SpecificationStageId  = 1,
                             Histories = histories,
                             PrimeResponsibleGroupShortName = "SP",
                             SecondaryResponsibleGroupsShortNames = "S1, S2, S3"
@@ -365,11 +349,7 @@ namespace Etsi.Ultimate.Services
                 IsActive= true,
                 IsUnderChangeControl = new Nullable<bool>(false),
 
-                Enum_SpecificationStage = new Domain.Enum_SpecificationStage(){
-                    Pk_Enum_SpecificationStage =1,
-                    Code ="Stage 3",
-                    Description = "Third stage"
-                },
+                
                 IsForPublication = new Nullable<bool>(false),
                 Remarks = remarks,
                 SpecificationTechnologies = specTechnologies,  
@@ -381,7 +361,6 @@ namespace Etsi.Ultimate.Services
                 MOD_TS =null,
                 TitleVerified =null,               
                 Fk_SerieId = 1,
-                Fk_SpecificationStageId  = 1,
                 Histories = histories
              
             });

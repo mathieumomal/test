@@ -286,7 +286,6 @@ namespace DatabaseImportTests
             Assert.AreEqual(true, specReleaseDbSet.All()[0].isWithdrawn);
             Assert.AreEqual(createDate, specReleaseDbSet.All()[0].CreationDate);
             Assert.AreEqual(updateDate, specReleaseDbSet.All()[0].UpdateDate);
-            Assert.AreEqual(67, specReleaseDbSet.All()[0].FreezeMeetingId);
             Assert.AreEqual(23, specReleaseDbSet.All()[0].WithdrawMeetingId);
             //Assert.AreEqual(true, specWorkItemDbSet.All()[0].isPrime);
         }

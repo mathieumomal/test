@@ -155,12 +155,6 @@ namespace Etsi.Ultimate.Tests.Repositories
                 IsActive = true,
                 IsUnderChangeControl = new Nullable<bool>(false),
 
-                Enum_SpecificationStage = new Enum_SpecificationStage()
-                {
-                    Pk_Enum_SpecificationStage = 1,
-                    Code = "Stage 3",
-                    Description = "Third stage"
-                },
                 IsForPublication = new Nullable<bool>(false),
                 Remarks = new List<Remark>
                 {
@@ -220,7 +214,7 @@ namespace Etsi.Ultimate.Tests.Repositories
                 MOD_TS = null,
                 TitleVerified = null,
                 Fk_SerieId = 1,
-                Fk_SpecificationStageId = 1,
+                
                 Histories = new List<History>
                 {
                     new History(){

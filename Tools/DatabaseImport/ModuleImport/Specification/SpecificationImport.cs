@@ -85,8 +85,6 @@ namespace DatabaseImport.ModuleImport
 
                 SerieCase(newSpec, legacySpec);
 
-                newSpec.Fk_SpecificationStageId = null;//For the moment... QUESTION TO ETSI
-
                 TechnologieCase(newSpec, legacySpec);
 
                 RemarksCase(newSpec, legacySpec);

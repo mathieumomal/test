@@ -4,12 +4,12 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="bd05b5827df942d494c31906a1644ecc" Name="Diagram1" ZoomLevel="48">
+      <Diagram DiagramId="bd05b5827df942d494c31906a1644ecc" Name="Diagram1" ZoomLevel="82">
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_ReleaseStatus" Width="1.5" PointX="3.375" PointY="2.875" IsExpanded="true" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Release" Width="1.5" PointX="5.875" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Meeting" Width="1.5" PointX="0.5" PointY="1" IsExpanded="true" FillColor="DarkSeaGreen" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Releases_Enum_ReleaseStatus" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Remark" Width="1.5" PointX="8.625" PointY="5.75" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Remark" Width="1.5" PointX="18.125" PointY="9.75" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Remarks_Releases" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Users_Groups" Width="1.5" PointX="2.625" PointY="6.5" FillColor="DarkSeaGreen" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Users_AdHoc_Roles" Width="1.5" PointX="2.625" PointY="8.625" FillColor="DarkSeaGreen" />
@@ -30,7 +30,7 @@
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_Serie" Width="1.5" PointX="7.375" PointY="14.75" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_Technology" Width="1.5" PointX="12" PointY="12.625" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Specification" Width="2.25" PointX="15.75" PointY="1" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Specification_Release" Width="1.5" PointX="10.423757760982847" PointY="14.285139775967757" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Specification_Release" Width="2.625" PointX="10.375" PointY="14.25" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Specification_WorkItem" Width="1.5" PointX="9.2940226054256883" PointY="1.0391841535638944" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SpecificationRapporteur" Width="1.5" PointX="8.34107796491174" PointY="12.426801612799428" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_SerieID" />
@@ -45,15 +45,18 @@
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.Release_FK_SpecificationID" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WorkItemID" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_CommunitiesShortName" Width="1.5" PointX="8.25" PointY="25.875" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_SpecificationStage" Width="1.5" PointX="10.211247692914331" PointY="5.0378095978115729" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SpecificationResponsibleGroup" Width="1.5" PointX="13.5" PointY="5.75" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SpecificationTechnology" Width="2.375" PointX="11.5" PointY="29.375" />
-        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_SpecificationStageID" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Enum_Technology" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Specification" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.RG_FK_SpecificationID" ManuallyRouted="false" >
         </AssociationConnector>
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Version" Width="1.5" PointX="20.125" PointY="3.375" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.Version_FK_ReleaseID" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Remarks_Version" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.Version_FK_SpecificationID" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.ETSI_WorkItem" Width="1.5" PointX="3.9823988843627269" PointY="25.159896296057802" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

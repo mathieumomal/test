@@ -9,12 +9,16 @@
     [PersonName]                AS             ([dbo].[getPersonName]([Fk_PersonId])),
     [Fk_SpecificationId]        INT            NULL,
     [Fk_SpecificationReleaseId] INT            NULL,
+    [Fk_VersionId]              INT            NULL,
     CONSTRAINT [PK_Remarks] PRIMARY KEY CLUSTERED ([Pk_RemarkId] ASC),
     CONSTRAINT [FK_Remarks_Releases] FOREIGN KEY ([Fk_ReleaseId]) REFERENCES [dbo].[Releases] ([Pk_ReleaseId]),
     CONSTRAINT [FK_Remarks_Specification] FOREIGN KEY ([Fk_SpecificationId]) REFERENCES [dbo].[Specification] ([Pk_SpecificationId]),
     CONSTRAINT [FK_Remarks_Specification_Release] FOREIGN KEY ([Fk_SpecificationReleaseId]) REFERENCES [dbo].[Specification_Release] ([Pk_Specification_ReleaseId]),
+    CONSTRAINT [FK_Remarks_Version] FOREIGN KEY ([Fk_VersionId]) REFERENCES [dbo].[Version] ([Pk_VersionId]),
     CONSTRAINT [FK_Remarks_WorkItems] FOREIGN KEY ([Fk_WorkItemId]) REFERENCES [dbo].[WorkItems] ([Pk_WorkItemUid])
 );
+
+
 
 
 GO
