@@ -52,11 +52,10 @@
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.RG_FK_SpecificationID" ManuallyRouted="false" >
         </AssociationConnector>
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Version" Width="1.5" PointX="20.125" PointY="3.375" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Version" Width="1.875" PointX="20.125" PointY="3.375" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.Version_FK_ReleaseID" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Remarks_Version" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.Version_FK_SpecificationID" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.ETSI_WorkItem" Width="1.5" PointX="3.9823988843627269" PointY="25.159896296057802" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

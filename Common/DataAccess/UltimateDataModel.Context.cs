@@ -54,7 +54,6 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<SpecificationResponsibleGroup> SpecificationResponsibleGroups { get; set; }
         public IDbSet<SpecificationTechnology> SpecificationTechnologies { get; set; }
         public IDbSet<Etsi.Ultimate.DomainClasses.Version> Versions { get; set; }
-        public IDbSet<ETSI_WorkItem> ETSI_WorkItem { get; set; }
     	
     	/**
     	 * This code is intended to enable testability of the different layers,
