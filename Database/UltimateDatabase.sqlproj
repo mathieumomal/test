@@ -151,6 +151,8 @@
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
     <Build Include="dbo\Tables\Version.sql" />
+    <Build Include="dbo\Views\ETSI_WorkItem.sql" />
+    <Build Include="dbo\Functions\getETSI_WKI_Ref.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />
