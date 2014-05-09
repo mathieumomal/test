@@ -182,5 +182,22 @@ namespace Etsi.Ultimate.Tests
         }
 
         #endregion
+
+        #region IUltimateContext Members
+
+
+        public System.Data.Entity.IDbSet<SpecVersion> SpecVersions
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        #endregion
     }
 }

@@ -78,7 +78,7 @@
     </Compile>
     <Compile Include="Meeting.Extend.cs" />
     <Compile Include="SpecificationSearch.cs" />
-    <Compile Include="Version.cs">
+    <Compile Include="SpecVersion.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="View_Persons.Extend.cs" />

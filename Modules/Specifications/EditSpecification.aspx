@@ -170,7 +170,7 @@
 
 
                     //Check if the inserted value is a valid URL */
-                    function isURLValid(element) {
+                    /*function isURLValid(element) {
                         var controlSelector = "#" + element
                         var urlregex = '^(http:\/\/|https:\/\/|ftp:\/\/){1}([0-9A-Za-z]+\.)'
                         if ($(controlSelector).val() == "") {
@@ -241,7 +241,7 @@
                         formValidator();
 
 
-                    });
+                    });*/
                 </script>
             </asp:Panel>
         </asp:Panel>

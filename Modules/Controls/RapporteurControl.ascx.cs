@@ -65,11 +65,11 @@ namespace Etsi.Ultimate.Controls
         private const string RAPPORTEURS_CSSCLASS_EDITMODE_MULTIPERSONMODE = "editModeMultiPersonMode";
         private const string RAPPORTEURS_CSSCLASS_VIEWMODE_MULTIPERSONMODE = "viewModeMultiPersonMode";
 
-        public enum Rapporteurs_selectablemode
+        public enum RapporteursSelectablemode
         {
-            multi,
-            single,
-            none
+            Multi,
+            Single,
+            None
         }
         #endregion
 
@@ -115,14 +115,14 @@ namespace Etsi.Ultimate.Controls
         /// <summary>
         /// This module provides a selection system
         /// </summary>
-        public string SelectableMode
+        public RapporteursSelectablemode SelectableMode
         {
             get
             {
                 if (ViewState[ClientID + RAPPORTEURS_VIEWSTATE_SELECTABLEMODE] == null)
-                    ViewState[ClientID + RAPPORTEURS_VIEWSTATE_SELECTABLEMODE] = "none";
+                    ViewState[ClientID + RAPPORTEURS_VIEWSTATE_SELECTABLEMODE] = RapporteursSelectablemode.None;
 
-                return (String)ViewState[ClientID + RAPPORTEURS_VIEWSTATE_SELECTABLEMODE];
+                return (RapporteursSelectablemode)ViewState[ClientID + RAPPORTEURS_VIEWSTATE_SELECTABLEMODE];
             }
             set
             {
@@ -262,14 +262,14 @@ namespace Etsi.Ultimate.Controls
             var nameHyperLinkColumn = (GridTemplateColumn)rdGridRapporteurs.MasterTableView.GetColumn(RAPPORTEURS_COLUMN_NAMEHYPERLINK);
             if (IsEditMode)//EDIT MODE CONFIG
             {
-                if (SelectableMode.Equals(Rapporteurs_selectablemode.single.ToString()))
+                if (SelectableMode.Equals(RapporteursSelectablemode.Single.ToString()))
                 {
                     selectableColumn.Visible = true;
                     rdGridRapporteurs.AllowMultiRowSelection = false;
                     rdGridRapporteurs.ClientSettings.EnablePostBackOnRowClick = true;
                     selectableColumn.HeaderText = SelectableColumnName;
                 }
-                else if (SelectableMode.Equals(Rapporteurs_selectablemode.multi.ToString()))
+                else if (SelectableMode.Equals(RapporteursSelectablemode.Multi.ToString()))
                 {
                     selectableColumn.Visible = true;
                     rdGridRapporteurs.AllowMultiRowSelection = true;
@@ -501,7 +501,7 @@ namespace Etsi.Ultimate.Controls
             rdGridRapporteurs.Rebind();
             if (IsEditMode)
             {
-                if (ListIdPersonSelect.Count() != 0 && !SelectableMode.Equals(Rapporteurs_selectablemode.none))
+                if (ListIdPersonSelect.Count() != 0 && !SelectableMode.Equals(RapporteursSelectablemode.None))
                 {
                     foreach (GridDataItem item in rdGridRapporteurs.MasterTableView.Items)
                     {

@@ -11,6 +11,7 @@ BEGIN
 
 	-- Delete from specifications
 	DELETE FROM Remarks WHERE Fk_SpecificationId IS NOT NULL OR Fk_SpecificationReleaseId IS NOT NULL;
+	DELETE FROM History WHERE Fk_SpecificationId IS NOT NULL;
 	DELETE FROM SpecificationResponsibleGroup;
 	DELETE FROM SpecifcationsGenealogy;
 	DELETE FROM SpecificationTechnologies;

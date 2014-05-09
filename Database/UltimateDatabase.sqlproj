@@ -111,6 +111,7 @@
     <Folder Include="Scripts" />
     <Folder Include="Scripts\Post-Deployment" />
     <Folder Include="dbo\Stored Procedures\" />
+    <Folder Include="Data feeds" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\Releases.sql" />
@@ -151,6 +152,13 @@
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
     <Build Include="dbo\Tables\Version.sql" />
+    <Build Include="dbo\Views\ETSI_WorkItem.sql" />
+    <Build Include="dbo\Functions\getETSI_WKI_Ref.sql" />
+    <Build Include="dbo\Stored Procedures\WorkItems_CleanAll_1.sql" />
+    <Build Include="dbo\Stored Procedures\Specifications_CleanAll_1.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />
@@ -159,6 +167,9 @@
     <None Include="Scripts\Post-Deployment\Enum_CommunitiesShortNames.data.sql" />
     <None Include="Scripts\Post-Deployment\Enum_ReleaseStatus.data.sql" />
     <None Include="UltimateDatabase.publish.xml" />
+    <None Include="Common\WPMDB.dacpac" />
+    <None Include="Data feeds\Enum_CommunitiesShortNames.data.sql" />
+    <None Include="Data feeds\Enum_ReleaseStatus.data.sql" />
   </ItemGroup>
   <ItemGroup>
     <SqlCmdVariable Include="DNN3GPP">
@@ -168,6 +179,10 @@
     <SqlCmdVariable Include="DSDB">
       <DefaultValue>DSDB</DefaultValue>
       <Value>$(SqlCmdVar__3)</Value>
+    </SqlCmdVariable>
+    <SqlCmdVariable Include="WPMDB">
+      <DefaultValue>WPMDB</DefaultValue>
+      <Value>$(SqlCmdVar__4)</Value>
     </SqlCmdVariable>
   </ItemGroup>
   <ItemGroup>
@@ -180,6 +195,11 @@
       <HintPath>Common\DSDB.dacpac</HintPath>
       <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
       <DatabaseSqlCmdVariable>DSDB</DatabaseSqlCmdVariable>
+    </ArtifactReference>
+    <ArtifactReference Include="Common\WPMDB.dacpac">
+      <HintPath>Common\WPMDB.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
+      <DatabaseSqlCmdVariable>WPMDB</DatabaseSqlCmdVariable>
     </ArtifactReference>
   </ItemGroup>
   <ItemGroup>

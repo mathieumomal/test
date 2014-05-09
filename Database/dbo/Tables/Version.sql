@@ -19,12 +19,11 @@
     [ProvidedBy]           INT           NULL,
     [Fk_SpecificationId]   INT           NOT NULL,
     [Fk_ReleaseId]         INT           NOT NULL,
+    [ETSI_WKI_Ref]         AS            ([dbo].[getETSI_WKI_Ref]([ETSI_WKI_ID])),
     CONSTRAINT [Pk_VersionId] PRIMARY KEY CLUSTERED ([Pk_VersionId] ASC),
     CONSTRAINT [Version_FK_ReleaseID] FOREIGN KEY ([Fk_ReleaseId]) REFERENCES [dbo].[Releases] ([Pk_ReleaseId]),
     CONSTRAINT [Version_FK_SpecificationID] FOREIGN KEY ([Fk_SpecificationId]) REFERENCES [dbo].[Specification] ([Pk_SpecificationId])
 );
-
-
 
 
 

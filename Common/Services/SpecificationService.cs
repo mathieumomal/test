@@ -218,7 +218,7 @@ namespace Etsi.Ultimate.Services
                     if (!status)
                         throw new Exception("Could not update specification");
                     uoW.Save();
-                    return new KeyValuePair<bool, ImportReport>(true, null);
+                    return new KeyValuePair<bool, ImportReport>(true, new ImportReport());
                 }
                 catch (Exception e)
                 {

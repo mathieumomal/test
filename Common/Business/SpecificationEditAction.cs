@@ -38,6 +38,7 @@ namespace Etsi.Ultimate.Business
 
             // Check that specification exists
             var specRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            specRepo.UoW = UoW;
             var oldSpec = specRepo.Find(spec.Pk_SpecificationId);
             if (oldSpec == null)
             {

@@ -25,6 +25,12 @@
           <EntitySet Name="WorkItems" EntityType="Etsi.Ultimate.DataAccess.Store.WorkItems" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="WorkItems_ResponsibleGroups" EntityType="Etsi.Ultimate.DataAccess.Store.WorkItems_ResponsibleGroups" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="WorkPlanFiles" EntityType="Etsi.Ultimate.DataAccess.Store.WorkPlanFiles" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ETSI_WorkItem" EntityType="Etsi.Ultimate.DataAccess.Store.ETSI_WorkItem" store:Type="Views" store:Schema="dbo" store:Name="ETSI_WorkItem">
+            <DefiningQuery>SELECT 
+      [ETSI_WorkItem].[WKI_ID] AS [WKI_ID], 
+      [ETSI_WorkItem].[WKI_REFERENCE] AS [WKI_REFERENCE]
+      FROM [dbo].[ETSI_WorkItem] AS [ETSI_WorkItem]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="Users_AdHoc_Roles" EntityType="Etsi.Ultimate.DataAccess.Store.Users_AdHoc_Roles" store:Type="Views" store:Schema="dbo" store:Name="Users_AdHoc_Roles">
             <DefiningQuery>SELECT 
       [Users_AdHoc_Roles].[UserID] AS [UserID], 
@@ -401,6 +407,7 @@
           <Property Name="ProvidedBy" Type="int" />
           <Property Name="Fk_SpecificationId" Type="int" Nullable="false" />
           <Property Name="Fk_ReleaseId" Type="int" Nullable="false" />
+          <Property Name="ETSI_WKI_Ref" Type="varchar" MaxLength="50" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="WorkItems">
           <Key>
@@ -451,8 +458,18 @@
           <Property Name="CreationDate" Type="datetime" Nullable="false" />
           <Property Name="WorkPlanFilePath" Type="nvarchar" Nullable="false" MaxLength="255" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_AdHoc_Roles » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.ETSI_WorkItem' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+        <EntityType Name="ETSI_WorkItem">
+          <Key>
+            <PropertyRef Name="WKI_ID" />
+          </Key>
+          <Property Name="WKI_ID" Type="int" Nullable="false" />
+          <Property Name="WKI_REFERENCE" Type="varchar" MaxLength="30" />
+        </EntityType>
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.Users_AdHoc_Roles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="Users_AdHoc_Roles">
           <Key>
@@ -463,8 +480,8 @@
           <Property Name="PERSON_ID" Type="nvarchar" MaxLength="3750" />
           <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="50" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_Groups » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.Users_Groups' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="Users_Groups">
           <Key>
@@ -477,8 +494,8 @@
           <Property Name="TB_ID" Type="int" />
           <Property Name="PERS_ROLE_CODE" Type="varchar" Nullable="false" MaxLength="12" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Communities » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.View_Communities' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="View_Communities">
           <Key>
@@ -490,8 +507,8 @@
           <Property Name="ActiveCode" Type="varchar" MaxLength="12" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Meetings » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.View_Meetings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="View_Meetings">
           <Key>
@@ -528,8 +545,8 @@
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
           <Property Name="MtgShortRef" Type="varchar" MaxLength="50" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_ModulesPages » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.View_ModulesPages' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="View_ModulesPages">
           <Key>
@@ -543,8 +560,8 @@
           <Property Name="ModuleID" Type="int" Nullable="false" />
           <Property Name="TabID" Type="int" Nullable="false" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Persons » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.View_Persons' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="View_Persons">
           <Key>
@@ -827,14 +844,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="getETSI_WKI_Ref" ReturnType="varchar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ETSI_WKI_ID" Type="int" Mode="In" />
+        </Function>
         <Function Name="getMeetingShortRef" ReturnType="varchar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="shortName" Type="varchar" Mode="In" />
           <Parameter Name="meetingTitle" Type="varchar" Mode="In" />
           <Parameter Name="SeqNumb" Type="varchar" Mode="In" />
+          <Parameter Name="MtgFullRef" Type="varchar" Mode="In" />
         </Function>
         <Function Name="getPersonName" ReturnType="varchar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="personId" Type="int" Mode="In" />
         </Function>
+        <Function Name="Specifications_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="WorkItems_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
@@ -949,19 +972,20 @@
           </AssociationSet>
           <FunctionImport Name="Specifications_CleanAll" />
           <FunctionImport Name="WorkItems_CleanAll" />
-          <EntitySet Name="Versions" EntityType="Etsi.Ultimate.DataAccess.Version" />
+          <EntitySet Name="SpecVersions" EntityType="Etsi.Ultimate.DataAccess.SpecVersion" />
           <AssociationSet Name="Version_FK_ReleaseID" Association="Etsi.Ultimate.DataAccess.Version_FK_ReleaseID">
             <End Role="Release" EntitySet="Releases" />
-            <End Role="Version" EntitySet="Versions" />
+            <End Role="Version" EntitySet="SpecVersions" />
           </AssociationSet>
           <AssociationSet Name="FK_Remarks_Version" Association="Etsi.Ultimate.DataAccess.FK_Remarks_Version">
-            <End Role="Version" EntitySet="Versions" />
+            <End Role="Version" EntitySet="SpecVersions" />
             <End Role="Remark" EntitySet="Remarks" />
           </AssociationSet>
           <AssociationSet Name="Version_FK_SpecificationID" Association="Etsi.Ultimate.DataAccess.Version_FK_SpecificationID">
             <End Role="Specification" EntitySet="Specifications" />
-            <End Role="Version" EntitySet="Versions" />
+            <End Role="Version" EntitySet="SpecVersions" />
           </AssociationSet>
+          <EntitySet Name="ETSI_WorkItem" EntityType="Etsi.Ultimate.DataAccess.ETSI_WorkItem" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -1564,7 +1588,7 @@
           <End Type="Etsi.Ultimate.DataAccess.Specification" Role="Specification" Multiplicity="*" />
           <End Type="Etsi.Ultimate.DataAccess.Specification" Role="Specification1" Multiplicity="*" />
         </Association>
-        <EntityType Name="Version">
+        <EntityType Name="SpecVersion">
           <Key>
             <PropertyRef Name="Pk_VersionId" />
           </Key>
@@ -1591,10 +1615,11 @@
           <NavigationProperty Name="Release" Relationship="Etsi.Ultimate.DataAccess.Version_FK_ReleaseID" FromRole="Version" ToRole="Release" />
           <NavigationProperty Name="Remarks" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_Version" FromRole="Version" ToRole="Remark" />
           <NavigationProperty Name="Specification" Relationship="Etsi.Ultimate.DataAccess.Version_FK_SpecificationID" FromRole="Version" ToRole="Specification" />
+          <Property Type="String" Name="ETSI_WKI_Ref" MaxLength="50" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
         </EntityType>
         <Association Name="Version_FK_ReleaseID">
           <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="1" />
-          <End Type="Etsi.Ultimate.DataAccess.Version" Role="Version" Multiplicity="*" />
+          <End Type="Etsi.Ultimate.DataAccess.SpecVersion" Role="Version" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Release">
               <PropertyRef Name="Pk_ReleaseId" />
@@ -1605,7 +1630,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Remarks_Version">
-          <End Type="Etsi.Ultimate.DataAccess.Version" Role="Version" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.SpecVersion" Role="Version" Multiplicity="0..1" />
           <End Type="Etsi.Ultimate.DataAccess.Remark" Role="Remark" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Version">
@@ -1618,7 +1643,7 @@
         </Association>
         <Association Name="Version_FK_SpecificationID">
           <End Type="Etsi.Ultimate.DataAccess.Specification" Role="Specification" Multiplicity="1" />
-          <End Type="Etsi.Ultimate.DataAccess.Version" Role="Version" Multiplicity="*" />
+          <End Type="Etsi.Ultimate.DataAccess.SpecVersion" Role="Version" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Specification">
               <PropertyRef Name="Pk_SpecificationId" />
@@ -1628,6 +1653,13 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ETSI_WorkItem">
+          <Key>
+            <PropertyRef Name="WKI_ID" />
+          </Key>
+          <Property Type="Int32" Name="WKI_ID" Nullable="false" />
+          <Property Type="String" Name="WKI_REFERENCE" MaxLength="30" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1975,9 +2007,10 @@
               <ScalarProperty Name="Pk_SpecificationId" ColumnName="Fk_SpecificationParentId" />
             </EndProperty>
           </AssociationSetMapping>
-          <EntitySetMapping Name="Versions">
-            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Version">
+          <EntitySetMapping Name="SpecVersions">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.SpecVersion">
               <MappingFragment StoreEntitySet="Version">
+                <ScalarProperty Name="ETSI_WKI_Ref" ColumnName="ETSI_WKI_Ref" />
                 <ScalarProperty Name="Fk_ReleaseId" ColumnName="Fk_ReleaseId" />
                 <ScalarProperty Name="Fk_SpecificationId" ColumnName="Fk_SpecificationId" />
                 <ScalarProperty Name="ProvidedBy" ColumnName="ProvidedBy" />
@@ -2001,6 +2034,16 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="ETSI_WorkItem">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ETSI_WorkItem">
+              <MappingFragment StoreEntitySet="ETSI_WorkItem">
+                <ScalarProperty Name="WKI_REFERENCE" ColumnName="WKI_REFERENCE" />
+                <ScalarProperty Name="WKI_ID" ColumnName="WKI_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Specifications_CleanAll" FunctionName="Etsi.Ultimate.DataAccess.Store.Specifications_CleanAll" />
+          <FunctionImportMapping FunctionImportName="WorkItems_CleanAll" FunctionName="Etsi.Ultimate.DataAccess.Store.WorkItems_CleanAll" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

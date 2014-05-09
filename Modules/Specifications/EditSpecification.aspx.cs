@@ -73,33 +73,36 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
             Domain.Specification spec;
-            Domain.ImportReport result;
+            Domain.ImportReport report;
 
             userId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
+            spec = new Domain.Specification();
+            FillSpecificationObject(spec);
             if (action.Equals(EDIT_MODE))
             {
-                spec = svc.GetSpecificationDetailsById(userId, SpecificationId.Value).Key;
-                FillSpecificationObject(spec);
-                result = svc.EditSpecification(userId, spec).Value;
+                var result = svc.EditSpecification(userId, spec); 
+                report = result.Value;
             }
             else
             {
-                spec = new Domain.Specification();
-                FillSpecificationObject(spec);
-                result = svc.CreateSpecification(userId, spec).Value;
+                var result = svc.CreateSpecification(userId, spec);
+                report = result.Value;
+                spec.Pk_SpecificationId = result.Key;
             }
 
-            if (result.ErrorList.Count > 0)
+            if (report.ErrorList.Count > 0)
             {
                 specMsg.Visible = true;
                 specMsg.CssClass = "Spec_Edit_Error";
                 specMsgTxt.CssClass = "ErrorTxt";
 
-                foreach (string errorMessage in result.ErrorList)
+                foreach (string errorMessage in report.ErrorList)
                     specMsgTxt.Text = errorMessage + "<br/>";
 
                 this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "setTimeout(function(){ $('#" + specMsg.ClientID + "').hide('slow');} , 3000);", true);
             }
+            else
+                Response.Redirect("SpecificationDetails.aspx?specificationId=" + spec.Pk_SpecificationId);
 
         }
 
@@ -153,12 +156,16 @@ namespace Etsi.Ultimate.Module.Specifications
             IReleaseService relSvc = ServicesFactory.Resolve<IReleaseService>();
             var releases = relSvc.GetAllReleases(userId).Key.Where(x=>x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Open 
                                                                    || x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Frozen).OrderByDescending(x=>x.StartDate).ToList();
+            
+            // Get the user rights
+            var rightsService = ServicesFactory.Resolve<IRightsService>();
+            var userRights = rightsService.GetGenericRightsForUser(userId);
+
             if (action.Equals(EDIT_MODE))
             {
                 // Retrieve data
                 KeyValuePair<DomainClasses.Specification, DomainClasses.UserRightsContainer> specificationRightsObject = svc.GetSpecificationDetailsById(userId, SpecificationId.Value);
                 Domain.Specification specification = specificationRightsObject.Key;
-                DomainClasses.UserRightsContainer userRights = specificationRightsObject.Value;
 
                 if (specification == null)
                 {
@@ -198,7 +205,8 @@ namespace Etsi.Ultimate.Module.Specifications
                         }
 
                         btnSaveDisabled.Style.Add("display", "none");
-                    }
+                    } 
+                    
                 }
             }
 
@@ -206,12 +214,12 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 BuildTabsDisplay();
                 SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
-                FillGeneralTab(null, null, releases);
+                FillGeneralTab(userRights, null, releases);
                 FillResponsiblityTab(null);
                 FillRelatedSpecificationsTab(null, null);
                 FillHistoryTab(null);
 
-                btnSave.Style.Add("display", "none");
+                //btnSave.Style.Add("display", "none");
             }
         }
 
@@ -302,6 +310,14 @@ namespace Etsi.Ultimate.Module.Specifications
                 ddlPlannedRelease.DataBind();
             }
 
+            if (userRights != null)
+            {
+                specificationRemarks.UserRights = userRights;
+                // Reference should not be editable by those who don't have full access.
+                if (!userRights.HasRight(Domain.Enum_UserRights.Specification_EditFull))
+                    txtReference.Enabled = false;
+            }
+
             if (specification != null && userRights != null)
             {
                 txtReference.Text = string.IsNullOrEmpty(specification.Number) ? CONST_EMPTY_FIELD : specification.Number;
@@ -330,8 +346,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
                     }
                 }
-
-                specificationRemarks.UserRights = userRights;
+                
                 specificationRemarks.DataSource = specification.Remarks.ToList();
             }
         }
@@ -344,12 +359,13 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             specificationRapporteurs.IsEditMode = true;
             specificationRapporteurs.IsSinglePersonMode = false;
+            specificationRapporteurs.SelectableMode = RapporteurControl.RapporteursSelectablemode.Single;
             specificationRapporteurs.PersonLinkBaseAddress = ConfigurationManager.AppSettings["RapporteurDetailsAddress"];
             
             if (specification != null)
             {
                 PrimaryResGrpCtrl.SelectedCommunityID = specification.PrimeResponsibleGroup.Fk_commityId;
-                SecondaryResGrpCtrl.SelectedCommunityIds = specification.SpecificationResponsibleGroups.Select(x => x.Fk_commityId).ToList();
+                SecondaryResGrpCtrl.SelectedCommunityIds = specification.SpecificationResponsibleGroups.Where(x => !x.IsPrime).Select(x => x.Fk_commityId).ToList();
 
                 specificationRapporteurs.ListIdPersonSelect = specification.PrimeSpecificationRapporteurs;
                 specificationRapporteurs.ListIdPersonsSelected_multimode = specification.FullSpecificationRapporteurs;
@@ -449,6 +465,8 @@ namespace Etsi.Ultimate.Module.Specifications
         private void FillSpecificationObject(Domain.Specification spec)
         {
             //General tab
+            if (SpecificationId.HasValue)
+                spec.Pk_SpecificationId = SpecificationId.Value;
             spec.Number = txtReference.Text;
 
             spec.Title = txtTitle.Text;
