@@ -144,12 +144,13 @@
                                             <spec:SpecificationListControl runat="server" ID="childSpecifications" />
                                         </fieldset>
                                     </div>
-                                    <br />
-                                    <div style="max-height: 220px;">
-                                        <ult:relatedwicontrol id="SpecificationRelatedWorkItems" runat="server" />
-                                    </div>
                                 </ContentTemplate>
                             </asp:UpdatePanel>
+                            <br />
+                            <div style="max-height: 220px;">
+                                <ult:relatedwicontrol id="SpecificationRelatedWorkItems" runat="server" />
+                            </div>
+
                         </asp:Panel>
                     </telerik:RadPageView>
                     <telerik:RadPageView ID="RadPageReleases" runat="server">
@@ -170,7 +171,7 @@
 
 
                     //Check if the inserted value is a valid URL */
-                    /*function isURLValid(element) {
+                    function isURLValid(element) {
                         var controlSelector = "#" + element
                         var urlregex = '^(http:\/\/|https:\/\/|ftp:\/\/){1}([0-9A-Za-z]+\.)'
                         if ($(controlSelector).val() == "") {
@@ -241,7 +242,7 @@
                         formValidator();
 
 
-                    });*/
+                    });
                 </script>
             </asp:Panel>
         </asp:Panel>

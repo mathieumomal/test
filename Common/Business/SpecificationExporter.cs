@@ -58,7 +58,8 @@ namespace Etsi.Ultimate.Business
                 var specs = specManager.GetAllSpecifications(0);
                 specs.ForEach(x => x.PrimeResponsibleGroupShortName = (x.PrimeResponsibleGroup == null) ? String.Empty : communityManager.GetCommmunityshortNameById(x.PrimeResponsibleGroup.Fk_commityId));
                 specs.ForEach(x => x.PrimeSpecificationRapporteurName = (x.PrimeResponsibleGroup == null) ? String.Empty : personManager.GetPersonDisplayName(x.PrimeSpecificationRapporteurIds.FirstOrDefault()));
-
+                specs.ForEach(x => x.SpecificationInitialRelease = ((x.Specification_Release == null) || x.Specification_Release.Count == 0) ? String.Empty : x.Specification_Release.OrderBy(y => y.Release.SortOrder).First().Release.Code);
+                
                 List<SpecificationForExport> specExportObjects = new List<SpecificationForExport>();
                 specExportObjects.AddRange(specs.OrderBy(x => x.Title).ToList().Select(y => new SpecificationForExport(y)));
 
@@ -150,7 +151,7 @@ namespace Etsi.Ultimate.Business
                                                           Status = s.Status,
                                                           Primary_Resp_Grp = s.PrimaryRespGrp,
                                                           Primary_rapporteur = s.PrimaryRapporteur,
-                                                          Innitial_planned_Release = s.InnitialPlannedRelease,
+                                                          Initial_planned_Release = s.InitialPlannedRelease,
                                                           Publication = s.IsForPublication,
                                                           Common_IMS = s.CommonIMS,
                                                           Technology = s.Technologies
@@ -294,7 +295,7 @@ namespace Etsi.Ultimate.Business
         public string Status { get; set; }
         public string PrimaryRespGrp { get; set; }
         public string PrimaryRapporteur { get; set; }
-        public string InnitialPlannedRelease { get; set; }
+        public string InitialPlannedRelease { get; set; }
         public string IsForPublication { get; set; }
         public string CommonIMS { get; set; }
         public string Technologies { get; set; }
@@ -316,7 +317,7 @@ namespace Etsi.Ultimate.Business
             Status = spec.Status;
             PrimaryRespGrp = String.IsNullOrEmpty(spec.PrimeResponsibleGroupShortName) ? BLANK_CELL : spec.PrimeResponsibleGroupShortName;
             PrimaryRapporteur = String.IsNullOrEmpty(spec.PrimeSpecificationRapporteurName) ? BLANK_CELL : spec.PrimeSpecificationRapporteurName;
-            InnitialPlannedRelease = String.IsNullOrEmpty(spec.SpecificationInitialRelease) ? BLANK_CELL : spec.SpecificationInitialRelease;
+            InitialPlannedRelease = String.IsNullOrEmpty(spec.SpecificationInitialRelease) ? BLANK_CELL : spec.SpecificationInitialRelease;
             IsForPublication = (spec.IsForPublication != null) ? (spec.IsForPublication.Value ? "For publication" : "Internal") : BLANK_CELL;
             CommonIMS = spec.ComIMS != null ? spec.ComIMS.Value.ToString() : BLANK_CELL;
             Technologies = String.Join(",", spec.SpecificationTechnologies.ToList().Select(x => x.Enum_Technology.Code));

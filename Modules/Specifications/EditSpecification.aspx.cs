@@ -219,7 +219,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 FillRelatedSpecificationsTab(null, null);
                 FillHistoryTab(null);
 
-                //btnSave.Style.Add("display", "none");
+                btnSave.Style.Add("display", "none");
             }
         }
 
