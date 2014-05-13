@@ -86,7 +86,11 @@ namespace Etsi.Ultimate.Services
                     {
                         WIBuffer = workItemsManager.GetWorkItemById(personId, item.Fk_WorkItemId).Key;
                         if (WIBuffer != null)
+                        {
+                            WIBuffer.IsPrimary = (item.isPrime != null) ? item.isPrime.Value : false;
+                            WIBuffer.IsUserAddedWi = (item.IsSetByUser != null) ? item.IsSetByUser.Value : false;
                             workItemsList.Add(WIBuffer);
+                        }
                     }
                     result.Key.SpecificationWIsList = workItemsList;
                 }
