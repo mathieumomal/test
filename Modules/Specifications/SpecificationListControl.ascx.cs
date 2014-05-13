@@ -12,7 +12,7 @@ namespace Etsi.Ultimate.Module.Specifications
     {
         #region Constants
 
-        private const string CONST_SPECIFICATION_GRID_DATA = "SpecificationsGridData";
+        private const string CONST_SPECIFICATION_GRID_DATA = "SpecificationListControlData_{0}";
         private const string CONST_SELECTED_TAB = "SPEC_SELECTED_TAB";
         private const int CONST_MIN_SCROLL_HEIGHT = 50;
 
@@ -42,14 +42,14 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             get
             {
-                if (ViewState[CONST_SPECIFICATION_GRID_DATA] == null)
-                    ViewState[CONST_SPECIFICATION_GRID_DATA] = new List<Specification>();
+                if (ViewState[String.Format(CONST_SPECIFICATION_GRID_DATA, this.ClientID)] == null)
+                    ViewState[String.Format(CONST_SPECIFICATION_GRID_DATA, this.ClientID)] = new List<Specification>();
 
-                return (List<Specification>)ViewState[CONST_SPECIFICATION_GRID_DATA];
+                return (List<Specification>)ViewState[String.Format(CONST_SPECIFICATION_GRID_DATA, this.ClientID)];
             }
             set
             {
-                ViewState[CONST_SPECIFICATION_GRID_DATA] = value;
+                ViewState[String.Format(CONST_SPECIFICATION_GRID_DATA, this.ClientID)] = value;
                 specificationsGrid.Rebind();
             }
         }

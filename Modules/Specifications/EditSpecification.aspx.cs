@@ -393,7 +393,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
             if (specification != null)
             {
-                if (specification.SpecificationChilds != null)
+                if (specification.SpecificationParents != null)
                     parentSpecifications.DataSource = specification.SpecificationParents.ToList();
                 else
                     parentSpecifications.DataSource = null;
@@ -507,7 +507,7 @@ namespace Etsi.Ultimate.Module.Specifications
             foreach (Domain.Specification sp in parentSpecifications.DataSource)
                 spec.SpecificationParents.Add(sp);
             foreach (Domain.Specification sp in childSpecifications.DataSource)
-                spec.SpecificationParents.Add(sp);
+                spec.SpecificationChilds.Add(sp);
         }
 
         #endregion

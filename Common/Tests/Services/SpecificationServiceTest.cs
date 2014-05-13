@@ -259,7 +259,6 @@ namespace Etsi.Ultimate.Tests.Services
             
             // Test specification technologies
             Assert.AreEqual(3, modifiedSpec.SpecificationTechnologies.Count);
-            Assert.IsTrue(modifiedSpec.SpecificationTechnologies.First().EntityStatus == Enum_EntityStatus.Deleted);
         }
 
         [Test]
@@ -282,7 +281,6 @@ namespace Etsi.Ultimate.Tests.Services
             // Test responsible groups
             Assert.AreEqual(3, modifiedSpec.SpecificationResponsibleGroups.Count);
             Assert.IsFalse(modifiedSpec.SpecificationResponsibleGroups.Where(g => g.Fk_commityId == 1).FirstOrDefault().IsPrime);
-            Assert.AreEqual(Enum_EntityStatus.Deleted, modifiedSpec.SpecificationResponsibleGroups.Where(g => g.Fk_commityId == 2).FirstOrDefault().EntityStatus);
 
             var createHistoryEntry = string.Format(Utils.Localization.History_Specification_Changed_Prime_Group, "RAN 2", "RAN 1");
             Assert.AreEqual(1, modifiedSpec.Histories.Where(h => h.HistoryText == createHistoryEntry).Count());
@@ -314,7 +312,6 @@ namespace Etsi.Ultimate.Tests.Services
             // Check changes to rapporteur
             Assert.AreEqual(3, modifiedSpec.SpecificationRapporteurs.Count);
             Assert.IsFalse(modifiedSpec.SpecificationRapporteurs.Where(r => r.Fk_RapporteurId == 1).FirstOrDefault().IsPrime);
-            Assert.AreEqual(Enum_EntityStatus.Deleted, modifiedSpec.SpecificationRapporteurs.Where(r => r.Fk_RapporteurId == 2).FirstOrDefault().EntityStatus);
 
             var createHistoryEntry = string.Format(Utils.Localization.History_Specification_Changed_Prime_Rapporteur, "User 3", "User 1");
             Assert.AreEqual(1, modifiedSpec.Histories.Where(h => h.HistoryText == createHistoryEntry).Count());
@@ -347,7 +344,6 @@ namespace Etsi.Ultimate.Tests.Services
             // Check changes to work items
             Assert.AreEqual(3, modifiedSpec.Specification_WorkItem.Count);
             Assert.IsFalse(modifiedSpec.Specification_WorkItem.Where(r => r.Fk_WorkItemId == 1).FirstOrDefault().isPrime.GetValueOrDefault());
-            Assert.AreEqual(Enum_EntityStatus.Deleted, modifiedSpec.Specification_WorkItem.Where(r => r.Fk_WorkItemId == 2).FirstOrDefault().EntityStatus);
         }
         
 

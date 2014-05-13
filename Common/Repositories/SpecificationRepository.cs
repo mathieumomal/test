@@ -193,6 +193,17 @@ namespace Etsi.Ultimate.Repositories
         {
             return UoW.Context.Enum_Serie.ToList();
         }
+
+        /// <summary>
+        /// Set entity state to deleted
+        /// </summary>
+        /// <typeparam name="T">Type of Entity</typeparam>
+        /// <param name="Entity">Entity</param>
+        public void MarkDeleted<T>(T Entity)
+        {
+            UoW.Context.SetDeleted(Entity);
+        }
+
         #endregion
 
         #region IDisposable Membres
@@ -221,5 +232,12 @@ namespace Etsi.Ultimate.Repositories
         List<Enum_Technology> GetTechnologyList();
 
         List<Enum_Serie> GetSeries();
+
+        /// <summary>
+        /// Set entity state to deleted
+        /// </summary>
+        /// <typeparam name="T">Type of Entity</typeparam>
+        /// <param name="Entity">Entity</param>
+        void MarkDeleted<T>(T Entity);
     }
 }

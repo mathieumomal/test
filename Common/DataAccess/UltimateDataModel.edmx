@@ -1372,8 +1372,8 @@
           <NavigationProperty Name="Specification_Release" Relationship="Etsi.Ultimate.DataAccess.Release_FK_SpecificationID" FromRole="Specification" ToRole="Specification_Release" />
           <NavigationProperty Name="SpecificationTechnologies" Relationship="Etsi.Ultimate.DataAccess.FK_Specification" FromRole="Specification" ToRole="SpecificationTechnology" />
           <NavigationProperty Name="SpecificationResponsibleGroups" Relationship="Etsi.Ultimate.DataAccess.RG_FK_SpecificationID" FromRole="Specification" ToRole="SpecificationResponsibleGroup" />
-          <NavigationProperty Name="SpecificationChilds" Relationship="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" FromRole="Specification" ToRole="Specification1" />
-          <NavigationProperty Name="SpecificationParents" Relationship="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" FromRole="Specification1" ToRole="Specification" />
+          <NavigationProperty Name="SpecificationParents" Relationship="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" FromRole="Specification" ToRole="Specification1" />
+          <NavigationProperty Name="SpecificationChilds" Relationship="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" FromRole="Specification1" ToRole="Specification" />
           <Property Type="Boolean" Name="IsTS" />
           <Property Type="DateTime" Name="MOD_TS" Precision="3" />
           <Property Type="String" Name="MOD_BY" MaxLength="20" FixedLength="false" Unicode="true" />

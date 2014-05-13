@@ -46,8 +46,7 @@ namespace Etsi.Ultimate.Business
             }
 
             // Compare the fields of the two specifications.
-            CompareSpecs(spec, oldSpec, personId);
-            specRepo.InsertOrUpdate(oldSpec);
+            CompareSpecs(spec, oldSpec, personId, specRepo);
 
             return true;
         }
@@ -55,53 +54,61 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Compares the specification, and modifies the old version.
         /// </summary>
-        /// <param name="spec"></param>
-        /// <param name="oldSpec"></param>
-        private void CompareSpecs(Specification newSpec, Specification currentSpec, int personId)
+        /// <param name="newSpec">Specification from UI</param>
+        /// <param name="currentSpec">Specification from Database</param>
+        /// <param name="personId">Person Id</param>
+        /// <param name="specRepo">Specification Repository</param>
+        private void CompareSpecs(Specification newSpec, Specification currentSpec, int personId, ISpecificationRepository specRepo)
         {
             // Starting by the title
-            currentSpec.Title = newSpec.Title;
-            currentSpec.IsTS = newSpec.IsTS;
-            currentSpec.IsForPublication = newSpec.IsForPublication;
-            currentSpec.ComIMS = newSpec.ComIMS;
+            if (currentSpec.Title != newSpec.Title) currentSpec.Title = newSpec.Title;
+            if (currentSpec.IsTS != newSpec.IsTS) currentSpec.IsTS = newSpec.IsTS;
+            if (currentSpec.IsForPublication != newSpec.IsForPublication) currentSpec.IsForPublication = newSpec.IsForPublication;
+            if (currentSpec.ComIMS != newSpec.ComIMS) currentSpec.ComIMS = newSpec.ComIMS;
 
-            // Manage the radio technologies
-            foreach (var tech in newSpec.SpecificationTechnologies)
-            {
-                // If technology does not exist, add it.
-                if (currentSpec.SpecificationTechnologies.Where(t => t.Fk_Enum_Technology == tech.Fk_Enum_Technology).FirstOrDefault() == null)
-                {
-                    currentSpec.SpecificationTechnologies.Add(tech);
-                    tech.EntityStatus = Enum_EntityStatus.New;
-                }
-            }
-            foreach (var tech in currentSpec.SpecificationTechnologies)
-            {
-                // If technology does not exist in the new spec, it means it's been deleted.
-                if (newSpec.SpecificationTechnologies.Where(t => t.Fk_Enum_Technology == tech.Fk_Enum_Technology).FirstOrDefault() == null)
-                {
-                    tech.EntityStatus = Enum_EntityStatus.Deleted;
-                }
-            }
+            //Specification Technologies (Insert / Delete)
+            var specTechnologiesToInsert = newSpec.SpecificationTechnologies.ToList().Where(x => currentSpec.SpecificationTechnologies.ToList().All(y => y.Fk_Enum_Technology != x.Fk_Enum_Technology));
+            specTechnologiesToInsert.ToList().ForEach(x => currentSpec.SpecificationTechnologies.Add(x));
+            var specTechnologiesToDelete = currentSpec.SpecificationTechnologies.ToList().Where(x => newSpec.SpecificationTechnologies.ToList().All(y => y.Fk_Enum_Technology != x.Fk_Enum_Technology));
+            specTechnologiesToDelete.ToList().ForEach(x => specRepo.MarkDeleted<SpecificationTechnology>(x));
+            
+            //Remarks (Insert / Update)
+            var remarksToInsert = newSpec.Remarks.ToList().Where(x => currentSpec.Remarks.ToList().All(y => y.Pk_RemarkId != x.Pk_RemarkId));
+            remarksToInsert.ToList().ForEach(x => currentSpec.Remarks.Add(x));
+            var remarksToUpdate = newSpec.Remarks.ToList().Where(x => currentSpec.Remarks.ToList().Any(y => y.Pk_RemarkId == x.Pk_RemarkId && y.IsPublic != x.IsPublic));
+            remarksToUpdate.ToList().ForEach(x => currentSpec.Remarks.ToList().Find(y => y.Pk_RemarkId == x.Pk_RemarkId).IsPublic = x.IsPublic);
 
-            // Manage the remarks. Users cannot delete remarks.
-            foreach (var rk in newSpec.Remarks)
-            {
-                if (rk.Pk_RemarkId != default(int))
-                {
-                    var updRk = currentSpec.Remarks.Where(r => r.Pk_RemarkId == rk.Pk_RemarkId).FirstOrDefault();
-                    if (updRk != null)
-                        updRk.IsPublic = rk.IsPublic;
-                }
-                else
-                {
-                    rk.Fk_PersonId = personId;
-                    rk.Fk_SpecificationId = newSpec.Pk_SpecificationId;
-                    currentSpec.Remarks.Add(rk);
-                }
-            }
+            //WorkItems (Insert / Update / Delete)
+            var specWorkItemToInsert = newSpec.Specification_WorkItem.ToList().Where(x => currentSpec.Specification_WorkItem.ToList().All(y => y.Fk_WorkItemId != x.Fk_WorkItemId));
+            specWorkItemToInsert.ToList().ForEach(x => currentSpec.Specification_WorkItem.Add(x));
+            var specWorkItemToUpdate = newSpec.Specification_WorkItem.ToList().Where(x => currentSpec.Specification_WorkItem.ToList().Any(y => y.Fk_WorkItemId == x.Fk_WorkItemId && y.isPrime != x.isPrime));
+            specWorkItemToUpdate.ToList().ForEach(x => currentSpec.Specification_WorkItem.ToList().Find(y => y.Fk_WorkItemId == x.Fk_WorkItemId).isPrime = x.isPrime);
+            var specWorkItemToDelete = currentSpec.Specification_WorkItem.ToList().Where(x => newSpec.Specification_WorkItem.ToList().All(y => y.Fk_WorkItemId != x.Fk_WorkItemId));
+            specWorkItemToDelete.ToList().ForEach(x => specRepo.MarkDeleted<Specification_WorkItem>(x));
 
-            // Manage responsible groups
+            //Spec Parents (Insert / Delete)
+            var specParentsToInsert = newSpec.SpecificationParents.ToList().Where(x => currentSpec.SpecificationParents.ToList().All(y => y.Pk_SpecificationId != x.Pk_SpecificationId));
+            specParentsToInsert.ToList().ForEach(x =>
+            {
+                var spec = specRepo.Find(x.Pk_SpecificationId); //Here we have disconnected specification objects. So, load them from DB & then add. Otherwise, EF will try to insert new Specification
+                if (spec != null)
+                    currentSpec.SpecificationParents.Add(spec);
+            });
+            var specParentsToDelete = currentSpec.SpecificationParents.ToList().Where(x => newSpec.SpecificationParents.ToList().All(y => y.Pk_SpecificationId != x.Pk_SpecificationId));
+            specParentsToDelete.ToList().ForEach(x => currentSpec.SpecificationParents.Remove(x));
+
+            //Spec Childs (Insert / Delete)
+            var specChildsToInsert = newSpec.SpecificationChilds.ToList().Where(x => currentSpec.SpecificationChilds.ToList().All(y => y.Pk_SpecificationId != x.Pk_SpecificationId));
+            specChildsToInsert.ToList().ForEach(x =>
+            {
+                var spec = specRepo.Find(x.Pk_SpecificationId); //Here we have disconnected specification objects. So, load them from DB & then add. Otherwise, EF will try to insert new Specification
+                if (spec != null)
+                    currentSpec.SpecificationChilds.Add(spec);
+            });
+            var specChildsToDelete = currentSpec.SpecificationChilds.ToList().Where(x => newSpec.SpecificationChilds.ToList().All(y => y.Pk_SpecificationId != x.Pk_SpecificationId));
+            specChildsToDelete.ToList().ForEach(x => currentSpec.SpecificationChilds.Remove(x));
+
+            //Responsible Groups (History / Insert / Update / Delete)
             // Log an history entry if prime responsible group differ.
             var newPrimeRespGroup = newSpec.SpecificationResponsibleGroups.Where(g => g.IsPrime).FirstOrDefault().Fk_commityId;
             var oldPrimeRespGroup = currentSpec.SpecificationResponsibleGroups.Where(g => g.IsPrime).FirstOrDefault().Fk_commityId;
@@ -121,40 +128,28 @@ namespace Etsi.Ultimate.Business
                         CreationDate = DateTime.UtcNow,
                         Fk_PersonId = personId,
                         HistoryText = String.Format(Utils.Localization.History_Specification_Changed_Prime_Group, newCom.TbName, oldCom.TbName),
-                        
+
                     });
-
                 }
             }
-           
-            // List all the additions and modifications
-            foreach (var group in newSpec.SpecificationResponsibleGroups)
-            {
-                var currentGroup = currentSpec.SpecificationResponsibleGroups.Where(g => g.Fk_commityId == group.Fk_commityId).FirstOrDefault();
-                if ( currentGroup == null)
-                {
-                    group.Fk_SpecificationId = currentSpec.Pk_SpecificationId;
-                    currentSpec.SpecificationResponsibleGroups.Add(group);
-                }
-                else
-                {
-                    currentGroup.IsPrime = group.IsPrime;
-                }
-            }
+            
+            //Primary Responsible Group
+            var oldPrimaryResponsibleGroup = currentSpec.SpecificationResponsibleGroups.ToList().Where(x=> x.IsPrime).FirstOrDefault();
+            var newPrimaryResponsibleGroup = newSpec.SpecificationResponsibleGroups.ToList().Where(x => x.IsPrime).FirstOrDefault();
+            if(oldPrimaryResponsibleGroup != null && newPrimaryResponsibleGroup != null && oldPrimaryResponsibleGroup.Fk_commityId != newPrimaryResponsibleGroup.Fk_commityId)
+            oldPrimaryResponsibleGroup.Fk_commityId = newPrimaryResponsibleGroup.Fk_commityId;
 
-            // List all the deletions
-            foreach (var group in currentSpec.SpecificationResponsibleGroups)
-            {
-                var newGroup = newSpec.SpecificationResponsibleGroups.Where(g => g.Fk_commityId == group.Fk_commityId).FirstOrDefault();
-                if (newGroup == null)
-                {
-                    group.EntityStatus = Enum_EntityStatus.Deleted;
-                }
-            }
+            //Secondary Responsible Groups
+            var oldSecondaryResponsibleGroups = currentSpec.SpecificationResponsibleGroups.ToList().Where(x => !x.IsPrime);
+            var newSecondaryResponsibleGroups = newSpec.SpecificationResponsibleGroups.ToList().Where(x => !x.IsPrime);
 
+            var specResponsibleGroupsToInsert = newSecondaryResponsibleGroups.Where(x => oldSecondaryResponsibleGroups.All(y => y.Fk_commityId != x.Fk_commityId));
+            specResponsibleGroupsToInsert.ToList().ForEach(x => currentSpec.SpecificationResponsibleGroups.Add(x));
+            var specResponsibleGroupsToDelete = oldSecondaryResponsibleGroups.Where(x => newSecondaryResponsibleGroups.All(y => y.Fk_commityId != x.Fk_commityId));
+            specResponsibleGroupsToDelete.ToList().ForEach(x => specRepo.MarkDeleted<SpecificationResponsibleGroup>(x));
 
-
-            // Manage rapporteurs
+            //Rapporteurs (History / Insert / Update / Delete)
+            // Log an history entry if prime rapporteur changed.
             var newPrimeRapporteur = newSpec.SpecificationRapporteurs.Where(r => r.IsPrime).FirstOrDefault();
             var oldPrimeRapporteur = currentSpec.SpecificationRapporteurs.Where(r => r.IsPrime).FirstOrDefault();
 
@@ -170,7 +165,7 @@ namespace Etsi.Ultimate.Business
             if (newPrimeRapporteurId.GetValueOrDefault() != oldPrimeRapporteurId.GetValueOrDefault())
             {
                 var personManager = ManagerFactory.Resolve<IPersonManager>();
-                personManager.UoW = UoW ;
+                personManager.UoW = UoW;
                 var newRapporteurName = "(None)";
                 var oldRapporteurName = "(None)";
 
@@ -193,81 +188,14 @@ namespace Etsi.Ultimate.Business
                     Fk_SpecificationId = currentSpec.Pk_SpecificationId
 
                 });
-
             }
 
-            // Check rapporteur addition           
-            foreach (var rapp in newSpec.SpecificationRapporteurs)
-            {
-                var currentRapp = currentSpec.SpecificationRapporteurs.Where(g => g.Fk_RapporteurId == rapp.Fk_RapporteurId).FirstOrDefault();
-                if (currentRapp == null)
-                {
-                    rapp.Fk_SpecificationId = currentSpec.Pk_SpecificationId;
-                    currentSpec.SpecificationRapporteurs.Add(rapp);
-                }
-                else
-                {
-                    currentRapp.IsPrime = rapp.IsPrime;
-                }
-            }
-
-            //  Check rapporteur deletion
-            foreach (var rapp in currentSpec.SpecificationRapporteurs)
-            {
-                var newRapp = newSpec.SpecificationRapporteurs.Where(g => g.Fk_RapporteurId== rapp.Fk_RapporteurId).FirstOrDefault();
-                if (newRapp == null)
-                {
-                    rapp.EntityStatus = Enum_EntityStatus.Deleted;
-                }
-            }
-
-
-            // ------------ Check work items -------------
-            // Check work item addition           
-            foreach (var wi in newSpec.Specification_WorkItem)
-            {
-                var newWi = currentSpec.Specification_WorkItem.Where(g => g.Fk_WorkItemId == wi.Fk_WorkItemId).FirstOrDefault();
-                if (newWi == null)
-                {
-                    wi.Fk_SpecificationId = currentSpec.Pk_SpecificationId;
-                    currentSpec.Specification_WorkItem.Add(wi);
-                }
-                else
-                {
-                    newWi.isPrime = wi.isPrime;
-                }
-            }
-
-            //  Check work item deletion
-            foreach (var wi in currentSpec.Specification_WorkItem)
-            {
-                var newWi = newSpec.Specification_WorkItem.Where(g => g.Fk_WorkItemId== wi.Fk_WorkItemId).FirstOrDefault();
-                if (newWi == null)
-                {
-                    wi.EntityStatus = Enum_EntityStatus.Deleted;
-                }
-            }
-
-
-            // -------------- Check parent specs
-            // Parent spec addition
-            foreach (var sp in newSpec.SpecificationParents)
-            {
-                var newSp = currentSpec.SpecificationParents.Where(g => g.Pk_SpecificationId == sp.Pk_SpecificationId).FirstOrDefault();
-                if (newSp == null)
-                    currentSpec.SpecificationParents.Add(sp);
-            }
-            if (newSpec.SpecificationParents != null)
-            {
-                var specTodelete = new List<Specification>();
-                foreach (var sp in currentSpec.SpecificationParents)
-                {
-                    var newSp = newSpec.SpecificationParents.Where(g => g.Pk_SpecificationId == sp.Pk_SpecificationId).FirstOrDefault();
-                    if (newSp == null)
-                        specTodelete.Add(sp);
-                }
-                specTodelete.ForEach(x => currentSpec.SpecificationParents.Remove(x));
-            }
+            var specRapporteursToInsert = newSpec.SpecificationRapporteurs.ToList().Where(x => currentSpec.SpecificationRapporteurs.ToList().All(y => y.Fk_RapporteurId != x.Fk_RapporteurId));
+            specRapporteursToInsert.ToList().ForEach(x => currentSpec.SpecificationRapporteurs.Add(x));
+            var specRapporteursToUpdate = newSpec.SpecificationRapporteurs.ToList().Where(x => currentSpec.SpecificationRapporteurs.ToList().Any(y => y.Fk_RapporteurId == x.Fk_RapporteurId && y.IsPrime != x.IsPrime));
+            specRapporteursToUpdate.ToList().ForEach(x => currentSpec.SpecificationRapporteurs.ToList().Find(y => y.Fk_RapporteurId == x.Fk_RapporteurId).IsPrime = x.IsPrime);
+            var specRapporteursToDelete = currentSpec.SpecificationRapporteurs.ToList().Where(x => newSpec.SpecificationRapporteurs.ToList().All(y => y.Fk_RapporteurId != x.Fk_RapporteurId));
+            specRapporteursToDelete.ToList().ForEach(x => specRepo.MarkDeleted<SpecificationRapporteur>(x));
         }
     }
 }
