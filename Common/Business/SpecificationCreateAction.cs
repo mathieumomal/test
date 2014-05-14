@@ -56,6 +56,9 @@ namespace Etsi.Ultimate.Business
             // Define default fields
             DefineDefaultValues(spec, personId);
 
+            //Replace disconnected objects (Spec Parents/Childs) with context objects
+            ReplaceDisconnectedObjects(spec, repo);
+
             // If spec number is entered, link the serie.
             if (!string.IsNullOrEmpty(spec.Number))
             {
@@ -82,6 +85,36 @@ namespace Etsi.Ultimate.Business
             repo.InsertOrUpdate(spec);
 
             return new KeyValuePair<Specification,ImportReport>(spec, report);
+        }
+
+        /// <summary>
+        /// Replace disconnected objects (Spec Parents/Childs) with context objects
+        /// </summary>
+        /// <param name="spec">Specification</param>
+        /// <param name="specRepo">Specification Repository</param>
+        private void ReplaceDisconnectedObjects(Specification spec, ISpecificationRepository specRepo)
+        {
+            //Specification Parents
+            List<Specification> specParents = new List<Specification>();
+            spec.SpecificationParents.ToList().ForEach(x =>
+            {
+                var specParent = specRepo.Find(x.Pk_SpecificationId); //Here we have disconnected specification objects. So, load them from DB & then add. Otherwise, EF will try to insert new Specification
+                if (specParent != null)
+                    specParents.Add(specParent);
+            });
+            spec.SpecificationParents.Clear();
+            specParents.ForEach(x => spec.SpecificationParents.Add(x));
+
+            //Specification Childs
+            List<Specification> specChilds = new List<Specification>();
+            spec.SpecificationChilds.ToList().ForEach(x =>
+            {
+                var specChild = specRepo.Find(x.Pk_SpecificationId); //Here we have disconnected specification objects. So, load them from DB & then add. Otherwise, EF will try to insert new Specification
+                if (specChild != null)
+                    specChilds.Add(specChild);
+            });
+            spec.SpecificationChilds.Clear();
+            specChilds.ForEach(x => spec.SpecificationChilds.Add(x));
         }
 
         /// <summary>
