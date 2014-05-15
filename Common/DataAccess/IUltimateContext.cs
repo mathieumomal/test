@@ -46,5 +46,6 @@ namespace Etsi.Ultimate.DataAccess
         // ---- STORED PROCEDURES calls -----------
         int Specifications_CleanAll();
         int WorkItems_CleanAll();
+        int Versions_CleanAll();
     }
 }

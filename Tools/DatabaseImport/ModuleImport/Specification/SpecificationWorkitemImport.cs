@@ -51,7 +51,7 @@ namespace DatabaseImport.ModuleImport
                 {
                     new_spec_Work.Fk_SpecificationId = spec.Pk_SpecificationId;
                     new_spec_Work.Fk_WorkItemId = work.Pk_WorkItemUid;
-                    new_spec_Work.IsSetByUser = false;
+                    new_spec_Work.IsSetByUser = true;
                     var old_spec = LegacyContext.Specs_GSM_3G.Where(x => x.Number == spec.Number).FirstOrDefault();
                     if (old_spec != null)
                     {

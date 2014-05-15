@@ -72,7 +72,7 @@
     <Compile Include="ModuleImport\Specification\SpecificationResponsibleGroupImport.cs" />
     <Compile Include="ModuleImport\Specification\SpecificationsGenealogyImport.cs" />
     <Compile Include="ModuleImport\Specification\SpecificationWorkitemImport.cs" />
-    <Compile Include="ModuleImport\VersionImport.cs" />
+    <Compile Include="ModuleImport\Version\VersionImport.cs" />
     <Compile Include="ModuleImport\WorkItemImport.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

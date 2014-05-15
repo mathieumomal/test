@@ -391,22 +391,19 @@
           <Property Name="MajorVersion" Type="varchar" MaxLength="3" />
           <Property Name="TechnicalVersion" Type="varchar" MaxLength="3" />
           <Property Name="EditorialVersion" Type="varchar" MaxLength="3" />
-          <Property Name="Milestone" Type="varchar" MaxLength="45" />
           <Property Name="AchievedDate" Type="datetime" />
           <Property Name="ExpertProvided" Type="datetime" />
           <Property Name="Location" Type="varchar" MaxLength="150" />
           <Property Name="SupressFromSDO_Pub" Type="bit" Nullable="false" />
           <Property Name="ForcePublication" Type="bit" Nullable="false" />
-          <Property Name="DocumentChecked" Type="datetime" />
           <Property Name="DocumentUploaded" Type="datetime" />
           <Property Name="DocumentPassedToPub" Type="datetime" />
-          <Property Name="SupressTransposition" Type="bit" Nullable="false" />
           <Property Name="Multifile" Type="bit" Nullable="false" />
           <Property Name="Source" Type="int" />
           <Property Name="ETSI_WKI_ID" Type="int" />
           <Property Name="ProvidedBy" Type="int" />
-          <Property Name="Fk_SpecificationId" Type="int" Nullable="false" />
-          <Property Name="Fk_ReleaseId" Type="int" Nullable="false" />
+          <Property Name="Fk_SpecificationId" Type="int" />
+          <Property Name="Fk_ReleaseId" Type="int" />
           <Property Name="ETSI_WKI_Ref" Type="varchar" MaxLength="50" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="WorkItems">
@@ -821,7 +818,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Version_FK_ReleaseID">
-          <End Role="Releases" Type="Etsi.Ultimate.DataAccess.Store.Releases" Multiplicity="1" />
+          <End Role="Releases" Type="Etsi.Ultimate.DataAccess.Store.Releases" Multiplicity="0..1" />
           <End Role="Version" Type="Etsi.Ultimate.DataAccess.Store.Version" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Releases">
@@ -833,7 +830,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Version_FK_SpecificationID">
-          <End Role="Specification" Type="Etsi.Ultimate.DataAccess.Store.Specification" Multiplicity="1" />
+          <End Role="Specification" Type="Etsi.Ultimate.DataAccess.Store.Specification" Multiplicity="0..1" />
           <End Role="Version" Type="Etsi.Ultimate.DataAccess.Store.Version" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Specification">
@@ -1600,29 +1597,26 @@
           <Property Type="String" Name="MajorVersion" MaxLength="3" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="TechnicalVersion" MaxLength="3" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="EditorialVersion" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Milestone" MaxLength="45" FixedLength="false" Unicode="false" />
           <Property Type="DateTime" Name="AchievedDate" Precision="3" />
           <Property Type="DateTime" Name="ExpertProvided" Precision="3" />
           <Property Type="String" Name="Location" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Type="Boolean" Name="SupressFromSDO_Pub" Nullable="false" />
           <Property Type="Boolean" Name="ForcePublication" Nullable="false" />
-          <Property Type="DateTime" Name="DocumentChecked" Precision="3" />
           <Property Type="DateTime" Name="DocumentUploaded" Precision="3" />
           <Property Type="DateTime" Name="DocumentPassedToPub" Precision="3" />
-          <Property Type="Boolean" Name="SupressTransposition" Nullable="false" />
           <Property Type="Boolean" Name="Multifile" Nullable="false" />
           <Property Type="Int32" Name="Source" />
           <Property Type="Int32" Name="ETSI_WKI_ID" />
           <Property Type="Int32" Name="ProvidedBy" />
-          <Property Type="Int32" Name="Fk_SpecificationId" Nullable="false" />
-          <Property Type="Int32" Name="Fk_ReleaseId" Nullable="false" />
+          <Property Type="Int32" Name="Fk_SpecificationId" />
+          <Property Type="Int32" Name="Fk_ReleaseId" />
           <NavigationProperty Name="Release" Relationship="Etsi.Ultimate.DataAccess.Version_FK_ReleaseID" FromRole="Version" ToRole="Release" />
           <NavigationProperty Name="Remarks" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_Version" FromRole="Version" ToRole="Remark" />
           <NavigationProperty Name="Specification" Relationship="Etsi.Ultimate.DataAccess.Version_FK_SpecificationID" FromRole="Version" ToRole="Specification" />
           <Property Type="String" Name="ETSI_WKI_Ref" MaxLength="50" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
         </EntityType>
         <Association Name="Version_FK_ReleaseID">
-          <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="1" />
+          <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="0..1" />
           <End Type="Etsi.Ultimate.DataAccess.SpecVersion" Role="Version" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Release">
@@ -1646,7 +1640,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="Version_FK_SpecificationID">
-          <End Type="Etsi.Ultimate.DataAccess.Specification" Role="Specification" Multiplicity="1" />
+          <End Type="Etsi.Ultimate.DataAccess.Specification" Role="Specification" Multiplicity="0..1" />
           <End Type="Etsi.Ultimate.DataAccess.SpecVersion" Role="Version" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Specification">
@@ -2021,16 +2015,13 @@
                 <ScalarProperty Name="ETSI_WKI_ID" ColumnName="ETSI_WKI_ID" />
                 <ScalarProperty Name="Source" ColumnName="Source" />
                 <ScalarProperty Name="Multifile" ColumnName="Multifile" />
-                <ScalarProperty Name="SupressTransposition" ColumnName="SupressTransposition" />
                 <ScalarProperty Name="DocumentPassedToPub" ColumnName="DocumentPassedToPub" />
                 <ScalarProperty Name="DocumentUploaded" ColumnName="DocumentUploaded" />
-                <ScalarProperty Name="DocumentChecked" ColumnName="DocumentChecked" />
                 <ScalarProperty Name="ForcePublication" ColumnName="ForcePublication" />
                 <ScalarProperty Name="SupressFromSDO_Pub" ColumnName="SupressFromSDO_Pub" />
                 <ScalarProperty Name="Location" ColumnName="Location" />
                 <ScalarProperty Name="ExpertProvided" ColumnName="ExpertProvided" />
                 <ScalarProperty Name="AchievedDate" ColumnName="AchievedDate" />
-                <ScalarProperty Name="Milestone" ColumnName="Milestone" />
                 <ScalarProperty Name="EditorialVersion" ColumnName="EditorialVersion" />
                 <ScalarProperty Name="TechnicalVersion" ColumnName="TechnicalVersion" />
                 <ScalarProperty Name="MajorVersion" ColumnName="MajorVersion" />

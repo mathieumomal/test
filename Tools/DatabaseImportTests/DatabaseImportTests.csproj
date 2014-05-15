@@ -68,6 +68,7 @@
     <Compile Include="TestReleaseImport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestSpecificationImport.cs" />
+    <Compile Include="TestVersionImport.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\DataAccess\DataAccess.csproj">

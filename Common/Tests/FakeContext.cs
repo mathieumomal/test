@@ -181,6 +181,11 @@ namespace Etsi.Ultimate.Tests
             throw new NotImplementedException();
         }
 
+        public int Versions_CleanAll()
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region IUltimateContext Members

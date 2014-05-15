@@ -89,8 +89,6 @@ namespace DatabaseImport.ModuleImport
 
                 RemarksCase(newSpec, legacySpec);
 
-
-
                 NewContext.Specifications.Add(newSpec);
                 count++;
                 if(count%100 == 0)

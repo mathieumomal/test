@@ -110,6 +110,7 @@
     <Compile Include="FakeSets\SpecificationTechnologyFakeDBSet.cs" />
     <Compile Include="FakeSets\SpecificationWorkItemFakeDBSet.cs" />
     <Compile Include="FakeSets\TechnologiesFakeDBSet.cs" />
+    <Compile Include="FakeSets\VersionFakeDBSet.cs" />
     <Compile Include="FakeSets\ViewPersonFakeDBSet.cs" />
     <Compile Include="Services\RightsService.cs" />
     <Compile Include="Services\RightsServiceTest.cs" />
