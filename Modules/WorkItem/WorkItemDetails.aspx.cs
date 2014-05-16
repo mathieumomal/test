@@ -260,7 +260,7 @@ namespace Etsi.Ultimate.Module.WorkItem
 
             // Link to specifications
             lnkSpecifications.Target = "_blank";
-            lnkSpecifications.NavigateUrl = "/Specifications.aspx?ShortUrl=True&WiUid=" + workitem.Pk_WorkItemUid;
+            lnkSpecifications.NavigateUrl = "/Specifications.aspx?q=1&WiUid=" + workitem.Pk_WorkItemUid;
         }
 
         /// <summary>

@@ -230,7 +230,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             // Change remarks
             specToEdit.Remarks.First().IsPublic = false;
-            specToEdit.Remarks.Add(new Remark() { IsPublic = false, Fk_PersonId = 12 });
+            specToEdit.Remarks.Add(new Remark() { IsPublic = false, Fk_PersonId = 0 });
 
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
             Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
@@ -238,7 +238,9 @@ namespace Etsi.Ultimate.Tests.Services
             // Test remarks
             var modifiedSpec = GetCorrectSpecificationForEdit(false);
             Assert.AreEqual(2, modifiedSpec.Remarks.Count);
+            Assert.AreEqual(EDIT_RIGHT_USER, modifiedSpec.Remarks.Last().Fk_PersonId);
             Assert.IsFalse(modifiedSpec.Remarks.First().IsPublic.GetValueOrDefault());
+
         }
 
         [Test]
@@ -345,7 +347,46 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(3, modifiedSpec.Specification_WorkItem.Count);
             Assert.IsFalse(modifiedSpec.Specification_WorkItem.Where(r => r.Fk_WorkItemId == 1).FirstOrDefault().isPrime.GetValueOrDefault());
         }
-        
+
+        [Test]
+        public void ExportSpecificationList_Nominal()
+        {
+            RegisterAllMocks();
+
+            var specList = new List<Specification>() 
+            {
+                new Specification() { 
+                    Number = "29.253", 
+                    IsTS = false, 
+                    Title = "Test", 
+                    IsActive = false, 
+                    IsUnderChangeControl = true, 
+                    IsForPublication = true,
+                    ComIMS = false,
+                    SpecificationTechnologies = new List<SpecificationTechnology>(){
+                        new SpecificationTechnology() { Enum_Technology = new Enum_Technology() { Code="2G", Description="2G" } },
+                        new SpecificationTechnology() { Enum_Technology = new Enum_Technology() { Code="LTE", Description="LTE"} },
+                    },
+                    SpecificationResponsibleGroups = new List<SpecificationResponsibleGroup>() {
+                        new SpecificationResponsibleGroup() { IsPrime = true, Fk_commityId = 1 },
+                    },
+                    SpecificationRapporteurs = new List<SpecificationRapporteur>() {
+                        new SpecificationRapporteur() { IsPrime = true, Fk_RapporteurId = 1 },
+                    }
+                }
+            };
+            var pair = new KeyValuePair<List<Specification>, int>(specList, 1);
+
+            var repo = MockRepository.GenerateMock<ISpecificationRepository>();
+            repo.Stub(r => r.GetSpecificationBySearchCriteria(Arg<SpecificationSearch>.Matches(s => s.PageSize == 0))).Return( pair );
+            RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(repo);
+
+            var svc = new SpecificationService();
+            var result = svc.ExportSpecification(EDIT_RIGHT_USER,new SpecificationSearch() { PageSize = 1 });
+            Assert.IsTrue(result.Contains(Utils.ConfigVariables.DefaultPublicTmpAddress));
+            Assert.IsTrue(result.Contains("SpecificationList.xlsx"));
+        }
+
 
         #region data
         private IEnumerable<object[]> GetSpecificicationNumbersTestFormat
@@ -546,6 +587,7 @@ namespace Etsi.Ultimate.Tests.Services
             var rights = new UserRightsContainer();
             rights.AddRight(Enum_UserRights.Specification_Create);
             rights.AddRight(Enum_UserRights.Specification_EditFull);
+            rights.AddRight(Enum_UserRights.Specification_View_UnAllocated_Number);
             var userRights = MockRepository.GenerateMock<IRightsManager>();
             userRights.Stub(r => r.GetRights(EDIT_RIGHT_USER)).Return(rights);
             ManagerFactory.Container.RegisterInstance<IRightsManager>(userRights);
@@ -561,7 +603,7 @@ namespace Etsi.Ultimate.Tests.Services
             var communityManager = MockRepository.GenerateMock<ICommunityManager>();
             communityManager.Stub(c => c.GetCommunities()).Return(
                 new List<Community>() {
-                    new Community() { TbId = 1, TbName ="RAN 1" },
+                    new Community() { TbId = 1, TbName ="RAN 1", ShortName="R1" },
                     new Community() { TbId = 3, TbName ="RAN 2" },
                 });
             ManagerFactory.Container.RegisterInstance<ICommunityManager>(communityManager);
@@ -581,6 +623,8 @@ namespace Etsi.Ultimate.Tests.Services
 
 
         }
+
+        
 
     }
 

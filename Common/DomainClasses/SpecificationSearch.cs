@@ -36,7 +36,11 @@ namespace Etsi.Ultimate.DomainClasses
         public bool IsWithACC { get; set; }
         public bool IsWithBCC { get; set; }
         public int SkipRecords { get; set; }
-        public int PazeSize { get; set; }
+
+        /// <summary>
+        /// Number of records to get. If = 0, take all. 
+        /// </summary>
+        public int PageSize { get; set; }
 
         public SpecificationOrder Order { get; set; }
 

@@ -87,7 +87,7 @@
                 </telerik:GridTemplateColumn>
                 <telerik:GridTemplateColumn HeaderStyle-Width="2%" UniqueName="seeSpec">
                     <ItemTemplate>
-                        <a target="_blank" href="./Specifications.aspx?ShortUrl=True&releases=<%# DataBinder.Eval(Container.DataItem, "Pk_ReleaseId").ToString() %>"><img border="0" src="/DesktopModules/Release/images/specifications.jpg" title="See related specifications" /></a>
+                        <a target="_blank" href="./Specifications.aspx?q=1&releases=<%# DataBinder.Eval(Container.DataItem, "Pk_ReleaseId").ToString() %>"><img border="0" src="/DesktopModules/Release/images/specifications.jpg" title="See related specifications" /></a>
                     </ItemTemplate>                    
                 </telerik:GridTemplateColumn>
             </Columns>

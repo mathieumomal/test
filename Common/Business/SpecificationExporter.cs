@@ -12,6 +12,7 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DocumentFormat.OpenXml.Packaging;
 using System.Text;
+using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Business
 {
@@ -44,7 +45,7 @@ namespace Etsi.Ultimate.Business
         /// Export Specification
         /// </summary>
         /// <param name="exportPath">Export Path</param>
-        public bool ExportSpecification(string exportPath)
+        public string ExportSpecification(int personId, SpecificationSearch searchObj)
         {
             try
             {
@@ -55,27 +56,29 @@ namespace Etsi.Ultimate.Business
                 var personManager = new PersonManager();
                 personManager.UoW = _uoW;
 
-                var specs = specManager.GetAllSpecifications(0);
+                searchObj.PageSize = 0;
+                var specs = specManager.GetSpecificationBySearchCriteria(personId, searchObj).Key.Key;
                 specs.ForEach(x => x.PrimeResponsibleGroupShortName = (x.PrimeResponsibleGroup == null) ? String.Empty : communityManager.GetCommmunityshortNameById(x.PrimeResponsibleGroup.Fk_commityId));
                 specs.ForEach(x => x.PrimeSpecificationRapporteurName = (x.PrimeResponsibleGroup == null) ? String.Empty : personManager.GetPersonDisplayName(x.PrimeSpecificationRapporteurIds.FirstOrDefault()));
                 specs.ForEach(x => x.SpecificationInitialRelease = ((x.Specification_Release == null) || x.Specification_Release.Count == 0) ? String.Empty : x.Specification_Release.OrderBy(y => y.Release.SortOrder).First().Release.Code);
                 
-                List<SpecificationForExport> specExportObjects = new List<SpecificationForExport>();
-                specExportObjects.AddRange(specs.OrderBy(x => x.Title).ToList().Select(y => new SpecificationForExport(y)));
 
-                ExportToExcel(specExportObjects, exportPath);
-                //ExportToWord(specExportObjects, exportPath);
-                if (!String.IsNullOrEmpty(exportPath) && specs.Count >= 1)
-                {
-                    List<string> filesToCompress = new List<string>() { exportPath + DOC_TITLE + ".xlsx" };
-                    Zip.CompressSetOfFiles(ZIP_NAME, filesToCompress, exportPath);
-                }
-                return true;
+                List<SpecificationForExport> specExportObjects = new List<SpecificationForExport>();
+                specExportObjects.AddRange(specs.Select(y => new SpecificationForExport(y)));
+
+                var filename= Guid.NewGuid().ToString().Substring(0, 6) + "_SpecificationList.xlsx";
+
+                var fullExcelFilePath = Utils.ConfigVariables.DefaultPublicTmpPath + filename;
+                if (Directory.Exists(Utils.ConfigVariables.DefaultPublicTmpPath))
+                    Directory.CreateDirectory(Utils.ConfigVariables.DefaultPublicTmpPath);
+
+                ExportToExcel(specExportObjects, fullExcelFilePath);
+                return Utils.ConfigVariables.DefaultPublicTmpAddress+filename;
             }
             catch (IOException ex)
             {
                 LogManager.Error("Export of the specification failed", ex);
-                return false;
+                return null;
             }
         }
 
@@ -95,9 +98,8 @@ namespace Etsi.Ultimate.Business
                 try
                 {
                     //Create Empty Work Book
-                    string file = exportPath + DOC_TITLE + ".xlsx";
-                    if (File.Exists(file)) File.Delete(file);
-                    FileInfo newFile = new FileInfo(file);
+                    if (File.Exists(exportPath)) File.Delete(exportPath);
+                    FileInfo newFile = new FileInfo(exportPath);
 
                     using (ExcelPackage pck = new ExcelPackage(newFile))
                     {

@@ -423,7 +423,7 @@ namespace Etsi.Ultimate.Services
         }
 
 
-        public bool ExportSpecification(string exportPath)
+        public string ExportSpecification(int personId, SpecificationSearch searchobj)
         {
             throw new NotImplementedException();
         }

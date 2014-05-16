@@ -11,15 +11,15 @@ namespace Etsi.Ultimate.Services
 {
     public class SpecificationService : ISpecificationService
     {
-        public bool ExportSpecification(string exportPath)
+        public string ExportSpecification(int personId, SpecificationSearch searchObj)
         {
-            bool isExportSuccess;
+            string exportPath;
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var csvExport = new SpecificationExporter(uoW);
-                isExportSuccess = csvExport.ExportSpecification(exportPath);
+                exportPath = csvExport.ExportSpecification(personId, searchObj);
             }
-            return isExportSuccess;
+            return exportPath;
         }
 
         public KeyValuePair<Specification, UserRightsContainer> GetSpecificationDetailsById(int personId, int specificationId)

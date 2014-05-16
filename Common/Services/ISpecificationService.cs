@@ -92,7 +92,12 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         bool CheckInhibitedToPromote(string specNumber);
 
-        bool ExportSpecification(string exportPath);
+        /// <summary>
+        /// Create an Excel file corresponding to the query that has been performed.
+        /// </summary>
+        /// <param name="exportPath"></param>
+        /// <returns></returns>
+        string ExportSpecification(int personId, SpecificationSearch searchObj);
 
     }
 }

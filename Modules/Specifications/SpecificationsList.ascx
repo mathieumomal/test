@@ -52,6 +52,8 @@
     </ProgressTemplate>
 </asp:UpdateProgress>
 
+
+
 <asp:UpdatePanel ID="upSpecificationGrid" runat="server" UpdateMode="Always">
     <ContentTemplate>
         <table style="width: 100%;">
@@ -61,7 +63,8 @@
                     <span style="float: right; padding-bottom: 2px; white-space: nowrap">
                         <asp:HyperLink ID="lnkManageITURecommendations" runat="server" Text="Manage ITU Recommendations" Target="_blank" />
                         <ult:fullviewcontrol id="ultFullView" runat="server" />
-                        <asp:ImageButton ID="btnSpecExport" runat="server" ImageAlign="Top" AlternateText="Export" ImageUrl="/DesktopModules/Specifications/images/excel_export.png" OnClick="btnSpecExport_Click" />
+                        <asp:ImageButton ID="btnSpecExport" runat="server" ImageAlign="Top" AlternateText="Export" ImageUrl="/DesktopModules/Specifications/images/excel_export.png" OnClick="btnSpecExport_Click" OnClientClick="removeBg" />
+                        <asp:HiddenField ID="hidSpecAddress" runat="server" Value="" />
                     </span>
                 </td>
             </tr>
@@ -234,6 +237,26 @@
     </ContentTemplate>
 </asp:UpdatePanel>
 <script type="text/javascript">
+    var lastVal = "";
+    function checkExport() {
+        var hidExport = $("#<%=hidSpecAddress.ClientID %>");
+        if (hidExport != null && hidExport.val() != "" && hidExport.val() != lastVal) {
+            lastVal = hidExport.val();
+            window.location.replace(hidExport.val());
+        }
+    }
+
+    function removeBg() {
+        setTimeout(function () {
+            alert('test');
+            var greyArea = $("#<%=updateProgressSpecificationGrid.ClientID %>");
+            greyArea.css('visibility', 'hidden');
+        }, 2000);
+    }
+
+
+
+
     function collapseItem() {
         var panelBar = $find("<%= rpbSpecSearch.ClientID %>");
         var item = panelBar.get_items().getItem(0);
@@ -254,4 +277,5 @@
         gridDiv.style.height = (hContent - securityValue) + "px";
     });
 
+    Sys.WebForms.PageRequestManager.getInstance().add_endRequest(checkExport);
 </script>

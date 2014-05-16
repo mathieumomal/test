@@ -23,6 +23,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
+using System.IO;
 
 
 namespace Etsi.Ultimate.Module.Specifications
@@ -251,6 +252,18 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             //flag used in ShortURL generation
             fromSearch = true;
+            searchObj = FillInSearchObj();
+            
+            ultShareUrl.IsShortUrlChecked = false;
+            LoadGridData();
+        }
+
+        /// <summary>
+        /// Fills in search object from the search form.
+        /// </summary>
+        /// <returns></returns>
+        private SpecificationSearch FillInSearchObj()
+        {
             searchObj = new SpecificationSearch();
 
             if (!String.IsNullOrEmpty(txtTitle.Text))
@@ -290,9 +303,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
             if (cbForPublication.Checked != cbInternal.Checked)
                 searchObj.IsForPublication = (cbForPublication.Checked) ? true : ((cbInternal.Checked) ? (bool?)false : null);
-
-            ultShareUrl.IsShortUrlChecked = false;
-            LoadGridData();
+            return searchObj;
         }
 
         /// <summary>
@@ -303,7 +314,7 @@ namespace Etsi.Ultimate.Module.Specifications
         protected void rgSpecificationList_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
             searchObj.SkipRecords = rgSpecificationList.CurrentPageIndex * rgSpecificationList.PageSize;
-            searchObj.PazeSize = rgSpecificationList.PageSize;
+            searchObj.PageSize = rgSpecificationList.PageSize;
 
             // Fetching the sort order:
             if (rgSpecificationList.MasterTableView.SortExpressions.Count != 0)
@@ -476,7 +487,7 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 fromSearch = false;
 
-                urlParams.Add("s", "y");
+                urlParams.Add("q", "1");
                 if (!String.IsNullOrEmpty(searchObj.Title))
                     urlParams.Add("title", searchObj.Title.Trim());
 
@@ -520,7 +531,7 @@ namespace Etsi.Ultimate.Module.Specifications
         /// </summary>
         private void GetRequestParameters()
         {
-            isUrlSearch = (Request.QueryString["s"] != null) ? Request.QueryString["s"] == "y" : false;
+            isUrlSearch = (Request.QueryString["q"] != null);
         }
 
         /// <summary>
@@ -546,9 +557,13 @@ namespace Etsi.Ultimate.Module.Specifications
 
         protected void btnSpecExport_Click(object sender, ImageClickEventArgs e)
         {
-            PathExportSpec = (PathExportSpec ?? Request.PhysicalApplicationPath);
             ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
-            svc.ExportSpecification(PathExportSpec);
+            searchObj = FillInSearchObj();
+            var filepath = svc.ExportSpecification(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
+
+            hidSpecAddress.Value = filepath;
+            /*Response.Redirect(Server.UrlEncode(filepath));
+            Response.End();*/
         }
     }
 }

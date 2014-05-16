@@ -519,7 +519,7 @@ namespace Etsi.Ultimate.Module.WorkItem
 
             if (!isUrlSearch)
             {
-                urlParams.Add("s", "y");
+                urlParams.Add("q", "1");
                 if (!String.IsNullOrEmpty(tbId))
                     urlParams.Add("tbid", tbId);
                 if (!String.IsNullOrEmpty(subTBId))
@@ -550,7 +550,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// </summary>
         private void GetRequestParameters()
         {
-            isUrlSearch = (Request.QueryString["s"] != null) ? Request.QueryString["s"] == "y" : false;
+            isUrlSearch = (Request.QueryString["q"] != null);
         }
 
         #region FIX : Cannot unregister UpdatePanel...

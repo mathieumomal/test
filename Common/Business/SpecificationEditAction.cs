@@ -74,6 +74,7 @@ namespace Etsi.Ultimate.Business
             
             //Remarks (Insert / Update)
             var remarksToInsert = newSpec.Remarks.ToList().Where(x => currentSpec.Remarks.ToList().All(y => y.Pk_RemarkId != x.Pk_RemarkId));
+            remarksToInsert.ToList().ForEach(x => x.Fk_PersonId = personId);
             remarksToInsert.ToList().ForEach(x => currentSpec.Remarks.Add(x));
             var remarksToUpdate = newSpec.Remarks.ToList().Where(x => currentSpec.Remarks.ToList().Any(y => y.Pk_RemarkId == x.Pk_RemarkId && y.IsPublic != x.IsPublic));
             remarksToUpdate.ToList().ForEach(x => currentSpec.Remarks.ToList().Find(y => y.Pk_RemarkId == x.Pk_RemarkId).IsPublic = x.IsPublic);

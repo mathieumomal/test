@@ -78,5 +78,27 @@ namespace Etsi.Ultimate.Utils
                 return "";
             }
         }
+
+        /// <summary>
+        /// Temporary folder where files can be stored
+        /// </summary>
+        public static string DefaultPublicTmpPath
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["DefaultTmpPath"] != null)
+                    return ConfigurationManager.AppSettings["DefaultTmpPath"].ToString();
+                
+                return HttpContext.Current.Request.MapPath("~/tmp/");
+            }
+        }
+
+        public static string DefaultPublicTmpAddress
+        {
+            get
+            {
+                return "/tmp/";
+            }
+        }
     }
 }

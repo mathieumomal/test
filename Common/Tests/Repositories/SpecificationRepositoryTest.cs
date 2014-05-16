@@ -68,13 +68,13 @@ namespace Etsi.Ultimate.Tests.Repositories
             var repo = new SpecificationRepository() { UoW = GetSimplifiedUnitOfWork() };
 
             // Check that with no order, but 1 record per page, only specification 1 is output
-            var searchCriteria = new SpecificationSearch() { PazeSize = 1 };
+            var searchCriteria = new SpecificationSearch() { PageSize = 1 };
             var speclist = repo.GetSpecificationBySearchCriteria(searchCriteria).Key;
             Assert.AreEqual(1, speclist.Count);
             Assert.AreEqual(1, speclist.First().Pk_SpecificationId);
 
             // Now reverse the order, and check that specification 2 is output
-            var searchCriteria2 = new SpecificationSearch() { PazeSize = 1, Order = SpecificationSearch.SpecificationOrder.NumberDesc };
+            var searchCriteria2 = new SpecificationSearch() { PageSize = 1, Order = SpecificationSearch.SpecificationOrder.NumberDesc };
             var specList2 = repo.GetSpecificationBySearchCriteria(searchCriteria2).Key;
             Assert.AreEqual(1, specList2.Count);
             Assert.AreEqual(2, specList2.First().Pk_SpecificationId);

@@ -170,9 +170,17 @@ namespace Etsi.Ultimate.Repositories
                     query = query.OrderBy(s => s.Number);
                     break;
             }
-
-
-            return new KeyValuePair<List<Specification>, int>(query.Skip(searchObject.SkipRecords).Take(searchObject.PazeSize).ToList(), query.Count());
+            
+            // Pagesize = 0 means get all.
+            if (searchObject.PageSize != 0)
+            {
+                return new KeyValuePair<List<Specification>, int>(query.Skip(searchObject.SkipRecords).Take(searchObject.PageSize).ToList(), query.Count());
+            }
+            else
+            {
+                return new KeyValuePair<List<Specification>, int>(query.ToList(), query.Count());
+            }
+           
         }
 
         public List<Specification> GetSpecificationBySearchCriteria(string searchString)
