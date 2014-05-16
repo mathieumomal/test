@@ -984,8 +984,6 @@
             <End Role="Version" EntitySet="SpecVersions" />
           </AssociationSet>
           <EntitySet Name="ETSI_WorkItem" EntityType="Etsi.Ultimate.DataAccess.ETSI_WorkItem" />
-          <FunctionImport Name="Specifications_CleanAll1" />
-          <FunctionImport Name="WorkItems_CleanAll1" />
           <FunctionImport Name="Versions_CleanAll" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
@@ -2037,8 +2035,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="Specifications_CleanAll1" FunctionName="Etsi.Ultimate.DataAccess.Store.Specifications_CleanAll" />
-          <FunctionImportMapping FunctionImportName="WorkItems_CleanAll1" FunctionName="Etsi.Ultimate.DataAccess.Store.WorkItems_CleanAll" />
           <FunctionImportMapping FunctionImportName="Versions_CleanAll" FunctionName="Etsi.Ultimate.DataAccess.Store.Versions_CleanAll" />
           </EntityContainerMapping>
       </Mapping>
