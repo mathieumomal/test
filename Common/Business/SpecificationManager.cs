@@ -86,7 +86,7 @@ namespace Etsi.Ultimate.Business
         }
 
 
-        public List<Specification> GetSpecificationBySearchCriteria(int personId, String searchString)
+        public List<Specification> GetSpecificationByNumberAndTitle(int personId, String searchString)
         {
             // Computes the rights of the user. These are independant from the releases.
             var rightManager = ManagerFactory.Resolve<IRightsManager>();

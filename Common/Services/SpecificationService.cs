@@ -118,7 +118,17 @@ namespace Etsi.Ultimate.Services
             {
                 var specificationManager = new SpecificationManager();
                 specificationManager.UoW = uoW;
-                return specificationManager.GetSpecificationBySearchCriteria(personId, searchString);
+                return specificationManager.GetSpecificationByNumberAndTitle(personId, searchString);
+            }
+        }
+
+        public List<Specification> GetSpecificationBySearchCriteriaWithExclusion(int personId,String searchString, List<string> toExclude)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specificationManager = new SpecificationManager();
+                specificationManager.UoW = uoW;
+                return specificationManager.GetSpecificationByNumberAndTitle(personId, searchString).Where(s => !toExclude.Contains(s.Number.Trim())).ToList();
             }
         }
 

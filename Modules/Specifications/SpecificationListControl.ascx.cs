@@ -14,7 +14,9 @@ namespace Etsi.Ultimate.Module.Specifications
 
         private const string CONST_SPECIFICATION_GRID_DATA = "SpecificationListControlData_{0}";
         private const string CONST_SELECTED_TAB = "SPEC_SELECTED_TAB";
+        private const string CONST_SELECTED_MODE = "SPEC_SELECTED_MODE";
         private const int CONST_MIN_SCROLL_HEIGHT = 50;
+        private const string CONST_EXCLUDE_SPEC = "SPEC_TO_EXCLUDE";
 
         #endregion
 
@@ -38,6 +40,23 @@ namespace Etsi.Ultimate.Module.Specifications
                 ViewState[CONST_SELECTED_TAB] = value;
             }
         }
+
+        public string SelectedMode
+        {
+            get
+            {
+                if (ViewState[String.Format(CONST_SELECTED_MODE, this.ClientID)] == null)
+                    return "EDIT";
+                else
+                    return ViewState[String.Format(CONST_SELECTED_MODE, this.ClientID)].ToString();
+
+            }
+            set
+            {
+                ViewState[String.Format(CONST_SELECTED_MODE, this.ClientID)] = value;
+            }
+        }
+
         public List<Specification> DataSource
         {
             get
@@ -54,6 +73,21 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
+        public List<string> ToExcludeFromDataSrouce
+        {
+            get
+            {
+                if (ViewState[String.Format(CONST_EXCLUDE_SPEC, this.ClientID)] == null)
+                    ViewState[String.Format(CONST_EXCLUDE_SPEC, this.ClientID)] = new List<string>();
+
+                return (List<string>)ViewState[String.Format(CONST_EXCLUDE_SPEC, this.ClientID)];
+            }
+            set
+            {
+                ViewState[String.Format(CONST_EXCLUDE_SPEC, this.ClientID)] = value;
+            }
+        }
+
         #endregion
 
         #region Events
@@ -64,13 +98,13 @@ namespace Etsi.Ultimate.Module.Specifications
             if (!IsPostBack)
             {
                 if (!IsEditMode)
-                {
+                {                    
                     lblAddSpecification.Visible = false;
                     rcbAddSpecification.Visible = false;
                     btnAddSpecification.Visible = false;
                 }
                 else
-                {
+                {                    
                     if (IsParentList)
                         lblAddSpecification.Text = "Add parent specification";
                     else
@@ -141,7 +175,7 @@ namespace Etsi.Ultimate.Module.Specifications
             if (e.Text.Length > 1)
             {
                 var svc = ServicesFactory.Resolve<ISpecificationService>();
-                var specList = svc.GetSpecificationBySearchCriteria(0, e.Text );
+                var specList = svc.GetSpecificationBySearchCriteriaWithExclusion(0, e.Text, ToExcludeFromDataSrouce);
                 BindDropDownData(specList);
             }
 

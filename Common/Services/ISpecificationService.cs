@@ -16,7 +16,7 @@ namespace Etsi.Ultimate.Services
         KeyValuePair<Specification, UserRightsContainer>  GetSpecificationDetailsById(int personId, int specificationId);
 
         /// <summary>
-        /// Returns list of specifications including related remarks, history, Parent/Child specification, and releases
+        /// Returns list of specifications including RGs
         /// </summary>
         /// <param name="personId"></param>
         /// <param name="searchObj">Object with all search parameters</param>
@@ -24,12 +24,20 @@ namespace Etsi.Ultimate.Services
         KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj);
 
         /// <summary>
-        /// Returns list of specifications including related remarks, history, Parent/Child specification, and releases
+        /// Returns list of specifications including RGs
         /// </summary>
         /// <param name="personId"></param>
         /// <param name="searchString">Search string for searching Spec Title/Number</param>
         /// <returns></returns>
         List<Specification> GetSpecificationBySearchCriteria(int personId, String searchString);
+
+        /// <summary>
+        /// Returns list of specifications that matches the search text except the excluded ones, including RGs. 
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="searchString">Search string for searching Spec Title/Number</param>
+        /// <returns></returns>
+        List<Specification> GetSpecificationBySearchCriteriaWithExclusion(int personId, String searchString, List<string> toExclude);
 
         /// <summary>
         /// Creates a specification. 

@@ -378,6 +378,8 @@ namespace Etsi.Ultimate.Module.Specifications
         /// <param name="specification">The retrieved specification</param>
         private void FillRelatedSpecificationsTab(Domain.Specification specification, string selectedTab)
         {
+            List<string> SpecToExcludeBuffer = new List<string>();
+            
             parentSpecifications.IsEditMode = true;
             parentSpecifications.IsParentList = true;
             parentSpecifications.SelectedTab = CONST_RELATED_TAB;
@@ -393,15 +395,29 @@ namespace Etsi.Ultimate.Module.Specifications
 
             if (specification != null)
             {
+                SpecToExcludeBuffer.Add(specification.Number);
                 if (specification.SpecificationParents != null)
+                {
                     parentSpecifications.DataSource = specification.SpecificationParents.ToList();
+                    parentSpecifications.DataSource.ForEach(s => SpecToExcludeBuffer.Add(s.Number));
+                    parentSpecifications.ToExcludeFromDataSrouce.AddRange(SpecToExcludeBuffer);
+                }
                 else
                     parentSpecifications.DataSource = null;
 
+                SpecToExcludeBuffer.Clear();
+                SpecToExcludeBuffer.Add(specification.Number);
+
                 if (specification.SpecificationChilds != null)
+                {
                     childSpecifications.DataSource = specification.SpecificationChilds.ToList();
+                    childSpecifications.DataSource.ForEach(s => SpecToExcludeBuffer.Add(s.Number));
+                    childSpecifications.ToExcludeFromDataSrouce.AddRange(SpecToExcludeBuffer);
+                }
                 else
                     childSpecifications.DataSource = null;
+
+                SpecToExcludeBuffer.Clear();
 
                 if (specification.SpecificationWIsList != null)
                     SpecificationRelatedWorkItems.DataSource = specification.SpecificationWIsList;

@@ -25,6 +25,7 @@ namespace Etsi.Ultimate.Services
                 new Enum_Technology(){ Pk_Enum_TechnologyId=3, Code="LTE", Description="LTE"}
             };
         }
+        
 
         public KeyValuePair<List<Domain.Specification>, Domain.UserRightsContainer> GetAllSpecification(int personID)
         {
@@ -422,6 +423,10 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
+        public List<Specification> GetSpecificationBySearchCriteriaWithExclusion(int personId, String searchString, List<string> toExclude)
+        {
+            throw new NotImplementedException();
+        }
 
         public string ExportSpecification(int personId, SpecificationSearch searchobj)
         {
