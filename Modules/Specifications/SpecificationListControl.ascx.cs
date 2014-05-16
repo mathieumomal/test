@@ -41,21 +41,7 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
-        public string SelectedMode
-        {
-            get
-            {
-                if (ViewState[String.Format(CONST_SELECTED_MODE, this.ClientID)] == null)
-                    return "EDIT";
-                else
-                    return ViewState[String.Format(CONST_SELECTED_MODE, this.ClientID)].ToString();
-
-            }
-            set
-            {
-                ViewState[String.Format(CONST_SELECTED_MODE, this.ClientID)] = value;
-            }
-        }
+        
 
         public List<Specification> DataSource
         {
