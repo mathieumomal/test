@@ -99,8 +99,11 @@
     <Compile Include="Business\LogManagerTest.cs" />
     <Compile Include="Business\MailManagerTest.cs" />
     <Compile Include="Business\RightsManagerTest.cs" />
+    <Compile Include="Business\SpecificationWorkItemManagerTest.cs" />
+    <Compile Include="Business\WorkPlanFileManagerTest.cs" />
     <Compile Include="FakeRepositories\Enum_TechnologiesFakeRepository.cs" />
     <Compile Include="FakeRepositories\SpecificationWIFakeRepository.cs" />
+    <Compile Include="FakeRepositories\WorkPlanFileFakeRepository.cs" />
     <Compile Include="FakeSets\Enum_SerieFakeDBSet.cs" />
     <Compile Include="FakeSets\Enum_TechnologyFakeDBSet.cs" />
     <Compile Include="FakeSets\SpecificationDBSet.cs" />
@@ -112,6 +115,9 @@
     <Compile Include="FakeSets\TechnologiesFakeDBSet.cs" />
     <Compile Include="FakeSets\VersionFakeDBSet.cs" />
     <Compile Include="FakeSets\ViewPersonFakeDBSet.cs" />
+    <Compile Include="FakeSets\WorkPlanFileFakeDBSet.cs" />
+    <Compile Include="Repositories\SpecificationWorkItemRepositoryTest.cs" />
+    <Compile Include="Repositories\WorkPlanFileRepositoryTest.cs" />
     <Compile Include="Services\RightsService.cs" />
     <Compile Include="Services\RightsServiceTest.cs" />
     <Compile Include="Services\SpecificationServiceTest.cs" />
@@ -163,6 +169,7 @@
     <Compile Include="Services\UrlServiceTest.cs" />
     <Compile Include="Services\WorkItemServiceTest.cs" />
     <Compile Include="Business\ConfigVariableTest.cs" />
+    <Compile Include="Services\WorkPlanFileServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

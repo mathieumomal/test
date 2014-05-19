@@ -46,7 +46,8 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                                 ResponsibleGroup = "S3"
                             }
                         }
-                    }
+                    },
+                    Fk_SpecificationId = 1
                 },
                 new Specification_WorkItem(){
                     Pk_Specification_WorkItemId = 2,
@@ -65,7 +66,8 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                                 IsPrimeResponsible = true
                             }
                         }
-                    }  
+                    } ,
+                    Fk_SpecificationId = 1 
                 },
                 new Specification_WorkItem(){
                     Pk_Specification_WorkItemId = 3,
@@ -84,7 +86,8 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                                 IsPrimeResponsible = true
                             }
                         }
-                    }  
+                    },
+                    Fk_SpecificationId = 1  
                 }
             };  
             var dbSet = new SpecificationWorkItemFakeDBSet();
