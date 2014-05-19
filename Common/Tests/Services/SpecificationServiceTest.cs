@@ -16,6 +16,7 @@ using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Tests.FakeRepositories;
 using Etsi.Ultimate.Utils;
+using System.IO;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -352,6 +353,9 @@ namespace Etsi.Ultimate.Tests.Services
         public void ExportSpecificationList_Nominal()
         {
             RegisterAllMocks();
+
+            if (!Directory.Exists(Utils.ConfigVariables.DefaultPublicTmpPath))
+                Directory.CreateDirectory(Utils.ConfigVariables.DefaultPublicTmpPath);
 
             var specList = new List<Specification>() 
             {
