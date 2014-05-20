@@ -32,6 +32,11 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             lblReleaseName.Text = ReleaseDataSource.Name;
             lblStatus.Text = string.Format("({0})", SpecificationDataSource.Status);
+            //var specRelease = SpecificationDataSource.Specification_Release.FirstOrDefault(x => x.Fk_ReleaseId == ReleaseDataSource.Pk_ReleaseId);
+
+
+            //var versionsSvc = ServicesFactory.Resolve<ISpecVersionService>();
+            //lblLatestRemark.Text = versionsSvc.GetVersionsById(specRelease.Pk_Specification_ReleaseId).Remarks.OrderBy(x => x.CreationDate).FirstOrDefault().RemarkText;
         }
 
         #endregion

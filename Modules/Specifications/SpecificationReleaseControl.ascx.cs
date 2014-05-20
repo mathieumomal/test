@@ -12,15 +12,27 @@ namespace Etsi.Ultimate.Module.Specifications
     {
         #region Constants
 
+        private const string CONST_DATASOURCE = "SpecificationReleaseControl_datasource";
+        
         #endregion
 
         #region Public Properties
 
         public bool IsEditMode { get; set; }
+
         public Specification DataSource
         {
-            set;
-            get;
+            get
+            {
+                if (ViewState[CONST_DATASOURCE] == null)
+                    return new Specification();
+                else
+                    return (Specification)ViewState[CONST_DATASOURCE];
+            }
+            set
+            {
+                ViewState[CONST_DATASOURCE] = value;
+            }
         }
 
         #endregion
@@ -36,8 +48,6 @@ namespace Etsi.Ultimate.Module.Specifications
                 item.Value = release.Pk_ReleaseId.ToString();
                 rpbReleases.Items.Add(item);
             }
-
-
 
             ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
             var versionsList = svc.GetVersionsBySpecId(DataSource.Pk_SpecificationId);

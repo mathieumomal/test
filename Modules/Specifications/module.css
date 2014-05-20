@@ -21,11 +21,6 @@
     font-size: 12px;
 }
 
-#SpecificationDetailsRadMultiPage td {
-    padding-top: 4px !important;
-    padding-bottom: 3px !important;
-}
-
 .TabContent {
     margin: 10px;
     font: Arial 12px Black;
@@ -84,11 +79,14 @@ legend {
 .TabLineLeft {
     width: 184.6px;
     text-align: right;
+
+    padding-top: 4px !important;
+    padding-bottom: 3px !important;
 }
 
-    .TabLineLeft span {
-        padding-right: 10px;
-    }
+.TabLineLeft span {
+    padding-right: 10px;
+}
 
 .TabLineRight {
     width: auto;

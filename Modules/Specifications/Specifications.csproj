@@ -155,15 +155,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="images\spec_rel-f.png" />
+    <Content Include="images\spec_rel-i.png" />
+    <Content Include="images\spec_rel-p.png" />
+    <Content Include="images\spec_rel-remarks.png" />
+    <Content Include="images\spec_rel-u.png" />
+    <Content Include="images\spec_rel-w.png" />
     <Content Include="ReleaseHeaderControl.ascx" />
     <Content Include="SpecificationReleaseControl.ascx" />
-    <Content Include="images\glyphicons_463_server.png" />
-    <Content Include="images\glyphicons_464_server_plus.png" />
-    <Content Include="images\glyphicons_465_server_minus.png" />
-    <Content Include="images\glyphicons_466_server_ban.png" />
-    <Content Include="images\glyphicons_467_server_flag.png" />
-    <Content Include="images\glyphicons_468_server_lock.png" />
-    <Content Include="images\glyphicons_469_server_new.png" />
     <Content Include="SpecificationVersionListControl.ascx" />
     <Content Include="EditSpecification.aspx" />
     <Content Include="Documentation\Documentation.css" />

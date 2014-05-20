@@ -22,7 +22,6 @@
         background-color: #f2f2f2;
         height: 20px;
         width: 20px;
-        padding: 2px;
     }
 </style>
 
