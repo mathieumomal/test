@@ -277,6 +277,7 @@ namespace Etsi.Ultimate.Services
                 {
                     var transpAction = new SpecificationForceUnforceTranspositionAction() { UoW = uow };
                     transpAction.ForceTranspositionForRelease(personId, releaseId, specificationId);
+                    uow.Save();
                 }
                 catch (Exception e)
                 {

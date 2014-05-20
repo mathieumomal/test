@@ -21,9 +21,9 @@ namespace Etsi.Ultimate.DomainClasses
         }
     
         public int Pk_VersionId { get; set; }
-        public string MajorVersion { get; set; }
-        public string TechnicalVersion { get; set; }
-        public string EditorialVersion { get; set; }
+        public Nullable<int> MajorVersion { get; set; }
+        public Nullable<int> TechnicalVersion { get; set; }
+        public Nullable<int> EditorialVersion { get; set; }
         public Nullable<System.DateTime> AchievedDate { get; set; }
         public Nullable<System.DateTime> ExpertProvided { get; set; }
         public string Location { get; set; }

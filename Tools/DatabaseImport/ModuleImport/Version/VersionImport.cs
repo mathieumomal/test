@@ -80,11 +80,11 @@ namespace DatabaseImport.ModuleImport
 
                 var newVersion = new Domain.SpecVersion();
 
-                newVersion.MajorVersion = Utils.CheckIntToString(legacyVersion.MAJOR_VERSION_NB, 3, RefImportForLog + " MajorVersion", idVersion, Report);
+                newVersion.MajorVersion = Utils.CheckInt(legacyVersion.MAJOR_VERSION_NB, RefImportForLog + " MajorVersion", idVersion, Report);
 
-                newVersion.TechnicalVersion = Utils.CheckIntToString(legacyVersion.TECHNICAL_VERSION_NB, 3, RefImportForLog + " TechnicalVersion", idVersion, Report);
+                newVersion.TechnicalVersion = Utils.CheckInt(legacyVersion.TECHNICAL_VERSION_NB, RefImportForLog + " TechnicalVersion", idVersion, Report);
 
-                newVersion.EditorialVersion = Utils.CheckIntToString(legacyVersion.EDITORIAL_VERSION_NB, 3, RefImportForLog + " EditorialVersion", idVersion, Report);
+                newVersion.EditorialVersion = Utils.CheckInt(legacyVersion.EDITORIAL_VERSION_NB, RefImportForLog + " EditorialVersion", idVersion, Report);
 
                 newVersion.AchievedDate = legacyVersion.ACHIEVED_DATE;
 

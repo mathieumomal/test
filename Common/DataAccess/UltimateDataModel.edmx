@@ -389,9 +389,9 @@
             <PropertyRef Name="Pk_VersionId" />
           </Key>
           <Property Name="Pk_VersionId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="MajorVersion" Type="varchar" MaxLength="3" />
-          <Property Name="TechnicalVersion" Type="varchar" MaxLength="3" />
-          <Property Name="EditorialVersion" Type="varchar" MaxLength="3" />
+          <Property Name="MajorVersion" Type="int" />
+          <Property Name="TechnicalVersion" Type="int" />
+          <Property Name="EditorialVersion" Type="int" />
           <Property Name="AchievedDate" Type="datetime" />
           <Property Name="ExpertProvided" Type="datetime" />
           <Property Name="Location" Type="varchar" MaxLength="150" />
@@ -971,6 +971,8 @@
           </AssociationSet>
           <FunctionImport Name="Specifications_CleanAll" />
           <FunctionImport Name="WorkItems_CleanAll" />
+          <EntitySet Name="ETSI_WorkItem" EntityType="Etsi.Ultimate.DataAccess.ETSI_WorkItem" />
+          <FunctionImport Name="Versions_CleanAll" />
           <EntitySet Name="SpecVersions" EntityType="Etsi.Ultimate.DataAccess.SpecVersion" />
           <AssociationSet Name="Version_FK_ReleaseID" Association="Etsi.Ultimate.DataAccess.Version_FK_ReleaseID">
             <End Role="Release" EntitySet="Releases" />
@@ -984,8 +986,6 @@
             <End Role="Specification" EntitySet="Specifications" />
             <End Role="Version" EntitySet="SpecVersions" />
           </AssociationSet>
-          <EntitySet Name="ETSI_WorkItem" EntityType="Etsi.Ultimate.DataAccess.ETSI_WorkItem" />
-          <FunctionImport Name="Versions_CleanAll" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -1589,14 +1589,21 @@
           <End Type="Etsi.Ultimate.DataAccess.Specification" Role="Specification" Multiplicity="*" />
           <End Type="Etsi.Ultimate.DataAccess.Specification" Role="Specification1" Multiplicity="*" />
         </Association>
+        <EntityType Name="ETSI_WorkItem">
+          <Key>
+            <PropertyRef Name="WKI_ID" />
+          </Key>
+          <Property Type="Int32" Name="WKI_ID" Nullable="false" />
+          <Property Type="String" Name="WKI_REFERENCE" MaxLength="30" FixedLength="false" Unicode="false" />
+        </EntityType>
         <EntityType Name="SpecVersion">
           <Key>
             <PropertyRef Name="Pk_VersionId" />
           </Key>
           <Property Type="Int32" Name="Pk_VersionId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="MajorVersion" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="TechnicalVersion" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="EditorialVersion" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="MajorVersion" />
+          <Property Type="Int32" Name="TechnicalVersion" />
+          <Property Type="Int32" Name="EditorialVersion" />
           <Property Type="DateTime" Name="AchievedDate" Precision="3" />
           <Property Type="DateTime" Name="ExpertProvided" Precision="3" />
           <Property Type="String" Name="Location" MaxLength="150" FixedLength="false" Unicode="false" />
@@ -1610,10 +1617,10 @@
           <Property Type="Int32" Name="ProvidedBy" />
           <Property Type="Int32" Name="Fk_SpecificationId" />
           <Property Type="Int32" Name="Fk_ReleaseId" />
+          <Property Type="String" Name="ETSI_WKI_Ref" MaxLength="50" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="Release" Relationship="Etsi.Ultimate.DataAccess.Version_FK_ReleaseID" FromRole="Version" ToRole="Release" />
           <NavigationProperty Name="Remarks" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_Version" FromRole="Version" ToRole="Remark" />
           <NavigationProperty Name="Specification" Relationship="Etsi.Ultimate.DataAccess.Version_FK_SpecificationID" FromRole="Version" ToRole="Specification" />
-          <Property Type="String" Name="ETSI_WKI_Ref" MaxLength="50" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
         </EntityType>
         <Association Name="Version_FK_ReleaseID">
           <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="0..1" />
@@ -1651,13 +1658,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="ETSI_WorkItem">
-          <Key>
-            <PropertyRef Name="WKI_ID" />
-          </Key>
-          <Property Type="Int32" Name="WKI_ID" Nullable="false" />
-          <Property Type="String" Name="WKI_REFERENCE" MaxLength="30" FixedLength="false" Unicode="false" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2006,6 +2006,15 @@
               <ScalarProperty Name="Pk_SpecificationId" ColumnName="Fk_SpecificationParentId" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="ETSI_WorkItem">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ETSI_WorkItem">
+              <MappingFragment StoreEntitySet="ETSI_WorkItem">
+                <ScalarProperty Name="WKI_REFERENCE" ColumnName="WKI_REFERENCE" />
+                <ScalarProperty Name="WKI_ID" ColumnName="WKI_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Versions_CleanAll" FunctionName="Etsi.Ultimate.DataAccess.Store.Versions_CleanAll" />
           <EntitySetMapping Name="SpecVersions">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.SpecVersion">
               <MappingFragment StoreEntitySet="Version">
@@ -2030,15 +2039,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="ETSI_WorkItem">
-            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ETSI_WorkItem">
-              <MappingFragment StoreEntitySet="ETSI_WorkItem">
-                <ScalarProperty Name="WKI_REFERENCE" ColumnName="WKI_REFERENCE" />
-                <ScalarProperty Name="WKI_ID" ColumnName="WKI_ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="Versions_CleanAll" FunctionName="Etsi.Ultimate.DataAccess.Store.Versions_CleanAll" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

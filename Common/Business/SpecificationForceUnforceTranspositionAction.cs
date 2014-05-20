@@ -50,7 +50,21 @@ namespace Etsi.Ultimate.Business
                 throw new InvalidOperationException("Transposition is already forced for this release.");
             }
 
+            // We set the flag of specRel to true
+            specRelease.isTranpositionForced = true;
 
+            // Then, we check if there is something to send to transposition.
+            var versionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            versionRepo.UoW = UoW;
+            var latestVersion = versionRepo.GetVersionForSpecRelease(specId,relId)
+                .OrderByDescending(s => s.MajorVersion).ThenByDescending(s => s.TechnicalVersion)
+                .ThenByDescending(s => s.EditorialVersion).FirstOrDefault();
+
+            if (latestVersion != null && latestVersion.DocumentUploaded != null)
+            {
+                var transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
+                transposeMgr.Transpose(specRelRepo.Find(specId), latestVersion);
+            }
 
             return true;
         }

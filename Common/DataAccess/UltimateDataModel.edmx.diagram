@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="bd05b5827df942d494c31906a1644ecc" Name="Diagram1" ZoomLevel="70">
+      <Diagram DiagramId="bd05b5827df942d494c31906a1644ecc" Name="Diagram1" ZoomLevel="45">
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_ReleaseStatus" Width="1.5" PointX="3.375" PointY="2.875" IsExpanded="true" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Release" Width="1.5" PointX="5.875" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Meeting" Width="1.5" PointX="0.5" PointY="1" IsExpanded="true" FillColor="DarkSeaGreen" />
@@ -52,11 +52,11 @@
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.RG_FK_SpecificationID" ManuallyRouted="false" >
         </AssociationConnector>
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SpecVersion" Width="1.5" PointX="20.125" PointY="3.375" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.ETSI_WorkItem" Width="1.5" PointX="3.9823988843627269" PointY="25.159896296057802" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SpecVersion" Width="1.5" PointX="19.625" PointY="23.375" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.Version_FK_ReleaseID" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Remarks_Version" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.Version_FK_SpecificationID" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.ETSI_WorkItem" Width="1.5" PointX="3.9823988843627269" PointY="25.159896296057802" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

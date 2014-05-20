@@ -39,7 +39,7 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(true, specSvc.ForceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_OPEN_ID, SPEC_ID));
         }
 
-        /*[Test]
+        [Test]
         public void ForceTransposition_SendsVersionForTranspositionIfUploaded()
         {
             SetMocks();
@@ -49,9 +49,9 @@ namespace Etsi.Ultimate.Tests.Services
             ManagerFactory.Container.RegisterInstance<ITranspositionManager>(transpMock);
 
             var specSvc = new SpecificationService();
-            Assert.AreEqual(true, specSvc.ForceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_OPEN_ID, SPEC_ID));
-            transpMock.AssertWasCalled( m => m.Transpose( Arg<Specification>.Is.Anything, Arg<SpecVersion>.Is.Anything));
-        }*/
+            Assert.AreEqual(true, specSvc.ForceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_OPENED_VERSION_TO_TRANSPOSE, SPEC_ID));
+            transpMock.AssertWasCalled( m => m.Transpose( Arg<Specification>.Is.Anything, Arg<SpecVersion>.Matches(v => v.TechnicalVersion == 1)));
+        }
 
         [Test]
         public void ForceTransposition_ReturnsFalseWhenUserHasNoRight()
@@ -143,9 +143,28 @@ namespace Etsi.Ultimate.Tests.Services
                     Enum_ReleaseStatus = new Enum_ReleaseStatus() { Code = Enum_ReleaseStatus.Open }
                 }
             });
+            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_OPENED_VERSION_TO_TRANSPOSE, true)).Return(new Specification_Release()
+            {
+                Pk_Specification_ReleaseId = 1,
+                Release = new Release()
+                {
+                    Enum_ReleaseStatus = new Enum_ReleaseStatus() { Code = Enum_ReleaseStatus.Open }
+                }
+            });
             
             RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(specRepo);
 
+
+            // Version repository
+            var versionRep = MockRepository.GenerateMock<ISpecVersionsRepository>();
+            versionRep.Stub(v => v.GetVersionForSpecRelease(SPEC_ID, RELEASE_OPEN_ID)).Return(new List<SpecVersion>());
+            versionRep.Stub(v => v.GetVersionForSpecRelease(SPEC_ID, RELEASE_OPENED_VERSION_TO_TRANSPOSE)).Return(new List<SpecVersion>()
+            {
+                new SpecVersion() { MajorVersion = RELEASE_OPENED_VERSION_TO_TRANSPOSE, TechnicalVersion = 0, EditorialVersion = 2, DocumentUploaded = DateTime.Now.AddDays(-1) },
+                new SpecVersion() { MajorVersion = RELEASE_OPENED_VERSION_TO_TRANSPOSE, TechnicalVersion = 1, EditorialVersion = 0, DocumentUploaded = DateTime.Now },
+            });
+
+            RepositoryFactory.Container.RegisterInstance<ISpecVersionsRepository>(versionRep);
         }
 
     }

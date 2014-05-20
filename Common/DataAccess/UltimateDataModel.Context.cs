@@ -53,8 +53,8 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<Enum_CommunitiesShortName> Enum_CommunitiesShortName { get; set; }
         public IDbSet<SpecificationResponsibleGroup> SpecificationResponsibleGroups { get; set; }
         public IDbSet<SpecificationTechnology> SpecificationTechnologies { get; set; }
-        public IDbSet<SpecVersion> SpecVersions { get; set; }
         public IDbSet<ETSI_WorkItem> ETSI_WorkItem { get; set; }
+        public IDbSet<SpecVersion> SpecVersions { get; set; }
     	
     	/**
     	 * This code is intended to enable testability of the different layers,
