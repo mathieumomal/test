@@ -49,6 +49,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommunityService.cs" />
+    <Compile Include="ISpecVersionService.cs" />
+    <Compile Include="SpecVersionService.cs" />
     <Compile Include="ICommunityService.cs" />
     <Compile Include="IMeetingService.cs" />
     <Compile Include="IPersonService.cs" />

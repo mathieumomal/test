@@ -56,7 +56,6 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
-
         /// <summary>
         /// Loads the content of the page 
         /// </summary>
@@ -97,6 +96,7 @@ namespace Etsi.Ultimate.Module.Specifications
                         FillGeneralTab(userRights, specification);
                         FillResponsiblityTab(specification);
                         FillRelatedSpecificationsTab(specification, selectedTab);
+                        FillReleasesTab(specification);
                         FillHistoryTab(specification);
                         ManageButtonDisplay(userRights);
                         // Check if selectedTab is specified then select the according Tab and View page
@@ -118,6 +118,14 @@ namespace Etsi.Ultimate.Module.Specifications
                 specificationMessages.CssClass = "Warning";
                 specificationMessagesTxt.CssClass = "WarningTxt";
             }
+        }
+
+        /// <summary>
+        /// Fill the Release Tab with the retrieved data 
+        /// </summary>
+        private void FillReleasesTab(Domain.Specification specification)
+        {
+            SpecificationReleaseControl1.DataSource = specification;
         }
 
         /// <summary>
@@ -378,10 +386,8 @@ namespace Etsi.Ultimate.Module.Specifications
                 Response.Redirect("EditSpecification.aspx?specificationId=" + SpecificationId + "&action=edit", true);
         }
 
-
         protected void WithdrawSpecificatione_Click(object sender, EventArgs e)
         {
         }
     }
-
 }

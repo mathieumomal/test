@@ -94,6 +94,29 @@
     <Compile Include="Components\FeatureController.cs" />
     <Compile Include="Components\ItemController.cs" />
     <Compile Include="Components\Item.cs" />
+    <Compile Include="ReleaseHeaderControl.ascx.cs">
+      <DependentUpon>ReleaseHeaderControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ReleaseHeaderControl.ascx.designer.cs">
+      <DependentUpon>ReleaseHeaderControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CustomHeaderTemplate.cs" />
+    <Compile Include="SpecificationReleaseControl.ascx.cs">
+      <DependentUpon>SpecificationReleaseControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SpecificationReleaseControl.ascx.designer.cs">
+      <DependentUpon>SpecificationReleaseControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="SpecificationVersionListControl.ascx.cs">
+      <DependentUpon>SpecificationVersionListControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="SpecificationVersionListControl.ascx.designer.cs">
+      <DependentUpon>SpecificationVersionListControl.ascx</DependentUpon>
+    </Compile>
+    <Compile Include="CustomContentTemplate.cs" />
     <Compile Include="EditSpecification.aspx.cs">
       <DependentUpon>EditSpecification.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -132,6 +155,16 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ReleaseHeaderControl.ascx" />
+    <Content Include="SpecificationReleaseControl.ascx" />
+    <Content Include="images\glyphicons_463_server.png" />
+    <Content Include="images\glyphicons_464_server_plus.png" />
+    <Content Include="images\glyphicons_465_server_minus.png" />
+    <Content Include="images\glyphicons_466_server_ban.png" />
+    <Content Include="images\glyphicons_467_server_flag.png" />
+    <Content Include="images\glyphicons_468_server_lock.png" />
+    <Content Include="images\glyphicons_469_server_new.png" />
+    <Content Include="SpecificationVersionListControl.ascx" />
     <Content Include="EditSpecification.aspx" />
     <Content Include="Documentation\Documentation.css" />
     <Content Include="Documentation\Documentation.html" />

@@ -161,6 +161,8 @@ namespace Etsi.Ultimate.DomainClasses
 
         public List<Enum_Technology> SpecificationTechnologiesList { get; set; }
         public List<WorkItem> SpecificationWIsList { get; set; }
+        public List<Release> SpecificationReleases { get; set; }
+
 
         public string SpecificationTypeShortName
         {

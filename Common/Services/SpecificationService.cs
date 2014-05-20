@@ -93,6 +93,20 @@ namespace Etsi.Ultimate.Services
                         }
                     }
                     result.Key.SpecificationWIsList = workItemsList;
+
+
+                    // Getting list of specification releases
+                    List<Release> releases = new List<Release>();
+                    Release releaseObj;
+                    var releaseManager = new ReleaseManager();
+                    releaseManager.UoW = uoW;
+                    foreach (Specification_Release item in result.Key.Specification_Release.ToList())
+                    {
+                        releaseObj = releaseManager.GetReleaseById(personId, item.Fk_ReleaseId).Key;
+                        if (releaseObj != null)
+                            releases.Add(releaseObj);
+                    }
+                    result.Key.SpecificationReleases = releases;
                 }
                 return result;
             }
@@ -122,7 +136,7 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public List<Specification> GetSpecificationBySearchCriteriaWithExclusion(int personId,String searchString, List<string> toExclude)
+        public List<Specification> GetSpecificationBySearchCriteriaWithExclusion(int personId, String searchString, List<string> toExclude)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {

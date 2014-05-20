@@ -81,6 +81,7 @@
     <Compile Include="SpecVersion.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="SpecVersion.Extend.cs" />
     <Compile Include="View_Persons.Extend.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Release.cs">

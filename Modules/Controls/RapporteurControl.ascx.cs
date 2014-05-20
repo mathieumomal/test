@@ -36,9 +36,6 @@ namespace Etsi.Ultimate.Controls
     ///we can use this last same attributes
     public partial class RapporteurControl : System.Web.UI.UserControl
     {
-        
-
-
         #region constants
         //ViewStates
         private const string RAPPORTEURS_VIEWSTATE_DATASOURCE = "RapporteursDataSource";
@@ -110,7 +107,6 @@ namespace Etsi.Ultimate.Controls
                 ViewState[ClientID + RAPPORTEURS_VIEWSTATE_ISSINGLEPERSONMODE] = value;
             }
         }
-
 
         /// <summary>
         /// This module provides a selection system
@@ -184,7 +180,6 @@ namespace Etsi.Ultimate.Controls
             }
         }
 
-
         /// <summary>
         /// List of choosen person's id
         /// </summary>
@@ -202,6 +197,7 @@ namespace Etsi.Ultimate.Controls
                 ViewState[ClientID + RAPPORTEURS_VIEWSTATE_ID] = value;
             }
         }
+
         /// <summary>
         /// Datasource for the radgrid which contains the list of persons (MODELS)
         /// </summary>
@@ -237,8 +233,6 @@ namespace Etsi.Ultimate.Controls
             }
         }
         #endregion
-
-
 
         #region Events
 
@@ -321,7 +315,6 @@ namespace Etsi.Ultimate.Controls
                 }
             }
         }
-        
 
         /// <summary>
         /// Add button for the multiple mode
@@ -413,8 +406,6 @@ namespace Etsi.Ultimate.Controls
         }
 
         #endregion
-
-
 
         #region private methods
 
