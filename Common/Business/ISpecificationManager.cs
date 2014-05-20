@@ -13,6 +13,14 @@ namespace Etsi.Ultimate.Business
         IUltimateUnitOfWork UoW { get; set; }
 
         /// <summary>
+        ///  Returns the specification from its ID, as well as the list of rights of the user.
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        KeyValuePair<Specification, UserRightsContainer> GetSpecificationById(int personId, int id);
+
+        /// <summary>
         /// Returns TRUE and nothing if the specification number is valid and FALSE and the list of the errors if the specification is not valid :
         /// - correctly formatted (ERR-002)
         /// - not already exist in database (ERR-003)

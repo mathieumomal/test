@@ -22,6 +22,12 @@ namespace Etsi.Ultimate.Business
 
         private int personId;
 
+        /// <summary>
+        /// Default implementation of the Interface. See interface
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public KeyValuePair<Specification, UserRightsContainer> GetSpecificationById(int personId, int id)
         {
             // Computes the rights of the user. These are independant from the releases.

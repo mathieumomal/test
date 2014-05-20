@@ -29,28 +29,21 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         public bool ForceTranspositionForRelease(int personId, int relId, int specId)
         {
-            // First check that user has right to transpose.
-            var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
-            var rights = rightsMgr.GetRights(personId);
-            if (!rights.HasRight(DomainClasses.Enum_UserRights.Specification_ForceTransposition))
-            {
-                throw new InvalidOperationException("User has no right to force transposition");
-            }
+            var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
+            specMgr.UoW = UoW;
+            var spec = specMgr.GetSpecificationById(personId, specId).Key;
+            
+            // Get the rights for all the releases.
+            var rights = specMgr.GetRightsForSpecReleases(personId, spec);
+            var rightsForRelease = rights.Where(r => r.Key.Fk_ReleaseId == relId).FirstOrDefault().Value;
 
-            // Then check that release is opened for this specification, and transposition is not already set to true
-            var specRelRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
-            specRelRepo.UoW = UoW;
-            var specRelease = specRelRepo.GetSpecificationRelease(specId, relId, true);
-            if (specRelease == null || specRelease.isWithdrawn.GetValueOrDefault() || specRelease.Release.Enum_ReleaseStatus.Code != Enum_ReleaseStatus.Open)
+            if (!rightsForRelease.HasRight(Enum_UserRights.Specification_ForceTransposition))
             {
-                throw new InvalidOperationException("Release is not opened, cannot force transposition");
+                throw new InvalidOperationException("User " + personId + " does not have right to force transposition");
             }
-            if (specRelease.isTranpositionForced.GetValueOrDefault())
-            {
-                throw new InvalidOperationException("Transposition is already forced for this release.");
-            }
-
-            // We set the flag of specRel to true
+           
+            // Then update the spec release
+            var specRelease = spec.Specification_Release.Where(sr => sr.Fk_ReleaseId == relId).FirstOrDefault();
             specRelease.isTranpositionForced = true;
 
             // Then, we check if there is something to send to transposition.
@@ -63,7 +56,7 @@ namespace Etsi.Ultimate.Business
             if (latestVersion != null && latestVersion.DocumentUploaded != null)
             {
                 var transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
-                transposeMgr.Transpose(specRelRepo.Find(specId), latestVersion);
+                transposeMgr.Transpose(spec, latestVersion);
             }
 
             return true;

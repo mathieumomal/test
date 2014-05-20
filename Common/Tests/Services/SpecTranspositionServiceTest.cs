@@ -33,7 +33,7 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void ForceTransposition_NominalCase()
         {
-            SetMocks();
+            SetMocks(true);
 
             var specSvc = new SpecificationService();
             Assert.AreEqual(true, specSvc.ForceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_OPEN_ID, SPEC_ID));
@@ -42,7 +42,7 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void ForceTransposition_SendsVersionForTranspositionIfUploaded()
         {
-            SetMocks();
+            SetMocks(true);
 
             var transpMock = MockRepository.GenerateMock<ITranspositionManager>();
             transpMock.Stub( m => m.Transpose( Arg<Specification>.Is.Anything, Arg<SpecVersion>.Is.Anything)).Return(true);
@@ -56,7 +56,7 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void ForceTransposition_ReturnsFalseWhenUserHasNoRight()
         {
-            SetMocks();
+            SetMocks(false);
             var specSvc = new SpecificationService();
             Assert.IsFalse(specSvc.ForceTranspositionForRelease(USER_TRANSPOSE_NO_RIGHT, 1, 1));
         }
@@ -64,7 +64,7 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void ForceTransposition_ReturnsFalseWhenReleaseIsFrozenOrClosed()
         {
-            SetMocks();
+            SetMocks(true);
             var specSvc = new SpecificationService();
             Assert.IsFalse(specSvc.ForceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_FROZEN_ID, SPEC_ID));
             Assert.IsFalse(specSvc.ForceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_CLOSED_ID, SPEC_ID));
@@ -72,7 +72,7 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void ForceTransposition_ReturnsFalseWhenReleaseIsWithdrawn()
         {
-            SetMocks();
+            SetMocks(true);
             var specSvc = new SpecificationService();
             Assert.IsFalse(specSvc.ForceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_WITHDRAWN_ID, SPEC_ID));
         }
@@ -80,77 +80,86 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void ForceTransposition_ReturnsFalseIfForceTranspositionFlagIsAlreadySet()
         {
-            SetMocks();
+            SetMocks(true);
             var specSvc = new SpecificationService();
             Assert.IsFalse(specSvc.ForceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_FORCED_TRANSPOSITION_ID, SPEC_ID));
         }
 
-        private void SetMocks()
+        private void SetMocks(bool hasBasicRight)
         {
-            // Registering rights
-            var rightsMgr = MockRepository.GenerateMock<IRightsManager>();
-            rightsMgr.Stub(r => r.GetRights(USER_TRANSPOSE_NO_RIGHT)).Return(new UserRightsContainer());
-
-            var rights = new UserRightsContainer();
-            rights.AddRight(Enum_UserRights.Specification_ForceTransposition);
-            rightsMgr.Stub(r => r.GetRights(USER_TRANSPOSE_RIGHT)).Return(rights);
-
-            ManagerFactory.Container.RegisterInstance<IRightsManager>(rightsMgr);
-
             // Registering spec release
             var specRepo = MockRepository.GenerateMock<ISpecificationRepository>();
-            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_FROZEN_ID, true)).Return(new Specification_Release()
+            var sp1 = new Specification_Release()
             {
                 Pk_Specification_ReleaseId = 1,
+                Fk_ReleaseId = RELEASE_FROZEN_ID,
                 Release = new Release()
                 {
                     Enum_ReleaseStatus = new Enum_ReleaseStatus() { Code = Enum_ReleaseStatus.Frozen }
                 }
-            });
-            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_CLOSED_ID, true)).Return(new Specification_Release()
+            };
+
+            var sp2 = new Specification_Release()
             {
                 Pk_Specification_ReleaseId = 1,
+                Fk_ReleaseId = RELEASE_OPEN_ID,
                 Release = new Release()
                 {
                     Enum_ReleaseStatus = new Enum_ReleaseStatus() { Code = Enum_ReleaseStatus.Closed }
                 }
-            });
-            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_OPEN_ID, true)).Return(new Specification_Release()
+            };
+
+            var sp3 = new Specification_Release()
             {
                 Pk_Specification_ReleaseId = 1,
+                Fk_ReleaseId = RELEASE_CLOSED_ID,
                 isWithdrawn = false,
                 Release = new Release()
                 {
                     Enum_ReleaseStatus = new Enum_ReleaseStatus() { Code = Enum_ReleaseStatus.Open }
                 }
-            });
-            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_WITHDRAWN_ID, true)).Return(new Specification_Release()
+            };
+
+            var sp4 = new Specification_Release()
             {
                 Pk_Specification_ReleaseId = 1,
+                Fk_ReleaseId = RELEASE_WITHDRAWN_ID,
                 isWithdrawn = true,
                 Release = new Release()
                 {
                     Enum_ReleaseStatus = new Enum_ReleaseStatus() { Code = Enum_ReleaseStatus.Open }
                 }
-            });
-            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_FORCED_TRANSPOSITION_ID, true)).Return(new Specification_Release()
+            };
+
+            var sp5 = new Specification_Release()
             {
                 Pk_Specification_ReleaseId = 1,
+                Fk_ReleaseId = RELEASE_FORCED_TRANSPOSITION_ID,
                 isWithdrawn = true,
                 isTranpositionForced = true,
                 Release = new Release()
                 {
                     Enum_ReleaseStatus = new Enum_ReleaseStatus() { Code = Enum_ReleaseStatus.Open }
                 }
-            });
-            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_OPENED_VERSION_TO_TRANSPOSE, true)).Return(new Specification_Release()
+            };
+
+            var sp6 = new Specification_Release()
             {
                 Pk_Specification_ReleaseId = 1,
+                Fk_ReleaseId = RELEASE_OPENED_VERSION_TO_TRANSPOSE,
                 Release = new Release()
                 {
                     Enum_ReleaseStatus = new Enum_ReleaseStatus() { Code = Enum_ReleaseStatus.Open }
                 }
-            });
+            };
+
+            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_FROZEN_ID, true)).Return(sp1);
+            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_CLOSED_ID, true)).Return(sp2);
+            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_OPEN_ID, true)).Return(sp3);
+            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_WITHDRAWN_ID, true)).Return(sp4);
+            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_FORCED_TRANSPOSITION_ID, true)).Return(sp5);
+            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_OPENED_VERSION_TO_TRANSPOSE, true)).Return(sp6);
+
             
             RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(specRepo);
 
@@ -165,6 +174,33 @@ namespace Etsi.Ultimate.Tests.Services
             });
 
             RepositoryFactory.Container.RegisterInstance<ISpecVersionsRepository>(versionRep);
+
+            // Release manager
+            var specMgr = MockRepository.GenerateMock<ISpecificationManager>();
+
+            var rightsOK = new UserRightsContainer();
+            rightsOK.AddRight(Enum_UserRights.Specification_ForceTransposition);
+            var rightsKO = new UserRightsContainer();
+
+            var rightsResult = new List<KeyValuePair<Specification_Release, UserRightsContainer>>()
+            {
+                new KeyValuePair<Specification_Release,UserRightsContainer>(sp1, rightsKO),
+                new KeyValuePair<Specification_Release,UserRightsContainer>(sp2, hasBasicRight? rightsOK:rightsKO),
+                new KeyValuePair<Specification_Release,UserRightsContainer>(sp3, rightsKO),
+                new KeyValuePair<Specification_Release,UserRightsContainer>(sp4, rightsKO),
+                new KeyValuePair<Specification_Release,UserRightsContainer>(sp5, rightsKO),
+                new KeyValuePair<Specification_Release,UserRightsContainer>(sp6, hasBasicRight? rightsOK:rightsKO),
+            };
+            specMgr.Stub(r => r.GetRightsForSpecReleases(Arg<int>.Is.Anything, Arg<Specification>.Is.Anything)).Return(rightsResult);
+
+            var spec = new Specification()
+            {
+                Pk_SpecificationId = SPEC_ID,
+                Specification_Release = new List<Specification_Release>() { sp1, sp2, sp3, sp4, sp5, sp6 },
+            };
+            specMgr.Stub(r => r.GetSpecificationById(Arg<int>.Is.Anything, Arg<int>.Is.Anything)).Return(new KeyValuePair<Specification, UserRightsContainer>(spec, rightsKO));
+
+            ManagerFactory.Container.RegisterInstance<ISpecificationManager>(specMgr);
         }
 
     }
