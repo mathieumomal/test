@@ -73,11 +73,13 @@ namespace Etsi.Ultimate.Tests.Repositories
             {                
                 Multifile = false,
                 ForcePublication = false,
-                Location = "Location3"
+                Location = "Location3",
+                Remarks = new List<Remark>(){ new Remark() { RemarkText = "New remark", Fk_VersionId = 1 } }
                  
             };
             repo.InsertOrUpdate(specVersion);
             Assert.AreEqual(3, repo.All.ToList().Count);
+            Assert.AreEqual("New remark", repo.All.ToList()[2].Remarks.ToList()[0].RemarkText);
         }
 
         [Test]
