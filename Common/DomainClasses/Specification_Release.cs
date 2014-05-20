@@ -27,6 +27,7 @@ namespace Etsi.Ultimate.DomainClasses
         public int Fk_SpecificationId { get; set; }
         public int Fk_ReleaseId { get; set; }
         public Nullable<int> WithdrawMeetingId { get; set; }
+        public Nullable<bool> isTranpositionForced { get; set; }
     
         public virtual Release Release { get; set; }
         public virtual ICollection<Remark> Remarks { get; set; }

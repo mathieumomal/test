@@ -90,7 +90,7 @@ namespace Etsi.Ultimate.Repositories
                 if (x.Pk_Specification_ReleaseId != default(int))
                     UoW.Context.SetModified(x);
             });
-            
+
 
 
             //[2] Add the Entity (It will add the childs as well)
@@ -170,7 +170,7 @@ namespace Etsi.Ultimate.Repositories
                     query = query.OrderBy(s => s.Number);
                     break;
             }
-            
+
             // Pagesize = 0 means get all.
             if (searchObject.PageSize != 0)
             {
@@ -180,7 +180,7 @@ namespace Etsi.Ultimate.Repositories
             {
                 return new KeyValuePair<List<Specification>, int>(query.ToList(), query.Count());
             }
-           
+
         }
 
         public List<Specification> GetSpecificationBySearchCriteria(string searchString)
@@ -224,6 +224,16 @@ namespace Etsi.Ultimate.Repositories
 
 
 
+
+
+        public Specification_Release GetSpecificationRelease(int specId, int releaseId, bool includeRelease)
+        {
+            var query = UoW.Context.Specification_Release.Where(sr => sr.Fk_SpecificationId == specId && sr.Fk_ReleaseId == releaseId);
+            if (includeRelease)
+                query = query.Include(sr => sr.Release);
+            return query.FirstOrDefault();
+        }
+
     }
 
     public interface ISpecificationRepository : IEntityRepository<Specification>
@@ -240,6 +250,15 @@ namespace Etsi.Ultimate.Repositories
         List<Enum_Technology> GetTechnologyList();
 
         List<Enum_Serie> GetSeries();
+
+        /// <summary>
+        /// Gets the specification release for given spec and release Id. Additionally appends the release if includeRelease = true
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <param name="releaseId"></param>
+        /// <param name="includeRelease"></param>
+        /// <returns></returns>
+        Specification_Release GetSpecificationRelease(int specId, int releaseId, bool includeRelease);
 
         /// <summary>
         /// Set entity state to deleted

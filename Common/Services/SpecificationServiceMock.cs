@@ -432,5 +432,15 @@ namespace Etsi.Ultimate.Services
         {
             throw new NotImplementedException();
         }
+
+        #region ISpecificationService Members
+
+
+        public bool ForceTranspositionForRelease(int personId, int releaseId, int specificationId)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

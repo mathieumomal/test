@@ -65,6 +65,7 @@ namespace Etsi.Ultimate.Business
             Container.RegisterType<IWorkItemCsvParser, WorkItemCsvParser>(new TransientLifetimeManager());
             Container.RegisterType<ISpecificationManager, SpecificationManager>(new TransientLifetimeManager());
             Container.RegisterType<ICommunityManager, CommunityManager>(new TransientLifetimeManager());
+            Container.RegisterType<ITranspositionManager, TranspositionManager>(new TransientLifetimeManager());
         }
     }
 }

@@ -107,5 +107,16 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         string ExportSpecification(int personId, SpecificationSearch searchObj);
 
+        /// <summary>
+        /// Sends the specification for transposition. This means:
+        /// - set the flag in the Spec_Release record
+        /// - if a version is uploaded and no version is allocated, sends the latest version for transposition.
+        /// </summary>
+        /// <param name="personId">The Id of the person doing the action.</param>
+        /// <param name="releaseId">The Id of the release for which transposition should be done.</param>
+        /// <param name="specificationId"></param>
+        /// <returns></returns>
+        bool ForceTranspositionForRelease(int personId, int releaseId, int specificationId);
+
     }
 }

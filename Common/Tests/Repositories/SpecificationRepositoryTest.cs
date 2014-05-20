@@ -90,6 +90,14 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(3, repo.All.ToList().Count);
         }
 
+        [Test]
+        public void SpecRelease_Find()
+        {
+            var repo = new SpecificationRepository() { UoW = GetUnitOfWork() };
+            Assert.IsNotNull(repo.GetSpecificationRelease(1, 1, true));
+            Assert.IsNull(repo.GetSpecificationRelease(1, 3, false));
+        }
+
 
         private IUltimateUnitOfWork GetSimplifiedUnitOfWork()
         {
@@ -231,6 +239,16 @@ namespace Etsi.Ultimate.Tests.Repositories
             });
 
             iUltimateContext.Specifications = specDbSet;
+
+
+            // Generate spec release
+
+            var specRel = new SpecificationReleaseFakeDBSet();
+            specRel.Add( new Specification_Release() { Fk_ReleaseId = 1, Fk_SpecificationId =1, isWithdrawn = false } );
+            specRel.Add(new Specification_Release() { Fk_ReleaseId = 2, Fk_SpecificationId = 2, isWithdrawn = true});
+            iUltimateContext.Specification_Release = specRel;
+
+
 
             iUnitOfWork.Stub(uow => uow.Context).Return(iUltimateContext);
             return iUnitOfWork;
