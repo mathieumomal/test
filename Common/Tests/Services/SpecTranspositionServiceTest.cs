@@ -157,8 +157,8 @@ namespace Etsi.Ultimate.Tests.Services
 
             // Version repository
             var versionRep = MockRepository.GenerateMock<ISpecVersionsRepository>();
-            versionRep.Stub(v => v.GetVersionForSpecRelease(SPEC_ID, RELEASE_OPEN_ID)).Return(new List<SpecVersion>());
-            versionRep.Stub(v => v.GetVersionForSpecRelease(SPEC_ID, RELEASE_OPENED_VERSION_TO_TRANSPOSE)).Return(new List<SpecVersion>()
+            versionRep.Stub(v => v.GetVersionsForSpecRelease(SPEC_ID, RELEASE_OPEN_ID)).Return(new List<SpecVersion>());
+            versionRep.Stub(v => v.GetVersionsForSpecRelease(SPEC_ID, RELEASE_OPENED_VERSION_TO_TRANSPOSE)).Return(new List<SpecVersion>()
             {
                 new SpecVersion() { MajorVersion = RELEASE_OPENED_VERSION_TO_TRANSPOSE, TechnicalVersion = 0, EditorialVersion = 2, DocumentUploaded = DateTime.Now.AddDays(-1) },
                 new SpecVersion() { MajorVersion = RELEASE_OPENED_VERSION_TO_TRANSPOSE, TechnicalVersion = 1, EditorialVersion = 0, DocumentUploaded = DateTime.Now },
