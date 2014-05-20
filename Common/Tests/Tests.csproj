@@ -100,9 +100,11 @@
     <Compile Include="Business\MailManagerTest.cs" />
     <Compile Include="Business\RightsManagerTest.cs" />
     <Compile Include="Business\SpecificationWorkItemManagerTest.cs" />
+    <Compile Include="Business\SpecVersionsManagerTest.cs" />
     <Compile Include="Business\WorkPlanFileManagerTest.cs" />
     <Compile Include="FakeRepositories\Enum_TechnologiesFakeRepository.cs" />
     <Compile Include="FakeRepositories\SpecificationWIFakeRepository.cs" />
+    <Compile Include="FakeRepositories\SpecVersionsFakeRepository.cs" />
     <Compile Include="FakeRepositories\WorkPlanFileFakeRepository.cs" />
     <Compile Include="FakeSets\Enum_SerieFakeDBSet.cs" />
     <Compile Include="FakeSets\Enum_TechnologyFakeDBSet.cs" />

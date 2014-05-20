@@ -15,8 +15,8 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specVersionManager = new SpecVersionManager();
-                specVersionManager.UoW = uoW;
+                var specVersionManager = new SpecVersionsManager(uoW);
+                //specVersionManager.UoW = uoW;
 
                 return specVersionManager.GetVersionsBySpecId(specificationId);
             }

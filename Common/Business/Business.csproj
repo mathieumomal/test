@@ -62,7 +62,6 @@
   <ItemGroup>
     <Compile Include="CommunityManager.cs" />
     <Compile Include="ISpecVersionManager.cs" />
-    <Compile Include="SpecVersionManager.cs" />
     <Compile Include="ITranspositionManager.cs" />
     <Compile Include="SpecificationExporter.cs" />
     <Compile Include="ICommunityManager.cs" />
@@ -82,6 +81,7 @@
     <Compile Include="SpecificationManager.cs" />
     <Compile Include="SpecificationTechnologiesManager.cs" />
     <Compile Include="SpecificationWorkItemManager.cs" />
+    <Compile Include="SpecVersionsManager.cs" />
     <Compile Include="TranspositionManager.cs" />
     <Compile Include="UrlManager.cs" />
     <Compile Include="WorkItemCsvParser.cs" />

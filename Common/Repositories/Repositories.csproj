@@ -51,7 +51,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommunityRepository.cs" />
-    <Compile Include="SpecVersionRepository.cs" />
     <Compile Include="EnumTechnologiesRepository.cs" />
     <Compile Include="HistoryRepository.cs" />
     <Compile Include="MeetingRepository.cs" />

@@ -46,9 +46,14 @@ namespace Etsi.Ultimate.Repositories
             return AllIncluding(v => v.Remarks, v=> v.Release, v => v.Specification).Where(v => v.Pk_VersionId == id).FirstOrDefault();
         }
 
-        public List<SpecVersion> GetVersionForSpecRelease(int specId, int releaseId)
+        public List<SpecVersion> GetVersionsForSpecRelease(int specId, int releaseId)
         {
             return AllIncluding(v => v.Remarks).Where(v => v.Fk_SpecificationId == specId && v.Fk_ReleaseId == releaseId).ToList();
+        }
+
+        public List<SpecVersion> GetVersionsBySpecId(int specificationId)
+        {
+            return All.Where(x => (x.Fk_SpecificationId != null) ? x.Fk_SpecificationId.Value == specificationId : false).ToList();
         }
 
         public void InsertOrUpdate(SpecVersion entity)
@@ -62,14 +67,7 @@ namespace Etsi.Ultimate.Repositories
             {
                 if (x.Pk_RemarkId != default(int))
                     UoW.Context.SetModified(x);                
-            });
-
-            /*if (entity.Fk_SpecificationId != default(int))
-                UoW.Context.SetModified(entity.Specification);
-
-            if (entity.Fk_ReleaseId != default(int))
-                UoW.Context.SetModified(entity.Release);*/
-
+            });            
 
             //[2] Add the Entity (It will add the childs as well)
             UoW.Context.SetAdded(entity);
@@ -104,6 +102,13 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="specId">Specification id</param>
         /// <param name="releaseId">Release id</param>
         /// <returns>List of specVersions</returns>
-        List<SpecVersion> GetVersionForSpecRelease(int specId, int releaseId);
+        List<SpecVersion> GetVersionsForSpecRelease(int specId, int releaseId);
+
+        /// <summary>
+        /// Return a list of SpecVersion for a specification (including Releases of the specification)
+        /// </summary>
+        /// <param name="specificationId">Identifier og the specification</param>
+        /// <returns>List of specVersions</returns>
+        List<SpecVersion> GetVersionsBySpecId(int specificationId);
     }
 }

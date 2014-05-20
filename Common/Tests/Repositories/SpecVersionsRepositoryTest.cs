@@ -51,13 +51,13 @@ namespace Etsi.Ultimate.Tests.Repositories
         }
 
         [Test]
-        public void SpecVersionRepository_GetVersionForSpecrelease()
+        public void SpecVersionRepository_GetVersionsForSpecrelease()
         {
             IUltimateUnitOfWork uow = GetUnitOfWork();
             var repo = new SpecVersionsRepository(uow);
             repo.UoW = uow;
 
-            Assert.AreEqual("Location1", repo.GetVersionForSpecRelease(1, 1)[0].Location);
+            Assert.AreEqual("Location1", repo.GetVersionsForSpecRelease(1, 1)[0].Location);
         }
         
 
