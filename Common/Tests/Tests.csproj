@@ -171,6 +171,7 @@
     <Compile Include="Services\PersonServiceTest.cs" />
     <Compile Include="Services\ReleaseServiceTest.cs" />
     <Compile Include="Services\SpecTranspositionServiceTest.cs" />
+    <Compile Include="Services\SpecVersionServiceTest.cs" />
     <Compile Include="Services\UrlServiceTest.cs" />
     <Compile Include="Services\WorkItemServiceTest.cs" />
     <Compile Include="Business\ConfigVariableTest.cs" />
