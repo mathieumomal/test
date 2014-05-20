@@ -109,6 +109,12 @@ namespace Etsi.Ultimate.Tests
             set;
         }
 
+        public System.Data.Entity.IDbSet<SpecVersion> SpecVersions
+        {
+            get;
+            set;
+        }
+
 
         public void SetModified(object entity)
         {
@@ -116,6 +122,8 @@ namespace Etsi.Ultimate.Tests
                 Releases.Add((Release)entity);
             else if (entity.GetType() == typeof(WorkItem))
                 WorkItems.Add((WorkItem)entity);
+            else if (entity.GetType() == typeof(SpecVersion))
+                SpecVersions.Add((SpecVersion)entity);
         }
 
         public void SetAdded(object entity)
@@ -138,6 +146,8 @@ namespace Etsi.Ultimate.Tests
                 WorkPlanFiles.Add((WorkPlanFile)entity);
             else if (entity.GetType() == typeof(Specification))
                 Specifications.Add((Specification)entity);
+            else if (entity.GetType() == typeof(SpecVersion))
+                SpecVersions.Add((SpecVersion)entity);
             else
                 throw new NotImplementedException("Something is missing in the FakeContext");
         }
@@ -189,19 +199,7 @@ namespace Etsi.Ultimate.Tests
         #endregion
 
         #region IUltimateContext Members
-
-
-        public System.Data.Entity.IDbSet<SpecVersion> SpecVersions
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
+        
 
         #endregion
     }

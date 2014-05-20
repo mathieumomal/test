@@ -112,11 +112,13 @@
     <Compile Include="FakeSets\SpecificationResponsibleGroupFakeDbSet.cs" />
     <Compile Include="FakeSets\SpecificationTechnologyFakeDBSet.cs" />
     <Compile Include="FakeSets\SpecificationWorkItemFakeDBSet.cs" />
+    <Compile Include="FakeSets\SpecVersionFakeDBSet.cs" />
     <Compile Include="FakeSets\TechnologiesFakeDBSet.cs" />
     <Compile Include="FakeSets\VersionFakeDBSet.cs" />
     <Compile Include="FakeSets\ViewPersonFakeDBSet.cs" />
     <Compile Include="FakeSets\WorkPlanFileFakeDBSet.cs" />
     <Compile Include="Repositories\SpecificationWorkItemRepositoryTest.cs" />
+    <Compile Include="Repositories\SpecVersionsRepositoryTest.cs" />
     <Compile Include="Repositories\WorkPlanFileRepositoryTest.cs" />
     <Compile Include="Services\RightsService.cs" />
     <Compile Include="Services\RightsServiceTest.cs" />

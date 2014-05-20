@@ -79,6 +79,7 @@ namespace Etsi.Ultimate.Repositories
             Container.RegisterType<IEnumTechnologiesRepository, EnumTechnologiesRepository>(new TransientLifetimeManager());
             Container.RegisterType<ISpecificationTechnologiesRepository, SpecificationTechnologiesRepository>(new TransientLifetimeManager());
             Container.RegisterType<ISpecificationWorkItemRepository, SpecificationWorkItemRepository>(new TransientLifetimeManager());
+            Container.RegisterType<ISpecVersionsRepository, SpecVersionsRepository>(new TransientLifetimeManager());
         }
     }
 }

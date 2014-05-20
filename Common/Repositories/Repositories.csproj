@@ -63,6 +63,7 @@
     <Compile Include="SpecificationRepository.cs" />
     <Compile Include="SpecificationTechnologiesRepository.cs" />
     <Compile Include="SpecificationWorkItemRepository.cs" />
+    <Compile Include="SpecVersionsRepository.cs" />
     <Compile Include="UrlRepository.cs" />
     <Compile Include="UserRightsRepository.cs" />
     <Compile Include="UltimateUnitOfWork.cs" />
