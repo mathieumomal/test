@@ -118,5 +118,12 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         bool ForceTranspositionForRelease(int personId, int releaseId, int specificationId);
 
+
+        /// <summary>
+        /// For a given specification, computes the authorized actions on each release.
+        /// </summary>
+        /// <param name="spec">The specification on which we want to compute rights</param>
+        /// <returns>A list of Specification_Release, in the order they were provided in the spec.Specification_Release field, with the associated rights</returns>
+        List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, Specification spec);
     }
 }

@@ -92,7 +92,7 @@ namespace Etsi.Ultimate.Tests.Services
             rightsMgr.Stub(r => r.GetRights(USER_TRANSPOSE_NO_RIGHT)).Return(new UserRightsContainer());
 
             var rights = new UserRightsContainer();
-            rights.AddRight(Enum_UserRights.Specification_ForceUnforceTransposition);
+            rights.AddRight(Enum_UserRights.Specification_ForceTransposition);
             rightsMgr.Stub(r => r.GetRights(USER_TRANSPOSE_RIGHT)).Return(rights);
 
             ManagerFactory.Container.RegisterInstance<IRightsManager>(rightsMgr);

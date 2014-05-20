@@ -69,7 +69,9 @@ namespace Etsi.Ultimate.Business
             }
 
             // Create an history entry
-            var releaseMgr = new ReleaseManager() { UoW = UoW };
+            var releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
+            releaseMgr.UoW = UoW ;
+
             var releaseShortName = releaseMgr.GetReleaseById(0, spec.Specification_Release.First().Fk_ReleaseId).Key.ShortName;
             spec.Histories.Clear();
             spec.Histories.Add(

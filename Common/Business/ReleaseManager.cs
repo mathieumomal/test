@@ -10,7 +10,7 @@ using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Business
 {
-    public class ReleaseManager
+    public class ReleaseManager : Etsi.Ultimate.Business.IReleaseManager
     {
         // Used for the caching of the releases.
         private static string CACHE_KEY = "ULT_BIZ_RELEASES_ALL";
@@ -524,4 +524,6 @@ namespace Etsi.Ultimate.Business
             CacheManager.Clear(CACHE_KEY);
         }
     }
+
+   
 }

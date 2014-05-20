@@ -24,7 +24,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var releaseManager = new ReleaseManager();
+                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
                 releaseManager.UoW = uoW;
                 //Get list of releases
                 return releaseManager.GetAllReleases(personId);
@@ -35,7 +35,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var releaseManager = new ReleaseManager();
+                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
                 releaseManager.UoW = uoW;
                 return releaseManager.GetReleaseById(personId,releaseId); 
             }
@@ -45,7 +45,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var releaseManager = new ReleaseManager();
+                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
                 releaseManager.UoW = uoW;
                 return releaseManager.GetPreviousReleaseCode(releaseId);
             }
@@ -56,7 +56,7 @@ namespace Etsi.Ultimate.Services
 
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var releaseManager = new ReleaseManager();
+                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
                 releaseManager.UoW = uoW;
                 releaseManager.FreezeRelease(releaseId, endDate, personId, FreezeMtgId, FreezeMtgRef);
                 uoW.Save();
@@ -75,7 +75,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var releaseManager = new ReleaseManager();
+                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
                 releaseManager.UoW = uoW;
                 releaseManager.CloseRelease(releaseId, closureDate, closureMtgRef, closureMtgId, personID);
                 uoW.Save();
@@ -91,7 +91,7 @@ namespace Etsi.Ultimate.Services
         {            
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var releaseManager = new ReleaseManager();
+                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
                 releaseManager.UoW = uoW;
                 return releaseManager.GetAllReleasesCodes(releaseId);
             }
@@ -107,7 +107,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var releaseManager = new ReleaseManager();
+                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
                 releaseManager.UoW = uoW;
                 releaseManager.EditRelease(release, previousReleaseId, personId);
                 uoW.Save();
@@ -124,7 +124,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var releaseManager = new ReleaseManager();
+                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
                 releaseManager.UoW = uoW;
                 var newRelease = releaseManager.CreateRelease(release, previousReleaseId, personId);
                 uoW.Save();

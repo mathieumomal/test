@@ -98,7 +98,7 @@ namespace Etsi.Ultimate.Services
                     // Getting list of specification releases
                     List<Release> releases = new List<Release>();
                     Release releaseObj;
-                    var releaseManager = new ReleaseManager();
+                    var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
                     releaseManager.UoW = uoW;
                     foreach (Specification_Release item in result.Key.Specification_Release.ToList())
                     {
@@ -286,6 +286,21 @@ namespace Etsi.Ultimate.Services
                 }
             }
             return true;
+        }
+
+        #endregion
+
+        #region ISpecificationService Members
+
+
+        public List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, Specification spec)
+        {
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
+                specMgr.UoW = uow;
+                return specMgr.GetRightsForSpecReleases(personId, spec);
+            }
         }
 
         #endregion

@@ -35,6 +35,7 @@ namespace Etsi.Ultimate.DomainClasses
         Specification_Withdraw,
         Specification_View_UnAllocated_Number,
         Specification_ManageITURecommendations,
-        Specification_ForceUnforceTransposition,
+
+        Specification_ForceTransposition,
     }
 }

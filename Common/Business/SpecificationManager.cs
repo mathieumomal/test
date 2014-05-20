@@ -165,5 +165,47 @@ namespace Etsi.Ultimate.Business
         }
 
         #endregion
+
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="spec"></param>
+        /// <returns></returns>
+        public List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, Specification spec)
+        {
+            var result = new List<KeyValuePair<Specification_Release, UserRightsContainer>>();
+
+            // Get user rights
+            var rightsManager = ManagerFactory.Resolve<IRightsManager>();
+            rightsManager.UoW = UoW;
+            var userRights = rightsManager.GetRights(personId);
+
+            // Get information about the releases, in particular the status.
+            var releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
+            releaseMgr.UoW = UoW;
+            var releases = releaseMgr.GetAllReleases(personId).Key;
+
+            foreach (var sRel in spec.Specification_Release)
+            {
+                var rights = new UserRightsContainer();
+
+                // This right is common to any action.
+                if (spec.IsActive && !sRel.isWithdrawn.GetValueOrDefault())
+                {
+
+                    // Test the right of the user to force transposition.
+                    var rel = releases.Where(r => r.Pk_ReleaseId == sRel.Fk_ReleaseId).FirstOrDefault();
+                    if (userRights.HasRight(Enum_UserRights.Specification_ForceTransposition)
+                        && rel != null && rel.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Open
+                        && ! sRel.isTranpositionForced.GetValueOrDefault())
+                    {
+                        rights.AddRight(Enum_UserRights.Specification_ForceTransposition);
+                    }
+                }
+                result.Add(new KeyValuePair<Specification_Release, UserRightsContainer>(sRel, rights));
+            }
+            return result;
+        }
+
     }
 }

@@ -46,7 +46,7 @@
 	<Right value="Specification_Withdraw"/>
 	<Right value="Specification_View_UnAllocated_Number"/>
 	<Right value="Specification_ManageITURecommendations"/>
-	<Right value="Specification_ForceUnforceTransposition"/>
+	<Right value="Specification_ForceTransposition"/>
   </UserRole>
   <!-- Administrators are members of the ETSI IT service who should be able to do everything -->
   <UserRole value="Administrator">

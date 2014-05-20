@@ -32,7 +32,7 @@ namespace Etsi.Ultimate.Business
             // First check that user has right to transpose.
             var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
             var rights = rightsMgr.GetRights(personId);
-            if (!rights.HasRight(DomainClasses.Enum_UserRights.Specification_ForceUnforceTransposition))
+            if (!rights.HasRight(DomainClasses.Enum_UserRights.Specification_ForceTransposition))
             {
                 throw new InvalidOperationException("User has no right to force transposition");
             }

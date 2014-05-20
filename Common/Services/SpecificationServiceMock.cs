@@ -442,5 +442,15 @@ namespace Etsi.Ultimate.Services
         }
 
         #endregion
+
+        #region ISpecificationService Members
+
+
+        public List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, Specification spec)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

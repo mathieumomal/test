@@ -34,5 +34,12 @@ namespace Etsi.Ultimate.Business
         /// <param name="keywords"></param>
         /// <returns></returns>
         List<Specification> LookForNumber(string specNumber);
+
+        /// <summary>
+        /// Returns the list of allowed actions regarding each specification-release of the provided specification.
+        /// </summary>
+        /// <param name="spec"></param>
+        /// <returns></returns>
+        List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, Specification spec);
     }
 }
