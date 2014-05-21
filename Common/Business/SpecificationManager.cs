@@ -203,7 +203,8 @@ namespace Etsi.Ultimate.Business
                     var rel = releases.Where(r => r.Pk_ReleaseId == sRel.Fk_ReleaseId).FirstOrDefault();
                     if (userRights.HasRight(Enum_UserRights.Specification_ForceTransposition)
                         && rel != null && rel.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Open
-                        && ! sRel.isTranpositionForced.GetValueOrDefault())
+                        && ! sRel.isTranpositionForced.GetValueOrDefault()
+                        && spec.IsUnderChangeControl.GetValueOrDefault())
                     {
                         rights.AddRight(Enum_UserRights.Specification_ForceTransposition);
                     }

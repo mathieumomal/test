@@ -12,10 +12,12 @@ namespace Etsi.Ultimate.Module.Specifications
     public class CustomContentTemplate : ITemplate
     {
         private List<SpecVersion> _specVersions;
+        private UserRightsContainer _releaseRights;
         private Page _page;
-        public CustomContentTemplate(List<SpecVersion> specVersions, Page page)
+        public CustomContentTemplate(List<SpecVersion> specVersions, UserRightsContainer releaseRights, Page page)
         {
             _specVersions = specVersions;
+            _releaseRights = releaseRights;
             _page = page;
         }
 
@@ -25,6 +27,7 @@ namespace Etsi.Ultimate.Module.Specifications
             if (ctrl != null)
             {
                 ctrl.DataSource = _specVersions;
+                ctrl.UserReleaseRights = _releaseRights;
             }
             container.Controls.Add(ctrl);
         }

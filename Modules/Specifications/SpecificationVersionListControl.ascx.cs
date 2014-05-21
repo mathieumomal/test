@@ -35,6 +35,14 @@ namespace Etsi.Ultimate.Module.Specifications
                 ViewState[CONST_SELECTED_TAB] = value;
             }
         }
+        /// <summary>
+        /// The list of rights of the user regarding the release.
+        /// </summary>
+        public UserRightsContainer UserReleaseRights
+        {
+            get;
+            set;
+        }
         public List<SpecVersion> DataSource
         {
             set;
@@ -52,6 +60,8 @@ namespace Etsi.Ultimate.Module.Specifications
 
             if (!IsPostBack)
             {
+                imgTransposition.Visible = !IsEditMode && UserReleaseRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
+
                 if (!IsEditMode)
                 {
                 }

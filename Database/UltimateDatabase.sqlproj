@@ -143,7 +143,9 @@
     <Build Include="dbo\Tables\SpecificationResponsibleGroup.sql" />
     <Build Include="dbo\Tables\SpecificationRapporteur.sql" />
     <Build Include="dbo\Tables\Specification_WorkItem.sql" />
-    <Build Include="dbo\Tables\Specification_Release.sql" />
+    <Build Include="dbo\Tables\Specification_Release.sql">
+      <AnsiNulls>Off</AnsiNulls>
+    </Build>
     <Build Include="dbo\Tables\Specification.sql" />
     <Build Include="dbo\Tables\Enum_Technology.sql" />
     <Build Include="dbo\Tables\Enum_Serie.sql" />
@@ -156,6 +158,10 @@
     <Build Include="dbo\Functions\getETSI_WKI_Ref.sql" />
     <Build Include="dbo\Stored Procedures\Specifications_CleanAll.sql" />
     <Build Include="dbo\Stored Procedures\WorkItems_CleanAll.sql" />
+    <Build Include="dbo\Stored Procedures\Versions_CleanAll.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

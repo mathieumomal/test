@@ -55,7 +55,7 @@ namespace DatabaseImport.ModuleImport
 
                 newSpec.Number = Utils.CheckString(legacySpec.Number, 20, RefImportForLog + " Number", newSpec.Number, Report);
 
-                newSpec.IsActive = Utils.NullBooleanCheck(legacySpec.definitively_withdrawn, RefImportForLog + "IsActive (<=> OLD DefinitivelyWithdrawn)", false, Report);
+                newSpec.IsActive = !Utils.NullBooleanCheck(legacySpec.definitively_withdrawn, RefImportForLog + "IsActive (<=> OLD DefinitivelyWithdrawn)", false, Report);
 
                 IsUnderChangeControlCase(newSpec, legacySpec);
 

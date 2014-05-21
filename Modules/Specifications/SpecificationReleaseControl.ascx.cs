@@ -18,6 +18,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
         #region Public Properties
 
+        public int PersonId { get; set; }
         public bool IsEditMode { get; set; }
 
         public Specification DataSource
@@ -49,6 +50,10 @@ namespace Etsi.Ultimate.Module.Specifications
                 rpbReleases.Items.Add(item);
             }
 
+            // Get the rights of the user
+            ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var userRightsPerSpecRelease = specSvc.GetRightsForSpecReleases(PersonId, DataSource);
+
             ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
             var versionsList = svc.GetVersionsBySpecId(DataSource.Pk_SpecificationId);
 
@@ -61,8 +66,8 @@ namespace Etsi.Ultimate.Module.Specifications
                                                            .OrderByDescending(x => x.MajorVersion)
                                                            .ThenByDescending(x => x.TechnicalVersion)
                                                            .ThenByDescending(x => x.EditorialVersion).ToList();
-
-                template = new CustomContentTemplate(datasource, this.Page);
+                var rights = userRightsPerSpecRelease.Where(r => r.Key.Fk_ReleaseId == releaseId).FirstOrDefault().Value;
+                template = new CustomContentTemplate(datasource,  rights, this.Page);
                 item.ContentTemplate = template;
                 template.InstantiateIn(item);
                 item.DataBind();

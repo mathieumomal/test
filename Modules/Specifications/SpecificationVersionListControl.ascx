@@ -46,7 +46,8 @@
         AllowSorting="false"
         AllowFilteringByColumn="false"
         AutoGenerateColumns="false"
-        AllowMultiRowEdit="true">
+        AllowMultiRowEdit="true"
+        OnItemDataBound="specificationsVersionGrid_ItemDataBound">
         <ClientSettings>
             <Scrolling AllowScroll="True" ScrollHeight="200px" UseStaticHeaders="true" />
         </ClientSettings>

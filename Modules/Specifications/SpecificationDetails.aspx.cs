@@ -126,6 +126,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private void FillReleasesTab(Domain.Specification specification)
         {
             SpecificationReleaseControl1.DataSource = specification;
+            SpecificationReleaseControl1.PersonId = UserId;
         }
 
         /// <summary>

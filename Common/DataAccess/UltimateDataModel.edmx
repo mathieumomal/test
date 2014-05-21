@@ -2039,6 +2039,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Specifications_CleanAll" FunctionName="Etsi.Ultimate.DataAccess.Store.Specifications_CleanAll" />
+          <FunctionImportMapping FunctionImportName="WorkItems_CleanAll" FunctionName="Etsi.Ultimate.DataAccess.Store.WorkItems_CleanAll" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

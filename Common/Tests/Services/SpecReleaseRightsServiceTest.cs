@@ -26,14 +26,15 @@ namespace Etsi.Ultimate.Tests.Services
         const int SPEC_REL_WITHDRAWN_ID = 3;
         const int SPEC_REL_ALREADY_FORCED_TRANSPOSITION_ID = 4;
 
-        [TestCase(PERSON_HAS_RIGHT, REL_OPEN_ID, false, true)]              // Nominal case
-        [TestCase(PERSON_HAS_NO_RIGHT, REL_OPEN_ID, false, false)]          // User has no right                ==> FAILURE
-        [TestCase(PERSON_HAS_RIGHT, REL_FROZEN_ID, false, false)]           // Release is not opened            ==> FAILURE
-        [TestCase(PERSON_HAS_RIGHT, SPEC_REL_WITHDRAWN_ID, false, false)]   // Spec-Release is withdrawn        ==> FAILURE
-        [TestCase(PERSON_HAS_RIGHT, REL_OPEN_ID, true, false)]              // Spec is withdrawn                ==> FAILURE
-        [TestCase(PERSON_HAS_RIGHT, REL_OPEN_ID, true, false)]              // Spec is withdrawn                ==> FAILURE
-        [TestCase(PERSON_HAS_RIGHT, SPEC_REL_ALREADY_FORCED_TRANSPOSITION_ID, false, false)]  // Transp. forced  ==> FAILURE
-        public void ForceTransposition(int personId, int relId, bool isSpecWithdrawn, bool expectedResult)
+        [TestCase(PERSON_HAS_RIGHT, REL_OPEN_ID, false, true, true)]              // Nominal case
+        [TestCase(PERSON_HAS_NO_RIGHT, REL_OPEN_ID, false, true, false)]          // User has no right                ==> FAILURE
+        [TestCase(PERSON_HAS_RIGHT, REL_FROZEN_ID, false, true, false)]           // Release is not opened            ==> FAILURE
+        [TestCase(PERSON_HAS_RIGHT, SPEC_REL_WITHDRAWN_ID, false, true, false)]   // Spec-Release is withdrawn        ==> FAILURE
+        [TestCase(PERSON_HAS_RIGHT, REL_OPEN_ID, true, true, false)]              // Spec is withdrawn                ==> FAILURE
+        [TestCase(PERSON_HAS_RIGHT, REL_OPEN_ID, true, true, false)]              // Spec is withdrawn                ==> FAILURE
+        [TestCase(PERSON_HAS_RIGHT, SPEC_REL_ALREADY_FORCED_TRANSPOSITION_ID, false, true, false)]  // Transp. forced ==> FAILURE
+        [TestCase(PERSON_HAS_RIGHT, REL_OPEN_ID, false, false, false)]        // Spec is in draft status          ==> FAILURE
+        public void ForceTransposition(int personId, int relId, bool isSpecWithdrawn, bool isUnderCC, bool expectedResult)
         {
             // Register all the mocks that might be needed.
             SetUpMocks();
@@ -48,7 +49,8 @@ namespace Etsi.Ultimate.Tests.Services
                     new Specification_Release() { Fk_ReleaseId = SPEC_REL_WITHDRAWN_ID, isWithdrawn = true },
                     new Specification_Release() { Fk_ReleaseId = SPEC_REL_ALREADY_FORCED_TRANSPOSITION_ID, isWithdrawn = false, isTranpositionForced = true  },
                 },
-                IsActive = !isSpecWithdrawn
+                IsActive = !isSpecWithdrawn,
+                IsUnderChangeControl = isUnderCC
             };
             var specSvc = new SpecificationService();
             var result = specSvc.GetRightsForSpecReleases(personId, spec);
@@ -80,6 +82,7 @@ namespace Etsi.Ultimate.Tests.Services
                 new Release() { Pk_ReleaseId = REL_FROZEN_ID, Enum_ReleaseStatus = new Enum_ReleaseStatus() { Code = Enum_ReleaseStatus.Frozen} },
                 new Release() { Pk_ReleaseId = SPEC_REL_WITHDRAWN_ID, Enum_ReleaseStatus = new Enum_ReleaseStatus() { Code = Enum_ReleaseStatus.Open} },
                 new Release() { Pk_ReleaseId = SPEC_REL_ALREADY_FORCED_TRANSPOSITION_ID, Enum_ReleaseStatus = new Enum_ReleaseStatus() { Code = Enum_ReleaseStatus.Open} },
+
             };
 
             releaseManager.Stub(r => r.GetAllReleases(Arg<int>.Is.Anything)).Return(new KeyValuePair<List<Release>,UserRightsContainer>(releaseList,new UserRightsContainer()));
