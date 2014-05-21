@@ -111,6 +111,11 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
+        /// <summary>
+        /// Upon click on the Force Transposition icon. Calls the service, then redirects user independently of result.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void imgForceTransposition_Click(object sender, System.Web.UI.ImageClickEventArgs e)
         {
             if (SpecId.HasValue && ReleaseId.HasValue && PersonId.HasValue)
@@ -121,6 +126,11 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
+        /// <summary>
+        /// Upon click on the Unforce Transposition icon. Calls the service, then redirects user independently of result.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void imgUnforceTransposition_Click(object sender, System.Web.UI.ImageClickEventArgs e)
         {
             if (SpecId.HasValue && ReleaseId.HasValue && PersonId.HasValue)
@@ -132,6 +142,9 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
+        /// <summary>
+        /// Redirect user. Removes previous "selectedTab" and "Rel" flags.
+        /// </summary>
         private void Redirect()
         {
             var address = HttpContext.Current.Request.Url.AbsoluteUri.Split('&').ToList();
