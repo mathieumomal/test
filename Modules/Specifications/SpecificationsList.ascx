@@ -62,8 +62,8 @@
                     <asp:LinkButton ID="btnNewSpecification" class="btn3GPP-success" runat="server" OnClientClick="var popUp=window.open('/desktopmodules/Specifications/EditSpecification.aspx?action=create', 'Specification-Create', 'height=690,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();return false;" Text="New Specification" />
                     <span style="float: right; padding-bottom: 2px; white-space: nowrap">
                         <asp:HyperLink ID="lnkManageITURecommendations" runat="server" Text="Manage ITU Recommendations" Target="_blank" />
-                        <ult:fullviewcontrol id="ultFullView" runat="server" />
                         <asp:ImageButton ID="btnSpecExport" runat="server" ImageAlign="Top" AlternateText="Export" ImageUrl="/DesktopModules/Specifications/images/excel_export.png" OnClick="btnSpecExport_Click" OnClientClick="removeBg" />
+                        <ult:fullviewcontrol id="ultFullView" runat="server" />
                         <asp:HiddenField ID="hidSpecAddress" runat="server" Value="" />
                     </span>
                 </td>
