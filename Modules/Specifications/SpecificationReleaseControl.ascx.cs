@@ -13,13 +13,34 @@ namespace Etsi.Ultimate.Module.Specifications
         #region Constants
 
         private const string CONST_DATASOURCE = "SpecificationReleaseControl_datasource";
+        private const string CONST_IS_EDIT_MODE = "SpecificationReleaseControl_isEditMode";
+        private const string CONST_PERSON_ID = "SpecificationReleaseControl_personId";
         
         #endregion
 
         #region Public Properties
 
-        public int PersonId { get; set; }
-        public bool IsEditMode { get; set; }
+        public int? PersonId
+        {
+            get
+            {
+                return (int?)ViewState[CONST_PERSON_ID];
+            }
+            set
+            {
+                ViewState[CONST_PERSON_ID] = value;
+            }
+        }
+        public bool IsEditMode {
+            get
+            {
+                return ((bool?)ViewState[CONST_IS_EDIT_MODE]).GetValueOrDefault();
+            }
+            set
+            {
+                ViewState[CONST_IS_EDIT_MODE] = value;
+            }
+        }
 
         public Specification DataSource
         {
@@ -42,7 +63,9 @@ namespace Etsi.Ultimate.Module.Specifications
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            foreach (var release in DataSource.SpecificationReleases)
+            rpbReleases.EnableViewState = false;
+
+            foreach (var release in DataSource.SpecificationReleases.OrderByDescending(sr => sr.SortOrder))
             {
                 RadPanelItem item = new RadPanelItem();
                 item.HeaderTemplate = new CustomHeaderTemplate(release, DataSource, this.Page);
@@ -52,7 +75,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
             // Get the rights of the user
             ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            var userRightsPerSpecRelease = specSvc.GetRightsForSpecReleases(PersonId, DataSource);
+            var userRightsPerSpecRelease = specSvc.GetRightsForSpecReleases(PersonId.GetValueOrDefault(), DataSource);
 
             ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
             var versionsList = svc.GetVersionsBySpecId(DataSource.Pk_SpecificationId);
@@ -67,11 +90,20 @@ namespace Etsi.Ultimate.Module.Specifications
                                                            .ThenByDescending(x => x.TechnicalVersion)
                                                            .ThenByDescending(x => x.EditorialVersion).ToList();
                 var rights = userRightsPerSpecRelease.Where(r => r.Key.Fk_ReleaseId == releaseId).FirstOrDefault().Value;
-                template = new CustomContentTemplate(datasource,  rights, this.Page);
+                template = new CustomContentTemplate(datasource,  rights, PersonId.GetValueOrDefault(), DataSource.Pk_SpecificationId, releaseId, this.Page);
                 item.ContentTemplate = template;
                 template.InstantiateIn(item);
                 item.DataBind();
                 item.ChildGroupHeight = 0;
+            }
+
+            if (Request.QueryString["Rel"] != null) 
+            {
+                var item = rpbReleases.Items.FindItemByValue(Request.QueryString["Rel"]);
+                if (item != null)
+                {
+                    item.Expanded = true;
+                }
             }
         }
 

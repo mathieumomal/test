@@ -188,25 +188,7 @@ namespace Etsi.Ultimate.Module.Specifications
             RadWindowAlert.RadAlert(errorText, 400, 150, "Error", "", "images/error.png");
         }
 
-        ///// <summary>
-        ///// Change all grid rows to Edit Mode
-        ///// </summary>
-        //private void ChangeGridToEditMode()
-        //{
-        //    if (IsEditMode)
-        //    {
-        //        foreach (GridItem item in specificationsGrid.MasterTableView.Items)
-        //        {
-        //            if (item is GridEditableItem)
-        //            {
-        //                GridEditableItem editableItem = item as GridDataItem;
-        //                editableItem.Edit = true;
-        //            }
-        //        }
-        //        specificationsGrid.Rebind();
-        //    }
-        //}
-
+      
         #endregion
     }
 }

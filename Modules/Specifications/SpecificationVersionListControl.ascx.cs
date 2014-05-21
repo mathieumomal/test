@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
+using System.Web;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
@@ -14,6 +15,9 @@ namespace Etsi.Ultimate.Module.Specifications
 
         private const string CONST_SPECIFICATION_GRID_DATA = "SpecificationListControlData_{0}";
         private const string CONST_SELECTED_TAB = "SPEC_SELECTED_TAB";
+        private const string CONST_SPEC_ID = "SPECIFICATION_ID";
+        private const string CONST_REL_ID = "RELEASE_ID";
+        private const string CONST_PERSON_ID = "PERSON_ID";
 
         #endregion
 
@@ -48,7 +52,19 @@ namespace Etsi.Ultimate.Module.Specifications
             set;
             get;
         }
-
+        public int? SpecId {
+            get; set;
+        
+        }
+        public int? ReleaseId {
+            get; set;
+        
+        }
+        public int? PersonId
+        {
+            get; set;
+          
+        }
         #endregion
 
         #region Events
@@ -91,6 +107,16 @@ namespace Etsi.Ultimate.Module.Specifications
                 GridDataItem item = (GridDataItem)e.Item;
                 if (IsEditMode && item["SpecificationActions"].FindControl("btnRemoveSpec") != null)
                     ((ImageButton)item["SpecificationActions"].FindControl("btnRemoveSpec")).Visible = true;
+            }
+        }
+
+        protected void imgTransposition_Click(object sender, System.Web.UI.ImageClickEventArgs e)
+        {
+            if (SpecId.HasValue && ReleaseId.HasValue && PersonId.HasValue)
+            {
+                var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                specSvc.ForceTranspositionForRelease(PersonId.Value, ReleaseId.Value, SpecId.Value);
+                Response.Redirect(HttpContext.Current.Request.Url.AbsoluteUri + "&selectedTab=Releases&Rel=" + ReleaseId.Value);
             }
         }
 

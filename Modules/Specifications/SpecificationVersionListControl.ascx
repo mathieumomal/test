@@ -37,7 +37,7 @@
 <asp:Panel runat="server" ID="pnlIconStrip" CssClass="TabContent" Height="100%">
     <asp:ImageButton ID="imgUploadVersion" ToolTip="Upload a version" ImageUrl="images/spec_rel-u.png" CssClass="display_size" runat="server" />
     <asp:ImageButton ID="imgInhibitPromote" ToolTip="Inhibit/Remove-Inhibit" ImageUrl="images/spec_rel-i.png" CssClass="display_size" runat="server" />
-    <asp:ImageButton ID="imgTransposition" ToolTip="Force/Unforce transposition" ImageUrl="images/spec_rel-f.png" CssClass="display_size" runat="server" />
+    <asp:ImageButton ID="imgTransposition" ToolTip="Force/Unforce transposition" ImageUrl="images/spec_rel-f.png" CssClass="display_size" runat="server" OnClick="imgTransposition_Click" />
     <asp:ImageButton ID="imgPromoteSpec" ToolTip="Promote specification to next Release" ImageUrl="images/spec_rel-p.png" CssClass="display_size" runat="server" />
     <asp:ImageButton ID="imgWithdrawSpec" ToolTip="Withdraw specification from Release" ImageUrl="images/spec_rel-w.png" CssClass="display_size" runat="server" />
 

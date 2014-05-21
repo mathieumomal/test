@@ -14,11 +14,17 @@ namespace Etsi.Ultimate.Module.Specifications
         private List<SpecVersion> _specVersions;
         private UserRightsContainer _releaseRights;
         private Page _page;
-        public CustomContentTemplate(List<SpecVersion> specVersions, UserRightsContainer releaseRights, Page page)
+        private int? _personId;
+        private int? _specId;
+        private int? _releaseId;
+        public CustomContentTemplate(List<SpecVersion> specVersions, UserRightsContainer releaseRights, int personId, int specId, int releaseId, Page page)
         {
             _specVersions = specVersions;
             _releaseRights = releaseRights;
             _page = page;
+            _personId = personId;
+            _specId = specId;
+            _releaseId = releaseId;
         }
 
         public void InstantiateIn(Control container)
@@ -28,6 +34,9 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 ctrl.DataSource = _specVersions;
                 ctrl.UserReleaseRights = _releaseRights;
+                ctrl.PersonId = _personId;
+                ctrl.SpecId = _specId;
+                ctrl.ReleaseId = _releaseId;
             }
             container.Controls.Add(ctrl);
         }
