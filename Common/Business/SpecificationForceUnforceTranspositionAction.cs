@@ -53,7 +53,7 @@ namespace Etsi.Ultimate.Business
                 .OrderByDescending(s => s.MajorVersion).ThenByDescending(s => s.TechnicalVersion)
                 .ThenByDescending(s => s.EditorialVersion).FirstOrDefault();
 
-            if (latestVersion != null && latestVersion.DocumentUploaded != null)
+            if (latestVersion != null && latestVersion.DocumentUploaded != null && latestVersion.DocumentPassedToPub == null)
             {
                 var transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
                 transposeMgr.Transpose(spec, latestVersion);
@@ -62,6 +62,35 @@ namespace Etsi.Ultimate.Business
             return true;
         }
 
+        /// <summary>
+        /// Unforces transposition for the given specification on the given release. System checks that: User has right to unforce transposition.
+        /// It then sets flag to "true"
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="relId"></param>
+        /// <param name="specId"></param>
+        /// <returns></returns>
+        public bool UnforceTranspositionForRelease(int personId, int relId, int specId)
+        {
+            var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
+            specMgr.UoW = UoW;
+            var spec = specMgr.GetSpecificationById(personId, specId).Key;
 
+            // Get the rights for all the releases.
+            var rights = specMgr.GetRightsForSpecReleases(personId, spec);
+            var rightsForRelease = rights.Where(r => r.Key.Fk_ReleaseId == relId).FirstOrDefault().Value;
+            if (!rightsForRelease.HasRight(Enum_UserRights.Specification_UnforceTransposition))
+            {
+                throw new InvalidOperationException("User " + personId + " does not have right to unforce transposition");
+            }
+
+            // Then update the spec release
+            var specRelease = spec.Specification_Release.Where(sr => sr.Fk_ReleaseId == relId).FirstOrDefault();
+            specRelease.isTranpositionForced = false;
+
+            return true;
+
+        }
     }
+
 }

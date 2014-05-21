@@ -155,6 +155,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="images\spec_rel-f-crossed.png" />
     <Content Include="images\spec_rel-f.png" />
     <Content Include="images\spec_rel-i.png" />
     <Content Include="images\spec_rel-p.png" />

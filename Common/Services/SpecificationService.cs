@@ -259,9 +259,6 @@ namespace Etsi.Ultimate.Services
         }
 
 
-        #region ISpecificationService Members
-
-
         /// <summary>
         /// See interface definition.
         /// </summary>
@@ -288,7 +285,31 @@ namespace Etsi.Ultimate.Services
             return true;
         }
 
-        #endregion
+        /// <summary>
+        /// See interface.
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="releaseId"></param>
+        /// <param name="specificationId"></param>
+        /// <returns></returns>
+        public bool UnforceTranspositionForRelease(int personId, int releaseId, int specificationId)
+        {
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var transpAction = new SpecificationForceUnforceTranspositionAction() { UoW = uow };
+                    transpAction.UnforceTranspositionForRelease(personId, releaseId, specificationId);
+                    uow.Save();
+                }
+                catch (Exception e)
+                {
+                    Utils.LogManager.Error("UnforceTransposition error: " + e.Message);
+                    return false;
+                }
+            }
+            return true;
+        }
 
         #region ISpecificationService Members
 

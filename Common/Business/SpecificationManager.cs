@@ -208,7 +208,14 @@ namespace Etsi.Ultimate.Business
                     {
                         rights.AddRight(Enum_UserRights.Specification_ForceTransposition);
                     }
+
+                    if (userRights.HasRight(Enum_UserRights.Specification_UnforceTransposition)
+                        && sRel.isTranpositionForced.GetValueOrDefault())
+                    {
+                        rights.AddRight(Enum_UserRights.Specification_UnforceTransposition);
+                    }
                 }
+                
                 result.Add(new KeyValuePair<Specification_Release, UserRightsContainer>(sRel, rights));
             }
             return result;

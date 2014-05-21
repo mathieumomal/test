@@ -37,5 +37,6 @@ namespace Etsi.Ultimate.DomainClasses
         Specification_ManageITURecommendations,
 
         Specification_ForceTransposition,
+        Specification_UnforceTransposition,
     }
 }

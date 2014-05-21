@@ -76,7 +76,8 @@ namespace Etsi.Ultimate.Module.Specifications
 
             if (!IsPostBack)
             {
-                imgTransposition.Visible = !IsEditMode && UserReleaseRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
+                imgForceTransposition.Visible = !IsEditMode && UserReleaseRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
+                imgUnforceTransposition.Visible = !IsEditMode && UserReleaseRights.HasRight(Enum_UserRights.Specification_UnforceTransposition);
 
                 if (!IsEditMode)
                 {
@@ -110,14 +111,34 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
-        protected void imgTransposition_Click(object sender, System.Web.UI.ImageClickEventArgs e)
+        protected void imgForceTransposition_Click(object sender, System.Web.UI.ImageClickEventArgs e)
         {
             if (SpecId.HasValue && ReleaseId.HasValue && PersonId.HasValue)
             {
                 var specSvc = ServicesFactory.Resolve<ISpecificationService>();
                 specSvc.ForceTranspositionForRelease(PersonId.Value, ReleaseId.Value, SpecId.Value);
-                Response.Redirect(HttpContext.Current.Request.Url.AbsoluteUri + "&selectedTab=Releases&Rel=" + ReleaseId.Value);
+                Redirect();
             }
+        }
+
+        protected void imgUnforceTransposition_Click(object sender, System.Web.UI.ImageClickEventArgs e)
+        {
+            if (SpecId.HasValue && ReleaseId.HasValue && PersonId.HasValue)
+            {
+                var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                specSvc.UnforceTranspositionForRelease(PersonId.Value, ReleaseId.Value, SpecId.Value);
+
+                Redirect();
+            }
+        }
+
+        private void Redirect()
+        {
+            var address = HttpContext.Current.Request.Url.AbsoluteUri.Split('&').ToList();
+            address.RemoveAll(s => s.Contains("selectedTab"));
+            address.RemoveAll(s => s.Contains("Rel"));
+            Response.Redirect(string.Join("&",address)+"&selectedTab=Releases&Rel="+ReleaseId.Value);
+
         }
 
     }

@@ -40,13 +40,22 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.WebControls.ImageButton imgInhibitPromote;
         
         /// <summary>
-        /// imgTransposition control.
+        /// imgForceTransposition control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton imgTransposition;
+        protected global::System.Web.UI.WebControls.ImageButton imgForceTransposition;
+        
+        /// <summary>
+        /// imgUnforceTransposition control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton imgUnforceTransposition;
         
         /// <summary>
         /// imgPromoteSpec control.

@@ -118,6 +118,16 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         bool ForceTranspositionForRelease(int personId, int releaseId, int specificationId);
 
+        /// <summary>
+        /// Prevent the specification from going directly to transposition upon upload for the given open release. This means:
+        /// - set the flag in the Spec_Release record to False
+        /// </summary>
+        /// <param name="personId">Id of the person doing the action</param>
+        /// <param name="releaseId">Id of the release for which transposition should be done</param>
+        /// <param name="specificationId">If of the specification to unforce transposition on.</param>
+        /// <returns></returns>
+        bool UnforceTranspositionForRelease(int personId, int releaseId, int specificationId);
+
 
         /// <summary>
         /// For a given specification, computes the authorized actions on each release.

@@ -35,8 +35,15 @@ namespace Etsi.Ultimate.Tests.Services
         {
             SetMocks(true);
 
+            var transpMock = MockRepository.GenerateMock<ITranspositionManager>();
+            transpMock.Stub(m => m.Transpose(Arg<Specification>.Is.Anything, Arg<SpecVersion>.Is.Anything)).Return(true);
+            ManagerFactory.Container.RegisterInstance<ITranspositionManager>(transpMock);
+
             var specSvc = new SpecificationService();
             Assert.AreEqual(true, specSvc.ForceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_OPEN_ID, SPEC_ID));
+
+            // System should not transpose something that is already transposed.
+            transpMock.AssertWasNotCalled(m => m.Transpose(Arg<Specification>.Is.Anything, Arg<SpecVersion>.Is.Anything));
         }
 
         [Test]
@@ -83,6 +90,25 @@ namespace Etsi.Ultimate.Tests.Services
             SetMocks(true);
             var specSvc = new SpecificationService();
             Assert.IsFalse(specSvc.ForceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_FORCED_TRANSPOSITION_ID, SPEC_ID));
+        }
+
+        /// <summary>
+        /// The rights are already tested in SpecREleaseRightsServiceTest, so only Nominal case is needed
+        /// </summary>
+        [Test]
+        public void UnforceTransposition_NominalCase()
+        {
+            SetMocks(true);
+            var specSvc = new SpecificationService();
+            Assert.IsTrue(specSvc.UnforceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_FORCED_TRANSPOSITION_ID, SPEC_ID));
+        }
+
+        [Test]
+        public void UnforceTransposition_NoRight()
+        {
+            SetMocks(true);
+            var specSvc = new SpecificationService();
+            Assert.IsFalse(specSvc.UnforceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_CLOSED_ID, SPEC_ID));
         }
 
         private void SetMocks(bool hasBasicRight)
@@ -135,7 +161,7 @@ namespace Etsi.Ultimate.Tests.Services
             {
                 Pk_Specification_ReleaseId = 1,
                 Fk_ReleaseId = RELEASE_FORCED_TRANSPOSITION_ID,
-                isWithdrawn = true,
+                isWithdrawn = false,
                 isTranpositionForced = true,
                 Release = new Release()
                 {
@@ -166,7 +192,9 @@ namespace Etsi.Ultimate.Tests.Services
 
             // Version repository
             var versionRep = MockRepository.GenerateMock<ISpecVersionsRepository>();
-            versionRep.Stub(v => v.GetVersionsForSpecRelease(SPEC_ID, RELEASE_OPEN_ID)).Return(new List<SpecVersion>());
+            versionRep.Stub(v => v.GetVersionsForSpecRelease(SPEC_ID, RELEASE_OPEN_ID)).Return(new List<SpecVersion>() {
+                    new SpecVersion() { MajorVersion = RELEASE_OPENED_VERSION_TO_TRANSPOSE, TechnicalVersion = 0, EditorialVersion = 2, DocumentUploaded = DateTime.Now.AddDays(-1), DocumentPassedToPub = DateTime.Now }
+                });
             versionRep.Stub(v => v.GetVersionsForSpecRelease(SPEC_ID, RELEASE_OPENED_VERSION_TO_TRANSPOSE)).Return(new List<SpecVersion>()
             {
                 new SpecVersion() { MajorVersion = RELEASE_OPENED_VERSION_TO_TRANSPOSE, TechnicalVersion = 0, EditorialVersion = 2, DocumentUploaded = DateTime.Now.AddDays(-1) },
@@ -178,18 +206,20 @@ namespace Etsi.Ultimate.Tests.Services
             // Release manager
             var specMgr = MockRepository.GenerateMock<ISpecificationManager>();
 
-            var rightsOK = new UserRightsContainer();
-            rightsOK.AddRight(Enum_UserRights.Specification_ForceTransposition);
+            var rightsForce = new UserRightsContainer();
+            rightsForce.AddRight(Enum_UserRights.Specification_ForceTransposition);
+            var rightsUnforce = new UserRightsContainer();
+            rightsUnforce.AddRight(Enum_UserRights.Specification_UnforceTransposition);
             var rightsKO = new UserRightsContainer();
 
             var rightsResult = new List<KeyValuePair<Specification_Release, UserRightsContainer>>()
             {
                 new KeyValuePair<Specification_Release,UserRightsContainer>(sp1, rightsKO),
-                new KeyValuePair<Specification_Release,UserRightsContainer>(sp2, hasBasicRight? rightsOK:rightsKO),
+                new KeyValuePair<Specification_Release,UserRightsContainer>(sp2, hasBasicRight? rightsForce:rightsKO),
                 new KeyValuePair<Specification_Release,UserRightsContainer>(sp3, rightsKO),
                 new KeyValuePair<Specification_Release,UserRightsContainer>(sp4, rightsKO),
-                new KeyValuePair<Specification_Release,UserRightsContainer>(sp5, rightsKO),
-                new KeyValuePair<Specification_Release,UserRightsContainer>(sp6, hasBasicRight? rightsOK:rightsKO),
+                new KeyValuePair<Specification_Release,UserRightsContainer>(sp5, hasBasicRight? rightsUnforce:rightsKO),
+                new KeyValuePair<Specification_Release,UserRightsContainer>(sp6, hasBasicRight? rightsForce:rightsKO),
             };
             specMgr.Stub(r => r.GetRightsForSpecReleases(Arg<int>.Is.Anything, Arg<Specification>.Is.Anything)).Return(rightsResult);
 

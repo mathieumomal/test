@@ -59,6 +59,35 @@ namespace Etsi.Ultimate.Tests.Services
 
         }
 
+        [TestCase(PERSON_HAS_RIGHT,SPEC_REL_ALREADY_FORCED_TRANSPOSITION_ID, false, true)]          // Nominal case     => Success
+        [TestCase(PERSON_HAS_NO_RIGHT, SPEC_REL_ALREADY_FORCED_TRANSPOSITION_ID, false, false)]     // No right         => Failure
+        [TestCase(PERSON_HAS_RIGHT, SPEC_REL_ALREADY_FORCED_TRANSPOSITION_ID, true, false)]         // Withdrawn spec   => Failure
+        [TestCase(PERSON_HAS_RIGHT, SPEC_REL_WITHDRAWN_ID, false, false)]                           // Withdrawn Spec Rel => Failure
+        [TestCase(PERSON_HAS_RIGHT, REL_OPEN_ID, false, false)]                                     // Open release, but no transposition => Failure
+        public void UnforceTransposition(int personId, int relId, bool isWithDrawn, bool expectedResult )
+        {
+            SetUpMocks();
+
+            // Test the service
+            var spec = new Specification()
+            {
+                Pk_SpecificationId = 25,
+                Specification_Release = new List<Specification_Release>() {
+                    new Specification_Release() { Fk_ReleaseId = REL_OPEN_ID },
+                    new Specification_Release() { Fk_ReleaseId = REL_FROZEN_ID,  },
+                    new Specification_Release() { Fk_ReleaseId = SPEC_REL_WITHDRAWN_ID, isWithdrawn = true },
+                    new Specification_Release() { Fk_ReleaseId = SPEC_REL_ALREADY_FORCED_TRANSPOSITION_ID, isWithdrawn = false, isTranpositionForced = true  },
+                },
+                IsActive = ! isWithDrawn,
+
+            };
+
+            var specSvc = new SpecificationService();
+            var result = specSvc.GetRightsForSpecReleases(personId, spec);
+
+            Assert.AreEqual(expectedResult, result.Where(r => r.Key.Fk_ReleaseId == relId).FirstOrDefault().Value.HasRight(Enum_UserRights.Specification_UnforceTransposition));
+        }
+
         private void SetUpMocks()
         {
             // Sets up the right manager
@@ -67,6 +96,7 @@ namespace Etsi.Ultimate.Tests.Services
             var noRightContainer = new UserRightsContainer();
             var allRightsContainer = new UserRightsContainer();
             allRightsContainer.AddRight(Enum_UserRights.Specification_ForceTransposition);
+            allRightsContainer.AddRight(Enum_UserRights.Specification_UnforceTransposition);
 
             rightsMgr.Stub(r => r.GetRights(PERSON_HAS_NO_RIGHT)).Return(noRightContainer);
             rightsMgr.Stub(r => r.GetRights(PERSON_HAS_RIGHT)).Return(allRightsContainer);
