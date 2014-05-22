@@ -27,7 +27,7 @@ namespace Etsi.Ultimate.Repositories
         {
             get
             {
-                return AllIncluding(v => v.Remarks, v=> v.Release, v => v.Specification);
+                return AllIncluding(v => v.Remarks, v => v.Release, v => v.Specification.SpecificationRapporteurs);
             }
         }
 

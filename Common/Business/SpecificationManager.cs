@@ -251,5 +251,56 @@ namespace Etsi.Ultimate.Business
             return result;
         }
 
+        public KeyValuePair<Specification_Release, UserRightsContainer> GetRightsForSpecRelease(UserRightsContainer userRights, int personId, Specification spec, int releaseId, List<Release> releases)
+        {
+            var rights = new UserRightsContainer();
+            Specification_Release specRelease = spec.Specification_Release.Where(r => r.Fk_ReleaseId == releaseId && r.Fk_SpecificationId == spec.Pk_SpecificationId).FirstOrDefault();
+            if (specRelease == null)
+                return new KeyValuePair<Specification_Release, UserRightsContainer>(null, null);
+            // This right is common to any action.
+            if (spec.IsActive && !specRelease.isWithdrawn.GetValueOrDefault())
+            {
+                var rel = releases.Where(r => r.Pk_ReleaseId == specRelease.Fk_ReleaseId).FirstOrDefault();
+
+                // Test the right of the user to force transposition.                
+                if (userRights.HasRight(Enum_UserRights.Specification_ForceTransposition)
+                    && rel != null && rel.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Open
+                    && !specRelease.isTranpositionForced.GetValueOrDefault()
+                    && spec.IsUnderChangeControl.GetValueOrDefault())
+                {
+                    rights.AddRight(Enum_UserRights.Specification_ForceTransposition);
+                }
+
+                // Test the right of the user to upload/Allocate a version
+                // User have the right => Check if we need to remove it
+                if (rel.Enum_ReleaseStatus.Code != Enum_ReleaseStatus.Closed)
+                {
+
+                    if (userRights.HasRight(Enum_UserRights.Versions_Upload))
+                    {
+                        rights.AddRight(Enum_UserRights.Versions_Upload);
+                    }
+                    // User does not have the right by default => Check if we need to add it
+                    else
+                    {
+                        //User id rapporteur of the specification
+                        // for allocation, being rapporteur does not enable to get the right
+                        if (spec.PrimeSpecificationRapporteurIds.Contains(personId))
+                        {
+                            //Still a draft
+                            if (!spec.IsUnderChangeControl.GetValueOrDefault())
+                                rights.AddRight(Enum_UserRights.Versions_Upload);
+                        }
+                    }
+
+                    if (userRights.HasRight(Enum_UserRights.Versions_Allocate))
+                    {
+                        rights.AddRight(Enum_UserRights.Versions_Allocate);
+                    }
+                }
+            }
+            return new KeyValuePair<Specification_Release, UserRightsContainer>(specRelease, rights);
+        }
+
     }
 }

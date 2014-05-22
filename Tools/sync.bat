@@ -63,3 +63,9 @@ SET SPECSOURCESDEST=%DNN_PATH%DesktopModules\Specification\
 xcopy %SPECSOURCES%*.ascx %SPECSOURCESDEST% /b/v/y
 xcopy %SPECSOURCES%*.aspx %SPECSOURCESDEST% /b/v/y
 xcopy %SPECSOURCES%*.css %SPECSOURCESDEST% /b/v/y
+
+SET SPECSOURCES=%TRUNK_PATH%Modules\Versions\
+SET SPECSOURCESDEST=%DNN_PATH%DesktopModules\Versions\
+xcopy %SPECSOURCES%*.ascx %SPECSOURCESDEST% /b/v/y
+xcopy %SPECSOURCES%*.aspx %SPECSOURCESDEST% /b/v/y
+xcopy %SPECSOURCES%*.css %SPECSOURCESDEST% /b/v/y

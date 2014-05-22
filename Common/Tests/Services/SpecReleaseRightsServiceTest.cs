@@ -40,14 +40,43 @@ namespace Etsi.Ultimate.Tests.Services
             SetUpMocks();
 
             // Test the service
+            var statusOpen = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open" };
             var spec = new Specification()
             {
                 Pk_SpecificationId = 25,
                 Specification_Release = new List<Specification_Release>() {
-                    new Specification_Release() { Fk_ReleaseId = REL_OPEN_ID },
-                    new Specification_Release() { Fk_ReleaseId = REL_FROZEN_ID,  },
-                    new Specification_Release() { Fk_ReleaseId = SPEC_REL_WITHDRAWN_ID, isWithdrawn = true },
-                    new Specification_Release() { Fk_ReleaseId = SPEC_REL_ALREADY_FORCED_TRANSPOSITION_ID, isWithdrawn = false, isTranpositionForced = true  },
+                    new Specification_Release() { Fk_ReleaseId = REL_OPEN_ID , Fk_SpecificationId=25},
+                    new Specification_Release() { Fk_ReleaseId = REL_FROZEN_ID, Fk_SpecificationId=25},
+                    new Specification_Release() { Fk_ReleaseId = SPEC_REL_WITHDRAWN_ID, isWithdrawn = true, Fk_SpecificationId=25},
+                    new Specification_Release() { Fk_ReleaseId = SPEC_REL_ALREADY_FORCED_TRANSPOSITION_ID, isWithdrawn = false, isTranpositionForced = true, Fk_SpecificationId=25},
+                },
+                Versions = new List<SpecVersion>(){
+                    new SpecVersion()
+                    {
+                        Pk_VersionId = 1,
+                        Multifile = false,
+                        ForcePublication = false,
+                        Location = "Location1",
+                        Fk_ReleaseId = 1,
+                        Fk_SpecificationId = 1,                        
+                        Release = new Release()
+                        {
+                            Pk_ReleaseId=1,
+                            Enum_ReleaseStatus = statusOpen
+                        },
+                        Specification = new Specification()
+                        {
+                            Pk_SpecificationId = 1,
+                            SpecificationRapporteurs = new List<SpecificationRapporteur>() { 
+                                new SpecificationRapporteur() 
+                                {
+                                    Pk_SpecificationRapporteurId=1,
+                                    IsPrime =true,
+                                    Fk_RapporteurId = 0
+                                }
+                            }
+                        }
+                    }
                 },
                 IsActive = !isSpecWithdrawn,
                 IsUnderChangeControl = isUnderCC

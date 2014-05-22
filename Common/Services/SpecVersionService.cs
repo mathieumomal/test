@@ -29,12 +29,12 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public SpecVersion GetVersionsById(int VersionId)
+        public KeyValuePair<SpecVersion, UserRightsContainer> GetVersionsById(int VersionId, int personId)
         {            
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var specVersionManager = new SpecVersionsManager(uoW);
-                return specVersionManager.GetSpecVersionById(VersionId);
+                return specVersionManager.GetSpecVersionById(VersionId, personId);
             }
         }
     }

@@ -51,6 +51,18 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="spec"></param>
         /// <returns></returns>
-        List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, Specification spec);
+        List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, Specification spec);        
+
+        /// <summary>
+        /// Returns the list of allowed actions regarding a providied specification-release.
+        /// </summary>
+        /// <param name="userRights">Current user rights</param>
+        /// <param name="personId"></param>
+        /// <param name="spec"></param>
+        /// <param name="releaseId"></param>
+        /// <param name="releases">List of all releases</param>
+        /// <returns></returns>
+        KeyValuePair<Specification_Release, UserRightsContainer> GetRightsForSpecRelease(UserRightsContainer userRights, int personId, Specification spec, int releaseId, List<Release> releases);
+        
     }
 }

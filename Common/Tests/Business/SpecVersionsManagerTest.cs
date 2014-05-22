@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Etsi.Ultimate.Repositories;
 using System.Data.Entity;
 using Microsoft.Practices.Unity;
+using Etsi.Ultimate.Business.Security;
 
 namespace Etsi.Ultimate.Tests.Business
 {
@@ -50,13 +51,25 @@ namespace Etsi.Ultimate.Tests.Business
         [Test, TestCaseSource("SpecVersionsData")]
         public void GetVersionsByIdTest(SpecVersionFakeDBSet specVersionsData)
         {
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Versions_Upload);
+
+            //Mock Rights Manager
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(userRights);
+            Assert.IsTrue(mockRightsManager.GetRights(0).HasRight(Enum_UserRights.Versions_Upload));
+
+            var statusOpen = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open" };
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)specVersionsData);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)new ReleaseFakeDBSet { 
+                new Release() { Pk_ReleaseId = 1, Enum_ReleaseStatus = statusOpen }, new Release() { Pk_ReleaseId = 1, Enum_ReleaseStatus = statusOpen } 
+            }.AsQueryable());
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
 
             SpecVersionsManager mng = new SpecVersionsManager(uow);
-            SpecVersion result = mng.GetSpecVersionById(1);
+            SpecVersion result = mng.GetSpecVersionById(1,0).Key;
             Assert.IsNotNull(result);
             Assert.AreEqual("Location1", result.Location);
         }
@@ -78,8 +91,9 @@ namespace Etsi.Ultimate.Tests.Business
                 rmkDbSet.Add(new Remark() { Pk_RemarkId = 1, RemarkText = "Remark 1", Fk_VersionId = 1 });
                 rmkDbSet.Add(new Remark() { Pk_RemarkId = 2, RemarkText = "Remark 2", Fk_VersionId = 2 });
 
+                var statusOpen = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open" };
                 SpecVersionFakeDBSet specVersionFakeDBSet = new SpecVersionFakeDBSet();
-                
+
                 specVersionFakeDBSet.Add(new SpecVersion()
                 {
                     Pk_VersionId = 1,
@@ -89,8 +103,23 @@ namespace Etsi.Ultimate.Tests.Business
                     Fk_ReleaseId = 1,
                     Fk_SpecificationId = 1,
                     Remarks = new List<Remark>() { rmkDbSet.ToList()[0] },
-                    Release = new Release(),
+                    Release = new Release()
+                    {
+                        Pk_ReleaseId=1,
+                        Enum_ReleaseStatus = statusOpen
+                    },
                     Specification = new Specification()
+                    {
+                        Pk_SpecificationId = 1,
+                        SpecificationRapporteurs = new List<SpecificationRapporteur>() { 
+                            new SpecificationRapporteur() 
+                            {
+                                Pk_SpecificationRapporteurId=1,
+                                IsPrime =true,
+                                Fk_RapporteurId = 0
+                            }
+                        }
+                    }
                 });
                 specVersionFakeDBSet.Add(new SpecVersion()
                 {
@@ -101,8 +130,23 @@ namespace Etsi.Ultimate.Tests.Business
                     Fk_ReleaseId = 2,
                     Fk_SpecificationId = 1,
                     Remarks = new List<Remark>() { rmkDbSet.ToList()[1] },
-                    Release = new Release(),
-                    Specification = new Specification(),
+                    Release = new Release()
+                    {
+                        Pk_ReleaseId = 2,
+                        Enum_ReleaseStatus = statusOpen
+                    },
+                    Specification = new Specification()
+                    {
+                        Pk_SpecificationId = 1,
+                        SpecificationRapporteurs = new List<SpecificationRapporteur>() { 
+                            new SpecificationRapporteur() 
+                            {
+                                Pk_SpecificationRapporteurId=1,
+                                IsPrime =true,
+                                Fk_RapporteurId = 0
+                            }
+                        }
+                    }
                 });
                 
                 yield return specVersionFakeDBSet;

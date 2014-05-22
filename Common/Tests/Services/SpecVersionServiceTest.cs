@@ -49,7 +49,7 @@ namespace Etsi.Ultimate.Tests.Services
             mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)specVersionsData);
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
             var versionsSvc = new SpecVersionService();
-            SpecVersion result = versionsSvc.GetVersionsById(2);            
+            SpecVersion result = versionsSvc.GetVersionsById(2,0).Key;            
             Assert.AreEqual("Location2", result.Location);
             Assert.AreEqual("Remark 2", result.Remarks.ToList()[0].RemarkText);
         }

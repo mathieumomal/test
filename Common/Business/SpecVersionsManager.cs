@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.DomainClasses;
+﻿using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using System;
 using System.Collections.Generic;
@@ -47,15 +48,40 @@ namespace Etsi.Ultimate.Business
         }
 
         /// <summary>
-        /// Return a SpecVersion object using it's identifier
+        /// Return a SpecVersion and current user rights objects using identifiers
         /// </summary>
         /// <param name="versionId">The identifier of the requested version</param>
-        /// <returns>A version</returns>
-        public SpecVersion GetSpecVersionById(int versionId)
+        /// <returns>A couple (version,userrights)</returns>
+        public KeyValuePair<SpecVersion, UserRightsContainer> GetSpecVersionById(int versionId, int personId)
         {
             ISpecVersionsRepository repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             repo.UoW = _uoW;
-            return repo.Find(versionId);
+            SpecVersion version = repo.Find(versionId); ;
+
+            if (version == null)
+                return new KeyValuePair<SpecVersion, UserRightsContainer>(null, null);
+
+            // Computes the rights of the user. These are independant from the releases.
+            var rightManager = ManagerFactory.Resolve<IRightsManager>();
+            rightManager.UoW = _uoW;
+            var personRights = rightManager.GetRights(personId);
+
+            // Get information about the releases, in particular the status.
+            var releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
+            releaseMgr.UoW = _uoW;
+            var releases = releaseMgr.GetAllReleases(personId).Key;
+
+            var specificationManager = new SpecificationManager();
+            specificationManager.UoW = _uoW;
+            //Get calculated rights
+            KeyValuePair<Specification_Release, UserRightsContainer> specRelease_Rights = specificationManager.GetRightsForSpecRelease(personRights, personId, version.Specification, version.Release.Pk_ReleaseId, releases);
+            //check for modifications
+            //GetRightsForVersion(personRights, version, personId, Enum_UserRights.Versions_Upload, isSpecreleaseWithrawn);
+            //GetRightsForVersion(personRights, version, personId, Enum_UserRights.Versions_Allocate, isSpecreleaseWithrawn);
+            
+            //UserRightsContainer rights = specificationManager.GetRightsForSpecReleases(personId, verison.Specification).Where(e => e.Key.Release.Pk_ReleaseId == verison.Release.Pk_ReleaseId).FirstOrDefault().Value;
+
+            return new KeyValuePair<SpecVersion, UserRightsContainer>(version, specRelease_Rights.Value);
         }
 
         /// <summary>
@@ -69,7 +95,45 @@ namespace Etsi.Ultimate.Business
             repo.InsertOrUpdate(version);
         }
 
-        
+        /// <summary>
+        /// Edit userRights ( based on role) to take into account those based on specification-release data
+        /// </summary>
+        /// /// <param name="currentRights">Role base user rights</param>
+        /// <param name="version">The current version</param>
+        /// <param name="personId">The user id</param>
+        /// <param name="rightToCheck">The right to check</param>
+        /// <param name="isSpecReleaseWithdrawn">Is version's specfication release withdrawn </param>
+        /// <returns></returns>
+        /*private UserRightsContainer GetRightsForVersion(UserRightsContainer currentRights, SpecVersion version, int personId, Enum_UserRights rightToCheck, bool isSpecReleaseWithdrawn)
+        {            
+            // User have the right => Check if we need to remove it
+            if (currentRights.HasRight(rightToCheck))
+            {
+                if (!(version.Specification.IsActive && version.Release.Enum_ReleaseStatus.Code != Enum_ReleaseStatus.Closed && !isSpecReleaseWithdrawn)) 
+                {
+                    //Remove right
+                    currentRights.RemoveRight(rightToCheck);
+                }
+            }
+            // User does not have the right => Check if we need to add it
+            else
+            {
+                //User id rapporteur of the specification
+                // for allocation, being rapporteur does not enable to get the right
+                if (version.Specification.PrimeSpecificationRapporteurIds.Contains(personId) && rightToCheck != Enum_UserRights.Versions_Allocate)
+                {
+                    if (version.Specification.IsActive && version.Release.Enum_ReleaseStatus.Code != Enum_ReleaseStatus.Closed && isSpecReleaseWithdrawn)
+                    {
+                        //Still a draft
+                        if(!version.Specification.IsUnderChangeControl)
+                            //Add right
+                            currentRights.AddRight(rightToCheck);
+                    }
+                }
+            }
+
+            return currentRights;
+        }*/
 
     }
 }

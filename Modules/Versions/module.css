@@ -1,0 +1,90 @@
+@import url("/Portals/_default/Skins/3GPP/CommonCssComponent/buttons.css");
+
+.containerFix {
+    width: 400px !important;
+    position: relative;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.versionUploadBody {
+    font-family: Arial,verdana,Serif;
+    font-size: 12px;
+}
+
+.Warning {
+    border: 1px solid;
+    margin: 10px 0px;
+    padding: 15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    color: #9F6000;
+    background-color: #FEEFB3;
+    background-image: url('images/warning.png');
+}
+
+.WarningTxt {
+    margin: 0 0 0 5px;
+}
+
+.Error {
+    border: 1px solid;
+    margin: 10px 0px;
+    padding: 15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    color: #D8000C;
+    background-color: #FFBABA;
+    background-image: url('images/error.png');
+}
+
+.ErrorTxt {
+    margin: 0 0 0 5px;
+}
+
+.TabLineLeft {
+    text-align: right;
+    width: 150px  !important;
+    padding-top: 4px !important;
+    padding-bottom: 3px !important;
+}
+
+.TabLineLeft span {
+    padding-right: 10px;
+}
+
+.TabLineRight {
+    width: auto;
+    text-align: left;
+    padding-top: 4px !important;
+    padding-bottom: 3px !important;
+}
+
+.TabLineRight2Col {
+    width: auto;
+    text-align: left;
+    padding-top: 4px !important;
+    padding-bottom: 3px !important;
+}
+
+.VersionDetailsTable {
+     width:390px !important;
+     border-width:2px !important; 
+     border-style:solid; 
+     border-color:grey;
+     table-layout: fixed;
+ }
+
+.VersionUploadTable {
+    width:394px !important;
+    table-layout: fixed;
+}
+
+.releaseDetailsAction {
+    width:394px !important;
+    text-align: right;
+}
+
+#CommentVal {
+    padding: 0px !important;
+}

@@ -126,7 +126,7 @@ namespace Etsi.Ultimate.Repositories
         public void Delete(int id)
         {
             throw new InvalidOperationException("Cannot delete Specification entity");
-        }
+        }        
 
 
         public KeyValuePair<List<Specification>, int> GetSpecificationBySearchCriteria(SpecificationSearch searchObject)
@@ -265,6 +265,6 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <typeparam name="T">Type of Entity</typeparam>
         /// <param name="Entity">Entity</param>
-        void MarkDeleted<T>(T Entity);
+        void MarkDeleted<T>(T Entity);        
     }
 }

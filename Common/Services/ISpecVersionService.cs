@@ -25,10 +25,10 @@ namespace Etsi.Ultimate.Services
         List<SpecVersion> GetVersionsForSpecRelease(int specificationId, int releaseId);
 
         /// <summary>
-        /// Return a SpecVersion object using it's identifier
+        /// Return a SpecVersion and current user rights objects using identifiers
         /// </summary>
         /// <param name="versionId">The identifier of the requested version</param>
-        /// <returns>A version</returns>
-        SpecVersion GetVersionsById(int VersionId);
+        /// <returns>A couple (version,userrights)</returns>
+        KeyValuePair<SpecVersion, UserRightsContainer> GetVersionsById(int VersionId, int personId);
     }
 }

@@ -38,5 +38,8 @@ namespace Etsi.Ultimate.DomainClasses
 
         Specification_ForceTransposition,
         Specification_UnforceTransposition,
+        Versions_Allocate,
+        Versions_Upload,
+        Versions_AddRemark,
     }
 }
