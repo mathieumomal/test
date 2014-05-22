@@ -433,6 +433,18 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
+        #region ISpecificationService Membres
+        public KeyValuePair<bool, List<string>> CheckFormatNumber(string specNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        public KeyValuePair<bool, List<string>> LookForNumber(string specNumber, bool forEdit)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
         #region ISpecificationService Members
 
 

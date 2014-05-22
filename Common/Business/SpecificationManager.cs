@@ -126,8 +126,14 @@ namespace Etsi.Ultimate.Business
 
         #region ISpecificationManager Membres
 
-
-        public KeyValuePair<bool, List<string>> CheckNumber(string specNumber)
+        /// <summary>
+        /// Returns TRUE and nothing if the specification number is valid and FALSE and the list of the errors if the specification is not valid :
+        /// - correctly formatted (ERR-002)
+        /// - not already exist in database (ERR-003)
+        /// </summary>
+        /// <param name="specNumber"></param>
+        /// <returns></returns>
+        public KeyValuePair<bool, List<string>> CheckFormatNumber(string specNumber)
         {
             #region local variable
             var state = true;
@@ -143,31 +149,55 @@ namespace Etsi.Ultimate.Business
             }
             #endregion
 
-            #region Existence verification
-
-
-            #endregion
-
-
             if (errors.Count() > 0)
                 state = false;
             return new KeyValuePair<bool, List<string>>(state, errors);
         }
 
+        /// <summary>
+        /// Test specifications already exists :
+        /// if foredit = true -> We allow one spec founded (edit mode case)
+        /// if foredit = false -> we don't allow any spec founded
+        /// </summary>
+        /// <param name="specNumber">The spec number.</param>
+        /// <param name="forEdit"></param>
+        /// <returns></returns>
+        public KeyValuePair<bool, List<string>> LookForNumber(string specNumber, bool forEdit)
+        {
+            var state = true;
+            var errors = new List<string>();
+
+            var repo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            repo.UoW = UoW;
+            var result = repo
+                    .All
+                    .Where(x => (x.IsActive && x.Number.Equals(specNumber)))
+                    .ToList();
+            if (forEdit)
+            {
+                if (result.Count() != 1)
+                    errors.Add("Edit specification doesn't exist");
+            }
+            else
+            {
+                if (result.Count() > 0)
+                    errors.Add(Localization.Specification_ERR003_Number_Already_Use);
+            }
+            
+            if (errors.Count() > 0)
+                state = false;
+            return new KeyValuePair<bool, List<string>>(state, errors);
+        }
+
+        /// <summary>
+        /// Return TRUE if "the number matches one of the inhibit promote patterns" or false
+        /// </summary>
+        /// <param name="specNumber"></param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
         public bool CheckInhibitedToPromote(string specNumber)
         {
             throw new NotImplementedException();
-        }
-
-        public List<Specification> LookForNumber(string specNumber)
-        {
-            ISpecificationRepository repo = RepositoryFactory.Resolve<ISpecificationRepository>();
-            repo.UoW = UoW;
-
-            return repo
-                    .All
-                    .Where(x => (x.IsActive && x.Number.Contains(specNumber)))
-                    .ToList();
         }
 
         #endregion

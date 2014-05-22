@@ -91,7 +91,14 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="specNumber"></param>
         /// <returns></returns>
-        KeyValuePair<bool, List<string>> CheckNumber(string specNumber);
+        KeyValuePair<bool, List<string>> CheckFormatNumber(string specNumber);
+
+        /// <summary>
+        /// Test specifications already exists
+        /// </summary>
+        /// <param name="specNumber"></param>
+        /// <returns></returns>
+        KeyValuePair<bool, List<string>> LookForNumber(string specNumber, bool forEdit);
 
         /// <summary>
         /// Return TRUE if "the number matches one of the inhibit promote patterns" or false

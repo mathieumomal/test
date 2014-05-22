@@ -16,6 +16,11 @@ namespace Etsi.Ultimate.Business
         {
         }
 
+        /// <summary>
+        /// <see cref="Etsi.Ultimate.Business.IPersonManager.GetPersonDisplayName"/>
+        /// </summary>
+        /// <param name="personID"></param>
+        /// <returns></returns>
         public string GetPersonDisplayName(int personID)
         {
             IPersonRepository personRepo = RepositoryFactory.Resolve<IPersonRepository>();

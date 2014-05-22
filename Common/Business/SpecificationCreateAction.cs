@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.ModelMails;
 
 namespace Etsi.Ultimate.Business
 {
@@ -24,6 +26,8 @@ namespace Etsi.Ultimate.Business
 
         /// <summary>
         /// Verifies all the fields of a specification, then send it to database.
+        /// Number case :
+        /// - In the case of an MCC MEMBER (have the Specification_EditLimitted right) WE NEED TO SEND A NULL OR EMPTY SPEC NUMBER 
         /// </summary>
         /// <param name="personId"></param>
         /// <param name="spec"></param>
@@ -85,6 +89,14 @@ namespace Etsi.Ultimate.Business
 
             
             repo.InsertOrUpdate(spec);
+
+            //If the user didn't have the right to edit spec number we send a mail to the spec manager
+            /*if (userRights.HasRight(Enum_UserRights.Specification_EditLimitted))
+            {
+                MailAlertSpecManager(spec);
+            }*/
+            //Suppress for the moment : cause an error with MailClient.SendEmailWithBcc in MailManager
+            // I Suppose a body format (T4 template)
 
             return new KeyValuePair<Specification,ImportReport>(spec, report);
         }
@@ -160,12 +172,39 @@ namespace Etsi.Ultimate.Business
             if (!String.IsNullOrEmpty(spec.Number))
             {
                 var specMgr = new SpecificationManager() { UoW = UoW };
-                var check = specMgr.CheckNumber(spec.Number);
+                var check = specMgr.CheckFormatNumber(spec.Number);
                 if (!check.Key)
                 {
                     throw new InvalidOperationException("Specification number is invalid: " + String.Join(" # -- # ", check.Value));
                 }
+                var checkAlreadyExist = specMgr.LookForNumber(spec.Number, false);
+                if (!checkAlreadyExist.Key)
+                {
+                    throw new InvalidOperationException("Specification number already exists : " + String.Join(" # -- # ", checkAlreadyExist.Value));
+                }
             }
+        }
+
+        private void MailAlertSpecManager(Specification spec)
+        {
+            var subject = String.Empty;
+            if (spec.Title.Length > 60)
+            {
+                subject = new StringBuilder()
+                .Append("Specification number allocation required: ")
+                .Append(spec.Title.Substring(0, 60))
+                .ToString();
+            }
+            else
+            {
+                subject = new StringBuilder()
+                .Append("Specification number allocation required: ")
+                .Append(spec.Title)
+                .ToString();
+            }
+            
+            var body = new CreateSpecificationMailTemplate("secretary",spec.Title,"link");
+            MailManager.Instance.SendEmail(null, new List<string>() { "test@supinfo.com" }, null, null, subject, body.TransformText());
         }
     }
 }

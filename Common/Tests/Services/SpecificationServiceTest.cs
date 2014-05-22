@@ -16,6 +16,7 @@ using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Tests.FakeRepositories;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.ModelMails;
 using System.IO;
 
 namespace Etsi.Ultimate.Tests.Services
@@ -87,10 +88,27 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [Test, TestCaseSource("GetSpecificicationNumbersTestFormat")]
-        public void TestCheckNumberIsValid(string specNumber, bool expectResult, int messageCount)
+        public void TestCheckFormatNumberIsValid(string specNumber, bool expectResult, int messageCount)
         {
-            var service = new SpecificationService();
-            var results = service.CheckNumber(specNumber.ToString());
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var results = specSvc.CheckFormatNumber(specNumber.ToString());
+
+            Assert.AreEqual(expectResult, results.Key);
+            if (!results.Key)
+            {
+                Assert.AreEqual(messageCount, results.Value.Count());
+            }
+        }
+
+        [Test, TestCaseSource("GetSpecificicationNumbersTestAlreadyExists")]
+        public void TestCheckNumberAlreadyExist(string specNumber, bool expectResult, int messageCount)
+        {
+            var repo = MockRepository.GenerateMock<ISpecificationRepository>();
+            repo.Stub(c => c.All).Return(GetSpecs());
+            RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(repo);
+
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var results = specSvc.LookForNumber(specNumber.ToString(),false);
 
             Assert.AreEqual(expectResult, results.Key);
             if (!results.Key)
@@ -148,22 +166,28 @@ namespace Etsi.Ultimate.Tests.Services
             // Set up the rights
             RegisterAllMocks();
 
-            // Specific mock for the email, because we want to check the call made to it.
-            /*var mailMgr = MockRepository.GenerateMock<IMailManager>();
-            mailMgr.Stub(r => r.SendEmail(
-                Arg<string>.Is.Anything,
-                Arg<List<string>>.Is.Anything,
-                Arg<List<string>>.Is.Anything,
-                Arg<List<string>>.Is.Anything,
-                Arg<string>.Is.Anything,
-                Arg<string>.Is.Anything
-                )).Return(true);
-            MailManager.Instance = mailMgr;*/
-
-
             var specification = GetCorrectSpecificationForCreation();
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
             var report = specSvc.CreateSpecification(EDIT_RIGHT_USER, specification).Value; // We can't change PK and check it, because it's assigned by EF in principle
+
+            //Specific mock for the email, because we want to check the call made to it.
+            //var toAddress = "test@supinfo.com";
+            //var toAddresss = new List<string>() { toAddress };
+            //var subject = new StringBuilder()
+            //    .Append("Specification number allocation required: ")
+            //    .Append(specification.Title)
+            //    .ToString();
+            //var body = new CreateSpecificationMailTemplate("secretary", specification.Title, "link");
+            
+            //var mailMock = MockRepository.GenerateMock<IMailManager>();
+            //mailMock.Stub(r => r.SendEmail(
+            //    Arg<string>.Is.Equal(ConfigVariables.EmailDefaultFrom),
+            //    Arg<List<string>>.Matches(l => l.Contains(toAddress)),
+            //    Arg<List<string>>.Is.Equal(null),
+            //    Arg<List<string>>.Is.Anything,
+            //    Arg<string>.Is.Equal(subject),
+            //    Arg<string>.Is.Equal(body.TransformText().ToString())
+            //    )).Return(true);
 
             Assert.AreEqual(1, specification.Histories.Count);
             Assert.AreEqual(String.Format(Utils.Localization.History_Specification_Created, "R1"), specification.Histories.First().HistoryText);
@@ -174,6 +198,11 @@ namespace Etsi.Ultimate.Tests.Services
 
             Assert.AreEqual(0, report.WarningList.Count);
             Assert.AreEqual(0, report.ErrorList.Count);
+
+            //Mail test
+            //Assert.IsTrue(mailMock.SendEmail(ConfigVariables.EmailDefaultFrom, toAddresss, null, null, subject, body.TransformText().ToString()));
+
+            //mailMock.VerifyAllExpectations();
         }
 
         [Test]
@@ -210,7 +239,7 @@ namespace Etsi.Ultimate.Tests.Services
             specToEdit.Title = "New title";
             
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit ).Key);
+            Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
 
             // From white box testing, we know that:
             // - spec that will be modified is the one provided by the Repository
@@ -393,6 +422,7 @@ namespace Etsi.Ultimate.Tests.Services
 
 
         #region data
+//--- Check format number
         private IEnumerable<object[]> GetSpecificicationNumbersTestFormat
         {
             get
@@ -410,8 +440,28 @@ namespace Etsi.Ultimate.Tests.Services
                 yield return new object[] { "9.A.-", false, 1 };
                 yield return new object[] { "xy.abc-", false, 1 };
                 yield return new object[] { "xy.abc-", false, 1 };
-
             }
+        }
+
+//--- Check spec number already exists
+        private IEnumerable<object[]> GetSpecificicationNumbersTestAlreadyExists
+        {
+            get
+            {
+                //Already exist
+                yield return new object[] { "01.05", true, 0 };
+                yield return new object[] { "01.01", false, 1 };
+                yield return new object[] { "03.98", true, 0 };
+            }
+        }
+        private IDbSet<Specification> GetSpecs()
+        {
+            var list = new SpecificationFakeDBSet();
+            list.Add(new Specification() { Pk_SpecificationId = 1, Number = "01.01", IsActive = true });
+            list.Add(new Specification() { Pk_SpecificationId = 2, Number = "12.123", IsActive = true });
+            list.Add(new Specification() { Pk_SpecificationId = 3, Number = "01.05", IsActive = false });
+            list.Add(new Specification() { Pk_SpecificationId = 4, Number = "02.72", IsActive = true });
+            return list;
         }
 
 
@@ -534,7 +584,8 @@ namespace Etsi.Ultimate.Tests.Services
             {
                 Pk_SpecificationId = 0,
                 Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
-                Number = "12.123",
+                Number = "12.124",
+                Title = "SpecTitle"
             };
         }
 
@@ -602,6 +653,7 @@ namespace Etsi.Ultimate.Tests.Services
             repo.Expect(r => r.InsertOrUpdate(Arg<Specification>.Is.Anything));
             repo.Stub(r => r.GetSeries()).Return(new List<Enum_Serie>() { new Enum_Serie() { Pk_Enum_SerieId = 1, Code = "SER_12", Description = "Serie12" } });
             repo.Stub(r => r.Find(12)).Return(GetCorrectSpecificationForEdit(false));
+            repo.Stub(r => r.All).Return(GetSpecs());
             RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(repo);
 
             var communityManager = MockRepository.GenerateMock<ICommunityManager>();

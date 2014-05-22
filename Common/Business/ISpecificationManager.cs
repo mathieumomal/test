@@ -27,7 +27,7 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="specNumber"></param>
         /// <returns></returns>
-        KeyValuePair<bool, List<string>> CheckNumber(string specNumber);
+        KeyValuePair<bool, List<string>> CheckFormatNumber(string specNumber);
 
         /// <summary>
         /// Return TRUE if "the number matches one of the inhibit promote patterns" or false
@@ -37,11 +37,14 @@ namespace Etsi.Ultimate.Business
         bool CheckInhibitedToPromote(string specNumber);
 
         /// <summary>
-        /// Find specifications by a keywords which match to their Number
+        /// Test specifications already exists :
+        /// if foredit = true -> We allow one spec founded (edit mode case)
+        /// if foredit = false -> we don't allow any spec founded
         /// </summary>
-        /// <param name="keywords"></param>
+        /// <param name="specNumber">The spec number.</param>
+        /// <param name="forEdit"></param>
         /// <returns></returns>
-        List<Specification> LookForNumber(string specNumber);
+        KeyValuePair<bool, List<string>> LookForNumber(string specNumber, bool forEdit);
 
         /// <summary>
         /// Returns the list of allowed actions regarding each specification-release of the provided specification.

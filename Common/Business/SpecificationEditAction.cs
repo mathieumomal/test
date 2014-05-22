@@ -45,10 +45,39 @@ namespace Etsi.Ultimate.Business
                 throw new InvalidOperationException("Edited specification does not exist");
             }
 
+            //Check specification number
+            CheckNumber(spec);
+
             // Compare the fields of the two specifications.
             CompareSpecs(spec, oldSpec, personId, specRepo);
 
             return true;
+        }
+
+        /// <summary>
+        /// Check the spec number format
+        /// </summary>
+        /// <param name="spec"></param>
+        private void CheckNumber(Specification spec)
+        {
+            if (!String.IsNullOrEmpty(spec.Number))
+            {
+                var specMgr = new SpecificationManager() { UoW = UoW };
+                var check = specMgr.CheckFormatNumber(spec.Number);
+                if (!check.Key)
+                {
+                    throw new InvalidOperationException("Specification number is invalid: " + String.Join(" # -- # ", check.Value));
+                }
+                var checkAlreadyExist = specMgr.LookForNumber(spec.Number, true);
+                if (!checkAlreadyExist.Key)
+                {
+                    throw new InvalidOperationException("Specification number already exists : " + String.Join(" # -- # ", checkAlreadyExist.Value));
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Cannot save an edit specification with a null or empty number");
+            }
         }
 
         /// <summary>

@@ -178,13 +178,23 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public KeyValuePair<bool, List<string>> CheckNumber(string specNumber)
+        public KeyValuePair<bool, List<string>> CheckFormatNumber(string specNumber)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var specificationManager = new SpecificationManager();
                 specificationManager.UoW = uoW;
-                return specificationManager.CheckNumber(specNumber);
+                return specificationManager.CheckFormatNumber(specNumber);
+            }
+        }
+
+        public KeyValuePair<bool, List<string>> LookForNumber(string specNumber, bool forEdit)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specificationManager = new SpecificationManager();
+                specificationManager.UoW = uoW;
+                return specificationManager.LookForNumber(specNumber, forEdit);
             }
         }
 
