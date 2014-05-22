@@ -63,7 +63,7 @@ namespace Etsi.Ultimate.Business
         private List<Community> AllCommunities { get; set; }
 
         // Report that is returned after parsing.
-        private ImportReport Report { get; set; }
+        private Report Report { get; set; }
 
         // List of treated data, and references used during the parsing.
         private Dictionary<int, WorkItem> lastWIForLevel;
@@ -77,7 +77,7 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="fileLocation"></param>
         /// <returns></returns>
-        public KeyValuePair<List<WorkItem>, ImportReport> ParseCsv(string fileLocation)
+        public KeyValuePair<List<WorkItem>, Report> ParseCsv(string fileLocation)
         {
             try
             {
@@ -90,7 +90,7 @@ namespace Etsi.Ultimate.Business
                 if (!fileLocation.EndsWith("csv"))
                 {
                     Report.LogError(Utils.Localization.WorkItem_Import_Invalid_File_Format);
-                    return new KeyValuePair<List<WorkItem>, ImportReport>(ModifiedWorkItems, Report);
+                    return new KeyValuePair<List<WorkItem>, Report>(ModifiedWorkItems, Report);
                 }
 
                 // Open the file.
@@ -146,24 +146,24 @@ namespace Etsi.Ultimate.Business
                 }
 
                 // Return the list of workitems that were modified, along with the report.
-                return new KeyValuePair<List<WorkItem>, ImportReport>(ModifiedWorkItems, Report);
+                return new KeyValuePair<List<WorkItem>, Report>(ModifiedWorkItems, Report);
             }
 
             catch (System.IO.FileNotFoundException e)
             {
                 // Log the error
                 Utils.LogManager.Error("Error occured in WorkplanCsvParser: cannot find file" + fileLocation);
-                var errorReport = new ImportReport();
+                var errorReport = new Report();
                 errorReport.LogError(String.Format(Utils.Localization.WorkItem_Import_FileNotFound, fileLocation));
 
-                return new KeyValuePair<List<WorkItem>, ImportReport>(new List<WorkItem>(), errorReport);
+                return new KeyValuePair<List<WorkItem>, Report>(new List<WorkItem>(), errorReport);
             }
             catch (CsvHelper.CsvBadDataException e)
             {
-                var errorReport = new ImportReport();
+                var errorReport = new Report();
                 errorReport.LogError(String.Format(Utils.Localization.WorkItem_Import_Bad_Format, e.Message));
 
-                return new KeyValuePair<List<WorkItem>, ImportReport>(new List<WorkItem>(), errorReport);
+                return new KeyValuePair<List<WorkItem>, Report>(new List<WorkItem>(), errorReport);
             }
 
             catch (Exception e)
@@ -175,10 +175,10 @@ namespace Etsi.Ultimate.Business
                 string lastSuccessfullyTreatedWi = "None";
                 if (lastTreatedWi != null)
                     lastSuccessfullyTreatedWi = lastTreatedWi.Pk_WorkItemUid.ToString();
-                var errorReport = new ImportReport();
+                var errorReport = new Report();
                 errorReport.LogError(String.Format(Utils.Localization.WorkItem_Import_Unknown_Exception, lastSuccessfullyTreatedWi));
 
-                return new KeyValuePair<List<WorkItem>, ImportReport>(new List<WorkItem>(), errorReport);
+                return new KeyValuePair<List<WorkItem>, Report>(new List<WorkItem>(), errorReport);
 
             }
         }
@@ -211,7 +211,7 @@ namespace Etsi.Ultimate.Business
 
             // Setup all the other empty structures
             lastWIForLevel = new Dictionary<int, WorkItem>();
-            Report = new ImportReport();
+            Report = new Report();
             ModifiedWorkItems = new List<WorkItem>();
             TreatedWorkItems = new List<WorkItem>();
         }
@@ -1133,7 +1133,7 @@ namespace Etsi.Ultimate.Business
 
     public interface IWorkItemCsvParser
     {
-        KeyValuePair<List<WorkItem>, ImportReport> ParseCsv(string fileLocation);
+        KeyValuePair<List<WorkItem>, Report> ParseCsv(string fileLocation);
         IUltimateUnitOfWork UoW { get; set; }
     }
 }

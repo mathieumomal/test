@@ -47,7 +47,7 @@ namespace DatabaseImportTests
 
 
             // Report
-            var report = new Domain.ImportReport();
+            var report = new Domain.Report();
             // Execute
             var import = new SpecificationImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
             import.FillDatabase();
@@ -100,7 +100,7 @@ namespace DatabaseImportTests
             legacyContext.Stub(ctx => ctx.Specs_GSM_3G).Return(GetSpecs_Legacy());
 
             // Report
-            var report = new Domain.ImportReport();
+            var report = new Domain.Report();
             // Execute
             var import_fill = new SpecificationResponsibleGroupImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
             import_fill.FillDatabase();
@@ -138,7 +138,7 @@ namespace DatabaseImportTests
 
 
             //Report
-            var report = new Domain.ImportReport();
+            var report = new Domain.Report();
             // Execute
             var import_fill = new SpecificationsGenealogyImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
             import_fill.FillDatabase();
@@ -172,7 +172,7 @@ namespace DatabaseImportTests
 
 
             //Report
-            var report = new Domain.ImportReport();
+            var report = new Domain.Report();
             // Execute
             var import_fill = new SpecificationRapporteurImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
             import_fill.FillDatabase();
@@ -208,7 +208,7 @@ namespace DatabaseImportTests
 
 
             //Report
-            var report = new Domain.ImportReport();
+            var report = new Domain.Report();
             // Execute
             var import_fill = new SpecificationWorkitemImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
             import_fill.FillDatabase();
@@ -244,7 +244,7 @@ namespace DatabaseImportTests
 
 
             //Report
-            var report = new Domain.ImportReport();
+            var report = new Domain.Report();
             // Execute
             var import_fill = new SpecificationReleaseImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
             import_fill.FillDatabase();

@@ -18,7 +18,7 @@ namespace DatabaseImport.ModuleImport
         public const string RefImportForLog = "[Specification/WorkItems]";
         public Etsi.Ultimate.DataAccess.IUltimateContext NewContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
-        public Etsi.Ultimate.DomainClasses.ImportReport Report { get; set; }
+        public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
 
         public void CleanDatabase()
         {

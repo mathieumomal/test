@@ -258,4 +258,16 @@
   <data name="History_Specification_Changed_Prime_Rapporteur" xml:space="preserve">
     <value>Prime Rapporteur has been changed to {0}. Previous: {1}</value>
   </data>
+  <data name="Specification_AwaitingReferenceNumberMail_Subject" xml:space="preserve">
+    <value>Specification number allocation required: {0}</value>
+  </data>
+  <data name="Specification_ReferenceNumberAssigned_Subject" xml:space="preserve">
+    <value>Specification number allocated: {0}</value>
+  </data>
+  <data name="Specification_ERR001_FailedToSendEmailToSpecManagers" xml:space="preserve">
+    <value>Specification has been created, but system failed to notify the Specification Manager(s). Please contact them directly to request them to set the number.</value>
+  </data>
+  <data name="Specification_MSG002_SpecCreatedMailSendToSpecManager" xml:space="preserve">
+    <value>Specification has been successfully created. An email has been sent to the Specification Manager(s) requesting the allocation of a specification number.</value>
+  </data>
 </root>

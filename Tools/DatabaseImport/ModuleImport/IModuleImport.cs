@@ -14,7 +14,7 @@ namespace DatabaseImport.ModuleImport
         IUltimateContext NewContext { get; set; }
         ITmpDb LegacyContext { get; set; }
 
-        ImportReport Report { get; set; }
+        Report Report { get; set; }
 
         void CleanDatabase();
 

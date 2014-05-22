@@ -20,7 +20,7 @@ namespace DatabaseImport
             var newContext = new UltimateContext();
 
             var oldContext = new TmpDB();
-            var report = new ImportReport();
+            var report = new Report();
 
 
             // CONFIGURE HERE

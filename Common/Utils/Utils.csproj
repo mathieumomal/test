@@ -71,12 +71,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Localization.resx</DependentUpon>
     </Compile>
-    <Compile Include="ModelMails\CreateSpecificationMailTemplate.cs">
+    <Compile Include="ModelMails\SpecAwaitingReferenceNumberMailTemplate.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>CreateSpecificationMailTemplate.tt</DependentUpon>
+      <DependentUpon>SpecAwaitingReferenceNumberMailTemplate.tt</DependentUpon>
     </Compile>
-    <Compile Include="ModelMails\CreateSpecificationMailTemplate.extend.cs" />
+    <Compile Include="ModelMails\SpecAwaitingReferenceNumberMailTemplate.extend.cs" />
+    <Compile Include="ModelMails\SpecReferenceNumberAssignedMailTemplate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SpecReferenceNumberAssignedMailTemplate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ModelMails\SpecReferenceNumberAssignedMailTemplate.extend.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerTopology.cs" />
     <Compile Include="Service References\WcfMailService\Reference.cs">
@@ -87,9 +93,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="ModelMails\CreateSpecificationMailTemplate.tt">
+    <None Include="ModelMails\SpecAwaitingReferenceNumberMailTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
-      <LastGenOutput>CreateSpecificationMailTemplate.cs</LastGenOutput>
+      <LastGenOutput>SpecAwaitingReferenceNumberMailTemplate.cs</LastGenOutput>
+    </None>
+    <None Include="ModelMails\SpecReferenceNumberAssignedMailTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>SpecReferenceNumberAssignedMailTemplate.cs</LastGenOutput>
     </None>
     <None Include="packages.config" />
     <None Include="Service References\WcfMailService\Arrays.xsd">

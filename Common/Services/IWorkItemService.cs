@@ -14,7 +14,7 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        KeyValuePair<string, ImportReport> AnalyseWorkPlanForImport(String path);
+        KeyValuePair<string, Report> AnalyseWorkPlanForImport(String path);
 
         /// <summary>
         /// Import workitems uploaded on the server

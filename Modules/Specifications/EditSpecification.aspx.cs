@@ -73,7 +73,7 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
             Domain.Specification spec;
-            Domain.ImportReport report;
+            Domain.Report report;
 
             userId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
             spec = new Domain.Specification();

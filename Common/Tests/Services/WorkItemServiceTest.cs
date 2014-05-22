@@ -304,7 +304,7 @@ namespace Etsi.Ultimate.Tests.Services
         {
             var wiList = new List<WorkItem>() { new WorkItem() };
             var csvImporterMock = MockRepository.GenerateMock<IWorkItemCsvParser>();
-            csvImporterMock.Stub(x => x.ParseCsv(path)).Return(new KeyValuePair<List<WorkItem>, ImportReport>(wiList, new ImportReport()));
+            csvImporterMock.Stub(x => x.ParseCsv(path)).Return(new KeyValuePair<List<WorkItem>, Report>(wiList, new Report()));
             ManagerFactory.Container.RegisterInstance(typeof(IWorkItemCsvParser), csvImporterMock);
         }
     }

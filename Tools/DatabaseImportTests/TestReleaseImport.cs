@@ -79,7 +79,7 @@ namespace DatabaseImportTests
             legacyContext.Stub(ctx => ctx.Releases).Return(legacyDbSet);
 
             // Report
-            var report = new Domain.ImportReport();
+            var report = new Domain.Report();
 
             // Execute
             var import = new ReleaseImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
@@ -145,7 +145,7 @@ namespace DatabaseImportTests
             legacyContext.Stub(ctx => ctx.Releases).Return(legacyDbSet);
 
             // Report
-            var report = new Domain.ImportReport();
+            var report = new Domain.Report();
 
             // Execute
             var import = new ReleaseImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
@@ -248,7 +248,7 @@ namespace DatabaseImportTests
             legacyContext.Stub(ctx => ctx.Releases).Return(legacyDbSet);
 
             // Report
-            var report = new Domain.ImportReport();
+            var report = new Domain.Report();
 
             // Execute
             var import = new ReleaseImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };

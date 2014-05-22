@@ -19,7 +19,7 @@ namespace Etsi.Ultimate.Business
 
         public IUltimateUnitOfWork UoW { get; set; }
 
-        public KeyValuePair<string, ImportReport> TryImportCsv(string filePath)
+        public KeyValuePair<string, Report> TryImportCsv(string filePath)
         {
             try
             {
@@ -30,9 +30,9 @@ namespace Etsi.Ultimate.Business
                     path = ExtractZipGetCsv(filePath);
                     if (String.IsNullOrEmpty(path))
                     {
-                        var report = new ImportReport();
+                        var report = new Report();
                         report.LogError(Utils.Localization.WorkItem_Import_Bad_Zip_File);
-                        return new KeyValuePair<string, ImportReport>("", report);
+                        return new KeyValuePair<string, Report>("", report);
                     }
 
                 }
@@ -47,14 +47,14 @@ namespace Etsi.Ultimate.Business
                     token = Guid.NewGuid().ToString();
                     CacheManager.InsertForLimitedTime(CACHE_KEY + token, result.Key, 10);
                 }
-                return new KeyValuePair<string, ImportReport>(token, result.Value);
+                return new KeyValuePair<string, Report>(token, result.Value);
             }
             catch (Exception e)
             {
                 Utils.LogManager.Error("Error while analysing workplan: " + e.Message);
-                var report = new ImportReport();
+                var report = new Report();
                 report.LogError(Utils.Localization.WorkItem_Import_Error_Analysis);
-                return new KeyValuePair<string, ImportReport>("", report);
+                return new KeyValuePair<string, Report>("", report);
             }
 
         }

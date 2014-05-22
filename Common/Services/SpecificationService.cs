@@ -214,7 +214,7 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId"></param>
         /// <param name="spec"></param>
         /// <returns></returns>
-        public KeyValuePair<int, ImportReport> CreateSpecification(int personId, Specification spec)
+        public KeyValuePair<int, Report> CreateSpecification(int personId, Specification spec)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
@@ -225,14 +225,14 @@ namespace Etsi.Ultimate.Services
                 {
                     var newSpec = createAction.Create(personId, spec);
                     uoW.Save();
-                    return new KeyValuePair<int, ImportReport>(newSpec.Key.Pk_SpecificationId, newSpec.Value);
+                    return new KeyValuePair<int, Report>(newSpec.Key.Pk_SpecificationId, newSpec.Value);
                 }
                 catch (Exception e)
                 {
                     Utils.LogManager.Error("Error while creating specification: " + e.Message);
-                    var report = new ImportReport();
+                    var report = new Report();
                     report.LogError(e.Message);
-                    return new KeyValuePair<int, ImportReport>(-1, report);
+                    return new KeyValuePair<int, Report>(-1, report);
                 }
 
             }
@@ -244,7 +244,7 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId"></param>
         /// <param name="spec"></param>
         /// <returns></returns>
-        public KeyValuePair<bool, ImportReport> EditSpecification(int personId, Specification spec)
+        public KeyValuePair<bool, Report> EditSpecification(int personId, Specification spec)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
@@ -256,14 +256,14 @@ namespace Etsi.Ultimate.Services
                     if (!status)
                         throw new Exception("Could not update specification");
                     uoW.Save();
-                    return new KeyValuePair<bool, ImportReport>(true, new ImportReport());
+                    return new KeyValuePair<bool, Report>(true, new Report());
                 }
                 catch (Exception e)
                 {
                     Utils.LogManager.Error("Error while editing specification: " + e.Message);
-                    var report = new ImportReport();
+                    var report = new Report();
                     report.LogError(e.Message);
-                    return new KeyValuePair<bool, ImportReport>(false, report);
+                    return new KeyValuePair<bool, Report>(false, report);
                 }
             }
         }

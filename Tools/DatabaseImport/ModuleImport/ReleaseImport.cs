@@ -23,7 +23,7 @@ namespace DatabaseImport.ModuleImport
             set;
         }
 
-        public ImportReport Report
+        public Report Report
         {
             get;
             set;

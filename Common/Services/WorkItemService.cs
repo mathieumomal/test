@@ -21,7 +21,7 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public KeyValuePair<string, ImportReport> AnalyseWorkPlanForImport(String path)
+        public KeyValuePair<string, Report> AnalyseWorkPlanForImport(String path)
         {
            
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())

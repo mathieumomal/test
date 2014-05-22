@@ -32,12 +32,12 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId"></param>
         /// <param name="spec"></param>
         /// <returns></returns>
-        public KeyValuePair<Specification, ImportReport> Create(int personId, Specification spec)
+        public KeyValuePair<Specification, Report> Create(int personId, Specification spec)
         {
             // Create repository and report
             var repo = RepositoryFactory.Resolve<ISpecificationRepository>();
             repo.UoW = UoW;
-            var report = new ImportReport();
+            var report = new Report();
 
             // Specification must not already have a primary key.
             if (spec.Pk_SpecificationId != default(int))
@@ -54,23 +54,14 @@ namespace Etsi.Ultimate.Business
                 throw new InvalidOperationException("User " + personId + " is not allowed to create a specification");
             }
 
-            // Perform checks on specification
-            CheckSpecification(spec);
+            // Perform checks on specification and associated serie
+            CheckSpecificationAndSerie(spec, userRights, repo);
             
             // Define default fields
             DefineDefaultValues(spec, personId);
 
             //Replace disconnected objects (Spec Parents/Childs) with context objects
             ReplaceDisconnectedObjects(spec, repo);
-
-            // If spec number is entered, link the serie.
-            if (!string.IsNullOrEmpty(spec.Number))
-            {
-                var specSerie = spec.Number.Split('.')[0];
-                var serie = repo.GetSeries().Where(s => s.Code == "SER_"+specSerie).FirstOrDefault();
-                if (serie != null)
-                    spec.Fk_SerieId = serie.Pk_Enum_SerieId;
-            }
 
             // Create an history entry
             var releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
@@ -85,20 +76,20 @@ namespace Etsi.Ultimate.Business
                     CreationDate = DateTime.UtcNow,
                     Fk_PersonId = personId
                 }
-                    );
+            );
 
             
             repo.InsertOrUpdate(spec);
 
             //If the user didn't have the right to edit spec number we send a mail to the spec manager
-            /*if (userRights.HasRight(Enum_UserRights.Specification_EditLimitted))
+            if (userRights.HasRight(Enum_UserRights.Specification_EditLimitted))
             {
-                MailAlertSpecManager(spec);
-            }*/
-            //Suppress for the moment : cause an error with MailClient.SendEmailWithBcc in MailManager
-            // I Suppose a body format (T4 template)
+                MailAlertSpecManager(spec, report);
+            }
 
-            return new KeyValuePair<Specification,ImportReport>(spec, report);
+            if (report.GetNumberOfErrors() == 0 && report.GetNumberOfWarnings() == 0)
+                report.LogInfo(Localization.Specification_MSG002_SpecCreatedMailSendToSpecManager);
+            return new KeyValuePair<Specification,Report>(spec, report);
         }
 
         /// <summary>
@@ -162,14 +153,16 @@ namespace Etsi.Ultimate.Business
         /// - Spec number is valid.
         /// </summary>
         /// <param name="spec"></param>
-        private void CheckSpecification(Specification spec)
+        private void CheckSpecificationAndSerie(Specification spec, UserRightsContainer userRights,ISpecificationRepository specRepo)
         {
             // Specification should be linked to one release.
             if (spec.Specification_Release.Count != 1 || spec.Specification_Release.First().Fk_ReleaseId == default(int))
                 throw new InvalidOperationException("Specification must be linked to one release");
 
             // Specification must have valid number.
-            if (!String.IsNullOrEmpty(spec.Number))
+            if (!String.IsNullOrEmpty(spec.Number) && !userRights.HasRight(Enum_UserRights.Specification_EditFull))
+                throw new InvalidOperationException("You don't have the right to create a specification number");
+            else if (!String.IsNullOrEmpty(spec.Number))
             {
                 var specMgr = new SpecificationManager() { UoW = UoW };
                 var check = specMgr.CheckFormatNumber(spec.Number);
@@ -182,29 +175,30 @@ namespace Etsi.Ultimate.Business
                 {
                     throw new InvalidOperationException("Specification number already exists : " + String.Join(" # -- # ", checkAlreadyExist.Value));
                 }
+
+                // If spec number is entered, link the serie.
+                var specSerie = spec.Number.Split('.')[0];
+                var serie = specRepo.GetSeries().Where(s => s.Code == "SER_" + specSerie).FirstOrDefault();
+                if (serie != null)
+                    spec.Fk_SerieId = serie.Pk_Enum_SerieId;
             }
         }
 
-        private void MailAlertSpecManager(Specification spec)
+        private void MailAlertSpecManager(Specification spec , Report report)
         {
-            var subject = String.Empty;
-            if (spec.Title.Length > 60)
-            {
-                subject = new StringBuilder()
-                .Append("Specification number allocation required: ")
-                .Append(spec.Title.Substring(0, 60))
-                .ToString();
-            }
+            var specTitleSubject = String.Empty;
+            if (spec.Title != null && spec.Title.Length > 60)
+                specTitleSubject = spec.Title.Substring(0, 60);
             else
+                specTitleSubject = spec.Title;
+            var subject = String.Format(Localization.Specification_AwaitingReferenceNumberMail_Subject, specTitleSubject);
+
+            var body = new SpecAwaitingReferenceNumberMailTemplate("#SECRETARY#", spec.Title, "#LINK#");
+            var mailInstance = MailManager.Instance;
+            if (!mailInstance.SendEmail(null, new List<string>() { "test@supinfo.com" }, null, null, subject, body.TransformText()))
             {
-                subject = new StringBuilder()
-                .Append("Specification number allocation required: ")
-                .Append(spec.Title)
-                .ToString();
+                report.LogError(Localization.Specification_ERR001_FailedToSendEmailToSpecManagers);
             }
-            
-            var body = new CreateSpecificationMailTemplate("secretary",spec.Title,"link");
-            MailManager.Instance.SendEmail(null, new List<string>() { "test@supinfo.com" }, null, null, subject, body.TransformText());
         }
     }
 }

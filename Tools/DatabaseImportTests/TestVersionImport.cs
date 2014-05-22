@@ -40,7 +40,7 @@ namespace DatabaseImportTests
             legacyContext.Stub(ctx => ctx.C2001_04_25_schedule).Return(GetSchedule_Legacy());
 
             // Report
-            var report = new Domain.ImportReport();
+            var report = new Domain.Report();
             // Execute
             var import = new VersionImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
             import.FillDatabase();

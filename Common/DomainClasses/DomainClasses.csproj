@@ -72,7 +72,7 @@
     <Compile Include="History.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="ImportReport.cs" />
+    <Compile Include="Report.cs" />
     <Compile Include="Meeting.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

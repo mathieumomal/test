@@ -16,7 +16,7 @@ namespace DatabaseImport
         /// <param name="logDescriptionCase"></param>
         /// <param name="defaultvalue"></param>
         /// <returns></returns>
-        public static bool NullBooleanCheck(bool? boo, string logDescriptionCase, bool defaultValue, ImportReport report)
+        public static bool NullBooleanCheck(bool? boo, string logDescriptionCase, bool defaultValue, Report report)
         {
             if (!boo.HasValue)
             {
@@ -34,7 +34,7 @@ namespace DatabaseImport
         /// <param name="logDescriptionCase"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static string CheckString(string str, int lenght, string logDescriptionCase, string id, ImportReport report)
+        public static string CheckString(string str, int lenght, string logDescriptionCase, string id, Report report)
         {
             if (String.IsNullOrEmpty(str))
             {
@@ -48,7 +48,7 @@ namespace DatabaseImport
             return str.Trim();
         }
 
-        public static int CheckInt(int? val, string logDescriptionCase, string id, ImportReport report)
+        public static int CheckInt(int? val, string logDescriptionCase, string id, Report report)
         {
             if (val == null)
             {
@@ -59,7 +59,7 @@ namespace DatabaseImport
             return val.Value;
         }
 
-        public static string CheckIntToString(int? val, int lenght, string logDescriptionCase, string id, ImportReport report)
+        public static string CheckIntToString(int? val, int lenght, string logDescriptionCase, string id, Report report)
         {
             if (val != null)
             {
