@@ -60,18 +60,6 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Etsi.Ultimate.Business">
-      <HintPath>..\..\bin\Etsi.Ultimate.Business.dll</HintPath>
-    </Reference>
-    <Reference Include="Etsi.Ultimate.Repositories">
-      <HintPath>..\..\bin\Etsi.Ultimate.Repositories.dll</HintPath>
-    </Reference>
-    <Reference Include="Etsi.Ultimate.Services">
-      <HintPath>..\..\bin\Etsi.Ultimate.Services.dll</HintPath>
-    </Reference>
-    <Reference Include="Etsi.Ultimate.Utils">
-      <HintPath>..\..\bin\Etsi.Ultimate.Utils.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Practices.Unity, Version=2.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Unity.3.0.1304.1\lib\Net45\Microsoft.Practices.Unity.dll</HintPath>
@@ -214,6 +202,10 @@
     <None Include="TestData\WorkItems\WpId_NonUnique.csv" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Business\Business.csproj">
+      <Project>{b01c6fdf-c992-4d87-b67e-41afd677ea5f}</Project>
+      <Name>Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DataAccess\DataAccess.csproj">
       <Project>{638f46a5-c23c-452d-a1f4-d0c49ea28f5b}</Project>
       <Name>DataAccess</Name>
@@ -222,9 +214,17 @@
       <Project>{d5bdede9-d397-411c-ae94-1646836406ba}</Project>
       <Name>DomainClasses</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Repositories\Repositories.csproj">
+      <Project>{c8f93426-67f5-4a75-803b-34ad1c5730e5}</Project>
+      <Name>Repositories</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Services\Services.csproj">
       <Project>{4bb8a434-1ed1-4d33-ae3d-32a000d19ca5}</Project>
       <Name>Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utils\Utils.csproj">
+      <Project>{ad1f6a1c-95b2-4274-a0c5-1f8ca9d9bb55}</Project>
+      <Name>Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
