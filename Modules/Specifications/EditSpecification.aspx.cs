@@ -36,14 +36,14 @@ namespace Etsi.Ultimate.Module.Specifications
         private const String EDIT_MODE = "edit";
         private List<string> LIST_OF_TABS = new List<string>() { };
         public static readonly string DsId_Key = "ETSI_DS_ID";
-        
+
 
         //Properties
         private int userId;
         private string selectedTab;
         public static Nullable<int> SpecificationId;
         private static String action;
-        
+
 
         #endregion
 
@@ -80,7 +80,7 @@ namespace Etsi.Ultimate.Module.Specifications
             FillSpecificationObject(spec);
             if (action.Equals(EDIT_MODE))
             {
-                var result = svc.EditSpecification(userId, spec); 
+                var result = svc.EditSpecification(userId, spec);
                 report = result.Value;
             }
             else
@@ -154,9 +154,9 @@ namespace Etsi.Ultimate.Module.Specifications
 
             ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
             IReleaseService relSvc = ServicesFactory.Resolve<IReleaseService>();
-            var releases = relSvc.GetAllReleases(userId).Key.Where(x=>x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Open 
-                                                                   || x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Frozen).OrderByDescending(x=>x.StartDate).ToList();
-            
+            var releases = relSvc.GetAllReleases(userId).Key.Where(x => x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Open
+                                                                   || x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Frozen).OrderByDescending(x => x.StartDate).ToList();
+
             // Get the user rights
             var rightsService = ServicesFactory.Resolve<IRightsService>();
             var userRights = rightsService.GetGenericRightsForUser(userId);
@@ -190,6 +190,7 @@ namespace Etsi.Ultimate.Module.Specifications
                         lblHeaderText.Text = SPEC_HEADER + ((String.IsNullOrEmpty(specification.Number)) ? CONST_EMPTY_FIELD : specification.Number);
 
                         BuildTabsDisplay();
+                        FillReleasesTab(specification);
                         SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
                         FillGeneralTab(userRights, specification, releases);
                         FillResponsiblityTab(specification);
@@ -205,8 +206,8 @@ namespace Etsi.Ultimate.Module.Specifications
                         }
 
                         btnSaveDisabled.Style.Add("display", "none");
-                    } 
-                    
+                    }
+
                 }
             }
 
@@ -221,6 +222,17 @@ namespace Etsi.Ultimate.Module.Specifications
 
                 btnSave.Style.Add("display", "none");
             }
+        }
+
+
+        /// <summary>
+        /// Fill the Release Tab with the retrieved data 
+        /// </summary>
+        private void FillReleasesTab(Domain.Specification specification)
+        {
+            SpecificationReleaseControl1.DataSource = specification;
+            SpecificationReleaseControl1.PersonId = userId;
+            SpecificationReleaseControl1.IsEditMode = true;
         }
 
         /// <summary>
@@ -346,7 +358,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
                     }
                 }
-                
+
                 specificationRemarks.DataSource = specification.Remarks.ToList();
             }
         }
@@ -361,7 +373,7 @@ namespace Etsi.Ultimate.Module.Specifications
             specificationRapporteurs.IsSinglePersonMode = false;
             specificationRapporteurs.SelectableMode = RapporteurControl.RapporteursSelectablemode.Single;
             specificationRapporteurs.PersonLinkBaseAddress = ConfigurationManager.AppSettings["RapporteurDetailsAddress"];
-            
+
             if (specification != null)
             {
                 PrimaryResGrpCtrl.SelectedCommunityID = specification.PrimeResponsibleGroup.Fk_commityId;
@@ -379,7 +391,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private void FillRelatedSpecificationsTab(Domain.Specification specification, string selectedTab)
         {
             List<string> SpecToExcludeBuffer = new List<string>();
-            
+
             parentSpecifications.IsEditMode = true;
             parentSpecifications.IsParentList = true;
             parentSpecifications.SelectedTab = CONST_RELATED_TAB;
@@ -511,9 +523,10 @@ namespace Etsi.Ultimate.Module.Specifications
 
             foreach (var rapporteur in specificationRapporteurs.DataSource_multimode)
             {
-                spec.SpecificationRapporteurs.Add (new Domain.SpecificationRapporteur() { 
-                    Fk_RapporteurId = rapporteur.PERSON_ID, 
-                    IsPrime = specificationRapporteurs.ListIdPersonSelect.Contains(rapporteur.PERSON_ID) 
+                spec.SpecificationRapporteurs.Add(new Domain.SpecificationRapporteur()
+                {
+                    Fk_RapporteurId = rapporteur.PERSON_ID,
+                    IsPrime = specificationRapporteurs.ListIdPersonSelect.Contains(rapporteur.PERSON_ID)
                 });
             }
 

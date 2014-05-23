@@ -71,7 +71,7 @@
                 <telerik:GridTemplateColumn HeaderText="Version" UniqueName="Version">
                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="60px" />
                     <ItemTemplate>
-                        <div class="text-center"><%# DataBinder.Eval(Container.DataItem,"MajorVersion").ToString() + "." + DataBinder.Eval(Container.DataItem,"TechnicalVersion").ToString() + "." + DataBinder.Eval(Container.DataItem,"EditorialVersion").ToString()%></div>
+                        <div class="text-center"><%# DataBinder.Eval(Container.DataItem,"Version")%></div>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
                 <telerik:GridTemplateColumn DataField="DocumentUploaded" HeaderText="Document Uploaded" UniqueName="DocumentUploaded">
@@ -81,7 +81,7 @@
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
                 <telerik:GridTemplateColumn DataField="LatestRemark" HeaderText="Comment" UniqueName="LatestRemark">
-                    <HeaderStyle HorizontalAlign="Center" Width="40%" Font-Bold="True"/>
+                    <HeaderStyle HorizontalAlign="Center" Width="40%" Font-Bold="True" />
                     <ItemTemplate>
                         <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"LatestRemark") %></div>
                     </ItemTemplate>

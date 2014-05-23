@@ -265,6 +265,15 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::Telerik.Web.UI.RadPageView RadPageReleases;
         
         /// <summary>
+        /// SpecificationReleaseControl1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Etsi.Ultimate.Module.Specifications.SpecificationReleaseControl SpecificationReleaseControl1;
+        
+        /// <summary>
         /// RadPageHistory control.
         /// </summary>
         /// <remarks>

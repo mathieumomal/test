@@ -14,11 +14,18 @@ namespace Etsi.Ultimate.Module.Specifications
         private Release _release;
         private Specification _specification;
         private Page _page;
-        public CustomHeaderTemplate(Release release, Specification specification, Page page)
+        private bool _isEditMode;
+        private UserRightsContainer _releaseRights;
+        private int? _personId;
+
+        public CustomHeaderTemplate(Release release, Specification specification, bool isEditMode,UserRightsContainer releaseRights, int personId, Page page)
         {
             _specification = specification;
             _release = release;
             _page = page;
+            _isEditMode = isEditMode;
+            _releaseRights = releaseRights;
+            _personId = personId;
         }
 
         public void InstantiateIn(Control container)
@@ -30,6 +37,9 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 ctrl.ReleaseDataSource = _release;
                 ctrl.SpecificationDataSource = _specification;
+                ctrl.IsEditMode = _isEditMode;
+                ctrl.UserReleaseRights = _releaseRights;
+                ctrl.PersonId = _personId;
             }
             container.Controls.Add(ctrl);
         }

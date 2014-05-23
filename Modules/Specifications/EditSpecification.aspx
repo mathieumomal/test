@@ -8,6 +8,7 @@
 <%@ Register TagPrefix="ult" TagName="RelatedWiControl" Src="../../controls/Ultimate/RelatedWiControl.ascx" %>
 <%@ Register TagPrefix="ult" TagName="CommunityControl" Src="../../controls/Ultimate/CommunityControl.ascx" %>
 <%@ Register TagPrefix="spec" TagName="SpecificationListControl" Src="SpecificationListControl.ascx" %>
+<%@ Register TagPrefix="spec" TagName="SpecificationReleaseControl" Src="SpecificationReleaseControl.ascx" %>
 
 <!DOCTYPE html>
 
@@ -154,6 +155,7 @@
                         </asp:Panel>
                     </telerik:RadPageView>
                     <telerik:RadPageView ID="RadPageReleases" runat="server">
+                        <spec:SpecificationReleaseControl runat="server" ID="SpecificationReleaseControl1" />
                     </telerik:RadPageView>
                     <telerik:RadPageView ID="RadPageHistory" runat="server">
                         <div class="TabContent" style="overflow-y: auto; overflow-x: auto">

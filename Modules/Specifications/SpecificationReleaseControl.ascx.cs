@@ -63,19 +63,22 @@ namespace Etsi.Ultimate.Module.Specifications
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Get the rights of the user
+            ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var userRightsPerSpecRelease = specSvc.GetRightsForSpecReleases(PersonId.GetValueOrDefault(), DataSource);
+
             rpbReleases.EnableViewState = false;
 
             foreach (var release in DataSource.SpecificationReleases.OrderByDescending(sr => sr.SortOrder))
             {
                 RadPanelItem item = new RadPanelItem();
-                item.HeaderTemplate = new CustomHeaderTemplate(release, DataSource, this.Page);
+                var rights = userRightsPerSpecRelease.Where(r => r.Key.Fk_ReleaseId == release.Pk_ReleaseId).FirstOrDefault().Value;
+                item.HeaderTemplate = new CustomHeaderTemplate(release, DataSource, IsEditMode, rights, PersonId.GetValueOrDefault(), this.Page);
                 item.Value = release.Pk_ReleaseId.ToString();
                 rpbReleases.Items.Add(item);
             }
 
-            // Get the rights of the user
-            ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            var userRightsPerSpecRelease = specSvc.GetRightsForSpecReleases(PersonId.GetValueOrDefault(), DataSource);
+
 
             ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
             var versionsList = svc.GetVersionsBySpecId(DataSource.Pk_SpecificationId);
@@ -90,7 +93,7 @@ namespace Etsi.Ultimate.Module.Specifications
                                                            .ThenByDescending(x => x.TechnicalVersion)
                                                            .ThenByDescending(x => x.EditorialVersion).ToList();
                 var rights = userRightsPerSpecRelease.Where(r => r.Key.Fk_ReleaseId == releaseId).FirstOrDefault().Value;
-                template = new CustomContentTemplate(datasource,  rights, PersonId.GetValueOrDefault(), DataSource.Pk_SpecificationId, releaseId, this.Page);
+                template = new CustomContentTemplate(datasource,  rights, PersonId.GetValueOrDefault(), DataSource.Pk_SpecificationId, releaseId, IsEditMode, this.Page);
                 item.ContentTemplate = template;
                 template.InstantiateIn(item);
                 item.DataBind();

@@ -81,13 +81,6 @@ namespace Etsi.Ultimate.Module.Specifications
             
             if (!IsPostBack)
             {
-                
-                if (!IsEditMode)
-                {
-                }
-                else
-                {
-                }
 
             }
         }
@@ -106,12 +99,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
         protected void specificationsVersionGrid_ItemDataBound(object sender, GridItemEventArgs e)
         {
-            if (e.Item is GridDataItem)
-            {
-                GridDataItem item = (GridDataItem)e.Item;
-                if (IsEditMode && item["SpecificationActions"].FindControl("btnRemoveSpec") != null)
-                    ((ImageButton)item["SpecificationActions"].FindControl("btnRemoveSpec")).Visible = true;
-            }
+
         }
 
         /// <summary>

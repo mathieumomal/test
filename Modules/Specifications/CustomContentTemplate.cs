@@ -17,7 +17,8 @@ namespace Etsi.Ultimate.Module.Specifications
         private int? _personId;
         private int? _specId;
         private int? _releaseId;
-        public CustomContentTemplate(List<SpecVersion> specVersions, UserRightsContainer releaseRights, int personId, int specId, int releaseId, Page page)
+        private bool _isEditMode;
+        public CustomContentTemplate(List<SpecVersion> specVersions, UserRightsContainer releaseRights, int personId, int specId, int releaseId, bool isEditMode, Page page)
         {
             _specVersions = specVersions;
             _releaseRights = releaseRights;
@@ -25,6 +26,7 @@ namespace Etsi.Ultimate.Module.Specifications
             _personId = personId;
             _specId = specId;
             _releaseId = releaseId;
+            _isEditMode = isEditMode;
         }
 
         public void InstantiateIn(Control container)
@@ -37,6 +39,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 ctrl.PersonId = _personId;
                 ctrl.SpecId = _specId;
                 ctrl.ReleaseId = _releaseId;
+                ctrl.IsEditMode = _isEditMode;
             }
             container.Controls.Add(ctrl);
         }

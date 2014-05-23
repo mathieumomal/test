@@ -18,5 +18,18 @@ namespace Etsi.Ultimate.DomainClasses
                 return remark;
             }
         }
+
+
+        public string Version
+        {
+            get
+            {
+                string version = string.Empty;
+                version = string.Format("{0}.{1}.{2}", (this.MajorVersion ?? default(int)).ToString(),
+                                                       (this.TechnicalVersion ?? default(int)).ToString(),
+                                                       (this.EditorialVersion ?? default(int)).ToString());
+                return version;
+            }
+        }
     }
 }
