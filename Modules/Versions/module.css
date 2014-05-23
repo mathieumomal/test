@@ -83,6 +83,7 @@
 .releaseDetailsAction {
     width:394px !important;
     text-align: right;
+    padding-right: 10px;
 }
 
 #CommentVal {

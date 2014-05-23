@@ -15,6 +15,7 @@ using DotNetNuke.Entities.Modules;
 using DotNetNuke.Services.Exceptions;
 using System.Text.RegularExpressions;
 using System.Text;
+using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Module.Versions
 {
@@ -40,6 +41,8 @@ namespace Etsi.Ultimate.Module.Versions
     /// -----------------------------------------------------------------------------
     public partial class Settings : ModuleSettingsBase
     {
+        private static readonly string regexPath = @"(.*)\\$";
+
         #region Base Method Implementations
 
         /// -----------------------------------------------------------------------------
@@ -53,18 +56,13 @@ namespace Etsi.Ultimate.Module.Versions
             {
                 if (Page.IsPostBack == false)
                 {
-                    //Check for existing settings and use those on this page
-                    //Settings["SettingName"]
+                    //Set settings with save values
+                    if (Settings.Contains(Enum_Settings.Version_UploadPath.ToString()))
+                        txtUploadPath.Text = Settings[Enum_Settings.Version_UploadPath.ToString()].ToString();
 
-                    /* uncomment to load saved settings in the text boxes
-                    if(Settings.Contains("Setting1"))
-                        txtSetting1.Text = Settings["Setting1"].ToString();
-			
-                    if (Settings.Contains("Setting2"))
-                        txtSetting2.Text = Settings["Setting2"].ToString();
-
-                    */
-
+                    //Set settings with save values
+                    if (Settings.Contains(Enum_Settings.Version_UploadPath.ToString()))
+                        txtFtpBasePath.Text = Settings[Enum_Settings.Version_FtpBasePath.ToString()].ToString();
                 }
             }
             catch (Exception exc) //Module failed to load
@@ -82,16 +80,12 @@ namespace Etsi.Ultimate.Module.Versions
         {
             try
             {
-                var modules = new ModuleController();
+                var module = new ModuleController();
 
-                //the following are two sample Module Settings, using the text boxes that are commented out in the ASCX file.
-                //module settings
-                //modules.UpdateModuleSetting(ModuleId, "Setting1", txtSetting1.Text);
-                //modules.UpdateModuleSetting(ModuleId, "Setting2", txtSetting2.Text);
-
-                //tab module settings
-                //modules.UpdateTabModuleSetting(TabModuleId, "Setting1",  txtSetting1.Text);
-                //modules.UpdateTabModuleSetting(TabModuleId, "Setting2",  txtSetting2.Text);
+                //Update settings
+                module.UpdateModuleSetting(ModuleId, Enum_Settings.Version_UploadPath.ToString(), getFormatPath(txtUploadPath.Text));
+                module.UpdateModuleSetting(ModuleId, Enum_Settings.Version_FtpBasePath.ToString(), getFormatPath(txtFtpBasePath.Text));
+                
             }
             catch (Exception exc) //Module failed to load
             {
@@ -100,5 +94,15 @@ namespace Etsi.Ultimate.Module.Versions
         }
 
         #endregion
+
+        private string getFormatPath(String pathNoFormat)
+        {
+            System.Text.RegularExpressions.Regex testPathRegex = new Regex(regexPath);
+            if (!testPathRegex.IsMatch(pathNoFormat))
+            {
+                return new StringBuilder().Append(pathNoFormat).Append(@"\").ToString();
+            }
+            return pathNoFormat;
+        }
     }
 }

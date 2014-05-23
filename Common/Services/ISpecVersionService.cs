@@ -30,5 +30,21 @@ namespace Etsi.Ultimate.Services
         /// <param name="versionId">The identifier of the requested version</param>
         /// <returns>A couple (version,userrights)</returns>
         KeyValuePair<SpecVersion, UserRightsContainer> GetVersionsById(int VersionId, int personId);
+
+        /// <summary>
+        /// Allocate a version
+        /// </summary>
+        /// <param name="version">Version to allocate</param>
+        /// <param name="version">Identifier of last uploaded version</param>
+        /// <returns>Result of the operation</returns>
+        bool AllocateVersion(SpecVersion version, int oldVersionId);
+
+        /// <summary>
+        /// Upload a version
+        /// </summary>
+        /// <param name="version"></param>
+        /// <param name="oldVersionId"></param>
+        /// <returns></returns>
+        bool UploadVersion(SpecVersion version, int oldVersionId);
     }
 }

@@ -22,6 +22,15 @@ namespace Etsi.Ultimate.Module.Versions {
         protected global::System.Web.UI.HtmlControls.HtmlForm VersionUploadForm;
         
         /// <summary>
+        /// Contrôle verionsRadAjaxManager.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadAjaxManager verionsRadAjaxManager;
+        
+        /// <summary>
         /// Contrôle RadScriptManager1.
         /// </summary>
         /// <remarks>
@@ -154,7 +163,7 @@ namespace Etsi.Ultimate.Module.Versions {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadTextBox NewVersionMajorVal;
+        protected global::System.Web.UI.WebControls.TextBox NewVersionMajorVal;
         
         /// <summary>
         /// Contrôle NewVersionTechnicalVal.
@@ -163,7 +172,7 @@ namespace Etsi.Ultimate.Module.Versions {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadTextBox NewVersionTechnicalVal;
+        protected global::System.Web.UI.WebControls.TextBox NewVersionTechnicalVal;
         
         /// <summary>
         /// Contrôle NewVersionEditorialVal.
@@ -172,7 +181,7 @@ namespace Etsi.Ultimate.Module.Versions {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadTextBox NewVersionEditorialVal;
+        protected global::System.Web.UI.WebControls.TextBox NewVersionEditorialVal;
         
         /// <summary>
         /// Contrôle CommentLbl.
@@ -211,6 +220,15 @@ namespace Etsi.Ultimate.Module.Versions {
         protected global::System.Web.UI.WebControls.LinkButton UploadBtn;
         
         /// <summary>
+        /// Contrôle AllocateBtn.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton AllocateBtn;
+        
+        /// <summary>
         /// Contrôle UploadBtnDisabled.
         /// </summary>
         /// <remarks>
@@ -227,5 +245,140 @@ namespace Etsi.Ultimate.Module.Versions {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.LinkButton ExitBtn;
+        
+        /// <summary>
+        /// Contrôle RadWindowManager1.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadWindowManager RadWindowManager1;
+        
+        /// <summary>
+        /// Contrôle RadWindow_VersionUploadAnalysis.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadWindow RadWindow_VersionUploadAnalysis;
+        
+        /// <summary>
+        /// Contrôle imgWait.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image imgWait;
+        
+        /// <summary>
+        /// Contrôle analysis_cancel.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadButton analysis_cancel;
+        
+        /// <summary>
+        /// Contrôle RadWindow_VersionUploadConfirmation.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadWindow RadWindow_VersionUploadConfirmation;
+        
+        /// <summary>
+        /// Contrôle lblCountWarningErrors.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblCountWarningErrors;
+        
+        /// <summary>
+        /// Contrôle rptWarningsErrors.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Repeater rptWarningsErrors;
+        
+        /// <summary>
+        /// Contrôle imgProgressImport.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image imgProgressImport;
+        
+        /// <summary>
+        /// Contrôle btnConfirmUpload.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadButton btnConfirmUpload;
+        
+        /// <summary>
+        /// Contrôle Confirmation_cancel.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadButton Confirmation_cancel;
+        
+        /// <summary>
+        /// Contrôle isDraft.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField isDraft;
+        
+        /// <summary>
+        /// Contrôle RadWindow_VersionUploadState.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadWindow RadWindow_VersionUploadState;
+        
+        /// <summary>
+        /// Contrôle lblSaveStatus.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblSaveStatus;
+        
+        /// <summary>
+        /// Contrôle state_confirmation.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadButton state_confirmation;
+        
+        /// <summary>
+        /// Contrôle RadScriptBlock1.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadScriptBlock RadScriptBlock1;
     }
 }

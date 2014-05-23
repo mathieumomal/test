@@ -106,6 +106,7 @@
     <Content Include="Documentation\Documentation.html" />
     <Content Include="images\error.png" />
     <Content Include="images\favicon.ico" />
+    <Content Include="images\hourglass.png" />
     <Content Include="images\warning.png" />
     <Content Include="JS\jquery.min.js" />
     <Content Include="License.txt" />
@@ -155,6 +156,10 @@
     <ProjectReference Include="..\..\Common\Services\Services.csproj">
       <Project>{4bb8a434-1ed1-4d33-ae3d-32a000d19ca5}</Project>
       <Name>Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Utils\Utils.csproj">
+      <Project>{ad1f6a1c-95b2-4274-a0c5-1f8ca9d9bb55}</Project>
+      <Name>Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\Controls\Controls.csproj">
       <Project>{1330d828-a24f-4676-9081-c41204c35072}</Project>

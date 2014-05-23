@@ -37,6 +37,61 @@ namespace Etsi.Ultimate.Services
                 return specVersionManager.GetSpecVersionById(VersionId, personId);
             }
         }
+
+        public bool AllocateVersion(SpecVersion version, int oldVersionId)
+        {
+            bool operationResult = true;
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {                    
+                    var specVersionManager = new SpecVersionsManager(uoW);
+                    if (specVersionManager.CheckIfVersionAlloawed(version, specVersionManager.GetSpecVersionById(oldVersionId, 0).Key, false))
+                    {
+                        specVersionManager.UploadOrAllocateVersion(version);
+                        uoW.Save();
+                    }
+                    else
+                    {
+                        operationResult = false;
+                    }
+                    
+                }
+                catch (Exception ex)
+                {
+                    operationResult = false;
+                }
+            }
+            return operationResult;
+        }
+
+        public bool UploadVersion(SpecVersion version, int oldVersionId)
+        {
+            bool operationResult = true;            
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var specVersionManager = new SpecVersionsManager(uoW);
+                    if (specVersionManager.CheckIfVersionAlloawed(version, specVersionManager.GetSpecVersionById(oldVersionId, 0).Key, true))
+                    {
+                        specVersionManager.UploadOrAllocateVersion(version);
+                        uoW.Save();
+                    }
+                    else
+                    {
+                        operationResult = false;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    operationResult = false;
+                }
+            }
+            return operationResult;
+        }
+
     }
 }
 

@@ -59,16 +59,20 @@ namespace Etsi.Ultimate.Repositories
         public void InsertOrUpdate(SpecVersion entity)
         {
             //Remove generated proxies to avoid Referential Integrity Errors
-            entity.Release = null;
-            entity.Specification = null;
+            //entity.Release = null;
+            //entity.Specification = null;
             
             //[1] Add Existing Childs First
             entity.Remarks.ToList().ForEach(x =>
             {
                 if (x.Pk_RemarkId != default(int))
                     UoW.Context.SetModified(x);                
-            });            
-
+            });
+            /*if (entity.Release.Pk_ReleaseId != default(int))
+                UoW.Context.SetModified(entity.Release);
+            if (entity.Specification.Pk_SpecificationId != default(int))
+                UoW.Context.SetModified(entity.Specification); */
+            
             //[2] Add the Entity (It will add the childs as well)
             UoW.Context.SetAdded(entity);
 

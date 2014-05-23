@@ -21,6 +21,10 @@ namespace Etsi.Ultimate.DomainClasses
         WorkItem_ExportPath,
         
         //Specification settings
-        Spec_ExportPath
+        Spec_ExportPath,
+
+        //Version settings
+        Version_UploadPath,
+        Version_FtpBasePath
     }
 }

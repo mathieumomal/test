@@ -74,13 +74,8 @@ namespace Etsi.Ultimate.Business
             var specificationManager = new SpecificationManager();
             specificationManager.UoW = _uoW;
             //Get calculated rights
-            KeyValuePair<Specification_Release, UserRightsContainer> specRelease_Rights = specificationManager.GetRightsForSpecRelease(personRights, personId, version.Specification, version.Release.Pk_ReleaseId, releases);
-            //check for modifications
-            //GetRightsForVersion(personRights, version, personId, Enum_UserRights.Versions_Upload, isSpecreleaseWithrawn);
-            //GetRightsForVersion(personRights, version, personId, Enum_UserRights.Versions_Allocate, isSpecreleaseWithrawn);
+            KeyValuePair<Specification_Release, UserRightsContainer> specRelease_Rights = specificationManager.GetRightsForSpecRelease(personRights, personId, version.Specification, version.Release.Pk_ReleaseId, releases);            
             
-            //UserRightsContainer rights = specificationManager.GetRightsForSpecReleases(personId, verison.Specification).Where(e => e.Key.Release.Pk_ReleaseId == verison.Release.Pk_ReleaseId).FirstOrDefault().Value;
-
             return new KeyValuePair<SpecVersion, UserRightsContainer>(version, specRelease_Rights.Value);
         }
 
@@ -96,44 +91,66 @@ namespace Etsi.Ultimate.Business
         }
 
         /// <summary>
-        /// Edit userRights ( based on role) to take into account those based on specification-release data
+        /// Check if the version to insert is allowed
         /// </summary>
-        /// /// <param name="currentRights">Role base user rights</param>
-        /// <param name="version">The current version</param>
-        /// <param name="personId">The user id</param>
-        /// <param name="rightToCheck">The right to check</param>
-        /// <param name="isSpecReleaseWithdrawn">Is version's specfication release withdrawn </param>
+        /// <param name="version"></param>
         /// <returns></returns>
-        /*private UserRightsContainer GetRightsForVersion(UserRightsContainer currentRights, SpecVersion version, int personId, Enum_UserRights rightToCheck, bool isSpecReleaseWithdrawn)
-        {            
-            // User have the right => Check if we need to remove it
-            if (currentRights.HasRight(rightToCheck))
+        public bool CheckIfVersionAlloawed(SpecVersion version, SpecVersion oldVersion, bool isUpload)
+        {
+
+            if (oldVersion == null)
+                return false;
+            if (isUpload)
             {
-                if (!(version.Specification.IsActive && version.Release.Enum_ReleaseStatus.Code != Enum_ReleaseStatus.Closed && !isSpecReleaseWithdrawn)) 
+                // Check if any version pending for load
+                List<SpecVersion> versions = GetVersionsForASpecRelease(version.Fk_SpecificationId.GetValueOrDefault(), version.Fk_ReleaseId.GetValueOrDefault()).Where(v => v.DocumentUploaded == null).ToList();
+                if (versions != null && versions.Count > 0)
                 {
-                    //Remove right
-                    currentRights.RemoveRight(rightToCheck);
-                }
-            }
-            // User does not have the right => Check if we need to add it
-            else
-            {
-                //User id rapporteur of the specification
-                // for allocation, being rapporteur does not enable to get the right
-                if (version.Specification.PrimeSpecificationRapporteurIds.Contains(personId) && rightToCheck != Enum_UserRights.Versions_Allocate)
-                {
-                    if (version.Specification.IsActive && version.Release.Enum_ReleaseStatus.Code != Enum_ReleaseStatus.Closed && isSpecReleaseWithdrawn)
+                    foreach (SpecVersion v in versions)
                     {
-                        //Still a draft
-                        if(!version.Specification.IsUnderChangeControl)
-                            //Add right
-                            currentRights.AddRight(rightToCheck);
+                        if (v.MajorVersion == version.MajorVersion && v.TechnicalVersion == version.TechnicalVersion && v.EditorialVersion == version.EditorialVersion)
+                        {
+                            return true;
+                        }
                     }
                 }
             }
-
-            return currentRights;
-        }*/
+            //Check if version is valid 
+            if(version.MajorVersion >= oldVersion.MajorVersion)
+            {
+                if (version.MajorVersion == oldVersion.MajorVersion)
+                {
+                    if (version.TechnicalVersion >= oldVersion.TechnicalVersion)
+                    {
+                        if (version.TechnicalVersion == oldVersion.TechnicalVersion)
+                        {
+                            if (version.EditorialVersion > oldVersion.EditorialVersion)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            return true;
+                        }
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+                return true;
+                
+            }
+            else
+            {
+                return false;
+            }
+        }
 
     }
 }
