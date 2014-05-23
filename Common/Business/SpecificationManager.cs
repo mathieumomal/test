@@ -312,5 +312,35 @@ namespace Etsi.Ultimate.Business
             return new KeyValuePair<Specification_Release, UserRightsContainer>(specRelease, rights);
         }
 
+        /// <summary>
+        /// Return workitems label list of a spec
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <returns></returns>
+        public List<string> GetWorkItemLabel(int specId)
+        {
+            specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            var workItemRepo = RepositoryFactory.Resolve<IWorkItemRepository>();
+            specificationRepo.UoW = UoW;
+            workItemRepo.UoW = UoW;
+
+            var spec = specificationRepo.Find(specId);
+            var wisLink = spec.Specification_WorkItem.ToList();
+;
+
+            var workItemLabels = new List<string>();
+            foreach (var wiLink in wisLink)
+            {
+                var wi = workItemRepo.Find(wiLink.Fk_WorkItemId);
+                var label = new StringBuilder()
+                    .Append("#")
+                    .Append(wi.UID)
+                    .Append(" - ")
+                    .Append(wi.Name)
+                    .ToString();
+                workItemLabels.Add(label);
+            }
+            return workItemLabels;
+        }
     }
 }

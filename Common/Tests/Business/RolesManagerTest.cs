@@ -20,7 +20,7 @@ namespace Etsi.Ultimate.Tests.Business
 {
     public class RolesManagerTest : BaseTest
     {
-        private string EmailTest = "emailTest@etsi.org";
+        private const string EmailTest = "emailTest@etsi.org";
         [Test]
         public void GetSpecMgrs()
         {
@@ -141,7 +141,6 @@ namespace Etsi.Ultimate.Tests.Business
         private IDbSet<View_Persons> Persons()
         {
             var dbSet = new PersonFakeDBSet();
-
             dbSet.Add(new View_Persons() { PERSON_ID = 1, Email = "un@etsi.org"});
             dbSet.Add(new View_Persons() { PERSON_ID = 2, Email = "deux@etsi.org" });
             dbSet.Add(new View_Persons() { PERSON_ID = 3, Email = "trois@etsi.org" });
@@ -149,13 +148,9 @@ namespace Etsi.Ultimate.Tests.Business
             dbSet.Add(new View_Persons() { PERSON_ID = 5, Email = "cinq@etsi.org" });
             dbSet.Add(new View_Persons() { PERSON_ID = 6, Email = "six@etsi.org" });
             dbSet.Add(new View_Persons() { PERSON_ID = 7, Email = "sept@etsi.org" });
-
             dbSet.Add(new View_Persons() { PERSON_ID = 101, Email = EmailTest });
-
-
             return dbSet;
         }
-
         #endregion
     }
 }

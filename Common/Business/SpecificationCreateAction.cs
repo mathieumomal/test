@@ -197,10 +197,12 @@ namespace Etsi.Ultimate.Business
             else
                 specTitleSubject = spec.Title;
             var subject = String.Format(Localization.Specification_AwaitingReferenceNumberMail_Subject, specTitleSubject);
-
             var body = new SpecAwaitingReferenceNumberMailTemplate("#SECRETARY#", (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), "#LINK#");
+            var roleManager = new RolesManager();
+            var to = roleManager.GetSpecMgrEmail();
+
             var mailInstance = MailManager.Instance;
-            if (!mailInstance.SendEmail(null, new List<string>() { "test@supinfo.com" }, null, null, subject, body.TransformText()))
+            if (!mailInstance.SendEmail(null, to, null, null, subject, body.TransformText()))
             {
                 report.LogError(Localization.Specification_ERR001_FailedToSendEmailToSpecManagers);
             }

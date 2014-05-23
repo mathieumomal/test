@@ -63,6 +63,12 @@ namespace Etsi.Ultimate.Business
         /// <param name="releases">List of all releases</param>
         /// <returns></returns>
         KeyValuePair<Specification_Release, UserRightsContainer> GetRightsForSpecRelease(UserRightsContainer userRights, int personId, Specification spec, int releaseId, List<Release> releases);
-        
+
+        /// <summary>
+        /// Return workitems label list of a spec
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <returns></returns>
+        List<string> GetWorkItemLabel(int specId);
     }
 }

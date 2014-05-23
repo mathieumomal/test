@@ -28,14 +28,8 @@ namespace Etsi.Ultimate.Utils.ModelMails
         /// </summary>
         public virtual string TransformText()
         {
-            this.Write("<html>\r\n<body>\r\nDear ");
-            
-            #line 9 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_3\ULTIMATE2\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(Recipient));
-            
-            #line default
-            #line hidden
-            this.Write(",\r\n\r\nPlease note that specification number ");
+            this.Write("<html>\r\n<body>\r\nDear Secretary and WorkPlan Manager(s),\r\n\r\nPlease note that speci" +
+                    "fication number ");
             
             #line 11 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_3\ULTIMATE2\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(SpecNumber));

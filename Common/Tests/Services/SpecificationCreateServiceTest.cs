@@ -84,8 +84,8 @@ namespace Etsi.Ultimate.Tests.Services
             RegisterAllMocks();
             //---MAIL
             //Specific mock for the email, because we want to check the call made to it.
-            var toAddress = "test@supinfo.com";
-            var toAddresss = new List<string>() { toAddress };
+            var roleManager = new RolesManager();
+            var toAddresss = roleManager.GetSpecMgrEmail();
             var subject = String.Format(Localization.Specification_AwaitingReferenceNumberMail_Subject, specification.Title);
             var body = new SpecAwaitingReferenceNumberMailTemplate("#SECRETARY#", specification.Title, "#LINK#");
             var bodyContent = body.TransformText();
@@ -220,6 +220,10 @@ namespace Etsi.Ultimate.Tests.Services
             uow.Expect(r => r.Save());
             RepositoryFactory.Container.RegisterInstance<IUltimateUnitOfWork>(uow);
 
+            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.View_Persons).Return(Persons());
+            uow.Stub(s => s.Context).Return(mockDataContext);
 
         }
 
@@ -290,6 +294,20 @@ namespace Etsi.Ultimate.Tests.Services
                 Title = "SpecTitle"
             };
         }
+        private IDbSet<View_Persons> Persons()
+        {
+            var dbSet = new PersonFakeDBSet();
+            dbSet.Add(new View_Persons() { PERSON_ID = 1, Email = "un@etsi.org" });
+            dbSet.Add(new View_Persons() { PERSON_ID = 2, Email = "deux@etsi.org" });
+            dbSet.Add(new View_Persons() { PERSON_ID = 3, Email = "trois@etsi.org" });
+            dbSet.Add(new View_Persons() { PERSON_ID = 4, Email = "quatre@etsi.org" });
+            dbSet.Add(new View_Persons() { PERSON_ID = 5, Email = "cinq@etsi.org" });
+            dbSet.Add(new View_Persons() { PERSON_ID = 6, Email = "six@etsi.org" });
+            dbSet.Add(new View_Persons() { PERSON_ID = 7, Email = "sept@etsi.org" });
+            dbSet.Add(new View_Persons() { PERSON_ID = 101, Email = "101@etsi.org" });
+            return dbSet;
+        }
+
         #endregion
 
         

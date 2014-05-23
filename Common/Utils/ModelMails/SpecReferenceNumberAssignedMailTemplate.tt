@@ -6,7 +6,7 @@
 <#@ output extension=".txt" encoding="UTF8" #>
 <html>
 <body>
-Dear <#= Recipient #>,
+Dear Secretary and WorkPlan Manager(s),
 
 Please note that specification number <#= SpecNumber #> has been allocated to specification <#= SpecTitle #>.
 

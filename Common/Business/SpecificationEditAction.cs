@@ -246,10 +246,17 @@ namespace Etsi.Ultimate.Business
         private void MailAlertNumberEdited(Specification spec, Report report)
         {
             var subject = String.Format(Localization.Specification_ReferenceNumberAssigned_Subject, spec.Number);
+            var roleManager = new RolesManager();
+            
+            var workplanMgrsEmail = roleManager.GetWpMgrEmail();
+            //var secretariesEmail = roleManager.GetSecretaryForComitteeEmail(TO FOUND);
+            //var to = secretariesEmail.Concat(workplanMgrsEmail).ToList();
+            var to = workplanMgrsEmail;
 
-            var body = new SpecReferenceNumberAssignedMailTemplate("#RECIPIENT#", (String.IsNullOrEmpty(spec.Number) ? "" : spec.Number), (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), new List<string>() { });
+            var workItemLabel = spec.Specification_WorkItem
+            var body = new SpecReferenceNumberAssignedMailTemplate((String.IsNullOrEmpty(spec.Number) ? "" : spec.Number), (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), new List<string>() { });
             var mailInstance = MailManager.Instance;
-            if (!mailInstance.SendEmail(null, new List<string>() { "test@supinfo.com" }, null, null, subject, body.TransformText()))
+            if (!mailInstance.SendEmail(null, to, null, null, subject, body.TransformText()))
             {
                 report.LogError(Localization.Specification_ERR101_FailedToSendEmailToSecretaryAndWorkplanManager);
             }
