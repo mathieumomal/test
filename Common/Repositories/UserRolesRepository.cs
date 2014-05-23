@@ -40,7 +40,26 @@ namespace Etsi.Ultimate.Repositories
             return UoW.Context.Users_Groups;
         }
 
-       
+
+
+        #region IUserRolesRepository Membres
+
+        public List<int> GetSpecMgr()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<int> GetWpMgr()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<int> GetSecretaryForComittee(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -61,5 +80,24 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <returns></returns>
         IQueryable<Users_Groups> GetAllEtsiBasedRoles();
+
+        /// <summary>
+        /// Return Specification managers' id
+        /// </summary>
+        /// <returns></returns>
+        List<int> GetSpecMgr();
+
+        /// <summary>
+        /// Return Workplan managers' id
+        /// </summary>
+        /// <returns></returns>
+        List<int> GetWpMgr();
+
+        /// <summary>
+        /// Return secretary's id from a comittee
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        List<int> GetSecretaryForComittee(int id);
     }
 }

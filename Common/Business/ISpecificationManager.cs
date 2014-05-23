@@ -44,7 +44,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="specNumber">The spec number.</param>
         /// <param name="forEdit"></param>
         /// <returns></returns>
-        KeyValuePair<bool, List<string>> LookForNumber(string specNumber, bool forEdit);
+        KeyValuePair<bool, List<string>> LookForNumber(string specNumber);
 
         /// <summary>
         /// Returns the list of allowed actions regarding each specification-release of the provided specification.

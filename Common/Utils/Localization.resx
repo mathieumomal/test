@@ -270,4 +270,7 @@
   <data name="Specification_MSG002_SpecCreatedMailSendToSpecManager" xml:space="preserve">
     <value>Specification has been successfully created. An email has been sent to the Specification Manager(s) requesting the allocation of a specification number.</value>
   </data>
+  <data name="Specification_ERR101_FailedToSendEmailToSecretaryAndWorkplanManager" xml:space="preserve">
+    <value>System failed to notify the Secretary and Workplan Manager. Please contact them directly to notify them of the reference assignment.</value>
+  </data>
 </root>

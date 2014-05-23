@@ -13,12 +13,12 @@ namespace Etsi.Ultimate.Utils.ModelMails
         public String SpecTitle { get; set; }
         public List<String> WorkItems { get; set; }
 
-        public SpecReferenceNumberAssignedMailTemplate(String recipient, String specNumber, String specTitle, List<String> workItems)
+        public SpecReferenceNumberAssignedMailTemplate(String Recipient, String SpecNumber, String SpecTitle, List<String> WorkItems)
         {
-            this.Recipient = recipient;
-            this.SpecNumber = specNumber;
+            this.Recipient = Recipient;
+            this.SpecNumber = SpecNumber;
             this.SpecTitle = SpecTitle;
-            this.WorkItems = workItems;
+            this.WorkItems = WorkItems;
         }
     }
 }

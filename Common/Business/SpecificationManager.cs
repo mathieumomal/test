@@ -175,7 +175,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="specNumber">The spec number.</param>
         /// <param name="forEdit"></param>
         /// <returns></returns>
-        public KeyValuePair<bool, List<string>> LookForNumber(string specNumber, bool forEdit)
+        public KeyValuePair<bool, List<string>> LookForNumber(string specNumber)
         {
             var state = true;
             var errors = new List<string>();
@@ -186,16 +186,8 @@ namespace Etsi.Ultimate.Business
                     .All
                     .Where(x => (x.IsActive && x.Number.Equals(specNumber)))
                     .ToList();
-            if (forEdit)
-            {
-                if (result.Count() != 1)
-                    errors.Add("Edit specification doesn't exist");
-            }
-            else
-            {
-                if (result.Count() > 0)
-                    errors.Add(Localization.Specification_ERR003_Number_Already_Use);
-            }
+            if (result.Count() > 0)
+                errors.Add(Localization.Specification_ERR003_Number_Already_Use);
             
             if (errors.Count() > 0)
                 state = false;

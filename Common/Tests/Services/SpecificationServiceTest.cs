@@ -109,7 +109,7 @@ namespace Etsi.Ultimate.Tests.Services
             RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(repo);
 
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            var results = specSvc.LookForNumber(specNumber.ToString(),false);
+            var results = specSvc.LookForNumber(specNumber.ToString());
 
             Assert.AreEqual(expectResult, results.Key);
             if (!results.Key)

@@ -170,7 +170,7 @@ namespace Etsi.Ultimate.Business
                 {
                     throw new InvalidOperationException("Specification number is invalid: " + String.Join(" # -- # ", check.Value));
                 }
-                var checkAlreadyExist = specMgr.LookForNumber(spec.Number, false);
+                var checkAlreadyExist = specMgr.LookForNumber(spec.Number);
                 if (!checkAlreadyExist.Key)
                 {
                     throw new InvalidOperationException("Specification number already exists : " + String.Join(" # -- # ", checkAlreadyExist.Value));
@@ -184,6 +184,11 @@ namespace Etsi.Ultimate.Business
             }
         }
 
+        /// <summary>
+        /// Send a mail to the Spec Manager
+        /// </summary>
+        /// <param name="spec"></param>
+        /// <param name="report"></param>
         private void MailAlertSpecManager(Specification spec , Report report)
         {
             var specTitleSubject = String.Empty;
@@ -193,7 +198,7 @@ namespace Etsi.Ultimate.Business
                 specTitleSubject = spec.Title;
             var subject = String.Format(Localization.Specification_AwaitingReferenceNumberMail_Subject, specTitleSubject);
 
-            var body = new SpecAwaitingReferenceNumberMailTemplate("#SECRETARY#", spec.Title, "#LINK#");
+            var body = new SpecAwaitingReferenceNumberMailTemplate("#SECRETARY#", (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), "#LINK#");
             var mailInstance = MailManager.Instance;
             if (!mailInstance.SendEmail(null, new List<string>() { "test@supinfo.com" }, null, null, subject, body.TransformText()))
             {

@@ -439,7 +439,7 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
-        public KeyValuePair<bool, List<string>> LookForNumber(string specNumber, bool forEdit)
+        public KeyValuePair<bool, List<string>> LookForNumber(string specNumber)
         {
             throw new NotImplementedException();
         }

@@ -49,28 +49,28 @@ namespace Etsi.Ultimate.Utils.ModelMails
             
             #line default
             #line hidden
-            this.Write(".\r\n\r\n");
+            this.Write(".\r\n\r\n<ul>\r\n");
             
-            #line 13 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_3\ULTIMATE2\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
-    foreach(var wi in WorkItems){ 
+            #line 14 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_3\ULTIMATE2\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
+    foreach (var wi in WorkItems){
             
             #line default
             #line hidden
-            this.Write("Specification is linked to the following Work items: ");
+            this.Write("<li>Specification is linked to the following Work items: ");
             
-            #line 14 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_3\ULTIMATE2\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
+            #line 15 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_3\ULTIMATE2\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(wi));
             
             #line default
             #line hidden
-            this.Write("\r\n");
+            this.Write("</li>\r\n");
             
-            #line 15 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_3\ULTIMATE2\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
-    } 
+            #line 16 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_3\ULTIMATE2\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
+    }
             
             #line default
             #line hidden
-            this.Write("\r\nRegards,\r\n3GPP notification system.\r\n</body>\r\n</html>\r\n");
+            this.Write("<ul>\r\nRegards,\r\n3GPP notification system.\r\n<body>\r\n</html>\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }

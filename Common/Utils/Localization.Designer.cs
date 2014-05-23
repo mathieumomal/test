@@ -160,6 +160,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à System failed to notify the Secretary and Workplan Manager. Please contact them directly to notify them of the reference assignment..
+        /// </summary>
+        public static string Specification_ERR101_FailedToSendEmailToSecretaryAndWorkplanManager {
+            get {
+                return ResourceManager.GetString("Specification_ERR101_FailedToSendEmailToSecretaryAndWorkplanManager", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Specification has been successfully created. An email has been sent to the Specification Manager(s) requesting the allocation of a specification number..
         /// </summary>
         public static string Specification_MSG002_SpecCreatedMailSendToSpecManager {

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.ModelMails;
 
 namespace Etsi.Ultimate.Business
 {
@@ -30,6 +32,7 @@ namespace Etsi.Ultimate.Business
             // Check that user has right to perform operation
             var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
             rightsMgr.UoW = UoW;
+            var report = new Report();
             var userRights = rightsMgr.GetRights(personId);
             if (!userRights.HasRight(Enum_UserRights.Specification_EditFull) && !userRights.HasRight(Enum_UserRights.Specification_EditLimitted))
             {
@@ -45,9 +48,10 @@ namespace Etsi.Ultimate.Business
                 throw new InvalidOperationException("Edited specification does not exist");
             }
 
-            //Check specification number
-            CheckNumber(spec);
-
+            //Check specification number if it changed
+            if (!spec.Number.Equals(oldSpec.Number))
+                CheckNumber(spec,userRights, report);
+            
             // Compare the fields of the two specifications.
             CompareSpecs(spec, oldSpec, personId, specRepo);
 
@@ -58,8 +62,12 @@ namespace Etsi.Ultimate.Business
         /// Check the spec number format
         /// </summary>
         /// <param name="spec"></param>
-        private void CheckNumber(Specification spec)
+        private void CheckNumber(Specification spec, UserRightsContainer userRights, Report report)
         {
+            //Throw an error if the user don't have the right to modify the spec number
+            if(!userRights.HasRight(Enum_UserRights.Specification_EditFull)){
+                throw new InvalidOperationException("You don't have the right to edit a specification number");
+            }
             if (!String.IsNullOrEmpty(spec.Number))
             {
                 var specMgr = new SpecificationManager() { UoW = UoW };
@@ -68,16 +76,14 @@ namespace Etsi.Ultimate.Business
                 {
                     throw new InvalidOperationException("Specification number is invalid: " + String.Join(" # -- # ", check.Value));
                 }
-                var checkAlreadyExist = specMgr.LookForNumber(spec.Number, true);
+                var checkAlreadyExist = specMgr.LookForNumber(spec.Number);
                 if (!checkAlreadyExist.Key)
                 {
                     throw new InvalidOperationException("Specification number already exists : " + String.Join(" # -- # ", checkAlreadyExist.Value));
                 }
             }
-            else
-            {
-                throw new InvalidOperationException("Cannot save an edit specification with a null or empty number");
-            }
+            //If the spec number has been edited we send a mail to the secretary and the workplan manager
+            MailAlertNumberEdited(spec, report);
         }
 
         /// <summary>
@@ -94,6 +100,10 @@ namespace Etsi.Ultimate.Business
             if (currentSpec.IsTS != newSpec.IsTS) currentSpec.IsTS = newSpec.IsTS;
             if (currentSpec.IsForPublication != newSpec.IsForPublication) currentSpec.IsForPublication = newSpec.IsForPublication;
             if (currentSpec.ComIMS != newSpec.ComIMS) currentSpec.ComIMS = newSpec.ComIMS;
+
+            //Number
+            if(!currentSpec.Number.Equals(newSpec.Number))
+                currentSpec.Number = newSpec.Number;
 
             //Specification Technologies (Insert / Delete)
             var specTechnologiesToInsert = newSpec.SpecificationTechnologies.ToList().Where(x => currentSpec.SpecificationTechnologies.ToList().All(y => y.Fk_Enum_Technology != x.Fk_Enum_Technology));
@@ -226,6 +236,23 @@ namespace Etsi.Ultimate.Business
             specRapporteursToUpdate.ToList().ForEach(x => currentSpec.SpecificationRapporteurs.ToList().Find(y => y.Fk_RapporteurId == x.Fk_RapporteurId).IsPrime = x.IsPrime);
             var specRapporteursToDelete = currentSpec.SpecificationRapporteurs.ToList().Where(x => newSpec.SpecificationRapporteurs.ToList().All(y => y.Fk_RapporteurId != x.Fk_RapporteurId));
             specRapporteursToDelete.ToList().ForEach(x => specRepo.MarkDeleted<SpecificationRapporteur>(x));
+        }
+
+        /// <summary>
+        /// If we edit the spec number we send a mail to the workplan manager and Secretary of the prime responsible working group 
+        /// </summary>
+        /// <param name="spec"></param>
+        /// <param name="report"></param>
+        private void MailAlertNumberEdited(Specification spec, Report report)
+        {
+            var subject = String.Format(Localization.Specification_ReferenceNumberAssigned_Subject, spec.Number);
+
+            var body = new SpecReferenceNumberAssignedMailTemplate("#RECIPIENT#", (String.IsNullOrEmpty(spec.Number) ? "" : spec.Number), (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), new List<string>() { });
+            var mailInstance = MailManager.Instance;
+            if (!mailInstance.SendEmail(null, new List<string>() { "test@supinfo.com" }, null, null, subject, body.TransformText()))
+            {
+                report.LogError(Localization.Specification_ERR101_FailedToSendEmailToSecretaryAndWorkplanManager);
+            }
         }
     }
 }

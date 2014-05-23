@@ -74,10 +74,12 @@ namespace Etsi.Ultimate.Tests.Services
         [TestCase(1, false, false, EDIT_RIGHT_USER, "12.145", 1, 0)] //Right to edit number, so mail doesn't be send, no errors
         [TestCase(2, true, true, EDIT_LIMITED_RIGHT_USER, "", null, 0)]//Limited right, an no errors, a mail is send
         //Errors
-        [TestCase(1, false, false, EDIT_LIMITED_RIGHT_USER, "12.145", 1, 1)]//Same that the first one, but the user don't have the right to edit the number, so an error is thrown
+        [TestCase(1, false, false, EDIT_LIMITED_RIGHT_USER, "", 0, 1)]//Same that the first one, but the user don't have the right to edit the number, so an error is thrown
+        [TestCase(3, false, false, EDIT_RIGHT_USER, "", 0, 1)]//BAD FORMAT
+        [TestCase(4, false, false, EDIT_RIGHT_USER, "", 0, 1)]//ALREADY EXIST
         public void CreateSpecification_NominalCase(int spec, bool shouldMailBeSent, bool shouldMailSucceed, int person, String number, int ? serie, int error)
         {
-            Specification specification = GetSpecsToCreate(spec);
+            var specification = GetSpecsToCreate(spec);
             // Set up the rights
             RegisterAllMocks();
             //---MAIL
@@ -146,6 +148,22 @@ namespace Etsi.Ultimate.Tests.Services
                         Pk_SpecificationId = 0,
                         Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
                         Number = "",
+                        Title = "SpecTitle"
+                    };
+                case 3://BAD FORMAT NUMBER
+                    return new Specification()
+                    {
+                        Pk_SpecificationId = 0,
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Number = "vd-()=",
+                        Title = "SpecTitle"
+                    };
+                case 4://ALREADY EXIST
+                    return new Specification()
+                    {
+                        Pk_SpecificationId = 0,
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Number = "12.123",
                         Title = "SpecTitle"
                     };
                 default:

@@ -10,11 +10,12 @@ Dear <#= Recipient #>,
 
 Please note that specification number <#= SpecNumber #> has been allocated to specification <#= SpecTitle #>.
 
-<#    foreach(var wi in WorkItems){ #>
-Specification is linked to the following Work items: <#= wi #>
-<#    } #>
-
+<ul>
+<#    foreach (var wi in WorkItems){#>
+<li>Specification is linked to the following Work items: <#= wi #></li>
+<#    }#>
+<ul>
 Regards,
 3GPP notification system.
-</body>
+<body>
 </html>

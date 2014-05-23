@@ -62,6 +62,25 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             return dbSet;
         }
 
+        public List<int> GetSpecMgr()
+        {
+            return new List<int>(){1, 101};
+        }
+
+        public List<int> GetWpMgr()
+        {
+            return new List<int>(){3, 4, 101};
+        }
+
+        public List<int> GetSecretaryForComittee(int id)
+        {
+            if(id==1)
+                return new List<int>() { 6, 101 };
+            else
+                return new List<int>() { 101 };
+        }
+
         #endregion
+
     }
 }

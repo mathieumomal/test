@@ -206,6 +206,102 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsFalse(modifiedSpec.Specification_WorkItem.Where(r => r.Fk_WorkItemId == 1).FirstOrDefault().isPrime.GetValueOrDefault());
         }
 
+        //SUCCESS
+        [TestCase(false, false, EDIT_RIGHT_USER, "12.123", 0)]//Number don't changed
+        [TestCase(false, false, EDIT_LIMITED_RIGHT_USER, "12.123", 0)]//Number don't changed
+        [TestCase(true, true, EDIT_RIGHT_USER, "", 0)]//Number changed to null
+        [TestCase(true, true, EDIT_RIGHT_USER, "12.145", 0)]//Number changed
+        ////ERROR
+        [TestCase(true, false, EDIT_LIMITED_RIGHT_USER, "12.145", 1)]//Number changed but user don't have full rights
+        [TestCase(true, false, EDIT_RIGHT_USER, "ijfzeo989=)", 1)]//Number changed with format error
+        [TestCase(true, false, EDIT_RIGHT_USER, "12.189", 1)]//Number changed but already exist
+        public void EditSpecification_EmailTest(bool shouldMailBeSent, bool shouldMailSucceed, int person, String numberUpdate, int error)
+        {
+            var specToEdit = GetCorrectSpecificationForEdit(true);
+            specToEdit.Number = numberUpdate;
+            // Set up the rights
+            RegisterAllMocks();
+            //---MAIL
+            //Specific mock for the email, because we want to check the call made to it.
+            var toAddress = "test@supinfo.com";
+            var toAddresss = new List<string>() { toAddress };
+            var subject = String.Format(Localization.Specification_ReferenceNumberAssigned_Subject, specToEdit.Number);
+            var body = new SpecReferenceNumberAssignedMailTemplate("#RECIPIENT#", (String.IsNullOrEmpty(specToEdit.Number) ? "" : specToEdit.Number), (String.IsNullOrEmpty(specToEdit.Title) ? "" : specToEdit.Title), new List<string>() { });
+            var bodyContent = body.TransformText();
+            //Simulation send mail with test datas when we use 'SendEmail' method
+            var mailMock = MockRepository.GenerateMock<IMailManager>();
+            mailMock.Stub(r => r.SendEmail(
+                Arg<string>.Is.Null,
+                Arg<List<string>>.Is.Equal(toAddresss),
+                Arg<List<string>>.Is.Null,
+                Arg<List<string>>.Is.Null,
+                Arg<string>.Is.Equal(subject),
+                Arg<string>.Is.Equal(bodyContent)
+                )).Return(shouldMailSucceed);
+            MailManager.Instance = mailMock;
+            //---MAIL
+
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var report = specSvc.EditSpecification(person, specToEdit).Value;
+
+            Assert.AreEqual(0, report.WarningList.Count);
+            Assert.AreEqual(error, report.ErrorList.Count);
+
+            var modifiedSpec = GetCorrectSpecificationForEdit(false);
+
+            if(error==0){
+                Assert.AreEqual(numberUpdate, modifiedSpec.Number);
+            }
+
+            if (shouldMailBeSent)
+            {
+                mailMock.VerifyAllExpectations();
+            }
+            if (shouldMailBeSent && !shouldMailSucceed)
+                Assert.AreEqual(1, report.ErrorList.Count);
+        }
+
+        private Specification GetSpecsToCreate(int spec)
+        {
+            switch (spec)
+            {
+                case 1://WITH NUMBER
+                    return new Specification()
+                    {
+                        Pk_SpecificationId = 12,
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Number = "12.145",
+                        Title = "SpecTitle"
+                    };
+                case 2://WITHOUTNUMBER
+                    return new Specification()
+                    {
+                        Pk_SpecificationId = 12,
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Number = "",
+                        Title = "SpecTitle"
+                    };
+                case 3://BAD FORMAT NUMBER
+                    return new Specification()
+                    {
+                        Pk_SpecificationId = 12,
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Number = "vd-()=",
+                        Title = "SpecTitle"
+                    };
+                case 4://ALREADY EXIST
+                    return new Specification()
+                    {
+                        Pk_SpecificationId = 12,
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Number = "12.123",
+                        Title = "SpecTitle"
+                    };
+                default:
+                    return null;
+            }
+        }
+
         #region datas
         private void RegisterAllMocks()
         {
@@ -309,7 +405,7 @@ namespace Etsi.Ultimate.Tests.Services
             var list = new SpecificationFakeDBSet();
             list.Add(new Specification() { Pk_SpecificationId = 1, Number = "01.01", IsActive = true });
             list.Add(new Specification() { Pk_SpecificationId = 2, Number = "12.123", IsActive = true });
-            list.Add(new Specification() { Pk_SpecificationId = 3, Number = "01.05", IsActive = false });
+            list.Add(new Specification() { Pk_SpecificationId = 3, Number = "12.189", IsActive = true });
             list.Add(new Specification() { Pk_SpecificationId = 4, Number = "02.72", IsActive = true });
             return list;
         }

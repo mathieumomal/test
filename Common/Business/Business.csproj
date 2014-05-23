@@ -64,6 +64,7 @@
     <Compile Include="IReleaseManager.cs" />
     <Compile Include="ISpecVersionManager.cs" />
     <Compile Include="ITranspositionManager.cs" />
+    <Compile Include="RolesManager.cs" />
     <Compile Include="SpecificationExporter.cs" />
     <Compile Include="ICommunityManager.cs" />
     <Compile Include="IPersonManager.cs" />

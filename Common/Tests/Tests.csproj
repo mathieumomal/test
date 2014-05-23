@@ -87,6 +87,7 @@
     <Compile Include="Business\LogManagerTest.cs" />
     <Compile Include="Business\MailManagerTest.cs" />
     <Compile Include="Business\RightsManagerTest.cs" />
+    <Compile Include="Business\RolesManagerTest.cs" />
     <Compile Include="Business\SpecificationWorkItemManagerTest.cs" />
     <Compile Include="Business\SpecVersionsManagerTest.cs" />
     <Compile Include="Business\WorkPlanFileManagerTest.cs" />

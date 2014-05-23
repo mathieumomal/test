@@ -517,7 +517,6 @@ namespace Etsi.Ultimate.Tests.Business
             RepositoryFactory.Container.RegisterType<IPersonRepository, PersonFakeRepository>(new TransientLifetimeManager());
             RepositoryFactory.Container.RegisterType<IMeetingRepository, MeetingsFakeRepository>(new TransientLifetimeManager());
             RepositoryFactory.Container.RegisterType<ICommunityRepository, CommunityFakeRepository>(new TransientLifetimeManager());
-            
         }
 
     }
