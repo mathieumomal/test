@@ -54,6 +54,7 @@
 	<Right value="Versions_Upload"/>
 	<Right value="Versions_AddRemark"/>
 	<Right value="Specification_UnforceTransposition"/>
+	<Right value="Specification_WithdrawFromRelease"/>
   </UserRole>
   <!-- Administrators are members of the ETSI IT service who should be able to do everything -->
   <UserRole value="Administrator">

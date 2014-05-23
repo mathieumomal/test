@@ -81,6 +81,7 @@
     <Compile Include="SpecificationForceUnforceTranspositionAction.cs" />
     <Compile Include="SpecificationManager.cs" />
     <Compile Include="SpecificationTechnologiesManager.cs" />
+    <Compile Include="SpecificationWithdrawAction.cs" />
     <Compile Include="SpecificationWorkItemManager.cs" />
     <Compile Include="SpecVersionsManager.cs" />
     <Compile Include="TranspositionManager.cs" />

@@ -135,6 +135,15 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         bool UnforceTranspositionForRelease(int personId, int releaseId, int specificationId);
 
+        /// <summary>
+        /// Withdraws a specification from a given release.
+        /// </summary>
+        /// <param name="personId">ID of the person requesting the withdrawal</param>
+        /// <param name="releaseId">ID of release for which spec should be withdrawn</param>
+        /// <param name="specificationId">ID of spec to be withdrawn</param>
+        /// <param name="withdrawalMtgId">ID of meeting for which spec should be withdrawn.</param>
+        /// <returns></returns>
+        bool WithdrawForRelease(int personId, int releaseId, int specificationId, int withdrawalMtgId);
 
         /// <summary>
         /// For a given specification, computes the authorized actions on each release.

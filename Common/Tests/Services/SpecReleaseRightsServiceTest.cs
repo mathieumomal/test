@@ -40,47 +40,7 @@ namespace Etsi.Ultimate.Tests.Services
             SetUpMocks();
 
             // Test the service
-            var statusOpen = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open" };
-            var spec = new Specification()
-            {
-                Pk_SpecificationId = 25,
-                Specification_Release = new List<Specification_Release>() {
-                    new Specification_Release() { Fk_ReleaseId = REL_OPEN_ID , Fk_SpecificationId=25},
-                    new Specification_Release() { Fk_ReleaseId = REL_FROZEN_ID, Fk_SpecificationId=25},
-                    new Specification_Release() { Fk_ReleaseId = SPEC_REL_WITHDRAWN_ID, isWithdrawn = true, Fk_SpecificationId=25},
-                    new Specification_Release() { Fk_ReleaseId = SPEC_REL_ALREADY_FORCED_TRANSPOSITION_ID, isWithdrawn = false, isTranpositionForced = true, Fk_SpecificationId=25},
-                },
-                Versions = new List<SpecVersion>(){
-                    new SpecVersion()
-                    {
-                        Pk_VersionId = 1,
-                        Multifile = false,
-                        ForcePublication = false,
-                        Location = "Location1",
-                        Fk_ReleaseId = 1,
-                        Fk_SpecificationId = 1,                        
-                        Release = new Release()
-                        {
-                            Pk_ReleaseId=1,
-                            Enum_ReleaseStatus = statusOpen
-                        },
-                        Specification = new Specification()
-                        {
-                            Pk_SpecificationId = 1,
-                            SpecificationRapporteurs = new List<SpecificationRapporteur>() { 
-                                new SpecificationRapporteur() 
-                                {
-                                    Pk_SpecificationRapporteurId=1,
-                                    IsPrime =true,
-                                    Fk_RapporteurId = 0
-                                }
-                            }
-                        }
-                    }
-                },
-                IsActive = !isSpecWithdrawn,
-                IsUnderChangeControl = isUnderCC
-            };
+            var spec = CreateSpec(isSpecWithdrawn, isUnderCC);
             var specSvc = new SpecificationService();
             var result = specSvc.GetRightsForSpecReleases(personId, spec);
 
@@ -98,23 +58,49 @@ namespace Etsi.Ultimate.Tests.Services
             SetUpMocks();
 
             // Test the service
-            var spec = new Specification()
-            {
-                Pk_SpecificationId = 25,
-                Specification_Release = new List<Specification_Release>() {
-                    new Specification_Release() { Fk_ReleaseId = REL_OPEN_ID },
-                    new Specification_Release() { Fk_ReleaseId = REL_FROZEN_ID,  },
-                    new Specification_Release() { Fk_ReleaseId = SPEC_REL_WITHDRAWN_ID, isWithdrawn = true },
-                    new Specification_Release() { Fk_ReleaseId = SPEC_REL_ALREADY_FORCED_TRANSPOSITION_ID, isWithdrawn = false, isTranpositionForced = true  },
-                },
-                IsActive = ! isWithDrawn,
-
-            };
+            var spec = CreateSpec(isWithDrawn, false);
 
             var specSvc = new SpecificationService();
             var result = specSvc.GetRightsForSpecReleases(personId, spec);
 
             Assert.AreEqual(expectedResult, result.Where(r => r.Key.Fk_ReleaseId == relId).FirstOrDefault().Value.HasRight(Enum_UserRights.Specification_UnforceTransposition));
+        }
+
+        
+        [TestCase(PERSON_HAS_RIGHT, REL_OPEN_ID, false, true)]                      // Nominal case             ==> True
+        [TestCase(PERSON_HAS_NO_RIGHT, REL_OPEN_ID, false, false)]                  // User has no right        ==> False
+        [TestCase(PERSON_HAS_RIGHT, REL_OPEN_ID, true, false)]                      // Spec is withdrawn        ==> False
+        [TestCase(PERSON_HAS_RIGHT, SPEC_REL_WITHDRAWN_ID, false, false)]           // Spec-rel is withdrawn    ==> False
+        public void WithdrawFromRelease(int personId, int relId, bool isWithdrawn, bool expectedResult)
+        {
+            SetUpMocks();
+            var spec = CreateSpec(isWithdrawn, false);
+
+            var specSvc = new SpecificationService();
+            var result = specSvc.GetRightsForSpecReleases(personId, spec);
+            Assert.AreEqual(expectedResult, result.Where(r => r.Key.Fk_ReleaseId == relId).FirstOrDefault().Value.HasRight(Enum_UserRights.Specification_WithdrawFromRelease));
+        }
+
+        /// <summary>
+        /// Creates a specification to test.
+        /// </summary>
+        /// <param name="isWithDrawn"></param>
+        /// <param name="isUnderCC"></param>
+        /// <returns></returns>
+        private Specification CreateSpec(bool isWithDrawn, bool isUnderCC)
+        {
+            return new Specification()
+            {
+                Pk_SpecificationId = 25,
+                Specification_Release = new List<Specification_Release>() {
+                    new Specification_Release() { Fk_ReleaseId = REL_OPEN_ID, Fk_SpecificationId = 25 },
+                    new Specification_Release() { Fk_ReleaseId = REL_FROZEN_ID, Fk_SpecificationId = 25 },
+                    new Specification_Release() { Fk_ReleaseId = SPEC_REL_WITHDRAWN_ID, isWithdrawn = true, Fk_SpecificationId = 25 },
+                    new Specification_Release() { Fk_ReleaseId = SPEC_REL_ALREADY_FORCED_TRANSPOSITION_ID, isWithdrawn = false, isTranpositionForced = true, Fk_SpecificationId = 25  },
+                },
+                IsActive = !isWithDrawn,
+                IsUnderChangeControl = isUnderCC
+            };
         }
 
         private void SetUpMocks()
@@ -126,6 +112,7 @@ namespace Etsi.Ultimate.Tests.Services
             var allRightsContainer = new UserRightsContainer();
             allRightsContainer.AddRight(Enum_UserRights.Specification_ForceTransposition);
             allRightsContainer.AddRight(Enum_UserRights.Specification_UnforceTransposition);
+            allRightsContainer.AddRight(Enum_UserRights.Specification_WithdrawFromRelease);
 
             rightsMgr.Stub(r => r.GetRights(PERSON_HAS_NO_RIGHT)).Return(noRightContainer);
             rightsMgr.Stub(r => r.GetRights(PERSON_HAS_RIGHT)).Return(allRightsContainer);

@@ -321,9 +321,13 @@ namespace Etsi.Ultimate.Services
             return true;
         }
 
-        #region ISpecificationService Members
-
-
+        /// <summary>
+        /// Default implementation. Returns the right of the user for each spec release. 
+        /// See interface for more details.
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="spec"></param>
+        /// <returns></returns>
         public List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, Specification spec)
         {
             using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -331,6 +335,37 @@ namespace Etsi.Ultimate.Services
                 var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
                 specMgr.UoW = uow;
                 return specMgr.GetRightsForSpecReleases(personId, spec);
+            }
+        }
+
+
+        #region ISpecificationService Members
+
+        /// <summary>
+        /// Default implementation of the ISpecificationService. See interface for more info.
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="releaseId"></param>
+        /// <param name="specificationId"></param>
+        /// <param name="withdrawalMtgId"></param>
+        /// <returns></returns>
+        public bool WithdrawForRelease(int personId, int releaseId, int specificationId, int withdrawalMtgId)
+        {
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specWithdrawAction = new SpecificationWithdrawAction();
+                specWithdrawAction.UoW = uow;
+                try
+                {
+                    specWithdrawAction.WithdrawFromRelease(personId, releaseId, specificationId, withdrawalMtgId);
+                    uow.Save();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Utils.LogManager.Error("Error when Withdrawing from release: " + e.Message);
+                    return false;
+                }
             }
         }
 

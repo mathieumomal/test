@@ -73,12 +73,15 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             specificationsVersionGrid.DataSource = DataSource;
             specificationsVersionGrid.DataBind();
-
+            imgForceTransposition.Visible = !IsEditMode && UserReleaseRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
+            imgUnforceTransposition.Visible = !IsEditMode && UserReleaseRights.HasRight(Enum_UserRights.Specification_UnforceTransposition);
+            
+            imgWithdrawSpec.Visible = !IsEditMode && UserReleaseRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
+            imgWithdrawSpec.OnClientClick = "openRadWin(" + SpecId.GetValueOrDefault() + "," + ReleaseId.GetValueOrDefault() + "); return false;";
+            
             if (!IsPostBack)
             {
-                imgForceTransposition.Visible = !IsEditMode && UserReleaseRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
-                imgUnforceTransposition.Visible = !IsEditMode && UserReleaseRights.HasRight(Enum_UserRights.Specification_UnforceTransposition);
-
+                
                 if (!IsEditMode)
                 {
                 }

@@ -91,7 +91,12 @@ namespace Etsi.Ultimate.Business
             return new KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer>(specifications, personRights);
         }
 
-
+        /// <summary>
+        /// Returns the list of all specification which number or title matches the string provided.
+        /// </summary>
+        /// <param name="personId">The ID of the user doing the search</param>
+        /// <param name="searchString">The string to search on.</param>
+        /// <returns></returns>
         public List<Specification> GetSpecificationByNumberAndTitle(int personId, String searchString)
         {
             // Computes the rights of the user. These are independant from the releases.
@@ -110,6 +115,10 @@ namespace Etsi.Ultimate.Business
             return specifications;
         }
 
+        /// <summary>
+        /// Returns the list of all technologies.
+        /// </summary>
+        /// <returns></returns>
         public List<Enum_Technology> GetTechnologyList()
         {
             specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
@@ -117,6 +126,10 @@ namespace Etsi.Ultimate.Business
             return specificationRepo.GetTechnologyList();
         }
 
+        /// <summary>
+        /// Returns the list of all specification series.
+        /// </summary>
+        /// <returns></returns>
         public List<Enum_Serie> GetSeries()
         {
             specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
@@ -223,34 +236,26 @@ namespace Etsi.Ultimate.Business
 
             foreach (var sRel in spec.Specification_Release)
             {
-                var rights = new UserRightsContainer();
-
-                // This right is common to any action.
-                if (spec.IsActive && !sRel.isWithdrawn.GetValueOrDefault())
-                {
-
-                    // Test the right of the user to force transposition.
-                    var rel = releases.Where(r => r.Pk_ReleaseId == sRel.Fk_ReleaseId).FirstOrDefault();
-                    if (userRights.HasRight(Enum_UserRights.Specification_ForceTransposition)
-                        && rel != null && rel.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Open
-                        && ! sRel.isTranpositionForced.GetValueOrDefault()
-                        && spec.IsUnderChangeControl.GetValueOrDefault())
-                    {
-                        rights.AddRight(Enum_UserRights.Specification_ForceTransposition);
-                    }
-
-                    if (userRights.HasRight(Enum_UserRights.Specification_UnforceTransposition)
-                        && sRel.isTranpositionForced.GetValueOrDefault())
-                    {
-                        rights.AddRight(Enum_UserRights.Specification_UnforceTransposition);
-                    }
-                }
-                
-                result.Add(new KeyValuePair<Specification_Release, UserRightsContainer>(sRel, rights));
+                result.Add(GetRightsForSpecRelease(userRights, personId,spec,sRel.Fk_ReleaseId, releases));
             }
             return result;
         }
 
+        /// <summary>
+        /// Returns the list of user rights for a given release of a specification.
+        /// For each release, this method determines if user has right to:
+        /// - force transposition
+        /// - unforce transposition
+        /// - Withdraw from release
+        /// - Upload a version
+        /// - Allocate a version
+        /// </summary>
+        /// <param name="userRights">Basic rights of the user</param>
+        /// <param name="personId">ID</param>
+        /// <param name="spec">Specification</param>
+        /// <param name="releaseId">Corresponding release</param>
+        /// <param name="releases">List of all releases, in order to fetch some fields (such as status).</param>
+        /// <returns></returns>
         public KeyValuePair<Specification_Release, UserRightsContainer> GetRightsForSpecRelease(UserRightsContainer userRights, int personId, Specification spec, int releaseId, List<Release> releases)
         {
             var rights = new UserRightsContainer();
@@ -262,13 +267,26 @@ namespace Etsi.Ultimate.Business
             {
                 var rel = releases.Where(r => r.Pk_ReleaseId == specRelease.Fk_ReleaseId).FirstOrDefault();
 
-                // Test the right of the user to force transposition.                
+                // Test the right of the user to force transposition.
                 if (userRights.HasRight(Enum_UserRights.Specification_ForceTransposition)
                     && rel != null && rel.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Open
                     && !specRelease.isTranpositionForced.GetValueOrDefault()
                     && spec.IsUnderChangeControl.GetValueOrDefault())
                 {
                     rights.AddRight(Enum_UserRights.Specification_ForceTransposition);
+                }
+
+                // Test the right of the user to unforce transposition.
+                if (userRights.HasRight(Enum_UserRights.Specification_UnforceTransposition)
+                    && specRelease.isTranpositionForced.GetValueOrDefault())
+                {
+                    rights.AddRight(Enum_UserRights.Specification_UnforceTransposition);
+                }
+
+                // Test the right of the user to withdraw transposition from 
+                if (userRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease))
+                {
+                    rights.AddRight(Enum_UserRights.Specification_WithdrawFromRelease);
                 }
 
                 // Test the right of the user to upload/Allocate a version

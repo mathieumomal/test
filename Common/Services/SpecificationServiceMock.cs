@@ -474,5 +474,15 @@ namespace Etsi.Ultimate.Services
         }
 
         #endregion
+
+        #region ISpecificationService Members
+
+
+        public bool WithdrawForRelease(int personId, int releaseId, int specificationId, int withdrawalMtgId)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

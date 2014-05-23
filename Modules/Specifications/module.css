@@ -178,3 +178,9 @@ span.requiredField {
 .imgViewSpecifications, .imgCR {
     cursor: pointer;
 }
+
+.MeetingError
+{
+    color:red;
+    font-weight:bold;
+}

@@ -33,6 +33,14 @@
         var gridHeader = sender.GridHeaderDiv;
         scrollArea.style.height = parent.clientHeight - gridHeader.clientHeight + "px";
     }
+
+    function openRadWin(specId,relId) {
+        var win = radopen("WithdrawMeetingSelectPopUp.aspx?SpecId="+specId+"&RelId="+relId, "Withdraw");
+        win.setSize(450, 300);
+        win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
+        win.show();
+        return false;
+    }
 </script>
 <asp:Panel runat="server" ID="pnlIconStrip" CssClass="TabContent" Height="100%">
     <asp:ImageButton ID="imgUploadVersion" ToolTip="Upload a version" ImageUrl="images/spec_rel-u.png" CssClass="display_size" runat="server" />
@@ -40,7 +48,7 @@
     <asp:ImageButton ID="imgForceTransposition" ToolTip="Force transposition" ImageUrl="images/spec_rel-f.png" CssClass="display_size" runat="server" OnClick="imgForceTransposition_Click" />
     <asp:ImageButton ID="imgUnforceTransposition" ToolTip="Unforce transposition" ImageUrl="images/spec_rel-f-crossed.png" CssClass="display_size" runat="server" OnClick="imgUnforceTransposition_Click" />
     <asp:ImageButton ID="imgPromoteSpec" ToolTip="Promote specification to next Release" ImageUrl="images/spec_rel-p.png" CssClass="display_size" runat="server" />
-    <asp:ImageButton ID="imgWithdrawSpec" ToolTip="Withdraw specification from Release" ImageUrl="images/spec_rel-w.png" CssClass="display_size" runat="server" />
+    <asp:ImageButton ID="imgWithdrawSpec" ToolTip="Withdraw specification from Release" ImageUrl="images/spec_rel-w.png" CssClass="display_size" runat="server"  />
 
     <telerik:RadGrid runat="server" ID="specificationsVersionGrid"
         AllowPaging="false"

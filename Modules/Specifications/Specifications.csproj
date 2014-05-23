@@ -153,6 +153,13 @@
     <Compile Include="SpecificationsList.ascx.designer.cs">
       <DependentUpon>SpecificationsList.ascx</DependentUpon>
     </Compile>
+    <Compile Include="WithdrawMeetingSelectPopUp.aspx.cs">
+      <DependentUpon>WithdrawMeetingSelectPopUp.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="WithdrawMeetingSelectPopUp.aspx.designer.cs">
+      <DependentUpon>WithdrawMeetingSelectPopUp.aspx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="images\spec_rel-f-crossed.png" />
@@ -188,6 +195,7 @@
     <Content Include="SpecificationListControl.ascx" />
     <Content Include="SpecificationsSettings.ascx" />
     <Content Include="SpecificationsList.ascx" />
+    <Content Include="WithdrawMeetingSelectPopUp.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Specifications.dnn">
