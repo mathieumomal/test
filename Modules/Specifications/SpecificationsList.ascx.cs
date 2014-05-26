@@ -358,6 +358,7 @@ namespace Etsi.Ultimate.Module.Specifications
             fromSearch = true;
             ManageFullView();
             SetSearchLabel();
+            rgSpecificationList.CurrentPageIndex = 0;
             rgSpecificationList.Rebind();
         }
 
