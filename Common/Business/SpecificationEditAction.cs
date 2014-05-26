@@ -253,7 +253,7 @@ namespace Etsi.Ultimate.Business
             //var to = secretariesEmail.Concat(workplanMgrsEmail).ToList();
             var to = workplanMgrsEmail;
 
-            var workItemLabel = spec.Specification_WorkItem
+            var workItemLabel = spec.Specification_WorkItem;
             var body = new SpecReferenceNumberAssignedMailTemplate((String.IsNullOrEmpty(spec.Number) ? "" : spec.Number), (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), new List<string>() { });
             var mailInstance = MailManager.Instance;
             if (!mailInstance.SendEmail(null, to, null, null, subject, body.TransformText()))
