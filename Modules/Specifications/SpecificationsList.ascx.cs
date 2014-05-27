@@ -56,8 +56,10 @@ namespace Etsi.Ultimate.Module.Specifications
 
         protected Etsi.Ultimate.Controls.FullView ultFullView;
         protected Etsi.Ultimate.Controls.ShareUrlControl ultShareUrl;
-        protected Etsi.Ultimate.Controls.CommunityControl CommunityCtrl;
         protected Etsi.Ultimate.Controls.ReleaseSearchControl ReleaseCtrl;
+
+        private static string tbId;
+        private static string subTBId;
 
         #endregion
 
@@ -126,8 +128,10 @@ namespace Etsi.Ultimate.Module.Specifications
                     Technologies = specSvc.GetTechnologyList();
                     Series = specSvc.GetSeries();
 
+                    tbId = Request.QueryString["tbid"];
+                    subTBId = Request.QueryString["SubTB"];
+
                     BindControls();
-                    SetTSGToCommunityControl();
                     ReleaseCtrl.Load += ReleaseCtrl_Load;
                 }
             }
@@ -193,9 +197,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     else
                         cbTechnicalReport.Checked = true;
                 }
-                if (!String.IsNullOrEmpty(Request.QueryString["communityIds"]))
-                    CommunityCtrl.SelectedCommunityIds = searchObj.SelectedCommunityIds = Request.QueryString["communityIds"].Split(',').Select(n => int.Parse(n)).ToList();
-
+                
                 if (!String.IsNullOrEmpty(Request.QueryString["releases"]))
                     ReleaseCtrl.SelectedReleaseIds = searchObj.SelectedReleaseIds = Request.QueryString["releases"].Split(',').Select(n => int.Parse(n)).ToList();
 
@@ -238,6 +240,15 @@ namespace Etsi.Ultimate.Module.Specifications
             else
             {
                 searchObj.SelectedReleaseIds = ReleaseCtrl.SelectedReleaseIds;
+            }
+
+            if (!String.IsNullOrEmpty(subTBId))
+            {
+                List<int> tbList = new List<int>();
+                int value;
+                tbList = subTBId.Split(',').Select(x => int.TryParse(x, out value) ? value : -1).ToList();
+                tbList.RemoveAll(x => x == -1);
+                searchObj.SelectedCommunityIds = tbList;
             }
 
             LoadGridData();
@@ -283,8 +294,14 @@ namespace Etsi.Ultimate.Module.Specifications
             if (trNumberNotYetAllocated.Visible)
                 searchObj.NumberNotYetAllocated = cbNumNotYetAllocated.Checked;
 
-            if (CommunityCtrl.SelectedCommunityIds.Count > 0)
-                searchObj.SelectedCommunityIds = CommunityCtrl.SelectedCommunityIds;
+            if (!String.IsNullOrEmpty(subTBId))
+            {
+                List<int> tbList = new List<int>();
+                int value;
+                tbList = subTBId.Split(',').Select(x => int.TryParse(x, out value) ? value : -1).ToList();
+                tbList.RemoveAll(x => x == -1);
+                searchObj.SelectedCommunityIds = tbList;
+            }
 
             searchObj.SelectedReleaseIds = ReleaseCtrl.SelectedReleaseIds;
 
@@ -445,7 +462,15 @@ namespace Etsi.Ultimate.Module.Specifications
                 if (searchObj.NumberNotYetAllocated)
                     sb.Append("No. not yet allocated, ");
                 if (searchObj.SelectedCommunityIds.Count > 0)
-                    sb.Append("Primary responsible groups(" + searchObj.SelectedCommunityIds.Count + "), ");
+                {
+                    var communityService = ServicesFactory.Resolve<ICommunityService>();                    
+                    List<string> communityShortNames = new List<string>();
+                    searchObj.SelectedCommunityIds.ForEach(x => {
+                                                                   var shortName = communityService.GetCommmunityshortNameById(x);
+                                                                   if (!String.IsNullOrEmpty(shortName)) communityShortNames.Add(shortName);
+                                                                });
+                    sb.Append("Primary responsible groups(" + String.Join(",", communityShortNames) + "), ");
+                }
                 if (searchObj.SelectedReleaseIds.Count > 0)
                     sb.Append("Releases(" + searchObj.SelectedReleaseIds.Count + "), ");
                 if (searchObj.IsDraft || searchObj.IsUnderCC || searchObj.IsWithACC || searchObj.IsWithBCC)
@@ -498,8 +523,10 @@ namespace Etsi.Ultimate.Module.Specifications
                 if (searchObj.Type != null)
                     urlParams.Add("type", searchObj.Type.ToString());
 
-                if (CommunityCtrl.SelectedCommunityIds != null && CommunityCtrl.SelectedCommunityIds.Count > 0)
-                    urlParams.Add("communityIds", String.Join(",", CommunityCtrl.SelectedCommunityIds));
+                if (!String.IsNullOrEmpty(tbId))
+                    urlParams.Add("tbid", tbId);
+                if (!String.IsNullOrEmpty(subTBId))
+                    urlParams.Add("SubTB", subTBId);
 
                 if (searchObj.SelectedReleaseIds != null && searchObj.SelectedReleaseIds.Count > 0)
                     urlParams.Add("releases", String.Join(",", searchObj.SelectedReleaseIds));
@@ -533,25 +560,6 @@ namespace Etsi.Ultimate.Module.Specifications
         private void GetRequestParameters()
         {
             isUrlSearch = (Request.QueryString["q"] != null);
-        }
-
-        /// <summary>
-        /// Set TSG values to Community Control
-        /// </summary>
-        private void SetTSGToCommunityControl()
-        {
-            //Set TSG values to community control only when it is Multi Selection Edit Mode
-            if ((!CommunityCtrl.IsSingleSelection) && CommunityCtrl.IsEditMode)
-            {
-                string subTBId = Request.QueryString["SubTB"];
-                if (!String.IsNullOrEmpty(subTBId))
-                {
-                    int value;
-                    var tbList = subTBId.Split(',').Select(x => int.TryParse(x, out value) ? value : -1).ToList();
-                    tbList.RemoveAll(x => x == -1);
-                    CommunityCtrl.TBSelectorIds = tbList;
-                }
-            }
         }
 
         #endregion

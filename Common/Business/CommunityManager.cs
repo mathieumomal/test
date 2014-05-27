@@ -1,6 +1,7 @@
 ﻿using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -66,8 +67,9 @@ namespace Etsi.Ultimate.Business
         {
             ICommunityRepository repo = RepositoryFactory.Resolve<ICommunityRepository>();
             repo.UoW = UoW;
-            //return repo.All.Where(c => c.TbId == id).ToList().FirstOrDefault().ShortName;
-            return GetCommunities().Where(c => c.TbId == id).ToList().FirstOrDefault().ShortName;
+
+            var community = GetCommunities().Where(c => c.TbId == id).FirstOrDefault();
+            return ((community == null) ? String.Empty : community.ShortName);
         }
 
         #endregion

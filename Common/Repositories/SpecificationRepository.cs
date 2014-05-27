@@ -145,7 +145,7 @@ namespace Etsi.Ultimate.Repositories
                       && ((searchObject.Technologies.Count == 0) || x.SpecificationTechnologies.Any(y => searchObject.Technologies.Contains(y.Fk_Enum_Technology)))  //Technology Search
                       && ((searchObject.Series.Count == 0) || searchObject.Series.Contains(x.Enum_Serie.Pk_Enum_SerieId)) //Series Search
                       && ((searchObject.SelectedReleaseIds.Count == 0) || x.Specification_Release.Any(y => searchObject.SelectedReleaseIds.Contains(y.Fk_ReleaseId))) //Release Search
-                      && ((searchObject.SelectedCommunityIds.Count == 0) || x.SpecificationResponsibleGroups.Any(y => searchObject.SelectedCommunityIds.Contains(y.Fk_commityId))) //Community Search
+                      && ((searchObject.SelectedCommunityIds.Count == 0) || x.SpecificationResponsibleGroups.Where(prime => prime.IsPrime).Any(y => searchObject.SelectedCommunityIds.Contains(y.Fk_commityId))) //Community Search
                       ));
 
             // Treat case WiUid is not empty

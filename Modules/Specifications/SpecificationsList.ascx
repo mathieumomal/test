@@ -120,12 +120,6 @@
                                                                 <asp:CheckBox ID="cbForPublication" runat="server" Text="For Publication"></asp:CheckBox>
                                                             </td>
                                                         </tr>
-                                                        <tr>
-                                                            <td>Primary responsible group(s)</td>
-                                                            <td>
-                                                                <ult:communitycontrol id="CommunityCtrl" width="200" issingleselection="false" iseditmode="true" runat="server" />
-                                                            </td>
-                                                        </tr>
                                                         <tr runat="server" id="trNumberNotYetAllocated" visible="false">
                                                             <td>Number not yet allocated</td>
                                                             <td>
