@@ -99,7 +99,7 @@ namespace Etsi.Ultimate.Tests.Services
                 Arg<string>.Is.Equal(subject),
                 Arg<string>.Is.Equal(bodyContent)
                 )).Return(shouldMailSucceed);
-            MailManager.Instance = mailMock;
+            UtilsFactory.Container.RegisterInstance<IMailManager>(mailMock);
             //---MAIL
 
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();

@@ -3,64 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.Utils.WcfMailService;
 
 namespace Etsi.Ultimate.Utils
 {
     /// <summary>
     /// Default implementation of the IMail Manager. This service uses the Mail Service developped during the NGPP project to send the mails
     /// outside.
-    /// 
-    /// This class is a Singleton.
     /// </summary>
     public class MailManager : IMailManager
     {
-        private static IMailManager instance;
-
-        /// <summary>
-        /// Retrieves the Instance of the mail manager. If instance is not yet set, instantiate it.
-        /// 
-        /// Note: you might set the instance by yourself if needed (Unit test, specific call)
-        /// </summary>
-        public static IMailManager Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new MailManager();
-                }
-
-                return instance;
-            }
-            set
-            {
-                instance = value;
-            }
-        }
-
-        private WcfMailService.ISendMail _mailClient;
-        public WcfMailService.ISendMail MailClient
-        {
-            get
-            {
-                if (_mailClient == null)
-                {
-                    _mailClient = new WcfMailService.SendMailClient();
-                }
-                return _mailClient;
-            }
-            set
-            {
-                _mailClient = value;
-            }
-        }
-
-        /// <summary>
-        /// Private constructor. Call GetInstance() to retrieve the instance.
-        /// </summary>
-        private MailManager() { }
-
-
+     
         #region IMailManager Members
 
         /// <summary>
@@ -90,8 +43,16 @@ namespace Etsi.Ultimate.Utils
             {
                 bccAddresses.Add(ConfigVariables.EmailDefaultBcc);
             }
-
-            return MailClient.SendEmailWithBcc(fromAddress, toAddresses, ccAddresses, bccAddresses, subject, body, String.Empty);
+            try
+            {
+                var mailClient = UtilsFactory.Resolve<ISendMail>();
+                return mailClient.SendEmailWithBcc(fromAddress, toAddresses, ccAddresses, bccAddresses, subject, body, String.Empty);
+            }
+            catch (Exception e)
+            {
+                Utils.LogManager.Error("Failed to send email: " + e.Message);
+                return false;
+            }
         }
 
         #endregion
@@ -116,9 +77,5 @@ namespace Etsi.Ultimate.Utils
         /// <returns></returns>
         bool SendEmail(string fromAddress, List<string> toAddresses, List<string> ccAddresses, List<string> bccAddresses, string subject, string body);
 
-        /// <summary>
-        /// Mail client used to send the email.
-        /// </summary>
-        WcfMailService.ISendMail MailClient { get; set; }
     }
 }

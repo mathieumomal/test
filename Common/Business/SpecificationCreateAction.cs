@@ -201,8 +201,8 @@ namespace Etsi.Ultimate.Business
             var roleManager = new RolesManager();
             var to = roleManager.GetSpecMgrEmail();
 
-            var mailInstance = MailManager.Instance;
-            if (!mailInstance.SendEmail(null, to, null, null, subject, body.TransformText()))
+            var mailManager = UtilsFactory.Resolve<IMailManager>();
+            if (!mailManager.SendEmail(null, to, null, null, subject, body.TransformText()))
             {
                 report.LogError(Localization.Specification_ERR001_FailedToSendEmailToSpecManagers);
             }

@@ -255,7 +255,7 @@ namespace Etsi.Ultimate.Business
 
             var workItemLabel = spec.Specification_WorkItem;
             var body = new SpecReferenceNumberAssignedMailTemplate((String.IsNullOrEmpty(spec.Number) ? "" : spec.Number), (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), new List<string>() { });
-            var mailInstance = MailManager.Instance;
+            var mailInstance = Utils.UtilsFactory.Resolve<IMailManager>();
             if (!mailInstance.SendEmail(null, to, null, null, subject, body.TransformText()))
             {
                 report.LogError(Localization.Specification_ERR101_FailedToSendEmailToSecretaryAndWorkplanManager);

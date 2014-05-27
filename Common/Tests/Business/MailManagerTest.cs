@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.WcfMailService;
 using NUnit.Framework;
+using Microsoft.Practices.Unity;
 using Rhino.Mocks;
 
 namespace Etsi.Ultimate.Tests.Business
@@ -19,7 +21,7 @@ namespace Etsi.Ultimate.Tests.Business
             var subject = "Sub";
             var content = "Blah";
 
-            var mailMock = MockRepository.GenerateMock<Etsi.Ultimate.Utils.WcfMailService.ISendMail>();
+            var mailMock = MockRepository.GenerateMock<ISendMail>();
             mailMock.Stub(mock => mock.SendEmailWithBcc(
                 Arg<string>.Is.Equal(ConfigVariables.EmailDefaultFrom), 
                 Arg<List<string>>.Matches(l => l.Contains(toAddress)), 
@@ -29,8 +31,8 @@ namespace Etsi.Ultimate.Tests.Business
                 Arg<string>.Is.Equal(content), 
                 Arg<string>.Is.Equal(string.Empty))).Return(true);
 
-            var mailSvc = MailManager.Instance;
-            mailSvc.MailClient = mailMock;
+            UtilsFactory.Container.RegisterInstance<ISendMail>(mailMock);
+            var mailSvc = new MailManager();
             Assert.IsTrue(mailSvc.SendEmail(ConfigVariables.EmailDefaultFrom, new List<string>() {toAddress}, null, new List<string>() { ConfigVariables.EmailDefaultBcc }, subject, content));
 
             mailMock.VerifyAllExpectations();
@@ -50,8 +52,8 @@ namespace Etsi.Ultimate.Tests.Business
                 Arg<string>.Is.Anything,
                 Arg<string>.Is.Anything)).Return(true);
 
-            var mailSvc = MailManager.Instance;
-            mailSvc.MailClient = mailMock;
+            UtilsFactory.Container.RegisterInstance<ISendMail>(mailMock);
+            var mailSvc = new MailManager();
             Assert.IsTrue(mailSvc.SendEmail(String.Empty, new List<string>() {"test"}, null, null, "test", "test"));
             mailMock.VerifyAllExpectations();
 
@@ -70,8 +72,8 @@ namespace Etsi.Ultimate.Tests.Business
                 Arg<string>.Is.Anything,
                 Arg<string>.Is.Anything)).Return(true);
 
-            var mailSvc = MailManager.Instance;
-            mailSvc.MailClient = mailMock;
+            UtilsFactory.Container.RegisterInstance<ISendMail>(mailMock);
+            var mailSvc = new MailManager();
             Assert.IsTrue(mailSvc.SendEmail(String.Empty, new List<string>() { "test" }, null, null, "test", "test"));
             mailMock.VerifyAllExpectations();
 

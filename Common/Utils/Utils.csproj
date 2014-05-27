@@ -71,6 +71,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Localization.resx</DependentUpon>
     </Compile>
+    <Compile Include="UtilsFactory.cs" />
     <Compile Include="ModelMails\SpecAwaitingReferenceNumberMailTemplate.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
