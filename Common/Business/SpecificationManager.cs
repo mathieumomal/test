@@ -188,7 +188,7 @@ namespace Etsi.Ultimate.Business
                     .ToList();
             if (result.Count() > 0)
                 errors.Add(Localization.Specification_ERR003_Number_Already_Use);
-            
+
             if (errors.Count() > 0)
                 state = false;
             return new KeyValuePair<bool, List<string>>(state, errors);
@@ -228,7 +228,7 @@ namespace Etsi.Ultimate.Business
 
             foreach (var sRel in spec.Specification_Release)
             {
-                result.Add(GetRightsForSpecRelease(userRights, personId,spec,sRel.Fk_ReleaseId, releases));
+                result.Add(GetRightsForSpecRelease(userRights, personId, spec, sRel.Fk_ReleaseId, releases));
             }
             return result;
         }
@@ -273,6 +273,21 @@ namespace Etsi.Ultimate.Business
                     && specRelease.isTranpositionForced.GetValueOrDefault())
                 {
                     rights.AddRight(Enum_UserRights.Specification_UnforceTransposition);
+                }
+
+                // Test the right of the user to InhibitPromote
+                if (userRights.HasRight(Enum_UserRights.Specification_InhibitPromote)
+                    && !spec.promoteInhibited.GetValueOrDefault())
+                {
+                    rights.AddRight(Enum_UserRights.Specification_InhibitPromote);
+                }
+
+
+                // Test the right of the user to remove InhibitPromote
+                if (userRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote)
+                    && spec.promoteInhibited.GetValueOrDefault())
+                {
+                    rights.AddRight(Enum_UserRights.Specification_RemoveInhibitPromote);
                 }
 
                 // Test the right of the user to withdraw transposition from 
@@ -326,7 +341,7 @@ namespace Etsi.Ultimate.Business
 
             var spec = specificationRepo.Find(specId);
             var wisLink = spec.Specification_WorkItem.ToList();
-;
+            ;
 
             var workItemLabels = new List<string>();
             foreach (var wiLink in wisLink)

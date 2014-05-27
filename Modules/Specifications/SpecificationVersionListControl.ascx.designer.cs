@@ -13,6 +13,15 @@ namespace Etsi.Ultimate.Module.Specifications {
     public partial class SpecificationVersionListControl {
         
         /// <summary>
+        /// pnlCover control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlCover;
+        
+        /// <summary>
         /// pnlIconStrip control.
         /// </summary>
         /// <remarks>
@@ -38,6 +47,15 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgInhibitPromote;
+        
+        /// <summary>
+        /// imgRemoveInhibitPromote control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton imgRemoveInhibitPromote;
         
         /// <summary>
         /// imgForceTransposition control.

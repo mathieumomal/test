@@ -39,6 +39,8 @@ namespace Etsi.Ultimate.DomainClasses
         Specification_ForceTransposition,
         Specification_UnforceTransposition,
         Specification_WithdrawFromRelease,
+        Specification_InhibitPromote,
+        Specification_RemoveInhibitPromote,
 
         Versions_Allocate,
         Versions_Upload,

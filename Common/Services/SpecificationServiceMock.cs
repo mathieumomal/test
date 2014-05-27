@@ -484,5 +484,16 @@ namespace Etsi.Ultimate.Services
         }
 
         #endregion
+
+
+        public bool SpecificationInhibitPromote(int personId, int specificationId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool SpecificationRemoveInhibitPromote(int personId, int specificationId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

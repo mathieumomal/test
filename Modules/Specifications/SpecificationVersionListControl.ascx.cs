@@ -52,18 +52,23 @@ namespace Etsi.Ultimate.Module.Specifications
             set;
             get;
         }
-        public int? SpecId {
-            get; set;
-        
+        public int? SpecId
+        {
+            get;
+            set;
+
         }
-        public int? ReleaseId {
-            get; set;
-        
+        public int? ReleaseId
+        {
+            get;
+            set;
+
         }
         public int? PersonId
         {
-            get; set;
-          
+            get;
+            set;
+
         }
         #endregion
 
@@ -73,12 +78,24 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             specificationsVersionGrid.DataSource = DataSource;
             specificationsVersionGrid.DataBind();
-            imgForceTransposition.Visible = !IsEditMode && UserReleaseRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
-            imgUnforceTransposition.Visible = !IsEditMode && UserReleaseRights.HasRight(Enum_UserRights.Specification_UnforceTransposition);
-            
-            imgWithdrawSpec.Visible = !IsEditMode && UserReleaseRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
-            imgWithdrawSpec.OnClientClick = "openRadWin(" + SpecId.GetValueOrDefault() + "," + ReleaseId.GetValueOrDefault() + "); return false;";
-            
+
+            if (!IsEditMode)
+            {
+                imgForceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
+                imgUnforceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_UnforceTransposition);
+
+                imgInhibitPromote.Visible = imgPromoteSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_InhibitPromote);
+                imgRemoveInhibitPromote.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote);
+
+
+                imgWithdrawSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
+                imgWithdrawSpec.OnClientClick = "openRadWin(" + SpecId.GetValueOrDefault() + "," + ReleaseId.GetValueOrDefault() + "); return false;";
+            }
+            else
+            {
+                pnlIconStrip.Visible = false;
+            }
+
             if (!IsPostBack)
             {
 
@@ -141,8 +158,28 @@ namespace Etsi.Ultimate.Module.Specifications
             var address = HttpContext.Current.Request.Url.AbsoluteUri.Split('&').ToList();
             address.RemoveAll(s => s.Contains("selectedTab"));
             address.RemoveAll(s => s.Contains("Rel"));
-            Response.Redirect(string.Join("&",address)+"&selectedTab=Releases&Rel="+ReleaseId.Value);
+            Response.Redirect(string.Join("&", address) + "&selectedTab=Releases&Rel=" + ReleaseId.Value);
 
+        }
+
+        protected void imgInhibitPromote_Click(object sender, System.Web.UI.ImageClickEventArgs e)
+        {
+            if (SpecId.HasValue && PersonId.HasValue)
+            {
+                var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                specSvc.SpecificationInhibitPromote(PersonId.Value, SpecId.Value);
+                Redirect();
+            }
+        }
+
+        protected void imgRemoveInhibitPromote_Click(object sender, System.Web.UI.ImageClickEventArgs e)
+        {
+            if (SpecId.HasValue && PersonId.HasValue)
+            {
+                var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                specSvc.SpecificationRemoveInhibitPromote(PersonId.Value, SpecId.Value);
+                Redirect();
+            }
         }
 
     }

@@ -13,7 +13,7 @@ namespace Etsi.Ultimate.Services
         /// Returns A specification details including related remarks, history, Parent/Child specification, and releases
         /// </summary>
         /// <param name="specificationId">The identifier of the requested specification</param>
-        KeyValuePair<Specification, UserRightsContainer>  GetSpecificationDetailsById(int personId, int specificationId);
+        KeyValuePair<Specification, UserRightsContainer> GetSpecificationDetailsById(int personId, int specificationId);
 
         /// <summary>
         /// Returns list of specifications including RGs
@@ -65,7 +65,7 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId">The ID of the person requesting the specification.</param>
         /// <param name="spec">The details of the specification that has been created.</param>
         /// <returns>True if update went well, else false. Additionally, the value of the Pair is a report of the </returns>
-        KeyValuePair<bool,Report> EditSpecification(int personId, Specification spec);
+        KeyValuePair<bool, Report> EditSpecification(int personId, Specification spec);
 
         /// <summary>
         /// Returns list of technologies
@@ -84,7 +84,7 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <returns>List of Enum_Technology</returns>
         List<Enum_Technology> GetAllSpecificationTechnologies();
-        
+
         /// Returns TRUE and nothing if the specification number is valid and FALSE and the list of the errors if the specification is not valid :
         /// - correctly formatted (ERR-002)
         /// - not already exist in database (ERR-003)
@@ -134,6 +134,22 @@ namespace Etsi.Ultimate.Services
         /// <param name="specificationId">If of the specification to unforce transposition on.</param>
         /// <returns></returns>
         bool UnforceTranspositionForRelease(int personId, int releaseId, int specificationId);
+
+        /// <summary>
+        /// Prevent Specification from promoting to the next release
+        /// </summary>
+        /// <param name="personId">personId</param>
+        /// <param name="specificationId">specificationId</param>
+        /// <returns></returns>
+        bool SpecificationInhibitPromote(int personId, int specificationId);
+
+        /// <summary>
+        /// Allow Specification from promoting to the next release
+        /// </summary>
+        /// <param name="personId">personId</param>
+        /// <param name="specificationId">specificationId</param>
+        /// <returns></returns>
+        bool SpecificationRemoveInhibitPromote(int personId, int specificationId);
 
         /// <summary>
         /// Withdraws a specification from a given release.

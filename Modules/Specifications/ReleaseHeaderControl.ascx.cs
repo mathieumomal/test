@@ -80,6 +80,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 releaseRemarks.DataSource = version.Remarks.ToList();
             }
             releaseRemarks.IsEditMode = IsEditMode;
+            releaseRemarks.ScrollHeight = 100;
             releaseRemarks.AddRemarkHandler += releaseRemarks_AddRemarkHandler;
 
 

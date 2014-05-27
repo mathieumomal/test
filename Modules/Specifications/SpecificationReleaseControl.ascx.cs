@@ -15,7 +15,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private const string CONST_DATASOURCE = "SpecificationReleaseControl_datasource";
         private const string CONST_IS_EDIT_MODE = "SpecificationReleaseControl_isEditMode";
         private const string CONST_PERSON_ID = "SpecificationReleaseControl_personId";
-        
+
         #endregion
 
         #region Public Properties
@@ -31,7 +31,8 @@ namespace Etsi.Ultimate.Module.Specifications
                 ViewState[CONST_PERSON_ID] = value;
             }
         }
-        public bool IsEditMode {
+        public bool IsEditMode
+        {
             get
             {
                 return ((bool?)ViewState[CONST_IS_EDIT_MODE]).GetValueOrDefault();
@@ -69,10 +70,20 @@ namespace Etsi.Ultimate.Module.Specifications
 
             rpbReleases.EnableViewState = false;
 
+            bool removeInhibitPromoteRight = false;
             foreach (var release in DataSource.SpecificationReleases.OrderByDescending(sr => sr.SortOrder))
             {
+
                 RadPanelItem item = new RadPanelItem();
                 var rights = userRightsPerSpecRelease.Where(r => r.Key.Fk_ReleaseId == release.Pk_ReleaseId).FirstOrDefault().Value;
+
+                if (removeInhibitPromoteRight)
+                {
+                    rights.RemoveRight(Enum_UserRights.Specification_InhibitPromote, null);
+                    rights.RemoveRight(Enum_UserRights.Specification_RemoveInhibitPromote, null);
+                    removeInhibitPromoteRight = true;
+                }
+
                 item.HeaderTemplate = new CustomHeaderTemplate(release, DataSource, IsEditMode, rights, PersonId.GetValueOrDefault(), this.Page);
                 item.Value = release.Pk_ReleaseId.ToString();
                 rpbReleases.Items.Add(item);
@@ -93,14 +104,14 @@ namespace Etsi.Ultimate.Module.Specifications
                                                            .ThenByDescending(x => x.TechnicalVersion)
                                                            .ThenByDescending(x => x.EditorialVersion).ToList();
                 var rights = userRightsPerSpecRelease.Where(r => r.Key.Fk_ReleaseId == releaseId).FirstOrDefault().Value;
-                template = new CustomContentTemplate(datasource,  rights, PersonId.GetValueOrDefault(), DataSource.Pk_SpecificationId, releaseId, IsEditMode, this.Page);
+                template = new CustomContentTemplate(datasource, rights, PersonId.GetValueOrDefault(), DataSource.Pk_SpecificationId, releaseId, IsEditMode, this.Page);
                 item.ContentTemplate = template;
                 template.InstantiateIn(item);
                 item.DataBind();
                 item.ChildGroupHeight = 0;
             }
 
-            if (Request.QueryString["Rel"] != null) 
+            if (Request.QueryString["Rel"] != null)
             {
                 var item = rpbReleases.Items.FindItemByValue(Request.QueryString["Rel"]);
                 if (item != null)

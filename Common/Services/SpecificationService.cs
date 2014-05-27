@@ -146,7 +146,6 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-
         public List<Enum_Technology> GetTechnologyList()
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -156,7 +155,6 @@ namespace Etsi.Ultimate.Services
                 return specificationManager.GetTechnologyList();
             }
         }
-
 
         public List<Enum_Serie> GetSeries()
         {
@@ -268,7 +266,6 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-
         /// <summary>
         /// See interface definition.
         /// </summary>
@@ -322,6 +319,56 @@ namespace Etsi.Ultimate.Services
         }
 
         /// <summary>
+        /// See interface definition.
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="specificationId"></param>
+        /// <returns></returns>
+        public bool SpecificationInhibitPromote(int personId, int specificationId)
+        {
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var inhibitPromoteAction = new SpecificationInhibitRemoveInhibitAction() { UoW = uow };
+                    inhibitPromoteAction.SpecificationInhibitPromote(personId, specificationId);
+                    uow.Save();
+                }
+                catch (Exception e)
+                {
+                    Utils.LogManager.Error("InhibitPromote error: " + e.Message);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// See interface definition.
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="specificationId"></param>
+        /// <returns></returns>
+        public bool SpecificationRemoveInhibitPromote(int personId, int specificationId)
+        {
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var inhibitPromoteAction = new SpecificationInhibitRemoveInhibitAction() { UoW = uow };
+                    inhibitPromoteAction.SpecificationRemoveInhibitPromote(personId, specificationId);
+                    uow.Save();
+                }
+                catch (Exception e)
+                {
+                    Utils.LogManager.Error("UnforceTransposition error: " + e.Message);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Default implementation. Returns the right of the user for each spec release. 
         /// See interface for more details.
         /// </summary>
@@ -337,7 +384,6 @@ namespace Etsi.Ultimate.Services
                 return specMgr.GetRightsForSpecReleases(personId, spec);
             }
         }
-
 
         #region ISpecificationService Members
 
@@ -370,6 +416,9 @@ namespace Etsi.Ultimate.Services
         }
 
         #endregion
+
+
+
     }
 }
 
