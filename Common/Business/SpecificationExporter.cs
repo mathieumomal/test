@@ -66,7 +66,7 @@ namespace Etsi.Ultimate.Business
                 List<SpecificationForExport> specExportObjects = new List<SpecificationForExport>();
                 specExportObjects.AddRange(specs.Select(y => new SpecificationForExport(y)));
 
-                var filename= Guid.NewGuid().ToString().Substring(0, 6) + "_SpecificationList.xlsx";
+                var filename= DateTime.Now.ToString("yyyy-MM-dd_HHmm")+"_SpecificationList_"+ Guid.NewGuid().ToString().Substring(0, 6)+".xlsx";
 
                 var fullExcelFilePath = Utils.ConfigVariables.DefaultPublicTmpPath + filename;
                 if (Directory.Exists(Utils.ConfigVariables.DefaultPublicTmpPath))
