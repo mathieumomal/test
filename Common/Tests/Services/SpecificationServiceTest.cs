@@ -164,7 +164,7 @@ namespace Etsi.Ultimate.Tests.Services
             var svc = new SpecificationService();
             var result = svc.ExportSpecification(EDIT_RIGHT_USER,new SpecificationSearch() { PageSize = 1 });
             Assert.IsTrue(result.Contains(Utils.ConfigVariables.DefaultPublicTmpAddress));
-            Assert.IsTrue(result.Contains("SpecificationList.xlsx"));
+            Assert.IsTrue(result.Contains("SpecificationList"));
         }
 
 
