@@ -101,5 +101,32 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Telerik.Web.UI.RadGrid specificationsVersionGrid;
+        
+        /// <summary>
+        /// rwmVersionReleaseHeader control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadWindowManager rwmVersionReleaseHeader;
+        
+        /// <summary>
+        /// rwVersionRemarks control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadWindow rwVersionRemarks;
+        
+        /// <summary>
+        /// versionRemarks control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.UserControl versionRemarks;
     }
 }

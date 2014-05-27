@@ -1,5 +1,6 @@
 ﻿<%@ Control Language="C#" ClassName="SpecificationVersionListControl" AutoEventWireup="true" CodeBehind="SpecificationVersionListControl.ascx.cs" Inherits="Etsi.Ultimate.Module.Specifications.SpecificationVersionListControl" %>
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
+<%@ Register TagPrefix="ult" TagName="RemarksControl" Src="../../controls/Ultimate/RemarksControl.ascx" %>
 
 <style type="text/css">
     .RadGrid_Default th.rgHeader {
@@ -24,6 +25,15 @@
         width: 20px;
         border-radius: 6px;
     }
+
+    .grid_btn {
+        height: 16px;
+        width: 16px;
+    }
+
+    .float_right {
+        float: right;
+    }
 </style>
 
 <script type="text/javascript">
@@ -42,6 +52,19 @@
         win.show();
         return false;
     }
+
+    function closeAllModals<%= this.ClientID%>() {
+        var manager = $find("<%=rwmVersionReleaseHeader.ClientID %>");
+            manager.closeAll();
+        }
+
+    function open_rwVersionRemarks<%= this.ClientID%>(sender, eventArgs) {
+        closeAllModals<%= this.ClientID%>();
+        var manager = $find("<%=rwVersionRemarks.ClientID %>");
+        manager.open(null, "rwVersionRemarks");
+        return false;
+    }
+
 </script>
 <asp:Panel runat="server" ID="pnlCover" CssClass="TabContent" Height="100%">
     <asp:Panel runat="server" ID="pnlIconStrip">
@@ -50,7 +73,7 @@
         <asp:ImageButton ID="imgRemoveInhibitPromote" ToolTip="Remove-Inhibit Promote" ImageUrl="images/spec_rel-ri.png" CssClass="display_size" runat="server" Visible="false" OnClick="imgRemoveInhibitPromote_Click" />
         <asp:ImageButton ID="imgForceTransposition" ToolTip="Force transposition" ImageUrl="images/spec_rel-f.png" CssClass="display_size" runat="server" OnClick="imgForceTransposition_Click" />
         <asp:ImageButton ID="imgUnforceTransposition" ToolTip="Unforce transposition" ImageUrl="images/spec_rel-f-crossed.png" CssClass="display_size" runat="server" OnClick="imgUnforceTransposition_Click" />
-        <asp:ImageButton ID="imgPromoteSpec" ToolTip="Promote specification to next Release" ImageUrl="images/spec_rel-p.png" CssClass="display_size" runat="server" />
+        <asp:ImageButton ID="imgPromoteSpec" ToolTip="Promote specification to next Release" ImageUrl="images/spec_rel-p.png" CssClass="display_size" runat="server" OnClick="imgPromoteSpec_Click" />
         <asp:ImageButton ID="imgWithdrawSpec" ToolTip="Withdraw specification from Release" ImageUrl="images/spec_rel-w.png" CssClass="display_size" runat="server" />
     </asp:Panel>
     <telerik:RadGrid runat="server" ID="specificationsVersionGrid"
@@ -68,7 +91,9 @@
                 <telerik:GridTemplateColumn DataField="Meetings" HeaderText="Meetings" UniqueName="Meetings">
                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="60px" />
                     <ItemTemplate>
-                        <div class="text-center"><%# DataBinder.Eval(Container.DataItem,"ETSI_WKI_ID") %></div>
+                        <div class="text-center">
+                            <asp:HyperLink runat="server" ID="lnkMeetings" Target="_blank"/>
+                        </div>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
                 <telerik:GridTemplateColumn HeaderText="Version" UniqueName="Version">
@@ -77,7 +102,7 @@
                         <div class="text-center"><%# DataBinder.Eval(Container.DataItem,"Version")%></div>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
-                <telerik:GridTemplateColumn DataField="DocumentUploaded" HeaderText="Document Uploaded" UniqueName="DocumentUploaded">
+                <telerik:GridTemplateColumn DataField="DocumentUploaded" HeaderText="Upload date" UniqueName="DocumentUploaded">
                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="150px" />
                     <ItemTemplate>
                         <%# DataBinder.Eval(Container.DataItem,"DocumentUploaded", "{0:yyyy-MM-dd}") %>
@@ -86,15 +111,21 @@
                 <telerik:GridTemplateColumn DataField="LatestRemark" HeaderText="Comment" UniqueName="LatestRemark">
                     <HeaderStyle HorizontalAlign="Center" Width="40%" Font-Bold="True" />
                     <ItemTemplate>
-                        <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"LatestRemark") %></div>
+                        <div class="text-left">
+                            <%# DataBinder.Eval(Container.DataItem,"LatestRemark") %>
+                            <asp:ImageButton ID="imgVersionRemarks" ImageUrl="images/spec_rel-remarks.png" runat="server" CssClass="float_right grid_btn"/>
+                        </div>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
                 <telerik:GridTemplateColumn UniqueName="Link">
                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" />
                     <ItemTemplate>
-                        <div class="text-left">Links</div>
+                        <asp:ImageButton ID="imgTransposedSpec" CssClass="grid_btn" ImageUrl="images/spec_rel-tranSpec.png" runat="server" OnClientClick="return false;" />
+                        <asp:ImageButton ID="imgRelatedTDocs" CssClass="grid_btn" ImageUrl="images/spec_rel-TDocs.png" runat="server" OnClientClick="return false;" />
+                        <asp:ImageButton ID="imgRelatedCRs" CssClass="grid_btn" ImageUrl="images/spec_rel-CRs.png" runat="server" OnClientClick="return false;" />
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
+                <telerik:GridBoundColumn DataField="Source"  UniqueName="Source" Display="false"></telerik:GridBoundColumn>
             </Columns>
             <NoRecordsTemplate>
                 <div style="text-align: center">
@@ -104,3 +135,12 @@
         </MasterTableView>
     </telerik:RadGrid>
 </asp:Panel>
+<telerik:RadWindowManager ID="rwmVersionReleaseHeader" runat="server">
+    <Windows>
+        <telerik:RadWindow ID="rwVersionRemarks" runat="server" Modal="true" Title="Remarks" Width="550" Height="230" VisibleStatusbar="false" Behaviors="Close">
+            <ContentTemplate>
+                <ult:remarkscontrol runat="server" id="versionRemarks" />
+            </ContentTemplate>
+        </telerik:RadWindow>
+    </Windows>
+</telerik:RadWindowManager>

@@ -6,6 +6,9 @@ using System.Linq;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using System.Web;
+using System.Web.UI;
+using System.Reflection;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
@@ -100,6 +103,8 @@ namespace Etsi.Ultimate.Module.Specifications
             {
 
             }
+
+
         }
 
         protected void specificationsVersionGrid_PreRender(object sender, System.EventArgs e)
@@ -116,7 +121,33 @@ namespace Etsi.Ultimate.Module.Specifications
 
         protected void specificationsVersionGrid_ItemDataBound(object sender, GridItemEventArgs e)
         {
+            //HyperLink lnkMeetings = e.Item.FindControl("lnkMeetings") as HyperLink;
+            //lnkMeetings.Text = currentWi.Pk_WorkItemUid.ToString();
+            //lnkMeetings.NavigateUrl = CONST_BASE_URL + currentWi.Pk_WorkItemUid;
+            //lnkMeetings.Visible = true;
 
+
+            //imgVersionRemarks
+
+
+            if (e.Item is GridDataItem)
+            {
+                GridDataItem item = (GridDataItem)e.Item;
+
+                if (!String.IsNullOrEmpty(item["LatestRemark"].Text))
+                {
+                    ImageButton btn = (ImageButton)item["LatestRemark"].FindControl("imgVersionRemarks");
+                    btn.OnClientClick = "open_rwVersionRemarks" + this.ClientID;
+                }
+
+
+                if (!String.IsNullOrEmpty(item["Source"].Text))
+                {
+                    HyperLink link = (HyperLink)item["Meetings"].FindControl("lnkMeetings");
+                    link.Text = item["Source"].Text;
+                    link.NavigateUrl = ConfigVariables.MeetingDetailsAddress + item["Source"].Text;
+                }
+            }
         }
 
         /// <summary>
@@ -182,5 +213,9 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
+        protected void imgPromoteSpec_Click(object sender, System.Web.UI.ImageClickEventArgs e)
+        {
+
+        }
     }
 }
