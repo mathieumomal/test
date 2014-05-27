@@ -152,6 +152,11 @@ namespace Etsi.Ultimate.Tests.Services
             };
             var pair = new KeyValuePair<List<Specification>, int>(specList, 1);
 
+            var communityMgr = MockRepository.GenerateMock<ICommunityManager>();
+            communityMgr.Stub(m => m.GetCommmunityshortNameById(1)).Return("S1");
+            ManagerFactory.Container.RegisterInstance<ICommunityManager>(communityMgr);
+            
+
             var repo = MockRepository.GenerateMock<ISpecificationRepository>();
             repo.Stub(r => r.GetSpecificationBySearchCriteria(Arg<SpecificationSearch>.Matches(s => s.PageSize == 0))).Return( pair );
             RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(repo);

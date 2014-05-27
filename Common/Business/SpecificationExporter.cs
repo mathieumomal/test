@@ -51,7 +51,7 @@ namespace Etsi.Ultimate.Business
             {
                 var specManager = new SpecificationManager();
                 specManager.UoW = _uoW;
-                var communityManager = new CommunityManager();
+                var communityManager = ManagerFactory.Resolve<ICommunityManager>();
                 communityManager.UoW = _uoW;
                 var personManager = new PersonManager();
                 personManager.UoW = _uoW;
