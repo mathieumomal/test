@@ -73,6 +73,7 @@ namespace Etsi.Ultimate.Module.Specifications
             set;
 
         }
+        public double ScrollHeight { get; set; }
         #endregion
 
         #region Events
@@ -101,7 +102,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
             if (!IsPostBack)
             {
-
+                specificationsVersionGrid.ClientSettings.Scrolling.ScrollHeight = Unit.Parse(ScrollHeight.ToString());
             }
 
 

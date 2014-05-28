@@ -37,14 +37,6 @@
 </style>
 
 <script type="text/javascript">
-    function GridCreated<%= this.ClientID%>(sender, args) {
-        var scrollArea = sender.GridDataDiv;
-        var parent = $get("<%= pnlIconStrip.ClientID %>");
-        console.log(parent.clientHeight);
-        var gridHeader = sender.GridHeaderDiv;
-        scrollArea.style.height = parent.clientHeight - gridHeader.clientHeight + "px";
-    }
-
     function openRadWin(specId, relId) {
         var win = radopen("WithdrawMeetingSelectPopUp.aspx?SpecId=" + specId + "&RelId=" + relId, "Withdraw");
         win.setSize(450, 300);
@@ -84,7 +76,7 @@
         AllowMultiRowEdit="true"
         OnItemDataBound="specificationsVersionGrid_ItemDataBound">
         <ClientSettings>
-            <Scrolling AllowScroll="True" ScrollHeight="200px" UseStaticHeaders="true" />
+            <Scrolling AllowScroll="True" UseStaticHeaders="true" />
         </ClientSettings>
         <MasterTableView>
             <Columns>

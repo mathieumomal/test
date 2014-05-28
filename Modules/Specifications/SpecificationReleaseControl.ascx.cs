@@ -95,6 +95,14 @@ namespace Etsi.Ultimate.Module.Specifications
             var versionsList = svc.GetVersionsBySpecId(DataSource.Pk_SpecificationId);
 
             CustomContentTemplate template;
+            
+            double panelHeight = rpbReleases.Height.Value;
+            double panelItemsHeaderHeight = (rpbReleases.Items.Count) * 31;
+            double iconsHeight = 30;
+            double gridHeaderHeight = 30;
+            double padding = 15;
+            double scrollHeight = panelHeight - panelItemsHeaderHeight - iconsHeight - gridHeaderHeight - padding;
+
             foreach (RadPanelItem item in rpbReleases.Items)
             {
                 int releaseId = Convert.ToInt32(item.Value);
@@ -104,7 +112,7 @@ namespace Etsi.Ultimate.Module.Specifications
                                                            .ThenByDescending(x => x.TechnicalVersion)
                                                            .ThenByDescending(x => x.EditorialVersion).ToList();
                 var rights = userRightsPerSpecRelease.Where(r => r.Key.Fk_ReleaseId == releaseId).FirstOrDefault().Value;
-                template = new CustomContentTemplate(datasource, rights, PersonId.GetValueOrDefault(), DataSource.Pk_SpecificationId, releaseId, IsEditMode, this.Page);
+                template = new CustomContentTemplate(datasource, rights, PersonId.GetValueOrDefault(), DataSource.Pk_SpecificationId, releaseId, IsEditMode, this.Page, scrollHeight);
                 item.ContentTemplate = template;
                 template.InstantiateIn(item);
                 item.DataBind();

@@ -18,7 +18,9 @@ namespace Etsi.Ultimate.Module.Specifications
         private int? _specId;
         private int? _releaseId;
         private bool _isEditMode;
-        public CustomContentTemplate(List<SpecVersion> specVersions, UserRightsContainer releaseRights, int personId, int specId, int releaseId, bool isEditMode, Page page)
+        private double _scrollHeight;
+
+        public CustomContentTemplate(List<SpecVersion> specVersions, UserRightsContainer releaseRights, int personId, int specId, int releaseId, bool isEditMode, Page page, double scrollHeight)
         {
             _specVersions = specVersions;
             _releaseRights = releaseRights;
@@ -27,6 +29,7 @@ namespace Etsi.Ultimate.Module.Specifications
             _specId = specId;
             _releaseId = releaseId;
             _isEditMode = isEditMode;
+            _scrollHeight = scrollHeight;
         }
 
         public void InstantiateIn(Control container)
@@ -40,6 +43,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 ctrl.SpecId = _specId;
                 ctrl.ReleaseId = _releaseId;
                 ctrl.IsEditMode = _isEditMode;
+                ctrl.ScrollHeight = _scrollHeight;
             }
             container.Controls.Add(ctrl);
         }
