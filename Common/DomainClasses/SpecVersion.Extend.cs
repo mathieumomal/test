@@ -14,11 +14,10 @@ namespace Etsi.Ultimate.DomainClasses
             {
                 string remark = string.Empty;
                 if (Remarks.Count > 0)
-                    remark = this.Remarks.OrderBy(x => x.CreationDate).FirstOrDefault().RemarkText;
+                    remark = this.Remarks.OrderByDescending(x => x.CreationDate).FirstOrDefault().RemarkText;
                 return remark;
             }
         }
-
 
         public string Version
         {
@@ -31,5 +30,7 @@ namespace Etsi.Ultimate.DomainClasses
                 return version;
             }
         }
+
+        public string MtgShortRef { get; set; }
     }
 }

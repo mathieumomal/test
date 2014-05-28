@@ -43,11 +43,6 @@
         <td style="width: 20px;">
             <asp:ImageButton ID="imgRemarks" ToolTip="Remarks" ImageUrl="images/spec_rel-remarks.png" OnClientClick="open_rwRemarks()" CssClass="button_position" runat="server" />
         </td>
-        <td style="width: 20px;">
-            <a class="rpExpandable">
-                <span class="rpExpandHandle"></span>
-            </a>
-        </td>
     </tr>
 </table>
 <telerik:RadWindowManager ID="rwmReleaseHeader" runat="server">

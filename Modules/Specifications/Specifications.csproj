@@ -94,6 +94,13 @@
     <Compile Include="Components\FeatureController.cs" />
     <Compile Include="Components\ItemController.cs" />
     <Compile Include="Components\Item.cs" />
+    <Compile Include="VersionRemarksPopUp.aspx.cs">
+      <DependentUpon>VersionRemarksPopUp.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="VersionRemarksPopUp.aspx.designer.cs">
+      <DependentUpon>VersionRemarksPopUp.aspx</DependentUpon>
+    </Compile>
     <Compile Include="ReleaseHeaderControl.ascx.cs">
       <DependentUpon>ReleaseHeaderControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -162,6 +169,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="VersionRemarksPopUp.aspx" />
     <Content Include="images\spec_rel-CRs.png" />
     <Content Include="images\spec_rel-f-crossed.png" />
     <Content Include="images\spec_rel-f.png" />

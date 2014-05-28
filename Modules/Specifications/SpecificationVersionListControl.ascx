@@ -45,12 +45,22 @@
         return false;
     }
 
+    function openRadWinRemarks(specVerId, isEditMode) {
+        var win = radopen("VersionRemarksPopUp.aspx?specVerId=" + specVerId + "&isEditMode=" + isEditMode, "Remarks");
+        win.setSize(500, 250);
+        win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
+        win.set_modal(true);
+        win.set_visibleStatusbar(false)
+        win.show();
+        return false;
+    }
+
     function closeAllModals<%= this.ClientID%>() {
         var manager = $find("<%=rwmVersionReleaseHeader.ClientID %>");
-            manager.closeAll();
-        }
+        manager.closeAll();
+    }
 
-    function open_rwVersionRemarks<%= this.ClientID%>(sender, eventArgs) {
+    function open_rwVersionRemarks<%= this.ClientID%>() {
         closeAllModals<%= this.ClientID%>();
         var manager = $find("<%=rwVersionRemarks.ClientID %>");
         manager.open(null, "rwVersionRemarks");
@@ -84,7 +94,7 @@
                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="60px" />
                     <ItemTemplate>
                         <div class="text-center">
-                            <asp:HyperLink runat="server" ID="lnkMeetings" Target="_blank"/>
+                            <asp:HyperLink runat="server" ID="lnkMeetings" Target="_blank" />
                         </div>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
@@ -104,8 +114,8 @@
                     <HeaderStyle HorizontalAlign="Center" Width="40%" Font-Bold="True" />
                     <ItemTemplate>
                         <div class="text-left">
-                            <%# DataBinder.Eval(Container.DataItem,"LatestRemark") %>
-                            <asp:ImageButton ID="imgVersionRemarks" ImageUrl="images/spec_rel-remarks.png" runat="server" CssClass="float_right grid_btn"/>
+                            <asp:Label ID="lblRemarkText" Text='<%# DataBinder.Eval(Container.DataItem,"LatestRemark") %>' runat="server"/>
+                            <asp:ImageButton ID="imgVersionRemarks" ImageUrl="images/spec_rel-remarks.png" runat="server" CssClass="float_right grid_btn" Visible="false"/>
                         </div>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
@@ -117,7 +127,10 @@
                         <asp:ImageButton ID="imgRelatedCRs" CssClass="grid_btn" ImageUrl="images/spec_rel-CRs.png" runat="server" OnClientClick="return false;" />
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
-                <telerik:GridBoundColumn DataField="Source"  UniqueName="Source" Display="false"></telerik:GridBoundColumn>
+                <telerik:GridBoundColumn DataField="Source" UniqueName="Source" Display="false"></telerik:GridBoundColumn>
+                <telerik:GridBoundColumn DataField="MtgShortRef" UniqueName="MtgShortRef" Display="false"></telerik:GridBoundColumn>
+                <telerik:GridBoundColumn DataField="Pk_VersionId" UniqueName="Pk_VersionId" Display="false"></telerik:GridBoundColumn>
+
             </Columns>
             <NoRecordsTemplate>
                 <div style="text-align: center">

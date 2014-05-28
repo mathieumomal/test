@@ -80,24 +80,38 @@ namespace Etsi.Ultimate.Module.Specifications
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            specificationsVersionGrid.DataSource = DataSource;
-            specificationsVersionGrid.DataBind();
-
-            if (!IsEditMode)
+            if (DataSource.Count > 0)
             {
-                imgForceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
-                imgUnforceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_UnforceTransposition);
+                var svc = ServicesFactory.Resolve<IMeetingService>();
+                foreach (SpecVersion specVersion in DataSource)
+                {
+                    if (specVersion.Source.HasValue)
+                    {
+                        var mtg = svc.GetMeetingById(specVersion.Source.Value);
+                        if (mtg != null)
+                            specVersion.MtgShortRef = mtg.MtgShortRef;
+                    }
+                }
 
-                imgInhibitPromote.Visible = imgPromoteSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_InhibitPromote);
-                imgRemoveInhibitPromote.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote);
+                specificationsVersionGrid.DataSource = DataSource;
+                specificationsVersionGrid.DataBind();
+
+                if (!IsEditMode)
+                {
+                    imgForceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
+                    imgUnforceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_UnforceTransposition);
+
+                    imgInhibitPromote.Visible = imgPromoteSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_InhibitPromote);
+                    imgRemoveInhibitPromote.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote);
 
 
-                imgWithdrawSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
-                imgWithdrawSpec.OnClientClick = "openRadWin(" + SpecId.GetValueOrDefault() + "," + ReleaseId.GetValueOrDefault() + "); return false;";
-            }
-            else
-            {
-                pnlIconStrip.Visible = false;
+                    imgWithdrawSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
+                    imgWithdrawSpec.OnClientClick = "openRadWin(" + SpecId.GetValueOrDefault() + "," + ReleaseId.GetValueOrDefault() + "); return false;";
+                }
+                else
+                {
+                    pnlIconStrip.Visible = false;
+                }
             }
 
             if (!IsPostBack)
@@ -122,30 +136,24 @@ namespace Etsi.Ultimate.Module.Specifications
 
         protected void specificationsVersionGrid_ItemDataBound(object sender, GridItemEventArgs e)
         {
-            //HyperLink lnkMeetings = e.Item.FindControl("lnkMeetings") as HyperLink;
-            //lnkMeetings.Text = currentWi.Pk_WorkItemUid.ToString();
-            //lnkMeetings.NavigateUrl = CONST_BASE_URL + currentWi.Pk_WorkItemUid;
-            //lnkMeetings.Visible = true;
-
-
-            //imgVersionRemarks
-
-
             if (e.Item is GridDataItem)
             {
                 GridDataItem item = (GridDataItem)e.Item;
 
-                if (!String.IsNullOrEmpty(item["LatestRemark"].Text))
+                string remarkText = ((Label)item["LatestRemark"].FindControl("lblRemarkText")).Text;
+                if (!string.IsNullOrEmpty(remarkText))
                 {
-                    ImageButton btn = (ImageButton)item["LatestRemark"].FindControl("imgVersionRemarks");
-                    btn.OnClientClick = "open_rwVersionRemarks" + this.ClientID;
-                }
+                    if(string.IsNullOrEmpty(((Label)item["LatestRemark"].FindControl("lblRemarkText")).Text.
 
+                    ImageButton btn = (ImageButton)item["LatestRemark"].FindControl("imgVersionRemarks");
+                    btn.OnClientClick = String.Format("openRadWinRemarks('{0}','{1}'); return false;", item["Pk_VersionId"].Text, IsEditMode.ToString());
+                    btn.Visible = true;
+                }
 
                 if (!String.IsNullOrEmpty(item["Source"].Text))
                 {
                     HyperLink link = (HyperLink)item["Meetings"].FindControl("lnkMeetings");
-                    link.Text = item["Source"].Text;
+                    link.Text = item["MtgShortRef"].Text;
                     link.NavigateUrl = ConfigVariables.MeetingDetailsAddress + item["Source"].Text;
                 }
             }
