@@ -127,6 +127,11 @@ namespace Etsi.Ultimate.Module.Specifications
                     item.Expanded = true;
                 }
             }
+            else
+            {
+                if (rpbReleases.Items.Count > 0)
+                    rpbReleases.Items[0].Expanded = true;
+            }
         }
 
         #endregion
