@@ -143,8 +143,8 @@ namespace Etsi.Ultimate.Module.Specifications
                 string remarkText = ((Label)item["LatestRemark"].FindControl("lblRemarkText")).Text;
                 if (!string.IsNullOrEmpty(remarkText))
                 {
-                    if(string.IsNullOrEmpty(((Label)item["LatestRemark"].FindControl("lblRemarkText")).Text.
-
+                    if (remarkText.Length > 30)
+                        ((Label)item["LatestRemark"].FindControl("lblRemarkText")).Text = remarkText.Substring(0, 29) + "...";
                     ImageButton btn = (ImageButton)item["LatestRemark"].FindControl("imgVersionRemarks");
                     btn.OnClientClick = String.Format("openRadWinRemarks('{0}','{1}'); return false;", item["Pk_VersionId"].Text, IsEditMode.ToString());
                     btn.Visible = true;
