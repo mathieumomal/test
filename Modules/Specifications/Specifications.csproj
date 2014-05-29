@@ -169,6 +169,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="images\spec_rel-a.png" />
     <Content Include="VersionRemarksPopUp.aspx" />
     <Content Include="images\spec_rel-CRs.png" />
     <Content Include="images\spec_rel-f-crossed.png" />

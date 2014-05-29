@@ -52,6 +52,11 @@ namespace Etsi.Ultimate.Module.Versions
                 KeyValuePair<SpecVersion, UserRightsContainer> specVersionRightsObject = svc.GetVersionsById(versionId.Value, UserId);
                 SpecVersion specVerion = specVersionRightsObject.Key;
                 UserRightsContainer userRights = specVersionRightsObject.Value;
+
+                //To be removed
+                userRights.AddRight(Enum_UserRights.Versions_Upload);
+                userRights.AddRight(Enum_UserRights.Versions_Allocate);
+
                 if (specVerion == null || (!action.Equals("upload") && !action.Equals("allocate")))
                 {
                     versionUploadBody.Visible = false;

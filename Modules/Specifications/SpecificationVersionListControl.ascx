@@ -55,22 +55,23 @@
         return false;
     }
 
-    function closeAllModals<%= this.ClientID%>() {
-        var manager = $find("<%=rwmVersionReleaseHeader.ClientID %>");
-        manager.closeAll();
-    }
-
-    function open_rwVersionRemarks<%= this.ClientID%>() {
-        closeAllModals<%= this.ClientID%>();
-        var manager = $find("<%=rwVersionRemarks.ClientID %>");
-        manager.open(null, "rwVersionRemarks");
+    function openRadWinVersion(specVerId, action) {
+        var win = radopen("/desktopmodules/Versions/UploadVersion.aspx?versionId=" + specVerId + "&action=" + action, "Version");
+        var height = (action == 'upload') ? 310 : 270;
+        win.setSize(440, height);
+        win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
+        win.set_modal(true);
+        win.set_visibleStatusbar(false)
+        win.show();
         return false;
     }
+
 
 </script>
 <asp:Panel runat="server" ID="pnlCover" CssClass="TabContent" Height="100%">
     <asp:Panel runat="server" ID="pnlIconStrip">
         <asp:ImageButton ID="imgUploadVersion" ToolTip="Upload a version" ImageUrl="images/spec_rel-u.png" CssClass="display_size" runat="server" />
+        <asp:ImageButton ID="imgAllocateVersion" ToolTip="Allocate a version" ImageUrl="images/spec_rel-a.png" CssClass="display_size" runat="server" />
         <asp:ImageButton ID="imgInhibitPromote" ToolTip="Inhibit Promote" ImageUrl="images/spec_rel-i.png" CssClass="display_size" runat="server" Visible="false" OnClick="imgInhibitPromote_Click" />
         <asp:ImageButton ID="imgRemoveInhibitPromote" ToolTip="Remove-Inhibit Promote" ImageUrl="images/spec_rel-ri.png" CssClass="display_size" runat="server" Visible="false" OnClick="imgRemoveInhibitPromote_Click" />
         <asp:ImageButton ID="imgForceTransposition" ToolTip="Force transposition" ImageUrl="images/spec_rel-f.png" CssClass="display_size" runat="server" OnClick="imgForceTransposition_Click" />
@@ -114,8 +115,8 @@
                     <HeaderStyle HorizontalAlign="Center" Width="40%" Font-Bold="True" />
                     <ItemTemplate>
                         <div class="text-left">
-                            <asp:Label ID="lblRemarkText" Text='<%# DataBinder.Eval(Container.DataItem,"LatestRemark") %>' runat="server"/>
-                            <asp:ImageButton ID="imgVersionRemarks" ImageUrl="images/spec_rel-remarks.png" runat="server" CssClass="float_right grid_btn" Visible="false"/>
+                            <asp:Label ID="lblRemarkText" Text='<%# DataBinder.Eval(Container.DataItem,"LatestRemark") %>' runat="server" />
+                            <asp:ImageButton ID="imgVersionRemarks" ImageUrl="images/spec_rel-remarks.png" runat="server" CssClass="float_right grid_btn" Visible="false" />
                         </div>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
