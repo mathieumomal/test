@@ -1,28 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Etsi.Ultimate.Business.Security;
+﻿using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Etsi.Ultimate.Business
 {
     public class ReleaseManager : Etsi.Ultimate.Business.IReleaseManager
     {
+        #region Variables / Properties
+
         // Used for the caching of the releases.
         private static string CACHE_KEY = "ULT_BIZ_RELEASES_ALL";
+        private int personId;
         private IReleaseRepository releaseRepo;
-
         public IUltimateUnitOfWork UoW { get; set; }
+
+        #endregion
+
+        #region Constructor
 
         public ReleaseManager() {}
 
+        #endregion
 
-        private int personId;
-
+        #region IReleaseManager Membres
 
         /// <summary>
         /// Retrieves all the data for the releases.
@@ -50,8 +54,7 @@ namespace Etsi.Ultimate.Business
             }
             return new KeyValuePair<List<Release>, UserRightsContainer>(cachedData, personRights); ;
         }
-
-
+        
         /// <summary>
         /// Retrieves the data from one single release, and computes the associated rights.
         /// </summary>
@@ -87,12 +90,14 @@ namespace Etsi.Ultimate.Business
             return new KeyValuePair<Release, UserRightsContainer>(releaseRepo.Find(id), personRights);
         }
 
-
         /// <summary>
-        /// Freezes the release.
+        /// Freezes the release
         /// </summary>
-        /// <param name="releaseId"></param>
-        /// <param name="endDate"></param>
+        /// <param name="releaseId">Release ID</param>
+        /// <param name="endDate">End Date</param>
+        /// <param name="personId">Person ID</param>
+        /// <param name="FreezeMtgId">Freeze Meeting ID</param>
+        /// <param name="FreezeMtgRef">Freeze Meeting Reference</param>
         public void FreezeRelease(int releaseId, DateTime? endDate, int personId, int? FreezeMtgId, string FreezeMtgRef)
         {
             releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
@@ -170,6 +175,13 @@ namespace Etsi.Ultimate.Business
             ClearCache();
         }
 
+        /// <summary>
+        /// Creates the release
+        /// </summary>
+        /// <param name="release">Release</param>
+        /// <param name="previousReleaseId">Previous Release ID</param>
+        /// <param name="personId">Person ID</param>
+        /// <returns>New Release</returns>
         public Release CreateRelease(Release release, int previousReleaseId, int personId)
         {
             ClearCache();
@@ -204,8 +216,12 @@ namespace Etsi.Ultimate.Business
             return aReleaseToAdd;
         }
 
-        
-
+        /// <summary>
+        /// Edits the release
+        /// </summary>
+        /// <param name="release">Release</param>
+        /// <param name="previousReleaseId">Previous Release ID</param>
+        /// <param name="personId">Person ID</param>
         public void EditRelease(Release release, int previousReleaseId, int personId)
         {
             // We are in edit mode, therefore we do not want the cache to be targeted.
@@ -226,6 +242,11 @@ namespace Etsi.Ultimate.Business
             releaseRepo.InsertOrUpdate(releaseToUpdate);
         }
 
+        /// <summary>
+        /// Lists all the releases
+        /// </summary>
+        /// <param name="releaseId">Release ID</param>
+        /// <returns>Release Codes</returns>
         public Dictionary<int, string> GetAllReleasesCodes(int releaseId)
         {
             Dictionary<int, string> allReleasesCodes = new Dictionary<int, string>();
@@ -253,11 +274,10 @@ namespace Etsi.Ultimate.Business
         }
 
         /// <summary>
-        /// Return the code of the previous Release of the current one
+        /// Computes the release code for the previous release.
         /// </summary>
-        /// <param name="personID"></param>
-        /// <param name="releaseId"></param>
-        /// <returns></returns>
+        /// <param name="releaseId">Release ID</param>
+        /// <returns>Previous Release Code</returns>
         public KeyValuePair<int, string> GetPreviousReleaseCode(int releaseId)
         {
             // Check in the cache
@@ -292,6 +312,46 @@ namespace Etsi.Ultimate.Business
                 }
             }
             return new KeyValuePair<int, string>(0, String.Empty);
+        }
+
+        /// <summary>
+        /// Get next release details for the given current release id.
+        /// </summary>
+        /// <param name="releaseId">Relese ID</param>
+        /// <returns>Next Release</returns>
+        public Release GetNextRelease(int releaseId)
+        {
+            var allReleases = GetAllReleases();
+            var currentRelease = allReleases.Where(x => x.Pk_ReleaseId == releaseId).FirstOrDefault();
+            int currentReleaseSortOrder = (currentRelease == null) ? 0 : (currentRelease.SortOrder ?? 0);
+            var nextRelease = allReleases.Where(x => x.SortOrder > currentReleaseSortOrder).OrderBy(y => y.SortOrder).FirstOrDefault();
+            return nextRelease;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Get All Release Details
+        /// </summary>
+        /// <returns>List of Releases</returns>
+        private List<Release> GetAllReleases()
+        {
+            // Check in the cache
+            var cachedData = (List<Release>)CacheManager.Get(CACHE_KEY);
+            if (cachedData == null)
+            {
+                // if nothing in the cache, ask the repository, then cache it
+                releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+                releaseRepo.UoW = UoW;
+                cachedData = releaseRepo.All.ToList();
+
+                // Check that cache is still empty
+                if (CacheManager.Get(CACHE_KEY) == null)
+                    CacheManager.Insert(CACHE_KEY, cachedData);
+            }
+            return cachedData;
         }
 
         /// <summary>
@@ -440,7 +500,7 @@ namespace Etsi.Ultimate.Business
                 releaseToUpdate.ClosureMtgId = release.ClosureMtgId;
                 releaseToUpdate.ClosureMtgRef = release.ClosureMtgRef;
             }
-            
+
             // Manage remarks
             foreach (var rk in release.Remarks)
             {
@@ -469,7 +529,7 @@ namespace Etsi.Ultimate.Business
             //releaseToUpdate.LAST_MOD_BY = personId;
             releaseToUpdate.LAST_MOD_TS = DateTime.Now;
 
-            if (changes.Count >0)
+            if (changes.Count > 0)
             {
                 var historyEntry = new History()
                 {
@@ -483,6 +543,11 @@ namespace Etsi.Ultimate.Business
             }
         }
 
+        /// <summary>
+        /// Manage Sort Order for all releases
+        /// </summary>
+        /// <param name="aReleaseToAdd">New Release</param>
+        /// <param name="previousReleaseId">Previous Release ID</param>
         private void ManageSortOrder(Release aReleaseToAdd, int previousReleaseId)
         {
             List<Release> allReleases = new List<Release>();
@@ -523,7 +588,7 @@ namespace Etsi.Ultimate.Business
         {
             CacheManager.Clear(CACHE_KEY);
         }
-    }
 
-   
+        #endregion
+    }   
 }

@@ -1,14 +1,12 @@
 ﻿using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
+using Etsi.Ultimate.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
-using System.Web;
-using System.Web.UI;
-using System.Reflection;
-using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
@@ -80,49 +78,44 @@ namespace Etsi.Ultimate.Module.Specifications
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (DataSource.Count > 0)
+            var svc = ServicesFactory.Resolve<IMeetingService>();
+            foreach (SpecVersion specVersion in DataSource)
             {
-                var svc = ServicesFactory.Resolve<IMeetingService>();
-                foreach (SpecVersion specVersion in DataSource)
+                if (specVersion.Source.HasValue)
                 {
-                    if (specVersion.Source.HasValue)
-                    {
-                        var mtg = svc.GetMeetingById(specVersion.Source.Value);
-                        if (mtg != null)
-                            specVersion.MtgShortRef = mtg.MtgShortRef;
-                    }
+                    var mtg = svc.GetMeetingById(specVersion.Source.Value);
+                    if (mtg != null)
+                        specVersion.MtgShortRef = mtg.MtgShortRef;
                 }
+            }
 
-                specificationsVersionGrid.DataSource = DataSource;
-                specificationsVersionGrid.DataBind();
+            specificationsVersionGrid.DataSource = DataSource;
+            specificationsVersionGrid.DataBind();
 
-                if (!IsEditMode)
-                {
-                    imgForceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
-                    imgUnforceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_UnforceTransposition);
+            if (!IsEditMode)
+            {
+                imgForceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
+                imgUnforceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_UnforceTransposition);
 
-                    imgInhibitPromote.Visible = imgPromoteSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_InhibitPromote);
-                    imgRemoveInhibitPromote.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote);
+                imgInhibitPromote.Visible = imgPromoteSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_InhibitPromote);
+                imgRemoveInhibitPromote.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote);
 
 
-                    imgWithdrawSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
-                    imgWithdrawSpec.OnClientClick = "openRadWin(" + SpecId.GetValueOrDefault() + "," + ReleaseId.GetValueOrDefault() + "); return false;";
+                imgWithdrawSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
+                imgWithdrawSpec.OnClientClick = "openRadWin(" + SpecId.GetValueOrDefault() + "," + ReleaseId.GetValueOrDefault() + "); return false;";
 
-                    imgUploadVersion.OnClientClick = "openRadWinVersion('" + DataSource.FirstOrDefault().Pk_VersionId + "', 'upload'); return false;";
-                    imgAllocateVersion.OnClientClick = "openRadWinVersion('" + DataSource.FirstOrDefault().Pk_VersionId + "', 'allocate'); return false;";
-                }
-                else
-                {
-                    pnlIconStrip.Visible = false;
-                }
+                //imgUploadVersion.OnClientClick = "openRadWinVersion('" + DataSource.FirstOrDefault().Pk_VersionId + "', 'upload'); return false;";
+                //imgAllocateVersion.OnClientClick = "openRadWinVersion('" + DataSource.FirstOrDefault().Pk_VersionId + "', 'allocate'); return false;";
+            }
+            else
+            {
+                pnlIconStrip.Visible = false;
             }
 
             if (!IsPostBack)
             {
                 specificationsVersionGrid.ClientSettings.Scrolling.ScrollHeight = Unit.Parse(ScrollHeight.ToString());
             }
-
-
         }
 
         protected void specificationsVersionGrid_PreRender(object sender, System.EventArgs e)
@@ -134,8 +127,6 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             specificationsVersionGrid.DataSource = DataSource;
         }
-
-        #endregion
 
         protected void specificationsVersionGrid_ItemDataBound(object sender, GridItemEventArgs e)
         {
@@ -193,18 +184,6 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
-        /// <summary>
-        /// Redirect user. Removes previous "selectedTab" and "Rel" flags.
-        /// </summary>
-        private void Redirect()
-        {
-            var address = HttpContext.Current.Request.Url.AbsoluteUri.Split('&').ToList();
-            address.RemoveAll(s => s.Contains("selectedTab"));
-            address.RemoveAll(s => s.Contains("Rel"));
-            Response.Redirect(string.Join("&", address) + "&selectedTab=Releases&Rel=" + ReleaseId.Value);
-
-        }
-
         protected void imgInhibitPromote_Click(object sender, System.Web.UI.ImageClickEventArgs e)
         {
             if (SpecId.HasValue && PersonId.HasValue)
@@ -225,9 +204,48 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
+        /// <summary>
+        /// Click event for Promote Specification Image
+        /// </summary>
+        /// <param name="sender">Promote Specification Image</param>
+        /// <param name="e">Event Args</param>
         protected void imgPromoteSpec_Click(object sender, System.Web.UI.ImageClickEventArgs e)
         {
+            if (SpecId.HasValue && PersonId.HasValue && ReleaseId.HasValue)
+            {
+                var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                specSvc.PromoteSpecification(PersonId.Value, SpecId.Value, ReleaseId.Value);
+                Refresh();
+            }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Redirect user. Removes previous "selectedTab" and "Rel" flags.
+        /// </summary>
+        private void Redirect()
+        {
+            var address = HttpContext.Current.Request.Url.AbsoluteUri.Split('&').ToList();
+            address.RemoveAll(s => s.Contains("selectedTab"));
+            address.RemoveAll(s => s.Contains("Rel"));
+            Response.Redirect(string.Join("&", address) + "&selectedTab=Releases&Rel=" + ReleaseId.Value);
 
         }
+
+        /// <summary>
+        /// Refresh the grid & stay on Releases tab
+        /// </summary>
+        private void Refresh()
+        {
+            var address = HttpContext.Current.Request.Url.AbsoluteUri.Split('&').ToList();
+            address.RemoveAll(s => s.Contains("selectedTab"));
+            address.RemoveAll(s => s.Contains("Rel"));
+            Response.Redirect(string.Join("&", address) + "&selectedTab=Releases");
+        }
+
+        #endregion
     }
 }

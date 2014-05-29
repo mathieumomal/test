@@ -495,5 +495,11 @@ namespace Etsi.Ultimate.Services
         {
             throw new NotImplementedException();
         }
+
+
+        public bool PromoteSpecification(int personId, int specificationId, int currentReleaseId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

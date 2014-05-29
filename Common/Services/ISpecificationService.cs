@@ -152,6 +152,15 @@ namespace Etsi.Ultimate.Services
         bool SpecificationRemoveInhibitPromote(int personId, int specificationId);
 
         /// <summary>
+        /// Promote Specification to next release
+        /// </summary>
+        /// <param name="personId">Person ID</param>
+        /// <param name="specificationId">Specification ID</param>
+        /// <param name="currentReleaseId">Current Release ID</param>
+        /// <returns>True/False</returns>
+        bool PromoteSpecification(int personId, int specificationId, int currentReleaseId);
+
+        /// <summary>
         /// Withdraws a specification from a given release.
         /// </summary>
         /// <param name="personId">ID of the person requesting the withdrawal</param>

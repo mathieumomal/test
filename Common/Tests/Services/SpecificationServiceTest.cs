@@ -118,8 +118,6 @@ namespace Etsi.Ultimate.Tests.Services
             }
         }
 
-        
-
         [Test]
         public void ExportSpecificationList_Nominal()
         {
@@ -167,6 +165,74 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsTrue(result.Contains("SpecificationList"));
         }
 
+        [TestCase(1, 1, 1)]
+        public void PromoteSpecification(int personId, int specificationId, int currentReleaseId)
+        {
+            //Arrange
+            //User Rights
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Specification_Create);
+            userRights.AddRight(Enum_UserRights.Specification_EditLimitted);
+            userRights.AddRight(Enum_UserRights.Specification_InhibitPromote);
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(personId)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            //Specification
+            var specDBSet = GetSpecifications();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specDBSet);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)Releases());
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var specificationService = new SpecificationService();
+
+            //Initial Assert
+            var spec = specDBSet.Find(specificationId);
+            Assert.AreEqual(1, spec.Specification_Release.Count);
+
+            //Act
+            bool isSuccess = specificationService.PromoteSpecification(personId, specificationId, currentReleaseId);
+
+            //Assert
+            Assert.AreEqual(2, spec.Specification_Release.Count);
+            var newSpecRelease = spec.Specification_Release.ToList().Where(x => x.Pk_Specification_ReleaseId == default(int)).FirstOrDefault();
+            Assert.AreEqual(false, newSpecRelease.isWithdrawn);
+            Assert.AreEqual(2, newSpecRelease.Fk_ReleaseId);
+            Assert.IsNotNull(newSpecRelease.CreationDate);
+            Assert.IsNotNull(newSpecRelease.UpdateDate);
+            Assert.IsTrue(isSuccess);
+            mockDataContext.AssertWasCalled(x => x.SaveChanges());
+        }
+
+        [TestCase(1, 1, 1)]
+        public void PromoteSpecificationWithoutRights(int personId, int specificationId, int currentReleaseId)
+        {
+            //Arrange
+            //User Rights
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Specification_Create);
+            userRights.AddRight(Enum_UserRights.Specification_EditLimitted);
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(personId)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            //Specification
+            var specDBSet = GetSpecifications();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specDBSet);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)Releases());
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var specificationService = new SpecificationService();
+
+            //Act
+            bool isSuccess = specificationService.PromoteSpecification(personId, specificationId, currentReleaseId);
+
+            //Assert
+            Assert.IsFalse(isSuccess);
+            mockDataContext.AssertWasNotCalled(x => x.SaveChanges());
+        }
 
         #region data
 //--- Check format number
@@ -370,6 +436,32 @@ namespace Etsi.Ultimate.Tests.Services
                 
             }
         }
+
+        /// <summary>
+        /// Get Fake Specification Details
+        /// </summary>
+        /// <returns>Specification Fake DBSet</returns>
+        private SpecificationFakeDBSet GetSpecifications()
+        {
+            var specDbSet = new SpecificationFakeDBSet();
+            var release = Releases().FirstOrDefault();
+            var specRelease = new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = release.Pk_ReleaseId, isWithdrawn = false, Release = release };
+            var specReleaseList = new List<Specification_Release>() { specRelease };
+            var specification = new Specification() { Pk_SpecificationId = 1, Number = "00.01U", Title = "First specification", IsActive = true, Specification_Release = specReleaseList };
+            specDbSet.Add(specification);
+            return specDbSet;
+        }
+
+        /// <summary>
+        /// Get Fake Releases
+        /// </summary>
+        /// <returns>Queryable Release list</returns>
+        private IQueryable<Release> Releases()
+        {
+            ReleaseFakeRepository releaseFakeRepository = new ReleaseFakeRepository();
+            return releaseFakeRepository.All;
+        }
+
         #endregion
 
         private void RegisterAllMocks()

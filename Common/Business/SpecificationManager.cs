@@ -275,17 +275,27 @@ namespace Etsi.Ultimate.Business
                     rights.AddRight(Enum_UserRights.Specification_UnforceTransposition);
                 }
 
+                //Get the latest spec_release
+                var latestSpecRelease = spec.Specification_Release.ToList().OrderByDescending(x => ((x.Release == null) ? 0 : (x.Release.SortOrder ?? 0))).FirstOrDefault();
+                //Get the latest release
+                var latestRelease = releases.OrderByDescending(x => x.SortOrder ?? 0).FirstOrDefault();
+                
+                //InhibitPromote button should display only on latest spec_release, But, it should not display if it is already promoted to latest release
                 // Test the right of the user to InhibitPromote
-                if (userRights.HasRight(Enum_UserRights.Specification_InhibitPromote)
-                    && !spec.promoteInhibited.GetValueOrDefault())
+                if (userRights.HasRight(Enum_UserRights.Specification_InhibitPromote) 
+                    && (latestSpecRelease.Fk_ReleaseId == releaseId)
+                    && (latestRelease.Pk_ReleaseId != releaseId) 
+                    && (!spec.promoteInhibited.GetValueOrDefault()))
                 {
                     rights.AddRight(Enum_UserRights.Specification_InhibitPromote);
                 }
 
-
+                //RemoveInhibitPromote button should display only on latest spec_release, But, it should not display if it is already promoted to latest release
                 // Test the right of the user to remove InhibitPromote
-                if (userRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote)
-                    && spec.promoteInhibited.GetValueOrDefault())
+                if (userRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote) 
+                    && (latestSpecRelease.Fk_ReleaseId == releaseId)
+                    && (latestRelease.Pk_ReleaseId != releaseId) 
+                    && (spec.promoteInhibited.GetValueOrDefault()))
                 {
                     rights.AddRight(Enum_UserRights.Specification_RemoveInhibitPromote);
                 }

@@ -84,6 +84,8 @@
   <ItemGroup>
     <Compile Include="BaseTest.cs" />
     <Compile Include="Business\CommunityManagerTest.cs" />
+    <Compile Include="Business\SpecificationPromoteActionTest.cs" />
+    <Compile Include="Business\ReleaseManagerTest.cs" />
     <Compile Include="Business\LogManagerTest.cs" />
     <Compile Include="Business\MailManagerTest.cs" />
     <Compile Include="Business\RightsManagerTest.cs" />

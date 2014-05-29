@@ -4,13 +4,13 @@ using Etsi.Ultimate.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Etsi.Ultimate.Services
 {
     public class SpecificationService : ISpecificationService
     {
+        #region ISpecificationService Members
+
         public string ExportSpecification(int personId, SpecificationSearch searchObj)
         {
             string exportPath;
@@ -385,16 +385,14 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        #region ISpecificationService Members
-
         /// <summary>
         /// Default implementation of the ISpecificationService. See interface for more info.
         /// </summary>
-        /// <param name="personId"></param>
-        /// <param name="releaseId"></param>
-        /// <param name="specificationId"></param>
-        /// <param name="withdrawalMtgId"></param>
-        /// <returns></returns>
+        /// <param name="personId">Person ID</param>
+        /// <param name="releaseId">Release ID</param>
+        /// <param name="specificationId">Specification ID</param>
+        /// <param name="withdrawalMtgId">Withdraw Meeting ID</param>
+        /// <returns>True/False</returns>
         public bool WithdrawForRelease(int personId, int releaseId, int specificationId, int withdrawalMtgId)
         {
             using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -415,10 +413,33 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Promote Specification to next release
+        /// </summary>
+        /// <param name="personId">Person ID</param>
+        /// <param name="specificationId">Specification ID</param>
+        /// <param name="currentReleaseId">Current Release ID</param>
+        /// <returns>True/False</returns>
+        public bool PromoteSpecification(int personId, int specificationId, int currentReleaseId)
+        {
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var specPromoteAction = new SpecificationPromoteAction(uow);
+                    specPromoteAction.PromoteSpecification(personId, specificationId, currentReleaseId);
+                    uow.Save();
+                }
+                catch (Exception e)
+                {
+                    Utils.LogManager.Error("Promote Specification Error: " + e.Message);
+                    return false;
+                }
+            }
+            return true;
+        }
+
         #endregion
-
-
-
     }
 }
 

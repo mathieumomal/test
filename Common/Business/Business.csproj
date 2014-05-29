@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommunityManager.cs" />
+    <Compile Include="SpecificationPromoteAction.cs" />
     <Compile Include="SpecificationInhibitRemoveInhibitAction.cs" />
     <Compile Include="IReleaseManager.cs" />
     <Compile Include="ISpecVersionManager.cs" />
