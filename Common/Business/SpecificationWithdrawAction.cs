@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Business
 {
@@ -52,6 +53,13 @@ namespace Etsi.Ultimate.Business
             var specRel = spec.Key.Specification_Release.Where(sr => sr.Fk_ReleaseId == releaseId).FirstOrDefault();
             specRel.isWithdrawn = true;
             specRel.WithdrawMeetingId = withdrawalMtgId;
+
+            //Update history
+            IHistoryRepository historyRepo = RepositoryFactory.Resolve<IHistoryRepository>();
+            historyRepo.UoW = UoW;
+            string historyText = String.Format("Specification has been withdrawn for release '{0}'", (specRel.Release == null) ? String.Empty : specRel.Release.Name);
+            History history = new History() { Fk_SpecificationId = specId, Fk_PersonId = personId, CreationDate = DateTime.UtcNow, HistoryText = historyText };
+            historyRepo.InsertOrUpdate(history);
 
             return true;
         }

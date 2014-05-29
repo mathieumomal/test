@@ -105,6 +105,11 @@ namespace Etsi.Ultimate.Tests.Services
 
             RepositoryFactory.Container.RegisterInstance<ISpecVersionsRepository>(versionRep);
 
+            //History Repository
+            var historyRepository = MockRepository.GenerateMock<IHistoryRepository>();
+            historyRepository.Stub(x => x.InsertOrUpdate(Arg<History>.Is.Anything));
+            RepositoryFactory.Container.RegisterInstance<IHistoryRepository>(historyRepository);
+
             // Release manager
             var specMgr = MockRepository.GenerateMock<ISpecificationManager>();
 

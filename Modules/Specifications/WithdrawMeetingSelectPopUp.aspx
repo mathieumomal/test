@@ -47,8 +47,7 @@
     <div class="specificationDetailsBody">
         <div class="contentModal" id="divWithdrawalMtgSelect" style="padding:5px;">
             <div class="header">
-                <asp:Label runat="server" ID="lblDefinitivelyWithdraw">You are about to definitively withdraw specification.</asp:Label>
-                <asp:Label runat="server" ID="lblWithdrawForRelease"> You are about to withdraw specification for release <%= SelectedRelease %>. 
+                <asp:Label runat="server" ID="lblWithdrawForRelease">You are about to withdraw specification for release <%= SelectedRelease %>. 
                     All versions of the specification concerning this release will be withdrawn. Continue? </asp:Label>
             </div>
             <br />

@@ -39,8 +39,10 @@
 <script type="text/javascript">
     function openRadWin(specId, relId) {
         var win = radopen("WithdrawMeetingSelectPopUp.aspx?SpecId=" + specId + "&RelId=" + relId, "Withdraw");
-        win.setSize(450, 300);
+        win.setSize(450, 220);
         win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
+        win.set_modal(true);
+        win.set_visibleStatusbar(false);
         win.show();
         return false;
     }
@@ -50,7 +52,7 @@
         win.setSize(500, 250);
         win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
         win.set_modal(true);
-        win.set_visibleStatusbar(false)
+        win.set_visibleStatusbar(false);
         win.show();
         return false;
     }
@@ -61,7 +63,7 @@
         win.setSize(440, height);
         win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
         win.set_modal(true);
-        win.set_visibleStatusbar(false)
+        win.set_visibleStatusbar(false);
         win.show();
         return false;
     }

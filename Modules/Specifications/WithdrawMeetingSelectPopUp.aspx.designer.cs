@@ -49,15 +49,6 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::Telerik.Web.UI.RadAjaxManager RadAjaxManager;
         
         /// <summary>
-        /// lblDefinitivelyWithdraw control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblDefinitivelyWithdraw;
-        
-        /// <summary>
         /// lblWithdrawForRelease control.
         /// </summary>
         /// <remarks>
