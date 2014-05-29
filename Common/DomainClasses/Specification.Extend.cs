@@ -86,7 +86,7 @@ namespace Etsi.Ultimate.DomainClasses
                     if (IsUnderChangeControl == null || !IsUnderChangeControl.Value)
                         specificationStatus = "Withdrawn before change control";
                     else
-                        specificationStatus = "Withdrawn after change control";
+                        specificationStatus = "Withdrawn under change control";
                 }
 
                 return specificationStatus;
