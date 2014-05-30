@@ -104,8 +104,8 @@ namespace Etsi.Ultimate.Module.Specifications
                 imgWithdrawSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
                 imgWithdrawSpec.OnClientClick = "openRadWin(" + SpecId.GetValueOrDefault() + "," + ReleaseId.GetValueOrDefault() + "); return false;";
 
-                //imgUploadVersion.OnClientClick = "openRadWinVersion('" + DataSource.FirstOrDefault().Pk_VersionId + "', 'upload'); return false;";
-                //imgAllocateVersion.OnClientClick = "openRadWinVersion('" + DataSource.FirstOrDefault().Pk_VersionId + "', 'allocate'); return false;";
+                imgUploadVersion.OnClientClick = "openRadWinVersion('" + DataSource.FirstOrDefault().Pk_VersionId + "', 'upload'); return false;";
+                imgAllocateVersion.OnClientClick = "openRadWinVersion('" + DataSource.FirstOrDefault().Pk_VersionId + "', 'allocate'); return false;";
             }
             else
             {
@@ -135,14 +135,11 @@ namespace Etsi.Ultimate.Module.Specifications
                 GridDataItem item = (GridDataItem)e.Item;
 
                 string remarkText = ((Label)item["LatestRemark"].FindControl("lblRemarkText")).Text;
-                if (!string.IsNullOrEmpty(remarkText))
-                {
-                    if (remarkText.Length > 30)
-                        ((Label)item["LatestRemark"].FindControl("lblRemarkText")).Text = remarkText.Substring(0, 29) + "...";
-                    ImageButton btn = (ImageButton)item["LatestRemark"].FindControl("imgVersionRemarks");
-                    btn.OnClientClick = String.Format("openRadWinRemarks('{0}','{1}'); return false;", item["Pk_VersionId"].Text, IsEditMode.ToString());
-                    btn.Visible = true;
-                }
+
+                if (remarkText.Length > 30)
+                    ((Label)item["LatestRemark"].FindControl("lblRemarkText")).Text = remarkText.Substring(0, 29) + "...";
+                ImageButton btn = (ImageButton)item["LatestRemark"].FindControl("imgVersionRemarks");
+                btn.OnClientClick = String.Format("openRadWinRemarks('{0}','{1}'); return false;", item["Pk_VersionId"].Text, IsEditMode.ToString());
 
                 if (!String.IsNullOrEmpty(item["Source"].Text))
                 {

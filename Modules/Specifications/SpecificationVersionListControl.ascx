@@ -118,7 +118,7 @@
                     <ItemTemplate>
                         <div class="text-left">
                             <asp:Label ID="lblRemarkText" Text='<%# DataBinder.Eval(Container.DataItem,"LatestRemark") %>' runat="server" />
-                            <asp:ImageButton ID="imgVersionRemarks" ImageUrl="images/spec_rel-remarks.png" runat="server" CssClass="float_right grid_btn" Visible="false" />
+                            <asp:ImageButton ID="imgVersionRemarks" ImageUrl="images/spec_rel-remarks.png" runat="server" CssClass="float_right grid_btn"/>
                         </div>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>

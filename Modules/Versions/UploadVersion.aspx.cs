@@ -33,7 +33,6 @@ namespace Etsi.Ultimate.Module.Versions
         {
             if (!IsPostBack)
             {
-
                 GetRequestParameters();
                 ManageAllocationCase();
                 LoadVersionUploadContent();
@@ -72,7 +71,6 @@ namespace Etsi.Ultimate.Module.Versions
                     {
                         LoadVersionDetails(specVerion);
                         ManageNewVersion(specVerion);
-
                     }
                     else
                     {
@@ -93,6 +91,7 @@ namespace Etsi.Ultimate.Module.Versions
                 specificationMessagesTxt.Text = "No avaible data for the requested query";
             }
         }
+
         /// <summary>
         /// Loads the Version's details
         /// </summary>
@@ -111,15 +110,19 @@ namespace Etsi.Ultimate.Module.Versions
             // Version was not uploaded => force user to upload it
             if (version.DocumentUploaded == null)
             {
-                NewVersionMajorVal.Text = version.MajorVersion.ToString();                
-                NewVersionTechnicalVal.Text = version.TechnicalVersion.ToString();                
-                NewVersionEditorialVal.Text = version.EditorialVersion.ToString();                
+                NewVersionMajorVal.Text = version.MajorVersion.ToString();
+                NewVersionTechnicalVal.Text = version.TechnicalVersion.ToString();
+                NewVersionEditorialVal.Text = version.EditorialVersion.ToString();
             }
             // Propose the version number
             else
             {
                 NewVersionMajorVal.Text = version.MajorVersion.ToString();
-                NewVersionTechnicalVal.Text = (version.TechnicalVersion+1).ToString();
+                NewVersionMajorVal.MinValue = (version.MajorVersion.HasValue) ? version.MajorVersion.Value : default(int);
+
+                NewVersionTechnicalVal.Text = (version.TechnicalVersion + 1).ToString();
+                NewVersionTechnicalVal.MinValue = (version.MajorVersion.HasValue) ? version.MajorVersion.Value + 1 : default(int);
+
                 NewVersionEditorialVal.Text = "0";
             }
             //If not MCC representive => NewVersionMajorVal.Disabled = true;
@@ -131,7 +134,7 @@ namespace Etsi.Ultimate.Module.Versions
         /// </summary>
         private void ManageAllocationCase()
         {
-            if(action.Equals("allocate"))
+            if (action.Equals("allocate"))
             {
                 FileToUploadLbl.Visible = false;
                 FileToUploadVal.Visible = false;
@@ -144,14 +147,14 @@ namespace Etsi.Ultimate.Module.Versions
         /// Prepare the specVersion object to add in DB
         /// </summary>
         /// <returns></returns>
-        private KeyValuePair<bool ,SpecVersion> fillSpecVersionObject()
-        {            
+        private KeyValuePair<bool, SpecVersion> fillSpecVersionObject()
+        {
 
             //User's data
             int[] verionsOutputs = new int[] { 0, 0, 0 };
-            if(!int.TryParse(NewVersionMajorVal.Text, out verionsOutputs[0]) || !int.TryParse(NewVersionTechnicalVal.Text, out verionsOutputs[1]) || !int.TryParse(NewVersionEditorialVal.Text, out verionsOutputs[2]))
+            if (!int.TryParse(NewVersionMajorVal.Text, out verionsOutputs[0]) || !int.TryParse(NewVersionTechnicalVal.Text, out verionsOutputs[1]) || !int.TryParse(NewVersionEditorialVal.Text, out verionsOutputs[2]))
             {
-                return new KeyValuePair<bool ,SpecVersion>(false, null);
+                return new KeyValuePair<bool, SpecVersion>(false, null);
             }
             else
             {
@@ -170,7 +173,7 @@ namespace Etsi.Ultimate.Module.Versions
                 version.MajorVersion = int.Parse(NewVersionMajorVal.Text);
                 version.TechnicalVersion = int.Parse(NewVersionTechnicalVal.Text);
                 version.EditorialVersion = int.Parse(NewVersionEditorialVal.Text);
-                
+
                 version.Remarks.Add(new Remark()
                 {
                     RemarkText = CommentVal.Text,
@@ -178,7 +181,8 @@ namespace Etsi.Ultimate.Module.Versions
                     Fk_PersonId = UserId
                 });
 
-                if (UploadMeeting.SelectedMeeting != null){
+                if (UploadMeeting.SelectedMeeting != null)
+                {
                     version.Source = UploadMeeting.SelectedMeeting.MTG_ID;
                 }
                 if (action.Equals("upload"))
@@ -187,9 +191,9 @@ namespace Etsi.Ultimate.Module.Versions
                     version.ProvidedBy = UserId;
                 }
 
-                return new KeyValuePair<bool ,SpecVersion>(true, version);
-                
-            }                        
+                return new KeyValuePair<bool, SpecVersion>(true, version);
+
+            }
         }
 
         /// <summary>
@@ -204,7 +208,6 @@ namespace Etsi.Ultimate.Module.Versions
                 isDraft.Value = "0";
         }
 
-
         /// <summary>
         /// Retreive the URL parameters
         /// </summary>
@@ -215,7 +218,7 @@ namespace Etsi.Ultimate.Module.Versions
 
             versionId = (Request.QueryString["versionId"] != null) ? (int.TryParse(Request.QueryString["versionId"], out output) ? new Nullable<int>(output) : null) : null;
             action = (Request.QueryString["action"] != null) ? Request.QueryString["action"] : string.Empty;
-        }        
+        }
 
         /// <summary>
         /// Retrieve person If exists
@@ -241,12 +244,13 @@ namespace Etsi.Ultimate.Module.Versions
         /// <param name="enableUpload"></param>
         private void EnableUploadButton(bool enableUpload)
         {
-            if(enableUpload)
+            if (enableUpload)
             {
                 UploadBtn.Visible = true;
                 UploadBtnDisabled.Visible = false;
             }
         }
+
         /// <summary>
         /// Method call by ajax when workplan is uploaded => WorkPlan Analyse
         /// </summary>
@@ -272,25 +276,23 @@ namespace Etsi.Ultimate.Module.Versions
             catch (Exception exc)
             {
                 LogManager.Error("Could not save the version file: " + exc.Message);
-            }            
+            }
         }
-       
 
-        
         protected void AllocateVersion_Click(object sender, EventArgs e)
         {
             GetRequestParameters();
-            KeyValuePair<bool ,SpecVersion> buffer = fillSpecVersionObject();
+            KeyValuePair<bool, SpecVersion> buffer = fillSpecVersionObject();
             bool operationSucceded = false;
             if (buffer.Key)
             {
                 ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                operationSucceded = svc.AllocateVersion(buffer.Value, versionId.GetValueOrDefault());                                        
+                operationSucceded = svc.AllocateVersion(buffer.Value, versionId.GetValueOrDefault());
             }
 
             //End of process => redirection
             if (operationSucceded)
-            {                
+            {
                 Page.ClientScript.RegisterStartupScript(this.GetType(), "show uplod state", "ShowAllocationResult(\"success\");", true);
             }
             else
@@ -314,9 +316,9 @@ namespace Etsi.Ultimate.Module.Versions
             if (buffer.Key)
             {
                 operationSucceded = svc.UploadVersion(buffer.Value, versionId.GetValueOrDefault());
-            }            
-            
-            
+            }
+
+
             //End of process => redirection
             if (operationSucceded)
             {
