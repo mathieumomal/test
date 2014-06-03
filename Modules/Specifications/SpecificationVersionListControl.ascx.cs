@@ -104,8 +104,12 @@ namespace Etsi.Ultimate.Module.Specifications
                 imgWithdrawSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
                 imgWithdrawSpec.OnClientClick = "openRadWin(" + SpecId.GetValueOrDefault() + "," + ReleaseId.GetValueOrDefault() + "); return false;";
 
-                imgUploadVersion.OnClientClick = "openRadWinVersion('" + DataSource.FirstOrDefault().Pk_VersionId + "', 'upload'); return false;";
-                imgAllocateVersion.OnClientClick = "openRadWinVersion('" + DataSource.FirstOrDefault().Pk_VersionId + "', 'allocate'); return false;";
+                imgAllocateVersion.OnClientClick = "openRadWinVersion('" + (DataSource.FirstOrDefault() != null ? DataSource.FirstOrDefault().Pk_VersionId : -1) + "','" + SpecId.GetValueOrDefault() + "','allocate'); return false;";
+
+                var UploadMissing = DataSource.Where(x => x.DocumentUploaded == null);
+                int versionId = (UploadMissing.Count() > 0) ? UploadMissing.LastOrDefault().Pk_VersionId : (DataSource.FirstOrDefault() != null ? DataSource.FirstOrDefault().Pk_VersionId : -1);
+
+                imgUploadVersion.OnClientClick = "openRadWinVersion('" + versionId + "','" + SpecId.GetValueOrDefault() + "', 'upload'); return false;";
             }
             else
             {

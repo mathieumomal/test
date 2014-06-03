@@ -56,8 +56,12 @@ namespace Etsi.Ultimate.Business
         {
             ISpecVersionsRepository repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             repo.UoW = _uoW;
-            SpecVersion version = repo.Find(versionId); ;
 
+            //New version
+            if(versionId == -1)
+                return new KeyValuePair<SpecVersion, UserRightsContainer>(new SpecVersion { MajorVersion = -1, TechnicalVersion = -1, EditorialVersion = -1 }, null);
+
+            SpecVersion version = repo.Find(versionId);
             if (version == null)
                 return new KeyValuePair<SpecVersion, UserRightsContainer>(null, null);
 

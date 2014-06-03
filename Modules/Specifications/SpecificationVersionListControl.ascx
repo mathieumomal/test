@@ -57,8 +57,8 @@
         return false;
     }
 
-    function openRadWinVersion(specVerId, action) {
-        var win = radopen("/desktopmodules/Versions/UploadVersion.aspx?versionId=" + specVerId + "&action=" + action, "Version");
+    function openRadWinVersion(specVerId, specId,  action) {
+        var win = radopen("/desktopmodules/Versions/UploadVersion.aspx?versionId=" + specVerId + "&specId=" + specId + "&action=" + action, "Version");
         var height = (action == 'upload') ? 310 : 270;
         win.setSize(440, height);
         win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
@@ -66,6 +66,22 @@
         win.set_visibleStatusbar(false);
         win.show();
         return false;
+    }
+
+    function AllocationResult(status) {
+        if (status == "success") {
+            radalert('Allocation of the version succeded', 330, 130, 'Allocation Status', refreshWindow, null);
+        }
+        else
+            radalert('Allocation of the version failed', 330, 130, 'Allocation Status', null, null);
+    }
+
+    function refreshWindow()
+    {
+        if (window.location.indexOf('&selectedTab=Releases') > -1)
+            window.location.reload();
+        else
+            window.location = window.location + "&selectedTab=Releases";
     }
 
 

@@ -25,6 +25,7 @@ namespace Etsi.Ultimate.Module.Versions
         //Properties
         private static int UserId;
         public static Nullable<int> versionId;
+        public static Nullable<int> specId;
         public static string action;
         public static string versionUploadPath;
         public static string versionFTP_Path;
@@ -46,40 +47,43 @@ namespace Etsi.Ultimate.Module.Versions
         {
             if (versionId != null)
             {
-                // Retrieve data
-                ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                KeyValuePair<SpecVersion, UserRightsContainer> specVersionRightsObject = svc.GetVersionsById(versionId.Value, UserId);
-                SpecVersion specVerion = specVersionRightsObject.Key;
-                UserRightsContainer userRights = specVersionRightsObject.Value;
-
-                //To be removed
-                userRights.AddRight(Enum_UserRights.Versions_Upload);
-                userRights.AddRight(Enum_UserRights.Versions_Allocate);
-
-                if (specVerion == null || (!action.Equals("upload") && !action.Equals("allocate")))
+                if (versionId != -1)
                 {
-                    versionUploadBody.Visible = false;
-                    versionUploadMessages.Visible = true;
-                    versionUploadMessages.CssClass = "Warning";
-                    specificationMessagesTxt.CssClass = "WarningTxt";
-                    specificationMessagesTxt.Text = "No avaible data for the requested query";
-                }
-                else
-                {
-                    // User does not have rights to perform the action
-                    if (((action.Equals("upload")) && (userRights.HasRight(Enum_UserRights.Versions_Upload))) || ((action.Equals("allocate")) && (userRights.HasRight(Enum_UserRights.Versions_Allocate))))
-                    {
-                        LoadVersionDetails(specVerion);
-                        ManageNewVersion(specVerion);
-                    }
-                    else
+                    // Retrieve data
+                    ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
+                    KeyValuePair<SpecVersion, UserRightsContainer> specVersionRightsObject = svc.GetVersionsById(versionId.Value, UserId);
+                    SpecVersion specVerion = specVersionRightsObject.Key;
+                    UserRightsContainer userRights = specVersionRightsObject.Value;
+
+                    if (specVerion == null || (!action.Equals("upload") && !action.Equals("allocate")))
                     {
                         versionUploadBody.Visible = false;
                         versionUploadMessages.Visible = true;
-                        versionUploadMessages.CssClass = "Error";
-                        specificationMessagesTxt.CssClass = "ErrorTxt";
-                        specificationMessagesTxt.Text = "You dont have the right to perform this action";
+                        versionUploadMessages.CssClass = "Warning";
+                        specificationMessagesTxt.CssClass = "WarningTxt";
+                        specificationMessagesTxt.Text = "No avaible data for the requested query";
                     }
+                    else
+                    {
+                        // User does not have rights to perform the action
+                        if (((action.Equals("upload")) && (userRights.HasRight(Enum_UserRights.Versions_Upload))) || ((action.Equals("allocate")) && (userRights.HasRight(Enum_UserRights.Versions_Allocate))))
+                        {
+                            LoadVersionDetails(specVerion);
+                            ManageNewVersion(specVerion, userRights);
+                        }
+                        else
+                        {
+                            versionUploadBody.Visible = false;
+                            versionUploadMessages.Visible = true;
+                            versionUploadMessages.CssClass = "Error";
+                            specificationMessagesTxt.CssClass = "ErrorTxt";
+                            specificationMessagesTxt.Text = "You dont have the right to perform this action";
+                        }
+                    }
+                }
+                else
+                {
+                    NewVersionMajorVal.Text = NewVersionTechnicalVal.Text = NewVersionEditorialVal.Text = "0";
                 }
             }
             else
@@ -105,7 +109,7 @@ namespace Etsi.Ultimate.Module.Versions
         /// <summary>
         /// Manage the new version to upload
         /// </summary>
-        private void ManageNewVersion(SpecVersion version)
+        private void ManageNewVersion(SpecVersion version, UserRightsContainer userRights)
         {
             // Version was not uploaded => force user to upload it
             if (version.DocumentUploaded == null)
@@ -125,7 +129,11 @@ namespace Etsi.Ultimate.Module.Versions
 
                 NewVersionEditorialVal.Text = "0";
             }
+
+
             //If not MCC representive => NewVersionMajorVal.Disabled = true;
+            NewVersionMajorVal.Enabled = userRights.HasRight(Enum_UserRights.Versions_Modify_MajorVersion);
+
         }
 
         /// <summary>
@@ -158,17 +166,30 @@ namespace Etsi.Ultimate.Module.Versions
             }
             else
             {
-                ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                KeyValuePair<SpecVersion, UserRightsContainer> specVersionRightsObject = svc.GetVersionsById(versionId.Value, UserId);
-                SpecVersion specVerion = specVersionRightsObject.Key;
-                if (specVerion == null)
-                {
-                    return new KeyValuePair<bool, SpecVersion>(false, null);
-                }
+
                 SpecVersion version = new SpecVersion();
-                //Inherited data
-                version.Fk_ReleaseId = specVerion.Fk_ReleaseId;
-                version.Fk_SpecificationId = specVerion.Fk_SpecificationId;
+
+                if (versionId == -1 && specId.HasValue)
+                {
+                    ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                    Specification_Release spec = specSvc.GetSpecificationDetailsById(UserId, specId.Value).Key.Specification_Release.FirstOrDefault();
+
+                    version.Fk_ReleaseId = spec.Fk_ReleaseId;
+                    version.Fk_SpecificationId = spec.Fk_SpecificationId;
+                }
+                else
+                {
+                    ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
+                    KeyValuePair<SpecVersion, UserRightsContainer> specVersionRightsObject = svc.GetVersionsById(versionId.Value, UserId);
+                    SpecVersion specVerion = specVersionRightsObject.Key;
+                    if (specVerion == null)
+                    {
+                        return new KeyValuePair<bool, SpecVersion>(false, null);
+                    }
+
+                    version.Fk_ReleaseId = specVerion.Fk_ReleaseId;
+                    version.Fk_SpecificationId = specVerion.Fk_SpecificationId;
+                }
 
                 version.MajorVersion = int.Parse(NewVersionMajorVal.Text);
                 version.TechnicalVersion = int.Parse(NewVersionTechnicalVal.Text);
@@ -217,6 +238,7 @@ namespace Etsi.Ultimate.Module.Versions
             UserId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
 
             versionId = (Request.QueryString["versionId"] != null) ? (int.TryParse(Request.QueryString["versionId"], out output) ? new Nullable<int>(output) : null) : null;
+            specId = (Request.QueryString["specId"] != null) ? (int.TryParse(Request.QueryString["specId"], out output) ? new Nullable<int>(output) : null) : null;
             action = (Request.QueryString["action"] != null) ? Request.QueryString["action"] : string.Empty;
         }
 

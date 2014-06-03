@@ -282,12 +282,10 @@
 
                     function ShowAllocationResult(result) {
                         if (result == "success") {
-
-                            alert('Allocation of the version succeded');
-                            closePopUpWindow();
+                            window.parent.AllocationResult("success");
                         }
                         else {
-                            alert('Allocation of the version failed');
+                            window.parent.AllocationResult("failure");
                         }
                     }
 
