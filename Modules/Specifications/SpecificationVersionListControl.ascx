@@ -59,7 +59,8 @@
 
     function openRadWinVersion(specVerId, specId,  action) {
         var win = radopen("/desktopmodules/Versions/UploadVersion.aspx?versionId=" + specVerId + "&specId=" + specId + "&action=" + action, "Version");
-        var height = (action == 'upload') ? 310 : 270;
+        //var height = (action == 'upload') ? 320 : 280;
+        var height = 320;
         win.setSize(440, height);
         win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
         win.set_modal(true);

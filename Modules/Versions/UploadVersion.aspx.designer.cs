@@ -22,15 +22,6 @@ namespace Etsi.Ultimate.Module.Versions {
         protected global::System.Web.UI.HtmlControls.HtmlForm VersionUploadForm;
         
         /// <summary>
-        /// verionsRadAjaxManager control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadAjaxManager verionsRadAjaxManager;
-        
-        /// <summary>
         /// RadScriptManager1 control.
         /// </summary>
         /// <remarks>
@@ -74,6 +65,15 @@ namespace Etsi.Ultimate.Module.Versions {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Panel versionUploadBody;
+        
+        /// <summary>
+        /// versionUploadScreen control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel versionUploadScreen;
         
         /// <summary>
         /// SpecNumberLbl control.
@@ -247,6 +247,15 @@ namespace Etsi.Ultimate.Module.Versions {
         protected global::System.Web.UI.WebControls.LinkButton ExitBtn;
         
         /// <summary>
+        /// analysis control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel analysis;
+        
+        /// <summary>
         /// imgWait control.
         /// </summary>
         /// <remarks>
@@ -265,6 +274,15 @@ namespace Etsi.Ultimate.Module.Versions {
         protected global::Telerik.Web.UI.RadButton analysis_cancel;
         
         /// <summary>
+        /// confirmation control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel confirmation;
+        
+        /// <summary>
         /// lblCountWarningErrors control.
         /// </summary>
         /// <remarks>
@@ -281,15 +299,6 @@ namespace Etsi.Ultimate.Module.Versions {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptWarningsErrors;
-        
-        /// <summary>
-        /// imgProgressImport control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Image imgProgressImport;
         
         /// <summary>
         /// btnConfirmUpload control.
@@ -319,6 +328,15 @@ namespace Etsi.Ultimate.Module.Versions {
         protected global::System.Web.UI.WebControls.HiddenField isDraft;
         
         /// <summary>
+        /// state control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel state;
+        
+        /// <summary>
         /// lblSaveStatus control.
         /// </summary>
         /// <remarks>
@@ -335,14 +353,5 @@ namespace Etsi.Ultimate.Module.Versions {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Telerik.Web.UI.RadButton state_confirmation;
-        
-        /// <summary>
-        /// RadScriptBlock1 control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadScriptBlock RadScriptBlock1;
     }
 }

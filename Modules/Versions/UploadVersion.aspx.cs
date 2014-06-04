@@ -33,6 +33,7 @@ namespace Etsi.Ultimate.Module.Versions
         {
             if (!IsPostBack)
             {
+                ResetPanelState();
                 GetRequestParameters();
                 ManageAllocationCase();
                 LoadVersionUploadContent();
@@ -107,6 +108,7 @@ namespace Etsi.Ultimate.Module.Versions
                 ReleaseVal.Text = version.Release.Code;
                 CurrentVersionVal.Text = SpecNumberVal.Text + "-" + version.MajorVersion + "." + version.TechnicalVersion + "." + version.EditorialVersion;
             }
+            //If no previous versions are available
             else if (specId.HasValue)
             {
                 ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
@@ -524,5 +526,26 @@ namespace Etsi.Ultimate.Module.Versions
         }
 
         #endregion
+
+        protected void UploadBtn_Click(object sender, EventArgs e)
+        {
+            versionUploadScreen.Visible = false;
+            confirmation.Visible = true;
+        }
+
+        protected void Cancel_Click(object sender, EventArgs e)
+        {
+            ResetPanelState();
+        }
+
+        private void ResetPanelState()
+        {
+            versionUploadScreen.Visible = true;
+            analysis.Visible = false;
+            confirmation.Visible = false;
+            state.Visible = false;
+        }
+
+
     }
 }

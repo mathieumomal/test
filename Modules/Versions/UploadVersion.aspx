@@ -51,29 +51,13 @@
         }
     </style>
     <form id="VersionUploadForm" runat="server">
-        <telerik:RadAjaxManager ID="verionsRadAjaxManager" runat="server" EnablePageHeadUpdate="false">
-            <ClientEvents OnRequestStart="Start" OnResponseEnd="End" />
-            <AjaxSettings>
-                <telerik:AjaxSetting AjaxControlID="UploadBtnDisabled">
-                    <UpdatedControls>
-                        <telerik:AjaxUpdatedControl ControlID="btnConfirmUpload" />
-                        <telerik:AjaxUpdatedControl ControlID="lblCountWarningErrors" />
-                    </UpdatedControls>
-                </telerik:AjaxSetting>
-                <telerik:AjaxSetting AjaxControlID="btnConfirmUpload">
-                    <UpdatedControls>
-                        <telerik:AjaxUpdatedControl ControlID="lblSaveStatus" />
-                    </UpdatedControls>
-                </telerik:AjaxSetting>
-            </AjaxSettings>
-        </telerik:RadAjaxManager>
         <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
         <asp:Panel runat="server" ID="fixContainer" CssClass="containerFix" Width="500px">
             <asp:Panel ID="versionUploadMessages" runat="server" Visible="false">
                 <asp:Label runat="server" ID="specificationMessagesTxt"></asp:Label>
             </asp:Panel>
             <asp:Panel ID="versionUploadBody" runat="server" CssClass="versionUploadBody">
-                <div class="contentModal" id="versionUploadScreen">
+                <asp:Panel runat="server" CssClass="contentModal" ID="versionUploadScreen">
                     <table class="VersionDetailsTable">
                         <tr>
                             <td class="TabLineLeft">
@@ -106,14 +90,12 @@
                                     MaxFileInputsCount="1"
                                     AllowedFileExtensions="docx,doc,zip"
                                     Localization-Select="Browse"
-                                    OnClientFileUploaded="OnClientFileUploaded"
                                     OnClientValidationFailed="OnClientValidationFailed"
                                     OnFileUploaded="AsyncUpload_VersionUpload"
                                     OnClientFileSelected="EnabledButtonUpload"
                                     OnClientFileUploadRemoved="DisabledButtonUpload"
                                     OverwriteExistingFiles="True"
-                                    ManualUpload="true"
-                                    TargetFolder="D:\Apptrans\ftp\Specs\Versions"
+                                    TargetFolder="D:\3GPP\DnnInstance\dnn.3gpp.org\Downloads"
                                     Visible="true">
                                 </telerik:RadAsyncUpload>
                             </td>
@@ -148,13 +130,13 @@
                         </tr>
                     </table>
                     <div class="releaseDetailsAction">
-                        <asp:LinkButton ID="UploadBtn" runat="server" Text="Upload" CssClass="btn3GPP-success" OnClientClick="startVersionUploadProcess(); return false;" />
+                        <asp:LinkButton ID="UploadBtn" runat="server" Text="Upload" CssClass="btn3GPP-success" OnClick="UploadBtn_Click" />
                         <asp:LinkButton ID="AllocateBtn" runat="server" Text="Allocate" CssClass="btn3GPP-success" Visible="false" OnClick="AllocateVersion_Click" />
                         <asp:LinkButton ID="UploadBtnDisabled" runat="server" Text="Upload" CssClass="btn3GPP-default" disabled="disabled" OnClientClick="return false;" />
                         <asp:LinkButton ID="ExitBtn" runat="server" Text="Cancel" CssClass="btn3GPP-success" OnClientClick="  return closePopUpWindow()" />
                     </div>
-                </div>
-                <div class="contentModal" id="analysis" style="display: none">
+                </asp:Panel>
+                <asp:Panel runat="server" CssClass="contentModal" ID="analysis">
                     <div class="wiHeader">
                         Version analysis is in progress.
                     </div>
@@ -162,97 +144,48 @@
                         <asp:Image ID="imgWait" runat="server" Class="rotating" ImageUrl="~/DesktopModules/Versions/images/hourglass.png" Width="45" />
                     </div>
                     <div class="wiFooter">
-                        <telerik:RadButton ID="analysis_cancel" runat="server" Text="Cancel" OnClientClicked="cancel" AutoPostBack="false"></telerik:RadButton>
+                        <telerik:RadButton ID="analysis_cancel" runat="server" Text="Cancel" OnClick="Cancel_Click"></telerik:RadButton>
                     </div>
-                </div>
-                <div class="contentModal" id="confirmation" style="display: none">
-                    <div class="wiHeader">
-                        <div>
-                            <asp:Label ID="lblCountWarningErrors" runat="server" />
-                        </div>
+                </asp:Panel>
+                <asp:Panel runat="server" CssClass="contentModal" ID="confirmation">
+                    <span style="font-size:15px; font-weight:bold">Errors and Warnings</span>
+                    <br />
+                    <asp:Label ID="lblCountWarningErrors" runat="server" />
+                    <div class="scrollable">
+                        <ul>
+                            <asp:Repeater runat="server" ID="rptWarningsErrors">
+                                <ItemTemplate>
+                                    <li>
+                                        <asp:Label ID="lblErrorOrWarning" runat="server"></asp:Label>
+                                    </li>
+                                </ItemTemplate>
+                            </asp:Repeater>
+                        </ul>
                     </div>
-                    <div>
-                        <h2>Errors and Warnings</h2>
-                        <div class="scrollable">
-                            <ul>
-                                <asp:Repeater runat="server" ID="rptWarningsErrors">
-                                    <ItemTemplate>
-                                        <li>
-                                            <asp:Label ID="lblErrorOrWarning" runat="server"></asp:Label>
-                                        </li>
-                                    </ItemTemplate>
-                                </asp:Repeater>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="wiFooter">
-                        <span class="updateProgress" id="importProgressIcon" style="visibility: hidden">
-                            <asp:Image ID="imgProgressImport" runat="server" Class="rotating" ImageUrl="~/DesktopModules/Versions/images/hourglass.png" Width="45" /></span>
+                    <div class="wiFooter" style="float: right">
                         <span>
                             <telerik:RadButton ID="btnConfirmUpload" runat="server" Text="Confirm upload" AutoPostBack="true" OnClick="Confirmation_Upload_OnClick" CssClass="WiInline"></telerik:RadButton>
                         </span>
                         <span>
-                            <telerik:RadButton ID="Confirmation_cancel" runat="server" Text="Cancel" AutoPostBack="false" OnClientClicked="cancel"></telerik:RadButton>
+                            <telerik:RadButton ID="Confirmation_cancel" runat="server" Text="Cancel" OnClick="Cancel_Click"></telerik:RadButton>
                         </span>
                     </div>
-                <div>
-                    <asp:HiddenField ID="isDraft" runat="server" />
-                </div>
-                </div>
-                <div class="contentModal" id="state" style="display: none">
+                    <div>
+                        <asp:HiddenField ID="isDraft" runat="server" />
+                    </div>
+                </asp:Panel>
+                <asp:Panel runat="server" CssClass="contentModal" ID="state">
                     <div class="wiHeader">
                         <asp:Label runat="server" ID="lblSaveStatus" Text="" />
                     </div>
                     <div class="wiFooter">
-                        <telerik:RadButton ID="state_confirmation" runat="server" Text="OK" AutoPostBack="false"></telerik:RadButton>
+                        <telerik:RadButton ID="state_confirmation" runat="server" Text="OK" OnClick="Cancel_Click"></telerik:RadButton>
                     </div>
-                </div>
+                </asp:Panel>
 
                 <script type="text/javascript">
 
-                    function startVersionUploadProcess(sender, eventArgs) {
-                        //If a Version => Analysis is required
-                        var upload = $find('<%= FileToUploadVal.ClientID%>');
-                        upload.startUpload();
-                    }
-
                     /*-- TELERIK EVENTS --*/
-
-                    function Start(sender, arguments) {
-                        if (arguments.EventTarget == "<%= verionsRadAjaxManager.UniqueID %>") {
-                            clearFilesToUpload();
-                            if ($("#isDraft").val() != "1") {
-                                open_RadWindow_VersionUploadAnalysis();
-                            }
-                                //If Draft => Perform FTP transfer without analysis
-                            else {
-                                open_RadWindow_VersionUploadConfirmation();
-                            }
-                        }
-
-                    }
-                    function End(sender, arguments) {
-                        if (arguments.EventTarget == "<%= verionsRadAjaxManager.UniqueID %>") {
-                            open_RadWindow_VersionUploadConfirmation();
-                        }
-                        if (arguments.EventTarget == "<%= btnConfirmUpload.UniqueID %>") {
-                            open_RadWindow_VersionUploadState();
-                        }
-                    }
-
-                    function open_RadWindow_VersionUploadAnalysis(sender, eventArgs) {
-                        $('#versionUploadScreen').hide();
-                        $('#analysis').show();
-                    }
-                    function open_RadWindow_VersionUploadConfirmation(sender, eventArgs) {
-                        $('#analysis').hide();
-                        $('#confirmation').show();
-
-                    }
-                    function open_RadWindow_VersionUploadState(sender, eventArgs) {
-                        $('#confirmation').hide();
-                        $('#state').show();
-                    }
 
                     function cancel() {
                         $('#analysis').hide();
@@ -302,13 +235,6 @@
                         });
                     });
                 </script>
-                <telerik:RadScriptBlock ID="RadScriptBlock1" runat="server">
-                    <script type="text/javascript">
-                        function OnClientFileUploaded(sender, args) {
-                            $find('<%=verionsRadAjaxManager.ClientID %>').ajaxRequest();
-                        }
-                    </script>
-                </telerik:RadScriptBlock>
             </asp:Panel>
         </asp:Panel>
     </form>

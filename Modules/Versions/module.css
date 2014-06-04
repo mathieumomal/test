@@ -44,14 +44,14 @@
 
 .TabLineLeft {
     text-align: right;
-    width: 150px  !important;
+    width: 150px !important;
     padding-top: 4px !important;
     padding-bottom: 3px !important;
 }
 
-.TabLineLeft span {
-    padding-right: 10px;
-}
+    .TabLineLeft span {
+        padding-right: 10px;
+    }
 
 .TabLineRight {
     width: auto;
@@ -68,20 +68,20 @@
 }
 
 .VersionDetailsTable {
-     width:390px !important;
-     border-width:2px !important; 
-     border-style:solid; 
-     border-color:grey;
-     table-layout: fixed;
- }
+    width: 400px !important;
+    border-width: 2px !important;
+    border-style: solid;
+    border-color: grey;
+    table-layout: fixed;
+}
 
 .VersionUploadTable {
-    width:394px !important;
+    width: 394px !important;
     table-layout: fixed;
 }
 
 .releaseDetailsAction {
-    width:394px !important;
+    width: 394px !important;
     text-align: right;
     padding-right: 10px;
 }
@@ -91,6 +91,17 @@
 }
 
 .RadUpload {
-width: 200px!important;
-text-align: left;
+    width: 200px!important;
+    text-align: left;
+}
+
+.contentModal {
+    width: 400px;
+    height: 260px;
+}
+.scrollable {
+    width: 100%;
+    height: 165px;
+    overflow-y:scroll;
+    background-color: rgb(231, 231, 231);
 }
