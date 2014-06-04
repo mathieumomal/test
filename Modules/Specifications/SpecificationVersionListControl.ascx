@@ -78,8 +78,9 @@
 
     function refreshWindow()
     {
-        if (window.location.indexOf('&selectedTab=Releases') > -1)
-            window.location.reload();
+        var url = window.location.href;
+        if (url.indexOf('&selectedTab=Releases') > -1)
+            location.reload();
         else
             window.location = window.location + "&selectedTab=Releases";
     }

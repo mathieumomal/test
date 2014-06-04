@@ -83,6 +83,7 @@ namespace Etsi.Ultimate.Module.Versions
                 }
                 else
                 {
+                    LoadVersionDetails(null);
                     NewVersionMajorVal.Text = NewVersionTechnicalVal.Text = NewVersionEditorialVal.Text = "0";
                 }
             }
@@ -101,9 +102,22 @@ namespace Etsi.Ultimate.Module.Versions
         /// </summary>
         private void LoadVersionDetails(SpecVersion version)
         {
-            SpecNumberVal.Text = version.Specification.Number;
-            ReleaseVal.Text = version.Release.Code;
-            CurrentVersionVal.Text = SpecNumberVal.Text + "-" + version.MajorVersion + "." + version.TechnicalVersion + "." + version.EditorialVersion;
+            if (version != null)
+            {
+                SpecNumberVal.Text = version.Specification.Number;
+                ReleaseVal.Text = version.Release.Code;
+                CurrentVersionVal.Text = SpecNumberVal.Text + "-" + version.MajorVersion + "." + version.TechnicalVersion + "." + version.EditorialVersion;
+            }
+            else if (specId.HasValue)
+            {
+                ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                Specification_Release spec = specSvc.GetSpecificationDetailsById(UserId, specId.Value).Key.Specification_Release.FirstOrDefault();
+
+                SpecNumberVal.Text = spec.Specification.Number;
+                ReleaseVal.Text = spec.Release.Code;
+                CurrentVersionVal.Text = SpecNumberVal.Text + "-";
+            }
+
         }
 
         /// <summary>
