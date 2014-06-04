@@ -64,7 +64,8 @@ namespace Etsi.Ultimate.Module.Specifications
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (Request.QueryString["action"] == null || Request.QueryString["action"] != "create")
+            if ((Request.QueryString["action"] == null || Request.QueryString["action"] != "create")
+                 && (DataSource.SpecificationReleases != null && DataSource.SpecificationReleases.Count > 0))
             {
                 // Get the rights of the user
                 ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();

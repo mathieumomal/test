@@ -3,6 +3,7 @@ using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,13 @@ namespace Etsi.Ultimate.Business
 {
     public class SpecVersionsManager
     {
+        private const string CONST_QUALITY_CHECK_REVISIONMARK = "Some revision marks left unaccepted";
+        private const string CONST_QUALITY_CHECK_VERSION_HISTORY = "Invalid version in history";
+        private const string CONST_QUALITY_CHECK_VERSION_COVERPAGE = "Invalid version in cover page";
+        private const string CONST_QUALITY_CHECK_DATE_COVERPAGE = "Invalid date in cover page";
+        private const string CONST_QUALITY_CHECK_YEAR_COPYRIGHT = "Year not valid in copyright statement";
+        private const string CONST_QUALITY_CHECK_TITLE_COVERPAGE = "Incorrect title in cover page";
+
         private IUltimateUnitOfWork _uoW;
 
         public SpecVersionsManager(IUltimateUnitOfWork UoW)
@@ -156,5 +164,46 @@ namespace Etsi.Ultimate.Business
             }
         }
 
+        /// <summary>
+        /// Validate Uploaded version document & provide validation summary
+        /// </summary>
+        /// <param name="fileExtension">File Extension (.doc/.docx)</param>
+        /// <param name="memoryStream">Memory Stream</param>
+        /// <param name="version">Specification Version</param>
+        /// <param name="title">Specification Title</param>
+        /// <param name="release">Specification Release</param>
+        /// <param name="meetingDate">Meeting Date</param>
+        /// <returns>Validation Summary</returns>
+        public Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string version, string title, string release, DateTime meetingDate)
+        {
+            Report validationReport = new Report();
+
+            IQualityChecks qualityChecks;
+
+            if (fileExtension.Equals(".docx", StringComparison.InvariantCultureIgnoreCase))
+                qualityChecks = new DocXQualityChecks(memoryStream);
+            else
+                qualityChecks = new DocQualityChecks();
+
+            if (qualityChecks.HasTrackedRevisions())
+                validationReport.LogWarning(CONST_QUALITY_CHECK_REVISIONMARK);
+
+            if(!qualityChecks.IsHistoryVersionCorrect(version))
+                validationReport.LogWarning(CONST_QUALITY_CHECK_VERSION_HISTORY);
+
+            if (!qualityChecks.IsCoverPageVersionCorrect(version))
+                validationReport.LogWarning(CONST_QUALITY_CHECK_VERSION_COVERPAGE);
+
+            if (!qualityChecks.IsCoverPageDateCorrect(meetingDate))
+                validationReport.LogWarning(CONST_QUALITY_CHECK_DATE_COVERPAGE);
+
+            if (!qualityChecks.IsCopyRightYearCorrect())
+                validationReport.LogWarning(CONST_QUALITY_CHECK_YEAR_COPYRIGHT);
+
+            if (!qualityChecks.IsTitleCorrect(title, release))
+                validationReport.LogWarning(CONST_QUALITY_CHECK_TITLE_COVERPAGE);
+
+            return validationReport;
+        }
     }
 }

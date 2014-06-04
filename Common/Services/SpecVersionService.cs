@@ -3,6 +3,7 @@ using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -92,6 +93,36 @@ namespace Etsi.Ultimate.Services
             return operationResult;
         }
 
+        /// <summary>
+        /// Validate Uploaded version document & provide validation summary
+        /// </summary>
+        /// <param name="fileExtension">File Extension (.doc/.docx)</param>
+        /// <param name="memoryStream">Memory Stream</param>
+        /// <param name="version">Specification Version</param>
+        /// <param name="title">Specification Title</param>
+        /// <param name="release">Specification Release</param>
+        /// <param name="meetingDate">Meeting Date</param>
+        /// <returns>Validation Summary</returns>
+        public Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string version, string title, string release, DateTime meetingDate)
+        {
+            Report validationReport;
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var specVersionManager = new SpecVersionsManager(uoW);
+                    validationReport = specVersionManager.ValidateVersionDocument(fileExtension, memoryStream, version, title, release, meetingDate);
+                }
+                catch (Exception ex)
+                {
+                    string errorMessage = "Version Document Validation Error: " + ex.Message;
+                    validationReport = new Report();
+                    validationReport.LogError(errorMessage);
+                    Utils.LogManager.Error(errorMessage);
+                }
+            }
+            return validationReport;
+        }
     }
 }
 

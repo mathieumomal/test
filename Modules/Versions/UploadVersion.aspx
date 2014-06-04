@@ -113,6 +113,7 @@
                                     OnClientFileUploadRemoved="DisabledButtonUpload"
                                     OverwriteExistingFiles="True"
                                     ManualUpload="true"
+                                    TargetFolder="D:\Apptrans\ftp\Specs\Versions"
                                     Visible="true">
                                 </telerik:RadAsyncUpload>
                             </td>
@@ -123,9 +124,9 @@
                             </td>
                             <td colspan="2" class="TabLineRight2Col">
                                 <telerik:RadNumericTextBox AutoComplete="off" IncrementSettings-InterceptArrowKeys="true" NumberFormat-DecimalDigits="0" IncrementSettings-InterceptMouseWheel="true" runat="server" ID="NewVersionMajorVal" Width="40px" MinValue="0"></telerik:RadNumericTextBox>
-                                <span>-</span>
+                                <span>.</span>
                                 <telerik:RadNumericTextBox AutoComplete="off" IncrementSettings-InterceptArrowKeys="true" NumberFormat-DecimalDigits="0" IncrementSettings-InterceptMouseWheel="true" runat="server" ID="NewVersionTechnicalVal" Width="40px" MaxValue="9" MinValue="0"></telerik:RadNumericTextBox>
-                                <span>-</span>
+                                <span>.</span>
                                 <telerik:RadNumericTextBox AutoComplete="off" IncrementSettings-InterceptArrowKeys="true" NumberFormat-DecimalDigits="0" IncrementSettings-InterceptMouseWheel="true" runat="server" ID="NewVersionEditorialVal" Width="40px" MaxValue="9" MinValue="0"></telerik:RadNumericTextBox>
                             </td>
                         </tr>
@@ -167,7 +168,7 @@
                 <div class="contentModal" id="confirmation" style="display: none">
                     <div class="wiHeader">
                         <div>
-                            <asp:Label ID="lblCountWarningErrors" runat="server" Text="Operation timed out" />
+                            <asp:Label ID="lblCountWarningErrors" runat="server" />
                         </div>
                     </div>
                     <div>
@@ -194,9 +195,9 @@
                             <telerik:RadButton ID="Confirmation_cancel" runat="server" Text="Cancel" AutoPostBack="false" OnClientClicked="cancel"></telerik:RadButton>
                         </span>
                     </div>
-                    <div>
-                        <asp:HiddenField ID="isDraft" runat="server" />
-                    </div>
+                <div>
+                    <asp:HiddenField ID="isDraft" runat="server" />
+                </div>
                 </div>
                 <div class="contentModal" id="state" style="display: none">
                     <div class="wiHeader">
@@ -232,37 +233,37 @@
                     }
                     function End(sender, arguments) {
                         if (arguments.EventTarget == "<%= verionsRadAjaxManager.UniqueID %>") {
-                              open_RadWindow_VersionUploadConfirmation();
-                          }
-                          if (arguments.EventTarget == "<%= btnConfirmUpload.UniqueID %>") {
-                              open_RadWindow_VersionUploadState();
-                          }
-                      }
+                            open_RadWindow_VersionUploadConfirmation();
+                        }
+                        if (arguments.EventTarget == "<%= btnConfirmUpload.UniqueID %>") {
+                            open_RadWindow_VersionUploadState();
+                        }
+                    }
 
-                      function open_RadWindow_VersionUploadAnalysis(sender, eventArgs) {
-                          $('#versionUploadScreen').hide();
-                          $('#analysis').show();
-                      }
-                      function open_RadWindow_VersionUploadConfirmation(sender, eventArgs) {
-                          $('#analysis').hide();
-                          $('#confirmation').show();
+                    function open_RadWindow_VersionUploadAnalysis(sender, eventArgs) {
+                        $('#versionUploadScreen').hide();
+                        $('#analysis').show();
+                    }
+                    function open_RadWindow_VersionUploadConfirmation(sender, eventArgs) {
+                        $('#analysis').hide();
+                        $('#confirmation').show();
 
-                      }
-                      function open_RadWindow_VersionUploadState(sender, eventArgs) {
-                          $('#confirmation').hide();
-                          $('#state').show();
-                      }
+                    }
+                    function open_RadWindow_VersionUploadState(sender, eventArgs) {
+                        $('#confirmation').hide();
+                        $('#state').show();
+                    }
 
-                      function cancel() {
-                          $('#analysis').hide();
-                          $('#confirmation').hide();
-                          $('#state').hide();
-                          $('#versionUploadScreen').show();
-                          //Other actions to perform
-                      }
+                    function cancel() {
+                        $('#analysis').hide();
+                        $('#confirmation').hide();
+                        $('#state').hide();
+                        $('#versionUploadScreen').show();
+                        //Other actions to perform
+                    }
 
-                      function clearFilesToUpload() {
-                          var upload = $find("<%= FileToUploadVal.ClientID %>");
+                    function clearFilesToUpload() {
+                        var upload = $find("<%= FileToUploadVal.ClientID %>");
                         upload.deleteAllFileInputs();
                     }
 

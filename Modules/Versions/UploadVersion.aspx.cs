@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using Etsi.Ultimate.Controls;
+﻿using Etsi.Ultimate.Controls;
+using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Utils;
-using Telerik.Web.UI;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Text;
-using Etsi.Ultimate.DomainClasses;
-
+using System.Web.UI;
+using Telerik.Web.UI;
+using Telerik.Web.Zip;
 
 namespace Etsi.Ultimate.Module.Versions
 {
@@ -294,24 +293,129 @@ namespace Etsi.Ultimate.Module.Versions
         /// <param name="e"></param>
         protected void AsyncUpload_VersionUpload(object sender, FileUploadedEventArgs e)
         {
-            //Get version
-            UploadedFile versionUploaded = e.File;
-            try
+            using (MemoryStream fileStream = new MemoryStream())
             {
-                //Save the file in TMP folder
-                /*versionUploaded.SaveAs(new StringBuilder()
-                    .Append(versionUploadPath)
-                    .Append(versionUploaded.FileName)
-                    .ToString());  */
+                try
+                {
+                    UploadedFile uploadedFile = e.File;
+                    string fileExtension = String.Empty;
+                    Report validationReport = new Report();
 
-                // Call checker
-                lblCountWarningErrors.Text = "0";
-                btnConfirmUpload.Enabled = true;
+                    //[1] Check the file name
+                    string validFileName = GetValidFileName();
+                    if (!uploadedFile.GetNameWithoutExtension().Equals(validFileName, StringComparison.InvariantCultureIgnoreCase))
+                        validationReport.LogWarning(String.Format("Invalid file name. System will change this to '{0}'", validFileName));
 
-            }
-            catch (Exception exc)
-            {
-                LogManager.Error("Could not save the version file: " + exc.Message);
+                    bool allowToRunQualityChecks = false;
+
+                    //[2] If file is in .zip format, check that .zip file and internal word file must have same name.
+                    if (uploadedFile.GetExtension().Equals(".zip", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        var zipFileName = uploadedFile.GetNameWithoutExtension();
+                        using (ZipPackage package = ZipPackage.Open(uploadedFile.InputStream))
+                        {
+                            bool matchingFileNameFound = false;
+
+                            foreach (var entry in package.ZipPackageEntries)
+                            {
+                                if (entry.Attributes != FileAttributes.Directory)
+                                {
+                                    string extension = Path.GetExtension(entry.FileNameInZip);
+                                    if (extension.Equals(".doc", StringComparison.InvariantCultureIgnoreCase) ||
+                                        extension.Equals(".docx", StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(entry.FileNameInZip);
+
+                                        if (zipFileName.Equals(fileNameWithoutExtension, StringComparison.InvariantCultureIgnoreCase))
+                                            matchingFileNameFound = true;
+
+                                        //Allow to run validation checks either filename matching with zip name or zip contains only one file
+                                        if (matchingFileNameFound || package.ZipPackageEntries.Where(x => x.Attributes != FileAttributes.Directory).Count() == 1)
+                                        {
+                                            using (Stream stream = entry.OpenInputStream())
+                                            {
+                                                stream.CopyTo(fileStream);
+                                            }
+                                            fileExtension = extension;
+                                            allowToRunQualityChecks = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if(!matchingFileNameFound)
+                                validationReport.LogWarning("Zip file and internal word file must have same name");
+
+                            if (!allowToRunQualityChecks)
+                                validationReport.LogWarning("No matching files inside zip. Quality checks cannot be executed");
+                        }
+                    }
+                    else //Copy to stream from .doc / .docx
+                    {
+                        using (Stream stream = uploadedFile.InputStream)
+                        {
+                            stream.CopyTo(fileStream);
+                        }
+                        fileExtension = uploadedFile.GetExtension();
+                        allowToRunQualityChecks = true;
+                    }
+
+                    //If we have valid file, run quality checks
+                    if (allowToRunQualityChecks)
+                    {
+                        string version = String.Empty;
+                        DateTime meetingDate = DateTime.MinValue;
+                        string title = String.Empty;
+                        string release = String.Empty;
+
+                        version = String.Format("{0}.{1}.{2}", NewVersionMajorVal.Text.Trim(), NewVersionTechnicalVal.Text.Trim(), NewVersionEditorialVal.Text.Trim());
+                        if (UploadMeeting.SelectedMeeting != null)
+                            meetingDate = UploadMeeting.SelectedMeeting.START_DATE ?? DateTime.MinValue;
+
+                        ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
+                        if (versionId.HasValue)
+                        {
+                            var specVersionRightsObject = svc.GetVersionsById(versionId.Value, UserId);
+                            var specVerion = specVersionRightsObject.Key;
+                            title = specVerion.Specification.Title;
+                            release = specVerion.Release.Description;
+                        }
+
+                        //Validate document & get the summary report
+                        var businessValidationReport = svc.ValidateVersionDocument(fileExtension, fileStream, version, title, release, meetingDate);
+                        validationReport.ErrorList.AddRange(businessValidationReport.ErrorList);
+                        validationReport.WarningList.AddRange(businessValidationReport.WarningList);
+                    }
+
+                    // Update Errors / Warnings
+                    lblCountWarningErrors.Text = new StringBuilder()
+                        .Append("Found ")
+                        .Append(validationReport.GetNumberOfErrors().ToString())
+                        .Append(" error")
+                        .Append(validationReport.GetNumberOfErrors() <= 1 ? "" : "s")
+                        .Append(", ")
+                        .Append(validationReport.GetNumberOfWarnings().ToString())
+                        .Append(" warning")
+                        .Append(validationReport.GetNumberOfWarnings() <= 1 ? "" : "s")
+                        .Append(".")
+                        .ToString();
+
+                    if (validationReport.GetNumberOfErrors() > 0)
+                        btnConfirmUpload.Enabled = false;
+                    else
+                        btnConfirmUpload.Enabled = true;
+
+                    List<string> datasource = new List<string>();
+                    datasource.AddRange(validationReport.ErrorList);
+                    datasource.AddRange(validationReport.WarningList);
+                    rptWarningsErrors.DataSource = datasource;
+                    rptWarningsErrors.DataBind();
+                }
+                catch (Exception exc)
+                {
+                    LogManager.Error("Could not save the version file: " + exc.Message);
+                }
             }
         }
 
@@ -366,5 +470,59 @@ namespace Etsi.Ultimate.Module.Versions
             }
         }
 
+        #region Private Methods
+
+        /// <summary>
+        /// Provide the valid file name for Version upload
+        /// </summary>
+        /// <returns>Valid version file name</returns>
+        private string GetValidFileName()
+        {
+            var specNumber = SpecNumberVal.Text.Replace(".", String.Empty);
+
+            int majorVersion;
+            string majorVersionBase36 = String.Empty;
+            if (int.TryParse(NewVersionMajorVal.Text, out majorVersion))
+                majorVersionBase36 = EncodeToBase36(majorVersion);
+
+            int technicalVersion;
+            string technicalVersionBase36 = String.Empty;
+            if (int.TryParse(NewVersionTechnicalVal.Text, out technicalVersion))
+                technicalVersionBase36 = EncodeToBase36(technicalVersion);
+
+            int editorialVersion;
+            string editorialVersionBase36 = String.Empty;
+            if (int.TryParse(NewVersionEditorialVal.Text, out editorialVersion))
+                editorialVersionBase36 = EncodeToBase36(editorialVersion);
+
+            string validFileName = String.Format("{0}-{1}{2}{3}", specNumber, majorVersionBase36, technicalVersionBase36, editorialVersionBase36);
+            return validFileName;
+        }
+
+        /// <summary>
+        /// Convert to Base36 string
+        /// </summary>
+        /// <param name="input">Base10 number</param>
+        /// <returns>Base36 string</returns>
+        private string EncodeToBase36(long input)
+        {
+            if (input < 0) throw new ArgumentOutOfRangeException("input", input, "input cannot be negative");
+            var CharList = "0123456789abcdefghijklmnopqrstuvwxyz";
+            char[] clistarr = CharList.ToCharArray();
+            var result = new Stack<char>();
+            if (input == 0)
+                result.Push('0');
+            else
+            {
+                while (input != 0)
+                {
+                    result.Push(clistarr[input % 36]);
+                    input /= 36;
+                }
+            }
+            return new string(result.ToArray());
+        }
+
+        #endregion
     }
 }
