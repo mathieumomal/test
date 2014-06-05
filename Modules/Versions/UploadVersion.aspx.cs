@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using Telerik.Web.Zip;
 
@@ -28,6 +29,7 @@ namespace Etsi.Ultimate.Module.Versions
         public static string action;
         public static string versionUploadPath;
         public static string versionFTP_Path;
+        private int errorNumber = 0;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -376,7 +378,7 @@ namespace Etsi.Ultimate.Module.Versions
                             meetingDate = UploadMeeting.SelectedMeeting.START_DATE ?? DateTime.MinValue;
 
                         ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                        if (versionId.HasValue)
+                        if ((versionId.HasValue) && (versionId > 0))
                         {
                             var specVersionRightsObject = svc.GetVersionsById(versionId.Value, UserId);
                             var specVerion = specVersionRightsObject.Key;
@@ -404,7 +406,10 @@ namespace Etsi.Ultimate.Module.Versions
                         .ToString();
 
                     if (validationReport.GetNumberOfErrors() > 0)
+                    {
                         btnConfirmUpload.Enabled = false;
+                        errorNumber = validationReport.GetNumberOfErrors();
+                    }
                     else
                         btnConfirmUpload.Enabled = true;
 
@@ -545,7 +550,28 @@ namespace Etsi.Ultimate.Module.Versions
             confirmation.Visible = false;
             state.Visible = false;
         }
+        
+        /// <summary>
+        /// Item DataBound event for Error/Warning report
+        /// </summary>
+        /// <param name="Sender">Repeater control</param>
+        /// <param name="e">Repeater item event arguments</param>
+        protected void rptErrorsWarning_ItemDataBound(Object Sender, RepeaterItemEventArgs e)
+        {
+            string item = (String)e.Item.DataItem;
+            if (item != null)
+            {
+                Label lbl = e.Item.FindControl("lblErrorOrWarning") as Label;
+                lbl.Text = item;
+                if (errorNumber > 0)
+                {
+                    lbl.CssClass = "ErrorItem";
+                    errorNumber--;
+                }
+                else
+                    lbl.CssClass = "WarningItem";
 
-
+            }
+        }
     }
 }

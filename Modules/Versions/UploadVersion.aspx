@@ -95,7 +95,6 @@
                                     OnClientFileSelected="EnabledButtonUpload"
                                     OnClientFileUploadRemoved="DisabledButtonUpload"
                                     OverwriteExistingFiles="True"
-                                    TargetFolder="D:\3GPP\DnnInstance\dnn.3gpp.org\Downloads"
                                     Visible="true">
                                 </telerik:RadAsyncUpload>
                             </td>
@@ -153,7 +152,7 @@
                     <asp:Label ID="lblCountWarningErrors" runat="server" />
                     <div class="scrollable">
                         <ul>
-                            <asp:Repeater runat="server" ID="rptWarningsErrors">
+                            <asp:Repeater runat="server" ID="rptWarningsErrors"  OnItemDataBound="rptErrorsWarning_ItemDataBound">
                                 <ItemTemplate>
                                     <li>
                                         <asp:Label ID="lblErrorOrWarning" runat="server"></asp:Label>

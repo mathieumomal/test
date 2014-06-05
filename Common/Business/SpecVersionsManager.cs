@@ -13,11 +13,11 @@ namespace Etsi.Ultimate.Business
     public class SpecVersionsManager
     {
         private const string CONST_QUALITY_CHECK_REVISIONMARK = "Some revision marks left unaccepted";
-        private const string CONST_QUALITY_CHECK_VERSION_HISTORY = "Invalid version in history";
-        private const string CONST_QUALITY_CHECK_VERSION_COVERPAGE = "Invalid version in cover page";
-        private const string CONST_QUALITY_CHECK_DATE_COVERPAGE = "Invalid date in cover page";
-        private const string CONST_QUALITY_CHECK_YEAR_COPYRIGHT = "Year not valid in copyright statement";
-        private const string CONST_QUALITY_CHECK_TITLE_COVERPAGE = "Incorrect title in cover page";
+        private const string CONST_QUALITY_CHECK_VERSION_HISTORY = "Invalid/missing version in history";
+        private const string CONST_QUALITY_CHECK_VERSION_COVERPAGE = "Invalid/missing version in cover page";
+        private const string CONST_QUALITY_CHECK_DATE_COVERPAGE = "Invalid/missing date in cover page";
+        private const string CONST_QUALITY_CHECK_YEAR_COPYRIGHT = "Year not valid/missing in copyright statement";
+        private const string CONST_QUALITY_CHECK_TITLE_COVERPAGE = "Incorrect/missing title in cover page";
 
         private IUltimateUnitOfWork _uoW;
 
