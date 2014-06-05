@@ -247,14 +247,20 @@ namespace Etsi.Ultimate.Business
         {
             var subject = String.Format(Localization.Specification_ReferenceNumberAssigned_Subject, spec.Number);
             var roleManager = new RolesManager();
-            
+
+            var specWorkitemManager = new SpecificationWorkItemManager();
+            var listSpecWILabel = specWorkitemManager.GetSpecificationWorkItemsLabels(spec.Pk_SpecificationId);
+
+            //Send to workplan manager
             var workplanMgrsEmail = roleManager.GetWpMgrEmail();
-            //var secretariesEmail = roleManager.GetSecretaryForComitteeEmail(TO FOUND);
-            //var to = secretariesEmail.Concat(workplanMgrsEmail).ToList();
             var to = workplanMgrsEmail;
+            
+            //Send to Prime responsible grou Secretary
+                //var secretariesEmail = roleManager.GetSecretaryForComitteeEmail(TO FOUND);
+                //var to = secretariesEmail.Concat(workplanMgrsEmail).ToList();
 
             var workItemLabel = spec.Specification_WorkItem;
-            var body = new SpecReferenceNumberAssignedMailTemplate((String.IsNullOrEmpty(spec.Number) ? "" : spec.Number), (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), new List<string>() { });
+            var body = new SpecReferenceNumberAssignedMailTemplate((String.IsNullOrEmpty(spec.Number) ? "" : spec.Number), (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), listSpecWILabel);
             var mailInstance = Utils.UtilsFactory.Resolve<IMailManager>();
             if (!mailInstance.SendEmail(null, to, null, null, subject, body.TransformText()))
             {

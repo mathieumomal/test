@@ -215,10 +215,10 @@ namespace Etsi.Ultimate.Tests.Services
         [TestCase(true, false, EDIT_LIMITED_RIGHT_USER, "12.145", 1)]//Number changed but user don't have full rights
         [TestCase(true, false, EDIT_RIGHT_USER, "ijfzeo989=)", 1)]//Number changed with format error
         [TestCase(true, false, EDIT_RIGHT_USER, "12.189", 1)]//Number changed but already exist
-        public void EditSpecification_EmailTest(bool shouldMailBeSent, bool shouldMailSucceed, int person, String numberUpdate, int error)
+        public void EditSpecification_EmailTest(bool shouldMailBeSent, bool shouldMailSucceed, int person, String specToUpdateNumber, int error)
         {
             var specToEdit = GetCorrectSpecificationForEdit(true);
-            specToEdit.Number = numberUpdate;
+            specToEdit.Number = specToUpdateNumber;
             // Set up the rights
             RegisterAllMocks();
             //---MAIL
@@ -250,7 +250,7 @@ namespace Etsi.Ultimate.Tests.Services
             var modifiedSpec = GetCorrectSpecificationForEdit(false);
 
             if(error==0){
-                Assert.AreEqual(numberUpdate, modifiedSpec.Number);
+                Assert.AreEqual(specToUpdateNumber, modifiedSpec.Number);
             }
 
             if (shouldMailBeSent)
@@ -319,7 +319,6 @@ namespace Etsi.Ultimate.Tests.Services
             userRights.Stub(r => r.GetRights(EDIT_LIMITED_RIGHT_USER)).Return(rights_withLimitedEdit);
             ManagerFactory.Container.RegisterInstance<IRightsManager>(userRights);
 
-
             // Repository: set up the attribution of the Pk
             var repo = MockRepository.GenerateMock<ISpecificationRepository>();
             repo.Expect(r => r.InsertOrUpdate(Arg<Specification>.Is.Anything));
@@ -351,6 +350,9 @@ namespace Etsi.Ultimate.Tests.Services
             RepositoryFactory.Container.RegisterInstance<IUltimateUnitOfWork>(uow);
 
             RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
+            
+            RepositoryFactory.Container.RegisterType<ISpecificationWorkItemRepository, SpecificationWIFakeRepository>(new TransientLifetimeManager());
+
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.View_Persons).Return(Persons());
             uow.Stub(s => s.Context).Return(mockDataContext);
@@ -425,6 +427,7 @@ namespace Etsi.Ultimate.Tests.Services
             dbSet.Add(new View_Persons() { PERSON_ID = 101, Email = "101@etsi.org" });
             return dbSet;
         }
+        
         #endregion
 
     }

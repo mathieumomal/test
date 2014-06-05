@@ -32,7 +32,7 @@ namespace Etsi.Ultimate.Tests.Services
         {
             var specification = new Specification() { Pk_SpecificationId = 14 };
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            Assert.AreEqual(-1, specSvc.CreateSpecification(0, specification).Key);
+            Assert.AreEqual(-1, specSvc.CreateSpecification(0, specification, "#baseurl#").Key);
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             var specification = new Specification() { Pk_SpecificationId = 0 };
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            Assert.AreEqual(-1, specSvc.CreateSpecification(NO_EDIT_RIGHT_USER, specification).Key);
+            Assert.AreEqual(-1, specSvc.CreateSpecification(NO_EDIT_RIGHT_USER, specification, "#baseurl#").Key);
         }
 
         [Test]
@@ -57,7 +57,7 @@ namespace Etsi.Ultimate.Tests.Services
             var specification = GetCorrectSpecificationForCreation();
             specification.Specification_Release.Clear();
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            Assert.AreEqual(-1, specSvc.CreateSpecification(EDIT_RIGHT_USER, specification).Key);
+            Assert.AreEqual(-1, specSvc.CreateSpecification(EDIT_RIGHT_USER, specification, "#baseurl#").Key);
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace Etsi.Ultimate.Tests.Services
             var specification = GetCorrectSpecificationForCreation();
             specification.Number = "12aaa";
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            Assert.AreEqual(-1, specSvc.CreateSpecification(EDIT_RIGHT_USER, specification).Key);
+            Assert.AreEqual(-1, specSvc.CreateSpecification(EDIT_RIGHT_USER, specification, "#baseurl#").Key);
         }
 
         //Success
@@ -87,7 +87,11 @@ namespace Etsi.Ultimate.Tests.Services
             var roleManager = new RolesManager();
             var toAddresss = roleManager.GetSpecMgrEmail();
             var subject = String.Format(Localization.Specification_AwaitingReferenceNumberMail_Subject, specification.Title);
-            var body = new SpecAwaitingReferenceNumberMailTemplate("#SECRETARY#", specification.Title, "#LINK#");
+
+            var specUrl = new StringBuilder().Append("/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=").Append(specification.Pk_SpecificationId).ToString();
+            var specLink = new StringBuilder().Append("#baseurl#").Append(specUrl).ToString();
+
+            var body = new SpecAwaitingReferenceNumberMailTemplate("X Y", specification.Title, specLink);
             var bodyContent = body.TransformText();
             //Simulation send mail with test datas when we use 'SendEmail' method
             var mailMock = MockRepository.GenerateMock<IMailManager>();
@@ -103,7 +107,7 @@ namespace Etsi.Ultimate.Tests.Services
             //---MAIL
 
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            var report = specSvc.CreateSpecification(person, specification).Value; // We can't change PK and check it, because it's assigned by EF in principle
+            var report = specSvc.CreateSpecification(person, specification, "#baseurl#").Value; // We can't change PK and check it, because it's assigned by EF in principle
 
             Assert.AreEqual(0, report.WarningList.Count);
             Assert.AreEqual(error, report.ErrorList.Count);
@@ -221,6 +225,7 @@ namespace Etsi.Ultimate.Tests.Services
             RepositoryFactory.Container.RegisterInstance<IUltimateUnitOfWork>(uow);
 
             RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
+
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.View_Persons).Return(Persons());
             uow.Stub(s => s.Context).Return(mockDataContext);
@@ -300,7 +305,7 @@ namespace Etsi.Ultimate.Tests.Services
             dbSet.Add(new View_Persons() { PERSON_ID = 1, Email = "un@etsi.org" });
             dbSet.Add(new View_Persons() { PERSON_ID = 2, Email = "deux@etsi.org" });
             dbSet.Add(new View_Persons() { PERSON_ID = 3, Email = "trois@etsi.org" });
-            dbSet.Add(new View_Persons() { PERSON_ID = 4, Email = "quatre@etsi.org" });
+            dbSet.Add(new View_Persons() { PERSON_ID = 4, Email = "quatre@etsi.org", FIRSTNAME = "X", LASTNAME = "Y" });
             dbSet.Add(new View_Persons() { PERSON_ID = 5, Email = "cinq@etsi.org" });
             dbSet.Add(new View_Persons() { PERSON_ID = 6, Email = "six@etsi.org" });
             dbSet.Add(new View_Persons() { PERSON_ID = 7, Email = "sept@etsi.org" });

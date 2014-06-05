@@ -35,6 +35,8 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                     WorkItem = new WorkItem(){
                         Pk_WorkItemUid = 1,
                         Acronym = "acro1",
+                        Name = "A",
+                        IsPrimary = false,
                         WorkItems_ResponsibleGroups = new List<WorkItems_ResponsibleGroups>(){
                             new WorkItems_ResponsibleGroups(){
                                 Pk_WorkItemResponsibleGroups =1,
@@ -55,6 +57,8 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                     WorkItem = new WorkItem(){
                         Pk_WorkItemUid = 2,
                         Acronym = "acro2",
+                        Name = "B",
+                        IsPrimary = true,
                         WorkItems_ResponsibleGroups = new List<WorkItems_ResponsibleGroups>(){
                             new WorkItems_ResponsibleGroups(){
                                 Pk_WorkItemResponsibleGroups =1,
@@ -75,6 +79,8 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                     WorkItem = new WorkItem(){
                         Pk_WorkItemUid = 3,
                         Acronym = "acro3",
+                        Name = "C",
+                        IsPrimary = false,
                         WorkItems_ResponsibleGroups = new List<WorkItems_ResponsibleGroups>(){
                             new WorkItems_ResponsibleGroups(){
                                 Pk_WorkItemResponsibleGroups =1,

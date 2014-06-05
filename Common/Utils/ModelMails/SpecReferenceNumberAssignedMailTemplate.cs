@@ -18,7 +18,7 @@ namespace Etsi.Ultimate.Utils.ModelMails
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_3\ULTIMATE2\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
+    #line 1 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_4\ULTIMATE\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "11.0.0.0")]
     public partial class SpecReferenceNumberAssignedMailTemplate : SpecReferenceNumberAssignedMailTemplateBase
     {
@@ -31,35 +31,35 @@ namespace Etsi.Ultimate.Utils.ModelMails
             this.Write("<html>\r\n<body>\r\nDear Secretary and WorkPlan Manager(s),\r\n\r\nPlease note that speci" +
                     "fication number ");
             
-            #line 11 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_3\ULTIMATE2\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
+            #line 11 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_4\ULTIMATE\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(SpecNumber));
             
             #line default
             #line hidden
             this.Write(" has been allocated to specification ");
             
-            #line 11 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_3\ULTIMATE2\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
+            #line 11 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_4\ULTIMATE\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(SpecTitle));
             
             #line default
             #line hidden
             this.Write(".\r\n\r\n<ul>\r\n");
             
-            #line 14 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_3\ULTIMATE2\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
+            #line 14 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_4\ULTIMATE\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
     foreach (var wi in WorkItems){
             
             #line default
             #line hidden
             this.Write("<li>Specification is linked to the following Work items: ");
             
-            #line 15 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_3\ULTIMATE2\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
+            #line 15 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_4\ULTIMATE\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(wi));
             
             #line default
             #line hidden
             this.Write("</li>\r\n");
             
-            #line 16 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_3\ULTIMATE2\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
+            #line 16 "D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_4\ULTIMATE\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
     }
             
             #line default

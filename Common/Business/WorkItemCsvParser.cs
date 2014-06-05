@@ -17,8 +17,6 @@ namespace Etsi.Ultimate.Business
     /// </summary>
     internal class WorkItemImportClass
     {
-
-
         public int ID { get; set; }
         public int Unique_ID { get; set; }
         public string Name { get; set; }

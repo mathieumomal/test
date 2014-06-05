@@ -53,7 +53,7 @@ namespace Etsi.Ultimate.Services
         /// <returns>Key value pair containing:
         /// - as Key: The Primary key of the specification. -1 if creation failed.
         /// - as Value: The list of errors and warnings to take into account.</returns>
-        KeyValuePair<int, Report> CreateSpecification(int personId, Specification spec);
+        KeyValuePair<int, Report> CreateSpecification(int personId, Specification spec, string baseurl);
 
         /// <summary>
         /// Updates the data concerning a specification.

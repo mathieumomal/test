@@ -212,7 +212,7 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId"></param>
         /// <param name="spec"></param>
         /// <returns></returns>
-        public KeyValuePair<int, Report> CreateSpecification(int personId, Specification spec)
+        public KeyValuePair<int, Report> CreateSpecification(int personId, Specification spec, string baseurl)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
@@ -221,7 +221,7 @@ namespace Etsi.Ultimate.Services
 
                 try
                 {
-                    var newSpec = createAction.Create(personId, spec);
+                    var newSpec = createAction.Create(personId, spec, baseurl);
                     uoW.Save();
                     return new KeyValuePair<int, Report>(newSpec.Key.Pk_SpecificationId, newSpec.Value);
                 }

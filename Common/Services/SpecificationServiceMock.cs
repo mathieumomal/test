@@ -407,7 +407,7 @@ namespace Etsi.Ultimate.Services
         }
 
    
-        KeyValuePair<int, Report> ISpecificationService.CreateSpecification(int personId, Specification spec)
+        KeyValuePair<int, Report> ISpecificationService.CreateSpecification(int personId, Specification spec, string baseurl)
         {
             throw new NotImplementedException();
         }

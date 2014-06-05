@@ -32,7 +32,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId"></param>
         /// <param name="spec"></param>
         /// <returns></returns>
-        public KeyValuePair<Specification, Report> Create(int personId, Specification spec)
+        public KeyValuePair<Specification, Report> Create(int personId, Specification spec, string baseurl)
         {
             // Create repository and report
             var repo = RepositoryFactory.Resolve<ISpecificationRepository>();
@@ -84,7 +84,7 @@ namespace Etsi.Ultimate.Business
             //If the user didn't have the right to edit spec number we send a mail to the spec manager
             if (userRights.HasRight(Enum_UserRights.Specification_EditLimitted))
             {
-                MailAlertSpecManager(spec, report);
+                MailAlertSpecManager(spec, report, baseurl, personId);
             }
 
             if (report.GetNumberOfErrors() == 0 && report.GetNumberOfWarnings() == 0)
@@ -185,19 +185,39 @@ namespace Etsi.Ultimate.Business
         }
 
         /// <summary>
-        /// Send a mail to the Spec Manager
+        /// Send a mail to the Spec Manager(s)
         /// </summary>
         /// <param name="spec"></param>
         /// <param name="report"></param>
-        private void MailAlertSpecManager(Specification spec , Report report)
+        private void MailAlertSpecManager(Specification spec , Report report, string baseurl, int personId)
         {
+            //get connected user name
+            var connectedUsername = String.Empty;
+            var personManager = new PersonManager();
+            personManager.UoW = UoW;
+            var connectedUser = personManager.FindPerson(personId);
+            if (connectedUser != null)
+            {
+                connectedUsername = new StringBuilder()
+                    .Append((connectedUser.FIRSTNAME != null) ? connectedUser.FIRSTNAME : "")
+                    .Append(" ")
+                    .Append((connectedUser.LASTNAME != null) ? connectedUser.LASTNAME : "")
+                    .ToString();
+            }
+            
+            //Subject
             var specTitleSubject = String.Empty;
             if (spec.Title != null && spec.Title.Length > 60)
                 specTitleSubject = spec.Title.Substring(0, 60);
             else
                 specTitleSubject = spec.Title;
             var subject = String.Format(Localization.Specification_AwaitingReferenceNumberMail_Subject, specTitleSubject);
-            var body = new SpecAwaitingReferenceNumberMailTemplate("#SECRETARY#", (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), "#LINK#");
+
+            //Body
+            var specUrl = new StringBuilder().Append("/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=").Append(spec.Pk_SpecificationId).ToString();
+            var specLink = new StringBuilder().Append(baseurl).Append(specUrl).ToString();
+            var body = new SpecAwaitingReferenceNumberMailTemplate(connectedUsername, (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), specLink);
+
             var roleManager = new RolesManager();
             var to = roleManager.GetSpecMgrEmail();
 
