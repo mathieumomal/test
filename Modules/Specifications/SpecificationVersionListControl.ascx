@@ -18,13 +18,6 @@
         padding-right: 3px;
     }
 
-    .display_size {
-        border: 1px solid gray;
-        background-color: #75B91A;
-        height: 20px;
-        width: 20px;
-        border-radius: 6px;
-    }
 
     .grid_btn {
         height: 16px;
@@ -90,14 +83,14 @@
 </script>
 <asp:Panel runat="server" ID="pnlCover" CssClass="TabContent" Height="100%">
     <asp:Panel runat="server" ID="pnlIconStrip">
-        <asp:ImageButton ID="imgUploadVersion" ToolTip="Upload a version" ImageUrl="images/spec_rel-u.png" CssClass="display_size" runat="server" />
-        <asp:ImageButton ID="imgAllocateVersion" ToolTip="Allocate a version" ImageUrl="images/spec_rel-a.png" CssClass="display_size" runat="server" />
-        <asp:ImageButton ID="imgInhibitPromote" ToolTip="Inhibit Promote" ImageUrl="images/spec_rel-i.png" CssClass="display_size" runat="server" Visible="false" OnClick="imgInhibitPromote_Click" />
-        <asp:ImageButton ID="imgRemoveInhibitPromote" ToolTip="Remove-Inhibit Promote" ImageUrl="images/spec_rel-ri.png" CssClass="display_size" runat="server" Visible="false" OnClick="imgRemoveInhibitPromote_Click" />
-        <asp:ImageButton ID="imgForceTransposition" ToolTip="Force transposition" ImageUrl="images/spec_rel-f.png" CssClass="display_size" runat="server" OnClick="imgForceTransposition_Click" />
-        <asp:ImageButton ID="imgUnforceTransposition" ToolTip="Unforce transposition" ImageUrl="images/spec_rel-f-crossed.png" CssClass="display_size" runat="server" OnClick="imgUnforceTransposition_Click" />
-        <asp:ImageButton ID="imgPromoteSpec" ToolTip="Promote specification to next Release" ImageUrl="images/spec_rel-p.png" CssClass="display_size" runat="server" OnClick="imgPromoteSpec_Click" />
-        <asp:ImageButton ID="imgWithdrawSpec" ToolTip="Withdraw specification from Release" ImageUrl="images/spec_rel-w.png" CssClass="display_size" runat="server" />
+        <asp:ImageButton ID="imgUploadVersion" ToolTip="Upload a version" ImageUrl="images/spec_rel-u.png" CssClass="icon_display_size" runat="server" />
+        <asp:ImageButton ID="imgAllocateVersion" ToolTip="Allocate a version" ImageUrl="images/spec_rel-a.png" CssClass="icon_display_size" runat="server" />
+        <asp:ImageButton ID="imgInhibitPromote" ToolTip="Inhibit Promote" ImageUrl="images/spec_rel-i.png" CssClass="icon_display_size" runat="server" Visible="false" OnClick="imgInhibitPromote_Click" />
+        <asp:ImageButton ID="imgRemoveInhibitPromote" ToolTip="Remove-Inhibit Promote" ImageUrl="images/spec_rel-ri.png" CssClass="icon_display_size" runat="server" Visible="false" OnClick="imgRemoveInhibitPromote_Click" />
+        <asp:ImageButton ID="imgForceTransposition" ToolTip="Force transposition" ImageUrl="images/spec_rel-f.png" CssClass="icon_display_size" runat="server" OnClick="imgForceTransposition_Click" />
+        <asp:ImageButton ID="imgUnforceTransposition" ToolTip="Unforce transposition" ImageUrl="images/spec_rel-f-crossed.png" CssClass="icon_display_size" runat="server" OnClick="imgUnforceTransposition_Click" />
+        <asp:ImageButton ID="imgPromoteSpec" ToolTip="Promote specification to next Release" ImageUrl="images/spec_rel-p.png" CssClass="icon_display_size" runat="server" OnClick="imgPromoteSpec_Click" />
+        <asp:ImageButton ID="imgWithdrawSpec" ToolTip="Withdraw specification from Release" ImageUrl="images/spec_rel-w.png" CssClass="icon_display_size" runat="server" />
     </asp:Panel>
     <telerik:RadGrid runat="server" ID="specificationsVersionGrid"
         AllowPaging="false"
