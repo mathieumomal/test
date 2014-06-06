@@ -169,9 +169,6 @@
                             <telerik:RadButton ID="Confirmation_cancel" runat="server" Text="Cancel" OnClick="Cancel_Click"></telerik:RadButton>
                         </span>
                     </div>
-                    <div>
-                        <asp:HiddenField ID="isDraft" runat="server" />
-                    </div>
                 </asp:Panel>
                 <asp:Panel runat="server" CssClass="contentModal" ID="state">
                     <div class="wiHeader">

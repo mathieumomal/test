@@ -57,8 +57,8 @@
         return false;
     }
 
-    function openRadWinVersion(specVerId, specId,  action) {
-        var win = radopen("/desktopmodules/Versions/UploadVersion.aspx?versionId=" + specVerId + "&specId=" + specId + "&action=" + action, "Version");
+    function openRadWinVersion(releaseId, specId, action) {
+        var win = radopen("/desktopmodules/Versions/UploadVersion.aspx?releaseId=" + releaseId + "&specId=" + specId + "&action=" + action, "Version");
         //var height = (action == 'upload') ? 320 : 280;
         var height = 320;
         win.setSize(440, height);

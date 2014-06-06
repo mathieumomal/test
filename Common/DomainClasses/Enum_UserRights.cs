@@ -45,7 +45,6 @@ namespace Etsi.Ultimate.DomainClasses
         Versions_Allocate,
         Versions_Upload,
         Versions_AddRemark,
-        Versions_Modify_MajorVersion,
-        Versions_Modify_TechnicalVersion,
+        Versions_Modify_MajorVersion
     }
 }

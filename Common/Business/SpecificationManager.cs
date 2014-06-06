@@ -309,20 +309,10 @@ namespace Etsi.Ultimate.Business
                     }
                 }
 
-                if (spec.IsUnderChangeControl != null && spec.IsUnderChangeControl.Value)
+                if (!(spec.IsUnderChangeControl.HasValue && spec.IsUnderChangeControl.Value))
                 {
-                    //This is for Under Change Control versions
-                    if (userRights.HasRight(Enum_UserRights.Versions_Modify_MajorVersion) && userRights.HasRight(Enum_UserRights.Versions_Modify_TechnicalVersion))
-                        rights.AddRight(Enum_UserRights.Versions_Modify_TechnicalVersion);
-                }
-                else
-                {
-                    //This is for Draft versions
-                    if (userRights.HasRight(Enum_UserRights.Versions_Modify_MajorVersion))
+                    if(userRights.HasRight(Enum_UserRights.Versions_Modify_MajorVersion))
                         rights.AddRight(Enum_UserRights.Versions_Modify_MajorVersion);
-
-                    if (userRights.HasRight(Enum_UserRights.Versions_Modify_TechnicalVersion))
-                        rights.AddRight(Enum_UserRights.Versions_Modify_TechnicalVersion);
                 }
             }
 

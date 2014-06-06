@@ -85,7 +85,7 @@ namespace Etsi.Ultimate.Module.Specifications
             }
             else
             {
-                var result = svc.CreateSpecification(userId, spec);
+                var result = svc.CreateSpecification(userId, spec, Request.Url.GetLeftPart(UriPartial.Authority));
                 report = result.Value;
                 spec.Pk_SpecificationId = result.Key;
             }
