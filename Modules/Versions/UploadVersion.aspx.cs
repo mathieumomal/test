@@ -32,6 +32,7 @@ namespace Etsi.Ultimate.Module.Versions
         private static int UserId;
         public static Nullable<int> releaseId;
         public static Nullable<int> specId;
+        public static bool isDraft;
         public static string action;
         public static string versionUploadPath;
         public static string versionFTP_Path;
@@ -238,7 +239,7 @@ namespace Etsi.Ultimate.Module.Versions
                         version = String.Format("{0}.{1}.{2}", NewVersionMajorVal.Text.Trim(), NewVersionTechnicalVal.Text.Trim(), NewVersionEditorialVal.Text.Trim());
                         if (UploadMeeting.SelectedMeeting != null)
                             meetingDate = UploadMeeting.SelectedMeeting.START_DATE ?? DateTime.MinValue;
-                        
+
                         //Validate document & get the summary report
                         ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
                         var businessValidationReport = svc.ValidateVersionDocument(fileExtension, fileStream, version, specificationTitle, releaseDescription, meetingDate);
@@ -318,13 +319,15 @@ namespace Etsi.Ultimate.Module.Versions
                 //Specification Details
                 ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
                 var spec = specSvc.GetSpecificationDetailsById(UserId, specId.Value).Key;
+                isDraft = !(spec.IsUnderChangeControl.HasValue && spec.IsUnderChangeControl.Value);
+
                 SpecNumberVal.Text = spec.Number;
                 specificationTitle = spec.Title;
 
                 //Get User Rights
                 var allSpecReleasesWithPermissions = specSvc.GetRightsForSpecReleases(UserId, spec);
                 var currentSpecReleaseWithPermission = allSpecReleasesWithPermissions.Where(x => x.Key.Fk_ReleaseId == releaseId).FirstOrDefault();
-                var userRights = currentSpecReleaseWithPermission.Value ?? new UserRightsContainer();               
+                var userRights = currentSpecReleaseWithPermission.Value ?? new UserRightsContainer();
 
                 //Release Details
                 IReleaseService releaseSvc = ServicesFactory.Resolve<IReleaseService>();
@@ -371,6 +374,7 @@ namespace Etsi.Ultimate.Module.Versions
                 }
                 else
                 {
+                    
                     if (spec.IsUnderChangeControl.HasValue && spec.IsUnderChangeControl.Value)
                     {
                         NewVersionMajorVal.Value = release.Version2g ?? 0;
@@ -380,7 +384,7 @@ namespace Etsi.Ultimate.Module.Versions
                     else if ((latestSpecVersionForAllReleases != null) && (latestSpecVersionForAllReleases.TechnicalVersion.HasValue))
                         NewVersionTechnicalVal.Value = latestSpecVersionForAllReleases.TechnicalVersion.Value + 1;
                 }
-                
+
                 //Set Major Version Status
                 NewVersionMajorVal.Enabled = userRights.HasRight(Enum_UserRights.Versions_Modify_MajorVersion);
             }
@@ -399,19 +403,38 @@ namespace Etsi.Ultimate.Module.Versions
         /// </summary>
         private void UploadOrAllocateVersion()
         {
+
             KeyValuePair<bool, SpecVersion> buffer = fillSpecVersionObject();
-            bool operationSucceded = false;
+
+            //bool operationSucceded = false;
             if (buffer.Key)
             {
                 ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                operationSucceded = svc.UploadOrAllocateVersion(buffer.Value);
+                Report result = svc.UploadOrAllocateVersion(buffer.Value, isDraft);
+
+                if (result.ErrorList.Count > 0)
+                {
+                    versionUploadScreen.Visible = false;
+                    confirmation.Visible = true;
+                    
+                    rptWarningsErrors.DataSource = result.ErrorList;
+                    rptWarningsErrors.DataBind();
+
+                }
+                else
+                {
+                    lblSaveStatus.Text = String.Format("Version {0}.{1}.{2} {3} successfully", buffer.Value.MajorVersion, buffer.Value.TechnicalVersion, buffer.Value.EditorialVersion, action.Equals("upload") ? "uploaded" : "allocated");
+
+                    versionUploadScreen.Visible = false;
+                    state.Visible = true;
+                }
             }
 
-            //End of process => redirection
-            if (operationSucceded)
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "show upload state", "ShowAllocationResult(\"success\");", true);
-            else
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "show upload state", "ShowAllocationResult(\"failure\");", true);
+            ////End of process => redirection
+            //if (operationSucceded)
+            //    Page.ClientScript.RegisterStartupScript(this.GetType(), "show upload state", "ShowAllocationResult(\"success\");", true);
+            //else
+            //    Page.ClientScript.RegisterStartupScript(this.GetType(), "show upload state", "ShowAllocationResult(\"failure\");", true);
         }
 
         /// <summary>
@@ -426,6 +449,7 @@ namespace Etsi.Ultimate.Module.Versions
                 FileToUploadVal.Visible = false;
                 UploadBtnDisabled.Visible = false;
                 AllocateBtn.Visible = true;
+                btnConfirmUpload.Visible = false;
             }
         }
 

@@ -48,7 +48,7 @@ namespace Etsi.Ultimate.Business
         /// <returns>List of versions objects</returns>
         public List<SpecVersion> GetVersionsForASpecRelease(int specificationId, int releaseId)
         {
-            List<SpecVersion> result = new List<SpecVersion>(); 
+            List<SpecVersion> result = new List<SpecVersion>();
             ISpecVersionsRepository repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             repo.UoW = _uoW;
             result = repo.GetVersionsForSpecRelease(specificationId, releaseId);
@@ -65,9 +65,9 @@ namespace Etsi.Ultimate.Business
             ISpecVersionsRepository repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             repo.UoW = _uoW;
 
-            //New version
-            if(versionId == -1)
-                return new KeyValuePair<SpecVersion, UserRightsContainer>(new SpecVersion { MajorVersion = -1, TechnicalVersion = -1, EditorialVersion = -1 }, null);
+            ////New version
+            //if (versionId == -1)
+            //    return new KeyValuePair<SpecVersion, UserRightsContainer>(new SpecVersion { MajorVersion = -1, TechnicalVersion = -1, EditorialVersion = -1 }, null);
 
             SpecVersion version = repo.Find(versionId);
             if (version == null)
@@ -86,8 +86,8 @@ namespace Etsi.Ultimate.Business
             var specificationManager = new SpecificationManager();
             specificationManager.UoW = _uoW;
             //Get calculated rights
-            KeyValuePair<Specification_Release, UserRightsContainer> specRelease_Rights = specificationManager.GetRightsForSpecRelease(personRights, personId, version.Specification, version.Release.Pk_ReleaseId, releases);            
-            
+            KeyValuePair<Specification_Release, UserRightsContainer> specRelease_Rights = specificationManager.GetRightsForSpecRelease(personRights, personId, version.Specification, version.Release.Pk_ReleaseId, releases);
+
             return new KeyValuePair<SpecVersion, UserRightsContainer>(version, specRelease_Rights.Value);
         }
 
@@ -95,31 +95,94 @@ namespace Etsi.Ultimate.Business
         /// Enable to Allocate a version or to to upload it from scratch
         /// </summary>
         /// <param name="version">The new version to allocate or upload</param>
-        public void UploadOrAllocateVersion(SpecVersion version)
+        public Report UploadOrAllocateVersion(SpecVersion version, bool isDraft)
         {
+            Report result = new Report();
             ISpecVersionsRepository repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             repo.UoW = _uoW;
             var specVersions = repo.GetVersionsForSpecRelease(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
-            var existingVersion = specVersions.Where(x => (x.MajorVersion == version.MajorVersion) && 
-                                                          (x.TechnicalVersion == version.TechnicalVersion) && 
+            var existingVersion = specVersions.Where(x => (x.MajorVersion == version.MajorVersion) &&
+                                                          (x.TechnicalVersion == version.TechnicalVersion) &&
                                                           (x.EditorialVersion == version.EditorialVersion)).FirstOrDefault();
             if (existingVersion != null) //Existing Version
             {
-                if (existingVersion.Source != version.Source)
-                    existingVersion.Source = version.Source;
-                if (existingVersion.DocumentUploaded != version.DocumentUploaded)
-                    existingVersion.DocumentUploaded = version.DocumentUploaded;
-                if (existingVersion.ProvidedBy != version.ProvidedBy)
-                    existingVersion.ProvidedBy = version.ProvidedBy;
+                if (existingVersion.DocumentUploaded == null && version.DocumentUploaded != null)
+                {
+                    if (existingVersion.Source != version.Source)
+                        existingVersion.Source = version.Source;
+                    if (existingVersion.DocumentUploaded != version.DocumentUploaded)
+                        existingVersion.DocumentUploaded = version.DocumentUploaded;
+                    if (existingVersion.ProvidedBy != version.ProvidedBy)
+                        existingVersion.ProvidedBy = version.ProvidedBy;
                 if (existingVersion.Location != version.Location)
                     existingVersion.Location = version.Location;
 
-                var newRemark = version.Remarks.FirstOrDefault();
-                if(newRemark != null)
+                    var newRemark = version.Remarks.FirstOrDefault();
+                    if (newRemark != null)
                         existingVersion.Remarks.Add(newRemark);
+                }
+                else
+                {
+                    if (existingVersion.DocumentUploaded != null && existingVersion.DocumentUploaded != version.DocumentUploaded)
+                        result.LogError(String.Format("Document has already been uploaded to this version"));
+                    else
+                        result.LogError(String.Format("Version {0} already exists!", version.Version));
+                }
             }
             else
-                repo.InsertOrUpdate(version); //New Version
+            {
+                SpecVersion latestSpecVersion;
+                if (isDraft)
+                {
+                    var specVersionsForAllReleases = repo.GetVersionsBySpecId(version.Fk_SpecificationId ?? 0);
+                    latestSpecVersion = specVersionsForAllReleases.OrderByDescending(x => x.MajorVersion ?? 0)
+                                                                                    .ThenByDescending(y => y.TechnicalVersion ?? 0)
+                                                                                    .ThenByDescending(z => z.EditorialVersion ?? 0)
+                                                                                    .FirstOrDefault();
+                }
+                else
+                {
+                    var specVersionsForRelease = repo.GetVersionsForSpecRelease(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
+                    latestSpecVersion = specVersionsForRelease.OrderByDescending(x => x.MajorVersion ?? 0)
+                                                                                .ThenByDescending(y => y.TechnicalVersion ?? 0)
+                                                                                .ThenByDescending(z => z.EditorialVersion ?? 0)
+                                                                                .FirstOrDefault();
+
+                }
+
+                if (latestSpecVersion != null)
+                {
+                    int latestVersionNumber = int.Parse(latestSpecVersion.Version.Replace(".", ""));
+                    int newVersionNumber = int.Parse(version.Version.Replace(".", ""));
+
+
+
+                    if (isDraft)
+                    {
+                        if (newVersionNumber > latestVersionNumber && version.MajorVersion <= 2)
+                            repo.InsertOrUpdate(version);
+                        else
+                            result.LogError(String.Format("Invalid draft version number!"));
+                    }
+                    else
+                    {
+                        if (newVersionNumber > latestVersionNumber)
+                            repo.InsertOrUpdate(version); //New Version
+                        else
+                            result.LogError(String.Format("Invalid version number. Version number should be grater than {0}", latestSpecVersion.Version));
+                    }
+                }
+                else
+                {
+                    if (version.MajorVersion > 2 && isDraft)
+                        result.LogError(String.Format("Invalid draft version number!"));
+                    else
+                        repo.InsertOrUpdate(version);
+                }
+
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -146,7 +209,7 @@ namespace Etsi.Ultimate.Business
             if (qualityChecks.HasTrackedRevisions())
                 validationReport.LogWarning(CONST_QUALITY_CHECK_REVISIONMARK);
 
-            if(!qualityChecks.IsHistoryVersionCorrect(version))
+            if (!qualityChecks.IsHistoryVersionCorrect(version))
                 validationReport.LogWarning(CONST_QUALITY_CHECK_VERSION_HISTORY);
 
             if (!qualityChecks.IsCoverPageVersionCorrect(version))

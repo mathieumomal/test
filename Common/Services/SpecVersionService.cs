@@ -31,7 +31,7 @@ namespace Etsi.Ultimate.Services
         }
 
         public KeyValuePair<SpecVersion, UserRightsContainer> GetVersionsById(int VersionId, int personId)
-        {            
+        {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var specVersionManager = new SpecVersionsManager(uoW);
@@ -44,23 +44,25 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="version">Version to allocate/upload</param>
         /// <returns>Result of the operation</returns>
-        public bool UploadOrAllocateVersion(SpecVersion version)
+        public Report UploadOrAllocateVersion(SpecVersion version, bool isDraft)
         {
-            bool operationResult = true;
+            Report result = new Report();
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 try
                 {
                     var specVersionManager = new SpecVersionsManager(uoW);
-                    specVersionManager.UploadOrAllocateVersion(version);
-                    uoW.Save();
+                    result = specVersionManager.UploadOrAllocateVersion(version, isDraft);
+
+                    if (result.ErrorList.Count == 0)
+                        uoW.Save();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    operationResult = false;
+                    result.LogError(ex.Message);
                 }
             }
-            return operationResult;
+            return result;
         }
 
         /// <summary>

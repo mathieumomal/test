@@ -107,9 +107,9 @@
                             <td colspan="2" class="TabLineRight2Col">
                                 <telerik:RadNumericTextBox AutoComplete="off" IncrementSettings-InterceptArrowKeys="true" NumberFormat-DecimalDigits="0" IncrementSettings-InterceptMouseWheel="true" runat="server" ID="NewVersionMajorVal" Width="40px" MinValue="0"></telerik:RadNumericTextBox>
                                 <span>.</span>
-                                <telerik:RadNumericTextBox AutoComplete="off" IncrementSettings-InterceptArrowKeys="true" NumberFormat-DecimalDigits="0" IncrementSettings-InterceptMouseWheel="true" runat="server" ID="NewVersionTechnicalVal" Width="40px" MaxValue="9" MinValue="0"></telerik:RadNumericTextBox>
+                                <telerik:RadNumericTextBox AutoComplete="off" IncrementSettings-InterceptArrowKeys="true" NumberFormat-DecimalDigits="0" IncrementSettings-InterceptMouseWheel="true" runat="server" ID="NewVersionTechnicalVal" Width="40px"  MinValue="0"></telerik:RadNumericTextBox>
                                 <span>.</span>
-                                <telerik:RadNumericTextBox AutoComplete="off" IncrementSettings-InterceptArrowKeys="true" NumberFormat-DecimalDigits="0" IncrementSettings-InterceptMouseWheel="true" runat="server" ID="NewVersionEditorialVal" Width="40px" MaxValue="9" MinValue="0"></telerik:RadNumericTextBox>
+                                <telerik:RadNumericTextBox AutoComplete="off" IncrementSettings-InterceptArrowKeys="true" NumberFormat-DecimalDigits="0" IncrementSettings-InterceptMouseWheel="true" runat="server" ID="NewVersionEditorialVal" Width="40px"  MinValue="0"></telerik:RadNumericTextBox>
                             </td>
                         </tr>
                         <tr>
@@ -173,7 +173,7 @@
                 </asp:Panel>
                 <asp:Panel runat="server" CssClass="contentModal" ID="state">
                     <div class="wiHeader">
-                        <asp:Label runat="server" ID="lblSaveStatus" Text="" />
+                        <asp:Label runat="server" ID="lblSaveStatus" Text="label" />
                     </div>
                     <div class="wiFooter">
                         <telerik:RadButton ID="state_confirmation" runat="server" Text="OK" OnClick="Cancel_Click"></telerik:RadButton>
