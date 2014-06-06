@@ -111,6 +111,8 @@ namespace Etsi.Ultimate.Business
                     existingVersion.DocumentUploaded = version.DocumentUploaded;
                 if (existingVersion.ProvidedBy != version.ProvidedBy)
                     existingVersion.ProvidedBy = version.ProvidedBy;
+                if (existingVersion.Location != version.Location)
+                    existingVersion.Location = version.Location;
 
                 var newRemark = version.Remarks.FirstOrDefault();
                 if(newRemark != null)

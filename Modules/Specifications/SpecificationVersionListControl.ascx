@@ -115,7 +115,10 @@
                 <telerik:GridTemplateColumn HeaderText="Version" UniqueName="Version">
                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="60px" />
                     <ItemTemplate>
-                        <div class="text-center"><%# DataBinder.Eval(Container.DataItem,"Version")%></div>
+                        <div class="text-center">                            
+                            <asp:HyperLink ID="lnkFtpDownload" runat="server" Text='<%# DataBinder.Eval(Container.DataItem,"Version")%>' 
+                                Target="_blank" NavigateUrl='<%# DataBinder.Eval(Container.DataItem,"Location")%>'/>
+                        </div>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
                 <telerik:GridTemplateColumn DataField="DocumentUploaded" HeaderText="Upload date" UniqueName="DocumentUploaded">

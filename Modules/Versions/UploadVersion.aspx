@@ -95,6 +95,7 @@
                                     OnClientFileSelected="EnabledButtonUpload"
                                     OnClientFileUploadRemoved="DisabledButtonUpload"
                                     OverwriteExistingFiles="True"
+                                    PostbackTriggers="UploadBtn"
                                     Visible="true">
                                 </telerik:RadAsyncUpload>
                             </td>

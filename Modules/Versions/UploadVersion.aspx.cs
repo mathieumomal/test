@@ -4,6 +4,7 @@ using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Utils;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,8 @@ namespace Etsi.Ultimate.Module.Versions
         public static readonly string DsId_Key = "ETSI_DS_ID";
         private static string specificationTitle = String.Empty;
         private static string releaseDescription = String.Empty;
-
+        private static UploadedFile versionToSave;
+        private static string versionPathToSave = String.Empty;
         //Properties
         private static int UserId;
         public static Nullable<int> releaseId;
@@ -93,10 +95,60 @@ namespace Etsi.Ultimate.Module.Versions
         /// <param name="e">event arguments</param>
         protected void Confirmation_Upload_OnClick(object sender, EventArgs e)
         {
-            ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
+            bool isFTPTransferSuccess = false;
+            StringBuilder errorList = new StringBuilder();
+            string ftpBasePath = String.Empty;
+            if (ConfigurationManager.AppSettings["FtpSpecVersions"] != null)
+                ftpBasePath = ConfigurationManager.AppSettings["FtpSpecVersions"].ToString();
+
+            if (String.IsNullOrEmpty(ftpBasePath))
+                errorList.AppendLine("FTP not yet configured");
+
+            string targetFolder = String.Format("{0}\\Specs\\archive\\{1}_series\\{2}\\", ftpBasePath, SpecNumberVal.Text.Split('.')[0], SpecNumberVal.Text);
+
             //Tranfer FTP
-            //If succeded
-            UploadOrAllocateVersion();
+            if (versionToSave != null)
+            {
+                try
+                {
+                    string validFileName = GetValidFileName();
+                    string zipFileName = validFileName + ".zip";
+                    versionPathToSave = Path.Combine(targetFolder, zipFileName);
+
+                    bool isTargetFolderExists = Directory.Exists(targetFolder);
+                    if (!isTargetFolderExists)
+                        Directory.CreateDirectory(targetFolder);
+
+                    FileToUploadVal.TargetFolder = targetFolder;
+
+                    //If it is not in zip format, compress & upload the same
+                    if (!versionToSave.GetExtension().Equals(".zip", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        var stream = File.Create(versionPathToSave);
+                        var package = ZipPackage.Create(stream);
+                        package.AddStream(versionToSave.InputStream, validFileName + versionToSave.GetExtension());
+                        package.Close(true);
+                    }
+                    else
+                        versionToSave.SaveAs(versionPathToSave);
+
+                    isFTPTransferSuccess = true;
+                }
+                catch (Exception ex)
+                {
+                    errorList.AppendLine("Upload FTP Error: " + ex.Message);
+                }
+                finally
+                {
+                    versionToSave = null;
+                }
+            }
+
+            //If FTP transfer succeded, then insert/update version object
+            if (isFTPTransferSuccess)
+                UploadOrAllocateVersion();
+
+            versionPathToSave = String.Empty; //Clear path
         }
 
         /// <summary>
@@ -110,6 +162,7 @@ namespace Etsi.Ultimate.Module.Versions
             {
                 try
                 {
+                    versionToSave = e.File;
                     UploadedFile uploadedFile = e.File;
                     string fileExtension = String.Empty;
                     Report validationReport = new Report();
@@ -293,7 +346,7 @@ namespace Etsi.Ultimate.Module.Versions
                                                                                       .ThenByDescending(z => z.EditorialVersion ?? 0)
                                                                                       .FirstOrDefault();
 
-                var leastSpecVersionPendingUpload = specVersionsForCurrentRelease.Where(x => x.DocumentUploaded == null)
+                var leastSpecVersionPendingUpload = specVersionsForCurrentRelease.Where(x => x.Location == null)
                                                                   .OrderBy(y => y.MajorVersion ?? 0)
                                                                   .ThenBy(z => z.TechnicalVersion ?? 0)
                                                                   .ThenBy(e => e.EditorialVersion ?? 0)
@@ -410,6 +463,7 @@ namespace Etsi.Ultimate.Module.Versions
                 }
                 if (action.Equals("upload"))
                 {
+                    version.Location = versionPathToSave;
                     version.DocumentUploaded = DateTime.UtcNow;
                     version.ProvidedBy = UserId;
                 }
@@ -508,6 +562,8 @@ namespace Etsi.Ultimate.Module.Versions
             analysis.Visible = false;
             confirmation.Visible = false;
             state.Visible = false;
+            versionToSave = null;
+            versionPathToSave = String.Empty;
         }
 
         #endregion
