@@ -23,6 +23,8 @@ namespace Etsi.Ultimate.Module.Versions
 
         //Static fields
         public static readonly string DsId_Key = "ETSI_DS_ID";
+        private static string specificationTitle = String.Empty;
+        private static string releaseDescription = String.Empty;
 
         //Properties
         private static int UserId;
@@ -60,24 +62,7 @@ namespace Etsi.Ultimate.Module.Versions
         /// <param name="e">event arguments</param>
         protected void AllocateVersion_Click(object sender, EventArgs e)
         {
-            GetRequestParameters();
-            KeyValuePair<bool, SpecVersion> buffer = fillSpecVersionObject();
-            bool operationSucceded = false;
-            if (buffer.Key)
-            {
-                ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                operationSucceded = svc.AllocateVersion(buffer.Value, releaseId.GetValueOrDefault());
-            }
-
-            //End of process => redirection
-            if (operationSucceded)
-            {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "show uplod state", "ShowAllocationResult(\"success\");", true);
-            }
-            else
-            {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "show uplod state", "ShowAllocationResult(\"failure\");", true);
-            }
+            UploadOrAllocateVersion();
         }
 
         /// <summary>
@@ -111,22 +96,7 @@ namespace Etsi.Ultimate.Module.Versions
             ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
             //Tranfer FTP
             //If succeded
-            KeyValuePair<bool, SpecVersion> buffer = fillSpecVersionObject();
-            bool operationSucceded = false;
-            if (buffer.Key)
-            {
-                operationSucceded = svc.UploadVersion(buffer.Value, releaseId.GetValueOrDefault());
-            }
-
-            //End of process => redirection
-            if (operationSucceded)
-            {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "show uplod state", "ShowAllocationResult(\"success\");", true);
-            }
-            else
-            {
-                Page.ClientScript.RegisterStartupScript(this.GetType(), "show uplod state", "ShowAllocationResult(\"failure\");", true);
-            }
+            UploadOrAllocateVersion();
         }
 
         /// <summary>
@@ -215,18 +185,10 @@ namespace Etsi.Ultimate.Module.Versions
                         version = String.Format("{0}.{1}.{2}", NewVersionMajorVal.Text.Trim(), NewVersionTechnicalVal.Text.Trim(), NewVersionEditorialVal.Text.Trim());
                         if (UploadMeeting.SelectedMeeting != null)
                             meetingDate = UploadMeeting.SelectedMeeting.START_DATE ?? DateTime.MinValue;
-
-                        ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                        if ((releaseId.HasValue) && (releaseId > 0))
-                        {
-                            var specVersionRightsObject = svc.GetVersionsById(releaseId.Value, UserId);
-                            var specVerion = specVersionRightsObject.Key;
-                            title = specVerion.Specification.Title;
-                            release = specVerion.Release.Description;
-                        }
-
+                        
                         //Validate document & get the summary report
-                        var businessValidationReport = svc.ValidateVersionDocument(fileExtension, fileStream, version, title, release, meetingDate);
+                        ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
+                        var businessValidationReport = svc.ValidateVersionDocument(fileExtension, fileStream, version, specificationTitle, releaseDescription, meetingDate);
                         validationReport.ErrorList.AddRange(businessValidationReport.ErrorList);
                         validationReport.WarningList.AddRange(businessValidationReport.WarningList);
                     }
@@ -304,6 +266,7 @@ namespace Etsi.Ultimate.Module.Versions
                 ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
                 var spec = specSvc.GetSpecificationDetailsById(UserId, specId.Value).Key;
                 SpecNumberVal.Text = spec.Number;
+                specificationTitle = spec.Title;
 
                 //Get User Rights
                 var allSpecReleasesWithPermissions = specSvc.GetRightsForSpecReleases(UserId, spec);
@@ -314,6 +277,7 @@ namespace Etsi.Ultimate.Module.Versions
                 IReleaseService releaseSvc = ServicesFactory.Resolve<IReleaseService>();
                 var release = releaseSvc.GetReleaseById(UserId, releaseId.Value).Key;
                 ReleaseVal.Text = release.Code;
+                releaseDescription = release.Description;
 
                 //SpecVersion Details
                 ISpecVersionService specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
@@ -350,6 +314,7 @@ namespace Etsi.Ultimate.Module.Versions
                     NewVersionMajorVal.Value = leastSpecVersionPendingUpload.MajorVersion ?? 0;
                     NewVersionTechnicalVal.Value = leastSpecVersionPendingUpload.TechnicalVersion ?? 0;
                     NewVersionEditorialVal.Value = leastSpecVersionPendingUpload.EditorialVersion ?? 0;
+                    UploadMeeting.SelectedMeetingId = leastSpecVersionPendingUpload.Source ?? 0;
                 }
                 else
                 {
@@ -377,6 +342,26 @@ namespace Etsi.Ultimate.Module.Versions
         }
 
         /// <summary>
+        /// Upload/Allocate Version
+        /// </summary>
+        private void UploadOrAllocateVersion()
+        {
+            KeyValuePair<bool, SpecVersion> buffer = fillSpecVersionObject();
+            bool operationSucceded = false;
+            if (buffer.Key)
+            {
+                ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
+                operationSucceded = svc.UploadOrAllocateVersion(buffer.Value);
+            }
+
+            //End of process => redirection
+            if (operationSucceded)
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "show upload state", "ShowAllocationResult(\"success\");", true);
+            else
+                Page.ClientScript.RegisterStartupScript(this.GetType(), "show upload state", "ShowAllocationResult(\"failure\");", true);
+        }
+
+        /// <summary>
         /// Display or not file upload input
         /// Display or not allocation btn
         /// </summary>
@@ -397,40 +382,17 @@ namespace Etsi.Ultimate.Module.Versions
         /// <returns></returns>
         private KeyValuePair<bool, SpecVersion> fillSpecVersionObject()
         {
-
             //User's data
-            int[] verionsOutputs = new int[] { 0, 0, 0 };
-            if (!int.TryParse(NewVersionMajorVal.Text, out verionsOutputs[0]) || !int.TryParse(NewVersionTechnicalVal.Text, out verionsOutputs[1]) || !int.TryParse(NewVersionEditorialVal.Text, out verionsOutputs[2]))
+            int output;
+            if (!int.TryParse(NewVersionMajorVal.Text, out output) || !int.TryParse(NewVersionTechnicalVal.Text, out output) || !int.TryParse(NewVersionEditorialVal.Text, out output))
             {
                 return new KeyValuePair<bool, SpecVersion>(false, null);
             }
             else
             {
-
                 SpecVersion version = new SpecVersion();
-
-                if (releaseId == -1 && specId.HasValue)
-                {
-                    ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
-                    Specification_Release spec = specSvc.GetSpecificationDetailsById(UserId, specId.Value).Key.Specification_Release.FirstOrDefault();
-
-                    version.Fk_ReleaseId = spec.Fk_ReleaseId;
-                    version.Fk_SpecificationId = spec.Fk_SpecificationId;
-                }
-                else
-                {
-                    ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                    KeyValuePair<SpecVersion, UserRightsContainer> specVersionRightsObject = svc.GetVersionsById(releaseId.Value, UserId);
-                    SpecVersion specVerion = specVersionRightsObject.Key;
-                    if (specVerion == null)
-                    {
-                        return new KeyValuePair<bool, SpecVersion>(false, null);
-                    }
-
-                    version.Fk_ReleaseId = specVerion.Fk_ReleaseId;
-                    version.Fk_SpecificationId = specVerion.Fk_SpecificationId;
-                }
-
+                version.Fk_SpecificationId = specId;
+                version.Fk_ReleaseId = releaseId;
                 version.MajorVersion = int.Parse(NewVersionMajorVal.Text);
                 version.TechnicalVersion = int.Parse(NewVersionTechnicalVal.Text);
                 version.EditorialVersion = int.Parse(NewVersionEditorialVal.Text);
@@ -438,7 +400,7 @@ namespace Etsi.Ultimate.Module.Versions
                 version.Remarks.Add(new Remark()
                 {
                     RemarkText = CommentVal.Text,
-                    CreationDate = new Nullable<System.DateTime>(DateTime.Now),
+                    CreationDate = new Nullable<System.DateTime>(DateTime.UtcNow),
                     Fk_PersonId = UserId
                 });
 
@@ -448,12 +410,10 @@ namespace Etsi.Ultimate.Module.Versions
                 }
                 if (action.Equals("upload"))
                 {
-                    version.DocumentUploaded = DateTime.Now;
+                    version.DocumentUploaded = DateTime.UtcNow;
                     version.ProvidedBy = UserId;
                 }
-
                 return new KeyValuePair<bool, SpecVersion>(true, version);
-
             }
         }
 

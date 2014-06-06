@@ -99,69 +99,25 @@ namespace Etsi.Ultimate.Business
         {
             ISpecVersionsRepository repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             repo.UoW = _uoW;
-            repo.InsertOrUpdate(version);
-        }
-
-        /// <summary>
-        /// Check if the version to insert is allowed
-        /// </summary>
-        /// <param name="version"></param>
-        /// <returns></returns>
-        public bool CheckIfVersionAlloawed(SpecVersion version, SpecVersion oldVersion, bool isUpload)
-        {
-
-            if (oldVersion == null)
-                return false;
-            if (isUpload)
+            var specVersions = repo.GetVersionsForSpecRelease(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
+            var existingVersion = specVersions.Where(x => (x.MajorVersion == version.MajorVersion) && 
+                                                          (x.TechnicalVersion == version.TechnicalVersion) && 
+                                                          (x.EditorialVersion == version.EditorialVersion)).FirstOrDefault();
+            if (existingVersion != null) //Existing Version
             {
-                // Check if any version pending for load
-                List<SpecVersion> versions = GetVersionsForASpecRelease(version.Fk_SpecificationId.GetValueOrDefault(), version.Fk_ReleaseId.GetValueOrDefault()).Where(v => v.DocumentUploaded == null).ToList();
-                if (versions != null && versions.Count > 0)
-                {
-                    foreach (SpecVersion v in versions)
-                    {
-                        if (v.MajorVersion == version.MajorVersion && v.TechnicalVersion == version.TechnicalVersion && v.EditorialVersion == version.EditorialVersion)
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-            //Check if version is valid 
-            if(version.MajorVersion >= oldVersion.MajorVersion)
-            {
-                if (version.MajorVersion == oldVersion.MajorVersion)
-                {
-                    if (version.TechnicalVersion >= oldVersion.TechnicalVersion)
-                    {
-                        if (version.TechnicalVersion == oldVersion.TechnicalVersion)
-                        {
-                            if (version.EditorialVersion > oldVersion.EditorialVersion)
-                            {
-                                return true;
-                            }
-                            else
-                            {
-                                return false;
-                            }
-                        }
-                        else
-                        {
-                            return true;
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-                return true;
-                
+                if (existingVersion.Source != version.Source)
+                    existingVersion.Source = version.Source;
+                if (existingVersion.DocumentUploaded != version.DocumentUploaded)
+                    existingVersion.DocumentUploaded = version.DocumentUploaded;
+                if (existingVersion.ProvidedBy != version.ProvidedBy)
+                    existingVersion.ProvidedBy = version.ProvidedBy;
+
+                var newRemark = version.Remarks.FirstOrDefault();
+                if(newRemark != null)
+                        existingVersion.Remarks.Add(newRemark);
             }
             else
-            {
-                return false;
-            }
+                repo.InsertOrUpdate(version); //New Version
         }
 
         /// <summary>
