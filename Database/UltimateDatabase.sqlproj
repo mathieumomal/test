@@ -162,6 +162,9 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
+    <Build Include="dbo\Views\ResponsibleGroup_Secretary.sql" />
+    <Build Include="dbo\Stored Procedures\WorkItems_CleanAll.sql" />
+    <Build Include="dbo\Stored Procedures\Specifications_CleanAll.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

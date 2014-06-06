@@ -44,5 +44,12 @@ namespace Etsi.Ultimate.Business
         View_Persons FindPerson(int id);
 
         #endregion
+
+        /// <summary>
+        /// Find the list of Prime responsible group secretaries Emails
+        /// </summary>
+        /// <param name="primeResponsibleGroupId"></param>
+        /// <returns></returns>
+        List<string> GetEmailSecretariesFromAPrimeResponsibleGroupByCommityId(int primeResponsibleGroupId);
     }
 }

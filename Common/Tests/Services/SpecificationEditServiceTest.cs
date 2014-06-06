@@ -223,8 +223,13 @@ namespace Etsi.Ultimate.Tests.Services
             RegisterAllMocks();
             //---MAIL
             //Specific mock for the email, because we want to check the call made to it.
-            var roleManager = new RolesManager();
+            var roleManager = new RolesManager();//To get workplan managers email
             var toAddresss = roleManager.GetWpMgrEmail();
+            var personManager = new PersonManager();//To get secretaries email
+            var primeResponsibleGroupCommityId = specToEdit.PrimeResponsibleGroup.Fk_commityId;
+            var listSecretariesEmail = personManager.GetEmailSecretariesFromAPrimeResponsibleGroupByCommityId(primeResponsibleGroupCommityId);
+            toAddresss = toAddresss.Concat(listSecretariesEmail).ToList();
+
             var subject = String.Format(Localization.Specification_ReferenceNumberAssigned_Subject, specToEdit.Number);
             var body = new SpecReferenceNumberAssignedMailTemplate((String.IsNullOrEmpty(specToEdit.Number) ? "" : specToEdit.Number), (String.IsNullOrEmpty(specToEdit.Title) ? "" : specToEdit.Title), new List<string>() { });
             var bodyContent = body.TransformText();
@@ -355,6 +360,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.View_Persons).Return(Persons());
+            mockDataContext.Stub(x => x.ResponsibleGroupSecretaries).Return((IDbSet<ResponsibleGroup_Secretary>)GetResponsibleGroupSecretary());
             uow.Stub(s => s.Context).Return(mockDataContext);
         }
 
@@ -426,6 +432,16 @@ namespace Etsi.Ultimate.Tests.Services
             dbSet.Add(new View_Persons() { PERSON_ID = 7, Email = "sept@etsi.org" });
             dbSet.Add(new View_Persons() { PERSON_ID = 101, Email = "101@etsi.org" });
             return dbSet;
+        }
+
+        private static ResponsibleGroupSecretaryFakeDBSet GetResponsibleGroupSecretary()
+        {
+            var ResponsibleGroupSecretaries = new ResponsibleGroupSecretaryFakeDBSet { 
+                new ResponsibleGroup_Secretary() { TbId = 1, Email = "one@capgemini.com", PersonId = 1 },
+                new ResponsibleGroup_Secretary() { TbId = 1, Email = "onBis@capgemini.com", PersonId = 11 },
+                new ResponsibleGroup_Secretary() { TbId = 2, Email = "two@capgemini.com", PersonId = 2 },
+            };
+            return ResponsibleGroupSecretaries;
         }
         
         #endregion

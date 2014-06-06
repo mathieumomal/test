@@ -60,6 +60,7 @@
     <Compile Include="IUltimateUnitOfWork.cs" />
     <Compile Include="ReleaseRepository.cs" />
     <Compile Include="RepositoryFactory.cs" />
+    <Compile Include="ResponsibleGroupSecretaryRepository.cs" />
     <Compile Include="SpecificationRepository.cs" />
     <Compile Include="SpecificationTechnologiesRepository.cs" />
     <Compile Include="SpecificationWorkItemRepository.cs" />

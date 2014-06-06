@@ -101,6 +101,15 @@ namespace Etsi.Ultimate.Tests.Services
             }
         }
 
+        [Test]
+        public void CheckInhibitedToPromote_Test()
+        {
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var result = specSvc.CheckInhibitedToPromote("test");
+
+            Assert.AreEqual(false, result);
+        }
+
         [Test, TestCaseSource("GetSpecificicationNumbersTestAlreadyExists")]
         public void TestCheckNumberAlreadyExist(string specNumber, bool expectResult, int messageCount)
         {

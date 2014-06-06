@@ -84,6 +84,7 @@
   <ItemGroup>
     <Compile Include="BaseTest.cs" />
     <Compile Include="Business\CommunityManagerTest.cs" />
+    <Compile Include="Business\PersonManagerTest.cs" />
     <Compile Include="Business\SpecificationPromoteActionTest.cs" />
     <Compile Include="Business\ReleaseManagerTest.cs" />
     <Compile Include="Business\LogManagerTest.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="FakeRepositories\WorkPlanFileFakeRepository.cs" />
     <Compile Include="FakeSets\Enum_SerieFakeDBSet.cs" />
     <Compile Include="FakeSets\Enum_TechnologyFakeDBSet.cs" />
+    <Compile Include="FakeSets\ResponsibleGroupSecretaryFakeDBSet.cs" />
     <Compile Include="FakeSets\SpecificationDBSet.cs" />
     <Compile Include="FakeSets\SpecificationRapporteurFakeDbSet.cs" />
     <Compile Include="FakeSets\SpecificationReleaseFakeDBSet.cs" />
@@ -110,6 +112,7 @@
     <Compile Include="FakeSets\VersionFakeDBSet.cs" />
     <Compile Include="FakeSets\ViewPersonFakeDBSet.cs" />
     <Compile Include="FakeSets\WorkPlanFileFakeDBSet.cs" />
+    <Compile Include="Repositories\ResponsibleGroupSecretaryRepositoryTest.cs" />
     <Compile Include="Repositories\SpecificationWorkItemRepositoryTest.cs" />
     <Compile Include="Repositories\SpecVersionsRepositoryTest.cs" />
     <Compile Include="Repositories\WorkPlanFileRepositoryTest.cs" />

@@ -31,6 +31,13 @@
             <asp:Panel ID="specBody" runat="server" CssClass="specificationDetailsBody">
                 <telerik:RadScriptManager runat="server" ID="rsmSpecificationEdit" />
                 <telerik:RadAjaxManager ID="wiRadAjaxManager" runat="server" EnablePageHeadUpdate="false" UpdatePanelsRenderMode="Inline">
+                    <AjaxSettings>
+                        <telerik:AjaxSetting AjaxControlID="txtReference">
+                            <UpdatedControls>
+                                <telerik:AjaxUpdatedControl ControlID="txtReference" />
+                            </UpdatedControls>
+                        </telerik:AjaxSetting>
+                    </AjaxSettings>
                 </telerik:RadAjaxManager>
                 <div class="HeaderText">
                     <asp:Label ID="lblHeaderText" runat="server"></asp:Label>
@@ -44,7 +51,7 @@
                             <tr>
                                 <td class="LeftColumn">Reference</td>
                                 <td class="RightColumn">
-                                    <asp:TextBox ID="txtReference" Width="198" runat="server"></asp:TextBox>
+                                    <telerik:RadTextBox ID="txtReference" runat="server" MaxLength="8" Width="198" ClientEvents-OnBlur="TxtReference_OnBlur" OnTextChanged="TxtReference_OnBlur" />
                                 </td>
                             </tr>
                             <tr>

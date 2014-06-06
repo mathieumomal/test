@@ -81,6 +81,8 @@ namespace Etsi.Ultimate.Business
                 {
                     throw new InvalidOperationException("Specification number already exists : " + String.Join(" # -- # ", checkAlreadyExist.Value));
                 }
+                //promoteInhibited
+                spec.promoteInhibited = specMgr.CheckInhibitedToPromote(spec.Number);
             }
             //If the spec number has been edited we send a mail to the secretary and the workplan manager
             MailAlertNumberEdited(spec, report);
@@ -254,10 +256,12 @@ namespace Etsi.Ultimate.Business
             //Send to workplan manager
             var workplanMgrsEmail = roleManager.GetWpMgrEmail();
             var to = workplanMgrsEmail;
-            
-            //Send to Prime responsible grou Secretary
-                //var secretariesEmail = roleManager.GetSecretaryForComitteeEmail(TO FOUND);
-                //var to = secretariesEmail.Concat(workplanMgrsEmail).ToList();
+
+            //Send to Prime Responsible Group secretaries as well
+            var primeResponsibleGroupCommityId = spec.PrimeResponsibleGroup.Fk_commityId;
+            var personManager = new PersonManager();
+            var listSecretariesEmail = personManager.GetEmailSecretariesFromAPrimeResponsibleGroupByCommityId(primeResponsibleGroupCommityId);
+            to = to.Concat(listSecretariesEmail).ToList();
 
             var workItemLabel = spec.Specification_WorkItem;
             var body = new SpecReferenceNumberAssignedMailTemplate((String.IsNullOrEmpty(spec.Number) ? "" : spec.Number), (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), listSpecWILabel);

@@ -43,23 +43,6 @@ namespace Etsi.Ultimate.Business
             }
             return wpMgrsEmail;
         }
-
-        public List<string> GetSecretaryForComitteeEmail(int id)
-        {
-            var secretaryForComitteeEmail = new List<string>();
-            IUserRolesRepository repo = RepositoryFactory.Resolve<IUserRolesRepository>();
-            repo.UoW = UoW;
-            PersonManager personManager = new PersonManager();
-            personManager.UoW = UoW;
-
-            var secretaryForComitteeId = repo.GetSecretaryForComittee(id);
-            var secretaryForComittee = personManager.GetByIds(secretaryForComitteeId);
-            foreach (var secretaryForComitteeMgr in secretaryForComittee)
-            {
-                secretaryForComitteeEmail.Add(secretaryForComitteeMgr.Email);
-            }
-            return secretaryForComitteeEmail;
-        }
         #endregion
 
 
@@ -84,17 +67,6 @@ namespace Etsi.Ultimate.Business
 
             var wpMgrsId = repo.GetWpMgr();
             return personManager.GetByIds(wpMgrsId);
-        }
-
-        public List<View_Persons> GetSecretaryForComittee(int id)
-        {
-            IUserRolesRepository repo = RepositoryFactory.Resolve<IUserRolesRepository>();
-            repo.UoW = UoW;
-            PersonManager personManager = new PersonManager();
-            personManager.UoW = UoW;
-
-            var secretariesForComitteeId = repo.GetSecretaryForComittee(id);
-            return personManager.GetByIds(secretariesForComitteeId);
         }
         #endregion
 
@@ -128,12 +100,6 @@ namespace Etsi.Ultimate.Business
         List<String> GetWpMgrEmail();
 
         /// <summary>
-        /// Return secretary's email for a comittee
-        /// </summary>
-        /// <returns></returns>
-        List<String> GetSecretaryForComitteeEmail(int id);
-
-        /// <summary>
         /// Return the list of spec manager
         /// </summary>
         /// <returns></returns>
@@ -144,11 +110,5 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <returns></returns>
         List<View_Persons> GetWpMgr();
-
-        /// <summary>
-        /// Return the list of secretary for a comittee 
-        /// </summary>
-        /// <returns></returns>
-        List<View_Persons> GetSecretaryForComittee(int id);
     }
 }

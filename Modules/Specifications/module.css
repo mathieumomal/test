@@ -72,9 +72,7 @@ legend {
     background-image: url('images/error.png');
 }
 
-.ErrorTxt {
-    margin: 0 0 0 25%;
-}
+.ErrorTxt {margin: 0 0 0 7%;}
 
 .TabLineLeft {
     width: 184.6px;

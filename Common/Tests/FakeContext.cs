@@ -109,6 +109,12 @@ namespace Etsi.Ultimate.Tests
             set;
         }
 
+        public System.Data.Entity.IDbSet<ResponsibleGroup_Secretary> ResponsibleGroupSecretaries
+        {
+            get;
+            set;
+        }
+
         public System.Data.Entity.IDbSet<SpecVersion> SpecVersions
         {
             get;

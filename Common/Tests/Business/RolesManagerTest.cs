@@ -91,52 +91,6 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.IsTrue(results.First().Contains(EmailTest));
         }
 
-        [TestCase(1)]
-        [TestCase(2)]
-        public void GetSecretaryForComittee(int comitteeId)
-        {
-            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
-            var mockUoW = MockRepository.GenerateMock<IUltimateUnitOfWork>();
-            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
-
-            mockDataContext.Stub(x => x.View_Persons).Return(Persons());
-            mockUoW.Stub(s => s.Context).Return(mockDataContext);
-            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateUnitOfWork), mockUoW);
-
-            var manager = new RolesManager();
-            var results = manager.GetSecretaryForComittee(comitteeId);
-
-            if(comitteeId==1)
-                Assert.AreEqual(2, results.Count);
-            else
-                Assert.AreEqual(1, results.Count);
-        }
-
-        [TestCase(1)]
-        [TestCase(2)]
-        public void GetSecretaryForComitteeEmail(int comitteeId)
-        {
-            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
-            var mockUoW = MockRepository.GenerateMock<IUltimateUnitOfWork>();
-            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
-
-            mockDataContext.Stub(x => x.View_Persons).Return(Persons());
-            mockUoW.Stub(s => s.Context).Return(mockDataContext);
-            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateUnitOfWork), mockUoW);
-
-            var manager = new RolesManager();
-            var results = manager.GetSecretaryForComitteeEmail(comitteeId);
-
-            if (comitteeId == 1){
-                Assert.AreEqual(2, results.Count);
-                Assert.IsTrue(results.First().Contains(EmailTest));
-            }
-            else{
-                Assert.AreEqual(1, results.Count);
-                Assert.IsTrue(results.First().Contains(EmailTest));
-            }
-        }
-
         #region datas
         private IDbSet<View_Persons> Persons()
         {

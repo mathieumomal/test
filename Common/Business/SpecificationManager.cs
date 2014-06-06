@@ -187,7 +187,7 @@ namespace Etsi.Ultimate.Business
                     .Where(x => (x.IsActive && x.Number.Equals(specNumber)))
                     .ToList();
             if (result.Count() > 0)
-                errors.Add(Localization.Specification_ERR003_Number_Already_Use);
+                errors.Add(String.Format(Localization.Specification_ERR003_Number_Already_Use,result.FirstOrDefault().Title));
 
             if (errors.Count() > 0)
                 state = false;
@@ -202,7 +202,17 @@ namespace Etsi.Ultimate.Business
         /// <exception cref="System.NotImplementedException"></exception>
         public bool CheckInhibitedToPromote(string specNumber)
         {
-            throw new NotImplementedException();
+            var state = false;
+            var listInhibitPromotePatterns = new List<string>();
+            foreach (var inihibitPromotePattern in listInhibitPromotePatterns)
+            {
+                Match match = Regex.Match(specNumber, inihibitPromotePattern);
+                if (match.Success)
+                {
+                    state = true;
+                }
+            }
+            return state;
         }
 
         #endregion

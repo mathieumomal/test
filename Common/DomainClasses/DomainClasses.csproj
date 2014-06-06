@@ -77,6 +77,9 @@
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Meeting.Extend.cs" />
+    <Compile Include="ResponsibleGroup_Secretary.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="SpecificationSearch.cs" />
     <Compile Include="SpecVersion.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>

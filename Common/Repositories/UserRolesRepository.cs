@@ -54,11 +54,6 @@ namespace Etsi.Ultimate.Repositories
             throw new NotImplementedException();
         }
 
-        public List<int> GetSecretaryForComittee(int id)
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion
     }
 
@@ -92,12 +87,5 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <returns></returns>
         List<int> GetWpMgr();
-
-        /// <summary>
-        /// Return secretary's id from a comittee
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        List<int> GetSecretaryForComittee(int id);
     }
 }

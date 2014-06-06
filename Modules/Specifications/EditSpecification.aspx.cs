@@ -36,6 +36,8 @@ namespace Etsi.Ultimate.Module.Specifications
         private const String EDIT_MODE = "edit";
         private List<string> LIST_OF_TABS = new List<string>() { };
         public static readonly string DsId_Key = "ETSI_DS_ID";
+        private const String CONST_ERRORPANEL_CSS = "Spec_Edit_Error";
+        private const String CONST_ERRORTEXT_CSS = "ErrorTxt";
 
 
         //Properties
@@ -93,8 +95,8 @@ namespace Etsi.Ultimate.Module.Specifications
             if (report.ErrorList.Count > 0)
             {
                 specMsg.Visible = true;
-                specMsg.CssClass = "Spec_Edit_Error";
-                specMsgTxt.CssClass = "ErrorTxt";
+                specMsg.CssClass = CONST_ERRORPANEL_CSS;
+                specMsgTxt.CssClass = CONST_ERRORTEXT_CSS;
 
                 foreach (string errorMessage in report.ErrorList)
                     specMsgTxt.Text = errorMessage + "<br/>";
@@ -140,6 +142,33 @@ namespace Etsi.Ultimate.Module.Specifications
                 PersonName = personDisplayName
             });
             specificationRemarks.DataSource = datasource;
+        }
+
+        protected void TxtReference_OnBlur(object sender, EventArgs e)
+        {
+            ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
+            List<string> errorsList = new List<string>();
+            
+            var referenceNumber = txtReference.Text;
+            if (!string.IsNullOrEmpty(referenceNumber))
+            {
+                var checkFormat = svc.CheckFormatNumber(referenceNumber);
+                errorsList.Concat(checkFormat.Value);
+                var checkAlreadyExist = svc.LookForNumber(referenceNumber);
+                errorsList.Concat(checkAlreadyExist.Value);
+            }
+
+            if (errorsList.Count > 0)
+            {
+                specMsg.Visible = true;
+                specMsg.CssClass = CONST_ERRORPANEL_CSS;
+                specMsgTxt.CssClass = CONST_ERRORTEXT_CSS;
+
+                foreach (string errorMessage in errorsList)
+                    specMsgTxt.Text = errorMessage + "<br/>";
+
+                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "setTimeout(function(){ $('#" + specMsg.ClientID + "').hide('slow');} , 5000);", true);
+            }
         }
 
         #endregion

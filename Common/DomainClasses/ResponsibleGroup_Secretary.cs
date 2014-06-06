@@ -13,10 +13,11 @@ namespace Etsi.Ultimate.DomainClasses
     using System.Collections.Generic;
     
     [Serializable]
-    public partial class ETSI_WorkItem
+    public partial class ResponsibleGroup_Secretary
     {
-        public int WKI_ID { get; set; }
-        public string WKI_REFERENCE { get; set; }
+        public Nullable<int> TbId { get; set; }
+        public string Email { get; set; }
+        public int PersonId { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }
