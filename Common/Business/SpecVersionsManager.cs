@@ -106,7 +106,7 @@ namespace Etsi.Ultimate.Business
                                                           (x.EditorialVersion == version.EditorialVersion)).FirstOrDefault();
             if (existingVersion != null) //Existing Version
             {
-                if (existingVersion.DocumentUploaded == null && version.DocumentUploaded != null)
+                if (existingVersion.Location == null && version.Location != null)
                 {
                     if (existingVersion.Source != version.Source)
                         existingVersion.Source = version.Source;
@@ -114,19 +114,16 @@ namespace Etsi.Ultimate.Business
                         existingVersion.DocumentUploaded = version.DocumentUploaded;
                     if (existingVersion.ProvidedBy != version.ProvidedBy)
                         existingVersion.ProvidedBy = version.ProvidedBy;
-                if (existingVersion.Location != version.Location)
-                    existingVersion.Location = version.Location;
+                    if (existingVersion.Location != version.Location)
+                        existingVersion.Location = version.Location;
 
                     var newRemark = version.Remarks.FirstOrDefault();
                     if (newRemark != null)
                         existingVersion.Remarks.Add(newRemark);
                 }
-                else
+                else if (existingVersion.Location != null)
                 {
-                    if (existingVersion.DocumentUploaded != null && existingVersion.DocumentUploaded != version.DocumentUploaded)
-                        result.LogError(String.Format("Document has already been uploaded to this version"));
-                    else
-                        result.LogError(String.Format("Version {0} already exists!", version.Version));
+                    result.LogError(String.Format("Document has already been uploaded to this version"));
                 }
             }
             else
@@ -154,8 +151,6 @@ namespace Etsi.Ultimate.Business
                 {
                     int latestVersionNumber = int.Parse(latestSpecVersion.Version.Replace(".", ""));
                     int newVersionNumber = int.Parse(version.Version.Replace(".", ""));
-
-
 
                     if (isDraft)
                     {

@@ -72,7 +72,7 @@ namespace Etsi.Ultimate.Module.Versions
         /// <param name="e">event arguments</param>
         protected void AllocateVersion_Click(object sender, EventArgs e)
         {
-            UploadOrAllocateVersion();
+            UploadOrAllocateVersion(false);
         }
 
         /// <summary>
@@ -103,13 +103,7 @@ namespace Etsi.Ultimate.Module.Versions
         /// <param name="e">event arguments</param>
         protected void Confirmation_Upload_OnClick(object sender, EventArgs e)
         {
-            bool isFTPTransferSuccess = TransferToFTP();
-
-            //If FTP transfer succeded, then insert/update version object
-            if (isFTPTransferSuccess)
-                UploadOrAllocateVersion();
-
-            versionPathToSave = String.Empty; //Clear path
+            UploadOrAllocateVersion(true);
         }
 
         /// <summary>
@@ -309,7 +303,7 @@ namespace Etsi.Ultimate.Module.Versions
                                                                                       .ThenByDescending(z => z.EditorialVersion ?? 0)
                                                                                       .FirstOrDefault();
 
-                var leastSpecVersionPendingUpload = specVersionsForCurrentRelease.Where(x => x.Location == null)
+                var leastSpecVersionPendingUpload = specVersionsForCurrentRelease.Where(x => String.IsNullOrEmpty(x.Location))
                                                                   .OrderBy(y => y.MajorVersion ?? 0)
                                                                   .ThenBy(z => z.TechnicalVersion ?? 0)
                                                                   .ThenBy(e => e.EditorialVersion ?? 0)
@@ -361,17 +355,29 @@ namespace Etsi.Ultimate.Module.Versions
         /// <summary>
         /// Upload/Allocate Version
         /// </summary>
-        private void UploadOrAllocateVersion()
+        private void UploadOrAllocateVersion(bool isUpload)
         {
-
             KeyValuePair<bool, SpecVersion> buffer = fillSpecVersionObject();
 
-            //bool operationSucceded = false;
             if (buffer.Key)
             {
-                ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                Report result = svc.UploadOrAllocateVersion(buffer.Value, isDraft);
+                Report ftpTransferReport = new Report();
+                Report result = new Report();
 
+                if (isUpload)
+                {
+                    ftpTransferReport = TransferToFTP();
+                    buffer.Value.Location = versionPathToSave;
+                }
+
+                if (ftpTransferReport.ErrorList.Count == 0)
+                {
+                    ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
+                    result = svc.UploadOrAllocateVersion(buffer.Value, isDraft);
+                }
+                else
+                    result.ErrorList.AddRange(ftpTransferReport.ErrorList);
+            
                 if (result.ErrorList.Count > 0)
                 {
                     versionUploadScreen.Visible = false;
@@ -379,22 +385,16 @@ namespace Etsi.Ultimate.Module.Versions
                     
                     rptWarningsErrors.DataSource = result.ErrorList;
                     rptWarningsErrors.DataBind();
-
                 }
                 else
                 {
                     lblSaveStatus.Text = String.Format("Version {0}.{1}.{2} {3} successfully", buffer.Value.MajorVersion, buffer.Value.TechnicalVersion, buffer.Value.EditorialVersion, action.Equals("upload") ? "uploaded" : "allocated");
-
                     versionUploadScreen.Visible = false;
                     state.Visible = true;
                 }
             }
 
-            ////End of process => redirection
-            //if (operationSucceded)
-            //    Page.ClientScript.RegisterStartupScript(this.GetType(), "show upload state", "ShowAllocationResult(\"success\");", true);
-            //else
-            //    Page.ClientScript.RegisterStartupScript(this.GetType(), "show upload state", "ShowAllocationResult(\"failure\");", true);
+            versionPathToSave = String.Empty; //Clear path
         }
 
         /// <summary>
@@ -447,7 +447,6 @@ namespace Etsi.Ultimate.Module.Versions
                 }
                 if (action.Equals("upload"))
                 {
-                    version.Location = versionPathToSave;
                     version.DocumentUploaded = DateTime.UtcNow;
                     version.ProvidedBy = UserId;
                 }
@@ -553,17 +552,16 @@ namespace Etsi.Ultimate.Module.Versions
         /// <summary>
         /// Transfer files to FTP & create necessary hard links between files
         /// </summary>
-        /// <returns>True/False</returns>
-        private bool TransferToFTP()
+        /// <returns>Error Report</returns>
+        private Report TransferToFTP()
         {
-            bool isFTPTransferSuccess = false;
-            StringBuilder errorList = new StringBuilder();
+            Report errorReport = new Report();
             string ftpBasePath = String.Empty;
             if (ConfigurationManager.AppSettings[CONST_SPEC_VERSIONS_FTP_PATH] != null)
                 ftpBasePath = ConfigurationManager.AppSettings[CONST_SPEC_VERSIONS_FTP_PATH].ToString();
 
             if (String.IsNullOrEmpty(ftpBasePath))
-                errorList.AppendLine("FTP not yet configured");
+                errorReport.LogError("FTP not yet configured");
 
             string targetFolder = String.Format(CONST_FTP_ARCHIVE_PATH, ftpBasePath, SpecNumberVal.Text.Split('.')[0], SpecNumberVal.Text);
 
@@ -591,12 +589,10 @@ namespace Etsi.Ultimate.Module.Versions
                     }
                     else
                         versionToSave.SaveAs(versionPathToSave);
-
-                    isFTPTransferSuccess = true;
                 }
                 catch (Exception ex)
                 {
-                    errorList.AppendLine("Upload FTP Error: " + ex.Message);
+                    errorReport.LogError("Upload FTP Error: " + ex.Message);
                 }
                 finally
                 {
@@ -605,7 +601,7 @@ namespace Etsi.Ultimate.Module.Versions
             }
 
             //If FTP transfer succeded, then create / remove hard links
-            if (isFTPTransferSuccess)
+            if (errorReport.ErrorList.Count == 0)
             {
                 try
                 {
@@ -688,13 +684,13 @@ namespace Etsi.Ultimate.Module.Versions
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    isFTPTransferSuccess = false;
+                    errorReport.LogError("Hard Link create error:" + ex.Message);
                 }
             }
 
-            return isFTPTransferSuccess;
+            return errorReport;
         }
 
         /// <summary>
