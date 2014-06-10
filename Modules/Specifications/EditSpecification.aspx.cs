@@ -104,7 +104,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "setTimeout(function(){ $('#" + specMsg.ClientID + "').hide('slow');} , 3000);", true);
             }
             else
-                Response.Redirect("SpecificationDetails.aspx?specificationId=" + spec.Pk_SpecificationId);
+                Response.Redirect("SpecificationDetails.aspx?specificationId=" + spec.Pk_SpecificationId + "&fromEdit=true");
 
         }
 
@@ -148,7 +148,7 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
             List<string> errorsList = new List<string>();
-            
+
             var referenceNumber = txtReference.Text;
             if (!string.IsNullOrEmpty(referenceNumber))
             {
@@ -361,7 +361,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
             if (specification != null && userRights != null)
             {
-                txtReference.Text = string.IsNullOrEmpty(specification.Number) ? CONST_EMPTY_FIELD : specification.Number;
+                txtReference.Text = string.IsNullOrEmpty(specification.Number) ? String.Empty : specification.Number;
                 txtTitle.Text = string.IsNullOrEmpty(specification.Title) ? CONST_EMPTY_FIELD : specification.Title;
                 lblStatus.Text = string.IsNullOrEmpty(specification.Status) ? CONST_EMPTY_FIELD : specification.Status;
                 if (specification.IsTS != null)

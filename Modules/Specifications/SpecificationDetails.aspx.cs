@@ -35,6 +35,7 @@ namespace Etsi.Ultimate.Module.Specifications
         //Properties
         private int UserId;
         private string selectedTab;
+        private bool fromEdit;
         public static Nullable<int> SpecificationId;
 
         /// <summary>
@@ -53,6 +54,9 @@ namespace Etsi.Ultimate.Module.Specifications
 
                 LoadReleaseDetails();
 
+                //Load parent page to reflect changes
+                if (fromEdit)
+                    this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Refresh", "window.opener.location.reload(true);", true);
             }
         }
 
@@ -339,6 +343,7 @@ namespace Etsi.Ultimate.Module.Specifications
             UserId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
             SpecificationId = (Request.QueryString["specificationId"] != null) ? (int.TryParse(Request.QueryString["specificationId"], out output) ? new Nullable<int>(output) : null) : null;
             selectedTab = (Request.QueryString["selectedTab"] != null) ? Request.QueryString["selectedTab"] : string.Empty;
+            fromEdit = (Request.QueryString["fromEdit"] != null) ? Convert.ToBoolean(Request.QueryString["fromEdit"]) : false;
         }
 
         /// <summary>

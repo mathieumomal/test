@@ -69,7 +69,7 @@
                         <telerik:GridTemplateColumn UniqueName="SpecificationActions">
                             <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="50px" />
                             <ItemTemplate>
-                                <asp:HyperLink runat="server" class="display_inline" ImageUrl="images/details.png" NavigateUrl='<%# "SpecificationDetails.aspx?specificationId=" + DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() + "&selectedTab=" + SelectedTab %>'></asp:HyperLink>
+                                <asp:HyperLink runat="server" class="display_inline" ImageUrl="images/details.png" Target="_blank" NavigateUrl='<%# "SpecificationDetails.aspx?specificationId=" + DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() + "&selectedTab=" + SelectedTab %>'></asp:HyperLink>
                                 <asp:ImageButton Visible="false" CssClass="display_inline" ID="btnRemoveSpec" CommandArgument='<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId") %>' ImageUrl="/controls/Ultimate/images/delete.png" runat="server" OnClientClick="setDeleteProgress(this)" OnClick="btnRemoveSpec_Click" />
                             </ItemTemplate>
                         </telerik:GridTemplateColumn>

@@ -193,7 +193,7 @@
                                         <HeaderStyle Width="30px" />
                                         <ItemTemplate>
                                             <span></span>
-                                            <img id="imgViewWorkItems" alt="See details" src="/DesktopModules/WorkItem/images/details.png" style='display: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsLevel0Record")) ? "none" : "block" %>'
+                                            <img id="imgViewWorkItems" alt="See details" src="/DesktopModules/WorkItem/images/details.png" style='cursor: pointer;display: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsLevel0Record")) ? "none" : "block" %>'
                                                 onclick="var popUp=window.open('/desktopmodules/WorkItem/WorkItemDetails.aspx?workitemId=<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>',
 								            'RelWi-<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>', 'height=550,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
                                         </ItemTemplate>
@@ -269,7 +269,7 @@
                                                         <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"ResponsibleGroups") %></div>
                                                     </ItemTemplate>
                                                 </telerik:GridTemplateColumn>
-                                                <telerik:GridTemplateColumn HeaderText="Delete" UniqueName="Delete">
+                                                <telerik:GridTemplateColumn HeaderText="Remove" UniqueName="Delete">
                                                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="50px" />
                                                     <ItemTemplate>
                                                         <asp:ImageButton ID="btnRemoveWis" CommandArgument='<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid") %>' ImageUrl="/controls/Ultimate/images/delete.png" runat="server" OnClientClick="setDeleteProgress(this)" OnClick="btnRemoveWis_Click" />
