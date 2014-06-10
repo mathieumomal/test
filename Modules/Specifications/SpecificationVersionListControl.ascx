@@ -57,29 +57,34 @@
         win.setSize(440, height);
         win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
         win.set_modal(true);
+        win.add_close(radWinVersionCloseCallBack);
         win.set_visibleStatusbar(false);
         win.show();
         return false;
     }
 
-    function AllocationResult(status) {
-        if (status == "success") {
-            radalert('Allocation of the version succeded', 330, 130, 'Allocation Status', refreshWindow, null);
-        }
-        else
-            radalert('Allocation of the version failed', 330, 130, 'Allocation Status', null, null);
-    }
-
-    function refreshWindow()
+    function radWinVersionCloseCallBack(sender, eventArgs)
     {
-        var url = window.location.href;
-        if (url.indexOf('&selectedTab=Releases') > -1)
-            location.reload();
-        else
-            window.location = window.location + "&selectedTab=Releases";
+        //get the transferred arguments
+        var arg = eventArgs.get_argument();
+        if (arg) {
+            var status = arg.status;
+            if (status == "success")
+            {
+                var url = window.location.href;
+                if (url.indexOf('&selectedTab=Releases') > -1)
+                    location.reload();
+                else
+                    window.location = window.location + "&selectedTab=Releases";
+            }
+        }
+
+        //remove RadWindow close callback
+        var oWnd = $find("Version");
+        if (oWnd) {
+            oWnd.remove_close(radWinVersionCloseCallBack);
+        }
     }
-
-
 </script>
 <asp:Panel runat="server" ID="pnlCover" CssClass="TabContent" Height="100%">
     <asp:Panel runat="server" ID="pnlIconStrip">

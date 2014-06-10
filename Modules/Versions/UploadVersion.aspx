@@ -176,21 +176,13 @@
                         <asp:Label runat="server" ID="lblSaveStatus" Text="label" />
                     </div>
                     <div class="wiFooter">
-                        <telerik:RadButton ID="state_confirmation" runat="server" Text="OK" OnClick="Cancel_Click"></telerik:RadButton>
+                        <telerik:RadButton ID="state_confirmation" runat="server" Text="Close & refresh" OnClick="Cancel_Click"></telerik:RadButton>
                     </div>
                 </asp:Panel>
 
                 <script type="text/javascript">
 
                     /*-- TELERIK EVENTS --*/
-
-                    function cancel() {
-                        $('#analysis').hide();
-                        $('#confirmation').hide();
-                        $('#state').hide();
-                        $('#versionUploadScreen').show();
-                        //Other actions to perform
-                    }
 
                     function clearFilesToUpload() {
                         var upload = $find("<%= FileToUploadVal.ClientID %>");
@@ -211,13 +203,20 @@
                         $('#UploadBtn').hide();
                     }
 
-                    function ShowAllocationResult(result) {
-                        if (result == "success") {
-                            window.parent.AllocationResult("success");
-                        }
-                        else {
-                            window.parent.AllocationResult("failure");
-                        }
+                    function GetRadWindow() {
+                        var oWindow = null;
+                        if (window.radWindow) oWindow = window.radWindow;
+                        else if (window.frameElement.radWindow) oWindow = window.frameElement.radWindow;
+                        return oWindow;
+                    }
+
+                    function closeRadWindow()
+                    {
+                        var oArg = new Object();
+                        oArg.status = "success";
+
+                        var oWnd = GetRadWindow();
+                        oWnd.close(oArg);
                     }
 
                     /* Exit function */

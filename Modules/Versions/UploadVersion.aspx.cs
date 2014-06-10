@@ -391,6 +391,8 @@ namespace Etsi.Ultimate.Module.Versions
                     lblSaveStatus.Text = String.Format("Version {0}.{1}.{2} {3} successfully", buffer.Value.MajorVersion, buffer.Value.TechnicalVersion, buffer.Value.EditorialVersion, action.Equals("upload") ? "uploaded" : "allocated");
                     versionUploadScreen.Visible = false;
                     state.Visible = true;
+
+                    state_confirmation.OnClientClicked = "closeRadWindow";
                 }
             }
 
