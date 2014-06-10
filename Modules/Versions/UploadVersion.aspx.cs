@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -28,6 +29,12 @@ namespace Etsi.Ultimate.Module.Versions
         private static string releaseDescription = String.Empty;
         private static UploadedFile versionToSave;
         private static string versionPathToSave = String.Empty;
+        private const string CONST_VALID_FILENAME = "{0}-{1}{2}{3}";
+        private const string CONST_SPEC_VERSIONS_FTP_PATH = "FtpSpecVersions";
+        private const string CONST_FTP_ARCHIVE_PATH = "{0}\\Specs\\archive\\{1}_series\\{2}\\";
+        private const string CONST_FTP_LATEST_DRAFTS_PATH = "{0}\\Specs\\latest-drafts\\";
+        private const string CONST_FTP_VERSIONS_PATH = "{0}\\Specs\\{1:0000}_{2:00}\\{3}\\{4}_series\\";
+
         //Properties
         private static int UserId;
         public static Nullable<int> releaseId;
@@ -96,54 +103,7 @@ namespace Etsi.Ultimate.Module.Versions
         /// <param name="e">event arguments</param>
         protected void Confirmation_Upload_OnClick(object sender, EventArgs e)
         {
-            bool isFTPTransferSuccess = false;
-            StringBuilder errorList = new StringBuilder();
-            string ftpBasePath = String.Empty;
-            if (ConfigurationManager.AppSettings["FtpSpecVersions"] != null)
-                ftpBasePath = ConfigurationManager.AppSettings["FtpSpecVersions"].ToString();
-
-            if (String.IsNullOrEmpty(ftpBasePath))
-                errorList.AppendLine("FTP not yet configured");
-
-            string targetFolder = String.Format("{0}\\Specs\\archive\\{1}_series\\{2}\\", ftpBasePath, SpecNumberVal.Text.Split('.')[0], SpecNumberVal.Text);
-
-            //Tranfer FTP
-            if (versionToSave != null)
-            {
-                try
-                {
-                    string validFileName = GetValidFileName();
-                    string zipFileName = validFileName + ".zip";
-                    versionPathToSave = Path.Combine(targetFolder, zipFileName);
-
-                    bool isTargetFolderExists = Directory.Exists(targetFolder);
-                    if (!isTargetFolderExists)
-                        Directory.CreateDirectory(targetFolder);
-
-                    FileToUploadVal.TargetFolder = targetFolder;
-
-                    //If it is not in zip format, compress & upload the same
-                    if (!versionToSave.GetExtension().Equals(".zip", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        var stream = File.Create(versionPathToSave);
-                        var package = ZipPackage.Create(stream);
-                        package.AddStream(versionToSave.InputStream, validFileName + versionToSave.GetExtension());
-                        package.Close(true);
-                    }
-                    else
-                        versionToSave.SaveAs(versionPathToSave);
-
-                    isFTPTransferSuccess = true;
-                }
-                catch (Exception ex)
-                {
-                    errorList.AppendLine("Upload FTP Error: " + ex.Message);
-                }
-                finally
-                {
-                    versionToSave = null;
-                }
-            }
+            bool isFTPTransferSuccess = TransferToFTP();
 
             //If FTP transfer succeded, then insert/update version object
             if (isFTPTransferSuccess)
@@ -549,7 +509,7 @@ namespace Etsi.Ultimate.Module.Versions
             if (int.TryParse(NewVersionEditorialVal.Text, out editorialVersion))
                 editorialVersionBase36 = EncodeToBase36(editorialVersion);
 
-            string validFileName = String.Format("{0}-{1}{2}{3}", specNumber, majorVersionBase36, technicalVersionBase36, editorialVersionBase36);
+            string validFileName = String.Format(CONST_VALID_FILENAME, specNumber, majorVersionBase36, technicalVersionBase36, editorialVersionBase36);
             return validFileName;
         }
 
@@ -589,6 +549,167 @@ namespace Etsi.Ultimate.Module.Versions
             versionToSave = null;
             versionPathToSave = String.Empty;
         }
+
+        /// <summary>
+        /// Transfer files to FTP & create necessary hard links between files
+        /// </summary>
+        /// <returns>True/False</returns>
+        private bool TransferToFTP()
+        {
+            bool isFTPTransferSuccess = false;
+            StringBuilder errorList = new StringBuilder();
+            string ftpBasePath = String.Empty;
+            if (ConfigurationManager.AppSettings[CONST_SPEC_VERSIONS_FTP_PATH] != null)
+                ftpBasePath = ConfigurationManager.AppSettings[CONST_SPEC_VERSIONS_FTP_PATH].ToString();
+
+            if (String.IsNullOrEmpty(ftpBasePath))
+                errorList.AppendLine("FTP not yet configured");
+
+            string targetFolder = String.Format(CONST_FTP_ARCHIVE_PATH, ftpBasePath, SpecNumberVal.Text.Split('.')[0], SpecNumberVal.Text);
+
+            if (versionToSave != null)
+            {
+                try
+                {
+                    string validFileName = GetValidFileName();
+                    string zipFileName = validFileName + ".zip";
+                    versionPathToSave = Path.Combine(targetFolder, zipFileName);
+
+                    bool isTargetFolderExists = Directory.Exists(targetFolder);
+                    if (!isTargetFolderExists)
+                        Directory.CreateDirectory(targetFolder);
+
+                    FileToUploadVal.TargetFolder = targetFolder;
+
+                    //If it is not in zip format, compress & upload the same
+                    if (!versionToSave.GetExtension().Equals(".zip", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        var stream = File.Create(versionPathToSave);
+                        var package = ZipPackage.Create(stream);
+                        package.AddStream(versionToSave.InputStream, validFileName + versionToSave.GetExtension());
+                        package.Close(true);
+                    }
+                    else
+                        versionToSave.SaveAs(versionPathToSave);
+
+                    isFTPTransferSuccess = true;
+                }
+                catch (Exception ex)
+                {
+                    errorList.AppendLine("Upload FTP Error: " + ex.Message);
+                }
+                finally
+                {
+                    versionToSave = null;
+                }
+            }
+
+            //If FTP transfer succeded, then create / remove hard links
+            if (isFTPTransferSuccess)
+            {
+                try
+                {
+                    ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                    var spec = specSvc.GetSpecificationDetailsById(UserId, specId.Value).Key;
+                    if (spec.IsActive && !(spec.IsUnderChangeControl ?? false)) //Draft
+                    {
+                        string draftPath = String.Format(CONST_FTP_LATEST_DRAFTS_PATH, ftpBasePath);
+                        bool isDraftPathExists = Directory.Exists(draftPath);
+                        if (!isDraftPathExists)
+                            Directory.CreateDirectory(draftPath);
+
+                        ISpecVersionService specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
+                        var allDraftVersions = specVersionSvc.GetVersionsBySpecId(specId.Value);
+                        var latestUploadedDraft = allDraftVersions.Where(draft => draft.Location != null)
+                                                                  .OrderByDescending(x => x.MajorVersion ?? 0)
+                                                                  .ThenByDescending(y => y.TechnicalVersion ?? 0)
+                                                                  .ThenByDescending(z => z.EditorialVersion ?? 0)
+                                                                  .FirstOrDefault();
+                        bool createHardLink = true;
+
+                        if (latestUploadedDraft != null)
+                        {
+                            string latestUploadedDraftVersion = String.Format("{0}{1}{2}", latestUploadedDraft.MajorVersion, latestUploadedDraft.TechnicalVersion, latestUploadedDraft.EditorialVersion);
+                            string uploadingDraftVersion = String.Format("{0}{1}{2}", NewVersionMajorVal.Text, NewVersionTechnicalVal.Text, NewVersionEditorialVal.Text);
+
+                            int uploadedVersionNumber;
+                            int uploadingVersionNumber;
+                            if (int.TryParse(latestUploadedDraftVersion, out uploadedVersionNumber) && int.TryParse(uploadingDraftVersion, out uploadingVersionNumber))
+                            {
+                                if (uploadedVersionNumber < uploadingVersionNumber)
+                                {
+                                    //Delete existing draft
+                                    string fileName = Path.Combine(draftPath, Path.GetFileName(latestUploadedDraft.Location));
+                                    if (File.Exists(fileName))
+                                        File.Delete(fileName);
+                                    createHardLink = true;
+                                }
+                            }
+                            else
+                                createHardLink = false;
+                        }
+
+                        if (createHardLink)
+                        {
+                            string fileName = Path.GetFileName(versionPathToSave);
+                            string hardLinkPath = Path.Combine(draftPath, fileName);
+
+                            CreateHardLink(hardLinkPath, versionPathToSave, IntPtr.Zero);
+                        }
+                    }
+                    else //Under Change Control
+                    {
+                        if ((UploadMeeting.SelectedMeetingId > 0) && (UploadMeeting.SelectedMeeting.START_DATE != null))
+                        {
+                            string underChangeControlPath = String.Format(CONST_FTP_VERSIONS_PATH, ftpBasePath, UploadMeeting.SelectedMeeting.START_DATE.Value.Year, UploadMeeting.SelectedMeeting.START_DATE.Value.Month, ReleaseVal.Text, SpecNumberVal.Text.Split('.')[0]);
+                            bool isUCPathExists = Directory.Exists(underChangeControlPath);
+                            if (!isUCPathExists)
+                                Directory.CreateDirectory(underChangeControlPath);
+
+                            string fileName = Path.GetFileName(versionPathToSave);
+                            string hardLinkPath = Path.Combine(underChangeControlPath, fileName);
+
+                            CreateHardLink(hardLinkPath, versionPathToSave, IntPtr.Zero);
+
+                            //Delete all drafts for this version
+                            string draftPath = String.Format(CONST_FTP_LATEST_DRAFTS_PATH, ftpBasePath);
+                            string specNumber = SpecNumberVal.Text.Replace(".", String.Empty);
+
+                            if (Directory.Exists(draftPath))
+                            {
+                                DirectoryInfo di = new DirectoryInfo(draftPath);
+                                var draftFiles = di.GetFiles(specNumber + "-*").Select(x => x.FullName).ToList();
+                                foreach (string draftFile in draftFiles)
+                                {
+                                    if (File.Exists(draftFile))
+                                        File.Delete(draftFile);
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    isFTPTransferSuccess = false;
+                }
+            }
+
+            return isFTPTransferSuccess;
+        }
+
+        /// <summary>
+        /// Create Hard links between files
+        /// </summary>
+        /// <param name="lpFileName">New File Name(Hard Link Path)</param>
+        /// <param name="lpExistingFileName">Original File Name</param>
+        /// <param name="lpSecurityAttributes">Security Attributes</param>
+        /// <returns>True/False</returns>
+        [DllImport("Kernel32.dll", CharSet = CharSet.Unicode)]
+        static extern bool CreateHardLink(
+            string lpFileName,
+            string lpExistingFileName,
+            IntPtr lpSecurityAttributes
+        );
 
         #endregion
     }

@@ -104,6 +104,7 @@
     <Content Include="Documentation\Documentation.html" />
     <Content Include="images\error.png" />
     <Content Include="images\favicon.ico" />
+    <Content Include="images\ftp.png" />
     <Content Include="images\hourglass.png" />
     <Content Include="images\warning.png" />
     <Content Include="JS\jquery.min.js" />
