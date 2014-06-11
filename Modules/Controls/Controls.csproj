@@ -135,6 +135,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="images\busy.gif" />
+    <Content Include="images\delete.png" />
+    <Content Include="images\hourglass.png" />
     <Content Include="RelatedWiControl.ascx" />
     <Content Include="images\edit_16X16.png" />
     <Content Include="images\fullview.png" />

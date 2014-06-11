@@ -32,7 +32,7 @@ namespace Etsi.Ultimate.Services
                 communityManager.UoW = uoW;
 
                 KeyValuePair<Specification, UserRightsContainer> result = specificationManager.GetSpecificationById(personId, specificationId);
-                List<string> secondaryRGShortName = new List<string>();
+                List<Community> communityList = new List<Community>();
 
                 if (result.Key != null)
                 {
@@ -40,14 +40,14 @@ namespace Etsi.Ultimate.Services
                     {
                         if (result.Key.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList() != null && result.Key.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().Count > 0)
                         {
-                            result.Key.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().ForEach(g => secondaryRGShortName.Add(communityManager.GetCommmunityshortNameById(g.Fk_commityId)));
-                            result.Key.SecondaryResponsibleGroupsShortNames = string.Join(",", secondaryRGShortName.ToArray());
+                            result.Key.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().ForEach(g => communityList.Add(communityManager.GetCommmunityById(g.Fk_commityId)));
+                            result.Key.SecondaryResponsibleGroupsFullNames = string.Join(",", communityList.Select(x=>x.TbName).ToArray());
                         }
 
                         if (result.Key.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList() != null & result.Key.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().Count > 0)
                         {
-                            result.Key.PrimeResponsibleGroupShortName
-                                = communityManager.GetCommmunityshortNameById(result.Key.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().FirstOrDefault().Fk_commityId);
+                            result.Key.PrimeResponsibleGroupFullName
+                                = communityManager.GetCommmunityById(result.Key.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().FirstOrDefault().Fk_commityId).TbName;
                         }
                     }
 
@@ -57,7 +57,7 @@ namespace Etsi.Ultimate.Services
                         {
                             if (s.SpecificationResponsibleGroups != null && s.SpecificationResponsibleGroups.Count > 0 && s.PrimeResponsibleGroup != null)
                             {
-                                s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId);
+                                s.PrimeResponsibleGroupFullName = communityManager.GetCommmunityById(s.PrimeResponsibleGroup.Fk_commityId).TbName;
                             }
                         }
                     }

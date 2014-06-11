@@ -17,7 +17,12 @@
         padding-right: 3px;
     }
 </style>
-
+<script type="text/javascript">
+    function showProgress<%=this.ClientID%>() {
+        $('#<%=btnAddSpecification.ClientID%>').next().show();
+        $('#<%=btnAddSpecification.ClientID%>').hide();
+    }
+</script>
 <table style="width: 100%">
     <tr>
         <td colspan="3">
@@ -102,6 +107,7 @@
         </td>
         <td>
             <asp:Button ID="btnAddSpecification" OnClick="btnAddSpecification_Click" runat="server" Text="Add" Width="100%" />
+            <img src="/desktopmodules/Specifications/images/busy.gif" alt="progress" style="display:none" />
         </td>
     </tr>
 </table>

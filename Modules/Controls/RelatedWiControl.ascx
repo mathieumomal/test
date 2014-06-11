@@ -41,7 +41,7 @@
         var manager = $find("<%=relatedWi_RadWindowManager.ClientID %>");
         manager.closeAll();
     }
-    
+
     function open_RadWindow_workItemEdit(sender, eventArgs) {
         closeAllModals();
         var manager = $find("<%=relatedWi_RadWindowManager.ClientID %>");
@@ -90,6 +90,13 @@
             $("#<%=btnSearchWi.ClientID %>").val('Searching...');
         else
             $("#<%=btnSearchWi.ClientID %>").val('Search');
+    }
+
+    function setAddingProgress(flag) {
+        if (flag)
+            $("#<%=btnAddWisToGrid.ClientID %>").val('Adding...');
+        else
+            $("#<%=btnAddWisToGrid.ClientID %>").val('Add');
     }
 
     //Visual response to WI removal 
@@ -193,7 +200,7 @@
                                         <HeaderStyle Width="30px" />
                                         <ItemTemplate>
                                             <span></span>
-                                            <img id="imgViewWorkItems" alt="See details" src="/DesktopModules/WorkItem/images/details.png" style='cursor: pointer;display: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsLevel0Record")) ? "none" : "block" %>'
+                                            <img id="imgViewWorkItems" alt="See details" src="/DesktopModules/WorkItem/images/details.png" style='cursor: pointer; display: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsLevel0Record")) ? "none" : "block" %>'
                                                 onclick="var popUp=window.open('/desktopmodules/WorkItem/WorkItemDetails.aspx?workitemId=<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>',
 								            'RelWi-<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>', 'height=550,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
                                         </ItemTemplate>
@@ -239,6 +246,7 @@
                                         OnItemDataBound="relatedWiGrid_Edit_ItemDataBound"
                                         Style="min-width: 400px">
                                         <ClientSettings>
+                                            <ClientEvents OnDataBound="setAddingProgress(false)" />
                                             <ClientEvents OnRowDeselected="OnRowSelected_relatedWiGrid_Edit" OnRowSelected="OnRowSelected_relatedWiGrid_Edit" />
                                             <Scrolling AllowScroll="True" UseStaticHeaders="true" ScrollHeight="130px" />
                                             <Selecting AllowRowSelect="True" />
@@ -355,7 +363,7 @@
                             <tr>
                                 <td colspan="2">
                                     <div class="floatRight">
-                                        <asp:Button ID="btnAddWisToGrid" runat="server" Width="100" Text="Add" OnClientClick="GetSelectedWis_relatedWiGrid();" OnClick="btnAddWisToGrid_Click" />
+                                        <asp:Button ID="btnAddWisToGrid" runat="server" Width="100" Text="Add" OnClientClick="setAddingProgress(true);GetSelectedWis_relatedWiGrid();" OnClick="btnAddWisToGrid_Click" />
                                     </div>
                                 </td>
                             </tr>

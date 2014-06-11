@@ -24,5 +24,13 @@ namespace Etsi.Ultimate.Business
         /// <param name="id">Identifier of the community</param>
         /// <returns>Short name of the community</returns>
         string GetCommmunityshortNameById(int id);
+
+
+        /// <summary>
+        /// Return community by id
+        /// </summary>
+        /// <param name="id">Identifier of the community</param>
+        /// <returns>community</returns>
+        Community GetCommmunityById(int id);
     }
 }

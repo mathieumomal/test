@@ -41,7 +41,7 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
-        
+
 
         public List<Specification> DataSource
         {
@@ -84,13 +84,13 @@ namespace Etsi.Ultimate.Module.Specifications
             if (!IsPostBack)
             {
                 if (!IsEditMode)
-                {                    
+                {
                     lblAddSpecification.Visible = false;
                     rcbAddSpecification.Visible = false;
                     btnAddSpecification.Visible = false;
                 }
                 else
-                {                    
+                {
                     if (IsParentList)
                         lblAddSpecification.Text = "Add parent specification";
                     else
@@ -98,6 +98,8 @@ namespace Etsi.Ultimate.Module.Specifications
                 }
                 specificationsGrid.ClientSettings.Scrolling.ScrollHeight = (ScrollHeight < CONST_MIN_SCROLL_HEIGHT) ? Unit.Pixel(CONST_MIN_SCROLL_HEIGHT) : Unit.Pixel(ScrollHeight);
             }
+
+            btnAddSpecification.OnClientClick = "showProgress" + this.ClientID + "();";
         }
 
         protected void specificationsGrid_PreRender(object sender, System.EventArgs e)
@@ -116,8 +118,8 @@ namespace Etsi.Ultimate.Module.Specifications
             int specId;
             if (Int32.TryParse(((ImageButton)sender).CommandArgument, out specId))
             {
-                var tmpSrc= DataSource;
-                tmpSrc.Remove( tmpSrc.Where(s => s.Pk_SpecificationId == specId).FirstOrDefault());
+                var tmpSrc = DataSource;
+                tmpSrc.Remove(tmpSrc.Where(s => s.Pk_SpecificationId == specId).FirstOrDefault());
                 DataSource = tmpSrc;
             }
             specificationsGrid.DataBind();
@@ -188,7 +190,7 @@ namespace Etsi.Ultimate.Module.Specifications
             RadWindowAlert.RadAlert(errorText, 400, 150, "Error", "", "images/error.png");
         }
 
-      
+
         #endregion
     }
 }

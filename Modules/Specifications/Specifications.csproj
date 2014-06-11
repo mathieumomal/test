@@ -167,6 +167,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="images\busy.gif" />
     <Content Include="images\spec_rel-a.png" />
     <Content Include="VersionRemarksPopUp.aspx" />
     <Content Include="images\spec_rel-CRs.png" />

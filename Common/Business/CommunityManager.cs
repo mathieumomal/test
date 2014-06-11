@@ -17,14 +17,14 @@ namespace Etsi.Ultimate.Business
 
         #region Properties
 
-       
-        public IUltimateUnitOfWork UoW { get; set; } 
+
+        public IUltimateUnitOfWork UoW { get; set; }
 
         #endregion
 
         #region Constructor
 
-       
+
         #endregion
 
         #region Public Methods
@@ -70,6 +70,20 @@ namespace Etsi.Ultimate.Business
 
             var community = GetCommunities().Where(c => c.TbId == id).FirstOrDefault();
             return ((community == null) ? String.Empty : community.ShortName);
+        }
+
+
+        /// <summary>
+        /// Return community by id
+        /// </summary>
+        /// <param name="id">Identifier of the community</param>
+        /// <returns>community</returns>
+        public Community GetCommmunityById(int id)
+        {
+            ICommunityRepository repo = RepositoryFactory.Resolve<ICommunityRepository>();
+            repo.UoW = UoW;
+
+            return GetCommunities().Where(c => c.TbId == id).FirstOrDefault();
         }
 
         #endregion

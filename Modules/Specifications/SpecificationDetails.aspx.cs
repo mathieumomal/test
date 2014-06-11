@@ -291,8 +291,8 @@ namespace Etsi.Ultimate.Module.Specifications
             specificationRapporteurs.PersonLinkBaseAddress = ConfigurationManager.AppSettings["RapporteurDetailsAddress"];
             if (specification != null)
             {
-                PrimaryResponsibleGroupVal.Text = (string.IsNullOrEmpty(specification.PrimeResponsibleGroupShortName)) ? CONST_EMPTY_FIELD : specification.PrimeResponsibleGroupShortName;
-                SecondaryResponsibleGroupsVal.Text = (string.IsNullOrEmpty(specification.SecondaryResponsibleGroupsShortNames)) ? CONST_EMPTY_FIELD : specification.SecondaryResponsibleGroupsShortNames;
+                PrimaryResponsibleGroupVal.Text = (string.IsNullOrEmpty(specification.PrimeResponsibleGroupFullName)) ? CONST_EMPTY_FIELD : specification.PrimeResponsibleGroupFullName;
+                SecondaryResponsibleGroupsVal.Text = (string.IsNullOrEmpty(specification.SecondaryResponsibleGroupsFullNames)) ? CONST_EMPTY_FIELD : specification.SecondaryResponsibleGroupsFullNames;
 
                 specificationRapporteurs.ListIdPersonSelect = specification.PrimeSpecificationRapporteurIds;
                 specificationRapporteurs.ListIdPersonsSelected_multimode = specification.FullSpecificationRapporteurs;

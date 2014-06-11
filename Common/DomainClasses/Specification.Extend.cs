@@ -15,6 +15,12 @@ namespace Etsi.Ultimate.DomainClasses
             set;
         }
 
+        public string PrimeResponsibleGroupFullName
+        {
+            get;
+            set;
+        }
+
         public string PrimeSpecificationRapporteurName
         {
             get;
@@ -30,6 +36,13 @@ namespace Etsi.Ultimate.DomainClasses
         }
 
         public string SecondaryResponsibleGroupsShortNames
+        {
+            get;
+            set;
+
+        }
+
+        public string SecondaryResponsibleGroupsFullNames
         {
             get;
             set;
