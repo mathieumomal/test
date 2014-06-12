@@ -6,6 +6,15 @@
 <dnn:DnnCssInclude runat="server" FilePath="~/controls/Ultimate/module.css" />
 <!--Import module.css-->
 
+
+<script type="text/javascript">
+    function setAddingRapporteurProgress(flag) {
+        if (flag)
+            $("#<%=btnAddRapporteur.ClientID %>").val('Adding...');
+        else
+            $("#<%=btnAddRapporteur.ClientID %>").val('Add');
+    }
+</script>
 <div id="divRapporteurControl">
     <asp:Panel runat="server" ID="panelRapporteurControl" CssClass="">
         <fieldset style="padding: 5px;">
@@ -25,12 +34,14 @@
                                                                                 OnSelectedIndexChanged="RdGridRapporteurs_SelectedIndexChanged"  
                                                                                 Height="140px">
                             <ClientSettings EnableRowHoverStyle="False" EnablePostBackOnRowClick="False">
+                                <ClientEvents OnDataBound="setAddingRapporteurProgress(false)" />
                                 <Scrolling AllowScroll="True" UseStaticHeaders="True" />
                                 <Selecting AllowRowSelect="True"></Selecting>
                             </ClientSettings>
                             <MasterTableView AutoGenerateColumns="False" DataKeyNames="PERSON_ID"> 
                                 <Columns>
                                     <telerik:GridClientSelectColumn UniqueName="selectable" Visible="false" HeaderStyle-CssClass="selectStyleColumn" ItemStyle-CssClass="selectStyleColumn">
+                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" CssClass="nameStyleColumn" Width="50px"/> 
                                     </telerik:GridClientSelectColumn>
                                     <telerik:GridTemplateColumn DataField="nameHyperLink" HeaderText="Name" UniqueName="nameHyperLink" Visible="false">
                                         <HeaderStyle HorizontalAlign="Left" Font-Bold="True" CssClass="hyperlinkStyleColumn"/> 
@@ -55,14 +66,14 @@
                                         </ItemTemplate>                
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn DataField="email" HeaderText="Email" UniqueName="email">
-                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="35%" CssClass="emailStyleColumn"/>
+                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" CssClass="emailStyleColumn"/>
                                         <ItemStyle CssClass="emailStyleColumn" />
                                         <ItemTemplate>
                                             <div><%# DataBinder.Eval(Container.DataItem,"Email") %></div>  
                                         </ItemTemplate>                
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridButtonColumn CommandName="Delete" HeaderText="Delete" UniqueName="delete" ImageUrl="/controls/Ultimate/images/delete.png" ButtonType="ImageButton" HeaderStyle-CssClass="deleteStyleColumn" ItemStyle-CssClass="deleteStyleColumn" >
-                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True"/>
+                                        <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="50px"/>
                                     </telerik:GridButtonColumn>
                                 </Columns>
                             
@@ -94,7 +105,7 @@
                         </telerik:RadComboBox>
                     </td>
                     <td>
-                        <asp:Button ID="btnAddRapporteur" OnClick="BtnAddRapporteur_onClick" runat="server" Text="Add" Width="95%" CssClass="center" />
+                        <asp:Button ID="btnAddRapporteur" OnClientClick="setAddingRapporteurProgress(true)" OnClick="BtnAddRapporteur_onClick" runat="server" Text="Add" Width="95%" CssClass="center" />
                     </td>
                 </tr>
             </table>

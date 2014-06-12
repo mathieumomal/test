@@ -487,8 +487,10 @@ namespace Etsi.Ultimate.Controls
                     }
                 }
             }
-            rdGridRapporteurs.DataSource = DataSource_multimode;
+            DataSource_multimode.Where(x => ListIdPersonSelect.Contains(x.PERSON_ID)).ToList().ForEach(y => y.IsPrimary = true);
+            rdGridRapporteurs.DataSource = DataSource_multimode.OrderByDescending(x=>x.IsPrimary);
             rdGridRapporteurs.Rebind();
+
             if (IsEditMode)
             {
                 if (ListIdPersonSelect.Count() != 0 && SelectableMode != RapporteursSelectablemode.None)

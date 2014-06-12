@@ -35,7 +35,8 @@ namespace Etsi.Ultimate.Controls
                 if (ViewState[CONST_RELATED_WI_GRID_DATA] == null)
                     ViewState[CONST_RELATED_WI_GRID_DATA] = new List<WorkItem>();
 
-                return (List<WorkItem>)ViewState[CONST_RELATED_WI_GRID_DATA];
+                return ((List<WorkItem>)ViewState[CONST_RELATED_WI_GRID_DATA]).OrderByDescending(x => x.IsPrimary)
+                                                                              .ThenBy(x => x.WorkplanId).ToList();
             }
             set
             {
@@ -51,7 +52,8 @@ namespace Etsi.Ultimate.Controls
                 if (ViewState[CONST_MOD_WI_DATASOURCE] == null)
                     ViewState[CONST_MOD_WI_DATASOURCE] = new List<WorkItem>();
 
-                return (List<WorkItem>)ViewState[CONST_MOD_WI_DATASOURCE];
+                return ((List<WorkItem>)ViewState[CONST_MOD_WI_DATASOURCE]).OrderByDescending(x => x.IsPrimary)
+                                                                           .ThenBy(x => x.WorkplanId).ToList();
             }
             set
             {

@@ -12,7 +12,7 @@
     function closeCommunitySelector<%= this.ClientID%>(sender, eventArgs) {
         //Set TreeView to initial state, before calling cancel to close the window
         UpdateNodes<%= this.ClientID%>(false);
-        var communityNamesList = $("#<%= lblCommunity.ClientID %>").text().split(", ");        
+        var communityNamesList = $("#<%= lblCommunity.ClientID %>").text().split(", ");
         var tree = $find("<%= rtvCommunitySelector.ClientID %>");
         for (var i = 0; i < tree.get_allNodes().length; i++) {
             var node = tree.get_allNodes()[i];
@@ -118,7 +118,7 @@
     .hideOverflow {
         height: 25px;
         overflow: hidden;
-        display:inline;
+        display: inline;
     }
 </style>
 <div>
@@ -127,7 +127,7 @@
         runat="server"
         AllowCustomText="false" />
     <asp:Panel CssClass="hideOverflow" ID="pnlCover" runat="server">
-        <asp:ImageButton ID="imgBtnCommunity" runat="server" ImageUrl="images/edit_16X16.png"/>
+        <asp:ImageButton ID="imgBtnCommunity" runat="server" ImageUrl="images/edit_16X16.png" />
         <asp:Label ID="lblCommunity" runat="server" />
     </asp:Panel>
 </div>
@@ -154,11 +154,11 @@
                             <tr style="height: 35px"></tr>
                         </table>
                         <div style="position: absolute; bottom: 0; height: 30px; width: 350px; padding-top: 5px; padding-left: 15px; margin-bottom: 8px; background-color: white;">
-                            <telerik:RadButton ID="btnConfirm" runat="server" Text="Confirm" Width="60" OnClick="btnConfirm_Click"/>
-                            <telerik:RadButton ID="btnAll" runat="server" Text="All" Width="60" AutoPostBack="false" />
-                            <telerik:RadButton ID="btnDefault" runat="server" Text="Default" Width="60"  AutoPostBack="false"/>
+                            <telerik:RadButton ID="btnConfirm" runat="server" Text="Confirm" Width="60" OnClick="btnConfirm_Click" />
                             <telerik:RadButton ID="btnClear" runat="server" Text="Clear" Width="60" AutoPostBack="false" />
                             <telerik:RadButton ID="btnCancel" runat="server" Text="Cancel" Width="60" AutoPostBack="false" />
+                            <telerik:RadButton ID="btnAll" Visible="false" runat="server" Text="All" Width="60" AutoPostBack="false" />
+                            <telerik:RadButton ID="btnDefault" Visible="false" runat="server" Text="Default" Width="60" AutoPostBack="false" />
                             <asp:HiddenField ID="defaultTbIds" runat="server" />
                         </div>
                     </ContentTemplate>

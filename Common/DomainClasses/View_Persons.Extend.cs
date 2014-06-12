@@ -27,5 +27,7 @@ namespace Etsi.Ultimate.DomainClasses
             }
         }
 
+        public bool IsPrimary { get; set; }
+
     }
 }

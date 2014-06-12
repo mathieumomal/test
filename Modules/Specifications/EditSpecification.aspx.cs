@@ -128,6 +128,9 @@ namespace Etsi.Ultimate.Module.Specifications
         /// <param name="e"></param>
         protected void specificationRemarks_AddRemarkHandler(object sender, EventArgs e)
         {
+            //fix for making old remarks editable
+            specificationRemarks.IsEditMode = true;
+
             List<Domain.Remark> datasource = specificationRemarks.DataSource;
             //Get display name
             IPersonService svc = ServicesFactory.Resolve<IPersonService>();
