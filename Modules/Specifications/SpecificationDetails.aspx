@@ -21,12 +21,12 @@
 </head>
 <body>
     <form id="specificationDetailsForm" runat="server">
+        <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
         <asp:Panel runat="server" ID="fixContainer" CssClass="containerFix" Width="750px">
             <asp:Panel ID="specificationMessages" runat="server" Visible="false">
                 <asp:Label runat="server" ID="specificationMessagesTxt"></asp:Label>
             </asp:Panel>
-            <asp:Panel ID="specificationDetailsBody" runat="server" CssClass="specificationDetailsBody">
-                <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
+            <asp:Panel ID="specificationDetailsBody" runat="server" CssClass="specificationDetailsBody">                
                 <div class="HeaderText">
                     <asp:Label ID="lblHeaderText" runat="server"></asp:Label>
                 </div>
@@ -148,7 +148,7 @@
                 </telerik:RadMultiPage>
                 <div class="specificationDetailsAction">
                     <asp:LinkButton ID="EditBtn" runat="server" Text="Edit" CssClass="btn3GPP-success" OnClick="EditSpecificationDetails_Click" />
-                    <asp:LinkButton ID="WithdrawBtn" runat="server" Text="Definitively withdraw" CssClass="btn3GPP-success" OnClick="WithdrawSpecificatione_Click" />
+                    <asp:LinkButton ID="WithdrawBtn" runat="server" Text="Definitively withdraw" CssClass="btn3GPP-success"/>
                     <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit" CssClass="btn3GPP-success" OnClientClick="  return closePopUpWindow()" />
                 </div>
                 <script type="text/javascript">
@@ -170,6 +170,89 @@
                 </script>
             </asp:Panel>
         </asp:Panel>
+        <script type="text/javascript">
+            //<![CDATA[
+            // Open popup for definitve withdrawal
+            function openDefinitiveWithdrawlRadWin() {
+                var win = $find("<%= WithdrawRadWindow.ClientID %>");                
+                win.setSize(450, 220);
+                win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
+                win.set_modal(true);
+                win.set_visibleStatusbar(false);                
+                win.show();
+                win.add_close(OnClientClose);
+                return false;
+            }
+            // On popup closure, sheow result popup 
+            function OnClientClose(sender, eventArgs) {
+                var arg = eventArgs.get_argument();
+                if (arg) {
+                    var operationResult = arg.OperationResult;
+                    if (operationResult == "True") {
+                        var successWin = $find("<%= WithdrawSuccessRadWindow.ClientID %>");
+                        successWin.setSize(290, 120);
+                        successWin.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
+                        successWin.set_modal(true);
+                        successWin.set_visibleStatusbar(false);
+                        successWin.show();
+
+                    }
+                    else {
+                        var failureWin = $find("<%= WithdrawFailureRadWindow.ClientID %>");
+                        failureWin.setSize(290, 120);
+                        failureWin.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
+                        failureWin.set_modal(true);
+                        failureWin.set_visibleStatusbar(false);
+                        failureWin.show();
+                    }                    
+                }
+            }            
+            // Refresh window in case the operation succede
+            function refreshWindow() {
+                cancel();               
+                window.location.reload(true);
+            }
+
+            // Close all modal windows
+            function closeAllModals() {
+                var manager = GetRadWindowManager();
+                manager.closeAll();
+            }
+
+            function cancel() {
+                closeAllModals();
+            }
+            //]]>
+        </script> 
+        <telerik:RadWindowManager ID="RadWindowManager1" runat="server">
+            <windows>      
+                <telerik:RadWindow ID="WithdrawRadWindow" runat="server" Behaviors="Close" 
+                    NavigateUrl="DefinitiveWithdrawlMeetingSelectPopUp.aspx"> </telerik:RadWindow>
+                <telerik:RadWindow ID="WithdrawSuccessRadWindow" runat="server" Behaviors="Close"> 
+                    <ContentTemplate>
+                        <br />
+                        <div class="header">               
+                            Specification hase been successfully withdrawn <br />
+                        </div>
+                        <div class="footer" style="position:absolute; bottom:10px; right:20px;">                            
+                            <asp:Button id="btnCancelSuccess" runat="server" Text ="OK" OnClientClick="refreshWindow(); return false;"/>
+                        </div>
+                    </ContentTemplate>
+                </telerik:RadWindow> 
+                <telerik:RadWindow ID="WithdrawFailureRadWindow" runat="server" Behaviors="Close"> 
+                    <ContentTemplate>
+                        <br />
+                        <div class="header">               
+                            Specification withdrawal has failed <br />
+                        </div>
+                        <div class="footer" style="position:absolute; bottom:10px; right:20px;">                            
+                            <asp:Button id="btnCancelFailure" runat="server" Text ="OK" OnClientClicked="cancel"/>
+                        </div>
+                    </ContentTemplate>
+                </telerik:RadWindow>                      
+            </windows>
+        </telerik:RadWindowManager>
+               
     </form>
 </body>
 </html>

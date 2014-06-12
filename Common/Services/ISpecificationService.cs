@@ -171,6 +171,15 @@ namespace Etsi.Ultimate.Services
         bool WithdrawForRelease(int personId, int releaseId, int specificationId, int withdrawalMtgId);
 
         /// <summary>
+        /// Withdraws definively a specification.
+        /// </summary>
+        /// <param name="personId">ID of the person requesting the withdrawal</param>
+        /// <param name="specificationId">ID of spec to be definitively withdrawn</param>
+        /// <param name="withdrawalMtgId">ID of meeting for which spec should be withdrawn.</param>
+        /// <returns></returns>
+        bool DefinitivelyWithdrawSpecification(int personId, int specificationId, int withdrawalMeetingId);
+
+        /// <summary>
         /// For a given specification, computes the authorized actions on each release.
         /// </summary>
         /// <param name="spec">The specification on which we want to compute rights</param>

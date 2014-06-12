@@ -64,6 +64,7 @@
     <Compile Include="DocQualityChecks.cs" />
     <Compile Include="DocXQualityChecks.cs" />
     <Compile Include="IQualityChecks.cs" />
+    <Compile Include="SpecificationDefinitiveWithdrawalAction.cs" />
     <Compile Include="SpecificationPromoteAction.cs" />
     <Compile Include="SpecificationInhibitRemoveInhibitAction.cs" />
     <Compile Include="IReleaseManager.cs" />

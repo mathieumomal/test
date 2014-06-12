@@ -85,6 +85,7 @@
     <Compile Include="BaseTest.cs" />
     <Compile Include="Business\CommunityManagerTest.cs" />
     <Compile Include="Business\PersonManagerTest.cs" />
+    <Compile Include="Business\SpecificationDefinitiveWithdrawalActionTest.cs" />
     <Compile Include="Business\SpecificationPromoteActionTest.cs" />
     <Compile Include="Business\ReleaseManagerTest.cs" />
     <Compile Include="Business\LogManagerTest.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="Repositories\WorkPlanFileRepositoryTest.cs" />
     <Compile Include="Services\RightsService.cs" />
     <Compile Include="Services\RightsServiceTest.cs" />
+    <Compile Include="Services\SpecDefinitiveWithdrawalTest.cs" />
     <Compile Include="Services\SpecificationCreateServiceTest.cs" />
     <Compile Include="Services\SpecificationEditServiceTest.cs" />
     <Compile Include="Services\SpecificationServiceTest.cs" />

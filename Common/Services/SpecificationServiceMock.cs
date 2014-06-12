@@ -501,5 +501,9 @@ namespace Etsi.Ultimate.Services
         {
             throw new NotImplementedException();
         }
+        public bool DefinitivelyWithdrawSpecification(int personId, int specificationId, int withdrawalMeetingId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

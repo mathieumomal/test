@@ -374,7 +374,15 @@ namespace Etsi.Ultimate.Module.Specifications
                 EditBtn.Visible = false;
 
             if (!userRights.HasRight(Domain.Enum_UserRights.Specification_Withdraw))
+            {
                 WithdrawBtn.Visible = false;
+            }
+            else
+            {
+                //Set button events 
+                WithdrawBtn.OnClientClick = "openDefinitiveWithdrawlRadWin(); return false;";
+                WithdrawRadWindow.NavigateUrl += "?SpecId=" + SpecificationId.GetValueOrDefault();
+            }
         }
 
         /// <summary>
@@ -390,10 +398,6 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if (SpecificationId != null)
                 Response.Redirect("EditSpecification.aspx?specificationId=" + SpecificationId + "&action=edit", true);
-        }
-
-        protected void WithdrawSpecificatione_Click(object sender, EventArgs e)
-        {
-        }
+        }        
     }
 }

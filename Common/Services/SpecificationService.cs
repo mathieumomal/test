@@ -270,6 +270,32 @@ namespace Etsi.Ultimate.Services
         /// See interface definition.
         /// </summary>
         /// <param name="personId"></param>
+        /// <param name="specificationId"></param>
+        /// <param name="WithdrawalMeetingId"></param>
+        /// <returns></returns>
+        public bool DefinitivelyWithdrawSpecification(int personId, int specificationId, int withdrawalMeetingId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var withdrawalAction = new SpecificationDefinitiveWithdrawalAction(uoW);
+                try
+                {
+                    withdrawalAction.WithdrawDefinivelySpecification(personId, specificationId, withdrawalMeetingId);
+                    uoW.Save();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Utils.LogManager.Error("Error during definitive withdrawal of the specification: " + e.Message);
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// See interface definition.
+        /// </summary>
+        /// <param name="personId"></param>
         /// <param name="releaseId"></param>
         /// <param name="specificationId"></param>
         /// <returns></returns>

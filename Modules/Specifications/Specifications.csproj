@@ -92,6 +92,13 @@
     <Compile Include="Components\FeatureController.cs" />
     <Compile Include="Components\ItemController.cs" />
     <Compile Include="Components\Item.cs" />
+    <Compile Include="DefinitiveWithdrawlMeetingSelectPopUp.aspx.cs">
+      <DependentUpon>DefinitiveWithdrawlMeetingSelectPopUp.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="DefinitiveWithdrawlMeetingSelectPopUp.aspx.designer.cs">
+      <DependentUpon>DefinitiveWithdrawlMeetingSelectPopUp.aspx</DependentUpon>
+    </Compile>
     <Compile Include="VersionRemarksPopUp.aspx.cs">
       <DependentUpon>VersionRemarksPopUp.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -167,6 +174,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="DefinitiveWithdrawlMeetingSelectPopUp.aspx" />
     <Content Include="images\busy.gif" />
     <Content Include="images\spec_rel-a.png" />
     <Content Include="VersionRemarksPopUp.aspx" />
