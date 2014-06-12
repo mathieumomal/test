@@ -232,7 +232,7 @@
                     <ContentTemplate>
                         <br />
                         <div class="header">               
-                            Specification hase been successfully withdrawn <br />
+                            Specification has been successfully withdrawn <br />
                         </div>
                         <div class="footer" style="position:absolute; bottom:10px; right:20px;">                            
                             <asp:Button id="btnCancelSuccess" runat="server" Text ="OK" OnClientClick="refreshWindow(); return false;"/>

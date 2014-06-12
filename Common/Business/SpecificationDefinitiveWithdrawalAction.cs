@@ -56,10 +56,11 @@ namespace Etsi.Ultimate.Business
             //Set the specification as withdrawn
             spec.IsActive = false;            
             spec.MOD_TS = actionDate;
-            spec.MOD_BY = persMgr.GetPersonDisplayName(personId);
+            //spec.MOD_BY = persMgr.GetPersonDisplayName(personId);
             spec.EntityStatus = Enum_EntityStatus.Modified;
             //Update history
             IHistoryRepository historyRepo = RepositoryFactory.Resolve<IHistoryRepository>();
+            historyRepo.UoW = _uoW;
             historyRepo.InsertOrUpdate(new History()
             {
                 Fk_PersonId = personId,
