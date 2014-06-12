@@ -51,9 +51,9 @@ namespace Etsi.Ultimate.Tests.Services
             List<Community> communitiesSet = new List<Community>() { c, c1, c2 };
             //Mock Comminities
             var mockCommunitiesManager = MockRepository.GenerateMock<ICommunityManager>();
-            mockCommunitiesManager.Stub(x => x.GetCommmunityshortNameById(1)).Return(c.ShortName);
-            mockCommunitiesManager.Stub(x => x.GetCommmunityshortNameById(2)).Return(c1.ShortName);
-            mockCommunitiesManager.Stub(x => x.GetCommmunityshortNameById(3)).Return(c2.ShortName);
+            mockCommunitiesManager.Stub(x => x.GetCommmunityById(1)).Return(c);
+            mockCommunitiesManager.Stub(x => x.GetCommmunityById(2)).Return(c1);
+            mockCommunitiesManager.Stub(x => x.GetCommmunityById(3)).Return(c2);
             mockCommunitiesManager.Stub(x => x.GetCommunities()).Return(communitiesSet);
 
             Enum_Technology e = new Enum_Technology() { Pk_Enum_TechnologyId = 1, Code = "2G", Description = "2G" };
@@ -83,9 +83,9 @@ namespace Etsi.Ultimate.Tests.Services
             KeyValuePair<Specification, UserRightsContainer> result = specSVC.GetSpecificationDetailsById(0, 1);
             Assert.IsFalse(result.Value.HasRight(Enum_UserRights.Specification_Withdraw));
             Assert.AreEqual("Withdrawn before change control", result.Key.Status);
-            Assert.AreEqual("SP", result.Key.PrimeResponsibleGroupShortName);
-            Assert.AreEqual("S1,S2", result.Key.SecondaryResponsibleGroupsShortNames);
-            Assert.AreEqual("S1,S2", result.Key.SecondaryResponsibleGroupsShortNames);
+            Assert.AreEqual("3GPP SA", result.Key.PrimeResponsibleGroupFullName);
+            Assert.AreEqual("3GPP SA 1,3GPP SA 2", result.Key.SecondaryResponsibleGroupsFullNames);
+            Assert.AreEqual("3GPP SA 1,3GPP SA 2", result.Key.SecondaryResponsibleGroupsFullNames);
         }
 
         [Test, TestCaseSource("GetSpecificicationNumbersTestFormat")]
