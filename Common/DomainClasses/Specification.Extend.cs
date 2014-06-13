@@ -187,5 +187,9 @@ namespace Etsi.Ultimate.DomainClasses
                     return (IsTS.Value) ? "TS" : "TR";
             }
         }
+        /// <summary>
+        /// Specify whether new vesion creation is enbaled or not in massive promotion case
+        /// </summary>
+        public bool IsNewVersionCreationEnabled { get; set; }
     }
 }
