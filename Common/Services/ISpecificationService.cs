@@ -187,5 +187,14 @@ namespace Etsi.Ultimate.Services
         /// <param name="spec">The specification on which we want to compute rights</param>
         /// <returns>A list of Specification_Release, in the order they were provided in the spec.Specification_Release field, with the associated rights</returns>
         List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, Specification spec);
+
+        /// <summary>
+        /// Get the list of specification candidates to a massive promote for a release
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="initialReleaseId"></param>
+        /// <param name="targetReleaseId"></param>
+        /// <returns></returns>
+        KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationForMassivePromotion(int personId, int initialReleaseId, int targetReleaseId);
     }
 }

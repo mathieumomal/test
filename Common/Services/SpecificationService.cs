@@ -206,6 +206,15 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationForMassivePromotion(int personId, int initialReleaseId, int targetReleaseId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction(uoW);
+                return specificationsMassivePromotionAction.GetSpecificationForMassivePromotion(personId, initialReleaseId, targetReleaseId);
+            }
+        }
+
         /// <summary>
         /// See Interface definition.
         /// </summary>
