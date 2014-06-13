@@ -124,5 +124,30 @@ namespace DatabaseImportTests
             Assert.AreEqual(true, newTDocStatus.TSGUsable);
             Assert.AreEqual(60, newTDocStatus.SortOrder);
         }
+
+        /// <summary>
+        /// TDoc Status insertion test
+        /// </summary>
+        [Test]
+        public void Test_FillDatabase_CRImpact()
+        {
+            // New context mock
+            var newContext = MockRepository.GenerateMock<IUltimateContext>();
+            var newDbSet = new Enum_CRImpactFakeDbSet();
+            newContext.Stub(ctx => ctx.Enum_CRImpact).Return(newDbSet);
+
+            // Report
+            var report = new Domain.Report();
+
+            // Execute
+            var import = new Enum_CRImpactImport() { LegacyContext = null, NewContext = newContext, Report = report };
+            import.FillDatabase();
+
+            // Test results
+            Assert.AreEqual(4, newDbSet.All().Count);
+
+            var newTDocStatus = newDbSet.All()[0];
+            Assert.AreEqual("UICS Apps", newTDocStatus.Impact);
+        }
     }
 }

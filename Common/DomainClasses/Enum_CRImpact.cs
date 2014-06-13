@@ -16,8 +16,7 @@ namespace Etsi.Ultimate.DomainClasses
     public partial class Enum_CRImpact
     {
         public int Pk_EnumCRImpact { get; set; }
-        public string Type { get; set; }
-        public string Description { get; set; }
+        public string Impact { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

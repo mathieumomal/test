@@ -229,8 +229,7 @@
             <PropertyRef Name="Pk_EnumCRImpact" />
           </Key>
           <Property Name="Pk_EnumCRImpact" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Type" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="Description" Type="varchar" Nullable="false" MaxLength="200" />
+          <Property Name="Impact" Type="varchar" Nullable="false" MaxLength="50" />
         </EntityType>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -1744,8 +1743,7 @@
             <PropertyRef Name="Pk_EnumCRImpact" />
           </Key>
           <Property Type="Int32" Name="Pk_EnumCRImpact" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Type" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Description" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Impact" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2164,8 +2162,7 @@
           <EntitySetMapping Name="Enum_CRImpact">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Enum_CRImpact">
               <MappingFragment StoreEntitySet="Enum_CRImpact">
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Impact" ColumnName="Impact" />
                 <ScalarProperty Name="Pk_EnumCRImpact" ColumnName="Pk_EnumCRImpact" />
               </MappingFragment>
             </EntityTypeMapping>
