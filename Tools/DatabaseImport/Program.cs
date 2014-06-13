@@ -41,6 +41,7 @@ namespace DatabaseImport
             operations.Add(new VersionImport());*/
 
             operations.Add(new Enum_CRCategoryImport());
+            operations.Add(new Enum_TDocStatusImport());
             
             //---> (First to CLEANDATABASE)
 

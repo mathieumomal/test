@@ -16,7 +16,7 @@ namespace DatabaseImportTests
     public class TestCRImport
     {
         /// <summary>
-        /// Test sur l'insertion des CR Categories
+        /// CR Category insertion test
         /// </summary>
         [Test]
         public void Test_FillDatabase_CRCategory()
@@ -27,8 +27,7 @@ namespace DatabaseImportTests
             // New context mock
             var newContext = MockRepository.GenerateMock<IUltimateContext>();
             var newDbSet = new Enum_CRCategoryFakeDbSet();
-
-            newContext.Stub(ctx => ctx.Enum_CRCategories).Return(newDbSet);
+            newContext.Stub(ctx => ctx.Enum_CRCategory).Return(newDbSet);
 
             // Legacy context mock
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
@@ -61,9 +60,69 @@ namespace DatabaseImportTests
             // Test results
             Assert.AreEqual(2, newDbSet.All().Count);
 
-            var newRelease = newDbSet.All()[0];
-            Assert.AreEqual(meaningExample, newRelease.Meaning);
-            Assert.AreEqual(categoryExample, newRelease.Category);
+            var newCRCategory = newDbSet.All()[0];
+            Assert.AreEqual(meaningExample, newCRCategory.Meaning);
+            Assert.AreEqual(categoryExample, newCRCategory.Category);
+        }
+
+        /// <summary>
+        /// TDoc Status insertion test
+        /// </summary>
+        [Test]
+        public void Test_FillDatabase_TDocStatus()
+        {
+            var validStatus = "tech endorsed";
+            var statusToRemove = " - ";
+            var meaningExample = "test";
+
+            // New context mock
+            var newContext = MockRepository.GenerateMock<IUltimateContext>();
+            var newDbSet = new Enum_TDocStatusFakeDbSet();
+            newContext.Stub(ctx => ctx.Enum_TDocStatus).Return(newDbSet);
+
+            // Legacy context mock
+            var legacyContext = MockRepository.GenerateMock<ITmpDb>();
+            var legacyDbSet = new CRStatusValuesLegacyFakeDbSet();
+            legacyDbSet.Add(
+                new CR_status_values()
+                {
+                    Row_id = 1,
+                    CR_status_value = statusToRemove,
+                    sort_order = 43,
+                    use = meaningExample,
+                    WG = true,
+                    TSG = false
+                }
+            );
+            legacyDbSet.Add(
+                new CR_status_values()
+                {
+                    Row_id = 2,
+                    CR_status_value = validStatus,
+                    sort_order = 60,
+                    use = meaningExample,
+                    WG = true,
+                    TSG = true
+                }
+            );
+            legacyContext.Stub(ctx => ctx.CR_status_values).Return(legacyDbSet);
+
+            // Report
+            var report = new Domain.Report();
+
+            // Execute
+            var import = new Enum_TDocStatusImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
+            import.FillDatabase();
+
+            // Test results
+            Assert.AreEqual(1, newDbSet.All().Count);
+
+            var newTDocStatus = newDbSet.All()[0];
+            Assert.AreEqual(meaningExample, newTDocStatus.Meaning);
+            Assert.AreEqual(validStatus, newTDocStatus.Status);
+            Assert.AreEqual(true, newTDocStatus.WGUsable);
+            Assert.AreEqual(true, newTDocStatus.TSGUsable);
+            Assert.AreEqual(60, newTDocStatus.SortOrder);
         }
     }
 }

@@ -11,13 +11,13 @@ using OldDomain = Etsi.Ultimate.Tools.TmpDbDataAccess;
 
 namespace DatabaseImport.ModuleImport
 {
-    public class Enum_CRCategoryImport : IModuleImport
+    public class Enum_TDocStatusImport : IModuleImport
     {
-        public const string RefImportForLog = "[ENUM_CRCategory]";
+        public const string RefImportForLog = "[ENUM_TDocStatus]";
 
         /// <summary>
         /// Old table(s) : 
-        /// CR-categories
+        /// CR-status-values
         /// </summary>
         #region IModuleImport Membres
 
@@ -25,11 +25,7 @@ namespace DatabaseImport.ModuleImport
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
         public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
 
-        public void CleanDatabase()
-        {
-            //For the moment here but to move in the CRImport global class when it will be created
-            NewContext.CR_CleanAll();
-        }
+        public void CleanDatabase() { }
 
         public void FillDatabase()
         {
@@ -51,14 +47,21 @@ namespace DatabaseImport.ModuleImport
         #region migration methods
         private void CreateTable()
         {
-            foreach (var elt in LegacyContext.CR_categories)
+            foreach (var elt in LegacyContext.CR_status_values)
             {
-                var newCRCategory = new Domain.Enum_CRCategory();
+                var status = Utils.CheckString(elt.CR_status_value, 50, RefImportForLog + "", elt.CR_status_value, Report);
+                if (!status.Equals("-"))
+                {
+                    var newTDocStatus = new Domain.Enum_TDocStatus();
 
-                newCRCategory.Category = elt.CR_category;
-                newCRCategory.Meaning = Utils.CheckString(elt.meaning, 200, RefImportForLog + " category", elt.CR_category, Report);
+                    newTDocStatus.Status = status;
+                    newTDocStatus.SortOrder = Utils.CheckInt(elt.sort_order, " tdoc status (sortOrder)", elt.CR_status_value, Report);
+                    newTDocStatus.Meaning = Utils.CheckString(elt.use, 200, RefImportForLog + " tdoc status (status)", elt.CR_status_value, Report);
+                    newTDocStatus.TSGUsable = Utils.NullBooleanCheck(elt.TSG, " tdoc status (TSG Usable) -> FALSE BY DEFAULT", false, Report);
+                    newTDocStatus.WGUsable = Utils.NullBooleanCheck(elt.WG, " tdoc status (TSG Usable) -> FALSE BY DEFAULT", false, Report);
 
-                NewContext.Enum_CRCategory.Add(newCRCategory);
+                    NewContext.Enum_TDocStatus.Add(newTDocStatus);
+                }
             }
         }
         #endregion

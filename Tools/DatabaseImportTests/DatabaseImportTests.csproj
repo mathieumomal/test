@@ -59,6 +59,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="LegacyDBSets\CRCategoryLegacyFakeDbSet.cs" />
+    <Compile Include="LegacyDBSets\CRStatusValuesLegacyFakeDbSet.cs" />
     <Compile Include="LegacyDBSets\FakeDBSet.cs" />
     <Compile Include="LegacyDBSets\FiliusPatrisFakeDBSet.cs" />
     <Compile Include="LegacyDBSets\ReleaseInfoFakeDBSet.cs" />
