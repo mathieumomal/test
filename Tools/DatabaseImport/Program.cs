@@ -28,7 +28,7 @@ namespace DatabaseImport
             
             //---> (First to FILLDATABASE)
             
-            operations.Add(new ReleaseImport());
+            /*operations.Add(new ReleaseImport());
             operations.Add(new WorkItemImport());
             operations.Add(new Enum_SerieImport());
             operations.Add(new Enum_TechnologyImport());
@@ -38,7 +38,9 @@ namespace DatabaseImport
             operations.Add(new SpecificationRapporteurImport());
             operations.Add(new SpecificationWorkitemImport());
             operations.Add(new SpecificationReleaseImport());
-            operations.Add(new VersionImport());
+            operations.Add(new VersionImport());*/
+
+            operations.Add(new Enum_CRCategoryImport());
             
             //---> (First to CLEANDATABASE)
 
