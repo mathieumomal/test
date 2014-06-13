@@ -7,6 +7,7 @@
     <Schema Namespace="Etsi.Ultimate.DataAccess.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="EtsiUltimateDataAccessStoreContainer">
           <EntitySet Name="Enum_CommunitiesShortName" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_CommunitiesShortName" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Enum_CRCategory" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_CRCategory" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_ReleaseStatus" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_ReleaseStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_Serie" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_Serie" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_Technology" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_Technology" store:Type="Tables" Schema="dbo" />
@@ -212,6 +213,14 @@
           <Property Name="Pk_EnumCommunitiesShortNames" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Fk_TbId" Type="int" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Enum_CRCategory">
+          <Key>
+            <PropertyRef Name="Pk_EnumCRCategory" />
+          </Key>
+          <Property Name="Pk_EnumCRCategory" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Category" Type="varchar" Nullable="false" MaxLength="5" />
+          <Property Name="Meaning" Type="varchar" Nullable="false" MaxLength="200" />
         </EntityType>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -860,6 +869,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="CR_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="getETSI_WKI_Ref" ReturnType="varchar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="ETSI_WKI_ID" Type="int" Mode="In" />
         </Function>
@@ -1005,6 +1015,8 @@
             <End Role="Version" EntitySet="SpecVersions" />
           </AssociationSet>
           <EntitySet Name="ResponsibleGroup_Secretary" EntityType="Etsi.Ultimate.DataAccess.ResponsibleGroup_Secretary" />
+          <EntitySet Name="Enum_CRCategory" EntityType="Etsi.Ultimate.DataAccess.Enum_CRCategory" />
+          <FunctionImport Name="CR_CleanAll" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -1685,6 +1697,14 @@
           <Property Type="String" Name="Email" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="PersonId" Nullable="false" />
         </EntityType>
+        <EntityType Name="Enum_CRCategory">
+          <Key>
+            <PropertyRef Name="Pk_EnumCRCategory" />
+          </Key>
+          <Property Type="Int32" Name="Pk_EnumCRCategory" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Category" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Meaning" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2077,6 +2097,16 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Enum_CRCategory">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Enum_CRCategory">
+              <MappingFragment StoreEntitySet="Enum_CRCategory">
+                <ScalarProperty Name="Meaning" ColumnName="Meaning" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="Pk_EnumCRCategory" ColumnName="Pk_EnumCRCategory" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="CR_CleanAll" FunctionName="Etsi.Ultimate.DataAccess.Store.CR_CleanAll" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

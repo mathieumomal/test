@@ -51,9 +51,9 @@ namespace DatabaseImportTests
 
             var newVersion = newDbSet.All()[0];
             //Global version
-            Assert.AreEqual("5", newVersion.MajorVersion);
-            Assert.AreEqual("4", newVersion.TechnicalVersion);
-            Assert.AreEqual("99", newVersion.EditorialVersion);
+            Assert.AreEqual(5, newVersion.MajorVersion);
+            Assert.AreEqual(4, newVersion.TechnicalVersion);
+            Assert.AreEqual(99, newVersion.EditorialVersion);
             Assert.AreEqual(AchievedDate, newVersion.AchievedDate);
             Assert.AreEqual(ExpertProvided, newVersion.ExpertProvided);
             Assert.AreEqual(Location, newVersion.Location);

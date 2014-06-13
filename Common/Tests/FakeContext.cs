@@ -121,6 +121,12 @@ namespace Etsi.Ultimate.Tests
             set;
         }
 
+        public System.Data.Entity.IDbSet<Enum_CRCategory> Enum_CRCategories
+        {
+            get;
+            set;
+        }
+
 
         public void SetModified(object entity)
         {
@@ -202,10 +208,10 @@ namespace Etsi.Ultimate.Tests
             throw new NotImplementedException();
         }
 
-        #endregion
-
-        #region IUltimateContext Members
-        
+        public int CR_CleanAll()
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
     }

@@ -165,6 +165,8 @@
     <Build Include="dbo\Views\ResponsibleGroup_Secretary.sql" />
     <Build Include="dbo\Stored Procedures\WorkItems_CleanAll.sql" />
     <Build Include="dbo\Stored Procedures\Specifications_CleanAll.sql" />
+    <Build Include="dbo\Tables\Enum_CRCategory.sql" />
+    <Build Include="dbo\Stored Procedures\CR_CleanAll.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

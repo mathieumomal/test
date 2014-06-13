@@ -56,6 +56,7 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<ETSI_WorkItem> ETSI_WorkItem { get; set; }
         public IDbSet<SpecVersion> SpecVersions { get; set; }
         public IDbSet<ResponsibleGroup_Secretary> ResponsibleGroupSecretaries { get; set; }
+        public IDbSet<Enum_CRCategory> Enum_CRCategories { get; set; }
     	
     	/**
     	 * This code is intended to enable testability of the different layers,
@@ -95,6 +96,11 @@ namespace Etsi.Ultimate.DataAccess
         public virtual int Versions_CleanAll()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Versions_CleanAll");
+        }
+    
+        public virtual int CR_CleanAll()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CR_CleanAll");
         }
     }
 }

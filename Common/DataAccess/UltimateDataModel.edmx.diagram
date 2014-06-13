@@ -58,6 +58,7 @@
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Remarks_Version" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.Version_FK_SpecificationID" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.ResponsibleGroup_Secretary" Width="1.5" PointX="1.625" PointY="27.75" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_CRCategory" Width="1.5" PointX="8.25" PointY="28" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
