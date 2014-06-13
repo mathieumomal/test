@@ -91,7 +91,19 @@ namespace Etsi.Ultimate.Tests.Repositories
             repo.UoW = uow;
 
             repo.Delete(1);
-        }        
+        }
+
+        [Test]
+        public void SpecVersionsRepository_GetVersionsByReleaseId()
+        {
+            IUltimateUnitOfWork uow = GetUnitOfWork();
+            var repo = new SpecVersionsRepository(uow);
+            repo.UoW = uow;
+
+            Assert.AreEqual(1, repo.GetVersionsByReleaseId(2).Count);
+            Assert.AreEqual(2, repo.GetVersionsByReleaseId(2).FirstOrDefault().Pk_VersionId);
+
+        }
 
         /// <summary>
         /// Create Mocks to simulate DB with objects

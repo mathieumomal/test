@@ -58,6 +58,7 @@
 	<Right value="Specification_WithdrawFromRelease"/>
 	<Right value="Specification_InhibitPromote"/>	
 	<Right value="Specification_RemoveInhibitPromote"/>	
+	<Right value="Specification_BulkPromote"/>	
   </UserRole>
   <!-- Administrators are members of the ETSI IT service who should be able to do everything -->
   <UserRole value="Administrator">

@@ -32,6 +32,11 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             throw new NotImplementedException();
         }
 
+        public List<SpecVersion> GetVersionsByReleaseId(int releaseId)
+        {
+            return All.Where(e => e.Fk_ReleaseId == releaseId).ToList();
+        }
+
         private IQueryable<SpecVersion> GenerateList()
         {
             var rmkDbSet = new RemarkFakeDbSet();

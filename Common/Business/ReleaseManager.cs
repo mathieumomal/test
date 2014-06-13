@@ -69,7 +69,7 @@ namespace Etsi.Ultimate.Business
 
             releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
             releaseRepo.UoW = UoW;
-            var release = releaseRepo.AllIncluding(t => t.Remarks, t => t.Histories).Where(r => r.Pk_ReleaseId == id).FirstOrDefault();
+            var release = releaseRepo.AllIncluding(t => t.Remarks, t => t.Histories, t => t.Specification_Release).Where(r => r.Pk_ReleaseId == id).FirstOrDefault();
 
             if (release == null)
                 return new KeyValuePair<Release, UserRightsContainer>(null, null);

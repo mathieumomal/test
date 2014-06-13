@@ -41,6 +41,7 @@ namespace Etsi.Ultimate.DomainClasses
         Specification_WithdrawFromRelease,
         Specification_InhibitPromote,
         Specification_RemoveInhibitPromote,
+        Specification_BulkPromote,
 
         Versions_Allocate,
         Versions_Upload,

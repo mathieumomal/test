@@ -56,6 +56,11 @@ namespace Etsi.Ultimate.Repositories
             return All.Where(x => (x.Fk_SpecificationId != null) ? x.Fk_SpecificationId.Value == specificationId : false).ToList();
         }
 
+        public List<SpecVersion> GetVersionsByReleaseId(int ReleaseId)
+        {
+            return AllIncluding().Where(x => (x.Fk_ReleaseId != null) ? x.Fk_ReleaseId.Value == ReleaseId : false).ToList();
+        }
+
         public void InsertOrUpdate(SpecVersion entity)
         {
             //Remove generated proxies to avoid Referential Integrity Errors
@@ -114,5 +119,11 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="specificationId">Identifier og the specification</param>
         /// <returns>List of specVersions</returns>
         List<SpecVersion> GetVersionsBySpecId(int specificationId);
+        /// <summary>
+        /// Return a list of SpecVersion for a release
+        /// </summary>
+        /// <param name="ReleaseId">Release identifier</param>
+        /// <returns></returns>
+        List<SpecVersion> GetVersionsByReleaseId(int ReleaseId);
     }
 }
