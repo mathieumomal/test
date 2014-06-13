@@ -123,7 +123,7 @@ namespace Etsi.Ultimate.Controls
 
                 List<Community> dataSource = new List<Community>(); //Create deep copy of list to avoid cache modifications
                 dataSource.AddRange(communityList.Select(x => new Community() { TbId = x.TbId, TbName = x.TbName, ParentTbId = x.ParentTbId, Order = x.Order, ActiveCode = x.ActiveCode }));
-                
+
                 if (IsSingleSelection) //Single Selection
                 {
                     imgBtnCommunity.Visible = false;
@@ -137,7 +137,7 @@ namespace Etsi.Ultimate.Controls
                         rcbCommunity.Visible = true;
                         lblCommunity.Visible = false;
 
-                        rcbCommunity.DataSource = dataSource.Where(x=>x.ActiveCode == "ACTIVE" || x.TbId == _selectedCommunityID).OrderBy(x => x.Order);
+                        rcbCommunity.DataSource = dataSource.Where(x => x.ActiveCode == "ACTIVE" || x.TbId == _selectedCommunityID).OrderBy(x => x.Order);
                         rcbCommunity.DataTextField = "TbName";
                         rcbCommunity.DataValueField = "TbId";
                         rcbCommunity.DataBind();
@@ -173,13 +173,20 @@ namespace Etsi.Ultimate.Controls
                     {
                         imgBtnCommunity.Visible = true;
 
+                        List<Community> rtvSource;
+                        if (dataSource.Count > 0 && _selectedCommunityIds != null)
+                            rtvSource = dataSource.OrderBy(x => x.Order).Where(x => x.ActiveCode == "ACTIVE" || _selectedCommunityIds.Contains(x.TbId)).OrderBy(x => x.Order).ToList();
+                        else
+                            rtvSource = dataSource;
+
+
                         AddPlenaryRecords(dataSource);
 
                         rtvCommunitySelector.DataTextField = "TbName";
                         rtvCommunitySelector.DataValueField = "TbId";
                         rtvCommunitySelector.DataFieldID = "TbId";
                         rtvCommunitySelector.DataFieldParentID = "ParentCommunityId";
-                        rtvCommunitySelector.DataSource = dataSource.OrderBy(x => x.Order).Where(x => x.ActiveCode == "ACTIVE" || _selectedCommunityIds.Contains(x.TbId)).OrderBy(x => x.Order);
+                        rtvCommunitySelector.DataSource = rtvSource;
                         rtvCommunitySelector.DataBind();
 
                         if (_selectedCommunityIds != null)
