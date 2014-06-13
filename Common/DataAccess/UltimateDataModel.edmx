@@ -8,6 +8,7 @@
         <EntityContainer Name="EtsiUltimateDataAccessStoreContainer">
           <EntitySet Name="Enum_CommunitiesShortName" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_CommunitiesShortName" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_CRCategory" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_CRCategory" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Enum_CRImpact" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_CRImpact" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_ReleaseStatus" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_ReleaseStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_Serie" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_Serie" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_TDocStatus" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_TDocStatus" store:Type="Tables" Schema="dbo" />
@@ -222,6 +223,14 @@
           <Property Name="Pk_EnumCRCategory" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Category" Type="varchar" Nullable="false" MaxLength="5" />
           <Property Name="Meaning" Type="varchar" Nullable="false" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="Enum_CRImpact">
+          <Key>
+            <PropertyRef Name="Pk_EnumCRImpact" />
+          </Key>
+          <Property Name="Pk_EnumCRImpact" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Description" Type="varchar" Nullable="false" MaxLength="200" />
         </EntityType>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -1030,6 +1039,7 @@
           <EntitySet Name="Enum_CRCategory" EntityType="Etsi.Ultimate.DataAccess.Enum_CRCategory" />
           <FunctionImport Name="CR_CleanAll" />
           <EntitySet Name="Enum_TDocStatus" EntityType="Etsi.Ultimate.DataAccess.Enum_TDocStatus" />
+          <EntitySet Name="Enum_CRImpact" EntityType="Etsi.Ultimate.DataAccess.Enum_CRImpact" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -1729,6 +1739,14 @@
           <Property Type="Boolean" Name="WGUsable" Nullable="false" />
           <Property Type="Boolean" Name="TSGUsable" Nullable="false" />
         </EntityType>
+        <EntityType Name="Enum_CRImpact">
+          <Key>
+            <PropertyRef Name="Pk_EnumCRImpact" />
+          </Key>
+          <Property Type="Int32" Name="Pk_EnumCRImpact" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Type" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2140,6 +2158,15 @@
                 <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Pk_EnumTDocStatus" ColumnName="Pk_EnumTDocStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Enum_CRImpact">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Enum_CRImpact">
+              <MappingFragment StoreEntitySet="Enum_CRImpact">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Pk_EnumCRImpact" ColumnName="Pk_EnumCRImpact" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

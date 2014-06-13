@@ -58,6 +58,7 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<ResponsibleGroup_Secretary> ResponsibleGroupSecretaries { get; set; }
         public IDbSet<Enum_CRCategory> Enum_CRCategory { get; set; }
         public IDbSet<Enum_TDocStatus> Enum_TDocStatus { get; set; }
+        public IDbSet<Enum_CRImpact> Enum_CRImpact { get; set; }
     	
     	/**
     	 * This code is intended to enable testability of the different layers,

@@ -121,17 +121,9 @@ namespace Etsi.Ultimate.Tests
             set;
         }
 
-        public System.Data.Entity.IDbSet<Enum_CRCategory> Enum_CRCategory
-        {
-            get;
-            set;
-        }
-
-        public System.Data.Entity.IDbSet<Enum_TDocStatus> Enum_TDocStatus
-        {
-            get;
-            set;
-        }
+        public System.Data.Entity.IDbSet<Enum_CRCategory> Enum_CRCategory{get;set;}
+        public System.Data.Entity.IDbSet<Enum_TDocStatus> Enum_TDocStatus{ get; set;}
+        public System.Data.Entity.IDbSet<Enum_CRImpact> Enum_CRImpact { get; set; }
 
 
         public void SetModified(object entity)

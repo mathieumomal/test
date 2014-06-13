@@ -11,6 +11,7 @@ BEGIN
 	-- Delete from CR
 	DELETE FROM Enum_CRCategory;
 	DELETE FROM Enum_TDocStatus;
+	DELETE FROM Enum_CRImpact;
 	
 	Select @Error = @@error
 	Return @Error
