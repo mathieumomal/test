@@ -56,7 +56,8 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<ETSI_WorkItem> ETSI_WorkItem { get; set; }
         public IDbSet<SpecVersion> SpecVersions { get; set; }
         public IDbSet<ResponsibleGroup_Secretary> ResponsibleGroupSecretaries { get; set; }
-        public IDbSet<Enum_CRCategory> Enum_CRCategories { get; set; }
+        public IDbSet<Enum_CRCategory> Enum_CRCategory { get; set; }
+        public IDbSet<Enum_TDocStatus> Enum_TDocStatus { get; set; }
     	
     	/**
     	 * This code is intended to enable testability of the different layers,

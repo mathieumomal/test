@@ -64,6 +64,9 @@
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Enum_Settings.cs" />
+    <Compile Include="Enum_TDocStatus.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Enum_Technology.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

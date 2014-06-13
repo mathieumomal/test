@@ -121,7 +121,13 @@ namespace Etsi.Ultimate.Tests
             set;
         }
 
-        public System.Data.Entity.IDbSet<Enum_CRCategory> Enum_CRCategories
+        public System.Data.Entity.IDbSet<Enum_CRCategory> Enum_CRCategory
+        {
+            get;
+            set;
+        }
+
+        public System.Data.Entity.IDbSet<Enum_TDocStatus> Enum_TDocStatus
         {
             get;
             set;

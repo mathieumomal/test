@@ -37,7 +37,8 @@ namespace Etsi.Ultimate.DataAccess
         IDbSet<SpecificationResponsibleGroup> SpecificationResponsibleGroups { get; set; }
         IDbSet<ResponsibleGroup_Secretary> ResponsibleGroupSecretaries { get; set; }
         IDbSet<SpecVersion> SpecVersions { get; set; }
-        IDbSet<Enum_CRCategory> Enum_CRCategories { get; set; }
+        IDbSet<Enum_CRCategory> Enum_CRCategory { get; set; }
+        IDbSet<Enum_TDocStatus> Enum_TDocStatus { get; set; }
 
         void SetModified(object entity);
         void SetAdded(object entity);

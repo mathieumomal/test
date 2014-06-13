@@ -167,6 +167,7 @@
     <Build Include="dbo\Stored Procedures\Specifications_CleanAll.sql" />
     <Build Include="dbo\Tables\Enum_CRCategory.sql" />
     <Build Include="dbo\Stored Procedures\CR_CleanAll.sql" />
+    <Build Include="dbo\Tables\Enum_TDocStatus.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

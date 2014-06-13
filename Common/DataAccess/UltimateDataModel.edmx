@@ -10,6 +10,7 @@
           <EntitySet Name="Enum_CRCategory" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_CRCategory" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_ReleaseStatus" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_ReleaseStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_Serie" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_Serie" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Enum_TDocStatus" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_TDocStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_Technology" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_Technology" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="History" EntityType="Etsi.Ultimate.DataAccess.Store.History" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Releases" EntityType="Etsi.Ultimate.DataAccess.Store.Releases" store:Type="Tables" Schema="dbo" />
@@ -239,6 +240,17 @@
           <Property Name="Description" Type="varchar" Nullable="false" MaxLength="100" />
           <Property Name="Series_2g" Type="bit" />
           <Property Name="Series_3g" Type="bit" />
+        </EntityType>
+        <EntityType Name="Enum_TDocStatus">
+          <Key>
+            <PropertyRef Name="Pk_EnumTDocStatus" />
+          </Key>
+          <Property Name="Pk_EnumTDocStatus" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Status" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="SortOrder" Type="int" Nullable="false" />
+          <Property Name="Meaning" Type="varchar" Nullable="false" MaxLength="200" />
+          <Property Name="WGUsable" Type="bit" Nullable="false" />
+          <Property Name="TSGUsable" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Enum_Technology">
           <Key>
@@ -1017,6 +1029,7 @@
           <EntitySet Name="ResponsibleGroup_Secretary" EntityType="Etsi.Ultimate.DataAccess.ResponsibleGroup_Secretary" />
           <EntitySet Name="Enum_CRCategory" EntityType="Etsi.Ultimate.DataAccess.Enum_CRCategory" />
           <FunctionImport Name="CR_CleanAll" />
+          <EntitySet Name="Enum_TDocStatus" EntityType="Etsi.Ultimate.DataAccess.Enum_TDocStatus" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -1705,6 +1718,17 @@
           <Property Type="String" Name="Category" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Meaning" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="Enum_TDocStatus">
+          <Key>
+            <PropertyRef Name="Pk_EnumTDocStatus" />
+          </Key>
+          <Property Type="Int32" Name="Pk_EnumTDocStatus" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="Status" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="SortOrder" Nullable="false" />
+          <Property Type="String" Name="Meaning" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="WGUsable" Nullable="false" />
+          <Property Type="Boolean" Name="TSGUsable" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2107,6 +2131,18 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="CR_CleanAll" FunctionName="Etsi.Ultimate.DataAccess.Store.CR_CleanAll" />
+          <EntitySetMapping Name="Enum_TDocStatus">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Enum_TDocStatus">
+              <MappingFragment StoreEntitySet="Enum_TDocStatus">
+                <ScalarProperty Name="TSGUsable" ColumnName="TSGUsable" />
+                <ScalarProperty Name="WGUsable" ColumnName="WGUsable" />
+                <ScalarProperty Name="Meaning" ColumnName="Meaning" />
+                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Pk_EnumTDocStatus" ColumnName="Pk_EnumTDocStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
