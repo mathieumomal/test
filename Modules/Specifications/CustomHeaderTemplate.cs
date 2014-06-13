@@ -30,8 +30,6 @@ namespace Etsi.Ultimate.Module.Specifications
 
         public void InstantiateIn(Control container)
         {
-
-
             ReleaseHeaderControl ctrl = (ReleaseHeaderControl)_page.LoadControl("ReleaseHeaderControl.ascx");
             if (ctrl != null)
             {

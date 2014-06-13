@@ -46,7 +46,7 @@ namespace Etsi.Ultimate.Repositories
         {
             return AllIncluding(t => t.Enum_Serie, t => t.Remarks, t => t.Histories,
                 t => t.SpecificationTechnologies, t => t.SpecificationResponsibleGroups, t => t.SpecificationRapporteurs,
-                t => t.Specification_Release).Where(x => x.Pk_SpecificationId == id).FirstOrDefault();
+                t => t.Specification_Release.Select(x => x.Remarks)).Where(x => x.Pk_SpecificationId == id).FirstOrDefault();
         }
 
         public void InsertOrUpdate(Specification specification)

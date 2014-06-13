@@ -92,14 +92,5 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel upRemarks;
-        
-        /// <summary>
-        /// releaseRemarks control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected Etsi.Ultimate.Controls.RemarksControl releaseRemarks;
     }
 }

@@ -179,7 +179,7 @@ namespace Etsi.Ultimate.Business
             var oldPrimaryResponsibleGroup = currentSpec.SpecificationResponsibleGroups.ToList().Where(x=> x.IsPrime).FirstOrDefault();
             var newPrimaryResponsibleGroup = newSpec.SpecificationResponsibleGroups.ToList().Where(x => x.IsPrime).FirstOrDefault();
             if(oldPrimaryResponsibleGroup != null && newPrimaryResponsibleGroup != null && oldPrimaryResponsibleGroup.Fk_commityId != newPrimaryResponsibleGroup.Fk_commityId)
-            oldPrimaryResponsibleGroup.Fk_commityId = newPrimaryResponsibleGroup.Fk_commityId;
+                oldPrimaryResponsibleGroup.Fk_commityId = newPrimaryResponsibleGroup.Fk_commityId;
 
             //Secondary Responsible Groups
             var oldSecondaryResponsibleGroups = currentSpec.SpecificationResponsibleGroups.ToList().Where(x => !x.IsPrime);
@@ -238,6 +238,20 @@ namespace Etsi.Ultimate.Business
             specRapporteursToUpdate.ToList().ForEach(x => currentSpec.SpecificationRapporteurs.ToList().Find(y => y.Fk_RapporteurId == x.Fk_RapporteurId).IsPrime = x.IsPrime);
             var specRapporteursToDelete = currentSpec.SpecificationRapporteurs.ToList().Where(x => newSpec.SpecificationRapporteurs.ToList().All(y => y.Fk_RapporteurId != x.Fk_RapporteurId));
             specRapporteursToDelete.ToList().ForEach(x => specRepo.MarkDeleted<SpecificationRapporteur>(x));
+
+            //Spec-Release Remarks (Insert / Update)
+            currentSpec.Specification_Release.ToList().ForEach(currentSpecRelease =>
+            {
+                var newSpecRelease = newSpec.Specification_Release.ToList().Where(specRelease => specRelease.Pk_Specification_ReleaseId == currentSpecRelease.Pk_Specification_ReleaseId).FirstOrDefault();
+                if (newSpecRelease != null)
+                {
+                    var specReleaseRemarksToInsert = newSpecRelease.Remarks.ToList().Where(x => currentSpecRelease.Remarks.ToList().All(y => y.Pk_RemarkId != x.Pk_RemarkId));
+                    specReleaseRemarksToInsert.ToList().ForEach(x => x.Fk_PersonId = personId);
+                    specReleaseRemarksToInsert.ToList().ForEach(x => currentSpecRelease.Remarks.Add(x));
+                    var specReleaseRemarksToUpdate = newSpecRelease.Remarks.ToList().Where(x => currentSpecRelease.Remarks.ToList().Any(y => y.Pk_RemarkId == x.Pk_RemarkId && y.IsPublic != x.IsPublic));
+                    specReleaseRemarksToUpdate.ToList().ForEach(x => currentSpecRelease.Remarks.ToList().Find(y => y.Pk_RemarkId == x.Pk_RemarkId).IsPublic = x.IsPublic);
+                }
+            });
         }
 
         /// <summary>

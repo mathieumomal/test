@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using System.Linq;
+using System.Web.UI;
+using System.Reflection;
 
 namespace Etsi.Ultimate.Controls
 {
@@ -32,14 +34,14 @@ namespace Etsi.Ultimate.Controls
         {
             get
             {
-                if (ViewState[CONST_REMARKS_USER_RIGHTS] == null)
-                    ViewState[CONST_REMARKS_USER_RIGHTS] = new UserRightsContainer();
+                if (ViewState[ClientID + CONST_REMARKS_USER_RIGHTS] == null)
+                    ViewState[ClientID + CONST_REMARKS_USER_RIGHTS] = new UserRightsContainer();
 
-                return (UserRightsContainer)ViewState[CONST_REMARKS_USER_RIGHTS];
+                return (UserRightsContainer)ViewState[ClientID + CONST_REMARKS_USER_RIGHTS];
             }
             set
             {
-                ViewState[CONST_REMARKS_USER_RIGHTS] = value;
+                ViewState[ClientID + CONST_REMARKS_USER_RIGHTS] = value;
             }
         }
         public string RemarkText { get { return this.txtAddRemark.Text; } }
@@ -48,14 +50,15 @@ namespace Etsi.Ultimate.Controls
         {
             get
             {
-                if (ViewState[CONST_REMARKS_GRID_DATA] == null)
-                    ViewState[CONST_REMARKS_GRID_DATA] = new List<Remark>();
+                if (ViewState[ClientID + CONST_REMARKS_GRID_DATA] == null)
+                    ViewState[ClientID + CONST_REMARKS_GRID_DATA] = new List<Remark>();
 
-                return (List<Remark>)ViewState[CONST_REMARKS_GRID_DATA];
+                return (List<Remark>)ViewState[ClientID + CONST_REMARKS_GRID_DATA];
             }
             set
             {
-                ViewState[CONST_REMARKS_GRID_DATA] = value;
+                ViewState[ClientID + CONST_REMARKS_GRID_DATA] = value;
+                remarksGrid.DataSource = null;
                 remarksGrid.Rebind();
             }
         }
@@ -83,8 +86,10 @@ namespace Etsi.Ultimate.Controls
                     btnAddRemark.Visible = false;
                 }
 
-                remarksGrid.ClientSettings.Scrolling.ScrollHeight = (ScrollHeight < CONST_MIN_SCROLL_HEIGHT) ? Unit.Pixel(CONST_MIN_SCROLL_HEIGHT) : Unit.Pixel(ScrollHeight);
+                remarksGrid.ClientSettings.Scrolling.ScrollHeight = (ScrollHeight < CONST_MIN_SCROLL_HEIGHT) ? Unit.Pixel(CONST_MIN_SCROLL_HEIGHT) : Unit.Pixel(ScrollHeight);                
             }
+
+            txtAddRemark.Attributes.Add("onkeyup", String.Format("SetAddRemarkState{0}(); return false;", ClientID));
         }
 
         /// <summary>

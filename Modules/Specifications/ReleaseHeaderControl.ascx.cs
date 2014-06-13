@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.DomainClasses;
+﻿using Etsi.Ultimate.Controls;
+using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,9 @@ namespace Etsi.Ultimate.Module.Specifications
     public partial class ReleaseHeaderControl : System.Web.UI.UserControl
     {
         #region Public Properties
+
+        protected RemarksControl releaseRemarks;
+        private const string CONST_REMARKS_GRID_DATA = "RemarksGridData";
 
         public bool IsEditMode { get; set; }
         public Release ReleaseDataSource
@@ -36,12 +40,30 @@ namespace Etsi.Ultimate.Module.Specifications
             set;
 
         }
+        public List<Remark> SpecReleaseRemarks
+        {
+            get
+            {
+                if (ViewState[ClientID + CONST_REMARKS_GRID_DATA] == null)
+                    ViewState[ClientID + CONST_REMARKS_GRID_DATA] = new List<Remark>();
 
+                return (List<Remark>)ViewState[ClientID + CONST_REMARKS_GRID_DATA];
+            }
+            set
+            {
+                ViewState[ClientID + CONST_REMARKS_GRID_DATA] = value;
+            }
+        }
 
         #endregion
 
         #region Events
 
+        /// <summary>
+        /// Page Load event of Release Header Control
+        /// </summary>
+        /// <param name="sender">Release Header Control</param>
+        /// <param name="e">Event arguments</param>
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -65,33 +87,34 @@ namespace Etsi.Ultimate.Module.Specifications
                     status = "Spec is Withdrawn from this Release";
 
                 lblStatus.Text = string.Format("({0})", status);
+
+                //Remarks
+                var specRelease = SpecificationDataSource.Specification_Release.FirstOrDefault(x => x.Fk_ReleaseId == ReleaseDataSource.Pk_ReleaseId);
+                if (specRelease != null && specRelease.Remarks != null && specRelease.Remarks.Count > 0)
+                {
+                    releaseRemarks.DataSource = SpecReleaseRemarks = specRelease.Remarks.ToList();
+                    var latestRemark = specRelease.Remarks.OrderByDescending(x => x.CreationDate ?? DateTime.MinValue).FirstOrDefault();
+                    lblLatestRemark.Text = ((latestRemark.CreationDate != null) ? string.Format("({0})", latestRemark.CreationDate.Value.ToString("yyyy-MM-dd")) : String.Empty) + latestRemark.RemarkText;
+                }
+                imgRemarks.OnClientClick = "OpenRemarksWindow" + this.ClientID + "(); return false;";
             }
-            var specRelease = SpecificationDataSource.Specification_Release.FirstOrDefault(x => x.Fk_ReleaseId == ReleaseDataSource.Pk_ReleaseId);
-
-            var versionsSvc = ServicesFactory.Resolve<ISpecVersionService>();
-            SpecVersion version = versionsSvc.GetVersionsById(specRelease.Pk_Specification_ReleaseId, (PersonId != null ? PersonId.Value : default(int))).Key;
-
-            if (version != null && version.Remarks.Count > 0)
+            else
             {
-                var remark = version.Remarks.OrderBy(x => x.CreationDate).FirstOrDefault();
-                lblLatestRemark.Text = ((remark.CreationDate != null) ? string.Format("({0})",
-                                        remark.CreationDate.Value.ToString("yyyy-MM-dd")) : "") +
-                                        remark.RemarkText;
-                releaseRemarks.DataSource = version.Remarks.ToList();
+                releaseRemarks.DataSource = SpecReleaseRemarks;
             }
+
             releaseRemarks.IsEditMode = IsEditMode;
             releaseRemarks.ScrollHeight = 100;
             releaseRemarks.AddRemarkHandler += releaseRemarks_AddRemarkHandler;
-
-
         }
 
-        void releaseRemarks_AddRemarkHandler(object sender, EventArgs e)
+        /// <summary>
+        /// Add Remark event handler to add remarks to grid
+        /// </summary>
+        /// <param name="sender">Remarks Component</param>
+        /// <param name="e">Event arguments</param>
+        protected void releaseRemarks_AddRemarkHandler(object sender, EventArgs e)
         {
-            var specRelease = SpecificationDataSource.Specification_Release.FirstOrDefault(x => x.Fk_ReleaseId == ReleaseDataSource.Pk_ReleaseId);
-            var versionsSvc = ServicesFactory.Resolve<ISpecVersionService>();
-            SpecVersion version = versionsSvc.GetVersionsById(specRelease.Pk_Specification_ReleaseId, (PersonId != null ? PersonId.Value : default(int))).Key;
-
             List<Remark> datasource = releaseRemarks.DataSource;
             //Get display name
             IPersonService svc = ServicesFactory.Resolve<IPersonService>();
@@ -99,13 +122,12 @@ namespace Etsi.Ultimate.Module.Specifications
             datasource.Add(new Remark()
             {
                 Fk_PersonId = PersonId,
-                Fk_SpecificationId = SpecificationDataSource.Pk_SpecificationId,
-                IsPublic = UserReleaseRights != null ? UserReleaseRights.HasRight(Enum_UserRights.Remarks_AddPrivateByDefault) : false,
+                IsPublic = UserReleaseRights != null ? !UserReleaseRights.HasRight(Enum_UserRights.Remarks_AddPrivateByDefault) : true,
                 CreationDate = DateTime.UtcNow,
                 RemarkText = releaseRemarks.RemarkText,
                 PersonName = personDisplayName
             });
-            releaseRemarks.DataSource = datasource;
+            releaseRemarks.DataSource = SpecReleaseRemarks = datasource;
         }
 
         #endregion

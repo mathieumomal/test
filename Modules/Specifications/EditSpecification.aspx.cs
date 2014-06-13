@@ -262,9 +262,9 @@ namespace Etsi.Ultimate.Module.Specifications
         /// </summary>
         private void FillReleasesTab(Domain.Specification specification)
         {
-            SpecificationReleaseControl1.DataSource = specification;
-            SpecificationReleaseControl1.PersonId = userId;
-            SpecificationReleaseControl1.IsEditMode = true;
+            ctrlSpecificationReleases.DataSource = specification;
+            ctrlSpecificationReleases.PersonId = userId;
+            ctrlSpecificationReleases.IsEditMode = true;
         }
 
         /// <summary>
@@ -532,9 +532,16 @@ namespace Etsi.Ultimate.Module.Specifications
             spec.Title = txtTitle.Text;
             spec.IsTS = Convert.ToBoolean(ddlType.SelectedValue);
 
-            int releaseId;
-            if (int.TryParse(ddlPlannedRelease.SelectedItem.Value, out releaseId))
-                spec.Specification_Release.Add(new Domain.Specification_Release() { Fk_ReleaseId = releaseId });
+            //Create Mode - Create New Spec-Release based on the Initital Planned Release
+            //Edit Mode - Spec-Release will not be part of save (These links will be created as part of Spec Promotion)
+            if (action.Equals(EDIT_MODE))
+                spec.Specification_Release = ctrlSpecificationReleases.DataSource.Specification_Release;
+            else
+            {
+                int releaseId;
+                if (int.TryParse(ddlPlannedRelease.SelectedItem.Value, out releaseId))
+                    spec.Specification_Release.Add(new Domain.Specification_Release() { Fk_ReleaseId = releaseId });
+            }
 
             spec.IsForPublication = !chkInternal.Checked;
             spec.ComIMS = chkCommonIMSSpec.Checked;
@@ -569,6 +576,20 @@ namespace Etsi.Ultimate.Module.Specifications
                 spec.SpecificationParents.Add(sp);
             foreach (Domain.Specification sp in childSpecifications.DataSource)
                 spec.SpecificationChilds.Add(sp);
+
+            //Releases Tab
+            //[1] Spec-Release Remarks
+            foreach (var specRelease in spec.Specification_Release)
+            {
+                var remarks = ctrlSpecificationReleases.GetSpecificationReleaseRemarks(specRelease.Fk_ReleaseId);
+                specRelease.Remarks = remarks;
+            }
+
+            //[2] Version Remarks
+            foreach (var specVersion in spec.Versions)
+            {
+                //specVersion.Remarks.Add();
+            }
         }
 
         #endregion

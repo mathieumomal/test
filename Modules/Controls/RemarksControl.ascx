@@ -82,7 +82,7 @@
         </tr>
         <tr>
             <td style="padding-right: 5px">
-                <asp:TextBox ID="txtAddRemark" runat="server" Width="100%" AutoComplete="off"></asp:TextBox>
+                <asp:TextBox ID="txtAddRemark" runat="server" Width="100%" AutoComplete="off" />
             </td>
             <td>
                 <asp:Button ID="btnAddRemark" runat="server" Text="Add" Width="100%" OnClick="btnAddRemark_Click" />
@@ -92,25 +92,12 @@
 </fieldset>
 
 <script type="text/javascript">
-    Sys.WebForms.PageRequestManager.getInstance().add_endRequest(EndRequest);
-    function EndRequest(sender, args)
-    {
-        if (args.get_error() == undefined) {
-            BindEvents();
-        }
-    }
 
+    function SetAddRemarkState<%= this.ClientID %>() {
+        if ($("#<%=txtAddRemark.ClientID %>").val().trim().length > 0)
+            $("#<%=btnAddRemark.ClientID %>").removeAttr('disabled');
+        else
+            $("#<%=btnAddRemark.ClientID %>").attr('disabled', 'disabled');
+    };
 
-    function BindEvents()
-    {
-        $("#<%=txtAddRemark.ClientID %>").keyup(function () {
-            console.log($(this).val());
-            if ($(this).val().trim().length > 0) {
-                $("#<%=btnAddRemark.ClientID %>").removeAttr('disabled', 'enabled');
-            }
-            else
-                $("#<%=btnAddRemark.ClientID %>").attr('disabled', 'disabled');
-        });
-    }
-    BindEvents();
 </script>

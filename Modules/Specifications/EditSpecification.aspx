@@ -51,7 +51,7 @@
                             <tr>
                                 <td class="LeftColumn">Reference</td>
                                 <td class="RightColumn">
-                                    <telerik:RadTextBox ID="txtReference" runat="server" MaxLength="8" Width="198" ClientEvents-OnBlur="TxtReference_OnBlur" OnTextChanged="TxtReference_OnBlur" />
+                                    <telerik:RadTextBox ID="txtReference" runat="server" MaxLength="8" Width="198" OnTextChanged="TxtReference_OnBlur" />
                                 </td>
                             </tr>
                             <tr>
@@ -162,7 +162,7 @@
                         </asp:Panel>
                     </telerik:RadPageView>
                     <telerik:RadPageView ID="RadPageReleases" runat="server">
-                        <spec:SpecificationReleaseControl runat="server" ID="SpecificationReleaseControl1" />
+                        <spec:SpecificationReleaseControl runat="server" ID="ctrlSpecificationReleases" />
                     </telerik:RadPageView>
                     <telerik:RadPageView ID="RadPageHistory" runat="server">
                         <div class="TabContent" style="overflow-y: auto; overflow-x: auto">

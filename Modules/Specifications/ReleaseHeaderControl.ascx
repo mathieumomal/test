@@ -18,16 +18,11 @@
 
 <script type="text/javascript">
 
-    function closeAllModals() {
-        var manager = $find("<%=rwmReleaseHeader.ClientID %>");
-        manager.closeAll();
+    function OpenRemarksWindow<%= this.ClientID %>() {
+        var radWindowRemarks = $find("<%= rwRemarks.ClientID %>");
+        radWindowRemarks.show();
     }
 
-    function open_rwRemarks(sender, eventArgs) {
-        closeAllModals();
-        var manager = $find("<%=rwmReleaseHeader.ClientID %>");
-        manager.open(null, "rwRemarks");
-    }
 </script>
 <table id="tblReleaseHeader" style="width: 100%; vertical-align: middle;">
     <tr>
@@ -41,7 +36,7 @@
             </asp:Panel>
         </td>
         <td style="width: 20px;">
-            <asp:ImageButton ID="imgRemarks" ToolTip="Remarks" ImageUrl="images/spec_rel-remarks.png" OnClientClick="open_rwRemarks()" CssClass="button_position" runat="server" />
+            <asp:ImageButton ID="imgRemarks" ToolTip="Remarks" ImageUrl="images/spec_rel-remarks.png" CssClass="button_position" runat="server" />
         </td>
     </tr>
 </table>
@@ -49,14 +44,11 @@
     <Windows>
         <telerik:RadWindow ID="rwRemarks" runat="server" Modal="true" Title="Remarks" Width="550" Height="230" VisibleStatusbar="false" Behaviors="Close">
             <ContentTemplate>
-                <asp:UpdatePanel ID="upRemarks" runat="server" UpdateMode="Conditional" ChildrenAsTriggers="true">
-                    <ContentTemplate>
-                        <ult:remarkscontrol runat="server" id="releaseRemarks" />
-                    </ContentTemplate>
-                    <Triggers>
-                        <asp:AsyncPostBackTrigger ControlID="imgRemarks" EventName="Click" />
-                    </Triggers>
-                </asp:UpdatePanel>
+                    <asp:UpdatePanel ID="upRemarks" runat="server">
+                        <ContentTemplate>
+                            <ult:remarkscontrol runat="server" id="releaseRemarks" />
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
             </ContentTemplate>
         </telerik:RadWindow>
     </Windows>
