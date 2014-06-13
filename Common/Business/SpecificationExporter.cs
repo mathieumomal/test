@@ -45,7 +45,7 @@ namespace Etsi.Ultimate.Business
         /// Export Specification
         /// </summary>
         /// <param name="exportPath">Export Path</param>
-        public string ExportSpecification(int personId, SpecificationSearch searchObj)
+        public string ExportSpecification(int personId, SpecificationSearch searchObj, string baseurl)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace Etsi.Ultimate.Business
                 if (Directory.Exists(Utils.ConfigVariables.DefaultPublicTmpPath))
                     Directory.CreateDirectory(Utils.ConfigVariables.DefaultPublicTmpPath);
 
-                ExportToExcel(specExportObjects, fullExcelFilePath);
+                ExportToExcel(specExportObjects, fullExcelFilePath, baseurl);
                 return Utils.ConfigVariables.DefaultPublicTmpAddress+filename;
             }
             catch (IOException ex)
@@ -91,7 +91,7 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="exportWorkPlan">Work Plan</param>
         /// <param name="exportPath">Export Path</param>
-        private void ExportToExcel(List<SpecificationForExport> exportSpecification, string exportPath)
+        private void ExportToExcel(List<SpecificationForExport> exportSpecification, string exportPath, string baseurl)
         {
             if (!String.IsNullOrEmpty(exportPath) && exportSpecification.Count >= 1)
             {
@@ -110,9 +110,16 @@ namespace Etsi.Ultimate.Business
                         /* Set Styles */
                         /*------------*/
                         int rowHeader = 1;
+                        int rowDataStart = 2;
                         int rowDataEnd = exportSpecification.Count + 1;
                         int columnStart = 1;
                         int columnEnd = 10;
+
+                        #region hyperlink Style
+                        wsData.Cells[rowDataStart, columnStart, rowDataEnd, columnStart].Style.Font.Bold = true;
+                        wsData.Cells[rowDataStart, columnStart, rowDataEnd, columnStart].Style.Font.UnderLine = true;
+                        wsData.Cells[rowDataStart, columnStart, rowDataEnd, columnStart].Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+                        #endregion
 
                         //Set Font Style
                         wsData.Cells.Style.Font.Size = 8;
@@ -141,24 +148,50 @@ namespace Etsi.Ultimate.Business
                         //Set Zoom to 85%
                         wsData.View.ZoomScale = 85;
 
+                        //Get datas specs
+                        var datas = from s in exportSpecification
+                                    orderby s.Number
+                                    select new
+                                    {
+                                        Spec_No = s.Number,
+                                        Type = s.Type,
+                                        Title = s.Title,
+                                        Status = s.Status,
+                                        Primary_Resp_Grp = s.PrimaryRespGrp,
+                                        Primary_rapporteur = s.PrimaryRapporteur,
+                                        Initial_planned_Release = s.InitialPlannedRelease,
+                                        Publication = s.IsForPublication,
+                                        Common_IMS = s.CommonIMS,
+                                        Technology = s.Technologies
+                                    };
+
+                        var specIdRelatedList = from s in exportSpecification
+                                 orderby s.Number
+                                 select new
+                                 {
+                                     SpecId = s.SpecId
+                                 };
+
                         //Upload Data to Excel
                         var dataRange = wsData.Cells["A1"].LoadFromCollection(
-                                                      from s in exportSpecification
-                                                      orderby s.Title
-                                                      select new
-                                                      {
-                                                          Spec_No = s.Number,
-                                                          Type = s.Type,
-                                                          Title = s.Title,
-                                                          Status = s.Status,
-                                                          Primary_Resp_Grp = s.PrimaryRespGrp,
-                                                          Primary_rapporteur = s.PrimaryRapporteur,
-                                                          Initial_planned_Release = s.InitialPlannedRelease,
-                                                          Publication = s.IsForPublication,
-                                                          Common_IMS = s.CommonIMS,
-                                                          Technology = s.Technologies
-                                                      },
-                                                      true, OfficeOpenXml.Table.TableStyles.None);
+                                                      datas,
+                                                      true, 
+                                                      OfficeOpenXml.Table.TableStyles.None);
+
+                        #region add hyperlink
+                        var count = 2;
+                        foreach (var specId in specIdRelatedList)
+                        {
+                            string hyperlink = new StringBuilder()
+                                .Append(baseurl)
+                                .Append(@"/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=")
+                                .Append(specId.SpecId)
+                                .ToString();
+                            wsData.Cells[count, columnStart].Hyperlink = new Uri(hyperlink, UriKind.RelativeOrAbsolute);
+                            count++;
+                        }
+                        #endregion
+
                         pck.Save();
                     }
                 }
@@ -289,7 +322,7 @@ namespace Etsi.Ultimate.Business
     internal class SpecificationForExport
     {
         #region Properties
-
+        //Display elements
         private const string BLANK_CELL = "  -  ";
         public string Number { get; set; }
         public string Type { get; set; }
@@ -301,6 +334,9 @@ namespace Etsi.Ultimate.Business
         public string IsForPublication { get; set; }
         public string CommonIMS { get; set; }
         public string Technologies { get; set; }
+
+        //HyperLink element
+        public int SpecId { get; set; }
         #endregion
 
         #region Constructor
@@ -313,6 +349,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="Specification">Specification</param>
         public SpecificationForExport(Domain.Specification spec)
         {
+            //Display elements
             Number = String.IsNullOrEmpty(spec.Number) ? BLANK_CELL : spec.Number;
             Type = (spec.IsTS != null) ? (spec.IsTS.Value ? "Technical Specification (TS)" : "Technical Report (TR)") : BLANK_CELL;
             Title = spec.Title;
@@ -323,6 +360,9 @@ namespace Etsi.Ultimate.Business
             IsForPublication = (spec.IsForPublication != null) ? (spec.IsForPublication.Value ? "For publication" : "Internal") : BLANK_CELL;
             CommonIMS = spec.ComIMS != null ? spec.ComIMS.Value.ToString() : BLANK_CELL;
             Technologies = String.Join(",", spec.SpecificationTechnologies.ToList().Select(x => x.Enum_Technology.Code));
+
+            //Hyperlink element
+            SpecId = spec.Pk_SpecificationId;
         }
 
         #endregion

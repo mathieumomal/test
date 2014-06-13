@@ -428,7 +428,7 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
-        public string ExportSpecification(int personId, SpecificationSearch searchobj)
+        public string ExportSpecification(int personId, SpecificationSearch searchobj, string baseurl)
         {
             throw new NotImplementedException();
         }

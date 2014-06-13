@@ -11,13 +11,13 @@ namespace Etsi.Ultimate.Services
     {
         #region ISpecificationService Members
 
-        public string ExportSpecification(int personId, SpecificationSearch searchObj)
+        public string ExportSpecification(int personId, SpecificationSearch searchObj, string baseurl)
         {
             string exportPath;
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var csvExport = new SpecificationExporter(uoW);
-                exportPath = csvExport.ExportSpecification(personId, searchObj);
+                exportPath = csvExport.ExportSpecification(personId, searchObj, baseurl);
             }
             return exportPath;
         }

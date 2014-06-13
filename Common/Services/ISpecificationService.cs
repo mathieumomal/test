@@ -110,9 +110,11 @@ namespace Etsi.Ultimate.Services
         /// <summary>
         /// Create an Excel file corresponding to the query that has been performed.
         /// </summary>
-        /// <param name="exportPath"></param>
+        /// <param name="personId"></param>
+        /// <param name="searchObj"></param>
+        /// <param name="baseurl"></param>
         /// <returns></returns>
-        string ExportSpecification(int personId, SpecificationSearch searchObj);
+        string ExportSpecification(int personId, SpecificationSearch searchObj, string baseurl);
 
         /// <summary>
         /// Sends the specification for transposition. This means:

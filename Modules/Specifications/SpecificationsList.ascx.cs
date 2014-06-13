@@ -568,7 +568,7 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
             searchObj = FillInSearchObj();
-            var filepath = svc.ExportSpecification(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
+            var filepath = svc.ExportSpecification(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj, Request.Url.GetLeftPart(UriPartial.Authority));
 
             hidSpecAddress.Value = filepath;
             /*Response.Redirect(Server.UrlEncode(filepath));

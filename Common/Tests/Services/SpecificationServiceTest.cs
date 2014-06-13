@@ -169,7 +169,7 @@ namespace Etsi.Ultimate.Tests.Services
             RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(repo);
 
             var svc = new SpecificationService();
-            var result = svc.ExportSpecification(EDIT_RIGHT_USER,new SpecificationSearch() { PageSize = 1 });
+            var result = svc.ExportSpecification(EDIT_RIGHT_USER,new SpecificationSearch() { PageSize = 1 }, "BASEURL");
             Assert.IsTrue(result.Contains(Utils.ConfigVariables.DefaultPublicTmpAddress));
             Assert.IsTrue(result.Contains("SpecificationList"));
         }
