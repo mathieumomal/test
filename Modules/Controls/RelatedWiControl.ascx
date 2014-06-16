@@ -99,6 +99,13 @@
             $("#<%=btnAddWisToGrid.ClientID %>").val('Add');
     }
 
+    function setAddingToMainGridProgress(flag) {
+        if (flag)
+            $("#<%=btnAddToRelatedWiGrid.ClientID %>").val('Adding...');
+        else
+            $("#<%=btnAddToRelatedWiGrid.ClientID %>").val('Done');
+    }
+
     //Visual response to WI removal 
     function setDeleteProgress(sender) {
         var gifImg = "/controls/Ultimate/images/busy.gif";
@@ -163,6 +170,7 @@
                             Style="min-width: 400px">
                             <ClientSettings>
                                 <Scrolling AllowScroll="True" UseStaticHeaders="true" />
+                                <ClientEvents OnDataBound="setAddingToMainGridProgress(false)" />
                             </ClientSettings>
                             <MasterTableView ClientDataKeyNames="UID" EditMode="InPlace">
                                 <Columns>
@@ -370,7 +378,7 @@
                         </table>
                     </fieldset>
 
-                    <asp:Button ID="btnAddToRelatedWiGrid" runat="server" Width="100" Text="Done" OnClientClick="closeAllModals();" OnClick="btnAddToRelatedWiGrid_Click" />
+                    <asp:Button ID="btnAddToRelatedWiGrid" runat="server" Width="100" Text="Done" OnClientClick="setAddingToMainGridProgress(true);closeAllModals();" OnClick="btnAddToRelatedWiGrid_Click" />
                     <asp:Button ID="btnRevertChanges" runat="server" Width="100" Text="Cancel" OnClientClick="closeAllModals();" OnClick="btnRevertChanges_Click" />
                 </div>
             </ContentTemplate>

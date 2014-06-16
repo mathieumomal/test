@@ -102,6 +102,13 @@
     <Compile Include="VersionRemarksControl.ascx.designer.cs">
       <DependentUpon>VersionRemarksControl.ascx</DependentUpon>
     </Compile>
+    <Compile Include="MassivePromote.aspx.cs">
+      <DependentUpon>MassivePromote.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MassivePromote.aspx.designer.cs">
+      <DependentUpon>MassivePromote.aspx</DependentUpon>
+    </Compile>
     <Compile Include="DefinitiveWithdrawlMeetingSelectPopUp.aspx.cs">
       <DependentUpon>DefinitiveWithdrawlMeetingSelectPopUp.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -177,6 +184,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="MassivePromote.aspx" />
     <Content Include="VersionRemarksControl.ascx" />
     <Content Include="DefinitiveWithdrawlMeetingSelectPopUp.aspx" />
     <Content Include="images\busy.gif" />

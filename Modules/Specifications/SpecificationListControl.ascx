@@ -74,7 +74,8 @@
                         <telerik:GridTemplateColumn UniqueName="SpecificationActions">
                             <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="50px" />
                             <ItemTemplate>
-                                <asp:HyperLink runat="server" class="display_inline" ImageUrl="images/details.png" Target="_blank" NavigateUrl='<%# "SpecificationDetails.aspx?specificationId=" + DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() + "&selectedTab=" + SelectedTab %>'></asp:HyperLink>
+                                <img id="imgViewSpecifications" title="See details" class="imgViewSpecifications" alt="See details" src="/DesktopModules/Specifications/images/details.png"
+                                                        onclick="var popUp=window.open('/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>', 'Specification-<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>', 'height=690,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
                                 <asp:ImageButton Visible="false" CssClass="display_inline" ID="btnRemoveSpec" CommandArgument='<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId") %>' ImageUrl="/controls/Ultimate/images/delete.png" runat="server" OnClientClick="setDeleteProgress(this)" OnClick="btnRemoveSpec_Click" />
                             </ItemTemplate>
                         </telerik:GridTemplateColumn>

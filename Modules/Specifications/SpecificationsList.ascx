@@ -60,6 +60,7 @@
             <tr>
                 <td style="line-height: 22px;">
                     <asp:LinkButton ID="btnNewSpecification" class="btn3GPP-success" runat="server" OnClientClick="var popUp=window.open('/desktopmodules/Specifications/EditSpecification.aspx?action=create', 'Specification-Create', 'height=690,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();return false;" Text="New Specification" />
+                    <asp:LinkButton ID="btnMassivePromote" class="btn3GPP-success" runat="server" OnClientClick="var popUp=window.open('/desktopmodules/Specifications/Massivepromote.aspx', 'Specification-Massive-Promote', 'height=590,width=650,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();return false;" Text="Massive Promote" />
                     <span style="float: right; padding-bottom: 2px; white-space: nowrap">
                         <asp:HyperLink ID="lnkManageITURecommendations" runat="server" Text="Manage ITU Recommendations" Target="_blank" />
                         <asp:ImageButton ID="btnSpecExport" runat="server" ImageAlign="Top" AlternateText="Export" ImageUrl="/DesktopModules/Specifications/images/excel_export.png" OnClick="btnSpecExport_Click" OnClientClick="removeBg" />
@@ -173,9 +174,6 @@
             <tr>
                 <td>
                     <telerik:RadGrid ID="rgSpecificationList" runat="server"
-                        EnableEmbeddedSkins="false"
-                        EnableEmbeddedBaseStylesheet="false"
-                        Skin="Ultimate"
                         AllowSorting="true"
                         AllowPaging="true"
                         AllowCustomPaging="true"

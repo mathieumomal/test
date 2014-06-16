@@ -186,8 +186,9 @@ namespace Etsi.Ultimate.Controls
                 }
                 else
                 {
-                    modifiedDataSource = DataSource.ToList();
-                    modifiedDataSource.RemoveAll(x => x.Pk_WorkItemUid == WiId);
+                    var tempList = DataSource.ToList();
+                    tempList.RemoveAll(x => x.Pk_WorkItemUid == WiId);
+                    modifiedDataSource = tempList;
 
                     SetHiddenWisValue(modifiedDataSource);
                     BindGrid(relatedWiGrid_Edit, modifiedDataSource);

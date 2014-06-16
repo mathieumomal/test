@@ -40,6 +40,15 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.WebControls.LinkButton btnNewSpecification;
         
         /// <summary>
+        /// btnMassivePromote control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnMassivePromote;
+        
+        /// <summary>
         /// lnkManageITURecommendations control.
         /// </summary>
         /// <remarks>

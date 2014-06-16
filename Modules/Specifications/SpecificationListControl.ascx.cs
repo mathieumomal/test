@@ -17,12 +17,27 @@ namespace Etsi.Ultimate.Module.Specifications
         private const string CONST_SELECTED_MODE = "SPEC_SELECTED_MODE";
         private const int CONST_MIN_SCROLL_HEIGHT = 50;
         private const string CONST_EXCLUDE_SPEC = "SPEC_TO_EXCLUDE";
+        private const string CONST_SPECIFICATION_EDIT = "SpecificationListControl_EDIT";
 
         #endregion
 
         #region Public Properties
 
-        public bool IsEditMode { get; set; }
+        public bool IsEditMode
+        {
+            get
+            {
+                if (ViewState[CONST_SPECIFICATION_EDIT] == null)
+                    return false;
+                else
+                    return (bool)ViewState[CONST_SPECIFICATION_EDIT];
+
+            }
+            set
+            {
+                ViewState[CONST_SPECIFICATION_EDIT] = value;
+            }
+        }
         public bool IsParentList { get; set; }
         public int ScrollHeight { get; set; }
         public string SelectedTab
@@ -40,7 +55,6 @@ namespace Etsi.Ultimate.Module.Specifications
                 ViewState[CONST_SELECTED_TAB] = value;
             }
         }
-
 
 
         public List<Specification> DataSource
