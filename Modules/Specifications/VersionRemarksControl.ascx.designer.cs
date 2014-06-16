@@ -10,42 +10,42 @@
 namespace Etsi.Ultimate.Module.Specifications {
     
     
-    public partial class VersionRemarksPopUp {
+    public partial class VersionRemarksControl {
         
         /// <summary>
-        /// Head1 control.
+        /// imgVersionRemarks control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlHead Head1;
+        protected global::System.Web.UI.WebControls.ImageButton imgVersionRemarks;
         
         /// <summary>
-        /// form1 control.
+        /// rwmSpecReleaseContent control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlForm form1;
+        protected global::Telerik.Web.UI.RadWindowManager rwmSpecReleaseContent;
         
         /// <summary>
-        /// RadScriptManager1 control.
+        /// rwReleaseContentRemarks control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadScriptManager RadScriptManager1;
+        protected global::Telerik.Web.UI.RadWindow rwReleaseContentRemarks;
         
         /// <summary>
-        /// RadAjaxManager control.
+        /// upContentRemarks control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadAjaxManager RadAjaxManager;
+        protected global::System.Web.UI.UpdatePanel upContentRemarks;       
     }
 }

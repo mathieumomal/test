@@ -89,22 +89,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SpecificationBasePage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Components\FeatureController.cs" />
     <Compile Include="Components\ItemController.cs" />
     <Compile Include="Components\Item.cs" />
+    <Compile Include="VersionRemarksControl.ascx.cs">
+      <DependentUpon>VersionRemarksControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="VersionRemarksControl.ascx.designer.cs">
+      <DependentUpon>VersionRemarksControl.ascx</DependentUpon>
+    </Compile>
     <Compile Include="DefinitiveWithdrawlMeetingSelectPopUp.aspx.cs">
       <DependentUpon>DefinitiveWithdrawlMeetingSelectPopUp.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="DefinitiveWithdrawlMeetingSelectPopUp.aspx.designer.cs">
       <DependentUpon>DefinitiveWithdrawlMeetingSelectPopUp.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="VersionRemarksPopUp.aspx.cs">
-      <DependentUpon>VersionRemarksPopUp.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="VersionRemarksPopUp.aspx.designer.cs">
-      <DependentUpon>VersionRemarksPopUp.aspx</DependentUpon>
     </Compile>
     <Compile Include="ReleaseHeaderControl.ascx.cs">
       <DependentUpon>ReleaseHeaderControl.ascx</DependentUpon>
@@ -174,10 +177,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="VersionRemarksControl.ascx" />
     <Content Include="DefinitiveWithdrawlMeetingSelectPopUp.aspx" />
     <Content Include="images\busy.gif" />
     <Content Include="images\spec_rel-a.png" />
-    <Content Include="VersionRemarksPopUp.aspx" />
     <Content Include="images\spec_rel-CRs.png" />
     <Content Include="images\spec_rel-f-crossed.png" />
     <Content Include="images\spec_rel-f.png" />

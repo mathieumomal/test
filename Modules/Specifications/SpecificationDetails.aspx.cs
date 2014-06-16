@@ -12,7 +12,7 @@ using System.Configuration;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
-    public partial class SpecificationDetails : System.Web.UI.Page
+    public partial class SpecificationDetails : SpecificationBasePage
     {
         // Custom controls
         protected HistoryControl specificationHistory;
@@ -47,7 +47,7 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if (!IsPostBack)
             {
-
+                VersionRemarks.Clear();
                 GetRequestParameters();
 
                 SetViewLayout();

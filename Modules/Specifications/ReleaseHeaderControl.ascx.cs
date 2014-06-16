@@ -17,6 +17,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
         protected RemarksControl releaseRemarks;
         private const string CONST_REMARKS_GRID_DATA = "RemarksGridData";
+        private const string CONST_REMARKS_USER_RIGHTS = "RemarksUserRights";
 
         public bool IsEditMode { get; set; }
         public Release ReleaseDataSource
@@ -40,6 +41,22 @@ namespace Etsi.Ultimate.Module.Specifications
             set;
 
         }
+
+        public UserRightsContainer UserRights
+        {
+            get
+            {
+                if (ViewState[ClientID + CONST_REMARKS_USER_RIGHTS] == null)
+                    ViewState[ClientID + CONST_REMARKS_USER_RIGHTS] = new UserRightsContainer();
+
+                return (UserRightsContainer)ViewState[ClientID + CONST_REMARKS_USER_RIGHTS];
+            }
+            set
+            {
+                ViewState[ClientID + CONST_REMARKS_USER_RIGHTS] = value;
+            }
+        }
+
         public List<Remark> SpecReleaseRemarks
         {
             get
@@ -92,14 +109,16 @@ namespace Etsi.Ultimate.Module.Specifications
                 var specRelease = SpecificationDataSource.Specification_Release.FirstOrDefault(x => x.Fk_ReleaseId == ReleaseDataSource.Pk_ReleaseId);
                 if (specRelease != null && specRelease.Remarks != null && specRelease.Remarks.Count > 0)
                 {
+                    releaseRemarks.UserRights = UserRights = UserReleaseRights;
                     releaseRemarks.DataSource = SpecReleaseRemarks = specRelease.Remarks.ToList();
                     var latestRemark = specRelease.Remarks.OrderByDescending(x => x.CreationDate ?? DateTime.MinValue).FirstOrDefault();
                     lblLatestRemark.Text = ((latestRemark.CreationDate != null) ? string.Format("({0})", latestRemark.CreationDate.Value.ToString("yyyy-MM-dd")) : String.Empty) + latestRemark.RemarkText;
                 }
-                imgRemarks.OnClientClick = "OpenRemarksWindow" + this.ClientID + "(); return false;";
+                imgRemarks.OnClientClick = "OpenReleaseHeaderRemarksWindow" + this.ClientID + "(); return false;";
             }
             else
             {
+                releaseRemarks.UserRights = UserRights;
                 releaseRemarks.DataSource = SpecReleaseRemarks;
             }
 
@@ -122,7 +141,7 @@ namespace Etsi.Ultimate.Module.Specifications
             datasource.Add(new Remark()
             {
                 Fk_PersonId = PersonId,
-                IsPublic = UserReleaseRights != null ? !UserReleaseRights.HasRight(Enum_UserRights.Remarks_AddPrivateByDefault) : true,
+                IsPublic = UserRights != null ? !UserRights.HasRight(Enum_UserRights.Remarks_AddPrivateByDefault) : true,
                 CreationDate = DateTime.UtcNow,
                 RemarkText = releaseRemarks.RemarkText,
                 PersonName = personDisplayName
@@ -136,8 +155,8 @@ namespace Etsi.Ultimate.Module.Specifications
         protected override void OnInit(EventArgs e)
         {
             base.OnInit(e);
-            if (this.upRemarks != null)
-                this.upRemarks.Unload += new EventHandler(UpdatePanel_Unload);
+            if (this.upHeaderRemarks != null)
+                this.upHeaderRemarks.Unload += new EventHandler(UpdatePanel_Unload);
         }
         void UpdatePanel_Unload(object sender, EventArgs e)
         {
@@ -149,7 +168,7 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 if (methodInfo.Name.Equals("System.Web.UI.IScriptManagerInternal.RegisterUpdatePanel"))
                 {
-                    methodInfo.Invoke(ScriptManager.GetCurrent(Page), new object[] { upRemarks });
+                    methodInfo.Invoke(ScriptManager.GetCurrent(Page), new object[] { panel });
                 }
             }
         }

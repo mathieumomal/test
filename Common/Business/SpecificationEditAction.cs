@@ -252,6 +252,20 @@ namespace Etsi.Ultimate.Business
                     specReleaseRemarksToUpdate.ToList().ForEach(x => currentSpecRelease.Remarks.ToList().Find(y => y.Pk_RemarkId == x.Pk_RemarkId).IsPublic = x.IsPublic);
                 }
             });
+
+            //Spec Version Remarks (Insert / Update)
+            currentSpec.Versions.ToList().ForEach(currentSpecVersion =>
+            {
+                var newSpecVersion = newSpec.Versions.ToList().Where(specVersion => specVersion.Pk_VersionId == currentSpecVersion.Pk_VersionId).FirstOrDefault();
+                if (newSpecVersion != null)
+                {
+                    var specVersionRemarksToInsert = newSpecVersion.Remarks.ToList().Where(x => currentSpecVersion.Remarks.ToList().All(y => y.Pk_RemarkId != x.Pk_RemarkId));
+                    specVersionRemarksToInsert.ToList().ForEach(x => x.Fk_PersonId = personId);
+                    specVersionRemarksToInsert.ToList().ForEach(x => currentSpecVersion.Remarks.Add(x));
+                    var specVersionRemarksToUpdate = newSpecVersion.Remarks.ToList().Where(x => currentSpecVersion.Remarks.ToList().Any(y => y.Pk_RemarkId == x.Pk_RemarkId && y.IsPublic != x.IsPublic));
+                    specVersionRemarksToUpdate.ToList().ForEach(x => currentSpecVersion.Remarks.ToList().Find(y => y.Pk_RemarkId == x.Pk_RemarkId).IsPublic = x.IsPublic);
+                }
+            });
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ using Domain = Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
-    public partial class EditSpecification : System.Web.UI.Page
+    public partial class EditSpecification : SpecificationBasePage
     {
         #region Fields
 
@@ -60,6 +60,7 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if (!IsPostBack)
             {
+                VersionRemarks.Clear();
                 GetRequestParameters();
                 LoadSpecificationDetails();
             }
@@ -255,7 +256,6 @@ namespace Etsi.Ultimate.Module.Specifications
                 btnSave.Style.Add("display", "none");
             }
         }
-
 
         /// <summary>
         /// Fill the Release Tab with the retrieved data 
@@ -533,8 +533,12 @@ namespace Etsi.Ultimate.Module.Specifications
 
             //Create Mode - Create New Spec-Release based on the Initital Planned Release
             //Edit Mode - Spec-Release will not be part of save (These links will be created as part of Spec Promotion)
+            //          - Versions will not be part of save (These links will be created as part of version allocation & upload)
             if (action.Equals(EDIT_MODE))
+            {
                 spec.Specification_Release = ctrlSpecificationReleases.DataSource.Specification_Release;
+                spec.Versions = ctrlSpecificationReleases.DataSource.Versions;
+            }
             else
             {
                 int releaseId;
@@ -587,7 +591,8 @@ namespace Etsi.Ultimate.Module.Specifications
             //[2] Version Remarks
             foreach (var specVersion in spec.Versions)
             {
-                //specVersion.Remarks.Add();
+                if (VersionRemarks.Exists(x => x.Key == specVersion.Pk_VersionId))
+                    specVersion.Remarks = VersionRemarks.Find(x => x.Key == specVersion.Pk_VersionId).Value;
             }
         }
 

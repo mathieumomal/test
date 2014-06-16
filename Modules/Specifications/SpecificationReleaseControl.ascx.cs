@@ -3,7 +3,6 @@ using Etsi.Ultimate.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 
 namespace Etsi.Ultimate.Module.Specifications
@@ -90,8 +89,6 @@ namespace Etsi.Ultimate.Module.Specifications
                 double scrollHeight = panelHeight - panelItemsHeaderHeight - iconsHeight - gridHeaderHeight - padding;
 
                 //Dynamic Header & Content controls always needs to re-create for each postback
-                ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                var versionsList = svc.GetVersionsBySpecId(DataSource.Pk_SpecificationId);
                 // Get the rights of the user
                 ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
                 var userRightsPerSpecRelease = specSvc.GetRightsForSpecReleases(PersonId.GetValueOrDefault(), DataSource);
@@ -99,7 +96,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 foreach (RadPanelItem item in rpbReleases.Items)
                 {
                     var release = DataSource.SpecificationReleases.Where(x => x.Pk_ReleaseId.ToString() == item.Value).FirstOrDefault();
-                    var datasource = versionsList.Where(x => (x.Fk_ReleaseId != null) ? x.Fk_ReleaseId.Value == release.Pk_ReleaseId : false)
+                    var datasource = DataSource.Versions.Where(x => (x.Fk_ReleaseId != null) ? x.Fk_ReleaseId.Value == release.Pk_ReleaseId : false)
                                                                .OrderByDescending(x => x.MajorVersion)
                                                                .ThenByDescending(x => x.TechnicalVersion)
                                                                .ThenByDescending(x => x.EditorialVersion).ToList();

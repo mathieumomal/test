@@ -1,6 +1,7 @@
 ﻿<%@ Control Language="C#" ClassName="SpecificationVersionListControl" AutoEventWireup="true" CodeBehind="SpecificationVersionListControl.ascx.cs" Inherits="Etsi.Ultimate.Module.Specifications.SpecificationVersionListControl" %>
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 <%@ Register TagPrefix="ult" TagName="RemarksControl" Src="../../controls/Ultimate/RemarksControl.ascx" %>
+<%@ Register TagPrefix="ult" TagName="VersionRemarksControl" Src="VersionRemarksControl.ascx" %>
 
 <style type="text/css">
     .RadGrid_Default th.rgHeader {
@@ -30,19 +31,10 @@
 </style>
 
 <script type="text/javascript">
+
     function openRadWin(specId, relId) {
         var win = radopen("WithdrawMeetingSelectPopUp.aspx?SpecId=" + specId + "&RelId=" + relId, "Withdraw");
         win.setSize(450, 220);
-        win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
-        win.set_modal(true);
-        win.set_visibleStatusbar(false);
-        win.show();
-        return false;
-    }
-
-    function openRadWinRemarks(specVerId, isEditMode) {
-        var win = radopen("VersionRemarksPopUp.aspx?specVerId=" + specVerId + "&isEditMode=" + isEditMode, "Remarks");
-        win.setSize(500, 250);
         win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
         win.set_modal(true);
         win.set_visibleStatusbar(false);
@@ -137,7 +129,7 @@
                     <ItemTemplate>
                         <div class="text-left">
                             <asp:Label ID="lblRemarkText" Text='<%# DataBinder.Eval(Container.DataItem,"LatestRemark") %>' runat="server" />
-                            <asp:ImageButton ID="imgVersionRemarks" ImageUrl="images/spec_rel-remarks.png" runat="server" CssClass="float_right grid_btn"/>
+                            <ult:VersionRemarksControl runat="server" ID="versionRemarksControl" />
                         </div>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
@@ -162,12 +154,3 @@
         </MasterTableView>
     </telerik:RadGrid>
 </asp:Panel>
-<telerik:RadWindowManager ID="rwmVersionReleaseHeader" runat="server">
-    <Windows>
-        <telerik:RadWindow ID="rwVersionRemarks" runat="server" Modal="true" Title="Remarks" Width="550" Height="230" VisibleStatusbar="false" Behaviors="Close">
-            <ContentTemplate>
-                <ult:remarkscontrol runat="server" id="versionRemarks" />
-            </ContentTemplate>
-        </telerik:RadWindow>
-    </Windows>
-</telerik:RadWindowManager>

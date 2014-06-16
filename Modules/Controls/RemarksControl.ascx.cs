@@ -85,10 +85,8 @@ namespace Etsi.Ultimate.Controls
                     txtAddRemark.Visible = false;
                     btnAddRemark.Visible = false;
                 }
-
-                remarksGrid.ClientSettings.Scrolling.ScrollHeight = (ScrollHeight < CONST_MIN_SCROLL_HEIGHT) ? Unit.Pixel(CONST_MIN_SCROLL_HEIGHT) : Unit.Pixel(ScrollHeight);                
             }
-
+            remarksGrid.ClientSettings.Scrolling.ScrollHeight = (ScrollHeight < CONST_MIN_SCROLL_HEIGHT) ? Unit.Pixel(CONST_MIN_SCROLL_HEIGHT) : Unit.Pixel(ScrollHeight);
             txtAddRemark.Attributes.Add("onkeyup", String.Format("SetAddRemarkState{0}(); return false;", ClientID));
         }
 

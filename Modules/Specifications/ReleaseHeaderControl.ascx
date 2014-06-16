@@ -18,8 +18,8 @@
 
 <script type="text/javascript">
 
-    function OpenRemarksWindow<%= this.ClientID %>() {
-        var radWindowRemarks = $find("<%= rwRemarks.ClientID %>");
+    function OpenReleaseHeaderRemarksWindow<%= this.ClientID %>() {
+        var radWindowRemarks = $find("<%= rwReleaseHeaderRemarks.ClientID %>");
         radWindowRemarks.show();
     }
 
@@ -40,11 +40,11 @@
         </td>
     </tr>
 </table>
-<telerik:RadWindowManager ID="rwmReleaseHeader" runat="server">
+<telerik:RadWindowManager ID="rwmSpecReleaseHeader" runat="server">
     <Windows>
-        <telerik:RadWindow ID="rwRemarks" runat="server" Modal="true" Title="Remarks" Width="550" Height="230" VisibleStatusbar="false" Behaviors="Close">
+        <telerik:RadWindow ID="rwReleaseHeaderRemarks" runat="server" Modal="true" Title="Remarks" Width="550" Height="230" VisibleStatusbar="false" Behaviors="Close">
             <ContentTemplate>
-                    <asp:UpdatePanel ID="upRemarks" runat="server">
+                    <asp:UpdatePanel ID="upHeaderRemarks" runat="server">
                         <ContentTemplate>
                             <ult:remarkscontrol runat="server" id="releaseRemarks" />
                         </ContentTemplate>

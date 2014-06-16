@@ -351,6 +351,12 @@ namespace Etsi.Ultimate.Business
                 rights.AddRight(Enum_UserRights.Specification_RemoveInhibitPromote);
             }
 
+            if (userRights.HasRight(Enum_UserRights.Remarks_AddPrivateByDefault))
+                rights.AddRight(Enum_UserRights.Remarks_AddPrivateByDefault);
+
+            if (userRights.HasRight(Enum_UserRights.Remarks_ViewPrivate))
+                rights.AddRight(Enum_UserRights.Remarks_ViewPrivate);
+
             return new KeyValuePair<Specification_Release, UserRightsContainer>(specRelease, rights);
         }
     }

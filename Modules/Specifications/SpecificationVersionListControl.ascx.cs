@@ -1,10 +1,13 @@
-﻿using Etsi.Ultimate.DomainClasses;
+﻿using Etsi.Ultimate.Controls;
+using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
+using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 
@@ -14,11 +17,7 @@ namespace Etsi.Ultimate.Module.Specifications
     {
         #region Constants
 
-        private const string CONST_SPECIFICATION_GRID_DATA = "SpecificationListControlData_{0}";
         private const string CONST_SELECTED_TAB = "SPEC_SELECTED_TAB";
-        private const string CONST_SPEC_ID = "SPECIFICATION_ID";
-        private const string CONST_REL_ID = "RELEASE_ID";
-        private const string CONST_PERSON_ID = "PERSON_ID";
 
         #endregion
 
@@ -72,53 +71,52 @@ namespace Etsi.Ultimate.Module.Specifications
 
         }
         public double ScrollHeight { get; set; }
+
         #endregion
 
         #region Events
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            var svc = ServicesFactory.Resolve<IMeetingService>();
-            foreach (SpecVersion specVersion in DataSource)
-            {
-                if (specVersion.Source.HasValue)
-                {
-                    var mtg = svc.GetMeetingById(specVersion.Source.Value);
-                    if (mtg != null)
-                        specVersion.MtgShortRef = mtg.MtgShortRef;
-                }
-            }
-
-            specificationsVersionGrid.DataSource = DataSource;
-            specificationsVersionGrid.DataBind();
-
-            if (!IsEditMode)
-            {
-                imgForceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
-                imgUnforceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_UnforceTransposition);
-
-                imgInhibitPromote.Visible = imgPromoteSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_InhibitPromote);
-                imgRemoveInhibitPromote.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote);
-
-
-                imgWithdrawSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
-                imgWithdrawSpec.OnClientClick = "openRadWin(" + SpecId.GetValueOrDefault() + "," + ReleaseId.GetValueOrDefault() + "); return false;";
-
-                imgAllocateVersion.Visible = UserReleaseRights.HasRight(Enum_UserRights.Versions_Allocate);
-                imgAllocateVersion.OnClientClick = "openRadWinVersion('" + ReleaseId.GetValueOrDefault() + "','" + SpecId.GetValueOrDefault() + "','allocate'); return false;";
-
-                imgUploadVersion.Visible = UserReleaseRights.HasRight(Enum_UserRights.Versions_Upload);
-                imgUploadVersion.OnClientClick = "openRadWinVersion('" + ReleaseId.GetValueOrDefault() + "','" + SpecId.GetValueOrDefault() + "', 'upload'); return false;";
-            }
-            else
-            {
-                pnlIconStrip.Visible = false;
-            }
-
             if (!IsPostBack)
             {
+                var svc = ServicesFactory.Resolve<IMeetingService>();
+                foreach (SpecVersion specVersion in DataSource)
+                {
+                    if (specVersion.Source.HasValue)
+                    {
+                        var mtg = svc.GetMeetingById(specVersion.Source.Value);
+                        if (mtg != null)
+                            specVersion.MtgShortRef = mtg.MtgShortRef;
+                    }
+                }
+
+                if (!IsEditMode)
+                {
+                    imgForceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
+                    imgUnforceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_UnforceTransposition);
+
+                    imgInhibitPromote.Visible = imgPromoteSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_InhibitPromote);
+                    imgRemoveInhibitPromote.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote);
+
+
+                    imgWithdrawSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
+                    imgWithdrawSpec.OnClientClick = "openRadWin(" + SpecId.GetValueOrDefault() + "," + ReleaseId.GetValueOrDefault() + "); return false;";
+
+                    imgAllocateVersion.Visible = UserReleaseRights.HasRight(Enum_UserRights.Versions_Allocate);
+                    imgAllocateVersion.OnClientClick = "openRadWinVersion('" + ReleaseId.GetValueOrDefault() + "','" + SpecId.GetValueOrDefault() + "','allocate'); return false;";
+
+                    imgUploadVersion.Visible = UserReleaseRights.HasRight(Enum_UserRights.Versions_Upload);
+                    imgUploadVersion.OnClientClick = "openRadWinVersion('" + ReleaseId.GetValueOrDefault() + "','" + SpecId.GetValueOrDefault() + "', 'upload'); return false;";
+                }
+                else
+                {
+                    pnlIconStrip.Visible = false;
+                }
                 specificationsVersionGrid.ClientSettings.Scrolling.ScrollHeight = Unit.Parse(ScrollHeight.ToString());
             }
+            specificationsVersionGrid.DataSource = DataSource;
+            specificationsVersionGrid.DataBind();
         }
 
         protected void specificationsVersionGrid_PreRender(object sender, System.EventArgs e)
@@ -141,15 +139,23 @@ namespace Etsi.Ultimate.Module.Specifications
 
                 if (remarkText.Length > 30)
                     ((Label)item["LatestRemark"].FindControl("lblRemarkText")).Text = remarkText.Substring(0, 29) + "...";
-                ImageButton btn = (ImageButton)item["LatestRemark"].FindControl("imgVersionRemarks");
-                btn.OnClientClick = String.Format("openRadWinRemarks('{0}','{1}'); return false;", item["Pk_VersionId"].Text, IsEditMode.ToString());
 
+                SpecVersion specVersion = (SpecVersion)item.DataItem;
+                if (specVersion != null)
+                {
+                    VersionRemarksControl versionRemarks = (VersionRemarksControl)item["LatestRemark"].FindControl("versionRemarksControl");
+                    versionRemarks.IsEditMode = IsEditMode;
+                    versionRemarks.PersonId = PersonId;
+                    versionRemarks.UserReleaseRights = UserReleaseRights;
+                    versionRemarks.SpecVersionDataSource = specVersion;
+                }
+                
                 if (!String.IsNullOrEmpty(item["Source"].Text))
                 {
                     HyperLink link = (HyperLink)item["Meetings"].FindControl("lnkMeetings");
                     link.Text = item["MtgShortRef"].Text;
                     link.NavigateUrl = ConfigVariables.MeetingDetailsAddress + item["Source"].Text;
-                }
+                }                
             }
         }
 
