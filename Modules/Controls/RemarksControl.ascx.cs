@@ -88,6 +88,9 @@ namespace Etsi.Ultimate.Controls
             }
             remarksGrid.ClientSettings.Scrolling.ScrollHeight = (ScrollHeight < CONST_MIN_SCROLL_HEIGHT) ? Unit.Pixel(CONST_MIN_SCROLL_HEIGHT) : Unit.Pixel(ScrollHeight);
             txtAddRemark.Attributes.Add("onkeyup", String.Format("SetAddRemarkState{0}(); return false;", ClientID));
+
+            btnAddRemark.OnClientClick = "setAddingProgress" + this.ClientID + "(true);";
+            remarksGrid.ClientSettings.ClientEvents.OnDataBound = "setAddingProgress" + this.ClientID + "(false)";
         }
 
         /// <summary>

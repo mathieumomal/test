@@ -100,4 +100,12 @@
             $("#<%=btnAddRemark.ClientID %>").attr('disabled', 'disabled');
     };
 
+
+    function setAddingProgress<%= this.ClientID %>(flag) {
+        if (flag)
+            $("#<%=btnAddRemark.ClientID %>").val('Adding...');
+        else
+            $("#<%=btnAddRemark.ClientID %>").val('Add');
+    }
+
 </script>
