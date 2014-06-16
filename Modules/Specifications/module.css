@@ -72,19 +72,20 @@ legend {
     background-image: url('images/error.png');
 }
 
-.ErrorTxt {margin: 0 0 0 7%;}
+.ErrorTxt {
+    margin: 0 0 0 7%;
+}
 
 .TabLineLeft {
     width: 184.6px;
     text-align: right;
-
     padding-top: 4px !important;
     padding-bottom: 3px !important;
 }
 
-.TabLineLeft span {
-    padding-right: 10px;
-}
+    .TabLineLeft span {
+        padding-right: 10px;
+    }
 
 .TabLineRight {
     width: auto;
@@ -177,13 +178,16 @@ span.requiredField {
     cursor: pointer;
 }
 
-.MeetingError
-{
-    color:red;
-    font-weight:bold;
+.MeetingError {
+    color: red;
+    font-weight: bold;
 }
 
 .icon_display_size {
     height: 28px;
     width: 28px;
+}
+
+.float-right {
+    float: right;
 }

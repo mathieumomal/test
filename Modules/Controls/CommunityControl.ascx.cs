@@ -173,14 +173,13 @@ namespace Etsi.Ultimate.Controls
                     {
                         imgBtnCommunity.Visible = true;
 
+                        AddPlenaryRecords(dataSource);
+
                         List<Community> rtvSource;
                         if (dataSource.Count > 0 && _selectedCommunityIds != null)
                             rtvSource = dataSource.OrderBy(x => x.Order).Where(x => x.ActiveCode == "ACTIVE" || _selectedCommunityIds.Contains(x.TbId)).OrderBy(x => x.Order).ToList();
                         else
                             rtvSource = dataSource;
-
-
-                        AddPlenaryRecords(dataSource);
 
                         rtvCommunitySelector.DataTextField = "TbName";
                         rtvCommunitySelector.DataValueField = "TbId";

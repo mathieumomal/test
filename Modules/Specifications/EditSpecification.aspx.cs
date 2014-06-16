@@ -187,7 +187,7 @@ namespace Etsi.Ultimate.Module.Specifications
             ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
             IReleaseService relSvc = ServicesFactory.Resolve<IReleaseService>();
             var releases = relSvc.GetAllReleases(userId).Key.Where(x => x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Open
-                                                                   || x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Frozen).OrderByDescending(x => x.StartDate).ToList();
+                                                                   || x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Frozen).OrderByDescending(x => x.SortOrder).ToList();
 
             // Get the user rights
             var rightsService = ServicesFactory.Resolve<IRightsService>();
@@ -347,8 +347,7 @@ namespace Etsi.Ultimate.Module.Specifications
             //update actual datasource
             if (releases != null)
             {
-                ddlPlannedRelease.DataSource = releases.Where(x => x.Enum_ReleaseStatus.Description == Domain.Enum_ReleaseStatus.Open
-                                                                || x.Enum_ReleaseStatus.Description == Domain.Enum_ReleaseStatus.Frozen).ToList();
+                ddlPlannedRelease.DataSource = releases;
                 ddlPlannedRelease.DataValueField = "Pk_ReleaseId";
                 ddlPlannedRelease.DataTextField = "Name";
                 ddlPlannedRelease.DataBind();
