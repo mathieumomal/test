@@ -1,51 +1,70 @@
 ﻿using Etsi.Ultimate.DomainClasses;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
-using Telerik.Web.UI;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
+    /// <summary>
+    /// Custom Template to render Versions Grid on Specification Releases Tab
+    /// </summary>
     public class CustomContentTemplate : ITemplate
     {
-        private List<SpecVersion> _specVersions;
-        private UserRightsContainer _releaseRights;
+        #region Private Variables
+
         private Page _page;
         private int? _personId;
-        private int? _specId;
-        private int? _releaseId;
         private bool _isEditMode;
         private double _scrollHeight;
+        private List<SpecVersion> _versions;
+        private Specification_Release _specRelease;
 
-        public CustomContentTemplate(List<SpecVersion> specVersions, UserRightsContainer releaseRights, int personId, int specId, int releaseId, bool isEditMode, Page page, double scrollHeight)
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Constructor of Custom Template for Versions Grid
+        /// </summary>
+        /// <param name="specRelease">Specification Release</param>
+        /// <param name="versions">Versions</param>
+        /// <param name="isEditMode">True - Edit Mode / False - View Mode</param>
+        /// <param name="personId">Person ID</param>
+        /// <param name="page">Page</param>
+        /// <param name="scrollHeight">Scroll Height</param>
+        public CustomContentTemplate(Specification_Release specRelease, List<SpecVersion> versions, bool isEditMode, int personId, Page page, double scrollHeight)
         {
-            _specVersions = specVersions;
-            _releaseRights = releaseRights;
+            _specRelease = specRelease;
+            _versions = versions;
             _page = page;
             _personId = personId;
-            _specId = specId;
-            _releaseId = releaseId;
             _isEditMode = isEditMode;
             _scrollHeight = scrollHeight;
         }
 
+        #endregion
+
+        #region Public Methods
+
+        /// <summary>
+        /// Instanciate controls on Specification Release Tab
+        /// </summary>
+        /// <param name="container">Controls container</param>
         public void InstantiateIn(Control container)
         {
             SpecificationVersionListControl ctrl = (SpecificationVersionListControl)_page.LoadControl("SpecificationVersionListControl.ascx");
             if (ctrl != null)
             {
-                ctrl.DataSource = _specVersions;
-                ctrl.UserReleaseRights = _releaseRights;
+                ctrl.SpecReleaseID = _specRelease.Pk_Specification_ReleaseId;
+                ctrl.Versions = _versions;
                 ctrl.PersonId = _personId;
-                ctrl.SpecId = _specId;
-                ctrl.ReleaseId = _releaseId;
+                ctrl.SpecId = _specRelease.Fk_SpecificationId;
+                ctrl.ReleaseId = _specRelease.Fk_ReleaseId;
                 ctrl.IsEditMode = _isEditMode;
                 ctrl.ScrollHeight = _scrollHeight;
             }
             container.Controls.Add(ctrl);
         }
+
+        #endregion
     }
 }

@@ -22,8 +22,8 @@ namespace Etsi.Ultimate.Module.Specifications
         #endregion
 
         #region Public Properties
+
         public bool IsEditMode { get; set; }
-        public bool IsParentList { get; set; }
         public string SelectedTab
         {
             get
@@ -39,19 +39,6 @@ namespace Etsi.Ultimate.Module.Specifications
                 ViewState[CONST_SELECTED_TAB] = value;
             }
         }
-        /// <summary>
-        /// The list of rights of the user regarding the release.
-        /// </summary>
-        public UserRightsContainer UserReleaseRights
-        {
-            get;
-            set;
-        }
-        public List<SpecVersion> DataSource
-        {
-            set;
-            get;
-        }
         public int? SpecId
         {
             get;
@@ -62,7 +49,6 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             get;
             set;
-
         }
         public int? PersonId
         {
@@ -71,6 +57,8 @@ namespace Etsi.Ultimate.Module.Specifications
 
         }
         public double ScrollHeight { get; set; }
+        public List<SpecVersion> Versions { get; set; }
+        public int SpecReleaseID { get; set; }
 
         #endregion
 
@@ -80,33 +68,25 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if (!IsPostBack)
             {
-                var svc = ServicesFactory.Resolve<IMeetingService>();
-                foreach (SpecVersion specVersion in DataSource)
-                {
-                    if (specVersion.Source.HasValue)
-                    {
-                        var mtg = svc.GetMeetingById(specVersion.Source.Value);
-                        if (mtg != null)
-                            specVersion.MtgShortRef = mtg.MtgShortRef;
-                    }
-                }
-
                 if (!IsEditMode)
                 {
-                    imgForceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
-                    imgUnforceTransposition.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_UnforceTransposition);
+                    SpecificationBasePage basePage = (SpecificationBasePage)this.Page;
+                    var userRights = basePage.SpecReleaseRights.Where(x => x.Key == SpecReleaseID).FirstOrDefault().Value;
 
-                    imgInhibitPromote.Visible = imgPromoteSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_InhibitPromote);
-                    imgRemoveInhibitPromote.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote);
+                    imgForceTransposition.Visible = userRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
+                    imgUnforceTransposition.Visible = userRights.HasRight(Enum_UserRights.Specification_UnforceTransposition);
+
+                    imgInhibitPromote.Visible = imgPromoteSpec.Visible = userRights.HasRight(Enum_UserRights.Specification_InhibitPromote);
+                    imgRemoveInhibitPromote.Visible = userRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote);
 
 
-                    imgWithdrawSpec.Visible = UserReleaseRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
+                    imgWithdrawSpec.Visible = userRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
                     imgWithdrawSpec.OnClientClick = "openRadWin(" + SpecId.GetValueOrDefault() + "," + ReleaseId.GetValueOrDefault() + "); return false;";
 
-                    imgAllocateVersion.Visible = UserReleaseRights.HasRight(Enum_UserRights.Versions_Allocate);
+                    imgAllocateVersion.Visible = userRights.HasRight(Enum_UserRights.Versions_Allocate);
                     imgAllocateVersion.OnClientClick = "openRadWinVersion('" + ReleaseId.GetValueOrDefault() + "','" + SpecId.GetValueOrDefault() + "','allocate'); return false;";
 
-                    imgUploadVersion.Visible = UserReleaseRights.HasRight(Enum_UserRights.Versions_Upload);
+                    imgUploadVersion.Visible = userRights.HasRight(Enum_UserRights.Versions_Upload);
                     imgUploadVersion.OnClientClick = "openRadWinVersion('" + ReleaseId.GetValueOrDefault() + "','" + SpecId.GetValueOrDefault() + "', 'upload'); return false;";
                 }
                 else
@@ -115,18 +95,26 @@ namespace Etsi.Ultimate.Module.Specifications
                 }
                 specificationsVersionGrid.ClientSettings.Scrolling.ScrollHeight = Unit.Parse(ScrollHeight.ToString());
             }
-            specificationsVersionGrid.DataSource = DataSource;
-            specificationsVersionGrid.DataBind();
-        }
 
-        protected void specificationsVersionGrid_PreRender(object sender, System.EventArgs e)
-        {
-            //ChangeGridToEditMode();
+            //Assign Missing Meeting Reference
+            var svc = ServicesFactory.Resolve<IMeetingService>();
+            foreach (SpecVersion specVersion in Versions)
+            {
+                if (specVersion.Source.HasValue)
+                {
+                    var mtg = svc.GetMeetingById(specVersion.Source.Value);
+                    if (mtg != null)
+                        specVersion.MtgShortRef = mtg.MtgShortRef;
+                }
+            }
+
+            specificationsVersionGrid.DataSource = Versions;
+            specificationsVersionGrid.DataBind();
         }
 
         protected void specificationsVersionGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
         {
-            specificationsVersionGrid.DataSource = DataSource;
+            specificationsVersionGrid.DataSource = Versions;
         }
 
         protected void specificationsVersionGrid_ItemDataBound(object sender, GridItemEventArgs e)
@@ -146,8 +134,8 @@ namespace Etsi.Ultimate.Module.Specifications
                     VersionRemarksControl versionRemarks = (VersionRemarksControl)item["LatestRemark"].FindControl("versionRemarksControl");
                     versionRemarks.IsEditMode = IsEditMode;
                     versionRemarks.PersonId = PersonId;
-                    versionRemarks.UserReleaseRights = UserReleaseRights;
-                    versionRemarks.SpecVersionDataSource = specVersion;
+                    versionRemarks.SpecVersion = specVersion;
+                    versionRemarks.SpecReleaseID = SpecReleaseID;
                 }
                 
                 if (!String.IsNullOrEmpty(item["Source"].Text))

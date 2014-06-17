@@ -79,6 +79,14 @@ namespace Etsi.Ultimate.Module.Specifications
                         item.Value = release.Pk_ReleaseId.ToString();
                         rpbReleases.Items.Add(item);
                     }
+
+                    // Get the rights of the user
+                    ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                    var userRightsPerSpecRelease = specSvc.GetRightsForSpecReleases(PersonId.GetValueOrDefault(), DataSource);
+
+                    SpecificationBasePage basePage = (SpecificationBasePage)this.Page;
+                    basePage.SpecReleaseRights.Clear();
+                    userRightsPerSpecRelease.ForEach( x => basePage.SpecReleaseRights.Add(new KeyValuePair<int,UserRightsContainer>(x.Key.Pk_Specification_ReleaseId, x.Value)));
                 }
 
                 double panelHeight = rpbReleases.Height.Value;
@@ -89,21 +97,17 @@ namespace Etsi.Ultimate.Module.Specifications
                 double scrollHeight = panelHeight - panelItemsHeaderHeight - iconsHeight - gridHeaderHeight - padding;
 
                 //Dynamic Header & Content controls always needs to re-create for each postback
-                // Get the rights of the user
-                ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
-                var userRightsPerSpecRelease = specSvc.GetRightsForSpecReleases(PersonId.GetValueOrDefault(), DataSource);
-
                 foreach (RadPanelItem item in rpbReleases.Items)
                 {
                     var release = DataSource.SpecificationReleases.Where(x => x.Pk_ReleaseId.ToString() == item.Value).FirstOrDefault();
-                    var datasource = DataSource.Versions.Where(x => (x.Fk_ReleaseId != null) ? x.Fk_ReleaseId.Value == release.Pk_ReleaseId : false)
+                    var versions = DataSource.Versions.Where(x => (x.Fk_ReleaseId != null) ? x.Fk_ReleaseId.Value == release.Pk_ReleaseId : false)
                                                                .OrderByDescending(x => x.MajorVersion)
                                                                .ThenByDescending(x => x.TechnicalVersion)
                                                                .ThenByDescending(x => x.EditorialVersion).ToList();
-                    var rights = userRightsPerSpecRelease.Where(r => r.Key.Fk_ReleaseId == release.Pk_ReleaseId).FirstOrDefault().Value;
 
-                    CustomHeaderTemplate customHeaderTemplate = new CustomHeaderTemplate(release, DataSource, IsEditMode, rights, PersonId.GetValueOrDefault(), this.Page);
-                    CustomContentTemplate customContentTemplate = new CustomContentTemplate(datasource, rights, PersonId.GetValueOrDefault(), DataSource.Pk_SpecificationId, release.Pk_ReleaseId, IsEditMode, this.Page, scrollHeight);
+                    var specRelease = DataSource.Specification_Release.Where(x => x.Fk_ReleaseId.ToString() == item.Value && x.Fk_SpecificationId == DataSource.Pk_SpecificationId).FirstOrDefault();
+                    CustomHeaderTemplate customHeaderTemplate = new CustomHeaderTemplate(specRelease, IsEditMode, PersonId.GetValueOrDefault(), this.Page);
+                    CustomContentTemplate customContentTemplate = new CustomContentTemplate(specRelease, versions, IsEditMode, PersonId.GetValueOrDefault(), this.Page, scrollHeight);
                     item.HeaderTemplate = customHeaderTemplate;
                     item.ApplyHeaderTemplate();
                     item.ContentTemplate = customContentTemplate;
@@ -126,30 +130,6 @@ namespace Etsi.Ultimate.Module.Specifications
                         rpbReleases.Items[0].Expanded = true;
                 }
             }
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Get Specification Release Remarks for the given release id
-        /// </summary>
-        /// <param name="releaseId">Release Id</param>
-        /// <returns>List of Specification Release Remarks</returns>
-        public List<Remark> GetSpecificationReleaseRemarks(int releaseId)
-        {
-            List<Remark> remarks = new List<Remark>();
-            var radPanelItem = rpbReleases.Items.FindItemByValue(releaseId.ToString());
-            if (radPanelItem != null)
-            {
-                var headerControl = radPanelItem.Header.Controls.OfType<ReleaseHeaderControl>().FirstOrDefault();
-                if (headerControl != null)
-                {
-                    remarks.AddRange(headerControl.SpecReleaseRemarks);
-                }
-            }
-            return remarks;
         }
 
         #endregion

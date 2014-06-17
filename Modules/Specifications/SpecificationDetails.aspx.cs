@@ -47,7 +47,6 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if (!IsPostBack)
             {
-                VersionRemarks.Clear();
                 GetRequestParameters();
 
                 SetViewLayout();
@@ -99,7 +98,7 @@ namespace Etsi.Ultimate.Module.Specifications
                         SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
                         FillGeneralTab(userRights, specification);
                         FillResponsiblityTab(specification);
-                        FillRelatedSpecificationsTab(specification, selectedTab);
+                        //FillRelatedSpecificationsTab(specification, selectedTab);
                         FillReleasesTab(specification);
                         FillHistoryTab(specification);
                         ManageButtonDisplay(userRights);

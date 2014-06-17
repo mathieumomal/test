@@ -227,7 +227,7 @@ namespace Etsi.Ultimate.Module.Specifications
                         SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
                         FillGeneralTab(userRights, specification, releases);
                         FillResponsiblityTab(specification);
-                        FillRelatedSpecificationsTab(specification, selectedTab);
+                        //FillRelatedSpecificationsTab(specification, selectedTab);
                         FillHistoryTab(specification);
 
                         // Check if selectedTab is specified then select the according Tab and View page
@@ -584,8 +584,8 @@ namespace Etsi.Ultimate.Module.Specifications
             //[1] Spec-Release Remarks
             foreach (var specRelease in spec.Specification_Release)
             {
-                var remarks = ctrlSpecificationReleases.GetSpecificationReleaseRemarks(specRelease.Fk_ReleaseId);
-                specRelease.Remarks = remarks;
+                if (SpecReleaseRemarks.Exists(x => x.Key == specRelease.Pk_Specification_ReleaseId))
+                    specRelease.Remarks = SpecReleaseRemarks.Find(x => x.Key == specRelease.Pk_Specification_ReleaseId).Value;
             }
 
             //[2] Version Remarks
