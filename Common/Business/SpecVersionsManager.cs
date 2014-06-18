@@ -180,6 +180,34 @@ namespace Etsi.Ultimate.Business
             return result;
         }
 
+
+        /// <summary>
+        /// Allocate version for a set of promoted specification for a release
+        /// </summary>
+        /// <param name="specificationIds">Set of specification ids</param>
+        /// <param name="release">Target release of promotion</param>
+        /// <returns></returns>
+        public List<Report> AllocateVersionFromMassivePromote(List<Specification> specifications, Release release)
+        {
+            List<Report> reports = new List<Report>();
+            Report r;
+            foreach (Specification s in specifications)
+            {
+                r= UploadOrAllocateVersion(new SpecVersion()
+                {
+                    Fk_SpecificationId= s.Pk_SpecificationId,
+                    Fk_ReleaseId = release.Pk_ReleaseId,
+                    EditorialVersion = 0,
+                    TechnicalVersion = 0,
+                    MajorVersion = release.Version3g
+
+                }, false);
+
+                reports.Add(r);
+            }
+            return reports;
+        }
+
         /// <summary>
         /// Validate Uploaded version document & provide validation summary
         /// </summary>

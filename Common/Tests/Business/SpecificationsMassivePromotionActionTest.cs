@@ -47,6 +47,44 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual(1, result.Where(s => s.IsNewVersionCreationEnabled).ToList().Count);
              
         }
+
+        [Test]
+        public void PromoteMassivelySpecificationsTest()
+        {
+            //Specification
+            var specDBSet = GetSpecifications();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specDBSet);            
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+
+            //Before action
+            Specification spec1 = specDBSet.Find(1);
+            Specification spec2 = specDBSet.Find(2);
+            int spec1ReleasesCountBefore = spec1.Specification_Release.ToList().Count;
+            int spec2ReleasesCountBefore = spec2.Specification_Release.ToList().Count;
+            //Action performed
+            var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction(uow);
+            specificationsMassivePromotionAction.PromoteMassivelySpecification(0,new List<int>{1,2}, 2);
+
+            //Initial Assert after action
+            //Get specifications concerned by the action
+            spec1 = specDBSet.Find(1);
+            spec2 = specDBSet.Find(2);
+            int spec1ReleasesCountAfter = spec1.Specification_Release.ToList().Count;
+            int spec2ReleasesCountAfter = spec2.Specification_Release.ToList().Count;
+
+            var newSpecRelease1 = spec1.Specification_Release.ToList().Where(x => x.Pk_Specification_ReleaseId == default(int)).FirstOrDefault();
+            var newSpecRelease2 = spec2.Specification_Release.ToList().Where(x => x.Pk_Specification_ReleaseId == default(int)).FirstOrDefault();
+            //Asserts
+            //Check of addition of the new element
+            Assert.AreEqual(spec1ReleasesCountAfter, spec1ReleasesCountBefore + 1);
+            Assert.AreEqual(spec2ReleasesCountAfter, spec2ReleasesCountBefore + 1);
+            //Check of content of added element
+            Assert.IsFalse(newSpecRelease1.isWithdrawn.GetValueOrDefault());
+            Assert.IsFalse(newSpecRelease2.isWithdrawn.GetValueOrDefault());            
+        }
         #endregion
 
         #region Private Methods
@@ -89,6 +127,39 @@ namespace Etsi.Ultimate.Tests.Business
             releaseDbSet.Add(release2);
             return releaseDbSet;
         }
+
+        /// <summary>
+        /// Get Fake Specification Details
+        /// </summary>
+        /// <returns>Specification Fake DBSet</returns>
+        private SpecificationFakeDBSet GetSpecifications()
+        {
+            var specDbSet = new SpecificationFakeDBSet();
+            var release = Releases().FirstOrDefault();            
+            var specReleaseList = new List<Specification_Release>() { 
+                new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 1, isWithdrawn = false, Release = release}
+                //new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 1, Fk_ReleaseId = 2, isWithdrawn = false}
+            };
+
+            var specReleaseList2 = new List<Specification_Release>() {                 
+                new Specification_Release() { Pk_Specification_ReleaseId = 3, Fk_SpecificationId = 2, Fk_ReleaseId = 1, isWithdrawn = false, Release = release}
+            };
+
+            specDbSet.Add(new Specification() { Pk_SpecificationId = 1, Number = "00.01U", Title = "First specification", IsActive = true, Specification_Release = specReleaseList});
+            specDbSet.Add(new Specification() { Pk_SpecificationId =2, Number = "00.02U", Title = "Second specification", IsActive = true, Specification_Release = specReleaseList2});
+            return specDbSet;
+        }
+
+        /// <summary>
+        /// Get Fake Releases
+        /// </summary>
+        /// <returns>Queryable Release list</returns>
+        private IQueryable<Release> Releases()
+        {
+            ReleaseFakeRepository releaseFakeRepository = new ReleaseFakeRepository();
+            return releaseFakeRepository.All;
+        }
+
 
         #endregion
     }

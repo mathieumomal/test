@@ -133,6 +133,21 @@ namespace Etsi.Ultimate.Tests.Business
         }
 
         /// <summary>
+        /// Get Fake Specification Details for massive promote
+        /// </summary>
+        /// <returns>Specification Fake DBSet</returns>
+        private SpecificationFakeDBSet GetSpecificationsForMassivePromote()
+        {
+            var specDbSet = new SpecificationFakeDBSet();
+            var release = Releases().FirstOrDefault();
+            var specRelease = new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = release.Pk_ReleaseId, isWithdrawn = false, Release = release };
+            var specReleaseList = new List<Specification_Release>() { specRelease };
+            var specification = new Specification() { Pk_SpecificationId = 1, Number = "00.01U", Title = "First specification", IsActive = true, Specification_Release = specReleaseList };
+            specDbSet.Add(specification);
+            return specDbSet;
+        }
+
+        /// <summary>
         /// Get Fake Releases
         /// </summary>
         /// <returns>Queryable Release list</returns>

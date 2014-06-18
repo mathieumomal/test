@@ -215,6 +215,45 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        public bool PerformMassivePromotion(int personId, List<Specification> specifications, int targetReleaseId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    List<int> specificationIds = new List<int>(specifications.Count);
+                    List<Specification> specificationsForVersionAllocation = new List<Specification>();
+                    specifications.ForEach(s =>
+                    {
+                        specificationIds.Add(s.Pk_SpecificationId);
+                        if (s.IsNewVersionCreationEnabled)
+                        {
+                            specificationsForVersionAllocation.Add(s);
+                        }
+                    });
+                    var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction(uoW);
+                    specificationsMassivePromotionAction.PromoteMassivelySpecification(personId, specificationIds, targetReleaseId);
+
+                    ReleaseManager releaseManager = new ReleaseManager();
+                    releaseManager.UoW = uoW;
+                    Release targetRelease = releaseManager.GetReleaseById(personId, targetReleaseId).Key;
+
+                    SpecVersionsManager versionManager = new SpecVersionsManager(uoW);
+                    versionManager.AllocateVersionFromMassivePromote(specificationsForVersionAllocation, targetRelease); 
+                   
+                    uoW.Save();
+                    return true; 
+                }
+                catch (Exception e)
+                {
+                    Utils.LogManager.Error("Error while massively promoting a set of specification: " + e.Message);
+                    var report = new Report();
+                    report.LogError(e.Message);
+                    return false; 
+                }
+            }
+        }
+
         /// <summary>
         /// See Interface definition.
         /// </summary>

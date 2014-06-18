@@ -196,5 +196,14 @@ namespace Etsi.Ultimate.Services
         /// <param name="targetReleaseId"></param>
         /// <returns></returns>
         KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationForMassivePromotion(int personId, int initialReleaseId, int targetReleaseId);
+
+        /// <summary>
+        /// Promote massively a set of specification
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="specificationIds">Specifications concerned by promotion</param>
+        /// <param name="targetReleaseId">The target release of the promotion</param>
+        /// <returns></returns>
+        bool PerformMassivePromotion(int personId, List<Specification> specificationIds, int targetReleaseId);
     }
 }

@@ -62,6 +62,17 @@ namespace Etsi.Ultimate.Business
 
             return new KeyValuePair<List<Specification>, UserRightsContainer>(SourceSpecs, personRights); 
         }
+
+        public void PromoteMassivelySpecification(int personId, List<int> specificationIds, int targetReleaseId)
+        {
+            var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
+            specMgr.UoW = _uoW;
+            DateTime actionDate = DateTime.UtcNow;
+            foreach (int id in specificationIds)
+            {
+                specMgr.GetSpecificationById(personId, id).Key.Specification_Release.Add(new Specification_Release() { isWithdrawn = false, CreationDate = actionDate, UpdateDate = actionDate, Fk_ReleaseId = targetReleaseId });
+            }
+        }
         #endregion
     }
 }

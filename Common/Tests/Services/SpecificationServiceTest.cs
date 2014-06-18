@@ -243,6 +243,84 @@ namespace Etsi.Ultimate.Tests.Services
             mockDataContext.AssertWasNotCalled(x => x.SaveChanges());
         }
 
+        [Test]
+        public void PerformMassivePromotion()
+        {
+            
+            //Arrange
+            //Params
+            int personId = 1;
+            
+            int targetReleaseId = 2;
+            //User Rights
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Specification_BulkPromote);            
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(personId)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            //Specification
+            var specDBSet = GetSpecificationsForMassivePromote();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specDBSet);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)Releases());
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var specificationService = new SpecificationService();
+
+            //Action
+            bool result = specificationService.PerformMassivePromotion(personId, specDBSet.ToList(), targetReleaseId);
+
+            //Assert
+            Assert.IsTrue(result);
+            mockDataContext.AssertWasCalled(x => x.SaveChanges());
+        }
+
+        [Test]
+        public void PerformMassivePromotionWithVersionsAllocations()
+        {
+
+            //Arrange
+            //Params
+            int personId = 1;
+
+            int targetReleaseId = 2;
+            //User Rights
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Specification_BulkPromote);
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(personId)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            //Specification
+            var specDBSet = GetSpecificationsForMassivePromote();
+            var specVersionDBSet = GetSpecVersions();
+            var releaseDBSet = GetReleases();
+            specDBSet.ToList()[0].IsNewVersionCreationEnabled = true;
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specDBSet);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releaseDBSet);
+            mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)specVersionDBSet);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var versionsSvc = new SpecVersionService();
+            SpecVersion allocatedSpec = versionsSvc.GetVersionsForSpecRelease(1, 2).FirstOrDefault();
+            Assert.AreEqual(20, allocatedSpec.MajorVersion);
+
+            //Action
+            var specificationService = new SpecificationService();
+            specificationService.PerformMassivePromotion(personId, specDBSet.ToList(), targetReleaseId);
+
+            //After            
+            allocatedSpec = versionsSvc.GetVersionsForSpecRelease(specDBSet.ToList()[0].Pk_SpecificationId, targetReleaseId).OrderByDescending(v => v.MajorVersion).FirstOrDefault();
+            
+            Release targetRelease = releaseDBSet.Where(r => r.Pk_ReleaseId == targetReleaseId).FirstOrDefault();
+
+            //Asserts
+            //Assert.AreEqual(targetRelease.Version3g , allocatedSpec.MajorVersion);
+            mockDataContext.AssertWasCalled(x => x.SaveChanges());
+        }
+
         #region data
 //--- Check format number
         private IEnumerable<object[]> GetSpecificicationNumbersTestFormat
@@ -461,6 +539,84 @@ namespace Etsi.Ultimate.Tests.Services
             return specDbSet;
         }
 
+        // <summary>
+        /// Get Fake Specification Details for massive promote
+        /// </summary>
+        /// <returns>Specification Fake DBSet</returns>
+        private SpecificationFakeDBSet GetSpecificationsForMassivePromote()
+        {
+            var specDbSet = new SpecificationFakeDBSet();
+            var release = GetReleases().FirstOrDefault();
+            var specReleaseList = new List<Specification_Release>() { 
+                new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 1, isWithdrawn = false, Release = release}
+                //new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 1, Fk_ReleaseId = 2, isWithdrawn = false}
+            };
+
+            var specReleaseList2 = new List<Specification_Release>() {                 
+                new Specification_Release() { Pk_Specification_ReleaseId = 3, Fk_SpecificationId = 2, Fk_ReleaseId = 1, isWithdrawn = false, Release = release}
+            };
+
+            specDbSet.Add(new Specification() { Pk_SpecificationId = 1, Number = "00.01U", Title = "First specification", IsActive = true, Specification_Release = specReleaseList });
+            specDbSet.Add(new Specification() { Pk_SpecificationId = 2, Number = "00.02U", Title = "Second specification", IsActive = true, Specification_Release = specReleaseList2 });
+            return specDbSet;
+        }
+
+        private SpecVersionFakeDBSet GetSpecVersions()
+        {
+            var specVersionFakeDBSet = new SpecVersionFakeDBSet();
+            specVersionFakeDBSet.Add(new SpecVersion()
+            {
+                Pk_VersionId = 1,
+                Multifile = false,
+                ForcePublication = false,
+                Location = "Location1",
+                Fk_ReleaseId = 1,
+                Fk_SpecificationId = 1,
+                MajorVersion = 10,
+                Release = GetReleases().FirstOrDefault(),
+                Specification = GetSpecificationsForMassivePromote().ToList()[0]
+            });
+            specVersionFakeDBSet.Add(new SpecVersion()
+            {
+                Pk_VersionId = 2,
+                Multifile = false,
+                ForcePublication = false,
+                Location = "Location2",
+                Fk_ReleaseId = 2,
+                Fk_SpecificationId = 1,
+                MajorVersion = 20,
+
+                Release = GetReleases().FirstOrDefault(),
+                Specification = GetSpecificationsForMassivePromote().ToList()[1]
+            });
+            return specVersionFakeDBSet;
+        }
+
+        private ReleaseFakeDBSet GetReleases()
+        {
+            
+            var openStatus = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open" };
+            var frozenStatus = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, Code = "Frozen" };
+            var closedStatus = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, Code = "Closed" };
+
+            var releaseFakeDBSet = new ReleaseFakeDBSet();
+            releaseFakeDBSet.Add(new Release()
+            {
+                Pk_ReleaseId = 1, 
+                Enum_ReleaseStatus = openStatus,
+                Version3g = 20
+
+            });
+
+            releaseFakeDBSet.Add(new Release()
+            {
+                Pk_ReleaseId = 2,
+                Enum_ReleaseStatus = openStatus,
+                Version3g = 30
+
+            });
+            return releaseFakeDBSet;
+        }
         /// <summary>
         /// Get Fake Releases
         /// </summary>

@@ -510,5 +510,10 @@ namespace Etsi.Ultimate.Services
         {
             throw new NotImplementedException();
         }
+
+        public bool PerformMassivePromotion(int personId, List<Specification> specificationIds, int targetReleaseId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
