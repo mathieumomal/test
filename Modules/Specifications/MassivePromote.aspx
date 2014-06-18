@@ -66,12 +66,12 @@
                                         <Columns>
                                             <telerik:GridTemplateColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="60" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderText="Promote inhibited" UniqueName="PromoteInhibit">
                                                 <ItemTemplate>
-                                                    <asp:CheckBox ID="chkPromoteInhibited" runat="server" />
+                                                    <asp:CheckBox ID="chkPromoteInhibited" OnClick="ToggleCreateNewStatus(this);" runat="server" />
                                                 </ItemTemplate>
                                             </telerik:GridTemplateColumn>
                                             <telerik:GridTemplateColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="60" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderText="Create new version" UniqueName="CreateNewVersion">
                                                 <ItemTemplate>
-                                                    <asp:CheckBox ID="chkCreateNewVersion" runat="server" />
+                                                    <asp:CheckBox ID="chkCreateNewVersion" OnClick="ToggleCreateNewStatus(this);" runat="server" />
                                                 </ItemTemplate>
                                             </telerik:GridTemplateColumn>
 
@@ -126,7 +126,31 @@
                     }
 
                     radconfirm("You are about to promote " + count + " specifications. Proceed?", aspButtonCallbackFn, 400, 100, null, "Confirm");
+            }
+
+
+            function ToggleCreateNewStatus(button,rowIndex)
+            {
+                var senderButtonId = button.id;
+                
+                var grid = $find("<%=rgSpecificationList.ClientID %>");
+                var tableView = grid.get_masterTableView();
+                var row = tableView.get_dataItems()[rowIndex];
+
+                if (senderButtonId.indexOf("chkPromoteInhibited") > 0) {
+                    if (row.findElement(senderButtonId).checked) {
+                        var targetButtonId = senderButtonId.replace("chkPromoteInhibited", "chkCreateNewVersion");
+                        row.findElement(targetButtonId).checked = false;
+                    }
                 }
+                else {
+                    if (row.findElement(senderButtonId).checked) {
+                        var targetButtonId = senderButtonId.replace("chkCreateNewVersion", "chkPromoteInhibited");
+                        row.findElement(targetButtonId).checked = false;
+                    }
+                }
+
+            }
         </script>
     </form>
 </body>

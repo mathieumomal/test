@@ -90,6 +90,8 @@ namespace Etsi.Ultimate.Module.Specifications
                 CheckBox chkCreateNewVersion = (CheckBox)dataItem.FindControl("chkCreateNewVersion");
 
                 Specification currentSpecification = (Specification)e.Item.DataItem;
+                chkPromoteInhibited.Attributes.Add("OnClick", "ToggleCreateNewStatus(this , '" + dataItem.ItemIndex + "');");
+                chkCreateNewVersion.Attributes.Add("OnClick", "ToggleCreateNewStatus(this , '" + dataItem.ItemIndex + "');");
 
                 //Set "Promote inhibited" &	"Create new version" checkbox values
                 if (currentSpecification.promoteInhibited != null && currentSpecification.promoteInhibited.Value)
@@ -98,7 +100,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     chkPromoteInhibited.Enabled = chkCreateNewVersion.Checked = chkCreateNewVersion.Enabled = false;
                 }
                 else
-                    chkCreateNewVersion.Checked = currentSpecification.IsNewVersionCreationEnabled;
+                    chkCreateNewVersion.Checked = chkCreateNewVersion.Enabled = currentSpecification.IsNewVersionCreationEnabled;
 
                 //Trim TITLE to fit inside grid column
                 if (!String.IsNullOrEmpty(currentSpecification.Title) && currentSpecification.Title.Length > 20)
