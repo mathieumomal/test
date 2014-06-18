@@ -9,6 +9,7 @@ using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using Domain = Etsi.Ultimate.DomainClasses;
 using System.Configuration;
+using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
@@ -98,7 +99,7 @@ namespace Etsi.Ultimate.Module.Specifications
                         SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
                         FillGeneralTab(userRights, specification);
                         FillResponsiblityTab(specification);
-                        //FillRelatedSpecificationsTab(specification, selectedTab);
+                        FillRelatedSpecificationsTab(specification, selectedTab);
                         FillReleasesTab(specification);
                         FillHistoryTab(specification);
                         ManageButtonDisplay(userRights);
@@ -397,6 +398,32 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if (SpecificationId != null)
                 Response.Redirect("EditSpecification.aspx?specificationId=" + SpecificationId + "&action=edit", true);
-        }        
+        }
+
+
+        /// <summary>
+        /// Get Actual POCO entities for Remark objects
+        /// </summary>
+        /// <param name="proxyRemarks">Proxy Remarks</param>
+        /// <returns>List of Remarks</returns>
+        private List<Remark> GetActualRemarksFromProxy(List<Remark> proxyRemarks)
+        {
+            List<Remark> remarks = new List<Remark>();
+            proxyRemarks.ForEach(x => remarks.Add(new Remark()
+            {
+                Pk_RemarkId = x.Pk_RemarkId,
+                Fk_PersonId = x.Fk_PersonId,
+                Fk_WorkItemId = x.Fk_WorkItemId,
+                Fk_VersionId = x.Fk_VersionId,
+                Fk_SpecificationId = x.Fk_SpecificationId,
+                Fk_ReleaseId = x.Fk_ReleaseId,
+                Fk_SpecificationReleaseId = x.Fk_SpecificationReleaseId,
+                IsPublic = x.IsPublic,
+                CreationDate = x.CreationDate,
+                RemarkText = x.RemarkText,
+                PersonName = x.PersonName,
+            }));
+            return remarks;
+        }
     }
 }

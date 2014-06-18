@@ -227,7 +227,7 @@ namespace Etsi.Ultimate.Module.Specifications
                         SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
                         FillGeneralTab(userRights, specification, releases);
                         FillResponsiblityTab(specification);
-                        //FillRelatedSpecificationsTab(specification, selectedTab);
+                        FillRelatedSpecificationsTab(specification, selectedTab);
                         FillHistoryTab(specification);
 
                         // Check if selectedTab is specified then select the according Tab and View page
