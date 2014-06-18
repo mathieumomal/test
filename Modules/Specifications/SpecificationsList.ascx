@@ -174,6 +174,9 @@
             <tr>
                 <td>
                     <telerik:RadGrid ID="rgSpecificationList" runat="server"
+                        EnableEmbeddedSkins="false"
+                        EnableEmbeddedBaseStylesheet="false"
+                        Skin="Ultimate"
                         AllowSorting="true"
                         AllowPaging="true"
                         AllowCustomPaging="true"
