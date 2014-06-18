@@ -206,11 +206,14 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationForMassivePromotion(int personId, int initialReleaseId, int targetReleaseId)
+        public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationForMassivePromotion(int personId, int initialReleaseId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction(uoW);
+                ReleaseManager releaseManager = new ReleaseManager();
+                releaseManager.UoW = uoW;
+                int targetReleaseId = releaseManager.GetNextRelease(initialReleaseId).Pk_ReleaseId; 
                 return specificationsMassivePromotionAction.GetSpecificationForMassivePromotion(personId, initialReleaseId, targetReleaseId);
             }
         }

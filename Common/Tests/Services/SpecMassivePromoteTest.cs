@@ -34,7 +34,7 @@ namespace Etsi.Ultimate.Tests.Services
 
 
             var specSvc = new SpecificationService();
-            List<Specification> result = specSvc.GetSpecificationForMassivePromotion(1,1,2).Key;
+            List<Specification> result = specSvc.GetSpecificationForMassivePromotion(1,1).Key;
 
             //Asserts
             Assert.AreEqual(3, result.Count);

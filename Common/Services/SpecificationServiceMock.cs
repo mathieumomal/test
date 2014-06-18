@@ -506,7 +506,7 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
-        public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationForMassivePromotion(int personId, int initialReleaseId, int targetReleaseId)
+        public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationForMassivePromotion(int personId, int initialReleaseId)
         {
             throw new NotImplementedException();
         }

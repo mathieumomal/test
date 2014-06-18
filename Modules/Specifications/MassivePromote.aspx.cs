@@ -147,8 +147,7 @@ namespace Etsi.Ultimate.Module.Specifications
             if (int.TryParse(ddlInitialRelease.SelectedValue, out releaseId) && releaseId > 0)
             {
                 var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-                var result = specSvc.GetSpecificationBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), new SpecificationSearch { SelectedReleaseIds = new List<int> { releaseId } });
-                rgSpecificationList.DataSource = result.Key.Key;
+                rgSpecificationList.DataSource = specSvc.GetSpecificationForMassivePromotion(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), releaseId).Key;
                 rgSpecificationList.DataBind();
             }
         }

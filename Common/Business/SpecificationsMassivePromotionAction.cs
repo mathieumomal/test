@@ -52,6 +52,7 @@ namespace Etsi.Ultimate.Business
 
             //Remove element exisiting in target release
             SourceSpecs.RemoveAll(s => targetReleaseSpecIds.Contains(s.Pk_SpecificationId));
+            SourceSpecs.RemoveAll(s => !s.IsActive);
             //If specification is not a draft, not inhibited from promotion, and has a version in the initial relase => New version allocation is enabled
             //Get specification ids havig a version for the initial release 
             ISpecVersionsRepository versionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
