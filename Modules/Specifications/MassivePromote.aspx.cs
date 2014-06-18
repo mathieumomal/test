@@ -22,7 +22,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
         //Properties
         private int userId;
-        private static Release latestRelease; 
+        private static Release latestRelease;
 
         #endregion
 
@@ -37,26 +37,9 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if (!IsPostBack)
             {
-                IReleaseService relSvc = ServicesFactory.Resolve<IReleaseService>();
-                var releases = relSvc.GetAllReleases(userId).Key.Where(x => x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Open
-                                                                       || x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Frozen)
-                                                                       .OrderByDescending(x => x.SortOrder).ToList();
+                LoadInitialReleaseDropdown();
 
-
-                if (releases.Count > 0)
-                {
-                    latestRelease = releases[0];
-                    releases.Remove(latestRelease);
-                    lblTargetRelease.Text = latestRelease.Name;
-                }
-
-                ddlInitialRelease.DataSource = releases;
-                ddlInitialRelease.DataValueField = "Pk_ReleaseId";
-                ddlInitialRelease.DataTextField = "Name";
-                ddlInitialRelease.DataBind();
-
-
-                rgSpecificationList.DataSource = String.Empty;
+                LoadSpecificationGrid();
             }
         }
 
@@ -67,7 +50,18 @@ namespace Etsi.Ultimate.Module.Specifications
         /// <param name="e"></param>
         protected void btnPromote_Click(object sender, EventArgs e)
         {
+            List<Specification> specPromoteList = new List<Specification>();
+            foreach (GridDataItem item in rgSpecificationList.MasterTableView.Items)
+            {
+                CheckBox chkPromoteInhibited = (CheckBox)item.FindControl("chkPromoteInhibited");
+                //CheckBox chkCreateNewVersion = (CheckBox)item.FindControl("chkCreateNewVersion");
 
+                if (!chkPromoteInhibited.Checked)
+                {
+                    specPromoteList.Add((Specification)item.DataItem);
+                }
+            }
+            RadWindowManager1.RadAlert(specPromoteList.Count + " specification(s) promoted successfully!", 400, 100, "Promote Status", null);
         }
 
         /// <summary>
@@ -78,15 +72,8 @@ namespace Etsi.Ultimate.Module.Specifications
         protected void ddlInitialRelease_SelectedIndexChanged(object sender, EventArgs e)
         {
             lblTargetRelease.Text = (ddlInitialRelease.SelectedIndex == 0) ? latestRelease.Name : ddlInitialRelease.Items[ddlInitialRelease.SelectedIndex - 1].Text;
-        }
 
-        /// <summary>
-        /// Need DataSource event for Specification List
-        /// </summary>
-        /// <param name="sender">Source of Event</param>
-        /// <param name="e">Event Args</param>
-        protected void rgSpecificationList_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
-        {
+            LoadSpecificationGrid();
         }
 
         /// <summary>
@@ -98,9 +85,26 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if (e.Item is GridDataItem)
             {
+                GridDataItem dataItem = e.Item as GridDataItem;
+                CheckBox chkPromoteInhibited = (CheckBox)dataItem.FindControl("chkPromoteInhibited");
+                CheckBox chkCreateNewVersion = (CheckBox)dataItem.FindControl("chkCreateNewVersion");
 
+                Specification currentSpecification = (Specification)e.Item.DataItem;
+
+                //Set "Promote inhibited" &	"Create new version" checkbox values
+                if (currentSpecification.promoteInhibited != null && currentSpecification.promoteInhibited.Value)
+                {
+                    chkPromoteInhibited.Checked = true;
+                    chkPromoteInhibited.Enabled = chkCreateNewVersion.Checked = chkCreateNewVersion.Enabled = false;
+                }
+                else
+                    chkCreateNewVersion.Checked = currentSpecification.IsNewVersionCreationEnabled;
+
+                //Trim TITLE to fit inside grid column
+                if (!String.IsNullOrEmpty(currentSpecification.Title) && currentSpecification.Title.Length > 20)
+                    dataItem["Title"].Text = currentSpecification.Title.Remove(19) + "...";
             }
-        } 
+        }
 
         #endregion
 
@@ -130,7 +134,45 @@ namespace Etsi.Ultimate.Module.Specifications
                     return personID;
             }
             return 0;
-        } 
+        }
+
+        /// <summary>
+        /// Bind Specification grid based on ddlInitialRelease selected release
+        /// </summary>
+        private void LoadSpecificationGrid()
+        {
+            int releaseId;
+            if (int.TryParse(ddlInitialRelease.SelectedValue, out releaseId) && releaseId > 0)
+            {
+                var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                var result = specSvc.GetSpecificationBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), new SpecificationSearch { SelectedReleaseIds = new List<int> { releaseId } });
+                rgSpecificationList.DataSource = result.Key.Key;
+                rgSpecificationList.DataBind();
+            }
+        }
+
+        /// <summary>
+        /// Load Initial Release dropdown
+        /// </summary>
+        private void LoadInitialReleaseDropdown()
+        {
+            IReleaseService relSvc = ServicesFactory.Resolve<IReleaseService>();
+            var releases = relSvc.GetAllReleases(userId).Key.Where(x => x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Open
+                                                                   || x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Frozen)
+                                                                   .OrderByDescending(x => x.SortOrder).ToList();
+
+            if (releases.Count > 0)
+            {
+                latestRelease = releases[0];
+                releases.Remove(latestRelease);
+                lblTargetRelease.Text = latestRelease.Name;
+            }
+
+            ddlInitialRelease.DataSource = releases;
+            ddlInitialRelease.DataValueField = "Pk_ReleaseId";
+            ddlInitialRelease.DataTextField = "Name";
+            ddlInitialRelease.DataBind();
+        }
 
         #endregion
     }

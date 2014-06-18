@@ -22,6 +22,8 @@
             border-radius: 4px !important;
         }
     </style>
+
+
 </head>
 <body style="margin-left: 0;">
     <form id="specMassivePromoteForm" runat="server">
@@ -56,20 +58,28 @@
                                     AllowFilteringByColumn="false"
                                     AutoGenerateColumns="false"
                                     AllowMultiRowEdit="true"
-                                    OnNeedDataSource="rgSpecificationList_NeedDataSource"
                                     OnItemDataBound="rgSpecificationList_ItemDataBound">
                                     <ClientSettings>
                                         <Scrolling AllowScroll="True" UseStaticHeaders="True" SaveScrollPosition="true"></Scrolling>
                                     </ClientSettings>
                                     <MasterTableView ClientDataKeyNames="Pk_SpecificationId" Width="100%" AllowNaturalSort="false">
                                         <Columns>
-                                            <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="60" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" ShowSortIcon="false" DataField="Number" HeaderText="Promote inhibited" UniqueName="PromoteInhibit"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="60" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" ShowSortIcon="false" DataField="Number" HeaderText="Create new version" UniqueName="CreateNewVersion"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="20%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" ShowSortIcon="false" DataField="Number" HeaderText="Specification Number" UniqueName="SpecificationNumber"></telerik:GridBoundColumn>
+                                            <telerik:GridTemplateColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="60" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderText="Promote inhibited" UniqueName="PromoteInhibit">
+                                                <ItemTemplate>
+                                                    <asp:CheckBox ID="chkPromoteInhibited" runat="server" />
+                                                </ItemTemplate>
+                                            </telerik:GridTemplateColumn>
+                                            <telerik:GridTemplateColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="60" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderText="Create new version" UniqueName="CreateNewVersion">
+                                                <ItemTemplate>
+                                                    <asp:CheckBox ID="chkCreateNewVersion" runat="server" />
+                                                </ItemTemplate>
+                                            </telerik:GridTemplateColumn>
+
+                                            <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="15%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="Number" HeaderText="Specification Number" UniqueName="SpecificationNumber"></telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="60" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="SpecificationTypeShortName" HeaderText="Type" UniqueName="Type"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Left" ShowSortIcon="false" DataField="Title" HeaderText="Title" UniqueName="Title"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Left" DataField="Title" HeaderText="Title" UniqueName="Title"></telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="10%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="Status" HeaderText="Status" UniqueName="Status"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="12%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="PrimeResponsibleGroupShortName" HeaderText="Prime Responsible" UniqueName="PrimeResponsibleGroupShortName"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="13%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="PrimeResponsibleGroupShortName" HeaderText="Prime Responsible" UniqueName="PrimeResponsibleGroupShortName"></telerik:GridBoundColumn>
                                             <telerik:GridTemplateColumn HeaderStyle-Width="40" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Left" UniqueName="SpecificationAdditionalDetails">
                                                 <ItemTemplate>
                                                     <table id="specAdditionalDetails">
@@ -92,11 +102,32 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="padding-left: 14px;">
-                            <asp:LinkButton ID="btnPromote" runat="server" Text="Promote" CssClass="btn3GPP-success" OnClick="btnPromote_Click" /></td>
+                            <asp:LinkButton ID="btnPromote" runat="server" Text="Promote" OnClientClick="confirmAspButton(this); return false;" CssClass="btn3GPP-success" OnClick="btnPromote_Click" /></td>
                     </tr>
                 </table>
             </asp:Panel>
         </asp:Panel>
+
+        <script type="text/javascript">
+            function confirmAspButton(button) {
+                function aspButtonCallbackFn(arg) {
+                    if (arg) {
+                        __doPostBack(button.id, "");
+                    }
+                }
+                var count = 0;
+                var grid = $find("<%=rgSpecificationList.ClientID %>");
+                    var tableView = grid.get_masterTableView();
+                    var items = tableView.get_dataItems();
+                    for (var i = 0; i < items.length; i++) {
+                        var rowValues = items[i];
+                        if (rowValues.findElement("chkCreateNewVersion").checked)
+                            count++;
+                    }
+
+                    radconfirm("You are about to promote " + count + " specifications. Proceed?", aspButtonCallbackFn, 400, 100, null, "Confirm");
+                }
+        </script>
     </form>
 </body>
 </html>
