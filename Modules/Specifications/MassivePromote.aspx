@@ -91,6 +91,7 @@
                                                     </table>
                                                 </ItemTemplate>
                                             </telerik:GridTemplateColumn>
+                                            <telerik:GridBoundColumn Display="false" DataField="Pk_SpecificationId" UniqueName="Pk_SpecificationId"></telerik:GridBoundColumn>
                                         </Columns>
                                     </MasterTableView>
                                 </telerik:RadGrid>
@@ -121,7 +122,7 @@
                     var items = tableView.get_dataItems();
                     for (var i = 0; i < items.length; i++) {
                         var rowValues = items[i];
-                        if (rowValues.findElement("chkCreateNewVersion").checked)
+                        if (!rowValues.findElement("chkPromoteInhibited").checked)
                             count++;
                     }
 

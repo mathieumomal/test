@@ -51,17 +51,37 @@ namespace Etsi.Ultimate.Module.Specifications
         protected void btnPromote_Click(object sender, EventArgs e)
         {
             List<Specification> specPromoteList = new List<Specification>();
-            foreach (GridDataItem item in rgSpecificationList.MasterTableView.Items)
+            int targetReleaseId;
+            if (int.TryParse(ddlInitialRelease.Items[ddlInitialRelease.SelectedIndex - 1].Value, out targetReleaseId))
             {
-                CheckBox chkPromoteInhibited = (CheckBox)item.FindControl("chkPromoteInhibited");
-                //CheckBox chkCreateNewVersion = (CheckBox)item.FindControl("chkCreateNewVersion");
-
-                if (!chkPromoteInhibited.Checked)
+                var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                foreach (GridDataItem item in rgSpecificationList.MasterTableView.Items)
                 {
-                    specPromoteList.Add((Specification)item.DataItem);
+                    int specificationId;
+
+                    if (!((CheckBox)item.FindControl("chkPromoteInhibited")).Checked && int.TryParse(item["Pk_SpecificationId"].Text, out specificationId))
+                    {
+                        Specification specToPromote = specSvc.GetSpecificationDetailsById(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), specificationId).Key;
+                        specToPromote.IsNewVersionCreationEnabled = ((CheckBox)item.FindControl("chkCreateNewVersion")).Checked;
+                        specPromoteList.Add(specToPromote);
+                    }
                 }
+
+                if (specPromoteList.Count > 0)
+                {
+                    if (specSvc.PerformMassivePromotion(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), specPromoteList, targetReleaseId))
+                    {
+                        LoadSpecificationGrid();
+                        ShowAlert(String.Format("{0} specification(s) promoted successfully!", specPromoteList.Count), "Promote Status");
+                    }
+                    else
+                        ShowAlert("Failed to promote specification(s)! Please try later.", "Promote Status");
+                }
+                else
+                    ShowAlert("Please select specification(s) to promote.", "Promote Status");
             }
-            RadWindowManager1.RadAlert(specPromoteList.Count + " specification(s) promoted successfully!", 400, 100, "Promote Status", null);
+            else
+                ShowAlert(String.Format("{0} is not a valid target release.", ddlInitialRelease.Items[ddlInitialRelease.SelectedIndex - 1].Text), "Promote Status");
         }
 
         /// <summary>
@@ -175,6 +195,10 @@ namespace Etsi.Ultimate.Module.Specifications
             ddlInitialRelease.DataBind();
         }
 
+        private void ShowAlert(string Message, string Title)
+        {
+            RadWindowManager1.RadAlert(Message, 400, 100, Title, null);
+        }
         #endregion
     }
 }
