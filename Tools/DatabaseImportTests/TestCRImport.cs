@@ -9,6 +9,7 @@ using Rhino.Mocks;
 using Etsi.Ultimate.Tests.FakeSets;
 using System.Collections.Generic;
 using System.Data.Entity;
+using Etsi.Ultimate.DomainClasses;
 
 
 namespace DatabaseImportTests
@@ -148,6 +149,101 @@ namespace DatabaseImportTests
 
             var newTDocStatus = newDbSet.All()[0];
             Assert.AreEqual("UICS Apps", newTDocStatus.Impact);
+        }
+
+
+        
+        [TestCaseSource("GetCRObjects")]
+        public void test_FillDatabase_CR(List_of_GSM___3G_CRs legacyObject, ChangeRequest expectedObject)
+        {
+            // New context mock
+            var newContext = MockRepository.GenerateMock<IUltimateContext>();
+            var newDbSet = new ChangeRequestFakeDbSet();
+            var newDbSetCRCategory = new CRCategoryLegacyFakeDbSet();
+            newContext.Stub(ctx => ctx.ChangeRequests).Return(newDbSet);
+            newContext.Stub(ctx => ctx.Enum_CRCategory).Return(GetCRCategory());
+
+            // Legacy context mock
+            var legacyContext = MockRepository.GenerateMock<ITmpDb>();
+            var legacyDbSet = new ListOfGSM3GCRsFakeDbSet();
+            legacyDbSet.Add(legacyObject);
+            legacyContext.Stub(ctx => ctx.List_of_GSM___3G_CRs).Return(legacyDbSet);
+
+            // Report
+            var report = new Domain.Report();
+
+            // Execute
+            var import = new CRImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
+            import.FillDatabase();
+
+            // Test results
+            Assert.AreEqual(1, newDbSet.All().Count);
+
+            var newCR = newDbSet.All()[0];
+            Assert.AreEqual(expectedObject.CRNumber, newCR.CRNumber);
+            Assert.AreEqual(expectedObject.Revision, newCR.Revision);
+            Assert.AreEqual(expectedObject.CreationDate, newCR.CreationDate);
+            Assert.AreEqual(expectedObject.Subject, newCR.Subject);
+            Assert.AreEqual(expectedObject.Fk_Enum_CRCategory, newCR.Fk_Enum_CRCategory);
+        }
+
+
+        public IEnumerable<TestCaseData> GetCRObjects
+        {
+            get
+            {
+                yield return new TestCaseData(
+                    new List_of_GSM___3G_CRs()
+                    {
+                        Row_id = 1,
+                        CR = "0013",
+                        created = new DateTime(2010, 1, 18),
+                        Rev = "-",
+                        Subject = "test",
+                        Cat = "-"
+                    },
+                    new ChangeRequest()
+                    {
+                        CRNumber = "0013",
+                        CreationDate = new DateTime(2010, 1, 18),
+                        Revision = null,
+                        Subject = "test",
+                        Fk_Enum_CRCategory = null
+                    }
+                );
+
+                yield return new TestCaseData(
+                    new List_of_GSM___3G_CRs()
+                    {
+                        Row_id = 2,
+                        CR = "A018",
+                        created = new DateTime(2010, 1, 18),
+                        Rev = "2",
+                        Subject = "test2",
+                        Cat = "B"
+                    },
+                    new ChangeRequest()
+                    {
+                        CRNumber = "A018",
+                        CreationDate = new DateTime(2010, 1, 18),
+                        Revision = 2,
+                        Subject = "test2",
+                        Fk_Enum_CRCategory = 2
+                    }
+                );
+
+
+            }
+        }
+
+        private IDbSet<Domain.Enum_CRCategory> GetCRCategory()
+        {
+            var list = new Enum_CRCategoryFakeDbSet();
+            list.Add(new Domain.Enum_CRCategory() { Pk_EnumCRCategory = 1, Category = "A", Meaning = "test1" });
+            list.Add(new Domain.Enum_CRCategory() { Pk_EnumCRCategory = 2, Category = "B", Meaning = "test2" });
+            list.Add(new Domain.Enum_CRCategory() { Pk_EnumCRCategory = 3, Category = "C", Meaning = "test3" });
+
+            return list;
         }
     }
 }

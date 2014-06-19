@@ -15,12 +15,21 @@ namespace Etsi.Ultimate.DomainClasses
     [Serializable]
     public partial class Enum_TDocStatus
     {
+        public Enum_TDocStatus()
+        {
+            this.ChangeRequests = new HashSet<ChangeRequest>();
+            this.ChangeRequests1 = new HashSet<ChangeRequest>();
+        }
+    
         public int Pk_EnumTDocStatus { get; set; }
         public string Status { get; set; }
         public int SortOrder { get; set; }
         public string Meaning { get; set; }
         public bool WGUsable { get; set; }
         public bool TSGUsable { get; set; }
+    
+        public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
+        public virtual ICollection<ChangeRequest> ChangeRequests1 { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

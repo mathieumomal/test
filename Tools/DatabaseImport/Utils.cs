@@ -48,6 +48,14 @@ namespace DatabaseImport
             return str.Trim();
         }
 
+        /// <summary>
+        /// Check int validity
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="logDescriptionCase"></param>
+        /// <param name="id"></param>
+        /// <param name="report"></param>
+        /// <returns></returns>
         public static int CheckInt(int? val, string logDescriptionCase, string id, Report report)
         {
             if (val == null)
@@ -59,6 +67,15 @@ namespace DatabaseImport
             return val.Value;
         }
 
+        /// <summary>
+        /// Convert an int to a string
+        /// </summary>
+        /// <param name="val"></param>
+        /// <param name="lenght"></param>
+        /// <param name="logDescriptionCase"></param>
+        /// <param name="id"></param>
+        /// <param name="report"></param>
+        /// <returns></returns>
         public static string CheckIntToString(int? val, int lenght, string logDescriptionCase, string id, Report report)
         {
             if (val != null)
@@ -71,7 +88,7 @@ namespace DatabaseImport
                 }
                 else if (lenght != 0 && str.Length > lenght)
                 {
-                    report.LogWarning("String validation error : " + logDescriptionCase + " : string too long for : " + id);
+                    report.LogWarning("Convert int to string error : " + logDescriptionCase + " : string too long for : " + id);
                     return "";
                 }
                 return str.Trim();
@@ -79,5 +96,30 @@ namespace DatabaseImport
             report.LogWarning(logDescriptionCase + " : int null for : " + id);
             return "";
         }
+
+        /// <summary>
+        /// Convert a string to an int
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="defaultValue"></param>
+        /// <param name="logDescriptionCase"></param>
+        /// <param name="id"></param>
+        /// <param name="report"></param>
+        /// <returns></returns>
+        public static int? CheckStringToInt(string str, int? defaultValue, string logDescriptionCase, string id, Report report)
+        {
+            int returnValue = 0;
+            int val = CheckInt(defaultValue, " (During ChechStringToInt) ", id, report);
+            string checkStr = CheckString(str, 0, " (During ChechStringToInt) ", id, report);
+
+            bool success = int.TryParse(str, out returnValue);
+            if (!success)
+            {
+                report.LogWarning("Convert string to int error : " + logDescriptionCase + " (return by default "+defaultValue+") - id : " + id);
+                return defaultValue;
+            }
+            return returnValue;
+        }
+
     }
 }

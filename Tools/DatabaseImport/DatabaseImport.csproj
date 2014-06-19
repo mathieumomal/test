@@ -62,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ModuleImport\CR\CRImport.cs" />
     <Compile Include="ModuleImport\CR\Enum_CRCategoryImport.cs" />
     <Compile Include="ModuleImport\CR\Enum_CRImpactImport.cs" />
     <Compile Include="ModuleImport\CR\Enum_TDocStatusImport.cs" />

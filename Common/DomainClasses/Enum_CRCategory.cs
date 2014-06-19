@@ -15,9 +15,16 @@ namespace Etsi.Ultimate.DomainClasses
     [Serializable]
     public partial class Enum_CRCategory
     {
+        public Enum_CRCategory()
+        {
+            this.ChangeRequests = new HashSet<ChangeRequest>();
+        }
+    
         public int Pk_EnumCRCategory { get; set; }
         public string Category { get; set; }
         public string Meaning { get; set; }
+    
+        public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

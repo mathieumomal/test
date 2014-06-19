@@ -19,23 +19,29 @@ namespace Etsi.Ultimate.DomainClasses
         public string CRNumber { get; set; }
         public Nullable<int> Revision { get; set; }
         public string Subject { get; set; }
-        public Nullable<int> TSGStatus { get; set; }
-        public Nullable<int> WGStatus { get; set; }
+        public Nullable<int> Fk_TSGStatus { get; set; }
+        public Nullable<int> Fk_WGStatus { get; set; }
         public Nullable<System.DateTime> CreationDate { get; set; }
         public string TSGSourceOrganizations { get; set; }
         public string WGSourceOrganizations { get; set; }
-        public Nullable<int> Fk_Specification { get; set; }
+        public Nullable<int> Fk_CR_Specification { get; set; }
         public Nullable<int> Fk_TargetVersion { get; set; }
         public Nullable<int> Fk_NewVersion { get; set; }
         public Nullable<int> Fk_TargetRelease { get; set; }
-        public Nullable<int> Category { get; set; }
-        public Nullable<int> Fk_TSGMeeting { get; set; }
-        public Nullable<int> Fk_TSGTarget { get; set; }
-        public Nullable<int> Fk_WGSourceForTSG { get; set; }
+        public Nullable<int> TSGMeeting { get; set; }
+        public Nullable<int> TSGTarget { get; set; }
+        public Nullable<int> WGSourceForTSG { get; set; }
         public Nullable<int> Fk_TSGTDoc { get; set; }
-        public Nullable<int> Fk_WGMeeting { get; set; }
-        public Nullable<int> Fk_WGTarget { get; set; }
+        public Nullable<int> WGMeeting { get; set; }
+        public Nullable<int> WGTarget { get; set; }
         public Nullable<int> Fk_WGTDoc { get; set; }
+        public Nullable<int> Fk_Enum_CRCategory { get; set; }
+    
+        public virtual Specification Specification { get; set; }
+        public virtual Enum_CRCategory Enum_CRCategory { get; set; }
+        public virtual Release Release { get; set; }
+        public virtual Enum_TDocStatus Enum_TSGStatus { get; set; }
+        public virtual Enum_TDocStatus Enum_WGStatus { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }
