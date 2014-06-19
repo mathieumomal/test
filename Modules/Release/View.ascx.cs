@@ -97,6 +97,8 @@ namespace Etsi.Ultimate.Module.Release
 
                 //New Button
                 newRelease.Visible = userRights.HasRight(Enum_UserRights.Release_Create);
+                //Massive promote
+                btnMassivePromote.Visible = userRights.HasRight(Enum_UserRights.Specification_BulkPromote);
             }
             catch (Exception exc) //Module failed to load
             {
