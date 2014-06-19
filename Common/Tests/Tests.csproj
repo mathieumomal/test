@@ -101,6 +101,7 @@
     <Compile Include="FakeRepositories\SpecVersionsFakeRepository.cs" />
     <Compile Include="FakeRepositories\WorkPlanFileFakeRepository.cs" />
     <Compile Include="FakeSets\ChangeRequestFakeDbSet.cs" />
+    <Compile Include="FakeSets\CR_VersionFakeDbSet.cs" />
     <Compile Include="FakeSets\Enum_CRCategoryFakeDbSet.cs" />
     <Compile Include="FakeSets\Enum_CRImpactFakeDbSet.cs" />
     <Compile Include="FakeSets\Enum_SerieFakeDBSet.cs" />

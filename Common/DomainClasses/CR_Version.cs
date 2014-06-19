@@ -13,26 +13,20 @@ namespace Etsi.Ultimate.DomainClasses
     using System.Collections.Generic;
     
     [Serializable]
-    public partial class Specification_Release
+    public partial class CR_Version
     {
-        public Specification_Release()
+        public CR_Version()
         {
-            this.Remarks = new HashSet<Remark>();
             this.ChangeRequests = new HashSet<ChangeRequest>();
         }
     
-        public int Pk_Specification_ReleaseId { get; set; }
-        public Nullable<bool> isWithdrawn { get; set; }
-        public Nullable<System.DateTime> CreationDate { get; set; }
-        public Nullable<System.DateTime> UpdateDate { get; set; }
-        public int Fk_SpecificationId { get; set; }
-        public int Fk_ReleaseId { get; set; }
-        public Nullable<int> WithdrawMeetingId { get; set; }
-        public Nullable<bool> isTranpositionForced { get; set; }
+        public int Pk_SpecVersion { get; set; }
+        public int Fk_CR { get; set; }
+        public int Fk_Version { get; set; }
+        public bool IsNew { get; set; }
     
-        public virtual Release Release { get; set; }
-        public virtual ICollection<Remark> Remarks { get; set; }
-        public virtual Specification Specification { get; set; }
+        public virtual SpecVersion Version { get; set; }
+        public virtual ChangeRequest ChangeRequest { get; set; }
         public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }

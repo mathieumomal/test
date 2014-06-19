@@ -40,6 +40,7 @@ namespace Etsi.Ultimate.Tests
         public System.Data.Entity.IDbSet<Enum_TDocStatus> Enum_TDocStatus{ get; set;}
         public System.Data.Entity.IDbSet<Enum_CRImpact> Enum_CRImpact { get; set; }
         public System.Data.Entity.IDbSet<ChangeRequest> ChangeRequests { get; set; }
+        public System.Data.Entity.IDbSet<CR_Version> CR_Versions { get; set; }
 
 
         public void SetModified(object entity)

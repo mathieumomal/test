@@ -50,6 +50,9 @@
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Community.Extend.cs" />
+    <Compile Include="CR_Version.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="DocxStyle.cs" />
     <Compile Include="DocxStylePool.cs" />
     <Compile Include="Enum_CommunitiesShortName.cs">

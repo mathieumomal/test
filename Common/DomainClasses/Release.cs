@@ -22,7 +22,6 @@ namespace Etsi.Ultimate.DomainClasses
             this.WorkItems = new HashSet<WorkItem>();
             this.Specification_Release = new HashSet<Specification_Release>();
             this.Versions = new HashSet<SpecVersion>();
-            this.ChangeRequests = new HashSet<ChangeRequest>();
         }
     
         public string Name { get; set; }
@@ -63,7 +62,6 @@ namespace Etsi.Ultimate.DomainClasses
         public virtual ICollection<WorkItem> WorkItems { get; set; }
         public virtual ICollection<Specification_Release> Specification_Release { get; set; }
         public virtual ICollection<SpecVersion> Versions { get; set; }
-        public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

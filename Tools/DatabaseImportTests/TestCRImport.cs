@@ -162,6 +162,10 @@ namespace DatabaseImportTests
             var newDbSetCRCategory = new CRCategoryLegacyFakeDbSet();
             newContext.Stub(ctx => ctx.ChangeRequests).Return(newDbSet);
             newContext.Stub(ctx => ctx.Enum_CRCategory).Return(GetCRCategory());
+            newContext.Stub(ctx => ctx.Enum_TDocStatus).Return(GetTDocStatus());
+            newContext.Stub(ctx => ctx.Specifications).Return(GetSpecs());
+            newContext.Stub(ctx => ctx.Releases).Return(GetReleases());
+            newContext.Stub(ctx => ctx.Specification_Release).Return(GetSpecRelease());
 
             // Legacy context mock
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
@@ -185,9 +189,14 @@ namespace DatabaseImportTests
             Assert.AreEqual(expectedObject.CreationDate, newCR.CreationDate);
             Assert.AreEqual(expectedObject.Subject, newCR.Subject);
             Assert.AreEqual(expectedObject.Fk_Enum_CRCategory, newCR.Fk_Enum_CRCategory);
+            Assert.AreEqual(expectedObject.Fk_WGStatus, newCR.Fk_WGStatus);
+            Assert.AreEqual(expectedObject.Fk_TSGStatus,newCR.Fk_TSGStatus);
+            Assert.AreEqual(expectedObject.Fk_SpecRelease, newCR.Fk_SpecRelease);
         }
 
-
+        /// <summary>
+        /// Send to the test method the legacy CR object and the new expected CR object
+        /// </summary>
         public IEnumerable<TestCaseData> GetCRObjects
         {
             get
@@ -200,7 +209,11 @@ namespace DatabaseImportTests
                         created = new DateTime(2010, 1, 18),
                         Rev = "-",
                         Subject = "test",
-                        Cat = "-"
+                        Cat = "-",
+                        Status_1st_Level = "agreed",
+                        Status_2nd_Level = "approved",
+                        Spec = "1",
+                        Phase = "Ph2"
                     },
                     new ChangeRequest()
                     {
@@ -208,7 +221,10 @@ namespace DatabaseImportTests
                         CreationDate = new DateTime(2010, 1, 18),
                         Revision = null,
                         Subject = "test",
-                        Fk_Enum_CRCategory = null
+                        Fk_Enum_CRCategory = null,
+                        Fk_WGStatus = 2,
+                        Fk_TSGStatus = 1,
+                        Fk_SpecRelease = 1
                     }
                 );
 
@@ -220,7 +236,11 @@ namespace DatabaseImportTests
                         created = new DateTime(2010, 1, 18),
                         Rev = "2",
                         Subject = "test2",
-                        Cat = "B"
+                        Cat = "B",
+                        Status_1st_Level = "posTponed",
+                        Status_2nd_Level = "postPoned",
+                        Spec = "2",
+                        Phase = "Ph2"
                     },
                     new ChangeRequest()
                     {
@@ -228,7 +248,10 @@ namespace DatabaseImportTests
                         CreationDate = new DateTime(2010, 1, 18),
                         Revision = 2,
                         Subject = "test2",
-                        Fk_Enum_CRCategory = 2
+                        Fk_Enum_CRCategory = 2,
+                        Fk_WGStatus = null,
+                        Fk_TSGStatus = 3,
+                        Fk_SpecRelease = 2
                     }
                 );
 
@@ -243,6 +266,38 @@ namespace DatabaseImportTests
             list.Add(new Domain.Enum_CRCategory() { Pk_EnumCRCategory = 2, Category = "B", Meaning = "test2" });
             list.Add(new Domain.Enum_CRCategory() { Pk_EnumCRCategory = 3, Category = "C", Meaning = "test3" });
 
+            return list;
+        }
+
+        private IDbSet<Domain.Enum_TDocStatus> GetTDocStatus()
+        {
+            var list = new Enum_TDocStatusFakeDbSet();
+            list.Add(new Domain.Enum_TDocStatus() { Pk_EnumTDocStatus = 1, SortOrder = 1, TSGUsable = true, WGUsable = true, Meaning = "test", Status = "agreed" });
+            list.Add(new Domain.Enum_TDocStatus() { Pk_EnumTDocStatus = 2, SortOrder = 2, TSGUsable = false, WGUsable = true, Meaning = "test", Status = "approved" });
+            list.Add(new Domain.Enum_TDocStatus() { Pk_EnumTDocStatus = 3, SortOrder = 3, TSGUsable = true, WGUsable = false, Meaning = "test", Status = "postponed" });
+
+            return list;
+        }
+
+        private IDbSet<Domain.Specification> GetSpecs()
+        {
+            var list = new SpecificationFakeDBSet();
+            list.Add(new Domain.Specification() { Pk_SpecificationId = 1, Number = "1" });
+            list.Add(new Domain.Specification() { Pk_SpecificationId = 2, Number = "2" });
+            return list;
+        }
+        private IDbSet<Domain.Release> GetReleases()
+        {
+            var list = new ReleaseFakeDBSet();
+            list.Add(new Domain.Release() { Pk_ReleaseId = 1, Code = "Ph1" });
+            list.Add(new Domain.Release() { Pk_ReleaseId = 2, Code = "Ph2" });
+            return list;
+        }
+        private IDbSet<Domain.Specification_Release> GetSpecRelease()
+        {
+            var list = new SpecificationReleaseFakeDBSet();
+            list.Add(new Domain.Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 2 });
+            list.Add(new Domain.Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 2, Fk_ReleaseId = 2 });
             return list;
         }
     }

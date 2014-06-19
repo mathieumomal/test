@@ -81,6 +81,7 @@
     </None>
     <None Include="UltimateDataModel.edmx.diagram">
       <DependentUpon>UltimateDataModel.edmx</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -8,10 +8,6 @@
     [CreationDate]           DATETIME      NULL,
     [TSGSourceOrganizations] VARCHAR (100) NULL,
     [WGSourceOrganizations]  VARCHAR (100) NULL,
-    [Fk_CR_Specification]    INT           NULL,
-    [Fk_TargetVersion]       INT           NULL,
-    [Fk_NewVersion]          INT           NULL,
-    [Fk_TargetRelease]       INT           NULL,
     [TSGMeeting]             INT           NULL,
     [TSGTarget]              INT           NULL,
     [WGSourceForTSG]         INT           NULL,
@@ -20,13 +16,19 @@
     [WGTarget]               INT           NULL,
     [Fk_WGTDoc]              INT           NULL,
     [Fk_Enum_CRCategory]     INT           NULL,
+    [Fk_SpecRelease]         INT           NOT NULL,
+    [Fk_Versions]            INT           NOT NULL,
     CONSTRAINT [PK_ChangeRequest] PRIMARY KEY CLUSTERED ([Pk_ChangeRequest] ASC),
-    CONSTRAINT [FK_CR_Specification] FOREIGN KEY ([Fk_CR_Specification]) REFERENCES [dbo].[Specification] ([Pk_SpecificationId]),
+    CONSTRAINT [FK_CR_Version] FOREIGN KEY ([Fk_Versions]) REFERENCES [dbo].[CR_Version] ([Pk_SpecVersion]),
     CONSTRAINT [FK_Enum_CRCategory] FOREIGN KEY ([Fk_Enum_CRCategory]) REFERENCES [dbo].[Enum_CRCategory] ([Pk_EnumCRCategory]),
-    CONSTRAINT [FK_Release] FOREIGN KEY ([Fk_TargetRelease]) REFERENCES [dbo].[Releases] ([Pk_ReleaseId]),
+    CONSTRAINT [FK_SpecRelease] FOREIGN KEY ([Fk_SpecRelease]) REFERENCES [dbo].[Specification_Release] ([Pk_Specification_ReleaseId]),
     CONSTRAINT [FK_TSGStatus] FOREIGN KEY ([Fk_TSGStatus]) REFERENCES [dbo].[Enum_TDocStatus] ([Pk_EnumTDocStatus]),
     CONSTRAINT [FK_WGStatus] FOREIGN KEY ([Fk_WGStatus]) REFERENCES [dbo].[Enum_TDocStatus] ([Pk_EnumTDocStatus])
 );
+
+
+
+
 
 
 

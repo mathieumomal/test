@@ -18,6 +18,7 @@ namespace Etsi.Ultimate.DomainClasses
         public SpecVersion()
         {
             this.Remarks = new HashSet<Remark>();
+            this.CR_Version = new HashSet<CR_Version>();
         }
     
         public int Pk_VersionId { get; set; }
@@ -42,6 +43,7 @@ namespace Etsi.Ultimate.DomainClasses
         public virtual Release Release { get; set; }
         public virtual ICollection<Remark> Remarks { get; set; }
         public virtual Specification Specification { get; set; }
+        public virtual ICollection<CR_Version> CR_Version { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

@@ -27,7 +27,6 @@ namespace Etsi.Ultimate.DomainClasses
             this.SpecificationParents = new HashSet<Specification>();
             this.SpecificationChilds = new HashSet<Specification>();
             this.Versions = new HashSet<SpecVersion>();
-            this.ChangeRequests = new HashSet<ChangeRequest>();
         }
     
         public int Pk_SpecificationId { get; set; }
@@ -60,7 +59,6 @@ namespace Etsi.Ultimate.DomainClasses
         public virtual ICollection<Specification> SpecificationParents { get; set; }
         public virtual ICollection<Specification> SpecificationChilds { get; set; }
         public virtual ICollection<SpecVersion> Versions { get; set; }
-        public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }
