@@ -12,118 +12,34 @@ namespace Etsi.Ultimate.Tests
     {
         #region IUltimateContext Members
 
-        public System.Data.Entity.IDbSet<Ultimate.DomainClasses.Enum_ReleaseStatus> Enum_ReleaseStatus
-        { get; set; }
-
-        public System.Data.Entity.IDbSet<Ultimate.DomainClasses.Release> Releases
-        { get; set; }
-
-        public System.Data.Entity.IDbSet<Ultimate.DomainClasses.Meeting> Meetings
-        { get; set; }
-
-        public System.Data.Entity.IDbSet<Ultimate.DomainClasses.Remark> Remarks
-        { get; set; }
-
-        public System.Data.Entity.IDbSet<Ultimate.DomainClasses.History> Histories
-        { get; set; }
-
-        public System.Data.Entity.IDbSet<Ultimate.DomainClasses.Users_Groups> Users_Groups
-        { get; set; }
-
-        public System.Data.Entity.IDbSet<Users_AdHoc_Roles> Users_AdHoc_Roles
-        { get; set; }
-
-        public System.Data.Entity.IDbSet<WorkItem> WorkItems
-        { get; set; }
-
-        public System.Data.Entity.IDbSet<WorkItems_ResponsibleGroups> WorkItems_ResponsibleGroups
-        { get; set; }
-
-        public System.Data.Entity.IDbSet<View_Persons> View_Persons
-        { get; set;}
-
-        public System.Data.Entity.IDbSet<Community> Communities
-        { get; set; }
-
-        public System.Data.Entity.IDbSet<View_ModulesPages> View_ModulesPages
-        {
-            get; set;
-        }
-        public System.Data.Entity.IDbSet<ShortUrl> ShortUrls
-        {
-            get;
-            set;
-        }
-
-        public System.Data.Entity.IDbSet<WorkPlanFile> WorkPlanFiles
-        {
-            get;
-            set;
-        }
-
-        public System.Data.Entity.IDbSet<Enum_Serie> Enum_Serie
-        {
-            get;
-            set;
-        }
-
-        public System.Data.Entity.IDbSet<Enum_Technology> Enum_Technology
-        {
-            get;
-            set;
-        }
-
-        public System.Data.Entity.IDbSet<Specification> Specifications
-        {
-            get;
-            set;
-        }
-
-        public System.Data.Entity.IDbSet<Specification_Release> Specification_Release
-        {
-            get;
-            set;
-        }
-
-        public System.Data.Entity.IDbSet<Specification_WorkItem> Specification_WorkItem
-        {
-            get;
-            set;
-        }
-
-        public System.Data.Entity.IDbSet<SpecificationRapporteur> SpecificationRapporteurs
-        {
-            get;
-            set;
-        }
-
-        public System.Data.Entity.IDbSet<SpecificationTechnology> SpecificationTechnologies
-        {
-            get;
-            set;
-        }
-
-        public System.Data.Entity.IDbSet<SpecificationResponsibleGroup> SpecificationResponsibleGroups
-        {
-            get;
-            set;
-        }
-
-        public System.Data.Entity.IDbSet<ResponsibleGroup_Secretary> ResponsibleGroupSecretaries
-        {
-            get;
-            set;
-        }
-
-        public System.Data.Entity.IDbSet<SpecVersion> SpecVersions
-        {
-            get;
-            set;
-        }
-
+        public System.Data.Entity.IDbSet<Ultimate.DomainClasses.Enum_ReleaseStatus> Enum_ReleaseStatus { get; set; }
+        public System.Data.Entity.IDbSet<Ultimate.DomainClasses.Release> Releases{ get; set; }
+        public System.Data.Entity.IDbSet<Ultimate.DomainClasses.Meeting> Meetings{ get; set; }
+        public System.Data.Entity.IDbSet<Ultimate.DomainClasses.Remark> Remarks{ get; set; }
+        public System.Data.Entity.IDbSet<Ultimate.DomainClasses.History> Histories{ get; set; }
+        public System.Data.Entity.IDbSet<Ultimate.DomainClasses.Users_Groups> Users_Groups{ get; set; }
+        public System.Data.Entity.IDbSet<Users_AdHoc_Roles> Users_AdHoc_Roles{ get; set; }
+        public System.Data.Entity.IDbSet<WorkItem> WorkItems{ get; set; }
+        public System.Data.Entity.IDbSet<WorkItems_ResponsibleGroups> WorkItems_ResponsibleGroups{ get; set; }
+        public System.Data.Entity.IDbSet<View_Persons> View_Persons{ get; set;}
+        public System.Data.Entity.IDbSet<Community> Communities{ get; set; }
+        public System.Data.Entity.IDbSet<View_ModulesPages> View_ModulesPages{ get; set;}
+        public System.Data.Entity.IDbSet<ShortUrl> ShortUrls{get;set;}
+        public System.Data.Entity.IDbSet<WorkPlanFile> WorkPlanFiles{get;set;}
+        public System.Data.Entity.IDbSet<Enum_Serie> Enum_Serie{ get;set;}
+        public System.Data.Entity.IDbSet<Enum_Technology> Enum_Technology{get; set;}
+        public System.Data.Entity.IDbSet<Specification> Specifications{get;set;}
+        public System.Data.Entity.IDbSet<Specification_Release> Specification_Release{get;set;}
+        public System.Data.Entity.IDbSet<Specification_WorkItem> Specification_WorkItem{get;set;}
+        public System.Data.Entity.IDbSet<SpecificationRapporteur> SpecificationRapporteurs{get;set;}
+        public System.Data.Entity.IDbSet<SpecificationTechnology> SpecificationTechnologies{get;set;}
+        public System.Data.Entity.IDbSet<SpecificationResponsibleGroup> SpecificationResponsibleGroups {get;set; }
+        public System.Data.Entity.IDbSet<ResponsibleGroup_Secretary> ResponsibleGroupSecretaries{get;set;}
+        public System.Data.Entity.IDbSet<SpecVersion> SpecVersions{get;set;}
         public System.Data.Entity.IDbSet<Enum_CRCategory> Enum_CRCategory{get;set;}
         public System.Data.Entity.IDbSet<Enum_TDocStatus> Enum_TDocStatus{ get; set;}
         public System.Data.Entity.IDbSet<Enum_CRImpact> Enum_CRImpact { get; set; }
+        public System.Data.Entity.IDbSet<ChangeRequest> ChangeRequests { get; set; }
 
 
         public void SetModified(object entity)

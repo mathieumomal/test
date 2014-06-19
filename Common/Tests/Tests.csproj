@@ -100,6 +100,7 @@
     <Compile Include="FakeRepositories\SpecificationWIFakeRepository.cs" />
     <Compile Include="FakeRepositories\SpecVersionsFakeRepository.cs" />
     <Compile Include="FakeRepositories\WorkPlanFileFakeRepository.cs" />
+    <Compile Include="FakeSets\ChangeRequestFakeDbSet.cs" />
     <Compile Include="FakeSets\Enum_CRCategoryFakeDbSet.cs" />
     <Compile Include="FakeSets\Enum_CRImpactFakeDbSet.cs" />
     <Compile Include="FakeSets\Enum_SerieFakeDBSet.cs" />

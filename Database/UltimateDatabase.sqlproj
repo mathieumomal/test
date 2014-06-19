@@ -169,6 +169,7 @@
     <Build Include="dbo\Stored Procedures\CR_CleanAll.sql" />
     <Build Include="dbo\Tables\Enum_TDocStatus.sql" />
     <Build Include="dbo\Tables\Enum_CRImpact.sql" />
+    <Build Include="dbo\Tables\ChangeRequest.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

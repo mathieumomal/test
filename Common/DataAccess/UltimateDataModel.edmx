@@ -6,6 +6,7 @@
     <edmx:StorageModels>
     <Schema Namespace="Etsi.Ultimate.DataAccess.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="EtsiUltimateDataAccessStoreContainer">
+          <EntitySet Name="ChangeRequest" EntityType="Etsi.Ultimate.DataAccess.Store.ChangeRequest" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_CommunitiesShortName" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_CommunitiesShortName" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_CRCategory" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_CRCategory" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_CRImpact" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_CRImpact" store:Type="Tables" Schema="dbo" />
@@ -208,6 +209,32 @@
             <End Role="Version" EntitySet="Version" />
           </AssociationSet>
         </EntityContainer>
+        <EntityType Name="ChangeRequest">
+          <Key>
+            <PropertyRef Name="Pk_ChangeRequest" />
+          </Key>
+          <Property Name="Pk_ChangeRequest" Type="int" Nullable="false" />
+          <Property Name="CRNumber" Type="varchar" Nullable="false" MaxLength="10" />
+          <Property Name="Revision" Type="int" />
+          <Property Name="Subject" Type="varchar" MaxLength="300" />
+          <Property Name="TSGStatus" Type="int" />
+          <Property Name="WGStatus" Type="int" />
+          <Property Name="CreationDate" Type="datetime" />
+          <Property Name="TSGSourceOrganizations" Type="varchar" MaxLength="100" />
+          <Property Name="WGSourceOrganizations" Type="varchar" MaxLength="100" />
+          <Property Name="Fk_Specification" Type="int" />
+          <Property Name="Fk_TargetVersion" Type="int" />
+          <Property Name="Fk_NewVersion" Type="int" />
+          <Property Name="Fk_TargetRelease" Type="int" />
+          <Property Name="Category" Type="int" />
+          <Property Name="Fk_TSGMeeting" Type="int" />
+          <Property Name="Fk_TSGTarget" Type="int" />
+          <Property Name="Fk_WGSourceForTSG" Type="int" />
+          <Property Name="Fk_TSGTDoc" Type="int" />
+          <Property Name="Fk_WGMeeting" Type="int" />
+          <Property Name="Fk_WGTarget" Type="int" />
+          <Property Name="Fk_WGTDoc" Type="int" />
+        </EntityType>
         <EntityType Name="Enum_CommunitiesShortName">
           <Key>
             <PropertyRef Name="Pk_EnumCommunitiesShortNames" />
@@ -1039,6 +1066,7 @@
           <FunctionImport Name="CR_CleanAll" />
           <EntitySet Name="Enum_TDocStatus" EntityType="Etsi.Ultimate.DataAccess.Enum_TDocStatus" />
           <EntitySet Name="Enum_CRImpact" EntityType="Etsi.Ultimate.DataAccess.Enum_CRImpact" />
+          <EntitySet Name="ChangeRequests" EntityType="Etsi.Ultimate.DataAccess.ChangeRequest" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -1745,6 +1773,32 @@
           <Property Type="Int32" Name="Pk_EnumCRImpact" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="Impact" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="ChangeRequest">
+          <Key>
+            <PropertyRef Name="Pk_ChangeRequest" />
+          </Key>
+          <Property Type="Int32" Name="Pk_ChangeRequest" Nullable="false" />
+          <Property Type="String" Name="CRNumber" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="Revision" />
+          <Property Type="String" Name="Subject" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="TSGStatus" />
+          <Property Type="Int32" Name="WGStatus" />
+          <Property Type="DateTime" Name="CreationDate" Precision="3" />
+          <Property Type="String" Name="TSGSourceOrganizations" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="WGSourceOrganizations" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="Fk_Specification" />
+          <Property Type="Int32" Name="Fk_TargetVersion" />
+          <Property Type="Int32" Name="Fk_NewVersion" />
+          <Property Type="Int32" Name="Fk_TargetRelease" />
+          <Property Type="Int32" Name="Category" />
+          <Property Type="Int32" Name="Fk_TSGMeeting" />
+          <Property Type="Int32" Name="Fk_TSGTarget" />
+          <Property Type="Int32" Name="Fk_WGSourceForTSG" />
+          <Property Type="Int32" Name="Fk_TSGTDoc" />
+          <Property Type="Int32" Name="Fk_WGMeeting" />
+          <Property Type="Int32" Name="Fk_WGTarget" />
+          <Property Type="Int32" Name="Fk_WGTDoc" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2164,6 +2218,33 @@
               <MappingFragment StoreEntitySet="Enum_CRImpact">
                 <ScalarProperty Name="Impact" ColumnName="Impact" />
                 <ScalarProperty Name="Pk_EnumCRImpact" ColumnName="Pk_EnumCRImpact" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChangeRequests">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ChangeRequest">
+              <MappingFragment StoreEntitySet="ChangeRequest">
+                <ScalarProperty Name="Fk_WGTDoc" ColumnName="Fk_WGTDoc" />
+                <ScalarProperty Name="Fk_WGTarget" ColumnName="Fk_WGTarget" />
+                <ScalarProperty Name="Fk_WGMeeting" ColumnName="Fk_WGMeeting" />
+                <ScalarProperty Name="Fk_TSGTDoc" ColumnName="Fk_TSGTDoc" />
+                <ScalarProperty Name="Fk_WGSourceForTSG" ColumnName="Fk_WGSourceForTSG" />
+                <ScalarProperty Name="Fk_TSGTarget" ColumnName="Fk_TSGTarget" />
+                <ScalarProperty Name="Fk_TSGMeeting" ColumnName="Fk_TSGMeeting" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="Fk_TargetRelease" ColumnName="Fk_TargetRelease" />
+                <ScalarProperty Name="Fk_NewVersion" ColumnName="Fk_NewVersion" />
+                <ScalarProperty Name="Fk_TargetVersion" ColumnName="Fk_TargetVersion" />
+                <ScalarProperty Name="Fk_Specification" ColumnName="Fk_Specification" />
+                <ScalarProperty Name="WGSourceOrganizations" ColumnName="WGSourceOrganizations" />
+                <ScalarProperty Name="TSGSourceOrganizations" ColumnName="TSGSourceOrganizations" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="WGStatus" ColumnName="WGStatus" />
+                <ScalarProperty Name="TSGStatus" ColumnName="TSGStatus" />
+                <ScalarProperty Name="Subject" ColumnName="Subject" />
+                <ScalarProperty Name="Revision" ColumnName="Revision" />
+                <ScalarProperty Name="CRNumber" ColumnName="CRNumber" />
+                <ScalarProperty Name="Pk_ChangeRequest" ColumnName="Pk_ChangeRequest" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

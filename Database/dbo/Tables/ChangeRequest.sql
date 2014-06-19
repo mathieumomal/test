@@ -1,0 +1,25 @@
+﻿CREATE TABLE [dbo].[ChangeRequest] (
+    [Pk_ChangeRequest]       INT           NOT NULL,
+    [CRNumber]               VARCHAR (10)  NOT NULL,
+    [Revision]               INT           NULL,
+    [Subject]                VARCHAR (300) NULL,
+    [TSGStatus]              INT           NULL,
+    [WGStatus]               INT           NULL,
+    [CreationDate]           DATETIME      NULL,
+    [TSGSourceOrganizations] VARCHAR (100) NULL,
+    [WGSourceOrganizations]  VARCHAR (100) NULL,
+    [Fk_Specification]       INT           NULL,
+    [Fk_TargetVersion]       INT           NULL,
+    [Fk_NewVersion]          INT           NULL,
+    [Fk_TargetRelease]       INT           NULL,
+    [Category]               INT           NULL,
+    [Fk_TSGMeeting]          INT           NULL,
+    [Fk_TSGTarget]           INT           NULL,
+    [Fk_WGSourceForTSG]      INT           NULL,
+    [Fk_TSGTDoc]             INT           NULL,
+    [Fk_WGMeeting]           INT           NULL,
+    [Fk_WGTarget]            INT           NULL,
+    [Fk_WGTDoc]              INT           NULL,
+    CONSTRAINT [PK_ChangeRequest] PRIMARY KEY CLUSTERED ([Pk_ChangeRequest] ASC)
+);
+
