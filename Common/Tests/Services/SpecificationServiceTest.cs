@@ -282,8 +282,8 @@ namespace Etsi.Ultimate.Tests.Services
 
             //Arrange
             //Params
-            int personId = 1;
-
+            int personId = 1;            
+            int intitialReleaseId = 1;
             int targetReleaseId = 2;
             //User Rights
             UserRightsContainer userRights = new UserRightsContainer();
@@ -304,12 +304,12 @@ namespace Etsi.Ultimate.Tests.Services
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
             var versionsSvc = new SpecVersionService();
-            SpecVersion allocatedSpec = versionsSvc.GetVersionsForSpecRelease(1, 2).FirstOrDefault();
+            SpecVersion allocatedSpec = versionsSvc.GetVersionsForSpecRelease(1, targetReleaseId).FirstOrDefault();
             Assert.AreEqual(20, allocatedSpec.MajorVersion);
 
             //Action
             var specificationService = new SpecificationService();
-            specificationService.PerformMassivePromotion(personId, specDBSet.ToList(), targetReleaseId);
+            specificationService.PerformMassivePromotion(personId, specDBSet.ToList(), intitialReleaseId);
 
             //After            
             allocatedSpec = versionsSvc.GetVersionsForSpecRelease(specDBSet.ToList()[0].Pk_SpecificationId, targetReleaseId).OrderByDescending(v => v.MajorVersion).FirstOrDefault();
@@ -556,8 +556,8 @@ namespace Etsi.Ultimate.Tests.Services
                 new Specification_Release() { Pk_Specification_ReleaseId = 3, Fk_SpecificationId = 2, Fk_ReleaseId = 1, isWithdrawn = false, Release = release}
             };
 
-            specDbSet.Add(new Specification() { Pk_SpecificationId = 1, Number = "00.01U", Title = "First specification", IsActive = true, Specification_Release = specReleaseList });
-            specDbSet.Add(new Specification() { Pk_SpecificationId = 2, Number = "00.02U", Title = "Second specification", IsActive = true, Specification_Release = specReleaseList2 });
+            specDbSet.Add(new Specification() { Pk_SpecificationId = 1, Number = "00.01U", Title = "First specification", IsActive = true, IsUnderChangeControl= false, Specification_Release = specReleaseList });
+            specDbSet.Add(new Specification() { Pk_SpecificationId = 2, Number = "00.02U", Title = "Second specification", IsActive = true, IsUnderChangeControl = false, Specification_Release = specReleaseList2 });
             return specDbSet;
         }
 

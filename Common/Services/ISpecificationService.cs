@@ -201,8 +201,8 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="personId"></param>
         /// <param name="specificationIds">Specifications concerned by promotion</param>
-        /// <param name="targetReleaseId">The target release of the promotion</param>
+        /// <param name="targetReleaseId">The source release of the promotion</param>
         /// <returns></returns>
-        bool PerformMassivePromotion(int personId, List<Specification> specificationIds, int targetReleaseId);
+        bool PerformMassivePromotion(int personId, List<Specification> specificationIds, int initialReleaseId);
     }
 }

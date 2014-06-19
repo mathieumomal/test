@@ -201,7 +201,7 @@ namespace Etsi.Ultimate.Business
                     TechnicalVersion = 0,
                     MajorVersion = release.Version3g
 
-                }, false);
+                }, ((s.IsActive) && !(s.IsUnderChangeControl.HasValue && s.IsUnderChangeControl.Value)));
 
                 reports.Add(r);
             }

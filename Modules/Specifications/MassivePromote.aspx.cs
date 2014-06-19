@@ -51,8 +51,8 @@ namespace Etsi.Ultimate.Module.Specifications
         protected void btnPromote_Click(object sender, EventArgs e)
         {
             List<Specification> specPromoteList = new List<Specification>();
-            int targetReleaseId;
-            if (int.TryParse(ddlInitialRelease.Items[ddlInitialRelease.SelectedIndex - 1].Value, out targetReleaseId))
+            int initialReleaseId;
+            if (int.TryParse(ddlInitialRelease.SelectedValue, out initialReleaseId) && initialReleaseId > 0)            
             {
                 var specSvc = ServicesFactory.Resolve<ISpecificationService>();
                 foreach (GridDataItem item in rgSpecificationList.MasterTableView.Items)
@@ -69,7 +69,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
                 if (specPromoteList.Count > 0)
                 {
-                    if (specSvc.PerformMassivePromotion(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), specPromoteList, targetReleaseId))
+                    if (specSvc.PerformMassivePromotion(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), specPromoteList, initialReleaseId))
                     {
                         LoadSpecificationGrid();
                         ShowAlert(String.Format("{0} specification(s) promoted successfully!", specPromoteList.Count), "Promote Status");

@@ -218,7 +218,7 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public bool PerformMassivePromotion(int personId, List<Specification> specifications, int targetReleaseId)
+        public bool PerformMassivePromotion(int personId, List<Specification> specifications, int initialReleaseId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
@@ -234,12 +234,13 @@ namespace Etsi.Ultimate.Services
                             specificationsForVersionAllocation.Add(s);
                         }
                     });
-                    var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction(uoW);
-                    specificationsMassivePromotionAction.PromoteMassivelySpecification(personId, specificationIds, targetReleaseId);
-
                     ReleaseManager releaseManager = new ReleaseManager();
                     releaseManager.UoW = uoW;
+                    int targetReleaseId = releaseManager.GetNextRelease(initialReleaseId).Pk_ReleaseId;
                     Release targetRelease = releaseManager.GetReleaseById(personId, targetReleaseId).Key;
+
+                    var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction(uoW);
+                    specificationsMassivePromotionAction.PromoteMassivelySpecification(personId, specificationIds, targetReleaseId);
 
                     SpecVersionsManager versionManager = new SpecVersionsManager(uoW);
                     versionManager.AllocateVersionFromMassivePromote(specificationsForVersionAllocation, targetRelease); 
