@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Etsi.Ultimate.Services
 {
-    public class SpecVersionService : ISpecVersionService
+    public class SpecVersionService : ISpecVersionService, IOfflineService<SpecVersion>
     {
         public List<SpecVersion> GetVersionsBySpecId(int specificationId)
         {
@@ -95,6 +95,96 @@ namespace Etsi.Ultimate.Services
             }
             return validationReport;
         }
+
+        #region IOfflineService Members
+
+        /// <summary>
+        /// Insert SpecVersion entity
+        /// </summary>
+        /// <param name="entity">SpecVersion</param>
+        /// <returns>Success/Failure</returns>
+        public int InsertEntity(SpecVersion entity)
+        {
+            int primaryKeyID = 0;
+
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var specVersionManager = new SpecVersionsManager(uoW);
+                    if (specVersionManager.InsertEntity(entity))
+                    {
+                        uoW.Save();
+                        primaryKeyID = entity.Pk_VersionId;
+                    }
+                }
+                catch (Exception)
+                {
+                }
+            }
+
+            return primaryKeyID;
+        }
+
+        /// <summary>
+        /// Update SpecVersion entity
+        /// </summary>
+        /// <param name="entity">SpecVersion</param>
+        /// <returns>Success/Failure</returns>
+        public bool UpdateEntity(SpecVersion entity)
+        {
+            bool isSuccess = false;
+
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var specVersionManager = new SpecVersionsManager(uoW);
+                    if (specVersionManager.UpdateEntity(entity))
+                    {
+                        uoW.Save();
+                        isSuccess = true;
+                    }
+                }
+                catch (Exception)
+                {
+                    isSuccess = false;
+                }
+            }
+
+            return isSuccess;
+        }
+
+        /// <summary>
+        /// Delete SpecVersion entity
+        /// </summary>
+        /// <param name="primaryKey">Primary Key</param>
+        /// <returns>Success/Failure</returns>
+        public bool DeleteEntity(int primaryKey)
+        {
+            bool isSuccess = false;
+
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var specVersionManager = new SpecVersionsManager(uoW);
+                    if (specVersionManager.DeleteEntity(primaryKey))
+                    {
+                        uoW.Save();
+                        isSuccess = true;
+                    }
+                }
+                catch (Exception)
+                {
+                    isSuccess = false;
+                }
+            }
+
+            return isSuccess;
+        }
+
+        #endregion
     }
 }
 

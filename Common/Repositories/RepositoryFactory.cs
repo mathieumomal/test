@@ -80,6 +80,9 @@ namespace Etsi.Ultimate.Repositories
             Container.RegisterType<ISpecificationWorkItemRepository, SpecificationWorkItemRepository>(new TransientLifetimeManager());
             Container.RegisterType<IResponsibleGroupSecretaryRepository, ResponsibleGroupSecretaryRepository>(new TransientLifetimeManager());
             Container.RegisterType<ISpecVersionsRepository, SpecVersionsRepository>(new TransientLifetimeManager());
+
+            //Offline Repositories
+            Container.RegisterType<IOfflineRepository, OfflineRepository>(new TransientLifetimeManager());
         }
     }
 }

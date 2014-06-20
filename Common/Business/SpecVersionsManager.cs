@@ -249,5 +249,140 @@ namespace Etsi.Ultimate.Business
 
             return validationReport;
         }
+
+        #region Offline Sync Methods
+
+        /// <summary>
+        /// Insert SpecVersion entity
+        /// </summary>
+        /// <param name="entity">SpecVersion</param>
+        /// <returns>Success/Failure</returns>
+        public bool InsertEntity(SpecVersion entity)
+        {
+            bool isSuccess = true;
+
+            try
+            {
+                IOfflineRepository offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
+                offlineRepo.UoW = _uoW;
+                offlineRepo.InsertOfflineEntity(entity);
+            }
+            catch (Exception)
+            {
+                isSuccess = false;
+            }
+
+            return isSuccess;
+        }
+
+        /// <summary>
+        /// Update SpecVersion entity
+        /// </summary>
+        /// <param name="entity">SpecVersion</param>
+        /// <returns>Success/Failure</returns>
+        public bool UpdateEntity(SpecVersion entity)
+        {
+            bool isSuccess = true;
+
+            try
+            {
+                //[1] Get the DB Version Entity
+                ISpecVersionsRepository specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+                specVersionRepo.UoW = _uoW;
+                SpecVersion dbEntity = specVersionRepo.Find(entity.Pk_VersionId);
+
+                //[2] Compare & Update SpecVersion Properties
+                UpdateModifications(dbEntity, entity);
+
+                //[3] Update modified entity in Context
+                IOfflineRepository offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
+                offlineRepo.UoW = _uoW;
+                offlineRepo.UpdateOfflineEntity(dbEntity);
+            }
+            catch (Exception)
+            {
+                isSuccess = false;
+            }
+
+            return isSuccess;
+        }
+
+        /// <summary>
+        /// Delete SpecVersion entity
+        /// </summary>
+        /// <param name="primaryKey">Primary Key</param>
+        /// <returns>Success/Failure</returns>
+        public bool DeleteEntity(int primaryKey)
+        {
+            bool isSuccess = true;
+
+            try
+            {
+                //[1] Get the DB Version Entity
+                ISpecVersionsRepository specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+                specVersionRepo.UoW = _uoW;
+                SpecVersion dbEntity = specVersionRepo.Find(primaryKey);
+
+                //[2] Update modified entity in Context
+                IOfflineRepository offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
+                offlineRepo.UoW = _uoW;
+                offlineRepo.DeleteOfflineEntity(dbEntity);
+            }
+            catch (Exception)
+            {
+                isSuccess = false;
+            }
+
+            return isSuccess;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Update modified properties
+        /// </summary>
+        /// <param name="targetSpecVersion">Target SpecVersion</param>
+        /// <param name="sourceSpecVersion">Source SpecVersion</param>
+        private void UpdateModifications(SpecVersion targetSpecVersion, SpecVersion sourceSpecVersion)
+        {
+            if (targetSpecVersion.MajorVersion != sourceSpecVersion.MajorVersion)
+                targetSpecVersion.MajorVersion = sourceSpecVersion.MajorVersion;
+            if (targetSpecVersion.TechnicalVersion != sourceSpecVersion.TechnicalVersion)
+                targetSpecVersion.TechnicalVersion = sourceSpecVersion.TechnicalVersion;
+            if (targetSpecVersion.EditorialVersion != sourceSpecVersion.EditorialVersion)
+                targetSpecVersion.EditorialVersion = sourceSpecVersion.EditorialVersion;
+            if (targetSpecVersion.AchievedDate != sourceSpecVersion.AchievedDate)
+                targetSpecVersion.AchievedDate = sourceSpecVersion.AchievedDate;
+            if (targetSpecVersion.ExpertProvided != sourceSpecVersion.ExpertProvided)
+                targetSpecVersion.ExpertProvided = sourceSpecVersion.ExpertProvided;
+            if (targetSpecVersion.Location != sourceSpecVersion.Location)
+                targetSpecVersion.Location = sourceSpecVersion.Location;
+            if (targetSpecVersion.SupressFromSDO_Pub != sourceSpecVersion.SupressFromSDO_Pub)
+                targetSpecVersion.SupressFromSDO_Pub = sourceSpecVersion.SupressFromSDO_Pub;
+            if (targetSpecVersion.ForcePublication != sourceSpecVersion.ForcePublication)
+                targetSpecVersion.ForcePublication = sourceSpecVersion.ForcePublication;
+            if (targetSpecVersion.DocumentUploaded != sourceSpecVersion.DocumentUploaded)
+                targetSpecVersion.DocumentUploaded = sourceSpecVersion.DocumentUploaded;
+            if (targetSpecVersion.DocumentPassedToPub != sourceSpecVersion.DocumentPassedToPub)
+                targetSpecVersion.DocumentPassedToPub = sourceSpecVersion.DocumentPassedToPub;
+            if (targetSpecVersion.Multifile != sourceSpecVersion.Multifile)
+                targetSpecVersion.Multifile = sourceSpecVersion.Multifile;
+            if (targetSpecVersion.Source != sourceSpecVersion.Source)
+                targetSpecVersion.Source = sourceSpecVersion.Source;
+            if (targetSpecVersion.ETSI_WKI_ID != sourceSpecVersion.ETSI_WKI_ID)
+                targetSpecVersion.ETSI_WKI_ID = sourceSpecVersion.ETSI_WKI_ID;
+            if (targetSpecVersion.ProvidedBy != sourceSpecVersion.ProvidedBy)
+                targetSpecVersion.ProvidedBy = sourceSpecVersion.ProvidedBy;
+            if (targetSpecVersion.Fk_SpecificationId != sourceSpecVersion.Fk_SpecificationId)
+                targetSpecVersion.Fk_SpecificationId = sourceSpecVersion.Fk_SpecificationId;
+            if (targetSpecVersion.Fk_ReleaseId != sourceSpecVersion.Fk_ReleaseId)
+                targetSpecVersion.Fk_ReleaseId = sourceSpecVersion.Fk_ReleaseId;
+            if (targetSpecVersion.ETSI_WKI_Ref != sourceSpecVersion.ETSI_WKI_Ref)
+                targetSpecVersion.ETSI_WKI_Ref = sourceSpecVersion.ETSI_WKI_Ref;
+        }
+
+        #endregion
     }
 }

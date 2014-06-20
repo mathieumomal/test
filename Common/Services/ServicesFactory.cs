@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
+using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Services
 {
@@ -63,10 +64,13 @@ namespace Etsi.Ultimate.Services
             Container.RegisterType<IMeetingService, MeetingService>(new TransientLifetimeManager());
             Container.RegisterType<IUrlService, UrlService>(new TransientLifetimeManager());
             Container.RegisterType<IPersonService, PersonService>(new TransientLifetimeManager());
-            Container.RegisterType<ISpecificationService, SpecificationService>(new TransientLifetimeManager());           
+            Container.RegisterType<ISpecificationService, SpecificationService>(new TransientLifetimeManager());
             Container.RegisterType<ICommunityService, CommunityService>(new TransientLifetimeManager());
             Container.RegisterType<IRightsService, RightsService>(new TransientLifetimeManager());
-            Container.RegisterType<ISpecVersionService, SpecVersionService>(new TransientLifetimeManager());     
+            Container.RegisterType<ISpecVersionService, SpecVersionService>(new TransientLifetimeManager());
+
+            //Offline Interfaces
+            Container.RegisterType<IOfflineService<SpecVersion>, SpecVersionService>(new TransientLifetimeManager());
         }
     }
 }

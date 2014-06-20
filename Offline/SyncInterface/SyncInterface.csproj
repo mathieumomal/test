@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5ED09160-13B8-49A2-8117-164305A77DB3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SyncInterface</RootNamespace>
+    <AssemblyName>SyncInterface</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataContract\Community.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Enum_CommunitiesShortName.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Enum_CRCategory.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Enum_CRImpact.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Enum_ReleaseStatus.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Enum_Serie.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Enum_TDocStatus.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Enum_Technology.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\ETSI_WorkItem.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\History.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Meeting.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Release.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Remark.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\ResponsibleGroup_Secretary.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\ShortUrl.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Specification.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\SpecificationRapporteur.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\SpecificationResponsibleGroup.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\SpecificationTechnology.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Specification_Release.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Specification_WorkItem.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\SpecVersion.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Ultimate.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Users_AdHoc_Roles.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\Users_Groups.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\View_ModulesPages.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\View_Persons.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\WorkItem.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\WorkItems_ResponsibleGroups.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\WorkPlanFile.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EnumEntity.cs" />
+    <Compile Include="ISyncService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="DataContract\Ultimate.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Ultimate.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

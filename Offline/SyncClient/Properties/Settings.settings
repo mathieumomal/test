@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SyncClient.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ScheduleInterval" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">60000</Value>
+    </Setting>
+    <Setting Name="ConnectionString" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Data Source=(local);Initial Catalog=U3GPP;Integrated Security=True</Value>
+    </Setting>
+    <Setting Name="ServiceURL" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://localhost:53528/SyncService/SyncService.svc</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

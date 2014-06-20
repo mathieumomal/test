@@ -54,6 +54,7 @@
     <Compile Include="EnumTechnologiesRepository.cs" />
     <Compile Include="HistoryRepository.cs" />
     <Compile Include="MeetingRepository.cs" />
+    <Compile Include="OfflineRepository.cs" />
     <Compile Include="PersonRepository.cs" />
     <Compile Include="Enum_ReleaseStatusRepository.cs" />
     <Compile Include="IEntityRepository.cs" />
