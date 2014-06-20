@@ -56,20 +56,22 @@ namespace DatabaseImport.ModuleImport
                 newCR.Revision = Utils.CheckStringToInt(legacyCR.Rev, null, RefImportForLog + " Revision ", legacyCR.CR, Report);
                 newCR.Subject = Utils.CheckString(legacyCR.Subject, 300, RefImportForLog + " Subject", legacyCR.CR, Report);
                 newCR.CreationDate = legacyCR.created;
+                SpecReleaseCase(newCR, legacyCR);
+                TargetVersionCase(newCR, legacyCR);
+                NewVersionCase(newCR, legacyCR);
+
                 CategoryCase(newCR, legacyCR); // Cas 1 2 3 4 ?????
                 StatusCase(newCR, legacyCR);//WG = LEVEL 2, TSG = LEVEL 1
                 //Text ???? sure ?
                 newCR.TSGSourceOrganizations = Utils.CheckString(legacyCR.Source_1st_Level, 100, RefImportForLog + " TSGSourceorganization ", legacyCR.CR, Report);
                 //Text ???? sure ?
                 newCR.WGSourceOrganizations = Utils.CheckString(legacyCR.Source_2nd_Level, 100, RefImportForLog + " WGSourceorganization ", legacyCR.CR, Report);
-                SpecReleaseCase(newCR, legacyCR);
 
-                TargetVersionCase(newCR, legacyCR);
-                NewVersionCase(newCR, legacyCR);
-
-               
-                //newCR.TSGMeeting = ;
+                newCR.TSGMeeting = Utils.CheckString(legacyCR.Meeting_1st_Level, 10, RefImportForLog + " TSGSourceorganization ", legacyCR.CR, Report);
                 //newCR.WGMeeting = ;
+
+
+
                 //newCR.WGSourceForTSG = ;
                 //newCR.Fk_TSGTDoc = ;
                 //newCR.Fk_WGTDoc = ;

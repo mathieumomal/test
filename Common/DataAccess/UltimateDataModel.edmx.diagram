@@ -61,15 +61,20 @@
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_CRCategory" Width="1.5" PointX="4.75" PointY="31.625" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_TDocStatus" Width="1.875" PointX="2.5" PointY="31.625" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_CRImpact" Width="1.5" PointX="6.75" PointY="31.625" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.ChangeRequest" Width="2.125" PointX="4.125" PointY="36.5" />
-        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Enum_CRCategory" />
-        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_SpecRelease" />
-        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_TSGStatus" />
-        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WGStatus" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.CR_Version" Width="1.5" PointX="7" PointY="36.5" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Version" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.ChangeRequest" Width="2.25" PointX="2.75" PointY="36.5" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.TDoc" Width="1.5" PointX="5.625" PointY="40.125" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_CR" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_CR_Version" />
-        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Version" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Enum_CRCategory" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_History_CR" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Remarks_CR" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_SpecRelease" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_TSGStatus" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_TSGTDoc" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WGStatus" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_WGTDoc" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

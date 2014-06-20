@@ -23,8 +23,12 @@
     CONSTRAINT [FK_Enum_CRCategory] FOREIGN KEY ([Fk_Enum_CRCategory]) REFERENCES [dbo].[Enum_CRCategory] ([Pk_EnumCRCategory]),
     CONSTRAINT [FK_SpecRelease] FOREIGN KEY ([Fk_SpecRelease]) REFERENCES [dbo].[Specification_Release] ([Pk_Specification_ReleaseId]),
     CONSTRAINT [FK_TSGStatus] FOREIGN KEY ([Fk_TSGStatus]) REFERENCES [dbo].[Enum_TDocStatus] ([Pk_EnumTDocStatus]),
-    CONSTRAINT [FK_WGStatus] FOREIGN KEY ([Fk_WGStatus]) REFERENCES [dbo].[Enum_TDocStatus] ([Pk_EnumTDocStatus])
+    CONSTRAINT [FK_TSGTDoc] FOREIGN KEY ([Fk_TSGTDoc]) REFERENCES [dbo].[TDoc] ([Pk_TDoc]),
+    CONSTRAINT [FK_WGStatus] FOREIGN KEY ([Fk_WGStatus]) REFERENCES [dbo].[Enum_TDocStatus] ([Pk_EnumTDocStatus]),
+    CONSTRAINT [FK_WGTDoc] FOREIGN KEY ([Fk_WGTDoc]) REFERENCES [dbo].[TDoc] ([Pk_TDoc])
 );
+
+
 
 
 

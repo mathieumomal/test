@@ -171,6 +171,7 @@
     <Build Include="dbo\Tables\Enum_CRImpact.sql" />
     <Build Include="dbo\Tables\ChangeRequest.sql" />
     <Build Include="dbo\Tables\CR_Version.sql" />
+    <Build Include="dbo\Tables\TDoc.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

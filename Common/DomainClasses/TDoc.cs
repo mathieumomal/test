@@ -13,20 +13,18 @@ namespace Etsi.Ultimate.DomainClasses
     using System.Collections.Generic;
     
     [Serializable]
-    public partial class History
+    public partial class TDoc
     {
-        public int Pk_HistoryId { get; set; }
-        public Nullable<int> Fk_ReleaseId { get; set; }
-        public Nullable<int> Fk_PersonId { get; set; }
-        public Nullable<System.DateTime> CreationDate { get; set; }
-        public string HistoryText { get; set; }
-        public string PersonName { get; set; }
-        public Nullable<int> Fk_SpecificationId { get; set; }
-        public Nullable<int> Fk_CRId { get; set; }
+        public TDoc()
+        {
+            this.ChangeRequests = new HashSet<ChangeRequest>();
+            this.ChangeRequests1 = new HashSet<ChangeRequest>();
+        }
     
-        public virtual Release Release { get; set; }
-        public virtual Specification Specification { get; set; }
-        public virtual ChangeRequest ChangeRequest { get; set; }
+        public int Pk_TDoc { get; set; }
+    
+        public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
+        public virtual ICollection<ChangeRequest> ChangeRequests1 { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

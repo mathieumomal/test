@@ -26,12 +26,14 @@ namespace Etsi.Ultimate.DomainClasses
         public Nullable<int> Fk_SpecificationId { get; set; }
         public Nullable<int> Fk_SpecificationReleaseId { get; set; }
         public Nullable<int> Fk_VersionId { get; set; }
+        public Nullable<int> Fk_CRId { get; set; }
     
         public virtual Release Release { get; set; }
         public virtual WorkItem WorkItem { get; set; }
         public virtual Specification Specification { get; set; }
         public virtual Specification_Release Specification_Release { get; set; }
         public virtual SpecVersion Version { get; set; }
+        public virtual ChangeRequest ChangeRequest { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

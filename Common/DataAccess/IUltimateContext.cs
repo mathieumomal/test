@@ -42,6 +42,7 @@ namespace Etsi.Ultimate.DataAccess
         IDbSet<Enum_CRImpact> Enum_CRImpact { get; set; }
         IDbSet<ChangeRequest> ChangeRequests { get; set; }
         IDbSet<CR_Version> CR_Versions { get; set; }
+        IDbSet<TDoc> TDocs { get; set; }
 
         void SetModified(object entity);
         void SetAdded(object entity);

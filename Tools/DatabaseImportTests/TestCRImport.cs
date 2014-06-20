@@ -194,6 +194,8 @@ namespace DatabaseImportTests
             Assert.AreEqual(expectedObject.Fk_WGStatus, newCR.Fk_WGStatus);
             Assert.AreEqual(expectedObject.Fk_TSGStatus,newCR.Fk_TSGStatus);
             Assert.AreEqual(expectedObject.Fk_SpecRelease, newCR.Fk_SpecRelease);
+            Assert.AreEqual(expectedObject.TSGSourceOrganizations, newCR.TSGSourceOrganizations);
+            Assert.AreEqual(expectedObject.WGSourceOrganizations, newCR.WGSourceOrganizations);
             Assert.AreEqual(1, newCR.CR_Versions.Count);
         }
 
@@ -219,8 +221,8 @@ namespace DatabaseImportTests
                         Phase = "Ph2",
                         Version_Current = "1.1.0",
                         Version_New = "2.2.18",
-                        Source_1st_Level = "Vodafone",
-                        Source_2nd_Level = "FT"
+                        Source_1st_Level = "Vodafone ",
+                        Source_2nd_Level = " FT "
                     },
                     new ChangeRequest()
                     {
@@ -252,7 +254,7 @@ namespace DatabaseImportTests
                         Phase = "Ph2",
                         Version_Current = "1.2.0",
                         Version_New = "2.1.5",
-                        Source_1st_Level = "GSM1",
+                        Source_1st_Level = "GSM1 ",
                         Source_2nd_Level = "PT12"
                     },
                     new ChangeRequest()
