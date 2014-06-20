@@ -15,19 +15,13 @@ namespace Etsi.Ultimate.DomainClasses
     [Serializable]
     public partial class CR_Version
     {
-        public CR_Version()
-        {
-            this.ChangeRequests = new HashSet<ChangeRequest>();
-        }
-    
-        public int Pk_SpecVersion { get; set; }
+        public int Pk_CRVersion { get; set; }
         public int Fk_CR { get; set; }
         public int Fk_Version { get; set; }
         public bool IsNew { get; set; }
     
-        public virtual SpecVersion Version { get; set; }
         public virtual ChangeRequest ChangeRequest { get; set; }
-        public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
+        public virtual SpecVersion Version { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

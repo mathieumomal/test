@@ -17,14 +17,14 @@ namespace Etsi.Ultimate.DomainClasses
     {
         public TDoc()
         {
-            this.ChangeRequests = new HashSet<ChangeRequest>();
-            this.ChangeRequests1 = new HashSet<ChangeRequest>();
+            this.ChangeRequestsTSG = new HashSet<ChangeRequest>();
+            this.ChangeRequestsWG = new HashSet<ChangeRequest>();
         }
     
         public int Pk_TDoc { get; set; }
     
-        public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
-        public virtual ICollection<ChangeRequest> ChangeRequests1 { get; set; }
+        public virtual ICollection<ChangeRequest> ChangeRequestsTSG { get; set; }
+        public virtual ICollection<ChangeRequest> ChangeRequestsWG { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

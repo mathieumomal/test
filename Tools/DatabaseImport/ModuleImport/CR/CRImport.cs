@@ -15,6 +15,11 @@ namespace DatabaseImport.ModuleImport
         public const string RefImportForLog = "[CR]";
         List<Enum_CRCategory> enumCategory;
         List<Enum_TDocStatus> enumTDocStatus;
+        List<Specification> specs;
+        List<Release> releases;
+        List<Specification_Release> specRelease;
+        List<SpecVersion> specVersions;
+        List<Meeting> meetings;
 
         /// <summary>
         /// Old table(s) : 
@@ -35,10 +40,24 @@ namespace DatabaseImport.ModuleImport
             //Initialization
             enumCategory = NewContext.Enum_CRCategory.ToList();
             enumTDocStatus = NewContext.Enum_TDocStatus.ToList();
+            specs = NewContext.Specifications.ToList();
+            releases = NewContext.Releases.ToList();
+            specRelease = NewContext.Specification_Release.ToList();
+            specVersions = NewContext.SpecVersions.ToList();
+            meetings = NewContext.Meetings.ToList();
 
             CreateDatas();
             NewContext.SetAutoDetectChanges(true);
-            NewContext.SaveChanges();
+            try
+            {
+                NewContext.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+                var test = ex;
+                Console.WriteLine(ex.InnerException);
+                Console.ReadLine();
+            }
         }
 
         #endregion
@@ -52,30 +71,35 @@ namespace DatabaseImport.ModuleImport
             {
                 var newCR = new Domain.ChangeRequest();
 
+                //Baseline attributes
                 newCR.CRNumber = Utils.CheckString(legacyCR.CR, 10, RefImportForLog + " CRNumber", legacyCR.CR, Report);
                 newCR.Revision = Utils.CheckStringToInt(legacyCR.Rev, null, RefImportForLog + " Revision ", legacyCR.CR, Report);
                 newCR.Subject = Utils.CheckString(legacyCR.Subject, 300, RefImportForLog + " Subject", legacyCR.CR, Report);
                 newCR.CreationDate = legacyCR.created;
-                SpecReleaseCase(newCR, legacyCR);
-                TargetVersionCase(newCR, legacyCR);
-                NewVersionCase(newCR, legacyCR);
 
-                CategoryCase(newCR, legacyCR); // Cas 1 2 3 4 ?????
-                StatusCase(newCR, legacyCR);//WG = LEVEL 2, TSG = LEVEL 1
+                //Special cases
+                    //Spec & release by Specrelease table AND Versions (new & target)
+                SpecReleaseAndVersionCase(newCR, legacyCR);
+                    //Remarks
+                RemarksCase(newCR, legacyCR);
+                    //History : nothing to add
+
+
+                    //Meetins (TSG/WG)
+                MeetingsCase(newCR, legacyCR); // What's "#2/93" ???? for example ????????????????
+                    //Category
+                CategoryCase(newCR, legacyCR); // Cas 1 2 3 4 ???????????????????? rowId ??
+                    //Status (TSG/WG)
+                StatusCase(newCR, legacyCR);//WG = LEVEL 2, TSG = LEVEL 1 ?????????????????????
                 //Text ???? sure ?
                 newCR.TSGSourceOrganizations = Utils.CheckString(legacyCR.Source_1st_Level, 100, RefImportForLog + " TSGSourceorganization ", legacyCR.CR, Report);
                 //Text ???? sure ?
                 newCR.WGSourceOrganizations = Utils.CheckString(legacyCR.Source_2nd_Level, 100, RefImportForLog + " WGSourceorganization ", legacyCR.CR, Report);
-
-                newCR.TSGMeeting = Utils.CheckString(legacyCR.Meeting_1st_Level, 10, RefImportForLog + " TSGSourceorganization ", legacyCR.CR, Report);
-                //newCR.WGMeeting = ;
-
-
-
-                //newCR.WGSourceForTSG = ;
-                //newCR.Fk_TSGTDoc = ;
-                //newCR.Fk_WGTDoc = ;
-
+                //Targets (TSG/WG)
+                //TDoc TSG/WG
+                //newCR.WGSourceForTSG = ; "Not for CRs broughts directly to TSG by an organization"
+                //Impact
+                //WorkItems
                 NewContext.ChangeRequests.Add(newCR);
                 count++;
                 if (count % 100 == 0)
@@ -134,12 +158,15 @@ namespace DatabaseImport.ModuleImport
             }
         }
 
-        private void SpecReleaseCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR)
+        private void SpecReleaseAndVersionCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR)
         {
             var legacyCRSpecNumber = Utils.CheckString(legacyCR.Spec, 10, RefImportForLog + " Spec Number ", legacyCR.CR, Report);
             var legacyCRReleaseCode = Utils.CheckString(legacyCR.Phase, 10, RefImportForLog + " Release Code ", legacyCR.CR, Report);
-            var specAssociated = NewContext.Specifications.Where(x => x.Number == legacyCRSpecNumber).FirstOrDefault();
-            var releaseAssociated = NewContext.Releases.Where(x => x.Code == legacyCRReleaseCode).FirstOrDefault();
+            var specAssociated = specs.Where(x => x.Number == legacyCRSpecNumber).FirstOrDefault();
+            var releaseAssociated = releases.Where(x => x.Code == legacyCRReleaseCode).FirstOrDefault();
+
+            var legacyCRNewVersion = Utils.CheckString(legacyCR.Version_New, 10, RefImportForLog + " Version-new ", legacyCR.CR, Report);
+            var legacyCRTargetVersion = Utils.CheckString(legacyCR.Version_Current, 10, RefImportForLog + " Version-current ", legacyCR.CR, Report);
 
             if (specAssociated == null)
             {
@@ -151,40 +178,31 @@ namespace DatabaseImport.ModuleImport
             }
             else
             {
-                var specReleaseAssociated = NewContext.Specification_Release.Where(x => x.Fk_ReleaseId == releaseAssociated.Pk_ReleaseId && x.Fk_SpecificationId == specAssociated.Pk_SpecificationId).FirstOrDefault();
-
-                if (specReleaseAssociated != null)
+                //SpecRelease 
+                if (specAssociated == null)
                 {
-                    newCR.Specification_Release = specReleaseAssociated;
-                    newCR.Fk_SpecRelease = specReleaseAssociated.Pk_Specification_ReleaseId;
+                    Report.LogWarning(RefImportForLog + "Spec not found : " + legacyCRSpecNumber + ", for CR : " + legacyCR.CR);
+                }
+                else if (releaseAssociated == null)
+                {
+                    Report.LogWarning(RefImportForLog + "Release not found : " + legacyCRReleaseCode + ", for CR : " + legacyCR.CR);
                 }
                 else
                 {
-                    Report.LogWarning(RefImportForLog + "Spec and release couple not found : spec number -> " + legacyCRSpecNumber + ", release code -> " + legacyCRReleaseCode + ", for CR : " + legacyCR.CR);
+                    var specReleaseAssociated = specRelease.Where(x => x.Fk_ReleaseId == releaseAssociated.Pk_ReleaseId && x.Fk_SpecificationId == specAssociated.Pk_SpecificationId).FirstOrDefault();
+
+                    if (specReleaseAssociated != null)
+                    {
+                        newCR.Specification_Release = specReleaseAssociated;
+                        newCR.Fk_SpecRelease = specReleaseAssociated.Pk_Specification_ReleaseId;
+                    }
+                    else
+                    {
+                        Report.LogWarning(RefImportForLog + "Spec and release couple not found : spec number -> " + legacyCRSpecNumber + ", release code -> " + legacyCRReleaseCode + ", for CR : " + legacyCR.CR);
+                    }
                 }
-            }
-            
-        }
 
-        private void NewVersionCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR)
-        {
-            var legacyCRSpecNumber = Utils.CheckString(legacyCR.Spec, 10, RefImportForLog + " Spec Number ", legacyCR.CR, Report);
-            var legacyCRReleaseCode = Utils.CheckString(legacyCR.Phase, 10, RefImportForLog + " Release Code ", legacyCR.CR, Report);
-            var specAssociated = NewContext.Specifications.Where(x => x.Number == legacyCRSpecNumber).FirstOrDefault();
-            var releaseAssociated = NewContext.Releases.Where(x => x.Code == legacyCRReleaseCode).FirstOrDefault();
-
-            var legacyCRNewVersion = Utils.CheckString(legacyCR.Version_New, 10, RefImportForLog + " Version-new ", legacyCR.CR, Report);
-
-            if (specAssociated == null)
-            {
-                Report.LogWarning(RefImportForLog + "Spec not found : " + legacyCRSpecNumber + ", for CR : " + legacyCR.CR);
-            }
-            else if (releaseAssociated == null)
-            {
-                Report.LogWarning(RefImportForLog + "Release not found : " + legacyCRReleaseCode + ", for CR : " + legacyCR.CR);
-            }
-            else
-            {
+                //New
                 var newVersionExploded = legacyCRNewVersion.Split('.');
 
                 if (newVersionExploded.Count() != 3)
@@ -196,7 +214,7 @@ namespace DatabaseImport.ModuleImport
                     var mv = Utils.CheckStringToInt(newVersionExploded[0], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the majorVersion : " + newVersionExploded[0], legacyCR.CR, Report);
                     var tv = Utils.CheckStringToInt(newVersionExploded[1], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the technicalVersion : " + newVersionExploded[1], legacyCR.CR, Report);
                     var ev = Utils.CheckStringToInt(newVersionExploded[2], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the editorialVersion : " + newVersionExploded[2], legacyCR.CR, Report);
-                    var newVersionAssociated = NewContext.SpecVersions.Where(x =>
+                    var newVersionAssociated = specVersions.Where(x =>
                         x.Fk_ReleaseId == releaseAssociated.Pk_ReleaseId
                         && x.Fk_SpecificationId == specAssociated.Pk_SpecificationId
                         && x.MajorVersion == mv
@@ -210,37 +228,15 @@ namespace DatabaseImport.ModuleImport
                         newCRNewVersion.Fk_Version = newVersionAssociated.Pk_VersionId;
                         newCRNewVersion.Version = newVersionAssociated;
                         newCRNewVersion.IsNew = true;
-                        NewContext.CR_Versions.Add(newCRNewVersion);
-
-                        newCR.CR_Versions.Add(newCRNewVersion);
+                        newCR.CR_Version.Add(newCRNewVersion);
                     }
                     else
                     {
                         Report.LogWarning(RefImportForLog + "New legacy version not found : " + legacyCRNewVersion + ", for CR : " + legacyCR.CR);
                     }
                 }
-            }
-        }
 
-        private void TargetVersionCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR)
-        {
-            var legacyCRSpecNumber = Utils.CheckString(legacyCR.Spec, 10, RefImportForLog + " Spec Number ", legacyCR.CR, Report);
-            var legacyCRReleaseCode = Utils.CheckString(legacyCR.Phase, 10, RefImportForLog + " Release Code ", legacyCR.CR, Report);
-            var specAssociated = NewContext.Specifications.Where(x => x.Number == legacyCRSpecNumber).FirstOrDefault();
-            var releaseAssociated = NewContext.Releases.Where(x => x.Code == legacyCRReleaseCode).FirstOrDefault();
-
-            var legacyCRTargetVersion = Utils.CheckString(legacyCR.Version_Current, 10, RefImportForLog + " Version-current ", legacyCR.CR, Report);
-
-            if (specAssociated == null)
-            {
-                Report.LogWarning(RefImportForLog + "Spec not found : " + legacyCRSpecNumber + ", for CR : " + legacyCR.CR);
-            }
-            else if (releaseAssociated == null)
-            {
-                Report.LogWarning(RefImportForLog + "Release not found : " + legacyCRReleaseCode + ", for CR : " + legacyCR.CR);
-            }
-            else
-            {
+                //Target
                 var targetVersionExploded = legacyCRTargetVersion.Split('.');
 
                 if (targetVersionExploded.Count() != 3)
@@ -252,7 +248,7 @@ namespace DatabaseImport.ModuleImport
                     var mv = Utils.CheckStringToInt(targetVersionExploded[0], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the majorVersion : " + targetVersionExploded[0], legacyCR.CR, Report);
                     var tv = Utils.CheckStringToInt(targetVersionExploded[1], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the technicalVersion : " + targetVersionExploded[1], legacyCR.CR, Report);
                     var ev = Utils.CheckStringToInt(targetVersionExploded[2], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the editorialVersion : " + targetVersionExploded[2], legacyCR.CR, Report);
-                    var targetVersionAssociated = NewContext.SpecVersions.Where(x =>
+                    var targetVersionAssociated = specVersions.Where(x =>
                         x.Fk_ReleaseId == releaseAssociated.Pk_ReleaseId
                         && x.Fk_SpecificationId == specAssociated.Pk_SpecificationId
                         && x.MajorVersion == mv
@@ -266,9 +262,7 @@ namespace DatabaseImport.ModuleImport
                         newCRTargetVersion.Fk_Version = targetVersionAssociated.Pk_VersionId;
                         newCRTargetVersion.Version = targetVersionAssociated;
                         newCRTargetVersion.IsNew = false;
-                        NewContext.CR_Versions.Add(newCRTargetVersion);
-
-                        newCR.CR_Versions.Add(newCRTargetVersion);
+                        newCR.CR_Version.Add(newCRTargetVersion);
                     }
                     else
                     {
@@ -276,6 +270,55 @@ namespace DatabaseImport.ModuleImport
                     }
                 }
             }
+        }
+
+        private void MeetingsCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR)
+        {
+            var TSGMeeting = Utils.CheckString(legacyCR.Meeting_1st_Level, 10, RefImportForLog + "TSG meeting : " + legacyCR.Meeting_1st_Level, legacyCR.CR, Report);
+            var WGMeeting = Utils.CheckString(legacyCR.Meeting_2nd_Level, 10, RefImportForLog + "TSG meeting : " + legacyCR.Meeting_2nd_Level, legacyCR.CR, Report);
+            
+            //TSG
+            if (!string.IsNullOrEmpty(TSGMeeting) && TSGMeeting != "-")
+            {
+                var mtg = meetings.Where(m => m.MtgShortRef == TSGMeeting).FirstOrDefault();
+
+                if (mtg == null)
+                    Report.LogWarning(RefImportForLog + "TSG meeting not found: " + TSGMeeting);
+                else
+                {
+                    newCR.TSGMeeting = mtg.MTG_ID;
+                }
+            }
+
+            //WG
+            if (!string.IsNullOrEmpty(WGMeeting) && WGMeeting != "-")
+            {
+                var mtg = meetings.Where(m => m.MtgShortRef == WGMeeting).FirstOrDefault();
+
+                if (mtg == null)
+                    Report.LogWarning(RefImportForLog + "WG meeting not found: " + TSGMeeting);
+                else
+                {
+                    newCR.WGMeeting = mtg.MTG_ID;
+                }
+            }
+        }
+
+        private void RemarksCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR)
+        {
+            var remarksField = Utils.CheckString(legacyCR.Remarks,255,RefImportForLog + " Remarks ", legacyCR.CR, Report);
+
+            if (remarksField == null || remarksField.Length == 0)
+                return;
+
+            var remark = new Domain.Remark()
+            {
+                CreationDate = DateTime.Now,
+                IsPublic = true,
+                RemarkText = remarksField,
+                ChangeRequest = newCR
+            };
+            newCR.Remarks.Add(remark);
         }
         #endregion
     }

@@ -12,7 +12,7 @@ namespace Etsi.Ultimate.Tests.FakeSets
         public override CR_Version Find(params object[] keyValues)
         {
             var keyValue = (int)keyValues.FirstOrDefault();
-            return this.SingleOrDefault(x => x.Pk_SpecVersion == keyValue);
+            return this.SingleOrDefault(x => x.Pk_CRVersion == keyValue);
         }
     }
 }

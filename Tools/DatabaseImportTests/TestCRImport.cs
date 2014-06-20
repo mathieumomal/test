@@ -160,14 +160,17 @@ namespace DatabaseImportTests
             var newContext = MockRepository.GenerateMock<IUltimateContext>();
             var newDbSet = new ChangeRequestFakeDbSet();
             var newCRVersionDbSet = new CR_VersionFakeDbSet();
+            var newRemarksDbSet = new RemarkFakeDbSet();
             newContext.Stub(ctx => ctx.ChangeRequests).Return(newDbSet);
             newContext.Stub(ctx => ctx.CR_Versions).Return(newCRVersionDbSet);
+            newContext.Stub(ctx => ctx.Remarks).Return(newRemarksDbSet);
             newContext.Stub(ctx => ctx.Enum_CRCategory).Return(GetCRCategory());
             newContext.Stub(ctx => ctx.Enum_TDocStatus).Return(GetTDocStatus());
             newContext.Stub(ctx => ctx.Specifications).Return(GetSpecs());
             newContext.Stub(ctx => ctx.Releases).Return(GetReleases());
             newContext.Stub(ctx => ctx.Specification_Release).Return(GetSpecRelease());
             newContext.Stub(ctx => ctx.SpecVersions).Return(GetVersions());
+            newContext.Stub(ctx => ctx.Meetings).Return(GetMeetings());
 
             // Legacy context mock
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
@@ -196,7 +199,10 @@ namespace DatabaseImportTests
             Assert.AreEqual(expectedObject.Fk_SpecRelease, newCR.Fk_SpecRelease);
             Assert.AreEqual(expectedObject.TSGSourceOrganizations, newCR.TSGSourceOrganizations);
             Assert.AreEqual(expectedObject.WGSourceOrganizations, newCR.WGSourceOrganizations);
-            Assert.AreEqual(1, newCR.CR_Versions.Count);
+            Assert.AreEqual(1, newCR.CR_Version.Count);
+            Assert.AreEqual(expectedObject.TSGMeeting, newCR.TSGMeeting);
+            Assert.AreEqual(expectedObject.WGMeeting, newCR.WGMeeting);
+            Assert.AreEqual(1, newCR.Remarks.Count);
         }
 
         /// <summary>
@@ -222,7 +228,10 @@ namespace DatabaseImportTests
                         Version_Current = "1.1.0",
                         Version_New = "2.2.18",
                         Source_1st_Level = "Vodafone ",
-                        Source_2nd_Level = " FT "
+                        Source_2nd_Level = " FT ",
+                        Meeting_1st_Level = "S3-48",
+                        Meeting_2nd_Level = "JZAYEZ",
+                        Remarks = "TEST REMARQUES"
                     },
                     new ChangeRequest()
                     {
@@ -235,7 +244,9 @@ namespace DatabaseImportTests
                         Fk_TSGStatus = 1,
                         Fk_SpecRelease = 1,
                         TSGSourceOrganizations = "Vodafone",
-                        WGSourceOrganizations = "FT"
+                        WGSourceOrganizations = "FT",
+                        TSGMeeting = 1,
+                        WGMeeting = null
                     }
                 );
 
@@ -255,7 +266,10 @@ namespace DatabaseImportTests
                         Version_Current = "1.2.0",
                         Version_New = "2.1.5",
                         Source_1st_Level = "GSM1 ",
-                        Source_2nd_Level = "PT12"
+                        Source_2nd_Level = "PT12",
+                        Meeting_1st_Level = "S3-4",
+                        Meeting_2nd_Level = "S3-49",
+                        Remarks = "TEST REMARQUES"
                     },
                     new ChangeRequest()
                     {
@@ -268,7 +282,9 @@ namespace DatabaseImportTests
                         Fk_TSGStatus = 3,
                         Fk_SpecRelease = 2,
                         TSGSourceOrganizations = "GSM1",
-                        WGSourceOrganizations = "PT12"
+                        WGSourceOrganizations = "PT12",
+                        TSGMeeting = null,
+                        WGMeeting = 2
                     }
                 );
 
@@ -325,5 +341,13 @@ namespace DatabaseImportTests
             list.Add(new Domain.SpecVersion() { Pk_VersionId = 2, Fk_SpecificationId = 2, Fk_ReleaseId = 2, MajorVersion = 2, TechnicalVersion = 1, EditorialVersion = 5 });
             return list;
         }
+        private IDbSet<Domain.Meeting> GetMeetings()
+        {
+            var list = new MeetingFakeDBSet();
+            list.Add(new Domain.Meeting() { MTG_ID = 1, MtgShortRef = "S3-48" });
+            list.Add(new Domain.Meeting() { MTG_ID = 2, MtgShortRef = "S3-49" });
+            return list;
+        }
+
     }
 }
