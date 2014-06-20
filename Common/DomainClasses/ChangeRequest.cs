@@ -17,7 +17,7 @@ namespace Etsi.Ultimate.DomainClasses
     {
         public ChangeRequest()
         {
-            this.CR_Version = new HashSet<CR_Version>();
+            this.CR_Versions = new HashSet<CR_Version>();
         }
     
         public int Pk_ChangeRequest { get; set; }
@@ -40,12 +40,11 @@ namespace Etsi.Ultimate.DomainClasses
         public int Fk_SpecRelease { get; set; }
         public int Fk_Versions { get; set; }
     
-        public virtual ICollection<CR_Version> CR_Version { get; set; }
-        public virtual CR_Version CR_Versions { get; set; }
         public virtual Enum_CRCategory Enum_CRCategory { get; set; }
         public virtual Specification_Release Specification_Release { get; set; }
         public virtual Enum_TDocStatus Enum_TDocStatusTSG { get; set; }
         public virtual Enum_TDocStatus Enum_TDocStatusWG { get; set; }
+        public virtual ICollection<CR_Version> CR_Versions { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

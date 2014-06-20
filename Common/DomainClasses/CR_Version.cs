@@ -25,9 +25,9 @@ namespace Etsi.Ultimate.DomainClasses
         public int Fk_Version { get; set; }
         public bool IsNew { get; set; }
     
-        public virtual SpecVersion Version { get; set; }
         public virtual ChangeRequest ChangeRequest { get; set; }
         public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
+        public virtual SpecVersion Version { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

@@ -9,6 +9,7 @@ BEGIN
 	Declare @Error int
 
 	-- Delete from CR
+	DELETE FROM CR_Version;
 	DELETE FROM ChangeRequest;
 	DELETE FROM Enum_CRCategory;
 	DELETE FROM Enum_TDocStatus;

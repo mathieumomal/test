@@ -159,13 +159,15 @@ namespace DatabaseImportTests
             // New context mock
             var newContext = MockRepository.GenerateMock<IUltimateContext>();
             var newDbSet = new ChangeRequestFakeDbSet();
-            var newDbSetCRCategory = new CRCategoryLegacyFakeDbSet();
+            var newCRVersionDbSet = new CR_VersionFakeDbSet();
             newContext.Stub(ctx => ctx.ChangeRequests).Return(newDbSet);
+            newContext.Stub(ctx => ctx.CR_Versions).Return(newCRVersionDbSet);
             newContext.Stub(ctx => ctx.Enum_CRCategory).Return(GetCRCategory());
             newContext.Stub(ctx => ctx.Enum_TDocStatus).Return(GetTDocStatus());
             newContext.Stub(ctx => ctx.Specifications).Return(GetSpecs());
             newContext.Stub(ctx => ctx.Releases).Return(GetReleases());
             newContext.Stub(ctx => ctx.Specification_Release).Return(GetSpecRelease());
+            newContext.Stub(ctx => ctx.SpecVersions).Return(GetVersions());
 
             // Legacy context mock
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
@@ -192,6 +194,7 @@ namespace DatabaseImportTests
             Assert.AreEqual(expectedObject.Fk_WGStatus, newCR.Fk_WGStatus);
             Assert.AreEqual(expectedObject.Fk_TSGStatus,newCR.Fk_TSGStatus);
             Assert.AreEqual(expectedObject.Fk_SpecRelease, newCR.Fk_SpecRelease);
+            Assert.AreEqual(1, newCR.CR_Versions.Count);
         }
 
         /// <summary>
@@ -213,7 +216,11 @@ namespace DatabaseImportTests
                         Status_1st_Level = "agreed",
                         Status_2nd_Level = "approved",
                         Spec = "1",
-                        Phase = "Ph2"
+                        Phase = "Ph2",
+                        Version_Current = "1.1.0",
+                        Version_New = "2.2.18",
+                        Source_1st_Level = "Vodafone",
+                        Source_2nd_Level = "FT"
                     },
                     new ChangeRequest()
                     {
@@ -224,7 +231,9 @@ namespace DatabaseImportTests
                         Fk_Enum_CRCategory = null,
                         Fk_WGStatus = 2,
                         Fk_TSGStatus = 1,
-                        Fk_SpecRelease = 1
+                        Fk_SpecRelease = 1,
+                        TSGSourceOrganizations = "Vodafone",
+                        WGSourceOrganizations = "FT"
                     }
                 );
 
@@ -240,7 +249,11 @@ namespace DatabaseImportTests
                         Status_1st_Level = "posTponed",
                         Status_2nd_Level = "postPoned",
                         Spec = "2",
-                        Phase = "Ph2"
+                        Phase = "Ph2",
+                        Version_Current = "1.2.0",
+                        Version_New = "2.1.5",
+                        Source_1st_Level = "GSM1",
+                        Source_2nd_Level = "PT12"
                     },
                     new ChangeRequest()
                     {
@@ -251,7 +264,9 @@ namespace DatabaseImportTests
                         Fk_Enum_CRCategory = 2,
                         Fk_WGStatus = null,
                         Fk_TSGStatus = 3,
-                        Fk_SpecRelease = 2
+                        Fk_SpecRelease = 2,
+                        TSGSourceOrganizations = "GSM1",
+                        WGSourceOrganizations = "PT12"
                     }
                 );
 
@@ -298,6 +313,14 @@ namespace DatabaseImportTests
             var list = new SpecificationReleaseFakeDBSet();
             list.Add(new Domain.Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 2 });
             list.Add(new Domain.Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 2, Fk_ReleaseId = 2 });
+            return list;
+        }
+
+        private IDbSet<Domain.SpecVersion> GetVersions()
+        {
+            var list = new SpecVersionFakeDBSet();
+            list.Add(new Domain.SpecVersion() { Pk_VersionId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 2, MajorVersion = 1, TechnicalVersion = 1, EditorialVersion = 0 });
+            list.Add(new Domain.SpecVersion() { Pk_VersionId = 2, Fk_SpecificationId = 2, Fk_ReleaseId = 2, MajorVersion = 2, TechnicalVersion = 1, EditorialVersion = 5 });
             return list;
         }
     }

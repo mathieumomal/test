@@ -63,24 +63,16 @@ namespace DatabaseImport.ModuleImport
                 //Text ???? sure ?
                 newCR.WGSourceOrganizations = Utils.CheckString(legacyCR.Source_2nd_Level, 100, RefImportForLog + " WGSourceorganization ", legacyCR.CR, Report);
                 SpecReleaseCase(newCR, legacyCR);
-                //VersionCase(newCR, legacyCR);
 
+                TargetVersionCase(newCR, legacyCR);
+                NewVersionCase(newCR, legacyCR);
 
-
-                //newCR.Fk_TargetRelease = ;
-                //newCR.Fk_TSGMeeting = ;
-                //newCR.Fk_WGMeeting = ;
-                //newCR.Fk_TSGTarget = ;
-                //newCR.Fk_WGTarget = ;
-                //newCR.Fk_WGSourceForTSG = ;
-
-                //SpecCase(newCR, legacyCR);
-
-
+               
+                //newCR.TSGMeeting = ;
+                //newCR.WGMeeting = ;
+                //newCR.WGSourceForTSG = ;
                 //newCR.Fk_TSGTDoc = ;
                 //newCR.Fk_WGTDoc = ;
-                //newCR.Fk_TargetVersion = ;
-                //newCR.Fk_NewVersion = ;
 
                 NewContext.ChangeRequests.Add(newCR);
                 count++;
@@ -149,11 +141,11 @@ namespace DatabaseImport.ModuleImport
 
             if (specAssociated == null)
             {
-                Report.LogWarning(RefImportForLog + "CR Spec not found : " + legacyCRSpecNumber + ", for CR : " + legacyCR.CR);
+                Report.LogWarning(RefImportForLog + "Spec not found : " + legacyCRSpecNumber + ", for CR : " + legacyCR.CR);
             }
             else if (releaseAssociated == null)
             {
-                Report.LogWarning(RefImportForLog + "CR Release not found : " + legacyCRReleaseCode + ", for CR : " + legacyCR.CR);
+                Report.LogWarning(RefImportForLog + "Release not found : " + legacyCRReleaseCode + ", for CR : " + legacyCR.CR);
             }
             else
             {
@@ -172,20 +164,116 @@ namespace DatabaseImport.ModuleImport
             
         }
 
-        private void VersionCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR)
+        private void NewVersionCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR)
         {
-            /*var legacyCRCategory = Utils.CheckString(legacyCR.Cat, 5, RefImportForLog + " category ", legacyCR.CR, Report);
-            var categoryAssiocated = enumCategory.Where(x => x.Category == legacyCRCategory).FirstOrDefault();
+            var legacyCRSpecNumber = Utils.CheckString(legacyCR.Spec, 10, RefImportForLog + " Spec Number ", legacyCR.CR, Report);
+            var legacyCRReleaseCode = Utils.CheckString(legacyCR.Phase, 10, RefImportForLog + " Release Code ", legacyCR.CR, Report);
+            var specAssociated = NewContext.Specifications.Where(x => x.Number == legacyCRSpecNumber).FirstOrDefault();
+            var releaseAssociated = NewContext.Releases.Where(x => x.Code == legacyCRReleaseCode).FirstOrDefault();
 
-            if (categoryAssiocated != null)
+            var legacyCRNewVersion = Utils.CheckString(legacyCR.Version_New, 10, RefImportForLog + " Version-new ", legacyCR.CR, Report);
+
+            if (specAssociated == null)
             {
-                newCR.Enum_CRCategory = categoryAssiocated;
-                newCR.Fk_Enum_CRCategory = categoryAssiocated.Pk_EnumCRCategory;
+                Report.LogWarning(RefImportForLog + "Spec not found : " + legacyCRSpecNumber + ", for CR : " + legacyCR.CR);
+            }
+            else if (releaseAssociated == null)
+            {
+                Report.LogWarning(RefImportForLog + "Release not found : " + legacyCRReleaseCode + ", for CR : " + legacyCR.CR);
             }
             else
             {
-                Report.LogWarning(RefImportForLog + "Category not found : " + legacyCRCategory + " for CR : " + legacyCR.CR);
-            }*/
+                var newVersionExploded = legacyCRNewVersion.Split('.');
+
+                if (newVersionExploded.Count() != 3)
+                {
+                    Report.LogWarning(RefImportForLog + "Target legacy version invalid format : " + legacyCRNewVersion + ", for CR : " + legacyCR.CR);
+                }
+                else
+                {
+                    var mv = Utils.CheckStringToInt(newVersionExploded[0], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the majorVersion : " + newVersionExploded[0], legacyCR.CR, Report);
+                    var tv = Utils.CheckStringToInt(newVersionExploded[1], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the technicalVersion : " + newVersionExploded[1], legacyCR.CR, Report);
+                    var ev = Utils.CheckStringToInt(newVersionExploded[2], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the editorialVersion : " + newVersionExploded[2], legacyCR.CR, Report);
+                    var newVersionAssociated = NewContext.SpecVersions.Where(x =>
+                        x.Fk_ReleaseId == releaseAssociated.Pk_ReleaseId
+                        && x.Fk_SpecificationId == specAssociated.Pk_SpecificationId
+                        && x.MajorVersion == mv
+                        && x.TechnicalVersion == tv
+                        && x.EditorialVersion == ev)
+                        .FirstOrDefault();
+
+                    if (newVersionAssociated != null)
+                    {
+                        var newCRNewVersion = new Domain.CR_Version();
+                        newCRNewVersion.Fk_Version = newVersionAssociated.Pk_VersionId;
+                        newCRNewVersion.Version = newVersionAssociated;
+                        newCRNewVersion.IsNew = true;
+                        NewContext.CR_Versions.Add(newCRNewVersion);
+
+                        newCR.CR_Versions.Add(newCRNewVersion);
+                    }
+                    else
+                    {
+                        Report.LogWarning(RefImportForLog + "New legacy version not found : " + legacyCRNewVersion + ", for CR : " + legacyCR.CR);
+                    }
+                }
+            }
+        }
+
+        private void TargetVersionCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR)
+        {
+            var legacyCRSpecNumber = Utils.CheckString(legacyCR.Spec, 10, RefImportForLog + " Spec Number ", legacyCR.CR, Report);
+            var legacyCRReleaseCode = Utils.CheckString(legacyCR.Phase, 10, RefImportForLog + " Release Code ", legacyCR.CR, Report);
+            var specAssociated = NewContext.Specifications.Where(x => x.Number == legacyCRSpecNumber).FirstOrDefault();
+            var releaseAssociated = NewContext.Releases.Where(x => x.Code == legacyCRReleaseCode).FirstOrDefault();
+
+            var legacyCRTargetVersion = Utils.CheckString(legacyCR.Version_Current, 10, RefImportForLog + " Version-current ", legacyCR.CR, Report);
+
+            if (specAssociated == null)
+            {
+                Report.LogWarning(RefImportForLog + "Spec not found : " + legacyCRSpecNumber + ", for CR : " + legacyCR.CR);
+            }
+            else if (releaseAssociated == null)
+            {
+                Report.LogWarning(RefImportForLog + "Release not found : " + legacyCRReleaseCode + ", for CR : " + legacyCR.CR);
+            }
+            else
+            {
+                var targetVersionExploded = legacyCRTargetVersion.Split('.');
+
+                if (targetVersionExploded.Count() != 3)
+                {
+                    Report.LogWarning(RefImportForLog + "Target legacy version invalid format : " + legacyCRTargetVersion + ", for CR : " + legacyCR.CR);
+                }
+                else
+                {
+                    var mv = Utils.CheckStringToInt(targetVersionExploded[0], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the majorVersion : " + targetVersionExploded[0], legacyCR.CR, Report);
+                    var tv = Utils.CheckStringToInt(targetVersionExploded[1], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the technicalVersion : " + targetVersionExploded[1], legacyCR.CR, Report);
+                    var ev = Utils.CheckStringToInt(targetVersionExploded[2], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the editorialVersion : " + targetVersionExploded[2], legacyCR.CR, Report);
+                    var targetVersionAssociated = NewContext.SpecVersions.Where(x =>
+                        x.Fk_ReleaseId == releaseAssociated.Pk_ReleaseId
+                        && x.Fk_SpecificationId == specAssociated.Pk_SpecificationId
+                        && x.MajorVersion == mv
+                        && x.TechnicalVersion == tv
+                        && x.EditorialVersion == ev)
+                        .FirstOrDefault();
+
+                    if (targetVersionAssociated != null)
+                    {
+                        var newCRTargetVersion = new Domain.CR_Version();
+                        newCRTargetVersion.Fk_Version = targetVersionAssociated.Pk_VersionId;
+                        newCRTargetVersion.Version = targetVersionAssociated;
+                        newCRTargetVersion.IsNew = false;
+                        NewContext.CR_Versions.Add(newCRTargetVersion);
+
+                        newCR.CR_Versions.Add(newCRTargetVersion);
+                    }
+                    else
+                    {
+                        Report.LogWarning(RefImportForLog + "Target legacy version not found : " + legacyCRTargetVersion + ", for CR : " + legacyCR.CR);
+                    }
+                }
+            }
         }
         #endregion
     }
