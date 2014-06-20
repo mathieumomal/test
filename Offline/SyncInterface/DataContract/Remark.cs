@@ -38,5 +38,7 @@ namespace SyncInterface.DataContract
         public Nullable<int> Fk_SpecificationReleaseId { get; set; }
         [DataMember]
         public Nullable<int> Fk_VersionId { get; set; }
+        [DataMember]
+        public Nullable<int> Fk_CRId { get; set; }
     }
 }

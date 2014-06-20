@@ -14,23 +14,15 @@ namespace SyncInterface.DataContract
     using System.Runtime.Serialization;
     
     [DataContract]
-    public class History
+    public class CR_Version
     {
         [DataMember]
-        public int Pk_HistoryId { get; set; }
+        public int Pk_SpecVersion { get; set; }
         [DataMember]
-        public Nullable<int> Fk_ReleaseId { get; set; }
+        public int Fk_CR { get; set; }
         [DataMember]
-        public Nullable<int> Fk_PersonId { get; set; }
+        public int Fk_Version { get; set; }
         [DataMember]
-        public Nullable<System.DateTime> CreationDate { get; set; }
-        [DataMember]
-        public string HistoryText { get; set; }
-        [DataMember]
-        public string PersonName { get; set; }
-        [DataMember]
-        public Nullable<int> Fk_SpecificationId { get; set; }
-        [DataMember]
-        public Nullable<int> Fk_CRId { get; set; }
+        public bool IsNew { get; set; }
     }
 }

@@ -14,23 +14,9 @@ namespace SyncInterface.DataContract
     using System.Runtime.Serialization;
     
     [DataContract]
-    public class History
+    public class TDoc
     {
         [DataMember]
-        public int Pk_HistoryId { get; set; }
-        [DataMember]
-        public Nullable<int> Fk_ReleaseId { get; set; }
-        [DataMember]
-        public Nullable<int> Fk_PersonId { get; set; }
-        [DataMember]
-        public Nullable<System.DateTime> CreationDate { get; set; }
-        [DataMember]
-        public string HistoryText { get; set; }
-        [DataMember]
-        public string PersonName { get; set; }
-        [DataMember]
-        public Nullable<int> Fk_SpecificationId { get; set; }
-        [DataMember]
-        public Nullable<int> Fk_CRId { get; set; }
+        public int Pk_TDoc { get; set; }
     }
 }

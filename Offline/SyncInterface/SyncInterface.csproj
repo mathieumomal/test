@@ -43,7 +43,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataContract\ChangeRequest.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataContract\Community.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\CR_Version.cs">
       <DependentUpon>Ultimate.tt</DependentUpon>
     </Compile>
     <Compile Include="DataContract\Enum_CommunitiesShortName.cs">
@@ -107,6 +113,9 @@
       <DependentUpon>Ultimate.tt</DependentUpon>
     </Compile>
     <Compile Include="DataContract\SpecVersion.cs">
+      <DependentUpon>Ultimate.tt</DependentUpon>
+    </Compile>
+    <Compile Include="DataContract\TDoc.cs">
       <DependentUpon>Ultimate.tt</DependentUpon>
     </Compile>
     <Compile Include="DataContract\Ultimate.cs">
