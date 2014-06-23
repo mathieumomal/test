@@ -160,6 +160,49 @@ namespace Etsi.Ultimate.Tests.Services
 
         }
 
+        [Test]
+        public void SpecificationInhibitPromote_Nominal()
+        {
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Specification_InhibitPromote);
+            //Mock Rights Manager
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(userRights);
+
+            var specDBSet = GetSpecifications();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specDBSet);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)Releases());
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+           
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var specSVC = new SpecificationService();
+            Assert.True(specSVC.SpecificationInhibitPromote(0, 1));            
+            mockDataContext.AssertWasCalled(x => x.SaveChanges());
+        }
+
+        [Test]
+        public void SpecificationInhibitPromote_MissingRights()
+        {
+            UserRightsContainer userRights = new UserRightsContainer();            
+            //Mock Rights Manager
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(userRights);
+
+            var specDBSet = GetSpecifications();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specDBSet);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)Releases());
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var specSVC = new SpecificationService();
+            Assert.False(specSVC.SpecificationInhibitPromote(0, 1));
+            mockDataContext.AssertWasNotCalled(x => x.SaveChanges());
+        }
+
         [Test, TestCaseSource("GetSpecificicationNumbersTestFormat")]
         public void TestCheckFormatNumberIsValid(string specNumber, bool expectResult, int messageCount)
         {
