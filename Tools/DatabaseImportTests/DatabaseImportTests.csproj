@@ -68,6 +68,7 @@
     <Compile Include="LegacyDBSets\ScheduleLegacyFakeDBSet.cs" />
     <Compile Include="LegacyDBSets\SpecificationLegacyFakeDBSet.cs" />
     <Compile Include="LegacyDBSets\SpecificationWILegacyFakeDBSet.cs" />
+    <Compile Include="LegacyDBSets\TdocLegacyFakeDbSet.cs" />
     <Compile Include="TestCRImport.cs" />
     <Compile Include="TestReleaseImport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

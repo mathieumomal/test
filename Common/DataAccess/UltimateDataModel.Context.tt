@@ -104,9 +104,19 @@ if (!loader.IsLazyLoadingEnabled(container))
         Entry(entity).State = EntityState.Deleted;
     }
 
+    public void SetDetached(object entity)
+    {
+        Entry(entity).State = EntityState.Detached;
+    }
+
 	public void SetAutoDetectChanges(bool detect)
     {
         Configuration.AutoDetectChangesEnabled = detect;
+    }
+
+    public void SetValidateOnSave(bool detect)
+    {
+        Configuration.ValidateOnSaveEnabled = detect;
     }
   
 <#

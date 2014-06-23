@@ -11,20 +11,28 @@
     [TSGMeeting]             INT           NULL,
     [TSGTarget]              INT           NULL,
     [WGSourceForTSG]         INT           NULL,
-    [Fk_TSGTDoc]             INT           NULL,
+    [TSGTDoc]                VARCHAR (50)  NULL,
     [WGMeeting]              INT           NULL,
     [WGTarget]               INT           NULL,
-    [Fk_WGTDoc]              INT           NULL,
+    [WGTDoc]                 VARCHAR (50)  NULL,
     [Fk_Enum_CRCategory]     INT           NULL,
-    [Fk_SpecRelease]         INT           NULL,
+    [Fk_Specification]       INT           NULL,
+    [Fk_Release]             INT           NULL,
+    [Fk_CurrentVersion]      INT           NULL,
+    [Fk_NewVersion]          INT           NULL,
+    [Fk_Impact]              INT           NULL,
     CONSTRAINT [PK_ChangeRequest] PRIMARY KEY CLUSTERED ([Pk_ChangeRequest] ASC),
+    CONSTRAINT [FK_CRCurrentVersion] FOREIGN KEY ([Fk_CurrentVersion]) REFERENCES [dbo].[Version] ([Pk_VersionId]),
+    CONSTRAINT [FK_CRNewVersion] FOREIGN KEY ([Fk_NewVersion]) REFERENCES [dbo].[Version] ([Pk_VersionId]),
+    CONSTRAINT [FK_CRRelease] FOREIGN KEY ([Fk_Release]) REFERENCES [dbo].[Releases] ([Pk_ReleaseId]),
+    CONSTRAINT [FK_CRSpecification] FOREIGN KEY ([Fk_Specification]) REFERENCES [dbo].[Specification] ([Pk_SpecificationId]),
     CONSTRAINT [FK_Enum_CRCategory] FOREIGN KEY ([Fk_Enum_CRCategory]) REFERENCES [dbo].[Enum_CRCategory] ([Pk_EnumCRCategory]),
-    CONSTRAINT [FK_SpecRelease] FOREIGN KEY ([Fk_SpecRelease]) REFERENCES [dbo].[Specification_Release] ([Pk_Specification_ReleaseId]),
+    CONSTRAINT [FK_Enum_CRImpact] FOREIGN KEY ([Fk_Impact]) REFERENCES [dbo].[Enum_CRImpact] ([Pk_EnumCRImpact]),
     CONSTRAINT [FK_TSGStatus] FOREIGN KEY ([Fk_TSGStatus]) REFERENCES [dbo].[Enum_TDocStatus] ([Pk_EnumTDocStatus]),
-    CONSTRAINT [FK_TSGTDoc] FOREIGN KEY ([Fk_TSGTDoc]) REFERENCES [dbo].[TDoc] ([Pk_TDoc]),
-    CONSTRAINT [FK_WGStatus] FOREIGN KEY ([Fk_WGStatus]) REFERENCES [dbo].[Enum_TDocStatus] ([Pk_EnumTDocStatus]),
-    CONSTRAINT [FK_WGTDoc] FOREIGN KEY ([Fk_WGTDoc]) REFERENCES [dbo].[TDoc] ([Pk_TDoc])
+    CONSTRAINT [FK_WGStatus] FOREIGN KEY ([Fk_WGStatus]) REFERENCES [dbo].[Enum_TDocStatus] ([Pk_EnumTDocStatus])
 );
+
+
 
 
 

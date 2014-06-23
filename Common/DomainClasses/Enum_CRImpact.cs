@@ -15,8 +15,15 @@ namespace Etsi.Ultimate.DomainClasses
     [Serializable]
     public partial class Enum_CRImpact
     {
+        public Enum_CRImpact()
+        {
+            this.ChangeRequests = new HashSet<ChangeRequest>();
+        }
+    
         public int Pk_EnumCRImpact { get; set; }
         public string Impact { get; set; }
+    
+        public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

@@ -109,7 +109,6 @@ namespace DatabaseImport
         public static int? CheckStringToInt(string str, int? defaultValue, string logDescriptionCase, string id, Report report)
         {
             int returnValue = 0;
-            int val = CheckInt(defaultValue, " (During ChechStringToInt) ", id, report);
             string checkStr = CheckString(str, 0, " (During ChechStringToInt) ", id, report);
 
             bool success = int.TryParse(str, out returnValue);

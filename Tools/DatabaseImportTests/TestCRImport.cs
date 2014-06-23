@@ -151,7 +151,37 @@ namespace DatabaseImportTests
             Assert.AreEqual("UICS Apps", newTDocStatus.Impact);
         }
 
+        /*[TestCaseSource("GetTDocObjects")]
+        public void Test_FillDatabase_TDoc(C2006_03_17_tdocs legacyObject, TDoc expectedObject)
+        {
+            // New context mock
+            var newContext = MockRepository.GenerateMock<IUltimateContext>();
+            var newDbSet = new TDocFakeDbSet();
+            newContext.Stub(ctx => ctx.TDocs).Return(newDbSet);
+            newContext.Stub(ctx => ctx.Enum_TDocStatus).Return(GetTDocStatus());
 
+            // Legacy context mock
+            var legacyContext = MockRepository.GenerateMock<ITmpDb>();
+            var legacyDbSet = new TdocLegacyFakeDbSet();
+            legacyDbSet.Add(legacyObject);
+            legacyContext.Stub(ctx => ctx.C2006_03_17_tdocs).Return(legacyDbSet);
+
+            // Report
+            var report = new Domain.Report();
+
+            // Execute
+            var import = new TDocImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
+            import.FillDatabase();
+
+            // Test results
+            Assert.AreEqual(1, newDbSet.All().Count);
+
+            var newTDoc = newDbSet.All()[0];
+            Assert.AreEqual(expectedObject.UID, newTDoc.UID);
+            Assert.AreEqual(expectedObject.Title, newTDoc.Title);
+            Assert.AreEqual(expectedObject.Source, newTDoc.Source);
+            Assert.AreEqual(expectedObject.Fk_TDocStatus, newTDoc.Fk_TDocStatus);
+        }*/
         
         [TestCaseSource("GetCRObjects")]
         public void test_FillDatabase_CR(List_of_GSM___3G_CRs legacyObject, ChangeRequest expectedObject)
@@ -159,11 +189,11 @@ namespace DatabaseImportTests
             // New context mock
             var newContext = MockRepository.GenerateMock<IUltimateContext>();
             var newDbSet = new ChangeRequestFakeDbSet();
-            var newCRVersionDbSet = new CR_VersionFakeDbSet();
+            var newWIDbSet = new CRWIFakeDbSet();
             var newRemarksDbSet = new RemarkFakeDbSet();
             newContext.Stub(ctx => ctx.ChangeRequests).Return(newDbSet);
-            newContext.Stub(ctx => ctx.CR_Versions).Return(newCRVersionDbSet);
             newContext.Stub(ctx => ctx.Remarks).Return(newRemarksDbSet);
+            newContext.Stub(ctx => ctx.CR_WorkItems).Return(newWIDbSet);
             newContext.Stub(ctx => ctx.Enum_CRCategory).Return(GetCRCategory());
             newContext.Stub(ctx => ctx.Enum_TDocStatus).Return(GetTDocStatus());
             newContext.Stub(ctx => ctx.Specifications).Return(GetSpecs());
@@ -171,6 +201,8 @@ namespace DatabaseImportTests
             newContext.Stub(ctx => ctx.Specification_Release).Return(GetSpecRelease());
             newContext.Stub(ctx => ctx.SpecVersions).Return(GetVersions());
             newContext.Stub(ctx => ctx.Meetings).Return(GetMeetings());
+            newContext.Stub(ctx => ctx.WorkItems).Return(GetWIs());
+            newContext.Stub(ctx => ctx.Communities).Return(GetCommunities());
 
             // Legacy context mock
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
@@ -196,13 +228,21 @@ namespace DatabaseImportTests
             Assert.AreEqual(expectedObject.Fk_Enum_CRCategory, newCR.Fk_Enum_CRCategory);
             Assert.AreEqual(expectedObject.Fk_WGStatus, newCR.Fk_WGStatus);
             Assert.AreEqual(expectedObject.Fk_TSGStatus,newCR.Fk_TSGStatus);
-            Assert.AreEqual(expectedObject.Fk_SpecRelease, newCR.Fk_SpecRelease);
+            Assert.AreEqual(expectedObject.Fk_Release, newCR.Fk_Release);
+            Assert.AreEqual(expectedObject.Fk_Specification, newCR.Fk_Specification);
             Assert.AreEqual(expectedObject.TSGSourceOrganizations, newCR.TSGSourceOrganizations);
             Assert.AreEqual(expectedObject.WGSourceOrganizations, newCR.WGSourceOrganizations);
-            Assert.AreEqual(1, newCR.CR_Version.Count);
+            Assert.AreEqual(expectedObject.Fk_CurrentVersion, newCR.Fk_CurrentVersion);
+            Assert.AreEqual(expectedObject.Fk_NewVersion, newCR.Fk_NewVersion);
             Assert.AreEqual(expectedObject.TSGMeeting, newCR.TSGMeeting);
             Assert.AreEqual(expectedObject.WGMeeting, newCR.WGMeeting);
+            Assert.AreEqual(expectedObject.TSGTDoc, newCR.TSGTDoc);
+            Assert.AreEqual(expectedObject.WGTDoc, newCR.WGTDoc);
+            Assert.AreEqual(expectedObject.WGTarget, newCR.WGTarget);
+            Assert.AreEqual(expectedObject.TSGTarget, newCR.TSGTarget);
+            Assert.AreEqual(expectedObject.WGSourceForTSG, newCR.WGSourceForTSG);
             Assert.AreEqual(1, newCR.Remarks.Count);
+            Assert.AreEqual(2, newCR.CR_WorkItems.Count);
         }
 
         /// <summary>
@@ -231,7 +271,11 @@ namespace DatabaseImportTests
                         Source_2nd_Level = " FT ",
                         Meeting_1st_Level = "S3-48",
                         Meeting_2nd_Level = "JZAYEZ",
-                        Remarks = "TEST REMARQUES"
+                        Doc_1st_Level = "AZER",
+                        Doc_2nd_Level = "TYUI",
+                        Remarks = "TEST REMARQUES",
+                        Workitem = "AZE/RTY",
+                        WG_Responsible = "C3"
                     },
                     new ChangeRequest()
                     {
@@ -242,11 +286,19 @@ namespace DatabaseImportTests
                         Fk_Enum_CRCategory = null,
                         Fk_WGStatus = 2,
                         Fk_TSGStatus = 1,
-                        Fk_SpecRelease = 1,
+                        Fk_Specification = 1,
+                        Fk_Release = 2,
                         TSGSourceOrganizations = "Vodafone",
                         WGSourceOrganizations = "FT",
                         TSGMeeting = 1,
-                        WGMeeting = null
+                        WGMeeting = null,
+                        Fk_NewVersion = null,
+                        Fk_CurrentVersion = 1,
+                        TSGTDoc = "AZER",
+                        WGTDoc = "TYUI",
+                        WGTarget = 1,
+                        TSGTarget = 2,
+                        WGSourceForTSG = 1
                     }
                 );
 
@@ -269,7 +321,11 @@ namespace DatabaseImportTests
                         Source_2nd_Level = "PT12",
                         Meeting_1st_Level = "S3-4",
                         Meeting_2nd_Level = "S3-49",
-                        Remarks = "TEST REMARQUES"
+                        Doc_1st_Level = "AZER2",
+                        Doc_2nd_Level = "TYUI2",
+                        Remarks = "TEST REMARQUES",
+                        Workitem = "RTY/AZE",
+                        WG_Responsible = "C9"
                     },
                     new ChangeRequest()
                     {
@@ -280,17 +336,72 @@ namespace DatabaseImportTests
                         Fk_Enum_CRCategory = 2,
                         Fk_WGStatus = null,
                         Fk_TSGStatus = 3,
-                        Fk_SpecRelease = 2,
+                        Fk_Specification = 2,
+                        Fk_Release = 2,
                         TSGSourceOrganizations = "GSM1",
                         WGSourceOrganizations = "PT12",
                         TSGMeeting = null,
-                        WGMeeting = 2
+                        WGMeeting = 2,
+                        Fk_NewVersion = 2,
+                        Fk_CurrentVersion = null,
+                        TSGTDoc = "AZER2",
+                        WGTDoc = "TYUI2",
+                        WGTarget = 2,
+                        TSGTarget = 3,
+                        WGSourceForTSG = 2
                     }
                 );
 
 
             }
         }
+        /// <summary>
+        /// Send to the test method the legacy TDoc object and the new expected TDoc object
+        /// </summary>
+        /*public IEnumerable<TestCaseData> GetTDocObjects
+        {
+            get
+            {
+                yield return new TestCaseData(
+                    new C2006_03_17_tdocs()
+                    {
+                        Row_id = 1,
+                        doc_tdoc = "C1-131002",
+                        doc_title = "Tunneling of UE services over restrictive access networks; Protocol Details",
+                        doc_source = "Vodafone",
+                        doc_remarks = "aGreed"
+                    },
+                    new TDoc()
+                    {
+                        UID = "C1-131002",
+                        Title = "Tunneling of UE services over restrictive access networks; Protocol Details",
+                        Source = "Vodafone",
+                        Fk_TDocStatus = 1,
+                    }
+                );
+
+                yield return new TestCaseData(
+                    new C2006_03_17_tdocs()
+                    {
+                        Row_id = 2,
+                        doc_tdoc = "C1-131004",
+                        doc_title = "Pseudo-CR on iFire Firewall Detection and Traversal",
+                        doc_source = "Vodafone/Acme Packet",
+                        doc_remarks = "postponed"
+                    },
+                    new TDoc()
+                    {
+                        UID = "C1-131004",
+                        Title = "Pseudo-CR on iFire Firewall Detection and Traversal",
+                        Source = "Vodafone/Acme Packet",
+                        Fk_TDocStatus = 3,
+                    }
+                );
+
+
+            }
+        }*/
+
 
         private IDbSet<Domain.Enum_CRCategory> GetCRCategory()
         {
@@ -319,6 +430,23 @@ namespace DatabaseImportTests
             list.Add(new Domain.Specification() { Pk_SpecificationId = 2, Number = "2" });
             return list;
         }
+
+        private IDbSet<Domain.WorkItem> GetWIs()
+        {
+            var list = new WorkItemFakeDBSet();
+            list.Add(new Domain.WorkItem() { Pk_WorkItemUid = 1, Acronym = "AZE" });
+            list.Add(new Domain.WorkItem() { Pk_WorkItemUid = 2, Acronym = "RTY" });
+            return list;
+        }
+
+        private IDbSet<Domain.Community> GetCommunities()
+        {
+            var list = new CommunityFakeDBSet();
+            list.Add(new Domain.Community() { TbId = 1, ShortName = "C3", ParentTbId = 2 });
+            list.Add(new Domain.Community() { TbId = 2, ShortName = "C9", ParentTbId = 3 });
+            return list;
+        }
+
         private IDbSet<Domain.Release> GetReleases()
         {
             var list = new ReleaseFakeDBSet();
@@ -330,7 +458,7 @@ namespace DatabaseImportTests
         {
             var list = new SpecificationReleaseFakeDBSet();
             list.Add(new Domain.Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 2 });
-            list.Add(new Domain.Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 2, Fk_ReleaseId = 2 });
+            list.Add(new Domain.Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 1, Fk_ReleaseId = 5 });
             return list;
         }
 

@@ -13,18 +13,14 @@ namespace Etsi.Ultimate.DomainClasses
     using System.Collections.Generic;
     
     [Serializable]
-    public partial class TDoc
+    public partial class CR_WorkItems
     {
-        public TDoc()
-        {
-            this.ChangeRequestsTSG = new HashSet<ChangeRequest>();
-            this.ChangeRequestsWG = new HashSet<ChangeRequest>();
-        }
+        public int Pk_CRWorkItems { get; set; }
+        public Nullable<int> Fk_CRId { get; set; }
+        public Nullable<int> Fk_WIId { get; set; }
     
-        public int Pk_TDoc { get; set; }
-    
-        public virtual ICollection<ChangeRequest> ChangeRequestsTSG { get; set; }
-        public virtual ICollection<ChangeRequest> ChangeRequestsWG { get; set; }
+        public virtual ChangeRequest ChangeRequest { get; set; }
+        public virtual WorkItem WorkItem { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

@@ -1,7 +1,0 @@
-﻿CREATE TABLE [dbo].[TDoc] (
-    [Pk_TDoc] INT IDENTITY (1, 1) NOT NULL,
-    CONSTRAINT [PK_TDoc] PRIMARY KEY CLUSTERED ([Pk_TDoc] ASC)
-);
-
-
-

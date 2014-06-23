@@ -37,7 +37,6 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<Users_AdHoc_Roles> Users_AdHoc_Roles { get; set; }
         public IDbSet<History> Histories { get; set; }
         public IDbSet<View_Persons> View_Persons { get; set; }
-        public IDbSet<Community> Communities { get; set; }
         public IDbSet<WorkItem> WorkItems { get; set; }
         public IDbSet<WorkItems_ResponsibleGroups> WorkItems_ResponsibleGroups { get; set; }
         public IDbSet<Meeting> Meetings { get; set; }
@@ -60,8 +59,8 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<Enum_TDocStatus> Enum_TDocStatus { get; set; }
         public IDbSet<Enum_CRImpact> Enum_CRImpact { get; set; }
         public IDbSet<ChangeRequest> ChangeRequests { get; set; }
-        public IDbSet<CR_Version> CR_Versions { get; set; }
-        public IDbSet<TDoc> TDocs { get; set; }
+        public IDbSet<CR_WorkItems> CR_WorkItems { get; set; }
+        public IDbSet<Community> Communities { get; set; }
     	
     	/**
     	 * This code is intended to enable testability of the different layers,
@@ -82,9 +81,19 @@ namespace Etsi.Ultimate.DataAccess
             Entry(entity).State = EntityState.Deleted;
         }
     
+        public void SetDetached(object entity)
+        {
+            Entry(entity).State = EntityState.Detached;
+        }
+    
     	public void SetAutoDetectChanges(bool detect)
         {
             Configuration.AutoDetectChangesEnabled = detect;
+        }
+    
+        public void SetValidateOnSave(bool detect)
+        {
+            Configuration.ValidateOnSaveEnabled = detect;
         }
       
     

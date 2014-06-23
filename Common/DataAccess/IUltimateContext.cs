@@ -41,13 +41,14 @@ namespace Etsi.Ultimate.DataAccess
         IDbSet<Enum_TDocStatus> Enum_TDocStatus { get; set; }
         IDbSet<Enum_CRImpact> Enum_CRImpact { get; set; }
         IDbSet<ChangeRequest> ChangeRequests { get; set; }
-        IDbSet<CR_Version> CR_Versions { get; set; }
-        IDbSet<TDoc> TDocs { get; set; }
+        IDbSet<CR_WorkItems> CR_WorkItems { get; set; }
 
         void SetModified(object entity);
         void SetAdded(object entity);
         void SetDeleted(object entity);
         void SetAutoDetectChanges(bool detect);
+        void SetValidateOnSave(bool detect);
+        void SetDetached(object entity);
         int SaveChanges();
 
         // ---- STORED PROCEDURES calls -----------

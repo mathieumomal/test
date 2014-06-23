@@ -7,7 +7,7 @@
     <Schema Namespace="Etsi.Ultimate.DataAccess.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="EtsiUltimateDataAccessStoreContainer">
           <EntitySet Name="ChangeRequest" EntityType="Etsi.Ultimate.DataAccess.Store.ChangeRequest" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="CR_Version" EntityType="Etsi.Ultimate.DataAccess.Store.CR_Version" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="CR_WorkItems" EntityType="Etsi.Ultimate.DataAccess.Store.CR_WorkItems" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_CommunitiesShortName" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_CommunitiesShortName" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_CRCategory" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_CRCategory" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_CRImpact" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_CRImpact" store:Type="Tables" Schema="dbo" />
@@ -26,7 +26,6 @@
           <EntitySet Name="SpecificationRapporteur" EntityType="Etsi.Ultimate.DataAccess.Store.SpecificationRapporteur" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SpecificationResponsibleGroup" EntityType="Etsi.Ultimate.DataAccess.Store.SpecificationResponsibleGroup" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SpecificationTechnologies" EntityType="Etsi.Ultimate.DataAccess.Store.SpecificationTechnologies" store:Type="Tables" Schema="dbo" />
-          <EntitySet Name="TDoc" EntityType="Etsi.Ultimate.DataAccess.Store.TDoc" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Version" EntityType="Etsi.Ultimate.DataAccess.Store.Version" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="WorkItems" EntityType="Etsi.Ultimate.DataAccess.Store.WorkItems" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="WorkItems_ResponsibleGroups" EntityType="Etsi.Ultimate.DataAccess.Store.WorkItems_ResponsibleGroups" store:Type="Tables" Schema="dbo" />
@@ -63,8 +62,8 @@
             <DefiningQuery>SELECT 
       [View_Communities].[TbId] AS [TbId], 
       [View_Communities].[TbName] AS [TbName], 
-      [View_Communities].[TbTitle] AS [TbTitle], 
       [View_Communities].[TbType] AS [TbType], 
+      [View_Communities].[TbTitle] AS [TbTitle], 
       [View_Communities].[ParentTbId] AS [ParentTbId], 
       [View_Communities].[ActiveCode] AS [ActiveCode], 
       [View_Communities].[ShortName] AS [ShortName]
@@ -124,12 +123,32 @@
       [View_Persons].[DELETED_FLG] AS [DELETED_FLG]
       FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           </EntitySet>
-          <AssociationSet Name="FK_CR" Association="Etsi.Ultimate.DataAccess.Store.FK_CR">
+          <AssociationSet Name="FK_CRCurrentVersion" Association="Etsi.Ultimate.DataAccess.Store.FK_CRCurrentVersion">
+            <End Role="Version" EntitySet="Version" />
             <End Role="ChangeRequest" EntitySet="ChangeRequest" />
-            <End Role="CR_Version" EntitySet="CR_Version" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CRId" Association="Etsi.Ultimate.DataAccess.Store.FK_CRId">
+            <End Role="ChangeRequest" EntitySet="ChangeRequest" />
+            <End Role="CR_WorkItems" EntitySet="CR_WorkItems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CRNewVersion" Association="Etsi.Ultimate.DataAccess.Store.FK_CRNewVersion">
+            <End Role="Version" EntitySet="Version" />
+            <End Role="ChangeRequest" EntitySet="ChangeRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CRRelease" Association="Etsi.Ultimate.DataAccess.Store.FK_CRRelease">
+            <End Role="Releases" EntitySet="Releases" />
+            <End Role="ChangeRequest" EntitySet="ChangeRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CRSpecification" Association="Etsi.Ultimate.DataAccess.Store.FK_CRSpecification">
+            <End Role="Specification" EntitySet="Specification" />
+            <End Role="ChangeRequest" EntitySet="ChangeRequest" />
           </AssociationSet>
           <AssociationSet Name="FK_Enum_CRCategory" Association="Etsi.Ultimate.DataAccess.Store.FK_Enum_CRCategory">
             <End Role="Enum_CRCategory" EntitySet="Enum_CRCategory" />
+            <End Role="ChangeRequest" EntitySet="ChangeRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Enum_CRImpact" Association="Etsi.Ultimate.DataAccess.Store.FK_Enum_CRImpact">
+            <End Role="Enum_CRImpact" EntitySet="Enum_CRImpact" />
             <End Role="ChangeRequest" EntitySet="ChangeRequest" />
           </AssociationSet>
           <AssociationSet Name="FK_Enum_Technology" Association="Etsi.Ultimate.DataAccess.Store.FK_Enum_Technology">
@@ -192,29 +211,17 @@
             <End Role="Specification" EntitySet="Specification" />
             <End Role="Specification_WorkItem" EntitySet="Specification_WorkItem" />
           </AssociationSet>
-          <AssociationSet Name="FK_SpecRelease" Association="Etsi.Ultimate.DataAccess.Store.FK_SpecRelease">
-            <End Role="Specification_Release" EntitySet="Specification_Release" />
-            <End Role="ChangeRequest" EntitySet="ChangeRequest" />
-          </AssociationSet>
           <AssociationSet Name="FK_TSGStatus" Association="Etsi.Ultimate.DataAccess.Store.FK_TSGStatus">
             <End Role="Enum_TDocStatus" EntitySet="Enum_TDocStatus" />
             <End Role="ChangeRequest" EntitySet="ChangeRequest" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TSGTDoc" Association="Etsi.Ultimate.DataAccess.Store.FK_TSGTDoc">
-            <End Role="TDoc" EntitySet="TDoc" />
-            <End Role="ChangeRequest" EntitySet="ChangeRequest" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Version" Association="Etsi.Ultimate.DataAccess.Store.FK_Version">
-            <End Role="Version" EntitySet="Version" />
-            <End Role="CR_Version" EntitySet="CR_Version" />
           </AssociationSet>
           <AssociationSet Name="FK_WGStatus" Association="Etsi.Ultimate.DataAccess.Store.FK_WGStatus">
             <End Role="Enum_TDocStatus" EntitySet="Enum_TDocStatus" />
             <End Role="ChangeRequest" EntitySet="ChangeRequest" />
           </AssociationSet>
-          <AssociationSet Name="FK_WGTDoc" Association="Etsi.Ultimate.DataAccess.Store.FK_WGTDoc">
-            <End Role="TDoc" EntitySet="TDoc" />
-            <End Role="ChangeRequest" EntitySet="ChangeRequest" />
+          <AssociationSet Name="FK_WIId" Association="Etsi.Ultimate.DataAccess.Store.FK_WIId">
+            <End Role="WorkItems" EntitySet="WorkItems" />
+            <End Role="CR_WorkItems" EntitySet="CR_WorkItems" />
           </AssociationSet>
           <AssociationSet Name="FK_WorkItemID" Association="Etsi.Ultimate.DataAccess.Store.FK_WorkItemID">
             <End Role="WorkItems" EntitySet="WorkItems" />
@@ -269,21 +276,24 @@
           <Property Name="TSGMeeting" Type="int" />
           <Property Name="TSGTarget" Type="int" />
           <Property Name="WGSourceForTSG" Type="int" />
-          <Property Name="Fk_TSGTDoc" Type="int" />
+          <Property Name="TSGTDoc" Type="varchar" MaxLength="50" />
           <Property Name="WGMeeting" Type="int" />
           <Property Name="WGTarget" Type="int" />
-          <Property Name="Fk_WGTDoc" Type="int" />
+          <Property Name="WGTDoc" Type="varchar" MaxLength="50" />
           <Property Name="Fk_Enum_CRCategory" Type="int" />
-          <Property Name="Fk_SpecRelease" Type="int" />
+          <Property Name="Fk_Specification" Type="int" />
+          <Property Name="Fk_Release" Type="int" />
+          <Property Name="Fk_CurrentVersion" Type="int" />
+          <Property Name="Fk_NewVersion" Type="int" />
+          <Property Name="Fk_Impact" Type="int" />
         </EntityType>
-        <EntityType Name="CR_Version">
+        <EntityType Name="CR_WorkItems">
           <Key>
-            <PropertyRef Name="Pk_CRVersion" />
+            <PropertyRef Name="Pk_CRWorkItems" />
           </Key>
-          <Property Name="Pk_CRVersion" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Fk_CR" Type="int" Nullable="false" />
-          <Property Name="Fk_Version" Type="int" Nullable="false" />
-          <Property Name="IsNew" Type="bit" Nullable="false" />
+          <Property Name="Pk_CRWorkItems" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Fk_CRId" Type="int" />
+          <Property Name="Fk_WIId" Type="int" />
         </EntityType>
         <EntityType Name="Enum_CommunitiesShortName">
           <Key>
@@ -499,12 +509,6 @@
           <Property Name="Fk_Specification" Type="int" Nullable="false" />
           <Property Name="Fk_Enum_Technology" Type="int" Nullable="false" />
         </EntityType>
-        <EntityType Name="TDoc">
-          <Key>
-            <PropertyRef Name="Pk_TDoc" />
-          </Key>
-          <Property Name="Pk_TDoc" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-        </EntityType>
         <EntityType Name="Version">
           <Key>
             <PropertyRef Name="Pk_VersionId" />
@@ -633,8 +637,8 @@
           </Key>
           <Property Name="TbId" Type="int" Nullable="false" />
           <Property Name="TbName" Type="varchar" MaxLength="26" />
-          <Property Name="TbTitle" Type="varchar" MaxLength="70" />
           <Property Name="TbType" Type="varchar" MaxLength="8" />
+          <Property Name="TbTitle" Type="varchar" MaxLength="70" />
           <Property Name="ParentTbId" Type="int" />
           <Property Name="ActiveCode" Type="varchar" MaxLength="12" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
@@ -712,15 +716,63 @@
           <Property Name="ORGA_SHORT" Type="varchar" MaxLength="30" />
           <Property Name="DELETED_FLG" Type="varchar" Nullable="false" MaxLength="1" />
         </EntityType>
-        <Association Name="FK_CR">
-          <End Role="ChangeRequest" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequest" Multiplicity="1" />
-          <End Role="CR_Version" Type="Etsi.Ultimate.DataAccess.Store.CR_Version" Multiplicity="*" />
+        <Association Name="FK_CRCurrentVersion">
+          <End Role="Version" Type="Etsi.Ultimate.DataAccess.Store.Version" Multiplicity="0..1" />
+          <End Role="ChangeRequest" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Version">
+              <PropertyRef Name="Pk_VersionId" />
+            </Principal>
+            <Dependent Role="ChangeRequest">
+              <PropertyRef Name="Fk_CurrentVersion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CRId">
+          <End Role="ChangeRequest" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequest" Multiplicity="0..1" />
+          <End Role="CR_WorkItems" Type="Etsi.Ultimate.DataAccess.Store.CR_WorkItems" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ChangeRequest">
               <PropertyRef Name="Pk_ChangeRequest" />
             </Principal>
-            <Dependent Role="CR_Version">
-              <PropertyRef Name="Fk_CR" />
+            <Dependent Role="CR_WorkItems">
+              <PropertyRef Name="Fk_CRId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CRNewVersion">
+          <End Role="Version" Type="Etsi.Ultimate.DataAccess.Store.Version" Multiplicity="0..1" />
+          <End Role="ChangeRequest" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Version">
+              <PropertyRef Name="Pk_VersionId" />
+            </Principal>
+            <Dependent Role="ChangeRequest">
+              <PropertyRef Name="Fk_NewVersion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CRRelease">
+          <End Role="Releases" Type="Etsi.Ultimate.DataAccess.Store.Releases" Multiplicity="0..1" />
+          <End Role="ChangeRequest" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Releases">
+              <PropertyRef Name="Pk_ReleaseId" />
+            </Principal>
+            <Dependent Role="ChangeRequest">
+              <PropertyRef Name="Fk_Release" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CRSpecification">
+          <End Role="Specification" Type="Etsi.Ultimate.DataAccess.Store.Specification" Multiplicity="0..1" />
+          <End Role="ChangeRequest" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Specification">
+              <PropertyRef Name="Pk_SpecificationId" />
+            </Principal>
+            <Dependent Role="ChangeRequest">
+              <PropertyRef Name="Fk_Specification" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -733,6 +785,18 @@
             </Principal>
             <Dependent Role="ChangeRequest">
               <PropertyRef Name="Fk_Enum_CRCategory" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Enum_CRImpact">
+          <End Role="Enum_CRImpact" Type="Etsi.Ultimate.DataAccess.Store.Enum_CRImpact" Multiplicity="0..1" />
+          <End Role="ChangeRequest" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Enum_CRImpact">
+              <PropertyRef Name="Pk_EnumCRImpact" />
+            </Principal>
+            <Dependent Role="ChangeRequest">
+              <PropertyRef Name="Fk_Impact" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -916,18 +980,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SpecRelease">
-          <End Role="Specification_Release" Type="Etsi.Ultimate.DataAccess.Store.Specification_Release" Multiplicity="0..1" />
-          <End Role="ChangeRequest" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Specification_Release">
-              <PropertyRef Name="Pk_Specification_ReleaseId" />
-            </Principal>
-            <Dependent Role="ChangeRequest">
-              <PropertyRef Name="Fk_SpecRelease" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_TSGStatus">
           <End Role="Enum_TDocStatus" Type="Etsi.Ultimate.DataAccess.Store.Enum_TDocStatus" Multiplicity="0..1" />
           <End Role="ChangeRequest" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequest" Multiplicity="*" />
@@ -937,30 +989,6 @@
             </Principal>
             <Dependent Role="ChangeRequest">
               <PropertyRef Name="Fk_TSGStatus" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TSGTDoc">
-          <End Role="TDoc" Type="Etsi.Ultimate.DataAccess.Store.TDoc" Multiplicity="0..1" />
-          <End Role="ChangeRequest" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TDoc">
-              <PropertyRef Name="Pk_TDoc" />
-            </Principal>
-            <Dependent Role="ChangeRequest">
-              <PropertyRef Name="Fk_TSGTDoc" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Version">
-          <End Role="Version" Type="Etsi.Ultimate.DataAccess.Store.Version" Multiplicity="1" />
-          <End Role="CR_Version" Type="Etsi.Ultimate.DataAccess.Store.CR_Version" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Version">
-              <PropertyRef Name="Pk_VersionId" />
-            </Principal>
-            <Dependent Role="CR_Version">
-              <PropertyRef Name="Fk_Version" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -976,15 +1004,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_WGTDoc">
-          <End Role="TDoc" Type="Etsi.Ultimate.DataAccess.Store.TDoc" Multiplicity="0..1" />
-          <End Role="ChangeRequest" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequest" Multiplicity="*" />
+        <Association Name="FK_WIId">
+          <End Role="WorkItems" Type="Etsi.Ultimate.DataAccess.Store.WorkItems" Multiplicity="0..1" />
+          <End Role="CR_WorkItems" Type="Etsi.Ultimate.DataAccess.Store.CR_WorkItems" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="TDoc">
-              <PropertyRef Name="Pk_TDoc" />
+            <Principal Role="WorkItems">
+              <PropertyRef Name="Pk_WorkItemUid" />
             </Principal>
-            <Dependent Role="ChangeRequest">
-              <PropertyRef Name="Fk_WGTDoc" />
+            <Dependent Role="CR_WorkItems">
+              <PropertyRef Name="Fk_WIId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1136,7 +1164,6 @@
             <End Role="History" EntitySet="Histories" />
           </AssociationSet>
           <EntitySet Name="View_Persons" EntityType="Etsi.Ultimate.DataAccess.View_Persons" />
-          <EntitySet Name="Communities" EntityType="Etsi.Ultimate.DataAccess.Community" />
           <EntitySet Name="WorkItems" EntityType="Etsi.Ultimate.DataAccess.WorkItem" />
           <AssociationSet Name="FK_WorkItems_Releases" Association="Etsi.Ultimate.DataAccess.FK_WorkItems_Releases">
             <End Role="Release" EntitySet="Releases" />
@@ -1247,11 +1274,21 @@
           <EntitySet Name="Enum_TDocStatus" EntityType="Etsi.Ultimate.DataAccess.Enum_TDocStatus" />
           <EntitySet Name="Enum_CRImpact" EntityType="Etsi.Ultimate.DataAccess.Enum_CRImpact" />
           <EntitySet Name="ChangeRequests" EntityType="Etsi.Ultimate.DataAccess.ChangeRequest" />
-          <EntitySet Name="CR_Versions" EntityType="Etsi.Ultimate.DataAccess.CR_Version" />
-          <EntitySet Name="TDocs" EntityType="Etsi.Ultimate.DataAccess.TDoc" />
-          <AssociationSet Name="FK_CR" Association="Etsi.Ultimate.DataAccess.FK_CR">
+          <AssociationSet Name="FK_CRCurrentVersion" Association="Etsi.Ultimate.DataAccess.FK_CRCurrentVersion">
+            <End Role="SpecVersion" EntitySet="SpecVersions" />
             <End Role="ChangeRequest" EntitySet="ChangeRequests" />
-            <End Role="CR_Version" EntitySet="CR_Versions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CRNewVersion" Association="Etsi.Ultimate.DataAccess.FK_CRNewVersion">
+            <End Role="SpecVersion" EntitySet="SpecVersions" />
+            <End Role="ChangeRequest" EntitySet="ChangeRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CRRelease" Association="Etsi.Ultimate.DataAccess.FK_CRRelease">
+            <End Role="Release" EntitySet="Releases" />
+            <End Role="ChangeRequest" EntitySet="ChangeRequests" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CRSpecification" Association="Etsi.Ultimate.DataAccess.FK_CRSpecification">
+            <End Role="Specification" EntitySet="Specifications" />
+            <End Role="ChangeRequest" EntitySet="ChangeRequests" />
           </AssociationSet>
           <AssociationSet Name="FK_Enum_CRCategory" Association="Etsi.Ultimate.DataAccess.FK_Enum_CRCategory">
             <End Role="Enum_CRCategory" EntitySet="Enum_CRCategory" />
@@ -1265,30 +1302,28 @@
             <End Role="ChangeRequest" EntitySet="ChangeRequests" />
             <End Role="Remark" EntitySet="Remarks" />
           </AssociationSet>
-          <AssociationSet Name="FK_SpecRelease" Association="Etsi.Ultimate.DataAccess.FK_SpecRelease">
-            <End Role="Specification_Release" EntitySet="Specification_Release" />
-            <End Role="ChangeRequest" EntitySet="ChangeRequests" />
-          </AssociationSet>
           <AssociationSet Name="FK_TSGStatus" Association="Etsi.Ultimate.DataAccess.FK_TSGStatus">
             <End Role="Enum_TDocStatus" EntitySet="Enum_TDocStatus" />
-            <End Role="ChangeRequest" EntitySet="ChangeRequests" />
-          </AssociationSet>
-          <AssociationSet Name="FK_TSGTDoc" Association="Etsi.Ultimate.DataAccess.FK_TSGTDoc">
-            <End Role="TDoc" EntitySet="TDocs" />
             <End Role="ChangeRequest" EntitySet="ChangeRequests" />
           </AssociationSet>
           <AssociationSet Name="FK_WGStatus" Association="Etsi.Ultimate.DataAccess.FK_WGStatus">
             <End Role="Enum_TDocStatus" EntitySet="Enum_TDocStatus" />
             <End Role="ChangeRequest" EntitySet="ChangeRequests" />
           </AssociationSet>
-          <AssociationSet Name="FK_WGTDoc" Association="Etsi.Ultimate.DataAccess.FK_WGTDoc">
-            <End Role="TDoc" EntitySet="TDocs" />
+          <AssociationSet Name="FK_Enum_CRImpact" Association="Etsi.Ultimate.DataAccess.FK_Enum_CRImpact">
+            <End Role="Enum_CRImpact" EntitySet="Enum_CRImpact" />
             <End Role="ChangeRequest" EntitySet="ChangeRequests" />
           </AssociationSet>
-          <AssociationSet Name="FK_Version" Association="Etsi.Ultimate.DataAccess.FK_Version">
-            <End Role="SpecVersion" EntitySet="SpecVersions" />
-            <End Role="CR_Version" EntitySet="CR_Versions" />
+          <EntitySet Name="CR_WorkItems" EntityType="Etsi.Ultimate.DataAccess.CR_WorkItems" />
+          <AssociationSet Name="FK_CRId" Association="Etsi.Ultimate.DataAccess.FK_CRId">
+            <End Role="ChangeRequest" EntitySet="ChangeRequests" />
+            <End Role="CR_WorkItems" EntitySet="CR_WorkItems" />
           </AssociationSet>
+          <AssociationSet Name="FK_WIId" Association="Etsi.Ultimate.DataAccess.FK_WIId">
+            <End Role="WorkItem" EntitySet="WorkItems" />
+            <End Role="CR_WorkItems" EntitySet="CR_WorkItems" />
+          </AssociationSet>
+          <EntitySet Name="Communities" EntityType="Etsi.Ultimate.DataAccess.Community" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -1340,6 +1375,7 @@
           <NavigationProperty Name="WorkItems" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItems_Releases" FromRole="Release" ToRole="WorkItem" />
           <NavigationProperty Name="Specification_Release" Relationship="Etsi.Ultimate.DataAccess.FK_ReleaseID" FromRole="Release" ToRole="Specification_Release" />
           <NavigationProperty Name="Versions" Relationship="Etsi.Ultimate.DataAccess.Version_FK_ReleaseID" FromRole="Release" ToRole="Version" />
+          <NavigationProperty Name="ChangeRequests" Relationship="Etsi.Ultimate.DataAccess.FK_CRRelease" FromRole="Release" ToRole="ChangeRequest" />
         </EntityType>
         <Association Name="FK_Releases_Enum_ReleaseStatus">
           <End Role="Enum_ReleaseStatus" Type="Etsi.Ultimate.DataAccess.Enum_ReleaseStatus" Multiplicity="0..1" />
@@ -1448,18 +1484,6 @@
           <Property Type="String" Name="DELETED_FLG" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="ORGA_SHORT" MaxLength="30" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="Community">
-          <Key>
-            <PropertyRef Name="TbId" />
-          </Key>
-          <Property Type="Int32" Name="TbId" Nullable="false" />
-          <Property Type="String" Name="TbName" MaxLength="26" FixedLength="false" Unicode="false" />
-          <Property Type="Int32" Name="ParentTbId" />
-          <Property Type="String" Name="ShortName" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="ActiveCode" MaxLength="12" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="TbTitle" MaxLength="70" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="TbType" MaxLength="8" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="WorkItem">
           <Key>
             <PropertyRef Name="Pk_WorkItemUid" />
@@ -1496,6 +1520,7 @@
           <NavigationProperty Name="ParentWi" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItems_ParentWi" FromRole="WorkItem1" ToRole="WorkItem" />
           <NavigationProperty Name="WorkItems_ResponsibleGroups" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItems_ResponsibleGroups_WorkItems" FromRole="WorkItem" ToRole="WorkItems_ResponsibleGroups" />
           <NavigationProperty Name="Specification_WorkItem" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItemID" FromRole="WorkItem" ToRole="Specification_WorkItem" />
+          <NavigationProperty Name="CR_WorkItems" Relationship="Etsi.Ultimate.DataAccess.FK_WIId" FromRole="WorkItem" ToRole="CR_WorkItems" />
         </EntityType>
         <Association Name="FK_WorkItems_Releases">
           <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="0..1" />
@@ -1683,6 +1708,7 @@
           <Property Type="DateTime" Name="MOD_TS" Precision="3" />
           <Property Type="String" Name="MOD_BY" MaxLength="20" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Versions" Relationship="Etsi.Ultimate.DataAccess.Version_FK_SpecificationID" FromRole="Specification" ToRole="Version" />
+          <NavigationProperty Name="ChangeRequests" Relationship="Etsi.Ultimate.DataAccess.FK_CRSpecification" FromRole="Specification" ToRole="ChangeRequest" />
           </EntityType>
         <EntityType Name="Specification_Release">
           <Key>
@@ -1699,7 +1725,6 @@
           <NavigationProperty Name="Remarks" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_Specification_Release" FromRole="Specification_Release" ToRole="Remark" />
           <NavigationProperty Name="Specification" Relationship="Etsi.Ultimate.DataAccess.Release_FK_SpecificationID" FromRole="Specification_Release" ToRole="Specification" />
           <Property Type="Boolean" Name="isTranpositionForced" />
-          <NavigationProperty Name="ChangeRequests" Relationship="Etsi.Ultimate.DataAccess.FK_SpecRelease" FromRole="Specification_Release" ToRole="ChangeRequest" />
         </EntityType>
         <EntityType Name="Specification_WorkItem">
           <Key>
@@ -1931,7 +1956,8 @@
           <NavigationProperty Name="Release" Relationship="Etsi.Ultimate.DataAccess.Version_FK_ReleaseID" FromRole="Version" ToRole="Release" />
           <NavigationProperty Name="Remarks" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_Version" FromRole="Version" ToRole="Remark" />
           <NavigationProperty Name="Specification" Relationship="Etsi.Ultimate.DataAccess.Version_FK_SpecificationID" FromRole="Version" ToRole="Specification" />
-          <NavigationProperty Name="CR_Version" Relationship="Etsi.Ultimate.DataAccess.FK_Version" FromRole="SpecVersion" ToRole="CR_Version" />
+          <NavigationProperty Name="ChangeRequests" Relationship="Etsi.Ultimate.DataAccess.FK_CRCurrentVersion" FromRole="SpecVersion" ToRole="ChangeRequest" />
+          <NavigationProperty Name="ChangeRequests1" Relationship="Etsi.Ultimate.DataAccess.FK_CRNewVersion" FromRole="SpecVersion" ToRole="ChangeRequest" />
           </EntityType>
         <Association Name="Version_FK_ReleaseID">
           <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="0..1" />
@@ -2005,6 +2031,7 @@
           </Key>
           <Property Type="Int32" Name="Pk_EnumCRImpact" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="Impact" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ChangeRequests" Relationship="Etsi.Ultimate.DataAccess.FK_Enum_CRImpact" FromRole="Enum_CRImpact" ToRole="ChangeRequest" />
         </EntityType>
         <EntityType Name="ChangeRequest">
           <Key>
@@ -2022,50 +2049,73 @@
           <Property Type="Int32" Name="TSGMeeting" />
           <Property Type="Int32" Name="TSGTarget" />
           <Property Type="Int32" Name="WGSourceForTSG" />
-          <Property Type="Int32" Name="Fk_TSGTDoc" />
           <Property Type="Int32" Name="WGMeeting" />
           <Property Type="Int32" Name="WGTarget" />
-          <Property Type="Int32" Name="Fk_WGTDoc" />
           <Property Type="Int32" Name="Fk_Enum_CRCategory" />
-          <Property Type="Int32" Name="Fk_SpecRelease" />
-          <NavigationProperty Name="CR_Version" Relationship="Etsi.Ultimate.DataAccess.FK_CR" FromRole="ChangeRequest" ToRole="CR_Version" />
+          <Property Type="Int32" Name="Fk_Specification" />
+          <Property Type="Int32" Name="Fk_Release" />
+          <Property Type="Int32" Name="Fk_CurrentVersion" />
+          <Property Type="Int32" Name="Fk_NewVersion" />
+          <NavigationProperty Name="CurrentVersion" Relationship="Etsi.Ultimate.DataAccess.FK_CRCurrentVersion" FromRole="ChangeRequest" ToRole="SpecVersion" />
+          <NavigationProperty Name="NewVersion" Relationship="Etsi.Ultimate.DataAccess.FK_CRNewVersion" FromRole="ChangeRequest" ToRole="SpecVersion" />
+          <NavigationProperty Name="Release" Relationship="Etsi.Ultimate.DataAccess.FK_CRRelease" FromRole="ChangeRequest" ToRole="Release" />
+          <NavigationProperty Name="Specification" Relationship="Etsi.Ultimate.DataAccess.FK_CRSpecification" FromRole="ChangeRequest" ToRole="Specification" />
           <NavigationProperty Name="Enum_CRCategory" Relationship="Etsi.Ultimate.DataAccess.FK_Enum_CRCategory" FromRole="ChangeRequest" ToRole="Enum_CRCategory" />
           <NavigationProperty Name="Histories" Relationship="Etsi.Ultimate.DataAccess.FK_History_CR" FromRole="ChangeRequest" ToRole="History" />
           <NavigationProperty Name="Remarks" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_CR" FromRole="ChangeRequest" ToRole="Remark" />
-          <NavigationProperty Name="Specification_Release" Relationship="Etsi.Ultimate.DataAccess.FK_SpecRelease" FromRole="ChangeRequest" ToRole="Specification_Release" />
           <NavigationProperty Name="Enum_TDocStatusTSG" Relationship="Etsi.Ultimate.DataAccess.FK_TSGStatus" FromRole="ChangeRequest" ToRole="Enum_TDocStatus" />
-          <NavigationProperty Name="TDocTSG" Relationship="Etsi.Ultimate.DataAccess.FK_TSGTDoc" FromRole="ChangeRequest" ToRole="TDoc" />
           <NavigationProperty Name="Enum_TDocStatusWG" Relationship="Etsi.Ultimate.DataAccess.FK_WGStatus" FromRole="ChangeRequest" ToRole="Enum_TDocStatus" />
-          <NavigationProperty Name="TDocWG" Relationship="Etsi.Ultimate.DataAccess.FK_WGTDoc" FromRole="ChangeRequest" ToRole="TDoc" />
+          <Property Type="Int32" Name="Fk_Impact" />
+          <NavigationProperty Name="Enum_CRImpact" Relationship="Etsi.Ultimate.DataAccess.FK_Enum_CRImpact" FromRole="ChangeRequest" ToRole="Enum_CRImpact" />
+          <NavigationProperty Name="CR_WorkItems" Relationship="Etsi.Ultimate.DataAccess.FK_CRId" FromRole="ChangeRequest" ToRole="CR_WorkItems" />
+          <Property Type="String" Name="TSGTDoc" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="WGTDoc" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="CR_Version">
-          <Key>
-            <PropertyRef Name="Pk_CRVersion" />
-          </Key>
-          <Property Type="Int32" Name="Pk_CRVersion" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="Int32" Name="Fk_CR" Nullable="false" />
-          <Property Type="Int32" Name="Fk_Version" Nullable="false" />
-          <Property Type="Boolean" Name="IsNew" Nullable="false" />
-          <NavigationProperty Name="ChangeRequest" Relationship="Etsi.Ultimate.DataAccess.FK_CR" FromRole="CR_Version" ToRole="ChangeRequest" />
-          <NavigationProperty Name="Version" Relationship="Etsi.Ultimate.DataAccess.FK_Version" FromRole="CR_Version" ToRole="SpecVersion" />
-        </EntityType>
-        <EntityType Name="TDoc">
-          <Key>
-            <PropertyRef Name="Pk_TDoc" />
-          </Key>
-          <Property Type="Int32" Name="Pk_TDoc" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <NavigationProperty Name="ChangeRequestsTSG" Relationship="Etsi.Ultimate.DataAccess.FK_TSGTDoc" FromRole="TDoc" ToRole="ChangeRequest" />
-          <NavigationProperty Name="ChangeRequestsWG" Relationship="Etsi.Ultimate.DataAccess.FK_WGTDoc" FromRole="TDoc" ToRole="ChangeRequest" />
-        </EntityType>
-        <Association Name="FK_CR">
-          <End Type="Etsi.Ultimate.DataAccess.ChangeRequest" Role="ChangeRequest" Multiplicity="1" />
-          <End Type="Etsi.Ultimate.DataAccess.CR_Version" Role="CR_Version" Multiplicity="*" />
+        <Association Name="FK_CRCurrentVersion">
+          <End Type="Etsi.Ultimate.DataAccess.SpecVersion" Role="SpecVersion" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.ChangeRequest" Role="ChangeRequest" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="ChangeRequest">
-              <PropertyRef Name="Pk_ChangeRequest" />
+            <Principal Role="SpecVersion">
+              <PropertyRef Name="Pk_VersionId" />
             </Principal>
-            <Dependent Role="CR_Version">
-              <PropertyRef Name="Fk_CR" />
+            <Dependent Role="ChangeRequest">
+              <PropertyRef Name="Fk_CurrentVersion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CRNewVersion">
+          <End Type="Etsi.Ultimate.DataAccess.SpecVersion" Role="SpecVersion" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.ChangeRequest" Role="ChangeRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SpecVersion">
+              <PropertyRef Name="Pk_VersionId" />
+            </Principal>
+            <Dependent Role="ChangeRequest">
+              <PropertyRef Name="Fk_NewVersion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CRRelease">
+          <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.ChangeRequest" Role="ChangeRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Release">
+              <PropertyRef Name="Pk_ReleaseId" />
+            </Principal>
+            <Dependent Role="ChangeRequest">
+              <PropertyRef Name="Fk_Release" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CRSpecification">
+          <End Type="Etsi.Ultimate.DataAccess.Specification" Role="Specification" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.ChangeRequest" Role="ChangeRequest" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Specification">
+              <PropertyRef Name="Pk_SpecificationId" />
+            </Principal>
+            <Dependent Role="ChangeRequest">
+              <PropertyRef Name="Fk_Specification" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2105,18 +2155,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_SpecRelease">
-          <End Type="Etsi.Ultimate.DataAccess.Specification_Release" Role="Specification_Release" Multiplicity="0..1" />
-          <End Type="Etsi.Ultimate.DataAccess.ChangeRequest" Role="ChangeRequest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Specification_Release">
-              <PropertyRef Name="Pk_Specification_ReleaseId" />
-            </Principal>
-            <Dependent Role="ChangeRequest">
-              <PropertyRef Name="Fk_SpecRelease" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_TSGStatus">
           <End Type="Etsi.Ultimate.DataAccess.Enum_TDocStatus" Role="Enum_TDocStatus" Multiplicity="0..1" />
           <End Type="Etsi.Ultimate.DataAccess.ChangeRequest" Role="ChangeRequest" Multiplicity="*" />
@@ -2126,18 +2164,6 @@
             </Principal>
             <Dependent Role="ChangeRequest">
               <PropertyRef Name="Fk_TSGStatus" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_TSGTDoc">
-          <End Type="Etsi.Ultimate.DataAccess.TDoc" Role="TDoc" Multiplicity="0..1" />
-          <End Type="Etsi.Ultimate.DataAccess.ChangeRequest" Role="ChangeRequest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="TDoc">
-              <PropertyRef Name="Pk_TDoc" />
-            </Principal>
-            <Dependent Role="ChangeRequest">
-              <PropertyRef Name="Fk_TSGTDoc" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2153,30 +2179,64 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_WGTDoc">
-          <End Type="Etsi.Ultimate.DataAccess.TDoc" Role="TDoc" Multiplicity="0..1" />
+        <Association Name="FK_Enum_CRImpact">
+          <End Type="Etsi.Ultimate.DataAccess.Enum_CRImpact" Role="Enum_CRImpact" Multiplicity="0..1" />
           <End Type="Etsi.Ultimate.DataAccess.ChangeRequest" Role="ChangeRequest" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="TDoc">
-              <PropertyRef Name="Pk_TDoc" />
+            <Principal Role="Enum_CRImpact">
+              <PropertyRef Name="Pk_EnumCRImpact" />
             </Principal>
             <Dependent Role="ChangeRequest">
-              <PropertyRef Name="Fk_WGTDoc" />
+              <PropertyRef Name="Fk_Impact" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Version">
-          <End Type="Etsi.Ultimate.DataAccess.SpecVersion" Role="SpecVersion" Multiplicity="1" />
-          <End Type="Etsi.Ultimate.DataAccess.CR_Version" Role="CR_Version" Multiplicity="*" />
+        <EntityType Name="CR_WorkItems">
+          <Key>
+            <PropertyRef Name="Pk_CRWorkItems" />
+          </Key>
+          <Property Type="Int32" Name="Pk_CRWorkItems" Nullable="false" />
+          <Property Type="Int32" Name="Fk_CRId" />
+          <Property Type="Int32" Name="Fk_WIId" />
+          <NavigationProperty Name="ChangeRequest" Relationship="Etsi.Ultimate.DataAccess.FK_CRId" FromRole="CR_WorkItems" ToRole="ChangeRequest" />
+          <NavigationProperty Name="WorkItem" Relationship="Etsi.Ultimate.DataAccess.FK_WIId" FromRole="CR_WorkItems" ToRole="WorkItem" />
+        </EntityType>
+        <Association Name="FK_CRId">
+          <End Type="Etsi.Ultimate.DataAccess.ChangeRequest" Role="ChangeRequest" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.CR_WorkItems" Role="CR_WorkItems" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="SpecVersion">
-              <PropertyRef Name="Pk_VersionId" />
+            <Principal Role="ChangeRequest">
+              <PropertyRef Name="Pk_ChangeRequest" />
             </Principal>
-            <Dependent Role="CR_Version">
-              <PropertyRef Name="Fk_Version" />
+            <Dependent Role="CR_WorkItems">
+              <PropertyRef Name="Fk_CRId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_WIId">
+          <End Type="Etsi.Ultimate.DataAccess.WorkItem" Role="WorkItem" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.CR_WorkItems" Role="CR_WorkItems" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="WorkItem">
+              <PropertyRef Name="Pk_WorkItemUid" />
+            </Principal>
+            <Dependent Role="CR_WorkItems">
+              <PropertyRef Name="Fk_WIId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Community">
+          <Key>
+            <PropertyRef Name="TbId" />
+          </Key>
+          <Property Type="Int32" Name="TbId" Nullable="false" />
+          <Property Type="String" Name="TbName" MaxLength="26" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="TbType" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="TbTitle" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="ParentTbId" />
+          <Property Type="String" Name="ActiveCode" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="ShortName" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2292,19 +2352,6 @@
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="Username" ColumnName="Username" />
                 <ScalarProperty Name="PERSON_ID" ColumnName="PERSON_ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Communities">
-            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Community">
-              <MappingFragment StoreEntitySet="View_Communities">
-                <ScalarProperty Name="TbType" ColumnName="TbType" />
-                <ScalarProperty Name="TbTitle" ColumnName="TbTitle" />
-                <ScalarProperty Name="ActiveCode" ColumnName="ActiveCode" />
-                <ScalarProperty Name="ShortName" ColumnName="ShortName" />
-                <ScalarProperty Name="ParentTbId" ColumnName="ParentTbId" />
-                <ScalarProperty Name="TbName" ColumnName="TbName" />
-                <ScalarProperty Name="TbId" ColumnName="TbId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -2606,12 +2653,16 @@
           <EntitySetMapping Name="ChangeRequests">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ChangeRequest">
               <MappingFragment StoreEntitySet="ChangeRequest">
-                <ScalarProperty Name="Fk_SpecRelease" ColumnName="Fk_SpecRelease" />
+                <ScalarProperty Name="WGTDoc" ColumnName="WGTDoc" />
+                <ScalarProperty Name="TSGTDoc" ColumnName="TSGTDoc" />
+                <ScalarProperty Name="Fk_Impact" ColumnName="Fk_Impact" />
+                <ScalarProperty Name="Fk_NewVersion" ColumnName="Fk_NewVersion" />
+                <ScalarProperty Name="Fk_CurrentVersion" ColumnName="Fk_CurrentVersion" />
+                <ScalarProperty Name="Fk_Release" ColumnName="Fk_Release" />
+                <ScalarProperty Name="Fk_Specification" ColumnName="Fk_Specification" />
                 <ScalarProperty Name="Fk_Enum_CRCategory" ColumnName="Fk_Enum_CRCategory" />
-                <ScalarProperty Name="Fk_WGTDoc" ColumnName="Fk_WGTDoc" />
                 <ScalarProperty Name="WGTarget" ColumnName="WGTarget" />
                 <ScalarProperty Name="WGMeeting" ColumnName="WGMeeting" />
-                <ScalarProperty Name="Fk_TSGTDoc" ColumnName="Fk_TSGTDoc" />
                 <ScalarProperty Name="WGSourceForTSG" ColumnName="WGSourceForTSG" />
                 <ScalarProperty Name="TSGTarget" ColumnName="TSGTarget" />
                 <ScalarProperty Name="TSGMeeting" ColumnName="TSGMeeting" />
@@ -2627,20 +2678,25 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="CR_Versions">
-            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.CR_Version">
-              <MappingFragment StoreEntitySet="CR_Version">
-                <ScalarProperty Name="IsNew" ColumnName="IsNew" />
-                <ScalarProperty Name="Fk_Version" ColumnName="Fk_Version" />
-                <ScalarProperty Name="Fk_CR" ColumnName="Fk_CR" />
-                <ScalarProperty Name="Pk_CRVersion" ColumnName="Pk_CRVersion" />
+          <EntitySetMapping Name="CR_WorkItems">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.CR_WorkItems">
+              <MappingFragment StoreEntitySet="CR_WorkItems">
+                <ScalarProperty Name="Fk_WIId" ColumnName="Fk_WIId" />
+                <ScalarProperty Name="Fk_CRId" ColumnName="Fk_CRId" />
+                <ScalarProperty Name="Pk_CRWorkItems" ColumnName="Pk_CRWorkItems" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="TDocs">
-            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.TDoc">
-              <MappingFragment StoreEntitySet="TDoc">
-                <ScalarProperty Name="Pk_TDoc" ColumnName="Pk_TDoc" />
+          <EntitySetMapping Name="Communities">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Community">
+              <MappingFragment StoreEntitySet="View_Communities">
+                <ScalarProperty Name="ShortName" ColumnName="ShortName" />
+                <ScalarProperty Name="ActiveCode" ColumnName="ActiveCode" />
+                <ScalarProperty Name="ParentTbId" ColumnName="ParentTbId" />
+                <ScalarProperty Name="TbTitle" ColumnName="TbTitle" />
+                <ScalarProperty Name="TbType" ColumnName="TbType" />
+                <ScalarProperty Name="TbName" ColumnName="TbName" />
+                <ScalarProperty Name="TbId" ColumnName="TbId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

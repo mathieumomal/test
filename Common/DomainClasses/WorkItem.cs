@@ -21,6 +21,7 @@ namespace Etsi.Ultimate.DomainClasses
             this.ChildWis = new HashSet<WorkItem>();
             this.WorkItems_ResponsibleGroups = new HashSet<WorkItems_ResponsibleGroups>();
             this.Specification_WorkItem = new HashSet<Specification_WorkItem>();
+            this.CR_WorkItems = new HashSet<CR_WorkItems>();
         }
     
         public int Pk_WorkItemUid { get; set; }
@@ -56,6 +57,7 @@ namespace Etsi.Ultimate.DomainClasses
         public virtual WorkItem ParentWi { get; set; }
         public virtual ICollection<WorkItems_ResponsibleGroups> WorkItems_ResponsibleGroups { get; set; }
         public virtual ICollection<Specification_WorkItem> Specification_WorkItem { get; set; }
+        public virtual ICollection<CR_WorkItems> CR_WorkItems { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

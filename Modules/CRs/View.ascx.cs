@@ -45,7 +45,16 @@ namespace Etsi.Ultimate.Module.CRs
             {
                 //Test data
                 ChangeRequest c = new ChangeRequest();
-                c.Specification_Release = new Specification_Release(){ Pk_Specification_ReleaseId = 1, Specification = new Specification(){Pk_SpecificationId=1, Number="SPEC123"}};
+                c.Specification = new Specification()
+                {
+                    Pk_SpecificationId = 1,
+                    Number = "SPEC123"
+                };
+                c.Release = new Release()
+                {
+                    Pk_ReleaseId = 1,
+                    Name = "test"
+                };
                 c.Revision = 12;
                 c.CRNumber = "CR123";
                 c.Subject = "New CR for test";
@@ -80,7 +89,8 @@ namespace Etsi.Ultimate.Module.CRs
         private ChangeRequest CloneCR(ChangeRequest cr)
         {
             ChangeRequest c = new ChangeRequest();
-            c.Specification_Release = cr.Specification_Release;
+            c.Specification = cr.Specification;
+            c.Release = cr.Release;
             c.Revision = cr.Revision;
             c.CRNumber = cr.CRNumber;
             c.WgMtgShortRef = cr.WgMtgShortRef;

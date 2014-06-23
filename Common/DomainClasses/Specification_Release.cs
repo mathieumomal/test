@@ -18,7 +18,6 @@ namespace Etsi.Ultimate.DomainClasses
         public Specification_Release()
         {
             this.Remarks = new HashSet<Remark>();
-            this.ChangeRequests = new HashSet<ChangeRequest>();
         }
     
         public int Pk_Specification_ReleaseId { get; set; }
@@ -33,7 +32,6 @@ namespace Etsi.Ultimate.DomainClasses
         public virtual Release Release { get; set; }
         public virtual ICollection<Remark> Remarks { get; set; }
         public virtual Specification Specification { get; set; }
-        public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

@@ -17,11 +17,11 @@ namespace Etsi.Ultimate.DomainClasses
     {
         public int TbId { get; set; }
         public string TbName { get; set; }
-        public Nullable<int> ParentTbId { get; set; }
-        public string ShortName { get; set; }
-        public string ActiveCode { get; set; }
-        public string TbTitle { get; set; }
         public string TbType { get; set; }
+        public string TbTitle { get; set; }
+        public Nullable<int> ParentTbId { get; set; }
+        public string ActiveCode { get; set; }
+        public string ShortName { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

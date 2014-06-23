@@ -40,8 +40,7 @@ namespace Etsi.Ultimate.Tests
         public System.Data.Entity.IDbSet<Enum_TDocStatus> Enum_TDocStatus{ get; set;}
         public System.Data.Entity.IDbSet<Enum_CRImpact> Enum_CRImpact { get; set; }
         public System.Data.Entity.IDbSet<ChangeRequest> ChangeRequests { get; set; }
-        public System.Data.Entity.IDbSet<CR_Version> CR_Versions { get; set; }
-        public System.Data.Entity.IDbSet<TDoc> TDocs { get; set; }
+        public System.Data.Entity.IDbSet<CR_WorkItems> CR_WorkItems { get; set; }
 
 
         public void SetModified(object entity)
@@ -86,6 +85,16 @@ namespace Etsi.Ultimate.Tests
         }
 
         public void SetAutoDetectChanges(bool detect)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetDetached(object entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetValidateOnSave(bool detect)
         {
             throw new NotImplementedException();
         }

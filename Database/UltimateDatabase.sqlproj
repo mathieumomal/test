@@ -170,8 +170,7 @@
     <Build Include="dbo\Tables\Enum_TDocStatus.sql" />
     <Build Include="dbo\Tables\Enum_CRImpact.sql" />
     <Build Include="dbo\Tables\ChangeRequest.sql" />
-    <Build Include="dbo\Tables\CR_Version.sql" />
-    <Build Include="dbo\Tables\TDoc.sql" />
+    <Build Include="dbo\Tables\CR_WorkItems.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

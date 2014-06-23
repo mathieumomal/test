@@ -9,11 +9,12 @@ BEGIN
 	Declare @Error int
 
 	-- Delete from CR
-	DELETE FROM CR_Version;
-	DELETE FROM ChangeRequest;
+	DELETE FROM CR_WorkItems;
+	DELETE FROM Remarks;
 	DELETE FROM Enum_CRCategory;
 	DELETE FROM Enum_TDocStatus;
 	DELETE FROM Enum_CRImpact;
+	DELETE FROM ChangeRequest;
 	
 	Select @Error = @@error
 	Return @Error

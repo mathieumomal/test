@@ -12,7 +12,7 @@ namespace Etsi.Ultimate.DomainClasses
         {
             get
             {
-                return Specification_Release.Specification.Number;
+                return Specification.Number;
             }
         }
 
