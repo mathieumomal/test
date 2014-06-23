@@ -74,11 +74,30 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual("Location1", result.Location);
         }
 
-        [Test]
-        public void UploadOrAllocateVersionTest()
+        [Test, TestCaseSource("SpecVersionsData")]
+        public void GetVersionsByWrongIdTest(SpecVersionFakeDBSet specVersionsData)
         {
-            //TODO
-        }
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Versions_Upload);
+
+            //Mock Rights Manager
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(userRights);
+            Assert.IsTrue(mockRightsManager.GetRights(0).HasRight(Enum_UserRights.Versions_Upload));
+
+            var statusOpen = new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open" };
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)specVersionsData);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)new ReleaseFakeDBSet { 
+                new Release() { Pk_ReleaseId = 1, Enum_ReleaseStatus = statusOpen }, new Release() { Pk_ReleaseId = 1, Enum_ReleaseStatus = statusOpen } 
+            }.AsQueryable());
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+
+            SpecVersionsManager mng = new SpecVersionsManager(uow);
+            SpecVersion result = mng.GetSpecVersionById(0, 0).Key;
+            Assert.IsNull(result);
+        }        
 
         /// <summary>
         /// Get SpecVersions DATA

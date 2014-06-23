@@ -138,7 +138,6 @@ namespace Etsi.Ultimate.Tests.Business
             var release = Releases().FirstOrDefault();            
             var specReleaseList = new List<Specification_Release>() { 
                 new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 1, isWithdrawn = false, Release = release}
-                //new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 1, Fk_ReleaseId = 2, isWithdrawn = false}
             };
 
             var specReleaseList2 = new List<Specification_Release>() {                 
