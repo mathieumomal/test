@@ -63,6 +63,8 @@
             <DefiningQuery>SELECT 
       [View_Communities].[TbId] AS [TbId], 
       [View_Communities].[TbName] AS [TbName], 
+      [View_Communities].[TbTitle] AS [TbTitle], 
+      [View_Communities].[TbType] AS [TbType], 
       [View_Communities].[ParentTbId] AS [ParentTbId], 
       [View_Communities].[ActiveCode] AS [ActiveCode], 
       [View_Communities].[ShortName] AS [ShortName]
@@ -631,6 +633,8 @@
           </Key>
           <Property Name="TbId" Type="int" Nullable="false" />
           <Property Name="TbName" Type="varchar" MaxLength="26" />
+          <Property Name="TbTitle" Type="varchar" MaxLength="70" />
+          <Property Name="TbType" Type="varchar" MaxLength="8" />
           <Property Name="ParentTbId" Type="int" />
           <Property Name="ActiveCode" Type="varchar" MaxLength="12" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
@@ -1453,6 +1457,8 @@
           <Property Type="Int32" Name="ParentTbId" />
           <Property Type="String" Name="ShortName" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="ActiveCode" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="TbTitle" MaxLength="70" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="TbType" MaxLength="8" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="WorkItem">
           <Key>
@@ -2292,6 +2298,8 @@
           <EntitySetMapping Name="Communities">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Community">
               <MappingFragment StoreEntitySet="View_Communities">
+                <ScalarProperty Name="TbType" ColumnName="TbType" />
+                <ScalarProperty Name="TbTitle" ColumnName="TbTitle" />
                 <ScalarProperty Name="ActiveCode" ColumnName="ActiveCode" />
                 <ScalarProperty Name="ShortName" ColumnName="ShortName" />
                 <ScalarProperty Name="ParentTbId" ColumnName="ParentTbId" />

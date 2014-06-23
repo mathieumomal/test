@@ -4,7 +4,7 @@
     <IncludeCompositeObjects>True</IncludeCompositeObjects>
     <TargetDatabaseName>U3GPPDB</TargetDatabaseName>
     <DeployScriptFileName>UltimateDatabase.sql</DeployScriptFileName>
-    <TargetConnectionString>Data Source=(local);Integrated Security=True;Pooling=False</TargetConnectionString>
+    <TargetConnectionString>Data Source=10.16.8.40;Persist Security Info=True;User ID=sa;Pooling=False</TargetConnectionString>
     <ProfileVersionNumber>1</ProfileVersionNumber>
   </PropertyGroup>
   <ItemGroup>
@@ -13,6 +13,10 @@
     </SqlCmdVariable>
     <SqlCmdVariable Include="DSDB">
       <Value>DSDB</Value>
+    </SqlCmdVariable>
+    <SqlCmdVariable Include="WPMDB">
+      <Value>
+      </Value>
     </SqlCmdVariable>
   </ItemGroup>
 </Project>

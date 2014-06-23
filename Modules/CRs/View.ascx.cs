@@ -12,15 +12,17 @@
 
 using System;
 using System.Web.UI.WebControls;
-using Christoc.Modules.CRs.Components;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Services.Localization;
 using DotNetNuke.UI.Utilities;
+using Etsi.Ultimate.DomainClasses;
+using Telerik.Web.UI;
+using System.Collections.Generic;
 
-namespace Christoc.Modules.CRs
+namespace Etsi.Ultimate.Module.CRs
 {
     /// -----------------------------------------------------------------------------
     /// <summary>
@@ -35,15 +37,34 @@ namespace Christoc.Modules.CRs
     /// 
     /// </summary>
     /// -----------------------------------------------------------------------------
-    public partial class View : CRsModuleBase, IActionable
+    public partial class View : PortalModuleBase
     {
         protected void Page_Load(object sender, EventArgs e)
         {
             try
             {
-                var tc = new ItemController();
-                rptItemList.DataSource = tc.GetItems(ModuleId);
-                rptItemList.DataBind();
+                //Test data
+                ChangeRequest c = new ChangeRequest();
+                c.Specification_Release = new Specification_Release(){ Pk_Specification_ReleaseId = 1, Specification = new Specification(){Pk_SpecificationId=1, Number="SPEC123"}};
+                c.Revision = 12;
+                c.CRNumber = "CR123";
+                c.Subject = "New CR for test";
+                c.WgMtgShortRef = "WG_MTG54";
+                c.WgTDocLink = "#";
+                c.Enum_TDocStatusWG = new Enum_TDocStatus() { Pk_EnumTDocStatus = 1, WGUsable = true, Status = "WG status" };
+                c.TsgMtgShortRef = "TSG_MTG54";
+                c.TsgTDocLink = "#";
+                c.Enum_TDocStatusTSG = new Enum_TDocStatus() { Pk_EnumTDocStatus = 2, TSGUsable = true, Status = "TSG status" };
+                c.ImplementationStatus = "Done";
+                c.IsRevisionCreationEnabled = true;
+                c.IsTDocCreationEnabled = true;
+                ChangeRequest c1 = CloneCR(c);
+                c1.IsRevisionCreationEnabled = false;
+                ChangeRequest c2 = CloneCR(c);
+                c2.IsTDocCreationEnabled = false;
+                List<ChangeRequest> l = new List<ChangeRequest>() { c,c1 , c2};
+                crsTable.DataSource = l;
+                crsTable.DataBind();
             }
             catch (Exception exc) //Module failed to load
             {
@@ -51,63 +72,45 @@ namespace Christoc.Modules.CRs
             }
         }
 
-        protected void rptItemListOnItemDataBound(object sender, RepeaterItemEventArgs e)
+        /// <summary>
+        /// Tmp operation to clone a ChangeRequest object for test purposes
+        /// </summary>
+        /// <param name="cr"></param>
+        /// <returns></returns>
+        private ChangeRequest CloneCR(ChangeRequest cr)
         {
-            if (e.Item.ItemType == ListItemType.AlternatingItem || e.Item.ItemType == ListItemType.Item)
+            ChangeRequest c = new ChangeRequest();
+            c.Specification_Release = cr.Specification_Release;
+            c.Revision = cr.Revision;
+            c.CRNumber = cr.CRNumber;
+            c.WgMtgShortRef = cr.WgMtgShortRef;
+            c.WgTDocLink = cr.WgTDocLink;
+            c.TsgMtgShortRef = cr.TsgMtgShortRef;
+            c.TsgTDocLink = cr.TsgTDocLink;
+            c.Enum_TDocStatusTSG = cr.Enum_TDocStatusTSG;
+            c.ImplementationStatus = cr.ImplementationStatus;
+            c.IsRevisionCreationEnabled = cr.IsRevisionCreationEnabled;
+            c.IsTDocCreationEnabled = cr.IsTDocCreationEnabled;
+            return c;
+        }
+        /// <summary>
+        /// Speicification List ItemDataBound event
+        /// </summary>
+        /// <param name="sender">source of event</param>
+        /// <param name="e">event args</param>
+        protected void crsTable_ItemDataBound(object sender, Telerik.Web.UI.GridItemEventArgs e)
+        {
+            if (e.Item is GridDataItem)
             {
-                var lnkEdit = e.Item.FindControl("lnkEdit") as HyperLink;
-                var lnkDelete = e.Item.FindControl("lnkDelete") as LinkButton;
-
-                var pnlAdminControls = e.Item.FindControl("pnlAdmin") as Panel;
-
-                var t = (Item)e.Item.DataItem;
-
-                if (IsEditable && lnkDelete != null && lnkEdit != null && pnlAdminControls != null)
-                {
-                    pnlAdminControls.Visible = true;
-                    lnkDelete.CommandArgument = t.ItemId.ToString();
-                    lnkDelete.Enabled = lnkDelete.Visible = lnkEdit.Enabled = lnkEdit.Visible = true;
-
-                    lnkEdit.NavigateUrl = EditUrl(string.Empty, string.Empty, "Edit", "tid=" + t.ItemId);
-
-                    ClientAPI.AddButtonConfirm(lnkDelete, Localization.GetString("ConfirmDelete", LocalResourceFile));
-                }
-                else
-                {
-                    pnlAdminControls.Visible = false;
-                }
+                GridDataItem dataItem = e.Item as GridDataItem;
+                //Get CR row
+                DomainClasses.ChangeRequest currentCR = (DomainClasses.ChangeRequest)e.Item.DataItem;
+                HyperLink createRevisionAction = e.Item.FindControl("CreateRevisionAction") as HyperLink;
+                createRevisionAction.Enabled = currentCR.IsRevisionCreationEnabled;
+                HyperLink createTDocAction = e.Item.FindControl("CreateTDocAction") as HyperLink;
+                createTDocAction.Enabled = currentCR.IsRevisionCreationEnabled;
             }
         }
-
-
-        public void rptItemListOnItemCommand(object source, RepeaterCommandEventArgs e)
-        {
-            if (e.CommandName == "Edit")
-            {
-                Response.Redirect(EditUrl(string.Empty, string.Empty, "Edit", "tid=" + e.CommandArgument));
-            }
-
-            if (e.CommandName == "Delete")
-            {
-                var tc = new ItemController();
-                tc.DeleteItem(Convert.ToInt32(e.CommandArgument), ModuleId);
-            }
-            Response.Redirect(DotNetNuke.Common.Globals.NavigateURL());
-        }
-
-        public ModuleActionCollection ModuleActions
-        {
-            get
-            {
-                var actions = new ModuleActionCollection
-                    {
-                        {
-                            GetNextActionID(), Localization.GetString("EditModule", LocalResourceFile), "", "", "",
-                            EditUrl(), false, SecurityAccessLevel.Edit, true, false
-                        }
-                    };
-                return actions;
-            }
-        }
+        
     }
 }

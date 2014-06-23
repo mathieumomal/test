@@ -1,14 +1,14 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="CRs" type="Module" version="00.00.01">
+    <package name="CRs" type="Module" version="00.00.02">
       <friendlyName>CRs</friendlyName>
-      <description>Christoc.com CRs module</description>
+      <description>CRs module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
       <owner>
-        <name>Christoc.com</name>
-        <organization>Christoc.com</organization>
-        <url>http://www.christoc.com</url>
-        <email>modules@christoc.com</email>
+        <name>capgemini.com</name>
+        <organization>capgemini.com</organization>
+        <url>http://www.capgemini.com</url>
+        <email></email>
       </owner>
       <license src="License.txt"></license>
       <releaseNotes src="ReleaseNotes.txt"></releaseNotes>
@@ -17,21 +17,7 @@
       </dependencies>
       
       <components>
-        <component type="Script">
-          <scripts>
-            <basePath>DesktopModules\CRs</basePath>
-            <script type="Install">
-              <path>Providers\DataProviders\SqlDataProvider</path>
-              <name>00.00.01.SqlDataProvider</name>
-              <version>00.00.01</version>
-            </script>
-            <script type="UnInstall">
-              <path>Providers\DataProviders\SqlDataProvider</path>
-              <name>Uninstall.SqlDataProvider</name>
-              <version>00.00.01</version>
-            </script>
-          </scripts>
-        </component>
+        
 
         <component type="ResourceFile">
           <resourceFiles>
@@ -46,7 +32,7 @@
           <desktopModule>
             <moduleName>CRs</moduleName>
             <foldername>CRs</foldername>
-            <businessControllerClass>Christoc.Modules.CRs.Components.FeatureController</businessControllerClass>
+            <businessControllerClass>Etsi.Ultimate.Module.CRs.Components.FeatureController</businessControllerClass>
             <supportedFeatures />
             <moduleDefinitions>
               <moduleDefinition>
@@ -62,28 +48,7 @@
                     <iconFile />
                     <helpUrl />
                     <viewOrder>0</viewOrder>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>Edit</controlKey>
-                    <controlSrc>DesktopModules/CRs/Edit.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>Edit Content</controlTitle>
-                    <controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <viewOrder>0</viewOrder>
-                    <supportsPopUps>True</supportsPopUps>
-                  </moduleControl>
-                  <moduleControl>
-                    <controlKey>Settings</controlKey>
-                    <controlSrc>DesktopModules/CRs/Settings.ascx</controlSrc>
-                    <supportsPartialRendering>False</supportsPartialRendering>
-                    <controlTitle>CRs Settings</controlTitle>
-                    <controlType>Edit</controlType>
-                    <iconFile />
-                    <helpUrl />
-                    <viewOrder>0</viewOrder>
-                  </moduleControl>
+                  </moduleControl>                  
                 </moduleControls>
               </moduleDefinition>
             </moduleDefinitions>
@@ -92,7 +57,11 @@
         <component type="Assembly">
           <assemblies>
             <assembly>
-              <name>CRs.dll</name>
+              <name>Etsi.Ultimate.Module.CRs.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.DomainClasses.dll</name>
               <path>bin</path>
             </assembly>
           </assemblies>
