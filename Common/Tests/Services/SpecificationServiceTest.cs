@@ -88,6 +88,78 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual("3GPP SA 1,3GPP SA 2", result.Key.SecondaryResponsibleGroupsFullNames);
         }
 
+        [Test, TestCaseSource("SpecificationData")]
+        public void GetSpecificationBySearchCriteria(SpecificationFakeDBSet specificationData)
+        {
+            UserRightsContainer userRights = new UserRightsContainer();
+            //Mock Rights Manager
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(userRights);
+
+            Community c = new Community() { TbId = 1, ActiveCode = "ACTIVE", ParentTbId = 0, ShortName = "SP", TbName = "3GPP SA" };
+            Community c1 = new Community() { TbId = 2, ActiveCode = "ACTIVE", ParentTbId = 1, ShortName = "S1", TbName = "3GPP SA 1" };
+            Community c2 = new Community() { TbId = 3, ActiveCode = "ACTIVE", ParentTbId = 1, ShortName = "S2", TbName = "3GPP SA 2" };
+
+            List<Community> communitiesSet = new List<Community>() { c, c1, c2 };
+            //Mock Comminities
+            var mockCommunitiesManager = MockRepository.GenerateMock<ICommunityManager>();
+            mockCommunitiesManager.Stub(x => x.GetCommmunityById(1)).Return(c);
+            mockCommunitiesManager.Stub(x => x.GetCommmunityById(2)).Return(c1);
+            mockCommunitiesManager.Stub(x => x.GetCommmunityById(3)).Return(c2);
+            mockCommunitiesManager.Stub(x => x.GetCommunities()).Return(communitiesSet);
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specificationData);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+            ManagerFactory.Container.RegisterInstance(typeof(ICommunityManager), mockCommunitiesManager);
+
+            SpecificationSearch searchObject = new SpecificationSearch()
+            {
+                Title= "First specification",
+                Order = SpecificationSearch.SpecificationOrder.TitleDesc,
+                PageSize = 1
+            };
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var specSVC = new SpecificationService();
+            Assert.AreEqual(1, specSVC.GetSpecificationBySearchCriteria(0, searchObject).Key.Key.Count);
+
+        }
+
+        [Test, TestCaseSource("SpecificationData")]
+        public void GetSpecificationBySearchText(SpecificationFakeDBSet specificationData)
+        {
+            UserRightsContainer userRights = new UserRightsContainer();
+            //Mock Rights Manager
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(userRights);
+
+            Community c = new Community() { TbId = 1, ActiveCode = "ACTIVE", ParentTbId = 0, ShortName = "SP", TbName = "3GPP SA" };
+            Community c1 = new Community() { TbId = 2, ActiveCode = "ACTIVE", ParentTbId = 1, ShortName = "S1", TbName = "3GPP SA 1" };
+            Community c2 = new Community() { TbId = 3, ActiveCode = "ACTIVE", ParentTbId = 1, ShortName = "S2", TbName = "3GPP SA 2" };
+
+            List<Community> communitiesSet = new List<Community>() { c, c1, c2 };
+            //Mock Comminities
+            var mockCommunitiesManager = MockRepository.GenerateMock<ICommunityManager>();
+            mockCommunitiesManager.Stub(x => x.GetCommmunityById(1)).Return(c);
+            mockCommunitiesManager.Stub(x => x.GetCommmunityById(2)).Return(c1);
+            mockCommunitiesManager.Stub(x => x.GetCommmunityById(3)).Return(c2);
+            mockCommunitiesManager.Stub(x => x.GetCommunities()).Return(communitiesSet);
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specificationData);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+            ManagerFactory.Container.RegisterInstance(typeof(ICommunityManager), mockCommunitiesManager);
+
+           
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var specSVC = new SpecificationService();
+            Assert.AreEqual(1, specSVC.GetSpecificationBySearchCriteria(0, "specification").Count);
+            Assert.AreEqual(0, specSVC.GetSpecificationBySearchCriteriaWithExclusion(0, "specification", new List<string>() { "00.01U" }).Count);
+
+        }
+
         [Test, TestCaseSource("GetSpecificicationNumbersTestFormat")]
         public void TestCheckFormatNumberIsValid(string specNumber, bool expectResult, int messageCount)
         {
@@ -126,6 +198,7 @@ namespace Etsi.Ultimate.Tests.Services
                 Assert.AreEqual(messageCount, results.Value.Count());
             }
         }
+        
 
         [Test]
         public void ExportSpecificationList_Nominal()

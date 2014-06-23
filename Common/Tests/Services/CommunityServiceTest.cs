@@ -51,5 +51,18 @@ namespace Etsi.Ultimate.Tests.Services
 
             mockDataContext.VerifyAllExpectations();
         }
+
+        [Test]
+        public void GetCommmunityshortNameById()
+        {
+            CacheManager.Clear(cacheKey);
+            CommunityFakeRepository fakeRepo = new CommunityFakeRepository();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Communities).Return((IDbSet<Community>)fakeRepo.All).Repeat.Once();
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var service = new CommunityService();
+            Assert.AreEqual("SP", service.GetCommmunityshortNameById(1));
+        }
     }
 }
