@@ -269,9 +269,8 @@ namespace Etsi.Ultimate.Business
         /// Check the title & release correct in cover page
         /// </summary>
         /// <param name="title">Title</param>
-        /// <param name="release">Release</param>
         /// <returns>True/False</returns>
-        public bool IsTitleCorrect(string title, string release)
+        public bool IsTitleCorrect(string title)
         {
             bool isTitleCorrect = false;
 
@@ -302,11 +301,63 @@ namespace Etsi.Ultimate.Business
             }
 
             string formattedPage = page1Text.ToString().Replace("\r\n", String.Empty).Replace(" ", String.Empty);
-            string titleText = title + "(" + release + ")";
-            if (formattedPage.Contains(titleText.Replace(" ", String.Empty).ToLower()))
+            if (formattedPage.Contains(title.Replace(" ", String.Empty).ToLower()))
                 isTitleCorrect = true;
 
             return isTitleCorrect;
+        }
+
+        /// <summary>
+        /// Check the release style for ZGSM
+        /// </summary>
+        /// <param name="release">Release</param>
+        /// <returns>True/False</returns>
+        public bool IsReleaseStyleCorrect(string release)
+        {
+            bool isReleaseStyleCorrect = false;
+            StyleDefinitionsPart styleDefinitionPart = wordProcessingDocument.MainDocumentPart.StyleDefinitionsPart;
+            bool isReleaseStyleExist = styleDefinitionPart.RootElement.Elements<Style>().Any(x => x.StyleId.Value.Equals("ZGSM", StringComparison.InvariantCultureIgnoreCase));
+            if (isReleaseStyleExist)
+            {
+                var paragraphs = wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+                StringBuilder zgsmText = new StringBuilder();
+                foreach (var paragraph in paragraphs)
+                {
+                    paragraph.Descendants().OfType<Run>().Where(x => x.Descendants().OfType<RunStyle>().Any(y => y.Val == "ZGSM")).ToList().ForEach(z => zgsmText.Append(GetPlainText(z)));
+                    if (!String.IsNullOrWhiteSpace(zgsmText.ToString()))
+                        break;
+                }
+
+                if (zgsmText.ToString().Equals(release, StringComparison.InvariantCultureIgnoreCase))
+                    isReleaseStyleCorrect = true;
+            }
+
+            return isReleaseStyleCorrect;
+        }
+
+        /// <summary>
+        /// Check for Auto Numbering values present in the document
+        /// </summary>
+        /// <returns>True/False</returns>
+        public bool IsAutomaticNumberingPresent()
+        {
+            return wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<NumberingId>().Any(x => x.Val != "0");
+        }
+
+        #endregion
+
+        #region IDisposable Members
+
+        /// <summary>
+        /// Dispose word application from memory
+        /// </summary>
+        public void Dispose()
+        {
+            // close word and dispose reference
+            if (wordProcessingDocument != null)
+            {
+                wordProcessingDocument.Close();
+            }
         }
 
         #endregion

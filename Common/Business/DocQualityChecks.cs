@@ -1,9 +1,48 @@
-﻿using System;
+﻿using NetOffice.WordApi;
+using NetOffice.WordApi.Enums;
+using System;
+using System.IO;
+using System.Security.Principal;
+using System.Text.RegularExpressions;
+using Word = NetOffice.WordApi;
 
 namespace Etsi.Ultimate.Business
 {
     class DocQualityChecks : IQualityChecks
     {
+        #region Variables
+
+        private Word.Application wordApplication;
+        private Word.Document wordDocument;
+        private string documentName = String.Empty;
+
+        #endregion
+
+        #region Constructor
+
+        /// <summary>
+        /// Constructor to create Word document by using given memory stream
+        /// </summary>
+        /// <param name="memoryStream">Memory Stream</param>
+        /// <param name="temporaryFolder">Temporary Folder</param>
+        public DocQualityChecks(MemoryStream memoryStream, string temporaryFolder)
+        {
+            //Save stream in temporary location
+            byte[] bytes = memoryStream.ToArray();
+            documentName = Path.Combine(temporaryFolder, "tempword.doc");
+            if (File.Exists(documentName))
+                File.Delete(documentName);
+            FileStream fs = new FileStream(documentName, FileMode.Create, FileAccess.Write);
+            fs.Write(bytes, 0, (int)bytes.Length);
+            fs.Close();
+
+            wordApplication = new Word.Application();
+            wordApplication.DisplayAlerts = WdAlertLevel.wdAlertsNone;
+            wordDocument = wordApplication.Documents.Open(documentName, false, true);
+        }
+
+        #endregion
+
         #region IQualityChecks Members
 
         /// <summary>
@@ -12,7 +51,39 @@ namespace Etsi.Ultimate.Business
         /// <returns>True/False</returns>
         public bool HasTrackedRevisions()
         {
-            return false;
+            bool hasTrackedRevisions = false;
+
+            //Check revisions on all doc sections
+            foreach (var section in wordDocument.Sections)
+            {
+                //If nothing found in main document, search in headers & footers 
+                if (section.Range.Revisions.Count > 0)
+                {
+                    hasTrackedRevisions = true;
+                    break;
+                }
+                else
+                {
+                    foreach (var header in section.Headers)
+                    {
+                        if (header.Range.Revisions.Count > 0)
+                        {
+                            hasTrackedRevisions = true;
+                            break;
+                        }
+                    }
+                    foreach (var footer in section.Footers)
+                    {
+                        if (footer.Range.Revisions.Count > 0)
+                        {
+                            hasTrackedRevisions = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return hasTrackedRevisions;
         }
 
         /// <summary>
@@ -22,7 +93,42 @@ namespace Etsi.Ultimate.Business
         /// <returns>True/False</returns>
         public bool IsHistoryVersionCorrect(string versionToCheck)
         {
-            return true;
+            bool isHistoryVersionCorrect = false;
+
+            //Check tables on all doc sections
+            foreach (var section in wordDocument.Sections)
+            {
+                if (section.Range.Tables.Count > 0)
+                {
+                    foreach (var table in section.Range.Tables)
+                    {
+                        var headerRow = table.Rows.First;
+                        if (headerRow != null)
+                        {
+                            var headerText =  ReplaceSpecialCharacters(headerRow.Range.Text, true);
+                            if (headerText.Equals("Changehistory", StringComparison.InvariantCultureIgnoreCase)) //Change History table found
+                            {
+                                var lastRow = table.Rows.Last;  //Last row found in change history table
+                                if (lastRow != null)
+                                {
+                                    var lastCell = lastRow.Cells[lastRow.Cells.Count]; //Last cell found in change history table
+                                    if (lastCell != null)
+                                    {
+                                        var historyVersionNumber = ReplaceSpecialCharacters(lastCell.Range.Text, true);
+                                        if (historyVersionNumber.Equals(versionToCheck, StringComparison.InvariantCultureIgnoreCase)) //Version matching on last row last cell of change history table
+                                        {
+                                            isHistoryVersionCorrect = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return isHistoryVersionCorrect;
         }
 
         /// <summary>
@@ -32,7 +138,22 @@ namespace Etsi.Ultimate.Business
         /// <returns>True/False</returns>
         public bool IsCoverPageVersionCorrect(string versionToCheck)
         {
-            return true;
+            bool isCoverPageVersionCorrect = false;
+            string title = "3rd generation partnership project;"; //Search version on cover page till we found fixed 3GPP title
+            var section = wordDocument.Sections.First;
+            if (section != null)
+            {
+                string sectionText = section.Range.Text.ToLower();
+                string versionToFind = "v" + versionToCheck;
+                int titleIndex = sectionText.IndexOf(title);
+
+                if (sectionText.Contains(versionToFind))
+                {
+                    int versionIndex = sectionText.IndexOf(versionToFind);
+                    isCoverPageVersionCorrect = (versionIndex < titleIndex);
+                }
+            }
+            return isCoverPageVersionCorrect;
         }
 
         /// <summary>
@@ -42,7 +163,39 @@ namespace Etsi.Ultimate.Business
         /// <returns>True/False</returns>
         public bool IsCoverPageDateCorrect(DateTime meetingDate)
         {
-            return true;
+            bool isCoverPageDateCorrect = false;
+            string title = "3rd generation partnership project;"; //Search meeting date on cover page till we found fixed 3GPP title
+            var section = wordDocument.Sections.First;
+            if (section != null)
+            {
+                string sectionText = section.Range.Text.ToLower();
+                int titleIndex = sectionText.IndexOf(title);
+
+                string regularExpressionPattern = @"\((\d{4}-\d{2})\)";
+                Regex regex = new Regex(regularExpressionPattern);
+                
+                foreach (Match match in regex.Matches(sectionText))
+                {
+                    int matchIndex = sectionText.IndexOf(match.Value);
+                    if (matchIndex < titleIndex)
+                    {
+                        var coverPageDate = match.Value.TrimStart('(').TrimEnd(')');
+                        double coverPageYear = Convert.ToDouble(coverPageDate.Split('-')[0]);
+                        double coverPageMonth = Convert.ToDouble(coverPageDate.Split('-')[1]);
+                        double coverPageDateInMonths = (coverPageYear * 12) + coverPageMonth;
+                        double meetingDateInMonths = (meetingDate.Year * 12) + meetingDate.Month;
+                        if (((meetingDateInMonths - 2) <= coverPageDateInMonths) && (coverPageDateInMonths <= (meetingDateInMonths + 2)))
+                        {
+                            isCoverPageDateCorrect = true;
+                            break;
+                        }
+                    }
+                    else
+                        break;
+                }
+            }
+
+            return isCoverPageDateCorrect;
         }
 
         /// <summary>
@@ -51,18 +204,150 @@ namespace Etsi.Ultimate.Business
         /// <returns>True/False</returns>
         public bool IsCopyRightYearCorrect()
         {
-            return true;
+            bool isCopyRightYearCorrect = false;
+
+            bool isCopyRightAddOnBookmarkFound = false;
+            int textLength = 0;
+            foreach (var section in wordDocument.Sections)
+            {
+                foreach (var bookmark in section.Range.Bookmarks)
+                {
+                    if (bookmark.Name.ToLower().Equals("copyrightaddon"))
+                    {
+                        isCopyRightAddOnBookmarkFound = true;
+                        int copyRightNotificationIndex = section.Range.Text.IndexOf("copyright notification", StringComparison.InvariantCultureIgnoreCase);
+                        if (copyRightNotificationIndex > 0 && (copyRightNotificationIndex + textLength) < bookmark.Start) 
+                        {
+                            string copyRightText = section.Range.Text.Substring(copyRightNotificationIndex, bookmark.Start - (copyRightNotificationIndex + textLength));
+                            if (DateTime.UtcNow.Month == 1)
+                            {
+                                if (copyRightText.Contains("© " + (DateTime.UtcNow.Year - 1)))
+                                {
+                                    isCopyRightYearCorrect = true;
+                                    break;
+                                }
+                            }
+
+                            if (copyRightText.Contains("© " + DateTime.UtcNow.Year))
+                            {
+                                isCopyRightYearCorrect = true;
+                                break;
+                            }
+                        }
+                        break;
+                    }
+                }
+                if (isCopyRightAddOnBookmarkFound)
+                    break;
+                textLength += section.Range.Text.Length;
+            }
+
+            return isCopyRightYearCorrect;
         }
 
         /// <summary>
         /// Check the title & release correct in cover page
         /// </summary>
         /// <param name="title">Title</param>
+        /// <returns>True/False</returns>
+        public bool IsTitleCorrect(string title)
+        {
+            bool isTitleCorrect = false;
+
+            var section = wordDocument.Sections.First;
+            if (section != null)
+            {
+                string sectionText = ReplaceSpecialCharacters(section.Range.Text, true);
+                if (sectionText.ToLower().Contains(title.Replace(" ", String.Empty).ToLower()))
+                    isTitleCorrect = true;
+            }
+
+            return isTitleCorrect;
+        }
+
+        /// <summary>
+        /// Check the release style for ZGSM
+        /// </summary>
         /// <param name="release">Release</param>
         /// <returns>True/False</returns>
-        public bool IsTitleCorrect(string title, string release)
+        public bool IsReleaseStyleCorrect(string release)
         {
-            return true;
+            bool isReleaseStyleCorrect = false;
+
+            var section = wordDocument.Sections.First;
+            if (section != null)
+            {
+                string releaseText = "(" + release + ")";
+                int indexOf3GPPTitle = section.Range.Text.IndexOf("3rd generation partnership project;", StringComparison.InvariantCultureIgnoreCase);
+                int indexOfRelease = section.Range.Text.IndexOf(releaseText, StringComparison.InvariantCultureIgnoreCase);
+
+                if (indexOf3GPPTitle < indexOfRelease)
+                {
+                    Range releaseRange = wordDocument.Range(indexOfRelease + 1, release.Length + indexOfRelease + 1);
+                    if ((releaseRange != null) && releaseRange.Text.Equals(release, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        Style releaseStyle = (Style)releaseRange.Style;
+
+                        if ((releaseStyle != null) && (releaseStyle.NameLocal == "ZGSM"))
+                        {
+                            isReleaseStyleCorrect = true;
+                        }
+                    }
+                }
+            }
+
+            return isReleaseStyleCorrect;
+        }
+
+        /// <summary>
+        /// Check for Auto Numbering values present in the document
+        /// </summary>
+        /// <returns>True/False</returns>
+        public bool IsAutomaticNumberingPresent()
+        {
+            return ( wordDocument.CountNumberedItems() > 0 );
+        }
+
+        #endregion
+
+        #region IDisposable Members
+
+        /// <summary>
+        /// Dispose word application from memory
+        /// </summary>
+        public void Dispose()
+        {
+            // close word and dispose reference
+            if (wordApplication != null)
+            {
+                wordDocument.Close();
+                wordApplication.Quit();
+                wordApplication.Dispose();
+            }
+
+            if (File.Exists(documentName))
+                File.Delete(documentName);
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Provide plain text by removing special characters ( \r, \n, \a ) 
+        /// </summary>
+        /// <param name="inputText">Input Text</param>
+        /// <param name="removeEmptySpace">Remove Empty Space</param>
+        /// <returns>Output Text</returns>
+        private string ReplaceSpecialCharacters(string inputText, bool removeEmptySpace)
+        {
+            string outputText = inputText.Replace("\r", String.Empty)
+                                         .Replace("\n", String.Empty)
+                                         .Replace("\a", String.Empty);
+            if(removeEmptySpace)
+                outputText = outputText.Replace(" ", String.Empty);
+
+            return outputText;
         }
 
         #endregion

@@ -2,7 +2,7 @@
 
 namespace Etsi.Ultimate.Business
 {
-    interface IQualityChecks
+    interface IQualityChecks : IDisposable
     {
         /// <summary>
         /// Check the document having any tracking revisions
@@ -41,8 +41,20 @@ namespace Etsi.Ultimate.Business
         /// Check the title & release correct in cover page
         /// </summary>
         /// <param name="title">Title</param>
+        /// <returns>True/False</returns>
+        bool IsTitleCorrect(string title);
+
+        /// <summary>
+        /// Check the release style for ZGSM
+        /// </summary>
         /// <param name="release">Release</param>
         /// <returns>True/False</returns>
-        bool IsTitleCorrect(string title, string release);
+        bool IsReleaseStyleCorrect(string release);
+
+        /// <summary>
+        /// Check for Auto Numbering values present in the document
+        /// </summary>
+        /// <returns>True/False</returns>
+        bool IsAutomaticNumberingPresent();
     }
 }

@@ -196,7 +196,7 @@ namespace Etsi.Ultimate.Module.Versions
 
                         //Validate document & get the summary report
                         ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                        var businessValidationReport = svc.ValidateVersionDocument(fileExtension, fileStream, version, specificationTitle, releaseDescription, meetingDate);
+                        var businessValidationReport = svc.ValidateVersionDocument(fileExtension, fileStream, Server.MapPath(FileToUploadVal.TemporaryFolder), version, specificationTitle, releaseDescription, meetingDate);
                         validationReport.ErrorList.AddRange(businessValidationReport.ErrorList);
                         validationReport.WarningList.AddRange(businessValidationReport.WarningList);
                     }
@@ -287,7 +287,7 @@ namespace Etsi.Ultimate.Module.Versions
                 IReleaseService releaseSvc = ServicesFactory.Resolve<IReleaseService>();
                 var release = releaseSvc.GetReleaseById(UserId, releaseId.Value).Key;
                 ReleaseVal.Text = release.Code;
-                releaseDescription = release.Description;
+                releaseDescription = release.Name;
 
                 //SpecVersion Details
                 ISpecVersionService specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();

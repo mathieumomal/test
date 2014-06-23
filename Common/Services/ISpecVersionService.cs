@@ -44,11 +44,12 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="fileExtension">File Extension (.doc/.docx)</param>
         /// <param name="memoryStream">Memory Stream</param>
+        /// <param name="temporaryFolder">Temporary Folder</param>
         /// <param name="version">Specification Version</param>
         /// <param name="title">Specification Title</param>
         /// <param name="release">Specification Release</param>
         /// <param name="meetingDate">Meeting Date</param>
         /// <returns>Validation Summary</returns>
-        Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string version, string title, string release, DateTime meetingDate);
+        Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate);
     }
 }
