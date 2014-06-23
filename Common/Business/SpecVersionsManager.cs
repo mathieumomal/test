@@ -20,6 +20,7 @@ namespace Etsi.Ultimate.Business
         private const string CONST_QUALITY_CHECK_TITLE_COVERPAGE = "Incorrect/missing title in cover page";
         private const string CONST_QUALITY_CHECK_RELEASE_STYLE = "Release style should be 'ZGSM' in cover page";
         private const string CONST_QUALITY_CHECK_AUTO_NUMBERING = "Automatic numbering (of clauses, figures, tables, notes, examples etc…) should be disabled in the document";
+        private const string CONST_QUALITY_CHECK_FIRST_TWO_LINES_TITLE = "The first two lines of the title must be correct, according to the TSG responsible for the specification";
 
         private IUltimateUnitOfWork _uoW;
 
@@ -220,8 +221,9 @@ namespace Etsi.Ultimate.Business
         /// <param name="title">Specification Title</param>
         /// <param name="release">Specification Release</param>
         /// <param name="meetingDate">Meeting Date</param>
+        /// <param name="tsgTitle">Technical Specificaion Group Title</param>
         /// <returns>Validation Summary</returns>
-        public Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate)
+        public Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate, string tsgTitle)
         {
             Report validationReport;
 
@@ -229,14 +231,14 @@ namespace Etsi.Ultimate.Business
             {
                 using (IQualityChecks qualityChecks = new DocXQualityChecks(memoryStream))
                 {
-                    validationReport = ValidateDocument(qualityChecks, version, title, release, meetingDate);
+                    validationReport = ValidateDocument(qualityChecks, version, title, release, meetingDate, tsgTitle);
                 }
             }
             else
             {
                 using (IQualityChecks qualityChecks = new DocQualityChecks(memoryStream, temporaryFolder))
                 {
-                    validationReport = ValidateDocument(qualityChecks, version, title, release, meetingDate);
+                    validationReport = ValidateDocument(qualityChecks, version, title, release, meetingDate, tsgTitle);
                 }
             }
 
@@ -251,8 +253,9 @@ namespace Etsi.Ultimate.Business
         /// <param name="title">Title</param>
         /// <param name="release">Release</param>
         /// <param name="meetingDate">Meeting Date</param>
-        /// <returns></returns>
-        private Report ValidateDocument(IQualityChecks qualityChecks, string version, string title, string release, DateTime meetingDate)
+        /// <param name="tsgTitle">Technical Specificaion Group Title</param>
+        /// <returns>Validation Summary</returns>
+        private Report ValidateDocument(IQualityChecks qualityChecks, string version, string title, string release, DateTime meetingDate, string tsgTitle)
         {
             Report validationReport = new Report();
 
@@ -279,6 +282,9 @@ namespace Etsi.Ultimate.Business
 
             if (qualityChecks.IsAutomaticNumberingPresent())
                 validationReport.LogWarning(CONST_QUALITY_CHECK_AUTO_NUMBERING);
+
+            if (!qualityChecks.IsFirstTwoLinesOfTitleCorrect(tsgTitle))
+                validationReport.LogWarning(CONST_QUALITY_CHECK_FIRST_TWO_LINES_TITLE);
 
             return validationReport;
         }

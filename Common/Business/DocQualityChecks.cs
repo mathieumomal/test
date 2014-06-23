@@ -95,32 +95,35 @@ namespace Etsi.Ultimate.Business
         {
             bool isHistoryVersionCorrect = false;
 
-            //Check tables on all doc sections
-            foreach (var section in wordDocument.Sections)
+            //Check history table in last section
+            var section = wordDocument.Sections.Last;
+            if (section.Range.Tables.Count > 0)
             {
-                if (section.Range.Tables.Count > 0)
+                //Change history should be last table
+                var table = section.Range.Tables[section.Range.Tables.Count];
+
+                Range range = table.Range;
+                if (range.Cells.Count > 0)
                 {
-                    foreach (var table in section.Range.Tables)
+                    var headerText = ReplaceSpecialCharacters(range.Cells[1].Range.Text, true);
+                    if (headerText.Equals("Changehistory", StringComparison.InvariantCultureIgnoreCase)) //Change History table found
                     {
-                        var headerRow = table.Rows.First;
-                        if (headerRow != null)
+                        int indexOfNewVersionCell = 1;
+                        for (int i = 1; i <= range.Cells.Count; i++)
                         {
-                            var headerText =  ReplaceSpecialCharacters(headerRow.Range.Text, true);
-                            if (headerText.Equals("Changehistory", StringComparison.InvariantCultureIgnoreCase)) //Change History table found
+                            if (range.Cells[i].RowIndex == 2)
                             {
-                                var lastRow = table.Rows.Last;  //Last row found in change history table
-                                if (lastRow != null)
+                                if (ReplaceSpecialCharacters(range.Cells[i].Range.Text, true).Equals("NewVersion", StringComparison.InvariantCultureIgnoreCase))
                                 {
-                                    var lastCell = lastRow.Cells[lastRow.Cells.Count]; //Last cell found in change history table
-                                    if (lastCell != null)
-                                    {
-                                        var historyVersionNumber = ReplaceSpecialCharacters(lastCell.Range.Text, true);
-                                        if (historyVersionNumber.Equals(versionToCheck, StringComparison.InvariantCultureIgnoreCase)) //Version matching on last row last cell of change history table
-                                        {
-                                            isHistoryVersionCorrect = true;
-                                            break;
-                                        }
-                                    }
+                                    indexOfNewVersionCell = range.Cells[i].ColumnIndex;
+                                }
+                            }
+                            if ((range.Cells[i].RowIndex == table.Rows.Count) && (range.Cells[i].ColumnIndex == indexOfNewVersionCell))
+                            {
+                                var historyVersionNumber = ReplaceSpecialCharacters(range.Cells[i].Range.Text, true);
+                                if (historyVersionNumber.Equals(versionToCheck, StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    isHistoryVersionCorrect = true;
                                 }
                             }
                         }
@@ -243,6 +246,29 @@ namespace Etsi.Ultimate.Business
             }
 
             return isCopyRightYearCorrect;
+        }
+
+        /// <summary>
+        /// Check for first two lines of fixed title as below
+        ///     3rd Generation Partnership Project;
+        ///     Technical Specification Group [TSG Title];
+        /// </summary>
+        /// <param name="tsgTitle">Technical Specification Group Title</param>
+        /// <returns>True/False</returns>
+        public bool IsFirstTwoLinesOfTitleCorrect(string tsgTitle)
+        {
+            string firstTwoLinesOfTitle = String.Format("3rd Generation Partnership Project;{0};", tsgTitle);
+            bool isFirstTwoLinesOfTitleCorrect = false;
+
+            var section = wordDocument.Sections.First;
+            if (section != null)
+            {
+                string sectionText = ReplaceSpecialCharacters(section.Range.Text, true);
+                if (sectionText.ToLower().Contains(firstTwoLinesOfTitle.Replace(" ", String.Empty).ToLower()))
+                    isFirstTwoLinesOfTitleCorrect = true;
+            }
+
+            return isFirstTwoLinesOfTitleCorrect;
         }
 
         /// <summary>

@@ -38,6 +38,15 @@ namespace Etsi.Ultimate.Business
         bool IsCopyRightYearCorrect();
 
         /// <summary>
+        /// Check for first two lines of fixed title as below
+        ///     3rd Generation Partnership Project;
+        ///     Technical Specification Group [TSG Title];
+        /// </summary>
+        /// <param name="tsgTitle">Technical Specification Group Title</param>
+        /// <returns>True/False</returns>
+        bool IsFirstTwoLinesOfTitleCorrect(string tsgTitle);
+
+        /// <summary>
         /// Check the title & release correct in cover page
         /// </summary>
         /// <param name="title">Title</param>

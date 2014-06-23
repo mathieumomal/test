@@ -266,6 +266,51 @@ namespace Etsi.Ultimate.Business
         }
 
         /// <summary>
+        /// Check for first two lines of fixed title as below
+        ///     3rd Generation Partnership Project;
+        ///     Technical Specification Group [TSG Title];
+        /// </summary>
+        /// <param name="tsgTitle">Technical Specification Group Title</param>
+        /// <returns>True/False</returns>
+        public bool IsFirstTwoLinesOfTitleCorrect(string tsgTitle)
+        {
+            string firstTwoLinesOfTitle = String.Format("3rd Generation Partnership Project;{0};", tsgTitle);
+            bool isFirstTwoLinesOfTitleCorrect = false;
+
+            //Search title on cover page based on bookmarks page1 & page2 (title should be on page1 bookmark range)
+            var paragraphs = wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+
+            bool page1BookmarkStart = false;
+            bool page2BookmarkStart = false;
+            StringBuilder page1Text = new StringBuilder();
+
+            foreach (var paragraph in paragraphs)
+            {
+                var bookMarkStart = paragraph.Descendants().OfType<BookmarkStart>();
+
+                foreach (var bookMark in bookMarkStart)
+                {
+                    if (bookMark.Name.ToString().ToLower().Equals("page1"))
+                        page1BookmarkStart = true;
+                    if (bookMark.Name.ToString().ToLower().Equals("page2"))
+                        page2BookmarkStart = true;
+                }
+
+                if (page1BookmarkStart)
+                    page1Text.AppendLine(GetPlainText(paragraph).Replace("\r\n", String.Empty).Trim().ToLower());
+
+                if (page2BookmarkStart)
+                    break;
+            }
+
+            string formattedPage = page1Text.ToString().Replace("\r\n", String.Empty).Replace(" ", String.Empty);
+            if (formattedPage.Contains(firstTwoLinesOfTitle.Replace(" ", String.Empty).ToLower()))
+                isFirstTwoLinesOfTitleCorrect = true;
+
+            return isFirstTwoLinesOfTitleCorrect;
+        }
+
+        /// <summary>
         /// Check the title & release correct in cover page
         /// </summary>
         /// <param name="title">Title</param>

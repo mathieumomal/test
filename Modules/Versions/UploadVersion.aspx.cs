@@ -27,6 +27,7 @@ namespace Etsi.Ultimate.Module.Versions
         public static readonly string DsId_Key = "ETSI_DS_ID";
         private static string specificationTitle = String.Empty;
         private static string releaseDescription = String.Empty;
+        private static int communityID;
         private static UploadedFile versionToSave;
         private static string versionPathToSave = String.Empty;
         private const string CONST_VALID_FILENAME = "{0}-{1}{2}{3}";
@@ -187,8 +188,13 @@ namespace Etsi.Ultimate.Module.Versions
                     {
                         string version = String.Empty;
                         DateTime meetingDate = DateTime.MinValue;
-                        string title = String.Empty;
-                        string release = String.Empty;
+                        string tsgTitle = String.Empty;
+
+                        ICommunityService communityService = ServicesFactory.Resolve<ICommunityService>();
+                        var communities = communityService.GetCommunities();
+                        var community = communities.Where(x => x.TbId == communityID).FirstOrDefault();
+                        if (community != null)
+                            tsgTitle = GetParentTSG(community, communities).TbTitle.Replace("Technical Specification Group -", "Technical Specification Group");
 
                         version = String.Format("{0}.{1}.{2}", NewVersionMajorVal.Text.Trim(), NewVersionTechnicalVal.Text.Trim(), NewVersionEditorialVal.Text.Trim());
                         if (UploadMeeting.SelectedMeeting != null)
@@ -196,7 +202,7 @@ namespace Etsi.Ultimate.Module.Versions
 
                         //Validate document & get the summary report
                         ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                        var businessValidationReport = svc.ValidateVersionDocument(fileExtension, fileStream, Server.MapPath(FileToUploadVal.TemporaryFolder), version, specificationTitle, releaseDescription, meetingDate);
+                        var businessValidationReport = svc.ValidateVersionDocument(fileExtension, fileStream, Server.MapPath(FileToUploadVal.TemporaryFolder), version, specificationTitle, releaseDescription, meetingDate, tsgTitle);
                         validationReport.ErrorList.AddRange(businessValidationReport.ErrorList);
                         validationReport.WarningList.AddRange(businessValidationReport.WarningList);
                     }
@@ -275,6 +281,7 @@ namespace Etsi.Ultimate.Module.Versions
                 var spec = specSvc.GetSpecificationDetailsById(UserId, specId.Value).Key;
                 isDraft = !(spec.IsUnderChangeControl.HasValue && spec.IsUnderChangeControl.Value);
 
+                communityID = spec.PrimeResponsibleGroup.Fk_commityId;
                 SpecNumberVal.Text = spec.Number;
                 specificationTitle = spec.Title;
 
@@ -693,6 +700,26 @@ namespace Etsi.Ultimate.Module.Versions
             }
 
             return errorReport;
+        }
+
+        /// <summary>
+        /// Get Parent TSG
+        /// </summary>
+        /// <param name="community">Community</param>
+        /// <param name="communities">List of Communities</param>
+        /// <returns>Parent TSG community</returns>
+        private Community GetParentTSG(Community community, List<Community> communities)
+        {
+            if (community.TbType == "TSG")
+                return community;
+            else
+            {
+                var parentCommunity = communities.Where(x => x.TbId == community.ParentCommunityId).FirstOrDefault();
+                if (parentCommunity != null)
+                    return GetParentTSG(parentCommunity, communities);
+                else
+                    return community;
+            }
         }
 
         /// <summary>
