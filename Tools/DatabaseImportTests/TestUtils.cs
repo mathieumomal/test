@@ -12,14 +12,14 @@ namespace DatabaseImportTests
     
     public class TestUtils
     {
-        [TestCase(null, 0 ,0, 1)]
-        [TestCase("", 0, 0, 1)]
+        [TestCase(null, 0 ,0, 0)]
+        [TestCase("", 0, 0, 0)]
         [TestCase("test", 0, 0, 1)]
         [TestCase("1", 0, 1, 0)]
         [TestCase("1 43", 0, 0, 1)]
         [TestCase("1987", 0, 1987, 0)]
         [TestCase("test", null, null, 1)]
-        [TestCase(null, null, null, 1)]
+        [TestCase(null, null, null, 0)]
         public void CheckStringToIntTest(string str, int? defaultValue, int? expectedResult, int expectedNumberOfWarning)
         {
             var report = new Domain.Report();

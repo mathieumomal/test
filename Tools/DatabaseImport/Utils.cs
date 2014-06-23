@@ -42,7 +42,7 @@ namespace DatabaseImport
             }
             else if (lenght != 0 && str.Length > lenght)
             {
-                report.LogWarning("String validation error : " + logDescriptionCase + " : string too long for : " + id);
+                report.LogWarning(logDescriptionCase + " String validation error : string too long for : " + id);
                 return "";
             }
             return str.Trim();
@@ -88,7 +88,7 @@ namespace DatabaseImport
                 }
                 else if (lenght != 0 && str.Length > lenght)
                 {
-                    report.LogWarning("Convert int to string error : " + logDescriptionCase + " : string too long for : " + id);
+                    report.LogWarning(logDescriptionCase + " Convert int to string error : string too long for : " + id);
                     return "";
                 }
                 return str.Trim();
@@ -109,12 +109,16 @@ namespace DatabaseImport
         public static int? CheckStringToInt(string str, int? defaultValue, string logDescriptionCase, string id, Report report)
         {
             int returnValue = 0;
+            if (String.IsNullOrEmpty(str))
+            {
+                return defaultValue;
+            }
             string checkStr = CheckString(str, 0, " (During ChechStringToInt) ", id, report);
 
             bool success = int.TryParse(str, out returnValue);
             if (!success)
             {
-                report.LogWarning("Convert string to int error : " + logDescriptionCase + " (return by default "+defaultValue+") - id : " + id);
+                report.LogWarning(logDescriptionCase + " Convert string to int error : (return by default "+defaultValue+") - id : " + id);
                 return defaultValue;
             }
             return returnValue;

@@ -184,9 +184,6 @@ namespace DatabaseImport.ModuleImport
             var specAssociated = specs.Where(x => x.Number == legacyCRSpecNumber).FirstOrDefault();
             var releaseAssociated = releases.Where(x => x.Code == legacyCRReleaseCode).FirstOrDefault();
 
-            var legacyCRNewVersion = Utils.CheckString(legacyCR.Version_New, 10, RefImportForLog + " Version-new ", logID, Report);
-            var legacyCRTargetVersion = Utils.CheckString(legacyCR.Version_Current, 10, RefImportForLog + " Version-current ", logID, Report);
-
             //Spec 
             if (specAssociated == null)
             {
@@ -212,69 +209,77 @@ namespace DatabaseImport.ModuleImport
             //Version NEW
             if (releaseAssociated == null || specAssociated == null)
             {
-                Report.LogWarning(RefImportForLog + "Versions (target and current) undefined because spec or release undefined, for CR : " + logID);
+                //Report.LogWarning(RefImportForLog + "Versions (target and current) undefined because spec or release undefined, for CR : " + logID);
             }
             else
             {
-                var newVersionExploded = legacyCRNewVersion.Split('.');
-
-                if (newVersionExploded.Count() != 3)
+                if (!String.IsNullOrEmpty(legacyCR.Version_New))
                 {
-                    Report.LogWarning(RefImportForLog + "Target version invalid format : " + legacyCRNewVersion + ", for CR : " + logID);
-                }
-                else
-                {
-                    var mv = Utils.CheckStringToInt(newVersionExploded[0], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the majorVersion : " + newVersionExploded[0], logID, Report);
-                    var tv = Utils.CheckStringToInt(newVersionExploded[1], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the technicalVersion : " + newVersionExploded[1], logID, Report);
-                    var ev = Utils.CheckStringToInt(newVersionExploded[2], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the editorialVersion : " + newVersionExploded[2], logID, Report);
-                    var newVersionAssociated = specVersions.Where(x =>
-                        x.Fk_ReleaseId == releaseAssociated.Pk_ReleaseId
-                        && x.Fk_SpecificationId == specAssociated.Pk_SpecificationId
-                        && x.MajorVersion == mv
-                        && x.TechnicalVersion == tv
-                        && x.EditorialVersion == ev)
-                        .FirstOrDefault();
+                    var legacyCRNewVersion = Utils.CheckString(legacyCR.Version_New, 10, RefImportForLog + " Version-new ", logID, Report);
+                    //VERSION NEW
+                    var newVersionExploded = legacyCRNewVersion.Split('.');
 
-                    if (newVersionAssociated != null)
+                    if (newVersionExploded.Count() != 3)
                     {
-                        newCR.NewVersion = newVersionAssociated;
-                        newCR.Fk_NewVersion = newVersionAssociated.Pk_VersionId;
+                        Report.LogWarning(RefImportForLog + "New version invalid format : " + legacyCRNewVersion + ", for CR : " + logID);
                     }
                     else
                     {
-                        Report.LogWarning(RefImportForLog + "New version not found : " + legacyCRNewVersion + ", for CR : " + logID);
+                        var mv = Utils.CheckStringToInt(newVersionExploded[0], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the majorVersion : " + newVersionExploded[0], logID, Report);
+                        var tv = Utils.CheckStringToInt(newVersionExploded[1], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the technicalVersion : " + newVersionExploded[1], logID, Report);
+                        var ev = Utils.CheckStringToInt(newVersionExploded[2], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the editorialVersion : " + newVersionExploded[2], logID, Report);
+                        var newVersionAssociated = specVersions.Where(x =>
+                            x.Fk_ReleaseId == releaseAssociated.Pk_ReleaseId
+                            && x.Fk_SpecificationId == specAssociated.Pk_SpecificationId
+                            && x.MajorVersion == mv
+                            && x.TechnicalVersion == tv
+                            && x.EditorialVersion == ev)
+                            .FirstOrDefault();
+
+                        if (newVersionAssociated != null)
+                        {
+                            newCR.NewVersion = newVersionAssociated;
+                            newCR.Fk_NewVersion = newVersionAssociated.Pk_VersionId;
+                        }
+                        else
+                        {
+                            Report.LogWarning(RefImportForLog + "New version not found : " + legacyCRNewVersion + ", for CR : " + logID);
+                        }
                     }
                 }
-
-                //Version TARGET (<=> CURRENT)
-                var targetVersionExploded = legacyCRTargetVersion.Split('.');
-
-                if (targetVersionExploded.Count() != 3)
+                if (!String.IsNullOrEmpty(legacyCR.Version_Current))
                 {
-                    Report.LogWarning(RefImportForLog + "Target version invalid format : " + legacyCRTargetVersion + ", for CR : " + logID);
-                }
-                else
-                {
-                    var mv = Utils.CheckStringToInt(targetVersionExploded[0], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the majorVersion : " + targetVersionExploded[0], logID, Report);
-                    var tv = Utils.CheckStringToInt(targetVersionExploded[1], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the technicalVersion : " + targetVersionExploded[1], logID, Report);
-                    var ev = Utils.CheckStringToInt(targetVersionExploded[2], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the editorialVersion : " + targetVersionExploded[2], logID, Report);
+                    var legacyCRTargetVersion = Utils.CheckString(legacyCR.Version_Current, 10, RefImportForLog + " Version-current ", logID, Report);
+                    //Version TARGET (<=> CURRENT)
+                    var targetVersionExploded = legacyCRTargetVersion.Split('.');
 
-                    var targetVersionAssociated = specVersions.Where(x =>
-                        x.Fk_ReleaseId == releaseAssociated.Pk_ReleaseId
-                        && x.Fk_SpecificationId == specAssociated.Pk_SpecificationId
-                        && x.MajorVersion == mv
-                        && x.TechnicalVersion == tv
-                        && x.EditorialVersion == ev)
-                        .FirstOrDefault();
-
-                    if (targetVersionAssociated != null)
+                    if (targetVersionExploded.Count() != 3)
                     {
-                        newCR.CurrentVersion = targetVersionAssociated;
-                        newCR.Fk_CurrentVersion = targetVersionAssociated.Pk_VersionId;
+                        Report.LogWarning(RefImportForLog + "Target version invalid format : " + legacyCRTargetVersion + ", for CR : " + logID);
                     }
                     else
                     {
-                        Report.LogWarning(RefImportForLog + "Target version not found : " + legacyCRTargetVersion + ", for CR : " + logID);
+                        var mv = Utils.CheckStringToInt(targetVersionExploded[0], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the majorVersion : " + targetVersionExploded[0], logID, Report);
+                        var tv = Utils.CheckStringToInt(targetVersionExploded[1], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the technicalVersion : " + targetVersionExploded[1], logID, Report);
+                        var ev = Utils.CheckStringToInt(targetVersionExploded[2], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the editorialVersion : " + targetVersionExploded[2], logID, Report);
+
+                        var targetVersionAssociated = specVersions.Where(x =>
+                            x.Fk_ReleaseId == releaseAssociated.Pk_ReleaseId
+                            && x.Fk_SpecificationId == specAssociated.Pk_SpecificationId
+                            && x.MajorVersion == mv
+                            && x.TechnicalVersion == tv
+                            && x.EditorialVersion == ev)
+                            .FirstOrDefault();
+
+                        if (targetVersionAssociated != null)
+                        {
+                            newCR.CurrentVersion = targetVersionAssociated;
+                            newCR.Fk_CurrentVersion = targetVersionAssociated.Pk_VersionId;
+                        }
+                        else
+                        {
+                            Report.LogWarning(RefImportForLog + "Target version not found : " + legacyCRTargetVersion + ", for CR : " + logID);
+                        }
                     }
                 }
             }
