@@ -76,8 +76,9 @@ namespace Etsi.Ultimate.Services
         /// <param name="release">Specification Release</param>
         /// <param name="meetingDate">Meeting Date</param>
         /// <param name="tsgTitle">Technical Specificaion Group Title</param>
+        /// <param name="isTS">True - Technical Specificaiton / False - Technical Report</param>
         /// <returns>Validation Summary</returns>
-        public Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate, string tsgTitle)
+        public Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTS)
         {
             Report validationReport;
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -85,7 +86,7 @@ namespace Etsi.Ultimate.Services
                 try
                 {
                     var specVersionManager = new SpecVersionsManager(uoW);
-                    validationReport = specVersionManager.ValidateVersionDocument(fileExtension, memoryStream, temporaryFolder, version, title, release, meetingDate, tsgTitle);
+                    validationReport = specVersionManager.ValidateVersionDocument(fileExtension, memoryStream, temporaryFolder, version, title, release, meetingDate, tsgTitle, isTS);
                 }
                 catch (Exception ex)
                 {

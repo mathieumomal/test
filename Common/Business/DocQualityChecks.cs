@@ -334,6 +334,53 @@ namespace Etsi.Ultimate.Business
             return ( wordDocument.CountNumberedItems() > 0 );
         }
 
+        /// <summary>
+        /// Check for Annexure Headings having correct styles or not
+        /// If TS, Style should be 'Heading 8'
+        ///      , text '(normative)/(informative)' allowed after Annexure heading
+        /// If TR, Style should be 'Heading 9'
+        ///      , no text allowed after Annexure heading
+        /// </summary>
+        /// <param name="isTechnicalSpecification">True - Technical Specificaiton / False - Technical Report</param>
+        /// <returns>True/False</returns>
+        public bool IsAnnexureStylesCorrect(bool isTechnicalSpecification)
+        {
+            bool isAnnexureStyleCorrect = true;
+
+            if (wordDocument.TablesOfContents.Count > 0)
+            {
+                var tocRange = wordDocument.TablesOfContents[1].Range;
+                foreach (var paragraph in tocRange.Paragraphs)
+                {
+                    string paragraphText = ReplaceSpecialCharacters(paragraph.Range.Text, true);
+                    if (paragraphText.StartsWith("Annex"))
+                    {
+                        if (isTechnicalSpecification)
+                        {
+                            Style style = (Style)paragraph.Range.Style;
+                            Regex tsRegex = new Regex(@"(annex\w{1}\(normative\):)|(annex\w{1}\(informative\):)");
+                            if (!(style != null && style.NameLocal == "TOC 8" && tsRegex.IsMatch(paragraphText.ToLower())))
+                            {
+                                isAnnexureStyleCorrect = false;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            Style style = (Style)paragraph.Range.Style;
+                            Regex trRegex = new Regex(@"annex\w{1}:");
+                            if (!(style != null && style.NameLocal == "TOC 9" && trRegex.IsMatch(paragraphText.ToLower())))
+                            {
+                                isAnnexureStyleCorrect = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            return isAnnexureStyleCorrect;
+        }
+
         #endregion
 
         #region IDisposable Members
@@ -369,6 +416,7 @@ namespace Etsi.Ultimate.Business
         {
             string outputText = inputText.Replace("\r", String.Empty)
                                          .Replace("\n", String.Empty)
+                                         .Replace("\t", String.Empty)
                                          .Replace("\a", String.Empty);
             if(removeEmptySpace)
                 outputText = outputText.Replace(" ", String.Empty);

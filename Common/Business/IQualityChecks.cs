@@ -65,5 +65,16 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <returns>True/False</returns>
         bool IsAutomaticNumberingPresent();
+
+        /// <summary>
+        /// Check for Annexure Headings having correct styles or not
+        /// If TS, Style should be 'Heading 8'
+        ///      , text '(normative)/(informative)' allowed after Annexure heading
+        /// If TR, Style should be 'Heading 9'
+        ///      , no text allowed after Annexure heading
+        /// </summary>
+        /// <param name="isTechnicalSpecification">True - Technical Specificaiton / False - Technical Report</param>
+        /// <returns>True/False</returns>
+        bool IsAnnexureStylesCorrect(bool isTechnicalSpecification);
     }
 }

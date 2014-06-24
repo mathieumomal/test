@@ -28,6 +28,7 @@ namespace Etsi.Ultimate.Module.Versions
         private static string specificationTitle = String.Empty;
         private static string releaseDescription = String.Empty;
         private static int communityID;
+        private static bool isTS;
         private static UploadedFile versionToSave;
         private static string versionPathToSave = String.Empty;
         private const string CONST_VALID_FILENAME = "{0}-{1}{2}{3}";
@@ -202,7 +203,7 @@ namespace Etsi.Ultimate.Module.Versions
 
                         //Validate document & get the summary report
                         ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                        var businessValidationReport = svc.ValidateVersionDocument(fileExtension, fileStream, Server.MapPath(FileToUploadVal.TemporaryFolder), version, specificationTitle, releaseDescription, meetingDate, tsgTitle);
+                        var businessValidationReport = svc.ValidateVersionDocument(fileExtension, fileStream, Server.MapPath(FileToUploadVal.TemporaryFolder), version, specificationTitle, releaseDescription, meetingDate, tsgTitle, isTS);
                         validationReport.ErrorList.AddRange(businessValidationReport.ErrorList);
                         validationReport.WarningList.AddRange(businessValidationReport.WarningList);
                     }
@@ -282,6 +283,7 @@ namespace Etsi.Ultimate.Module.Versions
                 isDraft = !(spec.IsUnderChangeControl.HasValue && spec.IsUnderChangeControl.Value);
 
                 communityID = spec.PrimeResponsibleGroup.Fk_commityId;
+                isTS = spec.IsTS ?? true;
                 SpecNumberVal.Text = spec.Number;
                 specificationTitle = spec.Title;
 

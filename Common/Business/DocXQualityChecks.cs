@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 
 namespace Etsi.Ultimate.Business
 {
@@ -387,6 +388,20 @@ namespace Etsi.Ultimate.Business
         public bool IsAutomaticNumberingPresent()
         {
             return wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<NumberingId>().Any(x => x.Val != "0");
+        }
+
+        /// <summary>
+        /// Check for Annexure Headings having correct styles or not
+        /// If TS, Style should be 'Heading 8'
+        ///      , text '(normative)/(informative)' allowed after Annexure heading
+        /// If TR, Style should be 'Heading 9'
+        ///      , no text allowed after Annexure heading
+        /// </summary>
+        /// <param name="isTechnicalSpecification">True - Technical Specificaiton / False - Technical Report</param>
+        /// <returns>True/False</returns>
+        public bool IsAnnexureStylesCorrect(bool isTechnicalSpecification)
+        {
+            return true;
         }
 
         #endregion

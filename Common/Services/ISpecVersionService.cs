@@ -50,7 +50,8 @@ namespace Etsi.Ultimate.Services
         /// <param name="release">Specification Release</param>
         /// <param name="meetingDate">Meeting Date</param>
         /// <param name="tsgTitle">Technical Specificaion Group Title</param>
+        /// <param name="isTS">True - Technical Specificaiton / False - Technical Report</param>
         /// <returns>Validation Summary</returns>
-        Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate, string tsgTitle);
+        Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTS);
     }
 }
