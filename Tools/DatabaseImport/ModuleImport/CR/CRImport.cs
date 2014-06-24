@@ -12,7 +12,9 @@ namespace DatabaseImport.ModuleImport
 {
     public class CRImport : IModuleImport
     {
+        //Report part indicator
         public const string RefImportForLog = "[CR]";
+        //Objects list initialize one shoot
         List<Enum_CRCategory> enumCategory;
         List<Enum_TDocStatus> enumTDocStatus;
         List<Specification> specs;
@@ -63,6 +65,9 @@ namespace DatabaseImport.ModuleImport
         #endregion
 
         #region migration methods
+        /// <summary>
+        /// Create CR datas
+        /// </summary>
         private void CreateDatas()
         {
             NewContext.SetAutoDetectChanges(false);
@@ -70,6 +75,7 @@ namespace DatabaseImport.ModuleImport
             var count = 0;
             foreach (var legacyCR in LegacyContext.List_of_GSM___3G_CRs)
             {
+                //Log legacy CR indicator
                 var logID = new StringBuilder()
                     .Append(legacyCR.Spec)
                     .Append("#")
@@ -80,11 +86,13 @@ namespace DatabaseImport.ModuleImport
 
                 var newCR = new Domain.ChangeRequest();
 
+                //CR baseline attribute initialization
                 newCR.CRNumber = Utils.CheckString(legacyCR.CR, 10, RefImportForLog + " CRNumber", logID, Report);
                 newCR.Revision = Utils.CheckStringToInt(legacyCR.Rev, null, RefImportForLog + " Revision ", logID, Report);
                 newCR.Subject = Utils.CheckString(legacyCR.Subject, 300, RefImportForLog + " Subject", logID, Report);
                 newCR.CreationDate = legacyCR.created;
 
+                //Others cases
                 SpecReleaseAndVersionCase(newCR, legacyCR, logID);
 
                 RemarksCase(newCR, legacyCR, logID);
@@ -113,6 +121,7 @@ namespace DatabaseImport.ModuleImport
                 count++;
                 if (count % 100 == 0)
                     Console.Write(String.Format("\r" + RefImportForLog + " {0}/{1}  ", count, total));
+                //Save each 10000 CRs cause of memory reasons
                 if (count % 10000 == 0)
                 {
                     Console.Write("\r" + RefImportForLog + " Intermediary Recording  ");
@@ -127,6 +136,12 @@ namespace DatabaseImport.ModuleImport
             }
         }
 
+        /// <summary>
+        /// Assigned TSG/WG TDOC status
+        /// </summary>
+        /// <param name="newCR"></param>
+        /// <param name="legacyCR"></param>
+        /// <param name="logID"></param>
         private void StatusCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
         {
             var legacyWGStatus = Utils.CheckString(legacyCR.Status_2nd_Level, 20, RefImportForLog + " WG status ", logID, Report).ToLower();
@@ -161,6 +176,12 @@ namespace DatabaseImport.ModuleImport
             }
         }
 
+        /// <summary>
+        /// Assigned category
+        /// </summary>
+        /// <param name="newCR"></param>
+        /// <param name="legacyCR"></param>
+        /// <param name="logID"></param>
         private void CategoryCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
         {
             var legacyCRCategory = Utils.CheckString(legacyCR.Cat, 5, RefImportForLog + " category ", logID, Report);
@@ -177,6 +198,15 @@ namespace DatabaseImport.ModuleImport
             }
         }
 
+        /// <summary>
+        /// Assigned 
+        /// a specification 
+        /// + a release 
+        /// + a new/current version
+        /// </summary>
+        /// <param name="newCR"></param>
+        /// <param name="legacyCR"></param>
+        /// <param name="logID"></param>
         private void SpecReleaseAndVersionCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
         {
             var legacyCRSpecNumber = Utils.CheckString(legacyCR.Spec, 10, RefImportForLog + " Spec Number ", logID, Report);
@@ -285,10 +315,16 @@ namespace DatabaseImport.ModuleImport
             }
         }
 
+        /// <summary>
+        /// Assigned meetings
+        /// </summary>
+        /// <param name="newCR"></param>
+        /// <param name="legacyCR"></param>
+        /// <param name="logID"></param>
         private void MeetingsCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
         {
             var TSGMeeting = Utils.CheckString(legacyCR.Meeting_1st_Level, 10, RefImportForLog + "TSG meeting : " + legacyCR.Meeting_1st_Level, logID, Report);
-            var WGMeeting = Utils.CheckString(legacyCR.Meeting_2nd_Level, 10, RefImportForLog + "TSG meeting : " + legacyCR.Meeting_2nd_Level, logID, Report);
+            var WGMeeting = Utils.CheckString(legacyCR.Meeting_2nd_Level, 10, RefImportForLog + "WG meeting : " + legacyCR.Meeting_2nd_Level, logID, Report);
             
             //TSG
             if (!string.IsNullOrEmpty(TSGMeeting) && TSGMeeting != "-")
@@ -313,6 +349,12 @@ namespace DatabaseImport.ModuleImport
             }
         }
 
+        /// <summary>
+        /// Insert remark associated 
+        /// </summary>
+        /// <param name="newCR"></param>
+        /// <param name="legacyCR"></param>
+        /// <param name="logID"></param>
         private void RemarksCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
         {
             var remarksField = Utils.CheckString(legacyCR.Remarks, 255, RefImportForLog + " Remarks ", logID, Report);
@@ -330,6 +372,12 @@ namespace DatabaseImport.ModuleImport
             newCR.Remarks.Add(remark);
         }
 
+        /// <summary>
+        /// Assigned a list of WI (separate by '/')
+        /// </summary>
+        /// <param name="newCR"></param>
+        /// <param name="legacyCR"></param>
+        /// <param name="logID"></param>
         private void WICase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
         {
             var WIField = Utils.CheckString(legacyCR.Workitem, 50, RefImportForLog + " WI ", logID, Report);
@@ -357,6 +405,18 @@ namespace DatabaseImport.ModuleImport
             }
         }
 
+        /// <summary>
+        /// Assigned TSG/WG targets + WGSourceForTSG :
+        /// Notice : 
+        /// - Source WG -> Source-2-level
+        /// - Source TSG -> Source-1-level
+        /// - WGTarget -> WG_Responsible
+        /// - TSGTarget -> WG_Responsible PARENT
+        /// - WGSourceForTSG -> WG_Responsible
+        /// </summary>
+        /// <param name="newCR"></param>
+        /// <param name="legacyCR"></param>
+        /// <param name="logID"></param>
         private void TSGWGTargetCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
         {
             //WGSourceForTSG
@@ -367,7 +427,7 @@ namespace DatabaseImport.ModuleImport
                 var community = NewContext.Communities.Where(x => x.ShortName == WGResponsibleLegacy).FirstOrDefault();
                 if (community != null)
                 {
-                    //If the community (WG responsible) is found so we take it as the WGTarget and his parent as TSGtarget
+                    //If the community (WG responsible) is found : we take it as the WGTarget and its parent as TSGtarget
                     newCR.WGTarget = community.TbId;
                     newCR.TSGTarget = community.ParentTbId;
                     newCR.WGSourceForTSG = community.TbId;
@@ -377,9 +437,6 @@ namespace DatabaseImport.ModuleImport
                     Report.LogWarning(RefImportForLog + "Community not found: " + WGResponsibleLegacy + " for CR : " + logID + " (WG and TSG target not assigned)");
                 }
             }
-
-            //Targets (TSG/WG)
-            //newCR.WGSourceForTSG = ; "Not for CRs broughts directly to TSG by an organization"
         }
         #endregion
     }
