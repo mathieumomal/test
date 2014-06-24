@@ -130,6 +130,63 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [Test, TestCaseSource("WorkItemData")]
+        public void GetWorkItemByIdExtend(WorkItemFakeDBSet workItemData)
+        {
+            int personID = 12;
+
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.WorkItem_ImportWorkplan);
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(1);
+
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(personID)).Return(userRights).Repeat.Times(1);
+
+            var mockPersonsRepo = MockRepository.GenerateMock<IPersonRepository>();
+            mockPersonsRepo.Stub(x => x.Find(42718)).Return(new View_Persons() { FIRSTNAME = "First", LASTNAME = "Last" }).Repeat.Times(1);
+
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+            RepositoryFactory.Container.RegisterInstance(typeof(IPersonRepository), mockPersonsRepo);
+
+            var wiService = new WorkItemService();
+
+            //No Release Ids
+            var workItems = wiService.GetWorkItemByIdExtend(personID, 102);            
+            Assert.IsTrue(workItems.Value.HasRight(Enum_UserRights.WorkItem_ImportWorkplan));
+            Assert.AreEqual("First Last", workItems.Key.RapporteurName);
+
+            mockDataContext.VerifyAllExpectations();
+        }
+        
+        [Test, TestCaseSource("WorkItemData")]
+        public void GetAllWorkItems(WorkItemFakeDBSet workItemData)
+        {
+            int personID = 12;
+
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.WorkItem_ImportWorkplan);
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(1);
+
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(personID)).Return(userRights).Repeat.Times(1);            
+
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            var wiService = new WorkItemService();
+
+            //No Release Ids
+            var workItems = wiService.GetAllWorkItems(personID).Key;
+            Assert.AreEqual(26, workItems.Count);
+
+            mockDataContext.VerifyAllExpectations();
+        }
+
+        [Test, TestCaseSource("WorkItemData")]
         public void GetWorkItemsCountBySearchCriteria(WorkItemFakeDBSet workItemData)
         {
             List<int> releaseIds = new List<int>();

@@ -73,6 +73,7 @@ namespace Etsi.Ultimate.Tests.Services
             mockDataContext.Stub(x => x.SpecificationTechnologies).Return((IDbSet<SpecificationTechnology>)fakeRepo2.All).Repeat.Once();
             SpecificationWIFakeRepository fakeRepo3 = new SpecificationWIFakeRepository();
             mockDataContext.Stub(x => x.Specification_WorkItem).Return((IDbSet<Specification_WorkItem>)fakeRepo3.All).Repeat.Once();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)GetWorkItems());
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
             ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
             ManagerFactory.Container.RegisterInstance(typeof(ICommunityManager), mockCommunitiesManager);
@@ -86,6 +87,9 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual("3GPP SA", result.Key.PrimeResponsibleGroupFullName);
             Assert.AreEqual("3GPP SA 1,3GPP SA 2", result.Key.SecondaryResponsibleGroupsFullNames);
             Assert.AreEqual("3GPP SA 1,3GPP SA 2", result.Key.SecondaryResponsibleGroupsFullNames);
+            Assert.AreEqual(1, result.Key.SpecificationParents.Count);
+            Assert.AreEqual(1, result.Key.SpecificationChilds.Count);
+            Assert.AreEqual("Stage 1 for RAN Sharing Enhancements", result.Key.SpecificationWIsList.FirstOrDefault().Name);
         }
 
         [Test, TestCaseSource("SpecificationData")]
@@ -200,6 +204,27 @@ namespace Etsi.Ultimate.Tests.Services
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             var specSVC = new SpecificationService();
             Assert.False(specSVC.SpecificationInhibitPromote(0, 1));
+            mockDataContext.AssertWasNotCalled(x => x.SaveChanges());
+        }
+
+        [Test]
+        public void SpecificationRemoveInhibitPromote_MissingRights()
+        {
+            UserRightsContainer userRights = new UserRightsContainer();
+            //Mock Rights Manager
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(userRights);
+
+            var specDBSet = GetSpecifications();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specDBSet);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)Releases());
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var specSVC = new SpecificationService();
+            Assert.False(specSVC.SpecificationRemoveInhibitPromote(0, 1));            
             mockDataContext.AssertWasNotCalled(x => x.SaveChanges());
         }
 
@@ -393,6 +418,39 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [Test]
+        public void PerformMassivePromotion_Exception()
+        {
+
+            //Arrange
+            //Params
+            int personId = 1;
+
+            int targetReleaseId = 2;
+            //User Rights
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Specification_BulkPromote);
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(personId)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            //Specification
+            var specDBSet = GetSpecificationsForMassivePromote();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specDBSet);
+            //mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)Releases()); Releases are missing
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var specificationService = new SpecificationService();
+
+            //Action
+            bool result = specificationService.PerformMassivePromotion(personId, specDBSet.ToList(), targetReleaseId);
+
+            //Assert
+            Assert.IsFalse(result);
+            mockDataContext.AssertWasNotCalled(x => x.SaveChanges());
+        }
+
+        [Test]
         public void PerformMassivePromotionWithVersionsAllocations()
         {
 
@@ -489,8 +547,21 @@ namespace Etsi.Ultimate.Tests.Services
         {
             get
             {
-                //var specificationList = GetAllTestRecords<Spec>(Directory.GetCurrentDirectory() + "\\TestData\\WorkItems\\WorkItem.csv");
                 SpecificationFakeDBSet specificationFakeDBSet = new SpecificationFakeDBSet();
+                Specification parentSpec = new Specification()
+                {
+                    Pk_SpecificationId = 2,
+                    Number = "00.02P",
+                    Title = "Parent specification",
+                    SpecificationResponsibleGroups = new List<SpecificationResponsibleGroup>() { new SpecificationResponsibleGroup() { Pk_SpecificationResponsibleGroupId =1,Fk_SpecificationId=2, IsPrime=true, Fk_commityId=1} }
+                };
+                Specification ChildSpec = new Specification()
+                {
+                    Pk_SpecificationId = 3,
+                    Number = "00.03C",
+                    Title = "Child specification",
+                    SpecificationResponsibleGroups = new List<SpecificationResponsibleGroup>() { new SpecificationResponsibleGroup() { Pk_SpecificationResponsibleGroupId = 2, Fk_SpecificationId = 3, IsPrime = true, Fk_commityId=2 } }
+                };
                 specificationFakeDBSet.Add(new Specification()
                 {
                     Pk_SpecificationId = 1,
@@ -501,7 +572,7 @@ namespace Etsi.Ultimate.Tests.Services
                     IsActive = false,
                     IsUnderChangeControl = new Nullable<bool>(false),
 
-                    
+
                     IsForPublication = new Nullable<bool>(false),
                     Remarks = new List<Remark>
                     {
@@ -553,7 +624,7 @@ namespace Etsi.Ultimate.Tests.Services
                     MOD_TS = null,
                     TitleVerified = null,
                     Fk_SerieId = 1,
-                    
+
                     Histories = new List<History>
                     {
                         new History(){
@@ -586,6 +657,12 @@ namespace Etsi.Ultimate.Tests.Services
                             Fk_commityId = 3,
                             Fk_SpecificationId = 1
                         }
+                    },
+                    SpecificationChilds = new List<Specification>() { ChildSpec },
+                    SpecificationParents = new List<Specification>() { parentSpec },
+                    Specification_WorkItem = new List<Specification_WorkItem>
+                    {
+                        new Specification_WorkItem(){ Pk_Specification_WorkItemId=1, Fk_WorkItemId=105, isPrime=true}
                     }
                 });
 
@@ -741,6 +818,18 @@ namespace Etsi.Ultimate.Tests.Services
         {
             ReleaseFakeRepository releaseFakeRepository = new ReleaseFakeRepository();
             return releaseFakeRepository.All;
+        }
+
+        /// <summary>
+        /// Get work items
+        /// </summary>
+        /// <returns></returns>
+        private WorkItemFakeDBSet GetWorkItems()
+        {
+            var workItemList = GetAllTestRecords<WorkItem>(Directory.GetCurrentDirectory() + "\\TestData\\WorkItems\\WorkItem.csv");
+            WorkItemFakeDBSet workItemFakeDBSet = new WorkItemFakeDBSet();
+            workItemList.ForEach(x => workItemFakeDBSet.Add(x));
+            return workItemFakeDBSet;
         }
 
         #endregion

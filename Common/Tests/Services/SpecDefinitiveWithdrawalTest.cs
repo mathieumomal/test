@@ -54,6 +54,17 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(editCounter, SpecReleasetoEditCount);
             Assert.GreaterOrEqual(specRes.Key.MOD_TS, lastMOD);            
         }
+
+        [Test]
+        public void DefinitiveWithdrawal_Exception()
+        {
+            SetMocks();            
+
+            var specSvc = new SpecificationService();
+            //Invalid specification id
+            Assert.False(specSvc.DefinitivelyWithdrawSpecification(USER_WITHDRAWN_RIGHT, 100, 25));
+          
+        }
         #endregion
 
         #region private methods

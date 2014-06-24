@@ -108,6 +108,22 @@ namespace Etsi.Ultimate.Tests.Services
 
             Assert.AreEqual(nameExpected, results.LASTNAME);
         }
+
+        [Test]
+        public void GetPersonDisplayNameTest()
+        {
+            var mockUoW = MockRepository.GenerateMock<IUltimateUnitOfWork>();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.View_Persons).Return((IDbSet<View_Persons>)GetPersonList());
+            mockUoW.Stub(s => s.Context).Return(mockDataContext);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateUnitOfWork), mockUoW);
+
+
+            var service = new PersonService();
+            var results = service.GetPersonDisplayName(1);
+
+            Assert.AreEqual("Un Martine", results);
+        }
         #endregion
 
         #region Datas
