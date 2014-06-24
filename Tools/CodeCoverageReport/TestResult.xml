@@ -1,0 +1,841 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="D:\ETSI_Projects\etsi_ngpp_source_code\ULTIMATE\trunk\Common\Tests\bin\Release\Etsi.Ultimate.Tests.dll" total="341" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2014-06-24" time="18:01:07">
+  <environment nunit-version="2.6.3.13283" clr-version="2.0.50727.5477" os-version="Microsoft Windows NT 6.1.7601 Service Pack 1" platform="Win32NT" cwd="D:\ETSI_Projects\etsi_ngpp_source_code\ULTIMATE\trunk\Tools\CodeCoverageReport" machine-name="LFR409140" user="aroucadi" user-domain="CORP" />
+  <culture-info current-culture="fr-FR" current-uiculture="fr-FR" />
+  <test-suite type="Assembly" name="D:\ETSI_Projects\etsi_ngpp_source_code\ULTIMATE\trunk\Common\Tests\bin\Release\Etsi.Ultimate.Tests.dll" executed="True" result="Success" success="True" time="10.137" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="Etsi" executed="True" result="Success" success="True" time="10.123" asserts="0">
+        <results>
+          <test-suite type="Namespace" name="Ultimate" executed="True" result="Success" success="True" time="10.122" asserts="0">
+            <results>
+              <test-suite type="Namespace" name="Tests" executed="True" result="Success" success="True" time="10.122" asserts="0">
+                <results>
+                  <test-suite type="Namespace" name="Business" executed="True" result="Success" success="True" time="5.654" asserts="0">
+                    <results>
+                      <test-suite type="TestFixture" name="CommunityManagerTest" executed="True" result="Success" success="True" time="1.045" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Business.CommunityManagerTest.CommunityManager_GetAll" executed="True" result="Success" success="True" time="0.992" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.CommunityManagerTest.CommunityManager_GetAll_WithCache" executed="True" result="Success" success="True" time="0.031" asserts="6" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="ConfigVariableTest" executed="True" result="Success" success="True" time="0.095" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Business.ConfigVariableTest.ConfigVariable_DefaultBcc" executed="True" result="Success" success="True" time="0.087" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.ConfigVariableTest.ConfigVariable_DefaultFrom" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="LogManagerTest" executed="True" result="Success" success="True" time="0.366" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Business.LogManagerTest.LogManager_Debug" executed="True" result="Success" success="True" time="0.321" asserts="10" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.LogManagerTest.LogManager_Error" executed="True" result="Success" success="True" time="0.007" asserts="10" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.LogManagerTest.LogManager_Fatal" executed="True" result="Success" success="True" time="0.006" asserts="10" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.LogManagerTest.LogManager_Info" executed="True" result="Success" success="True" time="0.007" asserts="10" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.LogManagerTest.LogManager_Trace" executed="True" result="Success" success="True" time="0.008" asserts="10" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.LogManagerTest.LogManager_Warn" executed="True" result="Success" success="True" time="0.008" asserts="10" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="MailManagerTest" executed="True" result="Success" success="True" time="0.183" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Business.MailManagerTest.SendMail_FillsInBcc" executed="True" result="Success" success="True" time="0.145" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.MailManagerTest.SendMail_FillsInFrom" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.MailManagerTest.SendMail_NominalCase" executed="True" result="Success" success="True" time="0.027" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="PersonManagerTest" executed="True" result="Success" success="True" time="0.103" asserts="0">
+                        <results>
+                          <test-suite type="ParameterizedTest" name="GetEmailSecretariesFromAPrimeResponsibleGroupByCommityId_Test" executed="True" result="Success" success="True" time="0.101" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.PersonManagerTest.GetEmailSecretariesFromAPrimeResponsibleGroupByCommityId_Test(2,1)" executed="True" result="Success" success="True" time="0.090" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Business.PersonManagerTest.GetEmailSecretariesFromAPrimeResponsibleGroupByCommityId_Test(1,2)" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Business.PersonManagerTest.GetEmailSecretariesFromAPrimeResponsibleGroupByCommityId_Test(0,3)" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="ReleaseManagerTest" executed="True" result="Success" success="True" time="0.155" asserts="0">
+                        <results>
+                          <test-suite type="ParameterizedTest" name="GetNextReleaseWhenExists" executed="True" result="Success" success="True" time="0.145" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.ReleaseManagerTest.GetNextReleaseWhenExists(1,2)" executed="True" result="Success" success="True" time="0.120" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Business.ReleaseManagerTest.GetNextReleaseWhenExists(0,1)" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Business.ReleaseManagerTest.GetNextReleaseWhenExists(3,4)" executed="True" result="Success" success="True" time="0.007" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Business.ReleaseManagerTest.GetNextReleaseWhenExists(-1,1)" executed="True" result="Success" success="True" time="0.002" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Business.ReleaseManagerTest.GetNextReleaseWhenExists(20,1)" executed="True" result="Success" success="True" time="0.002" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Business.ReleaseManagerTest.GetNextReleaseWhenExists(2,3)" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-case name="Etsi.Ultimate.Tests.Business.ReleaseManagerTest.GetNextReleaseWhenItIsNotExists" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="RightsManagerTest" executed="True" result="Success" success="True" time="0.322" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.GetCommitteeRelated_RolesChecksForCommitteeOfficials" executed="True" result="Success" success="True" time="0.037" asserts="4" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.GetNonCommitteeRelated_RolesChecksForAdministrators" executed="True" result="Success" success="True" time="0.023" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.GetNonCommitteeRelated_RolesChecksForSpecManager" executed="True" result="Success" success="True" time="0.006" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.GetNonCommitteeRelated_RolesChecksForWorkplanManagers" executed="True" result="Success" success="True" time="0.007" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.GetNonCommitteeRelated_RolesReturnAnonymousOnPersonIdZero" executed="True" result="Success" success="True" time="0.005" asserts="4" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.GetNonCommitteeRelated_RolesReturnEolOnPersonIdPositive" executed="True" result="Success" success="True" time="0.007" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.GetNonCommitteeRelated_RolesReturnStaffMemberIfUserBelongsToEtsi" executed="True" result="Success" success="True" time="0.008" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.GetRights_LooksInCache" executed="True" result="Success" success="True" time="0.116" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.GetRights_RetrievesRightsForAnonymous" executed="True" result="Success" success="True" time="0.007" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.GetRights_RetrievesRightsForOfficials" executed="True" result="Success" success="True" time="0.019" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.GetRights_RetrievesRightsForSuperUser" executed="True" result="Success" success="True" time="0.010" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.GetRights_ReturnsCopy" executed="True" result="Success" success="True" time="0.015" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.GetRights_UoWShouldBeInitialized" executed="True" result="Success" success="True" time="0.009" asserts="0" />
+                          <test-suite type="ParameterizedTest" name="IsUserMCCMember" executed="True" result="Success" success="True" time="0.031" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.IsUserMCCMember(13,False)" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.IsUserMCCMember(53388,False)" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.IsUserMCCMember(27905,True)" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.IsUserMCCMember(27900,True)" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Business.RightsManagerTest.IsUserMCCMember(27904,False)" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="RolesManagerTest" executed="True" result="Success" success="True" time="0.087" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Business.RolesManagerTest.GetSpecMgrs" executed="True" result="Success" success="True" time="0.051" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.RolesManagerTest.GetSpecMgrsEmail" executed="True" result="Success" success="True" time="0.010" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.RolesManagerTest.GetWpMgrs" executed="True" result="Success" success="True" time="0.010" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.RolesManagerTest.GetWpMgrsEmail" executed="True" result="Success" success="True" time="0.010" asserts="2" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecificationDefinitiveWithdrawalActionTest" executed="True" result="Success" success="True" time="0.145" asserts="0">
+                        <results>
+                          <test-suite type="ParameterizedTest" name="DefinitivelywithdrawSpecification" executed="True" result="Success" success="True" time="0.144" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.SpecificationDefinitiveWithdrawalActionTest.DefinitivelywithdrawSpecification(1,1,1)" executed="True" result="Success" success="True" time="0.143" asserts="10" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecificationPromoteActionTest" executed="True" result="Success" success="True" time="0.071" asserts="0">
+                        <results>
+                          <test-suite type="ParameterizedTest" name="PromoteSpecification" executed="True" result="Success" success="True" time="0.046" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.SpecificationPromoteActionTest.PromoteSpecification(1,1,1)" executed="True" result="Success" success="True" time="0.046" asserts="6" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="PromoteSpecificationForLatestRelease" executed="True" result="Success" success="True" time="0.008" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.SpecificationPromoteActionTest.PromoteSpecificationForLatestRelease(1,1,4)" executed="True" result="Success" success="True" time="0.008" asserts="0" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="PromoteSpecificationWithoutRights" executed="True" result="Success" success="True" time="0.011" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.SpecificationPromoteActionTest.PromoteSpecificationWithoutRights(1,1,1)" executed="True" result="Success" success="True" time="0.009" asserts="0" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecificationsMassivePromotionActionTest" executed="True" result="Success" success="True" time="0.063" asserts="0">
+                        <results>
+                          <test-suite type="ParameterizedTest" name="DefinitivelywithdrawSpecification" executed="True" result="Success" success="True" time="0.038" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.SpecificationsMassivePromotionActionTest.DefinitivelywithdrawSpecification(1,1,2)" executed="True" result="Success" success="True" time="0.038" asserts="2" />
+                            </results>
+                          </test-suite>
+                          <test-case name="Etsi.Ultimate.Tests.Business.SpecificationsMassivePromotionActionTest.PromoteMassivelySpecificationsTest" executed="True" result="Success" success="True" time="0.022" asserts="4" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecificationWorkItemManagerTest" executed="True" result="Success" success="True" time="0.074" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Business.SpecificationWorkItemManagerTest.GetSpecificationWorkItemsBySpecId" executed="True" result="Success" success="True" time="0.054" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.SpecificationWorkItemManagerTest.GetSpecificationWorkItemsLabels" executed="True" result="Success" success="True" time="0.017" asserts="4" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecVersionsManagerTest" executed="True" result="Success" success="True" time="0.090" asserts="0">
+                        <results>
+                          <test-suite type="ParameterizedTest" name="GetVersionForASpecReleaseTest" executed="True" result="Success" success="True" time="0.044" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.SpecVersionsManagerTest.GetVersionForASpecReleaseTest(Etsi.Ultimate.Tests.FakeSets.SpecVersionFakeDBSet)" executed="True" result="Success" success="True" time="0.044" asserts="2" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetVersionsByIdTest" executed="True" result="Success" success="True" time="0.013" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.SpecVersionsManagerTest.GetVersionsByIdTest(Etsi.Ultimate.Tests.FakeSets.SpecVersionFakeDBSet)" executed="True" result="Success" success="True" time="0.012" asserts="3" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetVersionsBySpecIdTest" executed="True" result="Success" success="True" time="0.016" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.SpecVersionsManagerTest.GetVersionsBySpecIdTest(Etsi.Ultimate.Tests.FakeSets.SpecVersionFakeDBSet)" executed="True" result="Success" success="True" time="0.015" asserts="3" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetVersionsByWrongIdTest" executed="True" result="Success" success="True" time="0.010" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.SpecVersionsManagerTest.GetVersionsByWrongIdTest(Etsi.Ultimate.Tests.FakeSets.SpecVersionFakeDBSet)" executed="True" result="Success" success="True" time="0.009" asserts="2" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="WorkItemCsvParserTest" executed="True" result="Success" success="True" time="1.099" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_AddNewRemark" executed="True" result="Success" success="True" time="0.555" asserts="3" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_BadHierarchy" executed="True" result="Success" success="True" time="0.045" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_CannotFindRapporteur" executed="True" result="Success" success="True" time="0.041" asserts="4" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_DuplicateAcronymMustLogErrorOutOfHierarchy" executed="True" result="Success" success="True" time="0.019" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_DuplicateAcronymMustLogWarningInHierarchy" executed="True" result="Success" success="True" time="0.016" asserts="3" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_EmptyFile" executed="True" result="Success" success="True" time="0.006" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_FileDoesNotExist" executed="True" result="Success" success="True" time="0.012" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_IncorrectRelease" executed="True" result="Success" success="True" time="0.022" asserts="5" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_InvalidCommittees" executed="True" result="Success" success="True" time="0.023" asserts="4" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_InvalidCompletionLogsWarning" executed="True" result="Success" success="True" time="0.022" asserts="4" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_InvalidDateLogsWarning" executed="True" result="Success" success="True" time="0.019" asserts="5" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_InvalidHyperLinkAndStatusReport" executed="True" result="Success" success="True" time="0.019" asserts="3" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_InvalidTsgPcgDates" executed="True" result="Success" success="True" time="0.019" asserts="6" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_Level0Wi" executed="True" result="Success" success="True" time="0.016" asserts="3" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_Level0WorkItemUidGeneration" executed="True" result="Success" success="True" time="0.021" asserts="3" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_LogsErrorOnNonCsvFile" executed="True" result="Success" success="True" time="0.008" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_ManagesHierarchy" executed="True" result="Success" success="True" time="0.023" asserts="5" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_NoLevelMeansLevel0" executed="True" result="Success" success="True" time="0.019" asserts="4" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_NominalCase" executed="True" result="Success" success="True" time="0.020" asserts="35" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_NotWellFormedWorkPlanLogsError" executed="True" result="Success" success="True" time="0.012" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_ShowsUnexpectedExceptionError" executed="True" result="Success" success="True" time="0.008" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_TestWrongWpOrderShouldLogError" executed="True" result="Success" success="True" time="0.019" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_TrimsAcronyms" executed="True" result="Success" success="True" time="0.019" asserts="4" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_TrimsTsAndTrs" executed="True" result="Success" success="True" time="0.017" asserts="4" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_WorkItemNotModified" executed="True" result="Success" success="True" time="0.020" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_WpIdFieldShouldBeUnique" executed="True" result="Success" success="True" time="0.018" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkItemCsvParserTest.ImportCsv_WpUidMustBeUnique" executed="True" result="Success" success="True" time="0.019" asserts="2" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="WorkItemManagerTest" executed="True" result="Success" success="True" time="0.204" asserts="0">
+                        <results>
+                          <test-suite type="ParameterizedTest" name="GetAllAcronyms" executed="True" result="Success" success="True" time="0.058" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.WorkItemManagerTest.GetAllAcronyms(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="0.057" asserts="7" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetAllWorkItems" executed="True" result="Success" success="True" time="0.009" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.WorkItemManagerTest.GetAllWorkItems(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="0.008" asserts="2" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetWorkItemById" executed="True" result="Success" success="True" time="0.015" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.WorkItemManagerTest.GetWorkItemById(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="0.015" asserts="10" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetWorkItemsBySearchCriteria" executed="True" result="Success" success="True" time="0.056" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.WorkItemManagerTest.GetWorkItemsBySearchCriteria(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="0.056" asserts="12" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetWorkItemsCountBySearchCriteria" executed="True" result="Success" success="True" time="0.054" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.WorkItemManagerTest.GetWorkItemsCountBySearchCriteria(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="0.053" asserts="6" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="WorkPlanExporterTest" executed="True" result="Success" success="True" time="1.425" asserts="0">
+                        <results>
+                          <test-suite type="ParameterizedTest" name="ExportWorkPlan" executed="True" result="Success" success="True" time="1.424" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Business.WorkPlanExporterTest.ExportWorkPlan(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="1.424" asserts="1" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="WorkPlanFileManagerTest" executed="True" result="Success" success="True" time="0.052" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Business.WorkPlanFileManagerTest.GetLastWorkPlanFile" executed="True" result="Success" success="True" time="0.051" asserts="1" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite type="Namespace" name="DomainClasses" executed="True" result="Success" success="True" time="0.038" asserts="0">
+                    <results>
+                      <test-suite type="TestFixture" name="RightsContainerTest" executed="True" result="Success" success="True" time="0.026" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.DomainClasses.RightsContainerTest.RemoveRight_DependingOnCommittee" executed="True" result="Success" success="True" time="0.003" asserts="2" />
+                          <test-suite type="ParameterizedTest" name="RemoveRight_IndependentOfCommittee" executed="True" result="Success" success="True" time="0.011" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.DomainClasses.RightsContainerTest.RemoveRight_IndependentOfCommittee(False,True)" executed="True" result="Success" success="True" time="0.004" asserts="3" />
+                              <test-case name="Etsi.Ultimate.Tests.DomainClasses.RightsContainerTest.RemoveRight_IndependentOfCommittee(True,False)" executed="True" result="Success" success="True" time="0.005" asserts="3" />
+                            </results>
+                          </test-suite>
+                          <test-case name="Etsi.Ultimate.Tests.DomainClasses.RightsContainerTest.UserRightsContainer_RetrieveCommitteeIndependentRight" executed="True" result="Success" success="True" time="0.003" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.DomainClasses.RightsContainerTest.UserRightsContainer_RetrieveCommitteeRight" executed="True" result="Success" success="True" time="0.003" asserts="3" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="WorkItemTest" executed="True" result="Success" success="True" time="0.007" asserts="0">
+                        <categories>
+                          <category name="Domain" />
+                        </categories>
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.DomainClasses.WorkItemTest.GetLatestRemark" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite type="Namespace" name="Repositories" executed="True" result="Success" success="True" time="1.185" asserts="0">
+                    <results>
+                      <test-suite type="TestFixture" name="CommunityRepositoryTest" executed="True" result="Success" success="True" time="0.038" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.CommunityRepositoryTest.CommunityRepository_AllIncluding" executed="True" result="Success" success="True" time="0.008" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.CommunityRepositoryTest.CommunityRepository_Delete" executed="True" result="Success" success="True" time="0.006" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.CommunityRepositoryTest.CommunityRepository_Find" executed="True" result="Success" success="True" time="0.008" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.CommunityRepositoryTest.CommunityRepository_GetAll" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.CommunityRepositoryTest.CommunityRepository_InsertOrUpdate" executed="True" result="Success" success="True" time="0.004" asserts="0" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="HistoryRepositoryTest" executed="True" result="Success" success="True" time="0.099" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.HistoryRepositoryTest.Delete_Test" executed="True" result="Success" success="True" time="0.005" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.HistoryRepositoryTest.Dispose_Test" executed="True" result="Success" success="True" time="0.013" asserts="0" />
+                          <test-suite type="ParameterizedTest" name="Find_Test" executed="True" result="Success" success="True" time="0.045" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Repositories.HistoryRepositoryTest.Find_Test(Etsi.Ultimate.Tests.FakeSets.HistoryFakeDBSet)" executed="True" result="Success" success="True" time="0.044" asserts="2" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetAll_Test" executed="True" result="Success" success="True" time="0.006" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Repositories.HistoryRepositoryTest.GetAll_Test(Etsi.Ultimate.Tests.FakeSets.HistoryFakeDBSet)" executed="True" result="Success" success="True" time="0.006" asserts="5" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetAllIncluding_Test" executed="True" result="Success" success="True" time="0.006" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Repositories.HistoryRepositoryTest.GetAllIncluding_Test(Etsi.Ultimate.Tests.FakeSets.HistoryFakeDBSet)" executed="True" result="Success" success="True" time="0.005" asserts="5" />
+                            </results>
+                          </test-suite>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.HistoryRepositoryTest.Insert_Test" executed="True" result="Success" success="True" time="0.006" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.HistoryRepositoryTest.Update_Test" executed="True" result="Success" success="True" time="0.004" asserts="0" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="MeetingRepositoryTest" executed="True" result="Success" success="True" time="0.082" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.MeetingRepositoryTest.MeetingRepository_AllIncluding" executed="True" result="Success" success="True" time="0.048" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.MeetingRepositoryTest.MeetingRepository_Delete" executed="True" result="Success" success="True" time="0.006" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.MeetingRepositoryTest.MeetingRepository_Find" executed="True" result="Success" success="True" time="0.012" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.MeetingRepositoryTest.MeetingRepository_GetAll" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.MeetingRepositoryTest.MeetingRepository_InsertOrUpdate" executed="True" result="Success" success="True" time="0.004" asserts="0" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="PersonRepositoryTest" executed="True" result="Success" success="True" time="0.032" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.PersonRepositoryTest.PersonRepository_AllIncluding" executed="True" result="Success" success="True" time="0.006" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.PersonRepositoryTest.PersonRepository_Delete" executed="True" result="Success" success="True" time="0.004" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.PersonRepositoryTest.PersonRepository_Find" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.PersonRepositoryTest.PersonRepository_GetAll" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.PersonRepositoryTest.PersonRepository_InsertOrUpdate" executed="True" result="Success" success="True" time="0.004" asserts="0" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="ResponsibleGroupSecretaryRepositoryTest+PersonRepositoryTest" executed="True" result="Success" success="True" time="0.063" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.ResponsibleGroupSecretaryRepositoryTest+PersonRepositoryTest.ResponsibleGroupSecretaryRepository_AllIncluding" executed="True" result="Success" success="True" time="0.006" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.ResponsibleGroupSecretaryRepositoryTest+PersonRepositoryTest.ResponsibleGroupSecretaryRepository_Delete" executed="True" result="Success" success="True" time="0.006" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.ResponsibleGroupSecretaryRepositoryTest+PersonRepositoryTest.ResponsibleGroupSecretaryRepository_Find" executed="True" result="Success" success="True" time="0.007" asserts="0" />
+                          <test-suite type="ParameterizedTest" name="ResponsibleGroupSecretaryRepository_FindAllByCommiteeId" executed="True" result="Success" success="True" time="0.023" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Repositories.ResponsibleGroupSecretaryRepositoryTest+PersonRepositoryTest.ResponsibleGroupSecretaryRepository_FindAllByCommiteeId(1,2)" executed="True" result="Success" success="True" time="0.008" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Repositories.ResponsibleGroupSecretaryRepositoryTest+PersonRepositoryTest.ResponsibleGroupSecretaryRepository_FindAllByCommiteeId(0,3)" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Repositories.ResponsibleGroupSecretaryRepositoryTest+PersonRepositoryTest.ResponsibleGroupSecretaryRepository_FindAllByCommiteeId(2,1)" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.ResponsibleGroupSecretaryRepositoryTest+PersonRepositoryTest.ResponsibleGroupSecretaryRepository_GetAll" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.ResponsibleGroupSecretaryRepositoryTest+PersonRepositoryTest.ResponsibleGroupSecretaryRepository_InsertOrUpdate" executed="True" result="Success" success="True" time="0.007" asserts="0" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="RightsRepositoryTest" executed="True" result="Success" success="True" time="0.098" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.RightsRepositoryTest.GetRightsPerRole_IgnoresInvalidData" executed="True" result="Success" success="True" time="0.070" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.RightsRepositoryTest.GetRightsPerRole_LoadSimpleData" executed="True" result="Success" success="True" time="0.004" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.RightsRepositoryTest.GetRightsPerRole_ManagesDuplicates" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.RightsRepositoryTest.GetRightsPerRole_NonExistingXmlFile" executed="True" result="Success" success="True" time="0.003" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.RightsRepositoryTest.GetRightsPerRole_ReturnsNoData" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.RightsRepositoryTest.GetRightsPerRole_StoresDataInCache" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="ShortUrlRepositoryTest" executed="True" result="Success" success="True" time="0.058" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.ShortUrlRepositoryTest.FindByToken_noResult" executed="True" result="Success" success="True" time="0.012" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.ShortUrlRepositoryTest.FindByToken_oneFind" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.ShortUrlRepositoryTest.GetTabIdAndPageNameForModuleId_ReturnsIdWhenFound" executed="True" result="Success" success="True" time="0.009" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.ShortUrlRepositoryTest.GetTabIdAndPageNameForModuleId_ReturnsNullWhenNothingFound" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.ShortUrlRepositoryTest.GetTabIdAndPageNameForModuleId_UsesCache" executed="True" result="Success" success="True" time="0.008" asserts="4" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.ShortUrlRepositoryTest.InsertOrUpdate_add" executed="True" result="Success" success="True" time="0.008" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecificationRepositoryTest" executed="True" result="Success" success="True" time="0.255" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecificationRepositoryTest.Specification_Find" executed="True" result="Success" success="True" time="0.019" asserts="5" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecificationRepositoryTest.Specification_InsertOrUpdate" executed="True" result="Success" success="True" time="0.009" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecificationRepositoryTest.SpecificationGetAllSearchCriteria_HandlesOrderingCorrectly" executed="True" result="Success" success="True" time="0.097" asserts="4" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecificationRepositoryTest.SpecificationGetAllSearchCriteria_SearchesOnWid" executed="True" result="Success" success="True" time="0.102" asserts="4" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecificationRepositoryTest.Specifications_GetAll" executed="True" result="Success" success="True" time="0.006" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecificationRepositoryTest.SpecRelease_Find" executed="True" result="Success" success="True" time="0.013" asserts="2" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecificationWorkItemRepositoryTest" executed="True" result="Success" success="True" time="0.037" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecificationWorkItemRepositoryTest.SpecificationWorkItemRepository_AllIncluding" executed="True" result="Success" success="True" time="0.012" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecificationWorkItemRepositoryTest.SpecificationWorkItemRepository_Delete" executed="True" result="Success" success="True" time="0.005" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecificationWorkItemRepositoryTest.SpecificationWorkItemRepository_Find" executed="True" result="Success" success="True" time="0.005" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecificationWorkItemRepositoryTest.SpecificationWorkItemRepository_GetAll" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecificationWorkItemRepositoryTest.SpecificationWorkItemRepository_InsertOrUpdate" executed="True" result="Success" success="True" time="0.004" asserts="0" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecVersionsRepositoryTest" executed="True" result="Success" success="True" time="0.060" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecVersionsRepositoryTest.SpecVersionRepository_GetVersionsForSpecrelease" executed="True" result="Success" success="True" time="0.013" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecVersionsRepositoryTest.SpecVersionsRepository_Delete" executed="True" result="Success" success="True" time="0.005" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecVersionsRepositoryTest.SpecVersionsRepository_Find" executed="True" result="Success" success="True" time="0.007" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecVersionsRepositoryTest.SpecVersionsRepository_GetAll" executed="True" result="Success" success="True" time="0.005" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecVersionsRepositoryTest.SpecVersionsRepository_GetAllIncluding" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecVersionsRepositoryTest.SpecVersionsRepository_GetVersionsByReleaseId" executed="True" result="Success" success="True" time="0.010" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.SpecVersionsRepositoryTest.SpecVersionsRepository_InsertOrUpdate_Insertion" executed="True" result="Success" success="True" time="0.006" asserts="2" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="TestEnum_ReleaseStatusRepository" executed="True" result="Success" success="True" time="0.074" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.TestEnum_ReleaseStatusRepository.ReleaseStatus_AllIncluding" executed="True" result="Success" success="True" time="0.040" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.TestEnum_ReleaseStatusRepository.ReleaseStatus_Delete" executed="True" result="Success" success="True" time="0.007" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.TestEnum_ReleaseStatusRepository.ReleaseStatus_Find" executed="True" result="Success" success="True" time="0.010" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.TestEnum_ReleaseStatusRepository.ReleaseStatus_GetAll" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.TestEnum_ReleaseStatusRepository.ReleaseStatus_InsertOrUpdate" executed="True" result="Success" success="True" time="0.005" asserts="0" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="TestReleaseRepository" executed="True" result="Success" success="True" time="0.039" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.TestReleaseRepository.Release_Delete" executed="True" result="Success" success="True" time="0.006" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.TestReleaseRepository.Release_Find" executed="True" result="Success" success="True" time="0.007" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.TestReleaseRepository.Release_GetAll" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.TestReleaseRepository.Release_GetAllIncluding" executed="True" result="Success" success="True" time="0.005" asserts="3" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.TestReleaseRepository.Release_InsertOrUpdate" executed="True" result="Success" success="True" time="0.010" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="UserRolesRepositoryTest" executed="True" result="Success" success="True" time="0.017" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.UserRolesRepositoryTest.getAll" executed="True" result="Success" success="True" time="0.009" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.UserRolesRepositoryTest.GetAllAdHocRoles" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="WorkItemRepositoryTest" executed="True" result="Success" success="True" time="0.153" asserts="0">
+                        <results>
+                          <test-suite type="ParameterizedTest" name="GetAllAcronyms" executed="True" result="Success" success="True" time="0.027" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Repositories.WorkItemRepositoryTest.GetAllAcronyms(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="0.025" asserts="7" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetWorkItemsByReleaseId" executed="True" result="Success" success="True" time="0.010" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Repositories.WorkItemRepositoryTest.GetWorkItemsByReleaseId(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="0.009" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetWorkItemsBySearchCriteria" executed="True" result="Success" success="True" time="0.033" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Repositories.WorkItemRepositoryTest.GetWorkItemsBySearchCriteria(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="0.033" asserts="5" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetWorkItemsCountBySearchCriteria" executed="True" result="Success" success="True" time="0.037" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Repositories.WorkItemRepositoryTest.GetWorkItemsCountBySearchCriteria(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="0.037" asserts="6" />
+                            </results>
+                          </test-suite>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.WorkItemRepositoryTest.WorkItem_Delete" executed="True" result="Success" success="True" time="0.011" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.WorkItemRepositoryTest.WorkItem_Find" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.WorkItemRepositoryTest.WorkItem_GetAll" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.WorkItemRepositoryTest.WorkItem_GetAllIncluding" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.WorkItemRepositoryTest.WorkItem_InsertOrUpdate" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="WorkPlanFileRepositoryTest" executed="True" result="Success" success="True" time="0.030" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.WorkPlanFileRepositoryTest.WorkPlanFileRepository_AllIncluding" executed="True" result="Success" success="True" time="0.006" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.WorkPlanFileRepositoryTest.WorkPlanFileRepository_Delete" executed="True" result="Success" success="True" time="0.006" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.WorkPlanFileRepositoryTest.WorkPlanFileRepository_Find" executed="True" result="Success" success="True" time="0.008" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Repositories.WorkPlanFileRepositoryTest.WorkPlanFileRepository_GetAll" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                  <test-suite type="Namespace" name="Services" executed="True" result="Success" success="True" time="3.180" asserts="0">
+                    <results>
+                      <test-suite type="TestFixture" name="CommunityServiceTest" executed="True" result="Success" success="True" time="0.017" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Services.CommunityServiceTest.CommunityService_GetAll" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.CommunityServiceTest.CommunityService_GetAll_WithCache" executed="True" result="Success" success="True" time="0.003" asserts="6" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.CommunityServiceTest.GetCommmunityshortNameById" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="MeetingServiceTest" executed="True" result="Success" success="True" time="0.176" asserts="0">
+                        <results>
+                          <test-suite type="ParameterizedTest" name="Test_GetLatestMeetings" executed="True" result="Success" success="True" time="0.033" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.MeetingServiceTest.Test_GetLatestMeetings(Etsi.Ultimate.Tests.FakeSets.MeetingFakeDBSet)" executed="True" result="Success" success="True" time="0.032" asserts="3" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="Test_GetLatestMeetings_WithId" executed="True" result="Success" success="True" time="0.042" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.MeetingServiceTest.Test_GetLatestMeetings_WithId(Etsi.Ultimate.Tests.FakeSets.MeetingFakeDBSet,1,3)" executed="True" result="Success" success="True" time="0.011" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.MeetingServiceTest.Test_GetLatestMeetings_WithId(Etsi.Ultimate.Tests.FakeSets.MeetingFakeDBSet,2,4)" executed="True" result="Success" success="True" time="0.008" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.MeetingServiceTest.Test_GetLatestMeetings_WithId(Etsi.Ultimate.Tests.FakeSets.MeetingFakeDBSet,3,3)" executed="True" result="Success" success="True" time="0.009" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.MeetingServiceTest.Test_GetLatestMeetings_WithId(Etsi.Ultimate.Tests.FakeSets.MeetingFakeDBSet,0,3)" executed="True" result="Success" success="True" time="0.008" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="Test_GetMatchingMeetings" executed="True" result="Success" success="True" time="0.044" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.MeetingServiceTest.Test_GetMatchingMeetings(&quot;S5&quot;,Etsi.Ultimate.Tests.FakeSets.MeetingFakeDBSet,2)" executed="True" result="Success" success="True" time="0.018" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.MeetingServiceTest.Test_GetMatchingMeetings(&quot;&quot;,Etsi.Ultimate.Tests.FakeSets.MeetingFakeDBSet,6)" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.MeetingServiceTest.Test_GetMatchingMeetings(&quot;2014-12&quot;,Etsi.Ultimate.Tests.FakeSets.MeetingFakeDBSet,0)" executed="True" result="Success" success="True" time="0.008" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.MeetingServiceTest.Test_GetMatchingMeetings(&quot;TH&quot;,Etsi.Ultimate.Tests.FakeSets.MeetingFakeDBSet,1)" executed="True" result="Success" success="True" time="0.007" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="Test_GetMeetingById" executed="True" result="Success" success="True" time="0.011" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.MeetingServiceTest.Test_GetMeetingById(Etsi.Ultimate.Tests.FakeSets.MeetingFakeDBSet)" executed="True" result="Success" success="True" time="0.011" asserts="2" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="Test_GetMeetingCaseInsensitive" executed="True" result="Success" success="True" time="0.017" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.MeetingServiceTest.Test_GetMeetingCaseInsensitive(&quot;S&quot;,Etsi.Ultimate.Tests.FakeSets.MeetingFakeDBSet)" executed="True" result="Success" success="True" time="0.007" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.MeetingServiceTest.Test_GetMeetingCaseInsensitive(&quot;s&quot;,Etsi.Ultimate.Tests.FakeSets.MeetingFakeDBSet)" executed="True" result="Success" success="True" time="0.008" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="Test_GetMeetingOrderedByStartDate" executed="True" result="Success" success="True" time="0.014" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.MeetingServiceTest.Test_GetMeetingOrderedByStartDate(Etsi.Ultimate.Tests.FakeSets.MeetingFakeDBSet)" executed="True" result="Success" success="True" time="0.013" asserts="9" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="PersonServiceTest" executed="True" result="Success" success="True" time="0.169" asserts="0">
+                        <results>
+                          <test-suite type="ParameterizedTest" name="FindPersonTest" executed="True" result="Success" success="True" time="0.010" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.PersonServiceTest.FindPersonTest(3,Etsi.Ultimate.Tests.FakeSets.PersonFakeDBSet,&quot;bernard&quot;)" executed="True" result="Success" success="True" time="0.009" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetByIdsTest_TestUknownIdAndNoPrimary" executed="True" result="Success" success="True" time="0.036" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.PersonServiceTest.GetByIdsTest_TestUknownIdAndNoPrimary(System.Collections.Generic.List`1[System.Int32],Etsi.Ultimate.Tests.FakeSets.PersonFakeDBSet,3)" executed="True" result="Success" success="True" time="0.012" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.PersonServiceTest.GetByIdsTest_TestUknownIdAndNoPrimary(System.Collections.Generic.List`1[System.Int32],Etsi.Ultimate.Tests.FakeSets.PersonFakeDBSet,4)" executed="True" result="Success" success="True" time="0.010" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.PersonServiceTest.GetByIdsTest_TestUknownIdAndNoPrimary(System.Collections.Generic.List`1[System.Int32],Etsi.Ultimate.Tests.FakeSets.PersonFakeDBSet,1)" executed="True" result="Success" success="True" time="0.011" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetByIdsTest_TestUknownIdAndNoPrimary" executed="True" result="Success" success="True" time="0.043" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.PersonServiceTest.GetByIdsTest_TestUknownIdAndNoPrimary(System.Collections.Generic.List`1[System.Int32],Etsi.Ultimate.Tests.FakeSets.PersonFakeDBSet,System.Collections.Generic.List`1[System.Int32])" executed="True" result="Success" success="True" time="0.014" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.PersonServiceTest.GetByIdsTest_TestUknownIdAndNoPrimary(System.Collections.Generic.List`1[System.Int32],Etsi.Ultimate.Tests.FakeSets.PersonFakeDBSet,System.Collections.Generic.List`1[System.Int32])" executed="True" result="Success" success="True" time="0.013" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.PersonServiceTest.GetByIdsTest_TestUknownIdAndNoPrimary(System.Collections.Generic.List`1[System.Int32],Etsi.Ultimate.Tests.FakeSets.PersonFakeDBSet,System.Collections.Generic.List`1[System.Int32])" executed="True" result="Success" success="True" time="0.012" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-case name="Etsi.Ultimate.Tests.Services.PersonServiceTest.GetPersonDisplayNameTest" executed="True" result="Success" success="True" time="0.010" asserts="1" />
+                          <test-suite type="ParameterizedTest" name="LookForTest" executed="True" result="Success" success="True" time="0.049" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.PersonServiceTest.LookForTest(&quot;un&quot;,Etsi.Ultimate.Tests.FakeSets.PersonFakeDBSet,1)" executed="True" result="Success" success="True" time="0.015" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.PersonServiceTest.LookForTest(&quot;uN&quot;,Etsi.Ultimate.Tests.FakeSets.PersonFakeDBSet,1)" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.PersonServiceTest.LookForTest(&quot;justine&quot;,Etsi.Ultimate.Tests.FakeSets.PersonFakeDBSet,1)" executed="True" result="Success" success="True" time="0.007" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.PersonServiceTest.LookForTest(&quot;DeUx&quot;,Etsi.Ultimate.Tests.FakeSets.PersonFakeDBSet,1)" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.PersonServiceTest.LookForTest(&quot;capgemini&quot;,Etsi.Ultimate.Tests.FakeSets.PersonFakeDBSet,6)" executed="True" result="Success" success="True" time="0.009" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="LookForTestNoDeletedPerson" executed="True" result="Success" success="True" time="0.007" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.PersonServiceTest.LookForTestNoDeletedPerson(&quot;franck&quot;,Etsi.Ultimate.Tests.FakeSets.PersonFakeDBSet,1)" executed="True" result="Success" success="True" time="0.007" asserts="1" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="ReleaseServiceTest" executed="True" result="Success" success="True" time="0.312" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_CloseRelease" executed="True" result="Success" success="True" time="0.035" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_CreateRelease" executed="True" result="Success" success="True" time="0.057" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_EditRelease" executed="True" result="Success" success="True" time="0.046" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_FreezeRelease" executed="True" result="Success" success="True" time="0.021" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetAllReleases" executed="True" result="Success" success="True" time="0.009" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetAllReleases_Cache" executed="True" result="Success" success="True" time="0.004" asserts="3" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetAllReleases_Rights" executed="True" result="Success" success="True" time="0.006" asserts="2" />
+                          <test-suite type="ParameterizedTest" name="Test_GetAllReleasesCodes" executed="True" result="Success" success="True" time="0.024" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetAllReleasesCodes(2)" executed="True" result="Success" success="True" time="0.011" asserts="2" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetAllReleasesCodes(4)" executed="True" result="Success" success="True" time="0.005" asserts="2" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetAllReleasesCodes(1)" executed="True" result="Success" success="True" time="0.004" asserts="2" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="Test_GetPreviousReleaseCode" executed="True" result="Success" success="True" time="0.022" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetPreviousReleaseCode(4)" executed="True" result="Success" success="True" time="0.010" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetPreviousReleaseCode(1)" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetPreviousReleaseCode(2)" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="Test_GetRelease_Releases" executed="True" result="Success" success="True" time="0.028" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetRelease_Releases(&quot;Frozen&quot;,True,False)" executed="True" result="Success" success="True" time="0.010" asserts="4" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetRelease_Releases(&quot;Open&quot;,True,True)" executed="True" result="Success" success="True" time="0.008" asserts="4" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetRelease_Releases(&quot;Closed&quot;,False,False)" executed="True" result="Success" success="True" time="0.006" asserts="4" />
+                            </results>
+                          </test-suite>
+                          <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetRelease_ReturnsRemarksAndHistory" executed="True" result="Success" success="True" time="0.008" asserts="3" />
+                          <test-suite type="ParameterizedTest" name="Test_GetReleaseById" executed="True" result="Success" success="True" time="0.028" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetReleaseById(1)" executed="True" result="Success" success="True" time="0.009" asserts="4" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetReleaseById(2)" executed="True" result="Success" success="True" time="0.008" asserts="4" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.ReleaseServiceTest.Test_GetReleaseById(4)" executed="True" result="Success" success="True" time="0.008" asserts="4" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="RightsServiceTest" executed="True" result="Success" success="True" time="0.007" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Services.RightsServiceTest.GetRights_RetrievesRightsForAnonymous" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecDefinitiveWithdrawalTest" executed="True" result="Success" success="True" time="0.153" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecDefinitiveWithdrawalTest.DefinitiveWithdrawal_Exception" executed="True" result="Success" success="True" time="0.138" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecDefinitiveWithdrawalTest.DefinitiveWithdrawal_NominalCase" executed="True" result="Success" success="True" time="0.011" asserts="9" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecificationCreateServiceTest" executed="True" result="Success" success="True" time="0.302" asserts="0">
+                        <results>
+                          <test-suite type="ParameterizedTest" name="CreateSpecification_NominalCase" executed="True" result="Success" success="True" time="0.258" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationCreateServiceTest.CreateSpecification_NominalCase(2,True,True,4,&quot;&quot;,null,0)" executed="True" result="Success" success="True" time="0.185" asserts="10" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationCreateServiceTest.CreateSpecification_NominalCase(1,False,False,3,&quot;12.145&quot;,1,0)" executed="True" result="Success" success="True" time="0.028" asserts="9" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationCreateServiceTest.CreateSpecification_NominalCase(1,False,False,4,&quot;&quot;,0,1)" executed="True" result="Success" success="True" time="0.011" asserts="2" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationCreateServiceTest.CreateSpecification_NominalCase(3,False,False,3,&quot;&quot;,0,1)" executed="True" result="Success" success="True" time="0.012" asserts="2" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationCreateServiceTest.CreateSpecification_NominalCase(4,False,False,3,&quot;&quot;,0,1)" executed="True" result="Success" success="True" time="0.014" asserts="2" />
+                            </results>
+                          </test-suite>
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationCreateServiceTest.CreateSpecification_ReturnsErrorIfExistingPk" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationCreateServiceTest.CreateSpecification_ReturnsErrorIfSpecNumberIsInvalid" executed="True" result="Success" success="True" time="0.013" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationCreateServiceTest.CreateSpecification_ReturnsErrorIfUserDidNotDefineRelease" executed="True" result="Success" success="True" time="0.009" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationCreateServiceTest.CreationSpecification_ReturnsErrorIfUserDoesNotHaveRight" executed="True" result="Success" success="True" time="0.009" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecificationEditServiceTest" executed="True" result="Success" success="True" time="0.338" asserts="0">
+                        <results>
+                          <test-suite type="ParameterizedTest" name="EditSpecification_EmailTest" executed="True" result="Success" success="True" time="0.236" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationEditServiceTest.EditSpecification_EmailTest(False,False,4,&quot;12.123&quot;,0)" executed="True" result="Success" success="True" time="0.090" asserts="3" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationEditServiceTest.EditSpecification_EmailTest(True,True,3,&quot;&quot;,0)" executed="True" result="Success" success="True" time="0.037" asserts="3" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationEditServiceTest.EditSpecification_EmailTest(True,True,3,&quot;12.145&quot;,0)" executed="True" result="Success" success="True" time="0.029" asserts="3" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationEditServiceTest.EditSpecification_EmailTest(True,False,3,&quot;ijfzeo989=)&quot;,1)" executed="True" result="Success" success="True" time="0.019" asserts="3" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationEditServiceTest.EditSpecification_EmailTest(True,False,3,&quot;12.189&quot;,1)" executed="True" result="Success" success="True" time="0.020" asserts="3" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationEditServiceTest.EditSpecification_EmailTest(False,False,3,&quot;12.123&quot;,0)" executed="True" result="Success" success="True" time="0.015" asserts="3" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationEditServiceTest.EditSpecification_EmailTest(True,False,4,&quot;12.145&quot;,1)" executed="True" result="Success" success="True" time="0.015" asserts="3" />
+                            </results>
+                          </test-suite>
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationEditServiceTest.EditSpecification_NominalCase" executed="True" result="Success" success="True" time="0.008" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationEditServiceTest.EditSpecification_NonExistingSpecificationReturnsError" executed="True" result="Success" success="True" time="0.008" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationEditServiceTest.EditSpecification_ReturnsFalseWhenUserHasNoRight" executed="True" result="Success" success="True" time="0.009" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationEditServiceTest.EditSpecification_TestRapporteurChange" executed="True" result="Success" success="True" time="0.015" asserts="4" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationEditServiceTest.EditSpecification_TestWorkItemChanges" executed="True" result="Success" success="True" time="0.013" asserts="3" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationEditServiceTest.SpecificationEdit_TestRemarksChange" executed="True" result="Success" success="True" time="0.012" asserts="4" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationEditServiceTest.SpecificationEdit_TestResponsibleGroupsChange" executed="True" result="Success" success="True" time="0.014" asserts="4" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationEditServiceTest.SpecificationEdit_TestTechnoChange" executed="True" result="Success" success="True" time="0.009" asserts="2" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecificationServiceTest" executed="True" result="Success" success="True" time="0.574" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.CheckInhibitedToPromote_Test" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.ExportSpecificationList_Nominal" executed="True" result="Success" success="True" time="0.094" asserts="2" />
+                          <test-suite type="ParameterizedTest" name="GetSpecificationBySearchCriteria" executed="True" result="Success" success="True" time="0.050" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.GetSpecificationBySearchCriteria(Etsi.Ultimate.Tests.FakeSets.SpecificationFakeDBSet)" executed="True" result="Success" success="True" time="0.050" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetSpecificationBySearchText" executed="True" result="Success" success="True" time="0.022" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.GetSpecificationBySearchText(Etsi.Ultimate.Tests.FakeSets.SpecificationFakeDBSet)" executed="True" result="Success" success="True" time="0.022" asserts="2" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetSpecificationDetailsById" executed="True" result="Success" success="True" time="0.113" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.GetSpecificationDetailsById(Etsi.Ultimate.Tests.FakeSets.SpecificationFakeDBSet)" executed="True" result="Success" success="True" time="0.113" asserts="9" />
+                            </results>
+                          </test-suite>
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.PerformMassivePromotion" executed="True" result="Success" success="True" time="0.023" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.PerformMassivePromotion_Exception" executed="True" result="Success" success="True" time="0.010" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.PerformMassivePromotionWithVersionsAllocations" executed="True" result="Success" success="True" time="0.046" asserts="1" />
+                          <test-suite type="ParameterizedTest" name="PromoteSpecification" executed="True" result="Success" success="True" time="0.016" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.PromoteSpecification(1,1,1)" executed="True" result="Success" success="True" time="0.016" asserts="7" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="PromoteSpecificationWithoutRights" executed="True" result="Success" success="True" time="0.012" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.PromoteSpecificationWithoutRights(1,1,1)" executed="True" result="Success" success="True" time="0.011" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.SpecificationInhibitPromote_MissingRights" executed="True" result="Success" success="True" time="0.016" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.SpecificationInhibitPromote_Nominal" executed="True" result="Success" success="True" time="0.013" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.SpecificationRemoveInhibitPromote_MissingRights" executed="True" result="Success" success="True" time="0.013" asserts="1" />
+                          <test-suite type="ParameterizedTest" name="TestCheckFormatNumberIsValid" executed="True" result="Success" success="True" time="0.058" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.TestCheckFormatNumberIsValid(&quot;01.0&quot;,True,0)" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.TestCheckFormatNumberIsValid(&quot;01.00U&quot;,True,0)" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.TestCheckFormatNumberIsValid(&quot;42.0UU-P&quot;,True,0)" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.TestCheckFormatNumberIsValid(&quot;99.Uu-P-s&quot;,True,0)" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.TestCheckFormatNumberIsValid(&quot;00.abc-P-&quot;,True,0)" executed="True" result="Success" success="True" time="0.003" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.TestCheckFormatNumberIsValid(&quot;01.abc-P-s-&quot;,True,0)" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.TestCheckFormatNumberIsValid(&quot;test&quot;,False,1)" executed="True" result="Success" success="True" time="0.003" asserts="2" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.TestCheckFormatNumberIsValid(&quot;9.A.&quot;,False,1)" executed="True" result="Success" success="True" time="0.005" asserts="2" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.TestCheckFormatNumberIsValid(&quot;9.A.-&quot;,False,1)" executed="True" result="Success" success="True" time="0.003" asserts="2" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.TestCheckFormatNumberIsValid(&quot;xy.abc-&quot;,False,1)" executed="True" result="Success" success="True" time="0.004" asserts="2" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.TestCheckFormatNumberIsValid(&quot;xy.abc-&quot;,False,1)" executed="True" result="Success" success="True" time="0.003" asserts="2" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="TestCheckNumberAlreadyExist" executed="True" result="Success" success="True" time="0.052" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.TestCheckNumberAlreadyExist(&quot;01.05&quot;,True,0)" executed="True" result="Success" success="True" time="0.032" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.TestCheckNumberAlreadyExist(&quot;01.01&quot;,False,1)" executed="True" result="Success" success="True" time="0.008" asserts="2" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecificationServiceTest.TestCheckNumberAlreadyExist(&quot;03.98&quot;,True,0)" executed="True" result="Success" success="True" time="0.008" asserts="1" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecMassivePromoteTest" executed="True" result="Success" success="True" time="0.085" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecMassivePromoteTest.GetSpecificationForMassivePromotion" executed="True" result="Success" success="True" time="0.084" asserts="2" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecReleaseRightsServiceTest" executed="True" result="Success" success="True" time="0.134" asserts="0">
+                        <results>
+                          <test-suite type="ParameterizedTest" name="ForceTransposition" executed="True" result="Success" success="True" time="0.067" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.ForceTransposition(1,1,False,False,False)" executed="True" result="Success" success="True" time="0.017" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.ForceTransposition(1,1,False,True,True)" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.ForceTransposition(2,1,False,True,False)" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.ForceTransposition(1,2,False,True,False)" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.ForceTransposition(1,3,False,True,False)" executed="True" result="Success" success="True" time="0.007" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.ForceTransposition(1,1,True,True,False)" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.ForceTransposition(1,1,True,True,False)" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.ForceTransposition(1,4,False,True,False)" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="UnforceTransposition" executed="True" result="Success" success="True" time="0.032" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.UnforceTransposition(1,3,False,False)" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.UnforceTransposition(1,4,False,True)" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.UnforceTransposition(2,4,False,False)" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.UnforceTransposition(1,4,True,False)" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.UnforceTransposition(1,1,False,False)" executed="True" result="Success" success="True" time="0.007" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="WithdrawFromRelease" executed="True" result="Success" success="True" time="0.025" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.WithdrawFromRelease(1,1,False,True)" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.WithdrawFromRelease(2,1,False,False)" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.WithdrawFromRelease(1,1,True,False)" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecReleaseRightsServiceTest.WithdrawFromRelease(1,3,False,False)" executed="True" result="Success" success="True" time="0.004" asserts="1" />
+                            </results>
+                          </test-suite>
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecTranspositionServiceTest" executed="True" result="Success" success="True" time="0.141" asserts="0">
+                        <categories>
+                          <category name="Specification" />
+                        </categories>
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecTranspositionServiceTest.ForceTransposition_NominalCase" executed="True" result="Success" success="True" time="0.075" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecTranspositionServiceTest.ForceTransposition_ReturnsFalseIfForceTranspositionFlagIsAlreadySet" executed="True" result="Success" success="True" time="0.008" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecTranspositionServiceTest.ForceTransposition_ReturnsFalseWhenReleaseIsFrozenOrClosed" executed="True" result="Success" success="True" time="0.007" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecTranspositionServiceTest.ForceTransposition_ReturnsFalseWhenReleaseIsWithdrawn" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecTranspositionServiceTest.ForceTransposition_ReturnsFalseWhenUserHasNoRight" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecTranspositionServiceTest.ForceTransposition_SendsVersionForTranspositionIfUploaded" executed="True" result="Success" success="True" time="0.010" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecTranspositionServiceTest.UnforceTransposition_NominalCase" executed="True" result="Success" success="True" time="0.011" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecTranspositionServiceTest.UnforceTransposition_NoRight" executed="True" result="Success" success="True" time="0.006" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecVersionServiceTest" executed="True" result="Success" success="True" time="0.116" asserts="0">
+                        <results>
+                          <test-suite type="ParameterizedTest" name="GetVersionsById" executed="True" result="Success" success="True" time="0.009" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecVersionServiceTest.GetVersionsById(Etsi.Ultimate.Tests.FakeSets.SpecVersionFakeDBSet)" executed="True" result="Success" success="True" time="0.008" asserts="2" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetVersionsBySpecId" executed="True" result="Success" success="True" time="0.011" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecVersionServiceTest.GetVersionsBySpecId(Etsi.Ultimate.Tests.FakeSets.SpecVersionFakeDBSet)" executed="True" result="Success" success="True" time="0.010" asserts="2" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetVersionsForSpecRelease" executed="True" result="Success" success="True" time="0.009" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.SpecVersionServiceTest.GetVersionsForSpecRelease(Etsi.Ultimate.Tests.FakeSets.SpecVersionFakeDBSet)" executed="True" result="Success" success="True" time="0.009" asserts="3" />
+                            </results>
+                          </test-suite>
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecVersionServiceTest.UploadOrAllocateVersionTest_Draft_InvalidVersion" executed="True" result="Success" success="True" time="0.017" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecVersionServiceTest.UploadOrAllocateVersionTest_ExistingVersion_Allocated" executed="True" result="Success" success="True" time="0.016" asserts="3" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecVersionServiceTest.UploadOrAllocateVersionTest_ExistingVersion_Uploaded" executed="True" result="Success" success="True" time="0.010" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecVersionServiceTest.UploadOrAllocateVersionTest_New_InvalidVersion" executed="True" result="Success" success="True" time="0.018" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecVersionServiceTest.UploadOrAllocateVersionTest_New_ValidVersion" executed="True" result="Success" success="True" time="0.012" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="SpecWithdrawalTest" executed="True" result="Success" success="True" time="0.033" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecWithdrawalTest.WithdrawFromRelease_NominalCase" executed="True" result="Success" success="True" time="0.022" asserts="3" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.SpecWithdrawalTest.WithdrawFromRelease_NoRight" executed="True" result="Success" success="True" time="0.008" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="UrlServiceTest" executed="True" result="Success" success="True" time="0.102" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Services.UrlServiceTest.CreateShortUrl" executed="True" result="Success" success="True" time="0.054" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.UrlServiceTest.GetFullUrlForToken_dontexist" executed="True" result="Success" success="True" time="0.013" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.UrlServiceTest.GetFullUrlForToken_exist" executed="True" result="Success" success="True" time="0.010" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.UrlServiceTest.GetPageIdAndFullAddressForModule_ModuleIdNotFound" executed="True" result="Success" success="True" time="0.007" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.UrlServiceTest.GetPageIdAndFullAddressForModule_NominalCase" executed="True" result="Success" success="True" time="0.009" asserts="2" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="WorkItemServiceTest" executed="True" result="Success" success="True" time="0.414" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Services.WorkItemServiceTest.AnalyseWorkPlanForImport_Nominal" executed="True" result="Success" success="True" time="0.032" asserts="2" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.WorkItemServiceTest.AnalyseWorkPlanForImport_NominalWithZip" executed="True" result="Success" success="True" time="0.088" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.WorkItemServiceTest.AnalyseWorkPlanForImport_ZipDoesNotContainCsv" executed="True" result="Success" success="True" time="0.011" asserts="3" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.WorkItemServiceTest.AnalyseWorkPlanForImport_ZipDoesNotExist" executed="True" result="Success" success="True" time="0.007" asserts="2" />
+                          <test-suite type="ParameterizedTest" name="GetAllAcronyms" executed="True" result="Success" success="True" time="0.022" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.WorkItemServiceTest.GetAllAcronyms(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="0.021" asserts="7" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetAllWorkItems" executed="True" result="Success" success="True" time="0.007" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.WorkItemServiceTest.GetAllWorkItems(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="0.007" asserts="1" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetWorkItemById" executed="True" result="Success" success="True" time="0.015" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.WorkItemServiceTest.GetWorkItemById(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="0.014" asserts="10" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetWorkItemByIdExtend" executed="True" result="Success" success="True" time="0.039" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.WorkItemServiceTest.GetWorkItemByIdExtend(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="0.039" asserts="2" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetWorkItemsBySearchCriteria" executed="True" result="Success" success="True" time="0.050" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.WorkItemServiceTest.GetWorkItemsBySearchCriteria(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="0.049" asserts="16" />
+                            </results>
+                          </test-suite>
+                          <test-suite type="ParameterizedTest" name="GetWorkItemsCountBySearchCriteria" executed="True" result="Success" success="True" time="0.047" asserts="0">
+                            <results>
+                              <test-case name="Etsi.Ultimate.Tests.Services.WorkItemServiceTest.GetWorkItemsCountBySearchCriteria(Etsi.Ultimate.Tests.FakeSets.WorkItemFakeDBSet)" executed="True" result="Success" success="True" time="0.047" asserts="6" />
+                            </results>
+                          </test-suite>
+                          <test-case name="Etsi.Ultimate.Tests.Services.WorkItemServiceTest.ImportWorkPlan_Nominal" executed="True" result="Success" success="True" time="0.068" asserts="1" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.WorkItemServiceTest.ImportWorkPlan_TokenNotFound" executed="True" result="Success" success="True" time="0.005" asserts="1" />
+                        </results>
+                      </test-suite>
+                      <test-suite type="TestFixture" name="WorkPlanFileServiceTest" executed="True" result="Success" success="True" time="0.023" asserts="0">
+                        <results>
+                          <test-case name="Etsi.Ultimate.Tests.Services.WorkPlanFileServiceTest.AddWorkPlanFile" executed="True" result="Success" success="True" time="0.014" asserts="0" />
+                          <test-case name="Etsi.Ultimate.Tests.Services.WorkPlanFileServiceTest.GetLastWorkPlanFile" executed="True" result="Success" success="True" time="0.007" asserts="1" />
+                        </results>
+                      </test-suite>
+                    </results>
+                  </test-suite>
+                </results>
+              </test-suite>
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
