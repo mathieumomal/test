@@ -142,7 +142,7 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Invalid format for specification number. Should be “ab.xyz”. .
+        ///   Recherche une chaîne localisée semblable à Invalid format for specification number. .
         /// </summary>
         public static string Specification_ERR002_Number_Invalid_Format {
             get {

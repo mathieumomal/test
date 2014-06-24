@@ -130,7 +130,7 @@
     <value>Release updated. Changes:&lt;br /&gt;{0}</value>
   </data>
   <data name="Specification_ERR002_Number_Invalid_Format" xml:space="preserve">
-    <value>Invalid format for specification number. Should be “ab.xyz”. </value>
+    <value>Invalid format for specification number. </value>
   </data>
   <data name="Specification_ERR003_Number_Already_Use" xml:space="preserve">
     <value>Specification number already in use by “{0}”. </value>
