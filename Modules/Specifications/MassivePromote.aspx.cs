@@ -178,9 +178,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private void LoadInitialReleaseDropdown()
         {
             IReleaseService relSvc = ServicesFactory.Resolve<IReleaseService>();
-            var releases = relSvc.GetAllReleases(userId).Key.Where(x => x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Open
-                                                                   || x.Enum_ReleaseStatus.Code == Domain.Enum_ReleaseStatus.Frozen)
-                                                                   .OrderByDescending(x => x.SortOrder).ToList();
+            var releases = relSvc.GetAllReleases(userId).Key.OrderByDescending(x => x.SortOrder).ToList();
 
             if (releases.Count > 0)
             {
