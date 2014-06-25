@@ -11,7 +11,7 @@
 
 </script>
 
-<asp:ImageButton ID="imgVersionRemarks" ImageUrl="images/spec_rel-remarks.png" runat="server" CssClass="float_right grid_btn" />
+<asp:ImageButton ID="imgVersionRemarks" ImageUrl="images/spec_rel-remarks.png" runat="server" ToolTip="Remarks" CssClass="float_right remarks_btn" />
 
 <telerik:RadWindowManager ID="rwmSpecReleaseContent" runat="server">
     <Windows>

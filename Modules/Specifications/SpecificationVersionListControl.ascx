@@ -22,7 +22,12 @@
 
     .grid_btn {
         height: 16px;
+    }
+
+    .remarks_btn
+    {
         width: 16px;
+        height: 16px;
     }
 
     .float_right {
@@ -136,9 +141,9 @@
                 <telerik:GridTemplateColumn UniqueName="Link">
                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" />
                     <ItemTemplate>
-                        <asp:ImageButton ID="imgTransposedSpec" CssClass="grid_btn" ImageUrl="images/spec_rel-tranSpec.png" runat="server" OnClientClick="return false;" />
-                        <asp:ImageButton ID="imgRelatedTDocs" CssClass="grid_btn" ImageUrl="images/spec_rel-TDocs.png" runat="server" OnClientClick="return false;" />
-                        <asp:ImageButton ID="imgRelatedCRs" CssClass="grid_btn" ImageUrl="images/spec_rel-CRs.png" runat="server" OnClientClick="return false;" />
+                        <asp:ImageButton ID="imgTransposedSpec" CssClass="grid_btn" ImageUrl="images/spec_rel-tranSpec.png" ToolTip="Reference of transposed specification" runat="server" OnClientClick="return false;" />
+                        <asp:ImageButton ID="imgRelatedTDocs" CssClass="grid_btn" ImageUrl="images/spec_rel-TDocs.png" ToolTip="Related TDocs" runat="server" OnClientClick="return false;" />
+                        <asp:ImageButton ID="imgRelatedCRs" CssClass="grid_btn" ImageUrl="images/spec_rel-CRs.png" ToolTip="Related CRs" runat="server" OnClientClick="return false;" />
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
                 <telerik:GridBoundColumn DataField="Source" UniqueName="Source" Display="false"></telerik:GridBoundColumn>
