@@ -33,8 +33,8 @@
                 <telerik:RadTabStrip ID="SpecificationDetailsRadTabStrip" runat="server" MultiPageID="SpecificationDetailsRadMultiPage"
                     AutoPostBack="false">
                 </telerik:RadTabStrip>
-                <telerik:RadMultiPage ID="SpecificationDetailsRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px" EnableViewState="false">
-                    <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true">
+                <telerik:RadMultiPage ID="SpecificationDetailsRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px" >
+                    <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true" EnableViewState="false">
                         <table style="width: 100%">
                             <tr>
                                 <td class="TabLineLeft">
@@ -95,7 +95,7 @@
                             </tr>
                         </table>
                     </telerik:RadPageView>
-                    <telerik:RadPageView ID="RadPageResponsibility" runat="server">
+                    <telerik:RadPageView ID="RadPageResponsibility" runat="server" EnableViewState="false">
                         <table style="width: 100%">
                             <tr>
                                 <td class="TabLineLeft">
@@ -116,7 +116,7 @@
                             </tr>
                         </table>
                     </telerik:RadPageView>
-                    <telerik:RadPageView ID="RadPageRelated" runat="server">
+                    <telerik:RadPageView ID="RadPageRelated" runat="server" EnableViewState="false">
                         <asp:Panel ID="RelatedSpecificationsPanel" runat="server">
                             <div style="max-height: 160px;">
                                 <fieldset id="ParentFieldset">
@@ -140,7 +140,7 @@
                     <telerik:RadPageView ID="RadPageReleases" runat="server">
                         <spec:SpecificationReleaseControl runat="server" ID="SpecificationReleaseControl1" />
                     </telerik:RadPageView>
-                    <telerik:RadPageView ID="RadPageHistory" runat="server">
+                    <telerik:RadPageView ID="RadPageHistory" runat="server" EnableViewState="false">
                         <div class="TabContent" style="overflow-y: auto; overflow-x: auto">
                             <ult:historycontrol runat="server" id="specificationHistory" />
                         </div>
