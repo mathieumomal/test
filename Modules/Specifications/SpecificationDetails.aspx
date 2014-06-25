@@ -33,7 +33,7 @@
                 <telerik:RadTabStrip ID="SpecificationDetailsRadTabStrip" runat="server" MultiPageID="SpecificationDetailsRadMultiPage"
                     AutoPostBack="false">
                 </telerik:RadTabStrip>
-                <telerik:RadMultiPage ID="SpecificationDetailsRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px">
+                <telerik:RadMultiPage ID="SpecificationDetailsRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px" EnableViewState="false">
                     <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true">
                         <table style="width: 100%">
                             <tr>
@@ -189,6 +189,7 @@
                 if (arg) {
                     var operationResult = arg.OperationResult;
                     if (operationResult == "True") {
+                        window.opener.location.reload(true);
                         var successWin = $find("<%= WithdrawSuccessRadWindow.ClientID %>");
                         successWin.setSize(290, 120);
                         successWin.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);

@@ -48,6 +48,8 @@ namespace Etsi.Ultimate.Services
                         {
                             result.Key.PrimeResponsibleGroupFullName
                                 = communityManager.GetCommmunityById(result.Key.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().FirstOrDefault().Fk_commityId).TbName;
+                            result.Key.PrimeResponsibleGroupShortName
+                                = communityManager.GetCommmunityById(result.Key.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().FirstOrDefault().Fk_commityId).ShortName;
                         }
                     }
 

@@ -8,7 +8,7 @@
 <div class="headerBtnRelease">
     <div style="float:right"><ult:FullView ID="ultFullView" runat="server" /></div>
     <asp:LinkButton runat="server" ID="newRelease" Text="New" CssClass="btn3GPP-success"></asp:LinkButton>
-    <asp:LinkButton ID="btnMassivePromote" class="btn3GPP-success" runat="server" OnClientClick="var popUp=window.open('/desktopmodules/Specifications/Massivepromote.aspx', 'Specification-Massive-Promote', 'height=590,width=650,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();return false;" Text="Massive Promote" />
+    <asp:LinkButton ID="btnMassivePromote" class="btn3GPP-success" runat="server" OnClientClick="var popUp=window.open('/desktopmodules/Specifications/Massivepromote.aspx', 'Specification-Massive-Promote', 'height=590,width=820,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();return false;" Text="Massive Promote" />
 </div>
 
 <script type="text/javascript">

@@ -61,6 +61,17 @@ namespace Etsi.Ultimate.Business
             versionRepo.GetVersionsByReleaseId(initialReleaseId).ForEach(v => buffer.Add(v.Fk_SpecificationId.GetValueOrDefault()));
             SourceSpecs.Where(s => (!s.promoteInhibited.GetValueOrDefault()) && !(s.IsActive && !s.IsUnderChangeControl.GetValueOrDefault()) && (buffer.Contains(s.Pk_SpecificationId))).ToList().ForEach(s => { s.IsNewVersionCreationEnabled = true; });
 
+            var communityManager = ManagerFactory.Resolve<ICommunityManager>();
+            communityManager.UoW = _uoW;
+            foreach (Specification s in SourceSpecs)
+            {
+                if (s.SpecificationResponsibleGroups != null && s.SpecificationResponsibleGroups.Count > 0 && s.PrimeResponsibleGroup != null)
+                {
+                    s.PrimeResponsibleGroupFullName = communityManager.GetCommmunityById(s.PrimeResponsibleGroup.Fk_commityId).TbName;
+                    s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityById(s.PrimeResponsibleGroup.Fk_commityId).ShortName;
+                }
+            }
+
             return new KeyValuePair<List<Specification>, UserRightsContainer>(SourceSpecs, personRights); 
         }
 

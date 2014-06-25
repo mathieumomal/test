@@ -16,6 +16,14 @@
     padding: 0 !important;
 }
 
+.containerFixLarger {
+    width: 800px !important;
+    position: relative;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+
 .specificationDetailsBody {
     font-family: Arial,verdana,Serif;
     font-size: 12px;
