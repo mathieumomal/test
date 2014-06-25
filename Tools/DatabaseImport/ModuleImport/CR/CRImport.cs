@@ -203,16 +203,20 @@ namespace DatabaseImport.ModuleImport
         private void CategoryCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
         {
             var legacyCRCategory = Utils.CheckString(legacyCR.Cat, 5, RefImportForLog + " category ", logID, Report);
-            var categoryAssiocated = enumCategory.Where(x => x.Code == legacyCRCategory).FirstOrDefault();
 
-            if (categoryAssiocated != null)
+            if (!String.IsNullOrEmpty(legacyCRCategory))
             {
-                newCR.Enum_CRCategory = categoryAssiocated;
-                newCR.Fk_Enum_CRCategory = categoryAssiocated.Pk_EnumCRCategory;
-            }
-            else
-            {
-                Report.LogWarning(RefImportForLog + "Category not found : " + legacyCRCategory + " for CR : " + logID);
+                var categoryAssiocated = enumCategory.Where(x => x.Code == legacyCRCategory).FirstOrDefault();
+
+                if (categoryAssiocated != null)
+                {
+                    newCR.Enum_CRCategory = categoryAssiocated;
+                    newCR.Fk_Enum_CRCategory = categoryAssiocated.Pk_EnumCRCategory;
+                }
+                else
+                {
+                    Report.LogWarning(RefImportForLog + "Category not found : " + legacyCRCategory + " for CR : " + logID);
+                }
             }
         }
 
@@ -261,15 +265,15 @@ namespace DatabaseImport.ModuleImport
             }
             else
             {
-                if (!String.IsNullOrEmpty(legacyCR.Version_New))
+                var legacyVersion = Utils.CheckString(legacyCR.Version_New, 0, RefImportForLog + " version Checkstring ", logID, Report);
+                if (!String.IsNullOrEmpty(legacyVersion) && !legacyVersion.Equals("-"))
                 {
-                    var legacyCRNewVersion = Utils.CheckString(legacyCR.Version_New, 10, RefImportForLog + " Version-new ", logID, Report);
                     //VERSION NEW
-                    var newVersionExploded = legacyCRNewVersion.Split('.');
+                    var newVersionExploded = legacyVersion.Split('.');
 
                     if (newVersionExploded.Count() != 3)
                     {
-                        Report.LogWarning(RefImportForLog + "New version invalid format : " + legacyCRNewVersion + ", for CR : " + logID);
+                        Report.LogWarning(RefImportForLog + "New version invalid format : " + legacyVersion + ", for CR : " + logID);
                     }
                     else
                     {
@@ -291,7 +295,7 @@ namespace DatabaseImport.ModuleImport
                         }
                         else
                         {
-                            Report.LogWarning(RefImportForLog + "New version not found : " + legacyCRNewVersion + ", for CR : " + logID);
+                            Report.LogWarning(RefImportForLog + "New version not found : " + legacyVersion + " with releaseId = " + releaseAssociated.Pk_ReleaseId + " and specId = " + specAssociated.Pk_SpecificationId + ", for CR : " + logID);
                         }
                     }
                 }
@@ -341,13 +345,13 @@ namespace DatabaseImport.ModuleImport
         /// <param name="logID"></param>
         private void MeetingsCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
         {
-            var TSGMeeting = Utils.CheckString(legacyCR.Meeting_1st_Level, 10, RefImportForLog + "TSG meeting : " + legacyCR.Meeting_1st_Level, logID, Report);
-            var WGMeeting = Utils.CheckString(legacyCR.Meeting_2nd_Level, 10, RefImportForLog + "WG meeting : " + legacyCR.Meeting_2nd_Level, logID, Report);
+            var TSGMeeting = Utils.CheckString(legacyCR.Meeting_1st_Level, 10, RefImportForLog + "TSG meeting string format : " + legacyCR.Meeting_1st_Level, logID, Report);
+            var WGMeeting = Utils.CheckString(legacyCR.Meeting_2nd_Level, 10, RefImportForLog + "WG meeting string format : " + legacyCR.Meeting_2nd_Level, logID, Report);
             
             //TSG
-            if (!string.IsNullOrEmpty(TSGMeeting) && TSGMeeting != "-")
+            if (!String.IsNullOrEmpty(TSGMeeting) && !TSGMeeting.Equals("-"))
             {
-                var mtg = meetings.Where(m => m.MtgShortRef == TSGMeeting).FirstOrDefault();
+                var mtg = meetings.Where(m => m.MtgShortRef.Equals(TSGMeeting)).FirstOrDefault();
 
                 if (mtg == null)
                     Report.LogWarning(RefImportForLog + "TSG meeting not found: " + TSGMeeting + " for CR : " + logID );
@@ -356,12 +360,12 @@ namespace DatabaseImport.ModuleImport
             }
 
             //WG
-            if (!string.IsNullOrEmpty(WGMeeting) && WGMeeting != "-")
+            if (!String.IsNullOrEmpty(WGMeeting) && !WGMeeting.Equals("-"))
             {
-                var mtg = meetings.Where(m => m.MtgShortRef == WGMeeting).FirstOrDefault();
+                var mtg = meetings.Where(m => m.MtgShortRef.Equals(WGMeeting)).FirstOrDefault();
 
                 if (mtg == null)
-                    Report.LogWarning(RefImportForLog + "WG meeting not found: " + TSGMeeting + " for CR : " + logID);
+                    Report.LogWarning(RefImportForLog + "WG meeting not found: " + WGMeeting + " for CR : " + logID);
                 else
                     newCR.WGMeeting = mtg.MTG_ID;
             }
