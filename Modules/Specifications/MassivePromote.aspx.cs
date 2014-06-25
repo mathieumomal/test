@@ -171,8 +171,22 @@ namespace Etsi.Ultimate.Module.Specifications
             if (int.TryParse(ddlInitialRelease.SelectedValue, out releaseId) && releaseId > 0)
             {
                 var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-                rgSpecificationList.DataSource = specSvc.GetSpecificationForMassivePromotion(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), releaseId).Key;
-                rgSpecificationList.DataBind();
+                KeyValuePair<List<Specification>, DomainClasses.UserRightsContainer> specificationRightsObject = specSvc.GetSpecificationForMassivePromotion(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), releaseId);
+                List<Specification> specifications = specificationRightsObject.Key;
+                UserRightsContainer userRights = specificationRightsObject.Value;
+                if (!userRights.HasRight(Domain.Enum_UserRights.Specification_BulkPromote))
+                {
+                    specMassivePromoteBody.Visible = false;
+                    specificationMessages.Visible = true;
+                    specificationMessagesTxt.Text = "You dont have the right to perform this action";
+                    specificationMessages.CssClass = "Error";
+                    specificationMessagesTxt.CssClass = "ErrorTxt";
+                }
+                else
+                {
+                    rgSpecificationList.DataSource = specifications;
+                    rgSpecificationList.DataBind();
+                }
             }
         }
 
