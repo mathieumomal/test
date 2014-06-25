@@ -9,6 +9,11 @@ namespace SyncClient.DataHelpers
     public interface IDataHelper
     {
         /// <summary>
+        /// Table Name in Database
+        /// </summary>
+        string TableName { get; }
+
+        /// <summary>
         /// Get inserted data (offline)
         /// </summary>
         /// <returns>Inserted objects</returns>

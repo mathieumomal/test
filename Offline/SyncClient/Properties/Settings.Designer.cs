@@ -34,7 +34,7 @@ namespace SyncClient.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(local);Initial Catalog=U3GPP;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=(local);Initial Catalog=U3GPPDB;Integrated Security=True")]
         public string ConnectionString {
             get {
                 return ((string)(this["ConnectionString"]));

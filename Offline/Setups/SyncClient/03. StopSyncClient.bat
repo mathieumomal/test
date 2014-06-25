@@ -1,0 +1,3 @@
+@ECHO OFF
+NET STOP SyncClient
+PAUSE

@@ -68,6 +68,27 @@ namespace SyncClient
 
         #endregion
 
+        #region Debug Methods
+
+        /// <summary>
+        /// Debug Start
+        /// </summary>
+        public void DebugStart()
+        {
+            string[] args = new string[1];
+            this.OnStart(args);
+        }
+
+        /// <summary>
+        /// Debug End
+        /// </summary>
+        public void DebugEnd()
+        {
+            this.OnStop();
+        }
+
+        #endregion   
+
         #region Private Methods
 
         /// <summary>
@@ -116,7 +137,7 @@ namespace SyncClient
                             {
                                 int pk_Id = proxy.InsertRecord(insertObject.Value, insertData.Key);
                                 if (pk_Id > 0)
-                                    SQLHelper.UpdatePrimaryKeyAndStatus(String.Format(CONST_OFFLINE_TABLE_NAME, insertData.Key.ToString()), insertObject.Key, pk_Id);
+                                    SQLHelper.UpdatePrimaryKeyAndStatus(String.Format(CONST_OFFLINE_TABLE_NAME, insertHelper.TableName), insertObject.Key, pk_Id);
                             }
                         }
 
@@ -128,7 +149,7 @@ namespace SyncClient
                             {
                                 bool isSuccess = proxy.UpdateRecord(updateObject.Value, updateData.Key);
                                 if (isSuccess)
-                                    SQLHelper.UpdateStatus(String.Format(CONST_OFFLINE_TABLE_NAME, updateData.Key.ToString()), updateObject.Key);
+                                    SQLHelper.UpdateStatus(String.Format(CONST_OFFLINE_TABLE_NAME, updateHelper.TableName), updateObject.Key);
                             }
                         }
 
@@ -140,7 +161,7 @@ namespace SyncClient
                             {
                                 bool isSuccess = proxy.DeleteRecord(deleteObject.Value, deleteData.Key);
                                 if (isSuccess)
-                                    SQLHelper.UpdateStatus(String.Format(CONST_OFFLINE_TABLE_NAME, deleteData.Key.ToString()), deleteObject.Key);
+                                    SQLHelper.UpdateStatus(String.Format(CONST_OFFLINE_TABLE_NAME, deleteHelper.TableName), deleteObject.Key);
                             }
                         }
                     }

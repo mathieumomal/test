@@ -2,6 +2,7 @@
 using Etsi.Ultimate.Services;
 using SyncInterface;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace SyncService
@@ -118,26 +119,29 @@ namespace SyncService
         /// </summary>
         /// <typeparam name="T">Target Type</typeparam>
         /// <param name="objSource">Source object</param>
-        /// <returns></returns>
+        /// <returns>Target object</returns>
         private static T ConvertObject<T>(object objSource)
         {
+
             //step : 1 Get the type of source object and create a new instance of that type
             Type typeSource = objSource.GetType();
             object objTarget = Activator.CreateInstance(typeof(T));
 
             //Step2 : Get all the properties of source object type
-            PropertyInfo[] propertyInfo = typeSource.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
+            PropertyInfo[] sourcePropertyInfo = typeSource.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            List<PropertyInfo> targetPropertyList = new List<PropertyInfo>(objTarget.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance));
             //Step : 3 Assign all source property to taget object 's properties
-            foreach (PropertyInfo property in propertyInfo)
+            foreach (PropertyInfo sourceProperty in sourcePropertyInfo)
             {
                 //Check whether property can be written to
-                if (property.CanWrite)
+                if (sourceProperty.CanWrite)
                 {
                     //Step : 4 check whether property type is value type, enum or string type
-                    if (property.PropertyType.IsValueType || property.PropertyType.IsEnum || property.PropertyType.Equals(typeof(System.String)))
+                    if (sourceProperty.PropertyType.IsValueType || sourceProperty.PropertyType.IsEnum || sourceProperty.PropertyType.Equals(typeof(System.String)))
                     {
-                        property.SetValue(objTarget, property.GetValue(objSource, null), null);
+                        PropertyInfo targetProperty = targetPropertyList.Find(x => x.Name == sourceProperty.Name);
+                        if (targetProperty != null)
+                            targetProperty.SetValue(objTarget, sourceProperty.GetValue(objSource, null));
                     }
                 }
             }

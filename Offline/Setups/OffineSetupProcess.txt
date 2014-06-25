@@ -1,0 +1,21 @@
+
+***** Following steps needs to perform only on Offline server  *****
+
+[Step 1] Prepare Database for Offline (This step needs to be done everytime after restoring backup from Online server)
+         [1] Double click on 'OfflineSetup\OfflineSetup.exe'
+         [2] Provide Offline server information (server name, database name, user name, password) & click on connect
+         [3] Click on 'Process Offline Setup'
+
+[Step 2] Install SyncClient (This needs to be done only once in offline server)
+         [1] Double Click on 'SyncClient\01. InstallService.bat"
+         [2] Windows + R => services.msc (or) Right Click on 'My Computer' => Manage => Services and Applications => Services
+         [3] Find 'SyncClient' => Right Click => Properties => Log On => select 'This account' & provide the account login/password which can access Offline database => Ok
+
+[Step 3] Start SyncClient (This needs to be done once you want to send the offline information to online server)
+         [1] Double Click on 'SyncClient\02. StartSyncClient.bat"
+
+[Step 4] Stop SyncClient (This needs to be done once you want to stop sending offline data to online server)
+         [1] Double Click on 'SyncClient\03. StopSyncClient.bat"
+
+[Step 5] Uninstall SyncClient (This needs to be done only when you want to completely remove the offline setup from offline server)
+         [1] Double Click on 'SyncClient\04. UnInstallService.bat"
