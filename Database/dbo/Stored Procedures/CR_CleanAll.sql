@@ -11,10 +11,11 @@ BEGIN
 	-- Delete from CR
 	DELETE FROM CR_WorkItems;
 	DELETE FROM Remarks;
+	DELETE FROM ChangeRequest;
 	DELETE FROM Enum_CRCategory;
 	DELETE FROM Enum_TDocStatus;
 	DELETE FROM Enum_CRImpact;
-	DELETE FROM ChangeRequest;
+	
 	
 	Select @Error = @@error
 	Return @Error

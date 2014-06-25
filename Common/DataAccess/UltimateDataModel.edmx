@@ -317,7 +317,7 @@
           </Key>
           <Property Name="Pk_EnumCRImpact" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Code" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="Description" Type="nchar" MaxLength="10" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -2033,7 +2033,7 @@
           <Property Type="Int32" Name="Pk_EnumCRImpact" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <NavigationProperty Name="ChangeRequests" Relationship="Etsi.Ultimate.DataAccess.FK_Enum_CRImpact" FromRole="Enum_CRImpact" ToRole="ChangeRequest" />
           <Property Type="String" Name="Code" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Description" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Type="String" Name="Description" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ChangeRequest">
           <Key>

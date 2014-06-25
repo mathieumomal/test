@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="bd05b5827df942d494c31906a1644ecc" Name="Diagram1" ZoomLevel="62">
+      <Diagram DiagramId="bd05b5827df942d494c31906a1644ecc" Name="Diagram1" ZoomLevel="93">
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Enum_ReleaseStatus" Width="1.5" PointX="3.375" PointY="2.875" IsExpanded="true" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Release" Width="1.5" PointX="5.875" PointY="0.875" IsExpanded="true" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Meeting" Width="1.5" PointX="0.5" PointY="1" IsExpanded="true" FillColor="DarkSeaGreen" />
