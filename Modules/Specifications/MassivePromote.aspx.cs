@@ -121,10 +121,6 @@ namespace Etsi.Ultimate.Module.Specifications
                 }
                 else
                     chkCreateNewVersion.Checked = chkCreateNewVersion.Enabled = currentSpecification.IsNewVersionCreationEnabled;
-
-                //Trim TITLE to fit inside grid column
-                if (!String.IsNullOrEmpty(currentSpecification.Title) && currentSpecification.Title.Length > 20)
-                    dataItem["Title"].Text = currentSpecification.Title.Remove(19) + "...";
             }
         }
 
