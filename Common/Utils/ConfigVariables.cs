@@ -93,6 +93,19 @@ namespace Etsi.Ultimate.Utils
             }
         }
 
+        /// <summary>
+        /// TranspositionFolder for ETSI Secretariat
+        /// </summary>
+        public static string TranspositionFolderPath
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["TranspositionFolderPath"] != null)
+                    return ConfigurationManager.AppSettings["TranspositionFolderPath"].ToString();
+                return "";
+            }
+        }
+
         public static string DefaultPublicTmpAddress
         {
             get
