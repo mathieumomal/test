@@ -54,9 +54,9 @@ namespace DatabaseImport.ModuleImport
                 {
                     var newTDocStatus = new Domain.Enum_TDocStatus();
 
-                    newTDocStatus.Status = status;
+                    newTDocStatus.Code = status;
                     newTDocStatus.SortOrder = Utils.CheckInt(elt.sort_order, " tdoc status (sortOrder)", elt.CR_status_value, Report);
-                    newTDocStatus.Meaning = Utils.CheckString(elt.use, 200, RefImportForLog + " tdoc status (status)", elt.CR_status_value, Report);
+                    newTDocStatus.Description = Utils.CheckString(new StringBuilder().Append(status).Append(" - ").Append(elt.use).ToString(), 200, RefImportForLog + " tdoc status (status)", elt.CR_status_value, Report);
                     newTDocStatus.TSGUsable = Utils.NullBooleanCheck(elt.TSG, " tdoc status (TSG Usable) -> FALSE BY DEFAULT", false, Report);
                     newTDocStatus.WGUsable = Utils.NullBooleanCheck(elt.WG, " tdoc status (TSG Usable) -> FALSE BY DEFAULT", false, Report);
 

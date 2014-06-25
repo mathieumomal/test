@@ -88,11 +88,12 @@ namespace DatabaseImport.ModuleImport
 
                 //CR baseline attribute initialization
                 newCR.CRNumber = Utils.CheckString(legacyCR.CR, 10, RefImportForLog + " CRNumber", logID, Report);
-                newCR.Revision = Utils.CheckStringToInt(legacyCR.Rev, null, RefImportForLog + " Revision ", logID, Report);
                 newCR.Subject = Utils.CheckString(legacyCR.Subject, 300, RefImportForLog + " Subject", logID, Report);
                 newCR.CreationDate = legacyCR.created;
 
                 //Others cases
+                RevisionCase(newCR, legacyCR, logID);
+
                 SpecReleaseAndVersionCase(newCR, legacyCR, logID);
 
                 RemarksCase(newCR, legacyCR, logID);
@@ -112,11 +113,9 @@ namespace DatabaseImport.ModuleImport
                 newCR.WGSourceOrganizations = Utils.CheckString(legacyCR.Source_2nd_Level, 100, RefImportForLog + " WGSourceorganization ", logID, Report);
 
                 TSGWGTargetCase(newCR, legacyCR, logID);
-                
-                #region no take in consideration for the moment...
-                //Impact
-                #endregion
 
+                //no take in consideration for the moment : Impact
+                
                 NewContext.ChangeRequests.Add(newCR);
                 count++;
                 if (count % 100 == 0)
@@ -137,6 +136,25 @@ namespace DatabaseImport.ModuleImport
         }
 
         /// <summary>
+        /// Interpret and assign a revision
+        /// </summary>
+        /// <param name="newCR"></param>
+        /// <param name="legacyCR"></param>
+        /// <param name="logID"></param>
+        private void RevisionCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
+        {
+            var legacyVersion = Utils.CheckString(legacyCR.Rev,10,RefImportForLog + " Revision ", logID, Report);
+            if (!String.IsNullOrEmpty(legacyVersion) && !legacyVersion.Equals("-"))
+            {
+                newCR.Revision = Utils.CheckStringToInt(legacyVersion, null, RefImportForLog + " Revision ", logID, Report);
+            }
+            else
+            {
+                newCR.Revision = 0;
+            }
+        }
+
+        /// <summary>
         /// Assigned TSG/WG TDOC status
         /// </summary>
         /// <param name="newCR"></param>
@@ -146,8 +164,8 @@ namespace DatabaseImport.ModuleImport
         {
             var legacyWGStatus = Utils.CheckString(legacyCR.Status_2nd_Level, 20, RefImportForLog + " WG status ", logID, Report).ToLower();
             var legacyTSGStatus = Utils.CheckString(legacyCR.Status_1st_Level, 20, RefImportForLog + " TSG status ", logID, Report).ToLower();
-            var WGStatus = enumTDocStatus.Where(x => x.Status == legacyWGStatus && x.WGUsable).FirstOrDefault();
-            var TSGStatus = enumTDocStatus.Where(x => x.Status == legacyTSGStatus && x.TSGUsable).FirstOrDefault();
+            var WGStatus = enumTDocStatus.Where(x => x.Code == legacyWGStatus && x.WGUsable).FirstOrDefault();
+            var TSGStatus = enumTDocStatus.Where(x => x.Code == legacyTSGStatus && x.TSGUsable).FirstOrDefault();
 
             if (WGStatus != null)
             {
@@ -185,7 +203,7 @@ namespace DatabaseImport.ModuleImport
         private void CategoryCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
         {
             var legacyCRCategory = Utils.CheckString(legacyCR.Cat, 5, RefImportForLog + " category ", logID, Report);
-            var categoryAssiocated = enumCategory.Where(x => x.Category == legacyCRCategory).FirstOrDefault();
+            var categoryAssiocated = enumCategory.Where(x => x.Code == legacyCRCategory).FirstOrDefault();
 
             if (categoryAssiocated != null)
             {
@@ -199,7 +217,7 @@ namespace DatabaseImport.ModuleImport
         }
 
         /// <summary>
-        /// Assigned 
+        /// Assigned to a spec, a release and versions (current, new)
         /// a specification 
         /// + a release 
         /// + a new/current version

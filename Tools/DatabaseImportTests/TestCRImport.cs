@@ -62,8 +62,8 @@ namespace DatabaseImportTests
             Assert.AreEqual(2, newDbSet.All().Count);
 
             var newCRCategory = newDbSet.All()[0];
-            Assert.AreEqual(meaningExample, newCRCategory.Meaning);
-            Assert.AreEqual(categoryExample, newCRCategory.Category);
+            Assert.AreEqual(categoryExample + " - " + meaningExample, newCRCategory.Description);
+            Assert.AreEqual(categoryExample, newCRCategory.Code);
         }
 
         /// <summary>
@@ -119,8 +119,8 @@ namespace DatabaseImportTests
             Assert.AreEqual(1, newDbSet.All().Count);
 
             var newTDocStatus = newDbSet.All()[0];
-            Assert.AreEqual(meaningExample, newTDocStatus.Meaning);
-            Assert.AreEqual(validStatus, newTDocStatus.Status);
+            Assert.AreEqual(validStatus + " - " + meaningExample, newTDocStatus.Description);
+            Assert.AreEqual(validStatus, newTDocStatus.Code);
             Assert.AreEqual(true, newTDocStatus.WGUsable);
             Assert.AreEqual(true, newTDocStatus.TSGUsable);
             Assert.AreEqual(60, newTDocStatus.SortOrder);
@@ -148,7 +148,7 @@ namespace DatabaseImportTests
             Assert.AreEqual(4, newDbSet.All().Count);
 
             var newTDocStatus = newDbSet.All()[0];
-            Assert.AreEqual("UICS Apps", newTDocStatus.Impact);
+            Assert.AreEqual("UICS Apps", newTDocStatus.Code);
         }
 
         /*[TestCaseSource("GetTDocObjects")]
@@ -281,7 +281,7 @@ namespace DatabaseImportTests
                     {
                         CRNumber = "0013",
                         CreationDate = new DateTime(2010, 1, 18),
-                        Revision = null,
+                        Revision = 0,
                         Subject = "test",
                         Fk_Enum_CRCategory = null,
                         Fk_WGStatus = 2,
@@ -406,9 +406,9 @@ namespace DatabaseImportTests
         private IDbSet<Domain.Enum_CRCategory> GetCRCategory()
         {
             var list = new Enum_CRCategoryFakeDbSet();
-            list.Add(new Domain.Enum_CRCategory() { Pk_EnumCRCategory = 1, Category = "A", Meaning = "test1" });
-            list.Add(new Domain.Enum_CRCategory() { Pk_EnumCRCategory = 2, Category = "B", Meaning = "test2" });
-            list.Add(new Domain.Enum_CRCategory() { Pk_EnumCRCategory = 3, Category = "C", Meaning = "test3" });
+            list.Add(new Domain.Enum_CRCategory() { Pk_EnumCRCategory = 1, Code = "A", Description = "test1" });
+            list.Add(new Domain.Enum_CRCategory() { Pk_EnumCRCategory = 2, Code = "B", Description = "test2" });
+            list.Add(new Domain.Enum_CRCategory() { Pk_EnumCRCategory = 3, Code = "C", Description = "test3" });
 
             return list;
         }
@@ -416,9 +416,9 @@ namespace DatabaseImportTests
         private IDbSet<Domain.Enum_TDocStatus> GetTDocStatus()
         {
             var list = new Enum_TDocStatusFakeDbSet();
-            list.Add(new Domain.Enum_TDocStatus() { Pk_EnumTDocStatus = 1, SortOrder = 1, TSGUsable = true, WGUsable = true, Meaning = "test", Status = "agreed" });
-            list.Add(new Domain.Enum_TDocStatus() { Pk_EnumTDocStatus = 2, SortOrder = 2, TSGUsable = false, WGUsable = true, Meaning = "test", Status = "approved" });
-            list.Add(new Domain.Enum_TDocStatus() { Pk_EnumTDocStatus = 3, SortOrder = 3, TSGUsable = true, WGUsable = false, Meaning = "test", Status = "postponed" });
+            list.Add(new Domain.Enum_TDocStatus() { Pk_EnumTDocStatus = 1, SortOrder = 1, TSGUsable = true, WGUsable = true, Description = "test", Code = "agreed" });
+            list.Add(new Domain.Enum_TDocStatus() { Pk_EnumTDocStatus = 2, SortOrder = 2, TSGUsable = false, WGUsable = true, Description = "test", Code = "approved" });
+            list.Add(new Domain.Enum_TDocStatus() { Pk_EnumTDocStatus = 3, SortOrder = 3, TSGUsable = true, WGUsable = false, Description = "test", Code = "postponed" });
 
             return list;
         }

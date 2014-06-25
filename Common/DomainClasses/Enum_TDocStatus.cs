@@ -22,11 +22,11 @@ namespace Etsi.Ultimate.DomainClasses
         }
     
         public int Pk_EnumTDocStatus { get; set; }
-        public string Status { get; set; }
         public int SortOrder { get; set; }
-        public string Meaning { get; set; }
         public bool WGUsable { get; set; }
         public bool TSGUsable { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
     
         public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
         public virtual ICollection<ChangeRequest> ChangeRequests1 { get; set; }

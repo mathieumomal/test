@@ -21,7 +21,8 @@ namespace Etsi.Ultimate.DomainClasses
         }
     
         public int Pk_EnumCRImpact { get; set; }
-        public string Impact { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
     
         public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
     

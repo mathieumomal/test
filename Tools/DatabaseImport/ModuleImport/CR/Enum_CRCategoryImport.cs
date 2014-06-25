@@ -55,8 +55,8 @@ namespace DatabaseImport.ModuleImport
             {
                 var newCRCategory = new Domain.Enum_CRCategory();
 
-                newCRCategory.Category = elt.CR_category;
-                newCRCategory.Meaning = Utils.CheckString(elt.meaning, 200, RefImportForLog + " category", elt.CR_category, Report);
+                newCRCategory.Code = elt.CR_category;
+                newCRCategory.Description = Utils.CheckString(new StringBuilder().Append(elt.CR_category).Append(" - ").Append(elt.meaning).ToString(), 200, RefImportForLog + " category", elt.CR_category, Report);
 
                 NewContext.Enum_CRCategory.Add(newCRCategory);
             }

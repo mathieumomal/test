@@ -308,15 +308,16 @@
             <PropertyRef Name="Pk_EnumCRCategory" />
           </Key>
           <Property Name="Pk_EnumCRCategory" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Category" Type="varchar" Nullable="false" MaxLength="5" />
-          <Property Name="Meaning" Type="varchar" Nullable="false" MaxLength="200" />
+          <Property Name="Code" Type="varchar" Nullable="false" MaxLength="5" />
+          <Property Name="Description" Type="varchar" Nullable="false" MaxLength="200" />
         </EntityType>
         <EntityType Name="Enum_CRImpact">
           <Key>
             <PropertyRef Name="Pk_EnumCRImpact" />
           </Key>
           <Property Name="Pk_EnumCRImpact" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Impact" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Code" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Description" Type="nchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -341,9 +342,9 @@
             <PropertyRef Name="Pk_EnumTDocStatus" />
           </Key>
           <Property Name="Pk_EnumTDocStatus" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="Status" Type="varchar" Nullable="false" MaxLength="50" />
+          <Property Name="Code" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="SortOrder" Type="int" Nullable="false" />
-          <Property Name="Meaning" Type="varchar" Nullable="false" MaxLength="200" />
+          <Property Name="Description" Type="varchar" Nullable="false" MaxLength="200" />
           <Property Name="WGUsable" Type="bit" Nullable="false" />
           <Property Name="TSGUsable" Type="bit" Nullable="false" />
         </EntityType>
@@ -2008,30 +2009,31 @@
             <PropertyRef Name="Pk_EnumCRCategory" />
           </Key>
           <Property Type="Int32" Name="Pk_EnumCRCategory" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Category" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Meaning" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="ChangeRequests" Relationship="Etsi.Ultimate.DataAccess.FK_Enum_CRCategory" FromRole="Enum_CRCategory" ToRole="ChangeRequest" />
+          <Property Type="String" Name="Code" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Enum_TDocStatus">
           <Key>
             <PropertyRef Name="Pk_EnumTDocStatus" />
           </Key>
           <Property Type="Int32" Name="Pk_EnumTDocStatus" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Status" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="SortOrder" Nullable="false" />
-          <Property Type="String" Name="Meaning" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Type="Boolean" Name="WGUsable" Nullable="false" />
           <Property Type="Boolean" Name="TSGUsable" Nullable="false" />
           <NavigationProperty Name="ChangeRequests" Relationship="Etsi.Ultimate.DataAccess.FK_TSGStatus" FromRole="Enum_TDocStatus" ToRole="ChangeRequest" />
           <NavigationProperty Name="ChangeRequests1" Relationship="Etsi.Ultimate.DataAccess.FK_WGStatus" FromRole="Enum_TDocStatus" ToRole="ChangeRequest" />
+          <Property Type="String" Name="Code" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Description" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
           </EntityType>
         <EntityType Name="Enum_CRImpact">
           <Key>
             <PropertyRef Name="Pk_EnumCRImpact" />
           </Key>
           <Property Type="Int32" Name="Pk_EnumCRImpact" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="Impact" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="ChangeRequests" Relationship="Etsi.Ultimate.DataAccess.FK_Enum_CRImpact" FromRole="Enum_CRImpact" ToRole="ChangeRequest" />
+          <Property Type="String" Name="Code" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Description" MaxLength="10" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="ChangeRequest">
           <Key>
@@ -2623,8 +2625,8 @@
           <EntitySetMapping Name="Enum_CRCategory">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Enum_CRCategory">
               <MappingFragment StoreEntitySet="Enum_CRCategory">
-                <ScalarProperty Name="Meaning" ColumnName="Meaning" />
-                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="Pk_EnumCRCategory" ColumnName="Pk_EnumCRCategory" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2633,11 +2635,11 @@
           <EntitySetMapping Name="Enum_TDocStatus">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Enum_TDocStatus">
               <MappingFragment StoreEntitySet="Enum_TDocStatus">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="TSGUsable" ColumnName="TSGUsable" />
                 <ScalarProperty Name="WGUsable" ColumnName="WGUsable" />
-                <ScalarProperty Name="Meaning" ColumnName="Meaning" />
                 <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Pk_EnumTDocStatus" ColumnName="Pk_EnumTDocStatus" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -2645,7 +2647,8 @@
           <EntitySetMapping Name="Enum_CRImpact">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Enum_CRImpact">
               <MappingFragment StoreEntitySet="Enum_CRImpact">
-                <ScalarProperty Name="Impact" ColumnName="Impact" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="Pk_EnumCRImpact" ColumnName="Pk_EnumCRImpact" />
               </MappingFragment>
             </EntityTypeMapping>

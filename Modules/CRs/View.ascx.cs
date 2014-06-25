@@ -60,10 +60,10 @@ namespace Etsi.Ultimate.Module.CRs
                 c.Subject = "New CR for test";
                 c.WgMtgShortRef = "WG_MTG54";
                 c.WgTDocLink = "#";
-                c.Enum_TDocStatusWG = new Enum_TDocStatus() { Pk_EnumTDocStatus = 1, WGUsable = true, Status = "WG status" };
+                c.Enum_TDocStatusWG = new Enum_TDocStatus() { Pk_EnumTDocStatus = 1, WGUsable = true, Code = "WG status" };
                 c.TsgMtgShortRef = "TSG_MTG54";
                 c.TsgTDocLink = "#";
-                c.Enum_TDocStatusTSG = new Enum_TDocStatus() { Pk_EnumTDocStatus = 2, TSGUsable = true, Status = "TSG status" };
+                c.Enum_TDocStatusTSG = new Enum_TDocStatus() { Pk_EnumTDocStatus = 2, TSGUsable = true, Code = "TSG status" };
                 c.ImplementationStatus = "Done";
                 c.IsRevisionCreationEnabled = true;
                 c.IsTDocCreationEnabled = true;

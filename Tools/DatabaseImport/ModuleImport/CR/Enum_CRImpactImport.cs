@@ -56,7 +56,8 @@ namespace DatabaseImport.ModuleImport
             foreach (var impact in Impacts)
             {
                 var newCRImpact = new Domain.Enum_CRImpact();
-                newCRImpact.Impact = impact;
+                newCRImpact.Code = impact;
+                newCRImpact.Description = new StringBuilder().Append(impact).Append(" - ").ToString();
                 NewContext.Enum_CRImpact.Add(newCRImpact);
             }
         }
