@@ -75,11 +75,11 @@
                                                 </ItemTemplate>
                                             </telerik:GridTemplateColumn>
 
-                                            <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="15%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="Number" HeaderText="Specification Number" UniqueName="SpecificationNumber"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="15%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="Number" HeaderText="Spec #" UniqueName="SpecificationNumber"></telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="60" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="SpecificationTypeShortName" HeaderText="Type" UniqueName="Type"></telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Left" DataField="Title" HeaderText="Title" UniqueName="Title"></telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="10%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="Status" HeaderText="Status" UniqueName="Status"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="13%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="PrimeResponsibleGroupShortName" HeaderText="Prime Responsible" UniqueName="PrimeResponsibleGroupShortName"></telerik:GridBoundColumn>
+                                            <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="13%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="PrimeResponsibleGroupShortName" HeaderText="Prime grp" UniqueName="PrimeResponsibleGroupShortName"></telerik:GridBoundColumn>
                                             <telerik:GridTemplateColumn HeaderStyle-Width="40" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Left" UniqueName="SpecificationAdditionalDetails">
                                                 <ItemTemplate>
                                                     <table id="specAdditionalDetails">
@@ -103,16 +103,21 @@
                     </tr>
                     <tr>
                         <td colspan="2" style="padding-left: 14px;">
-                            <asp:LinkButton ID="btnPromote" runat="server" Text="Promote" OnClientClick="confirmAspButton(this); return false;" CssClass="btn3GPP-success" OnClick="btnPromote_Click" /></td>
+                            <asp:LinkButton ID="btnPromote" runat="server" Text="Promote" OnClientClick="confirmAspButton(this); return false;" CssClass="btn3GPP-success" OnClick="btnPromote_Click" />
+                            <img src="/desktopmodules/Specifications/images/busy.gif" alt="progress" style="display:none" />
+                        </td>
                     </tr>
                 </table>
             </asp:Panel>
         </asp:Panel>
 
         <script type="text/javascript">
+            var btn;
             function confirmAspButton(button) {
                 function aspButtonCallbackFn(arg) {
                     if (arg) {
+                        $('#<%=btnPromote.ClientID%>').next().show();
+                        $('#<%=btnPromote.ClientID%>').hide();
                         __doPostBack(button.id, "");
                     }
                 }
