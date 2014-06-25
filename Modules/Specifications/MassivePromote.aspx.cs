@@ -52,7 +52,7 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             List<Specification> specPromoteList = new List<Specification>();
             int initialReleaseId;
-            if (int.TryParse(ddlInitialRelease.SelectedValue, out initialReleaseId) && initialReleaseId > 0)            
+            if (int.TryParse(ddlInitialRelease.SelectedValue, out initialReleaseId) && initialReleaseId > 0)
             {
                 var specSvc = ServicesFactory.Resolve<ISpecificationService>();
                 foreach (GridDataItem item in rgSpecificationList.MasterTableView.Items)
@@ -108,6 +108,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 GridDataItem dataItem = e.Item as GridDataItem;
                 CheckBox chkPromoteInhibited = (CheckBox)dataItem.FindControl("chkPromoteInhibited");
                 CheckBox chkCreateNewVersion = (CheckBox)dataItem.FindControl("chkCreateNewVersion");
+                Image imgPromoteInhibite = (Image)dataItem.FindControl("imgPromoteInhibited");
 
                 Specification currentSpecification = (Specification)e.Item.DataItem;
                 chkPromoteInhibited.Attributes.Add("OnClick", "ToggleCreateNewStatus(this , '" + dataItem.ItemIndex + "');");
@@ -117,10 +118,17 @@ namespace Etsi.Ultimate.Module.Specifications
                 if (currentSpecification.promoteInhibited != null && currentSpecification.promoteInhibited.Value)
                 {
                     chkPromoteInhibited.Checked = true;
-                    chkPromoteInhibited.Enabled = chkCreateNewVersion.Checked = chkCreateNewVersion.Enabled = false;
+                    chkCreateNewVersion.Checked = false;
+                    imgPromoteInhibite.ImageUrl = @"/DesktopModules/Specifications/images/lock.png";
+                    imgPromoteInhibite.ToolTip = "Promote inhibited";
+
                 }
                 else
                     chkCreateNewVersion.Checked = chkCreateNewVersion.Enabled = currentSpecification.IsNewVersionCreationEnabled;
+
+                //Trim TITLE to fit inside grid column
+                if (!String.IsNullOrEmpty(currentSpecification.Title) && currentSpecification.Title.Length > 31)
+                    ((Literal)dataItem["Title"].FindControl("ltrlTitle")).Text = currentSpecification.Title.Remove(30) + "...";
             }
         }
 

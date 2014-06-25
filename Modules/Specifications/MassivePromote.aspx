@@ -30,7 +30,7 @@
         <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
         <telerik:RadWindowManager ID="RadWindowManager1" runat="server">
         </telerik:RadWindowManager>
-        <asp:Panel runat="server" ID="fixContainer" CssClass="containerFixLarger" Width="750px">
+        <asp:Panel runat="server" ID="fixContainer" CssClass="containerFixLarger" Width="924px">
             <asp:Panel ID="specificationMessages" runat="server" Visible="false">
                 <asp:Label runat="server" ID="specificationMessagesTxt"></asp:Label>
             </asp:Panel>
@@ -66,10 +66,11 @@
                                         <Columns>
                                             <telerik:GridTemplateColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="60" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderText="Promote inhibited" UniqueName="PromoteInhibit">
                                                 <ItemTemplate>
+                                                    <asp:Image runat="server" ID="imgPromoteInhibited" />
                                                     <asp:CheckBox ID="chkPromoteInhibited" OnClick="ToggleCreateNewStatus(this);" runat="server" />
                                                 </ItemTemplate>
                                             </telerik:GridTemplateColumn>
-                                            <telerik:GridTemplateColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="60" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderText="Create new version" UniqueName="CreateNewVersion">
+                                            <telerik:GridTemplateColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="60" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderText="Allocate version" UniqueName="CreateNewVersion">
                                                 <ItemTemplate>
                                                     <asp:CheckBox ID="chkCreateNewVersion" OnClick="ToggleCreateNewStatus(this);" runat="server" />
                                                 </ItemTemplate>
@@ -77,15 +78,22 @@
 
                                             <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="70" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="Number" HeaderText="Spec #" UniqueName="SpecificationNumber"></telerik:GridBoundColumn>
                                             <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="30" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="SpecificationTypeShortName" HeaderText="Type" UniqueName="Type"></telerik:GridBoundColumn>
-                                            
+
                                             <telerik:GridTemplateColumn DataField="Title" HeaderText="Title" UniqueName="Title">
                                                 <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="200px" />
                                                 <ItemTemplate>
-                                                    <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Title") %></div>
+                                                    <asp:Panel ID="pnlTitle" runat="server" CssClass="text-left" ToolTip='<%# DataBinder.Eval(Container.DataItem,"Title") %>'>
+                                                        <asp:Literal runat="server" ID="ltrlTitle" Text='<%# DataBinder.Eval(Container.DataItem,"Title") %>'></asp:Literal></asp:Panel>
                                                 </ItemTemplate>
                                             </telerik:GridTemplateColumn>
-                                            <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="50" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="Status" HeaderText="Status" UniqueName="Status"></telerik:GridBoundColumn>
-                                            <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="70" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="PrimeResponsibleGroupShortName" HeaderText="Prime grp" UniqueName="PrimeResponsibleGroupShortName"></telerik:GridBoundColumn>
+                                            <telerik:GridTemplateColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="50" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="Status" HeaderText="Status" UniqueName="Status">
+                                                <ItemTemplate>
+                                                    <div class="text-left">
+                                                        <span title="<%# DataBinder.Eval(Container.DataItem,"Status") %>"><%# DataBinder.Eval(Container.DataItem,"ShortStatus") %></span>
+                                                    </div>
+                                                </ItemTemplate>
+                                            </telerik:GridTemplateColumn>
+                                            <telerik:GridBoundColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="70" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="PrimeResponsibleGroupShortName" HeaderText="Prime resp grp" UniqueName="PrimeResponsibleGroupShortName"></telerik:GridBoundColumn>
                                             <telerik:GridTemplateColumn HeaderStyle-Width="40" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Left" UniqueName="SpecificationAdditionalDetails">
                                                 <ItemTemplate>
                                                     <table id="specAdditionalDetails">
@@ -102,7 +110,7 @@
                                     </MasterTableView>
                                 </telerik:RadGrid>
                                 <br />
-                                <asp:HyperLink runat="server" ID="btnExportPromoteList" Target="_blank" NavigateUrl="#" CssClass="float-right">Export as CSV</asp:HyperLink>
+                                <asp:HyperLink runat="server" ID="btnExportPromoteList" Target="_blank" NavigateUrl="#" CssClass="float-right" Visible="false">Export as CSV</asp:HyperLink>
                                 <br />
                             </fieldset>
                         </td>
@@ -110,7 +118,7 @@
                     <tr>
                         <td colspan="2" style="padding-left: 14px;">
                             <asp:LinkButton ID="btnPromote" runat="server" Text="Promote" OnClientClick="confirmAspButton(this); return false;" CssClass="btn3GPP-success" OnClick="btnPromote_Click" />
-                            <img src="/desktopmodules/Specifications/images/busy.gif" alt="progress" style="display:none" />
+                            <img src="/desktopmodules/Specifications/images/busy.gif" alt="progress" style="display: none" />
                         </td>
                     </tr>
                 </table>
@@ -129,22 +137,21 @@
                 }
                 var count = 0;
                 var grid = $find("<%=rgSpecificationList.ClientID %>");
-                    var tableView = grid.get_masterTableView();
-                    var items = tableView.get_dataItems();
-                    for (var i = 0; i < items.length; i++) {
-                        var rowValues = items[i];
-                        if (!rowValues.findElement("chkPromoteInhibited").checked)
-                            count++;
-                    }
+                var tableView = grid.get_masterTableView();
+                var items = tableView.get_dataItems();
+                for (var i = 0; i < items.length; i++) {
+                    var rowValues = items[i];
+                    if (!rowValues.findElement("chkPromoteInhibited").checked)
+                        count++;
+                }
 
-                    radconfirm("You are about to promote " + count + " specifications. Proceed?", aspButtonCallbackFn, 400, 100, null, "Confirm");
+                radconfirm("You are about to promote " + count + " specifications. Proceed?", aspButtonCallbackFn, 400, 100, null, "Confirm");
             }
 
 
-            function ToggleCreateNewStatus(button,rowIndex)
-            {
+            function ToggleCreateNewStatus(button, rowIndex) {
                 var senderButtonId = button.id;
-                
+
                 var grid = $find("<%=rgSpecificationList.ClientID %>");
                 var tableView = grid.get_masterTableView();
                 var row = tableView.get_dataItems()[rowIndex];
