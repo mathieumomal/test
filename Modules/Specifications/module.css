@@ -82,6 +82,7 @@ legend {
 
 .ErrorTxt {
     margin: 0 0 0 7%;
+	display: block;
 }
 
 .TabLineLeft {
