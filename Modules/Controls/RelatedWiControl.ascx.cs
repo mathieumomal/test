@@ -178,8 +178,9 @@ namespace Etsi.Ultimate.Controls
                 //If modifiedDataSource is set; then remove from it else take data from DataSource to modifiedDataSource & remove
                 if (modifiedDataSource.Count > 0)
                 {
-                    var removedWi = modifiedDataSource.FirstOrDefault(x => x.Pk_WorkItemUid == WiId);
-                    modifiedDataSource.RemoveAll(x => x.Pk_WorkItemUid == WiId);
+                    var tempList = modifiedDataSource.ToList();
+                    tempList.RemoveAll(x => x.Pk_WorkItemUid == WiId);
+                    modifiedDataSource = tempList;
 
                     SetHiddenWisValue(modifiedDataSource);
                     BindGrid(relatedWiGrid_Edit, modifiedDataSource);
@@ -205,7 +206,7 @@ namespace Etsi.Ultimate.Controls
         protected void btnAddToRelatedWiGrid_Click(object sender, EventArgs e)
         {
             List<string> modWiIds = modifiedDataSource.Select(x => x.Pk_WorkItemUid.ToString()).ToList();
-            List<string> hidWiIds = hidSelectedWis.Value.Trim(',').Split(',').ToList();
+            List<string> hidWiIds = (string.IsNullOrEmpty(hidSelectedWis.Value)) ? new List<string>() : hidSelectedWis.Value.Trim(',').Split(',').ToList();
 
             if (modWiIds.OrderBy(x => x).SequenceEqual(hidWiIds.OrderBy(x => x)))
             {

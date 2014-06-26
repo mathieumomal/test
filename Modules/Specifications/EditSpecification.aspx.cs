@@ -140,7 +140,7 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 Fk_PersonId = userId,
                 Fk_SpecificationId = SpecificationId,
-                IsPublic = specificationRemarks.UserRights != null ? specificationRemarks.UserRights.HasRight(Domain.Enum_UserRights.Remarks_AddPrivateByDefault) : false,
+                IsPublic = specificationRemarks.UserRights != null ? (specificationRemarks.UserRights.HasRight(Domain.Enum_UserRights.Remarks_AddPrivateByDefault) ? false : true ) : false,
                 CreationDate = DateTime.UtcNow,
                 RemarkText = specificationRemarks.RemarkText,
                 PersonName = personDisplayName
