@@ -15,6 +15,9 @@ namespace Etsi.Ultimate.Repositories
     /// </summary>
     public class UserRolesRepository : IUserRolesRepository
     {
+        public const string admins = "Administrators";
+        public const string wpMgr = "Work Plan Managers";
+        public const string specMgr = "Specification Managers";
 
         public IUltimateUnitOfWork UoW
         {
@@ -46,12 +49,43 @@ namespace Etsi.Ultimate.Repositories
 
         public List<int> GetSpecMgr()
         {
-            throw new NotImplementedException();
+            var idList = UoW.Context.Users_AdHoc_Roles.Where(x => x.RoleName.Equals(specMgr)).Select(x => x.PERSON_ID).ToList();
+            List<int> specMgrIdList = new List<int>();
+            foreach(var idStr in idList){
+                int id = 0;
+                if (String.IsNullOrEmpty(idStr))
+                {
+                    break;
+                }
+                
+                bool success = int.TryParse(idStr, out id);
+                if (success)
+                {
+                    specMgrIdList.Add(id);
+                }
+            }
+            return specMgrIdList;
         }
 
         public List<int> GetWpMgr()
         {
-            throw new NotImplementedException();
+            var idList = UoW.Context.Users_AdHoc_Roles.Where(x => x.RoleName.Equals(wpMgr)).Select(x => x.PERSON_ID).ToList();
+            List<int> wpMgrIdList = new List<int>();
+            foreach (var idStr in idList)
+            {
+                int id = 0;
+                if (String.IsNullOrEmpty(idStr))
+                {
+                    break;
+                }
+
+                bool success = int.TryParse(idStr, out id);
+                if (success)
+                {
+                    wpMgrIdList.Add(id);
+                }
+            }
+            return wpMgrIdList;
         }
 
         #endregion

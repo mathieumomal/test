@@ -23,6 +23,9 @@
     <form id="specificationDetailsForm" runat="server">
         <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
         <asp:Panel runat="server" ID="fixContainer" CssClass="containerFix" Width="750px">
+            <asp:Panel ID="specMsg" runat="server" Visible="false">
+                <asp:Label runat="server" ID="specMsgTxt"></asp:Label>
+            </asp:Panel>
             <asp:Panel ID="specificationMessages" runat="server" Visible="false">
                 <asp:Label runat="server" ID="specificationMessagesTxt"></asp:Label>
             </asp:Panel>

@@ -30,14 +30,19 @@ namespace Etsi.Ultimate.Module.Specifications
         private static String CONST_RELEASES_TAB = "Releases";
         private static String CONST_HISTORY_TAB = "History";
         private const string CONST_EMPTY_FIELD = " - ";
+        private const string CONST_ERROR_SENDMAIL = "sendMail";
+        private const string CONST_ERROR_SENDMAIL_TEXT = "Specification has been successfully created. An email has been sent to the Specification Manager(s) requesting the allocation of a specification number.";
         private const string SPEC_HEADER = "Specification #: ";
         private List<string> LIST_OF_TABS = new List<string>() { };
         public static readonly string DsId_Key = "ETSI_DS_ID";
+        private const String CONST_ERRORPANEL_CSS = "Spec_Edit_Error";
+        private const String CONST_ERRORTEXT_CSS = "ErrorTxt";
         //Properties
         private int UserId;
         private string selectedTab;
         private bool fromEdit;
         public static Nullable<int> SpecificationId;
+        private string CreateError;
 
         /// <summary>
         /// Main event of the page
@@ -57,6 +62,17 @@ namespace Etsi.Ultimate.Module.Specifications
                 //Load parent page to reflect changes
                 if (fromEdit)
                     this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Refresh", "window.opener.location.reload(true);", true);
+
+                if (!String.IsNullOrEmpty(CreateError) && CreateError.Equals(CONST_ERROR_SENDMAIL))
+                {
+                    specMsg.Visible = true;
+                    specMsg.CssClass = CONST_ERRORPANEL_CSS;
+                    specMsgTxt.CssClass = CONST_ERRORTEXT_CSS;
+
+                    specMsgTxt.Text = CONST_ERROR_SENDMAIL_TEXT + "<br/>";
+                    this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "setTimeout(function(){ $('#" + specMsg.ClientID + "').hide('slow');} , 5000);", true);
+                }
+
             }
         }
 
@@ -344,6 +360,7 @@ namespace Etsi.Ultimate.Module.Specifications
             SpecificationId = (Request.QueryString["specificationId"] != null) ? (int.TryParse(Request.QueryString["specificationId"], out output) ? new Nullable<int>(output) : null) : null;
             selectedTab = (Request.QueryString["selectedTab"] != null) ? Request.QueryString["selectedTab"] : string.Empty;
             fromEdit = (Request.QueryString["fromEdit"] != null) ? Convert.ToBoolean(Request.QueryString["fromEdit"]) : false;
+            CreateError = (Request.QueryString["error"] != null) ? Request.QueryString["error"] : string.Empty;
         }
 
         /// <summary>

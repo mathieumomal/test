@@ -27,8 +27,23 @@ namespace Etsi.Ultimate.Tests.Repositories
         public void GetAllAdHocRoles()
         {
             var repo = new UserRolesRepository() { UoW = GetUnitOfWork() };
-            Assert.AreEqual(1, repo.GetAllAdHocRoles().ToList().Count);
+            Assert.AreEqual(2, repo.GetAllAdHocRoles().ToList().Count);
         }
+
+        [Test]
+        public void GetWpMgrIds()
+        {
+            var repo = new UserRolesRepository() { UoW = GetUnitOfWork() };
+            Assert.AreEqual(1, repo.GetWpMgr().ToList().Count);
+        }
+
+        [Test]
+        public void GetSpecMgrIds()
+        {
+            var repo = new UserRolesRepository() { UoW = GetUnitOfWork() };
+            Assert.AreEqual(1, repo.GetSpecMgr().ToList().Count);
+        }
+
 
         
         private IUltimateUnitOfWork GetUnitOfWork()
@@ -46,6 +61,7 @@ namespace Etsi.Ultimate.Tests.Repositories
 
             var userDnnRolesGroupsDBSet = new UsersAdHocRolesFakeDBSet();
             userDnnRolesGroupsDBSet.Add(new Users_AdHoc_Roles() { UserID = 9, PERSON_ID = "27904", RoleName = "Work Plan Managers" });
+            userDnnRolesGroupsDBSet.Add(new Users_AdHoc_Roles() { UserID = 10, PERSON_ID = "27906", RoleName = "Specification Managers" });
 
             iUltimateContext.Users_Groups = userGroupsDBSet;
             iUltimateContext.Users_AdHoc_Roles = userDnnRolesGroupsDBSet;

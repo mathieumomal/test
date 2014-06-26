@@ -37,10 +37,11 @@ namespace Etsi.Ultimate.Tests.Services
         public void EditSpecification_ReturnsFalseWhenUserHasNoRight()
         {
             RegisterAllMocks();
+            var spec = GetCorrectSpecificationForEdit(false);
 
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            var report = specSvc.EditSpecification(NO_EDIT_RIGHT_USER, GetCorrectSpecificationForEdit(false));
-            Assert.IsFalse(report.Key);
+            var report = specSvc.EditSpecification(NO_EDIT_RIGHT_USER, spec);
+            Assert.AreEqual(-1, report.Key);
             Assert.AreEqual(1, report.Value.GetNumberOfErrors());
         }
 
@@ -52,7 +53,7 @@ namespace Etsi.Ultimate.Tests.Services
             var spec = GetCorrectSpecificationForEdit(false);
             spec.Pk_SpecificationId = 0;
             var report = specSvc.EditSpecification(EDIT_RIGHT_USER, spec);
-            Assert.IsFalse(report.Key);
+            Assert.AreEqual(-1, report.Key);
             Assert.AreEqual(1, report.Value.GetNumberOfErrors());
         }
 
@@ -67,7 +68,7 @@ namespace Etsi.Ultimate.Tests.Services
             specToEdit.Title = "New title";
 
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
+            Assert.AreEqual(specToEdit.Pk_SpecificationId, specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
 
             // From white box testing, we know that:
             // - spec that will be modified is the one provided by the Repository
@@ -91,7 +92,7 @@ namespace Etsi.Ultimate.Tests.Services
             specToEdit.Remarks.Add(new Remark() { IsPublic = false, Fk_PersonId = 0 });
 
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
+            Assert.AreEqual(specToEdit.Pk_SpecificationId, specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
 
             // Test remarks
             var modifiedSpec = GetCorrectSpecificationForEdit(false);
@@ -114,7 +115,7 @@ namespace Etsi.Ultimate.Tests.Services
             specToEdit.SpecificationTechnologies.Add(new SpecificationTechnology() { Pk_SpecificationTechnologyId = 13, Fk_Enum_Technology = 3 }); // Let's say it's LTE
 
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
+            Assert.AreEqual(specToEdit.Pk_SpecificationId, specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
             var modifiedSpec = GetCorrectSpecificationForEdit(false);
 
             // Test specification technologies
@@ -135,7 +136,7 @@ namespace Etsi.Ultimate.Tests.Services
             specToEdit.SpecificationResponsibleGroups.Add(new SpecificationResponsibleGroup() { Pk_SpecificationResponsibleGroupId = 3, Fk_commityId = 3, IsPrime = true }); // Set prime on group 3
 
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
+            Assert.AreEqual(specToEdit.Pk_SpecificationId, specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
             var modifiedSpec = GetCorrectSpecificationForEdit(false);
 
             // Test responsible groups
@@ -161,7 +162,7 @@ namespace Etsi.Ultimate.Tests.Services
             specToEdit.SpecificationRapporteurs.Add(new SpecificationRapporteur() { Pk_SpecificationRapporteurId = 3, Fk_RapporteurId = 3, IsPrime = true });
 
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
+            Assert.AreEqual(specToEdit.Pk_SpecificationId, specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
 
             // From white box testing, we know that:
             // - spec that will be modified is the one provided by the Repository
@@ -193,7 +194,7 @@ namespace Etsi.Ultimate.Tests.Services
             specToEdit.Specification_WorkItem.Add(new Specification_WorkItem() { Fk_WorkItemId = 3, isPrime = true });
 
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            Assert.IsTrue(specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
+            Assert.AreEqual(specToEdit.Pk_SpecificationId, specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
 
             // From white box testing, we know that:
             // - spec that will be modified is the one provided by the Repository

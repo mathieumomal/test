@@ -296,7 +296,7 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId"></param>
         /// <param name="spec"></param>
         /// <returns></returns>
-        public KeyValuePair<bool, Report> EditSpecification(int personId, Specification spec)
+        public KeyValuePair<int, Report> EditSpecification(int personId, Specification spec)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
@@ -304,18 +304,22 @@ namespace Etsi.Ultimate.Services
                 editAction.UoW = uoW;
                 try
                 {
-                    var status = editAction.EditSpecification(personId, spec);
+                    var editSpec = editAction.EditSpecification(personId, spec);
+                    uoW.Save();
+                    return new KeyValuePair<int, Report>(editSpec.Key.Pk_SpecificationId, editSpec.Value);
+
+                    /*var status = editAction.EditSpecification(personId, spec);
                     if (!status)
                         throw new Exception("Could not update specification");
                     uoW.Save();
-                    return new KeyValuePair<bool, Report>(true, new Report());
+                    return new KeyValuePair<bool, Report>(true, new Report());*/
                 }
                 catch (Exception e)
                 {
                     Utils.LogManager.Error("Error while editing specification: " + e.Message);
                     var report = new Report();
                     report.LogError(e.Message);
-                    return new KeyValuePair<bool, Report>(false, report);
+                    return new KeyValuePair<int, Report>(-1, report);
                 }
             }
         }

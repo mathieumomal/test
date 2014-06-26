@@ -222,6 +222,7 @@ namespace Etsi.Ultimate.Business
             var body = new SpecAwaitingReferenceNumberMailTemplate(connectedUsername, (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), specLink);
 
             var roleManager = new RolesManager();
+            roleManager.UoW = UoW;
             var to = roleManager.GetSpecMgrEmail();
 
             var mailManager = UtilsFactory.Resolve<IMailManager>();

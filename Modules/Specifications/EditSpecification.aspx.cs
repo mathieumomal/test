@@ -7,6 +7,10 @@ using System.Linq;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using Domain = Etsi.Ultimate.DomainClasses;
+using System.Text;
+using System.Web;
+using System.IO;
+using System.Net;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
@@ -91,8 +95,13 @@ namespace Etsi.Ultimate.Module.Specifications
                 var result = svc.CreateSpecification(userId, spec, Request.Url.GetLeftPart(UriPartial.Authority));
                 report = result.Value;
                 spec.Pk_SpecificationId = result.Key;
+                if (result.Key != -1 && report.ErrorList.Count > 0)
+                {
+                    Response.Redirect("SpecificationDetails.aspx?specificationId=" + spec.Pk_SpecificationId + "&fromEdit=false&error=sendMail");
+                }
             }
 
+            //Errors
             if (report.ErrorList.Count > 0)
             {
                 specMsg.Visible = true;
@@ -102,11 +111,12 @@ namespace Etsi.Ultimate.Module.Specifications
                 foreach (string errorMessage in report.ErrorList)
                     specMsgTxt.Text = errorMessage + "<br/>";
 
-                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "setTimeout(function(){ $('#" + specMsg.ClientID + "').hide('slow');} , 3000);", true);
+                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "setTimeout(function(){ $('#" + specMsg.ClientID + "').hide('slow');} , 5000);", true);
             }
             else
-                Response.Redirect("SpecificationDetails.aspx?specificationId=" + spec.Pk_SpecificationId + "&fromEdit=true");
-
+            {
+                Response.Redirect("SpecificationDetails.aspx?specificationId=" + spec.Pk_SpecificationId + "&fromEdit=false");
+            }
         }
 
         /// <summary>

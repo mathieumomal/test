@@ -413,7 +413,7 @@ namespace Etsi.Ultimate.Services
         }
 
 
-        KeyValuePair<bool, Report> ISpecificationService.EditSpecification(int personId, Specification spec)
+        KeyValuePair<int, Report> ISpecificationService.EditSpecification(int personId, Specification spec)
         {
             throw new NotImplementedException();
         }

@@ -27,7 +27,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId"></param>
         /// <param name="spec"></param>
         /// <returns></returns>
-        public bool EditSpecification(int personId, Specification spec)
+        public KeyValuePair<Specification, Report> EditSpecification(int personId, Specification spec)
         {
             // Check that user has right to perform operation
             var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
@@ -55,7 +55,7 @@ namespace Etsi.Ultimate.Business
             // Compare the fields of the two specifications.
             CompareSpecs(spec, oldSpec, personId, specRepo);
 
-            return true;
+            return new KeyValuePair<Specification, Report>(spec, report); ;
         }
 
         /// <summary>
@@ -275,10 +275,12 @@ namespace Etsi.Ultimate.Business
         /// <param name="report"></param>
         private void MailAlertNumberEdited(Specification spec, Report report)
         {
-            var subject = String.Format(Localization.Specification_ReferenceNumberAssigned_Subject, spec.Number);
-            var roleManager = new RolesManager();
+            var specWorkitemManager = new SpecificationWorkItemManager() { UoW = UoW };
+            var roleManager = new RolesManager() { UoW = UoW };
+            var personManager = new PersonManager() { UoW = UoW };
 
-            var specWorkitemManager = new SpecificationWorkItemManager();
+
+            var subject = String.Format(Localization.Specification_ReferenceNumberAssigned_Subject, spec.Number);
             var listSpecWILabel = specWorkitemManager.GetSpecificationWorkItemsLabels(spec.Pk_SpecificationId);
 
             //Send to workplan manager
@@ -287,7 +289,6 @@ namespace Etsi.Ultimate.Business
 
             //Send to Prime Responsible Group secretaries as well
             var primeResponsibleGroupCommityId = spec.PrimeResponsibleGroup.Fk_commityId;
-            var personManager = new PersonManager();
             var listSecretariesEmail = personManager.GetEmailSecretariesFromAPrimeResponsibleGroupByCommityId(primeResponsibleGroupCommityId);
             to = to.Concat(listSecretariesEmail).ToList();
 
