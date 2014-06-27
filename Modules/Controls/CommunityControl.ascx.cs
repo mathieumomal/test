@@ -271,7 +271,10 @@ namespace Etsi.Ultimate.Controls
                 }
             }));
 
+            // Add the plenary communities at the beginning.
+            DataSource.Reverse();
             DataSource.AddRange(plenaryCommunities);
+            DataSource.Reverse();
         }
 
         /// <summary>
