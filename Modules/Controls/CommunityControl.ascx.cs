@@ -179,7 +179,7 @@ namespace Etsi.Ultimate.Controls
                         if (dataSource.Count > 0 && _selectedCommunityIds != null)
                             rtvSource = dataSource.OrderBy(x => x.Order).Where(x => x.ActiveCode == "ACTIVE" || _selectedCommunityIds.Contains(x.TbId)).OrderBy(x => x.Order).ToList();
                         else
-                            rtvSource = dataSource;
+                            rtvSource = dataSource.OrderBy(x => x.Order).Where(x => x.ActiveCode == "ACTIVE").ToList();
 
                         rtvCommunitySelector.DataTextField = "TbName";
                         rtvCommunitySelector.DataValueField = "TbId";
