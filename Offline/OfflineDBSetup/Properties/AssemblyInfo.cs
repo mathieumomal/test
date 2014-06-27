@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OfflineSetup")]
+[assembly: AssemblyTitle("OfflineDBSetup")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("OfflineSetup")]
+[assembly: AssemblyProduct("OfflineDBSetup")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("b227cfda-2110-44ff-882c-fbeb2a7987f8")]
+[assembly: Guid("9e5f73d8-71c4-4231-94a6-ea93abbfea0b")]
 
 // Version information for an assembly consists of the following four values:
 //

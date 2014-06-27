@@ -1,17 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<configuration>
-    <configSections>
-        <sectionGroup name="applicationSettings" type="System.Configuration.ApplicationSettingsGroup, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" >
-            <section name="OfflineSetup.Properties.Settings" type="System.Configuration.ClientSettingsSection, System, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false" />
-        </sectionGroup>
-    </configSections>
-    <startup useLegacyV2RuntimeActivationPolicy="true"> 
-        <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.5" />
-    </startup>
-    <applicationSettings>
-        <OfflineSetup.Properties.Settings>
-            <setting name="TrackingTable" serializeAs="String">
-                <value>IF (EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{0}' AND  TABLE_NAME = 'Offline_{1}'))
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="OfflineDBSetup.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="TrackingTable" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">IF (EXISTS (SELECT 1 FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '{0}' AND  TABLE_NAME = 'Offline_{1}'))
 BEGIN
     DROP TABLE [{0}].[Offline_{1}]
 END
@@ -27,10 +19,10 @@ CREATE TABLE [{0}].[Offline_{1}](
 	[Offline_PK_Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
-GO</value>
-            </setting>
-            <setting name="InsertTrigger" serializeAs="String">
-                <value>IF EXISTS (SELECT 1 FROM SYS.TRIGGERS WHERE NAME = '{1}_Insert_Trigger')
+GO</Value>
+    </Setting>
+    <Setting Name="InsertTrigger" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">IF EXISTS (SELECT 1 FROM SYS.TRIGGERS WHERE NAME = '{1}_Insert_Trigger')
 BEGIN
     DROP TRIGGER [{0}].[{1}_Insert_Trigger]
 END
@@ -44,10 +36,10 @@ BEGIN
     INSERT INTO [{0}].[Offline_{1}] (Offline_Pk_Id, Online_Pk_Id, Operation, SyncStatus)
     SELECT {2}, {2}, 'I', 'N' FROM INSERTED
 END
-GO</value>
-            </setting>
-            <setting name="UpdateTrigger" serializeAs="String">
-                <value>IF EXISTS (SELECT 1 FROM SYS.TRIGGERS WHERE NAME = '{1}_Update_Trigger')
+GO</Value>
+    </Setting>
+    <Setting Name="UpdateTrigger" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">IF EXISTS (SELECT 1 FROM SYS.TRIGGERS WHERE NAME = '{1}_Update_Trigger')
 BEGIN
     DROP TRIGGER [{0}].[{1}_Update_Trigger]
 END
@@ -74,10 +66,10 @@ BEGIN
     END
 END
 GO
-</value>
-            </setting>
-            <setting name="DeleteTrigger" serializeAs="String">
-                <value>IF EXISTS (SELECT 1 FROM SYS.TRIGGERS WHERE NAME = '{1}_Delete_Trigger')
+</Value>
+    </Setting>
+    <Setting Name="DeleteTrigger" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">IF EXISTS (SELECT 1 FROM SYS.TRIGGERS WHERE NAME = '{1}_Delete_Trigger')
 BEGIN
     DROP TRIGGER [{0}].[{1}_Delete_Trigger]
 END
@@ -111,10 +103,10 @@ BEGIN
 	END
 END
 GO
-</value>
-            </setting>
-            <setting name="GetChangesStoredProcedure" serializeAs="String">
-                <value>IF EXISTS (SELECT 1 FROM SYS.OBJECTS WHERE TYPE = 'P' AND NAME = 'Offline_{1}_GetChanges')
+</Value>
+    </Setting>
+    <Setting Name="GetChangesStoredProcedure" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">IF EXISTS (SELECT 1 FROM SYS.OBJECTS WHERE TYPE = 'P' AND NAME = 'Offline_{1}_GetChanges')
 BEGIN
     DROP PROCEDURE [{0}].[Offline_{1}_GetChanges]
 END
@@ -142,17 +134,19 @@ BEGIN
         AND        [tracking].[SyncStatus] = 'N'
     END 
 END
-GO</value>
-            </setting>
-            <setting name="ColumnSQL" serializeAs="String">
-                <value>        ,          [{0}] = [base].[{0}]</value>
-            </setting>
-            <setting name="ForeignKeyColumnSQL" serializeAs="String">
-                <value>        ,          [{0}]   = ISNULL([{1}].Online_Pk_Id, [base].{0})</value>
-            </setting>
-            <setting name="ForeignKeyTableSQL" serializeAs="String">
-                <value>        LEFT  JOIN {0}.Offline_{1} [{2}]         ON [base].{3} = [{2}].Offline_Pk_Id</value>
-            </setting>
-        </OfflineSetup.Properties.Settings>
-    </applicationSettings>
-</configuration>
+GO</Value>
+    </Setting>
+    <Setting Name="ColumnSQL" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">        ,          [{0}] = [base].[{0}]</Value>
+    </Setting>
+    <Setting Name="ForeignKeyColumnSQL" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">        ,          [{0}]   = ISNULL([{1}].Online_Pk_Id, [base].{0})</Value>
+    </Setting>
+    <Setting Name="ForeignKeyTableSQL" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">        LEFT  JOIN {0}.Offline_{1} [{2}]         ON [base].{3} = [{2}].Offline_Pk_Id</Value>
+    </Setting>
+    <Setting Name="ConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=(local);Initial Catalog=U3GPPDB;Integrated Security=True</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

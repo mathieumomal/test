@@ -1,15 +1,17 @@
 ﻿using Microsoft.SqlServer.Management.Common;
 using Microsoft.SqlServer.Management.Smo;
-using OfflineSetup.Entities;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace OfflineSetup.Utility
+namespace OfflineDBSetup
 {
-    internal class SQLHelper
+    /// <summary>
+    /// Helper class to execute sql queries
+    /// </summary>
+    public class SQLHelper
     {
         #region Constants
 
@@ -24,6 +26,11 @@ namespace OfflineSetup.Utility
 
         #region Internal Helper Methods
 
+        /// <summary>
+        /// Check whether we can connect sql or not
+        /// </summary>
+        /// <param name="connectionString">Connection String</param>
+        /// <returns>True/False</returns>
         internal static bool CanConnectSQL(string connectionString)
         {
             SqlConnection conn = new SqlConnection();
@@ -46,6 +53,10 @@ namespace OfflineSetup.Utility
             return true;
         }
 
+        /// <summary>
+        /// Load Tracking Tables from xml
+        /// </summary>
+        /// <returns>Tracking Tables list</returns>
         internal static List<TrackingTable> LoadTrackingTables()
         {
             List<TrackingTable> trackingTables = new List<TrackingTable>();
@@ -84,6 +95,11 @@ namespace OfflineSetup.Utility
             return trackingTables;
         }
 
+        /// <summary>
+        /// Run query on database
+        /// </summary>
+        /// <param name="query">Query</param>
+        /// <param name="connectionString">Connection String</param>
         internal static void RunQuery(string query, string connectionString)
         {
             using (SqlConnection sqlConnection = new SqlConnection(connectionString))

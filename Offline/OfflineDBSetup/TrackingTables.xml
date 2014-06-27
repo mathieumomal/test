@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TrackingTables>
+  <!--
+  [1] Example of Simple Entity  
+  <TrackingTable TableSchema="dbo" TableName="Person">
+    <PrimaryKey>Id</PrimaryKey>
+    <Columns>
+      <Column>PersonName</Column>
+    </Columns>
+  </TrackingTable>
+  
+  [2] Example of Foreignkey Entity
+  <TrackingTable  TableSchema="dbo" TableName="PersonSchool">
+    <PrimaryKey>Id</PrimaryKey>
+    <Columns>
+      <Column>DateOfJoining</Column>
+    </Columns>    
+    <ForeignKeys>
+      <ForeignKey TableSchema="dbo" TableName="Person">PersonID</ForeignKey>
+      <ForeignKey TableSchema="dbo" TableName="School">SchoolID</ForeignKey>
+    </ForeignKeys>
+  </TrackingTable>-->
+  <TrackingTable TableSchema="dbo" TableName="Version">
+    <PrimaryKey>Pk_VersionId</PrimaryKey>
+    <ForeignKeys>
+      <ForeignKey TableSchema="dbo" TableName="Specification">Fk_SpecificationId</ForeignKey>
+      <ForeignKey TableSchema="dbo" TableName="Release">Fk_ReleaseId</ForeignKey>
+    </ForeignKeys>
+    <Columns>
+      <Column>MajorVersion</Column>
+      <Column>TechnicalVersion</Column>
+      <Column>EditorialVersion</Column>
+      <Column>AchievedDate</Column>
+      <Column>ExpertProvided</Column>
+      <Column>Location</Column>
+      <Column>SupressFromSDO_Pub</Column>
+      <Column>ForcePublication</Column>
+      <Column>DocumentUploaded</Column>
+      <Column>DocumentPassedToPub</Column>
+      <Column>Multifile</Column>
+      <Column>Source</Column>
+      <Column>ETSI_WKI_ID</Column>
+      <Column>ProvidedBy</Column>
+      <Column>ETSI_WKI_Ref</Column>
+    </Columns>
+  </TrackingTable>
+</TrackingTables>
