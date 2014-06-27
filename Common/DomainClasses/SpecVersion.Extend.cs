@@ -32,5 +32,29 @@ namespace Etsi.Ultimate.DomainClasses
         }
 
         public string MtgShortRef { get; set; }
+
+        /// <summary>
+        /// Get Reference and date of a transposed version
+        /// </summary>
+        public string TranspositionReferenceAndDate {
+            get
+            {
+                var val = new StringBuilder();
+                if(this.ETSI_WKI_ID != null && this.ETSI_WKI_ID != 0)
+                {
+                    if (!String.IsNullOrEmpty(this.ETSI_WKI_Ref))
+                    {
+                        val.Append(this.ETSI_WKI_Ref);
+                    }
+                    if (this.DocumentPassedToPub != null)
+                    {
+                        val
+                            .Append("\nTransposed on : ")
+                            .Append(this.DocumentPassedToPub);
+                    }
+                }
+                return val.ToString();
+            }
+        }
     }
 }

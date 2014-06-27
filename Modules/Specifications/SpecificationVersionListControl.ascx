@@ -33,6 +33,11 @@
     .float_right {
         float: right;
     }
+
+    .notAvailable
+    {
+        opacity: 0.3;
+    }
 </style>
 
 <script type="text/javascript">
@@ -141,7 +146,7 @@
                 <telerik:GridTemplateColumn UniqueName="Link">
                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" />
                     <ItemTemplate>
-                        <asp:ImageButton ID="imgTransposedSpec" CssClass="grid_btn" ImageUrl="images/spec_rel-tranSpec.png" ToolTip="Reference of transposed specification" runat="server" OnClientClick="return false;" />
+                        <asp:ImageButton ID="imgTransposedSpec" Enabled='(<%# DataBinder.Eval(Container.DataItem, "TranspositionReferenceAndDate") == "" ? false : true) %>' CssClass='<%# DataBinder.Eval(Container.DataItem, "TranspositionReferenceAndDate") == "" ? "grid_btn notAvailable" : "grid_btn"%>' ImageUrl="images/spec_rel-tranSpec.png" ToolTip='<%# DataBinder.Eval(Container.DataItem,"TranspositionReferenceAndDate")%>' runat="server" OnClientClick="return false;" />
                         <asp:ImageButton ID="imgRelatedTDocs" CssClass="grid_btn" ImageUrl="images/spec_rel-TDocs.png" ToolTip="Related TDocs" runat="server" OnClientClick="return false;" />
                         <asp:ImageButton ID="imgRelatedCRs" CssClass="grid_btn" ImageUrl="images/spec_rel-CRs.png" ToolTip="Related CRs" runat="server" OnClientClick="return false;" />
                     </ItemTemplate>

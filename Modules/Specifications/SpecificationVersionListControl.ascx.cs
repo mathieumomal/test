@@ -137,13 +137,13 @@ namespace Etsi.Ultimate.Module.Specifications
                     versionRemarks.SpecVersion = specVersion;
                     versionRemarks.SpecReleaseID = SpecReleaseID;
                 }
-                
+
                 if (!String.IsNullOrEmpty(item["Source"].Text))
                 {
                     HyperLink link = (HyperLink)item["Meetings"].FindControl("lnkMeetings");
                     link.Text = item["MtgShortRef"].Text;
                     link.NavigateUrl = ConfigVariables.MeetingDetailsAddress + item["Source"].Text;
-                }                
+                }
             }
         }
 

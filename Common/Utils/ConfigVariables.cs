@@ -106,6 +106,19 @@ namespace Etsi.Ultimate.Utils
             }
         }
 
+        /// <summary>
+        /// WorkItem Report path
+        /// </summary>
+        public static string WIReportPath
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["WIReportPath"] != null)
+                    return ConfigurationManager.AppSettings["WIReportPath"].ToString();
+                return "";
+            }
+        }
+
         public static string DefaultPublicTmpAddress
         {
             get
