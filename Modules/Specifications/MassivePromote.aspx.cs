@@ -119,7 +119,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 {
                     chkPromoteInhibited.Checked = true;
                     chkCreateNewVersion.Checked = false;
-                    imgPromoteInhibite.ImageUrl = @"/DesktopModules/Specifications/images/lock.png";
+                    imgPromoteInhibite.ImageUrl = @"/DesktopModules/Specifications/images/inhibited.png";
                     imgPromoteInhibite.ToolTip = "Promote inhibited";
 
                 }
