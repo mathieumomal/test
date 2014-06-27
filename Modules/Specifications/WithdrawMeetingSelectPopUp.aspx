@@ -26,7 +26,7 @@
             if (selectedTab !== null) {
                 var str = parentLocation.split("&");
                 for (var i = 0; i < str.length; ++i) {
-                    if (str[i].indexOf("SelectedTab") == -1 && (relId == null || str[i].indexOf("RelId") == -1)) {
+                    if (str[i].indexOf("selectedTab") == -1 && (relId == null || str[i].indexOf("Rel") == -1)) {
                         finalAddress += str[i];
                     }
                 }
