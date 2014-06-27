@@ -1,6 +1,7 @@
 ﻿using SyncInterface;
 using System;
 using System.ServiceModel;
+using System.ServiceModel.Channels;
 
 namespace SyncClient
 {
@@ -100,8 +101,11 @@ namespace SyncClient
         /// </summary>
         private void CreateProxy()
         {
-            BasicHttpBinding binding = new BasicHttpBinding();
+            CustomUserNameBinding.CustomUsernameBinding binding = new CustomUserNameBinding.CustomUsernameBinding();
+            binding.SetMessageVersion(MessageVersion.Soap12);
             ChannelFactory<ISyncService> factory = new ChannelFactory<ISyncService>(binding, new EndpointAddress(serviceURL));
+            factory.Credentials.UserName.UserName = "dnn3gpp";
+            factory.Credentials.UserName.Password = "439FA15A-8EF2-4479-B15B-F0A063B94DB2";
             this.proxy = factory.CreateChannel();
         }
 

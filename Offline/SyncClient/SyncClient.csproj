@@ -92,6 +92,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CustomUserNameBinding\CustomUserNameBinding.csproj">
+      <Project>{76543cd3-2b5f-4716-855f-cb97a9d89686}</Project>
+      <Name>CustomUserNameBinding</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SyncInterface\SyncInterface.csproj">
       <Project>{5ed09160-13b8-49a2-8117-164305a77db3}</Project>
       <Name>SyncInterface</Name>

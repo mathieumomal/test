@@ -41,7 +41,7 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.Security" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -49,7 +49,6 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Runtime.Serialization" />
@@ -63,9 +62,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="SyncService.svc" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ServiceCredentialValidator.cs" />
     <Compile Include="ServiceHelper.cs" />
     <Compile Include="SyncService.svc.cs">
       <DependentUpon>SyncService.svc</DependentUpon>
@@ -92,6 +94,10 @@
     <ProjectReference Include="..\..\Common\Services\Services.csproj">
       <Project>{4bb8a434-1ed1-4d33-ae3d-32a000d19ca5}</Project>
       <Name>Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CustomUserNameBinding\CustomUserNameBinding.csproj">
+      <Project>{76543cd3-2b5f-4716-855f-cb97a9d89686}</Project>
+      <Name>CustomUserNameBinding</Name>
     </ProjectReference>
     <ProjectReference Include="..\SyncInterface\SyncInterface.csproj">
       <Project>{5ed09160-13b8-49a2-8117-164305a77db3}</Project>
