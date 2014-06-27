@@ -184,20 +184,23 @@ namespace Etsi.Ultimate.Controls
         private List<Remark> GetActualRemarksFromProxy(List<Remark> proxyRemarks)
         {
             List<Remark> remarks = new List<Remark>();
-            proxyRemarks.ForEach(x => remarks.Add(new Remark()
+            if (proxyRemarks != null)
             {
-                Pk_RemarkId = x.Pk_RemarkId,
-                Fk_PersonId = x.Fk_PersonId,
-                Fk_WorkItemId = x.Fk_WorkItemId,
-                Fk_VersionId = x.Fk_VersionId,
-                Fk_SpecificationId = x.Fk_SpecificationId,
-                Fk_ReleaseId = x.Fk_ReleaseId,
-                Fk_SpecificationReleaseId = x.Fk_SpecificationReleaseId,
-                IsPublic = x.IsPublic,
-                CreationDate = x.CreationDate,
-                RemarkText = x.RemarkText,
-                PersonName = x.PersonName,
-            }));
+                proxyRemarks.ForEach(x => remarks.Add(new Remark()
+                    {
+                        Pk_RemarkId = x.Pk_RemarkId,
+                        Fk_PersonId = x.Fk_PersonId,
+                        Fk_WorkItemId = x.Fk_WorkItemId,
+                        Fk_VersionId = x.Fk_VersionId,
+                        Fk_SpecificationId = x.Fk_SpecificationId,
+                        Fk_ReleaseId = x.Fk_ReleaseId,
+                        Fk_SpecificationReleaseId = x.Fk_SpecificationReleaseId,
+                        IsPublic = x.IsPublic,
+                        CreationDate = x.CreationDate,
+                        RemarkText = x.RemarkText,
+                        PersonName = x.PersonName,
+                    }));
+            }
             return remarks;
         }
         #endregion
