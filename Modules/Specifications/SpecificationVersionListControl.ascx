@@ -144,7 +144,7 @@
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
                 <telerik:GridTemplateColumn UniqueName="Link">
-                    <HeaderStyle HorizontalAlign="Center" Font-Bold="True" />
+                    <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="100px" />
                     <ItemTemplate>
                         <asp:ImageButton ID="imgTransposedSpec" Enabled='(<%# DataBinder.Eval(Container.DataItem, "TranspositionReferenceAndDate") == "" ? false : true) %>' CssClass='<%# DataBinder.Eval(Container.DataItem, "TranspositionReferenceAndDate") == "" ? "grid_btn notAvailable" : "grid_btn"%>' ImageUrl="images/spec_rel-tranSpec.png" ToolTip='<%# DataBinder.Eval(Container.DataItem,"TranspositionReferenceAndDate")%>' runat="server" OnClientClick="return false;" />
                         <asp:ImageButton ID="imgRelatedTDocs" CssClass="grid_btn" ImageUrl="images/spec_rel-TDocs.png" ToolTip="Related TDocs" runat="server" OnClientClick="return false;" />

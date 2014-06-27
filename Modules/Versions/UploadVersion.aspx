@@ -171,12 +171,12 @@
                         </span>
                     </div>
                 </asp:Panel>
-                <asp:Panel runat="server" CssClass="contentModal" ID="state">
-                    <div class="wiHeader">
+                <asp:Panel runat="server" CssClass="contentModal ConfirmationWindow" ID="state">
+                    <div class="VersionCentered">
                         <asp:Label runat="server" ID="lblSaveStatus" Text="label" />
-                    </div>
-                    <div class="wiFooter">
-                        <telerik:RadButton ID="state_confirmation" runat="server" Text="Close & refresh" OnClick="Cancel_Click"></telerik:RadButton>
+                    </div><br /><br />
+                    <div class="VersionCentered">
+                        <telerik:RadButton ID="state_confirmation" runat="server" Text="Close" OnClick="Cancel_Click"></telerik:RadButton>
                     </div>
                 </asp:Panel>
 

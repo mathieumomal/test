@@ -1,7 +1,7 @@
 @ECHO OFF
 REM ----- FILL IN THIS AREA -----
-SET TRUNK_PATH=D:\ETSI_Projects\etsi_ngpp_source_code\ULTIMATE\trunk\
-SET DNN_PATH=C:\websites\dnn3gpp.13.etsidev.org\
+SET TRUNK_PATH=D:\WS\ETSI_3GPP_Ultimate\dev\Ultimate\trunk\
+SET DNN_PATH=C:\Websites\dnn3gpp.loc\
 
 REM ----- DON'T MODIFY ANYTHING BELOW, unless you know what you're doing -----
 
@@ -50,6 +50,7 @@ SET aUIUSERSOURCE=%TRUNK_PATH%Modules\Controls\
 SET aUIUSERDEST=%DNN_PATH%controls\Ultimate\
 xcopy %aUIUSERSOURCE%*.ascx %aUIUSERDEST% /b/v/y
 xcopy %aUIUSERSOURCE%*.css %aUIUSERDEST% /b/v/y
+xcopy "%aUIUSERSOURCE%images\*" "%aUIUSERDEST%images\" /b/v/y
 
 
 SET UIUSERSOURCE1=%TRUNK_PATH%Modules\WorkItem\
@@ -58,11 +59,12 @@ xcopy %UIUSERSOURCE1%*.ascx %UIUSERDEST1% /b/v/y
 xcopy %UIUSERSOURCE1%*.aspx %UIUSERDEST1% /b/v/y
 xcopy %UIUSERSOURCE1%*.css %UIUSERDEST1% /b/v/y
 
-SET SPECSOURCES=%TRUNK_PATH%Modules\Specification\
-SET SPECSOURCESDEST=%DNN_PATH%DesktopModules\Specification\
+SET SPECSOURCES=%TRUNK_PATH%Modules\Specifications\
+SET SPECSOURCESDEST=%DNN_PATH%DesktopModules\Specifications\
 xcopy %SPECSOURCES%*.ascx %SPECSOURCESDEST% /b/v/y
 xcopy %SPECSOURCES%*.aspx %SPECSOURCESDEST% /b/v/y
 xcopy %SPECSOURCES%*.css %SPECSOURCESDEST% /b/v/y
+xcopy "%SPECSOURCES%images\*" "%SPECSOURCESDEST%images\" /b/v/y
 
 SET SPECSOURCES=%TRUNK_PATH%Modules\Versions\
 SET SPECSOURCESDEST=%DNN_PATH%DesktopModules\Versions\
