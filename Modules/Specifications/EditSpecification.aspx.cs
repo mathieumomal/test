@@ -11,6 +11,7 @@ using System.Text;
 using System.Web;
 using System.IO;
 using System.Net;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
@@ -42,6 +43,7 @@ namespace Etsi.Ultimate.Module.Specifications
         public static readonly string DsId_Key = "ETSI_DS_ID";
         private const String CONST_ERRORPANEL_CSS = "Spec_Edit_Error";
         private const String CONST_ERRORTEXT_CSS = "ErrorTxt";
+        private const int ErrorFadeTimeout = 10000;
 
 
         //Properties
@@ -85,23 +87,26 @@ namespace Etsi.Ultimate.Module.Specifications
             userId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
             spec = new Domain.Specification();
             FillSpecificationObject(spec);
+
+            // Call service, depending on mode.
+            KeyValuePair<int, Domain.Report> result;
             if (action.Equals(EDIT_MODE))
             {
-                var result = svc.EditSpecification(userId, spec);
-                report = result.Value;
+                result = svc.EditSpecification(userId, spec);
             }
             else
             {
-                var result = svc.CreateSpecification(userId, spec, Request.Url.GetLeftPart(UriPartial.Authority));
-                report = result.Value;
-                spec.Pk_SpecificationId = result.Key;
-                if (result.Key != -1 && report.ErrorList.Count > 0)
-                {
-                    Response.Redirect("SpecificationDetails.aspx?specificationId=" + spec.Pk_SpecificationId + "&fromEdit=false&error=sendMail");
-                }
+                result = svc.CreateSpecification(userId, spec, Request.Url.GetLeftPart(UriPartial.Authority));
+                
+            }
+            report = result.Value;
+
+            if (result.Key != -1 && report.ErrorList.Count > 0)
+            {
+                ManageMailErrorsAndWarnings(result.Key, report);
             }
 
-            //Errors
+            //Errors that were not awaited.
             if (report.ErrorList.Count > 0)
             {
                 specMsg.Visible = true;
@@ -111,12 +116,30 @@ namespace Etsi.Ultimate.Module.Specifications
                 foreach (string errorMessage in report.ErrorList)
                     specMsgTxt.Text = errorMessage + "<br/>";
 
-                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "setTimeout(function(){ $('#" + specMsg.ClientID + "').hide('slow');} , 5000);", true);
+                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "setTimeout(function(){ $('#" + specMsg.ClientID + "').hide('slow');} , "+ErrorFadeTimeout+");", true);
             }
             else
             {
-                Response.Redirect("SpecificationDetails.aspx?specificationId=" + spec.Pk_SpecificationId + "&fromEdit=false");
+                Response.Redirect("SpecificationDetails.aspx?specificationId=" + spec.Pk_SpecificationId+"&fromEdit=1");
             }
+        }
+
+        private void ManageMailErrorsAndWarnings(int specId, Domain.Report report)
+        {
+            var redirectUrl = "SpecificationDetails.aspx?specificationId=" + specId + "&fromEdit=1&error=";
+            if (report.ErrorList.First().Equals(Localization.Specification_ERR001_FailedToSendEmailToSpecManagers))
+            {
+                redirectUrl += SpecificationDetails.CONST_ERROR_SENDMAIL_SPEC_MGR;
+            }
+            else if (report.ErrorList.First().Equals(Localization.Specification_ERR101_FailedToSendEmailToSecretaryAndWorkplanManager))
+            {
+                redirectUrl += SpecificationDetails.CONST_ERROR_SENDMAIL_MCC;
+            }
+            else
+            {
+                redirectUrl += SpecificationDetails.CONST_WARNING_SENDMAIL_MCC;
+            }
+            Response.Redirect(redirectUrl);
         }
 
         /// <summary>
@@ -181,7 +204,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 foreach (string errorMessage in errorsList)
                     specMsgTxt.Text = errorMessage + "<br/>";
 
-                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "setTimeout(function(){ $('#" + specMsg.ClientID + "').hide('slow');} , 5000);", true);
+                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "setTimeout(function(){ $('#" + specMsg.ClientID + "').hide('slow');} , "+ErrorFadeTimeout+");", true);
             }
         }
 

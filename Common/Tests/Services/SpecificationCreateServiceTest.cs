@@ -26,6 +26,7 @@ namespace Etsi.Ultimate.Tests.Services
         private const int NO_EDIT_RIGHT_USER = 2;
         private const int EDIT_RIGHT_USER = 3;
         private const int EDIT_LIMITED_RIGHT_USER = 4;
+        private const int EDIT_SPECMGR_RIGHT_USER = UserRolesFakeRepository.SPECMGR_ID;
 
         [Test]
         public void CreateSpecification_ReturnsErrorIfExistingPk()
@@ -73,10 +74,12 @@ namespace Etsi.Ultimate.Tests.Services
         //Success
         [TestCase(1, false, false, EDIT_RIGHT_USER, "12.145", 1, 0)] //Right to edit number, so mail doesn't be send, no errors
         [TestCase(2, true, true, EDIT_LIMITED_RIGHT_USER, "", null, 0)]//Limited right, an no errors, a mail is send
+        [TestCase(2, false, false, EDIT_SPECMGR_RIGHT_USER, "", null, 0)]         // User is spec Mgr, spec number is not assigned => No mail sent
         //Errors
         [TestCase(1, false, false, EDIT_LIMITED_RIGHT_USER, "", 0, 1)]//Same that the first one, but the user don't have the right to edit the number, so an error is thrown
         [TestCase(3, false, false, EDIT_RIGHT_USER, "", 0, 1)]//BAD FORMAT
         [TestCase(4, false, false, EDIT_RIGHT_USER, "", 0, 1)]//ALREADY EXIST
+        
         public void CreateSpecification_NominalCase(int spec, bool shouldMailBeSent, bool shouldMailSucceed, int person, String number, int ? serie, int error)
         {
             var specification = GetSpecsToCreate(spec);
@@ -191,6 +194,7 @@ namespace Etsi.Ultimate.Tests.Services
             var userRights = MockRepository.GenerateMock<IRightsManager>();
             userRights.Stub(r => r.GetRights(EDIT_RIGHT_USER)).Return(rights);
             userRights.Stub(r => r.GetRights(EDIT_LIMITED_RIGHT_USER)).Return(rights_withLimitedEdit);
+            userRights.Stub(r => r.GetRights(EDIT_SPECMGR_RIGHT_USER)).Return(rights);
             ManagerFactory.Container.RegisterInstance<IRightsManager>(userRights);
 
 
@@ -214,6 +218,7 @@ namespace Etsi.Ultimate.Tests.Services
             personManager.Stub(p => p.FindPerson(1)).Return(new View_Persons() { PERSON_ID = 1, FIRSTNAME = "User", LASTNAME = "1" });
             personManager.Stub(p => p.FindPerson(3)).Return(new View_Persons() { PERSON_ID = 3, FIRSTNAME = "User", LASTNAME = "3" });
             personManager.Stub(p => p.FindPerson(4)).Return(new View_Persons() { PERSON_ID = 4, FIRSTNAME = "User", LASTNAME = "4" });
+            personManager.Stub(p => p.FindPerson(EDIT_SPECMGR_RIGHT_USER)).Return(new View_Persons() { PERSON_ID = EDIT_SPECMGR_RIGHT_USER, FIRSTNAME = "SpecMgr", LASTNAME = "5" });
             ManagerFactory.Container.RegisterInstance<IPersonManager>(personManager);
 
             // Need a release repository

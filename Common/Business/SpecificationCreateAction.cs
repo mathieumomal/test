@@ -82,7 +82,7 @@ namespace Etsi.Ultimate.Business
             repo.InsertOrUpdate(spec);
 
             //If the user didn't have the right to edit spec number we send a mail to the spec manager
-            if (userRights.HasRight(Enum_UserRights.Specification_EditLimitted))
+            if (!userRights.HasRight(Enum_UserRights.Specification_EditFull))
             {
                 MailAlertSpecManager(spec, report, baseurl, personId);
             }
