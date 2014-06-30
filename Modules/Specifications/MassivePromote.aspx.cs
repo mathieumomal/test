@@ -72,16 +72,16 @@ namespace Etsi.Ultimate.Module.Specifications
                     if (specSvc.PerformMassivePromotion(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), specPromoteList, initialReleaseId))
                     {
                         LoadSpecificationGrid();
-                        ShowAlert(String.Format("{0} specification(s) promoted successfully!", specPromoteList.Count), "Promote Status");
+                        ShowAlert(String.Format("{0} specification(s) promoted successfully!", specPromoteList.Count), "Promote Status", false);
                     }
                     else
-                        ShowAlert("Failed to promote specification(s)! Please try later.", "Promote Status");
+                        ShowAlert("Failed to promote specification(s)! Please try later.", "Promote Status", true);
                 }
                 else
-                    ShowAlert("Please select specification(s) to promote.", "Promote Status");
+                    ShowAlert("Please select specification(s) to promote.", "Promote Status", true);
             }
             else
-                ShowAlert(String.Format("{0} is not a valid target release.", ddlInitialRelease.Items[ddlInitialRelease.SelectedIndex - 1].Text), "Promote Status");
+                ShowAlert(String.Format("{0} is not a valid target release.", ddlInitialRelease.Items[ddlInitialRelease.SelectedIndex - 1].Text), "Promote Status", true);
         }
 
         /// <summary>
@@ -127,8 +127,8 @@ namespace Etsi.Ultimate.Module.Specifications
                     chkCreateNewVersion.Checked = chkCreateNewVersion.Enabled = currentSpecification.IsNewVersionCreationEnabled;
 
                 //Trim TITLE to fit inside grid column
-                if (!String.IsNullOrEmpty(currentSpecification.Title) && currentSpecification.Title.Length > 31)
-                    ((Literal)dataItem["Title"].FindControl("ltrlTitle")).Text = currentSpecification.Title.Remove(30) + "...";
+                if (!String.IsNullOrEmpty(currentSpecification.Title) && currentSpecification.Title.Length > 40)
+                    ((Literal)dataItem["Title"].FindControl("ltrlTitle")).Text = currentSpecification.Title.Remove(37) + "...";
             }
         }
 
@@ -211,10 +211,20 @@ namespace Etsi.Ultimate.Module.Specifications
             ddlInitialRelease.DataBind();
         }
 
-        private void ShowAlert(string Message, string Title)
+        /// <summary>
+        /// Show Success/Failure message
+        /// </summary>
+        /// <param name="Message">Message</param>
+        /// <param name="Title">Title</param>
+        /// <param name="isWarning">True - Display Warning icon / False - Display Error icon</param>
+        private void ShowAlert(string Message, string Title, bool isWarning)
         {
-            RadWindowManager1.RadAlert(Message, 400, 100, Title, null);
+            if (isWarning)
+                RadWindowManager1.RadAlert(Message, 400, 100, Title, null);
+            else
+                RadWindowManager1.RadAlert(Message, 400, 100, Title, null, "/desktopmodules/Specifications/images/success.png");
         }
+
         #endregion
     }
 }
