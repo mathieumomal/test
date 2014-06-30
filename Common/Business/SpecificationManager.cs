@@ -336,7 +336,8 @@ namespace Etsi.Ultimate.Business
             if (userRights.HasRight(Enum_UserRights.Specification_InhibitPromote)
                 && (latestSpecRelease.Fk_ReleaseId == releaseId)
                 && (latestRelease.Pk_ReleaseId != releaseId)
-                && (!spec.promoteInhibited.GetValueOrDefault()))
+                && (!spec.promoteInhibited.GetValueOrDefault())
+                && (spec.IsActive))
             {
                 rights.AddRight(Enum_UserRights.Specification_InhibitPromote);
             }
@@ -346,7 +347,8 @@ namespace Etsi.Ultimate.Business
             if (userRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote)
                 && (latestSpecRelease.Fk_ReleaseId == releaseId)
                 && (latestRelease.Pk_ReleaseId != releaseId)
-                && (spec.promoteInhibited.GetValueOrDefault()))
+                && (spec.promoteInhibited.GetValueOrDefault())
+                && (spec.IsActive))
             {
                 rights.AddRight(Enum_UserRights.Specification_RemoveInhibitPromote);
             }
