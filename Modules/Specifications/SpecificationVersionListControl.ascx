@@ -116,7 +116,7 @@
         AllowFilteringByColumn="false"
         AutoGenerateColumns="false"
         AllowMultiRowEdit="true"
-        OnItemDataBound="specificationsVersionGrid_ItemDataBound">
+        OnItemDataBound="specificationsVersionGrid_ItemDataBound" ViewStateMode="Disabled">
         <ClientSettings>
             <Scrolling AllowScroll="True" UseStaticHeaders="true" />
         </ClientSettings>

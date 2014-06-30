@@ -165,7 +165,7 @@ namespace Etsi.Ultimate.Module.Specifications
         /// </summary>
         private void FillReleasesTab(Domain.Specification specification)
         {
-            SpecificationReleaseControl1.DataSource = specification;
+            SpecificationReleaseControl1.DataSource = specification.GetSpecificationForUI();
             SpecificationReleaseControl1.PersonId = UserId;
         }
 

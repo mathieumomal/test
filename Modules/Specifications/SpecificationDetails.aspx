@@ -29,7 +29,7 @@
             <asp:Panel ID="specificationMessages" runat="server" Visible="false">
                 <asp:Label runat="server" ID="specificationMessagesTxt"></asp:Label>
             </asp:Panel>
-            <asp:Panel ID="specificationDetailsBody" runat="server" CssClass="specificationDetailsBody">                
+            <asp:Panel ID="specificationDetailsBody" runat="server" CssClass="specificationDetailsBody" ViewStateMode="Disabled">                
                 <div class="HeaderText">
                     <asp:Label ID="lblHeaderText" runat="server"></asp:Label>
                 </div>
@@ -37,7 +37,7 @@
                     AutoPostBack="false">
                 </telerik:RadTabStrip>
                 <telerik:RadMultiPage ID="SpecificationDetailsRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px" >
-                    <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true" EnableViewState="false">
+                    <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true">
                         <table style="width: 100%">
                             <tr>
                                 <td class="TabLineLeft">
@@ -98,7 +98,7 @@
                             </tr>
                         </table>
                     </telerik:RadPageView>
-                    <telerik:RadPageView ID="RadPageResponsibility" runat="server" EnableViewState="false">
+                    <telerik:RadPageView ID="RadPageResponsibility" runat="server">
                         <table style="width: 100%">
                             <tr>
                                 <td class="TabLineLeft">
@@ -119,7 +119,7 @@
                             </tr>
                         </table>
                     </telerik:RadPageView>
-                    <telerik:RadPageView ID="RadPageRelated" runat="server" EnableViewState="false">
+                    <telerik:RadPageView ID="RadPageRelated" runat="server">
                         <asp:Panel ID="RelatedSpecificationsPanel" runat="server">
                             <div style="max-height: 160px;">
                                 <fieldset id="ParentFieldset">
@@ -140,10 +140,10 @@
                             </div>
                         </asp:Panel>
                     </telerik:RadPageView>
-                    <telerik:RadPageView ID="RadPageReleases" runat="server">
+                    <telerik:RadPageView ID="RadPageReleases" runat="server" ViewStateMode="Enabled">
                         <spec:SpecificationReleaseControl runat="server" ID="SpecificationReleaseControl1" />
                     </telerik:RadPageView>
-                    <telerik:RadPageView ID="RadPageHistory" runat="server" EnableViewState="false">
+                    <telerik:RadPageView ID="RadPageHistory" runat="server">
                         <div class="TabContent" style="overflow-y: auto; overflow-x: auto">
                             <ult:historycontrol runat="server" id="specificationHistory" />
                         </div>

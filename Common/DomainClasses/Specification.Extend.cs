@@ -191,5 +191,46 @@ namespace Etsi.Ultimate.DomainClasses
         /// Specify whether new vesion creation is enbaled or not in massive promotion case
         /// </summary>
         public bool IsNewVersionCreationEnabled { get; set; }
+
+        public Specification GetSpecificationForUI()
+        {
+            Specification SpecForUI= new Specification()
+            {
+                Pk_SpecificationId = this.Pk_SpecificationId,
+                IsActive = this.IsActive,
+                IsUnderChangeControl = this.IsUnderChangeControl,
+                promoteInhibited = this.promoteInhibited,
+                SpecificationRapporteurs = this.SpecificationRapporteurs,
+                SpecificationReleases = this.SpecificationReleases,
+            };
+            this.Specification_Release.ToList().ForEach(e => 
+            {
+                SpecForUI.Specification_Release.Add(new Specification_Release()
+                {
+                    Pk_Specification_ReleaseId = e.Pk_Specification_ReleaseId,
+                    Fk_ReleaseId = e.Fk_ReleaseId,
+                    Fk_SpecificationId = e.Fk_SpecificationId,
+                    isWithdrawn = e.isWithdrawn,
+                    isTranpositionForced = e.isTranpositionForced,
+                    Release = new Release(){Name = e.Release.Name},
+                    Specification = new Specification(){IsActive = e.Specification.IsActive, IsUnderChangeControl = e.Specification.IsUnderChangeControl},
+                    Remarks = e.Remarks,
+                });                
+            });
+            this.Versions.ToList().ForEach(e => SpecForUI.Versions.Add(new SpecVersion()
+            {
+                Pk_VersionId = e.Pk_VersionId,
+                MajorVersion = e.MajorVersion,
+                TechnicalVersion = e.TechnicalVersion,
+                EditorialVersion = e.EditorialVersion,
+                Source = e.Source,
+                Location = e.Location,
+                DocumentUploaded = e.DocumentUploaded,
+                Fk_ReleaseId = e.Fk_ReleaseId,
+                Remarks = e.Remarks,
+            }));
+
+            return SpecForUI;
+        }
     }
 }
