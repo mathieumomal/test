@@ -10,6 +10,8 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
+using System.Configuration;
+using System.Text;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
@@ -18,6 +20,7 @@ namespace Etsi.Ultimate.Module.Specifications
         #region Constants
 
         private const string CONST_SELECTED_TAB = "SPEC_SELECTED_TAB";
+        private const string CONST_WEBCONFIG_WI_REPORT_PATH = "WIReportPath";
 
         #endregion
 
@@ -105,6 +108,15 @@ namespace Etsi.Ultimate.Module.Specifications
                     var mtg = svc.GetMeetingById(specVersion.Source.Value);
                     if (mtg != null)
                         specVersion.MtgShortRef = mtg.MtgShortRef;
+
+                    //We add the WIReport link to the SDO btn
+                    if (ConfigurationManager.AppSettings[CONST_WEBCONFIG_WI_REPORT_PATH] != null)
+                        specVersion.WIReportPath = new StringBuilder()
+                        .Append(ConfigurationManager.AppSettings[CONST_WEBCONFIG_WI_REPORT_PATH])
+                        .Append(specVersion.ETSI_WKI_ID)
+                        .ToString();
+                    else
+                        specVersion.WIReportPath = "Web.Config:WIReportPathNotConfigured";
                 }
             }
 

@@ -37,6 +37,17 @@
     .notAvailable
     {
         opacity: 0.3;
+        cursor:not-allowed !important;
+    }
+
+    .linkStyle
+    {
+        display:inline-block;
+    }
+
+    a.disabled
+    {
+        pointer-events: none;
     }
 </style>
 
@@ -146,7 +157,18 @@
                 <telerik:GridTemplateColumn UniqueName="Link">
                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="100px" />
                     <ItemTemplate>
-                        <asp:ImageButton ID="imgTransposedSpec" Enabled='<%# (DataBinder.Eval(Container.DataItem, "TranspositionReferenceAndDate") == "" ? false : true) %>' CssClass='<%# DataBinder.Eval(Container.DataItem, "TranspositionReferenceAndDate") == "" ? "grid_btn notAvailable" : "grid_btn"%>' ImageUrl="images/spec_rel-tranSpec.png" ToolTip='<%# DataBinder.Eval(Container.DataItem,"TranspositionReferenceAndDate")%>' runat="server" OnClientClick="return false;" />
+                        <a 
+                            target="_blank" 
+                            class="linkStyle <%# DataBinder.Eval(Container.DataItem, "TranspositionReferenceAndDate") == "" ? "disabled" : "" %>"
+                            href="<%# DataBinder.Eval(Container.DataItem,"WIReportPath")%>"
+                            <%# DataBinder.Eval(Container.DataItem, "TranspositionReferenceAndDate") == "" ? "disabled='disabled'" : "" %> 
+                            >
+                            <img border="0" 
+                                src="images/spec_rel-tranSpec.png" 
+                                class='<%# DataBinder.Eval(Container.DataItem, "TranspositionReferenceAndDate") == "" ? "grid_btn notAvailable" : "grid_btn"%>'
+                                title='<%# DataBinder.Eval(Container.DataItem,"TranspositionReferenceAndDate")%>' 
+                                />
+                        </a>
                         <asp:ImageButton ID="imgRelatedTDocs" CssClass="grid_btn" ImageUrl="images/spec_rel-TDocs.png" ToolTip="Related TDocs" runat="server" OnClientClick="return false;" />
                         <asp:ImageButton ID="imgRelatedCRs" CssClass="grid_btn" ImageUrl="images/spec_rel-CRs.png" ToolTip="Related CRs" runat="server" OnClientClick="return false;" />
                     </ItemTemplate>

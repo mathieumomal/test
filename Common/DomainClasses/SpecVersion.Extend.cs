@@ -56,5 +56,7 @@ namespace Etsi.Ultimate.DomainClasses
                 return val.ToString();
             }
         }
+
+        public string WIReportPath{get;set;}
     }
 }
