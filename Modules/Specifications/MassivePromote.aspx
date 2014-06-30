@@ -30,7 +30,7 @@
         <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
         <telerik:RadWindowManager ID="RadWindowManager1" runat="server">
         </telerik:RadWindowManager>
-        <asp:Panel runat="server" ID="fixContainer" CssClass="containerFixLarger" Width="1010px">
+        <asp:Panel runat="server" ID="fixContainer" CssClass="containerFixLarger">
             <asp:Panel ID="specificationMessages" runat="server" Visible="false">
                 <asp:Label runat="server" ID="specificationMessagesTxt"></asp:Label>
             </asp:Panel>
