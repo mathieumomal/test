@@ -45,7 +45,7 @@ namespace Etsi.Ultimate.Utils.ModelMails
             
             #line default
             #line hidden
-            this.Write(" <br/><br/>\r\n\r\nYou can set the number using <a href=\"");
+            this.Write(" <br/><br/>\r\n\r\nYou can set the number using <a target=\"_blank\" href=\"");
             
             #line 23 "D:\WS\ETSI_3GPP_Ultimate\dev\Ultimate\trunk\Common\Utils\ModelMails\SpecAwaitingReferenceNumberMailTemplate.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(LinkToSpec));

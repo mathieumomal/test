@@ -20,7 +20,7 @@ User <#= SecretaryName #> has created a new specification, and is waiting for yo
 
 Specification title: <#= SpecTitle #> <br/><br/>
 
-You can set the number using <a href="<#= LinkToSpec #>">this link</a>. <br/><br/>
+You can set the number using <a target="_blank" href="<#= LinkToSpec #>">this link</a>. <br/><br/>
 
 Regards,<br/>
 3GPP notification system
