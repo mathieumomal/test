@@ -82,8 +82,9 @@
                                             <telerik:GridTemplateColumn DataField="Title" HeaderText="Title" UniqueName="Title">
                                                 <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="200px" />
                                                 <ItemTemplate>
-                                                    <asp:Panel ID="pnlTitle" runat="server" CssClass="text-left" ToolTip='<%# DataBinder.Eval(Container.DataItem,"Title") %>'>
-                                                        <asp:Literal runat="server" ID="ltrlTitle" Text='<%# DataBinder.Eval(Container.DataItem,"Title") %>'></asp:Literal></asp:Panel>
+                                                    <div class="text-left">
+                                                        <%# DataBinder.Eval(Container.DataItem,"Title") %>
+                                                    </div>
                                                 </ItemTemplate>
                                             </telerik:GridTemplateColumn>
                                             <telerik:GridTemplateColumn HeaderStyle-Font-Bold="true" HeaderStyle-Width="50" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="Status" HeaderText="Status" UniqueName="Status">
