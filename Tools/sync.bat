@@ -2,6 +2,7 @@
 REM ----- FILL IN THIS AREA -----
 SET TRUNK_PATH=D:\WS\ETSI_3GPP_Ultimate\dev\Ultimate\trunk\
 SET DNN_PATH=C:\Websites\dnn3gpp.loc\
+SET PHASE=local
 
 REM ----- DON'T MODIFY ANYTHING BELOW, unless you know what you're doing -----
 
@@ -38,6 +39,9 @@ xcopy "%USERSOURCE%Etsi.Ultimate.Repositories.pdb" "%USERDEST%" /b/v/y
 xcopy "%USERSOURCE%Etsi.Ultimate.Services.pdb" "%USERDEST%" /b/v/y
 xcopy "%USERSOURCE%Etsi.Ultimate.Utils.pdb" "%USERDEST%" /b/v/y
 
+REM Copy configuration files
+xcopy "%TRUNK_PATH%web.config.%PHASE%" "%DNN_PATH%web.config" /b/v/y
+xcopy "%TRUNK_PATH%UserRights.xml" "%DNN_PATH%" /b/v/y
 
 REM Release component
 SET RELEASESOURCES=%TRUNK_PATH%Modules\Release\
