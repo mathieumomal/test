@@ -5,17 +5,30 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".txt" encoding="UTF8" #>
 <html>
+<head>
+    <style>
+    body {
+        font-family: Arial,verdana,Serif;
+        font-size: 12px;
+    }
+    </style>
+</head>
 <body>
-Dear Secretary and WorkPlan Manager(s),
+Dear Secretary and WorkPlan Manager(s), <br/><br/>
 
-Please note that specification number <#= SpecNumber #> has been allocated to specification <#= SpecTitle #>.
+Please note that specification number <#= SpecNumber #> has been allocated to specification <#= SpecTitle #>.<br/>
 
-<ul>
-<#    foreach (var wi in WorkItems){#>
-<li>Specification is linked to the following Work items: <#= wi #></li>
-<#    }#>
-<ul>
-Regards,
+<# if (WorkItems!= null && WorkItems.Count > 0) 
+        {
+#>
+Specification is linked to the following Work items:
+    <ul>
+    <#    foreach (var wi in WorkItems){#>
+        <li> <#= wi #></li>
+    <#    }#>
+    </ul> <br/>
+<# } #>
+Regards,<br/>
 3GPP notification system.
 <body>
 </html>

@@ -46,9 +46,8 @@ namespace Etsi.Ultimate.Business
             }
 
             // Check user rights. User must have rights to create specifications
-            var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
-            rightsMgr.UoW = UoW;
-            var userRights = rightsMgr.GetRights(personId);
+            
+            var userRights = GetUserRights(personId);
             if (!userRights.HasRight(Enum_UserRights.Specification_Create))
             {
                 throw new InvalidOperationException("User " + personId + " is not allowed to create a specification");
@@ -81,15 +80,19 @@ namespace Etsi.Ultimate.Business
             
             repo.InsertOrUpdate(spec);
 
-            //If the user didn't have the right to edit spec number we send a mail to the spec manager
-            if (!userRights.HasRight(Enum_UserRights.Specification_EditFull))
-            {
-                MailAlertSpecManager(spec, report, baseurl, personId);
-            }
-
-            if (report.GetNumberOfErrors() == 0 && report.GetNumberOfWarnings() == 0)
-                report.LogInfo(Localization.Specification_MSG002_SpecCreatedMailSendToSpecManager);
             return new KeyValuePair<Specification,Report>(spec, report);
+        }
+
+        /// <summary>
+        /// Fetches the list of user rights.
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        private UserRightsContainer GetUserRights(int personId)
+        {
+            var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
+            rightsMgr.UoW = UoW;
+            return rightsMgr.GetRights(personId);
         }
 
         /// <summary>
@@ -192,8 +195,15 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="spec"></param>
         /// <param name="report"></param>
-        private void MailAlertSpecManager(Specification spec , Report report, string baseurl, int personId)
+        public void MailAlertSpecManager(Specification spec , Report report, string baseurl, int personId)
         {
+            var userRights = GetUserRights(personId);
+            //If the user didn't have the right to edit spec number we send a mail to the spec manager
+            if (userRights.HasRight(Enum_UserRights.Specification_EditFull))
+            {
+                return;
+            }
+
             //get connected user name
             var connectedUsername = String.Empty;
             var personManager = new PersonManager();
@@ -225,11 +235,15 @@ namespace Etsi.Ultimate.Business
             roleManager.UoW = UoW;
             var to = roleManager.GetSpecMgrEmail();
 
+            // Send mail, and log info if all went well.
             var mailManager = UtilsFactory.Resolve<IMailManager>();
             if (!mailManager.SendEmail(null, to, null, null, subject, body.TransformText()))
             {
                 report.LogError(Localization.Specification_ERR001_FailedToSendEmailToSpecManagers);
             }
+
+            if (report.GetNumberOfErrors() == 0 && report.GetNumberOfWarnings() == 0)
+                report.LogInfo(Localization.Specification_MSG002_SpecCreatedMailSendToSpecManager);
         }
     }
 }

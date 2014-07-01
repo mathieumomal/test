@@ -5,16 +5,24 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ output extension=".txt" encoding="UTF8" #>
 <html>
+<head>
+    <style>
+    body {
+        font-family: Arial,verdana,Serif;
+        font-size: 12px;
+    }
+    </style>
+</head>
 <body>
-Dear Specification Managers,
+Dear Specification Managers, <br/><br/>
 
-User <#= SecretaryName #> has created a new specification, and is waiting for you to allocate the specification number.
+User <#= SecretaryName #> has created a new specification, and is waiting for you to allocate the specification number. <br/><br/>
 
-Specification title: <#= SpecTitle #>
+Specification title: <#= SpecTitle #> <br/><br/>
 
-You can set the number using this link: <#= LinkToSpec #>.
+You can set the number using <a href="<#= LinkToSpec #>">this link</a>. <br/><br/>
 
-Regards,
+Regards,<br/>
 3GPP notification system
 </body>
 </html>

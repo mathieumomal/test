@@ -101,7 +101,7 @@ namespace Etsi.Ultimate.Module.Specifications
             }
             report = result.Value;
 
-            if (result.Key != -1 && report.ErrorList.Count > 0)
+            if (result.Key != -1 && (report.ErrorList.Count > 0 || report.InfoList.Count > 0))
             {
                 ManageMailErrorsAndWarnings(result.Key, report);
             }
@@ -127,17 +127,23 @@ namespace Etsi.Ultimate.Module.Specifications
         private void ManageMailErrorsAndWarnings(int specId, Domain.Report report)
         {
             var redirectUrl = "SpecificationDetails.aspx?specificationId=" + specId + "&fromEdit=1&error=";
-            if (report.ErrorList.First().Equals(Localization.Specification_ERR001_FailedToSendEmailToSpecManagers))
+            if (report.ErrorList.Count > 0)
             {
-                redirectUrl += SpecificationDetails.CONST_ERROR_SENDMAIL_SPEC_MGR;
+                if (report.ErrorList.First().Equals(Localization.Specification_ERR001_FailedToSendEmailToSpecManagers))
+                {
+                    redirectUrl += SpecificationDetails.CONST_ERROR_SENDMAIL_SPEC_MGR;
+                }
+                else if (report.ErrorList.First().Equals(Localization.Specification_ERR101_FailedToSendEmailToSecretaryAndWorkplanManager))
+                {
+                    redirectUrl += SpecificationDetails.CONST_ERROR_SENDMAIL_MCC;
+                }
             }
-            else if (report.ErrorList.First().Equals(Localization.Specification_ERR101_FailedToSendEmailToSecretaryAndWorkplanManager))
+            else if (report.InfoList.Count > 0)
             {
-                redirectUrl += SpecificationDetails.CONST_ERROR_SENDMAIL_MCC;
-            }
-            else
-            {
-                redirectUrl += SpecificationDetails.CONST_WARNING_SENDMAIL_MCC;
+                if (report.InfoList.First().Equals(Localization.Specification_MSG002_SpecCreatedMailSendToSpecManager))
+                {
+                    redirectUrl += SpecificationDetails.CONST_WARNING_SENDMAIL_MCC;
+                }
             }
             Response.Redirect(redirectUrl);
         }

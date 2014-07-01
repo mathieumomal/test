@@ -45,6 +45,9 @@ namespace Etsi.Ultimate.Module.Specifications
         public static readonly string DsId_Key = "ETSI_DS_ID";
         private const String CONST_ERRORPANEL_CSS = "Spec_Edit_Error";
         private const String CONST_ERRORTEXT_CSS = "ErrorTxt";
+
+        private const String CONST_INFOPANEL_CSS = "Spec_Edit_Info";
+        private const String CONST_INFOTEXT_CSS = "InfoTxt";
         //Properties
         private int UserId;
         private string selectedTab;
@@ -80,6 +83,8 @@ namespace Etsi.Ultimate.Module.Specifications
                     if (CreateError.Equals(CONST_WARNING_SENDMAIL_MCC))
                     {
                         specMsgTxt.Text = SpecificationDetails_aspx.Warning_NumberNeeded_NotifySpec_Mgr;
+                        specMsg.CssClass = CONST_INFOPANEL_CSS;
+                        specMsgTxt.CssClass = CONST_INFOTEXT_CSS;
                     }
                     else if (CreateError.Equals(CONST_ERROR_SENDMAIL_SPEC_MGR))
                     {

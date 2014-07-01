@@ -25,7 +25,7 @@ namespace Etsi.Ultimate.Tests.Business
             mailMock.Stub(mock => mock.SendEmailWithBcc(
                 Arg<string>.Is.Equal(ConfigVariables.EmailDefaultFrom), 
                 Arg<List<string>>.Matches(l => l.Contains(toAddress)), 
-                Arg<List<string>>.Is.Equal(null), 
+                Arg<List<string>>.Matches(l => l.Count == 0), 
                 Arg<List<string>>.Matches(l => l.Count == 1), 
                 Arg<string>.Is.Equal(subject), 
                 Arg<string>.Is.Equal(content), 

@@ -62,6 +62,7 @@ namespace Etsi.Ultimate.Utils
             //Map of relation between Interfaces and classes
             Container.RegisterType<IMailManager, MailManager>(new TransientLifetimeManager());
             Container.RegisterType<ISendMail, WcfMailService.SendMailClient>(new TransientLifetimeManager());
+            Container.RegisterType<WcfMailService.SendMailClient>(new InjectionConstructor());
         }
     }
 }

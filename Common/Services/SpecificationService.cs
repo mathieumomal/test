@@ -277,7 +277,10 @@ namespace Etsi.Ultimate.Services
                 {
                     var newSpec = createAction.Create(personId, spec, baseurl);
                     uoW.Save();
-                    return new KeyValuePair<int, Report>(newSpec.Key.Pk_SpecificationId, newSpec.Value);
+                    var newSpecId = newSpec.Key.Pk_SpecificationId;
+                    var report = newSpec.Value;
+                    createAction.MailAlertSpecManager(newSpec.Key, report, baseurl, personId);
+                    return new KeyValuePair<int, Report>(newSpecId, report);
                 }
                 catch (Exception e)
                 {

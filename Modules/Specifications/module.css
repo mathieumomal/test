@@ -24,7 +24,7 @@
 }
 
 
-.specificationDetailsBody {
+.specificationDetailsBody, .ErrorTxt, .InfoTxt {
     font-family: Arial,verdana,Serif;
     font-size: 12px;
 }
@@ -80,7 +80,7 @@ legend {
     background-image: url('images/error.png');
 }
 
-.ErrorTxt {
+.ErrorTxt, .InfoTxt {
     margin: 0 0 0 7%;
 	display: block;
 }
@@ -136,6 +136,15 @@ legend {
     color: #D8000C;
     background-color: #FFBABA;
     background-image: url('images/error.png');
+}
+
+.Spec_Edit_Info {
+    border: 1px solid rgba(2, 139, 255, 0.2);
+    margin: 5px 0px;
+    padding: 5px 5px 5px 5px;
+    color: #444444;
+    background-color: rgba(2, 139, 255, 0.15);
+
 }
 
 span.requiredField {

@@ -34,6 +34,12 @@ namespace Etsi.Ultimate.Utils
                 fromAddress = ConfigVariables.EmailDefaultFrom;
             }
 
+            // Initialize CC
+            if (ccAddresses == null)
+            {
+                ccAddresses = new List<string>();
+            }
+
             // Initialize BCC
             if (bccAddresses == null)
             {
