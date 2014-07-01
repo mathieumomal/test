@@ -233,7 +233,7 @@ namespace Etsi.Ultimate.Module.Specifications
             var rightsService = ServicesFactory.Resolve<IRightsService>();
             var userRights = rightsService.GetGenericRightsForUser(userId);
 
-            if (action.Equals(EDIT_MODE))
+            if (action.Equals(EDIT_MODE, StringComparison.InvariantCultureIgnoreCase))
             {
                 // Retrieve data
                 KeyValuePair<DomainClasses.Specification, DomainClasses.UserRightsContainer> specificationRightsObject = svc.GetSpecificationDetailsById(userId, SpecificationId.Value);
@@ -249,11 +249,11 @@ namespace Etsi.Ultimate.Module.Specifications
                 }
                 else
                 {
-                    if (!userRights.HasRight(Domain.Enum_UserRights.Specification_ViewDetails))
+                    if (!(userRights.HasRight(Domain.Enum_UserRights.Specification_EditFull) || userRights.HasRight(Domain.Enum_UserRights.Specification_EditLimitted)))
                     {
                         specBody.Visible = false;
                         specMsg.Visible = true;
-                        specMsgTxt.Text = "You dont have the right to visualize this content";
+                        specMsgTxt.Text = "You do not have the right to edit specification";
                         specMsg.CssClass = "Error";
                         specMsgTxt.CssClass = "ErrorTxt";
                     }
@@ -283,16 +283,27 @@ namespace Etsi.Ultimate.Module.Specifications
                 }
             }
 
-            if (action.Equals(CREATION_MODE))
+            if (action.Equals(CREATION_MODE, StringComparison.InvariantCultureIgnoreCase))
             {
-                BuildTabsDisplay();
-                SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
-                FillGeneralTab(userRights, null, releases);
-                FillResponsiblityTab(null);
-                FillRelatedSpecificationsTab(null, null);
-                FillHistoryTab(null);
+                if (!userRights.HasRight(Domain.Enum_UserRights.Specification_Create))
+                {
+                    specBody.Visible = false;
+                    specMsg.Visible = true;
+                    specMsgTxt.Text = "You do not have the right to create specification";
+                    specMsg.CssClass = "Error";
+                    specMsgTxt.CssClass = "ErrorTxt";
+                }
+                else
+                {
+                    BuildTabsDisplay();
+                    SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
+                    FillGeneralTab(userRights, null, releases);
+                    FillResponsiblityTab(null);
+                    FillRelatedSpecificationsTab(null, null);
+                    FillHistoryTab(null);
 
-                btnSave.Style.Add("display", "none");
+                    btnSave.Style.Add("display", "none");
+                }
             }
         }
 

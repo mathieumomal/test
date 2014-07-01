@@ -55,7 +55,7 @@ namespace Etsi.Ultimate.Module.Release
             // Populate fileds of the view with basic validation rules
             dataValidationSetUp();
 
-            if (action.Equals(EDIT_MODE))
+            if (action.Equals(EDIT_MODE, StringComparison.InvariantCultureIgnoreCase))
             {
                 if (ReleaseId != null)
                 {
@@ -102,22 +102,31 @@ namespace Etsi.Ultimate.Module.Release
                     releaseWarning.Visible = true;
                 }
             }
-            else if (action.Equals(CREATION_MODE))
+            else if (action.Equals(CREATION_MODE, StringComparison.InvariantCultureIgnoreCase))
             {
                 IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
                 DomainClasses.UserRightsContainer userRights = svc.GetAllReleases(UserId).Value;
 
-                BuildTabsDisplay(action);
-                FillGeneralTab(null, action);
+                if (userRights.HasRight(Domain.Enum_UserRights.Release_Create))
+                {
+                    BuildTabsDisplay(action);
+                    FillGeneralTab(null, action);
 
-                releaseRemarks.UserRights = userRights;
-                releaseRemarks.DataSource = null;
+                    releaseRemarks.UserRights = userRights;
+                    releaseRemarks.DataSource = null;
 
-                var allReleases = svc.GetAllReleasesCodes(default(int));
-                FillAdminTab(null, allReleases, allReleases.First().Key);
+                    var allReleases = svc.GetAllReleasesCodes(default(int));
+                    FillAdminTab(null, allReleases, allReleases.First().Key);
 
-                SaveBtn.Style.Add("display", "none");
-                SaveBtnDisabled.Style.Remove("display");
+                    SaveBtn.Style.Add("display", "none");
+                    SaveBtnDisabled.Style.Remove("display");
+                }
+                else
+                {
+                    releaseDetailsBody.Visible = false;
+                    releaseError.Visible = true;
+                    ErrorMsg.Text = "Sorry you do not have the right to create a release.";
+                }
             }
             else
             {
