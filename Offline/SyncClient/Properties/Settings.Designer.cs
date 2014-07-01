@@ -43,7 +43,7 @@ namespace SyncClient.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://localhost:53528/SyncService/SyncService.svc")]
+        [global::System.Configuration.DefaultSettingValueAttribute("http://dnn.services.org/SyncService.svc")]
         public string ServiceURL {
             get {
                 return ((string)(this["ServiceURL"]));

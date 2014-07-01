@@ -1,21 +1,48 @@
 
-***** Following steps needs to perform only on Offline server  *****
+*****************************************************
+***** Prepare Database to track offline changes *****
+*****************************************************
+Where : Offline Server
+When  : After restoring database from backup
+How   : [Step 1] Open "OfflineDBSetup\OfflineDBSetup.exe.config" file in notepad
+        [Step 2] Find the following connection string => change parameters if required => save
+                <setting name="ConnectionString" serializeAs="String">
+                    <value>Data Source=(local);Initial Catalog=U3GPPDB;Integrated Security=True</value>
+                </setting>
+        [Step 3] Double click on "OfflineDBSetup\01. ProcessOfflineSetup.bat"
 
-[Step 1] Prepare Database for Offline (This step needs to be done everytime after restoring backup from Online server)
-         [1] Double click on 'OfflineSetup\OfflineSetup.exe'
-         [2] Provide Offline server information (server name, database name, user name, password) & click on connect
-         [3] Click on 'Process Offline Setup'
+*****************************************************
+**************** Install SyncClient  ****************
+*****************************************************
+Where : Offline Server
+When  : As part of DNN Setup (It is required to install only once)
+How   : [Step 1] Open "SyncClient\SyncClient.exe.config" file in notepad
+        [Setp 2] Find the following connection string => change parameters if required => save
+                <setting name="ConnectionString" serializeAs="String">
+                    <value>Data Source=(local);Initial Catalog=U3GPPDB;Integrated Security=True</value>
+                </setting>		
+        [Setp 3] Double Click on 'SyncClient\01. InstallService.bat"
+        [Step 4] Windows + R => services.msc (or) Right Click on 'My Computer' => Manage => Services and Applications => Services
+        [Step 5] Find 'SyncClient' => Right Click => Properties => Log On => select 'This account' & provide the account login/password which can access Offline database => Ok
 
-[Step 2] Install SyncClient (This needs to be done only once in offline server)
-         [1] Double Click on 'SyncClient\01. InstallService.bat"
-         [2] Windows + R => services.msc (or) Right Click on 'My Computer' => Manage => Services and Applications => Services
-         [3] Find 'SyncClient' => Right Click => Properties => Log On => select 'This account' & provide the account login/password which can access Offline database => Ok
+*****************************************************
+***************** Start SyncClient  *****************
+*****************************************************
+Where : Offline Server
+When  : Whenever you want to send the offline changes to online server (Pre-Requisite: SyncClient should be installed)
+How   : [Step 1] Double Click on 'SyncClient\02. StartSyncClient.bat"
 
-[Step 3] Start SyncClient (This needs to be done once you want to send the offline information to online server)
-         [1] Double Click on 'SyncClient\02. StartSyncClient.bat"
+*****************************************************
+***************** Stop SyncClient   *****************
+*****************************************************
+Where : Offline Server
+When  : Whenever you want to stop sending offline changes to online server (Pre-Requisite: SyncClient should be installed)
+How   : [Step 1] Double Click on 'SyncClient\03. StopSyncClient.bat"
 
-[Step 4] Stop SyncClient (This needs to be done once you want to stop sending offline data to online server)
-         [1] Double Click on 'SyncClient\03. StopSyncClient.bat"
-
-[Step 5] Uninstall SyncClient (This needs to be done only when you want to completely remove the offline setup from offline server)
-         [1] Double Click on 'SyncClient\04. UnInstallService.bat"
+*****************************************************
+************** Uninstall SyncClient  ****************
+*****************************************************
+Where : Offline Server
+When  : Whenever you want to completely remove the offline setup from offline server
+How   : [Step 1] Double Click on 'SyncClient\04. UnInstallService.bat"		 
+		 
