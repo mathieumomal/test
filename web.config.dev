@@ -70,6 +70,7 @@
 	<add key="FtpExportAddress" value="ftp://ftp.3gpp.org/Information/WORK_PLAN/"/>
 	<add key="TranspositionFolderPath" value=""/>
 	<add key="WIReportPath" value ="http://webapp.13.etsidev.org/workprogram/Report_WorkItem.asp?WKI_ID="/>
+	<add key="FtpVersionsPhysicalPath" value="D:\AppTrans\Ftp\" />
 	
 	<add key="EmailDefaultFrom" value="3GPP Portal&lt;3gppapp@3gpp.org&gt;"/>
 	<add key="EmailDefaultBcc" value="3gppapp@3gpp.org"/>

@@ -31,20 +31,20 @@
   </configSections>
   <connectionStrings>
     <!-- Connection String for SQL Server 2008/2012 Express -->
-    <add name="SiteSqlServer" connectionString="Data Source=ETSIBASE;Initial Catalog=DNN3GPP;User ID=DNNuser;Password=anu2groW." providerName="System.Data.SqlClient" />
-	<add name="UltimateContext" connectionString="metadata=res://*/UltimateDataModel.csdl|res://*/UltimateDataModel.ssdl|res://*/UltimateDataModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=ETSIBASE;initial catalog=U3GPPDB;User ID=ngppqa;Password=ngppqa;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+    <add name="SiteSqlServer" connectionString="Data Source=localhost;Initial Catalog=DNN3GPP;Integrated Security=True" providerName="System.Data.SqlClient" />
+	<add name="UltimateContext" connectionString="metadata=res://*/UltimateDataModel.csdl|res://*/UltimateDataModel.ssdl|res://*/UltimateDataModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=localhost;initial catalog=U3GPPDB;Integrated Security=True;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
     <!-- Connection String for SQL Server 2008/2012
     <add name="SiteSqlServer" connectionString="Server=(local);Database=DotNetNuke;uid=;pwd=;" providerName="System.Data.SqlClient" /> 
     -->
   </connectionStrings>
   <appSettings>
     <!-- Connection String for SQL Server 2008/2012 Express - kept for backwards compatability - legacy modules   -->
-    <add key="SiteSqlServer" value="Data Source=ETSIBASE;Initial Catalog=DNN3GPP;User ID=DNNuser;Password=anu2groW." />
+    <add key="SiteSqlServer" value="Data Source=localhost;Initial Catalog=DNN3GPP;Integrated Security=True" />
     <!-- Connection String for SQL Server 2008/2012 - kept for backwards compatability - legacy modules
     <add key="SiteSqlServer" value="Server=(local);Database=DotNetNuke;uid=;pwd=;"/>
     -->
     <add key="InstallTemplate" value="DotNetNuke.install.config" />
-    <add key="AutoUpgrade" value="true" />
+    <add key="AutoUpgrade" value="false" />
     <add key="UseInstallWizard" value="true" />
     <add key="InstallMemberRole" value="true" />
     <add key="ShowMissingKeys" value="false" />
@@ -68,6 +68,7 @@
     <add key="MeetingDetailsAddress" value="http://webapp.13.etsidev.org/meetingCalendar/MeetingDetails.asp?mid=" />
     <add key="RapporteurDetailsAddress" value="http://webapp.13.etsidev.org/teldir/ListPersDetails.asp?PersId="/>
     <add key="FtpExportAddress" value="ftp://ftp.3gpp.org/Information/WORK_PLAN/"/>
+	<add key="FtpVersionsPhysicalPath" value="D:\AppTrans\Ftp\" />
     <add key="TranspositionFolderPath" value=""/>
     <add key="WIReportPath" value =""/>
     
@@ -79,7 +80,6 @@
 		
 		<!-- These parameters are independent of the environment -->
 		<add key="FtpExportAddress" value="ftp://ftp.3gpp.org/Information/WORK_PLAN/"/>
-    <add key="FtpSpecVersions" value="D:\Apptrans\ftp"/>
 		<add key="EmailDefaultFrom" value="3GPP Portal&lt;3gppapp@3gpp.org&gt;"/>
 		<add key="EmailDefaultBcc" value="3gppapp@3gpp.org"/>
 	<!--  End of 3GPP Parameters  -->
@@ -141,26 +141,7 @@
           <add segment="Licenses" />
         </hiddenSegments>
       </requestFiltering>
-      <authentication>
-        <anonymousAuthentication userName="" />
-      </authentication>
     </security>
-    <rewrite>
-      <rules configSource="UrlRewrite.config" />
-        
-		<!-- This outbound rule was created by IIS itself. Keeping it commented for the moment, to be cleanedup later.
-		<outboundRules>
-			<rule name="OutboundRewriteUserFriendlyURL_Releases" preCondition="ResponseIsHtml1" enabled="false">
-				<match filterByTags="A, Form, Img" pattern="^(.*/)desktopmodules/Release/ReleaseDetails\.aspx\?releaseId=([^=&amp;]+)$" />
-				<action type="Rewrite" value="{R:1}Release/{R:2}/" />
-			</rule>
-			<preConditions>
-				<preCondition name="ResponseIsHtml1">
-					<add input="{RESPONSE_CONTENT_TYPE}" pattern="^text/html" />
-				</preCondition>
-			</preConditions>
-		</outboundRules>-->
-    </rewrite>
     <defaultDocument>
       <files>
         <clear />

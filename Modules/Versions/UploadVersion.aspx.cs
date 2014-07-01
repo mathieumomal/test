@@ -32,7 +32,6 @@ namespace Etsi.Ultimate.Module.Versions
         private static UploadedFile versionToSave;
         private static string versionPathToSave = String.Empty;
         private const string CONST_VALID_FILENAME = "{0}-{1}{2}{3}";
-        private const string CONST_SPEC_VERSIONS_FTP_PATH = "FtpSpecVersions";
         private const string CONST_FTP_ARCHIVE_PATH = "{0}\\Specs\\archive\\{1}_series\\{2}\\";
         private const string CONST_FTP_LATEST_DRAFTS_PATH = "{0}\\Specs\\latest-drafts\\";
         private const string CONST_FTP_VERSIONS_PATH = "{0}\\Specs\\{1:0000}_{2:00}\\{3}\\{4}_series\\";
@@ -567,9 +566,7 @@ namespace Etsi.Ultimate.Module.Versions
         private Report TransferToFTP()
         {
             Report errorReport = new Report();
-            string ftpBasePath = String.Empty;
-            if (ConfigurationManager.AppSettings[CONST_SPEC_VERSIONS_FTP_PATH] != null)
-                ftpBasePath = ConfigurationManager.AppSettings[CONST_SPEC_VERSIONS_FTP_PATH].ToString();
+            string ftpBasePath = ConfigVariables.FtpBasePath;
 
             if (String.IsNullOrEmpty(ftpBasePath))
                 errorReport.LogError("FTP not yet configured");

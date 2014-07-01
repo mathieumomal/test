@@ -40,6 +40,17 @@ namespace Etsi.Ultimate.Utils
             }
         }
 
+        public static string FtpBasePath
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["FtpVersionsPhysicalPath"] != null)
+                    return ConfigurationManager.AppSettings["FtpVersionsPhysicalPath"].ToString();
+                return "";
+            }
+
+        }
+
         /// <summary>
         /// Gets FTP path for downloading export zips
         /// </summary>

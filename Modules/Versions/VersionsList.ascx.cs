@@ -52,7 +52,7 @@ namespace Etsi.Ultimate.Module.Versions
         #region Constants
 
         private const string CONST_LATEST_VERSIONS_FTP_MAPPED_PATH = "LatestVersionsFTPMappedPath";
-        private const string CONST_SPEC_VERSIONS_FTP_PATH = "FtpSpecVersions";
+        private const string CONST_SPEC_VERSIONS_FTP_PATH = "FtpVersionsPhysicalPath";
         private const string CONST_FTP_LATEST_VERSIONS_PATH = "{0}\\Specs\\latest";
         private const string CONST_FTP_VERSIONS_BASE_PATH = "{0}\\Specs\\";
         private const string CONST_FTP_VERSIONS_MAP_PATH = "{0}\\Specs\\{1}";
