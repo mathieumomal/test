@@ -183,8 +183,8 @@ namespace Etsi.Ultimate.Module.Versions
                         allowToRunQualityChecks = true;
                     }
 
-                    //If we have valid file, run quality checks
-                    if (allowToRunQualityChecks)
+                    //If we have valid file & spec is under change control, run quality checks
+                    if (allowToRunQualityChecks && !isDraft)
                     {
                         string version = String.Empty;
                         DateTime meetingDate = DateTime.MinValue;
@@ -317,10 +317,10 @@ namespace Etsi.Ultimate.Module.Versions
                                                                   .ThenBy(e => e.EditorialVersion ?? 0)
                                                                   .FirstOrDefault();
 
-                string latestVersionNumber = String.Empty;
+                string latestVersionNumber = "-";
                 if (latestSpecVersionForCurrentRelease != null)
                     latestVersionNumber = String.Format("{0}.{1}.{2}", latestSpecVersionForCurrentRelease.MajorVersion, latestSpecVersionForCurrentRelease.TechnicalVersion, latestSpecVersionForCurrentRelease.EditorialVersion);
-                CurrentVersionVal.Text = String.Format("{0}-{1}", SpecNumberVal.Text, latestVersionNumber);
+                CurrentVersionVal.Text = latestVersionNumber;
 
                 //Set Default Values
                 NewVersionMajorVal.Value = 0;

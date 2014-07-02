@@ -212,7 +212,7 @@ namespace Etsi.Ultimate.DomainClasses
                     Fk_SpecificationId = e.Fk_SpecificationId,
                     isWithdrawn = e.isWithdrawn,
                     isTranpositionForced = e.isTranpositionForced,
-                    Release = new Release(){Name = e.Release.Name},
+                    Release = new Release(){Name = e.Release.Name, Pk_ReleaseId = e.Release.Pk_ReleaseId, SortOrder = e.Release.SortOrder },
                     Specification = new Specification(){IsActive = e.Specification.IsActive, IsUnderChangeControl = e.Specification.IsUnderChangeControl},
                     Remarks = e.Remarks,
                 });                

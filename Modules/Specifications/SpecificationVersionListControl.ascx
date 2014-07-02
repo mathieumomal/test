@@ -63,7 +63,7 @@
         return false;
     }
 
-    function openRadWinVersion(releaseId, specId, action) {
+    function openRadWinVersion(releaseId, specId, action, title) {
         var win = radopen("/desktopmodules/Versions/UploadVersion.aspx?releaseId=" + releaseId + "&specId=" + specId + "&action=" + action, "Version");
         //var height = (action == 'upload') ? 320 : 280;
         var height = 320;
@@ -72,6 +72,7 @@
         win.set_modal(true);
         win.add_close(radWinVersionCloseCallBack);
         win.set_visibleStatusbar(false);
+        win.set_title(title);
         win.show();
         return false;
     }

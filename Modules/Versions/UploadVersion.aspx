@@ -162,7 +162,7 @@
                             </asp:Repeater>
                         </ul>
                     </div>
-                    <div class="wiFooter" style="float: right">
+                    <div class="wiFooter" style="float: right; margin-top:10px">
                         <span>
                             <telerik:RadButton ID="btnConfirmUpload" runat="server" Text="Confirm upload" AutoPostBack="true" OnClick="Confirmation_Upload_OnClick" CssClass="WiInline"></telerik:RadButton>
                         </span>

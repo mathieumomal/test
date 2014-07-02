@@ -87,10 +87,10 @@ namespace Etsi.Ultimate.Module.Specifications
                     imgWithdrawSpec.OnClientClick = "openRadWin(" + SpecId.GetValueOrDefault() + "," + ReleaseId.GetValueOrDefault() + "); return false;";
 
                     imgAllocateVersion.Visible = userRights.HasRight(Enum_UserRights.Versions_Allocate);
-                    imgAllocateVersion.OnClientClick = "openRadWinVersion('" + ReleaseId.GetValueOrDefault() + "','" + SpecId.GetValueOrDefault() + "','allocate'); return false;";
+                    imgAllocateVersion.OnClientClick = "openRadWinVersion('" + ReleaseId.GetValueOrDefault() + "','" + SpecId.GetValueOrDefault() + "','allocate', 'Allocate version'); return false;";
 
                     imgUploadVersion.Visible = userRights.HasRight(Enum_UserRights.Versions_Upload);
-                    imgUploadVersion.OnClientClick = "openRadWinVersion('" + ReleaseId.GetValueOrDefault() + "','" + SpecId.GetValueOrDefault() + "', 'upload'); return false;";
+                    imgUploadVersion.OnClientClick = "openRadWinVersion('" + ReleaseId.GetValueOrDefault() + "','" + SpecId.GetValueOrDefault() + "', 'upload', 'Upload version'); return false;";
                 }
                 else
                 {
