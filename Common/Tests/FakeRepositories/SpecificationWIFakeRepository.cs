@@ -36,7 +36,6 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                         Pk_WorkItemUid = 1,
                         Acronym = "acro1",
                         Name = "A",
-                        IsPrimary = false,
                         WorkItems_ResponsibleGroups = new List<WorkItems_ResponsibleGroups>(){
                             new WorkItems_ResponsibleGroups(){
                                 Pk_WorkItemResponsibleGroups =1,
@@ -58,7 +57,6 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                         Pk_WorkItemUid = 2,
                         Acronym = "acro2",
                         Name = "B",
-                        IsPrimary = true,
                         WorkItems_ResponsibleGroups = new List<WorkItems_ResponsibleGroups>(){
                             new WorkItems_ResponsibleGroups(){
                                 Pk_WorkItemResponsibleGroups =1,
@@ -80,7 +78,6 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                         Pk_WorkItemUid = 3,
                         Acronym = "acro3",
                         Name = "C",
-                        IsPrimary = false,
                         WorkItems_ResponsibleGroups = new List<WorkItems_ResponsibleGroups>(){
                             new WorkItems_ResponsibleGroups(){
                                 Pk_WorkItemResponsibleGroups =1,
@@ -134,5 +131,18 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         #endregion
 
         public IUltimateUnitOfWork UoW { get; set; }
+
+        #region ISpecificationWorkItemRepository Members
+
+        public List<WorkItem> GetWorkItemsForSpec(int specId)
+        {
+            var result = GenerateList();
+            var wiList = result.Select(sw => sw.WorkItem).ToList();
+            wiList.First().IsPrimary = true;
+
+            return wiList ;
+        }
+
+        #endregion
     }
 }

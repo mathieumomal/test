@@ -30,9 +30,9 @@ namespace Etsi.Ultimate.Tests.Business
             
             mockDataContext.Stub(x => x.View_Persons).Return(Persons());
             mockUoW.Stub(s => s.Context).Return(mockDataContext);
-            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateUnitOfWork), mockUoW);
 
             var manager = new RolesManager();
+            manager.UoW = mockUoW;
             var results = manager.GetSpecMgr();
 
             Assert.AreEqual(2, results.Count);
@@ -47,9 +47,9 @@ namespace Etsi.Ultimate.Tests.Business
 
             mockDataContext.Stub(x => x.View_Persons).Return(Persons());
             mockUoW.Stub(s => s.Context).Return(mockDataContext);
-            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateUnitOfWork), mockUoW);
 
             var manager = new RolesManager();
+            manager.UoW = mockUoW;
             var results = manager.GetSpecMgrEmail();
 
             Assert.AreEqual(2, results.Count);
@@ -65,9 +65,9 @@ namespace Etsi.Ultimate.Tests.Business
 
             mockDataContext.Stub(x => x.View_Persons).Return(Persons());
             mockUoW.Stub(s => s.Context).Return(mockDataContext);
-            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateUnitOfWork), mockUoW);
 
             var manager = new RolesManager();
+            manager.UoW = mockUoW;
             var results = manager.GetWpMgr();
 
             Assert.AreEqual(3, results.Count);
@@ -82,9 +82,9 @@ namespace Etsi.Ultimate.Tests.Business
 
             mockDataContext.Stub(x => x.View_Persons).Return(Persons());
             mockUoW.Stub(s => s.Context).Return(mockDataContext);
-            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateUnitOfWork), mockUoW);
 
             var manager = new RolesManager();
+            manager.UoW = mockUoW;
             var results = manager.GetWpMgrEmail();
 
             Assert.AreEqual(3, results.Count);

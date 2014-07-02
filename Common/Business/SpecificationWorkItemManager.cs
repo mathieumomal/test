@@ -27,7 +27,7 @@ namespace Etsi.Ultimate.Business
         }
 
         /// <summary>
-        /// Return workitems (#[UID] - [NAME]) label list of a spec
+        /// Return workitems (#[UID] - [Acronym] - [NAME]) label list of a spec
         /// </summary>
         /// <param name="specId"></param>
         /// <returns></returns>
@@ -36,7 +36,7 @@ namespace Etsi.Ultimate.Business
             List<WorkItem> result = new List<WorkItem>();
             ISpecificationWorkItemRepository repo = RepositoryFactory.Resolve<ISpecificationWorkItemRepository>();
             repo.UoW = UoW;
-            repo.All.ToList().Where(s => s.Fk_SpecificationId == specId).ToList().ForEach(e => result.Add(e.WorkItem));
+            result = repo.GetWorkItemsForSpec(specId);
             result = result.OrderByDescending(x => x.IsPrimary).ToList();
 
             var workItemLabels = new List<string>();
@@ -50,6 +50,8 @@ namespace Etsi.Ultimate.Business
                     .Append("#")
                     .Append(wi.Pk_WorkItemUid)
                     .Append(" - ")
+                    .Append(wi.Acronym)
+                    .Append(" - ")
                     .Append(wi.Name)
                     .Append("</strong>")
                     .ToString();
@@ -59,6 +61,8 @@ namespace Etsi.Ultimate.Business
                     label = new StringBuilder()
                     .Append("#")
                     .Append(wi.Pk_WorkItemUid)
+                    .Append(" - ")
+                    .Append(wi.Acronym)
                     .Append(" - ")
                     .Append(wi.Name)
                     .ToString();

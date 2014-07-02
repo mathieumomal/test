@@ -50,9 +50,9 @@ namespace Etsi.Ultimate.Tests.Business
 
             var workItems = specWiManager.GetSpecificationWorkItemsLabels(1);
             Assert.AreEqual(3, workItems.Count);
-            Assert.AreEqual("<strong>#2 - B</strong>", workItems.First());
-            Assert.AreEqual("#1 - A", workItems.ElementAt(1));
-            Assert.AreEqual("#3 - C", workItems.Last());
+            Assert.AreEqual("<strong>#1 - acro1 - A</strong>", workItems.First());
+            Assert.AreEqual("#2 - acro2 - B", workItems.ElementAt(1));
+            Assert.AreEqual("#3 - acro3 - C", workItems.Last());
         }
 
     }

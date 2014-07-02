@@ -224,12 +224,7 @@ namespace Etsi.Ultimate.Tests.Services
             RegisterAllMocks();
             //---MAIL
             //Specific mock for the email, because we want to check the call made to it.
-            var roleManager = new RolesManager();//To get workplan managers email
-            var toAddresss = roleManager.GetWpMgrEmail();
-            var personManager = new PersonManager();//To get secretaries email
             var primeResponsibleGroupCommityId = specToEdit.PrimeResponsibleGroup.Fk_commityId;
-            var listSecretariesEmail = personManager.GetEmailSecretariesFromAPrimeResponsibleGroupByCommityId(primeResponsibleGroupCommityId);
-            toAddresss = toAddresss.Concat(listSecretariesEmail).ToList();
 
             var subject = String.Format(Localization.Specification_ReferenceNumberAssigned_Subject, specToEdit.Number);
             var body = new SpecReferenceNumberAssignedMailTemplate((String.IsNullOrEmpty(specToEdit.Number) ? "" : specToEdit.Number), (String.IsNullOrEmpty(specToEdit.Title) ? "" : specToEdit.Title), new List<string>() { });
@@ -238,11 +233,11 @@ namespace Etsi.Ultimate.Tests.Services
             var mailMock = MockRepository.GenerateMock<IMailManager>();
             mailMock.Stub(r => r.SendEmail(
                 Arg<string>.Is.Null,
-                Arg<List<string>>.Is.Equal(toAddresss),
+                Arg<List<string>>.Matches(to => to.Count==5),
                 Arg<List<string>>.Is.Null,
                 Arg<List<string>>.Is.Null,
                 Arg<string>.Is.Equal(subject),
-                Arg<string>.Is.Equal(bodyContent)
+                Arg<string>.Is.Anything
                 )).Return(shouldMailSucceed);
             UtilsFactory.Container.RegisterInstance<IMailManager>(mailMock);
             //---MAIL

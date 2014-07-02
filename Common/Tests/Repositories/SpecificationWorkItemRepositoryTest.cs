@@ -21,7 +21,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         public void SpecificationWorkItemRepository_GetAll()
         {
             IUltimateUnitOfWork uow = GetUnitOfWork();
-            var repo = new SpecificationWorkItemRepository(uow);
+            var repo = new SpecificationWorkItemRepository();
             repo.UoW = uow;
             Assert.AreEqual(3, repo.All.ToList().Count);
 
@@ -31,7 +31,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         public void SpecificationWorkItemRepository_AllIncluding()
         {
             IUltimateUnitOfWork uow = GetUnitOfWork();
-            var repo = new SpecificationWorkItemRepository(uow);
+            var repo = new SpecificationWorkItemRepository();
             repo.UoW = uow;
             Assert.AreEqual(repo.AllIncluding(t => t.WorkItem).ToList().Count, repo.All.ToList().Count);
         }
@@ -41,7 +41,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         public void SpecificationWorkItemRepository_Find()
         {
             IUltimateUnitOfWork uow = GetUnitOfWork();
-            var repo = new SpecificationWorkItemRepository(uow);
+            var repo = new SpecificationWorkItemRepository();
             repo.UoW = uow;
             repo.Find(0);
         }
@@ -51,7 +51,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         public void SpecificationWorkItemRepository_InsertOrUpdate()
         {
             IUltimateUnitOfWork uow = GetUnitOfWork();
-            var repo = new SpecificationWorkItemRepository(uow);
+            var repo = new SpecificationWorkItemRepository();
             repo.UoW = uow;
             repo.InsertOrUpdate(new Specification_WorkItem());
         }
@@ -61,9 +61,21 @@ namespace Etsi.Ultimate.Tests.Repositories
         public void SpecificationWorkItemRepository_Delete()
         {
             IUltimateUnitOfWork uow = GetUnitOfWork();
-            var repo = new SpecificationWorkItemRepository(uow);
+            var repo = new SpecificationWorkItemRepository();
             repo.UoW = uow;
             repo.Delete(0);
+        }
+
+        [Test]
+        public void SpecificationWorkItemRepository_GetSpecsForWI()
+        {
+            IUltimateUnitOfWork uow = GetUnitOfWork();
+            var repo = new SpecificationWorkItemRepository();
+            repo.UoW = uow;
+            var result = repo.GetWorkItemsForSpec(1);
+            Assert.AreEqual(3, result.Count);
+            Assert.IsTrue(result.First().IsPrimary);
+            Assert.IsFalse(result.Last().IsPrimary);
         }
 
         /// <summary>
@@ -74,12 +86,11 @@ namespace Etsi.Ultimate.Tests.Repositories
             var iUnitOfWork = MockRepository.GenerateMock<IUltimateUnitOfWork>();
             var iUltimateContext = MockRepository.GenerateMock<IUltimateContext>();
 
-            var wiDbSet = new WorkItemFakeDBSet();
-            List<WorkItem> tmpWIList = new List<WorkItem>(){
-                new WorkItem(){
-                    Pk_WorkItemUid = 1,
-                    Acronym = "acro1",
-                    WorkItems_ResponsibleGroups = new List<WorkItems_ResponsibleGroups>(){
+            var wi1 = new WorkItem()
+            {
+                Pk_WorkItemUid = 1,
+                Acronym = "acro1",
+                WorkItems_ResponsibleGroups = new List<WorkItems_ResponsibleGroups>(){
                         new WorkItems_ResponsibleGroups(){
                             Pk_WorkItemResponsibleGroups =1,
                             ResponsibleGroup = "S1",
@@ -90,38 +101,40 @@ namespace Etsi.Ultimate.Tests.Repositories
                             ResponsibleGroup = "S3"
                         }
                     }
-                },
-                new WorkItem(){
-                    Pk_WorkItemUid = 3,
-                    Acronym = "acro3",
-                    WorkItems_ResponsibleGroups = new List<WorkItems_ResponsibleGroups>(){
-                        new WorkItems_ResponsibleGroups(){
-                            Pk_WorkItemResponsibleGroups =1,
-                            ResponsibleGroup = "S3"
-                        },
-                        new WorkItems_ResponsibleGroups(){
-                            Pk_WorkItemResponsibleGroups =2,
-                            ResponsibleGroup = "S2",
-                            IsPrimeResponsible = true
-                        }
-                    }
-                },
-                new WorkItem(){
-                    Pk_WorkItemUid = 3,
-                    Acronym = "acro3",
-                    WorkItems_ResponsibleGroups = new List<WorkItems_ResponsibleGroups>(){
-                        new WorkItems_ResponsibleGroups(){
-                            Pk_WorkItemResponsibleGroups =1,
-                            ResponsibleGroup = "S3"
-                        },
-                        new WorkItems_ResponsibleGroups(){
-                            Pk_WorkItemResponsibleGroups =2,
-                            ResponsibleGroup = "S2",
-                            IsPrimeResponsible = true
-                        }
+            };
+            var wi2 = new WorkItem(){
+                Pk_WorkItemUid = 2,
+                Acronym = "acro2",
+                WorkItems_ResponsibleGroups = new List<WorkItems_ResponsibleGroups>(){
+                    new WorkItems_ResponsibleGroups(){
+                        Pk_WorkItemResponsibleGroups =1,
+                        ResponsibleGroup = "S3"
+                    },
+                    new WorkItems_ResponsibleGroups(){
+                        Pk_WorkItemResponsibleGroups =2,
+                        ResponsibleGroup = "S2",
+                        IsPrimeResponsible = true
                     }
                 }
             };
+            var wi3 = new WorkItem(){
+                    Pk_WorkItemUid = 3,
+                    Acronym = "acro3",
+                    WorkItems_ResponsibleGroups = new List<WorkItems_ResponsibleGroups>(){
+                        new WorkItems_ResponsibleGroups(){
+                            Pk_WorkItemResponsibleGroups =1,
+                            ResponsibleGroup = "S3"
+                        },
+                        new WorkItems_ResponsibleGroups(){
+                            Pk_WorkItemResponsibleGroups =2,
+                            ResponsibleGroup = "S2",
+                            IsPrimeResponsible = true
+                        }
+                    }
+                };
+
+            var wiDbSet = new WorkItemFakeDBSet();
+            List<WorkItem> tmpWIList = new List<WorkItem>(){ wi1, wi2, wi3 };
             tmpWIList.ForEach(e => wiDbSet.Add(e));
 
             var tmpList = new List<Specification_WorkItem>()

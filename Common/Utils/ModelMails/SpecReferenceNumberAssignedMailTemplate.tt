@@ -16,19 +16,22 @@
 <body>
 Dear Secretary and WorkPlan Manager(s), <br/><br/>
 
-Please note that specification number <#= SpecNumber #> has been allocated to specification <#= SpecTitle #>.<br/>
+Please note that specification number <#= SpecNumber #> has been allocated to specification <#= SpecTitle #>.<br/><br/>
 
 <# if (WorkItems!= null && WorkItems.Count > 0) 
         {
+        int cnt = 0;
 #>
 Specification is linked to the following Work items:
     <ul>
-    <#    foreach (var wi in WorkItems){#>
-        <li> <#= wi #></li>
-    <#    }#>
-    </ul> <br/>
+    <#        foreach (var wiLabel in WorkItems){#>
+        <li> <#=                wiLabel #></li>
+    <# 
+        }
+    #>          
+    </ul>
 <# } #>
 Regards,<br/>
 3GPP notification system.
-<body>
+</body>
 </html>

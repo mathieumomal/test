@@ -44,44 +44,47 @@ namespace Etsi.Ultimate.Utils.ModelMails
             
             #line default
             #line hidden
-            this.Write(".<br/>\r\n\r\n");
+            this.Write(".<br/><br/>\r\n\r\n");
             
             #line 21 "D:\WS\ETSI_3GPP_Ultimate\dev\Ultimate\trunk\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
  if (WorkItems!= null && WorkItems.Count > 0) 
         {
+        int cnt = 0;
 
             
             #line default
             #line hidden
             this.Write("Specification is linked to the following Work items:\r\n    <ul>\r\n    ");
             
-            #line 26 "D:\WS\ETSI_3GPP_Ultimate\dev\Ultimate\trunk\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
-    foreach (var wi in WorkItems){
+            #line 27 "D:\WS\ETSI_3GPP_Ultimate\dev\Ultimate\trunk\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
+        foreach (var wiLabel in WorkItems){
             
             #line default
             #line hidden
             this.Write("        <li> ");
             
-            #line 27 "D:\WS\ETSI_3GPP_Ultimate\dev\Ultimate\trunk\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(wi));
+            #line 28 "D:\WS\ETSI_3GPP_Ultimate\dev\Ultimate\trunk\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(wiLabel));
             
             #line default
             #line hidden
             this.Write("</li>\r\n    ");
             
-            #line 28 "D:\WS\ETSI_3GPP_Ultimate\dev\Ultimate\trunk\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
-    }
+            #line 29 "D:\WS\ETSI_3GPP_Ultimate\dev\Ultimate\trunk\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
+ 
+        }
+    
             
             #line default
             #line hidden
-            this.Write("    </ul> <br/>\r\n");
+            this.Write("          \r\n    </ul>\r\n");
             
-            #line 30 "D:\WS\ETSI_3GPP_Ultimate\dev\Ultimate\trunk\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
+            #line 33 "D:\WS\ETSI_3GPP_Ultimate\dev\Ultimate\trunk\Common\Utils\ModelMails\SpecReferenceNumberAssignedMailTemplate.tt"
  } 
             
             #line default
             #line hidden
-            this.Write("Regards,<br/>\r\n3GPP notification system.\r\n<body>\r\n</html>\r\n");
+            this.Write("Regards,<br/>\r\n3GPP notification system.\r\n</body>\r\n</html>\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }

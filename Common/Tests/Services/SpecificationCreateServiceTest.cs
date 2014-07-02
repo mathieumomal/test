@@ -87,8 +87,6 @@ namespace Etsi.Ultimate.Tests.Services
             RegisterAllMocks();
             //---MAIL
             //Specific mock for the email, because we want to check the call made to it.
-            var roleManager = new RolesManager();
-            var toAddresss = roleManager.GetSpecMgrEmail();
             var subject = String.Format(Localization.Specification_AwaitingReferenceNumberMail_Subject, specification.Title);
 
             var specUrl = new StringBuilder().Append("/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=").Append(specification.Pk_SpecificationId).ToString();
@@ -100,7 +98,7 @@ namespace Etsi.Ultimate.Tests.Services
             var mailMock = MockRepository.GenerateMock<IMailManager>();
             mailMock.Stub(r => r.SendEmail(
                 Arg<string>.Is.Null,
-                Arg<List<string>>.Is.Equal(toAddresss),
+                Arg<List<string>>.Matches(to => to.Count == 2),
                 Arg<List<string>>.Is.Null,
                 Arg<List<string>>.Is.Null,
                 Arg<string>.Is.Equal(subject),

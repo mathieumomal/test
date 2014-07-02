@@ -14,11 +14,20 @@ namespace Etsi.Ultimate.Repositories
 {
     public class SpecificationWorkItemRepository : ISpecificationWorkItemRepository
     {
-        private IUltimateContext context;
-
-        public SpecificationWorkItemRepository(IUltimateUnitOfWork iUoW)
+        public SpecificationWorkItemRepository()
         {
-            context = iUoW.Context;
+        }
+
+        public List<WorkItem> GetWorkItemsForSpec(int specId)
+        {
+            List<WorkItem> result = new List<WorkItem>();
+            foreach (var specWi in UoW.Context.Specification_WorkItem.Where(sw => sw.Fk_SpecificationId == specId).ToList()) 
+            {
+                specWi.WorkItem.IsPrimary = specWi.isPrime.GetValueOrDefault();
+                result.Add(specWi.WorkItem);
+            }
+
+            return result;
         }
 
         #region IEntityRepository<SpecificationWorkItemRepository> Membres
@@ -72,7 +81,6 @@ namespace Etsi.Ultimate.Repositories
 
         public void Dispose()
         {
-            context.Dispose();
         }
 
         #endregion
@@ -82,5 +90,11 @@ namespace Etsi.Ultimate.Repositories
 
     public interface ISpecificationWorkItemRepository : IEntityRepository<Specification_WorkItem>
     {
+        /// <summary>
+        /// Returns a list of workitem linked to the specification. Additionally computes the "IsPrimary" flag.
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <returns></returns>
+        List<WorkItem> GetWorkItemsForSpec(int specId);
     }
 }

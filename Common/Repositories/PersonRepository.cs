@@ -14,10 +14,8 @@ namespace Etsi.Ultimate.Repositories
     /// </summary>
     public class PersonRepository : IPersonRepository
     {
-        private IUltimateContext context;
-        public PersonRepository(IUltimateUnitOfWork iUoW)
+        public PersonRepository()
         {
-            context = iUoW.Context;
         }
 
 
@@ -27,7 +25,7 @@ namespace Etsi.Ultimate.Repositories
         public IQueryable<View_Persons> All
         {
             get { 
-                return context.View_Persons;
+                return UoW.Context.View_Persons;
             }
         }
 
@@ -38,7 +36,7 @@ namespace Etsi.Ultimate.Repositories
 
         public View_Persons Find(int id)
         {
-            return context.View_Persons.Find(id, "N");
+            return UoW.Context.View_Persons.Find(id, "N");
         }
 
         public void InsertOrUpdate(View_Persons entity)
@@ -57,7 +55,6 @@ namespace Etsi.Ultimate.Repositories
 
         public void Dispose()
         {
-            context.Dispose();
         }
 
         #endregion

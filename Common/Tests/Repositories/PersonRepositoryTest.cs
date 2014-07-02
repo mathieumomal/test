@@ -22,7 +22,8 @@ namespace Etsi.Ultimate.Tests.Repositories
         [Test]
         public void PersonRepository_GetAll()
         {
-            var repo = new PersonRepository(GetUnitOfWork());
+            var repo = new PersonRepository();
+            repo.UoW = GetUnitOfWork();
             Assert.AreEqual(2, repo.All.ToList().Count);
             
         }
@@ -31,14 +32,16 @@ namespace Etsi.Ultimate.Tests.Repositories
         [ExpectedException(typeof(NotImplementedException))]
         public void PersonRepository_AllIncluding()
         {
-            var repo = new PersonRepository(GetUnitOfWork());
+            var repo = new PersonRepository();
+            repo.UoW = GetUnitOfWork();
             repo.AllIncluding();
         }
 
         [Test]
         public void PersonRepository_Find()
         {
-            var repo = new PersonRepository(GetUnitOfWork());
+            var repo = new PersonRepository();
+            repo.UoW = GetUnitOfWork();
             Assert.AreEqual("mangion", repo.Find(27904).Username);
         }
 
@@ -46,7 +49,8 @@ namespace Etsi.Ultimate.Tests.Repositories
         [ExpectedException(typeof(InvalidOperationException))]
         public void PersonRepository_InsertOrUpdate()
         {
-            var repo = new PersonRepository(GetUnitOfWork());
+            var repo = new PersonRepository();
+            repo.UoW = GetUnitOfWork();
             repo.InsertOrUpdate(new View_Persons());
         }
 
@@ -54,7 +58,8 @@ namespace Etsi.Ultimate.Tests.Repositories
         [ExpectedException(typeof(InvalidOperationException))]
         public void PersonRepository_Delete()
         {
-            var repo = new PersonRepository(GetUnitOfWork());
+            var repo = new PersonRepository();
+            repo.UoW = GetUnitOfWork();
             repo.Delete(2);
         }
 
