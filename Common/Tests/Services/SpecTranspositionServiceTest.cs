@@ -198,7 +198,7 @@ namespace Etsi.Ultimate.Tests.Services
             versionRep.Stub(v => v.GetVersionsForSpecRelease(SPEC_ID, RELEASE_OPENED_VERSION_TO_TRANSPOSE)).Return(new List<SpecVersion>()
             {
                 new SpecVersion() { MajorVersion = RELEASE_OPENED_VERSION_TO_TRANSPOSE, TechnicalVersion = 0, EditorialVersion = 2, DocumentUploaded = DateTime.Now.AddDays(-1) },
-                new SpecVersion() { MajorVersion = RELEASE_OPENED_VERSION_TO_TRANSPOSE, TechnicalVersion = 1, EditorialVersion = 0, DocumentUploaded = DateTime.Now },
+                new SpecVersion() { MajorVersion = RELEASE_OPENED_VERSION_TO_TRANSPOSE, TechnicalVersion = 1, EditorialVersion = 0, DocumentUploaded = DateTime.Now, Location="http://www.3gpp.org/ftp/Specs/archive/22_series/22.368/22368-c20.zip" },
             });
 
             RepositoryFactory.Container.RegisterInstance<ISpecVersionsRepository>(versionRep);

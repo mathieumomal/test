@@ -169,8 +169,8 @@ namespace Etsi.Ultimate.Module.Specifications
             if (SpecId.HasValue && ReleaseId.HasValue && PersonId.HasValue)
             {
                 var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-                specSvc.ForceTranspositionForRelease(PersonId.Value, ReleaseId.Value, SpecId.Value);
-                Redirect();
+                if(specSvc.ForceTranspositionForRelease(PersonId.Value, ReleaseId.Value, SpecId.Value))
+                    Redirect();                
             }
         }
 

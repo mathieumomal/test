@@ -368,8 +368,10 @@ namespace Etsi.Ultimate.Services
                 try
                 {
                     var transpAction = new SpecificationForceUnforceTranspositionAction() { UoW = uow };
-                    transpAction.ForceTranspositionForRelease(personId, releaseId, specificationId);
-                    uow.Save();
+                    if (transpAction.ForceTranspositionForRelease(personId, releaseId, specificationId))
+                        uow.Save();
+                    else
+                        return false; 
                 }
                 catch (Exception e)
                 {

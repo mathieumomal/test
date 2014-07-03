@@ -53,10 +53,10 @@ namespace Etsi.Ultimate.Business
                 .OrderByDescending(s => s.MajorVersion).ThenByDescending(s => s.TechnicalVersion)
                 .ThenByDescending(s => s.EditorialVersion).FirstOrDefault();
 
-            if (latestVersion != null && latestVersion.DocumentUploaded != null && latestVersion.DocumentPassedToPub == null)
+            if (latestVersion != null && latestVersion.Location != null && latestVersion.DocumentPassedToPub == null)
             {
                 var transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
-                transposeMgr.Transpose(spec, latestVersion);
+                return transposeMgr.Transpose(spec, latestVersion);
             }
 
             return true;
