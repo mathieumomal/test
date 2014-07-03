@@ -54,6 +54,8 @@ namespace Etsi.Ultimate.Module.Specifications
         private bool fromEdit;
         public static Nullable<int> SpecificationId;
         private string CreateError;
+        public static Nullable<int> FailedOperationIndex;
+        private static Dictionary<int, string> OperationFailureMsgs = new Dictionary<int, string>() { { 1, "forced transposition failed" } };
 
         /// <summary>
         /// Main event of the page
@@ -135,6 +137,13 @@ namespace Etsi.Ultimate.Module.Specifications
                     }
                     else
                     {
+                        if (FailedOperationIndex != null)
+                        {
+                            notifMsg.Visible = true; 
+                            notifMsgTxt.Text = OperationFailureMsgs[FailedOperationIndex.GetValueOrDefault()];
+                            notifMsg.CssClass = "ErrorForControl";
+                            notifMsgTxt.CssClass = "ErrorTxt";
+                        }
                         lblHeaderText.Text = SPEC_HEADER + ((String.IsNullOrEmpty(specification.Number)) ? CONST_EMPTY_FIELD : specification.Number);
                         BuildTabsDisplay();
                         SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
@@ -386,6 +395,8 @@ namespace Etsi.Ultimate.Module.Specifications
             selectedTab = (Request.QueryString["selectedTab"] != null) ? Request.QueryString["selectedTab"] : string.Empty;
             fromEdit = (Request.QueryString["fromEdit"] != null);
             CreateError = (Request.QueryString["error"] != null) ? Request.QueryString["error"] : string.Empty;
+            int index;
+            FailedOperationIndex = (Request.QueryString["FailedOperationIndex"] != null) ? (int.TryParse(Request.QueryString["FailedOperationIndex"], out index) ? new Nullable<int>(index) : null) : null;            
         }
 
         /// <summary>

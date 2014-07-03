@@ -61,6 +61,14 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [Test]
+        public void ForceTransposition_SendsVersionForTransposition()
+        {
+            SetMocks(true);            
+            var specSvc = new SpecificationService();
+            Assert.AreEqual(true, specSvc.ForceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_OPENED_VERSION_TO_TRANSPOSE, SPEC_ID));            
+        }
+
+        [Test]
         public void ForceTransposition_ReturnsFalseWhenUserHasNoRight()
         {
             SetMocks(false);

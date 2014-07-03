@@ -62,6 +62,7 @@ namespace Etsi.Ultimate.Module.Specifications
         public double ScrollHeight { get; set; }
         public List<SpecVersion> Versions { get; set; }
         public int SpecReleaseID { get; set; }
+        private static Dictionary<int, string> OperationFailureMsgs = new Dictionary<int, string>() { {1, "forced transposition failed"}};
 
         #endregion
 
@@ -96,7 +97,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 {
                     pnlIconStrip.Visible = false;
                 }
-                specificationsVersionGrid.ClientSettings.Scrolling.ScrollHeight = Unit.Parse(ScrollHeight.ToString());
+                specificationsVersionGrid.ClientSettings.Scrolling.ScrollHeight = Unit.Parse(ScrollHeight.ToString());                
             }
 
             //Assign Missing Meeting Reference
@@ -124,6 +125,7 @@ namespace Etsi.Ultimate.Module.Specifications
             specificationsVersionGrid.DataBind();
         }
 
+        
         protected void specificationsVersionGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
         {
             specificationsVersionGrid.DataSource = Versions;
@@ -171,6 +173,8 @@ namespace Etsi.Ultimate.Module.Specifications
                 var specSvc = ServicesFactory.Resolve<ISpecificationService>();
                 if(specSvc.ForceTranspositionForRelease(PersonId.Value, ReleaseId.Value, SpecId.Value))
                     Redirect();                
+                else
+                    RedirectWithErrorMsg(1);
             }
         }
 
@@ -239,6 +243,14 @@ namespace Etsi.Ultimate.Module.Specifications
             address.RemoveAll(s => s.Contains("Rel"));
             Response.Redirect(string.Join("&", address) + "&selectedTab=Releases&Rel=" + ReleaseId.Value);
 
+        }
+
+        private void RedirectWithErrorMsg(int errorIndex)
+        {
+            var address = HttpContext.Current.Request.Url.AbsoluteUri.Split('&').ToList();
+            address.RemoveAll(s => s.Contains("selectedTab"));
+            address.RemoveAll(s => s.Contains("Rel"));
+            Response.Redirect(string.Join("&", address) + "&selectedTab=Releases&Rel=" + ReleaseId.Value + "&FailedOperationIndex=" + errorIndex);
         }
 
         /// <summary>

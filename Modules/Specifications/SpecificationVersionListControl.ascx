@@ -99,9 +99,10 @@
             oWnd.remove_close(radWinVersionCloseCallBack);
         }
     }
+   
 </script>
-<asp:Panel runat="server" ID="pnlCover" CssClass="TabContent" Height="100%">
-    <asp:Panel runat="server" ID="pnlIconStrip">
+<asp:Panel runat="server" ID="pnlCover" CssClass="TabContent" Height="100%">    
+    <asp:Panel runat="server" ID="pnlIconStrip">        
         <asp:ImageButton ID="imgUploadVersion" ToolTip="Upload a version" ImageUrl="images/spec_rel-u.png" CssClass="icon_display_size" runat="server" />
         <asp:ImageButton ID="imgAllocateVersion" ToolTip="Allocate a version" ImageUrl="images/spec_rel-a.png" CssClass="icon_display_size" runat="server" />
         <asp:ImageButton ID="imgInhibitPromote" ToolTip="Inhibit Promote" ImageUrl="images/spec_rel-i.png" CssClass="icon_display_size" runat="server" Visible="false" OnClick="imgInhibitPromote_Click" />

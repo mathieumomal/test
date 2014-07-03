@@ -26,6 +26,7 @@
             <asp:Panel ID="specMsg" runat="server" Visible="false">
                 <asp:Label runat="server" ID="specMsgTxt"></asp:Label>
             </asp:Panel>
+            
             <asp:Panel ID="specificationMessages" runat="server" Visible="false">
                 <asp:Label runat="server" ID="specificationMessagesTxt"></asp:Label>
             </asp:Panel>
@@ -141,6 +142,9 @@
                         </asp:Panel>
                     </telerik:RadPageView>
                     <telerik:RadPageView ID="RadPageReleases" runat="server" ViewStateMode="Enabled">
+                        <asp:Panel ID="notifMsg" runat="server" Visible="false">
+                            <asp:Label runat="server" ID="notifMsgTxt"></asp:Label>
+                        </asp:Panel>
                         <spec:SpecificationReleaseControl runat="server" ID="SpecificationReleaseControl1" />
                     </telerik:RadPageView>
                     <telerik:RadPageView ID="RadPageHistory" runat="server">
@@ -169,6 +173,10 @@
                                 document.title = specificationNumber;
                             }
                         }, 200);
+
+                        setTimeout(function () {
+                            $("#notifMsg").fadeOut("slow", null);
+                        }, 7000);
                     });
                 </script>
             </asp:Panel>

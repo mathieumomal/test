@@ -100,8 +100,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Documentation\Documentation.css" />
-    <Content Include="Documentation\Documentation.html" />
     <Content Include="images\error.png" />
     <Content Include="images\favicon.ico" />
     <Content Include="images\ftp.png" />
@@ -128,10 +126,6 @@
   <ItemGroup>
     <Content Include="App_LocalResources\Edit.ascx.resx" />
     <Content Include="App_LocalResources\Settings.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Providers\DataProviders\SqlDataProvider\00.00.01.SqlDataProvider" />
-    <Content Include="Providers\DataProviders\SqlDataProvider\Uninstall.SqlDataProvider" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

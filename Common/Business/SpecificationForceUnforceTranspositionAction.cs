@@ -56,7 +56,13 @@ namespace Etsi.Ultimate.Business
             if (latestVersion != null && latestVersion.Location != null && latestVersion.DocumentPassedToPub == null)
             {
                 var transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
-                return transposeMgr.Transpose(spec, latestVersion);
+                if (transposeMgr.Transpose(spec, latestVersion))
+                {
+                    latestVersion.DocumentPassedToPub = DateTime.Now;
+                    latestVersion.ForcePublication = true;                    
+                }
+                else
+                    return false; 
             }
 
             return true;
