@@ -65,6 +65,8 @@
     <add key="loginUrl" value="~/Login.aspx" />
     <add key="InstallVersion" value="07.00.04" />
     <add key="DefaultDevicesDatabase" value="DesktopModules\DevicePreviewManagement\Resources\defaultDevices.xml" />
+    <add key="TranspositionFolderPath" value=""/>
+    <add key="WIReportPath" value ="http://webapp.13.etsidev.org/workprogram/Report_WorkItem.asp?WKI_ID="/>
 	
 	<!-- 3GPP Parameters  -->
 		<!-- These parameters depends on the environment -->
