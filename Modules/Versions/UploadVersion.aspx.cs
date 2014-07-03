@@ -83,8 +83,12 @@ namespace Etsi.Ultimate.Module.Versions
         /// <param name="e">event arguments</param>
         protected void UploadBtn_Click(object sender, EventArgs e)
         {
-            versionUploadScreen.Visible = false;
-            confirmation.Visible = true;
+            var meetingId = UploadMeeting.SelectedMeetingId;
+            if (meetingId > 0)
+            {
+                versionUploadScreen.Visible = false;
+                confirmation.Visible = true;
+            }
         }
 
         /// <summary>
@@ -280,6 +284,8 @@ namespace Etsi.Ultimate.Module.Versions
                 ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
                 var spec = specSvc.GetSpecificationDetailsById(UserId, specId.Value).Key;
                 isDraft = !(spec.IsUnderChangeControl.HasValue && spec.IsUnderChangeControl.Value);
+                hidIsRequired.Value = (!isDraft && isActionUpload) ? "True" : "False";
+                MeetingLbl.Text = (!isDraft && isActionUpload) ? "Meeting(<span class='requiredField'>*</span>):" : "Meeting:";
 
                 communityID = spec.PrimeResponsibleGroup.Fk_commityId;
                 isTS = spec.IsTS ?? true;

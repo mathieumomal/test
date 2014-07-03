@@ -211,6 +211,15 @@ namespace Etsi.Ultimate.Module.Versions {
         protected global::System.Web.UI.WebControls.Label MeetingLbl;
         
         /// <summary>
+        /// hidIsRequired control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField hidIsRequired;
+        
+        /// <summary>
         /// UploadBtn control.
         /// </summary>
         /// <remarks>

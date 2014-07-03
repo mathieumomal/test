@@ -84,6 +84,15 @@ namespace Etsi.Ultimate.Controls
         /// Set style to EndDate label
         /// </summary>
         public string CssClass { get; set; }
+
+        /// <summary>
+        /// ClientID of Meeting Dropdown list
+        /// </summary>
+        public string MeetingClientID 
+        {
+            get { return this.rcbMeetings.ClientID; }
+        }
+
         #endregion
 
         #region Page/Control Methods

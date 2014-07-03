@@ -126,11 +126,13 @@
                             </td>
                             <td colspan="2" class="TabLineRight2Col">
                                 <ult:meetingcontrol runat="server" id="UploadMeeting" />
+                                <asp:HiddenField ID="hidIsRequired" runat="server" />
                             </td>
                         </tr>
                     </table>
                     <div class="releaseDetailsAction">
-                        <asp:LinkButton ID="UploadBtn" runat="server" Text="Upload" CssClass="btn3GPP-success" OnClick="UploadBtn_Click" />
+                        <span id="meetingRequiredMsg" style="display:none" class='requiredField'>*Meeting is required</span>
+                        <asp:LinkButton ID="UploadBtn" runat="server" Text="Upload" CssClass="btn3GPP-success" OnClientClick="return PerformValidations();" OnClick="UploadBtn_Click"/>
                         <asp:LinkButton ID="AllocateBtn" runat="server" Text="Allocate" CssClass="btn3GPP-success" Visible="false" OnClick="AllocateVersion_Click" />
                         <asp:LinkButton ID="UploadBtnDisabled" runat="server" Text="Upload" CssClass="btn3GPP-default" disabled="disabled" OnClientClick="return false;" />
                         <asp:LinkButton ID="ExitBtn" runat="server" Text="Cancel" CssClass="btn3GPP-success" OnClientClick="  return closePopUpWindow()" />
@@ -230,6 +232,20 @@
                             $('#UploadBtn').hide();
                         });
                     });
+
+                    /* Validations */
+                    function PerformValidations() {
+                        var isValid = true;
+                        if (hidIsRequired) {
+                            var meetingControl = $find('<% =UploadMeeting.MeetingClientID %>');
+                            var selectedMeetingID = meetingControl.get_value().split("|")[0];
+                            if (selectedMeetingID <= 0) {
+                                isValid = false;
+                                $('#meetingRequiredMsg').show();
+                            }
+                        }
+                        return isValid;
+                    }
                 </script>
             </asp:Panel>
         </asp:Panel>
