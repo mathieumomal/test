@@ -65,7 +65,14 @@ namespace Etsi.Ultimate.Tests.Services
         {
             SetMocks(true);            
             var specSvc = new SpecificationService();
-            Assert.AreEqual(true, specSvc.ForceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_OPENED_VERSION_TO_TRANSPOSE, SPEC_ID));            
+            DateTime previous = DateTime.Now;
+            Assert.AreEqual(true, specSvc.ForceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_OPENED_VERSION_TO_TRANSPOSE, SPEC_ID));
+            var versionSvc = new SpecVersionService();
+            var lastVersion = versionSvc.GetVersionsForSpecRelease(SPEC_ID, RELEASE_OPENED_VERSION_TO_TRANSPOSE).OrderByDescending(s => s.MajorVersion).ThenByDescending(s => s.TechnicalVersion)
+                .ThenByDescending(s => s.EditorialVersion).FirstOrDefault();
+            Assert.AreEqual(true, lastVersion.ForcePublication);
+            Assert.GreaterOrEqual(DateTime.Now, lastVersion.DocumentPassedToPub);
+            Assert.LessOrEqual(previous, lastVersion.DocumentPassedToPub);
         }
 
         [Test]
