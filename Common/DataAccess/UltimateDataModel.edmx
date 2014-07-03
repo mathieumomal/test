@@ -36,6 +36,13 @@
       [ETSI_WorkItem].[WKI_REFERENCE] AS [WKI_REFERENCE]
       FROM [dbo].[ETSI_WorkItem] AS [ETSI_WorkItem]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="ResponsibleGroup_Chairman" EntityType="Etsi.Ultimate.DataAccess.Store.ResponsibleGroup_Chairman" store:Type="Views" store:Schema="dbo" store:Name="ResponsibleGroup_Chairman">
+            <DefiningQuery>SELECT 
+      [ResponsibleGroup_Chairman].[TbId] AS [TbId], 
+      [ResponsibleGroup_Chairman].[Email] AS [Email], 
+      [ResponsibleGroup_Chairman].[PersonId] AS [PersonId]
+      FROM [dbo].[ResponsibleGroup_Chairman] AS [ResponsibleGroup_Chairman]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="ResponsibleGroup_Secretary" EntityType="Etsi.Ultimate.DataAccess.Store.ResponsibleGroup_Secretary" store:Type="Views" store:Schema="dbo" store:Name="ResponsibleGroup_Secretary">
             <DefiningQuery>SELECT 
       [ResponsibleGroup_Secretary].[TbId] AS [TbId], 
@@ -591,6 +598,17 @@
           </Key>
           <Property Name="WKI_ID" Type="int" Nullable="false" />
           <Property Name="WKI_REFERENCE" Type="varchar" MaxLength="30" />
+        </EntityType>
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.ResponsibleGroup_Chairman » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+      -->
+        <EntityType Name="ResponsibleGroup_Chairman">
+          <Key>
+            <PropertyRef Name="PersonId" />
+          </Key>
+          <Property Name="TbId" Type="int" />
+          <Property Name="Email" Type="varchar" MaxLength="100" />
+          <Property Name="PersonId" Type="int" Nullable="false" />
         </EntityType>
         <!--Erreurs détectées durant la génération :
       Avertissement 6002: La table/vue « U3GPPDB.dbo.ResponsibleGroup_Secretary » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
@@ -1325,6 +1343,7 @@
             <End Role="CR_WorkItems" EntitySet="CR_WorkItems" />
           </AssociationSet>
           <EntitySet Name="Communities" EntityType="Etsi.Ultimate.DataAccess.Community" />
+          <EntitySet Name="ResponsibleGroupChairmans" EntityType="Etsi.Ultimate.DataAccess.ResponsibleGroup_Chairman" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -2239,6 +2258,14 @@
           <Property Type="String" Name="ActiveCode" MaxLength="12" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="ShortName" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="ResponsibleGroup_Chairman">
+          <Key>
+            <PropertyRef Name="PersonId" />
+          </Key>
+          <Property Type="Int32" Name="TbId" />
+          <Property Type="String" Name="Email" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="PersonId" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2699,6 +2726,15 @@
                 <ScalarProperty Name="TbTitle" ColumnName="TbTitle" />
                 <ScalarProperty Name="TbType" ColumnName="TbType" />
                 <ScalarProperty Name="TbName" ColumnName="TbName" />
+                <ScalarProperty Name="TbId" ColumnName="TbId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ResponsibleGroupChairmans">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ResponsibleGroup_Chairman">
+              <MappingFragment StoreEntitySet="ResponsibleGroup_Chairman">
+                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="TbId" ColumnName="TbId" />
               </MappingFragment>
             </EntityTypeMapping>

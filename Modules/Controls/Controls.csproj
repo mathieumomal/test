@@ -135,6 +135,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="images\addChairman.png" />
     <Content Include="images\busy.gif" />
     <Content Include="images\delete.png" />
     <Content Include="images\hourglass.png" />

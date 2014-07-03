@@ -244,8 +244,9 @@ namespace Etsi.Ultimate.Services
                     var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction(uoW);
                     specificationsMassivePromotionAction.PromoteMassivelySpecification(personId, specificationIds, targetReleaseId);
 
-                    SpecVersionsManager versionManager = new SpecVersionsManager(uoW);
-                    versionManager.AllocateVersionFromMassivePromote(specificationsForVersionAllocation, targetRelease); 
+                    SpecVersionsManager versionManager = new SpecVersionsManager();
+                    versionManager._uoW = uoW;
+                    versionManager.AllocateVersionFromMassivePromote(specificationsForVersionAllocation, targetRelease, personId); 
                    
                     uoW.Save();
                     return true; 

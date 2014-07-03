@@ -392,11 +392,22 @@ namespace Etsi.Ultimate.Tests.Services
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releaseFakeRepository.All).Repeat.Once();
             mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)releaseStatus).Repeat.Once();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)GetSpecs());
+            mockDataContext.Stub(x => x.Specification_Release).Return((IDbSet<Specification_Release>)GetSpecReleases());
+            mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)GetVersions());
 
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
+            //Test de transposition MOCK
+            var mockTranspose = MockRepository.GenerateMock<ITranspositionManager>();
+            ManagerFactory.Container.RegisterInstance(typeof(ITranspositionManager), mockTranspose);
+
+            //Freeze a release
             var releaseService = new ReleaseService();
             releaseService.FreezeRelease(releaseIdToTest, FreezeDate, personID, FreezeRefId, FreezeRef);
+
+            //Test de transposition : method well called
+            mockTranspose.AssertWasCalled(x => x.Transpose(Arg<Specification>.Is.Anything, Arg<SpecVersion>.Is.Anything));
 
             mockDataContext.AssertWasCalled(x => x.SetModified(Arg<Release>.Matches(y => y.Fk_ReleaseStatus == 2 && y.Enum_ReleaseStatus == null
                                                                                                                 && y.EndDate == FreezeDate)));
@@ -406,8 +417,30 @@ namespace Etsi.Ultimate.Tests.Services
             mockDataContext.AssertWasCalled(x => x.SaveChanges(), y => y.Repeat.Once());
 
             mockDataContext.VerifyAllExpectations();
+            mockTranspose.VerifyAllExpectations();
         }
 
+        #region datas
+        private IDbSet<Specification> GetSpecs()
+        {
+            var list = new SpecificationFakeDBSet();
+            list.Add(new Specification() { Pk_SpecificationId = 1, Number = "1", IsUnderChangeControl = true, IsForPublication = true });
+            return list;
+        }
 
+        private IDbSet<Specification_Release> GetSpecReleases()
+        {
+            var list = new SpecificationReleaseFakeDBSet();
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 1, isTranpositionForced = false });
+            return list;
+        }
+
+        private IDbSet<SpecVersion> GetVersions()
+        {
+            var list = new SpecVersionFakeDBSet();
+            list.Add(new SpecVersion() { Pk_VersionId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 1 });
+            return list;
+        }
+        #endregion datas
     }
 }

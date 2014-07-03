@@ -437,7 +437,6 @@ namespace Etsi.Ultimate.Tests.Services
             var specDBSet = GetSpecificationsForMassivePromote();
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specDBSet);
-            //mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)Releases()); Releases are missing
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
             var specificationService = new SpecificationService();
@@ -453,7 +452,6 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void PerformMassivePromotionWithVersionsAllocations()
         {
-
             //Arrange
             //Params
             int personId = 1;            
@@ -475,6 +473,8 @@ namespace Etsi.Ultimate.Tests.Services
             mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specDBSet);
             mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releaseDBSet);
             mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)specVersionDBSet);
+            mockDataContext.Stub(x => x.Specification_Release).Return((IDbSet<Specification_Release>)GetSpecReleases());
+            mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)GetReleaseStatus());
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
             var versionsSvc = new SpecVersionService();
@@ -488,7 +488,7 @@ namespace Etsi.Ultimate.Tests.Services
             //After            
             allocatedSpec = versionsSvc.GetVersionsForSpecRelease(specDBSet.ToList()[0].Pk_SpecificationId, targetReleaseId).OrderByDescending(v => v.MajorVersion).FirstOrDefault();
             
-            Release targetRelease = releaseDBSet.Where(r => r.Pk_ReleaseId == targetReleaseId).FirstOrDefault();
+            var targetRelease = releaseDBSet.Where(r => r.Pk_ReleaseId == targetReleaseId).FirstOrDefault();
 
             //Asserts
             //Assert.AreEqual(targetRelease.Version3g , allocatedSpec.MajorVersion);
@@ -797,7 +797,8 @@ namespace Etsi.Ultimate.Tests.Services
             {
                 Pk_ReleaseId = 1, 
                 Enum_ReleaseStatus = openStatus,
-                Version3g = 20
+                Version3g = 20,
+                SortOrder = 20,
 
             });
 
@@ -805,7 +806,8 @@ namespace Etsi.Ultimate.Tests.Services
             {
                 Pk_ReleaseId = 2,
                 Enum_ReleaseStatus = openStatus,
-                Version3g = 30
+                Version3g = 30,
+                SortOrder = 30,
 
             });
             return releaseFakeDBSet;
@@ -882,6 +884,21 @@ namespace Etsi.Ultimate.Tests.Services
             RepositoryFactory.Container.RegisterInstance<IUltimateUnitOfWork>(uow);
 
 
+        }
+
+        private IDbSet<Specification_Release> GetSpecReleases()
+        {
+            var list = new SpecificationReleaseFakeDBSet();
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 2, isTranpositionForced = false });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 3, Fk_ReleaseId = 2, isTranpositionForced = true });
+            return list;
+        }
+
+        private IDbSet<Enum_ReleaseStatus> GetReleaseStatus()
+        {
+            var list = new Enum_ReleaseStatusFakeDBSet();
+            list.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, Code = "Frozen", Description = "Frozen" });
+            return list;
         }
 
         

@@ -296,6 +296,7 @@ namespace Etsi.Ultimate.Controls
                     emailColumn.Visible = false;
 
                     btnAddRapporteur.Visible = false;
+                    btnAddChairman.Visible = false;
                     lblAddRapporteur.Visible = false;
                     rdcbRapporteurs.Visible = false;
                     RefreshDataSourceFromListIds_MULTIMODE();
@@ -310,6 +311,7 @@ namespace Etsi.Ultimate.Controls
                     rdcbRapporteurs.Enabled = false;
 
                     btnAddRapporteur.Visible = false;
+                    btnAddChairman.Visible = false;
                     lblAddRapporteur.Visible = false;
                     RefreshDisplay_SINGLEMODE();
                 }
@@ -342,6 +344,29 @@ namespace Etsi.Ultimate.Controls
                     LaunchAlert("This person is already in the list.");
                 }
             }
+        }
+
+        protected void BtnAddChairman_onClick(object o, EventArgs e)
+        {
+            /*var personIdToAdd = 0;//add method to get Id chairman
+            if (personIdToAdd == 0)
+            {
+                LaunchAlert("Chairman cannot be found for this group.");
+            }
+            else
+            {
+                if (!ListIdPersonsSelected_multimode.Contains(personIdToAdd))
+                {
+                    AddPerson_MULTIMODE(personIdToAdd);
+                    rdcbRapporteurs.Text = "";
+                    rdcbRapporteurs.ClearSelection();
+                    RefreshDisplay_MULTIMODE();
+                }
+                else
+                {
+                    LaunchAlert("This person is already in the list.");
+                }
+            }*/
         }
 
         /// <summary>

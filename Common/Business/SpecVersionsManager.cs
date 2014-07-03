@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Etsi.Ultimate.Business
 {
-    public class SpecVersionsManager
+    public class SpecVersionsManager : ISpecVersionManager
     {
         private const string CONST_QUALITY_CHECK_REVISIONMARK = "Some revision marks left unaccepted";
         private const string CONST_QUALITY_CHECK_VERSION_HISTORY = "Invalid/missing version in history";
@@ -23,18 +23,12 @@ namespace Etsi.Ultimate.Business
         private const string CONST_QUALITY_CHECK_FIRST_TWO_LINES_TITLE = "The first two lines of the title must be correct, according to the TSG responsible for the specification";
         private const string CONST_QUALITY_CHECK_ANNEXURE_STYLE = "Annexes should be correctly styled as Heading 8(TS) or Heading 9(TR). In case of TS, (normative) or (informative) should appear immediately after annexure heading";
 
-        private IUltimateUnitOfWork _uoW;
+        public IUltimateUnitOfWork _uoW { get; set; }
 
-        public SpecVersionsManager(IUltimateUnitOfWork UoW)
+        public SpecVersionsManager()
         {
-            _uoW = UoW;
         }
 
-        /// <summary>
-        /// Returns a list of specVersion of a specification
-        /// </summary>
-        /// <param name="specificationId">Specification Id</param>
-        /// <returns>List of SpecVersions including related releases</returns>
         public List<SpecVersion> GetVersionsBySpecId(int specificationId)
         {
             ISpecVersionsRepository specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
@@ -44,12 +38,6 @@ namespace Etsi.Ultimate.Business
             return new List<SpecVersion>(specVersions);
         }
 
-        /// <summary>
-        /// Returns the list of versions of a specification release
-        /// </summary>
-        /// <param name="specificationId">The specification identifier</param>
-        /// <param name="releaseId">The identifier of the specification's release</param>
-        /// <returns>List of versions objects</returns>
         public List<SpecVersion> GetVersionsForASpecRelease(int specificationId, int releaseId)
         {
             List<SpecVersion> result = new List<SpecVersion>();
@@ -59,11 +47,6 @@ namespace Etsi.Ultimate.Business
             return result;
         }
 
-        /// <summary>
-        /// Return a SpecVersion and current user rights objects using identifiers
-        /// </summary>
-        /// <param name="versionId">The identifier of the requested version</param>
-        /// <returns>A couple (version,userrights)</returns>
         public KeyValuePair<SpecVersion, UserRightsContainer> GetSpecVersionById(int versionId, int personId)
         {
             ISpecVersionsRepository repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
@@ -95,19 +78,50 @@ namespace Etsi.Ultimate.Business
             return new KeyValuePair<SpecVersion, UserRightsContainer>(version, specRelease_Rights.Value);
         }
 
-        /// <summary>
-        /// Enable to Allocate a version or to to upload it from scratch
-        /// </summary>
-        /// <param name="version">The new version to allocate or upload</param>
-        public Report UploadOrAllocateVersion(SpecVersion version, bool isDraft)
+        public Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId)
         {
+            //Initialization
             Report result = new Report();
             ISpecVersionsRepository repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             repo.UoW = _uoW;
+            ISpecificationManager specMgr = ManagerFactory.Resolve<ISpecificationManager>();
+            specMgr.UoW = _uoW;
+            IReleaseManager releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
+            releaseMgr.UoW = _uoW;
+            IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
+            relStatusRepo.UoW = _uoW;
+
             var specVersions = repo.GetVersionsForSpecRelease(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
+            var specRelease = specMgr.GetSpecReleaseBySpecIdAndReleaseId(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
+            var spec = specMgr.GetSpecificationById(personId, version.Fk_SpecificationId ?? 0).Key;
+            var release = releaseMgr.GetReleaseById(personId, version.Fk_ReleaseId ?? 0).Key;
             var existingVersion = specVersions.Where(x => (x.MajorVersion == version.MajorVersion) &&
                                                           (x.TechnicalVersion == version.TechnicalVersion) &&
                                                           (x.EditorialVersion == version.EditorialVersion)).FirstOrDefault();
+
+            //Check if spec and release exist
+            if (spec == null)
+                throw new InvalidDataException("Version's specId is not defined.");
+            if (release == null)
+                throw new InvalidDataException("Version's releaseId is not defined.");
+            if (specRelease == null)
+                throw new InvalidDataException("Relation between specification and release not defined.");
+
+            //Transposition
+            var frozen = relStatusRepo.All.Where(x => x.Code == Enum_ReleaseStatus.Frozen).FirstOrDefault();
+
+            //Three conditions :
+            //Spec underChangeControl + (Release Frozen OR Specification IsTransposedForce)
+            var UCC = spec.IsUnderChangeControl ?? false;
+            var isFrozen = release.Fk_ReleaseStatus.Equals(frozen.Enum_ReleaseStatusId);
+            var transpoForced = specRelease.isTranpositionForced ?? false;
+            if (UCC && (isFrozen || transpoForced))
+            {
+                var transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
+                transposeMgr.Transpose(spec, version);
+            }
+            //Transposition
+
             if (existingVersion != null) //Existing Version
             {
                 if (existingVersion.Location == null && version.Location != null)
@@ -148,7 +162,6 @@ namespace Etsi.Ultimate.Business
                                                                                 .ThenByDescending(y => y.TechnicalVersion ?? 0)
                                                                                 .ThenByDescending(z => z.EditorialVersion ?? 0)
                                                                                 .FirstOrDefault();
-
                 }
 
                 if (latestSpecVersion != null)
@@ -184,14 +197,7 @@ namespace Etsi.Ultimate.Business
             return result;
         }
 
-
-        /// <summary>
-        /// Allocate version for a set of promoted specification for a release
-        /// </summary>
-        /// <param name="specificationIds">Set of specification ids</param>
-        /// <param name="release">Target release of promotion</param>
-        /// <returns></returns>
-        public List<Report> AllocateVersionFromMassivePromote(List<Specification> specifications, Release release)
+        public List<Report> AllocateVersionFromMassivePromote(List<Specification> specifications, Release release, int personId)
         {
             List<Report> reports = new List<Report>();
             Report r;
@@ -205,26 +211,13 @@ namespace Etsi.Ultimate.Business
                     TechnicalVersion = 0,
                     MajorVersion = release.Version3g
 
-                }, ((s.IsActive) && !(s.IsUnderChangeControl.HasValue && s.IsUnderChangeControl.Value)));
+                }, ((s.IsActive) && !(s.IsUnderChangeControl.HasValue && s.IsUnderChangeControl.Value)), personId);
 
                 reports.Add(r);
             }
             return reports;
         }
 
-        /// <summary>
-        /// Validate Uploaded version document & provide validation summary
-        /// </summary>
-        /// <param name="fileExtension">File Extension (.doc/.docx)</param>
-        /// <param name="memoryStream">Memory Stream</param>
-        /// <param name="temporaryFolder">Temporary Folder</param>
-        /// <param name="version">Specification Version</param>
-        /// <param name="title">Specification Title</param>
-        /// <param name="release">Specification Release</param>
-        /// <param name="meetingDate">Meeting Date</param>
-        /// <param name="tsgTitle">Technical Specificaion Group Title</param>
-        /// <param name="isTS">True - Technical Specificaiton / False - Technical Report</param>
-        /// <returns>Validation Summary</returns>
         public Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTS)
         {
             Report validationReport;
@@ -247,61 +240,9 @@ namespace Etsi.Ultimate.Business
             return validationReport;
         }
 
-        /// <summary>
-        /// Validate Word Document
-        /// </summary>
-        /// <param name="qualityChecks">Quality Checks Interface</param>
-        /// <param name="version">Version</param>
-        /// <param name="title">Title</param>
-        /// <param name="release">Release</param>
-        /// <param name="meetingDate">Meeting Date</param>
-        /// <param name="tsgTitle">Technical Specificaion Group Title</param>
-        /// <param name="isTS">True - Technical Specificaiton / False - Technical Report</param>
-        /// <returns>Validation Summary</returns>
-        private Report ValidateDocument(IQualityChecks qualityChecks, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTS)
-        {
-            Report validationReport = new Report();
-
-            if (qualityChecks.HasTrackedRevisions())
-                validationReport.LogWarning(CONST_QUALITY_CHECK_REVISIONMARK);
-
-            if (!qualityChecks.IsHistoryVersionCorrect(version))
-                validationReport.LogWarning(CONST_QUALITY_CHECK_VERSION_HISTORY);
-
-            if (!qualityChecks.IsCoverPageVersionCorrect(version))
-                validationReport.LogWarning(CONST_QUALITY_CHECK_VERSION_COVERPAGE);
-
-            if (!qualityChecks.IsCoverPageDateCorrect(meetingDate))
-                validationReport.LogWarning(CONST_QUALITY_CHECK_DATE_COVERPAGE);
-
-            if (!qualityChecks.IsCopyRightYearCorrect())
-                validationReport.LogWarning(CONST_QUALITY_CHECK_YEAR_COPYRIGHT);
-
-            if (!qualityChecks.IsTitleCorrect(title))
-                validationReport.LogWarning(CONST_QUALITY_CHECK_TITLE_COVERPAGE);
-            
-            if(!qualityChecks.IsReleaseStyleCorrect(release))
-                validationReport.LogWarning(CONST_QUALITY_CHECK_RELEASE_STYLE);
-
-            if (qualityChecks.IsAutomaticNumberingPresent())
-                validationReport.LogWarning(CONST_QUALITY_CHECK_AUTO_NUMBERING);
-
-            if (!qualityChecks.IsFirstTwoLinesOfTitleCorrect(tsgTitle))
-                validationReport.LogWarning(CONST_QUALITY_CHECK_FIRST_TWO_LINES_TITLE);
-
-            if (!qualityChecks.IsAnnexureStylesCorrect(isTS))
-                validationReport.LogWarning(CONST_QUALITY_CHECK_ANNEXURE_STYLE);
-
-            return validationReport;
-        }
-
         #region Offline Sync Methods
 
-        /// <summary>
-        /// Insert SpecVersion entity
-        /// </summary>
-        /// <param name="entity">SpecVersion</param>
-        /// <returns>Success/Failure</returns>
+        
         public bool InsertEntity(SpecVersion entity)
         {
             bool isSuccess = true;
@@ -320,11 +261,6 @@ namespace Etsi.Ultimate.Business
             return isSuccess;
         }
 
-        /// <summary>
-        /// Update SpecVersion entity
-        /// </summary>
-        /// <param name="entity">SpecVersion</param>
-        /// <returns>Success/Failure</returns>
         public bool UpdateEntity(SpecVersion entity)
         {
             bool isSuccess = true;
@@ -352,11 +288,6 @@ namespace Etsi.Ultimate.Business
             return isSuccess;
         }
 
-        /// <summary>
-        /// Delete SpecVersion entity
-        /// </summary>
-        /// <param name="primaryKey">Primary Key</param>
-        /// <returns>Success/Failure</returns>
         public bool DeleteEntity(int primaryKey)
         {
             bool isSuccess = true;
@@ -428,6 +359,53 @@ namespace Etsi.Ultimate.Business
                 targetSpecVersion.ETSI_WKI_Ref = sourceSpecVersion.ETSI_WKI_Ref;
         }
 
+        /// <summary>
+        /// Validate Word Document
+        /// </summary>
+        /// <param name="qualityChecks">Quality Checks Interface</param>
+        /// <param name="version">Version</param>
+        /// <param name="title">Title</param>
+        /// <param name="release">Release</param>
+        /// <param name="meetingDate">Meeting Date</param>
+        /// <param name="tsgTitle">Technical Specificaion Group Title</param>
+        /// <param name="isTS">True - Technical Specificaiton / False - Technical Report</param>
+        /// <returns>Validation Summary</returns>
+        private Report ValidateDocument(IQualityChecks qualityChecks, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTS)
+        {
+            Report validationReport = new Report();
+
+            if (qualityChecks.HasTrackedRevisions())
+                validationReport.LogWarning(CONST_QUALITY_CHECK_REVISIONMARK);
+
+            if (!qualityChecks.IsHistoryVersionCorrect(version))
+                validationReport.LogWarning(CONST_QUALITY_CHECK_VERSION_HISTORY);
+
+            if (!qualityChecks.IsCoverPageVersionCorrect(version))
+                validationReport.LogWarning(CONST_QUALITY_CHECK_VERSION_COVERPAGE);
+
+            if (!qualityChecks.IsCoverPageDateCorrect(meetingDate))
+                validationReport.LogWarning(CONST_QUALITY_CHECK_DATE_COVERPAGE);
+
+            if (!qualityChecks.IsCopyRightYearCorrect())
+                validationReport.LogWarning(CONST_QUALITY_CHECK_YEAR_COPYRIGHT);
+
+            if (!qualityChecks.IsTitleCorrect(title))
+                validationReport.LogWarning(CONST_QUALITY_CHECK_TITLE_COVERPAGE);
+
+            if (!qualityChecks.IsReleaseStyleCorrect(release))
+                validationReport.LogWarning(CONST_QUALITY_CHECK_RELEASE_STYLE);
+
+            if (qualityChecks.IsAutomaticNumberingPresent())
+                validationReport.LogWarning(CONST_QUALITY_CHECK_AUTO_NUMBERING);
+
+            if (!qualityChecks.IsFirstTwoLinesOfTitleCorrect(tsgTitle))
+                validationReport.LogWarning(CONST_QUALITY_CHECK_FIRST_TWO_LINES_TITLE);
+
+            if (!qualityChecks.IsAnnexureStylesCorrect(isTS))
+                validationReport.LogWarning(CONST_QUALITY_CHECK_ANNEXURE_STYLE);
+
+            return validationReport;
+        }
         #endregion
     }
 }

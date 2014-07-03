@@ -179,12 +179,12 @@ namespace Etsi.Ultimate.Tests.Services
                 }
             };
 
-            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_FROZEN_ID, true)).Return(sp1);
-            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_CLOSED_ID, true)).Return(sp2);
-            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_OPEN_ID, true)).Return(sp3);
-            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_WITHDRAWN_ID, true)).Return(sp4);
-            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_FORCED_TRANSPOSITION_ID, true)).Return(sp5);
-            specRepo.Stub(s => s.GetSpecificationRelease(SPEC_ID, RELEASE_OPENED_VERSION_TO_TRANSPOSE, true)).Return(sp6);
+            specRepo.Stub(s => s.GetSpecificationReleaseByReleaseIdAndSpecId(SPEC_ID, RELEASE_FROZEN_ID, true)).Return(sp1);
+            specRepo.Stub(s => s.GetSpecificationReleaseByReleaseIdAndSpecId(SPEC_ID, RELEASE_CLOSED_ID, true)).Return(sp2);
+            specRepo.Stub(s => s.GetSpecificationReleaseByReleaseIdAndSpecId(SPEC_ID, RELEASE_OPEN_ID, true)).Return(sp3);
+            specRepo.Stub(s => s.GetSpecificationReleaseByReleaseIdAndSpecId(SPEC_ID, RELEASE_WITHDRAWN_ID, true)).Return(sp4);
+            specRepo.Stub(s => s.GetSpecificationReleaseByReleaseIdAndSpecId(SPEC_ID, RELEASE_FORCED_TRANSPOSITION_ID, true)).Return(sp5);
+            specRepo.Stub(s => s.GetSpecificationReleaseByReleaseIdAndSpecId(SPEC_ID, RELEASE_OPENED_VERSION_TO_TRANSPOSE, true)).Return(sp6);
 
             
             RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(specRepo);

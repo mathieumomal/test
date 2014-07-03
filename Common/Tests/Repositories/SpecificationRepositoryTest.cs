@@ -94,10 +94,9 @@ namespace Etsi.Ultimate.Tests.Repositories
         public void SpecRelease_Find()
         {
             var repo = new SpecificationRepository() { UoW = GetUnitOfWork() };
-            Assert.IsNotNull(repo.GetSpecificationRelease(1, 1, true));
-            Assert.IsNull(repo.GetSpecificationRelease(1, 3, false));
+            Assert.IsNotNull(repo.GetSpecificationReleaseByReleaseIdAndSpecId(1, 1, true));
+            Assert.IsNull(repo.GetSpecificationReleaseByReleaseIdAndSpecId(1, 3, false));
         }
-
 
         private IUltimateUnitOfWork GetSimplifiedUnitOfWork()
         {

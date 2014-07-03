@@ -372,6 +372,8 @@ namespace Etsi.Ultimate.Module.Versions
                 Report ftpTransferReport = new Report();
                 Report result = new Report();
 
+                UserId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
+
                 if (isUpload)
                 {
                     ftpTransferReport = TransferToFTP();
@@ -381,7 +383,7 @@ namespace Etsi.Ultimate.Module.Versions
                 if (ftpTransferReport.ErrorList.Count == 0)
                 {
                     ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                    result = svc.UploadOrAllocateVersion(buffer.Value, isDraft);
+                    result = svc.UploadOrAllocateVersion(buffer.Value, isDraft, UserId);
                 }
                 else
                     result.ErrorList.AddRange(ftpTransferReport.ErrorList);

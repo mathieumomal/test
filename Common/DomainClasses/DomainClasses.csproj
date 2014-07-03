@@ -93,6 +93,9 @@
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Meeting.Extend.cs" />
+    <Compile Include="ResponsibleGroup_Chairman.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="ResponsibleGroup_Secretary.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

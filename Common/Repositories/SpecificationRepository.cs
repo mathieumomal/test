@@ -226,12 +226,24 @@ namespace Etsi.Ultimate.Repositories
 
 
 
-        public Specification_Release GetSpecificationRelease(int specId, int releaseId, bool includeRelease)
+        public Specification_Release GetSpecificationReleaseByReleaseIdAndSpecId(int specId, int releaseId, bool includeRelease)
         {
             var query = UoW.Context.Specification_Release.Where(sr => sr.Fk_SpecificationId == specId && sr.Fk_ReleaseId == releaseId);
             if (includeRelease)
                 query = query.Include(sr => sr.Release);
             return query.FirstOrDefault();
+        }
+
+        public List<Specification> GetAllRelatedSpecificationsByReleaseId(int releaseId)
+        {
+            List<Specification> specs = new List<Specification>();
+            var specIdList = UoW.Context.Specification_Release.Where(x => x.Fk_ReleaseId == releaseId).Select(x => x.Fk_SpecificationId).ToList();
+            foreach(var specId in specIdList){
+                var spec = this.Find(specId);
+                if(spec != null)
+                    specs.Add(spec);
+            }
+            return specs;
         }
 
     }
@@ -258,7 +270,13 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="releaseId"></param>
         /// <param name="includeRelease"></param>
         /// <returns></returns>
-        Specification_Release GetSpecificationRelease(int specId, int releaseId, bool includeRelease);
+        Specification_Release GetSpecificationReleaseByReleaseIdAndSpecId(int specId, int releaseId, bool includeRelease);
+
+        /// <summary>
+        /// Get all specs by a release
+        /// </summary>
+        /// <returns></returns>
+        List<Specification> GetAllRelatedSpecificationsByReleaseId(int releaseId);
 
         /// <summary>
         /// Set entity state to deleted

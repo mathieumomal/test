@@ -12,11 +12,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
+using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.Business;
 
 namespace Etsi.Ultimate.Tests.Services
 {
     class SpecVersionServiceTest : BaseTest
     {
+        private const int USERID = 0;
+
         [Test, TestCaseSource("SpecVersionsData")]
         public void GetVersionsBySpecId(SpecVersionFakeDBSet specVersionsData)
         {
@@ -56,11 +60,28 @@ namespace Etsi.Ultimate.Tests.Services
 
         [Test]
         public void UploadOrAllocateVersionTest_ExistingVersion_Uploaded()
-        {            
+        {
+            //User Rights
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Specification_Withdraw);
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(USERID)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
             var versionsDBSet = GetSpecVersions();
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)versionsDBSet);
+
+            var specs = GetSpecs();
+            var releases = GetReleases();
+            var enumReleaseStatus = GetReleaseStatus();
+            var specRelease = GetSpecReleases();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specs);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releases);
+            mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)enumReleaseStatus);
+            mockDataContext.Stub(x => x.Specification_Release).Return((IDbSet<Specification_Release>)specRelease);
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
             var versionsSvc = new SpecVersionService();
             var existingVersion = new SpecVersion()
             {
@@ -76,7 +97,7 @@ namespace Etsi.Ultimate.Tests.Services
                 Fk_SpecificationId = 1,
                 Fk_ReleaseId = 1
             };
-            Report r = versionsSvc.UploadOrAllocateVersion(existingVersion, false);
+            Report r = versionsSvc.UploadOrAllocateVersion(existingVersion, false, USERID);
             Assert.AreEqual(String.Format("Document has already been uploaded to this version"), r.ErrorList.FirstOrDefault());
             //Assert.AreEqual(existingVersion.EditorialVersion, versionsSvc.GetVersionsById(1,0).Key.EditorialVersion) ; 
         }
@@ -84,10 +105,27 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void UploadOrAllocateVersionTest_ExistingVersion_Allocated()
         {
+            //User Rights
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Specification_Withdraw);
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(USERID)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
             var versionsDBSet = GetSpecVersions();
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)versionsDBSet);
+
+            var specs = GetSpecs();
+            var releases = GetReleases();
+            var enumReleaseStatus = GetReleaseStatus();
+            var specRelease = GetSpecReleases();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specs);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releases);
+            mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)enumReleaseStatus);
+            mockDataContext.Stub(x => x.Specification_Release).Return((IDbSet<Specification_Release>)specRelease);
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
             var versionsSvc = new SpecVersionService();
             var existingVersion = new SpecVersion()
             {
@@ -104,7 +142,7 @@ namespace Etsi.Ultimate.Tests.Services
                 Fk_SpecificationId = 1,
                 Fk_ReleaseId = 1
             };
-            Report r = versionsSvc.UploadOrAllocateVersion(existingVersion, false);
+            Report r = versionsSvc.UploadOrAllocateVersion(existingVersion, false, USERID);
             Assert.AreEqual(null, r.ErrorList.FirstOrDefault());
             Assert.AreEqual(existingVersion.Remarks.Count + 1, versionsDBSet.Where(v => v.Pk_VersionId==2).ToList().FirstOrDefault().Remarks.Count);
             Assert.AreEqual("L2", versionsDBSet.Where(v => v.Pk_VersionId == 2).ToList().FirstOrDefault().Location);
@@ -113,10 +151,28 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void UploadOrAllocateVersionTest_Draft_InvalidVersion()
         {
+            //User Rights
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Specification_Withdraw);
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(USERID)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
             var versionsDBSet = GetSpecVersions();
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)versionsDBSet);
+
+            var specs = GetSpecs();
+            var releases = GetReleases();
+            var enumReleaseStatus = GetReleaseStatus();
+            var specRelease = GetSpecReleases();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specs);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releases);
+            mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)enumReleaseStatus);
+            mockDataContext.Stub(x => x.Specification_Release).Return((IDbSet<Specification_Release>)specRelease);
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+
             var versionsSvc = new SpecVersionService();
             var existingVersion = new SpecVersion()
             {
@@ -133,17 +189,35 @@ namespace Etsi.Ultimate.Tests.Services
                 Fk_SpecificationId = 2,
                 Fk_ReleaseId = 1
             };
-            Report r = versionsSvc.UploadOrAllocateVersion(existingVersion, true); //Draft            
+            Report r = versionsSvc.UploadOrAllocateVersion(existingVersion, true, USERID); //Draft            
             Assert.AreEqual("Invalid draft version number!", r.ErrorList.FirstOrDefault());                        
         }
 
         [Test]
         public void UploadOrAllocateVersionTest_New_InvalidVersion()
         {
+            //User Rights
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Specification_Withdraw);
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(USERID)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
             var versionsDBSet = GetSpecVersions();
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)versionsDBSet);
+
+            var specs = GetSpecs();
+            var releases = GetReleases();
+            var enumReleaseStatus = GetReleaseStatus();
+            var specRelease = GetSpecReleases();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specs);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releases);
+            mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)enumReleaseStatus);
+            mockDataContext.Stub(x => x.Specification_Release).Return((IDbSet<Specification_Release>)specRelease);
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+
             var versionsSvc = new SpecVersionService();
             var existingVersion = new SpecVersion()
             {
@@ -160,19 +234,35 @@ namespace Etsi.Ultimate.Tests.Services
                 Fk_SpecificationId = 2,
                 Fk_ReleaseId = 1
             };
-            Report r = versionsSvc.UploadOrAllocateVersion(existingVersion, false); //New
+            Report r = versionsSvc.UploadOrAllocateVersion(existingVersion, false, USERID); //New
             Assert.AreEqual(String.Format("Invalid version number. Version number should be grater than {0}", versionsDBSet.Where(v => v.Pk_VersionId == 3).ToList().FirstOrDefault().Version), r.ErrorList.FirstOrDefault());            
         }
-
-        
 
         [Test]
         public void UploadOrAllocateVersionTest_New_ValidVersion()
         {
+            //User Rights
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Specification_Withdraw);
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(USERID)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
             var versionsDBSet = GetSpecVersions();
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)versionsDBSet);
+
+            var specs = GetSpecs();
+            var releases = GetReleases();
+            var enumReleaseStatus = GetReleaseStatus();
+            var specRelease = GetSpecReleases();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specs);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releases);
+            mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)enumReleaseStatus);
+            mockDataContext.Stub(x => x.Specification_Release).Return((IDbSet<Specification_Release>)specRelease);
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+
             var versionsSvc = new SpecVersionService();
             var newVersion = new SpecVersion()
             {
@@ -189,10 +279,81 @@ namespace Etsi.Ultimate.Tests.Services
                 Fk_SpecificationId = 2,
                 Fk_ReleaseId = 1
             };
-            Report r = versionsSvc.UploadOrAllocateVersion(newVersion, false); //New
+            Report r = versionsSvc.UploadOrAllocateVersion(newVersion, false, USERID); //New
             Assert.AreEqual(null, r.ErrorList.FirstOrDefault());           
 
             mockDataContext.AssertWasCalled(x => x.SetAdded(newVersion));
+        }
+
+        /// <summary>
+        /// Transposition of a version
+        /// (three conditions to satisfied to complete
+        /// U- : no under change control
+        /// F- : release not frozen
+        /// TF- : specRelease not transposed by force
+        /// </summary>
+        /// <param name="specID"></param>
+        /// <param name="releaseID"></param>
+        /// <param name="specRelease"></param>
+        [TestCase(null, null, 1, false)]
+        [TestCase(null, 1, 1, false)]
+        [TestCase(3,null, 1, false)]
+        [TestCase(3, 1, 0, false)]// U- : not transposed
+        [TestCase(3, 2, 0, false)]// U F- : not transposed
+        [TestCase(1, 2, 0, false)]// U F- TF- : not transposed
+        [TestCase(2, 1, 0, true)]// U F TF- : transposed
+        [TestCase(2, 2, 0, true)]// U F- TF : transposed
+        [TestCase(2, 4, 0, true)]// U F TF : transposed
+        public void UploadTransposition_Transposition(int specID, int releaseID, int errorExpected, bool transpositionExpected)
+        {
+            //User Rights
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Specification_Withdraw);
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(USERID)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            var versionsDBSet = GetSpecVersions();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)versionsDBSet);
+
+            var specs = GetSpecs();
+            var releases = GetReleases();
+            var enumReleaseStatus = GetReleaseStatus();
+            var specRelease = GetSpecReleases();
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releases);
+            mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)enumReleaseStatus);
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specs);
+            mockDataContext.Stub(x => x.Specification_Release).Return((IDbSet<Specification_Release>)specRelease);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var versionsSvc = new SpecVersionService();
+            var newVersion = new SpecVersion()
+            {
+                Pk_VersionId = 3,
+                Location = "L3",
+                MajorVersion = 30, //Minor Major version
+                TechnicalVersion = 2,
+                EditorialVersion = 2,
+                Source = 1,
+                DocumentUploaded = new DateTime(2013, 11, 18),
+                ProvidedBy = 1,
+                Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 3, Fk_VersionId = 3, RemarkText = "R333" } },
+                Fk_SpecificationId = specID,
+                Fk_ReleaseId = releaseID
+            };
+
+            //Test de transposition MOCK
+            var mockTranspose = MockRepository.GenerateMock<ITranspositionManager>();
+            ManagerFactory.Container.RegisterInstance(typeof(ITranspositionManager), mockTranspose);
+
+            Report r = versionsSvc.UploadOrAllocateVersion(newVersion, false, USERID);
+            Assert.AreEqual(errorExpected, r.ErrorList.Count());
+            
+            if (transpositionExpected)
+                mockTranspose.AssertWasCalled(x => x.Transpose(Arg<Specification>.Is.Anything, Arg<SpecVersion>.Is.Anything));//Test de transposition : method well called
+            else
+                mockTranspose.AssertWasNotCalled(x => x.Transpose(Arg<Specification>.Is.Anything, Arg<SpecVersion>.Is.Anything));//Test de transposition : method well not called
         }
 
         /// <summary>
@@ -270,7 +431,6 @@ namespace Etsi.Ultimate.Tests.Services
                 Source = 1,
                 DocumentUploaded = new DateTime(2013, 10, 18),
                 ProvidedBy = 1,
-                Specification = new Specification(){Pk_SpecificationId=1, IsActive=true, IsUnderChangeControl=true},
                 Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 2, Fk_VersionId = 2, RemarkText = "R22" } },
                 Fk_SpecificationId = 1,
                 Fk_ReleaseId = 1
@@ -285,7 +445,6 @@ namespace Etsi.Ultimate.Tests.Services
                 Source = 1,
                 DocumentUploaded = new DateTime(2013, 11, 18),
                 ProvidedBy = 1,
-                Specification = new Specification(){Pk_SpecificationId=2, IsActive=true, IsUnderChangeControl=false},
                 Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 3, Fk_VersionId = 3, RemarkText = "R333" } },
                 Fk_SpecificationId = 2,
                 Fk_ReleaseId = 1
@@ -295,6 +454,45 @@ namespace Etsi.Ultimate.Tests.Services
             versionDbSet.Add(version3);
 
             return versionDbSet;
+        }
+
+        private IDbSet<Specification> GetSpecs()
+        {
+            var list = new SpecificationFakeDBSet();
+            list.Add(new Specification() { Pk_SpecificationId = 1, Number = "1", IsUnderChangeControl = true });
+            list.Add(new Specification() { Pk_SpecificationId = 2, Number = "2", IsUnderChangeControl = true });
+            list.Add(new Specification() { Pk_SpecificationId = 3, Number = "2", IsUnderChangeControl = false });
+            return list;
+        }
+
+        private IDbSet<Release> GetReleases()
+        {
+            var list = new ReleaseFakeDBSet();
+            list.Add(new Release() { Pk_ReleaseId = 1, Fk_ReleaseStatus = 2, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Frozen", Enum_ReleaseStatusId = 2, Description = "Frozen" } });
+            list.Add(new Release() { Pk_ReleaseId = 2, Fk_ReleaseStatus = 1, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Open", Enum_ReleaseStatusId = 1, Description = "Open" } });
+            list.Add(new Release() { Pk_ReleaseId = 3, Fk_ReleaseStatus = 1, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Open", Enum_ReleaseStatusId = 1, Description = "Open" } });
+            list.Add(new Release() { Pk_ReleaseId = 4, Fk_ReleaseStatus = 2, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Frozen", Enum_ReleaseStatusId = 2, Description = "Frozen" } });
+            return list;
+        }
+
+        private IDbSet<Enum_ReleaseStatus> GetReleaseStatus()
+        {
+            var list = new Enum_ReleaseStatusFakeDBSet();
+            list.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, Code = "Frozen", Description = "Frozen" });
+            return list;
+        }
+
+        private IDbSet<Specification_Release> GetSpecReleases()
+        {
+            var list = new SpecificationReleaseFakeDBSet();
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 2, isTranpositionForced = false });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId =3, Fk_ReleaseId = 2, isTranpositionForced = false });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 3, Fk_SpecificationId = 2, Fk_ReleaseId = 2, isTranpositionForced = true });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 4, Fk_SpecificationId = 2, Fk_ReleaseId = 1, isTranpositionForced = false });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 5, Fk_SpecificationId = 2, Fk_ReleaseId = 4, isTranpositionForced = false });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 6, Fk_SpecificationId = 3, Fk_ReleaseId = 1, isTranpositionForced = true });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 7, Fk_SpecificationId = 1, Fk_ReleaseId = 1, isTranpositionForced = false });
+            return list;
         }
     }
 }

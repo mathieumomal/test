@@ -18,8 +18,6 @@ namespace Etsi.Ultimate.Repositories
         {
         }
 
-
-
         #region IEntityRepository<PersonRepository> Membres
 
         public IQueryable<View_Persons> All

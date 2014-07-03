@@ -16,7 +16,8 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specVersionManager = new SpecVersionsManager(uoW);
+                var specVersionManager = new SpecVersionsManager();
+                specVersionManager._uoW = uoW;
                 return specVersionManager.GetVersionsBySpecId(specificationId);
             }
         }
@@ -25,7 +26,8 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specVersionManager = new SpecVersionsManager(uoW);
+                var specVersionManager = new SpecVersionsManager();
+                specVersionManager._uoW = uoW;
                 return specVersionManager.GetVersionsForASpecRelease(specificationId, releaseId);
             }
         }
@@ -34,7 +36,8 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specVersionManager = new SpecVersionsManager(uoW);
+                var specVersionManager = new SpecVersionsManager();
+                specVersionManager._uoW = uoW;
                 return specVersionManager.GetSpecVersionById(VersionId, personId);
             }
         }
@@ -44,15 +47,16 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="version">Version to allocate/upload</param>
         /// <returns>Result of the operation</returns>
-        public Report UploadOrAllocateVersion(SpecVersion version, bool isDraft)
+        public Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId)
         {
             Report result = new Report();
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 try
                 {
-                    var specVersionManager = new SpecVersionsManager(uoW);
-                    result = specVersionManager.UploadOrAllocateVersion(version, isDraft);
+                    var specVersionManager = new SpecVersionsManager();
+                    specVersionManager._uoW = uoW;
+                    result = specVersionManager.UploadOrAllocateVersion(version, isDraft, personId);
 
                     if (result.ErrorList.Count == 0)
                         uoW.Save();
@@ -85,7 +89,8 @@ namespace Etsi.Ultimate.Services
             {
                 try
                 {
-                    var specVersionManager = new SpecVersionsManager(uoW);
+                    var specVersionManager = new SpecVersionsManager();
+                    specVersionManager._uoW = uoW;
                     validationReport = specVersionManager.ValidateVersionDocument(fileExtension, memoryStream, temporaryFolder, version, title, release, meetingDate, tsgTitle, isTS);
                 }
                 catch (Exception ex)
@@ -114,7 +119,8 @@ namespace Etsi.Ultimate.Services
             {
                 try
                 {
-                    var specVersionManager = new SpecVersionsManager(uoW);
+                    var specVersionManager = new SpecVersionsManager();
+                    specVersionManager._uoW = uoW;
                     if (specVersionManager.InsertEntity(entity))
                     {
                         uoW.Save();
@@ -142,7 +148,8 @@ namespace Etsi.Ultimate.Services
             {
                 try
                 {
-                    var specVersionManager = new SpecVersionsManager(uoW);
+                    var specVersionManager = new SpecVersionsManager();
+                    specVersionManager._uoW = uoW;
                     if (specVersionManager.UpdateEntity(entity))
                     {
                         uoW.Save();
@@ -171,7 +178,8 @@ namespace Etsi.Ultimate.Services
             {
                 try
                 {
-                    var specVersionManager = new SpecVersionsManager(uoW);
+                    var specVersionManager = new SpecVersionsManager();
+                    specVersionManager._uoW = uoW;
                     if (specVersionManager.DeleteEntity(primaryKey))
                     {
                         uoW.Save();

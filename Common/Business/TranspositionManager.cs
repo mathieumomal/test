@@ -13,7 +13,7 @@ namespace Etsi.Ultimate.Business
 
         public bool Transpose(DomainClasses.Specification spec, DomainClasses.SpecVersion version)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         #endregion

@@ -36,6 +36,25 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual(result, listSecretariesEmail.Count);
         }
 
+        [Test]
+        [TestCase(1, 1)]//One chairman for the commitee id = 1
+        [TestCase(2, 2)]//One chairman for the commitee id = 2 (but two chairman are here)
+        [TestCase(0, 0)]//0 chairman for the commitee id which isn't in the database
+        public void GetChairmanIdByCommityIdTest(int result, int tbId)
+        {
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.ResponsibleGroupChairmans).Return((IDbSet<ResponsibleGroup_Chairman>)GetResponsibleGroupChairman());
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var personManager = ManagerFactory.Resolve<IPersonManager>();
+            personManager.UoW = uow;
+
+            var chairmanId = personManager.GetChairmanIdByCommityId(tbId);
+
+            Assert.AreEqual(result, chairmanId);
+        }
+
         private static ResponsibleGroupSecretaryFakeDBSet GetResponsibleGroupSecretary()
         {
             var ResponsibleGroupSecretaries = new ResponsibleGroupSecretaryFakeDBSet { 
@@ -44,6 +63,16 @@ namespace Etsi.Ultimate.Tests.Business
                 new ResponsibleGroup_Secretary() { TbId = 2, Email = "two@capgemini.com", PersonId = 2 },
             };
             return ResponsibleGroupSecretaries;
+        }
+
+        private static ResponsibleGroupChairmanFakeDBSet GetResponsibleGroupChairman()
+        {
+            var ResponsibleGroupChairmans = new ResponsibleGroupChairmanFakeDBSet { 
+                new ResponsibleGroup_Chairman() { TbId = 1, Email = "one@capgemini.com", PersonId = 1 },
+                new ResponsibleGroup_Chairman() { TbId = 1, Email = "onBis@capgemini.com", PersonId = 11 },
+                new ResponsibleGroup_Chairman() { TbId = 2, Email = "two@capgemini.com", PersonId = 2 },
+            };
+            return ResponsibleGroupChairmans;
         }
 
     }

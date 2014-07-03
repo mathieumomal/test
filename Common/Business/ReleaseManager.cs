@@ -105,9 +105,15 @@ namespace Etsi.Ultimate.Business
 
             IHistoryRepository historyRepo = RepositoryFactory.Resolve<IHistoryRepository>();
             historyRepo.UoW = UoW;
+            ISpecificationManager specMgr = ManagerFactory.Resolve<ISpecificationManager>();
+            specMgr.UoW = UoW;
+            ISpecVersionManager versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
+            versionMgr._uoW = UoW;
+
             
             IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
             relStatusRepo.UoW = UoW;
+
             var frozen = relStatusRepo.All.Where(x => x.Code == Enum_ReleaseStatus.Frozen).FirstOrDefault();
 
             var updatedObj = releaseRepo.Find(releaseId);
@@ -129,6 +135,28 @@ namespace Etsi.Ultimate.Business
 
             History history = new History() { Fk_ReleaseId = releaseId, Fk_PersonId = personId, CreationDate = DateTime.UtcNow, HistoryText = historyText };
             historyRepo.InsertOrUpdate(history);
+
+            //Transposition
+            var transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
+
+            //Get release related specs
+            //var specRelease = specMgr.GetSpecReleaseBySpecIdAndReleaseId(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
+            var relatedSpecs = specMgr.GetSpecsRelatedToARelease(updatedObj.Pk_ReleaseId);
+            foreach (var spec in relatedSpecs)
+            {
+                //for each of these specs which are UCC and "forPublication"
+                if ((spec.IsUnderChangeControl ?? false) && (spec.IsForPublication ?? false))
+                {
+                    var versions = versionMgr.GetVersionsForASpecRelease(spec.Pk_SpecificationId, updatedObj.Pk_ReleaseId);
+                    //for each of the versions
+                    foreach (var version in versions)
+                    {
+                        //We transpose the version
+                        transposeMgr.Transpose(spec, version);
+                    }
+                }
+            }
+            //Transposition
 
             ClearCache();
         }

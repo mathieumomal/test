@@ -43,6 +43,13 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         View_Persons FindPerson(int id);
 
+        /// <summary>
+        /// Find the commity's chairman
+        /// </summary>
+        /// <param name="primeResponsibleGroupId"></param>
+        /// <returns></returns>
+        int GetChairmanIdByCommityId(int primeResponsibleGroupId);
+
         #endregion
 
         /// <summary>

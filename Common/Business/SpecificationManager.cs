@@ -53,9 +53,11 @@ namespace Etsi.Ultimate.Business
             }
 
             //Set the initial release
-            specification.SpecificationInitialRelease = (specification.Specification_Release != null && specification.Specification_Release.Count > 0) ?
-                specification.Specification_Release.ToList().OrderBy(r => r.Pk_Specification_ReleaseId).FirstOrDefault().Release.Name : string.Empty;
-
+            //specification.SpecificationInitialRelease = (specification.Specification_Release != null && specification.Specification_Release.Count > 0) ?
+            //    specification.Specification_Release.ToList().OrderBy(r => r.Pk_Specification_ReleaseId).FirstOrDefault().Release.Name 
+            //    : 
+            //    string.Empty;
+            specification.SpecificationInitialRelease = string.Empty;
 
             return new KeyValuePair<Specification, UserRightsContainer>(specification, personRights);
         }
@@ -360,6 +362,23 @@ namespace Etsi.Ultimate.Business
                 rights.AddRight(Enum_UserRights.Remarks_ViewPrivate);
 
             return new KeyValuePair<Specification_Release, UserRightsContainer>(specRelease, rights);
+        }
+
+
+        public Specification_Release GetSpecReleaseBySpecIdAndReleaseId(int specId, int releaseId)
+        {
+            var repo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            repo.UoW = UoW;
+            var specRelease = repo.GetSpecificationReleaseByReleaseIdAndSpecId(specId, releaseId, true);
+            return specRelease;
+        }
+
+        public List<Specification> GetSpecsRelatedToARelease(int releaseId)
+        {
+            var repo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            repo.UoW = UoW;
+            var specs = repo.GetAllRelatedSpecificationsByReleaseId(releaseId);
+            return specs;
         }
     }
 }

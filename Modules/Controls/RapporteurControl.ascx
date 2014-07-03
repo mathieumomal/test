@@ -14,6 +14,13 @@
         else
             $("#<%=btnAddRapporteur.ClientID %>").val('Add');
     }
+
+    function setAddingChairmanProgress(flag) {
+        if (flag)
+            $("#<%=btnAddChairman.ClientID %>").val('Adding...');
+        else
+            $("#<%=btnAddChairman.ClientID %>").val('Add');
+    }
 </script>
 <div id="divRapporteurControl">
     <asp:Panel runat="server" ID="panelRapporteurControl" CssClass="">
@@ -23,7 +30,7 @@
             </legend>
             <table style="width: 100%">
                 <tr>
-                    <td colspan="3">
+                    <td colspan="4">
                         <telerik:RadGrid runat="server" ID="rdGridRapporteurs"  AllowPaging="false" 
                                                                                 AllowSorting="false" 
                                                                                 AllowFilteringByColumn="false" 
@@ -87,16 +94,16 @@
                     </td>
                 </tr>
                 <tr class="searchBar">
-                    <td class="center">
+                    <td class="center" style="width:10%">
                         <asp:Label ID="lblAddRapporteur" runat="server" Text="Add rapporteur"/>
                     </td>
-                    <td>
+                    <td style="width:50%">
                         <telerik:RadComboBox
                             id="rdcbRapporteurs"
                             runat="server"
                             AllowCustomText="true"
                             EnableLoadOnDemand="True"
-                            Width="98%"
+                            Width="95%"
                             OnItemsRequested="RdcbRapporteurs_ItemsRequested"
                             CssClass="rdcbRapporteurStyle"
                             OnSelectedIndexChanged="RdcbRapporteurs_SelectedIndexChanged"
@@ -104,8 +111,11 @@
                             EmptyMessage="Search Rapporteurs...">  
                         </telerik:RadComboBox>
                     </td>
-                    <td>
+                    <td style="width:10%">
                         <asp:Button ID="btnAddRapporteur" OnClientClick="setAddingRapporteurProgress(true)" OnClick="BtnAddRapporteur_onClick" runat="server" Text="Add" Width="95%" CssClass="center" />
+                    </td>
+                    <td style="width:10%">
+                        <asp:ImageButton ID="btnAddChairman" OnClientClick="setAddingChairmanProgress(true)" OnClick="BtnAddChairman_onClick" runat="server" ToolTip="Add Chairman" ImageUrl="/controls/Ultimate/images/addChairman.png" Width="20px" CssClass="center" />
                     </td>
                 </tr>
             </table>

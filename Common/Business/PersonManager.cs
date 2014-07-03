@@ -89,6 +89,16 @@ namespace Etsi.Ultimate.Business
             return person;
         }
 
+        public int GetChairmanIdByCommityId(int primeResponsibleGroupId)
+        {
+            IResponsibleGroupChairmanRepository repoChairman = RepositoryFactory.Resolve<IResponsibleGroupChairmanRepository>();
+            repoChairman.UoW = UoW;
+            var chairman = repoChairman.FindAllByCommiteeId(primeResponsibleGroupId).FirstOrDefault();
+
+            if(chairman != null)
+                return chairman.PersonId;
+            return 0;
+        }
         #endregion
 
         public List<string> GetEmailSecretariesFromAPrimeResponsibleGroupByCommityId(int primeResponsibleGroupId)
@@ -99,13 +109,13 @@ namespace Etsi.Ultimate.Business
             repoSecretary.UoW = UoW;
             var secretaries = repoSecretary.FindAllByCommiteeId(primeResponsibleGroupId);
 
-            IPersonRepository repoPerson = RepositoryFactory.Resolve<IPersonRepository>();
-            repoPerson.UoW = UoW;
             foreach(var secretary in secretaries)
             {
                 listSecretariesEmail.Add(secretary.Email);
             }
             return listSecretariesEmail;
         }
+
+        
     }
 }

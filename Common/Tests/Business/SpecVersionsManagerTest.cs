@@ -27,7 +27,8 @@ namespace Etsi.Ultimate.Tests.Business
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
 
-            SpecVersionsManager mng = new SpecVersionsManager(uow);            
+            SpecVersionsManager mng = new SpecVersionsManager();
+            mng._uoW = uow;
             List<SpecVersion> result = mng.GetVersionsForASpecRelease(1, 1);
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result[0].Pk_VersionId);
@@ -41,7 +42,8 @@ namespace Etsi.Ultimate.Tests.Business
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
 
-            SpecVersionsManager mng = new SpecVersionsManager(uow);
+            SpecVersionsManager mng = new SpecVersionsManager();
+            mng._uoW = uow;
             List<SpecVersion> result = mng.GetVersionsBySpecId(1);
             Assert.IsNotNull(result);
             Assert.AreEqual(2, result.Count);
@@ -68,7 +70,8 @@ namespace Etsi.Ultimate.Tests.Business
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
 
-            SpecVersionsManager mng = new SpecVersionsManager(uow);
+            SpecVersionsManager mng = new SpecVersionsManager();
+            mng._uoW = uow;
             SpecVersion result = mng.GetSpecVersionById(1,0).Key;
             Assert.IsNotNull(result);
             Assert.AreEqual("Location1", result.Location);
@@ -94,7 +97,8 @@ namespace Etsi.Ultimate.Tests.Business
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
 
-            SpecVersionsManager mng = new SpecVersionsManager(uow);
+            SpecVersionsManager mng = new SpecVersionsManager();
+            mng._uoW = uow;
             SpecVersion result = mng.GetSpecVersionById(0, 0).Key;
             Assert.IsNull(result);
         }        

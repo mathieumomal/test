@@ -10,20 +10,16 @@ namespace Etsi.Ultimate.Repositories
 {
     public class ResponsibleGroupSecretaryRepository : IResponsibleGroupSecretaryRepository
     {
-        private IUltimateContext context;
-        public ResponsibleGroupSecretaryRepository(IUltimateUnitOfWork iUoW)
+        public ResponsibleGroupSecretaryRepository()
         {
-            context = iUoW.Context;
         }
-
-
 
         #region IEntityRepository<ResponsibleGroupSecretaryRepository> Membres
 
         public IQueryable<ResponsibleGroup_Secretary> All
         {
             get {
-                return context.ResponsibleGroupSecretaries;
+                return UoW.Context.ResponsibleGroupSecretaries;
             }
         }
 
@@ -49,7 +45,7 @@ namespace Etsi.Ultimate.Repositories
 
         public IQueryable<ResponsibleGroup_Secretary> FindAllByCommiteeId(int id)
         {
-            return context.ResponsibleGroupSecretaries.Where(x => x.TbId == id).AsQueryable();
+            return UoW.Context.ResponsibleGroupSecretaries.Where(x => x.TbId == id).AsQueryable();
         }
 
 
@@ -59,7 +55,7 @@ namespace Etsi.Ultimate.Repositories
 
         public void Dispose()
         {
-            context.Dispose();
+            UoW.Context.Dispose();
         }
 
         #endregion

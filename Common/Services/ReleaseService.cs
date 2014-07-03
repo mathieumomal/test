@@ -53,7 +53,6 @@ namespace Etsi.Ultimate.Services
 
         public void FreezeRelease(int releaseId, DateTime? endDate, int personId, int? FreezeMtgId, string FreezeMtgRef)
         {
-
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var releaseManager = ManagerFactory.Resolve<IReleaseManager>();

@@ -20,7 +20,8 @@ namespace Etsi.Ultimate.Tests.Repositories
             [Test]
             public void ResponsibleGroupSecretaryRepository_GetAll()
             {
-                var repo = new ResponsibleGroupSecretaryRepository(GetUnitOfWork());
+                var repo = new ResponsibleGroupSecretaryRepository();
+                repo.UoW = GetUnitOfWork();
                 Assert.AreEqual(3, repo.All.ToList().Count);
             }
 
@@ -30,7 +31,8 @@ namespace Etsi.Ultimate.Tests.Repositories
             [TestCase(0, 3)]//0 secretary for the ommitee id which isn't in the database
             public void ResponsibleGroupSecretaryRepository_FindAllByCommiteeId(int result, int tbId)
             {
-                var repo = new ResponsibleGroupSecretaryRepository(GetUnitOfWork());
+                var repo = new ResponsibleGroupSecretaryRepository();
+                repo.UoW = GetUnitOfWork();
                 Assert.AreEqual(result, repo.FindAllByCommiteeId(tbId).Count());
             }
 
@@ -38,7 +40,8 @@ namespace Etsi.Ultimate.Tests.Repositories
             [ExpectedException(typeof(NotImplementedException))]
             public void ResponsibleGroupSecretaryRepository_AllIncluding()
             {
-                var repo = new ResponsibleGroupSecretaryRepository(GetUnitOfWork());
+                var repo = new ResponsibleGroupSecretaryRepository();
+                repo.UoW = GetUnitOfWork();
                 repo.AllIncluding();
             }
 
@@ -46,7 +49,8 @@ namespace Etsi.Ultimate.Tests.Repositories
             [ExpectedException(typeof(NotImplementedException))]
             public void ResponsibleGroupSecretaryRepository_Find()
             {
-                var repo = new ResponsibleGroupSecretaryRepository(GetUnitOfWork());
+                var repo = new ResponsibleGroupSecretaryRepository();
+                repo.UoW = GetUnitOfWork();
                 repo.Find(1);
             }
 
@@ -54,7 +58,8 @@ namespace Etsi.Ultimate.Tests.Repositories
             [ExpectedException(typeof(InvalidOperationException))]
             public void ResponsibleGroupSecretaryRepository_InsertOrUpdate()
             {
-                var repo = new ResponsibleGroupSecretaryRepository(GetUnitOfWork());
+                var repo = new ResponsibleGroupSecretaryRepository();
+                repo.UoW = GetUnitOfWork();
                 repo.InsertOrUpdate(new ResponsibleGroup_Secretary());
             }
 
@@ -62,7 +67,8 @@ namespace Etsi.Ultimate.Tests.Repositories
             [ExpectedException(typeof(InvalidOperationException))]
             public void ResponsibleGroupSecretaryRepository_Delete()
             {
-                var repo = new ResponsibleGroupSecretaryRepository(GetUnitOfWork());
+                var repo = new ResponsibleGroupSecretaryRepository();
+                repo.UoW = GetUnitOfWork();
                 repo.Delete(2);
             }
 
