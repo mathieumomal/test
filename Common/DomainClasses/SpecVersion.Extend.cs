@@ -71,7 +71,7 @@ namespace Etsi.Ultimate.DomainClasses
                     {
                         val
                             .Append("\nTransposed on : ")
-                            .Append(this.DocumentPassedToPub);
+                            .Append(String.Format("{0:yyyy-MM-dd}", this.DocumentPassedToPub));
                     }
                 }
                 return val.ToString();
