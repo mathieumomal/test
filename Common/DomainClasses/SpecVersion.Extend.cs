@@ -42,9 +42,11 @@ namespace Etsi.Ultimate.DomainClasses
                 var val = new StringBuilder();
                 if(this.ETSI_WKI_ID != null && this.ETSI_WKI_ID != 0)
                 {
-                    if (!String.IsNullOrEmpty(this.ETSI_WKI_Ref))
-                    {
+                    if (!String.IsNullOrEmpty(this.ETSI_WKI_Ref)){
                         val.Append(this.ETSI_WKI_Ref);
+                    }
+                    else{
+                        val.Append("Unknown reference");
                     }
                     if (this.DocumentPassedToPub != null)
                     {
