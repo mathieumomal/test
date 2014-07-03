@@ -217,18 +217,8 @@ namespace Etsi.Ultimate.DomainClasses
                     Remarks = e.Remarks,
                 });                
             });
-            this.Versions.ToList().ForEach(e => SpecForUI.Versions.Add(new SpecVersion()
-            {
-                Pk_VersionId = e.Pk_VersionId,
-                MajorVersion = e.MajorVersion,
-                TechnicalVersion = e.TechnicalVersion,
-                EditorialVersion = e.EditorialVersion,
-                Source = e.Source,
-                Location = e.Location,
-                DocumentUploaded = e.DocumentUploaded,
-                Fk_ReleaseId = e.Fk_ReleaseId,
-                Remarks = e.Remarks,
-            }));
+            this.Versions.ToList().ForEach(e => SpecForUI.Versions.Add(new SpecVersion(e)
+            ));
 
             return SpecForUI;
         }

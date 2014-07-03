@@ -8,6 +8,25 @@ namespace Etsi.Ultimate.DomainClasses
 {
     public partial class SpecVersion
     {
+        /// <summary>
+        /// Cloning constructor. Only clones the light fields.
+        /// </summary>
+        /// <param name="e"></param>
+        public SpecVersion(SpecVersion e)
+        {
+            Pk_VersionId = e.Pk_VersionId;
+            MajorVersion = e.MajorVersion;
+            TechnicalVersion = e.TechnicalVersion;
+            EditorialVersion = e.EditorialVersion;
+            Source = e.Source;
+            Location = e.Location;
+            DocumentUploaded = e.DocumentUploaded;
+            Fk_ReleaseId = e.Fk_ReleaseId;
+            Remarks = e.Remarks;
+            ETSI_WKI_ID = e.ETSI_WKI_ID;
+            ETSI_WKI_Ref = e.ETSI_WKI_Ref;
+            DocumentPassedToPub = e.DocumentPassedToPub;
+        }
         public string LatestRemark
         {
             get
