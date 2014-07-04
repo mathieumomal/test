@@ -398,8 +398,10 @@ namespace Etsi.Ultimate.Module.Versions
                 if (result.ErrorList.Count > 0)
                 {
                     versionUploadScreen.Visible = false;
+                    analysis.Visible = false;
                     confirmation.Visible = true;
-                    
+                    state.Visible = false;
+
                     rptWarningsErrors.DataSource = result.ErrorList;
                     rptWarningsErrors.DataBind();
                 }
@@ -407,6 +409,8 @@ namespace Etsi.Ultimate.Module.Versions
                 {
                     lblSaveStatus.Text = String.Format("Version {0}.{1}.{2} {3} successfully", buffer.Value.MajorVersion, buffer.Value.TechnicalVersion, buffer.Value.EditorialVersion, action.Equals("upload") ? "uploaded" : "allocated");
                     versionUploadScreen.Visible = false;
+                    analysis.Visible = false;
+                    confirmation.Visible = false;
                     state.Visible = true;
 
                     state_confirmation.OnClientClicked = "closeRadWindow";
