@@ -285,26 +285,16 @@ namespace Etsi.Ultimate.Tests.Services
             mockDataContext.AssertWasCalled(x => x.SetAdded(newVersion));
         }
 
-        /// <summary>
-        /// Transposition of a version
-        /// (three conditions to satisfied to complete
-        /// U- : no under change control
-        /// F- : release not frozen
-        /// TF- : specRelease not transposed by force
-        /// </summary>
-        /// <param name="specID"></param>
-        /// <param name="releaseID"></param>
-        /// <param name="specRelease"></param>
-        [TestCase(null, null, 1, false)]
-        [TestCase(null, 1, 1, false)]
-        [TestCase(3,null, 1, false)]
-        [TestCase(3, 1, 0, false)]// U- : not transposed
-        [TestCase(3, 2, 0, false)]// U F- : not transposed
-        [TestCase(1, 2, 0, false)]// U F- TF- : not transposed
-        [TestCase(2, 1, 0, true)]// U F TF- : transposed
-        [TestCase(2, 2, 0, true)]// U F- TF : transposed
-        [TestCase(2, 4, 0, true)]// U F TF : transposed
-        public void UploadTransposition_Transposition(int specID, int releaseID, int errorExpected, bool transpositionExpected)
+        [TestCase(null, null, 1)]
+        [TestCase(null, 1, 1)]
+        [TestCase(3,null, 1)]
+        [TestCase(3, 1, 0)]
+        [TestCase(3, 2, 0)]
+        [TestCase(1, 2, 0)]
+        [TestCase(2, 1, 0)]
+        [TestCase(2, 2, 0)]
+        [TestCase(2, 4, 0)]
+        public void UploadTransposition_Transposition(int specID, int releaseID, int errorExpected)
         {
             //User Rights
             UserRightsContainer userRights = new UserRightsContainer();
@@ -343,17 +333,8 @@ namespace Etsi.Ultimate.Tests.Services
                 Fk_ReleaseId = releaseID
             };
 
-            //Test de transposition MOCK
-            var mockTranspose = MockRepository.GenerateMock<ITranspositionManager>();
-            ManagerFactory.Container.RegisterInstance(typeof(ITranspositionManager), mockTranspose);
-
             Report r = versionsSvc.UploadOrAllocateVersion(newVersion, false, USERID);
             Assert.AreEqual(errorExpected, r.ErrorList.Count());
-            
-            if (transpositionExpected)
-                mockTranspose.AssertWasCalled(x => x.Transpose(Arg<Specification>.Is.Anything, Arg<SpecVersion>.Is.Anything));//Test de transposition : method well called
-            else
-                mockTranspose.AssertWasNotCalled(x => x.Transpose(Arg<Specification>.Is.Anything, Arg<SpecVersion>.Is.Anything));//Test de transposition : method well not called
         }
 
         /// <summary>

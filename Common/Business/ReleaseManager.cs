@@ -77,16 +77,35 @@ namespace Etsi.Ultimate.Business
             // remove some rights depending on release status:
             // - a frozen release cannot be frozen.
             // - a closed release can be neither frozen nor closed
-            if (release.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Frozen)
+            if (release.Enum_ReleaseStatus == null)
             {
-                personRights.RemoveRight(Enum_UserRights.Release_Freeze, true);
+                var releaseStatus = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
+                releaseStatus.UoW = UoW;
+                var frozen = releaseStatus.All.Where(x => x.Enum_ReleaseStatusId == 2).FirstOrDefault();
+                var closed = releaseStatus.All.Where(x => x.Enum_ReleaseStatusId == 3).FirstOrDefault();
+                if (release.Fk_ReleaseStatus == frozen.Enum_ReleaseStatusId)
+                {
+                    personRights.RemoveRight(Enum_UserRights.Release_Freeze, true);
+                }
+                else if (release.Fk_ReleaseStatus == closed.Enum_ReleaseStatusId)
+                {
+                    personRights.RemoveRight(Enum_UserRights.Release_Freeze, true);
+                    personRights.RemoveRight(Enum_UserRights.Release_Close, true);
+                }
             }
-            else if (release.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Closed)
+            else
             {
-                personRights.RemoveRight(Enum_UserRights.Release_Freeze, true);
-                personRights.RemoveRight(Enum_UserRights.Release_Close, true);
+                if (release.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Frozen)
+                {
+                    personRights.RemoveRight(Enum_UserRights.Release_Freeze, true);
+                }
+                else if (release.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Closed)
+                {
+                    personRights.RemoveRight(Enum_UserRights.Release_Freeze, true);
+                    personRights.RemoveRight(Enum_UserRights.Release_Close, true);
+                }
             }
-
+            
             return new KeyValuePair<Release, UserRightsContainer>(releaseRepo.Find(id), personRights);
         }
 
@@ -138,6 +157,7 @@ namespace Etsi.Ultimate.Business
 
             //Transposition
             var transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
+            transposeMgr._uoW = UoW;
 
             //Get release related specs
             //var specRelease = specMgr.GetSpecReleaseBySpecIdAndReleaseId(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);

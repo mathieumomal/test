@@ -6,12 +6,15 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
 
 
 namespace Etsi.Ultimate.Business
 {
     public class TranspositionManager : ITranspositionManager
     {
+        public IUltimateUnitOfWork _uoW { get; set; }
 
         #region ITranspositionManager Members
 
@@ -20,20 +23,22 @@ namespace Etsi.Ultimate.Business
 
         public bool Transpose(DomainClasses.Specification spec, DomainClasses.SpecVersion version)
         {
-
-            if ((version != null) && (version.Location != null))
+            if (this.TransposeAllowed(version))
             {
-                //Two steps to perform transposition
-                string versionURL = version.Location;
-                //STEP1: Transfer of the version to a dedicated folder
-                bool result_Step1 =  transferVersionToDedicatedFolder(versionURL);
-                //Missing step releated to WPMDB record   
+                if ((version != null) && (version.Location != null))
+                {
+                    //Two steps to perform transposition
+                    string versionURL = version.Location;
+                    //STEP1: Transfer of the version to a dedicated folder
+                    bool result_Step1 = transferVersionToDedicatedFolder(versionURL);
+                    //Missing step releated to WPMDB record   
 
-                return result_Step1;
+                    return result_Step1;
+                }
+                else
+                    return false; 
             }
-            else
-                return false;                              
-            
+            return false;
         }
 
         /// <summary>
@@ -62,6 +67,59 @@ namespace Etsi.Ultimate.Business
                 Utils.LogManager.Error("ForceTransposition error: " + e.Message);
                 return false;
             }
+        }
+
+        public bool TransposeAllowed(SpecVersion specVersion)
+        {
+            ISpecificationManager specMgr = ManagerFactory.Resolve<ISpecificationManager>();
+            specMgr.UoW = _uoW;
+            IReleaseManager releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
+            releaseMgr.UoW = _uoW;
+            IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
+            relStatusRepo.UoW = _uoW;
+
+            Specification_Release specRelease = null;
+            Specification spec = null;
+            Release release = null;
+
+            //Check that we have all informations to transpose the version
+            if (specVersion == null)
+                return false;
+            if (specVersion.Specification == null){
+                spec = specMgr.GetSpecificationById(0, specVersion.Fk_SpecificationId ?? 0).Key;
+                if (spec == null)
+                    return false;
+            }
+            else
+                spec = specVersion.Specification;
+
+            if (specVersion.Release == null){
+                release = releaseMgr.GetReleaseById(0, specVersion.Fk_ReleaseId ?? 0).Key;
+                if (release == null)
+                    return false;
+            }
+            else
+                release = specVersion.Release;
+
+            specRelease = specMgr.GetSpecReleaseBySpecIdAndReleaseId(spec.Pk_SpecificationId, release.Pk_ReleaseId);
+            if (specRelease == null)
+                return false;
+            var frozen = relStatusRepo.All.Where(x => x.Code == Enum_ReleaseStatus.Frozen).FirstOrDefault();
+            if (frozen == null)
+                throw new InvalidOperationException("Error for get the frozen status.");
+
+            var UCC = spec.IsUnderChangeControl ?? false;
+            var isFrozen = release.Fk_ReleaseStatus.Equals(frozen.Enum_ReleaseStatusId);
+            var specReleaseTranspoForced = specRelease.isTranpositionForced ?? false;
+            var specIsForPublication = spec.IsForPublication ?? false;
+            if (!UCC)
+                return false;
+            if (specReleaseTranspoForced)
+                return true;
+            if (specIsForPublication && isFrozen)
+                return true;
+
+            return false;
         }
 
 

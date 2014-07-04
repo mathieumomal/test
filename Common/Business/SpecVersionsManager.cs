@@ -90,6 +90,8 @@ namespace Etsi.Ultimate.Business
             releaseMgr.UoW = _uoW;
             IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
             relStatusRepo.UoW = _uoW;
+            ITranspositionManager transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
+            transposeMgr._uoW = _uoW;
 
             var specVersions = repo.GetVersionsForSpecRelease(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
             var specRelease = specMgr.GetSpecReleaseBySpecIdAndReleaseId(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
@@ -106,21 +108,8 @@ namespace Etsi.Ultimate.Business
                 throw new InvalidDataException("Version's releaseId is not defined.");
             if (specRelease == null)
                 throw new InvalidDataException("Relation between specification and release not defined.");
-
-            //Transposition
-            var frozen = relStatusRepo.All.Where(x => x.Code == Enum_ReleaseStatus.Frozen).FirstOrDefault();
-
-            //Three conditions :
-            //Spec underChangeControl + (Release Frozen OR Specification IsTransposedForce)
-            var UCC = spec.IsUnderChangeControl ?? false;
-            var isFrozen = release.Fk_ReleaseStatus.Equals(frozen.Enum_ReleaseStatusId);
-            var transpoForced = specRelease.isTranpositionForced ?? false;
-            if (UCC && (isFrozen || transpoForced))
-            {
-                var transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
-                transposeMgr.Transpose(spec, version);
-            }
-            //Transposition
+            
+            transposeMgr.Transpose(spec, version);
 
             if (existingVersion != null) //Existing Version
             {

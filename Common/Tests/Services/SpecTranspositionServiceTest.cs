@@ -11,6 +11,9 @@ using Etsi.Ultimate.Repositories;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Microsoft.Practices.Unity;
+using Etsi.Ultimate.DataAccess;
+using System.Data.Entity;
+using Etsi.Ultimate.Tests.FakeSets;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -63,7 +66,13 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void ForceTransposition_SendsVersionForTransposition()
         {
-            SetMocks(true);            
+            SetMocks(true);
+
+            var transposeMgr = MockRepository.GenerateMock<ITranspositionManager>();
+            transposeMgr.Stub(r => r.TransposeAllowed(Arg<SpecVersion>.Is.Anything)).Return(true);
+            transposeMgr.Stub(r => r.Transpose(Arg<Specification>.Is.Anything, Arg<SpecVersion>.Is.Anything)).Return(true);
+            ManagerFactory.Container.RegisterInstance<ITranspositionManager>(transposeMgr);
+           
             var specSvc = new SpecificationService();
             DateTime previous = DateTime.Now;
             Assert.AreEqual(true, specSvc.ForceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_OPENED_VERSION_TO_TRANSPOSE, SPEC_ID));
@@ -124,6 +133,45 @@ namespace Etsi.Ultimate.Tests.Services
             SetMocks(true);
             var specSvc = new SpecificationService();
             Assert.IsFalse(specSvc.UnforceTranspositionForRelease(USER_TRANSPOSE_RIGHT, RELEASE_CLOSED_ID, SPEC_ID));
+        }
+
+        /// <summary>
+        /// Transposition of a version
+        /// Conditions to be transposed
+        /// U- : no under change control
+        /// F- : release not frozen
+        /// TF- : specRelease not transposed by force
+        /// SP- : specForPublication
+        /// </summary>
+        /// <param name="versionId"></param>
+        /// <param name="resultExpected"></param>
+        [TestCase(1,false)]//U-
+        [TestCase(2, false)]//FP- SP-
+        [TestCase(3, false)]//TF- F- SP-
+        [TestCase(4, true)]//U TF
+        [TestCase(5, true)]//U SP F
+        public void TransposeAllowed(int versionId, bool resultExpected)
+        {
+            //User Right
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(new UserRightsContainer());
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)GetSpecVersions());
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)GetReleases());
+            mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)GetReleaseStatus());
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)GetSpecs());
+            mockDataContext.Stub(x => x.Specification_Release).Return((IDbSet<Specification_Release>)GetSpecReleases());
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            //METHOD
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            ITranspositionManager transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
+            transposeMgr._uoW = uow;
+            var result = transposeMgr.TransposeAllowed(GetSpecVersions().Where(x => x.Pk_VersionId == versionId).FirstOrDefault());
+
+            Assert.AreEqual(resultExpected, result);
         }
 
         private void SetMocks(bool hasBasicRight)
@@ -208,12 +256,12 @@ namespace Etsi.Ultimate.Tests.Services
             // Version repository
             var versionRep = MockRepository.GenerateMock<ISpecVersionsRepository>();
             versionRep.Stub(v => v.GetVersionsForSpecRelease(SPEC_ID, RELEASE_OPEN_ID)).Return(new List<SpecVersion>() {
-                    new SpecVersion() { MajorVersion = RELEASE_OPENED_VERSION_TO_TRANSPOSE, TechnicalVersion = 0, EditorialVersion = 2, DocumentUploaded = DateTime.Now.AddDays(-1), DocumentPassedToPub = DateTime.Now }
+                    new SpecVersion() { Pk_VersionId=1, MajorVersion = RELEASE_OPENED_VERSION_TO_TRANSPOSE, TechnicalVersion = 0, EditorialVersion = 2, DocumentUploaded = DateTime.Now.AddDays(-1), DocumentPassedToPub = DateTime.Now }
                 });
             versionRep.Stub(v => v.GetVersionsForSpecRelease(SPEC_ID, RELEASE_OPENED_VERSION_TO_TRANSPOSE)).Return(new List<SpecVersion>()
             {
-                new SpecVersion() { MajorVersion = RELEASE_OPENED_VERSION_TO_TRANSPOSE, TechnicalVersion = 0, EditorialVersion = 2, DocumentUploaded = DateTime.Now.AddDays(-1) },
-                new SpecVersion() { MajorVersion = RELEASE_OPENED_VERSION_TO_TRANSPOSE, TechnicalVersion = 1, EditorialVersion = 0, DocumentUploaded = DateTime.Now, Location="http://www.3gpp.org/ftp/Specs/archive/22_series/22.368/22368-c20.zip" },
+                new SpecVersion() {Pk_VersionId=2, MajorVersion = RELEASE_OPENED_VERSION_TO_TRANSPOSE, TechnicalVersion = 0, EditorialVersion = 2, DocumentUploaded = DateTime.Now.AddDays(-1) },
+                new SpecVersion() {Pk_VersionId=3, MajorVersion = RELEASE_OPENED_VERSION_TO_TRANSPOSE, TechnicalVersion = 1, EditorialVersion = 0, DocumentUploaded = DateTime.Now, Location="http://www.3gpp.org/ftp/Specs/archive/22_series/22.368/22368-c20.zip", Fk_ReleaseId = 1, Fk_SpecificationId = 1 },
             });
 
             RepositoryFactory.Container.RegisterInstance<ISpecVersionsRepository>(versionRep);
@@ -245,8 +293,139 @@ namespace Etsi.Ultimate.Tests.Services
             };
             specMgr.Stub(r => r.GetSpecificationById(Arg<int>.Is.Anything, Arg<int>.Is.Anything)).Return(new KeyValuePair<Specification, UserRightsContainer>(spec, rightsKO));
 
+            specMgr.Stub(r => r.GetSpecReleaseBySpecIdAndReleaseId(Arg<int>.Is.Anything, Arg<int>.Is.Anything)).Return(sp6);
+
             ManagerFactory.Container.RegisterInstance<ISpecificationManager>(specMgr);
+
+
         }
 
+        private IDbSet<Specification> GetSpecs()
+        {
+            var list = new SpecificationFakeDBSet();
+            list.Add(new Specification() { Pk_SpecificationId = 1, Number = "1", IsUnderChangeControl = true, IsForPublication = false });
+            list.Add(new Specification() { Pk_SpecificationId = 2, Number = "2", IsUnderChangeControl = false, IsForPublication = true });
+            list.Add(new Specification() { Pk_SpecificationId = 3, Number = "3", IsUnderChangeControl = true, IsForPublication = false });
+            list.Add(new Specification() { Pk_SpecificationId = 4, Number = "3", IsUnderChangeControl = true, IsForPublication = true });
+            return list;
+        }
+
+        private IDbSet<Specification_Release> GetSpecReleases()
+        {
+            var list = new SpecificationReleaseFakeDBSet();
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 1, isTranpositionForced = false });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 3, Fk_ReleaseId = 2, isTranpositionForced = false });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 3, Fk_ReleaseId = 3, isTranpositionForced = true });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 4, Fk_ReleaseId = 1, isTranpositionForced = false });
+            return list;
+        }
+
+        private IDbSet<SpecVersion> GetVersions()
+        {
+            var list = new SpecVersionFakeDBSet();
+            list.Add(new SpecVersion() { Pk_VersionId = 6, Fk_SpecificationId = 1, Fk_ReleaseId = 1 });
+            return list;
+        }
+
+        private IDbSet<Release> GetReleases()
+        {
+            var list = new ReleaseFakeDBSet();
+            list.Add(new Release() { Pk_ReleaseId = 1, Fk_ReleaseStatus = 2, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Frozen", Enum_ReleaseStatusId = 2, Description = "Frozen" } });
+            list.Add(new Release() { Pk_ReleaseId = 2, Fk_ReleaseStatus = 1, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Open", Enum_ReleaseStatusId = 1, Description = "Open" } });
+            list.Add(new Release() { Pk_ReleaseId = 3, Fk_ReleaseStatus = 1, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Open", Enum_ReleaseStatusId = 1, Description = "Open" } });
+            list.Add(new Release() { Pk_ReleaseId = 4, Fk_ReleaseStatus = 2, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Frozen", Enum_ReleaseStatusId = 2, Description = "Frozen" } });
+            return list;
+        }
+
+        private IDbSet<Enum_ReleaseStatus> GetReleaseStatus()
+        {
+            var list = new Enum_ReleaseStatusFakeDBSet();
+            list.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, Code = "Frozen", Description = "Frozen" });
+            return list;
+        }
+
+        private SpecVersionFakeDBSet GetSpecVersions()
+        {
+            var versionDbSet = new SpecVersionFakeDBSet();
+
+            var version = new SpecVersion()
+            {
+                Pk_VersionId = 1,
+                Location = "L1",
+                MajorVersion = 10,
+                TechnicalVersion = 2,
+                EditorialVersion = 1,
+                Source = 1,
+                DocumentUploaded = new DateTime(2013, 9, 18),
+                ProvidedBy = 1,
+                Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 1, Fk_VersionId = 1, RemarkText = "R1" } },
+                Fk_SpecificationId = 2,
+                Fk_ReleaseId = 1
+
+            };
+            var version2 = new SpecVersion()
+            {
+                Pk_VersionId = 2,
+                Location = null,
+                MajorVersion = 20,
+                TechnicalVersion = 2,
+                EditorialVersion = 1,
+                Source = 1,
+                DocumentUploaded = new DateTime(2013, 10, 18),
+                ProvidedBy = 1,
+                Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 2, Fk_VersionId = 2, RemarkText = "R22" } },
+                Fk_SpecificationId = 1,
+                Fk_ReleaseId = 1
+            };
+            var version3 = new SpecVersion()
+            {
+                Pk_VersionId = 3,
+                Location = null,
+                MajorVersion = 30,
+                TechnicalVersion = 2,
+                EditorialVersion = 1,
+                Source = 1,
+                DocumentUploaded = new DateTime(2013, 11, 18),
+                ProvidedBy = 1,
+                Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 3, Fk_VersionId = 3, RemarkText = "R333" } },
+                Fk_SpecificationId = 3,
+                Fk_ReleaseId = 2
+            };
+            var version4 = new SpecVersion()
+            {
+                Pk_VersionId = 4,
+                Location = null,
+                MajorVersion = 30,
+                TechnicalVersion = 2,
+                EditorialVersion = 1,
+                Source = 1,
+                DocumentUploaded = new DateTime(2013, 11, 18),
+                ProvidedBy = 1,
+                Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 3, Fk_VersionId = 3, RemarkText = "R33" } },
+                Fk_SpecificationId = 3,
+                Fk_ReleaseId = 3
+            };
+            var version5 = new SpecVersion()
+            {
+                Pk_VersionId = 5,
+                Location = null,
+                MajorVersion = 30,
+                TechnicalVersion = 2,
+                EditorialVersion = 1,
+                Source = 1,
+                DocumentUploaded = new DateTime(2013, 11, 18),
+                ProvidedBy = 1,
+                Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 3, Fk_VersionId = 3, RemarkText = "R1998" } },
+                Fk_SpecificationId = 4,
+                Fk_ReleaseId = 1
+            };
+            versionDbSet.Add(version);
+            versionDbSet.Add(version2);
+            versionDbSet.Add(version3);
+            versionDbSet.Add(version4);
+            versionDbSet.Add(version5);
+
+            return versionDbSet;
+        }
     }
 }

@@ -377,37 +377,29 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void Test_FreezeRelease()
         {
+            //User Right
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(new UserRightsContainer());
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
             int releaseIdToTest = 1;
             DateTime FreezeDate = DateTime.Now;
             string FreezeRef = "S6-25";
             int FreezeRefId = 21;
             int personID = 12;
 
-            ReleaseFakeRepository releaseFakeRepository = new ReleaseFakeRepository();
-            var releaseStatus = new Enum_ReleaseStatusFakeDBSet();
-            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 1, Code = "Open" });
-            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, Code = "Frozen" });
-            releaseStatus.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 3, Code = "Closed" });
-
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
-            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)releaseFakeRepository.All).Repeat.Once();
-            mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)releaseStatus).Repeat.Once();
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)GetReleases());
+            mockDataContext.Stub(x => x.Enum_ReleaseStatus).Return((IDbSet<Enum_ReleaseStatus>)GetReleaseStatus());
             mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)GetSpecs());
             mockDataContext.Stub(x => x.Specification_Release).Return((IDbSet<Specification_Release>)GetSpecReleases());
             mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)GetVersions());
 
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
-            //Test de transposition MOCK
-            var mockTranspose = MockRepository.GenerateMock<ITranspositionManager>();
-            ManagerFactory.Container.RegisterInstance(typeof(ITranspositionManager), mockTranspose);
-
             //Freeze a release
             var releaseService = new ReleaseService();
             releaseService.FreezeRelease(releaseIdToTest, FreezeDate, personID, FreezeRefId, FreezeRef);
-
-            //Test de transposition : method well called
-            mockTranspose.AssertWasCalled(x => x.Transpose(Arg<Specification>.Is.Anything, Arg<SpecVersion>.Is.Anything));
 
             mockDataContext.AssertWasCalled(x => x.SetModified(Arg<Release>.Matches(y => y.Fk_ReleaseStatus == 2 && y.Enum_ReleaseStatus == null
                                                                                                                 && y.EndDate == FreezeDate)));
@@ -417,7 +409,6 @@ namespace Etsi.Ultimate.Tests.Services
             mockDataContext.AssertWasCalled(x => x.SaveChanges(), y => y.Repeat.Once());
 
             mockDataContext.VerifyAllExpectations();
-            mockTranspose.VerifyAllExpectations();
         }
 
         #region datas
@@ -439,6 +430,21 @@ namespace Etsi.Ultimate.Tests.Services
         {
             var list = new SpecVersionFakeDBSet();
             list.Add(new SpecVersion() { Pk_VersionId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 1 });
+            return list;
+        }
+        private IDbSet<Release> GetReleases()
+        {
+            var list = new ReleaseFakeDBSet();
+            list.Add(new Release() { Pk_ReleaseId = 1, Fk_ReleaseStatus = 2, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Frozen", Enum_ReleaseStatusId = 2, Description = "Frozen" } });
+            list.Add(new Release() { Pk_ReleaseId = 2, Fk_ReleaseStatus = 1, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Open", Enum_ReleaseStatusId = 1, Description = "Open" } });
+            list.Add(new Release() { Pk_ReleaseId = 3, Fk_ReleaseStatus = 1, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Open", Enum_ReleaseStatusId = 1, Description = "Open" } });
+            list.Add(new Release() { Pk_ReleaseId = 4, Fk_ReleaseStatus = 2, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Frozen", Enum_ReleaseStatusId = 2, Description = "Frozen" } });
+            return list;
+        }
+        private IDbSet<Enum_ReleaseStatus> GetReleaseStatus()
+        {
+            var list = new Enum_ReleaseStatusFakeDBSet();
+            list.Add(new Enum_ReleaseStatus() { Enum_ReleaseStatusId = 2, Code = "Frozen", Description = "Frozen" });
             return list;
         }
         #endregion datas

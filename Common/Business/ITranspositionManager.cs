@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
 
 namespace Etsi.Ultimate.Business
 {
@@ -12,6 +13,8 @@ namespace Etsi.Ultimate.Business
     /// </summary>
     public interface ITranspositionManager
     {
+        IUltimateUnitOfWork _uoW { get; set; }
+
         /// <summary>
         /// Sends the version to ETSI for transposition.
         /// </summary>
@@ -19,5 +22,13 @@ namespace Etsi.Ultimate.Business
         /// <param name="version">Version to transpose.</param>
         /// <returns></returns>
         bool Transpose(Specification spec, SpecVersion version);
+
+
+        /// <summary>
+        /// Check if the transposition is allowed
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        bool TransposeAllowed(SpecVersion specVersion);
     }
 }
