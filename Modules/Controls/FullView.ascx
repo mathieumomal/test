@@ -8,6 +8,7 @@
     background-color:white;
     height:24px;
     width:24px;
+    vertical-align: middle;
 }
 
 </style>
