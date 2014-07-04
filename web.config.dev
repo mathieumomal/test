@@ -69,6 +69,7 @@
 	<add key="RapporteurDetailsAddress" value="http://webapp.13.etsidev.org/teldir/ListPersDetails.asp?PersId="/>
 	<add key="FtpExportAddress" value="ftp://ftp.3gpp.org/Information/WORK_PLAN/"/>
 	<add key="FtpVersionsPhysicalPath" value="D:\AppTrans\Ftp\" />
+	<add key="VersionsLatestFTPFolder" value="2014-09" />
   <add key="TranspositionFolderPath" value=""/>
   <add key="WIReportPath" value ="http://webapp.13.etsidev.org/workprogram/Report_WorkItem.asp?WKI_ID="/>
 	

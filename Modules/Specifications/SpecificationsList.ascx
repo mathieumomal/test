@@ -61,6 +61,7 @@
                 <td style="line-height: 22px;">
                     <asp:LinkButton ID="btnNewSpecification" class="btn3GPP-success" runat="server" OnClientClick="var popUp=window.open('/desktopmodules/Specifications/EditSpecification.aspx?action=create', 'Specification-Create', 'height=690,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();return false;" Text="New Specification" />                    
                     <span style="float: right; padding-bottom: 2px; white-space: nowrap">
+                        <asp:ImageButton ID="imgBtnFTP" runat="server" ImageAlign="Top" AlternateText="Manage specifications folders on FTP" ImageUrl="/DesktopModules/Specifications/images/ftp.png" OnClientClick="openFTPConfiguration(); return false;" />
                         <asp:HyperLink ID="lnkManageITURecommendations" runat="server" Text="Manage ITU Recommendations" Target="_blank" />
                         <asp:ImageButton ID="btnSpecExport" runat="server" ImageAlign="Top" AlternateText="Export" ImageUrl="/DesktopModules/Specifications/images/excel_export.png" OnClick="btnSpecExport_Click" OnClientClick="removeBg" />
                         <ult:fullviewcontrol id="ultFullView" runat="server" />
@@ -230,6 +231,30 @@
         </table>
     </ContentTemplate>
 </asp:UpdatePanel>
+<telerik:RadAjaxManager ID="ramVersions" runat="server" EnablePageHeadUpdate="false">
+</telerik:RadAjaxManager>
+<telerik:RadWindowManager ID="rwmVersions" runat="server">
+    <Windows>
+        <telerik:RadWindow ID="rwFTPConfiguration" runat="server" Modal="true" Behaviors="Close" Title="FTP Configuration" Height="225" Width="400" VisibleStatusbar="false" IconUrl="false">
+            <ContentTemplate>
+                <div id="divFTPConfiguration" style="padding: 5px">
+                    <div style="margin: 5px 5px 5px 5px">
+                        Do you want to create missing hardlinks from '\Specs\<asp:Label ID="lblFolderPath" runat="server"/>' to '\Specs\latest' ?
+                        <br />
+                        <br />
+                        <br />
+                        *This is required only when you map 'VersionsLatestFTPFolder' in web.config to an non-empty folder
+                    </div>
+                    <br />
+                    <div class="footer" style="text-align: right">
+                        <asp:Button ID="btnConfirm" runat="server" Text="Yes" OnClick="btnConfirm_Click"/>
+                        <asp:Button ID="btnCancel" runat="server" Text="No" OnClientClick="return closePopUpWindow();" />
+                    </div>
+                </div>
+            </ContentTemplate>
+        </telerik:RadWindow>
+    </Windows>
+</telerik:RadWindowManager>
 <script type="text/javascript">
     var lastVal = "";
     function checkExport() {
@@ -272,4 +297,16 @@
     });
 
     Sys.WebForms.PageRequestManager.getInstance().add_endRequest(checkExport);
+
+    function openFTPConfiguration() {
+        var radWindowFTPConfiguration = $find("<%= rwFTPConfiguration.ClientID %>");
+                radWindowFTPConfiguration.show();
+    };
+
+    function closePopUpWindow() {
+        var radWindowFTPConfiguration = $find("<%= rwFTPConfiguration.ClientID %>");
+        radWindowFTPConfiguration.close();
+        return false;
+    }
+
 </script>

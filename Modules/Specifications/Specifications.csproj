@@ -189,6 +189,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="images\ftp.png" />
     <Content Include="images\success.png" />
     <Content Include="MassivePromote.aspx" />
     <Content Include="VersionRemarksControl.ascx" />

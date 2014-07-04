@@ -236,7 +236,8 @@
                     /* Validations */
                     function PerformValidations() {
                         var isValid = true;
-                        if (hidIsRequired) {
+                        var hidIsRequiredValue = $('#hidIsRequired').val() == "True";
+                        if (hidIsRequiredValue) {
                             var meetingControl = $find('<% =UploadMeeting.MeetingClientID %>');
                             var selectedMeetingID = meetingControl.get_value().split("|")[0];
                             if (selectedMeetingID <= 0) {

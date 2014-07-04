@@ -35,7 +35,7 @@ namespace Etsi.Ultimate.DomainClasses
         Specification_Withdraw,
         Specification_View_UnAllocated_Number,
         Specification_ManageITURecommendations,
-
+        Specification_SyncHardLinksOnLatestFolder,
         Specification_ForceTransposition,
         Specification_UnforceTransposition,
         Specification_WithdrawFromRelease,

@@ -52,6 +52,19 @@ namespace Etsi.Ultimate.Utils
         }
 
         /// <summary>
+        /// FTP Folder name to store latest versions
+        /// </summary>
+        public static string VersionsLatestFTPFolder
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["VersionsLatestFTPFolder"] != null)
+                    return ConfigurationManager.AppSettings["VersionsLatestFTPFolder"].ToString();
+                return "";
+            }
+        }
+
+        /// <summary>
         /// Gets FTP path for downloading export zips
         /// </summary>
         public static string FtpExportAddress

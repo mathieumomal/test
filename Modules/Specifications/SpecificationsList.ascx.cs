@@ -24,6 +24,9 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using System.IO;
+using Etsi.Ultimate.Utils;
+using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 
 
 namespace Etsi.Ultimate.Module.Specifications
@@ -48,6 +51,8 @@ namespace Etsi.Ultimate.Module.Specifications
         private const string CONST_DSID_KEY = "ETSI_DS_ID";
         private const string CONST_SERIES_DATASOURCE = "SeriesDataSource";
         private const string CONST_TECH_DATASOURCE = "TechDataSource";
+        private const string CONST_FTP_LATEST_VERSIONS_PATH = "{0}\\Specs\\latest";
+        private const string CONST_FTP_VERSIONS_MAP_PATH = "{0}\\Specs\\{1}";
 
         private bool isUrlSearch;
         private bool fromSearch;
@@ -122,6 +127,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     trNumberNotYetAllocated.Visible = userRights.HasRight(Enum_UserRights.Specification_View_UnAllocated_Number);
                     lnkManageITURecommendations.Visible = userRights.HasRight(Enum_UserRights.Specification_ManageITURecommendations);
                     btnNewSpecification.Visible = userRights.HasRight(Enum_UserRights.Specification_Create);
+                    imgBtnFTP.Visible = userRights.HasRight(Enum_UserRights.Specification_SyncHardLinksOnLatestFolder);
 
                     var specSvc = ServicesFactory.Resolve<ISpecificationService>();
                     searchObj = new SpecificationSearch();
@@ -133,6 +139,8 @@ namespace Etsi.Ultimate.Module.Specifications
 
                     BindControls();
                     ReleaseCtrl.Load += ReleaseCtrl_Load;
+
+                    lblFolderPath.Text = ConfigVariables.VersionsLatestFTPFolder;
                 }
             }
             catch (Exception exc) //Module failed to load
@@ -362,6 +370,64 @@ namespace Etsi.Ultimate.Module.Specifications
             rgSpecificationList.DataSource = result.Key.Key;
         }
 
+        /// <summary>
+        /// Create hardlinks in \Specs\Latest folder
+        /// </summary>
+        /// <param name="sender">Confirm button</param>
+        /// <param name="e">Event arguments</param>
+        protected void btnConfirm_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string ftpBasePath = ConfigVariables.FtpBasePath;
+                string versionsLatestFTPFolder = ConfigVariables.VersionsLatestFTPFolder;
+                if (!String.IsNullOrEmpty(ftpBasePath) && !String.IsNullOrEmpty(versionsLatestFTPFolder))
+                {
+                    var sourcePath = String.Format(CONST_FTP_VERSIONS_MAP_PATH, ftpBasePath, versionsLatestFTPFolder);
+                    var mapPath = String.Format(CONST_FTP_LATEST_VERSIONS_PATH, ftpBasePath);
+
+                    //Create source path, if not exists
+                    if (!Directory.Exists(sourcePath))
+                        Directory.CreateDirectory(sourcePath);
+
+                    //Delete old links
+                    if (Directory.Exists(mapPath))
+                    {
+                        string[] files = Directory.GetFiles(mapPath);
+                        string[] dirs = Directory.GetDirectories(mapPath);
+                        //Remove Files
+                        foreach (string file in files)
+                        {
+                            File.SetAttributes(file, FileAttributes.Normal);
+                            File.Delete(file);
+                        }
+                        //Remove directories
+                        foreach (string dir in dirs)
+                        {
+                            Directory.Delete(dir, true);
+                        }
+                    }
+
+                    string[] fileNames = Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories);
+
+                    //Create hard links for all files
+                    foreach (string fileName in fileNames)
+                    {
+                        string hardLinkPath = fileName.Replace(sourcePath, mapPath);
+                        string hardLinkDirectory = Path.GetDirectoryName(hardLinkPath);
+                        if (!Directory.Exists(hardLinkDirectory))
+                            Directory.CreateDirectory(hardLinkDirectory);
+
+                        CreateHardLink(hardLinkPath, fileName, IntPtr.Zero);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error("Failed to create hardlinks in FTP. \nError: " + ex.Message);
+            }
+        }
+
         #endregion
 
         #region Helper methods
@@ -561,6 +627,20 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             isUrlSearch = (Request.QueryString["q"] != null);
         }
+
+        /// <summary>
+        /// Create Hard links between files
+        /// </summary>
+        /// <param name="lpFileName">New File Name(Hard Link Path)</param>
+        /// <param name="lpExistingFileName">Original File Name</param>
+        /// <param name="lpSecurityAttributes">Security Attributes</param>
+        /// <returns>True/False</returns>
+        [DllImport("Kernel32.dll", CharSet = CharSet.Unicode)]
+        static extern bool CreateHardLink(
+            string lpFileName,
+            string lpExistingFileName,
+            IntPtr lpSecurityAttributes
+        );
 
         #endregion
 

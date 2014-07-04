@@ -33,8 +33,9 @@ namespace Etsi.Ultimate.Module.Versions
         private static string versionPathToSave = String.Empty;
         private const string CONST_VALID_FILENAME = "{0}-{1}{2}{3}";
         private const string CONST_FTP_ARCHIVE_PATH = "{0}\\Specs\\archive\\{1}_series\\{2}\\";
+        private const string CONST_FTP_LATEST_PATH = "{0}\\Specs\\latest\\{1}\\{2}_series\\";
         private const string CONST_FTP_LATEST_DRAFTS_PATH = "{0}\\Specs\\latest-drafts\\";
-        private const string CONST_FTP_VERSIONS_PATH = "{0}\\Specs\\{1:0000}_{2:00}\\{3}\\{4}_series\\";
+        private const string CONST_FTP_VERSIONS_PATH = "{0}\\Specs\\{1}\\{2}\\{3}_series\\";        
 
         //Properties
         private static int UserId;
@@ -84,7 +85,7 @@ namespace Etsi.Ultimate.Module.Versions
         protected void UploadBtn_Click(object sender, EventArgs e)
         {
             var meetingId = UploadMeeting.SelectedMeetingId;
-            if (meetingId > 0)
+            if (meetingId > 0 || isDraft)
             {
                 versionUploadScreen.Visible = false;
                 confirmation.Visible = true;
@@ -673,9 +674,12 @@ namespace Etsi.Ultimate.Module.Versions
                     {
                         if ((UploadMeeting.SelectedMeetingId > 0) && (UploadMeeting.SelectedMeeting.START_DATE != null))
                         {
-                            string underChangeControlPath = String.Format(CONST_FTP_VERSIONS_PATH, ftpBasePath, UploadMeeting.SelectedMeeting.START_DATE.Value.Year, UploadMeeting.SelectedMeeting.START_DATE.Value.Month, ReleaseVal.Text, SpecNumberVal.Text.Split('.')[0]);
-                            bool isUCPathExists = Directory.Exists(underChangeControlPath);
-                            if (!isUCPathExists)
+                            string latestFolder = ConfigVariables.VersionsLatestFTPFolder;
+                            if(String.IsNullOrEmpty(latestFolder))
+                               latestFolder = String.Format("{0:0000}-{1:00}", UploadMeeting.SelectedMeeting.START_DATE.Value.Year, UploadMeeting.SelectedMeeting.START_DATE.Value.Month);
+                            string underChangeControlPath = String.Format(CONST_FTP_VERSIONS_PATH, ftpBasePath, latestFolder, ReleaseVal.Text, SpecNumberVal.Text.Split('.')[0]);
+                            bool isUCCPathExists = Directory.Exists(underChangeControlPath);
+                            if (!isUCCPathExists)
                                 Directory.CreateDirectory(underChangeControlPath);
 
                             string fileName = Path.GetFileName(versionPathToSave);
@@ -697,6 +701,14 @@ namespace Etsi.Ultimate.Module.Versions
                                         File.Delete(draftFile);
                                 }
                             }
+
+                            //Create hard link in 'Latest' folder
+                            string latestFolderPath = String.Format(CONST_FTP_LATEST_PATH, ftpBasePath, ReleaseVal.Text, SpecNumberVal.Text.Split('.')[0]);
+                            bool isLatestFolderPathExists = Directory.Exists(latestFolderPath);
+                            if (!isLatestFolderPathExists)
+                                Directory.CreateDirectory(latestFolderPath);
+                            string hardLinkPathInLatestFolder = Path.Combine(latestFolderPath, fileName);
+                            CreateHardLink(hardLinkPathInLatestFolder, hardLinkPath, IntPtr.Zero);
                         }
                     }
                 }
