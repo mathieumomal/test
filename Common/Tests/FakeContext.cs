@@ -35,7 +35,6 @@ namespace Etsi.Ultimate.Tests
         public System.Data.Entity.IDbSet<SpecificationTechnology> SpecificationTechnologies{get;set;}
         public System.Data.Entity.IDbSet<SpecificationResponsibleGroup> SpecificationResponsibleGroups {get;set; }
         public System.Data.Entity.IDbSet<ResponsibleGroup_Secretary> ResponsibleGroupSecretaries{get;set;}
-        public System.Data.Entity.IDbSet<ResponsibleGroup_Chairman> ResponsibleGroupChairmans { get; set; }
         public System.Data.Entity.IDbSet<SpecVersion> SpecVersions{get;set;}
         public System.Data.Entity.IDbSet<Enum_CRCategory> Enum_CRCategory{get;set;}
         public System.Data.Entity.IDbSet<Enum_TDocStatus> Enum_TDocStatus{ get; set;}

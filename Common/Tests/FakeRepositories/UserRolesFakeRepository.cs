@@ -82,5 +82,15 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
 
         #endregion
 
+
+        #region IUserRolesRepository Members
+
+
+        public int GetChairmanIdByCommitteeId(int committeeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

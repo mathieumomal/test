@@ -89,6 +89,23 @@ namespace Etsi.Ultimate.Repositories
         }
 
         #endregion
+
+        #region IUserRolesRepository Members
+
+        /// <summary>
+        /// Returns latest known chairman. Returns 0 if no chairman is found.
+        /// </summary>
+        /// <param name="committeeId"></param>
+        /// <returns></returns>
+        public int GetChairmanIdByCommitteeId(int committeeId)
+        {
+            var usr = UoW.Context.Users_Groups.Where(p => p.PERS_ROLE_CODE != null && (p.PERS_ROLE_CODE.ToLower() == "chairman" || p.PERS_ROLE_CODE.ToLower() == "convenor") && p.TB_ID == committeeId).OrderByDescending(p => p.END_DATE).FirstOrDefault();
+            if (usr == null)
+                return 0;
+            return usr.PERSON_ID;
+        }
+
+        #endregion
     }
 
     /// <summary>
@@ -121,5 +138,12 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <returns></returns>
         List<int> GetWpMgr();
+
+        /// <summary>
+        /// Return Chairman for a given TSG or WG.
+        /// </summary>
+        /// <param name="committeeId"></param>
+        /// <returns></returns>
+        int GetChairmanIdByCommitteeId(int committeeId);
     }
 }

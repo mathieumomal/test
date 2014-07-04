@@ -36,13 +36,6 @@
       [ETSI_WorkItem].[WKI_REFERENCE] AS [WKI_REFERENCE]
       FROM [dbo].[ETSI_WorkItem] AS [ETSI_WorkItem]</DefiningQuery>
           </EntitySet>
-          <EntitySet Name="ResponsibleGroup_Chairman" EntityType="Etsi.Ultimate.DataAccess.Store.ResponsibleGroup_Chairman" store:Type="Views" store:Schema="dbo" store:Name="ResponsibleGroup_Chairman">
-            <DefiningQuery>SELECT 
-      [ResponsibleGroup_Chairman].[TbId] AS [TbId], 
-      [ResponsibleGroup_Chairman].[Email] AS [Email], 
-      [ResponsibleGroup_Chairman].[PersonId] AS [PersonId]
-      FROM [dbo].[ResponsibleGroup_Chairman] AS [ResponsibleGroup_Chairman]</DefiningQuery>
-          </EntitySet>
           <EntitySet Name="ResponsibleGroup_Secretary" EntityType="Etsi.Ultimate.DataAccess.Store.ResponsibleGroup_Secretary" store:Type="Views" store:Schema="dbo" store:Name="ResponsibleGroup_Secretary">
             <DefiningQuery>SELECT 
       [ResponsibleGroup_Secretary].[TbId] AS [TbId], 
@@ -62,7 +55,9 @@
       [Users_Groups].[PERSON_ID] AS [PERSON_ID], 
       [Users_Groups].[PLIST_ID] AS [PLIST_ID], 
       [Users_Groups].[TB_ID] AS [TB_ID], 
-      [Users_Groups].[PERS_ROLE_CODE] AS [PERS_ROLE_CODE]
+      [Users_Groups].[PERS_ROLE_CODE] AS [PERS_ROLE_CODE], 
+      [Users_Groups].[INTERNET_ADD] AS [INTERNET_ADD], 
+      [Users_Groups].[END_DATE] AS [END_DATE]
       FROM [dbo].[Users_Groups] AS [Users_Groups]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="View_Communities" EntityType="Etsi.Ultimate.DataAccess.Store.View_Communities" store:Type="Views" store:Schema="dbo" store:Name="View_Communities">
@@ -589,8 +584,8 @@
           <Property Name="CreationDate" Type="datetime" Nullable="false" />
           <Property Name="WorkPlanFilePath" Type="nvarchar" Nullable="false" MaxLength="255" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.ETSI_WorkItem » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.ETSI_WorkItem' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="ETSI_WorkItem">
           <Key>
@@ -599,19 +594,8 @@
           <Property Name="WKI_ID" Type="int" Nullable="false" />
           <Property Name="WKI_REFERENCE" Type="varchar" MaxLength="30" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.ResponsibleGroup_Chairman » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
-      -->
-        <EntityType Name="ResponsibleGroup_Chairman">
-          <Key>
-            <PropertyRef Name="PersonId" />
-          </Key>
-          <Property Name="TbId" Type="int" />
-          <Property Name="Email" Type="varchar" MaxLength="100" />
-          <Property Name="PersonId" Type="int" Nullable="false" />
-        </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.ResponsibleGroup_Secretary » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.ResponsibleGroup_Secretary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="ResponsibleGroup_Secretary">
           <Key>
@@ -621,8 +605,8 @@
           <Property Name="Email" Type="varchar" MaxLength="100" />
           <Property Name="PersonId" Type="int" Nullable="false" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_AdHoc_Roles » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.Users_AdHoc_Roles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="Users_AdHoc_Roles">
           <Key>
@@ -633,8 +617,8 @@
           <Property Name="PERSON_ID" Type="nvarchar" MaxLength="3750" />
           <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="50" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_Groups » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.Users_Groups' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="Users_Groups">
           <Key>
@@ -646,9 +630,11 @@
           <Property Name="PLIST_ID" Type="int" Nullable="false" />
           <Property Name="TB_ID" Type="int" />
           <Property Name="PERS_ROLE_CODE" Type="varchar" Nullable="false" MaxLength="12" />
+          <Property Name="INTERNET_ADD" Type="varchar" MaxLength="100" />
+          <Property Name="END_DATE" Type="datetime" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Communities » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.View_Communities' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="View_Communities">
           <Key>
@@ -662,8 +648,8 @@
           <Property Name="ActiveCode" Type="varchar" MaxLength="12" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Meetings » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.View_Meetings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="View_Meetings">
           <Key>
@@ -700,8 +686,8 @@
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
           <Property Name="MtgShortRef" Type="varchar" MaxLength="50" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_ModulesPages » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.View_ModulesPages' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="View_ModulesPages">
           <Key>
@@ -715,8 +701,8 @@
           <Property Name="ModuleID" Type="int" Nullable="false" />
           <Property Name="TabID" Type="int" Nullable="false" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Persons » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.View_Persons' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="View_Persons">
           <Key>
@@ -1343,7 +1329,6 @@
             <End Role="CR_WorkItems" EntitySet="CR_WorkItems" />
           </AssociationSet>
           <EntitySet Name="Communities" EntityType="Etsi.Ultimate.DataAccess.Community" />
-          <EntitySet Name="ResponsibleGroupChairmans" EntityType="Etsi.Ultimate.DataAccess.ResponsibleGroup_Chairman" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -1452,6 +1437,8 @@
           <Property Type="Int32" Name="PLIST_ID" Nullable="false" />
           <Property Type="Int32" Name="TB_ID" />
           <Property Type="String" Name="PERS_ROLE_CODE" Nullable="false" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="INTERNET_ADD" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="DateTime" Name="END_DATE" Precision="3" />
         </EntityType>
         <EntityType Name="Users_AdHoc_Roles">
           <Key>
@@ -2258,14 +2245,6 @@
           <Property Type="String" Name="ActiveCode" MaxLength="12" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="ShortName" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="ResponsibleGroup_Chairman">
-          <Key>
-            <PropertyRef Name="PersonId" />
-          </Key>
-          <Property Type="Int32" Name="TbId" />
-          <Property Type="String" Name="Email" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Type="Int32" Name="PersonId" Nullable="false" />
-        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2339,6 +2318,8 @@
           <EntitySetMapping Name="Users_Groups">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Users_Groups">
               <MappingFragment StoreEntitySet="Users_Groups">
+                <ScalarProperty Name="END_DATE" ColumnName="END_DATE" />
+                <ScalarProperty Name="INTERNET_ADD" ColumnName="INTERNET_ADD" />
                 <ScalarProperty Name="PERS_ROLE_CODE" ColumnName="PERS_ROLE_CODE" />
                 <ScalarProperty Name="TB_ID" ColumnName="TB_ID" />
                 <ScalarProperty Name="PLIST_ID" ColumnName="PLIST_ID" />
@@ -2726,15 +2707,6 @@
                 <ScalarProperty Name="TbTitle" ColumnName="TbTitle" />
                 <ScalarProperty Name="TbType" ColumnName="TbType" />
                 <ScalarProperty Name="TbName" ColumnName="TbName" />
-                <ScalarProperty Name="TbId" ColumnName="TbId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="ResponsibleGroupChairmans">
-            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ResponsibleGroup_Chairman">
-              <MappingFragment StoreEntitySet="ResponsibleGroup_Chairman">
-                <ScalarProperty Name="PersonId" ColumnName="PersonId" />
-                <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="TbId" ColumnName="TbId" />
               </MappingFragment>
             </EntityTypeMapping>

@@ -107,7 +107,6 @@
     <Compile Include="FakeSets\Enum_SerieFakeDBSet.cs" />
     <Compile Include="FakeSets\Enum_TDocStatusFakeDbSet.cs" />
     <Compile Include="FakeSets\Enum_TechnologyFakeDBSet.cs" />
-    <Compile Include="FakeSets\ResponsibleGroupChairmanFakeDBSet.cs" />
     <Compile Include="FakeSets\ResponsibleGroupSecretaryFakeDBSet.cs" />
     <Compile Include="FakeSets\SpecificationDBSet.cs" />
     <Compile Include="FakeSets\SpecificationRapporteurFakeDbSet.cs" />
@@ -120,7 +119,6 @@
     <Compile Include="FakeSets\VersionFakeDBSet.cs" />
     <Compile Include="FakeSets\ViewPersonFakeDBSet.cs" />
     <Compile Include="FakeSets\WorkPlanFileFakeDBSet.cs" />
-    <Compile Include="Repositories\ResponsibleGroupChairmanRepositoryTest.cs" />
     <Compile Include="Repositories\ResponsibleGroupSecretaryRepositoryTest.cs" />
     <Compile Include="Repositories\SpecificationRepositoryReleaseTest.cs" />
     <Compile Include="Repositories\SpecificationWorkItemRepositoryTest.cs" />

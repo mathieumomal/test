@@ -91,13 +91,10 @@ namespace Etsi.Ultimate.Business
 
         public int GetChairmanIdByCommityId(int primeResponsibleGroupId)
         {
-            IResponsibleGroupChairmanRepository repoChairman = RepositoryFactory.Resolve<IResponsibleGroupChairmanRepository>();
+            var repoChairman = RepositoryFactory.Resolve<IUserRolesRepository>();
             repoChairman.UoW = UoW;
-            var chairman = repoChairman.FindAllByCommiteeId(primeResponsibleGroupId).FirstOrDefault();
+            return repoChairman.GetChairmanIdByCommitteeId(primeResponsibleGroupId);
 
-            if(chairman != null)
-                return chairman.PersonId;
-            return 0;
         }
         #endregion
 

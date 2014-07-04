@@ -53,11 +53,14 @@ namespace Etsi.Ultimate.Business
             }
 
             //Set the initial release
-            //specification.SpecificationInitialRelease = (specification.Specification_Release != null && specification.Specification_Release.Count > 0) ?
-            //    specification.Specification_Release.ToList().OrderBy(r => r.Pk_Specification_ReleaseId).FirstOrDefault().Release.Name 
-            //    : 
-            //    string.Empty;
             specification.SpecificationInitialRelease = string.Empty;
+            if (specification.Specification_Release != null && specification.Specification_Release.Count > 0)
+            {
+                var initialSpec = specification.Specification_Release.ToList().OrderBy(r => r.Pk_Specification_ReleaseId).FirstOrDefault();
+                if (initialSpec != null && initialSpec.Release != null)
+                    specification.SpecificationInitialRelease = initialSpec.Release.Name;
+            }
+           
 
             return new KeyValuePair<Specification, UserRightsContainer>(specification, personRights);
         }

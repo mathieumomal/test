@@ -125,7 +125,10 @@
       <AnsiNulls>Off</AnsiNulls>
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Views\Users_Groups.sql" />
+    <Build Include="dbo\Views\Users_Groups.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
     <Build Include="dbo\Views\Users_AdHoc_Roles.sql" />
     <Build Include="dbo\Views\View_Persons.sql" />
     <Build Include="dbo\Views\View_Communities.sql">
@@ -171,7 +174,6 @@
     <Build Include="dbo\Tables\Enum_CRImpact.sql" />
     <Build Include="dbo\Tables\ChangeRequest.sql" />
     <Build Include="dbo\Tables\CR_WorkItems.sql" />
-    <Build Include="dbo\Views\ResponsibleGroup_Chairman.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

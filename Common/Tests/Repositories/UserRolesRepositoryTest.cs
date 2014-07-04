@@ -20,7 +20,7 @@ namespace Etsi.Ultimate.Tests.Repositories
             var repo = new UserRolesRepository() { UoW = GetUnitOfWork() };
             var results = repo.GetAllEtsiBasedRoles().ToList();
 
-            Assert.AreEqual(4, results.Count);
+            Assert.AreEqual(5, results.Count);
         }
 
         [Test]
@@ -44,6 +44,12 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(1, repo.GetSpecMgr().ToList().Count);
         }
 
+        [Test]
+        public void GetChairmanIdByCommitteeId()
+        {
+            var repo = new UserRolesRepository() { UoW = GetUnitOfWork() };
+            Assert.AreEqual(27904, repo.GetChairmanIdByCommitteeId(15));
+        }
 
         
         private IUltimateUnitOfWork GetUnitOfWork()
@@ -55,7 +61,8 @@ namespace Etsi.Ultimate.Tests.Repositories
             var userGroupsDBSet = new UserGroupsFakeDBSet();
             userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5204, PERSON_ID = 27904, TB_ID = 0, PERS_ROLE_CODE = null });
             userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5204, PERSON_ID = 27905, TB_ID = 0, PERS_ROLE_CODE = null });
-            userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5322, PERSON_ID = 27904, TB_ID = 15, PERS_ROLE_CODE = "Chairman" });
+            userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5322, PERSON_ID = 59862, TB_ID = 15, PERS_ROLE_CODE = "Chairman", END_DATE = DateTime.Now.AddMonths(-2) });
+            userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5322, PERSON_ID = 27904, TB_ID = 15, PERS_ROLE_CODE = "Chairman", END_DATE = DateTime.Now.AddMonths(1) });
             userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5322, PERSON_ID = 27906, TB_ID = 15, PERS_ROLE_CODE = "Support" });
             //Just essentials informations for the tests
 
