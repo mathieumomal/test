@@ -14,7 +14,7 @@ namespace Etsi.Ultimate.DataAccess
     using System.Data.Entity.Infrastructure;
     
     using Etsi.Ultimate.DomainClasses;
-    using System.Data.Objects;
+    using System.Data.Entity.Core.Objects;
     using System.Data.Objects.DataClasses;
     using System.Linq;
     
@@ -115,6 +115,71 @@ namespace Etsi.Ultimate.DataAccess
         public virtual int CR_CleanAll()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CR_CleanAll");
+        }
+    
+        public virtual int Transposition_CreateEtsiWorkItem(string tITLE_PART3, ObjectParameter nEW_WKI_ID)
+        {
+            var tITLE_PART3Parameter = tITLE_PART3 != null ?
+                new ObjectParameter("TITLE_PART3", tITLE_PART3) :
+                new ObjectParameter("TITLE_PART3", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Transposition_CreateEtsiWorkItem", tITLE_PART3Parameter, nEW_WKI_ID);
+        }
+    
+        public virtual int Transposition_CreateWiKeywordEntry(Nullable<int> wKI_ID, string kEYWORD_CODE)
+        {
+            var wKI_IDParameter = wKI_ID.HasValue ?
+                new ObjectParameter("WKI_ID", wKI_ID) :
+                new ObjectParameter("WKI_ID", typeof(int));
+    
+            var kEYWORD_CODEParameter = kEYWORD_CODE != null ?
+                new ObjectParameter("KEYWORD_CODE", kEYWORD_CODE) :
+                new ObjectParameter("KEYWORD_CODE", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Transposition_CreateWiKeywordEntry", wKI_IDParameter, kEYWORD_CODEParameter);
+        }
+    
+        public virtual int Transposition_CreateWiProjectEntry(Nullable<int> wKI_ID, Nullable<int> pROJECT_ID)
+        {
+            var wKI_IDParameter = wKI_ID.HasValue ?
+                new ObjectParameter("WKI_ID", wKI_ID) :
+                new ObjectParameter("WKI_ID", typeof(int));
+    
+            var pROJECT_IDParameter = pROJECT_ID.HasValue ?
+                new ObjectParameter("PROJECT_ID", pROJECT_ID) :
+                new ObjectParameter("PROJECT_ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Transposition_CreateWiProjectEntry", wKI_IDParameter, pROJECT_IDParameter);
+        }
+    
+        public virtual int Transposition_CreateWiRemarkEntry(Nullable<int> wKI_ID, Nullable<int> sEQ_NO, string rEMARK_TEXT)
+        {
+            var wKI_IDParameter = wKI_ID.HasValue ?
+                new ObjectParameter("WKI_ID", wKI_ID) :
+                new ObjectParameter("WKI_ID", typeof(int));
+    
+            var sEQ_NOParameter = sEQ_NO.HasValue ?
+                new ObjectParameter("SEQ_NO", sEQ_NO) :
+                new ObjectParameter("SEQ_NO", typeof(int));
+    
+            var rEMARK_TEXTParameter = rEMARK_TEXT != null ?
+                new ObjectParameter("REMARK_TEXT", rEMARK_TEXT) :
+                new ObjectParameter("REMARK_TEXT", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Transposition_CreateWiRemarkEntry", wKI_IDParameter, sEQ_NOParameter, rEMARK_TEXTParameter);
+        }
+    
+        public virtual int Transposition_CreateWiScheduleEntry(Nullable<int> wKI_ID, Nullable<int> sCHED_ID)
+        {
+            var wKI_IDParameter = wKI_ID.HasValue ?
+                new ObjectParameter("WKI_ID", wKI_ID) :
+                new ObjectParameter("WKI_ID", typeof(int));
+    
+            var sCHED_IDParameter = sCHED_ID.HasValue ?
+                new ObjectParameter("SCHED_ID", sCHED_ID) :
+                new ObjectParameter("SCHED_ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Transposition_CreateWiScheduleEntry", wKI_IDParameter, sCHED_IDParameter);
         }
     }
 }

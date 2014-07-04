@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Objects;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,5 +56,11 @@ namespace Etsi.Ultimate.DataAccess
         int WorkItems_CleanAll();
         int Versions_CleanAll();
         int CR_CleanAll();
+
+        int Transposition_CreateEtsiWorkItem(string tITLE_PART3, ObjectParameter nEW_WKI_ID);
+        int Transposition_CreateWiKeywordEntry(Nullable<int> wKI_ID, string kEYWORD_CODE);
+        int Transposition_CreateWiProjectEntry(Nullable<int> wKI_ID, Nullable<int> pROJECT_ID);
+        int Transposition_CreateWiRemarkEntry(Nullable<int> wKI_ID, Nullable<int> sEQ_NO, string rEMARK_TEXT);
+        int Transposition_CreateWiScheduleEntry(Nullable<int> wKI_ID, Nullable<int> sCHED_ID);
     }
 }

@@ -139,5 +139,35 @@ namespace Etsi.Ultimate.Tests
         }
 
         #endregion
+
+        #region IUltimateContext Members
+
+
+        public int Transposition_CreateEtsiWorkItem(string tITLE_PART3, System.Data.Entity.Core.Objects.ObjectParameter nEW_WKI_ID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Transposition_CreateWiKeywordEntry(int? wKI_ID, string kEYWORD_CODE)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Transposition_CreateWiProjectEntry(int? wKI_ID, int? pROJECT_ID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Transposition_CreateWiRemarkEntry(int? wKI_ID, int? sEQ_NO, string rEMARK_TEXT)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int Transposition_CreateWiScheduleEntry(int? wKI_ID, int? sCHED_ID)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

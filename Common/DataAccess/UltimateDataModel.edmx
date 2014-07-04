@@ -1143,6 +1143,27 @@
           <Parameter Name="personId" Type="int" Mode="In" />
         </Function>
         <Function Name="Specifications_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+        <Function Name="Transposition_CreateEtsiWorkItem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="TITLE_PART3" Type="varchar" Mode="In" />
+          <Parameter Name="NEW_WKI_ID" Type="int" Mode="InOut" />
+        </Function>
+        <Function Name="Transposition_CreateWiKeywordEntry" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="WKI_ID" Type="int" Mode="In" />
+          <Parameter Name="KEYWORD_CODE" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="Transposition_CreateWiProjectEntry" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="WKI_ID" Type="int" Mode="In" />
+          <Parameter Name="PROJECT_ID" Type="int" Mode="In" />
+        </Function>
+        <Function Name="Transposition_CreateWiRemarkEntry" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="WKI_ID" Type="int" Mode="In" />
+          <Parameter Name="SEQ_NO" Type="int" Mode="In" />
+          <Parameter Name="REMARK_TEXT" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="Transposition_CreateWiScheduleEntry" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="WKI_ID" Type="int" Mode="In" />
+          <Parameter Name="SCHED_ID" Type="int" Mode="In" />
+        </Function>
         <Function Name="Versions_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="WorkItems_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
       </Schema></edmx:StorageModels>
@@ -1329,6 +1350,27 @@
             <End Role="CR_WorkItems" EntitySet="CR_WorkItems" />
           </AssociationSet>
           <EntitySet Name="Communities" EntityType="Etsi.Ultimate.DataAccess.Community" />
+          <FunctionImport Name="Transposition_CreateEtsiWorkItem">
+            <Parameter Name="TITLE_PART3" Mode="In" Type="String" />
+            <Parameter Name="NEW_WKI_ID" Mode="InOut" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Transposition_CreateWiKeywordEntry">
+            <Parameter Name="WKI_ID" Mode="In" Type="Int32" />
+            <Parameter Name="KEYWORD_CODE" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Transposition_CreateWiProjectEntry">
+            <Parameter Name="WKI_ID" Mode="In" Type="Int32" />
+            <Parameter Name="PROJECT_ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="Transposition_CreateWiRemarkEntry">
+            <Parameter Name="WKI_ID" Mode="In" Type="Int32" />
+            <Parameter Name="SEQ_NO" Mode="In" Type="Int32" />
+            <Parameter Name="REMARK_TEXT" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="Transposition_CreateWiScheduleEntry">
+            <Parameter Name="WKI_ID" Mode="In" Type="Int32" />
+            <Parameter Name="SCHED_ID" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -2711,6 +2753,11 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Transposition_CreateEtsiWorkItem" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateEtsiWorkItem" />
+          <FunctionImportMapping FunctionImportName="Transposition_CreateWiKeywordEntry" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiKeywordEntry" />
+          <FunctionImportMapping FunctionImportName="Transposition_CreateWiProjectEntry" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiProjectEntry" />
+          <FunctionImportMapping FunctionImportName="Transposition_CreateWiRemarkEntry" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiRemarkEntry" />
+          <FunctionImportMapping FunctionImportName="Transposition_CreateWiScheduleEntry" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiScheduleEntry" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
