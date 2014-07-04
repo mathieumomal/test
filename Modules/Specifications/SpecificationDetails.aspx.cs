@@ -240,7 +240,7 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if (specification != null && userRights != null)
             {
-                referenceVal.Text = string.IsNullOrEmpty(specification.Number) ? CONST_EMPTY_FIELD : specification.Number;
+                referenceVal.Text = string.IsNullOrEmpty(specification.Number) ? CONST_EMPTY_FIELD.Trim() : specification.Number;
                 titleVal.Text = string.IsNullOrEmpty(specification.Title) ? CONST_EMPTY_FIELD : specification.Title;
                 statusVal.Text = string.IsNullOrEmpty(specification.Status) ? CONST_EMPTY_FIELD : specification.Status;
                 if (specification.IsUnderChangeControl ?? false)

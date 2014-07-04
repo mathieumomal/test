@@ -168,10 +168,10 @@
                     $(document).ready(function () {
                         setTimeout(function () {
                             var specificationNumber = "Specification ";
-                            if ($("#referenceVal").html() != "undefined" && $("#referenceVal").html() != "") {
-                                specificationNumber += $("#referenceVal").html();
-                                document.title = specificationNumber;
+                            if ($("#referenceVal").html() != "undefined" && $("#referenceVal").html() != "" && $("#referenceVal").html() != "-") {
+                                specificationNumber += "# "+ $("#referenceVal").html();                                
                             }
+                            document.title = specificationNumber;
                         }, 200);
 
                         setTimeout(function () {
