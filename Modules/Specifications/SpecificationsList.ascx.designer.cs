@@ -40,11 +40,11 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.WebControls.LinkButton btnNewSpecification;
         
         /// <summary>
-        /// imgBtnFTP control.
+        /// Contrôle imgBtnFTP.
         /// </summary>
         /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgBtnFTP;
         
@@ -55,7 +55,7 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HyperLink lnkManageITURecommendations;
+        protected global::System.Web.UI.WebControls.ImageButton lnkManageITURecommendations;
         
         /// <summary>
         /// Contrôle btnSpecExport.
@@ -256,56 +256,56 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::Telerik.Web.UI.RadGrid rgSpecificationList;
         
         /// <summary>
-        /// ramVersions control.
+        /// Contrôle ramVersions.
         /// </summary>
         /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::Telerik.Web.UI.RadAjaxManager ramVersions;
         
         /// <summary>
-        /// rwmVersions control.
+        /// Contrôle rwmVersions.
         /// </summary>
         /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::Telerik.Web.UI.RadWindowManager rwmVersions;
         
         /// <summary>
-        /// rwFTPConfiguration control.
+        /// Contrôle rwFTPConfiguration.
         /// </summary>
         /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::Telerik.Web.UI.RadWindow rwFTPConfiguration;
         
         /// <summary>
-        /// lblFolderPath control.
+        /// Contrôle lblFolderPath.
         /// </summary>
         /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblFolderPath;
         
         /// <summary>
-        /// btnConfirm control.
+        /// Contrôle btnConfirm.
         /// </summary>
         /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnConfirm;
         
         /// <summary>
-        /// btnCancel control.
+        /// Contrôle btnCancel.
         /// </summary>
         /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCancel;
     }

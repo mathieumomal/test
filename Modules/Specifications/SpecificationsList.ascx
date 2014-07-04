@@ -62,9 +62,9 @@
                     <asp:LinkButton ID="btnNewSpecification" class="btn3GPP-success" runat="server" OnClientClick="var popUp=window.open('/desktopmodules/Specifications/EditSpecification.aspx?action=create', 'Specification-Create', 'height=690,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();return false;" Text="New Specification" />                    
                     <span style="float: right; padding-bottom: 2px; white-space: nowrap">
                         <asp:ImageButton ID="imgBtnFTP" runat="server" ImageAlign="Top" AlternateText="Manage specifications folders on FTP" ImageUrl="/DesktopModules/Specifications/images/ftp.png" OnClientClick="openFTPConfiguration(); return false;" />
-                        <asp:HyperLink ID="lnkManageITURecommendations" runat="server" Text="Manage ITU Recommendations" Target="_blank" />
+                        <asp:ImageButton ID="lnkManageITURecommendations" runat="server" ImageAlign="Top" AlternateText="Manage ITU Recommendations" ImageUrl="/DesktopModules/Specifications/images/itu.png" />
                         <asp:ImageButton ID="btnSpecExport" runat="server" ImageAlign="Top" AlternateText="Export" ImageUrl="/DesktopModules/Specifications/images/excel_export.png" OnClick="btnSpecExport_Click" OnClientClick="removeBg" />
-                        <ult:fullviewcontrol id="ultFullView" runat="server" />
+                        <ult:fullviewcontrol ID="ultFullView" runat="server" />
                         <asp:HiddenField ID="hidSpecAddress" runat="server" Value="" />
                     </span>
                 </td>

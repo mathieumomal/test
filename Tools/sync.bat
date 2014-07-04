@@ -1,7 +1,7 @@
 @ECHO OFF
 REM ----- FILL IN THIS AREA -----
-SET TRUNK_PATH=D:\ETSI_Projects\etsi_ngpp_source_code\ULTIMATE\trunk\
-SET DNN_PATH=C:\Websites\dnn3gpp.13.etsidev.org\
+SET TRUNK_PATH=D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_5\ULTIMATE\
+SET DNN_PATH=C:\websites\localdev.me\
 SET PHASE=local
 
 REM ----- DON'T MODIFY ANYTHING BELOW, unless you know what you're doing -----
