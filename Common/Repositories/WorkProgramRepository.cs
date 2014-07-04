@@ -27,7 +27,7 @@ namespace Etsi.Ultimate.Repositories
 
         public void InsertWIScheduleEntry(int WKI_ID, int SCHE_ID)
         {
-            UoW.Context.Transposition_CreateWiScheduleEntry(WKI_ID, SCHE_ID);
+            return; // UoW.Context.Transposition_CreateWiScheduleEntry(WKI_ID, SCHE_ID);
         }
 
         public void InsertWIKeyword(int WKI_ID, string kEYWORD_CODE)

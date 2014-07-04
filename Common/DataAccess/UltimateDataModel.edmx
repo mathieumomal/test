@@ -1172,9 +1172,11 @@
           <Parameter Name="SEQ_NO" Type="int" Mode="In" />
           <Parameter Name="REMARK_TEXT" Type="varchar" Mode="In" />
         </Function>
-        <Function Name="Transposition_CreateWiScheduleEntry" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+        <Function Name="Transposition_CreateWiScheduleEntries" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="WKI_ID" Type="int" Mode="In" />
-          <Parameter Name="SCHED_ID" Type="int" Mode="In" />
+          <Parameter Name="MAJOR_VERSION" Type="int" Mode="In" />
+          <Parameter Name="TECHNICAL_VERSION" Type="int" Mode="In" />
+          <Parameter Name="EDITORIAL_VERSION" Type="int" Mode="In" />
         </Function>
         <Function Name="Versions_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="WorkItems_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
@@ -1391,9 +1393,11 @@
             <Parameter Name="SEQ_NO" Mode="In" Type="Int32" />
             <Parameter Name="REMARK_TEXT" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="Transposition_CreateWiScheduleEntry">
+          <FunctionImport Name="Transposition_CreateWiScheduleEntries">
             <Parameter Name="WKI_ID" Mode="In" Type="Int32" />
-            <Parameter Name="SCHED_ID" Mode="In" Type="Int32" />
+            <Parameter Name="MAJOR_VERSION" Mode="In" Type="Int32" />
+            <Parameter Name="TECHNICAL_VERSION" Mode="In" Type="Int32" />
+            <Parameter Name="EDITORIAL_VERSION" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
@@ -2781,7 +2785,7 @@
           <FunctionImportMapping FunctionImportName="Transposition_CreateWiKeywordEntry" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiKeywordEntry" />
           <FunctionImportMapping FunctionImportName="Transposition_CreateWiProjectEntry" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiProjectEntry" />
           <FunctionImportMapping FunctionImportName="Transposition_CreateWiRemarkEntry" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiRemarkEntry" />
-          <FunctionImportMapping FunctionImportName="Transposition_CreateWiScheduleEntry" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiScheduleEntry" />
+          <FunctionImportMapping FunctionImportName="Transposition_CreateWiScheduleEntries" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiScheduleEntries" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
