@@ -22,7 +22,7 @@ namespace Etsi.Ultimate.Repositories
 
         public int InsertEtsiWorkITem(EtsiWorkItemImport entry)
         {
-            return UoW.Context.Transposition_CreateEtsiWorkItem("", null); 
+            return 0;// UoW.Context.Transposition_CreateEtsiWorkItem("", null); 
         }
 
         public void InsertWIScheduleEntry(int WKI_ID, int SCHE_ID)
