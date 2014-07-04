@@ -1,6 +1,6 @@
 @ECHO OFF
 REM ----- FILL IN THIS AREA -----
-SET TRUNK_PATH=D:\ETSI_Projects\etsi_ngpp_source_code\ULTIMATE\trunk
+SET TRUNK_PATH=D:\ETSI_Projects\etsi_ngpp_source_code\ULTIMATE\trunk\
 SET DNN_PATH=C:\Websites\dnn3gpp.13.etsidev.org\
 SET PHASE=local
 
@@ -8,7 +8,14 @@ REM ----- DON'T MODIFY ANYTHING BELOW, unless you know what you're doing -----
 
 REM Copying DLLs.
 SET USERSOURCE=%TRUNK_PATH%bin\
-SET USERDEST=%DNN_PATH%\bin\
+SET USERDEST=%DNN_PATH%bin\
+REM Copying Lib DLLs.
+SET USERLIBSOURCE=%TRUNK_PATH%Libs\
+xcopy "%USERLIBSOURCE%NetOffice.dll" "%USERDEST%" /b/v/y
+xcopy "%USERLIBSOURCE%OfficeApi.dll" "%USERDEST%" /b/v/y
+xcopy "%USERLIBSOURCE%VBIDEApi.dll" "%USERDEST%" /b/v/y
+xcopy "%USERLIBSOURCE%WordApi.dll" "%USERDEST%" /b/v/y
+
 xcopy "%USERSOURCE%Etsi.Ultimate.Business.dll" "%USERDEST%" /b/v/y
 xcopy "%USERSOURCE%Etsi.Ultimate.Controls.dll" "%USERDEST%" /b/v/y
 xcopy "%USERSOURCE%Etsi.Ultimate.DataAccess.dll" "%USERDEST%" /b/v/y
