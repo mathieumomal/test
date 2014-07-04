@@ -10,6 +10,7 @@ using DotNetNuke.Web.Client;
 using Telerik.Web.UI;
 using System.Data;
 using System.Text;
+using System.Web;
 
 namespace Etsi.Ultimate.Controls
 {
@@ -71,6 +72,10 @@ namespace Etsi.Ultimate.Controls
         #endregion
 
         #region public properties
+        //Main page communication component to add a chairman
+        // Event declaration
+        public event EventHandler AddChairmanEvent;
+        public int SelectedCommunityID;
 
         /// <summary>
         /// Provide the edit current mode ; EDIT MODE (true) or VIEW MODE (false)
@@ -346,9 +351,11 @@ namespace Etsi.Ultimate.Controls
             }
         }
 
-        protected void BtnAddChairman_onClick(object o, EventArgs e)
+        protected void BtnAddChairman_onClick(object sender, EventArgs e)
         {
-            /*var personIdToAdd = 0;//add method to get Id chairman
+            AddChairmanEvent(sender, e);
+            var svc = ServicesFactory.Resolve<IPersonService>();
+            var personIdToAdd = svc.GetChairmanIdByCommityId(SelectedCommunityID);
             if (personIdToAdd == 0)
             {
                 LaunchAlert("Chairman cannot be found for this group.");
@@ -366,7 +373,7 @@ namespace Etsi.Ultimate.Controls
                 {
                     LaunchAlert("This person is already in the list.");
                 }
-            }*/
+            }
         }
 
         /// <summary>

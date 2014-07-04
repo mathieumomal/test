@@ -51,6 +51,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private string selectedTab;
         public static Nullable<int> SpecificationId;
         private static String action;
+        private int SelectedCommunityID;
 
 
         #endregion
@@ -71,6 +72,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 LoadSpecificationDetails();
             }
             specificationRemarks.AddRemarkHandler += specificationRemarks_AddRemarkHandler;
+            specificationRapporteurs.AddChairmanEvent += GetSelectedCommunityID;
         }
 
         /// <summary>
@@ -644,6 +646,12 @@ namespace Etsi.Ultimate.Module.Specifications
                 if (VersionRemarks.Exists(x => x.Key == specVersion.Pk_VersionId))
                     specVersion.Remarks = VersionRemarks.Find(x => x.Key == specVersion.Pk_VersionId).Value;
             }
+        }
+
+        protected void GetSelectedCommunityID(object sender, EventArgs e)
+        {
+            SelectedCommunityID = PrimaryResGrpCtrl.SelectedCommunityID;
+            specificationRapporteurs.SelectedCommunityID = SelectedCommunityID;
         }
 
         #endregion

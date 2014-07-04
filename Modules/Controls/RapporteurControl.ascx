@@ -94,10 +94,10 @@
                     </td>
                 </tr>
                 <tr class="searchBar">
-                    <td class="center" style="width:10%">
+                    <td class="center" style="width:15%">
                         <asp:Label ID="lblAddRapporteur" runat="server" Text="Add rapporteur"/>
                     </td>
-                    <td style="width:50%">
+                    <td style="width:70%">
                         <telerik:RadComboBox
                             id="rdcbRapporteurs"
                             runat="server"
@@ -114,7 +114,7 @@
                     <td style="width:10%">
                         <asp:Button ID="btnAddRapporteur" OnClientClick="setAddingRapporteurProgress(true)" OnClick="BtnAddRapporteur_onClick" runat="server" Text="Add" Width="95%" CssClass="center" />
                     </td>
-                    <td style="width:10%">
+                    <td style="width:5%">
                         <asp:ImageButton ID="btnAddChairman" OnClientClick="setAddingChairmanProgress(true)" OnClick="BtnAddChairman_onClick" runat="server" ToolTip="Add Chairman" ImageUrl="/controls/Ultimate/images/addChairman.png" Width="20px" CssClass="center" />
                     </td>
                 </tr>
