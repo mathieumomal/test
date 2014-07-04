@@ -116,6 +116,7 @@
     <Compile Include="WorkItemManager.cs" />
     <Compile Include="WorkPlanExporter.cs" />
     <Compile Include="WorkPlanFileManager.cs" />
+    <Compile Include="WpmRecordCreator.cs" />
     <Compile Include="Zip.cs" />
   </ItemGroup>
   <ItemGroup>

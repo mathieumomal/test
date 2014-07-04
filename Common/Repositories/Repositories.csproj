@@ -73,6 +73,7 @@
     <Compile Include="UserRolesRepository.cs" />
     <Compile Include="WorkItemRepository.cs" />
     <Compile Include="WorkPlanFileRepository.cs" />
+    <Compile Include="WorkProgramRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataAccess\DataAccess.csproj">

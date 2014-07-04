@@ -70,7 +70,7 @@
     <add key="FtpExportAddress" value="ftp://ftp.3gpp.org/Information/WORK_PLAN/"/>
 	<add key="FtpVersionsPhysicalPath" value="D:\AppTrans\Ftp\" />
     <add key="VersionsLatestFTPFolder" value="2014-09" />
-    <add key="TranspositionFolderPath" value=""/>
+    <add key="TranspositionFolderPath" value="D:\AppTrans\transposition\"/>
     <add key="WIReportPath" value ="http://webapp.13.etsidev.org/workprogram/Report_WorkItem.asp?WKI_ID="/>
     
 	
@@ -142,6 +142,9 @@
           <add segment="Licenses" />
         </hiddenSegments>
       </requestFiltering>
+      <authentication>
+        <anonymousAuthentication userName="" />
+      </authentication>
     </security>
     <defaultDocument>
       <files>

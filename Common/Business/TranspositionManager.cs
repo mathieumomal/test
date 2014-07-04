@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.Utils;
+﻿using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Utils;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -14,11 +15,17 @@ namespace Etsi.Ultimate.Business
 {
     public class TranspositionManager : ITranspositionManager
     {
-        public IUltimateUnitOfWork _uoW { get; set; }
+       
 
         #region ITranspositionManager Members
 
         public static string CONST_WEBCONFIG_TRANSP_PATH = "TranspositionFolderPath";
+
+        public IUltimateUnitOfWork _uoW { get; set; }
+
+        public TranspositionManager()
+        {
+        }
 
 
         public bool Transpose(DomainClasses.Specification spec, DomainClasses.SpecVersion version)
@@ -30,10 +37,13 @@ namespace Etsi.Ultimate.Business
                     //Two steps to perform transposition
                     string versionURL = version.Location;
                     //STEP1: Transfer of the version to a dedicated folder
-                    bool result_Step1 = transferVersionToDedicatedFolder(versionURL);
-                    //Missing step releated to WPMDB record   
-
-                    return result_Step1;
+                bool result =  transferVersionToDedicatedFolder(versionURL);
+                //Add record to WPMDB   
+                WpmRecordCreator creator = new WpmRecordCreator(_uoW);
+                int WKI_ID = creator.AddWpmRecords(version);
+                //Add ETSI_WKI_ID field in version TABLE
+                //TODO
+                return result;
                 }
                 else
                     return false; 

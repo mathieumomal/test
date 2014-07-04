@@ -82,6 +82,7 @@
     </Compile>
     <Compile Include="Enum_UserRights.cs" />
     <Compile Include="Enum_WorkItemFilters.cs" />
+    <Compile Include="EtsiWorkItemImport.cs" />
     <Compile Include="ETSI_WorkItem.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
