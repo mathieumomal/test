@@ -46,7 +46,7 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton imgBtnFTP;
+        protected global::System.Web.UI.WebControls.Button imgBtnFTP;
         
         /// <summary>
         /// Contrôle lnkManageITURecommendations.
@@ -55,7 +55,7 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.ImageButton lnkManageITURecommendations;
+        protected global::System.Web.UI.WebControls.Button lnkManageITURecommendations;
         
         /// <summary>
         /// Contrôle btnSpecExport.
