@@ -113,13 +113,6 @@
     <Compile Include="RapporteurControl.ascx.designer.cs">
       <DependentUpon>RapporteurControl.ascx</DependentUpon>
     </Compile>
-    <Compile Include="RelatedWIPopUp.aspx.cs">
-      <DependentUpon>RelatedWIPopUp.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="RelatedWIPopUp.aspx.designer.cs">
-      <DependentUpon>RelatedWIPopUp.aspx</DependentUpon>
-    </Compile>
     <Compile Include="ReleaseSearchControl.ascx.cs">
       <DependentUpon>ReleaseSearchControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -158,7 +151,6 @@
     <Content Include="License.txt" />
     <Content Include="module.css" />
     <Content Include="RapporteurControl.ascx" />
-    <Content Include="RelatedWIPopUp.aspx" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="ReleaseSearchControl.ascx" />
     <Content Include="RemarksControl.ascx" />
