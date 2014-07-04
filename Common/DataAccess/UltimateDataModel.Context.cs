@@ -117,13 +117,61 @@ namespace Etsi.Ultimate.DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("CR_CleanAll");
         }
     
-        public virtual int Transposition_CreateEtsiWorkItem(string tITLE_PART3, ObjectParameter nEW_WKI_ID)
+        public virtual int Transposition_CreateEtsiWorkItem(ObjectParameter nEW_WKI_ID, string eTSI_NUMBER, string sTANDARD_TYPE, Nullable<int> eTSI_DOC_NUMBER, string rEFERENCE, string sERIAL_NUMBER, string vERSION, Nullable<int> cOMMUNITY_ID, string tITLE_PART1, string tITLE_PART2, string tITLE_PART3, Nullable<int> rAPPORTEUR_ID, Nullable<int> sECRETARY_ID, string wORKING_TITLE)
         {
+            var eTSI_NUMBERParameter = eTSI_NUMBER != null ?
+                new ObjectParameter("ETSI_NUMBER", eTSI_NUMBER) :
+                new ObjectParameter("ETSI_NUMBER", typeof(string));
+    
+            var sTANDARD_TYPEParameter = sTANDARD_TYPE != null ?
+                new ObjectParameter("STANDARD_TYPE", sTANDARD_TYPE) :
+                new ObjectParameter("STANDARD_TYPE", typeof(string));
+    
+            var eTSI_DOC_NUMBERParameter = eTSI_DOC_NUMBER.HasValue ?
+                new ObjectParameter("ETSI_DOC_NUMBER", eTSI_DOC_NUMBER) :
+                new ObjectParameter("ETSI_DOC_NUMBER", typeof(int));
+    
+            var rEFERENCEParameter = rEFERENCE != null ?
+                new ObjectParameter("REFERENCE", rEFERENCE) :
+                new ObjectParameter("REFERENCE", typeof(string));
+    
+            var sERIAL_NUMBERParameter = sERIAL_NUMBER != null ?
+                new ObjectParameter("SERIAL_NUMBER", sERIAL_NUMBER) :
+                new ObjectParameter("SERIAL_NUMBER", typeof(string));
+    
+            var vERSIONParameter = vERSION != null ?
+                new ObjectParameter("VERSION", vERSION) :
+                new ObjectParameter("VERSION", typeof(string));
+    
+            var cOMMUNITY_IDParameter = cOMMUNITY_ID.HasValue ?
+                new ObjectParameter("COMMUNITY_ID", cOMMUNITY_ID) :
+                new ObjectParameter("COMMUNITY_ID", typeof(int));
+    
+            var tITLE_PART1Parameter = tITLE_PART1 != null ?
+                new ObjectParameter("TITLE_PART1", tITLE_PART1) :
+                new ObjectParameter("TITLE_PART1", typeof(string));
+    
+            var tITLE_PART2Parameter = tITLE_PART2 != null ?
+                new ObjectParameter("TITLE_PART2", tITLE_PART2) :
+                new ObjectParameter("TITLE_PART2", typeof(string));
+    
             var tITLE_PART3Parameter = tITLE_PART3 != null ?
                 new ObjectParameter("TITLE_PART3", tITLE_PART3) :
                 new ObjectParameter("TITLE_PART3", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Transposition_CreateEtsiWorkItem", tITLE_PART3Parameter, nEW_WKI_ID);
+            var rAPPORTEUR_IDParameter = rAPPORTEUR_ID.HasValue ?
+                new ObjectParameter("RAPPORTEUR_ID", rAPPORTEUR_ID) :
+                new ObjectParameter("RAPPORTEUR_ID", typeof(int));
+    
+            var sECRETARY_IDParameter = sECRETARY_ID.HasValue ?
+                new ObjectParameter("SECRETARY_ID", sECRETARY_ID) :
+                new ObjectParameter("SECRETARY_ID", typeof(int));
+    
+            var wORKING_TITLEParameter = wORKING_TITLE != null ?
+                new ObjectParameter("WORKING_TITLE", wORKING_TITLE) :
+                new ObjectParameter("WORKING_TITLE", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Transposition_CreateEtsiWorkItem", nEW_WKI_ID, eTSI_NUMBERParameter, sTANDARD_TYPEParameter, eTSI_DOC_NUMBERParameter, rEFERENCEParameter, sERIAL_NUMBERParameter, vERSIONParameter, cOMMUNITY_IDParameter, tITLE_PART1Parameter, tITLE_PART2Parameter, tITLE_PART3Parameter, rAPPORTEUR_IDParameter, sECRETARY_IDParameter, wORKING_TITLEParameter);
         }
     
         public virtual int Transposition_CreateWiKeywordEntry(Nullable<int> wKI_ID, string kEYWORD_CODE)

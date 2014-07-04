@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -143,7 +144,7 @@ namespace Etsi.Ultimate.Tests
         #region IUltimateContext Members
 
 
-        public int Transposition_CreateEtsiWorkItem(string tITLE_PART3, System.Data.Entity.Core.Objects.ObjectParameter nEW_WKI_ID)
+        public virtual int Transposition_CreateEtsiWorkItem(ObjectParameter nEW_WKI_ID, string eTSI_NUMBER, string sTANDARD_TYPE, Nullable<int> eTSI_DOC_NUMBER, string rEFERENCE, string sERIAL_NUMBER, string vERSION, Nullable<int> cOMMUNITY_ID, string tITLE_PART1, string tITLE_PART2, string tITLE_PART3, Nullable<int> rAPPORTEUR_ID, Nullable<int> sECRETARY_ID, string wORKING_TITLE)
         {
             throw new NotImplementedException();
         }

@@ -1144,8 +1144,20 @@
         </Function>
         <Function Name="Specifications_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="Transposition_CreateEtsiWorkItem" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="TITLE_PART3" Type="varchar" Mode="In" />
           <Parameter Name="NEW_WKI_ID" Type="int" Mode="InOut" />
+          <Parameter Name="ETSI_NUMBER" Type="varchar" Mode="In" />
+          <Parameter Name="STANDARD_TYPE" Type="varchar" Mode="In" />
+          <Parameter Name="ETSI_DOC_NUMBER" Type="int" Mode="In" />
+          <Parameter Name="REFERENCE" Type="varchar" Mode="In" />
+          <Parameter Name="SERIAL_NUMBER" Type="varchar" Mode="In" />
+          <Parameter Name="VERSION" Type="varchar" Mode="In" />
+          <Parameter Name="COMMUNITY_ID" Type="int" Mode="In" />
+          <Parameter Name="TITLE_PART1" Type="varchar" Mode="In" />
+          <Parameter Name="TITLE_PART2" Type="varchar" Mode="In" />
+          <Parameter Name="TITLE_PART3" Type="varchar" Mode="In" />
+          <Parameter Name="RAPPORTEUR_ID" Type="int" Mode="In" />
+          <Parameter Name="SECRETARY_ID" Type="int" Mode="In" />
+          <Parameter Name="WORKING_TITLE" Type="varchar" Mode="In" />
         </Function>
         <Function Name="Transposition_CreateWiKeywordEntry" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="WKI_ID" Type="int" Mode="In" />
@@ -1351,8 +1363,20 @@
           </AssociationSet>
           <EntitySet Name="Communities" EntityType="Etsi.Ultimate.DataAccess.Community" />
           <FunctionImport Name="Transposition_CreateEtsiWorkItem">
-            <Parameter Name="TITLE_PART3" Mode="In" Type="String" />
             <Parameter Name="NEW_WKI_ID" Mode="InOut" Type="Int32" />
+            <Parameter Name="ETSI_NUMBER" Mode="In" Type="String" />
+            <Parameter Name="STANDARD_TYPE" Mode="In" Type="String" />
+            <Parameter Name="ETSI_DOC_NUMBER" Mode="In" Type="Int32" />
+            <Parameter Name="REFERENCE" Mode="In" Type="String" />
+            <Parameter Name="SERIAL_NUMBER" Mode="In" Type="String" />
+            <Parameter Name="VERSION" Mode="In" Type="String" />
+            <Parameter Name="COMMUNITY_ID" Mode="In" Type="Int32" />
+            <Parameter Name="TITLE_PART1" Mode="In" Type="String" />
+            <Parameter Name="TITLE_PART2" Mode="In" Type="String" />
+            <Parameter Name="TITLE_PART3" Mode="In" Type="String" />
+            <Parameter Name="RAPPORTEUR_ID" Mode="In" Type="Int32" />
+            <Parameter Name="SECRETARY_ID" Mode="In" Type="Int32" />
+            <Parameter Name="WORKING_TITLE" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="Transposition_CreateWiKeywordEntry">
             <Parameter Name="WKI_ID" Mode="In" Type="Int32" />

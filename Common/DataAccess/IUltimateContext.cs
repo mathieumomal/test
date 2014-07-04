@@ -57,7 +57,7 @@ namespace Etsi.Ultimate.DataAccess
         int Versions_CleanAll();
         int CR_CleanAll();
 
-        int Transposition_CreateEtsiWorkItem(string tITLE_PART3, ObjectParameter nEW_WKI_ID);
+        int Transposition_CreateEtsiWorkItem(ObjectParameter nEW_WKI_ID, string eTSI_NUMBER, string sTANDARD_TYPE, Nullable<int> eTSI_DOC_NUMBER, string rEFERENCE, string sERIAL_NUMBER, string vERSION, Nullable<int> cOMMUNITY_ID, string tITLE_PART1, string tITLE_PART2, string tITLE_PART3, Nullable<int> rAPPORTEUR_ID, Nullable<int> sECRETARY_ID, string wORKING_TITLE);
         int Transposition_CreateWiKeywordEntry(Nullable<int> wKI_ID, string kEYWORD_CODE);
         int Transposition_CreateWiProjectEntry(Nullable<int> wKI_ID, Nullable<int> pROJECT_ID);
         int Transposition_CreateWiRemarkEntry(Nullable<int> wKI_ID, Nullable<int> sEQ_NO, string rEMARK_TEXT);
