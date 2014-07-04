@@ -64,5 +64,15 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        public int GetChairmanIdByCommityId(int primeResponsibleGroupId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var personManager = ManagerFactory.Resolve<IPersonManager>();
+                personManager.UoW = uoW;
+                return personManager.GetChairmanIdByCommityId(primeResponsibleGroupId);
+            }
+        }
+
     }
 }
