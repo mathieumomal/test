@@ -142,9 +142,6 @@
           <add segment="Licenses" />
         </hiddenSegments>
       </requestFiltering>
-      <authentication>
-        <anonymousAuthentication userName="" />
-      </authentication>
     </security>
     <defaultDocument>
       <files>
