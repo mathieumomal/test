@@ -304,6 +304,7 @@
           <Property Name="Pk_EnumCommunitiesShortNames" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Fk_TbId" Type="int" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
+          <Property Name="WpmProjectId" Type="int" />
         </EntityType>
         <EntityType Name="Enum_CRCategory">
           <Key>
@@ -357,6 +358,7 @@
           <Property Name="Pk_Enum_TechnologyId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Code" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="Description" Type="varchar" MaxLength="150" />
+          <Property Name="WpmProjectId" Type="int" />
         </EntityType>
         <EntityType Name="History">
           <Key>
@@ -584,8 +586,8 @@
           <Property Name="CreationDate" Type="datetime" Nullable="false" />
           <Property Name="WorkPlanFilePath" Type="nvarchar" Nullable="false" MaxLength="255" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.ETSI_WorkItem' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.ETSI_WorkItem » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="ETSI_WorkItem">
           <Key>
@@ -594,8 +596,8 @@
           <Property Name="WKI_ID" Type="int" Nullable="false" />
           <Property Name="WKI_REFERENCE" Type="varchar" MaxLength="30" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.ResponsibleGroup_Secretary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.ResponsibleGroup_Secretary » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="ResponsibleGroup_Secretary">
           <Key>
@@ -605,8 +607,8 @@
           <Property Name="Email" Type="varchar" MaxLength="100" />
           <Property Name="PersonId" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.Users_AdHoc_Roles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_AdHoc_Roles » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="Users_AdHoc_Roles">
           <Key>
@@ -617,8 +619,8 @@
           <Property Name="PERSON_ID" Type="nvarchar" MaxLength="3750" />
           <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="50" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.Users_Groups' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_Groups » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="Users_Groups">
           <Key>
@@ -633,8 +635,8 @@
           <Property Name="INTERNET_ADD" Type="varchar" MaxLength="100" />
           <Property Name="END_DATE" Type="datetime" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_Communities' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Communities » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_Communities">
           <Key>
@@ -648,8 +650,8 @@
           <Property Name="ActiveCode" Type="varchar" MaxLength="12" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_Meetings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Meetings » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_Meetings">
           <Key>
@@ -686,8 +688,8 @@
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
           <Property Name="MtgShortRef" Type="varchar" MaxLength="50" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_ModulesPages' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_ModulesPages » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_ModulesPages">
           <Key>
@@ -701,8 +703,8 @@
           <Property Name="ModuleID" Type="int" Nullable="false" />
           <Property Name="TabID" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_Persons' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Persons » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_Persons">
           <Key>
@@ -1171,12 +1173,6 @@
           <Parameter Name="WKI_ID" Type="int" Mode="In" />
           <Parameter Name="SEQ_NO" Type="int" Mode="In" />
           <Parameter Name="REMARK_TEXT" Type="varchar" Mode="In" />
-        </Function>
-        <Function Name="Transposition_CreateWiScheduleEntries" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="WKI_ID" Type="int" Mode="In" />
-          <Parameter Name="MAJOR_VERSION" Type="int" Mode="In" />
-          <Parameter Name="TECHNICAL_VERSION" Type="int" Mode="In" />
-          <Parameter Name="EDITORIAL_VERSION" Type="int" Mode="In" />
         </Function>
         <Function Name="Versions_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="WorkItems_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
@@ -1751,6 +1747,7 @@
           <Property Type="String" Name="Code" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Description" MaxLength="150" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="SpecificationTechnologies" Relationship="Etsi.Ultimate.DataAccess.FK_Enum_Technology" FromRole="Enum_Technology" ToRole="SpecificationTechnology" />
+          <Property Type="Int32" Name="WpmProjectId" />
         </EntityType>
         <EntityType Name="Specification">
           <Key>
@@ -1940,6 +1937,7 @@
           <Property Type="Int32" Name="Pk_EnumCommunitiesShortNames" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="Int32" Name="Fk_TbId" />
           <Property Type="String" Name="ShortName" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="WpmProjectId" />
         </EntityType>
         <EntityType Name="SpecificationResponsibleGroup">
           <Key>
@@ -2555,6 +2553,7 @@
           <EntitySetMapping Name="Enum_Technology">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Enum_Technology">
               <MappingFragment StoreEntitySet="Enum_Technology">
+                <ScalarProperty Name="WpmProjectId" ColumnName="WpmProjectId" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="Pk_Enum_TechnologyId" ColumnName="Pk_Enum_TechnologyId" />
@@ -2623,6 +2622,7 @@
           <EntitySetMapping Name="Enum_CommunitiesShortName">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Enum_CommunitiesShortName">
               <MappingFragment StoreEntitySet="Enum_CommunitiesShortName">
+                <ScalarProperty Name="WpmProjectId" ColumnName="WpmProjectId" />
                 <ScalarProperty Name="ShortName" ColumnName="ShortName" />
                 <ScalarProperty Name="Fk_TbId" ColumnName="Fk_TbId" />
                 <ScalarProperty Name="Pk_EnumCommunitiesShortNames" ColumnName="Pk_EnumCommunitiesShortNames" />
@@ -2785,7 +2785,6 @@
           <FunctionImportMapping FunctionImportName="Transposition_CreateWiKeywordEntry" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiKeywordEntry" />
           <FunctionImportMapping FunctionImportName="Transposition_CreateWiProjectEntry" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiProjectEntry" />
           <FunctionImportMapping FunctionImportName="Transposition_CreateWiRemarkEntry" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiRemarkEntry" />
-          <FunctionImportMapping FunctionImportName="Transposition_CreateWiScheduleEntries" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiScheduleEntries" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

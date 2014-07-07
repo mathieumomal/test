@@ -20,6 +20,9 @@ namespace DatabaseImport.ModuleImport
         public const string _2gCode = "2G";
         public const string _3gCode = "3G";
         public const string _lteCode = "LTE";
+        public const int _2gWpmProjectId = 744;
+        public const int _3gWpmProjectId = 704;
+        public const int _lteWpmProjectId = 576;
 
         #region IModuleImport Membres
 
@@ -46,18 +49,21 @@ namespace DatabaseImport.ModuleImport
             var _2g = new Domain.Enum_Technology()
             {
                 Code = _2gCode,
-                Description = _2gCode
+                Description = _2gCode,
+                WpmProjectId = _2gWpmProjectId
             };
             
             var _3g = new Domain.Enum_Technology(){
                 Code = _3gCode,
-                Description = _3gCode
+                Description = _3gCode,
+                WpmProjectId = _3gWpmProjectId
             };
             
             var _lte = new Domain.Enum_Technology()
             {
                 Code = _lteCode,
-                Description = _lteCode
+                Description = _lteCode,
+                WpmProjectId = _lteWpmProjectId
             };
             NewContext.Enum_Technology.Add(_2g);
             NewContext.Enum_Technology.Add(_3g);

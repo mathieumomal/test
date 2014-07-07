@@ -143,6 +143,26 @@ namespace Etsi.Ultimate.Utils
             }
         }
 
+        /// <summary>
+        /// Global 3GPP project id
+        /// </summary>
+        public static int Global3GPPProjetId
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["Global3GPPProjetId"] != null)
+                {
+                    int returnValue = 0;
+                    bool success = int.TryParse(ConfigurationManager.AppSettings["Global3GPPProjetId"].ToString(), out returnValue);
+                    if (success)
+                        return returnValue;
+                    else
+                        return 0;
+                }
+                return 0;
+            }
+        }
+
         public static string DefaultPublicTmpAddress
         {
             get

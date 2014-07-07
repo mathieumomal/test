@@ -1,7 +1,10 @@
-﻿CREATE TABLE [dbo].[Enum_CommunitiesShortName](
-	[Pk_EnumCommunitiesShortNames] [int] IDENTITY(1,1) NOT NULL,
-	[Fk_TbId] [int] NULL,
-	[ShortName] [varchar](10) NULL,
- CONSTRAINT [PK_Enum_CommunitiesShortName] PRIMARY KEY CLUSTERED ([Pk_EnumCommunitiesShortNames] ASC)
+﻿CREATE TABLE [dbo].[Enum_CommunitiesShortName] (
+    [Pk_EnumCommunitiesShortNames] INT          IDENTITY (1, 1) NOT NULL,
+    [Fk_TbId]                      INT          NULL,
+    [ShortName]                    VARCHAR (10) NULL,
+    [WpmProjectId]                 INT          NULL,
+    CONSTRAINT [PK_Enum_CommunitiesShortName] PRIMARY KEY CLUSTERED ([Pk_EnumCommunitiesShortNames] ASC)
 );
+
+
 
