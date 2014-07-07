@@ -32,5 +32,6 @@ namespace Etsi.Ultimate.Business
         /// <param name="id">Identifier of the community</param>
         /// <returns>community</returns>
         Community GetCommmunityById(int id);
+       
     }
 }

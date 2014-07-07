@@ -58,6 +58,11 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             throw new NotImplementedException();
         }
 
+        public int GetWgNumber(int wgId, int parentTbId)
+        {
+            return (All.Where(c => c.ParentTbId == parentTbId).ToList().Select((v, i) => new { v, i }).Where(x => x.v.TbId == wgId).Select(x => x.i).FirstOrDefault() +1 );
+        }
+
         public void InsertOrUpdate(Community entity)
         {
             throw new NotImplementedException();

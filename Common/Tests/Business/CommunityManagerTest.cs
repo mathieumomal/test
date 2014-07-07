@@ -54,6 +54,6 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.IsNotNull(CacheManager.Get(cacheKey));
 
             mockDataContext.VerifyAllExpectations();
-        }
+        }        
     }
 }

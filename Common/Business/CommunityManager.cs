@@ -84,7 +84,7 @@ namespace Etsi.Ultimate.Business
             repo.UoW = UoW;
 
             return GetCommunities().Where(c => c.TbId == id).FirstOrDefault();
-        }
+        }        
 
         #endregion
 

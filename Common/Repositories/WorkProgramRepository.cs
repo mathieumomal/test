@@ -1,6 +1,7 @@
 ﻿using Etsi.Ultimate.DomainClasses;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,12 +23,20 @@ namespace Etsi.Ultimate.Repositories
 
         public int InsertEtsiWorkITem(EtsiWorkItemImport entry)
         {
-            return 0;// UoW.Context.Transposition_CreateEtsiWorkItem("", null); 
+            var outputparameter = new ObjectParameter("WKI_ID", typeof(Int32));
+
+            UoW.Context.Transposition_CreateEtsiWorkItem(outputparameter, 
+                entry.EtsiNumber, entry.StandardType, entry.EtsiDocNumber,
+                entry.Reference, entry.SerialNumber, entry.Version,
+                entry.CommunityId, entry.titllePart_1, entry.titllePart_2,
+                entry.titllePart_3, entry.RapporteurId, entry.SecretaryId, entry.WorkingTitle);
+
+            return (int)outputparameter.Value;
         }
 
-        public void InsertWIScheduleEntry(int WKI_ID, int SCHE_ID)
+        public void InsertWIScheduleEntry(int WKI_ID, int MajVersion, int TechVersion, int EditVersion)
         {
-            return; // UoW.Context.Transposition_CreateWiScheduleEntry(WKI_ID, SCHE_ID);
+            UoW.Context.Transposition_CreateWiScheduleEntries(WKI_ID, MajVersion, TechVersion, EditVersion);
         }
 
         public void InsertWIKeyword(int WKI_ID, string kEYWORD_CODE)
@@ -57,7 +66,7 @@ namespace Etsi.Ultimate.Repositories
 
         int InsertEtsiWorkITem(EtsiWorkItemImport entry);
 
-        void InsertWIScheduleEntry(int WKI_ID, int SCHE_ID);
+        void InsertWIScheduleEntry(int WKI_ID, int MajVersion, int TechVersion, int EditVersion);
 
         void InsertWIKeyword(int WKI_ID, string kEYWORD_CODE);
 

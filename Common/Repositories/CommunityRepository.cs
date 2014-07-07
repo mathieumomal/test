@@ -42,6 +42,11 @@ namespace Etsi.Ultimate.Repositories
             return context.Communities.Find(id);
         }
 
+        public int GetWgNumber(int wgId, int parentTbId)
+        {
+            return (context.Communities.Where(c => c.ParentTbId == parentTbId).ToList().Select((v, i) => new { v, i }).Where(x => x.v.TbId == wgId).Select(x => x.i).FirstOrDefault() +1 );
+        }
+
         public void InsertOrUpdate(Community entity)
         {
             throw new InvalidOperationException("Cannot add or update a community");
@@ -69,6 +74,12 @@ namespace Etsi.Ultimate.Repositories
 
     public interface ICommunityRepository : IEntityRepository<Community>
     {
-
+        /// <summary>
+        /// Return the number of a WG in a TB childs list
+        /// </summary>
+        /// <param name="wgId">wg id</param>
+        /// <param name="parentTbId">Parent TB id</param>
+        /// <returns>WG's number</returns>
+        int GetWgNumber(int wgId, int parentTbId);
     }
 }

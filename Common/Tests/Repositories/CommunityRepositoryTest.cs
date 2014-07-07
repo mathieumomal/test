@@ -56,6 +56,13 @@ namespace Etsi.Ultimate.Tests.Repositories
             var repo = new CommunityRepository(GetUnitOfWork());
             repo.Delete(2);
         }
+        [Test]
+        public void GetWgNumber_Test()
+        {
+            var repo = new CommunityRepository(GetUnitOfWork());
+            Assert.AreEqual(1, repo.GetWgNumber(2, 1));
+        }
+
 
         /// <summary>
         /// Create Mocks to simulate DB with objects

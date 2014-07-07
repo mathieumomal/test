@@ -37,13 +37,13 @@ namespace Etsi.Ultimate.Business
                     //Two steps to perform transposition
                     string versionURL = version.Location;
                     //STEP1: Transfer of the version to a dedicated folder
-                bool result =  transferVersionToDedicatedFolder(versionURL);
-                //Add record to WPMDB   
-                WpmRecordCreator creator = new WpmRecordCreator(_uoW);
-                int WKI_ID = creator.AddWpmRecords(version);
-                //Add ETSI_WKI_ID field in version TABLE
-                //TODO
-                return result;
+                    bool result =  transferVersionToDedicatedFolder(versionURL);
+                    //STEP2: Add record to WPMDB   
+                    WpmRecordCreator creator = new WpmRecordCreator(_uoW);
+                    int WKI_ID = creator.AddWpmRecords(version);
+                    //STEP3: Add ETSI_WKI_ID field in version TABLE IF(WKI_ID != -1)
+                    //TODO
+                    return (result && (WKI_ID != -1));
                 }
                 else
                     return false; 
