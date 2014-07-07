@@ -333,6 +333,11 @@ namespace Etsi.Ultimate.Tests.Services
                 Fk_ReleaseId = releaseID
             };
 
+            //This version is associated to a specification who is not associated to any technologies (example)
+            var mockTechnologiesManager = MockRepository.GenerateMock<ISpecificationTechnologiesManager>();
+            mockTechnologiesManager.Stub(x => x.GetASpecificationTechnologiesBySpecId(newVersion.Fk_SpecificationId ?? 0)).Return(null);
+            ManagerFactory.Container.RegisterInstance(typeof(ISpecificationTechnologiesManager), mockTechnologiesManager);
+
             Report r = versionsSvc.UploadOrAllocateVersion(newVersion, false, USERID);
             Assert.AreEqual(errorExpected, r.ErrorList.Count());
         }

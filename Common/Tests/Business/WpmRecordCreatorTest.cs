@@ -10,11 +10,17 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using Etsi.Ultimate.Business;
 
 namespace Etsi.Ultimate.Tests.Business
 {
     public class WpmRecordCreatorTest
     {
+        public const int IMPORTPROJECT_VERSION_ID = 89;
+        public const int IMPORTPROJECT_WKI_ID = 18;
+        public const int IMPORTPROJECT_SPEC_ID = 1;
+
+
         [Test]
         public void AddWPMRecord_Nominal()
         {            
@@ -41,11 +47,13 @@ namespace Etsi.Ultimate.Tests.Business
             WorkProgramRepoMock.Expect(wp => wp.InsertEtsiWorkITem(Arg<EtsiWorkItemImport>.Is.Anything)).Return(1);
             WorkProgramRepoMock.Expect(wp => wp.InsertWIScheduleEntry(Arg<int>.Is.Equal(1), Arg<int>.Is.Equal(10), Arg<int>.Is.Equal(2), Arg<int>.Is.Equal(1)));
             WorkProgramRepoMock.Expect(wp => wp.InsertWIKeyword(Arg<int>.Is.Equal(1), Arg<string>.Is.Anything));
-            WorkProgramRepoMock.Expect(wp => wp.InsertWIProject(Arg<int>.Is.Equal(1), Arg<int>.Is.Anything));
             WorkProgramRepoMock.Expect(wp => wp.InsertWIRemeark(Arg<int>.Is.Equal(1), Arg<int>.Is.Anything, Arg<string>.Is.Anything));
             
             RepositoryFactory.Container.RegisterInstance<IWorkProgramRepository>(WorkProgramRepoMock);
 
+            //Overpassed, without issues, the ImportProjectsToWPMDB methods that we test in the next test method :
+            var mockTechnologiesManager = MockRepository.GenerateMock<ISpecificationTechnologiesManager>();
+            ManagerFactory.Container.RegisterInstance(typeof(ISpecificationTechnologiesManager), mockTechnologiesManager);
 
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             var manager = new WpmRecordCreator(uow);
@@ -58,10 +66,62 @@ namespace Etsi.Ultimate.Tests.Business
 
             WorkProgramRepoMock.AssertWasCalled(wp => wp.InsertEtsiWorkITem(Arg<EtsiWorkItemImport>.Matches(c => c.EtsiNumber.Equals("126 124") && c.EtsiDocNumber == 26124 && c.SerialNumber.Equals("26124vA21") && c.Reference.Equals("DTS/TSGS-0426124vA21"))));
             WorkProgramRepoMock.VerifyAllExpectations();
-
-           //TODO
         }
 
+        [Test]
+        public void ImportProjectsToWPMDB_Test()
+        {
+            //Mocks
+            ImportProjectsToWPMDB_SetMocks();
+            var wprMock = MockRepository.GenerateMock<IWorkProgramRepository>();
+            RepositoryFactory.Container.RegisterInstance<IWorkProgramRepository>(wprMock);
+
+            //Return the UltimateUnitOfWork
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+
+            //Init the manager
+            var wpmRecordCreator = new WpmRecordCreator(uow);
+            //Get version
+            var version = uow.Context.SpecVersions.Where(x => x.Pk_VersionId == IMPORTPROJECT_VERSION_ID).FirstOrDefault();
+
+            //Start projects import
+            wpmRecordCreator.ImportProjectsToWPMDB(version, IMPORTPROJECT_WKI_ID, wprMock);
+
+            //TESTS
+            //Verif import project : global case, no testable because of Configvariables interaction with web.config
+            //Verif import project : technos case
+            wprMock.AssertWasCalled(x => x.InsertWIProject(IMPORTPROJECT_WKI_ID, 744));
+            //Verif import project : technos case
+            wprMock.AssertWasCalled(x => x.InsertWIProject(IMPORTPROJECT_WKI_ID, 704));
+            //Verif import project : release case
+            wprMock.AssertWasCalled(x => x.InsertWIProject(IMPORTPROJECT_WKI_ID, 2));
+        }
+
+        public void ImportProjectsToWPMDB_SetMocks()
+        {
+            
+            //Version to transpose
+            var versions = new SpecVersionFakeDBSet();
+            versions.Add(new SpecVersion() { Pk_VersionId = IMPORTPROJECT_VERSION_ID, Fk_SpecificationId = 1, Fk_ReleaseId = 1 });
+
+            //Release associated to the version
+            var releases = new ReleaseFakeDBSet();
+            releases.Add(new Release() { Pk_ReleaseId = 1, WpmProjectId = 2 });
+
+            //Mock the context
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.SpecVersions).Return(versions);
+            mockDataContext.Stub(x => x.Releases).Return(releases);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            //Mock of the technologies associated to the version specification
+            Enum_Technology e = new Enum_Technology() { Pk_Enum_TechnologyId = 1, Code = "2G", WpmProjectId = 744 };
+            Enum_Technology e1 = new Enum_Technology() { Pk_Enum_TechnologyId = 2, Code = "3G", WpmProjectId = 704 };
+            List<Enum_Technology> techSet = new List<Enum_Technology>() { e, e1 };
+            var mockTechnologiesManager = MockRepository.GenerateMock<ISpecificationTechnologiesManager>();
+            mockTechnologiesManager.Stub(x => x.GetASpecificationTechnologiesBySpecId(IMPORTPROJECT_SPEC_ID)).Return(techSet);
+            ManagerFactory.Container.RegisterInstance(typeof(ISpecificationTechnologiesManager), mockTechnologiesManager);
+        }
 
         // <summary>
         /// Get Fake SpecVersion Details

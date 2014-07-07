@@ -68,6 +68,7 @@ namespace Etsi.Ultimate.Business
             Container.RegisterType<ITranspositionManager, TranspositionManager>(new TransientLifetimeManager());
             Container.RegisterType<IReleaseManager, ReleaseManager>(new TransientLifetimeManager());
             Container.RegisterType<ISpecVersionManager, SpecVersionsManager>(new TransientLifetimeManager());
+            Container.RegisterType<ISpecificationTechnologiesManager, SpecificationTechnologiesManager>(new TransientLifetimeManager());
         }
     }
 }
