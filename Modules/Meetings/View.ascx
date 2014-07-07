@@ -1,23 +1,22 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="View.ascx.cs" Inherits="Etsi.Ultimate.Module.Meetings.View" %>
-<asp:Repeater ID="rptItemList" runat="server" OnItemDataBound="rptItemListOnItemDataBound" OnItemCommand="rptItemListOnItemCommand">
-    <HeaderTemplate>
-        <ul class="tm_tl">
-    </HeaderTemplate>
+﻿<!-- 
+    Take care : this module must follow new design css rules :
+    - All the css in the module.css file
+    - Consistency naming
+    - use global design components (buttons, messagebox, ...)
+-->
 
-    <ItemTemplate>
-        <li class="tm_t">
-            <h3>
-                <asp:Label ID="lblitemName" runat="server" Text='<%#DataBinder.Eval(Container.DataItem,"ItemName").ToString() %>' />
-            </h3>
-            <asp:Label ID="lblItemDescription" runat="server" Text='<%#DataBinder.Eval(Container.DataItem,"ItemDescription").ToString() %>' CssClass="tm_td" />
+<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="View.ascx.cs" Inherits="Etsi.Ultimate.Module.Meetings.View" %>
+<%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
+<!--Import module.css-->
+<%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.Client.ClientResourceManagement" Assembly="DotNetNuke.Web.Client" %>
+<dnn:DnnCssInclude runat="server" FilePath="~/DesktopModules/Specifications/module.css" />
+<!--Import module.css-->
 
-            <asp:Panel ID="pnlAdmin" runat="server" Visible="false">
-                <asp:HyperLink ID="lnkEdit" runat="server" ResourceKey="EditItem.Text" Visible="false" Enabled="false" />
-                <asp:LinkButton ID="lnkDelete" runat="server" ResourceKey="DeleteItem.Text" Visible="false" Enabled="false" CommandName="Delete" />
-            </asp:Panel>
-        </li>
-    </ItemTemplate>
-    <FooterTemplate>
-        </ul>
-    </FooterTemplate>
-</asp:Repeater>
+
+<!-- This global contener should be stay here and its id should be use as prefix of all css style in the module.css file -->
+<div id="meetingsView">
+    <h1>Meetings module</h1>
+
+
+</div>
+<!-- no code anymore -->

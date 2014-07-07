@@ -66,15 +66,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Components\FeatureController.cs" />
-    <Compile Include="Components\ItemController.cs" />
-    <Compile Include="Components\Item.cs" />
-    <Compile Include="MeetingsModuleBase.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="MeetingsModuleSettingsBase.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Edit.ascx.cs">
       <DependentUpon>Edit.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -140,6 +131,23 @@
       <DependentUpon>web.config</DependentUpon>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Components\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\DomainClasses\DomainClasses.csproj">
+      <Project>{d5bdede9-d397-411c-ae94-1646836406ba}</Project>
+      <Name>DomainClasses</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Services\Services.csproj">
+      <Project>{4bb8a434-1ed1-4d33-ae3d-32a000d19ca5}</Project>
+      <Name>Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Utils\Utils.csproj">
+      <Project>{ad1f6a1c-95b2-4274-a0c5-1f8ca9d9bb55}</Project>
+      <Name>Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -151,9 +159,9 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
-          <DevelopmentServerPort>0</DevelopmentServerPort>
+          <DevelopmentServerPort>54323</DevelopmentServerPort>
           <DevelopmentServerVPath>
           </DevelopmentServerVPath>
           <IISUrl>http://dnndev.me/desktopmodules/Meetings</IISUrl>

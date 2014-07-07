@@ -1,0 +1,6 @@
+/*please prefix all your css by the id of your component global div*/
+
+#meetingsView h1
+{
+	color:red;
+}
