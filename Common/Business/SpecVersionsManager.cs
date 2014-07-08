@@ -231,16 +231,33 @@ namespace Etsi.Ultimate.Business
 
         #region Offline Sync Methods
 
-        
-        public bool InsertEntity(SpecVersion entity)
+        /// <summary>
+        /// Insert SpecVersion entity
+        /// </summary>
+        /// <param name="entity">SpecVersion</param>
+        /// <param name="terminalName">Terminal Name</param>
+        /// <returns>Success/Failure</returns>
+        public bool InsertEntity(SpecVersion entity, string terminalName)
         {
             bool isSuccess = true;
 
             try
             {
-                IOfflineRepository offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
-                offlineRepo.UoW = _uoW;
-                offlineRepo.InsertOfflineEntity(entity);
+                if (entity != null)
+                {
+                    SyncInfo syncInfo = new SyncInfo();
+                    syncInfo.TerminalName = terminalName;
+                    syncInfo.Offline_PK_Id = entity.Pk_VersionId;
+                    entity.SyncInfoes.Add(syncInfo);
+
+                    IOfflineRepository offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
+                    offlineRepo.UoW = _uoW;
+                    offlineRepo.InsertOfflineEntity(entity);
+                }
+                else
+                {
+                    isSuccess = false;
+                }
             }
             catch (Exception)
             {
@@ -250,24 +267,41 @@ namespace Etsi.Ultimate.Business
             return isSuccess;
         }
 
+        /// <summary>
+        /// Update SpecVersion entity
+        /// </summary>
+        /// <param name="entity">SpecVersion</param>
+        /// <returns>Success/Failure</returns>
         public bool UpdateEntity(SpecVersion entity)
         {
             bool isSuccess = true;
 
             try
             {
-                //[1] Get the DB Version Entity
-                ISpecVersionsRepository specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
-                specVersionRepo.UoW = _uoW;
-                SpecVersion dbEntity = specVersionRepo.Find(entity.Pk_VersionId);
+                if (entity != null)
+                {
+                    //[1] Get the DB Version Entity
+                    ISpecVersionsRepository specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+                    specVersionRepo.UoW = _uoW;
+                    SpecVersion dbEntity = specVersionRepo.Find(entity.Pk_VersionId);
 
-                //[2] Compare & Update SpecVersion Properties
-                UpdateModifications(dbEntity, entity);
+                    //Record may be deleted in serverside, while changes happen at offline
+                    //So, priority is serverside, hence no more changes will update
+                    if (dbEntity != null)
+                    {
+                        //[2] Compare & Update SpecVersion Properties
+                        UpdateModifications(dbEntity, entity);
 
-                //[3] Update modified entity in Context
-                IOfflineRepository offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
-                offlineRepo.UoW = _uoW;
-                offlineRepo.UpdateOfflineEntity(dbEntity);
+                        //[3] Update modified entity in Context
+                        IOfflineRepository offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
+                        offlineRepo.UoW = _uoW;
+                        offlineRepo.UpdateOfflineEntity(dbEntity);
+                    }
+                }
+                else
+                {
+                    isSuccess = false;
+                }
             }
             catch (Exception)
             {
@@ -277,6 +311,11 @@ namespace Etsi.Ultimate.Business
             return isSuccess;
         }
 
+        /// <summary>
+        /// Delete SpecVersion entity
+        /// </summary>
+        /// <param name="primaryKey">Primary Key</param>
+        /// <returns>Success/Failure</returns>
         public bool DeleteEntity(int primaryKey)
         {
             bool isSuccess = true;
@@ -288,10 +327,15 @@ namespace Etsi.Ultimate.Business
                 specVersionRepo.UoW = _uoW;
                 SpecVersion dbEntity = specVersionRepo.Find(primaryKey);
 
-                //[2] Update modified entity in Context
-                IOfflineRepository offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
-                offlineRepo.UoW = _uoW;
-                offlineRepo.DeleteOfflineEntity(dbEntity);
+                //Record may be deleted in serverside, while changes happen at offline
+                //So, priority is serverside, hence no more changes will update
+                if (dbEntity != null)
+                {
+                    //[2] Update modified entity in Context
+                    IOfflineRepository offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
+                    offlineRepo.UoW = _uoW;
+                    offlineRepo.DeleteOfflineEntity(dbEntity);
+                }
             }
             catch (Exception)
             {

@@ -110,25 +110,37 @@ namespace Etsi.Ultimate.Services
         /// Insert SpecVersion entity
         /// </summary>
         /// <param name="entity">SpecVersion</param>
-        /// <returns>Success/Failure</returns>
-        public int InsertEntity(SpecVersion entity)
+        /// <param name="terminalName">Terminal Name</param>
+        /// <returns>Inserted Identity</returns>
+        public int InsertEntity(SpecVersion entity, string terminalName)
         {
             int primaryKeyID = 0;
 
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            if (entity != null)
             {
-                try
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
                 {
-                    var specVersionManager = new SpecVersionsManager();
-                    specVersionManager._uoW = uoW;
-                    if (specVersionManager.InsertEntity(entity))
+                    try
                     {
-                        uoW.Save();
-                        primaryKeyID = entity.Pk_VersionId;
+                        var specVersionManager = new SpecVersionsManager();
+                        specVersionManager._uoW = uoW;
+                        //Check whether insert already processed
+                        var syncInfoManager = new SyncInfoManager(uoW);
+                        List<SyncInfo> syncInfos = syncInfoManager.GetSyncInfo(terminalName, entity.Pk_VersionId);
+                        var syncInfo = syncInfos.Where(x => x.Fk_VersionId != null).FirstOrDefault();
+                        if (syncInfo != null)
+                        {
+                            primaryKeyID = syncInfo.Fk_VersionId ?? 0;
+                        }
+                        else if (specVersionManager.InsertEntity(entity, terminalName))
+                        {
+                            uoW.Save();
+                            primaryKeyID = entity.Pk_VersionId;
+                        }
                     }
-                }
-                catch (Exception)
-                {
+                    catch (Exception)
+                    {
+                    }
                 }
             }
 

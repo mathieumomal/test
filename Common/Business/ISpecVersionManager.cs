@@ -69,8 +69,9 @@ namespace Etsi.Ultimate.Business
         /// Insert SpecVersion entity
         /// </summary>
         /// <param name="entity">SpecVersion</param>
+        /// <param name="terminalName">Terminal Name</param>
         /// <returns>Success/Failure</returns>
-        bool InsertEntity(SpecVersion entity);
+        bool InsertEntity(SpecVersion entity, string terminalName);
 
         /// <summary>
         /// Update SpecVersion entity

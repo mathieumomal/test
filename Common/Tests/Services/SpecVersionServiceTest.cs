@@ -19,7 +19,13 @@ namespace Etsi.Ultimate.Tests.Services
 {
     class SpecVersionServiceTest : BaseTest
     {
-        private const int USERID = 0;
+        #region Variables
+
+        private const int USERID = 0; 
+
+        #endregion
+
+        #region Tests
 
         [Test, TestCaseSource("SpecVersionsData")]
         public void GetVersionsBySpecId(SpecVersionFakeDBSet specVersionsData)
@@ -28,7 +34,7 @@ namespace Etsi.Ultimate.Tests.Services
             mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)specVersionsData);
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
             var versionsSvc = new SpecVersionService();
-            List<SpecVersion> result =  versionsSvc.GetVersionsBySpecId(1);
+            List<SpecVersion> result = versionsSvc.GetVersionsBySpecId(1);
             Assert.AreEqual(2, result.Count);
             Assert.AreEqual(1, result[0].Remarks.Count);
         }
@@ -53,7 +59,7 @@ namespace Etsi.Ultimate.Tests.Services
             mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)specVersionsData);
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
             var versionsSvc = new SpecVersionService();
-            SpecVersion result = versionsSvc.GetVersionsById(2,0).Key;            
+            SpecVersion result = versionsSvc.GetVersionsById(2, 0).Key;
             Assert.AreEqual("Location2", result.Location);
             Assert.AreEqual("Remark 2", result.Remarks.ToList()[0].RemarkText);
         }
@@ -93,7 +99,7 @@ namespace Etsi.Ultimate.Tests.Services
                 Source = 1,
                 DocumentUploaded = new DateTime(2013, 9, 18),
                 ProvidedBy = 1,
-                Remarks = new List<Remark>() { new Remark() {Pk_RemarkId=1, Fk_VersionId = 1, RemarkText="R1"}},
+                Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 1, Fk_VersionId = 1, RemarkText = "R1" } },
                 Fk_SpecificationId = 1,
                 Fk_ReleaseId = 1
             };
@@ -144,7 +150,7 @@ namespace Etsi.Ultimate.Tests.Services
             };
             Report r = versionsSvc.UploadOrAllocateVersion(existingVersion, false, USERID);
             Assert.AreEqual(null, r.ErrorList.FirstOrDefault());
-            Assert.AreEqual(existingVersion.Remarks.Count + 1, versionsDBSet.Where(v => v.Pk_VersionId==2).ToList().FirstOrDefault().Remarks.Count);
+            Assert.AreEqual(existingVersion.Remarks.Count + 1, versionsDBSet.Where(v => v.Pk_VersionId == 2).ToList().FirstOrDefault().Remarks.Count);
             Assert.AreEqual("L2", versionsDBSet.Where(v => v.Pk_VersionId == 2).ToList().FirstOrDefault().Location);
         }
 
@@ -190,7 +196,7 @@ namespace Etsi.Ultimate.Tests.Services
                 Fk_ReleaseId = 1
             };
             Report r = versionsSvc.UploadOrAllocateVersion(existingVersion, true, USERID); //Draft            
-            Assert.AreEqual("Invalid draft version number!", r.ErrorList.FirstOrDefault());                        
+            Assert.AreEqual("Invalid draft version number!", r.ErrorList.FirstOrDefault());
         }
 
         [Test]
@@ -235,7 +241,7 @@ namespace Etsi.Ultimate.Tests.Services
                 Fk_ReleaseId = 1
             };
             Report r = versionsSvc.UploadOrAllocateVersion(existingVersion, false, USERID); //New
-            Assert.AreEqual(String.Format("Invalid version number. Version number should be grater than {0}", versionsDBSet.Where(v => v.Pk_VersionId == 3).ToList().FirstOrDefault().Version), r.ErrorList.FirstOrDefault());            
+            Assert.AreEqual(String.Format("Invalid version number. Version number should be grater than {0}", versionsDBSet.Where(v => v.Pk_VersionId == 3).ToList().FirstOrDefault().Version), r.ErrorList.FirstOrDefault());
         }
 
         [Test]
@@ -280,14 +286,14 @@ namespace Etsi.Ultimate.Tests.Services
                 Fk_ReleaseId = 1
             };
             Report r = versionsSvc.UploadOrAllocateVersion(newVersion, false, USERID); //New
-            Assert.AreEqual(null, r.ErrorList.FirstOrDefault());           
+            Assert.AreEqual(null, r.ErrorList.FirstOrDefault());
 
             mockDataContext.AssertWasCalled(x => x.SetAdded(newVersion));
         }
 
         [TestCase(null, null, 1)]
         [TestCase(null, 1, 1)]
-        [TestCase(3,null, 1)]
+        [TestCase(3, null, 1)]
         [TestCase(3, 1, 0)]
         [TestCase(3, 2, 0)]
         [TestCase(1, 2, 0)]
@@ -342,6 +348,118 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(errorExpected, r.ErrorList.Count());
         }
 
+        [Test]
+        public void SpecVersionService_InsertEntity()
+        {
+            //Arrange
+            int online_PrimaryKey = 0;
+            string terminalName = "T1";
+            SpecVersion specVersion1 = new SpecVersion() { Pk_VersionId = 1, MajorVersion = 1, EditorialVersion = 0, TechnicalVersion = 0 };
+            SpecVersion specVersion2 = new SpecVersion() { Pk_VersionId = 2, MajorVersion = 1, EditorialVersion = 0, TechnicalVersion = 0 };
+            SyncInfo syncInfo = new SyncInfo() { Pk_SyncId = 1, TerminalName = "T1", Offline_PK_Id = 1, Fk_VersionId = 1 };
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.SyncInfoes).Return((IDbSet<SyncInfo>)new SyncInfoFakeDBSet() { syncInfo });
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            //Action
+            var service = new SpecVersionService();
+
+            //Assert
+            //[1] Fault call
+            online_PrimaryKey = service.InsertEntity(null, terminalName);
+            Assert.AreEqual(0, online_PrimaryKey);
+            mockDataContext.AssertWasNotCalled(x => x.SetAdded(Arg<SpecVersion>.Is.Anything));
+            mockDataContext.AssertWasNotCalled(x => x.SaveChanges());
+
+            //[2] Call for already processed record
+            online_PrimaryKey = service.InsertEntity(specVersion1, terminalName);
+            Assert.AreEqual(1, online_PrimaryKey);
+            mockDataContext.AssertWasNotCalled(x => x.SetAdded(Arg<SpecVersion>.Is.Anything));
+            mockDataContext.AssertWasNotCalled(x => x.SaveChanges());
+
+            //[3] Call for new insert
+            online_PrimaryKey = service.InsertEntity(specVersion2, terminalName);
+            mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<SpecVersion>.Matches(y =>
+                   ((y.Pk_VersionId == specVersion2.Pk_VersionId)
+                && (y.MajorVersion == specVersion2.MajorVersion)
+                && (y.EditorialVersion == specVersion2.EditorialVersion)
+                && (y.TechnicalVersion == specVersion2.TechnicalVersion)
+                && (y.SyncInfoes.Count == 1)
+                && (y.SyncInfoes.FirstOrDefault().TerminalName == terminalName)
+                && (y.SyncInfoes.FirstOrDefault().Offline_PK_Id == specVersion2.Pk_VersionId)))));
+            mockDataContext.AssertWasCalled(x => x.SaveChanges());
+        }
+
+        [Test]
+        public void SpecVersionService_UpdateEntity()
+        {
+            //Arrange
+            SpecVersion specVersion1 = new SpecVersion() { Pk_VersionId = 1, MajorVersion = 1, EditorialVersion = 1, TechnicalVersion = 0 };
+            SpecVersion specVersion2 = new SpecVersion() { Pk_VersionId = 2, MajorVersion = 1, EditorialVersion = 0, TechnicalVersion = 0 };
+            SpecVersion specVersionDB = new SpecVersion() { Pk_VersionId = 1, MajorVersion = 1, EditorialVersion = 0, TechnicalVersion = 0 };
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.SpecVersions).Return(((IDbSet<SpecVersion>)new SpecVersionFakeDBSet() { specVersionDB }));
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            //Action
+            var service = new SpecVersionService();
+
+            //Assert
+            bool isSuccess = service.UpdateEntity(null);
+            Assert.IsFalse(isSuccess);
+            mockDataContext.AssertWasNotCalled(x => x.SetModified(Arg<SpecVersion>.Is.Anything));
+            mockDataContext.AssertWasNotCalled(x => x.SaveChanges());
+
+            isSuccess = service.UpdateEntity(specVersion2);
+            Assert.IsTrue(isSuccess);
+            mockDataContext.AssertWasNotCalled(x => x.SetModified(Arg<SpecVersion>.Is.Anything));
+            mockDataContext.AssertWasCalled(x => x.SaveChanges());
+
+            isSuccess = service.UpdateEntity(specVersion1);
+            Assert.IsTrue(isSuccess);
+            mockDataContext.AssertWasCalled(x => x.SetModified(Arg<SpecVersion>.Matches(y =>
+                   ((y.Pk_VersionId == specVersion1.Pk_VersionId)
+                && (y.MajorVersion == specVersion1.MajorVersion)
+                && (y.EditorialVersion == specVersion1.EditorialVersion)
+                && (y.TechnicalVersion == specVersion1.TechnicalVersion)))));
+            mockDataContext.AssertWasCalled(x => x.SaveChanges());
+        }
+
+        [Test]
+        public void SpecVersionService_DeleteEntity()
+        {
+            //Arrange
+            SpecVersion specVersion1 = new SpecVersion() { Pk_VersionId = 1, MajorVersion = 1, EditorialVersion = 1, TechnicalVersion = 0 };
+            SpecVersion specVersion2 = new SpecVersion() { Pk_VersionId = 2, MajorVersion = 1, EditorialVersion = 0, TechnicalVersion = 0 };
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.SpecVersions).Return(((IDbSet<SpecVersion>)new SpecVersionFakeDBSet() { specVersion1, specVersion2 }));
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            //Action
+            var service = new SpecVersionService();
+
+            //Assert
+            bool isSuccess = service.DeleteEntity(0);
+            Assert.IsTrue(isSuccess);
+            mockDataContext.AssertWasNotCalled(x => x.SetDeleted(Arg<SpecVersion>.Is.Anything));
+            mockDataContext.AssertWasCalled(x => x.SaveChanges());
+
+            isSuccess = service.DeleteEntity(1);
+            Assert.IsTrue(isSuccess);
+            mockDataContext.AssertWasCalled(x => x.SetDeleted(Arg<SpecVersion>.Matches(y =>
+                   ((y.Pk_VersionId == specVersion1.Pk_VersionId)
+                && (y.MajorVersion == specVersion1.MajorVersion)
+                && (y.EditorialVersion == specVersion1.EditorialVersion)
+                && (y.TechnicalVersion == specVersion1.TechnicalVersion)))));
+            mockDataContext.AssertWasCalled(x => x.SaveChanges());
+        }
+
+        #endregion
+
+        #region TestData
+
         /// <summary>
         /// Get SpecVersions DATA
         /// </summary>
@@ -384,14 +502,14 @@ namespace Etsi.Ultimate.Tests.Services
             }
         }
 
-        // <summary>
+        /// <summary>
         /// Get Fake SpecVersion Details
         /// </summary>
         /// <returns>Specification Fake DBSet</returns>
         private SpecVersionFakeDBSet GetSpecVersions()
         {
             var versionDbSet = new SpecVersionFakeDBSet();
-           
+
             var version = new SpecVersion()
             {
                 Pk_VersionId = 1,
@@ -402,8 +520,8 @@ namespace Etsi.Ultimate.Tests.Services
                 Source = 1,
                 DocumentUploaded = new DateTime(2013, 9, 18),
                 ProvidedBy = 1,
-                Remarks = new List<Remark>() { new Remark() {Pk_RemarkId=1, Fk_VersionId = 1, RemarkText="R1"}},
-                Fk_SpecificationId=1,
+                Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 1, Fk_VersionId = 1, RemarkText = "R1" } },
+                Fk_SpecificationId = 1,
                 Fk_ReleaseId = 1
 
             };
@@ -472,13 +590,15 @@ namespace Etsi.Ultimate.Tests.Services
         {
             var list = new SpecificationReleaseFakeDBSet();
             list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 2, isTranpositionForced = false });
-            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId =3, Fk_ReleaseId = 2, isTranpositionForced = false });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 3, Fk_ReleaseId = 2, isTranpositionForced = false });
             list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 3, Fk_SpecificationId = 2, Fk_ReleaseId = 2, isTranpositionForced = true });
             list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 4, Fk_SpecificationId = 2, Fk_ReleaseId = 1, isTranpositionForced = false });
             list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 5, Fk_SpecificationId = 2, Fk_ReleaseId = 4, isTranpositionForced = false });
             list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 6, Fk_SpecificationId = 3, Fk_ReleaseId = 1, isTranpositionForced = true });
             list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 7, Fk_SpecificationId = 1, Fk_ReleaseId = 1, isTranpositionForced = false });
             return list;
-        }
+        } 
+
+        #endregion
     }
 }

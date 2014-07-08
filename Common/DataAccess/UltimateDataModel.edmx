@@ -26,6 +26,7 @@
           <EntitySet Name="SpecificationRapporteur" EntityType="Etsi.Ultimate.DataAccess.Store.SpecificationRapporteur" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SpecificationResponsibleGroup" EntityType="Etsi.Ultimate.DataAccess.Store.SpecificationResponsibleGroup" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="SpecificationTechnologies" EntityType="Etsi.Ultimate.DataAccess.Store.SpecificationTechnologies" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="SyncInfo" EntityType="Etsi.Ultimate.DataAccess.Store.SyncInfo" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Version" EntityType="Etsi.Ultimate.DataAccess.Store.Version" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="WorkItems" EntityType="Etsi.Ultimate.DataAccess.Store.WorkItems" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="WorkItems_ResponsibleGroups" EntityType="Etsi.Ultimate.DataAccess.Store.WorkItems_ResponsibleGroups" store:Type="Tables" Schema="dbo" />
@@ -212,6 +213,10 @@
           <AssociationSet Name="FK_SpecificationID" Association="Etsi.Ultimate.DataAccess.Store.FK_SpecificationID">
             <End Role="Specification" EntitySet="Specification" />
             <End Role="Specification_WorkItem" EntitySet="Specification_WorkItem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SyncInfo_Version" Association="Etsi.Ultimate.DataAccess.Store.FK_SyncInfo_Version">
+            <End Role="Version" EntitySet="Version" />
+            <End Role="SyncInfo" EntitySet="SyncInfo" />
           </AssociationSet>
           <AssociationSet Name="FK_TSGStatus" Association="Etsi.Ultimate.DataAccess.Store.FK_TSGStatus">
             <End Role="Enum_TDocStatus" EntitySet="Enum_TDocStatus" />
@@ -513,6 +518,15 @@
           <Property Name="Pk_SpecificationTechnologyId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Fk_Specification" Type="int" Nullable="false" />
           <Property Name="Fk_Enum_Technology" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="SyncInfo">
+          <Key>
+            <PropertyRef Name="Pk_SyncId" />
+          </Key>
+          <Property Name="Pk_SyncId" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="TerminalName" Type="varchar" Nullable="false" MaxLength="250" />
+          <Property Name="Offline_PK_Id" Type="int" Nullable="false" />
+          <Property Name="Fk_VersionId" Type="int" />
         </EntityType>
         <EntityType Name="Version">
           <Key>
@@ -987,6 +1001,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SyncInfo_Version">
+          <End Role="Version" Type="Etsi.Ultimate.DataAccess.Store.Version" Multiplicity="0..1" />
+          <End Role="SyncInfo" Type="Etsi.Ultimate.DataAccess.Store.SyncInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Version">
+              <PropertyRef Name="Pk_VersionId" />
+            </Principal>
+            <Dependent Role="SyncInfo">
+              <PropertyRef Name="Fk_VersionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_TSGStatus">
           <End Role="Enum_TDocStatus" Type="Etsi.Ultimate.DataAccess.Store.Enum_TDocStatus" Multiplicity="0..1" />
           <End Role="ChangeRequest" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequest" Multiplicity="*" />
@@ -1395,6 +1421,11 @@
             <Parameter Name="TECHNICAL_VERSION" Mode="In" Type="Int32" />
             <Parameter Name="EDITORIAL_VERSION" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="SyncInfoes" EntityType="Etsi.Ultimate.DataAccess.SyncInfo" />
+          <AssociationSet Name="FK_SyncInfo_Version" Association="Etsi.Ultimate.DataAccess.FK_SyncInfo_Version">
+            <End Role="SpecVersion" EntitySet="SpecVersions" />
+            <End Role="SyncInfo" EntitySet="SyncInfoes" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -2033,6 +2064,7 @@
           <NavigationProperty Name="Specification" Relationship="Etsi.Ultimate.DataAccess.Version_FK_SpecificationID" FromRole="Version" ToRole="Specification" />
           <NavigationProperty Name="ChangeRequests" Relationship="Etsi.Ultimate.DataAccess.FK_CRCurrentVersion" FromRole="SpecVersion" ToRole="ChangeRequest" />
           <NavigationProperty Name="ChangeRequests1" Relationship="Etsi.Ultimate.DataAccess.FK_CRNewVersion" FromRole="SpecVersion" ToRole="ChangeRequest" />
+          <NavigationProperty Name="SyncInfoes" Relationship="Etsi.Ultimate.DataAccess.FK_SyncInfo_Version" FromRole="SpecVersion" ToRole="SyncInfo" />
           </EntityType>
         <Association Name="Version_FK_ReleaseID">
           <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="0..1" />
@@ -2313,6 +2345,28 @@
           <Property Type="String" Name="ActiveCode" MaxLength="12" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="ShortName" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="SyncInfo">
+          <Key>
+            <PropertyRef Name="Pk_SyncId" />
+          </Key>
+          <Property Type="Int32" Name="Pk_SyncId" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="TerminalName" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="Offline_PK_Id" Nullable="false" />
+          <Property Type="Int32" Name="Fk_VersionId" />
+          <NavigationProperty Name="Version" Relationship="Etsi.Ultimate.DataAccess.FK_SyncInfo_Version" FromRole="SyncInfo" ToRole="SpecVersion" />
+        </EntityType>
+        <Association Name="FK_SyncInfo_Version">
+          <End Type="Etsi.Ultimate.DataAccess.SpecVersion" Role="SpecVersion" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.SyncInfo" Role="SyncInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SpecVersion">
+              <PropertyRef Name="Pk_VersionId" />
+            </Principal>
+            <Dependent Role="SyncInfo">
+              <PropertyRef Name="Fk_VersionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2785,6 +2839,16 @@
           <FunctionImportMapping FunctionImportName="Transposition_CreateWiKeywordEntry" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiKeywordEntry" />
           <FunctionImportMapping FunctionImportName="Transposition_CreateWiProjectEntry" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiProjectEntry" />
           <FunctionImportMapping FunctionImportName="Transposition_CreateWiRemarkEntry" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiRemarkEntry" />
+          <EntitySetMapping Name="SyncInfoes">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.SyncInfo">
+              <MappingFragment StoreEntitySet="SyncInfo">
+                <ScalarProperty Name="Fk_VersionId" ColumnName="Fk_VersionId" />
+                <ScalarProperty Name="Offline_PK_Id" ColumnName="Offline_PK_Id" />
+                <ScalarProperty Name="TerminalName" ColumnName="TerminalName" />
+                <ScalarProperty Name="Pk_SyncId" ColumnName="Pk_SyncId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

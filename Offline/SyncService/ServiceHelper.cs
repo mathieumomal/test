@@ -19,15 +19,16 @@ namespace SyncService
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityType">Entity Type</param>
+        /// <param name="terminalName">Terminal Name</param>
         /// <returns>Primary Key of inserted entity</returns>
-        public static int InsertEntity(object entity, EnumEntity entityType)
+        public static int InsertEntity(object entity, EnumEntity entityType, string terminalName)
         {
             int primaryKeyID = 0;
 
             switch (entityType)
             {
                 case EnumEntity.SpecVersion:
-                    primaryKeyID = InsertEntity<SpecVersion>(entity);
+                    primaryKeyID = InsertEntity<SpecVersion>(entity, terminalName);
                     break;
             }
 
@@ -83,11 +84,12 @@ namespace SyncService
         /// </summary>
         /// <typeparam name="T">Type of Entity</typeparam>
         /// <param name="entity">Entity</param>
+        /// <param name="terminalName">Terminal Name</param>
         /// <returns>Primary Key of inserted entity</returns>
-        private static int InsertEntity<T>(object entity)
+        private static int InsertEntity<T>(object entity, string terminalName)
         {
             IOfflineService<T> specVersionService = ServicesFactory.Resolve<IOfflineService<T>>();
-            return specVersionService.InsertEntity(ConvertObject<T>(entity));
+            return specVersionService.InsertEntity(ConvertObject<T>(entity), terminalName);
         }
 
         /// <summary>

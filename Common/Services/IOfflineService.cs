@@ -11,8 +11,9 @@ namespace Etsi.Ultimate.Services
         /// Insert entity
         /// </summary>
         /// <param name="entity">Entity</param>
+        /// <param name="terminalName">Terminal Name</param>
         /// <returns>Primary Key of Inserted Entity</returns>
-        int InsertEntity(T entity);
+        int InsertEntity(T entity, string terminalName);
 
         /// <summary>
         /// Update entity

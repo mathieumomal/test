@@ -51,10 +51,11 @@ namespace SyncClient
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityType">Entity Type</param>
+        /// <param name="terminalName">Terminal Name</param>
         /// <returns>Primary Key of Inserted Record</returns>
-        public int InsertRecord(object entity, EnumEntity entityType)
+        public int InsertRecord(object entity, EnumEntity entityType, string terminalName)
         {
-            return proxy.InsertRecord(entity, entityType);
+            return proxy.InsertRecord(entity, entityType, terminalName);
         }
 
         /// <summary>

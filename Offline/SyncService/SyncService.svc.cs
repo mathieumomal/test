@@ -14,10 +14,11 @@ namespace SyncService
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityType">Entity Type</param>
+        /// <param name="terminalName">Terminal Name</param>
         /// <returns>Primary Key of inserted entity</returns>
-        public int InsertRecord(object entity, EnumEntity entityType)
+        public int InsertRecord(object entity, EnumEntity entityType, string terminalName)
         {
-            return ServiceHelper.InsertEntity(entity, entityType);
+            return ServiceHelper.InsertEntity(entity, entityType, terminalName);
         }
 
         /// <summary>

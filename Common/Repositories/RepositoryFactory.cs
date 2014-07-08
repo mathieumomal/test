@@ -84,6 +84,7 @@ namespace Etsi.Ultimate.Repositories
 
             //Offline Repositories
             Container.RegisterType<IOfflineRepository, OfflineRepository>(new TransientLifetimeManager());
+            Container.RegisterType<ISyncInfoRepository, SyncInfoRepository>(new TransientLifetimeManager());
         }
     }
 }

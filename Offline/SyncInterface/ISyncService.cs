@@ -15,9 +15,10 @@ namespace SyncInterface
         /// </summary>
         /// <param name="entity">Entity</param>
         /// <param name="entityType">Entity Type</param>
+        /// <param name="terminalName">Terminal Name</param>
         /// <returns>Primary Key of inserted entity</returns>
         [OperationContract]
-        int InsertRecord(object entity, EnumEntity entityType);
+        int InsertRecord(object entity, EnumEntity entityType, string terminalName);
 
         /// <summary>
         /// Update record

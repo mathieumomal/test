@@ -61,6 +61,7 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<ChangeRequest> ChangeRequests { get; set; }
         public IDbSet<CR_WorkItems> CR_WorkItems { get; set; }
         public IDbSet<Community> Communities { get; set; }
+        public IDbSet<SyncInfo> SyncInfoes { get; set; }
     	
     	/**
     	 * This code is intended to enable testability of the different layers,

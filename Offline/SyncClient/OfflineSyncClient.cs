@@ -135,7 +135,7 @@ namespace SyncClient
                             var insertData = insertHelper.GetInsertData();
                             foreach (var insertObject in insertData.Value)
                             {
-                                int pk_Id = proxy.InsertRecord(insertObject.Value, insertData.Key);
+                                int pk_Id = proxy.InsertRecord(insertObject.Value, insertData.Key, System.Environment.MachineName);
                                 if (pk_Id > 0)
                                     SQLHelper.UpdatePrimaryKeyAndStatus(String.Format(CONST_OFFLINE_TABLE_NAME, insertHelper.TableName), insertObject.Key, pk_Id);
                             }

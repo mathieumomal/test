@@ -102,6 +102,7 @@
     <Compile Include="FakeRepositories\SpecVersionsFakeRepository.cs" />
     <Compile Include="FakeRepositories\WorkPlanFileFakeRepository.cs" />
     <Compile Include="FakeSets\ChangeRequestFakeDbSet.cs" />
+    <Compile Include="FakeSets\SyncInfoFakeDBSet.cs" />
     <Compile Include="FakeSets\CRWIFakeDbSet.cs" />
     <Compile Include="FakeSets\Enum_CRCategoryFakeDbSet.cs" />
     <Compile Include="FakeSets\Enum_CRImpactFakeDbSet.cs" />
@@ -120,10 +121,12 @@
     <Compile Include="FakeSets\VersionFakeDBSet.cs" />
     <Compile Include="FakeSets\ViewPersonFakeDBSet.cs" />
     <Compile Include="FakeSets\WorkPlanFileFakeDBSet.cs" />
+    <Compile Include="Repositories\OfflineRepositoryTest.cs" />
     <Compile Include="Repositories\ResponsibleGroupSecretaryRepositoryTest.cs" />
     <Compile Include="Repositories\SpecificationRepositoryReleaseTest.cs" />
     <Compile Include="Repositories\SpecificationWorkItemRepositoryTest.cs" />
     <Compile Include="Repositories\SpecVersionsRepositoryTest.cs" />
+    <Compile Include="Repositories\SyncInfoRepositoryTest.cs" />
     <Compile Include="Repositories\WorkPlanFileRepositoryTest.cs" />
     <Compile Include="Services\RightsService.cs" />
     <Compile Include="Services\RightsServiceTest.cs" />

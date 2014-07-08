@@ -19,6 +19,8 @@ namespace Etsi.Ultimate.Tests.Business
 {
     class SpecVersionsManagerTest : BaseTest
     {
+        #region Tests
+
         [Test, TestCaseSource("SpecVersionsData")]
         public void GetVersionForASpecReleaseTest(SpecVersionFakeDBSet specVersionsData)
         {
@@ -72,7 +74,7 @@ namespace Etsi.Ultimate.Tests.Business
 
             SpecVersionsManager mng = new SpecVersionsManager();
             mng._uoW = uow;
-            SpecVersion result = mng.GetSpecVersionById(1,0).Key;
+            SpecVersion result = mng.GetSpecVersionById(1, 0).Key;
             Assert.IsNotNull(result);
             Assert.AreEqual("Location1", result.Location);
         }
@@ -101,7 +103,108 @@ namespace Etsi.Ultimate.Tests.Business
             mng._uoW = uow;
             SpecVersion result = mng.GetSpecVersionById(0, 0).Key;
             Assert.IsNull(result);
-        }        
+        }
+
+        [Test]
+        public void SpecVersionsManager_InsertEntity()
+        {
+            //Arrange
+            SpecVersion specVersion = new SpecVersion() { Pk_VersionId = 1, MajorVersion=1, EditorialVersion=0, TechnicalVersion=0 };
+            string terminalName = "T1";
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            //Action
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var manager = new SpecVersionsManager();
+            manager._uoW = uow;
+            
+            //Assert
+            bool isSuccess = manager.InsertEntity(null, terminalName);
+            Assert.IsFalse(isSuccess);
+            mockDataContext.AssertWasNotCalled(x => x.SetAdded(Arg<SpecVersion>.Is.Anything));
+
+            isSuccess = manager.InsertEntity(specVersion, terminalName);
+            Assert.IsTrue(isSuccess);
+            mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<SpecVersion>.Matches(y => 
+                   ((y.Pk_VersionId == specVersion.Pk_VersionId)
+                && (y.MajorVersion == specVersion.MajorVersion)
+                && (y.EditorialVersion == specVersion.EditorialVersion)
+                && (y.TechnicalVersion == specVersion.TechnicalVersion)
+                && (y.SyncInfoes.Count == 1)
+                && (y.SyncInfoes.FirstOrDefault().TerminalName == terminalName)
+                && (y.SyncInfoes.FirstOrDefault().Offline_PK_Id == specVersion.Pk_VersionId)))));
+        }
+
+        [Test]
+        public void SpecVersionsManager_UpdateEntity()
+        {
+            //Arrange
+            SpecVersion specVersion1 = new SpecVersion() { Pk_VersionId = 1, MajorVersion = 1, EditorialVersion = 1, TechnicalVersion = 0 };
+            SpecVersion specVersion2 = new SpecVersion() { Pk_VersionId = 2, MajorVersion = 1, EditorialVersion = 0, TechnicalVersion = 0 };
+            SpecVersion specVersionDB = new SpecVersion() { Pk_VersionId = 1, MajorVersion = 1, EditorialVersion = 0, TechnicalVersion = 0 };
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.SpecVersions).Return(((IDbSet<SpecVersion>)new SpecVersionFakeDBSet() { specVersionDB }));
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            //Action
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var manager = new SpecVersionsManager();
+            manager._uoW = uow;
+
+            //Assert
+            bool isSuccess = manager.UpdateEntity(null);
+            Assert.IsFalse(isSuccess);
+            mockDataContext.AssertWasNotCalled(x => x.SetModified(Arg<SpecVersion>.Is.Anything));
+
+            isSuccess = manager.UpdateEntity(specVersion2);
+            Assert.IsTrue(isSuccess);
+            mockDataContext.AssertWasNotCalled(x => x.SetModified(Arg<SpecVersion>.Is.Anything));
+
+            isSuccess = manager.UpdateEntity(specVersion1);
+            Assert.IsTrue(isSuccess);
+            mockDataContext.AssertWasCalled(x => x.SetModified(Arg<SpecVersion>.Matches(y =>
+                   ((y.Pk_VersionId == specVersion1.Pk_VersionId)
+                && (y.MajorVersion == specVersion1.MajorVersion)
+                && (y.EditorialVersion == specVersion1.EditorialVersion)
+                && (y.TechnicalVersion == specVersion1.TechnicalVersion)))));
+        }
+
+        [Test]
+        public void SpecVersionsManager_DeleteEntity()
+        {
+            //Arrange
+            SpecVersion specVersion1 = new SpecVersion() { Pk_VersionId = 1, MajorVersion = 1, EditorialVersion = 1, TechnicalVersion = 0 };
+            SpecVersion specVersion2 = new SpecVersion() { Pk_VersionId = 2, MajorVersion = 1, EditorialVersion = 0, TechnicalVersion = 0 };           
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.SpecVersions).Return(((IDbSet<SpecVersion>)new SpecVersionFakeDBSet() { specVersion1, specVersion2 }));
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            //Action
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var manager = new SpecVersionsManager();
+            manager._uoW = uow;
+
+            //Assert
+            bool isSuccess = manager.DeleteEntity(0);
+            Assert.IsTrue(isSuccess);
+            mockDataContext.AssertWasNotCalled(x => x.SetDeleted(Arg<SpecVersion>.Is.Anything));
+
+            isSuccess = manager.DeleteEntity(1);
+            Assert.IsTrue(isSuccess);
+            mockDataContext.AssertWasCalled(x => x.SetDeleted(Arg<SpecVersion>.Matches(y =>
+                   ((y.Pk_VersionId == specVersion1.Pk_VersionId)
+                && (y.MajorVersion == specVersion1.MajorVersion)
+                && (y.EditorialVersion == specVersion1.EditorialVersion)
+                && (y.TechnicalVersion == specVersion1.TechnicalVersion)))));
+        }
+
+        #endregion
+
+        #region TestData
 
         /// <summary>
         /// Get SpecVersions DATA
@@ -128,7 +231,7 @@ namespace Etsi.Ultimate.Tests.Business
                     Remarks = new List<Remark>() { rmkDbSet.ToList()[0] },
                     Release = new Release()
                     {
-                        Pk_ReleaseId=1,
+                        Pk_ReleaseId = 1,
                         Enum_ReleaseStatus = statusOpen
                     },
                     Specification = new Specification()
@@ -171,9 +274,11 @@ namespace Etsi.Ultimate.Tests.Business
                         }
                     }
                 });
-                
+
                 yield return specVersionFakeDBSet;
             }
-        }
+        } 
+
+        #endregion
     }
 }
