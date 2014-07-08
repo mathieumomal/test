@@ -64,7 +64,9 @@ namespace Etsi.Ultimate.Tests.Business
 
             manager.AddWpmRecords(versionManager.GetVersionsForASpecRelease(1, 1).FirstOrDefault());
 
-            WorkProgramRepoMock.AssertWasCalled(wp => wp.InsertEtsiWorkITem(Arg<EtsiWorkItemImport>.Matches(c => c.EtsiNumber.Equals("126 124") && c.EtsiDocNumber == 26124 && c.SerialNumber.Equals("26124vA21") && c.Reference.Equals("DTS/TSGS-0426124vA21"))));
+            WorkProgramRepoMock.AssertWasCalled(wp => wp.InsertEtsiWorkITem(Arg<EtsiWorkItemImport>.Matches(c => c.EtsiNumber.Equals("126 124") 
+                && c.EtsiDocNumber == 26124 && c.SerialNumber.Equals("26124vA21") 
+                && c.Reference.Equals("DTS/TSGS-0426124vA21") && c.titllePart_1.Equals("2G description; LTE description;"))));
             WorkProgramRepoMock.VerifyAllExpectations();
         }
 
@@ -173,12 +175,28 @@ namespace Etsi.Ultimate.Tests.Business
                 Pk_SpecificationId = 1, Number = "26.124", 
                 IsUnderChangeControl = true , 
                 IsTS = true,
+                SpecificationTechnologies = new List<SpecificationTechnology>(){
+                    new SpecificationTechnology(){
+                        Enum_Technology = new Enum_Technology(){
+                            Pk_Enum_TechnologyId= 1,
+                            Code="2G",
+                            Description = "2G description",
+                        }
+                    },
+                    new SpecificationTechnology(){
+                        Enum_Technology = new Enum_Technology(){
+                             Pk_Enum_TechnologyId= 2,
+                            Code="LTE",
+                            Description = "LTE description",
+                        }
+                    }                    
+                },
                 SpecificationResponsibleGroups = new List<SpecificationResponsibleGroup>(){
                     new SpecificationResponsibleGroup(){
                         Pk_SpecificationResponsibleGroupId = 1,
                         IsPrime = true,
                         Fk_commityId = 1,
-                        Fk_SpecificationId = 1
+                        Fk_SpecificationId = 1,                        
                     }
                 }
             });

@@ -41,6 +41,8 @@ namespace Etsi.Ultimate.DomainClasses
             Version = version.Version;
             CommunityId = community.TbId;
             titllePart_1 = "";
+            specification.SpecificationTechnologies.ToList().ForEach(e => { titllePart_1 += e.Enum_Technology.Description + "; "; });
+            titllePart_1 = titllePart_1.Trim();
             titllePart_2 = specification.Title;
             titllePart_3 = "3GPP " + StandardType + " " + specification.Number + " version " + version.Version + " " + releaseName;
             RapporteurId = specification.PrimeSpecificationRapporteurIds.FirstOrDefault();
