@@ -78,7 +78,7 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception e)
             {
-                Utils.LogManager.Error("WPM record creation error: " + e.Message);
+                Utils.LogManager.Error("WPM record creation error: " + e.InnerException);
                 return -1;
             }
         }

@@ -66,13 +66,8 @@ namespace Etsi.Ultimate.Business
                 //Get the target folder path
                 string transpositionFolder = ConfigVariables.TranspositionFolderPath;
                 string filePath = versionURL.Replace(ConfigVariables.FtpBaseAddress, ConfigVariables.FtpBasePhysicalPath).Replace("/", "\\");
-                
-                /*using (WebClient client = new WebClient())
-                {
-                    //Download the file and copy it to the dedicated folder
-                    client.DownloadFile(new Uri(versionURL), transpositionFolder + FileName);
-                }*/
-                if (Directory.Exists(transpositionFolder)) // this returns true even if it exists
+                                
+                if (Directory.Exists(transpositionFolder)) 
                 {
                     File.Copy(filePath, transpositionFolder + FileName);
                 }
