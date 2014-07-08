@@ -69,7 +69,7 @@ namespace Etsi.Ultimate.Business
                                 
                 if (Directory.Exists(transpositionFolder)) 
                 {
-                    File.Copy(filePath, transpositionFolder + FileName);
+                    File.Copy(filePath, transpositionFolder + FileName, true);
                 }
                 return true;
             }
