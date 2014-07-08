@@ -23,7 +23,7 @@ namespace Etsi.Ultimate.Repositories
 
         public int InsertEtsiWorkITem(EtsiWorkItemImport entry)
         {
-            var outputparameter = new ObjectParameter("WKI_ID", typeof(Int32));
+            var outputparameter = new ObjectParameter("NEW_WKI_ID", typeof(int));
 
             UoW.Context.Transposition_CreateEtsiWorkItem(outputparameter, 
                 entry.EtsiNumber, entry.StandardType, entry.EtsiDocNumber,

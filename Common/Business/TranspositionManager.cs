@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
+using System.IO;
 
 
 namespace Etsi.Ultimate.Business
@@ -39,7 +40,7 @@ namespace Etsi.Ultimate.Business
                     //STEP1: Transfer of the version to a dedicated folder
                     bool result =  transferVersionToDedicatedFolder(versionURL);
                     //STEP2: Add record to WPMDB   
-                WpmRecordCreator creator = new WpmRecordCreator(UoW);
+                    WpmRecordCreator creator = new WpmRecordCreator(UoW);
                     int WKI_ID = creator.AddWpmRecords(version);
                     //STEP3: Add ETSI_WKI_ID field in version TABLE IF(WKI_ID != -1)
                     //TODO
@@ -64,17 +65,22 @@ namespace Etsi.Ultimate.Business
                 string FileName = versionURL.Split('/').LastOrDefault();
                 //Get the target folder path
                 string transpositionFolder = ConfigVariables.TranspositionFolderPath;
+                string filePath = versionURL.Replace(ConfigVariables.FtpBaseAddress, ConfigVariables.FtpBasePhysicalPath).Replace("/", "\\");
                 
-                using (WebClient client = new WebClient())
+                /*using (WebClient client = new WebClient())
                 {
                     //Download the file and copy it to the dedicated folder
                     client.DownloadFile(new Uri(versionURL), transpositionFolder + FileName);
+                }*/
+                if (Directory.Exists(transpositionFolder)) // this returns true even if it exists
+                {
+                    File.Copy(filePath, transpositionFolder + FileName);
                 }
                 return true;
             }
             catch (Exception e)
             {
-                Utils.LogManager.Error("ForceTransposition error: " + e.Message);
+                Utils.LogManager.Error("ForceTransposition error: " + e.InnerException);
                 return false;
             }
         }

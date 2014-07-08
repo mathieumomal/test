@@ -11,6 +11,9 @@ namespace Etsi.Ultimate.Business
 {
     public class WpmRecordCreator
     {
+        private const string REMARK_TEXT = "Record created automatically from 3GPP Specifications Status database.";
+        private const int SEQ_NO = 1;
+
         public IUltimateUnitOfWork UoW { get; set; }
         
         public WpmRecordCreator(IUltimateUnitOfWork UoW)
@@ -62,14 +65,14 @@ namespace Etsi.Ultimate.Business
                 //Import Schedule to WPMDB
                 wpRepo.InsertWIScheduleEntry(WKI_ID, version.MajorVersion.GetValueOrDefault(), version.TechnicalVersion.GetValueOrDefault(), version.EditorialVersion.GetValueOrDefault());
 
-                //Import Keyword to WPMDB
+                //Import Keyword to WPMDB ==> TODO
                 wpRepo.InsertWIKeyword(WKI_ID, "");
 
                 //Import project to WPMDB
                 ImportProjectsToWPMDB(version, WKI_ID, wpRepo);
 
                 //Import Remark to WPMDB
-                wpRepo.InsertWIRemeark(WKI_ID, 0, "");
+                wpRepo.InsertWIRemeark(WKI_ID, SEQ_NO, REMARK_TEXT);
 
                 return WKI_ID;
             }
