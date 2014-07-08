@@ -318,11 +318,7 @@ namespace Etsi.Ultimate.Module.Versions
                                                                                       .ThenByDescending(z => z.EditorialVersion ?? 0)
                                                                                       .FirstOrDefault();
 
-                var leastSpecVersionPendingUpload = specVersionsForCurrentRelease.Where(x => String.IsNullOrEmpty(x.Location))
-                                                                  .OrderBy(y => y.MajorVersion ?? 0)
-                                                                  .ThenBy(z => z.TechnicalVersion ?? 0)
-                                                                  .ThenBy(e => e.EditorialVersion ?? 0)
-                                                                  .FirstOrDefault();
+                var leastSpecVersionPendingUpload = this.GetVersionToUpload(specVersionsForCurrentRelease);
 
                 string latestVersionNumber = "-";
                 if (latestSpecVersionForCurrentRelease != null)
@@ -365,6 +361,28 @@ namespace Etsi.Ultimate.Module.Versions
                 specificationMessagesTxt.CssClass = "WarningTxt";
                 specificationMessagesTxt.Text = "No avaible data for the requested query";
             }
+        }
+
+        /// <summary>
+        /// This method find the last uploaded version 
+        /// and propose to upload the next version (or the same version if any "superior" version exists)
+        /// </summary>
+        /// <returns></returns>
+        private SpecVersion GetVersionToUpload(List<SpecVersion> versions)
+        {
+            var versionsOrderedByVersion = versions.OrderByDescending(y => y.MajorVersion ?? 0)
+                                                                  .ThenByDescending(z => z.TechnicalVersion ?? 0)
+                                                                  .ThenByDescending(e => e.EditorialVersion ?? 0)
+                                                                  .ToList();
+            SpecVersion versionToUpload = versionsOrderedByVersion.FirstOrDefault();
+            foreach (var version in versionsOrderedByVersion)
+            {
+                if (String.IsNullOrEmpty(version.Location))
+                    versionToUpload = version;
+                else
+                    return versionToUpload;
+            }
+            return versionToUpload;
         }
 
         /// <summary>

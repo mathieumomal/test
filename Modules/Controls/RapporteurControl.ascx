@@ -112,10 +112,10 @@
                         </telerik:RadComboBox>
                     </td>
                     <td style="width:10%">
-                        <asp:Button ID="btnAddRapporteur" OnClientClick="setAddingRapporteurProgress(true)" OnClick="BtnAddRapporteur_onClick" runat="server" Text="Add" Width="95%" CssClass="center" />
+                        <asp:Button ID="btnAddRapporteur" OnClientClick="setAddingRapporteurProgress(true)" OnClick="BtnAddRapporteur_onClick" runat="server" Text="Add" Width="95%" CssClass="center btn3GPP-success" />
                     </td>
                     <td style="width:5%">
-                        <asp:ImageButton ID="btnAddChairman" OnClientClick="setAddingChairmanProgress(true)" OnClick="BtnAddChairman_onClick" runat="server" ToolTip="Add Chairman" ImageUrl="/controls/Ultimate/images/addChairman.png" Width="20px" CssClass="center" />
+                        <asp:ImageButton ID="btnAddChairman" OnClientClick="setAddingChairmanProgress(true)" OnClick="BtnAddChairman_onClick" runat="server" ToolTip="Add Chairman" ImageUrl="/controls/Ultimate/images/addChairman.png" Width="20px" CssClass="verticalAlignMiddle center" />
                     </td>
                 </tr>
             </table>
