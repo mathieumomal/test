@@ -65,14 +65,14 @@ namespace Etsi.Ultimate.Business
                 //Import Schedule to WPMDB
                 wpRepo.InsertWIScheduleEntry(WKI_ID, version.MajorVersion.GetValueOrDefault(), version.TechnicalVersion.GetValueOrDefault(), version.EditorialVersion.GetValueOrDefault());
 
+                //Import Remark to WPMDB
+                wpRepo.InsertWIRemeark(WKI_ID, SEQ_NO, REMARK_TEXT);
+
                 //Import Keyword to WPMDB ==> TODO
-                wpRepo.InsertWIKeyword(WKI_ID, "");
+                wpRepo.InsertWIKeyword(WKI_ID, "LTE");
 
                 //Import project to WPMDB
                 ImportProjectsToWPMDB(version, WKI_ID, wpRepo);
-
-                //Import Remark to WPMDB
-                wpRepo.InsertWIRemeark(WKI_ID, SEQ_NO, REMARK_TEXT);
 
                 return WKI_ID;
             }
