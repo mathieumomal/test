@@ -69,13 +69,13 @@ namespace Etsi.Ultimate.Business
                                 
                 if (Directory.Exists(transpositionFolder)) 
                 {
-                    File.Copy(filePath, transpositionFolder + FileName, true);
+                    File.Copy(filePath, transpositionFolder + FileName);
                 }
                 return true;
             }
             catch (Exception e)
             {
-                Utils.LogManager.Error("ForceTransposition error: " + e.InnerException);
+                Utils.LogManager.Error("ForceTransposition error: " + e.Message);
                 return false;
             }
         }
