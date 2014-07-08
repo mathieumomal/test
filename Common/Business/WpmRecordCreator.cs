@@ -32,7 +32,7 @@ namespace Etsi.Ultimate.Business
                 IReleaseRepository releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
                 releaseRepo.UoW = UoW;
                 int releaseID = version.Fk_ReleaseId.GetValueOrDefault();
-                string releaseName = releaseRepo.Find(releaseID).Name;
+                Release release = releaseRepo.Find(releaseID);
 
                 ISpecificationRepository specRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
                 specRepo.UoW = UoW;
@@ -53,7 +53,7 @@ namespace Etsi.Ultimate.Business
                 versionRepo.UoW = UoW;
                 isAlreadyTransposed = (versionRepo.GetVersionsForSpecRelease(version.Fk_SpecificationId.GetValueOrDefault(), version.Fk_ReleaseId.GetValueOrDefault()).FirstOrDefault(v => v.ETSI_WKI_ID != null) != null);
 
-                EtsiWorkItemImport importData = new EtsiWorkItemImport(version, spec, c, wgNumber, secretaryID, releaseName, isAlreadyTransposed);
+                EtsiWorkItemImport importData = new EtsiWorkItemImport(version, spec, c, wgNumber, secretaryID, release.Name, isAlreadyTransposed);
                 IWorkProgramRepository wpRepo = RepositoryFactory.Resolve<IWorkProgramRepository>();
                 wpRepo.UoW = UoW;
                 //Import Work Item to WPMDB
@@ -92,12 +92,21 @@ namespace Etsi.Ultimate.Business
         /// <param name="wpRepo"></param>
         public void ImportProjectsToWPMDB(SpecVersion version, int WKI_ID, IWorkProgramRepository wpRepo)
         {
+            ISpecificationTechnologiesManager specTechnosMgr = ManagerFactory.Resolve<ISpecificationTechnologiesManager>();
+            specTechnosMgr.UoW = UoW;
+
             IReleaseRepository releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
             releaseRepo.UoW = UoW;
             int releaseID = version.Fk_ReleaseId.GetValueOrDefault();
+            Release release = releaseRepo.Find(releaseID);
 
-            ISpecificationTechnologiesManager specTechnosMgr = ManagerFactory.Resolve<ISpecificationTechnologiesManager>();
-            specTechnosMgr.UoW = UoW;
+            ISpecificationRepository specRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            specRepo.UoW = UoW;
+            int specID = version.Fk_SpecificationId.GetValueOrDefault();
+            Specification spec = specRepo.Find(specID);
+
+            ICommunityManager comMgr = ManagerFactory.Resolve<ICommunityManager>();
+            comMgr.UoW = UoW;
 
             //Import related projects to WPMDB :
             //- global (value found in the web.config)
@@ -105,7 +114,7 @@ namespace Etsi.Ultimate.Business
             if (global3GPPProjectId != 0)
                 wpRepo.InsertWIProject(WKI_ID, global3GPPProjectId);
             //- release (value found in the release table, column WpmProjectId)
-            var releaseWpmProjectId = releaseRepo.Find(releaseID).WpmProjectId.GetValueOrDefault();
+            var releaseWpmProjectId = release.WpmProjectId.GetValueOrDefault();
             if (releaseWpmProjectId != 0)
                 wpRepo.InsertWIProject(WKI_ID, releaseWpmProjectId);
             //- technos (value found by the technologies associated to the version specification)
@@ -119,8 +128,12 @@ namespace Etsi.Ultimate.Business
                         wpRepo.InsertWIProject(WKI_ID, techno.WpmProjectId ?? 0);
                 }
             }
-            //- tsg
-            
+            //- tsg (value found by the TSG associated to the specification of the version).
+            if(spec.PrimeResponsibleGroup != null){
+                var community = comMgr.GetEnumCommunityShortNameByCommunityId(spec.PrimeResponsibleGroup.Fk_commityId);
+                if (community != null)
+                    wpRepo.InsertWIProject(WKI_ID, community.WpmProjectId ?? 0);
+            }
         }
 
     }    

@@ -51,9 +51,13 @@ namespace Etsi.Ultimate.Tests.Business
             
             RepositoryFactory.Container.RegisterInstance<IWorkProgramRepository>(WorkProgramRepoMock);
 
-            //Overpassed, without issues, the ImportProjectsToWPMDB methods that we test in the next test method :
+            //### Overpassed, without issues, the ImportProjectsToWPMDB methods that we test in the next test method :
             var mockTechnologiesManager = MockRepository.GenerateMock<ISpecificationTechnologiesManager>();
             ManagerFactory.Container.RegisterInstance(typeof(ISpecificationTechnologiesManager), mockTechnologiesManager);
+            var mockCommunity = MockRepository.GenerateMock<ICommunityManager>();
+            mockCommunity.Stub(x => x.GetEnumCommunityShortNameByCommunityId(Arg<int>.Is.Anything)).Return(null);
+            ManagerFactory.Container.RegisterInstance(typeof(ICommunityManager), mockCommunity);
+
 
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             var manager = new WpmRecordCreator(uow);
@@ -97,6 +101,8 @@ namespace Etsi.Ultimate.Tests.Business
             wprMock.AssertWasCalled(x => x.InsertWIProject(IMPORTPROJECT_WKI_ID, 704));
             //Verif import project : release case
             wprMock.AssertWasCalled(x => x.InsertWIProject(IMPORTPROJECT_WKI_ID, 2));
+            //Verif import project : tsg case
+            wprMock.AssertWasCalled(x => x.InsertWIProject(IMPORTPROJECT_WKI_ID, 24));
         }
 
         public void ImportProjectsToWPMDB_SetMocks()
@@ -110,10 +116,21 @@ namespace Etsi.Ultimate.Tests.Business
             var releases = new ReleaseFakeDBSet();
             releases.Add(new Release() { Pk_ReleaseId = 1, WpmProjectId = 2 });
 
+            //Spec associated to the version
+            var specs = new SpecificationFakeDBSet();
+            specs.Add(new Specification() { Pk_SpecificationId = 1 });
+            specs.Find(1).SpecificationResponsibleGroups.Add(new SpecificationResponsibleGroup() { Pk_SpecificationResponsibleGroupId = 1, Fk_SpecificationId = 1, Fk_commityId = 2, IsPrime = true });
+
+            //Enum_CommunitiesShortName
+            var mockCommunity = MockRepository.GenerateMock<ICommunityManager>();
+            mockCommunity.Stub(x => x.GetEnumCommunityShortNameByCommunityId(Arg<int>.Is.Anything)).Return(new Enum_CommunitiesShortName() { Pk_EnumCommunitiesShortNames = 1, Fk_TbId = 2, WpmProjectId = 24, ShortName = "SP" });
+            ManagerFactory.Container.RegisterInstance(typeof(ICommunityManager), mockCommunity);
+
             //Mock the context
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.SpecVersions).Return(versions);
             mockDataContext.Stub(x => x.Releases).Return(releases);
+            mockDataContext.Stub(x => x.Specifications).Return(specs);
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
             //Mock of the technologies associated to the version specification

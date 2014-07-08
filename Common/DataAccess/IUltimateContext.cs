@@ -43,6 +43,7 @@ namespace Etsi.Ultimate.DataAccess
         IDbSet<ChangeRequest> ChangeRequests { get; set; }
         IDbSet<CR_WorkItems> CR_WorkItems { get; set; }
         IDbSet<SyncInfo> SyncInfoes { get; set; }
+        IDbSet<Enum_CommunitiesShortName> Enum_CommunitiesShortName { get; set; }
 
         void SetModified(object entity);
         void SetAdded(object entity);

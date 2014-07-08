@@ -32,6 +32,13 @@ namespace Etsi.Ultimate.Business
         /// <param name="id">Identifier of the community</param>
         /// <returns>community</returns>
         Community GetCommmunityById(int id);
+
+        /// <summary>
+        /// Get a communityShortname object by community id (TbId)
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Enum_CommunitiesShortName GetEnumCommunityShortNameByCommunityId(int id);
        
     }
 }

@@ -43,6 +43,7 @@ namespace Etsi.Ultimate.Tests
         public System.Data.Entity.IDbSet<ChangeRequest> ChangeRequests { get; set; }
         public System.Data.Entity.IDbSet<CR_WorkItems> CR_WorkItems { get; set; }
         public System.Data.Entity.IDbSet<SyncInfo> SyncInfoes { get; set; }
+        public System.Data.Entity.IDbSet<Enum_CommunitiesShortName> Enum_CommunitiesShortName { get; set; }
 
         public void SetModified(object entity)
         {

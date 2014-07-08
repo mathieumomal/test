@@ -8,6 +8,7 @@ using Microsoft.Practices.Unity;
 using NUnit.Framework;
 using Rhino.Mocks;
 using System.Data.Entity;
+using Etsi.Ultimate.Tests.FakeSets;
 
 namespace Etsi.Ultimate.Tests.Business
 {
@@ -54,6 +55,31 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.IsNotNull(CacheManager.Get(cacheKey));
 
             mockDataContext.VerifyAllExpectations();
-        }        
+        } 
+       
+        [Test]
+        public void GetEnumCommunityShortNameByCommunityId_Test()
+        {
+            Enum_CommunitiesShortNameFakeDbSet comShortNamefkDbSet = new Enum_CommunitiesShortNameFakeDbSet();
+            comShortNamefkDbSet.Add(new Enum_CommunitiesShortName()
+            {
+                Fk_TbId = 1,
+                Pk_EnumCommunitiesShortNames = 1,
+                ShortName = "EN",
+                WpmProjectId = 3
+            });
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Enum_CommunitiesShortName).Return((IDbSet<Enum_CommunitiesShortName>)comShortNamefkDbSet);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var manager = ManagerFactory.Resolve<ICommunityManager>();
+            manager.UoW = uow;
+
+            var comShortNameFound = manager.GetEnumCommunityShortNameByCommunityId(1);
+
+            Assert.AreEqual(comShortNamefkDbSet.Find(1), comShortNameFound);
+        }
     }
 }

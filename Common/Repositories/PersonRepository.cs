@@ -14,6 +14,7 @@ namespace Etsi.Ultimate.Repositories
     /// </summary>
     public class PersonRepository : IPersonRepository
     {
+        public IUltimateUnitOfWork UoW { get; set; }
         public PersonRepository()
         {
         }
@@ -58,7 +59,7 @@ namespace Etsi.Ultimate.Repositories
         #endregion
 
         
-        public IUltimateUnitOfWork UoW { get; set; }
+        
     }
 
     public interface IPersonRepository : IEntityRepository<View_Persons>

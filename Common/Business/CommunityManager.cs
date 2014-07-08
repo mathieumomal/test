@@ -84,7 +84,15 @@ namespace Etsi.Ultimate.Business
             repo.UoW = UoW;
 
             return GetCommunities().Where(c => c.TbId == id).FirstOrDefault();
-        }        
+        }
+
+        public Enum_CommunitiesShortName GetEnumCommunityShortNameByCommunityId(int id)
+        {
+            IEnum_CommunitiesShortNameRepository repo = RepositoryFactory.Resolve<IEnum_CommunitiesShortNameRepository>();
+            repo.UoW = UoW;
+
+            return repo.All.Where(x => x.Fk_TbId == id).FirstOrDefault();
+        }
 
         #endregion
 
