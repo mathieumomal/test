@@ -40,12 +40,23 @@ namespace Etsi.Ultimate.Utils
             }
         }
 
-        public static string FtpBasePath
+
+        public static string FtpBaseAddress
         {
             get
             {
-                if (ConfigurationManager.AppSettings["FtpVersionsPhysicalPath"] != null)
-                    return ConfigurationManager.AppSettings["FtpVersionsPhysicalPath"].ToString();
+                if (ConfigurationManager.AppSettings["FtpBaseAddress"] != null)
+                    return ConfigurationManager.AppSettings["FtpBaseAddress"].ToString();
+                return "";
+            }
+
+        }
+        public static string FtpBasePhysicalPath
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["FtpBasePhysicalPath"] != null)
+                    return ConfigurationManager.AppSettings["FtpBasePhysicalPath"].ToString();
                 return "";
             }
 

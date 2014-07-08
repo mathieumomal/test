@@ -174,10 +174,6 @@
     <Build Include="dbo\Tables\Enum_CRImpact.sql" />
     <Build Include="dbo\Tables\ChangeRequest.sql" />
     <Build Include="dbo\Tables\CR_WorkItems.sql" />
-    <Build Include="dbo\Stored Procedures\Transposition_CreateWiScheduleEntry.sql">
-      <AnsiNulls>On</AnsiNulls>
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
     <Build Include="dbo\Stored Procedures\Transposition_CreateWiRemarkEntry.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
@@ -194,6 +190,7 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
+    <Build Include="dbo\Stored Procedures\Transposition_CreateWiScheduleEntries.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

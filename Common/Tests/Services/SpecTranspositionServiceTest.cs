@@ -168,7 +168,7 @@ namespace Etsi.Ultimate.Tests.Services
             //METHOD
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             ITranspositionManager transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
-            transposeMgr._uoW = uow;
+            transposeMgr.UoW = uow;
             var result = transposeMgr.TransposeAllowed(GetSpecVersions().Where(x => x.Pk_VersionId == versionId).FirstOrDefault());
 
             Assert.AreEqual(resultExpected, result);

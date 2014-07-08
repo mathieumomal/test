@@ -157,7 +157,7 @@ namespace Etsi.Ultimate.Business
 
             //Transposition
             var transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
-            transposeMgr._uoW = UoW;
+            transposeMgr.UoW = UoW;
 
             //Get release related specs
             //var specRelease = specMgr.GetSpecReleaseBySpecIdAndReleaseId(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);

@@ -379,7 +379,7 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             try
             {
-                string ftpBasePath = ConfigVariables.FtpBasePath;
+                string ftpBasePath = ConfigVariables.FtpBasePhysicalPath;
                 string versionsLatestFTPFolder = ConfigVariables.VersionsLatestFTPFolder;
                 if (!String.IsNullOrEmpty(ftpBasePath) && !String.IsNullOrEmpty(versionsLatestFTPFolder))
                 {

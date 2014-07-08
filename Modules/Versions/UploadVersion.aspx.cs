@@ -384,7 +384,9 @@ namespace Etsi.Ultimate.Module.Versions
                 if (isUpload)
                 {
                     ftpTransferReport = TransferToFTP();
-                    buffer.Value.Location = versionPathToSave;
+                    string ftpPhysicalPath = ConfigVariables.FtpBasePhysicalPath;
+                    string ftpBaseAddress = ConfigVariables.FtpBaseAddress;
+                    buffer.Value.Location = versionPathToSave.Replace(ftpPhysicalPath, ftpBaseAddress ).Replace("/\\","/").Replace("\\","/");
                 }
 
                 if (ftpTransferReport.ErrorList.Count == 0)
@@ -579,7 +581,8 @@ namespace Etsi.Ultimate.Module.Versions
         private Report TransferToFTP()
         {
             Report errorReport = new Report();
-            string ftpBasePath = ConfigVariables.FtpBasePath;
+            string ftpBasePath = ConfigVariables.FtpBasePhysicalPath;
+            
 
             if (String.IsNullOrEmpty(ftpBasePath))
                 errorReport.LogError("FTP not yet configured");

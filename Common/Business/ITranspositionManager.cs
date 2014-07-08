@@ -13,7 +13,7 @@ namespace Etsi.Ultimate.Business
     /// </summary>
     public interface ITranspositionManager
     {
-        IUltimateUnitOfWork _uoW { get; set; }
+        IUltimateUnitOfWork UoW { get; set; }
 
         /// <summary>
         /// Sends the version to ETSI for transposition.

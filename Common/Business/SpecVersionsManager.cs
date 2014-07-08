@@ -91,7 +91,7 @@ namespace Etsi.Ultimate.Business
             IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
             relStatusRepo.UoW = _uoW;
             ITranspositionManager transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
-            transposeMgr._uoW = _uoW;
+            transposeMgr.UoW = _uoW;
 
             var specVersions = repo.GetVersionsForSpecRelease(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
             var specRelease = specMgr.GetSpecReleaseBySpecIdAndReleaseId(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);

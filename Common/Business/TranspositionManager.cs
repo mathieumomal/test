@@ -21,7 +21,7 @@ namespace Etsi.Ultimate.Business
 
         public static string CONST_WEBCONFIG_TRANSP_PATH = "TranspositionFolderPath";
 
-        public IUltimateUnitOfWork _uoW { get; set; }
+        public IUltimateUnitOfWork UoW { get; set; }
 
         public TranspositionManager()
         {
@@ -39,7 +39,7 @@ namespace Etsi.Ultimate.Business
                     //STEP1: Transfer of the version to a dedicated folder
                     bool result =  transferVersionToDedicatedFolder(versionURL);
                     //STEP2: Add record to WPMDB   
-                    WpmRecordCreator creator = new WpmRecordCreator(_uoW);
+                WpmRecordCreator creator = new WpmRecordCreator(UoW);
                     int WKI_ID = creator.AddWpmRecords(version);
                     //STEP3: Add ETSI_WKI_ID field in version TABLE IF(WKI_ID != -1)
                     //TODO
@@ -82,11 +82,11 @@ namespace Etsi.Ultimate.Business
         public bool TransposeAllowed(SpecVersion specVersion)
         {
             ISpecificationManager specMgr = ManagerFactory.Resolve<ISpecificationManager>();
-            specMgr.UoW = _uoW;
+            specMgr.UoW = UoW;
             IReleaseManager releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
-            releaseMgr.UoW = _uoW;
+            releaseMgr.UoW = UoW;
             IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
-            relStatusRepo.UoW = _uoW;
+            relStatusRepo.UoW = UoW;
 
             Specification_Release specRelease = null;
             Specification spec = null;
@@ -118,10 +118,10 @@ namespace Etsi.Ultimate.Business
             if (frozen == null)
                 throw new InvalidOperationException("Error for get the frozen status.");
 
-            var UCC = spec.IsUnderChangeControl ?? false;
+            var UCC = spec.IsUnderChangeControl.GetValueOrDefault();
             var isFrozen = release.Fk_ReleaseStatus.Equals(frozen.Enum_ReleaseStatusId);
-            var specReleaseTranspoForced = specRelease.isTranpositionForced ?? false;
-            var specIsForPublication = spec.IsForPublication ?? false;
+            var specReleaseTranspoForced = specRelease.isTranpositionForced.GetValueOrDefault();
+            var specIsForPublication = spec.IsForPublication.GetValueOrDefault();
             if (!UCC)
                 return false;
             if (specReleaseTranspoForced)
