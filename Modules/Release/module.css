@@ -1,4 +1,18 @@
 @import url("/Portals/_default/Skins/3GPP/CommonCssComponent/buttons.css");
+/*Other TODO : put in the skin*/
+.lblTooltipStyleDark
+{
+	border-bottom: 1px rgba(87, 87, 87, 0.36) dashed;
+	cursor: help;
+}
+
+#releaseList .helpTooltip{
+	border-bottom: 1px rgba(255, 255, 255, 0.36) dashed;
+	cursor: help;
+}
+
+
+
 
 .status{
     font-weight: bold;
@@ -137,7 +151,7 @@ legend{
 }
 
 .TabLineLeft  span{
-    padding-right: 10px;
+    margin-right: 10px;
 }
 
 .TabLineLeft span .requiredField {
@@ -192,6 +206,14 @@ legend{
 .DetailsColFreezeStage {
     width: 208.8px !important;
 }
+#releaseList .rgMasterTable
+{
+	color: #312e25;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+
 
 
 /* Details*/
@@ -243,11 +265,3 @@ a.linkRelease
 .headerBtnRelease{
     height: 30px;
 }
-
-#releaseList .rgMasterTable
-{
-	color: #312e25;
-	font-size: 12px;
-	font-family: Arial, Helvetica, sans-serif;
-}
-

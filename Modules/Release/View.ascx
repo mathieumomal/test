@@ -4,7 +4,6 @@
 <%@ Control Language="C#" AutoEventWireup="true" CodeBehind="View.ascx.cs" Inherits="Etsi.Ultimate.Module.Release.View" %>
 <%@ Import Namespace="System.Drawing" %>
 
-
 <div class="headerBtnRelease">
     <div style="float:right"><ult:FullView ID="ultFullView" runat="server" /></div>
     <asp:LinkButton runat="server" ID="newRelease" Text="New" CssClass="btn3GPP-success"></asp:LinkButton>
@@ -36,44 +35,44 @@
         <MasterTableView ClientDataKeyNames="Pk_ReleaseId">
             <Columns>
                 <telerik:GridBoundColumn HeaderStyle-Width="8%" DataField="Code" HeaderText="Release Code" UniqueName="Code" ></telerik:GridBoundColumn>
-                <telerik:GridTemplateColumn HeaderStyle-Width="10%" DataField="Name" HeaderText="Name" UniqueName="Name"  >
+                <telerik:GridTemplateColumn HeaderStyle-Width="10%" DataField="Name" HeaderText="Name" UniqueName="Name">
                     <ItemTemplate>
                         <div class="text-left"><asp:HyperLink runat="server" ID="lnkReleaseDescription" CssClass="linkRelease" Visible="false" />
                             <asp:Label runat="server" ID="lblReleaseName" />
                         </div>  
                     </ItemTemplate> 
                 </telerik:GridTemplateColumn>
-                <telerik:GridTemplateColumn HeaderStyle-Width="6%" DataField="Status" HeaderText="Status" UniqueName="Status">
+                <telerik:GridTemplateColumn HeaderStyle-Width="6%" DataField="Status" HeaderText="Status" UniqueName="Status" HeaderTooltip="Status of the Release (see 3GPP TR 21.900)">
                     <ItemTemplate>
                         <span class="status <%# DataBinder.Eval(Container.DataItem,"Enum_ReleaseStatus.Description").ToString().ToLower() %>"><%# DataBinder.Eval(Container.DataItem,"Enum_ReleaseStatus.Description") %></span>  
                     </ItemTemplate>                    
                 </telerik:GridTemplateColumn>
-                <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="StartDate" HeaderText="Start date" UniqueName="StartDate">
+                <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="StartDate" HeaderText="Start date" UniqueName="StartDate" HeaderTooltip="Start of earliest work item in this Release">
                     <ItemTemplate>
                         <span><%# DataBinder.Eval(Container.DataItem,"StartDate", "{0:yyyy-MM-dd}") %></span>  
                     </ItemTemplate>                    
                 </telerik:GridTemplateColumn>
-                <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="Stage1FreezeDate" HeaderText="Stage 1 <br />Freeze date" UniqueName="Stage1FreezeDate">
+                <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="Stage1FreezeDate" HeaderText="Stage 1 <br />Freeze date" UniqueName="Stage1FreezeDate" HeaderTooltip="Stage 1 Feeze date (see 3GPP TR 21.900)">
                     <ItemTemplate>
                         <span><%# DataBinder.Eval(Container.DataItem,"Stage1FreezeDate", "{0:yyyy-MM-dd}") %></span>  
                     </ItemTemplate>                    
                 </telerik:GridTemplateColumn>
-                <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="Stage2FreezeDate" HeaderText="Stage 2 <br />Freeze date" UniqueName="Stage2FreezeDate">
+                <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="Stage2FreezeDate" HeaderText="Stage 2 <br />Freeze date" UniqueName="Stage2FreezeDate" HeaderTooltip="Stage 2 Feeze date (see 3GPP TR 21.900)">
                     <ItemTemplate>
                         <span><%# DataBinder.Eval(Container.DataItem,"Stage2FreezeDate", "{0:yyyy-MM-dd}") %></span>  
                     </ItemTemplate>                    
                 </telerik:GridTemplateColumn>
-                <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="Stage3FreezeDate" HeaderText="Stage 3 <br />Freeze date" UniqueName="Stage3FreezeDate">
+                <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="Stage3FreezeDate" HeaderText="Stage 3 <br />Freeze date" UniqueName="Stage3FreezeDate" HeaderTooltip="Stage 3 Feeze date (see 3GPP TR 21.900)">
                     <ItemTemplate>
                         <span><%# DataBinder.Eval(Container.DataItem,"Stage3FreezeDate", "{0:yyyy-MM-dd}") %></span>  
                     </ItemTemplate>                    
                 </telerik:GridTemplateColumn>
-                <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="EndDate" HeaderText="End date" UniqueName="EndDate">
+                <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="EndDate" HeaderText="End date" UniqueName="EndDate" HeaderTooltip="Protocols stable">
                     <ItemTemplate>
                         <span><%# DataBinder.Eval(Container.DataItem,"EndDate", "{0:yyyy-MM-dd}") %></span>  
                     </ItemTemplate>                    
                 </telerik:GridTemplateColumn>
-                <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="ClosureDate" HeaderText="Closure date" UniqueName="ClosureDate">
+                <telerik:GridTemplateColumn HeaderStyle-Width="12%" DataField="ClosureDate" HeaderText="Closure date" UniqueName="ClosureDate" HeaderTooltip="Date after which specifications are no longer maitained for the corresponding Release (see 3GPP TR 21.900)">
                     <ItemTemplate>
                         <span><%# DataBinder.Eval(Container.DataItem,"ClosureDate", "{0:yyyy-MM-dd}") %></span>  
                     </ItemTemplate>                    
@@ -95,15 +94,6 @@
         </MasterTableView>
     </telerik:RadGrid>
 </div>
-<!--
-    --- Tooltip example : ---
-    For tooltip : add 'HeaderTooltip="[text]"' to a telerik:GridTemplateColumn item 
-    AND decomment this section :
-<%--    <telerik:RadToolTipManager ID="rdTooltipHeader" runat="server"  RelativeTo="Element" Position="TopCenter"></telerik:RadToolTipManager>--%>
 
-    Easter eggs : add this style for dashed underline and use ? cursor on the handler tooltip element
-    .helpTooltip{
-	    border-bottom: 1px gray dashed;
-	    cursor: help;
-    }
- -->
+    
+ 

@@ -76,7 +76,7 @@
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">
-                                    <asp:Label ID="internalLbl" runat="server" Text="Internal:"></asp:Label></td>
+                                    <asp:Label ID="internalLbl" runat="server" Text="Internal:" ToolTip="Not for SDO transposition" CssClass="lblTooltipStyleDark"></asp:Label></td>
                                 <td class="TabLineRight">
                                     <asp:CheckBox ID="internalVal" runat="server"></asp:CheckBox></td>
                             </tr>

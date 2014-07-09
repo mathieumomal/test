@@ -5,6 +5,9 @@
 <%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.Client.ClientResourceManagement" Assembly="DotNetNuke.Web.Client" %>
 <dnn:DnnCssInclude runat="server" FilePath="~/controls/Ultimate/module.css" />
 <!--Import module.css-->
+<style>
+#divRapporteurControl .searchBar .verticalAlignMiddle{padding-top:3px;}
+</style>
 
 
 <script type="text/javascript">

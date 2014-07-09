@@ -177,8 +177,8 @@
                         <telerik:TreeListBoundColumn DataField="Acronym" UniqueName="Acronym" HeaderText="Acronym" ItemStyle-CssClass="breakWord">
                             <HeaderStyle Font-Bold="True"/> 
                         </telerik:TreeListBoundColumn>
-                        <telerik:TreeListBoundColumn DataField="UID" UniqueName="UID"  HeaderText="UID" ItemStyle-CssClass="breakWord">
-                            <HeaderStyle Font-Bold="True"/> 
+                        <telerik:TreeListBoundColumn DataField="UID" UniqueName="UID"  HeaderText="UID" ItemStyle-CssClass="breakWord" HeaderTooltip="Unique Work Item Identifier">
+                            <HeaderStyle Font-Bold="True"/>
                         </telerik:TreeListBoundColumn>
                         <telerik:TreeListTemplateColumn DataField="Release" UniqueName="Release" HeaderText="Release" ItemStyle-CssClass="breakWord">
                             <HeaderStyle Font-Bold="True"/> 
@@ -271,7 +271,6 @@
                             OnClientFileSelected="EnabledButtonImport" 
                             OnClientFileUploadRemoved="DisabledButtonImport" 
                             OverwriteExistingFiles="True"
-                            
                             ManualUpload="true">
                         </telerik:RadAsyncUpload>
                     </div>

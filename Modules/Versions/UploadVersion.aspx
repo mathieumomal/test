@@ -105,11 +105,11 @@
                                 <asp:Label runat="server" ID="NewVersionLbl" Text="New version:" />
                             </td>
                             <td colspan="2" class="TabLineRight2Col">
-                                <telerik:RadNumericTextBox AutoComplete="off" IncrementSettings-InterceptArrowKeys="true" NumberFormat-DecimalDigits="0" IncrementSettings-InterceptMouseWheel="true" runat="server" ID="NewVersionMajorVal" Width="40px" MinValue="0"></telerik:RadNumericTextBox>
+                                <telerik:RadNumericTextBox AutoComplete="off" IncrementSettings-InterceptArrowKeys="true" NumberFormat-DecimalDigits="0" IncrementSettings-InterceptMouseWheel="true" runat="server" ID="NewVersionMajorVal" Width="40px" MinValue="0" ToolTip="Major"></telerik:RadNumericTextBox>
                                 <span>.</span>
-                                <telerik:RadNumericTextBox AutoComplete="off" IncrementSettings-InterceptArrowKeys="true" NumberFormat-DecimalDigits="0" IncrementSettings-InterceptMouseWheel="true" runat="server" ID="NewVersionTechnicalVal" Width="40px"  MinValue="0"></telerik:RadNumericTextBox>
+                                <telerik:RadNumericTextBox AutoComplete="off" IncrementSettings-InterceptArrowKeys="true" NumberFormat-DecimalDigits="0" IncrementSettings-InterceptMouseWheel="true" runat="server" ID="NewVersionTechnicalVal" Width="40px"  MinValue="0" ToolTip="Technical"></telerik:RadNumericTextBox>
                                 <span>.</span>
-                                <telerik:RadNumericTextBox AutoComplete="off" IncrementSettings-InterceptArrowKeys="true" NumberFormat-DecimalDigits="0" IncrementSettings-InterceptMouseWheel="true" runat="server" ID="NewVersionEditorialVal" Width="40px"  MinValue="0"></telerik:RadNumericTextBox>
+                                <telerik:RadNumericTextBox AutoComplete="off" IncrementSettings-InterceptArrowKeys="true" NumberFormat-DecimalDigits="0" IncrementSettings-InterceptMouseWheel="true" runat="server" ID="NewVersionEditorialVal" Width="40px"  MinValue="0" ToolTip="Editorial"></telerik:RadNumericTextBox>
                             </td>
                         </tr>
                         <tr>

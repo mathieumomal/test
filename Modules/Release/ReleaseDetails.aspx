@@ -49,7 +49,7 @@
                             <td colspan="2" class="TabLineRight"><asp:Label ID="ReleaseNameVal" runat="server"  CssClass="releaseName"></asp:Label></td>
                         </tr>
                         <tr>            
-                            <td class="TabLineLeft"><asp:Label ID="ReleaseDescLbl" runat="server"  Text="Release description:"></asp:Label>  </td>          
+                            <td class="TabLineLeft"><asp:Label ID="ReleaseDescLbl" runat="server" CssClass="lblTooltipStyleDark" Text="Release description:" ToolTip="URL of Release description document"></asp:Label>  </td>          
                             <td colspan="2" class="TabLineRight">
                                 <asp:hyperlink id="lnkReleaseDescription" runat="server" Target="_blank">
                                    <img runat="server" id="ReleaseDescVal" alt="Go to description" src="images/ReleaseDecription.png"/>
@@ -136,7 +136,7 @@
                         </tr>
                         <tr class="TabLine">
                             <td class="TabLineLeft">                                
-                                <asp:Label ID="ITURCodeLbl" runat="server"  Text="ITUR code:"></asp:Label> 
+                                <asp:Label ID="ITURCodeLbl" runat="server" CssClass="lblTooltipStyleDark" Text="ITUR code:" ToolTip="For referencing in appropriate ITU Recommendations"></asp:Label> 
                             </td>
                             <td class="TabLineRight">   
                                 <asp:Label ID="ITURCodeVal" runat="server" ></asp:Label>

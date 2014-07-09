@@ -1,4 +1,16 @@
 @import url("/Portals/_default/Skins/3GPP/CommonCssComponent/buttons.css");
+/*TODO : put in the skin*/
+#componentSpecList .helpTooltip{
+	border-bottom: 1px rgba(255, 255, 255, 0.36) dashed;
+	cursor: help;
+}
+.lblTooltipStyleDark
+{
+	border-bottom: 1px rgba(87, 87, 87, 0.36) dashed;
+	cursor: help;
+}
+
+
 
 .text-left {
     text-align: left;
@@ -92,9 +104,9 @@ legend {
     padding-bottom: 3px !important;
 }
 
-    .TabLineLeft span {
-        padding-right: 10px;
-    }
+.TabLineLeft span {
+    margin-right: 10px;
+}
 
 .TabLineRight {
     width: auto;
