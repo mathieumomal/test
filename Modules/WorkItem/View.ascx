@@ -139,7 +139,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td>Name</td>
+                                    <td>Name / UID</td>
                                     <td>
                                         <telerik:RadTextBox ID="txtName" runat="server" Width="200"></telerik:RadTextBox>
                                     </td>
@@ -177,7 +177,7 @@
                         <telerik:TreeListBoundColumn DataField="Acronym" UniqueName="Acronym" HeaderText="Acronym" ItemStyle-CssClass="breakWord">
                             <HeaderStyle Font-Bold="True"/> 
                         </telerik:TreeListBoundColumn>
-                        <telerik:TreeListBoundColumn DataField="UID" UniqueName="UID"  HeaderText="UID" ItemStyle-CssClass="breakWord" HeaderTooltip="Unique Work Item Identifier">
+                        <telerik:TreeListBoundColumn DataField="UID" UniqueName="UID" HeaderText="<span title='Unique Work Item Identifier' class='helpTooltip'>UID</span>"  ItemStyle-CssClass="breakWord">
                             <HeaderStyle Font-Bold="True"/>
                         </telerik:TreeListBoundColumn>
                         <telerik:TreeListTemplateColumn DataField="Release" UniqueName="Release" HeaderText="Release" ItemStyle-CssClass="breakWord">
