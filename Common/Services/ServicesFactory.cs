@@ -71,6 +71,7 @@ namespace Etsi.Ultimate.Services
 
             //Offline Interfaces
             Container.RegisterType<IOfflineService<SpecVersion>, SpecVersionService>(new TransientLifetimeManager());
+            Container.RegisterType<IOfflineService<Remark>, RemarkService>(new TransientLifetimeManager());
         }
     }
 }
