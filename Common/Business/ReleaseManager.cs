@@ -160,7 +160,6 @@ namespace Etsi.Ultimate.Business
             transposeMgr.UoW = UoW;
 
             //Get release related specs
-            //var specRelease = specMgr.GetSpecReleaseBySpecIdAndReleaseId(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
             var relatedSpecs = specMgr.GetSpecsRelatedToARelease(updatedObj.Pk_ReleaseId);
             foreach (var spec in relatedSpecs)
             {

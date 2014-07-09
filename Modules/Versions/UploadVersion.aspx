@@ -125,7 +125,7 @@
                                 <asp:Label runat="server" ID="MeetingLbl" Text="Meeting:" />
                             </td>
                             <td colspan="2" class="TabLineRight2Col">
-                                <ult:meetingcontrol runat="server" id="UploadMeeting" />
+                                <ult:meetingcontrol runat="server" ID="UploadMeeting" />
                                 <asp:HiddenField ID="hidIsRequired" runat="server" />
                             </td>
                         </tr>
@@ -238,7 +238,7 @@
                         var isValid = true;
                         var hidIsRequiredValue = $('#hidIsRequired').val() == "True";
                         if (hidIsRequiredValue) {
-                            var meetingControl = $find('<% =UploadMeeting.MeetingClientID %>');
+                            var meetingControl = $find('<%= UploadMeeting.ClientID %>');
                             var selectedMeetingID = meetingControl.get_value().split("|")[0];
                             if (selectedMeetingID <= 0) {
                                 isValid = false;

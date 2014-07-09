@@ -139,7 +139,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>56796</DevelopmentServerPort>
+          <DevelopmentServerPort>62129</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://dnndev.me/desktopmodules/CRs</IISUrl>
           <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>

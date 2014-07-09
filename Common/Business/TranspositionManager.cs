@@ -16,8 +16,6 @@ namespace Etsi.Ultimate.Business
 {
     public class TranspositionManager : ITranspositionManager
     {
-       
-
         #region ITranspositionManager Members
 
         public static string CONST_WEBCONFIG_TRANSP_PATH = "TranspositionFolderPath";

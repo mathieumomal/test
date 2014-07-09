@@ -109,8 +109,6 @@ namespace Etsi.Ultimate.Business
             if (specRelease == null)
                 throw new InvalidDataException("Relation between specification and release not defined.");
             
-            transposeMgr.Transpose(spec, version);
-
             if (existingVersion != null) //Existing Version
             {
                 if (existingVersion.Location == null && version.Location != null)
@@ -127,6 +125,9 @@ namespace Etsi.Ultimate.Business
                     var newRemark = version.Remarks.FirstOrDefault();
                     if (newRemark != null)
                         existingVersion.Remarks.Add(newRemark);
+
+                    //Transposition of the existing version
+                    transposeMgr.Transpose(spec, existingVersion);
                 }
                 else if (existingVersion.Location != null)
                 {
@@ -181,6 +182,9 @@ namespace Etsi.Ultimate.Business
                         repo.InsertOrUpdate(version);
                 }
 
+                //Transposition of the new version
+                if (result.ErrorList.Count == 0)
+                    transposeMgr.Transpose(spec, version);
             }
 
             return result;
