@@ -26,10 +26,10 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="version">The transposed version</param>
         /// <returns>ETSI work item identifier</returns>
-        public int AddWpmRecords(SpecVersion version) 
+        public bool AddWpmRecords(SpecVersion version) 
         {
             if (version == null)
-                return -1;
+                return false; 
             try
             {
                 IReleaseRepository releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
@@ -73,13 +73,16 @@ namespace Etsi.Ultimate.Business
 
                 //Import project to WPMDB
                 ImportProjectsToWPMDB(version, WKI_ID, wpRepo);
-
-                return WKI_ID;
+                
+                //Add ETSI_WKI_ID field in version TABLE IF(WKI_ID != -1)                    
+                version.ETSI_WKI_ID = WKI_ID;
+                
+                return true;
             }
             catch (Exception e)
             {
                 Utils.LogManager.Error("WPM record creation error: " + e.InnerException);
-                return -1;
+                return false;
             }
         }
 

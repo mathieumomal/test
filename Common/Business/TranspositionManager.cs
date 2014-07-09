@@ -29,6 +29,9 @@ namespace Etsi.Ultimate.Business
 
         public bool Transpose(DomainClasses.Specification spec, DomainClasses.SpecVersion version)
         {
+            bool importResult = false;
+            bool transferResult = false; 
+
             if (this.TransposeAllowed(version))
             {
                 if ((version != null) && (version.Location != null))
@@ -36,13 +39,14 @@ namespace Etsi.Ultimate.Business
                     //Two steps to perform transposition
                     string versionURL = version.Location;
                     //STEP1: Transfer of the version to a dedicated folder
-                    bool result =  transferVersionToDedicatedFolder(versionURL);
-                    //STEP2: Add record to WPMDB   
-                    WpmRecordCreator creator = new WpmRecordCreator(UoW);
-                    int WKI_ID = creator.AddWpmRecords(version);
-                    //STEP3: Add ETSI_WKI_ID field in version TABLE IF(WKI_ID != -1)
-                    //TODO
-                    return (result && (WKI_ID != -1));
+                    transferResult = transferVersionToDedicatedFolder(versionURL);
+                    if (transferResult)
+                    {
+                        //STEP2: Add record to WPMDB   
+                        WpmRecordCreator creator = new WpmRecordCreator(UoW);
+                        importResult = creator.AddWpmRecords(version);                        
+                    }                    
+                    return (transferResult && importResult);
                 }
                 else
                     return false; 
