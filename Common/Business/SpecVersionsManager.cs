@@ -1,6 +1,8 @@
 ﻿using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.ModelMails;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -78,7 +80,7 @@ namespace Etsi.Ultimate.Business
             return new KeyValuePair<SpecVersion, UserRightsContainer>(version, specRelease_Rights.Value);
         }
 
-        public Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId)
+        public Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId, Report report = null)
         {
             //Initialization
             Report result = new Report();
@@ -108,7 +110,35 @@ namespace Etsi.Ultimate.Business
                 throw new InvalidDataException("Version's releaseId is not defined.");
             if (specRelease == null)
                 throw new InvalidDataException("Relation between specification and release not defined.");
-            
+
+            if (report != null && report.WarningList.Count > 0)
+            {
+                var personManager = new PersonManager();
+                personManager.UoW = _uoW;
+                string personDisplayName = personManager.GetPersonDisplayName(personId);
+
+                String remrkText = string.Join(Environment.NewLine, report.WarningList);
+                if (remrkText.Length > 250)
+                    remrkText = remrkText.Substring(0, 247) + "...";
+
+                //Create a new remark for generated warnings during document validation
+                Remark warningRemark = new Remark
+                    {
+                        CreationDate = DateTime.Now,
+                        Fk_PersonId = personId,
+                        PersonName = personDisplayName,
+                        RemarkText = remrkText,
+                        IsPublic = false
+                    };
+
+                //Add above remark to appropriate version object 
+                if (existingVersion != null)
+                    existingVersion.Remarks.Add(warningRemark);
+                else
+                    version.Remarks.Add(warningRemark);
+            }
+
+
             if (existingVersion != null) //Existing Version
             {
                 if (existingVersion.Location == null && version.Location != null)
@@ -187,6 +217,12 @@ namespace Etsi.Ultimate.Business
                     transposeMgr.Transpose(spec, version);
             }
 
+            if (report != null && report.WarningList.Count > 0 && result.ErrorList.Count == 0)
+            {
+                SpecVersion ver = existingVersion != null ? existingVersion : version;
+                MailVersionAuthor(spec, ver, report, personId);
+            }
+
             return result;
         }
 
@@ -196,9 +232,9 @@ namespace Etsi.Ultimate.Business
             Report r;
             foreach (Specification s in specifications)
             {
-                r= UploadOrAllocateVersion(new SpecVersion()
+                r = UploadOrAllocateVersion(new SpecVersion()
                 {
-                    Fk_SpecificationId= s.Pk_SpecificationId,
+                    Fk_SpecificationId = s.Pk_SpecificationId,
                     Fk_ReleaseId = release.Pk_ReleaseId,
                     EditorialVersion = 0,
                     TechnicalVersion = 0,
@@ -442,6 +478,49 @@ namespace Etsi.Ultimate.Business
                 validationReport.LogWarning(CONST_QUALITY_CHECK_ANNEXURE_STYLE);
 
             return validationReport;
+        }
+
+
+        /// <summary>
+        /// When quality checks fail, and the user confirms anyway the upload of a version, an email must be sent to the user and to the spec manager
+        /// </summary>
+        /// <param name="spec"></param>
+        /// <param name="report"></param>
+        /// <param name="personId"></param>
+        public void MailVersionAuthor(Specification spec, SpecVersion version, Report report, int personId)
+        {
+            var to = new List<string>();
+
+            //get connected user name
+            var connectedUsername = String.Empty;
+            var personManager = new PersonManager();
+            personManager.UoW = _uoW;
+
+            var connectedUser = personManager.FindPerson(personId);
+            if (connectedUser != null)
+            {
+                connectedUsername = new StringBuilder()
+                    .Append((connectedUser.FIRSTNAME != null) ? connectedUser.FIRSTNAME : "")
+                    .Append(" ")
+                    .Append((connectedUser.LASTNAME != null) ? connectedUser.LASTNAME : "")
+                    .ToString();
+
+                to.Add(connectedUser.Email);
+            }
+
+            //Subject
+            var subject = String.Format("Spec {0}, version {1} has been uploaded despite some quality checks failure", spec.Pk_SpecificationId, version.Version);
+
+            //Body
+            var body = new VersionUploadFailedQualityCheckMailTemplate(connectedUsername, spec.Pk_SpecificationId.ToString(), version.Version.ToString(), report.WarningList);
+
+            var roleManager = new RolesManager();
+            roleManager.UoW = _uoW;
+            var cc = roleManager.GetSpecMgrEmail();
+
+            // Send mail
+            var mailManager = UtilsFactory.Resolve<IMailManager>();
+            mailManager.SendEmail(null, to, cc, null, subject, body.TransformText());
         }
         #endregion
     }

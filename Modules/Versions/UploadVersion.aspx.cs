@@ -35,7 +35,8 @@ namespace Etsi.Ultimate.Module.Versions
         private const string CONST_FTP_ARCHIVE_PATH = "{0}\\Specs\\archive\\{1}_series\\{2}\\";
         private const string CONST_FTP_LATEST_PATH = "{0}\\Specs\\latest\\{1}\\{2}_series\\";
         private const string CONST_FTP_LATEST_DRAFTS_PATH = "{0}\\Specs\\latest-drafts\\";
-        private const string CONST_FTP_VERSIONS_PATH = "{0}\\Specs\\{1}\\{2}\\{3}_series\\";        
+        private const string CONST_FTP_VERSIONS_PATH = "{0}\\Specs\\{1}\\{2}\\{3}_series\\";
+        private const string CONST_WARNING_REPORT = "UploadVersionReport";
 
         //Properties
         private static int UserId;
@@ -46,6 +47,17 @@ namespace Etsi.Ultimate.Module.Versions
         public static string versionUploadPath;
         public static string versionFTP_Path;
         private int errorNumber = 0;
+        private Report report
+        {
+            get
+            {
+                return ViewState[CONST_WARNING_REPORT] != null ? (Report)ViewState[CONST_WARNING_REPORT] : null;
+            }
+            set
+            {
+                ViewState[CONST_WARNING_REPORT] = value;
+            }
+        }
 
         #endregion
 
@@ -231,7 +243,11 @@ namespace Etsi.Ultimate.Module.Versions
                         errorNumber = validationReport.GetNumberOfErrors();
                     }
                     else
+                    {
+                        if (validationReport.GetNumberOfWarnings() > 0)
+                            report = validationReport;
                         btnConfirmUpload.Enabled = true;
+                    }
 
                     List<string> datasource = new List<string>();
                     datasource.AddRange(validationReport.ErrorList);
@@ -339,7 +355,7 @@ namespace Etsi.Ultimate.Module.Versions
                 }
                 else
                 {
-                    
+
                     if (spec.IsUnderChangeControl.HasValue && spec.IsUnderChangeControl.Value)
                     {
                         NewVersionMajorVal.Value = release.Version2g ?? 0;
@@ -404,17 +420,17 @@ namespace Etsi.Ultimate.Module.Versions
                     ftpTransferReport = TransferToFTP();
                     string ftpPhysicalPath = ConfigVariables.FtpBasePhysicalPath;
                     string ftpBaseAddress = ConfigVariables.FtpBaseAddress;
-                    buffer.Value.Location = versionPathToSave.Replace(ftpPhysicalPath, ftpBaseAddress ).Replace("/\\","/").Replace("\\","/");
+                    buffer.Value.Location = versionPathToSave.Replace(ftpPhysicalPath, ftpBaseAddress).Replace("/\\", "/").Replace("\\", "/");
                 }
 
                 if (ftpTransferReport.ErrorList.Count == 0)
                 {
                     ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                    result = svc.UploadOrAllocateVersion(buffer.Value, isDraft, UserId);
+                    result = svc.UploadOrAllocateVersion(buffer.Value, isDraft, UserId, report);
                 }
                 else
                     result.ErrorList.AddRange(ftpTransferReport.ErrorList);
-            
+
                 if (result.ErrorList.Count > 0)
                 {
                     versionUploadScreen.Visible = false;
@@ -600,7 +616,7 @@ namespace Etsi.Ultimate.Module.Versions
         {
             Report errorReport = new Report();
             string ftpBasePath = ConfigVariables.FtpBasePhysicalPath;
-            
+
 
             if (String.IsNullOrEmpty(ftpBasePath))
                 errorReport.LogError("FTP not yet configured");
@@ -700,8 +716,8 @@ namespace Etsi.Ultimate.Module.Versions
                         if ((UploadMeeting.SelectedMeetingId > 0) && (UploadMeeting.SelectedMeeting.START_DATE != null))
                         {
                             string latestFolder = ConfigVariables.VersionsLatestFTPFolder;
-                            if(String.IsNullOrEmpty(latestFolder))
-                               latestFolder = String.Format("{0:0000}-{1:00}", UploadMeeting.SelectedMeeting.START_DATE.Value.Year, UploadMeeting.SelectedMeeting.START_DATE.Value.Month);
+                            if (String.IsNullOrEmpty(latestFolder))
+                                latestFolder = String.Format("{0:0000}-{1:00}", UploadMeeting.SelectedMeeting.START_DATE.Value.Year, UploadMeeting.SelectedMeeting.START_DATE.Value.Month);
                             string underChangeControlPath = String.Format(CONST_FTP_VERSIONS_PATH, ftpBasePath, latestFolder, ReleaseVal.Text, SpecNumberVal.Text.Split('.')[0]);
                             bool isUCCPathExists = Directory.Exists(underChangeControlPath);
                             if (!isUCCPathExists)

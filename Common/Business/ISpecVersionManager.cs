@@ -40,7 +40,7 @@ namespace Etsi.Ultimate.Business
         /// Notice : (without considering the draft case) with must have a spec and a release ID
         /// </summary>
         /// <param name="version">The new version to allocate or upload</param>
-        Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId);
+        Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId, Report report = null);
 
         /// <summary>
         /// Allocate version for a set of promoted specification for a release

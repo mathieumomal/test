@@ -37,7 +37,7 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="version">Version to allocate/upload</param>
         /// <returns>Result of the operation</returns>
-        Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId);
+        Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId, Report report);
 
         /// <summary>
         /// Validate Uploaded version document & provide validation summary

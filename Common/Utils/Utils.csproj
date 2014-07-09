@@ -71,6 +71,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Localization.resx</DependentUpon>
     </Compile>
+    <Compile Include="ModelMails\VersionUploadFailedQualityCheckMailTemplate.extend.cs" />
+    <Compile Include="ModelMails\VersionUploadFailedQualityCheckMailTemplate.cs">
+      <DependentUpon>VersionUploadFailedQualityCheckMailTemplate.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="UtilsFactory.cs" />
     <Compile Include="ModelMails\SpecAwaitingReferenceNumberMailTemplate.cs">
       <AutoGen>True</AutoGen>
@@ -94,6 +100,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="ModelMails\VersionUploadFailedQualityCheckMailTemplate.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>VersionUploadFailedQualityCheckMailTemplate.cs</LastGenOutput>
+    </None>
     <None Include="ModelMails\SpecAwaitingReferenceNumberMailTemplate.tt">
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>SpecAwaitingReferenceNumberMailTemplate.cs</LastGenOutput>

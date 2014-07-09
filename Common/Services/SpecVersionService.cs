@@ -47,7 +47,7 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="version">Version to allocate/upload</param>
         /// <returns>Result of the operation</returns>
-        public Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId)
+        public Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId, Report report = null)
         {
             Report result = new Report();
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -56,7 +56,7 @@ namespace Etsi.Ultimate.Services
                 {
                     var specVersionManager = new SpecVersionsManager();
                     specVersionManager._uoW = uoW;
-                    result = specVersionManager.UploadOrAllocateVersion(version, isDraft, personId);
+                    result = specVersionManager.UploadOrAllocateVersion(version, isDraft, personId, report);
 
                     if (result.ErrorList.Count == 0)
                         uoW.Save();
