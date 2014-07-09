@@ -551,48 +551,25 @@ namespace Etsi.Ultimate.Module.Versions
         private string GetValidFileName()
         {
             var specNumber = SpecNumberVal.Text.Replace(".", String.Empty);
+            var utilsService = new UtilsService();
 
             int majorVersion;
             string majorVersionBase36 = String.Empty;
             if (int.TryParse(NewVersionMajorVal.Text, out majorVersion))
-                majorVersionBase36 = EncodeToBase36(majorVersion);
+                majorVersionBase36 = utilsService.EncodeToBase36Digits2(majorVersion);
 
             int technicalVersion;
             string technicalVersionBase36 = String.Empty;
             if (int.TryParse(NewVersionTechnicalVal.Text, out technicalVersion))
-                technicalVersionBase36 = EncodeToBase36(technicalVersion);
+                technicalVersionBase36 = utilsService.EncodeToBase36Digits2(technicalVersion);
 
             int editorialVersion;
             string editorialVersionBase36 = String.Empty;
             if (int.TryParse(NewVersionEditorialVal.Text, out editorialVersion))
-                editorialVersionBase36 = EncodeToBase36(editorialVersion);
+                editorialVersionBase36 = utilsService.EncodeToBase36Digits2(editorialVersion);
 
             string validFileName = String.Format(CONST_VALID_FILENAME, specNumber, majorVersionBase36, technicalVersionBase36, editorialVersionBase36);
             return validFileName;
-        }
-
-        /// <summary>
-        /// Convert to Base36 string
-        /// </summary>
-        /// <param name="input">Base10 number</param>
-        /// <returns>Base36 string</returns>
-        private string EncodeToBase36(long input)
-        {
-            if (input < 0) throw new ArgumentOutOfRangeException("input", input, "input cannot be negative");
-            var CharList = "0123456789abcdefghijklmnopqrstuvwxyz";
-            char[] clistarr = CharList.ToCharArray();
-            var result = new Stack<char>();
-            if (input == 0)
-                result.Push('0');
-            else
-            {
-                while (input != 0)
-                {
-                    result.Push(clistarr[input % 36]);
-                    input /= 36;
-                }
-            }
-            return new string(result.ToArray());
         }
 
         /// <summary>

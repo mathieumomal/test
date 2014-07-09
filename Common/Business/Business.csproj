@@ -113,6 +113,7 @@
     <Compile Include="SpecVersionsManager.cs" />
     <Compile Include="TranspositionManager.cs" />
     <Compile Include="UrlManager.cs" />
+    <Compile Include="UtilsManager.cs" />
     <Compile Include="WorkItemCsvParser.cs" />
     <Compile Include="WorkItemImporter.cs" />
     <Compile Include="WorkItemManager.cs" />

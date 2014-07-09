@@ -148,3 +148,10 @@ INSERT INTO Enum_CommunitiesShortName (Fk_TbId, ShortName) VALUES(393, 'UMTS')
 INSERT INTO Enum_CommunitiesShortName (Fk_TbId, ShortName) VALUES(739, 'GSM')
 
 GO
+
+UPDATE [U3GPPDB].[dbo].Enum_CommunitiesShortName SET WpmProjectId = 717 WHERE Fk_TbId = 373 --RP
+UPDATE [U3GPPDB].[dbo].Enum_CommunitiesShortName SET WpmProjectId = 718 WHERE Fk_TbId = 375 --SP
+UPDATE [U3GPPDB].[dbo].Enum_CommunitiesShortName SET WpmProjectId = 719 WHERE Fk_TbId = 535 --GP
+UPDATE [U3GPPDB].[dbo].Enum_CommunitiesShortName SET WpmProjectId = 733 WHERE Fk_TbId = 649 --CP
+
+GO
