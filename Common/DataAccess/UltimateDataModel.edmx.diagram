@@ -77,6 +77,7 @@
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.Community" Width="1.5" PointX="2.625" PointY="10.5" FillColor="DarkSeaGreen" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SyncInfo" Width="1.5" PointX="8.00586634502088" PointY="20.597548285777471" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_SyncInfo_Version" />
+        <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_SyncInfo_Remark" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

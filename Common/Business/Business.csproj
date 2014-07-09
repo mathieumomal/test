@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommunityManager.cs" />
+    <Compile Include="RemarkManager.cs" />
     <Compile Include="SyncInfoManager.cs" />
     <Compile Include="DocQualityChecks.cs" />
     <Compile Include="DocXQualityChecks.cs" />

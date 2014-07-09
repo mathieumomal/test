@@ -60,6 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataHelpers\RemarkHelper.cs" />
     <Compile Include="DataHelpers\IDataHelper.cs" />
     <Compile Include="DataHelpers\SpecVersionHelper.cs" />
     <Compile Include="OfflineSyncClient.cs">

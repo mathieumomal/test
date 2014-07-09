@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="CommunityRepository.cs" />
     <Compile Include="Enum_CommunitiesShortNameRepository.cs" />
+    <Compile Include="RemarkRepository.cs" />
     <Compile Include="SyncInfoRepository.cs" />
     <Compile Include="EnumTechnologiesRepository.cs" />
     <Compile Include="HistoryRepository.cs" />

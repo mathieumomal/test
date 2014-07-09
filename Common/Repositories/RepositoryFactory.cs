@@ -83,6 +83,7 @@ namespace Etsi.Ultimate.Repositories
             Container.RegisterType<IWorkProgramRepository, WorkProgramRepository>(new TransientLifetimeManager());
             Container.RegisterType<IEnum_CommunitiesShortNameRepository, Enum_CommunitiesShortNameRepository>(new TransientLifetimeManager());
             
+            Container.RegisterType<IRemarkRepository, RemarkRepository>(new TransientLifetimeManager());
 
             //Offline Repositories
             Container.RegisterType<IOfflineRepository, OfflineRepository>(new TransientLifetimeManager());

@@ -214,6 +214,10 @@
             <End Role="Specification" EntitySet="Specification" />
             <End Role="Specification_WorkItem" EntitySet="Specification_WorkItem" />
           </AssociationSet>
+          <AssociationSet Name="FK_SyncInfo_Remark" Association="Etsi.Ultimate.DataAccess.Store.FK_SyncInfo_Remark">
+            <End Role="Remarks" EntitySet="Remarks" />
+            <End Role="SyncInfo" EntitySet="SyncInfo" />
+          </AssociationSet>
           <AssociationSet Name="FK_SyncInfo_Version" Association="Etsi.Ultimate.DataAccess.Store.FK_SyncInfo_Version">
             <End Role="Version" EntitySet="Version" />
             <End Role="SyncInfo" EntitySet="SyncInfo" />
@@ -527,6 +531,7 @@
           <Property Name="TerminalName" Type="varchar" Nullable="false" MaxLength="250" />
           <Property Name="Offline_PK_Id" Type="int" Nullable="false" />
           <Property Name="Fk_VersionId" Type="int" />
+          <Property Name="Fk_RemarkId" Type="int" />
         </EntityType>
         <EntityType Name="Version">
           <Key>
@@ -1001,6 +1006,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_SyncInfo_Remark">
+          <End Role="Remarks" Type="Etsi.Ultimate.DataAccess.Store.Remarks" Multiplicity="0..1" />
+          <End Role="SyncInfo" Type="Etsi.Ultimate.DataAccess.Store.SyncInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Remarks">
+              <PropertyRef Name="Pk_RemarkId" />
+            </Principal>
+            <Dependent Role="SyncInfo">
+              <PropertyRef Name="Fk_RemarkId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_SyncInfo_Version">
           <End Role="Version" Type="Etsi.Ultimate.DataAccess.Store.Version" Multiplicity="0..1" />
           <End Role="SyncInfo" Type="Etsi.Ultimate.DataAccess.Store.SyncInfo" Multiplicity="*" />
@@ -1432,6 +1449,10 @@
             <End Role="SpecVersion" EntitySet="SpecVersions" />
             <End Role="SyncInfo" EntitySet="SyncInfoes" />
           </AssociationSet>
+          <AssociationSet Name="FK_SyncInfo_Remark" Association="Etsi.Ultimate.DataAccess.FK_SyncInfo_Remark">
+            <End Role="Remark" EntitySet="Remarks" />
+            <End Role="SyncInfo" EntitySet="SyncInfoes" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -1519,6 +1540,7 @@
           <NavigationProperty Name="Version" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_Version" FromRole="Remark" ToRole="Version" />
           <Property Type="Int32" Name="Fk_CRId" />
           <NavigationProperty Name="ChangeRequest" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_CR" FromRole="Remark" ToRole="ChangeRequest" />
+          <NavigationProperty Name="SyncInfoes" Relationship="Etsi.Ultimate.DataAccess.FK_SyncInfo_Remark" FromRole="Remark" ToRole="SyncInfo" />
         </EntityType>
         <Association Name="FK_Remarks_Releases">
           <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="0..1" />
@@ -2360,6 +2382,8 @@
           <Property Type="Int32" Name="Offline_PK_Id" Nullable="false" />
           <Property Type="Int32" Name="Fk_VersionId" />
           <NavigationProperty Name="Version" Relationship="Etsi.Ultimate.DataAccess.FK_SyncInfo_Version" FromRole="SyncInfo" ToRole="SpecVersion" />
+          <Property Type="Int32" Name="Fk_RemarkId" />
+          <NavigationProperty Name="Remark" Relationship="Etsi.Ultimate.DataAccess.FK_SyncInfo_Remark" FromRole="SyncInfo" ToRole="Remark" />
         </EntityType>
         <Association Name="FK_SyncInfo_Version">
           <End Type="Etsi.Ultimate.DataAccess.SpecVersion" Role="SpecVersion" Multiplicity="0..1" />
@@ -2370,6 +2394,18 @@
             </Principal>
             <Dependent Role="SyncInfo">
               <PropertyRef Name="Fk_VersionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SyncInfo_Remark">
+          <End Type="Etsi.Ultimate.DataAccess.Remark" Role="Remark" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.SyncInfo" Role="SyncInfo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Remark">
+              <PropertyRef Name="Pk_RemarkId" />
+            </Principal>
+            <Dependent Role="SyncInfo">
+              <PropertyRef Name="Fk_RemarkId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2849,6 +2885,7 @@
           <EntitySetMapping Name="SyncInfoes">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.SyncInfo">
               <MappingFragment StoreEntitySet="SyncInfo">
+                <ScalarProperty Name="Fk_RemarkId" ColumnName="Fk_RemarkId" />
                 <ScalarProperty Name="Fk_VersionId" ColumnName="Fk_VersionId" />
                 <ScalarProperty Name="Offline_PK_Id" ColumnName="Offline_PK_Id" />
                 <ScalarProperty Name="TerminalName" ColumnName="TerminalName" />

@@ -30,6 +30,9 @@ namespace SyncService
                 case EnumEntity.SpecVersion:
                     primaryKeyID = InsertEntity<SpecVersion>(entity, terminalName);
                     break;
+                case EnumEntity.Remark:
+                    primaryKeyID = InsertEntity<Remark>(entity, terminalName);
+                    break;
             }
 
             return primaryKeyID;
@@ -50,6 +53,9 @@ namespace SyncService
                 case EnumEntity.SpecVersion:
                     isSuccess = UpdateEntity<SpecVersion>(entity);
                     break;
+                case EnumEntity.Remark:
+                    isSuccess = UpdateEntity<Remark>(entity);
+                    break;
             }
 
             return isSuccess;
@@ -69,6 +75,9 @@ namespace SyncService
             {
                 case EnumEntity.SpecVersion:
                     isSuccess = DeleteEntity<SpecVersion>(primaryKeyID);
+                    break;
+                case EnumEntity.Remark:
+                    isSuccess = DeleteEntity<Remark>(primaryKeyID);
                     break;
             }
 

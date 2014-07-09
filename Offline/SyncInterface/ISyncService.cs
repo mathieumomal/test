@@ -8,6 +8,7 @@ namespace SyncInterface
     /// </summary>
     [ServiceContract]
     [ServiceKnownType(typeof(SpecVersion))]
+    [ServiceKnownType(typeof(Remark))]
     public interface ISyncService
     {
         /// <summary>

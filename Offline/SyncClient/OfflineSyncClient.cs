@@ -97,6 +97,7 @@ namespace SyncClient
         private void LoadInsertHelperInfo()
         {
             insertHelpers.Add(new SpecVersionHelper());
+            insertHelpers.Add(new RemarkHelper());
         }
 
         /// <summary>
@@ -105,6 +106,7 @@ namespace SyncClient
         private void LoadUpdateHelperInfo()
         {
             updateHelpers.Add(new SpecVersionHelper());
+            updateHelpers.Add(new RemarkHelper());
         }
 
         /// <summary>
@@ -112,6 +114,7 @@ namespace SyncClient
         /// </summary>
         private void LoadDeleteHelperInfo()
         {
+            deleteHelpers.Add(new RemarkHelper());
             deleteHelpers.Add(new SpecVersionHelper());
         }
 

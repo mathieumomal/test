@@ -19,8 +19,10 @@ namespace Etsi.Ultimate.DomainClasses
         public string TerminalName { get; set; }
         public int Offline_PK_Id { get; set; }
         public Nullable<int> Fk_VersionId { get; set; }
+        public Nullable<int> Fk_RemarkId { get; set; }
     
         public virtual SpecVersion Version { get; set; }
+        public virtual Remark Remark { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

@@ -6,6 +6,7 @@ namespace SyncInterface
     /// </summary>
     public enum EnumEntity
     {
-        SpecVersion
+        SpecVersion,
+        Remark
     }
 }

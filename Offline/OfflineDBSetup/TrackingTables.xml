@@ -44,4 +44,16 @@
       <Column>ETSI_WKI_Ref</Column>
     </Columns>
   </TrackingTable>
+  <TrackingTable TableSchema="dbo" TableName="Remarks">
+    <PrimaryKey>Pk_RemarkId</PrimaryKey>
+    <ForeignKeys>
+      <ForeignKey TableSchema="dbo" TableName="Version">Fk_VersionId</ForeignKey>
+    </ForeignKeys>
+    <Columns>
+      <Column>Fk_PersonId</Column>
+      <Column>IsPublic</Column>
+      <Column>CreationDate</Column>
+      <Column>RemarkText</Column>
+    </Columns>
+  </TrackingTable>
 </TrackingTables>
