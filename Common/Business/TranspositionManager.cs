@@ -63,15 +63,25 @@ namespace Etsi.Ultimate.Business
         {
             try
             {
-                //Get file name from the location
-                string FileName = versionURL.Split('/').LastOrDefault();
+                
                 //Get the target folder path
                 string transpositionFolder = ConfigVariables.TranspositionFolderPath;
-                string filePath = versionURL.Replace(ConfigVariables.FtpBaseAddress, ConfigVariables.FtpBasePhysicalPath).Replace("/", "\\");
-                                
-                if (Directory.Exists(transpositionFolder)) 
+                string filePath;                
+                string fileName; 
+                if (versionURL.Trim().StartsWith(ConfigVariables.FtpBaseAddress))
                 {
-                    File.Copy(filePath, transpositionFolder + FileName, true);
+                    filePath = versionURL.Replace(ConfigVariables.FtpBaseAddress, ConfigVariables.FtpBasePhysicalPath).Replace("/", "\\");
+                    fileName = versionURL.Split('/').LastOrDefault();
+                }
+                else
+                {
+                    filePath = versionURL;
+                    fileName = versionURL.Split('\\').LastOrDefault();
+                }
+
+                if (File.Exists(filePath) && Directory.Exists(transpositionFolder)) 
+                {
+                    File.Copy(filePath, transpositionFolder + fileName, true);
                 }
                 return true;
             }
