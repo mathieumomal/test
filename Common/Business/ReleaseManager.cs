@@ -158,7 +158,6 @@ namespace Etsi.Ultimate.Business
             //Transposition
             var transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
             transposeMgr.UoW = UoW;
-
             //Get release related specs
             var relatedSpecs = specMgr.GetSpecsRelatedToARelease(updatedObj.Pk_ReleaseId);
             foreach (var spec in relatedSpecs)
@@ -167,11 +166,15 @@ namespace Etsi.Ultimate.Business
                 if ((spec.IsUnderChangeControl ?? false) && (spec.IsForPublication ?? false))
                 {
                     var versions = versionMgr.GetVersionsForASpecRelease(spec.Pk_SpecificationId, updatedObj.Pk_ReleaseId);
-                    //for each of the versions
-                    foreach (var version in versions)
+                    //We get "the latest version of this spec"
+                    var latestVersion = versions.OrderByDescending(x => x.MajorVersion ?? 0)
+                                        .ThenByDescending(y => y.TechnicalVersion ?? 0)
+                                        .ThenByDescending(z => z.EditorialVersion ?? 0)
+                                        .FirstOrDefault();
+                    //"is allocated and not yet uploaded"
+                    if (latestVersion != null && latestVersion.Location != null && latestVersion.DocumentPassedToPub != null)
                     {
-                        //We transpose the version
-                        transposeMgr.Transpose(spec, version);
+                        transposeMgr.Transpose(spec, latestVersion);
                     }
                 }
             }
