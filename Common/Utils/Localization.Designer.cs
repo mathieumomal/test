@@ -376,6 +376,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à {0}, Uid {1}: Has different release from his parent. .
+        /// </summary>
+        public static string WorkItem_Import_Invalid_Release_From_Parent {
+            get {
+                return ResourceManager.GetString("WorkItem_Import_Invalid_Release_From_Parent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à {0}, Uid {1}: Resource format has not been recognized: {2}.
         /// </summary>
         public static string WorkItem_Import_Invalid_Resource {

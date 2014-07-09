@@ -273,4 +273,7 @@
   <data name="Specification_ERR101_FailedToSendEmailToSecretaryAndWorkplanManager" xml:space="preserve">
     <value>System failed to notify the Secretary and Workplan Manager. Please contact them directly to notify them of the reference assignment.</value>
   </data>
+  <data name="WorkItem_Import_Invalid_Release_From_Parent" xml:space="preserve">
+    <value>{0}, Uid {1}: Has different release from his parent. </value>
+  </data>
 </root>

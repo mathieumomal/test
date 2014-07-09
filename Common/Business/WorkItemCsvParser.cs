@@ -878,6 +878,11 @@ namespace Etsi.Ultimate.Business
             if (targetRelease != null)
             {
                 releaseFk = targetRelease.Pk_ReleaseId;
+                //Check if it has the same release as it's parents
+                if (lastTreatedWi != null && !lastTreatedWi.IsLevel0Record && (lastTreatedWi.WiLevel < wi.WiLevel) && lastTreatedWi.Fk_ReleaseId != releaseFk)
+                {
+                    Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_Invalid_Release_From_Parent, wi.WorkplanId, wi.Pk_WorkItemUid));
+                }
             }
             else
             {
