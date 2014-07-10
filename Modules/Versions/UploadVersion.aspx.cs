@@ -386,19 +386,25 @@ namespace Etsi.Ultimate.Module.Versions
         /// <returns></returns>
         private SpecVersion GetVersionToUpload(List<SpecVersion> versions)
         {
-            var versionsOrderedByVersion = versions.OrderByDescending(y => y.MajorVersion ?? 0)
+            if (versions != null && versions.Count > 0)
+            {
+                var versionsOrderedByVersion = versions.OrderByDescending(y => y.MajorVersion ?? 0)
                                                                   .ThenByDescending(z => z.TechnicalVersion ?? 0)
                                                                   .ThenByDescending(e => e.EditorialVersion ?? 0)
                                                                   .ToList();
-            SpecVersion versionToUpload = versionsOrderedByVersion.FirstOrDefault();
-            foreach (var version in versionsOrderedByVersion)
-            {
-                if (String.IsNullOrEmpty(version.Location))
-                    versionToUpload = version;
-                else
-                    return versionToUpload;
+                var lastVersion = versionsOrderedByVersion.FirstOrDefault();//We get the last version
+                //We create a temporary version to have the next version to upload : technical number + 1
+                SpecVersion versionToUpload = new SpecVersion() { MajorVersion = lastVersion.MajorVersion, TechnicalVersion = lastVersion.TechnicalVersion + 1, EditorialVersion = lastVersion.EditorialVersion };
+                foreach (var version in versionsOrderedByVersion)
+                {
+                    if (String.IsNullOrEmpty(version.Location))//if the lastVersion hasn't be downloaded : we get this version
+                        versionToUpload = version;
+                    else
+                        return versionToUpload;
+                }
+                return versionToUpload;
             }
-            return versionToUpload;
+            return null;
         }
 
         /// <summary>
