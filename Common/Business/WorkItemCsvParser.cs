@@ -890,7 +890,18 @@ namespace Etsi.Ultimate.Business
                 wi.Fk_ReleaseId = releaseFk;
             }
 
+            if (wi.Fk_ParentWiId != null)
+            {
+                var parentWi = TreatedWorkItems.Where(x => x.Pk_WorkItemUid == wi.Fk_ParentWiId).FirstOrDefault();
+                if ((parentWi != null) && (parentWi.Fk_ReleaseId != null))
+                {
+                    var parentRelease = AllReleases.Where(x => x.Pk_ReleaseId == parentWi.Fk_ReleaseId).FirstOrDefault();
+                    string parentReleaseCode = (parentRelease != null) ? parentRelease.Code : String.Empty;
 
+                    if (!record.Release.Equals(parentReleaseCode, StringComparison.InvariantCultureIgnoreCase))
+                        Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_Parent_Release_Different_With_Child, wi.WorkplanId, wi.Pk_WorkItemUid, record.Release, parentReleaseCode));
+                }
+            }
         }
 
         private void TreatAcronym(WorkItemImportClass record, WorkItem wi)

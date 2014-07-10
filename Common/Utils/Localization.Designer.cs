@@ -439,6 +439,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}, Uid {1}: WI has different Release ({2}) from its parent ({3})..
+        /// </summary>
+        public static string WorkItem_Import_Parent_Release_Different_With_Child {
+            get {
+                return ResourceManager.GetString("WorkItem_Import_Parent_Release_Different_With_Child", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à {0}, Uid {1}: &quot;PcgApprovalMtgRef&quot; field is more than 20 characters. It has been truncated..
         /// </summary>
         public static string WorkItem_Import_PcgApprovalMtgRef_Too_Long {

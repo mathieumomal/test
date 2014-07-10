@@ -510,16 +510,16 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_TsTr_Too_Long, "17", "630000"), report.WarningList.First());
         }
 
-        /*[Test]
+        [Test]
         public void ImportCsv_DifferentReleaseCase()
         {
             RegisterRepositories();
 
             var wiImporter = new WorkItemCsvParser() { UoW = new UltimateUnitOfWork() };
-
+            
             var result = wiImporter.ParseCsv("../../TestData/WorkItems/ReleaseDifferentFromParent.csv").Value;
-            Assert.GreaterOrEqual( result.WarningList.Where(s => s.Contains("Has different release from his parent.")).ToList().Count,  1);
-        }*/
+            Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Parent_Release_Different_With_Child, "10", "580099", "Rel-2", "Rel-1"), result.WarningList.First());
+        }
 
         private void RegisterRepositories()
         {

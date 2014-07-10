@@ -276,4 +276,7 @@
   <data name="WorkItem_Import_Invalid_Release_From_Parent" xml:space="preserve">
     <value>{0}, Uid {1}: Has different release from his parent. </value>
   </data>
+  <data name="WorkItem_Import_Parent_Release_Different_With_Child" xml:space="preserve">
+    <value>{0}, Uid {1}: WI has different Release ({2}) from its parent ({3}).</value>
+  </data>
 </root>

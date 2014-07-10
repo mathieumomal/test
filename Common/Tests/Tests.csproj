@@ -204,6 +204,7 @@
     <None Include="TestData\WorkItems\BadFormat.csv" />
     <Content Include="TestData\WorkItems\empty.txt" />
     <None Include="TestData\WorkItems\AcronymTooLong.csv" />
+    <None Include="TestData\WorkItems\ReleaseDifferentFromParent.csv" />
     <None Include="TestData\WorkItems\TSsAndTRsTooLong.csv" />
     <None Include="TestData\WorkItems\OneLine_Nominal_Zipped.csv" />
     <None Include="TestData\WorkItems\InvalidLevel.csv" />
