@@ -172,7 +172,7 @@ namespace Etsi.Ultimate.Business
                                         .ThenByDescending(z => z.EditorialVersion ?? 0)
                                         .FirstOrDefault();
                     //"is allocated and not yet uploaded"
-                    if (latestVersion != null && latestVersion.Location != null && latestVersion.DocumentPassedToPub != null)
+                    if (latestVersion != null && latestVersion.ETSI_WKI_ID == null)
                     {
                         transposeMgr.Transpose(spec, latestVersion);
                     }
