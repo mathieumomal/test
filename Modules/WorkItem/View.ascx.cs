@@ -110,7 +110,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             try
             {
                 GetRequestParameters();
-                
+
                 // init the full view component.
                 ManageFullView("");
 
@@ -424,6 +424,17 @@ namespace Etsi.Ultimate.Module.WorkItem
             }
         }
 
+        protected void rtlWorkItems_ItemDataBound(object sender, TreeListItemDataBoundEventArgs e)
+        {
+            if (e.Item is TreeListDataItem)
+            {
+                TreeListDataItem item = (TreeListDataItem)e.Item;
+                if (!string.IsNullOrEmpty(item["TsgStoppedMtgRef"].Text) && item["TsgStoppedMtgRef"].Text != "&nbsp;")
+                    item.BackColor = System.Drawing.Color.Gray;
+            }
+        }
+
+
         #endregion
 
         #region Private methods
@@ -512,7 +523,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             ultFullView.Display();
         }
 
-        private Dictionary<string,string> ManageUrlParams(string selectedReleases)
+        private Dictionary<string, string> ManageUrlParams(string selectedReleases)
         {
             var nameValueCollection = HttpContext.Current.Request.QueryString;
             var urlParams = new Dictionary<string, string>();

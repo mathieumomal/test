@@ -79,14 +79,15 @@
         <table style="width: 100%;">
             <tr>
                 <td>
-                    
+
                     <asp:LinkButton ID="WorkPlanImport_Btn" runat="server" OnClientClick="open_RadWindow_workItemImport(); return false;" Text="Import work plan" />
-                    <span style="float: right; padding-bottom:2px; white-space:nowrap ">
+                    <span style="float: right; padding-bottom: 2px; white-space: nowrap">
                         <asp:Label Visible="false" ID="lblLatestUpdated" runat="server" />
                         <asp:HyperLink Visible="false" ID="lnkFtpDownload" runat="server" Text="Download from FTP" Target="_blank" />
-                        &nbsp; <ult:FullViewControl id="ultFullView" runat="server" />
+                        &nbsp;
+                        <ult:fullviewcontrol id="ultFullView" runat="server" />
                     </span>
-                    
+
                 </td>
             </tr>
             <tr>
@@ -161,7 +162,7 @@
             <tr>
                 <td>
 
-                    <telerik:RadTreeList ID="rtlWorkItems" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" runat="server" OnNeedDataSource="rtlWorkItems_NeedDataSource"
+                    <telerik:RadTreeList ID="rtlWorkItems" EnableEmbeddedSkins="false" EnableEmbeddedBaseStylesheet="false" runat="server" OnNeedDataSource="rtlWorkItems_NeedDataSource" OnItemDataBound="rtlWorkItems_ItemDataBound"
                         ParentDataKeyNames="Fk_ParentWiId" DataKeyNames="Pk_WorkItemUid" AutoGenerateColumns="false" AllowSorting="false" AllowPaging="false" AllowFilteringByColumn="false">
                         <clientsettings>
                             <Scrolling AllowScroll="true" />
@@ -222,6 +223,8 @@
 								            'Rel-<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>', 'height=550,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
                             </ItemTemplate>      
                         </telerik:TreeListTemplateColumn>
+                        <telerik:TreeListBoundColumn DataField="TsgStoppedMtgRef" UniqueName="TsgStoppedMtgRef" Visible="false">
+                        </telerik:TreeListBoundColumn>
                     </columns>
                     </telerik:RadTreeList>
                 </td>
@@ -428,7 +431,7 @@
             $("#importProgressIcon").show();
             $("#importProgressIcon").css("visibility", "visible");
         }
-        
+
 
     }
     function End(sender, arguments) {
@@ -473,7 +476,7 @@
         timeout = window.setTimeout(function () { $('#<%=rbworkItemCountOk.ClientID %>').click(); }, 10000)
     }
 
-    function racAcronym_TextChanged(sender, eventArgs){
+    function racAcronym_TextChanged(sender, eventArgs) {
         $('#<%=hidAcronym.ClientID %>').val(eventArgs.get_text());
     }
 
