@@ -15,7 +15,12 @@
 
 <!-- This global contener should be stay here and its id should be use as prefix of all css style in the module.css file -->
 <div id="meetingsView">
-    <h1>Meetings module</h1>
+     <telerik:RadComboBox runat="server" ID="New" Width="150px" DropDownWidth="150px">
+         <Items>
+             <telerik:RadComboBoxItem runat="server" Text="New Disputes" Value="New Disputes" />
+             <telerik:RadComboBoxItem runat="server" Text="Pending" Value="Pending TPG" />
+         </Items>
+     </telerik:RadComboBox>
 
 
 </div>

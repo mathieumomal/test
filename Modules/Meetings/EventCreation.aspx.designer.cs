@@ -10,15 +10,6 @@
 namespace Etsi.Ultimate.Module.Meetings {
     
     
-    public partial class View {
-        
-        /// <summary>
-        /// Contrôle New.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadComboBox New;
+    public partial class EventCreation {
     }
 }
