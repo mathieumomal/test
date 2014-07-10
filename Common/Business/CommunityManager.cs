@@ -94,6 +94,19 @@ namespace Etsi.Ultimate.Business
             return repo.All.Where(x => x.Fk_TbId == id).FirstOrDefault();
         }
 
+        public Community GetParentCommunityByCommunityId(int childTbId)
+        {
+            ICommunityRepository repo = RepositoryFactory.Resolve<ICommunityRepository>();
+            repo.UoW = UoW;
+            var childCommunity = this.GetCommmunityById(childTbId);
+            if (childCommunity != null && childCommunity.ParentCommunityId != 0)
+            {
+                var parentCommunity = this.GetCommmunityById(childCommunity.ParentCommunityId);
+                return parentCommunity;
+            }
+            return null;
+        }
+
         #endregion
 
         #region Private Methods

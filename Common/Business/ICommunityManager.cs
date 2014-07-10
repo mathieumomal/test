@@ -39,6 +39,13 @@ namespace Etsi.Ultimate.Business
         /// <param name="id"></param>
         /// <returns></returns>
         Enum_CommunitiesShortName GetEnumCommunityShortNameByCommunityId(int id);
+
+        /// <summary>
+        /// Get the parent communnity id (Tb_id) from a 'potential' child community id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Community GetParentCommunityByCommunityId(int childTbId);
        
     }
 }

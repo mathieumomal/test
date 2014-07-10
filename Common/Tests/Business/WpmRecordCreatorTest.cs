@@ -78,7 +78,7 @@ namespace Etsi.Ultimate.Tests.Business
         public void ImportProjectsToWPMDB_Test()
         {
             //Mocks
-            ImportProjectsToWPMDB_SetMocks();
+            ImportProjectsToWPMDB_SetMocks(false);
             var wprMock = MockRepository.GenerateMock<IWorkProgramRepository>();
             RepositoryFactory.Container.RegisterInstance<IWorkProgramRepository>(wprMock);
 
@@ -105,7 +105,30 @@ namespace Etsi.Ultimate.Tests.Business
             wprMock.AssertWasCalled(x => x.InsertWIProject(IMPORTPROJECT_WKI_ID, 24));
         }
 
-        public void ImportProjectsToWPMDB_SetMocks()
+        [Test]
+        public void ImportProjectsToWPMDB_TSGParent_Test()
+        {
+            //Mocks
+            ImportProjectsToWPMDB_SetMocks(true);
+            var wprMock = MockRepository.GenerateMock<IWorkProgramRepository>();
+            RepositoryFactory.Container.RegisterInstance<IWorkProgramRepository>(wprMock);
+
+            //Return the UltimateUnitOfWork
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+
+            //Init the manager
+            var wpmRecordCreator = new WpmRecordCreator(uow);
+            //Get version
+            var version = uow.Context.SpecVersions.Where(x => x.Pk_VersionId == IMPORTPROJECT_VERSION_ID).FirstOrDefault();
+
+            //Start projects import
+            wpmRecordCreator.ImportProjectsToWPMDB(version, IMPORTPROJECT_WKI_ID, wprMock);
+
+            //Verif import project : tsg case when this tsg project Id is not define => we test its parent
+            wprMock.AssertWasCalled(x => x.InsertWIProject(IMPORTPROJECT_WKI_ID, 25));
+        }
+
+        public void ImportProjectsToWPMDB_SetMocks(bool tsgParentTest)
         {
             
             //Version to transpose
@@ -121,10 +144,21 @@ namespace Etsi.Ultimate.Tests.Business
             specs.Add(new Specification() { Pk_SpecificationId = 1 });
             specs.Find(1).SpecificationResponsibleGroups.Add(new SpecificationResponsibleGroup() { Pk_SpecificationResponsibleGroupId = 1, Fk_SpecificationId = 1, Fk_commityId = 2, IsPrime = true });
 
-            //Enum_CommunitiesShortName
-            var mockCommunity = MockRepository.GenerateMock<ICommunityManager>();
-            mockCommunity.Stub(x => x.GetEnumCommunityShortNameByCommunityId(Arg<int>.Is.Anything)).Return(new Enum_CommunitiesShortName() { Pk_EnumCommunitiesShortNames = 1, Fk_TbId = 2, WpmProjectId = 24, ShortName = "SP" });
-            ManagerFactory.Container.RegisterInstance(typeof(ICommunityManager), mockCommunity);
+            //Enum_CommunitiesShortName and communities
+            var mockCommunityShortName = MockRepository.GenerateMock<ICommunityManager>();
+
+            if (tsgParentTest)
+            {
+                mockCommunityShortName.Stub(x => x.GetEnumCommunityShortNameByCommunityId(2)).Return(new Enum_CommunitiesShortName() { Pk_EnumCommunitiesShortNames = 1, Fk_TbId = 2, WpmProjectId = null, ShortName = "SP" });
+                mockCommunityShortName.Stub(x => x.GetEnumCommunityShortNameByCommunityId(3)).Return(new Enum_CommunitiesShortName() { Pk_EnumCommunitiesShortNames = 2, Fk_TbId = 3, WpmProjectId = 25, ShortName = "SP" });
+                mockCommunityShortName.Stub(x => x.GetParentCommunityByCommunityId(2)).Return(new Community() { TbId = 3, ParentTbId = null });//Parent of the community with tbId 2 is the community with the tbId 3
+            }
+            else
+            {
+                mockCommunityShortName.Stub(x => x.GetEnumCommunityShortNameByCommunityId(2)).Return(new Enum_CommunitiesShortName() { Pk_EnumCommunitiesShortNames = 1, Fk_TbId = 2, WpmProjectId = 24, ShortName = "SP" });
+            }
+            ManagerFactory.Container.RegisterInstance(typeof(ICommunityManager), mockCommunityShortName);
+
 
             //Mock the context
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();

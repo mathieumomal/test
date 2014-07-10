@@ -139,8 +139,20 @@ namespace Etsi.Ultimate.Business
             //- tsg (value found by the TSG associated to the specification of the version).
             if(spec.PrimeResponsibleGroup != null){
                 var community = comMgr.GetEnumCommunityShortNameByCommunityId(spec.PrimeResponsibleGroup.Fk_commityId);
-                if (community != null && community.WpmProjectId != null)
+                if(community != null){
+                    if (community.WpmProjectId != null)
                     wpRepo.InsertWIProject(WKI_ID, community.WpmProjectId ?? 0);
+                    else
+                    {
+                        //If we don't have any project ID for a TSG : we find its parent and we try to get this project ID
+                        var parentCommunity = comMgr.GetParentCommunityByCommunityId(community.Fk_TbId ?? 0);
+                        var parentCommunityShortName = comMgr.GetEnumCommunityShortNameByCommunityId(parentCommunity.TbId);
+                        if (parentCommunityShortName != null && parentCommunityShortName.WpmProjectId != null)
+                        {
+                            wpRepo.InsertWIProject(WKI_ID, parentCommunityShortName.WpmProjectId ?? 0);
+                        }
+                    }
+                }
             }
         }
 

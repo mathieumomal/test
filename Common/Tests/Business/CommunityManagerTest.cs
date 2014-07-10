@@ -16,6 +16,14 @@ namespace Etsi.Ultimate.Tests.Business
     public class CommunityManagerTest : BaseTest
     {
         private static string cacheKey = "ULT_COMMUNITY_MANAGER_ALL";
+        private static int CHILDTBID = 46;
+        private static int PARENTTBID = 189;
+
+        [TearDown]
+        public void CleanUpCache()
+        {
+            CacheManager.Clear(cacheKey);
+        }
 
         [Test]
         public void CommunityManager_GetAll()
@@ -80,6 +88,36 @@ namespace Etsi.Ultimate.Tests.Business
             var comShortNameFound = manager.GetEnumCommunityShortNameByCommunityId(1);
 
             Assert.AreEqual(comShortNamefkDbSet.Find(1), comShortNameFound);
+        }
+
+        [Test]
+        public void GetParentCommunityByCommunityId_Test()
+        {
+            CommunityFakeDBSet comfkDbSet = new CommunityFakeDBSet();
+            comfkDbSet.Add(new Community()
+            {
+                ShortName = "S1",
+                TbId = CHILDTBID,
+                ParentTbId = PARENTTBID
+            });
+            comfkDbSet.Add(new Community()
+            {
+                ShortName = "SP",
+                TbId = PARENTTBID,
+                ParentTbId = null
+            });
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Communities).Return((IDbSet<Community>)comfkDbSet);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var manager = new CommunityManager();
+            manager.UoW = uow;
+
+            var comParentFound = manager.GetParentCommunityByCommunityId(CHILDTBID);
+
+            Assert.AreEqual(PARENTTBID, comParentFound.TbId);
         }
     }
 }
