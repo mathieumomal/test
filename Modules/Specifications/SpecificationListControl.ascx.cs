@@ -68,7 +68,7 @@ namespace Etsi.Ultimate.Module.Specifications
             }
             set
             {
-                ViewState[String.Format(CONST_SPECIFICATION_GRID_DATA, this.ClientID)] = value;
+                ViewState[String.Format(CONST_SPECIFICATION_GRID_DATA, this.ClientID)] = GetActualSpecificationsFromProxy(value);
                 specificationsGrid.Rebind();
             }
         }
@@ -158,7 +158,7 @@ namespace Etsi.Ultimate.Module.Specifications
             if (int.TryParse(rcbAddSpecification.SelectedValue, out specId))
             {
                 ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
-                DataSource.Add(svc.GetSpecificationDetailsById(0, specId).Key);
+                DataSource.Add(GetActualSpecificationFromProxy(svc.GetSpecificationDetailsById(0, specId).Key));
 
                 rcbAddSpecification.Text = "";
                 rcbAddSpecification.ClearSelection();
@@ -204,6 +204,40 @@ namespace Etsi.Ultimate.Module.Specifications
             RadWindowAlert.RadAlert(errorText, 400, 150, "Error", "", "images/error.png");
         }
 
+        /// <summary>
+        /// Provide the simplified specification objects with required properties
+        /// </summary>
+        /// <param name="proxySpecifications">List of specifications</param>
+        /// <returns>List of simplified specifications with required properties</returns>
+        private List<Specification> GetActualSpecificationsFromProxy(List<Specification> proxySpecifications)
+        {
+            List<Specification> specifications = new List<Specification>();
+            if ((proxySpecifications != null) && (proxySpecifications.Count > 0))
+                proxySpecifications.ForEach(x => specifications.Add(GetActualSpecificationFromProxy(x)));
+
+            return specifications;
+        }
+
+        /// <summary>
+        /// Provide the simplified specification object with required properties
+        /// </summary>
+        /// <param name="proxySpecification">Specification</param>
+        /// <returns>Specification with simplified properties</returns>
+        private Specification GetActualSpecificationFromProxy(Specification proxySpecification)
+        {
+            Specification specification = new Specification()
+            {
+                Pk_SpecificationId = proxySpecification.Pk_SpecificationId,
+                Number = proxySpecification.Number,
+                Title = proxySpecification.Title,
+                PrimeResponsibleGroupShortName = proxySpecification.PrimeResponsibleGroupShortName,
+                IsTS = proxySpecification.IsTS,
+                IsActive = proxySpecification.IsActive,
+                IsUnderChangeControl = proxySpecification.IsUnderChangeControl
+            };
+
+            return specification;
+        }
 
         #endregion
     }

@@ -53,7 +53,7 @@ namespace Etsi.Ultimate.Module.Specifications
             }
             set
             {
-                ViewState[CONST_DATASOURCE] = value;
+                ViewState[CONST_DATASOURCE] = GetActualSpecificationFromProxy(value);
             }
         }
 
@@ -130,6 +130,103 @@ namespace Etsi.Ultimate.Module.Specifications
                         rpbReleases.Items[0].Expanded = true;
                 }
             }
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Provide the required specification properties for release tab
+        /// </summary>
+        /// <param name="proxySpecification">Specification</param>
+        /// <returns>Specification with required properties</returns>
+        private Specification GetActualSpecificationFromProxy(Specification proxySpecification)
+        {
+            Specification specification = new Specification()
+            {
+                Pk_SpecificationId = proxySpecification.Pk_SpecificationId,
+                IsActive = proxySpecification.IsActive,
+                IsUnderChangeControl = proxySpecification.IsUnderChangeControl,
+                promoteInhibited = proxySpecification.promoteInhibited
+            };
+            
+            if(proxySpecification.SpecificationReleases != null)
+            {
+                List<Release> specReleases = new List<Release>();
+                proxySpecification.SpecificationReleases.ForEach(x => specReleases.Add(new Release() { Pk_ReleaseId = x.Pk_ReleaseId, SortOrder = x.SortOrder }));
+                specification.SpecificationReleases = specReleases;
+            }
+
+            proxySpecification.Specification_Release.ToList().ForEach(x => specification.Specification_Release.Add(new Specification_Release()
+            {
+                Pk_Specification_ReleaseId = x.Pk_Specification_ReleaseId,
+                Fk_SpecificationId = x.Fk_SpecificationId,
+                Fk_ReleaseId = x.Fk_ReleaseId,
+                isWithdrawn = x.isWithdrawn,
+                WithdrawMeetingId = x.WithdrawMeetingId,
+                isTranpositionForced = x.isTranpositionForced,
+                CreationDate = x.CreationDate,
+                UpdateDate = x.UpdateDate,
+                Release = (x.Release == null) ? null : new Release() { Pk_ReleaseId = x.Release.Pk_ReleaseId, Name = x.Release.Name, SortOrder = x.Release.SortOrder },
+                Specification = (x.Specification == null) ? null : new Specification() { Pk_SpecificationId = x.Specification.Pk_SpecificationId, IsActive = x.Specification.IsActive, IsUnderChangeControl = x.Specification.IsUnderChangeControl },
+                Remarks = GetActualRemarksFromProxy(x.Remarks.ToList())
+            }));
+
+            proxySpecification.Versions.ToList().ForEach(x => specification.Versions.Add(new SpecVersion()
+            {
+                Pk_VersionId = x.Pk_VersionId,
+                MajorVersion = x.MajorVersion,
+                TechnicalVersion = x.TechnicalVersion,
+                EditorialVersion = x.EditorialVersion,
+                AchievedDate = x.AchievedDate,
+                ExpertProvided = x.ExpertProvided,
+                Location = x.Location,
+                SupressFromSDO_Pub = x.SupressFromSDO_Pub,
+                ForcePublication = x.ForcePublication,
+                DocumentUploaded = x.DocumentUploaded,
+                DocumentPassedToPub = x.DocumentPassedToPub,
+                Multifile = x.Multifile,
+                Source = x.Source,
+                ETSI_WKI_ID = x.ETSI_WKI_ID,
+                ProvidedBy = x.ProvidedBy,
+                Fk_SpecificationId = x.Fk_SpecificationId,
+                Fk_ReleaseId = x.Fk_ReleaseId,
+                ETSI_WKI_Ref = x.ETSI_WKI_Ref,
+                Remarks = GetActualRemarksFromProxy(x.Remarks.ToList())
+            }));
+
+            proxySpecification.SpecificationRapporteurs.ToList().ForEach(x => specification.SpecificationRapporteurs.Add(new SpecificationRapporteur()
+            {
+                Pk_SpecificationRapporteurId = x.Pk_SpecificationRapporteurId,
+                Fk_SpecificationId = x.Fk_SpecificationId,
+                Fk_RapporteurId = x.Fk_RapporteurId,
+                IsPrime = x.IsPrime
+            }));
+
+            return specification;
+        }
+
+        /// <summary>
+        /// Provide the required remark properties for release tab
+        /// </summary>
+        /// <param name="proxyRemarks">Remark</param>
+        /// <returns>Remark with required properties</returns>
+        private List<Remark> GetActualRemarksFromProxy(List<Remark> proxyRemarks)
+        {
+            List<Remark> remarks = new List<Remark>();
+            proxyRemarks.ForEach(x => remarks.Add(new Remark()
+            {
+                Pk_RemarkId = x.Pk_RemarkId,
+                Fk_PersonId = x.Fk_PersonId,
+                IsPublic = x.IsPublic,
+                CreationDate = x.CreationDate,
+                RemarkText = x.RemarkText,
+                PersonName = x.PersonName,
+                Fk_SpecificationReleaseId = x.Fk_SpecificationReleaseId,
+                Fk_VersionId = x.Fk_VersionId
+            }));
+            return remarks;
         }
 
         #endregion

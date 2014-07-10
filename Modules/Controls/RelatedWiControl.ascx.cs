@@ -40,7 +40,7 @@ namespace Etsi.Ultimate.Controls
             }
             set
             {
-                ViewState[CONST_RELATED_WI_GRID_DATA] = value;
+                ViewState[CONST_RELATED_WI_GRID_DATA] = GetActualWorkItemsFromProxy(value);
                 relatedWiGrid.Rebind();
             }
         }
@@ -57,7 +57,7 @@ namespace Etsi.Ultimate.Controls
             }
             set
             {
-                ViewState[CONST_MOD_WI_DATASOURCE] = value;
+                ViewState[CONST_MOD_WI_DATASOURCE] = GetActualWorkItemsFromProxy(value);
             }
         }
 
@@ -333,6 +333,41 @@ namespace Etsi.Ultimate.Controls
         {
             radGrid.DataSource = obj;
             radGrid.DataBind();
+        }
+
+        /// <summary>
+        /// Provide simplified workitem objects with required properties
+        /// </summary>
+        /// <param name="proxyWorkItems">List of workitems</param>
+        /// <returns>List of workitems with simplified properties</returns>
+        private List<WorkItem> GetActualWorkItemsFromProxy(List<WorkItem> proxyWorkItems)
+        {
+            List<WorkItem> workItems = new List<WorkItem>();
+            if ((proxyWorkItems != null) && (proxyWorkItems.Count > 0))
+                proxyWorkItems.ForEach(x => workItems.Add(GetActualWorkItemFromProxy(x)));
+
+            return workItems;
+        }
+
+        /// <summary>
+        /// Provide simplified workitem object with required fields
+        /// </summary>
+        /// <param name="proxyWorkItem">Workitem</param>
+        /// <returns>Workitem with required properties</returns>
+        private WorkItem GetActualWorkItemFromProxy(WorkItem proxyWorkItem)
+        {
+            WorkItem workItem = new WorkItem()
+            {
+                Pk_WorkItemUid = proxyWorkItem.Pk_WorkItemUid,
+                WiLevel = proxyWorkItem.WiLevel,
+                Acronym = proxyWorkItem.Acronym,
+                Name = proxyWorkItem.Name,
+                IsPrimary = proxyWorkItem.IsPrimary
+            };
+
+            proxyWorkItem.WorkItems_ResponsibleGroups.ToList().ForEach(x => workItem.WorkItems_ResponsibleGroups.Add(new WorkItems_ResponsibleGroups() { Pk_WorkItemResponsibleGroups = x.Pk_WorkItemResponsibleGroups, ResponsibleGroup = x.ResponsibleGroup } ));
+
+            return workItem;
         }
 
         #endregion

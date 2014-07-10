@@ -195,6 +195,7 @@ namespace Etsi.Ultimate.Controls
                         Fk_SpecificationId = x.Fk_SpecificationId,
                         Fk_ReleaseId = x.Fk_ReleaseId,
                         Fk_SpecificationReleaseId = x.Fk_SpecificationReleaseId,
+                        Fk_CRId = x.Fk_CRId,
                         IsPublic = x.IsPublic,
                         CreationDate = x.CreationDate,
                         RemarkText = x.RemarkText,
