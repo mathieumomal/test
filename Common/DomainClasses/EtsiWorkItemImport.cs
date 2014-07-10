@@ -8,9 +8,8 @@ namespace Etsi.Ultimate.DomainClasses
 {
     public class EtsiWorkItemImport
     {
-        private const string base36 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        
-        public string EtsiNumber { get; set;}
+        #region Properties
+        public string EtsiNumber { get; set; }
         public string StandardType { get; set; }
         public int EtsiDocNumber { get; set; }
         public string Reference { get; set; }
@@ -23,6 +22,7 @@ namespace Etsi.Ultimate.DomainClasses
         public int RapporteurId { get; set; }
         public int SecretaryId { get; set; }
         public string WorkingTitle { get; set; }
+        #endregion
 
         #region constructors
 
@@ -30,14 +30,14 @@ namespace Etsi.Ultimate.DomainClasses
         {
         }
 
-        public EtsiWorkItemImport(SpecVersion version, Specification specification, Community community, int wgNumber , int SecretaryId, string releaseName, bool isAlreadyTransposed)
-        {
+        public EtsiWorkItemImport(SpecVersion version, Specification specification, Community community, int wgNumber, int SecretaryId, string releaseName, bool isAlreadyTransposed)
+        {            
+
             EtsiNumber = "1" + specification.Number.Replace(".", " ");
-            StandardType = specification.SpecificationType; 
+            StandardType = specification.SpecificationType;
             EtsiDocNumber = Int32.Parse(specification.Number.Replace(".", ""));
-            SerialNumber = EtsiDocNumber + "v" + Encode(version.MajorVersion.GetValueOrDefault()) + Encode(version.TechnicalVersion.GetValueOrDefault()) + Encode(version.EditorialVersion.GetValueOrDefault());
-            //TOCOMPLETE
-            Reference = (isAlreadyTransposed ? "R" : "D") + StandardType + "/TSG" + community.ShortName.Trim().ElementAt(0) + "-" + (community.TbType.Equals("TSG") ? "00" : ("0" + wgNumber)) + SerialNumber;
+            //Reference not yet completed
+            Reference = (isAlreadyTransposed ? "R" : "D") + StandardType + "/TSG" + community.ShortName.Trim().ElementAt(0) + "-" + (community.TbType.Equals("TSG") ? "00" : ("0" + wgNumber));
             Version = version.Version;
             CommunityId = community.TbId;
             titllePart_1 = "";
@@ -51,18 +51,13 @@ namespace Etsi.Ultimate.DomainClasses
 
         }
 
-        #endregion
-
-        private string Encode(int input)
+        public void SetSerialNumber(string MajorVersion36, string TechnicalVersion36, string EditorialVersion)
         {
-            char[] baseElements = base36.ToCharArray();
-            var result = new Stack<char>();
-            while (input != 0)
-            {
-                result.Push(baseElements[input % 36]);
-                input /= 36;
-            }
-            return new string(result.ToArray());
+            SerialNumber = EtsiDocNumber + "v" + MajorVersion36 + TechnicalVersion36 + EditorialVersion;
+            //Reference completed
+            Reference += SerialNumber;
         }
+
+        #endregion
     }
 }

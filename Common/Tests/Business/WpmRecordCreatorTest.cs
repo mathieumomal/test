@@ -69,8 +69,8 @@ namespace Etsi.Ultimate.Tests.Business
             manager.AddWpmRecords(versionManager.GetVersionsForASpecRelease(1, 1).FirstOrDefault());
 
             WorkProgramRepoMock.AssertWasCalled(wp => wp.InsertEtsiWorkITem(Arg<EtsiWorkItemImport>.Matches(c => c.EtsiNumber.Equals("126 124") 
-                && c.EtsiDocNumber == 26124 && c.SerialNumber.Equals("26124vA21") 
-                && c.Reference.Equals("DTS/TSGS-0426124vA21") && c.titllePart_1.Equals("2G description; LTE description;"))));
+                && c.EtsiDocNumber == 26124 && c.SerialNumber.Equals("26124v0a0201")
+                && c.Reference.Equals("DTS/TSGS-0426124v0a0201") && c.titllePart_1.Equals("2G description; LTE description;"))));
             WorkProgramRepoMock.VerifyAllExpectations();
         }
 
