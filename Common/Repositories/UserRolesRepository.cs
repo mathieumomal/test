@@ -99,7 +99,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns></returns>
         public int GetChairmanIdByCommitteeId(int committeeId)
         {
-            var usr = UoW.Context.Users_Groups.Where(p => p.PERS_ROLE_CODE != null && (p.PERS_ROLE_CODE.ToLower() == "chairman" || p.PERS_ROLE_CODE.ToLower() == "convenor") && p.TB_ID == committeeId).OrderByDescending(p => p.END_DATE).FirstOrDefault();
+            var usr = UoW.Context.Users_Groups.Where(p => p.PERS_ROLE_CODE != null && (p.PERS_ROLE_CODE.ToLower() == "chairman" || p.PERS_ROLE_CODE.ToLower() == "convenor") && p.TB_ID == committeeId && p.END_DATE == null).FirstOrDefault();
             if (usr == null)
                 return 0;
             return usr.PERSON_ID;

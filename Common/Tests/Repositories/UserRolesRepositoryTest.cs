@@ -56,15 +56,13 @@ namespace Etsi.Ultimate.Tests.Repositories
         {
             var iUnitOfWork = MockRepository.GenerateMock<IUltimateUnitOfWork>();
             var iUltimateContext = new FakeContext();
-            //var iUltimateContext = MockRepository.GenerateMock<IUltimateContext>();
 
             var userGroupsDBSet = new UserGroupsFakeDBSet();
             userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5204, PERSON_ID = 27904, TB_ID = 0, PERS_ROLE_CODE = null });
             userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5204, PERSON_ID = 27905, TB_ID = 0, PERS_ROLE_CODE = null });
             userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5322, PERSON_ID = 59862, TB_ID = 15, PERS_ROLE_CODE = "Chairman", END_DATE = DateTime.Now.AddMonths(-2) });
-            userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5322, PERSON_ID = 27904, TB_ID = 15, PERS_ROLE_CODE = "Chairman", END_DATE = DateTime.Now.AddMonths(1) });
+            userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5322, PERSON_ID = 27904, TB_ID = 15, PERS_ROLE_CODE = "Chairman", END_DATE = null });
             userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5322, PERSON_ID = 27906, TB_ID = 15, PERS_ROLE_CODE = "Support" });
-            //Just essentials informations for the tests
 
             var userDnnRolesGroupsDBSet = new UsersAdHocRolesFakeDBSet();
             userDnnRolesGroupsDBSet.Add(new Users_AdHoc_Roles() { UserID = 9, PERSON_ID = "27904", RoleName = "Work Plan Managers" });

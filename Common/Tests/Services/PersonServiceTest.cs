@@ -124,6 +124,19 @@ namespace Etsi.Ultimate.Tests.Services
 
             Assert.AreEqual("Un Martine", results);
         }
+
+        [Test]
+        public void GetChairmanIdByCommityId()
+        {
+            var userRoleRepo = MockRepository.GenerateMock<IUserRolesRepository>(); 
+            userRoleRepo.Stub(x => x.GetChairmanIdByCommitteeId(1)).Return(2);
+            RepositoryFactory.Container.RegisterInstance(userRoleRepo);
+
+            var service = new PersonService();
+            var results = service.GetChairmanIdByCommityId(1);
+
+            Assert.AreEqual(2, results);
+        }
         #endregion
 
         #region Datas
