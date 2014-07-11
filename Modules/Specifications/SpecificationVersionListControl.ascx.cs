@@ -62,6 +62,7 @@ namespace Etsi.Ultimate.Module.Specifications
         public double ScrollHeight { get; set; }
         public List<SpecVersion> Versions { get; set; }
         public int SpecReleaseID { get; set; }
+        public bool IsSpecNumberAssigned { get; set; }
         private static Dictionary<int, string> OperationFailureMsgs = new Dictionary<int, string>() { {1, "forced transposition failed"}};
 
         #endregion
@@ -87,10 +88,10 @@ namespace Etsi.Ultimate.Module.Specifications
                     imgWithdrawSpec.Visible = userRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
                     imgWithdrawSpec.OnClientClick = "openRadWin(" + SpecId.GetValueOrDefault() + "," + ReleaseId.GetValueOrDefault() + "); return false;";
 
-                    imgAllocateVersion.Visible = userRights.HasRight(Enum_UserRights.Versions_Allocate);
+                    imgAllocateVersion.Visible = (userRights.HasRight(Enum_UserRights.Versions_Allocate) && IsSpecNumberAssigned);
                     imgAllocateVersion.OnClientClick = "openRadWinVersion('" + ReleaseId.GetValueOrDefault() + "','" + SpecId.GetValueOrDefault() + "','allocate', 'Allocate version'); return false;";
 
-                    imgUploadVersion.Visible = userRights.HasRight(Enum_UserRights.Versions_Upload);
+                    imgUploadVersion.Visible = (userRights.HasRight(Enum_UserRights.Versions_Upload) && IsSpecNumberAssigned);
                     imgUploadVersion.OnClientClick = "openRadWinVersion('" + ReleaseId.GetValueOrDefault() + "','" + SpecId.GetValueOrDefault() + "', 'upload', 'Upload version'); return false;";
                 }
                 else

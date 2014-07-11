@@ -105,9 +105,14 @@ namespace Etsi.Ultimate.Module.Specifications
                                                                .ThenByDescending(x => x.TechnicalVersion)
                                                                .ThenByDescending(x => x.EditorialVersion).ToList();
 
+                    //We find if the spec number is define to display or not the Allocate and Upload buttons :
+                    var isSpecNumberAssigned = true;
+                    if (String.IsNullOrEmpty(DataSource.Number))
+                        isSpecNumberAssigned = false;
+
                     var specRelease = DataSource.Specification_Release.Where(x => x.Fk_ReleaseId.ToString() == item.Value && x.Fk_SpecificationId == DataSource.Pk_SpecificationId).FirstOrDefault();
                     CustomHeaderTemplate customHeaderTemplate = new CustomHeaderTemplate(specRelease, IsEditMode, PersonId.GetValueOrDefault(), this.Page);
-                    CustomContentTemplate customContentTemplate = new CustomContentTemplate(specRelease, versions, IsEditMode, PersonId.GetValueOrDefault(), this.Page, scrollHeight);
+                    CustomContentTemplate customContentTemplate = new CustomContentTemplate(isSpecNumberAssigned, specRelease, versions, IsEditMode, PersonId.GetValueOrDefault(), this.Page, scrollHeight);
                     item.HeaderTemplate = customHeaderTemplate;
                     item.ApplyHeaderTemplate();
                     item.ContentTemplate = customContentTemplate;
@@ -148,7 +153,8 @@ namespace Etsi.Ultimate.Module.Specifications
                 Pk_SpecificationId = proxySpecification.Pk_SpecificationId,
                 IsActive = proxySpecification.IsActive,
                 IsUnderChangeControl = proxySpecification.IsUnderChangeControl,
-                promoteInhibited = proxySpecification.promoteInhibited
+                promoteInhibited = proxySpecification.promoteInhibited,
+                Number = proxySpecification.Number
             };
             
             if(proxySpecification.SpecificationReleases != null)
