@@ -20,7 +20,7 @@ namespace Etsi.Ultimate.Tests.Repositories
             var repo = new UserRolesRepository() { UoW = GetUnitOfWork() };
             var results = repo.GetAllEtsiBasedRoles().ToList();
 
-            Assert.AreEqual(5, results.Count);
+            Assert.AreEqual(7, results.Count);
         }
 
         [Test]
@@ -48,7 +48,9 @@ namespace Etsi.Ultimate.Tests.Repositories
         public void GetChairmanIdByCommitteeId()
         {
             var repo = new UserRolesRepository() { UoW = GetUnitOfWork() };
-            Assert.AreEqual(27904, repo.GetChairmanIdByCommitteeId(15));
+            Assert.AreEqual(27904, repo.GetChairmanIdByCommitteeId(15));//One person with the role chairman and with an null end_date : result expected 
+            Assert.AreEqual(0, repo.GetChairmanIdByCommitteeId(2));//Two persons with no end_date : no result expected 
+            Assert.AreEqual(0, repo.GetChairmanIdByCommitteeId(16));//Two persons with end_date : no result expected
         }
 
         
@@ -58,11 +60,16 @@ namespace Etsi.Ultimate.Tests.Repositories
             var iUltimateContext = new FakeContext();
 
             var userGroupsDBSet = new UserGroupsFakeDBSet();
-            userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5204, PERSON_ID = 27904, TB_ID = 0, PERS_ROLE_CODE = null });
-            userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5204, PERSON_ID = 27905, TB_ID = 0, PERS_ROLE_CODE = null });
+            userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5204, PERSON_ID = 27904, TB_ID = 2, PERS_ROLE_CODE = "Chairman" });
+            userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5204, PERSON_ID = 27905, TB_ID = 2, PERS_ROLE_CODE = "Chairman" });
+
             userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5322, PERSON_ID = 59862, TB_ID = 15, PERS_ROLE_CODE = "Chairman", END_DATE = DateTime.Now.AddMonths(-2) });
             userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5322, PERSON_ID = 27904, TB_ID = 15, PERS_ROLE_CODE = "Chairman", END_DATE = null });
             userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5322, PERSON_ID = 27906, TB_ID = 15, PERS_ROLE_CODE = "Support" });
+
+            userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5322, PERSON_ID = 27904, TB_ID = 16, PERS_ROLE_CODE = "Chairman", END_DATE = DateTime.Now.AddMonths(-4) });
+            userGroupsDBSet.Add(new Users_Groups() { PLIST_ID = 5322, PERSON_ID = 27904, TB_ID = 16, PERS_ROLE_CODE = "Chairman", END_DATE = DateTime.Now.AddMonths(-4) });
+
 
             var userDnnRolesGroupsDBSet = new UsersAdHocRolesFakeDBSet();
             userDnnRolesGroupsDBSet.Add(new Users_AdHoc_Roles() { UserID = 9, PERSON_ID = "27904", RoleName = "Work Plan Managers" });
