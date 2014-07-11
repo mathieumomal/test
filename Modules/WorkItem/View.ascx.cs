@@ -67,6 +67,9 @@ namespace Etsi.Ultimate.Module.WorkItem
         private static string tbId;
         private static string subTBId;
 
+        //Style
+        private static string CSS_CLASS_STOPPED_WI = "trStoppedWI";
+
         #endregion
 
         #region Properties
@@ -430,7 +433,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             {
                 TreeListDataItem item = (TreeListDataItem)e.Item;
                 if (!string.IsNullOrEmpty(item["TsgStoppedMtgRef"].Text) && item["TsgStoppedMtgRef"].Text != "&nbsp;")
-                    item.BackColor = System.Drawing.Color.Gray;
+                    item.CssClass = CSS_CLASS_STOPPED_WI;
             }
         }
 

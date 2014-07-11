@@ -328,3 +328,12 @@ img.imgViewWorkItems {
 {
 	cursor:pointer;
 }
+
+#moduleWI .trStoppedWI
+{
+    background-color:rgb(199, 199, 199);
+}
+#moduleWI .trStoppedWI:hover
+{
+    background-color:rgb(199, 199, 199);
+}
