@@ -31,7 +31,7 @@ Quality checks for version <#= VersionNumber #> of specification <#= SpecNumber 
     </ul>
 <# } #>
 <br/><br/
-The version has been uploaded anyway after your confirmation.
+The version has been uploaded anyway after your confirmation.<br/><br/>
 
 Regards,<br/>
 3GPP notification system.

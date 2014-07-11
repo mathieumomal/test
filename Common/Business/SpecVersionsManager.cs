@@ -117,7 +117,7 @@ namespace Etsi.Ultimate.Business
                 personManager.UoW = _uoW;
                 string personDisplayName = personManager.GetPersonDisplayName(personId);
 
-                String remrkText = string.Join(Environment.NewLine, report.WarningList);
+                String remrkText = "This version was uploaded with the following quality checks failures: " + string.Join(";", report.WarningList);
                 if (remrkText.Length > 250)
                     remrkText = remrkText.Substring(0, 247) + "...";
 
@@ -513,7 +513,7 @@ namespace Etsi.Ultimate.Business
             var subject = String.Format("Spec {0}, version {1} has been uploaded despite some quality checks failure", spec.Pk_SpecificationId, version.Version);
 
             //Body
-            var body = new VersionUploadFailedQualityCheckMailTemplate(connectedUsername, spec.Pk_SpecificationId.ToString(), version.Version.ToString(), report.WarningList);
+            var body = new VersionUploadFailedQualityCheckMailTemplate(connectedUsername, spec.Number, version.Version.ToString(), report.WarningList);
 
             var roleManager = new RolesManager();
             roleManager.UoW = _uoW;

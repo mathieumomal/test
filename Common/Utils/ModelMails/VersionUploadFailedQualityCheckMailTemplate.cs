@@ -90,8 +90,8 @@ namespace Etsi.Ultimate.Utils.ModelMails
             
             #line default
             #line hidden
-            this.Write("<br/><br/\r\nThe version has been uploaded anyway after your confirmation.\r\n\r\nRegar" +
-                    "ds,<br/>\r\n3GPP notification system.\r\n</body>\r\n</html>\r\n");
+            this.Write("<br/><br/\r\nThe version has been uploaded anyway after your confirmation.<br/><br/" +
+                    ">\r\n\r\nRegards,<br/>\r\n3GPP notification system.\r\n</body>\r\n</html>\r\n");
             return this.GenerationEnvironment.ToString();
         }
     }
