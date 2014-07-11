@@ -198,16 +198,6 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public bool CheckInhibitedToPromote(string specNumber)
-        {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
-            {
-                var specificationManager = new SpecificationManager();
-                specificationManager.UoW = uoW;
-                return specificationManager.CheckInhibitedToPromote(specNumber);
-            }
-        }
-
         public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationForMassivePromotion(int personId, int initialReleaseId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())

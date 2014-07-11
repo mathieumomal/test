@@ -79,7 +79,6 @@ namespace Etsi.Ultimate.Tests.Services
         [TestCase(1, false, false, EDIT_LIMITED_RIGHT_USER, "", 0, 1)]//Same that the first one, but the user don't have the right to edit the number, so an error is thrown
         [TestCase(3, false, false, EDIT_RIGHT_USER, "", 0, 1)]//BAD FORMAT
         [TestCase(4, false, false, EDIT_RIGHT_USER, "", 0, 1)]//ALREADY EXIST
-        
         public void CreateSpecification_NominalCase(int spec, bool shouldMailBeSent, bool shouldMailSucceed, int person, String number, int ? serie, int error)
         {
             var specification = GetSpecsToCreate(spec);

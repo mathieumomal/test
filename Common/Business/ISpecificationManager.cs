@@ -37,6 +37,14 @@ namespace Etsi.Ultimate.Business
         bool CheckInhibitedToPromote(string specNumber);
 
         /// <summary>
+        /// Put the spec as inhibited to promote : 
+        /// - promoteInhibited = TRUE
+        /// - IsForPublication = FALSE
+        /// </summary>
+        /// <param name="spec"></param>
+        Specification PutSpecAsInhibitedToPromote(Specification spec);
+
+        /// <summary>
         /// Test specifications already exists :
         /// if foredit = true -> We allow one spec founded (edit mode case)
         /// if foredit = false -> we don't allow any spec founded

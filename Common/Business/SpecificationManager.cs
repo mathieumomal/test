@@ -204,20 +204,40 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="specNumber"></param>
         /// <returns></returns>
-        /// <exception cref="System.NotImplementedException"></exception>
         public bool CheckInhibitedToPromote(string specNumber)
         {
-            var state = false;
             var listInhibitPromotePatterns = new List<string>();
+            listInhibitPromotePatterns.Add(@"^30\.(\w|\-)*$");
+            listInhibitPromotePatterns.Add(@"^50\.(\w|\-)*$");
+            listInhibitPromotePatterns.Add(@"^[0-9]{2}\.8(\w|\-)*$");
             foreach (var inihibitPromotePattern in listInhibitPromotePatterns)
             {
                 Match match = Regex.Match(specNumber, inihibitPromotePattern);
                 if (match.Success)
                 {
-                    state = true;
+                    return true;
                 }
             }
-            return state;
+            return false;
+        }
+
+        public Specification PutSpecAsInhibitedToPromote(Specification spec)
+        {
+            if (spec != null && spec.Number != null)
+            {
+                if (this.CheckInhibitedToPromote(spec.Number))
+                {
+                    spec.IsForPublication = false;
+                    spec.promoteInhibited = true;
+                }
+                else
+                {
+                    spec.IsForPublication = true;
+                    spec.promoteInhibited = false;
+                }
+                return spec;
+            }
+            return null;
         }
 
         #endregion

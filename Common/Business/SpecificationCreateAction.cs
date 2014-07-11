@@ -179,8 +179,8 @@ namespace Etsi.Ultimate.Business
                     throw new InvalidOperationException("Specification number already exists : " + String.Join(" # -- # ", checkAlreadyExist.Value));
                 }
 
-                //promoteInhibited
-                spec.promoteInhibited = specMgr.CheckInhibitedToPromote(spec.Number);
+                //Check the spec number and define if this number define the spec as inhibit to promote
+                specMgr.PutSpecAsInhibitedToPromote(spec);
 
                 // If spec number is entered, link the serie.
                 var specSerie = spec.Number.Split('.')[0];

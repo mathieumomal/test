@@ -262,6 +262,7 @@ namespace Etsi.Ultimate.Tests.Services
                 Assert.AreEqual(1, report.ErrorList.Count);
         }
 
+        #region datas
         private Specification GetSpecsToCreate(int spec)
         {
             switch (spec)
@@ -303,7 +304,6 @@ namespace Etsi.Ultimate.Tests.Services
             }
         }
 
-        #region datas
         private void RegisterAllMocks()
         {
             var rights = new UserRightsContainer();

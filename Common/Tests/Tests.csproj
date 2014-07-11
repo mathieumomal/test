@@ -87,6 +87,7 @@
     <Compile Include="Business\RemarkManagerTest.cs" />
     <Compile Include="Business\PersonManagerTest.cs" />
     <Compile Include="Business\SpecificationDefinitiveWithdrawalActionTest.cs" />
+    <Compile Include="Business\SpecificationManagerTest.cs" />
     <Compile Include="Business\SpecificationPromoteActionTest.cs" />
     <Compile Include="Business\ReleaseManagerTest.cs" />
     <Compile Include="Business\LogManagerTest.cs" />

@@ -81,8 +81,9 @@ namespace Etsi.Ultimate.Business
                 {
                     throw new InvalidOperationException("Specification number already exists : " + String.Join(" # -- # ", checkAlreadyExist.Value));
                 }
-                //promoteInhibited
-                spec.promoteInhibited = specMgr.CheckInhibitedToPromote(spec.Number);
+
+                //Check the spec number and define if this number define the spec as inhibit to promote
+                specMgr.PutSpecAsInhibitedToPromote(spec);
             }
             //If the spec number has been edited we send a mail to the secretary and the workplan manager
             MailAlertNumberEdited(spec, report);
@@ -101,6 +102,7 @@ namespace Etsi.Ultimate.Business
             if (currentSpec.Title != newSpec.Title) currentSpec.Title = newSpec.Title;
             if (currentSpec.IsTS != newSpec.IsTS) currentSpec.IsTS = newSpec.IsTS;
             if (currentSpec.IsForPublication != newSpec.IsForPublication) currentSpec.IsForPublication = newSpec.IsForPublication;
+            if (currentSpec.promoteInhibited != newSpec.promoteInhibited) currentSpec.promoteInhibited = newSpec.promoteInhibited;
             if (currentSpec.ComIMS != newSpec.ComIMS) currentSpec.ComIMS = newSpec.ComIMS;
 
             //Number

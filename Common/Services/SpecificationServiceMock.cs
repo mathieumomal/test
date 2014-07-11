@@ -383,11 +383,6 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
-        public bool CheckInhibitedToPromote(string specNumber)
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion
 
 

@@ -101,13 +101,6 @@ namespace Etsi.Ultimate.Services
         KeyValuePair<bool, List<string>> LookForNumber(string specNumber);
 
         /// <summary>
-        /// Return TRUE if "the number matches one of the inhibit promote patterns" or false
-        /// </summary>
-        /// <param name="specNumber"></param>
-        /// <returns></returns>
-        bool CheckInhibitedToPromote(string specNumber);
-
-        /// <summary>
         /// Create an Excel file corresponding to the query that has been performed.
         /// </summary>
         /// <param name="personId"></param>
