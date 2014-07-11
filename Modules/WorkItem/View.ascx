@@ -257,7 +257,7 @@
 
     <telerik:RadWindowManager ID="RadWindowManager1" runat="server">
         <windows>
-            <telerik:RadWindow ID="RadWindow_workItemImport" runat="server" Modal="true" Title="Work Plan Import" Height="180" Width="500" VisibleStatusbar="false" iconUrl="false" Behaviors="Close">
+            <telerik:RadWindow ID="RadWindow_workItemImport" runat="server" Modal="true" Title="Work Plan Import" Height="195" Width="500" VisibleStatusbar="false" iconUrl="false" Behaviors="Close">
                 <ContentTemplate>
                     <div class="contentModal" id="import">
                         <div class="wiHeader">
