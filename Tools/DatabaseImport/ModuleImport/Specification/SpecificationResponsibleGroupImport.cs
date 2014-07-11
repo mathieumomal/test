@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Service = Etsi.Ultimate.Services;
 using Etsi.Ultimate.DomainClasses;
-using Domain = Etsi.Ultimate.DomainClasses;
 using OldDomain = Etsi.Ultimate.Tools.TmpDbDataAccess;
-using Etsi.Ultimate.Repositories;
-using Etsi.Ultimate.Business;
-using System.Data.Entity.Validation;
-using System.Data.Entity.Infrastructure;
 
 namespace DatabaseImport.ModuleImport
 {
@@ -114,7 +106,7 @@ namespace DatabaseImport.ModuleImport
                             }
                             else
                             {
-                                var responsibleGroup = new Domain.SpecificationResponsibleGroup()
+                                var responsibleGroup = new SpecificationResponsibleGroup()
                                 {
                                     IsPrime = isPrime,
                                     Fk_commityId = communityGroup.TbId,

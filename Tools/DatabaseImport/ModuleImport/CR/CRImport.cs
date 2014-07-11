@@ -34,7 +34,9 @@ namespace DatabaseImport.ModuleImport
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
         public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
 
-        public void CleanDatabase(){}
+        public void CleanDatabase(){
+            NewContext.CR_CleanAll();
+        }
 
         public void FillDatabase()
         {

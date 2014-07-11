@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Service = Etsi.Ultimate.Services;
 using Etsi.Ultimate.DomainClasses;
-using Domain = Etsi.Ultimate.DomainClasses;
-using OldDomain = Etsi.Ultimate.Tools.TmpDbDataAccess;
-using Etsi.Ultimate.Repositories;
-using Etsi.Ultimate.Business;
 
 namespace DatabaseImport.ModuleImport
 {
@@ -42,7 +34,7 @@ namespace DatabaseImport.ModuleImport
             var count = 0;
             foreach (var old_spec_work in LegacyContext.C2008_03_08_Specs_vs_WIs)
             {
-                var new_spec_Work = new Domain.Specification_WorkItem();
+                var new_spec_Work = new Specification_WorkItem();
 
                 var spec = NewContext.Specifications.Where(x => x.Number == old_spec_work.Spec.Trim()).FirstOrDefault();
                 var work = NewContext.WorkItems.Where(x => x.Pk_WorkItemUid == old_spec_work.WI_UID).FirstOrDefault();

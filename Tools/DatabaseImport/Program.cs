@@ -28,7 +28,7 @@ namespace DatabaseImport
             
             //---> (First to FILLDATABASE)
             
-            /*operations.Add(new ReleaseImport());
+            operations.Add(new ReleaseImport());
             operations.Add(new WorkItemImport());
             operations.Add(new Enum_SerieImport());
             operations.Add(new Enum_TechnologyImport());
@@ -38,13 +38,19 @@ namespace DatabaseImport
             operations.Add(new SpecificationRapporteurImport());
             operations.Add(new SpecificationWorkitemImport());
             operations.Add(new SpecificationReleaseImport());
-            operations.Add(new VersionImport());*/
+            operations.Add(new VersionImport());
 
-            operations.Add(new Enum_CRCategoryImport());
+            // Cleanup CRs -- TEMPORARY FIX AS WE ARE NOT USING CRs.
+            var crImport = new CRImport();
+            crImport.NewContext = newContext;
+            crImport.CleanDatabase();
+            newContext.SaveChanges();
+
+            /*operations.Add(new Enum_CRCategoryImport());
             operations.Add(new Enum_TDocStatusImport());
             operations.Add(new Enum_CRImpactImport());
             //operations.Add(new TDocImport());
-            operations.Add(new CRImport());
+            operations.Add(new CRImport());*/
             
             //---> (First to CLEANDATABASE)
 

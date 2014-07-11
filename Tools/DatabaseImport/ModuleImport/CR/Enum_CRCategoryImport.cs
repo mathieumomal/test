@@ -27,8 +27,6 @@ namespace DatabaseImport.ModuleImport
 
         public void CleanDatabase()
         {
-            //For the moment here but to move in the CRImport global class when it will be created
-            NewContext.CR_CleanAll();
         }
 
         public void FillDatabase()

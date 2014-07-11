@@ -39,16 +39,6 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="Etsi.Ultimate.Business">
-      <HintPath>..\..\bin\Etsi.Ultimate.Business.dll</HintPath>
-    </Reference>
-    <Reference Include="Etsi.Ultimate.Repositories, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\bin\Etsi.Ultimate.Repositories.dll</HintPath>
-    </Reference>
-    <Reference Include="Etsi.Ultimate.Services">
-      <HintPath>..\..\bin\Etsi.Ultimate.Services.dll</HintPath>
-    </Reference>
     <Reference Include="Etsi.Ultimate.Tests">
       <HintPath>..\..\Common\Tests\bin\Debug\Etsi.Ultimate.Tests.dll</HintPath>
     </Reference>
@@ -90,6 +80,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\Business\Business.csproj">
+      <Project>{b01c6fdf-c992-4d87-b67e-41afd677ea5f}</Project>
+      <Name>Business</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Common\DataAccess\DataAccess.csproj">
       <Project>{638f46a5-c23c-452d-a1f4-d0c49ea28f5b}</Project>
       <Name>DataAccess</Name>
@@ -97,6 +91,10 @@
     <ProjectReference Include="..\..\Common\DomainClasses\DomainClasses.csproj">
       <Project>{d5bdede9-d397-411c-ae94-1646836406ba}</Project>
       <Name>DomainClasses</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Repositories\Repositories.csproj">
+      <Project>{c8f93426-67f5-4a75-803b-34ad1c5730e5}</Project>
+      <Name>Repositories</Name>
     </ProjectReference>
     <ProjectReference Include="..\3GPPTmpDataAccess\3GPPTmpDataAccess.csproj">
       <Project>{4abbf98f-5a6a-4409-953b-2fbf781abdbe}</Project>

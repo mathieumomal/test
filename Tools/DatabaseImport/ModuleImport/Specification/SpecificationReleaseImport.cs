@@ -1,16 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Service = Etsi.Ultimate.Services;
 using Etsi.Ultimate.DomainClasses;
-using Domain = Etsi.Ultimate.DomainClasses;
 using OldDomain = Etsi.Ultimate.Tools.TmpDbDataAccess;
-using Etsi.Ultimate.Repositories;
-using Etsi.Ultimate.Business;
-using System.Data.Entity.Validation;
-using System.Data.Entity.Infrastructure;
 
 namespace DatabaseImport.ModuleImport
 {
@@ -89,7 +81,7 @@ namespace DatabaseImport.ModuleImport
 
         }
 
-        private void WithdrawnMeetingCase(Domain.Specification_Release newSpecRelease, OldDomain.Specs_GSM_3G_release_info legacySpecInfo)
+        private void WithdrawnMeetingCase(Specification_Release newSpecRelease, OldDomain.Specs_GSM_3G_release_info legacySpecInfo)
         {
             var withdrawnMeetingId = Utils.CheckString(legacySpecInfo.stopped_at_meeting, 0, RefImportForLog + " WithdrawnMeeting", legacySpecInfo.Release, Report);
             if (withdrawnMeetingId != "" && withdrawnMeetingId != "-")
