@@ -60,7 +60,7 @@ namespace QualityChecks
             {
                 if (Directory.Exists(QCPath))
                 {
-                    Regex reg = new Regex(@"^[0-9]{5,}-[A-Za-z0-9]{6}\.zip$");
+                    Regex reg = new Regex(@"^[0-9]{5,}-([A-Za-z0-9]{6}|[A-Za-z0-9]{3})\.zip$");
                     var files = Directory.EnumerateFiles(QCPath, "*.zip", SearchOption.AllDirectories).Where(x => reg.IsMatch(Path.GetFileName(x)));
 
                     StringBuilder sbFileNames = new StringBuilder();
@@ -71,18 +71,24 @@ namespace QualityChecks
                         string specNumber = Path.GetFileNameWithoutExtension(fileName).Split('-')[0];
                         var spec = specService.GetSpecificationByNumber(String.Format("{0}.{1}", specNumber.Substring(0, 2), specNumber.Substring(2, specNumber.Length - 2)));
 
+                        if (spec == null)
+                            continue;
+
                         //SpecVersion
                         var utilsService = new UtilsService();
                         string base36VersionNumber = Path.GetFileNameWithoutExtension(fileName).Split('-')[1];
-                        int majorVersion = Convert.ToInt32(utilsService.DecodeBase36ToDecimal(base36VersionNumber.Substring(0, 2)));
-                        int technicalVersion = Convert.ToInt32(utilsService.DecodeBase36ToDecimal(base36VersionNumber.Substring(2, 2)));
-                        int editorialVersion = Convert.ToInt32(utilsService.DecodeBase36ToDecimal(base36VersionNumber.Substring(4, 2)));
+                        int majorVersion = Convert.ToInt32(utilsService.DecodeBase36ToDecimal((base36VersionNumber.Length == 3) ? base36VersionNumber.Substring(0, 1) : base36VersionNumber.Substring(0, 2)));
+                        int technicalVersion = Convert.ToInt32(utilsService.DecodeBase36ToDecimal((base36VersionNumber.Length == 3) ? base36VersionNumber.Substring(1, 1) : base36VersionNumber.Substring(2, 2)));
+                        int editorialVersion = Convert.ToInt32(utilsService.DecodeBase36ToDecimal((base36VersionNumber.Length == 3) ? base36VersionNumber.Substring(2, 1) : base36VersionNumber.Substring(4, 2)));
                         var version = String.Format("{0}.{1}.{2}", majorVersion, technicalVersion, editorialVersion);
                         var specVersion = spec.Versions.Where(x => x.MajorVersion == majorVersion && x.TechnicalVersion == technicalVersion && x.EditorialVersion == editorialVersion).FirstOrDefault();
 
                         //Meeting
                         IMeetingService meetingService = ServicesFactory.Resolve<IMeetingService>();
                         var meeting = meetingService.GetMeetingById(specVersion.Source ?? 0);
+                        DateTime meetingStartDate = DateTime.MinValue;
+                        if (meeting != null)
+                            meetingStartDate = meeting.START_DATE ?? DateTime.MinValue;
 
                         //Community
                         ICommunityService communityService = ServicesFactory.Resolve<ICommunityService>();
@@ -116,7 +122,7 @@ namespace QualityChecks
                             if (isValidFile)
                             {
                                 SpecVersionsManager specVersionsManager = new SpecVersionsManager();
-                                Report report = specVersionsManager.ValidateVersionDocument(extension, ms, System.IO.Path.GetTempPath(), version, spec.Title, specVersion.Release.Name, meeting.START_DATE ?? DateTime.MinValue, tsgTitle, spec.IsTS ?? true);
+                                Report report = specVersionsManager.ValidateVersionDocument(extension, ms, System.IO.Path.GetTempPath(), version, spec.Title, specVersion.Release.Name, meetingStartDate, tsgTitle, spec.IsTS ?? true);
 
                                 sbFileNames.AppendLine(fileName);
                                 sbFileNames.AppendLine("=========================================================");
