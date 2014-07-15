@@ -79,18 +79,18 @@
 
     function radWinVersionCloseCallBack(sender, eventArgs)
     {
+        //Refresh page
+        var url = window.location.href;
+        if (url.indexOf('&selectedTab=Releases') > -1)
+            location.reload();
+        else
+            window.location = window.location + "&selectedTab=Releases";
+
         //get the transferred arguments
         var arg = eventArgs.get_argument();
         if (arg) {
             var status = arg.status;
-            if (status == "success")
-            {
-                var url = window.location.href;
-                if (url.indexOf('&selectedTab=Releases') > -1)
-                    location.reload();
-                else
-                    window.location = window.location + "&selectedTab=Releases";
-            }
+            if (status == "success") { }
         }
 
         //remove RadWindow close callback
