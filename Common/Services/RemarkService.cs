@@ -45,8 +45,11 @@ namespace Etsi.Ultimate.Services
                             primaryKeyID = entity.Pk_RemarkId;
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        Utils.LogManager.Error("[Offline] Remark Insert Error: " + ex.Message);
+                        if (ex.InnerException != null)
+                            Utils.LogManager.Error("Inner Exception: " + ex.InnerException);
                     }
                 }
             }
@@ -74,8 +77,11 @@ namespace Etsi.Ultimate.Services
                         isSuccess = true;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Utils.LogManager.Error("[Offline] Remark Update Error: " + ex.Message);
+                    if (ex.InnerException != null)
+                        Utils.LogManager.Error("Inner Exception: " + ex.InnerException);
                     isSuccess = false;
                 }
             }
@@ -103,8 +109,11 @@ namespace Etsi.Ultimate.Services
                         isSuccess = true;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Utils.LogManager.Error("[Offline] Remark Delete Error: " + ex.Message);
+                    if (ex.InnerException != null)
+                        Utils.LogManager.Error("Inner Exception: " + ex.InnerException);
                     isSuccess = false;
                 }
             }

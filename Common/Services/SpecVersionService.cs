@@ -138,8 +138,11 @@ namespace Etsi.Ultimate.Services
                             primaryKeyID = entity.Pk_VersionId;
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        Utils.LogManager.Error("[Offline] Specification Insert Error: " + ex.Message);
+                        if(ex.InnerException != null)
+                            Utils.LogManager.Error("Inner Exception: " + ex.InnerException);
                     }
                 }
             }
@@ -168,8 +171,11 @@ namespace Etsi.Ultimate.Services
                         isSuccess = true;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Utils.LogManager.Error("[Offline] Specification Update Error: " + ex.Message);
+                    if (ex.InnerException != null)
+                        Utils.LogManager.Error("Inner Exception: " + ex.InnerException);
                     isSuccess = false;
                 }
             }
@@ -198,8 +204,11 @@ namespace Etsi.Ultimate.Services
                         isSuccess = true;
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Utils.LogManager.Error("[Offline] Specification Delete Error: " + ex.Message);
+                    if (ex.InnerException != null)
+                        Utils.LogManager.Error("Inner Exception: " + ex.InnerException);
                     isSuccess = false;
                 }
             }
