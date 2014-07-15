@@ -30,7 +30,7 @@ namespace Etsi.Ultimate.Tests.Business
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
 
             SpecVersionsManager mng = new SpecVersionsManager();
-            mng._uoW = uow;
+            mng.UoW = uow;
             List<SpecVersion> result = mng.GetVersionsForASpecRelease(1, 1);
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result[0].Pk_VersionId);
@@ -45,7 +45,7 @@ namespace Etsi.Ultimate.Tests.Business
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
 
             SpecVersionsManager mng = new SpecVersionsManager();
-            mng._uoW = uow;
+            mng.UoW = uow;
             List<SpecVersion> result = mng.GetVersionsBySpecId(1);
             Assert.IsNotNull(result);
             Assert.AreEqual(2, result.Count);
@@ -73,7 +73,7 @@ namespace Etsi.Ultimate.Tests.Business
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
 
             SpecVersionsManager mng = new SpecVersionsManager();
-            mng._uoW = uow;
+            mng.UoW = uow;
             SpecVersion result = mng.GetSpecVersionById(1, 0).Key;
             Assert.IsNotNull(result);
             Assert.AreEqual("Location1", result.Location);
@@ -100,7 +100,7 @@ namespace Etsi.Ultimate.Tests.Business
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
 
             SpecVersionsManager mng = new SpecVersionsManager();
-            mng._uoW = uow;
+            mng.UoW = uow;
             SpecVersion result = mng.GetSpecVersionById(0, 0).Key;
             Assert.IsNull(result);
         }
@@ -118,7 +118,7 @@ namespace Etsi.Ultimate.Tests.Business
             //Action
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             var manager = new SpecVersionsManager();
-            manager._uoW = uow;
+            manager.UoW = uow;
             
             //Assert
             bool isSuccess = manager.InsertEntity(null, terminalName);
@@ -152,7 +152,7 @@ namespace Etsi.Ultimate.Tests.Business
             //Action
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             var manager = new SpecVersionsManager();
-            manager._uoW = uow;
+            manager.UoW = uow;
 
             //Assert
             bool isSuccess = manager.UpdateEntity(null);
@@ -186,7 +186,7 @@ namespace Etsi.Ultimate.Tests.Business
             //Action
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             var manager = new SpecVersionsManager();
-            manager._uoW = uow;
+            manager.UoW = uow;
 
             //Assert
             bool isSuccess = manager.DeleteEntity(0);

@@ -37,7 +37,7 @@
 
 /* Release details/Edit style*/
 
-.releaseDetailBody {
+#releaseDetailBody {
     font-family:Arial,verdana,Serif;
     font-size: 12px;
 }
@@ -265,3 +265,5 @@ a.linkRelease
 .headerBtnRelease{
     height: 30px;
 }
+
+#releaseDetailBody .contentModal { padding:15px; }

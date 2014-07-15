@@ -127,7 +127,7 @@ namespace Etsi.Ultimate.Business
             ISpecificationManager specMgr = ManagerFactory.Resolve<ISpecificationManager>();
             specMgr.UoW = UoW;
             ISpecVersionManager versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
-            versionMgr._uoW = UoW;
+            versionMgr.UoW = UoW;
 
             
             IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();

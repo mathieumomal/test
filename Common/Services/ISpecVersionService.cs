@@ -53,5 +53,12 @@ namespace Etsi.Ultimate.Services
         /// <param name="isTS">True - Technical Specificaiton / False - Technical Report</param>
         /// <returns>Validation Summary</returns>
         Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTS);
+
+        /// <summary>
+        /// Count the number of (latest) versions which pending upload
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <returns></returns>
+        int CountVersionsPendingUploadByReleaseId(int releaseId);
     }
 }

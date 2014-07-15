@@ -11,7 +11,7 @@ namespace Etsi.Ultimate.Business
 {
     public interface ISpecVersionManager
     {
-        IUltimateUnitOfWork _uoW { get; set; }
+        IUltimateUnitOfWork UoW { get; set; }
 
         /// <summary>
         /// Returns a list of specVersion of a specification
@@ -86,5 +86,12 @@ namespace Etsi.Ultimate.Business
         /// <param name="primaryKey">Primary Key</param>
         /// <returns>Success/Failure</returns>
         bool DeleteEntity(int primaryKey);
+
+        /// <summary>
+        /// Count the number of (latest) versions which pending upload
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <returns></returns>
+        int CountVersionsPendingUploadByReleaseId(int releaseId);
     }
 }

@@ -25,16 +25,14 @@ namespace Etsi.Ultimate.Business
         private const string CONST_QUALITY_CHECK_FIRST_TWO_LINES_TITLE = "The first two lines of the title must be correct, according to the TSG responsible for the specification";
         private const string CONST_QUALITY_CHECK_ANNEXURE_STYLE = "Annexes should be correctly styled as Heading 8(TS) or Heading 9(TR). In case of TS, (normative) or (informative) should appear immediately after annexure heading";
 
-        public IUltimateUnitOfWork _uoW { get; set; }
+        public IUltimateUnitOfWork UoW { get; set; }
 
-        public SpecVersionsManager()
-        {
-        }
+        public SpecVersionsManager(){ }
 
         public List<SpecVersion> GetVersionsBySpecId(int specificationId)
         {
             ISpecVersionsRepository specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
-            specVersionRepo.UoW = _uoW;
+            specVersionRepo.UoW = UoW;
 
             var specVersions = specVersionRepo.GetVersionsBySpecId(specificationId);
             return new List<SpecVersion>(specVersions);
@@ -44,7 +42,7 @@ namespace Etsi.Ultimate.Business
         {
             List<SpecVersion> result = new List<SpecVersion>();
             ISpecVersionsRepository repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
-            repo.UoW = _uoW;
+            repo.UoW = UoW;
             result = repo.GetVersionsForSpecRelease(specificationId, releaseId);
             return result;
         }
@@ -52,7 +50,7 @@ namespace Etsi.Ultimate.Business
         public KeyValuePair<SpecVersion, UserRightsContainer> GetSpecVersionById(int versionId, int personId)
         {
             ISpecVersionsRepository repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
-            repo.UoW = _uoW;
+            repo.UoW = UoW;
 
             ////New version
             //if (versionId == -1)
@@ -64,16 +62,16 @@ namespace Etsi.Ultimate.Business
 
             // Computes the rights of the user. These are independant from the releases.
             var rightManager = ManagerFactory.Resolve<IRightsManager>();
-            rightManager.UoW = _uoW;
+            rightManager.UoW = UoW;
             var personRights = rightManager.GetRights(personId);
 
             // Get information about the releases, in particular the status.
             var releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
-            releaseMgr.UoW = _uoW;
+            releaseMgr.UoW = UoW;
             var releases = releaseMgr.GetAllReleases(personId).Key;
 
             var specificationManager = new SpecificationManager();
-            specificationManager.UoW = _uoW;
+            specificationManager.UoW = UoW;
             //Get calculated rights
             KeyValuePair<Specification_Release, UserRightsContainer> specRelease_Rights = specificationManager.GetRightsForSpecRelease(personRights, personId, version.Specification, version.Release.Pk_ReleaseId, releases);
 
@@ -85,15 +83,15 @@ namespace Etsi.Ultimate.Business
             //Initialization
             Report result = new Report();
             ISpecVersionsRepository repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
-            repo.UoW = _uoW;
+            repo.UoW = UoW;
             ISpecificationManager specMgr = ManagerFactory.Resolve<ISpecificationManager>();
-            specMgr.UoW = _uoW;
+            specMgr.UoW = UoW;
             IReleaseManager releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
-            releaseMgr.UoW = _uoW;
+            releaseMgr.UoW = UoW;
             IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
-            relStatusRepo.UoW = _uoW;
+            relStatusRepo.UoW = UoW;
             ITranspositionManager transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
-            transposeMgr.UoW = _uoW;
+            transposeMgr.UoW = UoW;
 
             var specVersions = repo.GetVersionsForSpecRelease(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
             var specRelease = specMgr.GetSpecReleaseBySpecIdAndReleaseId(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
@@ -114,7 +112,7 @@ namespace Etsi.Ultimate.Business
             if (report != null && report.WarningList.Count > 0)
             {
                 var personManager = new PersonManager();
-                personManager.UoW = _uoW;
+                personManager.UoW = UoW;
                 string personDisplayName = personManager.GetPersonDisplayName(personId);
 
                 String remrkText = "This version was uploaded with the following quality checks failures: " + string.Join(";", report.WarningList);
@@ -280,6 +278,39 @@ namespace Etsi.Ultimate.Business
             return validationReport;
         }
 
+        public int CountVersionsPendingUploadByReleaseId(int releaseId)
+        {
+            if (releaseId == null || releaseId == 0)
+                return 0;
+
+            var count = 0;
+
+            ISpecificationManager specMgr = ManagerFactory.Resolve<ISpecificationManager>();
+            specMgr.UoW = UoW;
+            ISpecVersionManager versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
+            versionMgr.UoW = UoW;
+
+            //"Versions pending upload =  Latest (and only latest) versions that are : ...
+            // - that are in the Release of interest, 
+            var relatedSpecs = specMgr.GetSpecsRelatedToARelease(releaseId);
+            foreach (var spec in relatedSpecs)
+            {
+                var versions = versionMgr.GetVersionsForASpecRelease(spec.Pk_SpecificationId, releaseId);
+                var latestVersion = versions.OrderByDescending(x => x.MajorVersion ?? 0)
+                                    .ThenByDescending(y => y.TechnicalVersion ?? 0)
+                                    .ThenByDescending(z => z.EditorialVersion ?? 0)
+                                    .FirstOrDefault();
+                // - and that are UCC.
+                if (spec.IsUnderChangeControl ?? false){
+                    // - allocated and not yet uploaded of specs ".
+                    if (latestVersion != null && latestVersion.ETSI_WKI_ID == null)
+                        count++;
+                }
+                
+            }
+            return count;
+        }
+
 
         #region Offline Sync Methods
 
@@ -303,7 +334,7 @@ namespace Etsi.Ultimate.Business
                     entity.SyncInfoes.Add(syncInfo);
 
                     IOfflineRepository offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
-                    offlineRepo.UoW = _uoW;
+                    offlineRepo.UoW = UoW;
                     offlineRepo.InsertOfflineEntity(entity);
                 }
                 else
@@ -334,7 +365,7 @@ namespace Etsi.Ultimate.Business
                 {
                     //[1] Get the DB Version Entity
                     ISpecVersionsRepository specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
-                    specVersionRepo.UoW = _uoW;
+                    specVersionRepo.UoW = UoW;
                     SpecVersion dbEntity = specVersionRepo.Find(entity.Pk_VersionId);
 
                     //Record may be deleted in serverside, while changes happen at offline
@@ -346,7 +377,7 @@ namespace Etsi.Ultimate.Business
 
                         //[3] Update modified entity in Context
                         IOfflineRepository offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
-                        offlineRepo.UoW = _uoW;
+                        offlineRepo.UoW = UoW;
                         offlineRepo.UpdateOfflineEntity(dbEntity);
                     }
                 }
@@ -376,7 +407,7 @@ namespace Etsi.Ultimate.Business
             {
                 //[1] Get the DB Version Entity
                 ISpecVersionsRepository specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
-                specVersionRepo.UoW = _uoW;
+                specVersionRepo.UoW = UoW;
                 SpecVersion dbEntity = specVersionRepo.Find(primaryKey);
 
                 //Record may be deleted in serverside, while changes happen at offline
@@ -385,7 +416,7 @@ namespace Etsi.Ultimate.Business
                 {
                     //[2] Update modified entity in Context
                     IOfflineRepository offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
-                    offlineRepo.UoW = _uoW;
+                    offlineRepo.UoW = UoW;
                     offlineRepo.DeleteOfflineEntity(dbEntity);
                 }
             }
@@ -506,7 +537,7 @@ namespace Etsi.Ultimate.Business
             //get connected user name
             var connectedUsername = String.Empty;
             var personManager = new PersonManager();
-            personManager.UoW = _uoW;
+            personManager.UoW = UoW;
 
             var connectedUser = personManager.FindPerson(personId);
             if (connectedUser != null)
@@ -527,7 +558,7 @@ namespace Etsi.Ultimate.Business
             var body = new VersionUploadFailedQualityCheckMailTemplate(connectedUsername, spec.Number, version.Version.ToString(), report.WarningList);
 
             var roleManager = new RolesManager();
-            roleManager.UoW = _uoW;
+            roleManager.UoW = UoW;
             var cc = roleManager.GetSpecMgrEmail();
 
             // Send mail

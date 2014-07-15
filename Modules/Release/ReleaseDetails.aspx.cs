@@ -261,10 +261,22 @@ namespace Etsi.Ultimate.Module.Release
                 EditBtn.Visible = true;
                 EditBtn.Text = "Edit";
             }
+
+            ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
+            var versionsPendingUpload = svc.CountVersionsPendingUploadByReleaseId(ReleaseId ?? 0).ToString();
+
             if (userRights.HasRight(Domain.Enum_UserRights.Release_Freeze))
+            {
+                Freeze_VersionsPendingUpload.Text = versionsPendingUpload;
                 FreezeReleaseBtn.Visible = true;
+                FreezeReleaseBtn.OnClientClick = "freezeRelease(); return false;";
+            }
             if (userRights.HasRight(Domain.Enum_UserRights.Release_Close))
+            {
+                Close_VersionsPendingUpload.Text = versionsPendingUpload;
                 CloseReleaseBtn.Visible = true;
+                CloseReleaseBtn.OnClientClick = "closeRelease(); return false;";
+            }
         }
 
         /// <summary>

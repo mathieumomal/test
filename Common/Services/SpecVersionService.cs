@@ -17,7 +17,7 @@ namespace Etsi.Ultimate.Services
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var specVersionManager = new SpecVersionsManager();
-                specVersionManager._uoW = uoW;
+                specVersionManager.UoW = uoW;
                 return specVersionManager.GetVersionsBySpecId(specificationId);
             }
         }
@@ -27,7 +27,7 @@ namespace Etsi.Ultimate.Services
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var specVersionManager = new SpecVersionsManager();
-                specVersionManager._uoW = uoW;
+                specVersionManager.UoW = uoW;
                 return specVersionManager.GetVersionsForASpecRelease(specificationId, releaseId);
             }
         }
@@ -37,7 +37,7 @@ namespace Etsi.Ultimate.Services
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var specVersionManager = new SpecVersionsManager();
-                specVersionManager._uoW = uoW;
+                specVersionManager.UoW = uoW;
                 return specVersionManager.GetSpecVersionById(VersionId, personId);
             }
         }
@@ -55,7 +55,7 @@ namespace Etsi.Ultimate.Services
                 try
                 {
                     var specVersionManager = new SpecVersionsManager();
-                    specVersionManager._uoW = uoW;
+                    specVersionManager.UoW = uoW;
                     result = specVersionManager.UploadOrAllocateVersion(version, isDraft, personId, report);
 
                     if (result.ErrorList.Count == 0)
@@ -90,7 +90,7 @@ namespace Etsi.Ultimate.Services
                 try
                 {
                     var specVersionManager = new SpecVersionsManager();
-                    specVersionManager._uoW = uoW;
+                    specVersionManager.UoW = uoW;
                     validationReport = specVersionManager.ValidateVersionDocument(fileExtension, memoryStream, temporaryFolder, version, title, release, meetingDate, tsgTitle, isTS);
                 }
                 catch (Exception ex)
@@ -102,6 +102,16 @@ namespace Etsi.Ultimate.Services
                 }
             }
             return validationReport;
+        }
+
+        public int CountVersionsPendingUploadByReleaseId(int releaseId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specVersionManager = new SpecVersionsManager();
+                specVersionManager.UoW = uoW;
+                return specVersionManager.CountVersionsPendingUploadByReleaseId(releaseId);
+            }
         }
 
         #region IOfflineService Members
@@ -123,7 +133,7 @@ namespace Etsi.Ultimate.Services
                     try
                     {
                         var specVersionManager = new SpecVersionsManager();
-                        specVersionManager._uoW = uoW;
+                        specVersionManager.UoW = uoW;
                         //Check whether insert already processed
                         var syncInfoManager = new SyncInfoManager(uoW);
                         List<SyncInfo> syncInfos = syncInfoManager.GetSyncInfo(terminalName, entity.Pk_VersionId);
@@ -164,7 +174,7 @@ namespace Etsi.Ultimate.Services
                 try
                 {
                     var specVersionManager = new SpecVersionsManager();
-                    specVersionManager._uoW = uoW;
+                    specVersionManager.UoW = uoW;
                     if (specVersionManager.UpdateEntity(entity))
                     {
                         uoW.Save();
@@ -197,7 +207,7 @@ namespace Etsi.Ultimate.Services
                 try
                 {
                     var specVersionManager = new SpecVersionsManager();
-                    specVersionManager._uoW = uoW;
+                    specVersionManager.UoW = uoW;
                     if (specVersionManager.DeleteEntity(primaryKey))
                     {
                         uoW.Save();

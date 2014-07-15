@@ -64,7 +64,7 @@ namespace Etsi.Ultimate.Tests.Business
             //manager._uoW = uow;
 
             var versionManager = ManagerFactory.Resolve<ISpecVersionManager>();
-            versionManager._uoW = uow;
+            versionManager.UoW = uow;
 
             manager.AddWpmRecords(versionManager.GetVersionsForASpecRelease(1, 1).FirstOrDefault());
 

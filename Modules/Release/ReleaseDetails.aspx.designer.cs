@@ -625,6 +625,24 @@ namespace Etsi.Ultimate.Module.Release {
         protected global::Telerik.Web.UI.RadWindow RadWindow_FreezeConfirmation;
         
         /// <summary>
+        /// Contrôle Freeze_VersionsPendingUpload.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Freeze_VersionsPendingUpload;
+        
+        /// <summary>
+        /// Contrôle Freeze_CRsNotInFinalStatus.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Freeze_CRsNotInFinalStatus;
+        
+        /// <summary>
         /// Contrôle mcFreeze.
         /// </summary>
         /// <remarks>
@@ -659,6 +677,33 @@ namespace Etsi.Ultimate.Module.Release {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::Telerik.Web.UI.RadWindow RadWindow_ClosureConfirmation;
+        
+        /// <summary>
+        /// Contrôle Close_VersionsPendingUpload.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Close_VersionsPendingUpload;
+        
+        /// <summary>
+        /// Contrôle Close_CRsNotInFinalStatus.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Close_CRsNotInFinalStatus;
+        
+        /// <summary>
+        /// Contrôle Close_TDocsNotInFinalStatus.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label Close_TDocsNotInFinalStatus;
         
         /// <summary>
         /// Contrôle mcClose.

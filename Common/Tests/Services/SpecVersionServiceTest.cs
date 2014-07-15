@@ -456,6 +456,21 @@ namespace Etsi.Ultimate.Tests.Services
             mockDataContext.AssertWasCalled(x => x.SaveChanges());
         }
 
+        [Test]
+        public void CountVersionsPendingUploadByReleaseId()
+        {
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)GetSpecs());
+            mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)GetSpecVersions());
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)GetReleases());
+            mockDataContext.Stub(x => x.Specification_Release).Return((IDbSet<Specification_Release>)GetSpecReleases());
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var versionsSvc = new SpecVersionService();
+            var result = versionsSvc.CountVersionsPendingUploadByReleaseId(1);
+            Assert.AreEqual(1, result);//Just the version 3 pending upload because ETSI_WKI_ID = 1 for the version 2
+        }
+
         #endregion
 
         #region TestData
@@ -523,7 +538,6 @@ namespace Etsi.Ultimate.Tests.Services
                 Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 1, Fk_VersionId = 1, RemarkText = "R1" } },
                 Fk_SpecificationId = 1,
                 Fk_ReleaseId = 1
-
             };
             var version2 = new SpecVersion()
             {
@@ -537,7 +551,8 @@ namespace Etsi.Ultimate.Tests.Services
                 ProvidedBy = 1,
                 Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 2, Fk_VersionId = 2, RemarkText = "R22" } },
                 Fk_SpecificationId = 1,
-                Fk_ReleaseId = 1
+                Fk_ReleaseId = 1,
+                ETSI_WKI_ID = 1
             };
             var version3 = new SpecVersion()
             {

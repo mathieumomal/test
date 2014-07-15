@@ -11,8 +11,8 @@
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title></title>
-    <link rel="stylesheet" type="text/css" href="module.css">
-    <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="module.css"/>
+    <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon"/>
     <script src="JS/jquery.min.js"></script>    
     <script type="text/javascript">
 
@@ -22,7 +22,7 @@
         }
     </script>
 </head>
-<body class="releaseDetailBody">
+<body id="releaseDetailBody">
     <form id="ReleaseDetailsForm" runat="server">
        <asp:Panel runat="server" ID="fixContainer" CssClass="containerFix" Width="650px">
        <asp:Panel ID="releaseWarning" runat="server" CssClass="releaseDetailsWarning" Visible="false">
@@ -207,7 +207,7 @@
                 <asp:LinkButton ID="EditBtn" runat="server" Text="Edit" CssClass="btn3GPP-success" Visible="false" OnClick="EditReleaseDetails_Click" />
                 <asp:LinkButton ID="FreezeReleaseBtn" runat="server" Text="Freeze Release" CssClass="btn3GPP-success" Visible="false"/>
                 <asp:LinkButton ID="CloseReleaseBtn" runat="server" Text="Close Release" CssClass="btn3GPP-success" Visible="false"/>
-                <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit" CssClass="btn3GPP-success" OnClientClick="  return closePopUpWindow()"/>
+                <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit" CssClass="btn3GPP-success" OnClientClick=" return closePopUpWindow()"/>
            </div> 
            <script type="text/javascript">
                /* Exit function */
@@ -215,22 +215,23 @@
                    window.close();
                }
 
+               //Freeze a release : display popup
+               function freezeRelease() {
+                   closeAllModals();
+                   window.radopen(null, "RadWindow_FreezeConfirmation");
+               }
+
+               //Close release : display popup
+               function closeRelease() {
+                   closeAllModals();
+                   window.radopen(null, "RadWindow_ClosureConfirmation");
+               }
+
                $(document).ready(function () {
                    setTimeout(function () {
                        var releaseName = "Release " + $("#releaseCodeVal").html();
                        document.title = releaseName;                                              
                    }, 200);
-
-                   $('#FreezeReleaseBtn').click(function (event) {
-                       event.preventDefault();
-                       closeAllModals();
-                       window.radopen(null, "RadWindow_FreezeConfirmation");
-                   });
-                   $('#CloseReleaseBtn').click(function (event) {
-                       event.preventDefault();
-                       closeAllModals();
-                       window.radopen(null, "RadWindow_ClosureConfirmation");
-                   });
                });
         </script>  
        </asp:Panel>
@@ -238,9 +239,9 @@
        </telerik:RadAjaxManager>
         <telerik:RadWindowManager ID="RadWindowManager1" runat="server" >
             <Windows>
-                <telerik:RadWindow ID="RadWindow_FreezeConfirmation"  runat="server" Modal="true" Title="Freeze Confirmation" Height="210" Width="400" VisibleStatusbar="false" iconUrl="false">
+                <telerik:RadWindow ID="RadWindow_FreezeConfirmation"  runat="server" Modal="true" Title="Freeze Confirmation" Height="230" Width="400" VisibleStatusbar="false" iconUrl="false">
                     <ContentTemplate>
-                        <div class="contentModal" id="divFreezeConfirmation" style="padding:5px;">
+                        <div class="contentModal" id="divFreezeConfirmation">
                             <div class="header">
                                 You are about to freeze the Release.
                             </div>
@@ -248,20 +249,23 @@
                             <div class="center">
                                 <b>WARNING</b>
                                 <br />
-                                # Versions are pending upload.<br />
-                                # CRs are not in final status.<br /><br />
+                                <asp:Label ID="Freeze_VersionsPendingUpload" runat="server">#</asp:Label> Versions are pending upload.
+                                <br />
+                                <asp:Label ID="Freeze_CRsNotInFinalStatus" runat="server">#</asp:Label> CRs are not in final status.
+                                <br /><br />
                                 End meeting: <ult:MeetingControl runat="server" ID="mcFreeze" DisplayLabel="true" />
                             </div>
                             <br />
                             <div class="footer" style="text-align: right">
-                                <asp:Button ID="btnConfirmFreeze" Text ="Confirm" OnClick="btnConfirmFreeze_Click" runat="server"/><asp:Button id="btnCancelFreeze" runat="server" Text ="Cancel" />
+                                <asp:Button ID="btnConfirmFreeze" CssClass="btn3GPP-success" Text ="Confirm" OnClick="btnConfirmFreeze_Click" runat="server"/>
+                                <asp:Button ID="btnCancelFreeze" CssClass="btn3GPP-default" runat="server" Text ="Cancel" />
                             </div>
                         </div>
                     </ContentTemplate>
                 </telerik:RadWindow>
-                <telerik:RadWindow ID="RadWindow_ClosureConfirmation"  runat="server" Modal="true" Title="Closure Confirmation" Height="260" Width="400" VisibleStatusbar="false" iconUrl="false" Behaviors="Close">
+                <telerik:RadWindow ID="RadWindow_ClosureConfirmation"  runat="server" Modal="true" Title="Closure Confirmation" Height="280" Width="410" VisibleStatusbar="false" iconUrl="false" Behaviors="Close">
                     <ContentTemplate>
-                        <div class="contentModal" id="divClosureConfirmation" style="padding:5px;">
+                        <div class="contentModal" id="divClosureConfirmation">
                             <div class="header">
                                 You are about to close the release. It will no longer be possible to create change requests on any specification for this release.
                             </div>
@@ -270,16 +274,19 @@
                                 <div id="divWarnings">
                                 <img src="images/warning.png" style="vertical-align:middle"/> <b>WARNING</b>
                                 <br />
-                                # Versions are pending upload.<br />
-                                # CRs are not in final status.<br />
-                                # TDocs are not in final status.<br /><br />
+                                <asp:Label ID="Close_VersionsPendingUpload" runat="server">#</asp:Label> Versions are pending upload.
+                                <br />
+                                <asp:Label ID="Close_CRsNotInFinalStatus" runat="server">#</asp:Label> CRs are not in final status.
+                                <br />
+                                <asp:Label ID="Close_TDocsNotInFinalStatus" runat="server">#</asp:Label> TDocs are not in final status.
+                                <br /><br />
                                 </div>
                                 Closure meeting: <ult:MeetingControl runat="server" ID="mcClose" DisplayLabel="true"/>
                             </div>
                             <br />
                             <div class="footer" style="text-align: right">
-                                <asp:Button ID="btnConfirmClosure" runat="server" Text ="Confirm" OnClick="btnConfirmClosure_Click" />
-                                <asp:Button id="btnCancelClosure" runat="server" Text ="Cancel" OnClientClick="return close();" />
+                                <asp:Button ID="btnConfirmClosure" CssClass="btn3GPP-success" runat="server" Text ="Confirm" OnClick="btnConfirmClosure_Click" />
+                                <asp:Button ID="btnCancelClosure" CssClass="btn3GPP-default" runat="server" Text ="Cancel" OnClientClick="return close();" />
                             </div>
                         </div>
                     </ContentTemplate>
