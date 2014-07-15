@@ -1,3 +1,3 @@
 @ECHO OFF
-NET STOP SyncClient
+NET STOP "3GU Synchronization Client"
 PAUSE

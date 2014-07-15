@@ -39,9 +39,9 @@
             // 
             // syncClientInstaller
             // 
-            this.syncClientInstaller.Description = "3GPP Ultimate - Synchronization client to send offline changes to online server";
-            this.syncClientInstaller.DisplayName = "SyncClient";
-            this.syncClientInstaller.ServiceName = "SyncClient";
+            this.syncClientInstaller.Description = "3GU Synchronization Client to send offline changes to online server";
+            this.syncClientInstaller.DisplayName = "3GU Synchronization Client";
+            this.syncClientInstaller.ServiceName = "3GU Synchronization Client";
             // 
             // ProjectInstaller
             // 
