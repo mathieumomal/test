@@ -503,7 +503,8 @@ namespace Etsi.Ultimate.Module.Versions
                 {
                     RemarkText = CommentVal.Text,
                     CreationDate = new Nullable<System.DateTime>(DateTime.UtcNow),
-                    Fk_PersonId = UserId
+                    Fk_PersonId = UserId,
+                    IsPublic = true
                 });
 
                 if (UploadMeeting.SelectedMeeting != null)

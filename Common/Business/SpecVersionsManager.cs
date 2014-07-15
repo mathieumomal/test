@@ -121,21 +121,32 @@ namespace Etsi.Ultimate.Business
                 if (remrkText.Length > 250)
                     remrkText = remrkText.Substring(0, 247) + "...";
 
+                var utcNow = DateTime.UtcNow;
+
                 //Create a new remark for generated warnings during document validation
                 Remark warningRemark = new Remark
                     {
-                        CreationDate = DateTime.Now,
+                        CreationDate = utcNow,
                         Fk_PersonId = personId,
                         PersonName = personDisplayName,
                         RemarkText = remrkText,
                         IsPublic = false
                     };
 
+                var commentRemark = version.Remarks.FirstOrDefault();
+                if (commentRemark != null)
+                    commentRemark.CreationDate = utcNow.AddMilliseconds(5d);
+
                 //Add above remark to appropriate version object 
                 if (existingVersion != null)
                     existingVersion.Remarks.Add(warningRemark);
                 else
+                {
+                    version.Remarks.Clear();
                     version.Remarks.Add(warningRemark);
+                    if (commentRemark != null)
+                        version.Remarks.Add(commentRemark);
+                }
             }
 
 
