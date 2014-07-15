@@ -145,9 +145,9 @@
           <match url="(.*)" />
           <conditions logicalGrouping="MatchAny">
                         <add input="{HTTPS}" pattern="off" />
-                        <add input="{HTTP_HOST}" pattern="^portal\.13\.etsiqa\.org$" negate="true" />
+                        <add input="{HTTP_HOST}" pattern="^portal\.13\.etsidev\.org$" negate="true" />
           </conditions>
-          <action type="Redirect" url="https://portal.13.etsiqa.org/{R:1}" redirectType="Found" />
+          <action type="Redirect" url="https://portal.13.etsidev.org/{R:1}" redirectType="Found" />
         </rule>
       </rules>
     </rewrite>
