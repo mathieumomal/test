@@ -519,6 +519,30 @@ namespace Etsi.Ultimate.Services
             return true;
         }
 
+        /// <summary>
+        /// Get Specification details by using Number
+        /// </summary>
+        /// <param name="number">Specification Number</param>
+        /// <returns>Specification Details</returns>
+        public Specification GetSpecificationByNumber(string number)
+        {
+            Specification spec = new Specification();
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var manager = new SpecificationManager();
+                    manager.UoW = uow;
+                    spec = manager.GetSpecificationByNumber(number);
+                }
+                catch (Exception e)
+                {
+                    Utils.LogManager.Error("Specification search error: " + e.Message);
+                }
+            }
+            return spec;
+        }
+
         #endregion
     }
 }

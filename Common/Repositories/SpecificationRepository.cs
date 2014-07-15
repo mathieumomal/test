@@ -223,8 +223,15 @@ namespace Etsi.Ultimate.Repositories
         #endregion
 
 
-
-
+        /// <summary>
+        /// Get Specification details by using Number
+        /// </summary>
+        /// <param name="number">Specification Number</param>
+        /// <returns>Specification Details</returns>
+        public Specification GetSpecificationByNumber(string number)
+        {
+            return AllIncluding(spec => spec.SpecificationResponsibleGroups, spec => spec.Versions.Select(version => version.Release)).Where(x => x.Number.Equals(number, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
+        }
 
         public Specification_Release GetSpecificationReleaseByReleaseIdAndSpecId(int specId, int releaseId, bool includeRelease)
         {
@@ -283,6 +290,13 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <typeparam name="T">Type of Entity</typeparam>
         /// <param name="Entity">Entity</param>
-        void MarkDeleted<T>(T Entity);        
+        void MarkDeleted<T>(T Entity);       
+ 
+        /// <summary>
+        /// Get Specification details by using Number
+        /// </summary>
+        /// <param name="number">Specification Number</param>
+        /// <returns>Specification Details</returns>
+        Specification GetSpecificationByNumber(string number);
     }
 }

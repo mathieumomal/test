@@ -21,5 +21,17 @@ namespace Etsi.Ultimate.Tests.Services
 
             Assert.AreEqual(resultExpected, result);
         }
+
+        [TestCase("00", 0)]
+        [TestCase("0c", 12)]
+        [TestCase("yl", 1245)]
+        [TestCase("7f5kx", 12464385)]
+        public void DecodeBase36ToDecimal(string value, long resultExpected)
+        {
+            var UtilsMgr = new UtilsService();
+            var result = UtilsMgr.DecodeBase36ToDecimal(value);
+
+            Assert.AreEqual(resultExpected, result);
+        }
     }
 }

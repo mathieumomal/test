@@ -486,6 +486,26 @@ namespace Etsi.Ultimate.Tests.Services
             mockDataContext.AssertWasCalled(x => x.SaveChanges());
         }
 
+        [Test]
+        public void GetSpecificationByNumber()
+        {
+            SpecificationFakeDBSet specFakeDBSet = new SpecificationFakeDBSet();
+            specFakeDBSet.Add(new Specification() { Pk_SpecificationId = 1, Number = "23.001" });
+            specFakeDBSet.Add(new Specification() { Pk_SpecificationId = 2, Number = "23.002" });
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specFakeDBSet).Repeat.Once();
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            SpecificationService service = new SpecificationService();
+            var result = service.GetSpecificationByNumber("23.001");
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Pk_SpecificationId);
+            Assert.AreEqual("23.001", result.Number);
+
+            mockDataContext.VerifyAllExpectations();
+        }
+
         #region data
 //--- Check format number
         private IEnumerable<object[]> GetSpecificicationNumbersTestFormat

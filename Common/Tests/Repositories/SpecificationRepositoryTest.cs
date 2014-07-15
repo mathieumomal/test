@@ -98,6 +98,16 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.IsNull(repo.GetSpecificationReleaseByReleaseIdAndSpecId(1, 3, false));
         }
 
+        [Test]
+        public void Specification_GetSpecificationByNumber()
+        {
+            var repo = new SpecificationRepository() { UoW = GetUnitOfWork() };
+            var spec = repo.GetSpecificationByNumber("00.01U");
+            Assert.IsNotNull(spec);
+            Assert.AreEqual("00.01U", spec.Number);
+            Assert.AreEqual(1, spec.SpecificationResponsibleGroups.ToList().Count);
+        }
+
         private IUltimateUnitOfWork GetSimplifiedUnitOfWork()
         {
             var unitOfWork = MockRepository.GenerateMock<IUltimateUnitOfWork>();

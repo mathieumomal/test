@@ -403,5 +403,17 @@ namespace Etsi.Ultimate.Business
             var specs = repo.GetAllRelatedSpecificationsByReleaseId(releaseId);
             return specs;
         }
+
+        /// <summary>
+        /// Get Specification details by using Number
+        /// </summary>
+        /// <param name="number">Specification Number</param>
+        /// <returns>Specification Details</returns>
+        public Specification GetSpecificationByNumber(string number)
+        {
+            var repo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            repo.UoW = UoW;
+            return repo.GetSpecificationByNumber(number);
+        }
     }
 }

@@ -510,5 +510,11 @@ namespace Etsi.Ultimate.Services
         {
             throw new NotImplementedException();
         }
+
+
+        public Specification GetSpecificationByNumber(string number)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

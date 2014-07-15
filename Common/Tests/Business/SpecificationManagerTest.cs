@@ -11,12 +11,14 @@ using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Tests.FakeSets;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Microsoft.Practices.Unity;
 
 namespace Etsi.Ultimate.Tests.Business
 {
     public class SpecificationManagerTest
     {
         #region tests
+
         [TestCase("", false)]
         [TestCase("30.-kdd", true)]
         [TestCase("50.dzhzd987", true)]
@@ -61,6 +63,29 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual(result2.promoteInhibited, false);
             Assert.AreEqual(result2.IsForPublication, true);
         }
+
+        [Test]
+        public void GetSpecificationByNumber()
+        {
+            SpecificationFakeDBSet specFakeDBSet = new SpecificationFakeDBSet();
+            specFakeDBSet.Add(new Specification() { Pk_SpecificationId = 1, Number = "23.001" });
+            specFakeDBSet.Add(new Specification() { Pk_SpecificationId = 2, Number = "23.002" });
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specFakeDBSet).Repeat.Once();
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+
+            SpecificationManager manager = new SpecificationManager();
+            manager.UoW = uow;
+            var result = manager.GetSpecificationByNumber("23.001");
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Pk_SpecificationId);
+            Assert.AreEqual("23.001", result.Number);
+            
+            mockDataContext.VerifyAllExpectations();
+        }
+
         #endregion
 
     }

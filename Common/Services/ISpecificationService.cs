@@ -197,5 +197,12 @@ namespace Etsi.Ultimate.Services
         /// <param name="targetReleaseId">The source release of the promotion</param>
         /// <returns></returns>
         bool PerformMassivePromotion(int personId, List<Specification> specificationIds, int initialReleaseId);
+
+        /// <summary>
+        /// Get Specification details by using Number
+        /// </summary>
+        /// <param name="number">Specification Number</param>
+        /// <returns>Specification Details</returns>
+        Specification GetSpecificationByNumber(string number);
     }
 }
