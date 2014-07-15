@@ -140,27 +140,16 @@
       </authentication>
     </security>
     <rewrite>
-      <rules configSource="UrlRewrite.config" />
-            <outboundRules>
-                <preConditions>
-                    <preCondition name="ResponseIsHtml1">
-                        <add input="{RESPONSE_CONTENT_TYPE}" pattern="^text/html" />
-                    </preCondition>
-                </preConditions>
-            </outboundRules>
-        
-		<!-- This outbound rule was created by IIS itself. Keeping it commented for the moment, to be cleanedup later.
-		<outboundRules>
-			<rule name="OutboundRewriteUserFriendlyURL_Releases" preCondition="ResponseIsHtml1" enabled="false">
-				<match filterByTags="A, Form, Img" pattern="^(.*/)desktopmodules/Release/ReleaseDetails\.aspx\?releaseId=([^=&amp;]+)$" />
-				<action type="Rewrite" value="{R:1}Release/{R:2}/" />
-			</rule>
-			<preConditions>
-				<preCondition name="ResponseIsHtml1">
-					<add input="{RESPONSE_CONTENT_TYPE}" pattern="^text/html" />
-				</preCondition>
-			</preConditions>
-		</outboundRules>-->
+      <rules>
+        <rule name="HTTP to HTTPS redirect" enabled="false" stopProcessing="true">
+          <match url="(.*)" />
+          <conditions logicalGrouping="MatchAny">
+                        <add input="{HTTPS}" pattern="off" />
+                        <add input="{HTTP_HOST}" pattern="^portal\.13\.etsiqa\.org$" negate="true" />
+          </conditions>
+          <action type="Redirect" url="https://portal.13.etsiqa.org/{R:1}" redirectType="Found" />
+        </rule>
+      </rules>
     </rewrite>
     <defaultDocument>
       <files>

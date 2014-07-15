@@ -65,19 +65,18 @@
     <add key="loginUrl" value="~/Login.aspx" />
     <add key="InstallVersion" value="07.00.04" />
     <add key="DefaultDevicesDatabase" value="DesktopModules\DevicePreviewManagement\Resources\defaultDevices.xml" />
-    <add key="TranspositionFolderPath" value=""/>
-    <add key="WIReportPath" value ="http://webapp.13.etsidev.org/workprogram/Report_WorkItem.asp?WKI_ID="/>
-    <add key="Global3GPPProjetId" value ="703"/>
+	<add key="MeetingDetailsAddress" value="http://webapp.13.etsiqa.org/meetingCalendar/MeetingDetails.asp?mid=" />
+	<add key="RapporteurDetailsAddress" value="http://webapp.13.etsiqa.org/teldir/ListPersDetails.asp?PersId="/>
+	<add key="FtpExportAddress" value="ftp://ftp.3gpp.org/Information/WORK_PLAN/"/>
+	<add key="FtpBasePhysicalPath" value="D:\AppTrans\Ftp\" />
+	<add key="FtpBaseAddress" value="http://www.3gpp.org/ftp/" />
+	<add key="VersionsLatestFTPFolder" value="2014-09" />
+	<add key="TranspositionFolderPath" value="D:\AppTrans\transposition\"/>
+	<add key="WIReportPath" value ="http://webapp.13.etsiqa.org/workprogram/Report_WorkItem.asp?WKI_ID="/>
+	<add key="Global3GPPProjetId" value ="703"/>
 	
-	<!-- 3GPP Parameters  -->
-		<!-- These parameters depends on the environment -->
-		<add key="MeetingDetailsAddress" value="http://webapp.13.etsiqa.org/meetingCalendar/MeetingDetails.asp?mid=" />
-		<add key="RapporteurDetailsAddress" value="http://webapp.13.etsiqa.org/teldir/ListPersDetails.asp?PersId=" />
-		
-		<!-- These parameters are independent of the environment -->
-		<add key="FtpExportAddress" value="ftp://ftp.3gpp.org/Information/WORK_PLAN/" />
-	
-
+	<add key="EmailDefaultFrom" value="3GPP Portal&lt;3gppapp@3gpp.org&gt;"/>
+	<add key="EmailDefaultBcc" value="3gppapp@3gpp.org"/>
   </appSettings>
   <system.web.webPages.razor>
     <pages pageBaseType="DotNetNuke.Web.Razor.DotNetNukeWebPage">
@@ -146,9 +145,9 @@
           <match url="(.*)" />
           <conditions logicalGrouping="MatchAny">
                         <add input="{HTTPS}" pattern="off" />
-                        <add input="{HTTP_HOST}" pattern="^portal\.13\.etsidev\.org$" negate="true" />
+                        <add input="{HTTP_HOST}" pattern="^portal\.13\.etsiqa\.org$" negate="true" />
           </conditions>
-          <action type="Redirect" url="https://portal.13.etsidev.org/{R:1}" redirectType="Found" />
+          <action type="Redirect" url="https://portal.13.etsiqa.org/{R:1}" redirectType="Found" />
         </rule>
       </rules>
     </rewrite>
@@ -489,4 +488,22 @@
       <provider invariantName="System.Data.SqlClient" type="System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer" />
     </providers>
   </entityFramework>
+  <system.serviceModel>
+    <bindings>
+      <wsHttpBinding>
+        <binding name="HttpClient" closeTimeout="00:01:00" openTimeout="00:01:00" receiveTimeout="00:10:00" sendTimeout="00:01:00" bypassProxyOnLocal="false" transactionFlow="true" hostNameComparisonMode="StrongWildcard" maxBufferPoolSize="524288" maxReceivedMessageSize="65536" messageEncoding="Text" textEncoding="utf-8" useDefaultWebProxy="true" allowCookies="false">
+          <readerQuotas maxDepth="2147483647" maxStringContentLength="2147483647" maxArrayLength="2147483647" maxBytesPerRead="2147483647" maxNameTableCharCount="2147483647" />
+          <reliableSession ordered="true" inactivityTimeout="00:10:00" enabled="false" />
+          <security mode="Message">
+            <transport clientCredentialType="None" proxyCredentialType="None" realm="" />
+            <message clientCredentialType="Windows" negotiateServiceCredential="true" algorithmSuite="Default" establishSecurityContext="true" />
+          </security>
+        </binding>
+      </wsHttpBinding>
+    </bindings>
+    <client>
+      <endpoint address="http://localhost:81/SendMail" binding="wsHttpBinding" bindingConfiguration="HttpClient" contract="WcfMailService.ISendMail" name="ISendMail">
+      </endpoint>
+    </client>
+  </system.serviceModel>
 </configuration>
