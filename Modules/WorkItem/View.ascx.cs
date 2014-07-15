@@ -319,10 +319,18 @@ namespace Etsi.Ultimate.Module.WorkItem
                 tbList.RemoveAll(x => x == -1);
             }
 
-            if (wiService.GetWorkItemsCountBySearchCriteria(releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, hidAcronym.Value.Trim().TrimEnd(';'), txtName.Text, tbList) > 500)
+            if (wiService.GetWorkItemsCountBySearchCriteria(releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, hidAcronym.Value.Trim().TrimEnd(';'), txtName.Text, tbList) > 200)
             {
-                string script = "function f(){$find(\"" + RadWindow_workItemCount.ClientID + "\").show(); Sys.Application.remove_load(f);}Sys.Application.add_load(f);autoConfirmSearch();";
-                ScriptManager.RegisterStartupScript(Page, Page.GetType(), "customConfirmOpener", script, true);
+                //
+                if (releaseSearchControl.SelectedReleaseIds.Count > 3)
+                {
+                    RadWindowManager1.RadAlert("Query will return many records. Please download the Excel workplan / select 3 or less Releases!", 400, 80, "WorkItem Search", String.Empty);
+                }
+                else
+                {
+                    string script = "function f(){$find(\"" + RadWindow_workItemCount.ClientID + "\").show(); Sys.Application.remove_load(f);}Sys.Application.add_load(f);autoConfirmSearch();";
+                    ScriptManager.RegisterStartupScript(Page, Page.GetType(), "customConfirmOpener", script, true);
+                }
             }
             else
             {
@@ -427,6 +435,11 @@ namespace Etsi.Ultimate.Module.WorkItem
             }
         }
 
+        /// <summary>
+        /// Method used to gray stopped WIs
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void rtlWorkItems_ItemDataBound(object sender, TreeListItemDataBoundEventArgs e)
         {
             if (e.Item is TreeListDataItem)
