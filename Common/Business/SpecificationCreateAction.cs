@@ -162,31 +162,9 @@ namespace Etsi.Ultimate.Business
             if (spec.Specification_Release.Count != 1 || spec.Specification_Release.First().Fk_ReleaseId == default(int))
                 throw new InvalidOperationException("Specification must be linked to one release");
 
-            // Specification must have valid number.
-            if (!String.IsNullOrEmpty(spec.Number) && !userRights.HasRight(Enum_UserRights.Specification_EditFull))
-                throw new InvalidOperationException("You don't have the right to create a specification number");
-            else if (!String.IsNullOrEmpty(spec.Number))
+            if (!string.IsNullOrEmpty(spec.Number))
             {
-                var specMgr = new SpecificationManager() { UoW = UoW };
-                var check = specMgr.CheckFormatNumber(spec.Number);
-                if (!check.Key)
-                {
-                    throw new InvalidOperationException("Specification number is invalid: " + String.Join(" # -- # ", check.Value));
-                }
-                var checkAlreadyExist = specMgr.LookForNumber(spec.Number);
-                if (!checkAlreadyExist.Key)
-                {
-                    throw new InvalidOperationException("Specification number already exists : " + String.Join(" # -- # ", checkAlreadyExist.Value));
-                }
-
-                //Check the spec number and define if this number define the spec as inhibit to promote
-                specMgr.PutSpecAsInhibitedToPromote(spec);
-
-                // If spec number is entered, link the serie.
-                var specSerie = spec.Number.Split('.')[0];
-                var serie = specRepo.GetSeries().Where(s => s.Code == "SER_" + specSerie).FirstOrDefault();
-                if (serie != null)
-                    spec.Fk_SerieId = serie.Pk_Enum_SerieId;
+                SpecificationEditAction.CheckNumber(spec, userRights, UoW, specRepo);
             }
         }
 

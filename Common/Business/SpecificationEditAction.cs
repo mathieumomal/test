@@ -50,8 +50,11 @@ namespace Etsi.Ultimate.Business
 
             //Check specification number if it changed
             if (!spec.Number.Equals(oldSpec.Number))
-                CheckNumber(spec,userRights, report);
-            
+            {
+                CheckNumber(spec, userRights, UoW, specRepo);
+                MailAlertNumberEdited(spec, report);
+            }
+
             // Compare the fields of the two specifications.
             CompareSpecs(spec, oldSpec, personId, specRepo);
 
@@ -62,7 +65,7 @@ namespace Etsi.Ultimate.Business
         /// Check the spec number format
         /// </summary>
         /// <param name="spec"></param>
-        private void CheckNumber(Specification spec, UserRightsContainer userRights, Report report)
+        public static void CheckNumber(Specification spec, UserRightsContainer userRights, IUltimateUnitOfWork UoW, ISpecificationRepository specRepo)
         {
             //Throw an error if the user don't have the right to modify the spec number
             if(!userRights.HasRight(Enum_UserRights.Specification_EditFull)){
@@ -82,11 +85,22 @@ namespace Etsi.Ultimate.Business
                     throw new InvalidOperationException("Specification number already exists : " + String.Join(" # -- # ", checkAlreadyExist.Value));
                 }
 
+                // Link serie
+                var specSerie = spec.Number.Split('.')[0];
+                var serie = specRepo.GetSeries().Where(s => s.Code == "SER_" + specSerie).FirstOrDefault();
+                if (serie != null)
+                {
+                    spec.Fk_SerieId = serie.Pk_Enum_SerieId;
+                }
+                
                 //Check the spec number and define if this number define the spec as inhibit to promote
                 specMgr.PutSpecAsInhibitedToPromote(spec);
             }
-            //If the spec number has been edited we send a mail to the secretary and the workplan manager
-            MailAlertNumberEdited(spec, report);
+            else
+            {
+                spec.Fk_SerieId = null;
+            }
+            
         }
 
         /// <summary>
@@ -105,16 +119,18 @@ namespace Etsi.Ultimate.Business
             if (currentSpec.promoteInhibited != newSpec.promoteInhibited) currentSpec.promoteInhibited = newSpec.promoteInhibited;
             if (currentSpec.ComIMS != newSpec.ComIMS) currentSpec.ComIMS = newSpec.ComIMS;
 
-            //Number
-            if(!currentSpec.Number.Equals(newSpec.Number))
+            //Number & serie
+            if (!currentSpec.Number.Equals(newSpec.Number))
+            {
                 currentSpec.Number = newSpec.Number;
-
+                currentSpec.Fk_SerieId = newSpec.Fk_SerieId;
+            }
             //Specification Technologies (Insert / Delete)
             var specTechnologiesToInsert = newSpec.SpecificationTechnologies.ToList().Where(x => currentSpec.SpecificationTechnologies.ToList().All(y => y.Fk_Enum_Technology != x.Fk_Enum_Technology));
             specTechnologiesToInsert.ToList().ForEach(x => currentSpec.SpecificationTechnologies.Add(x));
             var specTechnologiesToDelete = currentSpec.SpecificationTechnologies.ToList().Where(x => newSpec.SpecificationTechnologies.ToList().All(y => y.Fk_Enum_Technology != x.Fk_Enum_Technology));
             specTechnologiesToDelete.ToList().ForEach(x => specRepo.MarkDeleted<SpecificationTechnology>(x));
-            
+
             //Remarks (Insert / Update)
             var remarksToInsert = newSpec.Remarks.ToList().Where(x => currentSpec.Remarks.ToList().All(y => y.Pk_RemarkId != x.Pk_RemarkId));
             remarksToInsert.ToList().ForEach(x => x.Fk_PersonId = personId);
@@ -176,11 +192,11 @@ namespace Etsi.Ultimate.Business
                     });
                 }
             }
-            
+
             //Primary Responsible Group
-            var oldPrimaryResponsibleGroup = currentSpec.SpecificationResponsibleGroups.ToList().Where(x=> x.IsPrime).FirstOrDefault();
+            var oldPrimaryResponsibleGroup = currentSpec.SpecificationResponsibleGroups.ToList().Where(x => x.IsPrime).FirstOrDefault();
             var newPrimaryResponsibleGroup = newSpec.SpecificationResponsibleGroups.ToList().Where(x => x.IsPrime).FirstOrDefault();
-            if(oldPrimaryResponsibleGroup != null && newPrimaryResponsibleGroup != null && oldPrimaryResponsibleGroup.Fk_commityId != newPrimaryResponsibleGroup.Fk_commityId)
+            if (oldPrimaryResponsibleGroup != null && newPrimaryResponsibleGroup != null && oldPrimaryResponsibleGroup.Fk_commityId != newPrimaryResponsibleGroup.Fk_commityId)
                 oldPrimaryResponsibleGroup.Fk_commityId = newPrimaryResponsibleGroup.Fk_commityId;
 
             //Secondary Responsible Groups

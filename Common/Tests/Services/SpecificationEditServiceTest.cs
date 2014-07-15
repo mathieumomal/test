@@ -208,15 +208,15 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         //SUCCESS
-        [TestCase(false, false, EDIT_RIGHT_USER, "12.123", 0)]//Number don't changed
-        [TestCase(false, false, EDIT_LIMITED_RIGHT_USER, "12.123", 0)]//Number don't changed
-        [TestCase(true, true, EDIT_RIGHT_USER, "", 0)]//Number changed to null
-        [TestCase(true, true, EDIT_RIGHT_USER, "12.145", 0)]//Number changed
+        [TestCase(false, false, EDIT_RIGHT_USER, "12.123", 0, 1)]//Number don't changed
+        [TestCase(false, false, EDIT_LIMITED_RIGHT_USER, "12.123", 0, 1)]//Number don't changed
+        [TestCase(true, true, EDIT_RIGHT_USER, "", 0, null)]//Number changed to null
+        [TestCase(true, true, EDIT_RIGHT_USER, "23.145", 0, 2)]//Number changed
         ////ERROR
-        [TestCase(true, false, EDIT_LIMITED_RIGHT_USER, "12.145", 1)]//Number changed but user don't have full rights
-        [TestCase(true, false, EDIT_RIGHT_USER, "ijfzeo989=)", 1)]//Number changed with format error
-        [TestCase(true, false, EDIT_RIGHT_USER, "12.189", 1)]//Number changed but already exist
-        public void EditSpecification_EmailTest(bool shouldMailBeSent, bool shouldMailSucceed, int person, String specToUpdateNumber, int error)
+        [TestCase(true, false, EDIT_LIMITED_RIGHT_USER, "12.145", 1, null)]//Number changed but user don't have full rights
+        [TestCase(true, false, EDIT_RIGHT_USER, "ijfzeo989=)", 1, null)]//Number changed with format error
+        [TestCase(true, false, EDIT_RIGHT_USER, "12.189", 1, null)]//Number changed but already exist
+        public void EditSpecification_EmailTest(bool shouldMailBeSent, bool shouldMailSucceed, int person, String specToUpdateNumber, int error, int? serie)
         {
             var specToEdit = GetCorrectSpecificationForEdit(true);
             specToEdit.Number = specToUpdateNumber;
@@ -252,6 +252,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             if(error==0){
                 Assert.AreEqual(specToUpdateNumber, modifiedSpec.Number);
+                Assert.AreEqual(serie, modifiedSpec.Fk_SerieId);
             }
 
             if (shouldMailBeSent)
@@ -297,7 +298,8 @@ namespace Etsi.Ultimate.Tests.Services
                         Pk_SpecificationId = 12,
                         Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
                         Number = "12.123",
-                        Title = "SpecTitle"
+                        Title = "SpecTitle",
+                        Fk_SerieId = 1
                     };
                 default:
                     return null;
@@ -323,7 +325,10 @@ namespace Etsi.Ultimate.Tests.Services
             // Repository: set up the attribution of the Pk
             var repo = MockRepository.GenerateMock<ISpecificationRepository>();
             repo.Expect(r => r.InsertOrUpdate(Arg<Specification>.Is.Anything));
-            repo.Stub(r => r.GetSeries()).Return(new List<Enum_Serie>() { new Enum_Serie() { Pk_Enum_SerieId = 1, Code = "SER_12", Description = "Serie12" } });
+            repo.Stub(r => r.GetSeries()).Return(new List<Enum_Serie>() { 
+                new Enum_Serie() { Pk_Enum_SerieId = 1, Code = "SER_12", Description = "Serie12" },
+                new Enum_Serie() { Pk_Enum_SerieId = 2, Code = "SER_23", Description = "Serie23" }}
+            );
             repo.Stub(r => r.Find(12)).Return(GetCorrectSpecificationForEdit(false));
             repo.Stub(r => r.All).Return(GetSpecs());
             RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(repo);
@@ -368,6 +373,7 @@ namespace Etsi.Ultimate.Tests.Services
                 Pk_SpecificationId = 12,
                 Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
                 Number = "12.123",
+                Fk_SerieId = 1,
                 SpecificationTechnologies = new List<SpecificationTechnology>() { 
                         new SpecificationTechnology() { Pk_SpecificationTechnologyId = 11, Fk_Enum_Technology=1 }, // Let's say it's 2G
                         new SpecificationTechnology() { Pk_SpecificationTechnologyId = 12, Fk_Enum_Technology=2 }, // Let's say it's 3G
