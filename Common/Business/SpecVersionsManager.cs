@@ -280,7 +280,7 @@ namespace Etsi.Ultimate.Business
 
         public int CountVersionsPendingUploadByReleaseId(int releaseId)
         {
-            if (releaseId == null || releaseId == 0)
+            if (releaseId == 0)
                 return 0;
 
             var count = 0;
@@ -296,7 +296,7 @@ namespace Etsi.Ultimate.Business
             foreach (var spec in relatedSpecs)
             {
                 // - and that are UCC.
-                if (spec.IsUnderChangeControl ?? false)
+                if (spec.IsUnderChangeControl ?? false && spec.IsActive)
                 {
                     var versions = versionMgr.GetVersionsForASpecRelease(spec.Pk_SpecificationId, releaseId);
                     var latestVersion = versions.OrderByDescending(x => x.MajorVersion ?? 0)

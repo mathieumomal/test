@@ -257,8 +257,8 @@
                             </div>
                             <br />
                             <div class="footer" style="text-align: right">
-                                <asp:Button ID="btnConfirmFreeze" CssClass="btn3GPP-success" Text ="Confirm" OnClick="btnConfirmFreeze_Click" runat="server"/>
-                                <asp:Button ID="btnCancelFreeze" CssClass="btn3GPP-default" runat="server" Text ="Cancel" />
+                                <asp:Button ID="btnConfirmFreeze" Text ="Confirm" OnClick="btnConfirmFreeze_Click" runat="server"/>
+                                <asp:Button ID="btnCancelFreeze" runat="server" Text ="Cancel" />
                             </div>
                         </div>
                     </ContentTemplate>
@@ -285,8 +285,8 @@
                             </div>
                             <br />
                             <div class="footer" style="text-align: right">
-                                <asp:Button ID="btnConfirmClosure" CssClass="btn3GPP-success" runat="server" Text ="Confirm" OnClick="btnConfirmClosure_Click" />
-                                <asp:Button ID="btnCancelClosure" CssClass="btn3GPP-default" runat="server" Text ="Cancel" OnClientClick="return close();" />
+                                <asp:Button ID="btnConfirmClosure" runat="server" Text ="Confirm" OnClick="btnConfirmClosure_Click" />
+                                <asp:Button ID="btnCancelClosure" runat="server" Text ="Cancel" OnClientClick="return close();" />
                             </div>
                         </div>
                     </ContentTemplate>
