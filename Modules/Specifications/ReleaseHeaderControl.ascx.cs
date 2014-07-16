@@ -85,7 +85,12 @@ namespace Etsi.Ultimate.Module.Specifications
                         basePage.SpecReleaseRemarks.Add(new KeyValuePair<int, List<Remark>>(SpecRelease.Pk_Specification_ReleaseId, remarks));
                     }
 
-                    var latestRemark = SpecRelease.Remarks.OrderByDescending(x => x.CreationDate ?? DateTime.MinValue).FirstOrDefault();
+                    Remark latestRemark;
+                    if (releaseRemarks.UserRights.HasRight(Enum_UserRights.Remarks_ViewPrivate))
+                        latestRemark = SpecRelease.Remarks.OrderByDescending(x => x.CreationDate ?? DateTime.MinValue).FirstOrDefault();
+                    else
+                        latestRemark = SpecRelease.Remarks.Where(r => r.IsPublic.GetValueOrDefault()).OrderByDescending(x => x.CreationDate ?? DateTime.MinValue).FirstOrDefault();
+
                     lblLatestRemark.Text = ((latestRemark.CreationDate != null) ? string.Format("({0})", latestRemark.CreationDate.Value.ToString("yyyy-MM-dd")) : String.Empty) + latestRemark.RemarkText;
                 }
                 imgRemarks.OnClientClick = "OpenReleaseHeaderRemarksWindow" + this.ClientID + "(); return false;";
