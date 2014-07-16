@@ -296,7 +296,7 @@ namespace Etsi.Ultimate.Business
             foreach (var spec in relatedSpecs)
             {
                 // - and that are UCC.
-                if (spec.IsUnderChangeControl ?? false && spec.IsActive)
+                if ((spec.IsUnderChangeControl ?? false) && spec.IsActive)
                 {
                     var versions = versionMgr.GetVersionsForASpecRelease(spec.Pk_SpecificationId, releaseId);
                     var latestVersion = versions.OrderByDescending(x => x.MajorVersion ?? 0)

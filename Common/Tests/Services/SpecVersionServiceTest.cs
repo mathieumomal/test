@@ -552,7 +552,7 @@ namespace Etsi.Ultimate.Tests.Services
                 Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 2, Fk_VersionId = 2, RemarkText = "R22" } },
                 Fk_SpecificationId = 1,
                 Fk_ReleaseId = 1,
-                ETSI_WKI_ID = 1
+                ETSI_WKI_ID = 1,
             };
             var version3 = new SpecVersion()
             {
@@ -578,9 +578,9 @@ namespace Etsi.Ultimate.Tests.Services
         private IDbSet<Specification> GetSpecs()
         {
             var list = new SpecificationFakeDBSet();
-            list.Add(new Specification() { Pk_SpecificationId = 1, Number = "1", IsUnderChangeControl = true });
-            list.Add(new Specification() { Pk_SpecificationId = 2, Number = "2", IsUnderChangeControl = true });
-            list.Add(new Specification() { Pk_SpecificationId = 3, Number = "2", IsUnderChangeControl = false });
+            list.Add(new Specification() { Pk_SpecificationId = 1, Number = "1", IsUnderChangeControl = true, IsActive = true });
+            list.Add(new Specification() { Pk_SpecificationId = 2, Number = "2", IsUnderChangeControl = true, IsActive = true });
+            list.Add(new Specification() { Pk_SpecificationId = 3, Number = "2", IsUnderChangeControl = false, IsActive = true });
             return list;
         }
 
