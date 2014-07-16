@@ -441,7 +441,7 @@
           </Key>
           <Property Name="Pk_Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="Token" Type="varchar" Nullable="false" MaxLength="50" />
-          <Property Name="Url" Type="varchar" Nullable="false" MaxLength="200" />
+          <Property Name="Url" Type="varchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="SpecifcationsGenealogy">
           <Key>
@@ -1765,7 +1765,7 @@
           </Key>
           <Property Type="Int32" Name="Pk_Id" Nullable="false" />
           <Property Type="String" Name="Token" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="Url" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Url" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="View_ModulesPages">
           <Key>

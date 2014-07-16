@@ -222,6 +222,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 {
                     searchObj.IsForPublication = Convert.ToBoolean(Request.QueryString["publication"]);
                     cbForPublication.Checked = searchObj.IsForPublication.Value;
+                    cbInternal.Checked = !searchObj.IsForPublication.Value;
                 }
 
                 if (!String.IsNullOrEmpty(Request.QueryString["tech"]))
@@ -235,6 +236,11 @@ namespace Etsi.Ultimate.Module.Specifications
                     }
                 }
 
+                if (!String.IsNullOrEmpty(Request.QueryString["numberNYA"]))
+                {
+                    searchObj.NumberNotYetAllocated = Convert.ToBoolean(Request.QueryString["numberNYA"]);
+                    cbNumNotYetAllocated.Checked = searchObj.NumberNotYetAllocated;
+                }
                 // Management of the WiUid
                 // Add it to the search object only if string is an integer
                 if (!String.IsNullOrEmpty(Request.QueryString["WiUid"]))
@@ -607,6 +613,8 @@ namespace Etsi.Ultimate.Module.Specifications
 
                 if (searchObj.Technologies != null && searchObj.Technologies.Count > 0)
                     urlParams.Add("tech", String.Join(",", searchObj.Technologies));
+
+                urlParams.Add("numberNYA", searchObj.NumberNotYetAllocated.ToString());
             }
             else
             {
