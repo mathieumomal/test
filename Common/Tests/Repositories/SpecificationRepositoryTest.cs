@@ -46,19 +46,19 @@ namespace Etsi.Ultimate.Tests.Repositories
 
             // By default, returns all
             var searchCriteria0 = new SpecificationSearch();
-            Assert.AreEqual(2, repo.GetSpecificationBySearchCriteria(searchCriteria0).Value);
+            Assert.AreEqual(2, repo.GetSpecificationBySearchCriteria(searchCriteria0, false).Value);
 
             // Search on dedicated, non existing WiD returns nothing.
             var searchCriteria1 = new SpecificationSearch() { WiUid = 123456789};
-            Assert.AreEqual(0, repo.GetSpecificationBySearchCriteria(searchCriteria1).Value);
+            Assert.AreEqual(0, repo.GetSpecificationBySearchCriteria(searchCriteria1, false).Value);
 
             // Search on dedicated WI.
             var searchCriteria2 = new SpecificationSearch() { WiUid = 1 };
-            Assert.AreEqual(1, repo.GetSpecificationBySearchCriteria(searchCriteria2).Value);
+            Assert.AreEqual(1, repo.GetSpecificationBySearchCriteria(searchCriteria2, false).Value);
 
             // Search on dedicated WI, but that is not userAdded.
             var searchCriteria3 = new SpecificationSearch() { WiUid = 2 };
-            Assert.AreEqual(0, repo.GetSpecificationBySearchCriteria(searchCriteria3).Value);
+            Assert.AreEqual(0, repo.GetSpecificationBySearchCriteria(searchCriteria3, false).Value);
         }
                                                     //(IsActive, IsUnderChangeControl)
         [TestCase(false, false, false, false, 2)]   //(null, null)
@@ -71,7 +71,7 @@ namespace Etsi.Ultimate.Tests.Repositories
             var repo = new SpecificationRepository() { UoW = GetSimplifiedUnitOfWork() };
 
             var searchCriterias = new SpecificationSearch() { IsDraft = isDraft , IsUnderCC = isUnderCC, IsWithACC = isWithACC, IsWithBCC = isWithBCC};
-            Assert.AreEqual(expectedResult, repo.GetSpecificationBySearchCriteria(searchCriterias).Value);
+            Assert.AreEqual(expectedResult, repo.GetSpecificationBySearchCriteria(searchCriterias, false).Value);
         }
 
         [Test]
@@ -81,13 +81,13 @@ namespace Etsi.Ultimate.Tests.Repositories
 
             // Check that with no order, but 1 record per page, only specification 1 is output
             var searchCriteria = new SpecificationSearch() { PageSize = 1 };
-            var speclist = repo.GetSpecificationBySearchCriteria(searchCriteria).Key;
+            var speclist = repo.GetSpecificationBySearchCriteria(searchCriteria, false).Key;
             Assert.AreEqual(1, speclist.Count);
             Assert.AreEqual(1, speclist.First().Pk_SpecificationId);
 
             // Now reverse the order, and check that specification 2 is output
             var searchCriteria2 = new SpecificationSearch() { PageSize = 1, Order = SpecificationSearch.SpecificationOrder.NumberDesc };
-            var specList2 = repo.GetSpecificationBySearchCriteria(searchCriteria2).Key;
+            var specList2 = repo.GetSpecificationBySearchCriteria(searchCriteria2, false).Key;
             Assert.AreEqual(1, specList2.Count);
             Assert.AreEqual(2, specList2.First().Pk_SpecificationId);
 

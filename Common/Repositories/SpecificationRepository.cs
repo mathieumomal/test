@@ -126,10 +126,10 @@ namespace Etsi.Ultimate.Repositories
         public void Delete(int id)
         {
             throw new InvalidOperationException("Cannot delete Specification entity");
-        }        
+        }
 
 
-        public KeyValuePair<List<Specification>, int> GetSpecificationBySearchCriteria(SpecificationSearch searchObject)
+        public KeyValuePair<List<Specification>, int> GetSpecificationBySearchCriteria(SpecificationSearch searchObject, bool includeSpecRel)
         {
             //IsActive case : if we have selected two "incompatible" options witch correspond to an IsActive flag to true AND to false -> that's not a search criteria (isActive = null)
             bool? isActive = null;
@@ -144,9 +144,22 @@ namespace Etsi.Ultimate.Repositories
                 isUnderChangeControl = false;
             if ((searchObject.IsUnderCC || searchObject.IsWithACC) && !searchObject.IsDraft && !searchObject.IsWithBCC)
                 isUnderChangeControl = true;
+        
+            IQueryable<Specification> query;
+            
+            if (includeSpecRel)
+            {
+                query = AllIncluding(x => x.SpecificationResponsibleGroups, 
+                    x => x.SpecificationTechnologies.Select(y => y.Enum_Technology),
+                    x => x.Specification_Release,
+                    x => x.SpecificationRapporteurs);
+            }
+            else
+            {
+                query = AllIncluding(x => x.SpecificationResponsibleGroups, x => x.SpecificationTechnologies.Select(y => y.Enum_Technology));
+            }
 
-            IQueryable<Specification> query = AllIncluding(x => x.SpecificationResponsibleGroups, x => x.SpecificationTechnologies.Select(y => y.Enum_Technology))
-                    .Where(x => ((String.IsNullOrEmpty(searchObject.Title) || (x.Title.ToLower().Trim().Contains(searchObject.Title.ToLower().Trim()) || x.Number.ToLower().Trim().Contains(searchObject.Title.ToLower().Trim())))
+            query = query.Where(x => ((String.IsNullOrEmpty(searchObject.Title) || (x.Title.ToLower().Trim().Contains(searchObject.Title.ToLower().Trim()) || x.Number.ToLower().Trim().Contains(searchObject.Title.ToLower().Trim())))
                       && ((searchObject.Type == null) || (x.IsTS == searchObject.Type.Value))                                      //Type Search
                       && ((searchObject.IsForPublication == null) || (x.IsForPublication == searchObject.IsForPublication.Value))  //Publication Search
                       && (searchObject.NumberNotYetAllocated ? (String.IsNullOrEmpty(x.Number)) : true)  //Number not yet allocated
@@ -267,12 +280,15 @@ namespace Etsi.Ultimate.Repositories
 
     public interface ISpecificationRepository : IEntityRepository<Specification>
     {
+
+
         /// <summary>
         /// Returns a page of specifications that are matching the search criteria, along with the total number of specifications matching this criteria.
         /// </summary>
         /// <param name="searchObj"></param>
+        /// <param name="includeSpecRel"></param>
         /// <returns></returns>
-        KeyValuePair<List<Specification>, int> GetSpecificationBySearchCriteria(SpecificationSearch searchObj);
+        KeyValuePair<List<Specification>, int> GetSpecificationBySearchCriteria(SpecificationSearch searchObj, bool includeSpecRel);
 
         List<Specification> GetSpecificationBySearchCriteria(String searchString);
 

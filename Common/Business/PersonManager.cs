@@ -43,29 +43,30 @@ namespace Etsi.Ultimate.Business
 
         #region IPersonManager Membres
 
-        public List<View_Persons> GetByIds(List<int> rapporteurId)
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="personIds"></param>
+        /// <returns></returns>
+        public List<View_Persons> GetByIds(List<int> personIds)
         {
             IPersonRepository repo = RepositoryFactory.Resolve<IPersonRepository>();
             repo.UoW = UoW;
-            List<View_Persons> listPersonsFound = new List<View_Persons>();
-
-            foreach (int id in rapporteurId)
+            List<View_Persons> listPersonsFound = repo.FindByIds(personIds);
+            listPersonsFound.Reverse();
+            
+            var orderResult = new List<View_Persons>();
+            foreach (var pId in personIds)
             {
-                try
+                var personToAdd = listPersonsFound.Find(p => p.PERSON_ID == pId);
+                if (personToAdd != null)
                 {
-                    View_Persons person = repo.Find(id);
-                    if (person != null)
-                    {
-                        listPersonsFound.Add(person);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    LogManager.Error("Finding person using id failed", ex);
+                    orderResult.Add(personToAdd);
                 }
             }
-            listPersonsFound.Reverse();
-            return listPersonsFound;  
+            orderResult.Reverse();
+
+            return orderResult;
         }
 
         public List<View_Persons> LookFor(string keywords)

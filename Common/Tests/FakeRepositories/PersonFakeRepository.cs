@@ -69,5 +69,16 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         }
 
         #endregion
+
+
+
+        #region IPersonRepository Members
+
+        public List<View_Persons> FindByIds(List<int> personIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

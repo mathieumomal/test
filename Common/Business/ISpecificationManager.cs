@@ -21,6 +21,16 @@ namespace Etsi.Ultimate.Business
         KeyValuePair<Specification, UserRightsContainer> GetSpecificationById(int personId, int id);
 
         /// <summary>
+        /// Returns the list of specifications matching given criteria. Includes or not the Spec release details depending on
+        /// whether the includeSpecRel flag is set to true or to false.
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="searchObj"></param>
+        /// <param name="includeSpecRel"></param>
+        /// <returns></returns>
+        KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj, bool includeRelations);
+
+        /// <summary>
         /// Returns TRUE and nothing if the specification number is valid and FALSE and the list of the errors if the specification is not valid :
         /// - correctly formatted (ERR-002)
         /// - not already exist in database (ERR-003)

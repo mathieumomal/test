@@ -48,6 +48,11 @@ namespace Etsi.Ultimate.Repositories
             throw new InvalidOperationException("Cannot delete Release status entity");
         }
 
+        public List<View_Persons> FindByIds(List<int> personIds)
+        {
+            return UoW.Context.View_Persons.Where(p => personIds.Contains(p.PERSON_ID)).ToList();
+        }
+
         #endregion
 
         #region IDisposable Membres
@@ -65,5 +70,6 @@ namespace Etsi.Ultimate.Repositories
     public interface IPersonRepository : IEntityRepository<View_Persons>
     {
 
+        List<View_Persons> FindByIds(List<int> personIds);
     }
 }

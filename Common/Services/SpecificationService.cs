@@ -118,11 +118,11 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specificationManager = new SpecificationManager();
+                var specificationManager = ManagerFactory.Resolve<ISpecificationManager>();
                 specificationManager.UoW = uoW;
                 var communityManager = ManagerFactory.Resolve<ICommunityManager>();
                 communityManager.UoW = uoW;
-                KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> result = specificationManager.GetSpecificationBySearchCriteria(personId, searchObject);
+                KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> result = specificationManager.GetSpecificationBySearchCriteria(personId, searchObject, false);
                 result.Key.Key.ForEach(x => x.PrimeResponsibleGroupShortName = (x.PrimeResponsibleGroup == null) ? String.Empty : communityManager.GetCommmunityshortNameById(x.PrimeResponsibleGroup.Fk_commityId));
                 return result;
             }

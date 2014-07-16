@@ -297,7 +297,7 @@ namespace Etsi.Ultimate.Tests.Services
             
 
             var repo = MockRepository.GenerateMock<ISpecificationRepository>();
-            repo.Stub(r => r.GetSpecificationBySearchCriteria(Arg<SpecificationSearch>.Matches(s => s.PageSize == 0))).Return( pair );
+            repo.Stub(r => r.GetSpecificationBySearchCriteria(Arg<SpecificationSearch>.Matches(s => s.PageSize == 0), Arg<bool>.Is.Anything)).Return( pair );
             RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(repo);
 
             var svc = new SpecificationService();
@@ -881,9 +881,11 @@ namespace Etsi.Ultimate.Tests.Services
             ManagerFactory.Container.RegisterInstance<ICommunityManager>(communityManager);
 
             var personManager = MockRepository.GenerateMock<IPersonManager>();
-            personManager.Stub(p => p.FindPerson(1)).Return(new View_Persons() { PERSON_ID = 1, FIRSTNAME = "User", LASTNAME = "1" });
+            var user1 = new View_Persons() { PERSON_ID = 1, FIRSTNAME = "User", LASTNAME = "1" };
+            personManager.Stub(p => p.FindPerson(1)).Return(user1);
             personManager.Stub(p => p.FindPerson(3)).Return(new View_Persons() { PERSON_ID = 3, FIRSTNAME = "User", LASTNAME = "3" });
             personManager.Stub(p => p.FindPerson(4)).Return(new View_Persons() { PERSON_ID = 4, FIRSTNAME = "User", LASTNAME = "4" });
+            personManager.Stub(p => p.GetByIds(Arg<List<int>>.Matches(x => x.Count == 1 && x.First() == 1))).Return(new List<View_Persons>() { user1 });
             ManagerFactory.Container.RegisterInstance<IPersonManager>(personManager);
 
             // Need a release repository

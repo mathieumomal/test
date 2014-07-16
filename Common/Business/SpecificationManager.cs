@@ -38,8 +38,6 @@ namespace Etsi.Ultimate.Business
 
             var specification = specificationRepo.Find(id);
 
-
-
             if (specification == null)
                 return new KeyValuePair<Specification, UserRightsContainer>(null, null);
 
@@ -76,7 +74,14 @@ namespace Etsi.Ultimate.Business
             return specification.ToList();
         }
 
-        public KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj)
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="searchObj"></param>
+        /// <param name="includeRelations"></param>
+        /// <returns></returns>
+        public KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj, bool includeRelations)
         {
             // Computes the rights of the user. These are independant from the releases.
             var rightManager = ManagerFactory.Resolve<IRightsManager>();
@@ -86,13 +91,14 @@ namespace Etsi.Ultimate.Business
             specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
             specificationRepo.UoW = UoW;
 
-            var specifications = specificationRepo.GetSpecificationBySearchCriteria(searchObj);
+            var specifications = specificationRepo.GetSpecificationBySearchCriteria(searchObj,includeRelations);
 
             if (!personRights.HasRight(Enum_UserRights.Specification_View_UnAllocated_Number))
                 specifications.Key.RemoveAll(x => String.IsNullOrEmpty(x.Number));
 
             return new KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer>(specifications, personRights);
         }
+
 
         /// <summary>
         /// Returns the list of all specification which number or title matches the string provided.
@@ -413,5 +419,7 @@ namespace Etsi.Ultimate.Business
             repo.UoW = UoW;
             return repo.GetSpecificationByNumber(number);
         }
+
+        
     }
 }

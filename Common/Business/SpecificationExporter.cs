@@ -20,7 +20,7 @@ namespace Etsi.Ultimate.Business
     {
         #region Properties
 
-        private IUltimateUnitOfWork _uoW;
+        private IUltimateUnitOfWork UoW;
         private string DOC_TITLE = "Specification_3gpp_" + DateTime.Now.ToString("yyMMdd");
         private string ZIP_NAME = "Specification_3gpp_" + DateTime.Now.ToString("yyMMdd");
 
@@ -32,9 +32,9 @@ namespace Etsi.Ultimate.Business
         /// Default Constructor
         /// </summary>
         /// <param name="UoW">Unit Of Work</param>
-        public SpecificationExporter(IUltimateUnitOfWork UoW)
+        public SpecificationExporter(IUltimateUnitOfWork iUoW)
         {
-            _uoW = UoW;
+            UoW = iUoW;
         }
 
         #endregion
@@ -50,18 +50,47 @@ namespace Etsi.Ultimate.Business
             try
             {
                 var specManager = new SpecificationManager();
-                specManager.UoW = _uoW;
+                specManager.UoW = UoW;
                 var communityManager = ManagerFactory.Resolve<ICommunityManager>();
-                communityManager.UoW = _uoW;
-                var personManager = new PersonManager();
-                personManager.UoW = _uoW;
+                communityManager.UoW = UoW;
+                var personManager = ManagerFactory.Resolve<IPersonManager>();
+                personManager.UoW = UoW;
+                var relMgr = ManagerFactory.Resolve<IReleaseManager>();
+                relMgr.UoW = UoW;
 
                 searchObj.PageSize = 0;
-                var specs = specManager.GetSpecificationBySearchCriteria(personId, searchObj).Key.Key;
+                var specs = specManager.GetSpecificationBySearchCriteria(personId, searchObj, true).Key.Key;
                 specs.ForEach(x => x.PrimeResponsibleGroupShortName = (x.PrimeResponsibleGroup == null) ? String.Empty : communityManager.GetCommmunityshortNameById(x.PrimeResponsibleGroup.Fk_commityId));
-                specs.ForEach(x => x.PrimeSpecificationRapporteurName = (x.PrimeResponsibleGroup == null) ? String.Empty : personManager.GetPersonDisplayName(x.PrimeSpecificationRapporteurIds.FirstOrDefault()));
-                specs.ForEach(x => x.SpecificationInitialRelease = ((x.Specification_Release == null) || x.Specification_Release.Count == 0) ? String.Empty : x.Specification_Release.OrderBy(y => y.Release.SortOrder).First().Release.Code);
+
+                // Bind the rapporteur's name
+                // For this, we retrieve all the distinct person names that are responsible for a spec, we go fetch their data in DB, and we build their display name
+                var personIdList = specs.Select(x => x.PrimeSpecificationRapporteurIds.FirstOrDefault()).Distinct().ToList();
+                var responsiblePeople = personManager.GetByIds(personIdList);
+                foreach (var spec in specs)
+                {
+                    spec.PrimeSpecificationRapporteurName = "";
+                    if (spec.PrimeSpecificationRapporteurIds.Count > 0 )
+                    {
+                        var p = responsiblePeople.Find(x => x.PERSON_ID ==  spec.PrimeSpecificationRapporteurIds.FirstOrDefault());
+                        spec.PrimeSpecificationRapporteurName = p.FIRSTNAME + " " + p.LASTNAME;
+                    }
+                }
                 
+                // Bind the initial release by asking the Release manager to get the list of ordered releases
+                // list of ordered releases.
+                var allReleases = relMgr.GetAllReleases(personId).Key.OrderBy(r => r.SortOrder).ToList();
+                foreach (var spec in specs)
+                {
+                    if ((spec.Specification_Release != null) && spec.Specification_Release.Count != 0)
+                    {
+                        var specReleaseId = spec.Specification_Release.Select(sr => sr.Fk_ReleaseId);
+                        var firstRelease = allReleases.Where(r => specReleaseId.Contains(r.Pk_ReleaseId)).FirstOrDefault();
+                        if (firstRelease != null)
+                        {
+                            spec.SpecificationInitialRelease = firstRelease.Code;
+                        }
+                    }
+                }
 
                 List<SpecificationForExport> specExportObjects = new List<SpecificationForExport>();
                 specExportObjects.AddRange(specs.Select(y => new SpecificationForExport(y)));
@@ -69,7 +98,7 @@ namespace Etsi.Ultimate.Business
                 var filename= DateTime.Now.ToString("yyyy-MM-dd_HHmm")+"_SpecificationList_"+ Guid.NewGuid().ToString().Substring(0, 6)+".xlsx";
 
                 var fullExcelFilePath = Utils.ConfigVariables.DefaultPublicTmpPath + filename;
-                if (Directory.Exists(Utils.ConfigVariables.DefaultPublicTmpPath))
+                if (! Directory.Exists(Utils.ConfigVariables.DefaultPublicTmpPath))
                     Directory.CreateDirectory(Utils.ConfigVariables.DefaultPublicTmpPath);
 
                 ExportToExcel(specExportObjects, fullExcelFilePath, baseurl);

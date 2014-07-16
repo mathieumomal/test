@@ -19,15 +19,14 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         string GetPersonDisplayName(int personID);
 
-
-        #region Rapporteur control methods
-
         /// <summary>
-        /// Get th rapporteurs by their id and their primary status (Only one rapporteur is Primary)
+        /// Returns the list of users corresponding to given Ids.
+        /// The system automatically eliminates all the unknown IDs, and send back the 
+        /// list of person in same order as the IDs.
         /// </summary>
-        /// <param name="rapporteurIdAndIsPrimary"></param>
+        /// <param name="personIds"></param>
         /// <returns></returns>
-        List<View_Persons> GetByIds(List<int> rapporteurId);
+        List<View_Persons> GetByIds(List<int> personIds);
 
         /// <summary>
         /// Find rapporteurs by a keywords which match to their firstname/lastname/email
@@ -50,7 +49,7 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         int GetChairmanIdByCommityId(int primeResponsibleGroupId);
 
-        #endregion
+        
 
         /// <summary>
         /// Find the list of Prime responsible group secretaries Emails
