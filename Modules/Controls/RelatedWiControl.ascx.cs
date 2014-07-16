@@ -362,7 +362,8 @@ namespace Etsi.Ultimate.Controls
                 WiLevel = proxyWorkItem.WiLevel,
                 Acronym = proxyWorkItem.Acronym,
                 Name = proxyWorkItem.Name,
-                IsPrimary = proxyWorkItem.IsPrimary
+                IsPrimary = proxyWorkItem.IsPrimary,
+                IsUserAddedWi = proxyWorkItem.IsUserAddedWi
             };
 
             proxyWorkItem.WorkItems_ResponsibleGroups.ToList().ForEach(x => workItem.WorkItems_ResponsibleGroups.Add(new WorkItems_ResponsibleGroups() { Pk_WorkItemResponsibleGroups = x.Pk_WorkItemResponsibleGroups, ResponsibleGroup = x.ResponsibleGroup } ));
