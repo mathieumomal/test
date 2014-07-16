@@ -545,8 +545,8 @@ namespace Etsi.Ultimate.Module.Specifications
                     tempSb.Append("(");
                     tempSb.Append(searchObj.IsDraft ? "Draft, " : string.Empty);
                     tempSb.Append(searchObj.IsUnderCC ? "Under change control, " : string.Empty);
-                    tempSb.Append(searchObj.IsWithACC ? "Withdrawn before change control, " : string.Empty);
-                    tempSb.Append(searchObj.IsWithBCC ? "Withdrawn under change control, " : string.Empty);
+                    tempSb.Append(searchObj.IsWithACC ? "Withdrawn under change control, " : string.Empty);
+                    tempSb.Append(searchObj.IsWithBCC ? "Withdrawn before change control, " : string.Empty);
 
                     sb.Append(tempSb.ToString().Trim().Trim(',') + "), ");
                 }

@@ -59,7 +59,19 @@ namespace Etsi.Ultimate.Tests.Repositories
             // Search on dedicated WI, but that is not userAdded.
             var searchCriteria3 = new SpecificationSearch() { WiUid = 2 };
             Assert.AreEqual(0, repo.GetSpecificationBySearchCriteria(searchCriteria3).Value);
+        }
+                                                    //(IsActive, IsUnderChangeControl)
+        [TestCase(false, false, false, false, 2)]   //(null, null)
+        [TestCase(true, false, false, false, 0)]    //(true, false)
+        [TestCase(false, true, false, false, 1)]    //(true, true)
+        [TestCase(false, false, true, false, 0)]    //(false, true)
+        [TestCase(false, false, false, true, 1)]    //(false, false)
+        public void GetSpecificationBySearchCriteria_IsActiveAndIsUnderChangeControlCases(bool isDraft, bool isUnderCC, bool isWithACC, bool isWithBCC, int expectedResult)
+        {
+            var repo = new SpecificationRepository() { UoW = GetSimplifiedUnitOfWork() };
 
+            var searchCriterias = new SpecificationSearch() { IsDraft = isDraft , IsUnderCC = isUnderCC, IsWithACC = isWithACC, IsWithBCC = isWithBCC};
+            Assert.AreEqual(expectedResult, repo.GetSpecificationBySearchCriteria(searchCriterias).Value);
         }
 
         [Test]
@@ -125,8 +137,8 @@ namespace Etsi.Ultimate.Tests.Repositories
                 Number = "00.01",
                 Title = "Spec 1",
                 IsTS = true,
-                IsActive = true,
-                IsUnderChangeControl = true
+                IsActive = false,
+                IsUnderChangeControl = false
 
             };
             specDbSet.Add(spec1);

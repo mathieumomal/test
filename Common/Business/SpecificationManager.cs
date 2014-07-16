@@ -20,8 +20,6 @@ namespace Etsi.Ultimate.Business
 
         public SpecificationManager() { }
 
-        private int personId;
-
         /// <summary>
         /// Default implementation of the Interface. See interface
         /// </summary>
