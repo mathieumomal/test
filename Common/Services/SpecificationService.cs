@@ -59,7 +59,7 @@ namespace Etsi.Ultimate.Services
                         {
                             if (s.SpecificationResponsibleGroups != null && s.SpecificationResponsibleGroups.Count > 0 && s.PrimeResponsibleGroup != null)
                             {
-                                s.PrimeResponsibleGroupFullName = communityManager.GetCommmunityById(s.PrimeResponsibleGroup.Fk_commityId).TbName;
+                                s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId);
                             }
                         }
                     }
