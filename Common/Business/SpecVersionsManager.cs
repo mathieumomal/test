@@ -295,18 +295,18 @@ namespace Etsi.Ultimate.Business
             var relatedSpecs = specMgr.GetSpecsRelatedToARelease(releaseId);
             foreach (var spec in relatedSpecs)
             {
-                var versions = versionMgr.GetVersionsForASpecRelease(spec.Pk_SpecificationId, releaseId);
-                var latestVersion = versions.OrderByDescending(x => x.MajorVersion ?? 0)
-                                    .ThenByDescending(y => y.TechnicalVersion ?? 0)
-                                    .ThenByDescending(z => z.EditorialVersion ?? 0)
-                                    .FirstOrDefault();
                 // - and that are UCC.
-                if (spec.IsUnderChangeControl ?? false){
+                if (spec.IsUnderChangeControl ?? false)
+                {
+                    var versions = versionMgr.GetVersionsForASpecRelease(spec.Pk_SpecificationId, releaseId);
+                    var latestVersion = versions.OrderByDescending(x => x.MajorVersion ?? 0)
+                                        .ThenByDescending(y => y.TechnicalVersion ?? 0)
+                                        .ThenByDescending(z => z.EditorialVersion ?? 0)
+                                        .FirstOrDefault();
                     // - allocated and not yet uploaded of specs ".
-                    if (latestVersion != null && latestVersion.ETSI_WKI_ID == null)
+                    if (latestVersion != null && String.IsNullOrEmpty(latestVersion.Location))
                         count++;
                 }
-                
             }
             return count;
         }

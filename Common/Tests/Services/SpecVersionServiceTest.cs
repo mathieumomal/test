@@ -557,7 +557,7 @@ namespace Etsi.Ultimate.Tests.Services
             var version3 = new SpecVersion()
             {
                 Pk_VersionId = 3,
-                Location = null,
+                Location = "aa",
                 MajorVersion = 30,
                 TechnicalVersion = 2,
                 EditorialVersion = 1,
