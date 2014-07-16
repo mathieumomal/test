@@ -63,16 +63,27 @@ namespace QualityChecks
                     Regex reg = new Regex(@"^[0-9]{5,}-([A-Za-z0-9]{6}|[A-Za-z0-9]{3})\.zip$");
                     var files = Directory.EnumerateFiles(QCPath, "*.zip", SearchOption.AllDirectories).Where(x => reg.IsMatch(Path.GetFileName(x)));
 
-                    StringBuilder sbFileNames = new StringBuilder();
                     foreach (var fileName in files)
                     {
+                        StringBuilder specOutput = new StringBuilder();
+                        specOutput.AppendLine(fileName);
+                        specOutput.AppendLine("=========================================================");
+                        rtbQCResults.AppendText(specOutput.ToString());
+
                         //Specification
                         ISpecificationService specService = ServicesFactory.Resolve<ISpecificationService>();
                         string specNumber = Path.GetFileNameWithoutExtension(fileName).Split('-')[0];
-                        var spec = specService.GetSpecificationByNumber(String.Format("{0}.{1}", specNumber.Substring(0, 2), specNumber.Substring(2, specNumber.Length - 2)));
+                        string formattedSpecNumber = String.Format("{0}.{1}", specNumber.Substring(0, 2), specNumber.Substring(2, specNumber.Length - 2));
+                        var spec = specService.GetSpecificationByNumber(formattedSpecNumber);
 
                         if (spec == null)
+                        {
+                            StringBuilder output = new StringBuilder();
+                            output.AppendLine(String.Format("Error:: Specification '{0}' not present in the database", formattedSpecNumber));
+                            output.AppendLine("=========================================================");
+                            rtbQCResults.AppendText(output.ToString());
                             continue;
+                        }
 
                         //SpecVersion
                         var utilsService = new UtilsService();
@@ -82,6 +93,15 @@ namespace QualityChecks
                         int editorialVersion = Convert.ToInt32(utilsService.DecodeBase36ToDecimal((base36VersionNumber.Length == 3) ? base36VersionNumber.Substring(2, 1) : base36VersionNumber.Substring(4, 2)));
                         var version = String.Format("{0}.{1}.{2}", majorVersion, technicalVersion, editorialVersion);
                         var specVersion = spec.Versions.Where(x => x.MajorVersion == majorVersion && x.TechnicalVersion == technicalVersion && x.EditorialVersion == editorialVersion).FirstOrDefault();
+
+                        if (specVersion == null)
+                        {
+                            StringBuilder output = new StringBuilder();
+                            output.AppendLine(String.Format("Error:: Version '{0}' not present in the database for Specification '{1}'", version, formattedSpecNumber));
+                            output.AppendLine("=========================================================");
+                            rtbQCResults.AppendText(output.ToString());
+                            continue;
+                        }
 
                         //Meeting
                         IMeetingService meetingService = ServicesFactory.Resolve<IMeetingService>();
@@ -124,30 +144,35 @@ namespace QualityChecks
                                 SpecVersionsManager specVersionsManager = new SpecVersionsManager();
                                 Report report = specVersionsManager.ValidateVersionDocument(extension, ms, System.IO.Path.GetTempPath(), version, spec.Title, specVersion.Release.Name, meetingStartDate, tsgTitle, spec.IsTS ?? true);
 
-                                sbFileNames.AppendLine(fileName);
-                                sbFileNames.AppendLine("=========================================================");
+                                StringBuilder output = new StringBuilder();
                                 if (report.ErrorList.Count > 0)
                                 {
-                                    sbFileNames.AppendLine("Errors::");
-                                    sbFileNames.AppendLine("========");
-                                    sbFileNames.AppendLine(String.Join("\n", report.ErrorList));
+                                    output.AppendLine("Errors::");
+                                    output.AppendLine("========");
+                                    output.AppendLine(String.Join("\n", report.ErrorList));
                                 }
                                 if (report.WarningList.Count > 0)
                                 {
-                                    sbFileNames.AppendLine("Warnings::");
-                                    sbFileNames.AppendLine("==========");
-                                    sbFileNames.AppendLine(String.Join("\n", report.WarningList));
+                                    output.AppendLine("Warnings::");
+                                    output.AppendLine("==========");
+                                    output.AppendLine(String.Join("\n", report.WarningList));
                                 }
                                 if (report.ErrorList.Count == 0 && report.WarningList.Count == 0)
                                 {
-                                    sbFileNames.AppendLine("No Errors & Warnings");
+                                    output.AppendLine("No Errors & Warnings");
                                 }
-                                sbFileNames.AppendLine("=========================================================");
+                                output.AppendLine("=========================================================");
+                                rtbQCResults.AppendText(output.ToString());
+                            }
+                            else
+                            {
+                                StringBuilder output = new StringBuilder();
+                                output.AppendLine("Error:: No valid file inside zip");
+                                output.AppendLine("=========================================================");
+                                rtbQCResults.AppendText(output.ToString());
                             }
                         }
                     }
-
-                    rtbQCResults.AppendText(sbFileNames.ToString());
                 }
                 else
                 {
