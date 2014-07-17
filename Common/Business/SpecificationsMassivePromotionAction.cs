@@ -12,22 +12,11 @@ namespace Etsi.Ultimate.Business
     public class SpecificationsMassivePromotionAction
     {
         #region Properties
-
-        public IUltimateUnitOfWork _uoW { get; set; }
-
+        public IUltimateUnitOfWork UoW { get; set; }
         #endregion
 
         #region Constructor
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="UoW">Ultimate UnitOfWork</param>
-        public SpecificationsMassivePromotionAction(IUltimateUnitOfWork UoW)
-        {
-            _uoW = UoW;
-        }
-
+        public SpecificationsMassivePromotionAction() { }
         #endregion
 
         #region Methods
@@ -35,11 +24,11 @@ namespace Etsi.Ultimate.Business
         {
             // Computes the rights of the user. These are independant from the releases.
             var rightManager = ManagerFactory.Resolve<IRightsManager>();
-            rightManager.UoW = _uoW;
+            rightManager.UoW = UoW;
             var personRights = rightManager.GetRights(personId);
 
             var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
-            releaseManager.UoW = _uoW;
+            releaseManager.UoW = UoW;
 
             // Get source release Specifications 
             var SourceSpecs = new  List<Specification>();
@@ -56,13 +45,13 @@ namespace Etsi.Ultimate.Business
             //If specification is not a draft, not inhibited from promotion, and has a version in the initial relase => New version allocation is enabled
             //Get specification ids havig a version for the initial release 
             ISpecVersionsRepository versionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
-            versionRepo.UoW = _uoW;
+            versionRepo.UoW = UoW;
             List<int> buffer = new List<int>();
             versionRepo.GetVersionsByReleaseId(initialReleaseId).ForEach(v => buffer.Add(v.Fk_SpecificationId.GetValueOrDefault()));
             SourceSpecs.Where(s => (!s.promoteInhibited.GetValueOrDefault()) && !(s.IsActive && !s.IsUnderChangeControl.GetValueOrDefault()) && (buffer.Contains(s.Pk_SpecificationId))).ToList().ForEach(s => { s.IsNewVersionCreationEnabled = true; });
 
             var communityManager = ManagerFactory.Resolve<ICommunityManager>();
-            communityManager.UoW = _uoW;
+            communityManager.UoW = UoW;
             foreach (Specification s in SourceSpecs)
             {
                 if (s.SpecificationResponsibleGroups != null && s.SpecificationResponsibleGroups.Count > 0 && s.PrimeResponsibleGroup != null)
@@ -78,7 +67,7 @@ namespace Etsi.Ultimate.Business
         public void PromoteMassivelySpecification(int personId, List<int> specificationIds, int targetReleaseId)
         {
             var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
-            specMgr.UoW = _uoW;
+            specMgr.UoW = UoW;
             DateTime actionDate = DateTime.UtcNow;
             foreach (int id in specificationIds)
             {

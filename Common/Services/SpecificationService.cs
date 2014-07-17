@@ -202,7 +202,8 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction(uoW);
+                var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction();
+                specificationsMassivePromotionAction.UoW = uoW;
                 ReleaseManager releaseManager = new ReleaseManager();
                 releaseManager.UoW = uoW;
                 int targetReleaseId = releaseManager.GetNextRelease(initialReleaseId).Pk_ReleaseId; 
@@ -226,16 +227,17 @@ namespace Etsi.Ultimate.Services
                             specificationsForVersionAllocation.Add(s);
                         }
                     });
-                    ReleaseManager releaseManager = new ReleaseManager();
+                    var releaseManager = new ReleaseManager();
                     releaseManager.UoW = uoW;
                     int targetReleaseId = releaseManager.GetNextRelease(initialReleaseId).Pk_ReleaseId;
                     Release targetRelease = releaseManager.GetReleaseById(personId, targetReleaseId).Key;
 
-                    var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction(uoW);
-                    specificationsMassivePromotionAction.PromoteMassivelySpecification(personId, specificationIds, targetReleaseId);
-
-                    SpecVersionsManager versionManager = new SpecVersionsManager();
+                    var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction();
+                    specificationsMassivePromotionAction.UoW = uoW;
+                    var versionManager = new SpecVersionsManager();
                     versionManager.UoW = uoW;
+
+                    specificationsMassivePromotionAction.PromoteMassivelySpecification(personId, specificationIds, targetReleaseId);
                     versionManager.AllocateVersionFromMassivePromote(specificationsForVersionAllocation, targetRelease, personId); 
                    
                     uoW.Save();

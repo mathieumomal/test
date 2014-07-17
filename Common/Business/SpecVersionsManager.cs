@@ -94,7 +94,6 @@ namespace Etsi.Ultimate.Business
             transposeMgr.UoW = UoW;
 
             var specVersions = repo.GetVersionsForSpecRelease(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
-            var specRelease = specMgr.GetSpecReleaseBySpecIdAndReleaseId(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
             var spec = specMgr.GetSpecificationById(personId, version.Fk_SpecificationId ?? 0).Key;
             var release = releaseMgr.GetReleaseById(personId, version.Fk_ReleaseId ?? 0).Key;
             var existingVersion = specVersions.Where(x => (x.MajorVersion == version.MajorVersion) &&
@@ -106,8 +105,6 @@ namespace Etsi.Ultimate.Business
                 throw new InvalidDataException("Version's specId is not defined.");
             if (release == null)
                 throw new InvalidDataException("Version's releaseId is not defined.");
-            if (specRelease == null)
-                throw new InvalidDataException("Relation between specification and release not defined.");
 
             if (report != null && report.WarningList.Count > 0)
             {

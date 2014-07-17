@@ -39,7 +39,8 @@ namespace Etsi.Ultimate.Tests.Business
             RepositoryFactory.Container.RegisterInstance(typeof(ISpecVersionsRepository), specVersionRep);
 
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
-            var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction(uow);
+            var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction();
+            specificationsMassivePromotionAction.UoW = uow;
             List<Specification> result = specificationsMassivePromotionAction.GetSpecificationForMassivePromotion(personId, initialReleaseId, targetReleaseId).Key;
 
             //Asserts
@@ -65,7 +66,8 @@ namespace Etsi.Ultimate.Tests.Business
             int spec1ReleasesCountBefore = spec1.Specification_Release.ToList().Count;
             int spec2ReleasesCountBefore = spec2.Specification_Release.ToList().Count;
             //Action performed
-            var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction(uow);
+            var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction();
+            specificationsMassivePromotionAction.UoW = uow;
             specificationsMassivePromotionAction.PromoteMassivelySpecification(0,new List<int>{1,2}, 2);
 
             //Initial Assert after action
