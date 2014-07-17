@@ -87,11 +87,17 @@ namespace Etsi.Ultimate.Module.Specifications
 
                     Remark latestRemark;
                     if (releaseRemarks.UserRights.HasRight(Enum_UserRights.Remarks_ViewPrivate))
+                    {
                         latestRemark = SpecRelease.Remarks.OrderByDescending(x => x.CreationDate ?? DateTime.MinValue).FirstOrDefault();
-                    else
+                        lblLatestRemark.Text = ((latestRemark.CreationDate != null) ? string.Format("({0})", latestRemark.CreationDate.Value.ToString("yyyy-MM-dd")) : String.Empty) + latestRemark.RemarkText;
+                    }
+                    else if (SpecRelease.Remarks.Where(r => r.IsPublic.GetValueOrDefault()).ToList() != null && SpecRelease.Remarks.Where(r => r.IsPublic.GetValueOrDefault()).ToList().Count > 0)
+                    {
                         latestRemark = SpecRelease.Remarks.Where(r => r.IsPublic.GetValueOrDefault()).OrderByDescending(x => x.CreationDate ?? DateTime.MinValue).FirstOrDefault();
+                        lblLatestRemark.Text = ((latestRemark.CreationDate != null) ? string.Format("({0})", latestRemark.CreationDate.Value.ToString("yyyy-MM-dd")) : String.Empty) + latestRemark.RemarkText;
+                    }
 
-                    lblLatestRemark.Text = ((latestRemark.CreationDate != null) ? string.Format("({0})", latestRemark.CreationDate.Value.ToString("yyyy-MM-dd")) : String.Empty) + latestRemark.RemarkText;
+                    
                 }
                 imgRemarks.OnClientClick = "OpenReleaseHeaderRemarksWindow" + this.ClientID + "(); return false;";
             }
