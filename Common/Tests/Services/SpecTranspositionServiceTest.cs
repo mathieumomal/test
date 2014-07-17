@@ -29,6 +29,7 @@ namespace Etsi.Ultimate.Tests.Services
         const int RELEASE_WITHDRAWN_ID = 4;
         const int RELEASE_FORCED_TRANSPOSITION_ID = 5;
         const int RELEASE_OPENED_VERSION_TO_TRANSPOSE = 6;
+        const int RELEASE_FROZEN_SPEC_ALREADY_TRANSPOSED = 7;
 
         const int SPEC_ID = 1;
 
@@ -142,6 +143,7 @@ namespace Etsi.Ultimate.Tests.Services
         /// F- : release not frozen
         /// TF- : specRelease not transposed by force
         /// SP- : specForPublication
+        /// WI- : Already transposed.
         /// </summary>
         /// <param name="versionId"></param>
         /// <param name="resultExpected"></param>
@@ -150,6 +152,7 @@ namespace Etsi.Ultimate.Tests.Services
         [TestCase(3, false)]//TF- F- SP-
         [TestCase(4, true)]//U TF
         [TestCase(5, true)]//U SP F
+        [TestCase(7, false)] //U SP F WI-
         public void TransposeAllowed(int versionId, bool resultExpected)
         {
             //User Right
@@ -242,12 +245,26 @@ namespace Etsi.Ultimate.Tests.Services
                 }
             };
 
+            var sp7 = new Specification_Release()
+            {
+                Pk_Specification_ReleaseId = 1,
+                Fk_ReleaseId = RELEASE_FROZEN_ID,
+                Release = new Release()
+                {
+                    Enum_ReleaseStatus = new Enum_ReleaseStatus() { Code = Enum_ReleaseStatus.Frozen }
+                },
+                isWithdrawn = false,
+                isTranpositionForced = false,
+            };
+
             specRepo.Stub(s => s.GetSpecificationReleaseByReleaseIdAndSpecId(SPEC_ID, RELEASE_FROZEN_ID, true)).Return(sp1);
             specRepo.Stub(s => s.GetSpecificationReleaseByReleaseIdAndSpecId(SPEC_ID, RELEASE_CLOSED_ID, true)).Return(sp2);
             specRepo.Stub(s => s.GetSpecificationReleaseByReleaseIdAndSpecId(SPEC_ID, RELEASE_OPEN_ID, true)).Return(sp3);
             specRepo.Stub(s => s.GetSpecificationReleaseByReleaseIdAndSpecId(SPEC_ID, RELEASE_WITHDRAWN_ID, true)).Return(sp4);
             specRepo.Stub(s => s.GetSpecificationReleaseByReleaseIdAndSpecId(SPEC_ID, RELEASE_FORCED_TRANSPOSITION_ID, true)).Return(sp5);
             specRepo.Stub(s => s.GetSpecificationReleaseByReleaseIdAndSpecId(SPEC_ID, RELEASE_OPENED_VERSION_TO_TRANSPOSE, true)).Return(sp6);
+            specRepo.Stub(s => s.GetSpecificationReleaseByReleaseIdAndSpecId(SPEC_ID, RELEASE_OPENED_VERSION_TO_TRANSPOSE, true)).Return(sp6);
+            specRepo.Stub(s => s.GetSpecificationReleaseByReleaseIdAndSpecId(SPEC_ID, RELEASE_FROZEN_SPEC_ALREADY_TRANSPOSED, true)).Return(sp7);
 
             
             RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(specRepo);
@@ -419,11 +436,27 @@ namespace Etsi.Ultimate.Tests.Services
                 Fk_SpecificationId = 4,
                 Fk_ReleaseId = 1
             };
+            var version7 = new SpecVersion()
+            {
+                Pk_VersionId = 7,
+                Location = null,
+                MajorVersion = 30,
+                TechnicalVersion = 2,
+                EditorialVersion = 1,
+                Source = 1,
+                DocumentUploaded = new DateTime(2013, 11, 18),
+                ProvidedBy = 1,
+                Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 3, Fk_VersionId = 3, RemarkText = "R1998" } },
+                Fk_SpecificationId = 4,
+                Fk_ReleaseId = 1,
+                ETSI_WKI_ID = 12
+            };
             versionDbSet.Add(version);
             versionDbSet.Add(version2);
             versionDbSet.Add(version3);
             versionDbSet.Add(version4);
             versionDbSet.Add(version5);
+            versionDbSet.Add(version7);
 
             return versionDbSet;
         }

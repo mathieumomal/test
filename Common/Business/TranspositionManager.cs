@@ -108,6 +108,11 @@ namespace Etsi.Ultimate.Business
             //Check that we have all informations to transpose the version
             if (specVersion == null)
                 return false;
+            
+            // Do not transpose an already transposed version
+            if (specVersion.ETSI_WKI_ID.GetValueOrDefault() != 0)
+                return false;
+
             if (specVersion.Specification == null){
                 spec = specMgr.GetSpecificationById(0, specVersion.Fk_SpecificationId ?? 0).Key;
                 if (spec == null)
