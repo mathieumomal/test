@@ -17,10 +17,12 @@ namespace Etsi.Ultimate.Tests.Business
 {
     class WorkItemManagerTest : BaseTest
     {
+        int personID = 12;
+        int releaseId = 1;
+
         [Test, TestCaseSource("WorkItemData")]
         public void GetWorkItemsBySearchCriteria(WorkItemFakeDBSet workItemData)
         {
-            int personID = 12;
             List<int> releaseIds = new List<int>();
             UserRightsContainer userRights = new UserRightsContainer();
             userRights.AddRight(Enum_UserRights.WorkItem_ImportWorkplan);
@@ -78,7 +80,6 @@ namespace Etsi.Ultimate.Tests.Business
         [Test, TestCaseSource("WorkItemData")]
         public void GetWorkItemById(WorkItemFakeDBSet workItemData)
         {
-            int personID = 12;
 
             UserRightsContainer userRights = new UserRightsContainer();
             userRights.AddRight(Enum_UserRights.WorkItem_ImportWorkplan);
@@ -152,6 +153,29 @@ namespace Etsi.Ultimate.Tests.Business
             mockDataContext.VerifyAllExpectations();
         }
 
+        [Test]
+        public void GetWorkItemsBySearchCriteria_TakesTBsIntoAccount()
+        {
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)WorkItemDataWithTbs);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.WorkItem_ImportWorkplan);
+
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(personID)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance<IRightsManager>(mockRightsManager);
+
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var wiManager = new WorkItemManager(uow);
+
+            var releases = new List<int>() { releaseId };
+            var tbs = new List<int>() { 1 };
+            var result = wiManager.GetWorkItemsBySearchCriteria(personID, releases, 1, false, String.Empty, String.Empty, tbs).Key;
+            Assert.AreEqual( 3, result.Count ) ;
+        }
+
         [Test, TestCaseSource("WorkItemData")]
         public void GetAllAcronyms(WorkItemFakeDBSet workItemData)
         {
@@ -211,7 +235,43 @@ namespace Etsi.Ultimate.Tests.Business
 
                 yield return workItemFakeDBSet;
             }
-        }        
+        }
+
+        public WorkItemFakeDBSet WorkItemDataWithTbs
+        {
+            get
+            {
+                var sa1Responsible = new List<WorkItems_ResponsibleGroups>(){
+                    new WorkItems_ResponsibleGroups() { Fk_TbId = 1, IsPrimeResponsible = true }
+                };
+                var sa2Responsible = new List<WorkItems_ResponsibleGroups>(){
+                    new WorkItems_ResponsibleGroups() { Fk_TbId = 2, IsPrimeResponsible = true },
+                };
+
+                var wi1 = new WorkItem() { Pk_WorkItemUid = 1, Acronym = "Test", Name="Test", Fk_ReleaseId = 1, WiLevel = 1, WorkItems_ResponsibleGroups = sa1Responsible };
+                var wi11 = new WorkItem() { Pk_WorkItemUid = 2, Acronym = "Test1.1", Name = "Test1.1", Fk_ReleaseId = 1, WiLevel = 2, Fk_ParentWiId = 1, WorkItems_ResponsibleGroups = sa1Responsible };
+                var wi12 = new WorkItem() { Pk_WorkItemUid = 3, Acronym = "Test1.2", Name = "Test1.2", Fk_ReleaseId = 1, WiLevel = 2, Fk_ParentWiId = 1, WorkItems_ResponsibleGroups = sa2Responsible };
+                wi1.ChildWis.Add(wi11);
+                wi1.ChildWis.Add(wi12);
+
+                var wi2 = new WorkItem() { Pk_WorkItemUid = 4, Acronym = "Test2", Name = "Test2", Fk_ReleaseId = 1, WiLevel = 1, WorkItems_ResponsibleGroups = sa2Responsible };
+                var wi21 = new WorkItem() { Pk_WorkItemUid = 5, Acronym = "Test2.1", Name = "Test2.1", Fk_ReleaseId = 1, WiLevel = 2, Fk_ParentWiId = 4, WorkItems_ResponsibleGroups = sa1Responsible };
+                var wi22 = new WorkItem() { Pk_WorkItemUid = 6, Acronym = "Test2.2", Name = "Test2.2", Fk_ReleaseId = 1, WiLevel = 2, Fk_ParentWiId = 4, WorkItems_ResponsibleGroups = sa2Responsible };
+                wi2.ChildWis.Add(wi21);
+                wi2.ChildWis.Add(wi22);
+
+                var wis = new WorkItemFakeDBSet();
+                wis.Add(wi1);
+                wis.Add(wi11);
+                wis.Add(wi12);
+                wis.Add(wi2);
+                wis.Add(wi21);
+                wis.Add(wi22);
+                                
+
+                return wis;
+            }
+        }
     }
 }
 

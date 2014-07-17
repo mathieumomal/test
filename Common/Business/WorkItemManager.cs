@@ -35,10 +35,25 @@ namespace Etsi.Ultimate.Business
             // Search simplification:
             // In case only the Releases and the granularity are specified, we anyway will need to retrieve all the work items
             // from the releases. Thus, we retrieve them directly, to speed up performances.
-            // We might want here to refine the algorithm to the TSG selection as well.
-            if (string.IsNullOrEmpty(wiAcronym) && string.IsNullOrEmpty(wiName) && tbIds.Count == 0 && !hidePercentComplete)
+            // Additionally, if TSG/WG are passed, we will clean up the mess.
+            if (string.IsNullOrEmpty(wiAcronym) && string.IsNullOrEmpty(wiName) && !hidePercentComplete)
             {
-                return new KeyValuePair<List<WorkItem>, UserRightsContainer>(repo.GetAllWorkItemsForReleases(releaseIds), GetRights(personId));
+                var wiList = repo.GetAllWorkItemsForReleases(releaseIds);
+                if (tbIds.Count > 0)
+                {
+                    // Get all the WIs for current granularity who are not using the TBs.
+                    var nonEligibleWis = wiList.Where(x => x.WiLevel == granularity && ! x.WorkItems_ResponsibleGroups.Any(y => tbIds.Contains(y.Fk_TbId.Value))).ToList();
+                    List<WorkItem> children = new List<WorkItem>();
+                    while (nonEligibleWis.Count != 0)
+                    {
+                        children = nonEligibleWis.SelectMany(x => x.ChildWis).Distinct().ToList();
+                        nonEligibleWis.ForEach(x => wiList.Remove(x));
+                        wiList.RemoveAll(x => nonEligibleWis.Select(nw => nw.Pk_WorkItemUid).ToList().Contains(x.Pk_WorkItemUid));
+                        nonEligibleWis = children;
+                    }
+                }
+
+                return new KeyValuePair<List<WorkItem>, UserRightsContainer>(wiList, GetRights(personId));
             }
 
             List<WorkItem> AllWorkItems = new List<WorkItem>();
@@ -73,9 +88,7 @@ namespace Etsi.Ultimate.Business
                     GetChildWorkItems(x, childRecordsForGranularityLevel, repo); //Collect Child records
                 });
 
-            AllWorkItems.AddRange(childRecordsForGranularityLevel.Where(x => (x.Name.ToLower().Contains(wiName.Trim().ToLower()) || String.IsNullOrEmpty(wiName.Trim()))
-                                                                          && (x.Acronym.ToLower().Contains(wiAcronym.Trim().ToLower()) || (String.IsNullOrEmpty(wiAcronym.Trim())))
-                                                                          && (tbIds.Count == 0 || x.WorkItems_ResponsibleGroups.Any(y => tbIds.Contains(y.Fk_TbId.Value)))));
+            AllWorkItems.AddRange(childRecordsForGranularityLevel);
 
             return new KeyValuePair<List<WorkItem>, UserRightsContainer>(AllWorkItems, GetRights(personId));
         }
