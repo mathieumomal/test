@@ -113,7 +113,8 @@ namespace Etsi.Ultimate.Business
                         {
                             if (range.Cells[i].RowIndex == 2)
                             {
-                                if (ReplaceSpecialCharacters(range.Cells[i].Range.Text, true).Equals("NewVersion", StringComparison.InvariantCultureIgnoreCase))
+                                if (ReplaceSpecialCharacters(range.Cells[i].Range.Text, true).Equals("New", StringComparison.InvariantCultureIgnoreCase)
+                                    || ReplaceSpecialCharacters(range.Cells[i].Range.Text, true).Equals("NewVersion", StringComparison.InvariantCultureIgnoreCase))
                                 {
                                     indexOfNewVersionCell = range.Cells[i].ColumnIndex;
                                 }

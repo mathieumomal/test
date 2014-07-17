@@ -120,17 +120,36 @@ namespace Etsi.Ultimate.Business
                     var headerText = GetPlainText(headerRow).Replace("\r\n", String.Empty).Replace(" ", String.Empty);
                     if (headerText.Equals("Changehistory", StringComparison.InvariantCultureIgnoreCase)) //Change History table found
                     {
-                        var lastRow = table.OfType<TableRow>().LastOrDefault();  //Last row found in change history table
-                        if (lastRow != null)
+                        var secondRow = table.OfType<TableRow>().ToList()[1];
+                        if (secondRow != null)
                         {
-                            var lastCell = lastRow.OfType<TableCell>().LastOrDefault(); //Last cell found in change history table
-                            if (lastCell != null)
+                            var secondRowColumns = secondRow.OfType<TableCell>().ToList();
+                            int indexOfNewColumn = -1;
+                            for (int i = 0; i < secondRowColumns.Count; i++)
                             {
-                                var historyVersionNumber = GetPlainText(lastCell).Replace("\r\n", String.Empty).Replace(" ", String.Empty);
-                                if (historyVersionNumber.Equals(versionToCheck, StringComparison.InvariantCultureIgnoreCase)) //Version matching on last row last cell of change history table
+                                var columnText = GetPlainText(secondRowColumns[i]).Replace("\r\n", String.Empty).Replace(" ", String.Empty);
+                                if (columnText.Equals("New", StringComparison.InvariantCultureIgnoreCase) || columnText.Equals("NewVersion", StringComparison.InvariantCultureIgnoreCase))
                                 {
-                                    isHistoryVersionCorrect = true;
+                                    indexOfNewColumn = i;
                                     break;
+                                }
+                            }
+
+                            if (indexOfNewColumn >= 0)
+                            {
+                                var lastRow = table.OfType<TableRow>().LastOrDefault();  //Last row found in change history table
+                                if (lastRow != null)
+                                {
+                                    var newColumnCell = lastRow.OfType<TableCell>().ToList()[indexOfNewColumn];
+                                    if (newColumnCell != null)
+                                    {
+                                        var historyVersionNumber = GetPlainText(newColumnCell).Replace("\r\n", String.Empty).Replace(" ", String.Empty);
+                                        if (historyVersionNumber.Equals(versionToCheck, StringComparison.InvariantCultureIgnoreCase)) //Version matching on last row last cell of change history table
+                                        {
+                                            isHistoryVersionCorrect = true;
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         }
