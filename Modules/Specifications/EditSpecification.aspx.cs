@@ -607,7 +607,7 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 int releaseId;
                 if (int.TryParse(ddlPlannedRelease.SelectedItem.Value, out releaseId))
-                    spec.Specification_Release.Add(new Domain.Specification_Release() { Fk_ReleaseId = releaseId });
+                    spec.Specification_Release.Add(new Domain.Specification_Release() { Fk_ReleaseId = releaseId, isWithdrawn = false, CreationDate = DateTime.UtcNow, UpdateDate = DateTime.UtcNow });
             }
 
             spec.IsForPublication = !chkInternal.Checked;
