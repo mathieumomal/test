@@ -51,6 +51,12 @@ namespace Etsi.Ultimate.Business
                         wiList.RemoveAll(x => nonEligibleWis.Select(nw => nw.Pk_WorkItemUid).ToList().Contains(x.Pk_WorkItemUid));
                         nonEligibleWis = children;
                     }
+                    // Clean up parents
+                    for (var i = granularity - 1; i >= 0; --i)
+                    {
+                        var wiToDelete = wiList.Where(wi => wi.WiLevel == i && !wi.ChildWis.Any(x => wiList.Contains(x))).Select(wi => wi.Pk_WorkItemUid);
+                        wiList.RemoveAll(wi => wiToDelete.Contains(wi.Pk_WorkItemUid));
+                    }
                 }
 
                 return new KeyValuePair<List<WorkItem>, UserRightsContainer>(wiList, GetRights(personId));
