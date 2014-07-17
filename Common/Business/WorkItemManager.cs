@@ -54,7 +54,7 @@ namespace Etsi.Ultimate.Business
                     // Clean up parents
                     for (var i = granularity - 1; i >= 0; --i)
                     {
-                        var wiToDelete = wiList.Where(wi => wi.WiLevel == i && !wi.ChildWis.Any(x => wiList.Contains(x))).Select(wi => wi.Pk_WorkItemUid);
+                        var wiToDelete = wiList.Where(wi => wi.WiLevel == i && !wi.ChildWis.Any(x => wiList.Contains(x)) && !wi.WorkItems_ResponsibleGroups.Any(x => tbIds.Contains(x.Fk_TbId.Value))).Select(wi => wi.Pk_WorkItemUid);
                         wiList.RemoveAll(wi => wiToDelete.Contains(wi.Pk_WorkItemUid));
                     }
                 }
