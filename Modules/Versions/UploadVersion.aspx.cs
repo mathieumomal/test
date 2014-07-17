@@ -441,7 +441,9 @@ namespace Etsi.Ultimate.Module.Versions
                 {
                     versionUploadScreen.Visible = false;
                     analysis.Visible = false;
-                    confirmation.Visible = true;
+                    //Prevent upload of already uploaded versions
+                    confirmation.Visible =true;
+                    btnConfirmUpload.Enabled = result.ErrorList.Contains(String.Format("Document has already been uploaded to this version")) ? false : true;
                     state.Visible = false;
 
                     rptWarningsErrors.DataSource = result.ErrorList;
