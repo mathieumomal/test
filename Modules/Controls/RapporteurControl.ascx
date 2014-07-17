@@ -14,7 +14,7 @@
     function setAddingRapporteurProgress(flag) {
         if (flag)
             $("#<%=btnAddRapporteur.ClientID %>").val('Adding...');
-        else
+        else 
             $("#<%=btnAddRapporteur.ClientID %>").val('Add');
     }
 
@@ -24,6 +24,31 @@
         else
             $("#<%=btnAddChairman.ClientID %>").val('Add');
     }
+
+
+    //FIX : On deletion of Rapporteurs, primary Rapporteur used to get unselected temporarily
+    function selectPrimaryRapporteur()
+    {
+        var hidPersonId = $("#<%=hidPrimaryRapporteur.ClientID %>").val();
+       
+        if (hidPersonId != null && hidPersonId != "") {
+            var dataItems = $find("<%=rdGridRapporteurs.ClientID %>").get_masterTableView().get_dataItems();
+            for (var i = 0; i < dataItems.length; i++) {
+                var cell = dataItems[i].get_cell("PERSON_ID");
+                var personId = cell.innerHTML;
+
+                if (personId == hidPersonId) {
+                    dataItems[i].set_selected();
+                }
+            }
+        }
+    }
+
+    //Reset hidPrimaryRapporteur on deselecting primary Rapporteur
+    function RowDeselected(sender, eventArgs) {
+        $("#<%=hidPrimaryRapporteur.ClientID %>").val("");
+    }
+
 </script>
 <div id="divRapporteurControl">
     <asp:Panel runat="server" ID="panelRapporteurControl" CssClass="">
@@ -44,7 +69,7 @@
                                                                                 OnSelectedIndexChanged="RdGridRapporteurs_SelectedIndexChanged"  
                                                                                 Height="140px">
                             <ClientSettings EnableRowHoverStyle="False" EnablePostBackOnRowClick="False">
-                                <ClientEvents OnDataBound="setAddingRapporteurProgress(false)" />
+                                <ClientEvents OnDataBound="setAddingRapporteurProgress(false)" OnGridCreated="selectPrimaryRapporteur" OnRowDeselected="RowDeselected"/>
                                 <Scrolling AllowScroll="True" UseStaticHeaders="True" />
                                 <Selecting AllowRowSelect="True"></Selecting>
                             </ClientSettings>
@@ -85,6 +110,8 @@
                                     <telerik:GridButtonColumn CommandName="Delete" HeaderText="Delete" UniqueName="delete" ImageUrl="/controls/Ultimate/images/delete.png" ButtonType="ImageButton" HeaderStyle-CssClass="deleteStyleColumn" ItemStyle-CssClass="deleteStyleColumn" >
                                         <HeaderStyle HorizontalAlign="Left" Font-Bold="True" Width="50px"/>
                                     </telerik:GridButtonColumn>
+                                    <telerik:GridBoundColumn Display="false" DataField="PERSON_ID" UniqueName="PERSON_ID">
+                                    </telerik:GridBoundColumn>
                                 </Columns>
                             
                                 <NoRecordsTemplate>
@@ -94,6 +121,7 @@
                                 </NoRecordsTemplate>
                             </MasterTableView>
                         </telerik:RadGrid>
+                        <asp:HiddenField runat="server" ID="hidPrimaryRapporteur" />
                     </td>
                 </tr>
                 <tr class="searchBar">

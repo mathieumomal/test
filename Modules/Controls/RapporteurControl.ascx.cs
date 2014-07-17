@@ -532,6 +532,7 @@ namespace Etsi.Ultimate.Controls
                         var ID = ConvertStringToInt(item.OwnerTableView.DataKeyValues[item.ItemIndex]["PERSON_ID"].ToString());
                         if (ListIdPersonSelect.Contains(ID))
                         {
+                            hidPrimaryRapporteur.Value = ID.ToString();
                             item.Selected = true;
                         }
                     }
