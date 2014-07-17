@@ -49,13 +49,13 @@
                     <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true">
                         <table style="width: 100%">
                             <tr>
-                                <td class="LeftColumn">Reference</td>
+                                <td class="LeftColumn">Reference:</td>
                                 <td class="RightColumn">
                                     <telerik:RadTextBox ID="txtReference" runat="server" MaxLength="8" Width="198" OnTextChanged="TxtReference_OnBlur" />
                                 </td>
                             </tr>
                             <tr>
-                                <td class="LeftColumn">Title<span class='requiredField'>(*)</span></td>
+                                <td class="LeftColumn">Title<span class='requiredField'>(*)</span>:</td>
                                 <td class="RightColumn">
                                     <asp:TextBox ID="txtTitle" Width="350" runat="server" autocomplete="off"></asp:TextBox>
                                 </td>
@@ -67,7 +67,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="LeftColumn">Type</td>
+                                <td class="LeftColumn">Type:</td>
                                 <td class="RightColumn">
                                     <asp:DropDownList ID="ddlType" Width="200" runat="server">
                                         <asp:ListItem Selected="True" Text="Technical Specification (TS)" Value="true" />
@@ -76,24 +76,24 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="LeftColumn">Initial planned Release
-                                </td>
+                                <td class="LeftColumn">Initial planned Release:</td>
                                 <td class="RightColumn">
+                                    <asp:Label ID="initialPlannedReleaseVal" runat="server">-</asp:Label>
                                     <asp:DropDownList ID="ddlPlannedRelease" Width="200" runat="server"></asp:DropDownList>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="LeftColumn">Internal</td>
+                                <td class="LeftColumn">Internal:</td>
                                 <td class="RightColumn">
                                     <asp:CheckBox ID="chkInternal" runat="server"></asp:CheckBox></td>
                             </tr>
                             <tr>
-                                <td class="LeftColumn">Common IMS Specification</td>
+                                <td class="LeftColumn">Common IMS Specification:</td>
                                 <td class="RightColumn">
                                     <asp:CheckBox ID="chkCommonIMSSpec" runat="server"></asp:CheckBox></td>
                             </tr>
                             <tr>
-                                <td class="LeftColumn">Radio technology</td>
+                                <td class="LeftColumn">Radio technology:</td>
                                 <td class="RightColumn">
                                     <asp:CheckBoxList ID="cblRadioTechnology" runat="server" RepeatDirection="Horizontal"></asp:CheckBoxList></td>
                             </tr>
@@ -113,13 +113,13 @@
                             <ContentTemplate>
                                 <table style="width: 100%">
                                     <tr>
-                                        <td class="LeftColumn">Primary responsible group</td>
+                                        <td class="LeftColumn">Primary responsible group:</td>
                                         <td class="RightColumn">
                                             <ult:communitycontrol id="PrimaryResGrpCtrl" width="200" issingleselection="true" iseditmode="true" runat="server" />
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="LeftColumn">Secondary responsible groups</td>
+                                        <td class="LeftColumn">Secondary responsible groups:</td>
                                         <td class="RightColumn">
                                             <ult:communitycontrol id="SecondaryResGrpCtrl" width="200" issingleselection="false" iseditmode="true" runat="server" />
                                         </td>

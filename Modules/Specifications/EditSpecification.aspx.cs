@@ -396,14 +396,20 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             specificationRemarks.IsEditMode = true;
 
-            //update actual datasource
-            if (releases != null)
-            {
-                ddlPlannedRelease.DataSource = releases;
-                ddlPlannedRelease.DataValueField = "Pk_ReleaseId";
-                ddlPlannedRelease.DataTextField = "Name";
-                ddlPlannedRelease.DataBind();
+            //InitialPlannedRelease display handler
+            if (action.Equals(CREATION_MODE, StringComparison.InvariantCultureIgnoreCase)){
+                initialPlannedReleaseVal.Visible = false;//Edit the initialPlannedRelease is allowed in CREATION_MODE
+                //update actual datasource (the edition of the initialPlannedRelease isn't possible in EDIT_MODE)
+                if (releases != null)
+                {
+                    ddlPlannedRelease.DataSource = releases;
+                    ddlPlannedRelease.DataValueField = "Pk_ReleaseId";
+                    ddlPlannedRelease.DataTextField = "Name";
+                    ddlPlannedRelease.DataBind();
+                }
             }
+            else
+                ddlPlannedRelease.Visible = false;//Edit the initialPlannedRelease isn't allowed in EDIT_MODE
 
             if (userRights != null)
             {
@@ -421,12 +427,20 @@ namespace Etsi.Ultimate.Module.Specifications
                 if (specification.IsTS != null)
                     ddlType.SelectedIndex = specification.IsTS.Value ? 0 : 1;
 
-                foreach (ListItem item in ddlPlannedRelease.Items)
-                    if (item.Text == specification.SpecificationInitialRelease)
-                    {
-                        item.Selected = true;
-                        break;
-                    }
+                //In EDIT_MODE the edition of the initialPlannedRelease isn't possible
+                if (action.Equals(CREATION_MODE, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    foreach (ListItem item in ddlPlannedRelease.Items)
+                        if (item.Text == specification.SpecificationInitialRelease)
+                        {
+                            item.Selected = true;
+                            break;
+                        }
+                }
+                else
+                {
+                    initialPlannedReleaseVal.Text = specification.SpecificationInitialRelease;
+                }
 
                 chkInternal.Checked = specification.IsForPublication == null ? true : !specification.IsForPublication.Value;
                 chkCommonIMSSpec.Checked = specification.ComIMS == null ? false : specification.ComIMS.Value;
@@ -438,10 +452,8 @@ namespace Etsi.Ultimate.Module.Specifications
                         {
                             cblRadioTechnology.Items.FindByValue(technology.Pk_Enum_TechnologyId.ToString()).Selected = true;
                         }
-
                     }
                 }
-
                 specificationRemarks.DataSource = specification.Remarks.ToList();
             }
         }
