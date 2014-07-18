@@ -24,6 +24,7 @@ namespace Etsi.Ultimate.Business
         private const string CONST_QUALITY_CHECK_AUTO_NUMBERING = "Automatic numbering (of clauses, figures, tables, notes, examples etc…) should be disabled in the document";
         private const string CONST_QUALITY_CHECK_FIRST_TWO_LINES_TITLE = "The first two lines of the title must be correct, according to the TSG responsible for the specification";
         private const string CONST_QUALITY_CHECK_ANNEXURE_STYLE = "Annexes should be correctly styled as Heading 8(TS) or Heading 9(TR). In case of TS, (normative) or (informative) should appear immediately after annexure heading";
+        private const string CONST_QUALITY_CHECK_RELEASE = "Invalid/missing release in cover page";
 
         public IUltimateUnitOfWork UoW { get; set; }
 
@@ -504,6 +505,9 @@ namespace Etsi.Ultimate.Business
 
             if (!qualityChecks.IsTitleCorrect(title))
                 validationReport.LogWarning(CONST_QUALITY_CHECK_TITLE_COVERPAGE);
+
+            if (!qualityChecks.IsReleaseCorrect(release))
+                validationReport.LogWarning(CONST_QUALITY_CHECK_RELEASE);
 
             if (!qualityChecks.IsReleaseStyleCorrect(release))
                 validationReport.LogWarning(CONST_QUALITY_CHECK_RELEASE_STYLE);

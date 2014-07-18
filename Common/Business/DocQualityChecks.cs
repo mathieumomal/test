@@ -293,6 +293,35 @@ namespace Etsi.Ultimate.Business
         }
 
         /// <summary>
+        /// Check the release is correct in cover page
+        /// </summary>
+        /// <param name="release">Release</param>
+        /// <returns>True/False</returns>
+        public bool IsReleaseCorrect(string release)
+        {
+            bool isReleaseCorrect = false;
+
+            var section = wordDocument.Sections.First;
+            if (section != null)
+            {
+                string releaseText = "(" + release + ")";
+                int indexOf3GPPTitle = section.Range.Text.IndexOf("3rd generation partnership project;", StringComparison.InvariantCultureIgnoreCase);
+                int indexOfRelease = section.Range.Text.IndexOf(releaseText, StringComparison.InvariantCultureIgnoreCase);
+
+                if (indexOf3GPPTitle < indexOfRelease)
+                {
+                    Range releaseRange = wordDocument.Range(indexOfRelease + 1, release.Length + indexOfRelease + 1);
+                    if ((releaseRange != null) && releaseRange.Text.Equals(release, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        isReleaseCorrect = true;
+                    }
+                }
+            }
+
+            return isReleaseCorrect;
+        }
+
+        /// <summary>
         /// Check the release style for ZGSM
         /// </summary>
         /// <param name="release">Release</param>

@@ -54,6 +54,13 @@ namespace Etsi.Ultimate.Business
         bool IsTitleCorrect(string title);
 
         /// <summary>
+        /// Check the release is correct in cover page
+        /// </summary>
+        /// <param name="release">Release</param>
+        /// <returns>True/False</returns>
+        bool IsReleaseCorrect(string release);
+
+        /// <summary>
         /// Check the release style for ZGSM
         /// </summary>
         /// <param name="release">Release</param>

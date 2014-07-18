@@ -373,6 +373,58 @@ namespace Etsi.Ultimate.Business
         }
 
         /// <summary>
+        /// Check the release is correct in cover page
+        /// </summary>
+        /// <param name="release">Release</param>
+        /// <returns>True/False</returns>
+        public bool IsReleaseCorrect(string release)
+        {
+            bool isReleaseCorrect = false;
+
+            //Search title on cover page based on bookmarks page1 & page2 (title should be on page1 bookmark range)
+            var paragraphs = wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+
+            bool page1BookmarkStart = false;
+            bool page2BookmarkStart = false;
+            StringBuilder page1Text = new StringBuilder();
+
+            foreach (var paragraph in paragraphs)
+            {
+                var bookMarkStart = paragraph.Descendants().OfType<BookmarkStart>();
+
+                foreach (var bookMark in bookMarkStart)
+                {
+                    if (bookMark.Name.ToString().ToLower().Equals("page1"))
+                        page1BookmarkStart = true;
+                    if (bookMark.Name.ToString().ToLower().Equals("page2"))
+                        page2BookmarkStart = true;
+                }
+
+                if (page1BookmarkStart)
+                    page1Text.AppendLine(GetPlainText(paragraph).Replace("\r\n", String.Empty).Trim().ToLower());
+
+                if (page2BookmarkStart)
+                    break;
+            }
+
+            string formattedPage = page1Text.ToString().Replace("\r\n", String.Empty).Replace(" ", String.Empty);
+            string title = "3rd generation partnership project;";
+            string releaseText = "(" + release + ")";
+            if (formattedPage.Contains(title.Replace(" ", String.Empty).ToLower()))
+            {
+                int indexOfTitle = formattedPage.IndexOf(title.Replace(" ", String.Empty).ToLower());
+                int indexOfRelease = formattedPage.IndexOf(releaseText.Replace(" ", String.Empty).ToLower());
+                if (indexOfTitle < indexOfRelease)
+                    isReleaseCorrect = true;
+
+            }
+            else if (formattedPage.Contains(releaseText.Replace(" ", String.Empty).ToLower()))
+                isReleaseCorrect = true;
+
+            return isReleaseCorrect;
+        }
+
+        /// <summary>
         /// Check the release style for ZGSM
         /// </summary>
         /// <param name="release">Release</param>
