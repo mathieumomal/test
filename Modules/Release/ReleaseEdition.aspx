@@ -25,7 +25,7 @@
         }
     </script>
 </head>
-<body class="releaseDetailBody">
+<body id="releaseDetailBody">
     <form id="ReleaseEditionForm" runat="server">
         <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
             <div class="containerFix">
