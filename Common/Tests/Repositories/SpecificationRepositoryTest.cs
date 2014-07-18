@@ -66,6 +66,11 @@ namespace Etsi.Ultimate.Tests.Repositories
         [TestCase(false, true, false, false, 1)]    //(true, true)
         [TestCase(false, false, true, false, 0)]    //(false, true)
         [TestCase(false, false, false, true, 1)]    //(false, false)
+        [TestCase(false, true, true, false, 1)]    
+        [TestCase(true, false, true, false, 0)]
+        [TestCase(false, true, false, true, 2)]
+        [TestCase(true, true, true, true, 2)]
+        [TestCase(false, false, false, false, 2)]  
         public void GetSpecificationBySearchCriteria_IsActiveAndIsUnderChangeControlCases(bool isDraft, bool isUnderCC, bool isWithACC, bool isWithBCC, int expectedResult)
         {
             var repo = new SpecificationRepository() { UoW = GetSimplifiedUnitOfWork() };
