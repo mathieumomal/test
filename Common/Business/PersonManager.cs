@@ -12,9 +12,7 @@ namespace Etsi.Ultimate.Business
     public class PersonManager : IPersonManager
     {
         public IUltimateUnitOfWork UoW { get; set; }
-        public PersonManager()
-        {
-        }
+        public PersonManager() { }
 
         /// <summary>
         /// <see cref="Etsi.Ultimate.Business.IPersonManager.GetPersonDisplayName"/>

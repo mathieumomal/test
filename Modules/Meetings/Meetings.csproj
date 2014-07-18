@@ -110,6 +110,7 @@
     <Content Include="Documentation\Documentation.html" />
     <Content Include="Edit.ascx" />
     <Content Include="EventCreation.aspx" />
+    <Content Include="images\favicon.ico" />
     <Content Include="License.txt" />
     <Content Include="module.css" />
     <Content Include="ReleaseNotes.txt" />
