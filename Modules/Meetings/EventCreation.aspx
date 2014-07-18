@@ -10,7 +10,7 @@
         <link rel="stylesheet" type="text/css" href="/Portals/_default/Skins/3GPP/mainpage.css"/>
         <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon"/>
     </head>
-    <body id="eventCreationContener">
+    <body id="eventCreationContener" class="eventWebFormStyle">
         <h1>Create event</h1>
 
         <form id="createEventForm" runat="server">

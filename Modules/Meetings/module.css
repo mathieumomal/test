@@ -1,31 +1,41 @@
 /*please prefix all your css by the id of your component global div*/
-#eventCreationContener
+
+/*Event webform style*/
+.eventWebFormStyle
 {
 	font-family: Arial,verdana,Serif;
 	font-size: 12px;
 	margin:20px;
 }
-#eventCreationContener h1
+.eventWebFormStyle h1
 {
 	text-align: center;
 	font-size: 25px;
 	font-weight: bold;
 	color: gray;
 }
-#eventCreationContener table {width:100%;margin:auto;}
-#eventCreationContener table .LeftColumn
+.eventWebFormStyle table {width:100%;margin:auto;}
+.eventWebFormStyle table .LeftColumn
 {
 	width: 33%;
 	text-align: right;
 	padding: 5px;
 }
-#eventCreationContener table .RightColumn
+.eventWebFormStyle table .RightColumn
 {
     text-align: left;
     padding: 5px;
 }
-#eventCreationContener table textarea{width: 99%;}
+.eventWebFormStyle table textarea{width: 99%;}
+/*Event webform style*/
+
+/*Event create/edit*/
 #eventCreationContener table .satisfactionSurveyURLStyle
 {
 	width:100%;
 }
+/*Event create/edit*/
+
+/*Event details*/
+
+/*Event details*/

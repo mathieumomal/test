@@ -221,7 +221,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>62113</DevelopmentServerPort>
+          <DevelopmentServerPort>53821</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://dnndev.me/desktopmodules/Release</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
