@@ -501,13 +501,16 @@ namespace Etsi.Ultimate.Module.Versions
                 version.TechnicalVersion = int.Parse(NewVersionTechnicalVal.Text);
                 version.EditorialVersion = int.Parse(NewVersionEditorialVal.Text);
 
-                version.Remarks.Add(new Remark()
+                if (!String.IsNullOrEmpty(CommentVal.Text))
                 {
-                    RemarkText = CommentVal.Text,
-                    CreationDate = new Nullable<System.DateTime>(DateTime.UtcNow),
-                    Fk_PersonId = UserId,
-                    IsPublic = true
-                });
+                    version.Remarks.Add(new Remark()
+                    {
+                        RemarkText = CommentVal.Text,
+                        CreationDate = new Nullable<System.DateTime>(DateTime.UtcNow),
+                        Fk_PersonId = UserId,
+                        IsPublic = true
+                    });
+                }
 
                 if (UploadMeeting.SelectedMeeting != null)
                 {
