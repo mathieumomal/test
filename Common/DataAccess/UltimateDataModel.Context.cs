@@ -17,6 +17,7 @@ namespace Etsi.Ultimate.DataAccess
     using System.Data.Entity.Core.Objects;
     using System.Data.Objects.DataClasses;
     using System.Linq;
+    using System.Data.Entity.Core.EntityClient;
     
     public partial class UltimateContext : DbContext, IUltimateContext
     {
@@ -24,6 +25,12 @@ namespace Etsi.Ultimate.DataAccess
             : base("name=UltimateContext")
         {
         }
+        //Effort framework need it
+        //public UltimateContext(EntityConnection connection)
+        //    : base(connection, true)
+        //{
+        //}
+
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

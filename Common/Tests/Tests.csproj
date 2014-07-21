@@ -54,6 +54,9 @@
     <Reference Include="DotNetOpenAuth.OAuth">
       <HintPath>..\..\..\..\..\..\..\Perso\3NET\MDFTest2\MDFTest2\bin\DotNetOpenAuth.OAuth.dll</HintPath>
     </Reference>
+    <Reference Include="Effort">
+      <HintPath>..\..\packages\Effort.EF6.1.1.0\lib\net45\Effort.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -65,6 +68,9 @@
       <HintPath>..\..\packages\Unity.3.0.1304.1\lib\Net45\Microsoft.Practices.Unity.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="NMemory">
+      <HintPath>..\..\packages\NMemory.1.0.0\lib\net45\NMemory.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\Libs\nunit.framework.dll</HintPath>
     </Reference>
@@ -74,6 +80,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -99,6 +106,7 @@
     <Compile Include="Business\SpecVersionsManagerTest.cs" />
     <Compile Include="Business\WorkPlanFileManagerTest.cs" />
     <Compile Include="Business\WpmRecordCreatorTest.cs" />
+    <Compile Include="EffortTests\EffortTestsExample.cs" />
     <Compile Include="FakeRepositories\Enum_TechnologiesFakeRepository.cs" />
     <Compile Include="FakeRepositories\SpecificationWIFakeRepository.cs" />
     <Compile Include="FakeRepositories\SpecVersionsFakeRepository.cs" />
@@ -197,6 +205,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Content Include="Data_For_EffortUnitTests\Enum_Technology.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data_For_EffortUnitTests\View_Meetings.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <Content Include="TestData\LogManager\Test.log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
