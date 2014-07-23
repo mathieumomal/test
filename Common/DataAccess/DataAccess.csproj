@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="IUltimateContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UltimateContext.cs" />
     <Compile Include="UltimateDataModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

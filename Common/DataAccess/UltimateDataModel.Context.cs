@@ -25,12 +25,6 @@ namespace Etsi.Ultimate.DataAccess
             : base("name=UltimateContext")
         {
         }
-        //Effort framework need it
-        //public UltimateContext(EntityConnection connection)
-        //    : base(connection, true)
-        //{
-        //}
-
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

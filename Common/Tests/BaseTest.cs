@@ -12,6 +12,12 @@ namespace Etsi.Ultimate.Tests
 {
     public class BaseTest
     {
+        [TestFixtureSetUp]
+        public virtual void RegisterEffort()
+        {
+            Effort.Provider.EffortProviderConfiguration.RegisterProvider();
+        }
+
         [SetUp]
         public virtual void Setup()
         {
