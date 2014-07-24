@@ -93,5 +93,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="specId"></param>
         /// <returns></returns>
         int CountVersionsPendingUploadByReleaseId(int releaseId);
+
+        ServiceResponse<SpecVersion> GetNextVersionForSpec(int personId, int specId, int releaseId, bool forUpload);
     }
 }

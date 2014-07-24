@@ -13,6 +13,7 @@ namespace Etsi.Ultimate.Services
 {
     public class SpecVersionService : ISpecVersionService, IOfflineService<SpecVersion>
     {
+
         public List<SpecVersion> GetVersionsBySpecId(int specificationId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -279,6 +280,21 @@ namespace Etsi.Ultimate.Services
             }
 
             return isSuccess;
+        }
+
+        #endregion
+
+        #region ISpecVersionService Members
+
+
+        public ServiceResponse<SpecVersion> GetNextVersionForSpec(int personId, int specId, int releaseId, bool forUpload)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
+                versionMgr.UoW = uoW;
+                return versionMgr.GetNextVersionForSpec(personId, specId, releaseId, forUpload);
+            }
         }
 
         #endregion

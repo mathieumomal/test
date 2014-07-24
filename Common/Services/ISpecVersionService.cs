@@ -33,6 +33,20 @@ namespace Etsi.Ultimate.Services
         KeyValuePair<SpecVersion, UserRightsContainer> GetVersionsById(int VersionId, int personId);
 
         /// <summary>
+        /// Returns the next version which is candidate for upload or allocation.
+        /// 
+        /// This system will :
+        /// - In case of allocation (upload = false), return the next available version for allocation
+        /// - in case of upload (upload = true), compute the next version that should be uploaded.
+        /// </summary>
+        /// <param name="personId">Person requesting the update.</param>
+        /// <param name="SpecId">The target specification ID</param>
+        /// <param name="ReleaseId">The target Release ID</param>
+        /// <param name="forUpload">true if next version is to be uploaded, false if not.</param>
+        /// <returns></returns>
+        ServiceResponse<SpecVersion> GetNextVersionForSpec(int personId, int SpecId, int ReleaseId, bool forUpload);
+
+        /// <summary>
         /// Enables user to allocate version.
         /// </summary>
         /// <param name="version"></param>

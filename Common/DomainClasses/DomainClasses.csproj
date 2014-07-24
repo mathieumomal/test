@@ -97,6 +97,7 @@
     <Compile Include="ResponsibleGroup_Secretary.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="ServiceResponse.cs" />
     <Compile Include="SpecificationSearch.cs" />
     <Compile Include="SpecVersion.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>

@@ -17,7 +17,7 @@ using Etsi.Ultimate.Business;
 
 namespace Etsi.Ultimate.Tests.Services
 {
-    class SpecVersionServiceTest : BaseTest
+    class SpecVersionSvcTest : BaseTest
     {
         #region Variables
 

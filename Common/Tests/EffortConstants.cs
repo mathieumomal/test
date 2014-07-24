@@ -1,0 +1,20 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Etsi.Ultimate.Tests
+{
+    class EffortConstants
+    {
+        public const int RELEASE_CLOSED_ID = 2874;
+        public const int RELEASE_ID = 2882;
+        public const int RELEASE_OPEN_ID = 2883;
+        public const int RELEASE_NEWLY_OPEN_ID = 2884;
+
+
+        public const int SPECIFICATION_ACTIVE_ID = 136080;
+        public const int SPECIFICATION_WITHDRAWN_ID = 136081;
+    }
+}

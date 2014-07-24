@@ -20,10 +20,7 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
         const int USER_HAS_NO_RIGHT = 1;
         const int USER_HAS_RIGHT = 2;
 
-        const int OPEN_RELEASE_ID = 2883;
-        const int NEXT_OPEN_RELEASE_ID = 2884;
-        const int ACTIVE_SPECIFICATION_ID = 136080;
-        const int WITHDRAWN_SPECIFICATION_ID = 136081;
+       
 
         SpecVersionService versionSvc;
         SpecVersion myVersion;
@@ -54,7 +51,10 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
             Assert.AreEqual(0, result.GetNumberOfWarnings());
             
             // Now let's try to fetch the version, check it's there
-            var newlyCreatedVersion = RepositoryFactory.Resolve<IUltimateUnitOfWork>().Context.SpecVersions.Where(v => v.Fk_SpecificationId == ACTIVE_SPECIFICATION_ID && v.Fk_ReleaseId == OPEN_RELEASE_ID && v.MajorVersion == myVersion.MajorVersion && v.TechnicalVersion == myVersion.TechnicalVersion && v.EditorialVersion == myVersion.EditorialVersion).FirstOrDefault();
+            var newlyCreatedVersion = RepositoryFactory.Resolve<IUltimateUnitOfWork>().Context.SpecVersions
+                .Where(v => v.Fk_SpecificationId == EffortConstants.SPECIFICATION_ACTIVE_ID 
+                    && v.Fk_ReleaseId == EffortConstants.RELEASE_OPEN_ID && v.MajorVersion == myVersion.MajorVersion 
+                    && v.TechnicalVersion == myVersion.TechnicalVersion && v.EditorialVersion == myVersion.EditorialVersion).FirstOrDefault();
             Assert.IsNotNull(newlyCreatedVersion);
         }
 
@@ -97,8 +97,8 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
         [Test]
         public void Allocation_FailsIfSpecIsNotActive()
         {
-            myVersion.Fk_SpecificationId = WITHDRAWN_SPECIFICATION_ID;
-            myVersion.Fk_ReleaseId = OPEN_RELEASE_ID;
+            myVersion.Fk_SpecificationId = EffortConstants.SPECIFICATION_WITHDRAWN_ID;
+            myVersion.Fk_ReleaseId = EffortConstants.RELEASE_OPEN_ID;
             var result = versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
             Assert.AreEqual(1, result.GetNumberOfErrors());
             Assert.AreEqual(Utils.Localization.RightError, result.ErrorList.First());
@@ -107,8 +107,8 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
         [Test]
         public void Allocation_FailsIfSpecReleaseDoesNotExist()
         {
-            myVersion.Fk_SpecificationId = ACTIVE_SPECIFICATION_ID;
-            myVersion.Fk_ReleaseId = NEXT_OPEN_RELEASE_ID;
+            myVersion.Fk_SpecificationId = EffortConstants.SPECIFICATION_ACTIVE_ID;
+            myVersion.Fk_ReleaseId = EffortConstants.RELEASE_NEWLY_OPEN_ID;
             var result = versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
             Assert.AreEqual(1, result.GetNumberOfErrors());
             Assert.AreEqual(Utils.Localization.Allocate_Error_SpecRelease_Does_Not_Exist, result.ErrorList.First());
@@ -122,8 +122,8 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
         [TestCase(13,1,0)]
         public void Allocation_FailsIfVersionIsSmallerThanExistingOneForTheRelease(int major, int technical, int editorial)
         {
-            myVersion.Fk_SpecificationId = ACTIVE_SPECIFICATION_ID;
-            myVersion.Fk_ReleaseId = OPEN_RELEASE_ID;
+            myVersion.Fk_SpecificationId = EffortConstants.SPECIFICATION_ACTIVE_ID;
+            myVersion.Fk_ReleaseId = EffortConstants.RELEASE_OPEN_ID;
             myVersion.MajorVersion = major;
             myVersion.TechnicalVersion = technical;
             myVersion.EditorialVersion = editorial;
@@ -140,10 +140,10 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
             return new SpecVersion()
             {
                 MajorVersion = 13,
-                TechnicalVersion = 2,
+                TechnicalVersion = 3,
                 EditorialVersion = 0,
-                Fk_ReleaseId = OPEN_RELEASE_ID,
-                Fk_SpecificationId = ACTIVE_SPECIFICATION_ID
+                Fk_ReleaseId = EffortConstants.RELEASE_OPEN_ID,
+                Fk_SpecificationId = EffortConstants.SPECIFICATION_ACTIVE_ID
 
             };
         }
