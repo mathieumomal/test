@@ -1,4 +1,4 @@
 Pk_Enum_TechnologyId,Code,Description,WpmProjectId
-250,2G,2G,744
-251,3G,3G,704
-252,LTE,LTE,706
+256,2G,2G,744
+257,3G,3G,704
+258,LTE,LTE,576

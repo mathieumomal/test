@@ -1,0 +1,2 @@
+Pk_WorkItemUid,WorkplanId,Name,Acronym,WiLevel,StartDate,EndDate,Completion,LastModification,CreationDate,Fk_ParentWiId,Fk_ReleaseId,Wid,RapporteurId,RapporteurStr,TsgApprovalMtgId,TsgApprovalMtgRef,PcgApprovalMtgId,PcgApprovalMtgRef,TsgStoppedMtgId,TsgStoppedMtgRef,PcgStoppedMtgId,PcgStoppedMtgRef,StatusReport,RapporteurCompany,TssAndTrs
+1274,3378,Call control and roaming to support IMS in UMTS,IMS-CCR,2,03/03/2001,03/03/2001,100,03/03/2001,03/03/2001,,2883,SP-010339,,Liz Daniel,,,,,,,,,,Lucent,

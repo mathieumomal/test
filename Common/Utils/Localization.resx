@@ -279,4 +279,7 @@
   <data name="WorkItem_Import_Parent_Release_Different_With_Child" xml:space="preserve">
     <value>{0}, Uid {1}: WI has different Release ({2}) from its parent ({3}).</value>
   </data>
+  <data name="RightError" xml:space="preserve">
+    <value>You do not have right to perform this action</value>
+  </data>
 </root>

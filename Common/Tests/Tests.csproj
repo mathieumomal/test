@@ -196,6 +196,7 @@
     <Compile Include="Services\SpecMassivePromoteTest.cs" />
     <Compile Include="Services\SpecReleaseRightsServiceTest.cs" />
     <Compile Include="Services\SpecTranspositionServiceTest.cs" />
+    <Compile Include="Services\SpecVersionAllocateTest.cs" />
     <Compile Include="Services\SpecVersionServiceTest.cs" />
     <Compile Include="Services\SpecWithdrawalTest.cs" />
     <Compile Include="Services\UrlServiceTest.cs" />
@@ -212,6 +213,36 @@
     <Content Include="Data_For_EffortUnitTests\View_Meetings.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Data_For_EffortUnitTests\Enum_CommunitiesShortName.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\Enum_ReleaseStatus.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\Enum_Serie.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\Releases.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\Specification.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\Specification_Release.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\Specification_WorkItem.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\Version.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\WorkItems.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\WorkItems_ResponsibleGroups.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <Content Include="TestData\LogManager\Test.log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

@@ -69,6 +69,17 @@ namespace Etsi.Ultimate.Services
             return result;
         }
 
+        public Report AllocateVersion(int personId, SpecVersion version)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specVersionAllocateAction = new SpecVersionAllocateAction();
+                specVersionAllocateAction.UoW = uoW;
+                return specVersionAllocateAction.AllocateVersion(personId, version);
+            }
+        }
+
+
         /// <summary>
         /// Validate Uploaded version document & provide validation summary
         /// </summary>
@@ -151,7 +162,7 @@ namespace Etsi.Ultimate.Services
                     catch (Exception ex)
                     {
                         Utils.LogManager.Error("[Offline] Specification Insert Error: " + ex.Message);
-                        if(ex.InnerException != null)
+                        if (ex.InnerException != null)
                             Utils.LogManager.Error("Inner Exception: " + ex.InnerException);
                     }
                 }

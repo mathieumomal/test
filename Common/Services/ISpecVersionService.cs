@@ -17,7 +17,7 @@ namespace Etsi.Ultimate.Services
         /// <returns>List of SpecVersions including related releases</returns>
         List<SpecVersion> GetVersionsBySpecId(int specificationId);
 
-         /// <summary>
+        /// <summary>
         /// Returns the list of versions of a specification release
         /// </summary>
         /// <param name="specificationId">The specification identifier</param>
@@ -31,6 +31,14 @@ namespace Etsi.Ultimate.Services
         /// <param name="versionId">The identifier of the requested version</param>
         /// <returns>A couple (version,userrights)</returns>
         KeyValuePair<SpecVersion, UserRightsContainer> GetVersionsById(int VersionId, int personId);
+
+        /// <summary>
+        /// Enables user to allocate version.
+        /// </summary>
+        /// <param name="version"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        Report AllocateVersion(int personId, SpecVersion version);
 
         /// <summary>
         /// Allocate/Upload a version
