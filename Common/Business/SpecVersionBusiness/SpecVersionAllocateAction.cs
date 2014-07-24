@@ -59,7 +59,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             version.Release = releaseManager.GetReleaseById(personId, version.Fk_ReleaseId.Value).Key;
             if (version.Release == null)
             {
-                throw new InvalidOperationException(Utils.Localization.Allocate_Error_Release_Does_Not_Exist);
+                throw new InvalidOperationException(Utils.Localization.Error_Release_Does_Not_Exist);
             }
 
             // Now fetch specification
@@ -68,7 +68,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             version.Specification = specificationManager.GetSpecificationById(personId, version.Fk_SpecificationId.Value).Key;
             if (version.Specification == null)
             {
-                throw new InvalidOperationException(Utils.Localization.Allocate_Error_Spec_Does_Not_Exist);
+                throw new InvalidOperationException(Utils.Localization.Error_Spec_Does_Not_Exist);
             }
 
             // The spec release must be defined as well

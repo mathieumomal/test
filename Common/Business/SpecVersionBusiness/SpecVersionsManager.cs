@@ -79,30 +79,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             return new KeyValuePair<SpecVersion, UserRightsContainer>(version, specRelease_Rights.Value);
         }
 
-        public ServiceResponse<SpecVersion> GetNextVersionForSpec(int personId, int specId, int releaseId, bool forUpload)
-        {
-            var response = new ServiceResponse<SpecVersion>();
-            var resultVersion = new SpecVersion();
-
-            var specs = GetVersionsForASpecRelease(specId, releaseId);
-            if (specs.Count == 0)
-            {
-                // We need to get the release number.
-                var relMgr = ManagerFactory.Resolve<IReleaseManager>();
-                relMgr.UoW = UoW;
-                var release = relMgr.GetReleaseById(personId, releaseId).Key;
-                if (release != null)
-                {
-                    resultVersion.MajorVersion = release.Version3g;
-                    resultVersion.TechnicalVersion = 0;
-                    resultVersion.EditorialVersion = 0;
-                }
-            }
-
-            response.Result = resultVersion;
-            return response;
-
-        }
+        
 
         public Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId, Report report = null)
         {

@@ -291,7 +291,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
+                var versionMgr = new GetNextReleaseAction();
                 versionMgr.UoW = uoW;
                 return versionMgr.GetNextVersionForSpec(personId, specId, releaseId, forUpload);
             }

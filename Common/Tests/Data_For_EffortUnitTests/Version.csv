@@ -1,3 +1,6 @@
 Pk_VersionId,MajorVersion,TechnicalVersion,EditorialVersion,AchievedDate,ExpertProvided,Location,SupressFromSDO_Pub,ForcePublication,DocumentUploaded,DocumentPassedToPub,Multifile,Source,ETSI_WKI_ID,ProvidedBy,Fk_SpecificationId,Fk_ReleaseId,ETSI_WKI_Ref
+428927,13,0,1,,,,False,False,,,False,29581,0,,136080,2883,
 428928,13,1,0,2013-12-20,2013-12-20,http://www.3gpp.org/ftp/Specs/archive/22_series/22.101/22101-d10.zip,False,False,,,False,29581,0,,136080,2883,
-428929,13,2,0,,,,False,False,,,False,29581,0,,136080,2883,
+428929,13,1,1,,,,False,False,,,False,29581,0,,136080,2883,
+428930,13,2,0,,,,False,False,,,False,29581,0,,136080,2883,
+428931,2,1,0,,,,False,False,,,False,29581,0,,136082,2883,

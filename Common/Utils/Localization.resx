@@ -285,13 +285,13 @@
   <data name="Allocate_Error_Missing_Release_Or_Specification" xml:space="preserve">
     <value>Release and specification must be provided</value>
   </data>
-  <data name="Allocate_Error_Release_Does_Not_Exist" xml:space="preserve">
+  <data name="Error_Release_Does_Not_Exist" xml:space="preserve">
     <value>Release does not exist</value>
   </data>
   <data name="Allocate_Error_SpecRelease_Does_Not_Exist" xml:space="preserve">
     <value>Specification release does not exist.</value>
   </data>
-  <data name="Allocate_Error_Spec_Does_Not_Exist" xml:space="preserve">
+  <data name="Error_Spec_Does_Not_Exist" xml:space="preserve">
     <value>Specification does not exist</value>
   </data>
   <data name="Allocate_Error_Version_Not_Allowed" xml:space="preserve">

@@ -73,7 +73,7 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
             myVersion.Fk_ReleaseId = 1;
             var result = versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
             Assert.AreEqual(1, result.GetNumberOfErrors());
-            Assert.AreEqual(Utils.Localization.Allocate_Error_Release_Does_Not_Exist, result.ErrorList.First());
+            Assert.AreEqual(Utils.Localization.Error_Release_Does_Not_Exist, result.ErrorList.First());
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
             myVersion.Fk_SpecificationId = 1;
             var result = versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
             Assert.AreEqual(1, result.GetNumberOfErrors());
-            Assert.AreEqual(Utils.Localization.Allocate_Error_Spec_Does_Not_Exist, result.ErrorList.First());
+            Assert.AreEqual(Utils.Localization.Error_Spec_Does_Not_Exist, result.ErrorList.First());
         }
 
         [Test]

@@ -19,17 +19,27 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
         const int USER_HAS_RIGHT = 1;
         const int USER_HAS_NO_RIGHT = 2;
 
+        SpecVersionService versionSvc;
+
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
             SetupMocks();
+
+            versionSvc = new SpecVersionService();
+
+            isTestReadOnly = true;
         }      
 
-        [TestCase(EffortConstants.SPECIFICATION_ACTIVE_ID, EffortConstants.RELEASE_NEWLY_OPEN_ID, false, 14, 0, 0)]
+        [TestCase(EffortConstants.SPECIFICATION_ACTIVE_ID, EffortConstants.RELEASE_NEWLY_OPEN_ID, false, 14, 0, 0)]     // First version of a UCC spec is <rel#>.0.0
+        [TestCase(EffortConstants.SPECIFICATION_ACTIVE_ID, EffortConstants.RELEASE_OPEN_ID, false, 13, 3, 0)]           // Next version for allocation is always <rel#>.<biggest+1>.0    
+        [TestCase(EffortConstants.SPECIFICATION_DRAFT_WITH_EXISTING_DRAFTS_ID, EffortConstants.RELEASE_NEWLY_OPEN_ID, false, 2, 2, 0)]           // In case of draft, next version for allocation is <biggest>.<biggest+1>.0    
+        [TestCase(EffortConstants.SPECIFICATION_DRAFT_WITH_NO_DRAFT_ID, EffortConstants.RELEASE_NEWLY_OPEN_ID, false, 0, 0, 0)]           // In case of draft, and no draft already allocated, 0.0.0
+        [TestCase(EffortConstants.SPECIFICATION_ACTIVE_ID, EffortConstants.RELEASE_OPEN_ID, true, 13, 1, 1)]           // In case of upload, fetch lowest allocated version after an upload.
+        [TestCase(EffortConstants.SPECIFICATION_DRAFT_WITH_EXISTING_DRAFTS_ID, EffortConstants.RELEASE_NEWLY_OPEN_ID, true, 2, 2, 0)]           // Here, we can't allocate, because draft is registered for previous release.   
         public void GetNextVersion_ComputesRightVersionNumber(int specId, int relId, bool forUpload, int awaitedMajor, int awaitedTechnical, int awaitedEditorial )
         {
-            var versionSvc = new SpecVersionService();
             var response = versionSvc.GetNextVersionForSpec(1, specId, relId, forUpload);
 
             Assert.IsNotNull(response);
@@ -41,6 +51,30 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
             Assert.AreEqual(awaitedEditorial, response.Result.EditorialVersion);
         }
 
+        [Test]
+        public void GetNextVersion_ReturnsReleaseAndSpecDetails()
+        {
+            var response = versionSvc.GetNextVersionForSpec(1, EffortConstants.SPECIFICATION_ACTIVE_ID, EffortConstants.RELEASE_OPEN_ID, false);
+
+            Assert.AreEqual("Rel-13", response.Result.Release.Code);
+            Assert.AreEqual("22.101", response.Result.Specification.Number);
+        }
+
+        [Test]
+        public void GetNextVersion_ReportsErrorForInvalidRelease()
+        {
+            var response = versionSvc.GetNextVersionForSpec(1, EffortConstants.SPECIFICATION_ACTIVE_ID, 1, false);
+            Assert.AreEqual(1, response.Report.GetNumberOfErrors());
+            Assert.AreEqual(Utils.Localization.Error_Release_Does_Not_Exist, response.Report.ErrorList.First());
+        }
+
+        [Test]
+        public void GetNextVersion_ReportsErrorForInvalidSpec()
+        {
+            var response = versionSvc.GetNextVersionForSpec(1, 1, EffortConstants.RELEASE_OPEN_ID, false);
+            Assert.AreEqual(1, response.Report.GetNumberOfErrors());
+            Assert.AreEqual(Utils.Localization.Error_Spec_Does_Not_Exist, response.Report.ErrorList.First());
+        }
 
         private void SetupMocks()
         {

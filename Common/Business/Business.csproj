@@ -79,6 +79,7 @@
   <ItemGroup>
     <Compile Include="CommunityManager.cs" />
     <Compile Include="RemarkManager.cs" />
+    <Compile Include="SpecVersionBusiness\GetNextReleaseAction.cs" />
     <Compile Include="SpecVersionBusiness\SpecVersionAllocateAction.cs" />
     <Compile Include="SpecVersionBusiness\SpecVersionUploadAction.cs" />
     <Compile Include="SyncInfoManager.cs" />

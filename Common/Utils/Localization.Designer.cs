@@ -70,24 +70,6 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Release does not exist.
-        /// </summary>
-        public static string Allocate_Error_Release_Does_Not_Exist {
-            get {
-                return ResourceManager.GetString("Allocate_Error_Release_Does_Not_Exist", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Specification does not exist.
-        /// </summary>
-        public static string Allocate_Error_Spec_Does_Not_Exist {
-            get {
-                return ResourceManager.GetString("Allocate_Error_Spec_Does_Not_Exist", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Specification release does not exist..
         /// </summary>
         public static string Allocate_Error_SpecRelease_Does_Not_Exist {
@@ -102,6 +84,24 @@ namespace Etsi.Ultimate.Utils {
         public static string Allocate_Error_Version_Not_Allowed {
             get {
                 return ResourceManager.GetString("Allocate_Error_Version_Not_Allowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Release does not exist.
+        /// </summary>
+        public static string Error_Release_Does_Not_Exist {
+            get {
+                return ResourceManager.GetString("Error_Release_Does_Not_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specification does not exist.
+        /// </summary>
+        public static string Error_Spec_Does_Not_Exist {
+            get {
+                return ResourceManager.GetString("Error_Spec_Does_Not_Exist", resourceCulture);
             }
         }
         
