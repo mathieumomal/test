@@ -63,9 +63,10 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
         [ExpectedException(typeof(InvalidOperationException))]
         public void Allocation_Fails_If_No_Spec_Attached()
         {
-            myVersion.Fk_ReleaseId = null;
+            myVersion.Fk_SpecificationId = 0;
             versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
         }
+
 
         private SpecVersion CreateVersion()
         {

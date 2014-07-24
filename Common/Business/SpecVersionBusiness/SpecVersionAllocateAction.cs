@@ -36,9 +36,9 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
         private void CheckVersion(SpecVersion version)
         {
-            if (version.Fk_ReleaseId == null)
+            if (version.Fk_ReleaseId.GetValueOrDefault() == 0|| version.Fk_SpecificationId.GetValueOrDefault() == 0)
             {
-                throw new InvalidOperationException("Release must be provided");
+                throw new InvalidOperationException("Release and specification must be provided");
             }
         }
     }
