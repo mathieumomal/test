@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.Business.SpecVersionBusiness;
 using Microsoft.Practices.Unity;
 
 namespace Etsi.Ultimate.Business

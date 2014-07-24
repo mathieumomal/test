@@ -14,6 +14,7 @@ using Etsi.Ultimate.Repositories;
 using System.Data.Entity;
 using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.Business.SpecVersionBusiness;
 
 namespace Etsi.Ultimate.Tests.Business
 {

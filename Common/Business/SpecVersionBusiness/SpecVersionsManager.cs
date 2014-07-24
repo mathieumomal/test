@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.SpecVersionBusiness
 {
     public class SpecVersionsManager : ISpecVersionManager
     {

@@ -79,7 +79,8 @@
   <ItemGroup>
     <Compile Include="CommunityManager.cs" />
     <Compile Include="RemarkManager.cs" />
-    <Compile Include="SpecVersionAllocateAction.cs" />
+    <Compile Include="SpecVersionBusiness\SpecVersionAllocateAction.cs" />
+    <Compile Include="SpecVersionBusiness\SpecVersionUploadAction.cs" />
     <Compile Include="SyncInfoManager.cs" />
     <Compile Include="DocQualityChecks.cs" />
     <Compile Include="DocXQualityChecks.cs" />
@@ -111,7 +112,7 @@
     <Compile Include="SpecificationTechnologiesManager.cs" />
     <Compile Include="SpecificationWithdrawAction.cs" />
     <Compile Include="SpecificationWorkItemManager.cs" />
-    <Compile Include="SpecVersionsManager.cs" />
+    <Compile Include="SpecVersionBusiness\SpecVersionsManager.cs" />
     <Compile Include="TranspositionManager.cs" />
     <Compile Include="UrlManager.cs" />
     <Compile Include="UtilsManager.cs" />

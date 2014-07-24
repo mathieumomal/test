@@ -196,8 +196,9 @@
     <Compile Include="Services\SpecMassivePromoteTest.cs" />
     <Compile Include="Services\SpecReleaseRightsServiceTest.cs" />
     <Compile Include="Services\SpecTranspositionServiceTest.cs" />
-    <Compile Include="Services\SpecVersionAllocateTest.cs" />
-    <Compile Include="Services\SpecVersionServiceTest.cs" />
+    <Compile Include="Services\SpecVersionServiceTest\SpecVersionAllocateTest.cs" />
+    <Compile Include="Services\SpecVersionServiceTest\SpecVersionServiceTest.cs" />
+    <Compile Include="Services\SpecVersionServiceTest\SpecVersionUploadTest.cs" />
     <Compile Include="Services\SpecWithdrawalTest.cs" />
     <Compile Include="Services\UrlServiceTest.cs" />
     <Compile Include="Services\UtilsServiceTest.cs" />
@@ -206,7 +207,9 @@
     <Compile Include="Services\WorkPlanFileServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="Data_For_EffortUnitTests\Enum_Technology.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

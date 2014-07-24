@@ -36,8 +36,7 @@ namespace Etsi.Ultimate.Repositories
 
         public void Dispose()
         {
-            //if ((((System.Data.Entity.DbContext)(context)).Database.Connection).DataSource != "in-process") //for Effort testing
-                context.Dispose();
+            context.Dispose();
         }
 
         #endregion

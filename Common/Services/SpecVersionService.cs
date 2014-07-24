@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.Business.SpecVersionBusiness;
 
 namespace Etsi.Ultimate.Services
 {
@@ -42,8 +43,9 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        //TO REMOVE -----------------------------------------
         /// <summary>
-        /// Allocate/Upload a version
+        /// OLD : Allocate/Upload a version
         /// </summary>
         /// <param name="version">Version to allocate/upload</param>
         /// <returns>Result of the operation</returns>
@@ -68,7 +70,14 @@ namespace Etsi.Ultimate.Services
             }
             return result;
         }
+        //TO REMOVE -----------------------------------------
 
+        /// <summary>
+        /// Allocate a version
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
         public Report AllocateVersion(int personId, SpecVersion version)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -76,6 +85,22 @@ namespace Etsi.Ultimate.Services
                 var specVersionAllocateAction = new SpecVersionAllocateAction();
                 specVersionAllocateAction.UoW = uoW;
                 return specVersionAllocateAction.AllocateVersion(personId, version);
+            }
+        }
+
+        /// <summary>
+        /// Upload a version
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public KeyValuePair<int, Report> UploadVersion(int personId, SpecVersion version)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specVersionUploadAction = new SpecVersionUploadAction();
+                specVersionUploadAction.UoW = uoW;
+                return specVersionUploadAction.UploadVersion(personId, version);
             }
         }
 

@@ -4,6 +4,7 @@ using Etsi.Ultimate.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Etsi.Ultimate.Business.SpecVersionBusiness;
 
 namespace Etsi.Ultimate.Services
 {

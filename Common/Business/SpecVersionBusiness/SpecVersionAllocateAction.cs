@@ -7,7 +7,7 @@ using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.SpecVersionBusiness
 {
     public class SpecVersionAllocateAction
     {
