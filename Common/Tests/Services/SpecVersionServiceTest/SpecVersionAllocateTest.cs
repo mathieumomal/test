@@ -10,6 +10,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Etsi.Ultimate.Business;
 using Microsoft.Practices.Unity;
+using Etsi.Ultimate.Repositories;
 
 namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
 {
@@ -20,7 +21,9 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
         const int USER_HAS_RIGHT = 2;
 
         const int OPEN_RELEASE_ID = 2883;
-        const int OPEN_SPEC_ID = 136080;
+        const int NEXT_OPEN_RELEASE_ID = 2884;
+        const int ACTIVE_SPECIFICATION_ID = 136080;
+        const int WITHDRAWN_SPECIFICATION_ID = 136081;
 
         SpecVersionService versionSvc;
         SpecVersion myVersion;
@@ -32,15 +35,15 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
 
             versionSvc = new SpecVersionService();
             myVersion = CreateVersion();
+            SetupMocks();
         }
 
         [Test]
-        public void Allocate_Fails_If_User_Has_No_Right()
+        public void Allocate_FailsIfUserHasNoRight()
         {
-            SetupMocks();
-
             var result = versionSvc.AllocateVersion(USER_HAS_NO_RIGHT, myVersion);
             Assert.AreEqual(1, result.GetNumberOfErrors());
+            Assert.AreEqual(Utils.Localization.RightError, result.ErrorList.First());
         }
 
         [Test]
@@ -49,34 +52,98 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
             var result = versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
             Assert.AreEqual(0, result.GetNumberOfErrors());
             Assert.AreEqual(0, result.GetNumberOfWarnings());
+            
+            // Now let's try to fetch the version, check it's there
+            var newlyCreatedVersion = RepositoryFactory.Resolve<IUltimateUnitOfWork>().Context.SpecVersions.Where(v => v.Fk_SpecificationId == ACTIVE_SPECIFICATION_ID && v.Fk_ReleaseId == OPEN_RELEASE_ID && v.MajorVersion == myVersion.MajorVersion && v.TechnicalVersion == myVersion.TechnicalVersion && v.EditorialVersion == myVersion.EditorialVersion).FirstOrDefault();
+            Assert.IsNotNull(newlyCreatedVersion);
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void Allocation_Fails_If_No_Release_Attached()
+        public void Allocation_FailsIfNoReleaseAttached()
         {
             myVersion.Fk_ReleaseId = null;
-            versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
+            var result = versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
+            Assert.AreEqual(1, result.GetNumberOfErrors());
+            Assert.AreEqual(Utils.Localization.Allocate_Error_Missing_Release_Or_Specification, result.ErrorList.First());
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void Allocation_Fails_If_No_Spec_Attached()
+        public void Allocation_FailsIfReleaseDoesNotExist()
         {
-            myVersion.Fk_SpecificationId = 0;
-            versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
+            myVersion.Fk_ReleaseId = 1;
+            var result = versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
+            Assert.AreEqual(1, result.GetNumberOfErrors());
+            Assert.AreEqual(Utils.Localization.Allocate_Error_Release_Does_Not_Exist, result.ErrorList.First());
         }
 
+        [Test]
+        public void Allocation_FailsIfNoSpecAttached()
+        {
+            myVersion.Fk_SpecificationId = 0;
+            var result = versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
+            Assert.AreEqual(1, result.GetNumberOfErrors());
+            Assert.AreEqual(Utils.Localization.Allocate_Error_Missing_Release_Or_Specification, result.ErrorList.First());
+        }
+
+        [Test]
+        public void Allocation_FailsIfSpecDoesNotExist()
+        {
+            myVersion.Fk_SpecificationId = 1;
+            var result = versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
+            Assert.AreEqual(1, result.GetNumberOfErrors());
+            Assert.AreEqual(Utils.Localization.Allocate_Error_Spec_Does_Not_Exist, result.ErrorList.First());
+        }
+
+        [Test]
+        public void Allocation_FailsIfSpecIsNotActive()
+        {
+            myVersion.Fk_SpecificationId = WITHDRAWN_SPECIFICATION_ID;
+            myVersion.Fk_ReleaseId = OPEN_RELEASE_ID;
+            var result = versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
+            Assert.AreEqual(1, result.GetNumberOfErrors());
+            Assert.AreEqual(Utils.Localization.RightError, result.ErrorList.First());
+        }
+
+        [Test]
+        public void Allocation_FailsIfSpecReleaseDoesNotExist()
+        {
+            myVersion.Fk_SpecificationId = ACTIVE_SPECIFICATION_ID;
+            myVersion.Fk_ReleaseId = NEXT_OPEN_RELEASE_ID;
+            var result = versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
+            Assert.AreEqual(1, result.GetNumberOfErrors());
+            Assert.AreEqual(Utils.Localization.Allocate_Error_SpecRelease_Does_Not_Exist, result.ErrorList.First());
+        }
+
+        /**
+         * In database, version 13.1.0 already exists, therefor it should not be able to allocate 13.0.0
+         */
+        [TestCase(1,4,3)]
+        [TestCase(13,0,0)]
+        [TestCase(13,1,0)]
+        public void Allocation_FailsIfVersionIsSmallerThanExistingOneForTheRelease(int major, int technical, int editorial)
+        {
+            myVersion.Fk_SpecificationId = ACTIVE_SPECIFICATION_ID;
+            myVersion.Fk_ReleaseId = OPEN_RELEASE_ID;
+            myVersion.MajorVersion = major;
+            myVersion.TechnicalVersion = technical;
+            myVersion.EditorialVersion = editorial;
+
+            var result = versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
+            Assert.AreEqual(1, result.GetNumberOfErrors());
+            Assert.AreEqual(Utils.Localization.Allocate_Error_Version_Not_Allowed, result.ErrorList.First());
+        }
+
+        
 
         private SpecVersion CreateVersion()
         {
             return new SpecVersion()
             {
                 MajorVersion = 13,
-                TechnicalVersion = 1,
+                TechnicalVersion = 2,
                 EditorialVersion = 0,
                 Fk_ReleaseId = OPEN_RELEASE_ID,
-                Fk_SpecificationId = OPEN_SPEC_ID
+                Fk_SpecificationId = ACTIVE_SPECIFICATION_ID
 
             };
         }

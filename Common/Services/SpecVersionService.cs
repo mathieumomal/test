@@ -84,7 +84,10 @@ namespace Etsi.Ultimate.Services
             {
                 var specVersionAllocateAction = new SpecVersionAllocateAction();
                 specVersionAllocateAction.UoW = uoW;
-                return specVersionAllocateAction.AllocateVersion(personId, version);
+                var result = specVersionAllocateAction.AllocateVersion(personId, version);
+                uoW.Save();
+
+                return result;
             }
         }
 

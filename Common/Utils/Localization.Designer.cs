@@ -61,6 +61,51 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Release and specification must be provided.
+        /// </summary>
+        public static string Allocate_Error_Missing_Release_Or_Specification {
+            get {
+                return ResourceManager.GetString("Allocate_Error_Missing_Release_Or_Specification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Release does not exist.
+        /// </summary>
+        public static string Allocate_Error_Release_Does_Not_Exist {
+            get {
+                return ResourceManager.GetString("Allocate_Error_Release_Does_Not_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specification does not exist.
+        /// </summary>
+        public static string Allocate_Error_Spec_Does_Not_Exist {
+            get {
+                return ResourceManager.GetString("Allocate_Error_Spec_Does_Not_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Specification release does not exist..
+        /// </summary>
+        public static string Allocate_Error_SpecRelease_Does_Not_Exist {
+            get {
+                return ResourceManager.GetString("Allocate_Error_SpecRelease_Does_Not_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version should be greater that latest uploaded version for the release..
+        /// </summary>
+        public static string Allocate_Error_Version_Not_Allowed {
+            get {
+                return ResourceManager.GetString("Allocate_Error_Version_Not_Allowed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Release closed. {0}.
         /// </summary>
         public static string History_Release_Close {

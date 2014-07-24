@@ -67,7 +67,9 @@ namespace Etsi.Ultimate.Tests
                 throw new Exception(error);
             }
 
-            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), Context); 
+            
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), Context);
+            RepositoryFactory.Container.RegisterType<IUltimateUnitOfWork,EffortUnitOfWork>(new TransientLifetimeManager() );
             UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
         }
 

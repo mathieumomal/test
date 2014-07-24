@@ -12,11 +12,9 @@ namespace Etsi.Ultimate.Repositories
 {
     public class EnumTechnologiesRepository : IEnumTechnologiesRepository
     {
-        private IUltimateContext context;
 
-        public EnumTechnologiesRepository(IUltimateUnitOfWork iUoW)
+        public EnumTechnologiesRepository()
         {
-            context = iUoW.Context;
         }
 
         #region IEntityRepository<Enum_Technology> Membres
@@ -24,7 +22,7 @@ namespace Etsi.Ultimate.Repositories
         public IQueryable<Enum_Technology> All
         {
             get { 
-                return context.Enum_Technology;
+                return UoW.Context.Enum_Technology;
             }
         }
 
@@ -35,7 +33,7 @@ namespace Etsi.Ultimate.Repositories
 
         public Enum_Technology Find(int id)
         {
-            return context.Enum_Technology.Find(id);
+            return UoW.Context.Enum_Technology.Find(id);
         }
 
         public void InsertOrUpdate(Enum_Technology entity)
@@ -54,7 +52,6 @@ namespace Etsi.Ultimate.Repositories
 
         public void Dispose()
         {
-            context.Dispose();
         }
 
         #endregion

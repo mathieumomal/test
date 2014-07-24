@@ -282,4 +282,19 @@
   <data name="RightError" xml:space="preserve">
     <value>You do not have right to perform this action</value>
   </data>
+  <data name="Allocate_Error_Missing_Release_Or_Specification" xml:space="preserve">
+    <value>Release and specification must be provided</value>
+  </data>
+  <data name="Allocate_Error_Release_Does_Not_Exist" xml:space="preserve">
+    <value>Release does not exist</value>
+  </data>
+  <data name="Allocate_Error_SpecRelease_Does_Not_Exist" xml:space="preserve">
+    <value>Specification release does not exist.</value>
+  </data>
+  <data name="Allocate_Error_Spec_Does_Not_Exist" xml:space="preserve">
+    <value>Specification does not exist</value>
+  </data>
+  <data name="Allocate_Error_Version_Not_Allowed" xml:space="preserve">
+    <value>Version should be greater that latest uploaded version for the release.</value>
+  </data>
 </root>
