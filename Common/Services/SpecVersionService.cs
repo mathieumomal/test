@@ -89,18 +89,34 @@ namespace Etsi.Ultimate.Services
         }
 
         /// <summary>
-        /// Upload a version
+        /// Check a version before upload it
         /// </summary>
         /// <param name="personId"></param>
         /// <param name="version"></param>
         /// <returns></returns>
-        public KeyValuePair<int, Report> UploadVersion(int personId, SpecVersion version)
+        public KeyValuePair<string, Report> CheckVersionForUpload(int personId, SpecVersion version, string path)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var specVersionUploadAction = new SpecVersionUploadAction();
                 specVersionUploadAction.UoW = uoW;
-                return specVersionUploadAction.UploadVersion(personId, version);
+                return specVersionUploadAction.CheckVersionForUpload(personId, version, path);
+            }
+        }
+
+        /// <summary>
+        /// Upload a version
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public KeyValuePair<string, Report> UploadVersion(int personId, SpecVersion version, string token)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specVersionUploadAction = new SpecVersionUploadAction();
+                specVersionUploadAction.UoW = uoW;
+                return specVersionUploadAction.CheckVersionForUpload(personId, version, token);
             }
         }
 

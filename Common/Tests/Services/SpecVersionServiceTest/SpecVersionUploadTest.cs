@@ -15,14 +15,17 @@ namespace Etsi.Ultimate.Tests.Services
 {
     public class SpecVersionUploadTest : BaseEffortTest
     {
+        #region constantes
         const int USER_HAS_NO_RIGHT = 1;
         const int USER_HAS_RIGHT = 2;
 
         const int OPEN_RELEASE_ID = 2883;
         const int OPEN_SPEC_ID = 136080;
+        #endregion
 
+        #region tests
         [Test]
-        public void Allocate_Fails_If_User_Has_No_Right()
+        public void Upload_Fails_If_User_Has_No_Right()
         {
             var versionSvc = new SpecVersionService();
 
@@ -30,21 +33,47 @@ namespace Etsi.Ultimate.Tests.Services
 
             var myVersion = CreateVersion();
 
-            var result = versionSvc.UploadVersion(USER_HAS_NO_RIGHT, myVersion);
+            var result = versionSvc.UploadVersion(USER_HAS_NO_RIGHT, myVersion, "token");
             Assert.AreEqual(1, result.Value.GetNumberOfErrors());
         }
 
         [Test]
-        public void Allocate_NominalCase()
+        public void Upload_NominalCase()
         {
             var versionSvc = new SpecVersionService();
 
             var myVersion = CreateVersion();
-            var result = versionSvc.UploadVersion(USER_HAS_RIGHT, myVersion);
+            var result = versionSvc.UploadVersion(USER_HAS_RIGHT, myVersion, "token");
             Assert.AreEqual(0, result.Value.GetNumberOfErrors());
             Assert.AreEqual(0, result.Value.GetNumberOfWarnings());
         }
 
+        public void CheckVersionForUpload_Fails_If_User_Has_No_Right()
+        {
+            var versionSvc = new SpecVersionService();
+
+            SetupMocks();
+
+            var myVersion = CreateVersion();
+
+            var result = versionSvc.CheckVersionForUpload(USER_HAS_NO_RIGHT, myVersion, "path");
+            Assert.AreEqual(1, result.Value.GetNumberOfErrors());
+        }
+
+        [Test]
+        public void CheckVersionForUpload_NominalCase()
+        {
+            var versionSvc = new SpecVersionService();
+            SetupMocks();
+            var myVersion = CreateVersion();
+            var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, "path");
+            Assert.AreEqual(0, result.Value.GetNumberOfErrors());
+            Assert.AreEqual(0, result.Value.GetNumberOfWarnings());
+        }
+        #endregion
+
+
+        #region datas
         private SpecVersion CreateVersion()
         {
             return new SpecVersion()
@@ -57,7 +86,6 @@ namespace Etsi.Ultimate.Tests.Services
 
             };
         }
-
         private void SetupMocks()
         {
             var noRights = new UserRightsContainer();
@@ -70,5 +98,6 @@ namespace Etsi.Ultimate.Tests.Services
 
             ManagerFactory.Container.RegisterInstance<IRightsManager>(rightsManager);
         }
+        #endregion
     }
 }
