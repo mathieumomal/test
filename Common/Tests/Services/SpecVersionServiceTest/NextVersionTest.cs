@@ -29,7 +29,6 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
 
             versionSvc = new SpecVersionService();
 
-            isTestReadOnly = true;
         }      
 
         [TestCase(EffortConstants.SPECIFICATION_ACTIVE_ID, EffortConstants.RELEASE_NEWLY_OPEN_ID, false, 14, 0, 0)]     // First version of a UCC spec is <rel#>.0.0

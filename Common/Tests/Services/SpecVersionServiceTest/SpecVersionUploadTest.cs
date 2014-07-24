@@ -48,6 +48,7 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(0, result.Value.GetNumberOfWarnings());
         }
 
+        [Test]
         public void CheckVersionForUpload_Fails_If_User_Has_No_Right()
         {
             var versionSvc = new SpecVersionService();
