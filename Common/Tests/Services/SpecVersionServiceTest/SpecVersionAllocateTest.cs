@@ -11,8 +11,9 @@ using Rhino.Mocks;
 using Etsi.Ultimate.Business;
 using Microsoft.Practices.Unity;
 
-namespace Etsi.Ultimate.Tests.Services
+namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
 {
+    [Category("Version")]
     public class SpecVersionAllocateTest : BaseEffortTest
     {
         const int USER_HAS_NO_RIGHT = 1;
@@ -21,14 +22,22 @@ namespace Etsi.Ultimate.Tests.Services
         const int OPEN_RELEASE_ID = 2883;
         const int OPEN_SPEC_ID = 136080;
 
+        SpecVersionService versionSvc;
+        SpecVersion myVersion;
+
+        [SetUp]
+        public override void SetUp()
+        {
+            base.SetUp();
+
+            versionSvc = new SpecVersionService();
+            myVersion = CreateVersion();
+        }
+
         [Test]
         public void Allocate_Fails_If_User_Has_No_Right()
         {
-            var versionSvc = new SpecVersionService();
-
             SetupMocks();
-
-            var myVersion = CreateVersion();
 
             var result = versionSvc.AllocateVersion(USER_HAS_NO_RIGHT, myVersion);
             Assert.AreEqual(1, result.GetNumberOfErrors());
@@ -37,12 +46,25 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void Allocate_NominalCase()
         {
-            var versionSvc = new SpecVersionService();
-
-            var myVersion = CreateVersion();
             var result = versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
             Assert.AreEqual(0, result.GetNumberOfErrors());
             Assert.AreEqual(0, result.GetNumberOfWarnings());
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Allocation_Fails_If_No_Release_Attached()
+        {
+            myVersion.Fk_ReleaseId = null;
+            versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
+        }
+
+        [Test]
+        [ExpectedException(typeof(InvalidOperationException))]
+        public void Allocation_Fails_If_No_Spec_Attached()
+        {
+            myVersion.Fk_ReleaseId = null;
+            versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
         }
 
         private SpecVersion CreateVersion()

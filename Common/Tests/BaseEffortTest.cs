@@ -37,7 +37,7 @@ namespace Etsi.Ultimate.Tests
         /// Initialization of the context by a set of csv files
         /// </summary>
         [SetUp]
-        public void init()
+        public virtual void SetUp()
         {
             
             //CSV files are stored in a specific folder : Data_For_EffortUnitTests
@@ -73,7 +73,7 @@ namespace Etsi.Ultimate.Tests
 
 
         [TearDown]
-        public void end()
+        public virtual void TearDown()
         {
             Context.Dispose();
         }

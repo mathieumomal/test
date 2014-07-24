@@ -24,7 +24,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
             if (rights.HasRight(Enum_UserRights.Versions_Allocate))
             {
-
+                CheckVersion(version);
             }
             else
             {
@@ -32,6 +32,14 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             }
 
             return report;
+        }
+
+        private void CheckVersion(SpecVersion version)
+        {
+            if (version.Fk_ReleaseId == null)
+            {
+                throw new InvalidOperationException("Release must be provided");
+            }
         }
     }
 }
