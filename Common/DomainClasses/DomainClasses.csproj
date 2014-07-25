@@ -103,6 +103,7 @@
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="SpecVersion.Extend.cs" />
+    <Compile Include="SpecVersionCurrentAndNew.cs" />
     <Compile Include="SyncInfo.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

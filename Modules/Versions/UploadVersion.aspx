@@ -1,5 +1,4 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="UploadVersion.aspx.cs" Inherits="Etsi.Ultimate.Module.Versions.UploadVersion" %>
-
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 <%@ Register TagPrefix="ult" TagName="MeetingControl" Src="../../controls/Ultimate/MeetingControl.ascx" %>
 
@@ -9,8 +8,9 @@
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
-    <link rel="stylesheet" type="text/css" href="module.css">
-    <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="/Portals/_default/Skins/3GPP/mainpage.css"/>
+    <link rel="stylesheet" type="text/css" href="module.css"/>
+    <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon"/>
     <script src="JS/jquery.min.js"></script>
 </head>
 <body>

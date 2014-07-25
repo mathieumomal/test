@@ -13,82 +13,119 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using Telerik.Web.Zip;
+using Etsi.Ultimate.Module.Versions.App_LocalResources;
 
 namespace Etsi.Ultimate.Module.Versions
 {
     public partial class UploadVersion : System.Web.UI.Page
     {
         #region Variables / Properties
-
-        // Custom controls
         protected MeetingControl UploadMeeting;
 
-        //Static fields
+        //To remove ------------------------------------------------------
         public static readonly string DsId_Key = "ETSI_DS_ID";
-        private static string specificationTitle = String.Empty;
-        private static string releaseDescription = String.Empty;
-        private static int communityID;
-        private static bool isTS;
-        private static UploadedFile versionToSave;
-        private static string versionPathToSave = String.Empty;
         private const string CONST_VALID_FILENAME = "{0}-{1}{2}{3}";
         private const string CONST_FTP_ARCHIVE_PATH = "{0}\\Specs\\archive\\{1}_series\\{2}\\";
         private const string CONST_FTP_LATEST_PATH = "{0}\\Specs\\latest\\{1}\\{2}_series\\";
         private const string CONST_FTP_LATEST_DRAFTS_PATH = "{0}\\Specs\\latest-drafts\\";
         private const string CONST_FTP_VERSIONS_PATH = "{0}\\Specs\\{1}\\{2}\\{3}_series\\";
-        private const string CONST_WARNING_REPORT = "UploadVersionReport";
+        //To remove ------------------------------------------------------
 
-        //Properties
-        private static int UserId;
-        public static Nullable<int> releaseId;
-        public static Nullable<int> specId;
-        public static bool isDraft;
-        public static string action;
+
+        private static string releaseDescription = String.Empty;
+        private static UploadedFile versionToSave;
+        private static string versionPathToSave = String.Empty;
         public static string versionUploadPath;
         public static string versionFTP_Path;
         private int errorNumber = 0;
+
+
+        //Attributes validated --------------------------------------------------------------------
+        private const string CONST_WARNING_REPORT = "CONST_WARNING_REPORT";
+        private const string CONST_USER_ID_VIEWSTATE_LABEL = "CONST_USER_ID_VIEWSTATE_LABEL";
+        private const string CONST_RELEASE_ID_VIEWSTATE_LABEL = "CONST_RELEASE_ID_VIEWSTATE_LABEL";
+        private const string CONST_SPEC_ID_VIEWSTATE_LABEL = "CONST_SPEC_ID_VIEWSTATE_LABEL";
+        private const string CONST_IS_UPLOAD_MODE_VIEWSTATE_LABEL = "CONST_IS_UPLOAD_MODE_VIEWSTATE_LABEL";
+        private const string CONST_IS_DRAFT_VIEWSTATE_LABEL = "CONST_IS_DRAFT_VIEWSTATE_LABEL";
+
         private Report report
         {
             get
             {
-                return ViewState[CONST_WARNING_REPORT] != null ? (Report)ViewState[CONST_WARNING_REPORT] : null;
+                return ViewState[ClientID + CONST_WARNING_REPORT] != null ? (Report)ViewState[ClientID + CONST_WARNING_REPORT] : null;
             }
             set
             {
-                ViewState[CONST_WARNING_REPORT] = value;
+                ViewState[ClientID + CONST_WARNING_REPORT] = value;
+            }
+        }
+        public int ReleaseId
+        {
+            get
+            {
+                if (ViewState[ClientID + CONST_RELEASE_ID_VIEWSTATE_LABEL] == null)
+                    ViewState[ClientID + CONST_RELEASE_ID_VIEWSTATE_LABEL] = 0;
+
+                return (int)ViewState[ClientID + CONST_RELEASE_ID_VIEWSTATE_LABEL];
+            }
+            set
+            {
+                ViewState[ClientID + CONST_RELEASE_ID_VIEWSTATE_LABEL] = value;
+            }
+        }
+        public int SpecId
+        {
+            get
+            {
+                if (ViewState[ClientID + CONST_SPEC_ID_VIEWSTATE_LABEL] == null)
+                    ViewState[ClientID + CONST_SPEC_ID_VIEWSTATE_LABEL] = 0;
+
+                return (int)ViewState[ClientID + CONST_SPEC_ID_VIEWSTATE_LABEL];
+            }
+            set
+            {
+                ViewState[ClientID + CONST_SPEC_ID_VIEWSTATE_LABEL] = value;
+            }
+        }
+        /// <summary>
+        /// true : upload case, false : allocate case
+        /// </summary>
+        public bool IsUploadMode
+        {
+            get
+            {
+                if (ViewState[ClientID + CONST_IS_UPLOAD_MODE_VIEWSTATE_LABEL] == null)
+                    ViewState[ClientID + CONST_IS_UPLOAD_MODE_VIEWSTATE_LABEL] = false;
+
+                return (bool)ViewState[ClientID + CONST_IS_UPLOAD_MODE_VIEWSTATE_LABEL];
+            }
+            set
+            {
+                ViewState[ClientID + CONST_IS_UPLOAD_MODE_VIEWSTATE_LABEL] = value;
+            }
+        }
+        public bool IsDraft
+        {
+            get
+            {
+                if (ViewState[ClientID + CONST_IS_DRAFT_VIEWSTATE_LABEL] == null)
+                    ViewState[ClientID + CONST_IS_DRAFT_VIEWSTATE_LABEL] = null;
+
+                return (bool)ViewState[ClientID + CONST_IS_DRAFT_VIEWSTATE_LABEL];
+            }
+            set
+            {
+                ViewState[ClientID + CONST_IS_DRAFT_VIEWSTATE_LABEL] = value;
             }
         }
 
+        //To discusss their utility :
+        private static int communityID;
+        private static bool isTS;
+        private static string specificationTitle = String.Empty;
         #endregion
 
-        #region Events
-
-        /// <summary>
-        /// Upload Version - Constructor
-        /// </summary>
-        /// <param name="sender">source of event</param>
-        /// <param name="e">event args</param>
-        protected void Page_Load(object sender, EventArgs e)
-        {
-            if (!IsPostBack)
-            {
-                ResetPanelState();
-                GetRequestParameters();
-                ManageAllocationCase();
-                LoadVersionUploadContent();
-            }
-        }
-
-        /// <summary>
-        /// Click event of Allocation button
-        /// </summary>
-        /// <param name="sender">Allocation button</param>
-        /// <param name="e">event arguments</param>
-        protected void AllocateVersion_Click(object sender, EventArgs e)
-        {
-            UploadOrAllocateVersion(false);
-        }
-
+        #region OLD Events OLD
         /// <summary>
         /// Click event of upload button
         /// </summary>
@@ -97,13 +134,12 @@ namespace Etsi.Ultimate.Module.Versions
         protected void UploadBtn_Click(object sender, EventArgs e)
         {
             var meetingId = UploadMeeting.SelectedMeetingId;
-            if (meetingId > 0 || isDraft)
+            if (meetingId > 0 || IsDraft)
             {
                 versionUploadScreen.Visible = false;
                 confirmation.Visible = true;
             }
         }
-
         /// <summary>
         /// Click event of cancel button
         /// </summary>
@@ -113,7 +149,6 @@ namespace Etsi.Ultimate.Module.Versions
         {
             ResetPanelState();
         }
-
         /// <summary>
         /// Upload the version
         /// </summary>
@@ -121,9 +156,8 @@ namespace Etsi.Ultimate.Module.Versions
         /// <param name="e">event arguments</param>
         protected void Confirmation_Upload_OnClick(object sender, EventArgs e)
         {
-            UploadOrAllocateVersion(true);
+            //UploadOrAllocateVersion(true);
         }
-
         /// <summary>
         /// Method call by ajax when workplan is uploaded => WorkPlan Analyse
         /// </summary>
@@ -201,7 +235,7 @@ namespace Etsi.Ultimate.Module.Versions
                     }
 
                     //If we have valid file & spec is under change control, run quality checks
-                    if (allowToRunQualityChecks && !isDraft)
+                    if (allowToRunQualityChecks && !IsDraft)
                     {
                         string version = String.Empty;
                         DateTime meetingDate = DateTime.MinValue;
@@ -228,11 +262,11 @@ namespace Etsi.Ultimate.Module.Versions
                     lblCountWarningErrors.Text = new StringBuilder()
                         .Append("Found ")
                         .Append(validationReport.GetNumberOfErrors().ToString())
-                        .Append(" error")
+                        .Append(" error(s)")
                         .Append(validationReport.GetNumberOfErrors() <= 1 ? "" : "s")
                         .Append(", ")
                         .Append(validationReport.GetNumberOfWarnings().ToString())
-                        .Append(" warning")
+                        .Append(" warning(s)")
                         .Append(validationReport.GetNumberOfWarnings() <= 1 ? "" : "s")
                         .Append(".")
                         .ToString();
@@ -261,7 +295,6 @@ namespace Etsi.Ultimate.Module.Versions
                 }
             }
         }
-
         /// <summary>
         /// Item DataBound event for Error/Warning report
         /// </summary>
@@ -283,143 +316,20 @@ namespace Etsi.Ultimate.Module.Versions
                     lbl.CssClass = "WarningItem";
             }
         }
-
         #endregion
 
-        #region Private Methods
-
-        /// <summary>
-        /// Load page content
-        /// </summary>
-        private void LoadVersionUploadContent()
-        {
-            bool isActionUpload = action.Equals("upload");
-            bool isActionAllocate = action.Equals("allocate");
-            if ((releaseId != null) && (specId != null) && (isActionUpload || isActionAllocate))
-            {
-                //Specification Details
-                ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
-                var spec = specSvc.GetSpecificationDetailsById(UserId, specId.Value).Key;
-                isDraft = !(spec.IsUnderChangeControl.HasValue && spec.IsUnderChangeControl.Value);
-                hidIsRequired.Value = (!isDraft && isActionUpload) ? "True" : "False";
-                MeetingLbl.Text = (!isDraft && isActionUpload) ? "Meeting(<span class='requiredField'>*</span>):" : "Meeting:";
-
-                communityID = spec.PrimeResponsibleGroup.Fk_commityId;
-                isTS = spec.IsTS ?? true;
-                SpecNumberVal.Text = spec.Number;
-                specificationTitle = spec.Title;
-
-                //Get User Rights
-                var allSpecReleasesWithPermissions = specSvc.GetRightsForSpecReleases(UserId, spec);
-                var currentSpecReleaseWithPermission = allSpecReleasesWithPermissions.Where(x => x.Key.Fk_ReleaseId == releaseId).FirstOrDefault();
-                var userRights = currentSpecReleaseWithPermission.Value ?? new UserRightsContainer();
-
-                //Release Details
-                IReleaseService releaseSvc = ServicesFactory.Resolve<IReleaseService>();
-                var release = releaseSvc.GetReleaseById(UserId, releaseId.Value).Key;
-                ReleaseVal.Text = release.Code;
-                releaseDescription = release.Name;
-
-                //SpecVersion Details
-                ISpecVersionService specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
-                var specVersionsForAllReleases = specVersionSvc.GetVersionsBySpecId(specId.Value);
-                var latestSpecVersionForAllReleases = specVersionsForAllReleases.OrderByDescending(x => x.MajorVersion ?? 0)
-                                                                                .ThenByDescending(y => y.TechnicalVersion ?? 0)
-                                                                                .ThenByDescending(z => z.EditorialVersion ?? 0)
-                                                                                .FirstOrDefault();
-
-                var specVersionsForCurrentRelease = specVersionSvc.GetVersionsForSpecRelease(specId.Value, releaseId.Value);
-                var latestSpecVersionForCurrentRelease = specVersionsForCurrentRelease.OrderByDescending(x => x.MajorVersion ?? 0)
-                                                                                      .ThenByDescending(y => y.TechnicalVersion ?? 0)
-                                                                                      .ThenByDescending(z => z.EditorialVersion ?? 0)
-                                                                                      .FirstOrDefault();
-
-                var leastSpecVersionPendingUpload = this.GetVersionToUpload(specVersionsForCurrentRelease);
-
-                string latestVersionNumber = "-";
-                if (latestSpecVersionForCurrentRelease != null)
-                    latestVersionNumber = String.Format("{0}.{1}.{2}", latestSpecVersionForCurrentRelease.MajorVersion, latestSpecVersionForCurrentRelease.TechnicalVersion, latestSpecVersionForCurrentRelease.EditorialVersion);
-                CurrentVersionVal.Text = latestVersionNumber;
-
-                //Set Default Values
-                NewVersionMajorVal.Value = 0;
-                NewVersionTechnicalVal.Value = 0;
-                NewVersionEditorialVal.Value = 0;
-
-                if ((leastSpecVersionPendingUpload != null) && isActionUpload)
-                {
-                    NewVersionMajorVal.Value = leastSpecVersionPendingUpload.MajorVersion ?? 0;
-                    NewVersionTechnicalVal.Value = leastSpecVersionPendingUpload.TechnicalVersion ?? 0;
-                    NewVersionEditorialVal.Value = leastSpecVersionPendingUpload.EditorialVersion ?? 0;
-                    UploadMeeting.SelectedMeetingId = leastSpecVersionPendingUpload.Source ?? 0;
-                }
-                else
-                {
-
-                    if (spec.IsUnderChangeControl.HasValue && spec.IsUnderChangeControl.Value)
-                    {
-                        NewVersionMajorVal.Value = release.Version2g ?? 0;
-                        if ((latestSpecVersionForCurrentRelease != null) && (latestSpecVersionForCurrentRelease.TechnicalVersion.HasValue))
-                            NewVersionTechnicalVal.Value = latestSpecVersionForCurrentRelease.TechnicalVersion.Value + 1;
-                    }
-                    else if ((latestSpecVersionForAllReleases != null) && (latestSpecVersionForAllReleases.TechnicalVersion.HasValue))
-                        NewVersionTechnicalVal.Value = latestSpecVersionForAllReleases.TechnicalVersion.Value + 1;
-                }
-
-                //Set Major Version Status
-                NewVersionMajorVal.Enabled = userRights.HasRight(Enum_UserRights.Versions_Modify_MajorVersion);
-            }
-            else
-            {
-                versionUploadBody.Visible = false;
-                versionUploadMessages.Visible = true;
-                versionUploadMessages.CssClass = "Warning";
-                specificationMessagesTxt.CssClass = "WarningTxt";
-                specificationMessagesTxt.Text = "No avaible data for the requested query";
-            }
-        }
-
-        /// <summary>
-        /// This method find the last uploaded version 
-        /// and propose to upload the next version (or the same version if any "superior" version exists)
-        /// </summary>
-        /// <returns></returns>
-        private SpecVersion GetVersionToUpload(List<SpecVersion> versions)
-        {
-            if (versions != null && versions.Count > 0)
-            {
-                var versionsOrderedByVersion = versions.OrderByDescending(y => y.MajorVersion ?? 0)
-                                                                  .ThenByDescending(z => z.TechnicalVersion ?? 0)
-                                                                  .ThenByDescending(e => e.EditorialVersion ?? 0)
-                                                                  .ToList();
-                var lastVersion = versionsOrderedByVersion.FirstOrDefault();//We get the last version
-                //We create a temporary version to have the next version to upload : technical number + 1
-                SpecVersion versionToUpload = new SpecVersion() { MajorVersion = lastVersion.MajorVersion, TechnicalVersion = lastVersion.TechnicalVersion + 1, EditorialVersion = lastVersion.EditorialVersion };
-                foreach (var version in versionsOrderedByVersion)
-                {
-                    if (String.IsNullOrEmpty(version.Location))//if the lastVersion hasn't be downloaded : we get this version
-                        versionToUpload = version;
-                    else
-                        return versionToUpload;
-                }
-                return versionToUpload;
-            }
-            return null;
-        }
-
+        #region OLD Private Methods OLD
         /// <summary>
         /// Upload/Allocate Version
         /// </summary>
-        private void UploadOrAllocateVersion(bool isUpload)
+        /*private void UploadOrAllocateVersion(bool isUpload)
         {
-            KeyValuePair<bool, SpecVersion> buffer = fillSpecVersionObject();
+            KeyValuePair<bool, SpecVersion> buffer = GetEditedSpecVersionObject();
 
             if (buffer.Key)
             {
                 Report ftpTransferReport = new Report();
                 Report result = new Report();
-
-                UserId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
 
                 if (isUpload)
                 {
@@ -432,7 +342,7 @@ namespace Etsi.Ultimate.Module.Versions
                 if (ftpTransferReport.ErrorList.Count == 0)
                 {
                     ISpecVersionService svc = ServicesFactory.Resolve<ISpecVersionService>();
-                    result = svc.UploadOrAllocateVersion(buffer.Value, isDraft, UserId, report);
+                    result = svc.UploadOrAllocateVersion(buffer.Value, IsDraft, UserId, report);
                 }
                 else
                     result.ErrorList.AddRange(ftpTransferReport.ErrorList);
@@ -451,7 +361,7 @@ namespace Etsi.Ultimate.Module.Versions
                 }
                 else
                 {
-                    lblSaveStatus.Text = String.Format("Version {0}.{1}.{2} {3} successfully", buffer.Value.MajorVersion, buffer.Value.TechnicalVersion, buffer.Value.EditorialVersion, action.Equals("upload") ? "uploaded" : "allocated");
+                    lblSaveStatus.Text = String.Format("Version {0}.{1}.{2} {3} successfully", buffer.Value.MajorVersion, buffer.Value.TechnicalVersion, buffer.Value.EditorialVersion, IsUploadMode ? "uploaded" : "allocated");
                     versionUploadScreen.Visible = false;
                     analysis.Visible = false;
                     confirmation.Visible = false;
@@ -462,100 +372,7 @@ namespace Etsi.Ultimate.Module.Versions
             }
 
             versionPathToSave = String.Empty; //Clear path
-        }
-
-        /// <summary>
-        /// Display or not file upload input
-        /// Display or not allocation btn
-        /// </summary>
-        private void ManageAllocationCase()
-        {
-            if (action.Equals("allocate"))
-            {
-                FileToUploadLbl.Visible = false;
-                FileToUploadVal.Visible = false;
-                UploadBtnDisabled.Visible = false;
-                AllocateBtn.Visible = true;
-                btnConfirmUpload.Visible = false;
-            }
-        }
-
-        /// <summary>
-        /// Prepare the specVersion object to add in DB
-        /// </summary>
-        /// <returns></returns>
-        private KeyValuePair<bool, SpecVersion> fillSpecVersionObject()
-        {
-            //User's data
-            int output;
-            if (!int.TryParse(NewVersionMajorVal.Text, out output) || !int.TryParse(NewVersionTechnicalVal.Text, out output) || !int.TryParse(NewVersionEditorialVal.Text, out output))
-            {
-                return new KeyValuePair<bool, SpecVersion>(false, null);
-            }
-            else
-            {
-                SpecVersion version = new SpecVersion();
-                version.Fk_SpecificationId = specId;
-                version.Fk_ReleaseId = releaseId;
-                version.MajorVersion = int.Parse(NewVersionMajorVal.Text);
-                version.TechnicalVersion = int.Parse(NewVersionTechnicalVal.Text);
-                version.EditorialVersion = int.Parse(NewVersionEditorialVal.Text);
-
-                if (!String.IsNullOrEmpty(CommentVal.Text))
-                {
-                    version.Remarks.Add(new Remark()
-                    {
-                        RemarkText = CommentVal.Text,
-                        CreationDate = new Nullable<System.DateTime>(DateTime.UtcNow),
-                        Fk_PersonId = UserId,
-                        IsPublic = true
-                    });
-                }
-
-                if (UploadMeeting.SelectedMeeting != null)
-                {
-                    version.Source = UploadMeeting.SelectedMeeting.MTG_ID;
-                }
-                if (action.Equals("upload"))
-                {
-                    version.DocumentUploaded = DateTime.UtcNow;
-                    version.ProvidedBy = UserId;
-                }
-                return new KeyValuePair<bool, SpecVersion>(true, version);
-            }
-        }
-
-        /// <summary>
-        /// Retreive the URL parameters
-        /// </summary>
-        private void GetRequestParameters()
-        {
-            int output;
-            UserId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
-
-            releaseId = (Request.QueryString["releaseId"] != null) ? (int.TryParse(Request.QueryString["releaseId"], out output) ? new Nullable<int>(output) : null) : null;
-            specId = (Request.QueryString["specId"] != null) ? (int.TryParse(Request.QueryString["specId"], out output) ? new Nullable<int>(output) : null) : null;
-            action = (Request.QueryString["action"] != null) ? Request.QueryString["action"] : string.Empty;
-        }
-
-        /// <summary>
-        /// Retrieve person If exists
-        /// </summary>
-        /// <param name="UserInfo">Current user information</param>
-        /// <returns></returns>
-        private int GetUserPersonId(DotNetNuke.Entities.Users.UserInfo UserInfo)
-        {
-            if (UserInfo.UserID < 0)
-                return 0;
-            else
-            {
-                int personID;
-                if (Int32.TryParse(UserInfo.Profile.GetPropertyValue(DsId_Key), out personID))
-                    return personID;
-            }
-            return 0;
-        }
-
+        }*/
         /// <summary>
         /// Provide the valid file name for Version upload
         /// </summary>
@@ -583,20 +400,6 @@ namespace Etsi.Ultimate.Module.Versions
             string validFileName = String.Format(CONST_VALID_FILENAME, specNumber, majorVersionBase36, technicalVersionBase36, editorialVersionBase36);
             return validFileName;
         }
-
-        /// <summary>
-        /// Reset Panel Status
-        /// </summary>
-        private void ResetPanelState()
-        {
-            versionUploadScreen.Visible = true;
-            analysis.Visible = false;
-            confirmation.Visible = false;
-            state.Visible = false;
-            versionToSave = null;
-            versionPathToSave = String.Empty;
-        }
-
         /// <summary>
         /// Transfer files to FTP & create necessary hard links between files
         /// </summary>
@@ -653,7 +456,7 @@ namespace Etsi.Ultimate.Module.Versions
                 try
                 {
                     ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
-                    var spec = specSvc.GetSpecificationDetailsById(UserId, specId.Value).Key;
+                    var spec = specSvc.GetSpecificationDetailsById(GetUserPersonId(), SpecId).Key;
                     if (spec.IsActive && !(spec.IsUnderChangeControl ?? false)) //Draft
                     {
                         string draftPath = String.Format(CONST_FTP_LATEST_DRAFTS_PATH, ftpBasePath);
@@ -662,7 +465,7 @@ namespace Etsi.Ultimate.Module.Versions
                             Directory.CreateDirectory(draftPath);
 
                         ISpecVersionService specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
-                        var allDraftVersions = specVersionSvc.GetVersionsBySpecId(specId.Value);
+                        var allDraftVersions = specVersionSvc.GetVersionsBySpecId(SpecId);
                         var latestUploadedDraft = allDraftVersions.Where(draft => draft.Location != null)
                                                                   .OrderByDescending(x => x.MajorVersion ?? 0)
                                                                   .ThenByDescending(y => y.TechnicalVersion ?? 0)
@@ -750,7 +553,6 @@ namespace Etsi.Ultimate.Module.Versions
 
             return errorReport;
         }
-
         /// <summary>
         /// Get Parent TSG
         /// </summary>
@@ -770,7 +572,6 @@ namespace Etsi.Ultimate.Module.Versions
                     return community;
             }
         }
-
         /// <summary>
         /// Create Hard links between files
         /// </summary>
@@ -785,6 +586,239 @@ namespace Etsi.Ultimate.Module.Versions
             IntPtr lpSecurityAttributes
         );
 
+        #endregion
+
+
+        #region NEW events NEW
+        /// <summary>
+        /// Upload Version - Constructor
+        /// </summary>
+        /// <param name="sender">source of event</param>
+        /// <param name="e">event args</param>
+        protected void Page_Load(object sender, EventArgs e)
+        {
+            if (!IsPostBack)
+            {
+                GetRequestParameters();//Retreive the URL parameters
+                ResetPanelState();//Reset version upload/allocate popup and its attributes
+                LoadVersionUploadContent();
+            }
+        }
+        /// <summary>
+        /// Click event of Allocation button
+        /// </summary>
+        /// <param name="sender">Allocation button</param>
+        /// <param name="e">event arguments</param>
+        protected void AllocateVersion_Click(object sender, EventArgs e)
+        {
+            var report = new Report();
+            ISpecVersionService specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
+            var version = GetEditedSpecVersionObject();
+            if (version.Key)
+                report = specVersionSvc.AllocateVersion(GetUserPersonId(), version.Value);
+
+            if (report.GetNumberOfErrors() == 0)
+            {
+                lblSaveStatus.Text = String.Format(UploadVersion_aspx.SuccessMessage, version.Value.MajorVersion, version.Value.TechnicalVersion, version.Value.EditorialVersion, "allocated");
+                versionUploadScreen.Visible = false;
+                analysis.Visible = false;
+                confirmation.Visible = false;
+                state.Visible = true;
+                state_confirmation.OnClientClicked = "closeRadWindow";
+            }
+            else
+            {
+                versionUploadScreen.Visible = false;
+                analysis.Visible = false;
+                //Prevent upload of already uploaded versions
+                confirmation.Visible = true;
+                btnConfirmUpload.Enabled = report.ErrorList.Contains(String.Format(UploadVersion_aspx.DocumentAlreadyUploaded)) ? false : true;
+                state.Visible = false;
+
+                rptWarningsErrors.DataSource = report.ErrorList;
+                rptWarningsErrors.DataBind();
+            }
+        }
+        #endregion
+
+        #region NEW Private Methods NEW
+        /// <summary>
+        /// Reset version upload/allocate popup and its attributes
+        /// </summary>
+        private void ResetPanelState()
+        {
+            //UI elements
+            versionUploadScreen.Visible = true;
+            analysis.Visible = false;
+            confirmation.Visible = false;
+            state.Visible = false;
+            if (!IsUploadMode)
+            {
+                FileToUploadLbl.Visible = false;
+                FileToUploadVal.Visible = false;
+                UploadBtnDisabled.Visible = false;
+                AllocateBtn.Visible = true;
+                btnConfirmUpload.Visible = false;
+            }
+            //Code behind attributes
+            versionToSave = null;
+            versionPathToSave = String.Empty;
+        }
+        /// <summary>
+        /// Retreive the URL parameters
+        /// </summary>
+        private void GetRequestParameters()
+        {
+            ReleaseId = (Request.QueryString["releaseId"] != null) ? Convert.ToInt32(Request.QueryString["releaseId"]) : 0;
+            SpecId = (Request.QueryString["specId"] != null) ? Convert.ToInt32(Request.QueryString["specId"]) : 0;
+            if (ReleaseId == 0 || SpecId == 0)
+                ThrowAnError(UploadVersion_aspx.NoAvailableDatas);
+
+            var action = (Request.QueryString["action"] != null) ? Request.QueryString["action"] : string.Empty;
+            if (action.Equals("upload") || action.Equals("allocate"))
+                IsUploadMode = action.Equals("upload");
+            else
+                ThrowAnError(UploadVersion_aspx.GenericError);
+        }
+        /// <summary>
+        /// Retrieve person If exists
+        /// </summary>
+        /// <param name="UserInfo">Current user information</param>
+        /// <returns></returns>
+        private int GetUserPersonId()
+        {
+            var userInfo = DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo();
+            if (userInfo.UserID < 0)
+                return 0;
+            else
+            {
+                int personID;
+                if (Int32.TryParse(userInfo.Profile.GetPropertyValue(DsId_Key), out personID))
+                    return personID;
+            }
+            return 0;
+        }
+        /// <summary>
+        /// Method to get the version edited by the user through the popup
+        /// </summary>
+        /// <returns></returns>
+        private KeyValuePair<bool, SpecVersion> GetEditedSpecVersionObject()
+        {
+            //User's data
+            int output;
+            if (!int.TryParse(NewVersionMajorVal.Text, out output) || !int.TryParse(NewVersionTechnicalVal.Text, out output) || !int.TryParse(NewVersionEditorialVal.Text, out output))
+                return new KeyValuePair<bool, SpecVersion>(false, null);
+            else
+            {
+                SpecVersion version = new SpecVersion();
+                version.Fk_SpecificationId = SpecId;
+                version.Fk_ReleaseId = ReleaseId;
+                version.MajorVersion = int.Parse(NewVersionMajorVal.Text);
+                version.TechnicalVersion = int.Parse(NewVersionTechnicalVal.Text);
+                version.EditorialVersion = int.Parse(NewVersionEditorialVal.Text);
+
+                if (!String.IsNullOrEmpty(CommentVal.Text))
+                {
+                    version.Remarks.Add(new Remark()
+                    {
+                        RemarkText = CommentVal.Text,
+                        CreationDate = new Nullable<System.DateTime>(DateTime.UtcNow),
+                        Fk_PersonId = GetUserPersonId(),
+                        IsPublic = true
+                    });
+                }
+
+                if (UploadMeeting.SelectedMeeting != null)
+                {
+                    version.Source = UploadMeeting.SelectedMeeting.MTG_ID;
+                }
+                if (IsUploadMode)
+                {
+                    version.DocumentUploaded = DateTime.UtcNow;
+                    version.ProvidedBy = GetUserPersonId();
+                }
+                return new KeyValuePair<bool, SpecVersion>(true, version);
+            }
+        }
+        /// <summary>
+        /// Display an error
+        /// </summary>
+        /// <param name="errorMessage"></param>
+        private void ThrowAnError(string errorMessage)
+        {
+            versionUploadBody.Visible = false;
+            versionUploadMessages.Visible = true;
+            versionUploadMessages.CssClass = "messageBox error";
+            specificationMessagesTxt.Text = errorMessage;
+        }
+        /// <summary>
+        /// Load page content
+        /// </summary>
+        private void LoadVersionUploadContent()
+        {
+            if ((ReleaseId != 0) && (SpecId != 0))
+            {
+                ISpecVersionService specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
+                var svcResponseSpecVersion = specVersionSvc.GetNextVersionForSpec(GetUserPersonId(), SpecId, ReleaseId, IsUploadMode);
+
+                if (svcResponseSpecVersion.Report.GetNumberOfErrors() == 0)
+                {
+                    var version = svcResponseSpecVersion.Result;
+                    SpecAttributesHandler(version.NewSpecVersion.Specification);
+                    ReleaseAttributesHandler(version.NewSpecVersion.Release);
+
+                    //Set Major Version Status
+                    NewVersionMajorVal.Enabled = svcResponseSpecVersion.Rights.HasRight(Enum_UserRights.Versions_Modify_MajorVersion);
+
+                    string currentVersionNumber = "-";
+                    if (svcResponseSpecVersion.Result.CurrentSpecVersion != null && svcResponseSpecVersion.Result.CurrentSpecVersion.MajorVersion != null && svcResponseSpecVersion.Result.CurrentSpecVersion.TechnicalVersion != null && svcResponseSpecVersion.Result.CurrentSpecVersion.EditorialVersion != null)
+                        currentVersionNumber = String.Format("{0}.{1}.{2}", svcResponseSpecVersion.Result.CurrentSpecVersion.MajorVersion, svcResponseSpecVersion.Result.CurrentSpecVersion.TechnicalVersion, svcResponseSpecVersion.Result.CurrentSpecVersion.EditorialVersion);
+                    CurrentVersionVal.Text = currentVersionNumber;
+
+                    //Set version number values
+                    NewVersionMajorVal.Value = version.NewSpecVersion.MajorVersion;
+                    NewVersionTechnicalVal.Value = version.NewSpecVersion.TechnicalVersion;
+                    NewVersionEditorialVal.Value = version.NewSpecVersion.EditorialVersion;
+                }
+                else
+                {
+                    ThrowAnError(UploadVersion_aspx.GenericError);
+                }
+            }
+            else
+            {
+                ThrowAnError(UploadVersion_aspx.NoAvailableDatas);
+            }
+        }
+
+        //TO REFRACTOR -------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Spec attributes handler
+        /// </summary>
+        private void SpecAttributesHandler(Specification spec)//---------------
+        {
+            IsDraft = !(spec.IsUnderChangeControl.HasValue && spec.IsUnderChangeControl.Value && spec.IsActive);
+            hidIsRequired.Value = (!IsDraft && IsUploadMode) ? "True" : "False";
+            MeetingLbl.Text = (!IsDraft && IsUploadMode) ? "Meeting(<span class='requiredField'>*</span>):" : "Meeting:";
+
+            //----------------------------------------------- UTILITY
+            communityID = spec.PrimeResponsibleGroup.Fk_commityId;
+            isTS = spec.IsTS ?? true;
+            specificationTitle = spec.Title;
+            //----------------------------------------------- UTILITY
+            SpecNumberVal.Text = spec.Number;
+        }
+        /// <summary>
+        /// Release attributes handler
+        /// </summary>
+        private void ReleaseAttributesHandler(Release release)//-------------------
+        {
+            ReleaseVal.Text = release.Code;
+            //----------------------------------------------- UTILITY
+            releaseDescription = release.Name;
+            //----------------------------------------------- UTILITY
+        }
+        //TO REFRACTOR -------------------------------------------------------------------------------------------------------------
         #endregion
     }
 }

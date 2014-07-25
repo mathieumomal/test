@@ -51,7 +51,6 @@
     <Compile Include="CommunityService.cs" />
     <Compile Include="RemarkService.cs" />
     <Compile Include="IOfflineService.cs" />
-    <Compile Include="ISpecVersionService.cs" />
     <Compile Include="SpecVersionService.cs" />
     <Compile Include="ICommunityService.cs" />
     <Compile Include="IMeetingService.cs" />

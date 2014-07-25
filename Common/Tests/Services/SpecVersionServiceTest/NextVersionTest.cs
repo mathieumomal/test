@@ -45,9 +45,23 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
             var newVersion = response.Result;
             Assert.IsNotNull(newVersion);
 
-            Assert.AreEqual(awaitedMajor, response.Result.MajorVersion);
-            Assert.AreEqual(awaitedTechnical, response.Result.TechnicalVersion);
-            Assert.AreEqual(awaitedEditorial, response.Result.EditorialVersion);
+            Assert.AreEqual(awaitedMajor, response.Result.NewSpecVersion.MajorVersion);
+            Assert.AreEqual(awaitedTechnical, response.Result.NewSpecVersion.TechnicalVersion);
+            Assert.AreEqual(awaitedEditorial, response.Result.NewSpecVersion.EditorialVersion);
+        }
+
+        [TestCase(EffortConstants.SPECIFICATION_ACTIVE_ID, EffortConstants.RELEASE_OPEN_ID, false, 13, 2, 0)]
+        public void GetNextVersion_CurrentVersionNumber(int specId, int relId, bool forUpload, int awaitedMajor, int awaitedTechnical, int awaitedEditorial)
+        {
+            var response = versionSvc.GetNextVersionForSpec(1, specId, relId, forUpload);
+
+            Assert.IsNotNull(response);
+            var newVersion = response.Result;
+            Assert.IsNotNull(newVersion);
+
+            Assert.AreEqual(awaitedMajor, response.Result.CurrentSpecVersion.MajorVersion);
+            Assert.AreEqual(awaitedTechnical, response.Result.CurrentSpecVersion.TechnicalVersion);
+            Assert.AreEqual(awaitedEditorial, response.Result.CurrentSpecVersion.EditorialVersion);
         }
 
         [Test]
@@ -55,8 +69,8 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
         {
             var response = versionSvc.GetNextVersionForSpec(1, EffortConstants.SPECIFICATION_ACTIVE_ID, EffortConstants.RELEASE_OPEN_ID, false);
 
-            Assert.AreEqual("Rel-13", response.Result.Release.Code);
-            Assert.AreEqual("22.101", response.Result.Specification.Number);
+            Assert.AreEqual("Rel-13", response.Result.NewSpecVersion.Release.Code);
+            Assert.AreEqual("22.101", response.Result.NewSpecVersion.Specification.Number);
         }
 
         [Test]

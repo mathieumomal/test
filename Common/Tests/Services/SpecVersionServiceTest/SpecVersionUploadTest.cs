@@ -42,6 +42,8 @@ namespace Etsi.Ultimate.Tests.Services
         {
             var versionSvc = new SpecVersionService();
 
+            SetupMocks();
+
             var myVersion = CreateVersion();
             var result = versionSvc.UploadVersion(USER_HAS_RIGHT, myVersion, "token");
             Assert.AreEqual(0, result.Value.GetNumberOfErrors());

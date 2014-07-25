@@ -78,14 +78,14 @@ namespace Etsi.Ultimate.Module.WorkItem
         {
             get
             {
-                if (ViewState[CONST_ACRONYMS_DATASOURCE] == null)
-                    ViewState[CONST_ACRONYMS_DATASOURCE] = new List<string>();
+                if (ViewState[ClientID + CONST_ACRONYMS_DATASOURCE] == null)
+                    ViewState[ClientID + CONST_ACRONYMS_DATASOURCE] = new List<string>();
 
-                return (List<string>)ViewState[CONST_ACRONYMS_DATASOURCE];
+                return (List<string>)ViewState[ClientID + CONST_ACRONYMS_DATASOURCE];
             }
             set
             {
-                ViewState[CONST_ACRONYMS_DATASOURCE] = value;
+                ViewState[ClientID + CONST_ACRONYMS_DATASOURCE] = value;
             }
         }
 
@@ -173,30 +173,6 @@ namespace Etsi.Ultimate.Module.WorkItem
             catch (Exception exc) //Module failed to load
             {
                 Exceptions.ProcessModuleLoadException(this, exc);
-            }
-        }
-
-        private bool IsFileOnFtp(string url)
-        {
-            try
-            {
-                // create the request
-                HttpWebRequest request = WebRequest.Create(url.Replace("ftp://", "http://")) as HttpWebRequest;
-
-                // instruct the server to return headers only
-                request.Method = "HEAD";
-
-                // make the connection
-
-                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
-
-                // get the status code
-                HttpStatusCode status = response.StatusCode;
-                return status == HttpStatusCode.OK || status == HttpStatusCode.NotModified;
-            }
-            catch (Exception e)
-            {
-                return false;
             }
         }
 
@@ -571,13 +547,36 @@ namespace Etsi.Ultimate.Module.WorkItem
             return urlParams;
         }
 
-
         /// <summary>
         /// Populate fields with available query strings
         /// </summary>
         private void GetRequestParameters()
         {
             isUrlSearch = (Request.QueryString["q"] != null);
+        }
+
+        private bool IsFileOnFtp(string url)
+        {
+            try
+            {
+                // create the request
+                HttpWebRequest request = WebRequest.Create(url.Replace("ftp://", "http://")) as HttpWebRequest;
+
+                // instruct the server to return headers only
+                request.Method = "HEAD";
+
+                // make the connection
+
+                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+
+                // get the status code
+                HttpStatusCode status = response.StatusCode;
+                return status == HttpStatusCode.OK || status == HttpStatusCode.NotModified;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         #region FIX : Cannot unregister UpdatePanel...
