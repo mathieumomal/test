@@ -604,12 +604,14 @@ namespace Etsi.Ultimate.Module.Versions
                 LoadVersionUploadContent();
             }
         }
+
+        //BTN click events
         /// <summary>
         /// Click event of Allocation button
         /// </summary>
         /// <param name="sender">Allocation button</param>
         /// <param name="e">event arguments</param>
-        protected void AllocateVersion_Click(object sender, EventArgs e)
+        protected void AllocateVersionBtn_Click(object sender, EventArgs e)
         {
             var report = new Report();
             ISpecVersionService specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
@@ -639,6 +641,11 @@ namespace Etsi.Ultimate.Module.Versions
                 rptWarningsErrors.DataBind();
             }
         }
+        //BTN click events
+
+        //Upload events
+
+        //Upload events
         #endregion
 
         #region NEW Private Methods NEW
@@ -790,7 +797,6 @@ namespace Etsi.Ultimate.Module.Versions
                 ThrowAnError(UploadVersion_aspx.NoAvailableDatas);
             }
         }
-
         //TO REFRACTOR -------------------------------------------------------------------------------------------------------------
         /// <summary>
         /// Spec attributes handler
@@ -800,13 +806,13 @@ namespace Etsi.Ultimate.Module.Versions
             IsDraft = !(spec.IsUnderChangeControl.HasValue && spec.IsUnderChangeControl.Value && spec.IsActive);
             hidIsRequired.Value = (!IsDraft && IsUploadMode) ? "True" : "False";
             MeetingLbl.Text = (!IsDraft && IsUploadMode) ? "Meeting(<span class='requiredField'>*</span>):" : "Meeting:";
+            SpecNumberVal.Text = spec.Number;
 
-            //----------------------------------------------- UTILITY
+            //----------------------------------------------- UTILITY ?
             communityID = spec.PrimeResponsibleGroup.Fk_commityId;
             isTS = spec.IsTS ?? true;
             specificationTitle = spec.Title;
-            //----------------------------------------------- UTILITY
-            SpecNumberVal.Text = spec.Number;
+            //----------------------------------------------- UTILITY ?
         }
         /// <summary>
         /// Release attributes handler
@@ -814,9 +820,9 @@ namespace Etsi.Ultimate.Module.Versions
         private void ReleaseAttributesHandler(Release release)//-------------------
         {
             ReleaseVal.Text = release.Code;
-            //----------------------------------------------- UTILITY
+            //----------------------------------------------- UTILITY ?
             releaseDescription = release.Name;
-            //----------------------------------------------- UTILITY
+            //----------------------------------------------- UTILITY ?
         }
         //TO REFRACTOR -------------------------------------------------------------------------------------------------------------
         #endregion
