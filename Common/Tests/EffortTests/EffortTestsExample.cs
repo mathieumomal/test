@@ -21,19 +21,6 @@ namespace Etsi.Ultimate.Tests.EffortTests
     public class EffortTestsExample : BaseEffortTest
     {
 
-        //REPO
-
-        [Test]
-        public void EnumTechnologyRepository_GetAll_Test()
-        {
-            var techRepo = new EnumTechnologiesRepository();
-            techRepo.UoW = UoW;
-
-            var result = techRepo.All.ToList();
-            Assert.AreEqual(3, result.Count);
-            Assert.AreEqual("2G", result.FirstOrDefault().Code);
-        }
-
         [Test]
         public void MeetingsRepository_GetAll_Test()
         {
