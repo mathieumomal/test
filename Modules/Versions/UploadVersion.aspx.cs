@@ -222,7 +222,7 @@ namespace Etsi.Ultimate.Module.Versions
             ISpecVersionService specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
             var version = GetEditedSpecVersionObject();
             if (version.Key)
-                svcResponse = specVersionSvc.UploadVersion(GetUserPersonId(), version.Value, "");
+                svcResponse = specVersionSvc.UploadVersion(GetUserPersonId(), version.Value, VersionFileToken);
 
             if (report.GetNumberOfErrors() == 0 && report.GetNumberOfWarnings() == 0)
             {
