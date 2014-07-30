@@ -70,6 +70,15 @@ namespace Etsi.Ultimate.Module.Versions.App_LocalResources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à ETSI_DS_ID.
+        /// </summary>
+        public static string DsId_Key {
+            get {
+                return ResourceManager.GetString("DsId_Key", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à An error occured. If the problem persists, contact the administrator..
         /// </summary>
         public static string GenericError {

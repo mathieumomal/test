@@ -57,7 +57,7 @@
                 <asp:Label runat="server" ID="specificationMessagesTxt"></asp:Label>
             </asp:Panel>
             <asp:Panel ID="versionUploadBody" runat="server" CssClass="versionUploadBody">
-                <asp:Panel runat="server" CssClass="contentModal" ID="versionUploadScreen">
+                <asp:Panel runat="server" CssClass="contentModal" ID="preVersionUploadScreen">
                     <table class="VersionDetailsTable">
                         <tr>
                             <td class="TabLineLeft">
@@ -132,7 +132,7 @@
                     </table>
                     <div class="releaseDetailsAction">
                         <span id="meetingRequiredMsg" style="display:none" class='requiredField'>*Meeting is required</span>
-                        <asp:LinkButton ID="UploadBtn" runat="server" Text="Upload" CssClass="btn3GPP-success" OnClientClick="return PerformValidations();" OnClick="UploadBtn_Click"/>
+                        <asp:LinkButton ID="UploadBtn" runat="server" Text="Upload" CssClass="btn3GPP-success" OnClientClick="return PerformValidations();" OnClick="UploadVersionBtn_Click"/>
                         <asp:LinkButton ID="AllocateBtn" runat="server" Text="Allocate" CssClass="btn3GPP-success" Visible="false" OnClick="AllocateVersionBtn_Click" />
                         <asp:LinkButton ID="UploadBtnDisabled" runat="server" Text="Upload" CssClass="btn3GPP-default" disabled="disabled" OnClientClick="return false;" />
                         <asp:LinkButton ID="ExitBtn" runat="server" Text="Cancel" CssClass="btn3GPP-success" OnClientClick="  return closePopUpWindow()" />

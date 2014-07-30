@@ -34,7 +34,7 @@ namespace Etsi.Ultimate.Tests.Services
             var myVersion = CreateVersion();
 
             var result = versionSvc.UploadVersion(USER_HAS_NO_RIGHT, myVersion, "token");
-            Assert.AreEqual(1, result.Value.GetNumberOfErrors());
+            Assert.AreEqual(1, result.Report.GetNumberOfErrors());
         }
 
         [Test]
@@ -46,8 +46,8 @@ namespace Etsi.Ultimate.Tests.Services
 
             var myVersion = CreateVersion();
             var result = versionSvc.UploadVersion(USER_HAS_RIGHT, myVersion, "token");
-            Assert.AreEqual(0, result.Value.GetNumberOfErrors());
-            Assert.AreEqual(0, result.Value.GetNumberOfWarnings());
+            Assert.AreEqual(0, result.Report.GetNumberOfErrors());
+            Assert.AreEqual(0, result.Report.GetNumberOfWarnings());
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace Etsi.Ultimate.Tests.Services
             var myVersion = CreateVersion();
 
             var result = versionSvc.CheckVersionForUpload(USER_HAS_NO_RIGHT, myVersion, "path");
-            Assert.AreEqual(1, result.Value.GetNumberOfErrors());
+            Assert.AreEqual(1, result.Report.GetNumberOfErrors());
         }
 
         [Test]
@@ -70,8 +70,8 @@ namespace Etsi.Ultimate.Tests.Services
             SetupMocks();
             var myVersion = CreateVersion();
             var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, "path");
-            Assert.AreEqual(0, result.Value.GetNumberOfErrors());
-            Assert.AreEqual(0, result.Value.GetNumberOfWarnings());
+            Assert.AreEqual(0, result.Report.GetNumberOfErrors());
+            Assert.AreEqual(0, result.Report.GetNumberOfWarnings());
         }
         #endregion
 

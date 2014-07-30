@@ -22,8 +22,7 @@ namespace Etsi.Ultimate.Module.Versions
         #region Variables / Properties
         protected MeetingControl UploadMeeting;
 
-        //To remove ------------------------------------------------------
-        public static readonly string DsId_Key = "ETSI_DS_ID";
+        //To remove because need to move in business part ------------------------------------------------------
         private const string CONST_VALID_FILENAME = "{0}-{1}{2}{3}";
         private const string CONST_FTP_ARCHIVE_PATH = "{0}\\Specs\\archive\\{1}_series\\{2}\\";
         private const string CONST_FTP_LATEST_PATH = "{0}\\Specs\\latest\\{1}\\{2}_series\\";
@@ -126,38 +125,7 @@ namespace Etsi.Ultimate.Module.Versions
         #endregion
 
         #region OLD Events OLD
-        /// <summary>
-        /// Click event of upload button
-        /// </summary>
-        /// <param name="sender">Upload button</param>
-        /// <param name="e">event arguments</param>
-        protected void UploadBtn_Click(object sender, EventArgs e)
-        {
-            var meetingId = UploadMeeting.SelectedMeetingId;
-            if (meetingId > 0 || IsDraft)
-            {
-                versionUploadScreen.Visible = false;
-                confirmation.Visible = true;
-            }
-        }
-        /// <summary>
-        /// Click event of cancel button
-        /// </summary>
-        /// <param name="sender">Cancel button</param>
-        /// <param name="e">event arguments</param>
-        protected void Cancel_Click(object sender, EventArgs e)
-        {
-            ResetPanelState();
-        }
-        /// <summary>
-        /// Upload the version
-        /// </summary>
-        /// <param name="sender">Confirmation upload button</param>
-        /// <param name="e">event arguments</param>
-        protected void Confirmation_Upload_OnClick(object sender, EventArgs e)
-        {
-            //UploadOrAllocateVersion(true);
-        }
+        
         /// <summary>
         /// Method call by ajax when workplan is uploaded => WorkPlan Analyse
         /// </summary>
@@ -604,8 +572,16 @@ namespace Etsi.Ultimate.Module.Versions
                 LoadVersionUploadContent();
             }
         }
-
-        //BTN click events
+        /// <summary>
+        /// Click event of cancel button
+        /// </summary>
+        /// <param name="sender">Cancel button</param>
+        /// <param name="e">event arguments</param>
+        protected void Cancel_Click(object sender, EventArgs e)
+        {
+            ResetPanelState();
+        }
+        //Allocate events
         /// <summary>
         /// Click event of Allocation button
         /// </summary>
@@ -622,7 +598,7 @@ namespace Etsi.Ultimate.Module.Versions
             if (report.GetNumberOfErrors() == 0)
             {
                 lblSaveStatus.Text = String.Format(UploadVersion_aspx.SuccessMessage, version.Value.MajorVersion, version.Value.TechnicalVersion, version.Value.EditorialVersion, "allocated");
-                versionUploadScreen.Visible = false;
+                preVersionUploadScreen.Visible = false;
                 analysis.Visible = false;
                 confirmation.Visible = false;
                 state.Visible = true;
@@ -630,7 +606,7 @@ namespace Etsi.Ultimate.Module.Versions
             }
             else
             {
-                versionUploadScreen.Visible = false;
+                preVersionUploadScreen.Visible = false;
                 analysis.Visible = false;
                 //Prevent upload of already uploaded versions
                 confirmation.Visible = true;
@@ -641,10 +617,62 @@ namespace Etsi.Ultimate.Module.Versions
                 rptWarningsErrors.DataBind();
             }
         }
-        //BTN click events
+        //Allocate events
 
         //Upload events
+        /// <summary>
+        /// Click event for upload button
+        /// </summary>
+        /// <param name="sender">Upload button</param>
+        /// <param name="e">event arguments</param>
+        protected void UploadVersionBtn_Click(object sender, EventArgs e)
+        {
+            var meetingId = UploadMeeting.SelectedMeetingId;
 
+            //NEED ???
+            if (meetingId > 0 || IsDraft)
+            {
+                preVersionUploadScreen.Visible = false;
+                confirmation.Visible = true;
+            }
+
+            //Analyse...
+        }
+        /// <summary>
+        /// Confirm upload of the version
+        /// </summary>
+        /// <param name="sender">Confirmation upload button</param>
+        /// <param name="e">event arguments</param>
+        protected void Confirmation_Upload_OnClick(object sender, EventArgs e)
+        {
+            var svcResponse = new ServiceResponse<string>();
+            ISpecVersionService specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
+            var version = GetEditedSpecVersionObject();
+            if (version.Key)
+                svcResponse = specVersionSvc.UploadVersion(GetUserPersonId(), version.Value, "");
+
+            if (report.GetNumberOfErrors() == 0)
+            {
+                lblSaveStatus.Text = String.Format(UploadVersion_aspx.SuccessMessage, version.Value.MajorVersion, version.Value.TechnicalVersion, version.Value.EditorialVersion, "allocated");
+                preVersionUploadScreen.Visible = false;
+                analysis.Visible = false;
+                confirmation.Visible = false;
+                state.Visible = true;
+                state_confirmation.OnClientClicked = "closeRadWindow";
+            }
+            else
+            {
+                preVersionUploadScreen.Visible = false;
+                analysis.Visible = false;
+                //Prevent upload of already uploaded versions
+                confirmation.Visible = true;
+                btnConfirmUpload.Enabled = report.ErrorList.Contains(String.Format(UploadVersion_aspx.DocumentAlreadyUploaded)) ? false : true;
+                state.Visible = false;
+
+                rptWarningsErrors.DataSource = report.ErrorList;
+                rptWarningsErrors.DataBind();
+            }
+        }
         //Upload events
         #endregion
 
@@ -655,7 +683,7 @@ namespace Etsi.Ultimate.Module.Versions
         private void ResetPanelState()
         {
             //UI elements
-            versionUploadScreen.Visible = true;
+            preVersionUploadScreen.Visible = true;
             analysis.Visible = false;
             confirmation.Visible = false;
             state.Visible = false;
@@ -700,7 +728,7 @@ namespace Etsi.Ultimate.Module.Versions
             else
             {
                 int personID;
-                if (Int32.TryParse(userInfo.Profile.GetPropertyValue(DsId_Key), out personID))
+                if (Int32.TryParse(userInfo.Profile.GetPropertyValue(UploadVersion_aspx.DsId_Key), out personID))
                     return personID;
             }
             return 0;

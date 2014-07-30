@@ -13,32 +13,28 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
     {
         public IUltimateUnitOfWork UoW;
 
-        public KeyValuePair<string, Report> CheckVersionForUpload(int personId, SpecVersion version, string path)
+        public ServiceResponse<string> CheckVersionForUpload(int personId, SpecVersion version, string path)
         {
-            var report = new Report();
+            var svcResponse = new ServiceResponse<string>();
 
-            report = CheckPersonRightToUploadVersion(report, personId);
-            if (report.GetNumberOfErrors() == 0)
+            svcResponse.Report = CheckPersonRightToUploadVersion(svcResponse.Report, personId);
+            if (svcResponse.Report.GetNumberOfErrors() == 0)
             {
                 //...
             }
-
-            var result = new KeyValuePair<string, Report>("token", report);
-            return result;
+            return svcResponse;
         }
 
-        public KeyValuePair<string, Report> UploadVersion(int personId, SpecVersion version, string token)
+        public ServiceResponse<string> UploadVersion(int personId, SpecVersion version, string token)
         {
-            var report = new Report();
+            var svcResponse = new ServiceResponse<string>();
 
-            report = CheckPersonRightToUploadVersion(report, personId);
-            if (report.GetNumberOfErrors() == 0)
+            svcResponse.Report = CheckPersonRightToUploadVersion(svcResponse.Report, personId);
+            if (svcResponse.Report.GetNumberOfErrors() == 0)
             {
                 //...
             }
-
-            var result = new KeyValuePair<string, Report>("token", report);
-            return result;
+            return svcResponse;
         }
 
         private Report CheckPersonRightToUploadVersion(Report report, int personId)

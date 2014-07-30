@@ -98,7 +98,7 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId"></param>
         /// <param name="version"></param>
         /// <returns></returns>
-        public KeyValuePair<string, Report> CheckVersionForUpload(int personId, SpecVersion version, string path)
+        public ServiceResponse<string> CheckVersionForUpload(int personId, SpecVersion version, string path)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
@@ -114,13 +114,13 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId"></param>
         /// <param name="version"></param>
         /// <returns></returns>
-        public KeyValuePair<string, Report> UploadVersion(int personId, SpecVersion version, string token)
+        public ServiceResponse<string> UploadVersion(int personId, SpecVersion version, string token)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var specVersionUploadAction = new SpecVersionUploadAction();
                 specVersionUploadAction.UoW = uoW;
-                return specVersionUploadAction.CheckVersionForUpload(personId, version, token);
+                return specVersionUploadAction.UploadVersion(personId, version, token);
             }
         }
 
@@ -374,6 +374,9 @@ namespace Etsi.Ultimate.Services
         /// <param name="specId"></param>
         /// <returns></returns>
         int CountVersionsPendingUploadByReleaseId(int releaseId);
+
+        ServiceResponse<string> CheckVersionForUpload(int personId, SpecVersion version, string path);
+        ServiceResponse<string> UploadVersion(int personId, SpecVersion version, string token);
     }
 }
 

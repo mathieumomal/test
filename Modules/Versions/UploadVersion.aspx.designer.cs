@@ -67,13 +67,13 @@ namespace Etsi.Ultimate.Module.Versions {
         protected global::System.Web.UI.WebControls.Panel versionUploadBody;
         
         /// <summary>
-        /// Contrôle versionUploadScreen.
+        /// Contrôle preVersionUploadScreen.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel versionUploadScreen;
+        protected global::System.Web.UI.WebControls.Panel preVersionUploadScreen;
         
         /// <summary>
         /// Contrôle SpecNumberLbl.

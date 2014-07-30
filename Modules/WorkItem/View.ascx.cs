@@ -194,8 +194,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                     .Append(PathUploadWorkPlan)
                     .Append(workplanUploaded.FileName)
                     .ToString());
-            }
-            catch (Exception exc)
+            }catch (Exception exc)
             {
                 LogManager.Error("Could not save work plan file: " + exc.Message);
             }

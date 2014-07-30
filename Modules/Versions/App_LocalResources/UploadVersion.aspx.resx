@@ -120,6 +120,9 @@
   <data name="DocumentAlreadyUploaded" xml:space="preserve">
     <value>Document has already been uploaded to this version</value>
   </data>
+  <data name="DsId_Key" xml:space="preserve">
+    <value>ETSI_DS_ID</value>
+  </data>
   <data name="GenericError" xml:space="preserve">
     <value>An error occured. If the problem persists, contact the administrator.</value>
   </data>
