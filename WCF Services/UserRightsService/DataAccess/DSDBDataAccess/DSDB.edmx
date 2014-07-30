@@ -1,0 +1,557 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DSDBModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="DSDBModelStoreContainer">
+          <EntitySet Name="PERSON" EntityType="DSDBModel.Store.PERSON" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PERSON_IN_LIST" EntityType="DSDBModel.Store.PERSON_IN_LIST" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="PERSON_LIST" EntityType="DSDBModel.Store.PERSON_LIST" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="PERSON_IN_LIST__PERSON" Association="DSDBModel.Store.PERSON_IN_LIST__PERSON">
+            <End Role="PERSON" EntitySet="PERSON" />
+            <End Role="PERSON_IN_LIST" EntitySet="PERSON_IN_LIST" />
+          </AssociationSet>
+          <AssociationSet Name="PERSON_IN_LIST__PERSON_LIST" Association="DSDBModel.Store.PERSON_IN_LIST__PERSON_LIST">
+            <End Role="PERSON_LIST" EntitySet="PERSON_LIST" />
+            <End Role="PERSON_IN_LIST" EntitySet="PERSON_IN_LIST" />
+          </AssociationSet>
+          <AssociationSet Name="PERSON_LIST_OWNER__PERSON" Association="DSDBModel.Store.PERSON_LIST_OWNER__PERSON">
+            <End Role="PERSON" EntitySet="PERSON" />
+            <End Role="PERSON_LIST" EntitySet="PERSON_LIST" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="PERSON">
+          <Key>
+            <PropertyRef Name="PERSON_ID" />
+          </Key>
+          <Property Name="PERSON_ID" Type="int" Nullable="false" />
+          <Property Name="LASTNAME" Type="varchar" Nullable="false" MaxLength="30" />
+          <Property Name="FIRSTNAME" Type="varchar" MaxLength="20" />
+          <Property Name="PERS_TITL" Type="varchar" MaxLength="6" />
+          <Property Name="ADDRESS" Type="varchar" MaxLength="165" />
+          <Property Name="EMAILTYP" Type="varchar" MaxLength="15" />
+          <Property Name="PHONE" Type="varchar" MaxLength="20" />
+          <Property Name="FAX" Type="varchar" MaxLength="20" />
+          <Property Name="EXPERT_FLG" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="HOMEADDR" Type="varchar" MaxLength="165" />
+          <Property Name="BIRTH_DATE" Type="datetime" />
+          <Property Name="BIRTH_PLAC" Type="varchar" MaxLength="30" />
+          <Property Name="MAR_STATUS" Type="varchar" MaxLength="10" />
+          <Property Name="PP_NUMBER" Type="varchar" MaxLength="16" />
+          <Property Name="PP_ISS_AT" Type="varchar" MaxLength="32" />
+          <Property Name="PP_ISSUED" Type="datetime" />
+          <Property Name="PP_EXPIR" Type="datetime" />
+          <Property Name="WP_START" Type="datetime" />
+          <Property Name="WP_MONTHS" Type="numeric" Scale="4" />
+          <Property Name="PERSINIT" Type="varchar" MaxLength="4" />
+          <Property Name="CTY_CODE" Type="varchar" MaxLength="2" />
+          <Property Name="ESTAFF_FLG" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="VMS_USER" Type="varchar" MaxLength="12" />
+          <Property Name="DEPT_CODE" Type="varchar" MaxLength="3" />
+          <Property Name="JOB_CODE" Type="varchar" MaxLength="12" />
+          <Property Name="ETSI_INIT" Type="varchar" MaxLength="3" />
+          <Property Name="ROOM" Type="varchar" MaxLength="6" />
+          <Property Name="TEL_EXT" Type="varchar" MaxLength="4" />
+          <Property Name="ORGA_ID" Type="int" />
+          <Property Name="RAPTR_FLG" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="ESMS_CODE" Type="varchar" MaxLength="12" />
+          <Property Name="CTY_POST" Type="varchar" MaxLength="4" />
+          <Property Name="ZIP" Type="varchar" MaxLength="10" />
+          <Property Name="CITY" Type="varchar" MaxLength="30" />
+          <Property Name="ADD_CTY_CODE" Type="varchar" MaxLength="2" />
+          <Property Name="OFFICIAL_FLG" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="CONTACT_FLG" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="ACTIVE_EXPERT_FLG" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="OFFICIAL_CONTACT_FLG" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="PT_CONTRACT_FLG" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="SORT_KEY" Type="int" />
+          <Property Name="SECRETARY_PHONE" Type="varchar" MaxLength="20" />
+          <Property Name="STANDARD_PHONE" Type="varchar" MaxLength="20" />
+          <Property Name="MOBILE_PHONE" Type="varchar" MaxLength="20" />
+          <Property Name="OTHER_PHONE" Type="varchar" MaxLength="20" />
+          <Property Name="OTHER_PHONE_QUAL" Type="varchar" MaxLength="20" />
+          <Property Name="PAGER_NUMB" Type="varchar" MaxLength="20" />
+          <Property Name="FAX2" Type="varchar" MaxLength="20" />
+          <Property Name="CTY_POST_EXPRS" Type="varchar" MaxLength="4" />
+          <Property Name="ZIP_EXPRS" Type="varchar" MaxLength="10" />
+          <Property Name="CITY_EXPRS" Type="varchar" MaxLength="30" />
+          <Property Name="CTY_CODE_EXPRS" Type="varchar" MaxLength="2" />
+          <Property Name="ADDRESS_EXPRS" Type="varchar" MaxLength="165" />
+          <Property Name="DELETED_FLG" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="BUSINESS_TITLE" Type="varchar" MaxLength="40" />
+          <Property Name="PICTURE_PATH" Type="varchar" MaxLength="30" />
+          <Property Name="VIDEO_CONF_NUMB" Type="varchar" MaxLength="20" />
+          <Property Name="ETSI_ADD" Type="varchar" MaxLength="30" />
+          <Property Name="INTERNET_ADD" Type="varchar" MaxLength="100" />
+          <Property Name="X400_ADD" Type="varchar" MaxLength="150" />
+          <Property Name="OTHER_ADD" Type="varchar" MaxLength="100" />
+          <Property Name="MOD_TS" Type="datetime" Nullable="false" />
+          <Property Name="MOD_BY" Type="varchar" MaxLength="12" />
+          <Property Name="TEL_DIRECTORY_FLG" Type="char" MaxLength="1" />
+          <Property Name="WEB_UPDATE_STATE" Type="varchar" MaxLength="1" />
+          <Property Name="WEB_MOD_TS" Type="datetime" />
+          <Property Name="WEB_MOD_BY" Type="varchar" MaxLength="12" />
+          <Property Name="SIMPLE_NAME" Type="varchar" MaxLength="30" />
+          <Property Name="LAST_REP_ORGA_ID" Type="int" />
+          <Property Name="ACCEPT_EMAIL_FLG" Type="varchar" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="PERSON_IN_LIST">
+          <Key>
+            <PropertyRef Name="PLIST_ID" />
+            <PropertyRef Name="PERSON_ID" />
+            <PropertyRef Name="PERS_ROLE_CODE" />
+            <PropertyRef Name="START_DATE" />
+            <PropertyRef Name="ORGA_ID" />
+          </Key>
+          <Property Name="PLIST_ID" Type="int" Nullable="false" />
+          <Property Name="PERSON_ID" Type="int" Nullable="false" />
+          <Property Name="PERS_ROLE_CODE" Type="varchar" Nullable="false" MaxLength="12" />
+          <Property Name="START_DATE" Type="datetime" Nullable="false" />
+          <Property Name="FREE_TEXT" Type="varchar" MaxLength="120" />
+          <Property Name="INVITATION_SENT_FLG" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="INVITATION_DATE" Type="datetime" />
+          <Property Name="CONFIRMATION_FLG" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="CONFIRMATION_DATE" Type="datetime" />
+          <Property Name="PARTICIPATION_FLG" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="DOC_REQUESTED_FLG" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="DOC_REQUESTED_DATE" Type="datetime" />
+          <Property Name="DOC_SENT_FLG" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="DOC_SENT_DATE" Type="datetime" />
+          <Property Name="LINE_POSITION" Type="int" />
+          <Property Name="END_DATE" Type="datetime" />
+          <Property Name="ORGA_ID" Type="int" Nullable="false" />
+          <Property Name="REPRESENT_FLG" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="PARTICIPANT_ACCESS" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="OFFICIAL_ACCESS" Type="varchar" Nullable="false" MaxLength="1" />
+          <Property Name="MOD_TS" Type="datetime" Nullable="false" />
+          <Property Name="MOD_BY" Type="varchar" MaxLength="12" />
+          <Property Name="no_dispatch_flg" Type="varchar" MaxLength="1" />
+          <Property Name="USE_PAPER_FLG" Type="varchar" MaxLength="1" />
+          <Property Name="WEB_MOD_BY" Type="varchar" MaxLength="12" />
+          <Property Name="WEB_MOD_TS" Type="datetime" />
+          <Property Name="REPRESENT_ORGA_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="PERSON_LIST">
+          <Key>
+            <PropertyRef Name="PLIST_ID" />
+          </Key>
+          <Property Name="PLIST_ID" Type="int" Nullable="false" />
+          <Property Name="PLIST_TYPE" Type="varchar" MaxLength="12" />
+          <Property Name="PLISTS_CODE" Type="varchar" MaxLength="12" />
+          <Property Name="CREATION_DATE" Type="datetime" />
+          <Property Name="REF_YEAR" Type="int" />
+          <Property Name="REF_SEQNO" Type="int" />
+          <Property Name="PLIST_TITLE" Type="varchar" MaxLength="70" />
+          <Property Name="MTG_ID" Type="int" />
+          <Property Name="OWNER_ID" Type="int" />
+          <Property Name="OWNER_DEPT" Type="varchar" MaxLength="3" />
+          <Property Name="OWNERSHIP_LEVEL" Type="varchar" MaxLength="12" />
+          <Property Name="TB_ID" Type="int" />
+          <Property Name="OWNER_LIST_ID" Type="int" />
+          <Property Name="PT_TYPE" Type="varchar" MaxLength="1" />
+          <Property Name="PT_CODE" Type="varchar" MaxLength="10" />
+          <Property Name="MOD_TS" Type="datetime" Nullable="false" />
+          <Property Name="MOD_BY" Type="varchar" MaxLength="12" />
+          <Property Name="WEB_MOD_BY" Type="varchar" MaxLength="12" />
+          <Property Name="WEB_MOD_TS" Type="datetime" />
+        </EntityType>
+        <Association Name="PERSON_IN_LIST__PERSON">
+          <End Role="PERSON" Type="DSDBModel.Store.PERSON" Multiplicity="1" />
+          <End Role="PERSON_IN_LIST" Type="DSDBModel.Store.PERSON_IN_LIST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PERSON">
+              <PropertyRef Name="PERSON_ID" />
+            </Principal>
+            <Dependent Role="PERSON_IN_LIST">
+              <PropertyRef Name="PERSON_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PERSON_IN_LIST__PERSON_LIST">
+          <End Role="PERSON_LIST" Type="DSDBModel.Store.PERSON_LIST" Multiplicity="1" />
+          <End Role="PERSON_IN_LIST" Type="DSDBModel.Store.PERSON_IN_LIST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PERSON_LIST">
+              <PropertyRef Name="PLIST_ID" />
+            </Principal>
+            <Dependent Role="PERSON_IN_LIST">
+              <PropertyRef Name="PLIST_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PERSON_LIST_OWNER__PERSON">
+          <End Role="PERSON" Type="DSDBModel.Store.PERSON" Multiplicity="0..1" />
+          <End Role="PERSON_LIST" Type="DSDBModel.Store.PERSON_LIST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PERSON">
+              <PropertyRef Name="PERSON_ID" />
+            </Principal>
+            <Dependent Role="PERSON_LIST">
+              <PropertyRef Name="OWNER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DSDBModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DSDBContext" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="People" EntityType="DSDBModel.PERSON" />
+          <EntitySet Name="PERSON_IN_LIST" EntityType="DSDBModel.PERSON_IN_LIST" />
+          <EntitySet Name="PERSON_LIST" EntityType="DSDBModel.PERSON_LIST" />
+          <AssociationSet Name="PERSON_IN_LIST__PERSON" Association="DSDBModel.PERSON_IN_LIST__PERSON">
+            <End Role="PERSON" EntitySet="People" />
+            <End Role="PERSON_IN_LIST" EntitySet="PERSON_IN_LIST" />
+          </AssociationSet>
+          <AssociationSet Name="PERSON_LIST_OWNER__PERSON" Association="DSDBModel.PERSON_LIST_OWNER__PERSON">
+            <End Role="PERSON" EntitySet="People" />
+            <End Role="PERSON_LIST" EntitySet="PERSON_LIST" />
+          </AssociationSet>
+          <AssociationSet Name="PERSON_IN_LIST__PERSON_LIST" Association="DSDBModel.PERSON_IN_LIST__PERSON_LIST">
+            <End Role="PERSON_LIST" EntitySet="PERSON_LIST" />
+            <End Role="PERSON_IN_LIST" EntitySet="PERSON_IN_LIST" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="PERSON">
+          <Key>
+            <PropertyRef Name="PERSON_ID" />
+          </Key>
+          <Property Name="PERSON_ID" Type="Int32" Nullable="false" />
+          <Property Name="LASTNAME" Type="String" Nullable="false" MaxLength="30" Unicode="false" FixedLength="false" />
+          <Property Name="FIRSTNAME" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="PERS_TITL" Type="String" MaxLength="6" Unicode="false" FixedLength="false" />
+          <Property Name="ADDRESS" Type="String" MaxLength="165" Unicode="false" FixedLength="false" />
+          <Property Name="EMAILTYP" Type="String" MaxLength="15" Unicode="false" FixedLength="false" />
+          <Property Name="PHONE" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="FAX" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="EXPERT_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="HOMEADDR" Type="String" MaxLength="165" Unicode="false" FixedLength="false" />
+          <Property Name="BIRTH_DATE" Type="DateTime" Precision="3" />
+          <Property Name="BIRTH_PLAC" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+          <Property Name="MAR_STATUS" Type="String" MaxLength="10" Unicode="false" FixedLength="false" />
+          <Property Name="PP_NUMBER" Type="String" MaxLength="16" Unicode="false" FixedLength="false" />
+          <Property Name="PP_ISS_AT" Type="String" MaxLength="32" Unicode="false" FixedLength="false" />
+          <Property Name="PP_ISSUED" Type="DateTime" Precision="3" />
+          <Property Name="PP_EXPIR" Type="DateTime" Precision="3" />
+          <Property Name="WP_START" Type="DateTime" Precision="3" />
+          <Property Name="WP_MONTHS" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="PERSINIT" Type="String" MaxLength="4" Unicode="false" FixedLength="false" />
+          <Property Name="CTY_CODE" Type="String" MaxLength="2" Unicode="false" FixedLength="false" />
+          <Property Name="ESTAFF_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="VMS_USER" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
+          <Property Name="DEPT_CODE" Type="String" MaxLength="3" Unicode="false" FixedLength="false" />
+          <Property Name="JOB_CODE" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
+          <Property Name="ETSI_INIT" Type="String" MaxLength="3" Unicode="false" FixedLength="false" />
+          <Property Name="ROOM" Type="String" MaxLength="6" Unicode="false" FixedLength="false" />
+          <Property Name="TEL_EXT" Type="String" MaxLength="4" Unicode="false" FixedLength="false" />
+          <Property Name="ORGA_ID" Type="Int32" />
+          <Property Name="RAPTR_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="ESMS_CODE" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
+          <Property Name="CTY_POST" Type="String" MaxLength="4" Unicode="false" FixedLength="false" />
+          <Property Name="ZIP" Type="String" MaxLength="10" Unicode="false" FixedLength="false" />
+          <Property Name="CITY" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+          <Property Name="ADD_CTY_CODE" Type="String" MaxLength="2" Unicode="false" FixedLength="false" />
+          <Property Name="OFFICIAL_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="CONTACT_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="ACTIVE_EXPERT_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="OFFICIAL_CONTACT_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="PT_CONTRACT_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="SORT_KEY" Type="Int32" />
+          <Property Name="SECRETARY_PHONE" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="STANDARD_PHONE" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="MOBILE_PHONE" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="OTHER_PHONE" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="OTHER_PHONE_QUAL" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="PAGER_NUMB" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="FAX2" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="CTY_POST_EXPRS" Type="String" MaxLength="4" Unicode="false" FixedLength="false" />
+          <Property Name="ZIP_EXPRS" Type="String" MaxLength="10" Unicode="false" FixedLength="false" />
+          <Property Name="CITY_EXPRS" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+          <Property Name="CTY_CODE_EXPRS" Type="String" MaxLength="2" Unicode="false" FixedLength="false" />
+          <Property Name="ADDRESS_EXPRS" Type="String" MaxLength="165" Unicode="false" FixedLength="false" />
+          <Property Name="DELETED_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="BUSINESS_TITLE" Type="String" MaxLength="40" Unicode="false" FixedLength="false" />
+          <Property Name="PICTURE_PATH" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+          <Property Name="VIDEO_CONF_NUMB" Type="String" MaxLength="20" Unicode="false" FixedLength="false" />
+          <Property Name="ETSI_ADD" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+          <Property Name="INTERNET_ADD" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="X400_ADD" Type="String" MaxLength="150" Unicode="false" FixedLength="false" />
+          <Property Name="OTHER_ADD" Type="String" MaxLength="100" Unicode="false" FixedLength="false" />
+          <Property Name="MOD_TS" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="MOD_BY" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
+          <Property Name="TEL_DIRECTORY_FLG" Type="String" MaxLength="1" Unicode="false" FixedLength="true" />
+          <Property Name="WEB_UPDATE_STATE" Type="String" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="WEB_MOD_TS" Type="DateTime" Precision="3" />
+          <Property Name="WEB_MOD_BY" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
+          <Property Name="SIMPLE_NAME" Type="String" MaxLength="30" Unicode="false" FixedLength="false" />
+          <Property Name="LAST_REP_ORGA_ID" Type="Int32" />
+          <Property Name="ACCEPT_EMAIL_FLG" Type="String" MaxLength="1" Unicode="false" FixedLength="false" />
+          <NavigationProperty Name="PERSON_IN_LIST" Relationship="DSDBModel.PERSON_IN_LIST__PERSON" FromRole="PERSON" ToRole="PERSON_IN_LIST" />
+          <NavigationProperty Name="PERSON_LIST" Relationship="DSDBModel.PERSON_LIST_OWNER__PERSON" FromRole="PERSON" ToRole="PERSON_LIST" />
+        </EntityType>
+        <EntityType Name="PERSON_IN_LIST">
+          <Key>
+            <PropertyRef Name="PLIST_ID" />
+            <PropertyRef Name="PERSON_ID" />
+            <PropertyRef Name="PERS_ROLE_CODE" />
+            <PropertyRef Name="START_DATE" />
+            <PropertyRef Name="ORGA_ID" />
+          </Key>
+          <Property Name="PLIST_ID" Type="Int32" Nullable="false" />
+          <Property Name="PERSON_ID" Type="Int32" Nullable="false" />
+          <Property Name="PERS_ROLE_CODE" Type="String" Nullable="false" MaxLength="12" Unicode="false" FixedLength="false" />
+          <Property Name="START_DATE" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FREE_TEXT" Type="String" MaxLength="120" Unicode="false" FixedLength="false" />
+          <Property Name="INVITATION_SENT_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="INVITATION_DATE" Type="DateTime" Precision="3" />
+          <Property Name="CONFIRMATION_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="CONFIRMATION_DATE" Type="DateTime" Precision="3" />
+          <Property Name="PARTICIPATION_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="DOC_REQUESTED_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="DOC_REQUESTED_DATE" Type="DateTime" Precision="3" />
+          <Property Name="DOC_SENT_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="DOC_SENT_DATE" Type="DateTime" Precision="3" />
+          <Property Name="LINE_POSITION" Type="Int32" />
+          <Property Name="END_DATE" Type="DateTime" Precision="3" />
+          <Property Name="ORGA_ID" Type="Int32" Nullable="false" />
+          <Property Name="REPRESENT_FLG" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="PARTICIPANT_ACCESS" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="OFFICIAL_ACCESS" Type="String" Nullable="false" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="MOD_TS" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="MOD_BY" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
+          <Property Name="no_dispatch_flg" Type="String" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="USE_PAPER_FLG" Type="String" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="WEB_MOD_BY" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
+          <Property Name="WEB_MOD_TS" Type="DateTime" Precision="3" />
+          <Property Name="REPRESENT_ORGA_ID" Type="Int32" />
+          <NavigationProperty Name="PERSON" Relationship="DSDBModel.PERSON_IN_LIST__PERSON" FromRole="PERSON_IN_LIST" ToRole="PERSON" />
+          <NavigationProperty Name="PERSON_LIST" Relationship="DSDBModel.PERSON_IN_LIST__PERSON_LIST" FromRole="PERSON_IN_LIST" ToRole="PERSON_LIST" />
+        </EntityType>
+        <EntityType Name="PERSON_LIST">
+          <Key>
+            <PropertyRef Name="PLIST_ID" />
+          </Key>
+          <Property Name="PLIST_ID" Type="Int32" Nullable="false" />
+          <Property Name="PLIST_TYPE" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
+          <Property Name="PLISTS_CODE" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
+          <Property Name="CREATION_DATE" Type="DateTime" Precision="3" />
+          <Property Name="REF_YEAR" Type="Int32" />
+          <Property Name="REF_SEQNO" Type="Int32" />
+          <Property Name="PLIST_TITLE" Type="String" MaxLength="70" Unicode="false" FixedLength="false" />
+          <Property Name="MTG_ID" Type="Int32" />
+          <Property Name="OWNER_ID" Type="Int32" />
+          <Property Name="OWNER_DEPT" Type="String" MaxLength="3" Unicode="false" FixedLength="false" />
+          <Property Name="OWNERSHIP_LEVEL" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
+          <Property Name="TB_ID" Type="Int32" />
+          <Property Name="OWNER_LIST_ID" Type="Int32" />
+          <Property Name="PT_TYPE" Type="String" MaxLength="1" Unicode="false" FixedLength="false" />
+          <Property Name="PT_CODE" Type="String" MaxLength="10" Unicode="false" FixedLength="false" />
+          <Property Name="MOD_TS" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="MOD_BY" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
+          <Property Name="WEB_MOD_BY" Type="String" MaxLength="12" Unicode="false" FixedLength="false" />
+          <Property Name="WEB_MOD_TS" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="PERSON" Relationship="DSDBModel.PERSON_LIST_OWNER__PERSON" FromRole="PERSON_LIST" ToRole="PERSON" />
+          <NavigationProperty Name="PERSON_IN_LIST" Relationship="DSDBModel.PERSON_IN_LIST__PERSON_LIST" FromRole="PERSON_LIST" ToRole="PERSON_IN_LIST" />
+        </EntityType>
+        <Association Name="PERSON_IN_LIST__PERSON">
+          <End Role="PERSON" Type="DSDBModel.PERSON" Multiplicity="1" />
+          <End Role="PERSON_IN_LIST" Type="DSDBModel.PERSON_IN_LIST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PERSON">
+              <PropertyRef Name="PERSON_ID" />
+            </Principal>
+            <Dependent Role="PERSON_IN_LIST">
+              <PropertyRef Name="PERSON_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PERSON_LIST_OWNER__PERSON">
+          <End Role="PERSON" Type="DSDBModel.PERSON" Multiplicity="0..1" />
+          <End Role="PERSON_LIST" Type="DSDBModel.PERSON_LIST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PERSON">
+              <PropertyRef Name="PERSON_ID" />
+            </Principal>
+            <Dependent Role="PERSON_LIST">
+              <PropertyRef Name="OWNER_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="PERSON_IN_LIST__PERSON_LIST">
+          <End Role="PERSON_LIST" Type="DSDBModel.PERSON_LIST" Multiplicity="1" />
+          <End Role="PERSON_IN_LIST" Type="DSDBModel.PERSON_IN_LIST" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="PERSON_LIST">
+              <PropertyRef Name="PLIST_ID" />
+            </Principal>
+            <Dependent Role="PERSON_IN_LIST">
+              <PropertyRef Name="PLIST_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DSDBModelStoreContainer" CdmEntityContainer="DSDBContext">
+          <EntitySetMapping Name="People">
+            <EntityTypeMapping TypeName="DSDBModel.PERSON">
+              <MappingFragment StoreEntitySet="PERSON">
+                <ScalarProperty Name="PERSON_ID" ColumnName="PERSON_ID" />
+                <ScalarProperty Name="LASTNAME" ColumnName="LASTNAME" />
+                <ScalarProperty Name="FIRSTNAME" ColumnName="FIRSTNAME" />
+                <ScalarProperty Name="PERS_TITL" ColumnName="PERS_TITL" />
+                <ScalarProperty Name="ADDRESS" ColumnName="ADDRESS" />
+                <ScalarProperty Name="EMAILTYP" ColumnName="EMAILTYP" />
+                <ScalarProperty Name="PHONE" ColumnName="PHONE" />
+                <ScalarProperty Name="FAX" ColumnName="FAX" />
+                <ScalarProperty Name="EXPERT_FLG" ColumnName="EXPERT_FLG" />
+                <ScalarProperty Name="HOMEADDR" ColumnName="HOMEADDR" />
+                <ScalarProperty Name="BIRTH_DATE" ColumnName="BIRTH_DATE" />
+                <ScalarProperty Name="BIRTH_PLAC" ColumnName="BIRTH_PLAC" />
+                <ScalarProperty Name="MAR_STATUS" ColumnName="MAR_STATUS" />
+                <ScalarProperty Name="PP_NUMBER" ColumnName="PP_NUMBER" />
+                <ScalarProperty Name="PP_ISS_AT" ColumnName="PP_ISS_AT" />
+                <ScalarProperty Name="PP_ISSUED" ColumnName="PP_ISSUED" />
+                <ScalarProperty Name="PP_EXPIR" ColumnName="PP_EXPIR" />
+                <ScalarProperty Name="WP_START" ColumnName="WP_START" />
+                <ScalarProperty Name="WP_MONTHS" ColumnName="WP_MONTHS" />
+                <ScalarProperty Name="PERSINIT" ColumnName="PERSINIT" />
+                <ScalarProperty Name="CTY_CODE" ColumnName="CTY_CODE" />
+                <ScalarProperty Name="ESTAFF_FLG" ColumnName="ESTAFF_FLG" />
+                <ScalarProperty Name="VMS_USER" ColumnName="VMS_USER" />
+                <ScalarProperty Name="DEPT_CODE" ColumnName="DEPT_CODE" />
+                <ScalarProperty Name="JOB_CODE" ColumnName="JOB_CODE" />
+                <ScalarProperty Name="ETSI_INIT" ColumnName="ETSI_INIT" />
+                <ScalarProperty Name="ROOM" ColumnName="ROOM" />
+                <ScalarProperty Name="TEL_EXT" ColumnName="TEL_EXT" />
+                <ScalarProperty Name="ORGA_ID" ColumnName="ORGA_ID" />
+                <ScalarProperty Name="RAPTR_FLG" ColumnName="RAPTR_FLG" />
+                <ScalarProperty Name="ESMS_CODE" ColumnName="ESMS_CODE" />
+                <ScalarProperty Name="CTY_POST" ColumnName="CTY_POST" />
+                <ScalarProperty Name="ZIP" ColumnName="ZIP" />
+                <ScalarProperty Name="CITY" ColumnName="CITY" />
+                <ScalarProperty Name="ADD_CTY_CODE" ColumnName="ADD_CTY_CODE" />
+                <ScalarProperty Name="OFFICIAL_FLG" ColumnName="OFFICIAL_FLG" />
+                <ScalarProperty Name="CONTACT_FLG" ColumnName="CONTACT_FLG" />
+                <ScalarProperty Name="ACTIVE_EXPERT_FLG" ColumnName="ACTIVE_EXPERT_FLG" />
+                <ScalarProperty Name="OFFICIAL_CONTACT_FLG" ColumnName="OFFICIAL_CONTACT_FLG" />
+                <ScalarProperty Name="PT_CONTRACT_FLG" ColumnName="PT_CONTRACT_FLG" />
+                <ScalarProperty Name="SORT_KEY" ColumnName="SORT_KEY" />
+                <ScalarProperty Name="SECRETARY_PHONE" ColumnName="SECRETARY_PHONE" />
+                <ScalarProperty Name="STANDARD_PHONE" ColumnName="STANDARD_PHONE" />
+                <ScalarProperty Name="MOBILE_PHONE" ColumnName="MOBILE_PHONE" />
+                <ScalarProperty Name="OTHER_PHONE" ColumnName="OTHER_PHONE" />
+                <ScalarProperty Name="OTHER_PHONE_QUAL" ColumnName="OTHER_PHONE_QUAL" />
+                <ScalarProperty Name="PAGER_NUMB" ColumnName="PAGER_NUMB" />
+                <ScalarProperty Name="FAX2" ColumnName="FAX2" />
+                <ScalarProperty Name="CTY_POST_EXPRS" ColumnName="CTY_POST_EXPRS" />
+                <ScalarProperty Name="ZIP_EXPRS" ColumnName="ZIP_EXPRS" />
+                <ScalarProperty Name="CITY_EXPRS" ColumnName="CITY_EXPRS" />
+                <ScalarProperty Name="CTY_CODE_EXPRS" ColumnName="CTY_CODE_EXPRS" />
+                <ScalarProperty Name="ADDRESS_EXPRS" ColumnName="ADDRESS_EXPRS" />
+                <ScalarProperty Name="DELETED_FLG" ColumnName="DELETED_FLG" />
+                <ScalarProperty Name="BUSINESS_TITLE" ColumnName="BUSINESS_TITLE" />
+                <ScalarProperty Name="PICTURE_PATH" ColumnName="PICTURE_PATH" />
+                <ScalarProperty Name="VIDEO_CONF_NUMB" ColumnName="VIDEO_CONF_NUMB" />
+                <ScalarProperty Name="ETSI_ADD" ColumnName="ETSI_ADD" />
+                <ScalarProperty Name="INTERNET_ADD" ColumnName="INTERNET_ADD" />
+                <ScalarProperty Name="X400_ADD" ColumnName="X400_ADD" />
+                <ScalarProperty Name="OTHER_ADD" ColumnName="OTHER_ADD" />
+                <ScalarProperty Name="MOD_TS" ColumnName="MOD_TS" />
+                <ScalarProperty Name="MOD_BY" ColumnName="MOD_BY" />
+                <ScalarProperty Name="TEL_DIRECTORY_FLG" ColumnName="TEL_DIRECTORY_FLG" />
+                <ScalarProperty Name="WEB_UPDATE_STATE" ColumnName="WEB_UPDATE_STATE" />
+                <ScalarProperty Name="WEB_MOD_TS" ColumnName="WEB_MOD_TS" />
+                <ScalarProperty Name="WEB_MOD_BY" ColumnName="WEB_MOD_BY" />
+                <ScalarProperty Name="SIMPLE_NAME" ColumnName="SIMPLE_NAME" />
+                <ScalarProperty Name="LAST_REP_ORGA_ID" ColumnName="LAST_REP_ORGA_ID" />
+                <ScalarProperty Name="ACCEPT_EMAIL_FLG" ColumnName="ACCEPT_EMAIL_FLG" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PERSON_IN_LIST">
+            <EntityTypeMapping TypeName="DSDBModel.PERSON_IN_LIST">
+              <MappingFragment StoreEntitySet="PERSON_IN_LIST">
+                <ScalarProperty Name="PLIST_ID" ColumnName="PLIST_ID" />
+                <ScalarProperty Name="PERSON_ID" ColumnName="PERSON_ID" />
+                <ScalarProperty Name="PERS_ROLE_CODE" ColumnName="PERS_ROLE_CODE" />
+                <ScalarProperty Name="START_DATE" ColumnName="START_DATE" />
+                <ScalarProperty Name="FREE_TEXT" ColumnName="FREE_TEXT" />
+                <ScalarProperty Name="INVITATION_SENT_FLG" ColumnName="INVITATION_SENT_FLG" />
+                <ScalarProperty Name="INVITATION_DATE" ColumnName="INVITATION_DATE" />
+                <ScalarProperty Name="CONFIRMATION_FLG" ColumnName="CONFIRMATION_FLG" />
+                <ScalarProperty Name="CONFIRMATION_DATE" ColumnName="CONFIRMATION_DATE" />
+                <ScalarProperty Name="PARTICIPATION_FLG" ColumnName="PARTICIPATION_FLG" />
+                <ScalarProperty Name="DOC_REQUESTED_FLG" ColumnName="DOC_REQUESTED_FLG" />
+                <ScalarProperty Name="DOC_REQUESTED_DATE" ColumnName="DOC_REQUESTED_DATE" />
+                <ScalarProperty Name="DOC_SENT_FLG" ColumnName="DOC_SENT_FLG" />
+                <ScalarProperty Name="DOC_SENT_DATE" ColumnName="DOC_SENT_DATE" />
+                <ScalarProperty Name="LINE_POSITION" ColumnName="LINE_POSITION" />
+                <ScalarProperty Name="END_DATE" ColumnName="END_DATE" />
+                <ScalarProperty Name="ORGA_ID" ColumnName="ORGA_ID" />
+                <ScalarProperty Name="REPRESENT_FLG" ColumnName="REPRESENT_FLG" />
+                <ScalarProperty Name="PARTICIPANT_ACCESS" ColumnName="PARTICIPANT_ACCESS" />
+                <ScalarProperty Name="OFFICIAL_ACCESS" ColumnName="OFFICIAL_ACCESS" />
+                <ScalarProperty Name="MOD_TS" ColumnName="MOD_TS" />
+                <ScalarProperty Name="MOD_BY" ColumnName="MOD_BY" />
+                <ScalarProperty Name="no_dispatch_flg" ColumnName="no_dispatch_flg" />
+                <ScalarProperty Name="USE_PAPER_FLG" ColumnName="USE_PAPER_FLG" />
+                <ScalarProperty Name="WEB_MOD_BY" ColumnName="WEB_MOD_BY" />
+                <ScalarProperty Name="WEB_MOD_TS" ColumnName="WEB_MOD_TS" />
+                <ScalarProperty Name="REPRESENT_ORGA_ID" ColumnName="REPRESENT_ORGA_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PERSON_LIST">
+            <EntityTypeMapping TypeName="DSDBModel.PERSON_LIST">
+              <MappingFragment StoreEntitySet="PERSON_LIST">
+                <ScalarProperty Name="PLIST_ID" ColumnName="PLIST_ID" />
+                <ScalarProperty Name="PLIST_TYPE" ColumnName="PLIST_TYPE" />
+                <ScalarProperty Name="PLISTS_CODE" ColumnName="PLISTS_CODE" />
+                <ScalarProperty Name="CREATION_DATE" ColumnName="CREATION_DATE" />
+                <ScalarProperty Name="REF_YEAR" ColumnName="REF_YEAR" />
+                <ScalarProperty Name="REF_SEQNO" ColumnName="REF_SEQNO" />
+                <ScalarProperty Name="PLIST_TITLE" ColumnName="PLIST_TITLE" />
+                <ScalarProperty Name="MTG_ID" ColumnName="MTG_ID" />
+                <ScalarProperty Name="OWNER_ID" ColumnName="OWNER_ID" />
+                <ScalarProperty Name="OWNER_DEPT" ColumnName="OWNER_DEPT" />
+                <ScalarProperty Name="OWNERSHIP_LEVEL" ColumnName="OWNERSHIP_LEVEL" />
+                <ScalarProperty Name="TB_ID" ColumnName="TB_ID" />
+                <ScalarProperty Name="OWNER_LIST_ID" ColumnName="OWNER_LIST_ID" />
+                <ScalarProperty Name="PT_TYPE" ColumnName="PT_TYPE" />
+                <ScalarProperty Name="PT_CODE" ColumnName="PT_CODE" />
+                <ScalarProperty Name="MOD_TS" ColumnName="MOD_TS" />
+                <ScalarProperty Name="MOD_BY" ColumnName="MOD_BY" />
+                <ScalarProperty Name="WEB_MOD_BY" ColumnName="WEB_MOD_BY" />
+                <ScalarProperty Name="WEB_MOD_TS" ColumnName="WEB_MOD_TS" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

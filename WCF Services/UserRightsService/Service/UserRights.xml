@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Portals>
+  <Portal value="ETSI">
+    <UserRoles>
+      <UserRole value="Administrator">
+      </UserRole>
+      <UserRole value="MeetingManager">
+        <Right value="Meetings_View"/>
+        <Right value="Meetings_CreateEvent"/>
+        <Right value="Meetings_EditEvent"/>
+      </UserRole>
+      <UserRole value="Anonymous">
+      </UserRole>
+    </UserRoles>
+  </Portal>
+  <Portal value="Ultimate">
+    <UserRoles>
+      <UserRole value="Administrator">
+        <Right value="Release_Create"/>
+        <Right value="Release_Edit"/>
+        <Right value="Release_Freeze"/>
+        <Right value="Release_Close"/>
+        <Right value="Remarks_ViewPrivate"/>
+        <Right value="Remarks_AddPrivateByDefault"/>
+        <Right value="WorkItem_ImportWorkplan"/>
+      </UserRole>
+      <UserRole value="SuperUser">
+        <Right value="Release_Create"/>
+        <Right value="Release_Edit"/>
+        <Right value="Release_Freeze"/>
+        <Right value="Release_Close"/>
+        <Right value="Remarks_ViewPrivate"/>
+        <Right value="Remarks_AddPrivateByDefault"/>
+        <Right value="Release_ViewCompleteDetails"/>
+        <Right value="WorkItem_ImportWorkplan"/>
+        <Right value="Specification_Create"/>
+        <Right value="Specification_EditFull"/>
+        <Right value="Specification_Withdraw"/>
+        <Right value="Specification_View_UnAllocated_Number"/>
+        <Right value="Specification_ManageITURecommendations"/>
+        <Right value="Specification_ForceTransposition"/>
+        <Right value="Versions_Allocate"/>
+        <Right value="Versions_Upload"/>
+        <Right value="Versions_AddRemark"/>
+        <Right value="Specification_UnforceTransposition"/>
+        <Right value="Specification_WithdrawFromRelease"/>
+        <Right value="Specification_InhibitPromote"/>
+        <Right value="Specification_RemoveInhibitPromote"/>
+        <Right value="Specification_BulkPromote"/>
+        <Right value="Specification_SyncHardLinksOnLatestFolder"/>
+      </UserRole>
+      <UserRole value="WorkPlanManager">
+        <Right value="Remarks_ViewPrivate"/>
+        <Right value="Remarks_AddPrivateByDefault"/>
+        <Right value="Release_ViewCompleteDetails"/>
+        <Right value="WorkItem_ImportWorkplan"/>
+      </UserRole>
+      <UserRole value="CommitteeOfficial">
+      </UserRole>
+      <UserRole value="StaffMember">
+        <Right value="Remarks_ViewPrivate"/>
+        <Right value="Remarks_AddPrivateByDefault"/>
+        <Right value="Specification_Create"/>
+        <Right value="Specification_EditLimitted"/>
+        <Right value="Specification_View_UnAllocated_Number"/>
+        <Right value="Versions_Allocate"/>
+        <Right value="Versions_Upload"/>
+        <Right value="Versions_Modify_MajorVersion"/>
+        <Right value="Versions_AddRemark"/>
+      </UserRole>
+      <UserRole value="EolAccountOwner">
+        <Right value="Release_ViewCompleteList"/>
+        <Right value="Release_ViewDetails"/>
+        <Right value="General_ViewPersonalData"/>
+        <Right value="Specification_ViewDetails"/>
+      </UserRole>
+      <UserRole value="MeetingManager">
+        <Right value="Meetings_View"/>
+        <Right value="Meetings_CreateEvent"/>
+        <Right value="Meetings_EditEvent"/>
+      </UserRole>
+      <UserRole value="Anonymous">
+        <Right value="Release_ViewPartialList"/>
+        <Right value="Release_ViewLimitedDetails"/>
+        <Right value="Specification_ViewDetails"/>
+      </UserRole>
+    </UserRoles>
+  </Portal>
+</Portals>
