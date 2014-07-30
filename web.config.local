@@ -90,6 +90,7 @@
 		<add key="FtpBaseAddress" value="http://www.3gpp.org/ftp/" />
 		<add key="FtpExportAddress" value="ftp://ftp.3gpp.org/Information/WORK_PLAN/"/>
 		<add key="TranspositionFolderPath" value="D:\AppTrans\transposition\"/>
+    <add key="UploadVersionTemporaryPath" value="D:\AppTrans\Version\"/>
 	<!--  End of 3GPP Parameters  -->
   </appSettings>
   <system.web.webPages.razor>

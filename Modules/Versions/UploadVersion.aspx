@@ -155,11 +155,9 @@
                     <asp:Label ID="lblCountWarningErrors" runat="server" />
                     <div class="scrollable">
                         <ul>
-                            <asp:Repeater runat="server" ID="rptWarningsErrors"  OnItemDataBound="rptErrorsWarning_ItemDataBound">
+                            <asp:Repeater runat="server" ID="rptWarningsErrors"  OnItemDataBound="rptWarningsErrors_ItemDataBound">
                                 <ItemTemplate>
-                                    <li>
-                                        <asp:Label ID="lblErrorOrWarning" runat="server"></asp:Label>
-                                    </li>
+                                    <li><asp:Label ID="lblErrorOrWarning" runat="server"></asp:Label></li>
                                 </ItemTemplate>
                             </asp:Repeater>
                         </ul>

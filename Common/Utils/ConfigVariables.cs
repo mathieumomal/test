@@ -155,6 +155,19 @@ namespace Etsi.Ultimate.Utils
         }
 
         /// <summary>
+        /// temporary upload version path
+        /// </summary>
+        public static string UploadVersionTemporaryPath
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["UploadVersionTemporaryPath"] != null)
+                    return ConfigurationManager.AppSettings["UploadVersionTemporaryPath"].ToString();
+                return "";
+            }
+        }
+
+        /// <summary>
         /// Global 3GPP project id
         /// </summary>
         public static int Global3GPPProjetId
