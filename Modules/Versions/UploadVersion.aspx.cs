@@ -22,24 +22,6 @@ namespace Etsi.Ultimate.Module.Versions
         #region Variables / Properties
         protected MeetingControl UploadMeeting;
 
-        //To remove because need to move in business part ------------------------------------------------------
-        private const string CONST_VALID_FILENAME = "{0}-{1}{2}{3}";
-        private const string CONST_FTP_ARCHIVE_PATH = "{0}\\Specs\\archive\\{1}_series\\{2}\\";
-        private const string CONST_FTP_LATEST_PATH = "{0}\\Specs\\latest\\{1}\\{2}_series\\";
-        private const string CONST_FTP_LATEST_DRAFTS_PATH = "{0}\\Specs\\latest-drafts\\";
-        private const string CONST_FTP_VERSIONS_PATH = "{0}\\Specs\\{1}\\{2}\\{3}_series\\";
-        //To remove ------------------------------------------------------
-
-
-        private static string releaseDescription = String.Empty;
-        private static UploadedFile versionToSave;
-        private static string versionPathToSave = String.Empty;
-        public static string versionUploadPath;
-        public static string versionFTP_Path;
-        private int errorNumber = 0;
-
-
-        //Attributes validated --------------------------------------------------------------------
         private const string CONST_WARNING_REPORT = "CONST_WARNING_REPORT";
         private const string CONST_USER_ID_VIEWSTATE_LABEL = "CONST_USER_ID_VIEWSTATE_LABEL";
         private const string CONST_RELEASE_ID_VIEWSTATE_LABEL = "CONST_RELEASE_ID_VIEWSTATE_LABEL";
@@ -132,11 +114,6 @@ namespace Etsi.Ultimate.Module.Versions
                 ViewState[ClientID + CONST_IS_DRAFT_VIEWSTATE_LABEL] = value;
             }
         }
-
-        //To discusss their utility :
-        private static int communityID;
-        private static bool isTS;
-        private static string specificationTitle = String.Empty;
         #endregion
 
         #region NEW events NEW
@@ -168,7 +145,7 @@ namespace Etsi.Ultimate.Module.Versions
         /// </summary>
         /// <param name="Sender">Repeater control</param>
         /// <param name="e">Repeater item event arguments</param>
-        protected void rptWarningsErrors_ItemDataBound(Object Sender, RepeaterItemEventArgs e)
+        /*protected void rptWarningsErrors_ItemDataBound(Object Sender, RepeaterItemEventArgs e) 
         {
             string item = (String)e.Item.DataItem;
             if (item != null)
@@ -183,7 +160,7 @@ namespace Etsi.Ultimate.Module.Versions
                 else
                     lbl.CssClass = "WarningItem";
             }
-        }
+        }*/
 
         //Allocate events
         /// <summary>
@@ -333,9 +310,6 @@ namespace Etsi.Ultimate.Module.Versions
                 AllocateBtn.Visible = true;
                 btnConfirmUpload.Visible = false;
             }
-            //Code behind attributes
-            versionToSave = null;
-            versionPathToSave = String.Empty;
         }
         /// <summary>
         /// Retreive the URL parameters
@@ -483,34 +457,23 @@ namespace Etsi.Ultimate.Module.Versions
                 ThrowAnError(UploadVersion_aspx.NoAvailableDatas);
             }
         }
-        //TO REFRACTOR -------------------------------------------------------------------------------------------------------------
         /// <summary>
         /// Spec attributes handler
         /// </summary>
-        private void SpecAttributesHandler(Specification spec)//---------------
+        private void SpecAttributesHandler(Specification spec)
         {
             IsDraft = !(spec.IsUnderChangeControl.HasValue && spec.IsUnderChangeControl.Value && spec.IsActive);
             hidIsRequired.Value = (!IsDraft && IsUploadMode) ? "True" : "False";
             MeetingLbl.Text = (!IsDraft && IsUploadMode) ? "Meeting(<span class='requiredField'>*</span>):" : "Meeting:";
             SpecNumberVal.Text = spec.Number;
-
-            //----------------------------------------------- UTILITY ?
-            communityID = spec.PrimeResponsibleGroup.Fk_commityId;
-            isTS = spec.IsTS ?? true;
-            specificationTitle = spec.Title;
-            //----------------------------------------------- UTILITY ?
         }
         /// <summary>
         /// Release attributes handler
         /// </summary>
-        private void ReleaseAttributesHandler(Release release)//-------------------
+        private void ReleaseAttributesHandler(Release release)
         {
             ReleaseVal.Text = release.Code;
-            //----------------------------------------------- UTILITY ?
-            releaseDescription = release.Name;
-            //----------------------------------------------- UTILITY ?
         }
-        //TO REFRACTOR -------------------------------------------------------------------------------------------------------------
         #endregion
     }
 }
