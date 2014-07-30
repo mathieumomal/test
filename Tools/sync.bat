@@ -1,6 +1,6 @@
 @ECHO OFF
 REM ----- FILL IN THIS AREA -----
-SET TRUNK_PATH=D:\Users\lbabin\Documents\Projets_CG\Projet_ETSI\ITERATION__2\SPRINT_5\ULTIMATE\
+SET TRUNK_PATH=D:\CG_projects\Ultimate\
 SET DNN_PATH=C:\websites\localdev.me\
 SET PHASE=local
 

@@ -30,6 +30,8 @@ namespace Etsi.Ultimate.Module.Versions
         private const string CONST_IS_DRAFT_VIEWSTATE_LABEL = "CONST_IS_DRAFT_VIEWSTATE_LABEL";
         private const string CONST_VERSION_PATH_VIEWSTATE_LABEL = "CONST_VERSION_PATH_VIEWSTATE_LABEL";
 
+        private int errorNumber = 0;
+
         private Report report
         {
             get
@@ -145,7 +147,7 @@ namespace Etsi.Ultimate.Module.Versions
         /// </summary>
         /// <param name="Sender">Repeater control</param>
         /// <param name="e">Repeater item event arguments</param>
-        /*protected void rptWarningsErrors_ItemDataBound(Object Sender, RepeaterItemEventArgs e) 
+        protected void rptWarningsErrors_ItemDataBound(Object Sender, RepeaterItemEventArgs e) 
         {
             string item = (String)e.Item.DataItem;
             if (item != null)
@@ -160,7 +162,7 @@ namespace Etsi.Ultimate.Module.Versions
                 else
                     lbl.CssClass = "WarningItem";
             }
-        }*/
+        }
 
         //Allocate events
         /// <summary>
@@ -250,14 +252,14 @@ namespace Etsi.Ultimate.Module.Versions
             var uploadVersionTemporaryPath = Utils.ConfigVariables.UploadVersionTemporaryPath;
 
             //Get the version file
-            UploadedFile workplanUploaded = e.File;
-
+            UploadedFile versionUploaded = e.File;
+            var path = new StringBuilder()
+                    .Append(uploadVersionTemporaryPath)
+                    .Append(versionUploaded.FileName)
+                    .ToString();
             try
             {
-                workplanUploaded.SaveAs(new StringBuilder()
-                    .Append(uploadVersionTemporaryPath)
-                    .Append(workplanUploaded.FileName)
-                    .ToString());
+                versionUploaded.SaveAs(path);
             }
             catch (Exception exc)
             {
@@ -266,10 +268,7 @@ namespace Etsi.Ultimate.Module.Versions
 
             var version = GetEditedSpecVersionObject();
             if (version.Key)
-                svcResponse = specVersionSvc.CheckVersionForUpload(GetUserPersonId(), version.Value, new StringBuilder()
-                                                                                                        .Append(uploadVersionTemporaryPath)
-                                                                                                        .Append(workplanUploaded.GetName())
-                                                                                                        .ToString());
+                svcResponse = specVersionSvc.CheckVersionForUpload(GetUserPersonId(), version.Value, path);
 
             //Get version file token to use it when user will press "confirm upload" button
             VersionFileToken = svcResponse.Result;
@@ -286,7 +285,9 @@ namespace Etsi.Ultimate.Module.Versions
             else
             {
                 DisplayWarningAndErrorInConfirmationPopUp(svcResponse.Report);
+                errorNumber = svcResponse.Report.GetNumberOfErrors();
             }
+
         }
         //Upload events
         #endregion
@@ -411,6 +412,18 @@ namespace Etsi.Ultimate.Module.Versions
 
             if (report.GetNumberOfErrors() > 0)
                 btnConfirmUpload.Enabled = false;
+
+            lblCountWarningErrors.Text = new StringBuilder()
+                .Append("Found ")
+                .Append(report.GetNumberOfErrors().ToString())
+                .Append(" error")
+                .Append(report.GetNumberOfErrors() <= 1 ? "" : "s")
+                .Append(", ")
+                .Append(report.GetNumberOfWarnings().ToString())
+                .Append(" warning")
+                .Append(report.GetNumberOfWarnings() <= 1 ? "" : "s")
+                .Append(".")
+                .ToString();
 
             List<string> datasource = new List<string>();
             datasource.AddRange(report.ErrorList);

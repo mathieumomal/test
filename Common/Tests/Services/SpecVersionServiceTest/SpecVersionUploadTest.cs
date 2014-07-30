@@ -63,7 +63,7 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(1, result.Report.GetNumberOfErrors());
         }
 
-        [Test]
+        /*[Test]
         public void CheckVersionForUpload_NominalCase()
         {
             var versionSvc = new SpecVersionService();
@@ -72,7 +72,7 @@ namespace Etsi.Ultimate.Tests.Services
             var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, "path");
             Assert.AreEqual(0, result.Report.GetNumberOfErrors());
             Assert.AreEqual(0, result.Report.GetNumberOfWarnings());
-        }
+        }*/
         #endregion
 
 

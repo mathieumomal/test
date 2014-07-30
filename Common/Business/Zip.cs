@@ -59,7 +59,7 @@ namespace Etsi.Ultimate.Business
                 if (outputPath == null) outputPath = Path.GetDirectoryName(zipFilePath);
                 using (var zip = ZipFile.Read(zipFilePath))
                 {
-                    var path = createOwnDirectory ? outputPath + FileName : outputPath;
+                    var path = createOwnDirectory ? outputPath + "\\" + FileName : outputPath;
                     foreach (var entry in zip.Entries)
                     {
                         entry.Extract(path, ExtractExistingFileAction.OverwriteSilently);

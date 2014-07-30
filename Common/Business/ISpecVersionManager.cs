@@ -51,21 +51,6 @@ namespace Etsi.Ultimate.Business
         List<Report> AllocateVersionFromMassivePromote(List<Specification> specifications, Release release, int personId);
 
         /// <summary>
-        /// Validate Uploaded version document & provide validation summary
-        /// </summary>
-        /// <param name="fileExtension">File Extension (.doc/.docx)</param>
-        /// <param name="memoryStream">Memory Stream</param>
-        /// <param name="temporaryFolder">Temporary Folder</param>
-        /// <param name="version">Specification Version</param>
-        /// <param name="title">Specification Title</param>
-        /// <param name="release">Specification Release</param>
-        /// <param name="meetingDate">Meeting Date</param>
-        /// <param name="tsgTitle">Technical Specificaion Group Title</param>
-        /// <param name="isTS">True - Technical Specificaiton / False - Technical Report</param>
-        /// <returns>Validation Summary</returns>
-        Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTS);
-
-        /// <summary>
         /// Insert SpecVersion entity
         /// </summary>
         /// <param name="entity">SpecVersion</param>

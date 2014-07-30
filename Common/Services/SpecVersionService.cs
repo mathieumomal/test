@@ -44,7 +44,7 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        //TO REMOVE -----------------------------------------
+        //TO REMOVE WITH TESTS-----------------------------------------
         /// <summary>
         /// OLD : Allocate/Upload a version
         /// </summary>
@@ -122,42 +122,6 @@ namespace Etsi.Ultimate.Services
                 specVersionUploadAction.UoW = uoW;
                 return specVersionUploadAction.UploadVersion(personId, version, token);
             }
-        }
-
-
-        /// <summary>
-        /// Validate Uploaded version document & provide validation summary
-        /// </summary>
-        /// <param name="fileExtension">File Extension (.doc/.docx)</param>
-        /// <param name="memoryStream">Memory Stream</param>
-        /// <param name="temporaryFolder">Temporary Folder</param>
-        /// <param name="version">Specification Version</param>
-        /// <param name="title">Specification Title</param>
-        /// <param name="release">Specification Release</param>
-        /// <param name="meetingDate">Meeting Date</param>
-        /// <param name="tsgTitle">Technical Specificaion Group Title</param>
-        /// <param name="isTS">True - Technical Specificaiton / False - Technical Report</param>
-        /// <returns>Validation Summary</returns>
-        public Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTS)
-        {
-            Report validationReport;
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
-            {
-                try
-                {
-                    var specVersionManager = new SpecVersionsManager();
-                    specVersionManager.UoW = uoW;
-                    validationReport = specVersionManager.ValidateVersionDocument(fileExtension, memoryStream, temporaryFolder, version, title, release, meetingDate, tsgTitle, isTS);
-                }
-                catch (Exception ex)
-                {
-                    string errorMessage = "Version Document Validation Error: " + ex.Message;
-                    validationReport = new Report();
-                    validationReport.LogError(errorMessage);
-                    Utils.LogManager.Error(errorMessage);
-                }
-            }
-            return validationReport;
         }
 
         public int CountVersionsPendingUploadByReleaseId(int releaseId)
@@ -352,21 +316,6 @@ namespace Etsi.Ultimate.Services
         /// <param name="version">Version to allocate/upload</param>
         /// <returns>Result of the operation</returns>
         Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId, Report report);
-
-        /// <summary>
-        /// Validate Uploaded version document & provide validation summary
-        /// </summary>
-        /// <param name="fileExtension">File Extension (.doc/.docx)</param>
-        /// <param name="memoryStream">Memory Stream</param>
-        /// <param name="temporaryFolder">Temporary Folder</param>
-        /// <param name="version">Specification Version</param>
-        /// <param name="title">Specification Title</param>
-        /// <param name="release">Specification Release</param>
-        /// <param name="meetingDate">Meeting Date</param>
-        /// <param name="tsgTitle">Technical Specificaion Group Title</param>
-        /// <param name="isTS">True - Technical Specificaiton / False - Technical Report</param>
-        /// <returns>Validation Summary</returns>
-        Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTS);
 
         /// <summary>
         /// Count the number of (latest) versions which pending upload
