@@ -3,6 +3,7 @@ using Etsi.UserRights.DSDBDataAccess;
 using Etsi.UserRights.Interface;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -215,7 +216,7 @@ namespace Etsi.UserRights.Service
         {
             var personRights = new List<string>();
 
-            var doc = XDocument.Load("UserRights.xml");
+            var doc = XDocument.Load(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserRights.xml"));
 
             foreach (var personRole in personRoles)
             {

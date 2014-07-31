@@ -1,6 +1,7 @@
 ﻿using DotNetNuke.Instrumentation;
 using log4net.Config;
 using System;
+using System.IO;
 
 namespace Etsi.UserRights.Service
 {
@@ -27,7 +28,7 @@ namespace Etsi.UserRights.Service
 
         private static void ConfigureLogger()
         {
-            XmlConfigurator.ConfigureAndWatch(new System.IO.FileInfo(String.IsNullOrEmpty(CONFIG_FILE_PATH) ? "UserRights.log4net.config" : CONFIG_FILE_PATH));
+            XmlConfigurator.ConfigureAndWatch(new System.IO.FileInfo(String.IsNullOrEmpty(CONFIG_FILE_PATH) ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserRights.log4net.config") : CONFIG_FILE_PATH));
             _userRightsLogger = LoggerSource.Instance.GetLogger(String.IsNullOrEmpty(LOGGER_NAME) ? "UserRightsLogger" : LOGGER_NAME);
         }
 
