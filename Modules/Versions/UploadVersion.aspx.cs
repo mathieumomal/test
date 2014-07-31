@@ -390,6 +390,8 @@ namespace Etsi.Ultimate.Module.Versions
 
             if (report.GetNumberOfErrors() > 0)
                 btnConfirmUpload.Enabled = false;
+            else
+                btnConfirmUpload.Enabled = true;
 
             lblCountWarningErrors.Text = new StringBuilder()
                 .Append("Found ")
@@ -436,6 +438,9 @@ namespace Etsi.Ultimate.Module.Versions
                     NewVersionMajorVal.Value = version.NewSpecVersion.MajorVersion;
                     NewVersionTechnicalVal.Value = version.NewSpecVersion.TechnicalVersion;
                     NewVersionEditorialVal.Value = version.NewSpecVersion.EditorialVersion;
+
+                    if (version.NewSpecVersion.Source != null)
+                        UploadMeeting.SelectedMeetingId = version.NewSpecVersion.Source.GetValueOrDefault();
                 }
                 else
                 {
