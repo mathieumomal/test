@@ -78,6 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommunityManager.cs" />
+    <Compile Include="MeetingManager.cs" />
     <Compile Include="RemarkManager.cs" />
     <Compile Include="SpecVersionBusiness\GetNextReleaseAction.cs" />
     <Compile Include="SpecVersionBusiness\SpecVersionAllocateAction.cs" />
@@ -98,7 +99,6 @@
     <Compile Include="IPersonManager.cs" />
     <Compile Include="ISpecificationManager.cs" />
     <Compile Include="ISpecificationTechnologiesManager.cs" />
-    <Compile Include="MeetingManager.cs" />
     <Compile Include="ManagerFactory.cs" />
     <Compile Include="PersonManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
