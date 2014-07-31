@@ -186,7 +186,6 @@ namespace Etsi.Ultimate.Module.Versions
             }
             else
             {
-                //DisplayWarningAndErrorInConfirmationPopUp(report);
                 ThrowAnError(UploadVersion_aspx.GenericErrorAllocation);
             }
         }
@@ -218,7 +217,7 @@ namespace Etsi.Ultimate.Module.Versions
             if (version.Key)
                 svcResponse = specVersionSvc.UploadVersion(GetUserPersonId(), version.Value, VersionFileToken);
 
-            if (report.GetNumberOfErrors() == 0 && report.GetNumberOfWarnings() == 0)
+            if (svcResponse.Report.GetNumberOfErrors() == 0 && svcResponse.Report.GetNumberOfWarnings() == 0)
             {
                 lblSaveStatus.Text = String.Format(UploadVersion_aspx.SuccessMessage, version.Value.MajorVersion, version.Value.TechnicalVersion, version.Value.EditorialVersion, "uploaded.");
                 preVersionUploadScreen.Visible = false;

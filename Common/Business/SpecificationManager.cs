@@ -348,7 +348,7 @@ namespace Etsi.Ultimate.Business
                     }
                 }
 
-                if (!(spec.IsUnderChangeControl.HasValue && spec.IsUnderChangeControl.Value))
+                if (!spec.IsUnderChangeControl.GetValueOrDefault())
                 {
                     if(userRights.HasRight(Enum_UserRights.Versions_Modify_MajorVersion))
                         rights.AddRight(Enum_UserRights.Versions_Modify_MajorVersion);

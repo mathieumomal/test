@@ -37,7 +37,7 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(1, result.Report.GetNumberOfErrors());
         }
 
-        [Test]
+        /*[Test]
         public void Upload_NominalCase()
         {
             var versionSvc = new SpecVersionService();
@@ -48,7 +48,7 @@ namespace Etsi.Ultimate.Tests.Services
             var result = versionSvc.UploadVersion(USER_HAS_RIGHT, myVersion, "token");
             Assert.AreEqual(0, result.Report.GetNumberOfErrors());
             Assert.AreEqual(0, result.Report.GetNumberOfWarnings());
-        }
+        }*/
 
         [Test]
         public void CheckVersionForUpload_Fails_If_User_Has_No_Right()

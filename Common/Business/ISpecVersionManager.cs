@@ -36,13 +36,6 @@ namespace Etsi.Ultimate.Business
         KeyValuePair<SpecVersion, UserRightsContainer> GetSpecVersionById(int versionId, int personId);
 
         /// <summary>
-        /// Enable to Allocate a version or to to upload it from scratch
-        /// Notice : (without considering the draft case) with must have a spec and a release ID
-        /// </summary>
-        /// <param name="version">The new version to allocate or upload</param>
-        Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId, Report report = null);
-
-        /// <summary>
         /// Allocate version for a set of promoted specification for a release
         /// </summary>
         /// <param name="specificationIds">Set of specification ids</param>

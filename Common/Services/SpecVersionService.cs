@@ -44,35 +44,6 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        //TO REMOVE WITH TESTS-----------------------------------------
-        /// <summary>
-        /// OLD : Allocate/Upload a version
-        /// </summary>
-        /// <param name="version">Version to allocate/upload</param>
-        /// <returns>Result of the operation</returns>
-        public Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId, Report report = null)
-        {
-            Report result = new Report();
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
-            {
-                try
-                {
-                    var specVersionManager = new SpecVersionsManager();
-                    specVersionManager.UoW = uoW;
-                    result = specVersionManager.UploadOrAllocateVersion(version, isDraft, personId, report);
-
-                    if (result.ErrorList.Count == 0)
-                        uoW.Save();
-                }
-                catch (Exception ex)
-                {
-                    result.LogError(ex.Message);
-                }
-            }
-            return result;
-        }
-        //TO REMOVE -----------------------------------------
-
         /// <summary>
         /// Allocate a version
         /// </summary>
@@ -120,7 +91,9 @@ namespace Etsi.Ultimate.Services
             {
                 var specVersionUploadAction = new SpecVersionUploadAction();
                 specVersionUploadAction.UoW = uoW;
-                return specVersionUploadAction.UploadVersion(personId, version, token);
+                var result = specVersionUploadAction.UploadVersion(personId, version, token);
+                uoW.Save();
+                return result;
             }
         }
 
@@ -309,13 +282,6 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId"></param>
         /// <returns></returns>
         Report AllocateVersion(int personId, SpecVersion version);
-
-        /// <summary>
-        /// Allocate/Upload a version
-        /// </summary>
-        /// <param name="version">Version to allocate/upload</param>
-        /// <returns>Result of the operation</returns>
-        Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId, Report report);
 
         /// <summary>
         /// Count the number of (latest) versions which pending upload

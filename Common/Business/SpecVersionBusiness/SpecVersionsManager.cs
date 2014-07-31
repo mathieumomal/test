@@ -67,170 +67,16 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             return new KeyValuePair<SpecVersion, UserRightsContainer>(version, specRelease_Rights.Value);
         }
 
-        
-        // TO REMOVE -----------------------------------------------------
-        public Report UploadOrAllocateVersion(SpecVersion version, bool isDraft, int personId, Report report = null)
-        {
-            //Initialization
-            Report result = new Report();
-            ISpecVersionsRepository repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
-            repo.UoW = UoW;
-            ISpecificationManager specMgr = ManagerFactory.Resolve<ISpecificationManager>();
-            specMgr.UoW = UoW;
-            IReleaseManager releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
-            releaseMgr.UoW = UoW;
-            IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
-            relStatusRepo.UoW = UoW;
-            ITranspositionManager transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
-            transposeMgr.UoW = UoW;
-
-            var specVersions = repo.GetVersionsForSpecRelease(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
-            var spec = specMgr.GetSpecificationById(personId, version.Fk_SpecificationId ?? 0).Key;
-            var release = releaseMgr.GetReleaseById(personId, version.Fk_ReleaseId ?? 0).Key;
-            var existingVersion = specVersions.Where(x => (x.MajorVersion == version.MajorVersion) &&
-                                                          (x.TechnicalVersion == version.TechnicalVersion) &&
-                                                          (x.EditorialVersion == version.EditorialVersion)).FirstOrDefault();
-
-            //Check if spec and release exist
-            if (spec == null)
-                throw new InvalidDataException("Version's specId is not defined.");
-            if (release == null)
-                throw new InvalidDataException("Version's releaseId is not defined.");
-
-            if (report != null && report.WarningList.Count > 0)
-            {
-                var personManager = new PersonManager();
-                personManager.UoW = UoW;
-                string personDisplayName = personManager.GetPersonDisplayName(personId);
-
-                String remrkText = "This version was uploaded with the following quality checks failures: " + string.Join(";", report.WarningList);
-                if (remrkText.Length > 250)
-                    remrkText = remrkText.Substring(0, 247) + "...";
-
-                var utcNow = DateTime.UtcNow;
-
-                //Create a new remark for generated warnings during document validation
-                Remark warningRemark = new Remark
-                    {
-                        CreationDate = utcNow,
-                        Fk_PersonId = personId,
-                        PersonName = personDisplayName,
-                        RemarkText = remrkText,
-                        IsPublic = false
-                    };
-
-                var commentRemark = version.Remarks.FirstOrDefault();
-                if (commentRemark != null)
-                    commentRemark.CreationDate = utcNow.AddMilliseconds(5d);
-
-                //Add above remark to appropriate version object 
-                if (existingVersion != null)
-                    existingVersion.Remarks.Add(warningRemark);
-                else
-                {
-                    version.Remarks.Clear();
-                    version.Remarks.Add(warningRemark);
-                    if (commentRemark != null)
-                        version.Remarks.Add(commentRemark);
-                }
-            }
-
-
-            if (existingVersion != null) //Existing Version
-            {
-                if (existingVersion.Location == null && version.Location != null)
-                {
-                    if (existingVersion.Source != version.Source)
-                        existingVersion.Source = version.Source;
-                    if (existingVersion.DocumentUploaded != version.DocumentUploaded)
-                        existingVersion.DocumentUploaded = version.DocumentUploaded;
-                    if (existingVersion.ProvidedBy != version.ProvidedBy)
-                        existingVersion.ProvidedBy = version.ProvidedBy;
-                    if (existingVersion.Location != version.Location)
-                        existingVersion.Location = version.Location;
-
-                    var newRemark = version.Remarks.FirstOrDefault();
-                    if (newRemark != null)
-                        existingVersion.Remarks.Add(newRemark);
-
-                    //Transposition of the existing version
-                    transposeMgr.Transpose(spec, existingVersion);
-                }
-                else if (existingVersion.Location != null)
-                {
-                    result.LogError(String.Format("Document has already been uploaded to this version"));
-                }
-            }
-            else
-            {
-                SpecVersion latestSpecVersion;
-                if (isDraft)
-                {
-                    var specVersionsForAllReleases = repo.GetVersionsBySpecId(version.Fk_SpecificationId ?? 0);
-                    latestSpecVersion = specVersionsForAllReleases.OrderByDescending(x => x.MajorVersion ?? 0)
-                                                                                    .ThenByDescending(y => y.TechnicalVersion ?? 0)
-                                                                                    .ThenByDescending(z => z.EditorialVersion ?? 0)
-                                                                                    .FirstOrDefault();
-                }
-                else
-                {
-                    var specVersionsForRelease = repo.GetVersionsForSpecRelease(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
-                    latestSpecVersion = specVersionsForRelease.OrderByDescending(x => x.MajorVersion ?? 0)
-                                                                                .ThenByDescending(y => y.TechnicalVersion ?? 0)
-                                                                                .ThenByDescending(z => z.EditorialVersion ?? 0)
-                                                                                .FirstOrDefault();
-                }
-
-                if (latestSpecVersion != null)
-                {
-                    int latestVersionNumber = int.Parse(latestSpecVersion.Version.Replace(".", ""));
-                    int newVersionNumber = int.Parse(version.Version.Replace(".", ""));
-
-                    if (isDraft)
-                    {
-                        if (newVersionNumber > latestVersionNumber && version.MajorVersion <= 2)
-                            repo.InsertOrUpdate(version);
-                        else
-                            result.LogError(String.Format("Invalid draft version number!"));
-                    }
-                    else
-                    {
-                        if (newVersionNumber > latestVersionNumber)
-                            repo.InsertOrUpdate(version); //New Version
-                        else
-                            result.LogError(String.Format("Invalid version number. Version number should be grater than {0}", latestSpecVersion.Version));
-                    }
-                }
-                else
-                {
-                    if (version.MajorVersion > 2 && isDraft)
-                        result.LogError(String.Format("Invalid draft version number!"));
-                    else
-                        repo.InsertOrUpdate(version);
-                }
-
-                //Transposition of the new version
-                if (result.ErrorList.Count == 0)
-                    transposeMgr.Transpose(spec, version);
-            }
-
-            if (report != null && report.WarningList.Count > 0 && result.ErrorList.Count == 0)
-            {
-                SpecVersion ver = existingVersion != null ? existingVersion : version;
-                MailVersionAuthor(spec, ver, report, personId);
-            }
-
-            return result;
-        }
-        // TO REMOVE -----------------------------------------------------
-
         public List<Report> AllocateVersionFromMassivePromote(List<Specification> specifications, Release release, int personId)
         {
+            SpecVersionAllocateAction specVersionAllocateAction = new SpecVersionAllocateAction();
+            specVersionAllocateAction.UoW = UoW;
+
             List<Report> reports = new List<Report>();
             Report r;
             foreach (Specification s in specifications)
             {
-                r = UploadOrAllocateVersion(new SpecVersion()
+                r = specVersionAllocateAction.AllocateVersion(personId,new SpecVersion()
                 {
                     Fk_SpecificationId = s.Pk_SpecificationId,
                     Fk_ReleaseId = release.Pk_ReleaseId,
@@ -238,7 +84,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                     TechnicalVersion = 0,
                     MajorVersion = release.Version3g
 
-                }, ((s.IsActive) && !(s.IsUnderChangeControl.HasValue && s.IsUnderChangeControl.Value)), personId);
+                });
 
                 reports.Add(r);
             }
@@ -440,51 +286,6 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                 targetSpecVersion.Fk_ReleaseId = sourceSpecVersion.Fk_ReleaseId;
             if (targetSpecVersion.ETSI_WKI_Ref != sourceSpecVersion.ETSI_WKI_Ref)
                 targetSpecVersion.ETSI_WKI_Ref = sourceSpecVersion.ETSI_WKI_Ref;
-        }
-
-        
-
-
-        /// <summary>
-        /// When quality checks fail, and the user confirms anyway the upload of a version, an email must be sent to the user and to the spec manager
-        /// </summary>
-        /// <param name="spec"></param>
-        /// <param name="report"></param>
-        /// <param name="personId"></param>
-        public void MailVersionAuthor(Specification spec, SpecVersion version, Report report, int personId)
-        {
-            var to = new List<string>();
-
-            //get connected user name
-            var connectedUsername = String.Empty;
-            var personManager = new PersonManager();
-            personManager.UoW = UoW;
-
-            var connectedUser = personManager.FindPerson(personId);
-            if (connectedUser != null)
-            {
-                connectedUsername = new StringBuilder()
-                    .Append((connectedUser.FIRSTNAME != null) ? connectedUser.FIRSTNAME : "")
-                    .Append(" ")
-                    .Append((connectedUser.LASTNAME != null) ? connectedUser.LASTNAME : "")
-                    .ToString();
-
-                to.Add(connectedUser.Email);
-            }
-
-            //Subject
-            var subject = String.Format("Spec {0}, version {1} has been uploaded despite some quality checks failure", spec.Pk_SpecificationId, version.Version);
-
-            //Body
-            var body = new VersionUploadFailedQualityCheckMailTemplate(connectedUsername, spec.Number, version.Version.ToString(), report.WarningList);
-
-            var roleManager = new RolesManager();
-            roleManager.UoW = UoW;
-            var cc = roleManager.GetSpecMgrEmail();
-
-            // Send mail
-            var mailManager = UtilsFactory.Resolve<IMailManager>();
-            mailManager.SendEmail(null, to, cc, null, subject, body.TransformText());
         }
         #endregion
     }
