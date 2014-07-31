@@ -18,8 +18,6 @@ namespace Etsi.Ultimate.Business
     {
         #region ITranspositionManager Members
 
-        public static string CONST_WEBCONFIG_TRANSP_PATH = "TranspositionFolderPath";
-
         public IUltimateUnitOfWork UoW { get; set; }
 
         public TranspositionManager()
@@ -44,7 +42,8 @@ namespace Etsi.Ultimate.Business
                     {
                         //STEP2: Add record to WPMDB   
                         WpmRecordCreator creator = new WpmRecordCreator(UoW);
-                        importResult = creator.AddWpmRecords(version);                        
+                        importResult = creator.AddWpmRecords(version);
+                        version.DocumentPassedToPub = DateTime.Now;
                     }                    
                     return (transferResult && importResult);
                 }
@@ -136,11 +135,20 @@ namespace Etsi.Ultimate.Business
             if (frozen == null)
                 throw new InvalidOperationException("Error for get the frozen status.");
 
+            //Define withdrawn criterias
+            var specIsActive = spec.IsActive;//No withdrawn
+            var specReleaseIsWithdrawn = specRelease.isWithdrawn.GetValueOrDefault();
+            //Define others criterias
             var UCC = spec.IsUnderChangeControl.GetValueOrDefault();
             var isFrozen = release.Fk_ReleaseStatus.Equals(frozen.Enum_ReleaseStatusId);
             var specReleaseTranspoForced = specRelease.isTranpositionForced.GetValueOrDefault();
             var specIsForPublication = spec.IsForPublication.GetValueOrDefault();
-            if (!UCC)
+
+            //No transposition if :
+            //- the spec isn't UCC
+            //- the spec isn't active (withdrawn)
+            //- the spec_release is withdrawn
+            if (!UCC || !specIsActive || specReleaseIsWithdrawn)
                 return false;
             if (specReleaseTranspoForced)
                 return true;

@@ -17,12 +17,24 @@ namespace Etsi.Ultimate.Module.Specifications
     {
         #region Properties
 
-        //Static fields
-        public static readonly string DsId_Key = "ETSI_DS_ID";
+        // Const strings.
+        public const string DsId_Key = "ETSI_DS_ID";
 
         //Properties
         private int userId;
-        private static Release latestRelease;
+
+        private const string VS_RELEASE = "LATEST_RELEASE";
+        private Release latestRelease
+        {
+            get
+            {
+                return (Release)ViewState[VS_RELEASE];
+            }
+            set
+            {
+                ViewState[VS_RELEASE] = value;
+            }
+        }
 
         #endregion
 

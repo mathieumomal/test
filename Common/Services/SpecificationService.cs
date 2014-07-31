@@ -35,28 +35,30 @@ namespace Etsi.Ultimate.Services
                 KeyValuePair<Specification, UserRightsContainer> result = specificationManager.GetSpecificationById(personId, specificationId);
                 List<Community> communityList = new List<Community>();
 
-                if (result.Key != null)
+                var spec = result.Key;
+
+                if (spec != null)
                 {
-                    if (result.Key.SpecificationResponsibleGroups != null && result.Key.SpecificationResponsibleGroups.Count > 0)
+                    if (spec.SpecificationResponsibleGroups != null && spec.SpecificationResponsibleGroups.Count > 0)
                     {
-                        if (result.Key.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList() != null && result.Key.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().Count > 0)
+                        if (spec.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList() != null && spec.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().Count > 0)
                         {
-                            result.Key.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().ForEach(g => communityList.Add(communityManager.GetCommmunityById(g.Fk_commityId)));
-                            result.Key.SecondaryResponsibleGroupsFullNames = string.Join(",", communityList.Select(x=>x.TbName).ToArray());
+                            spec.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().ForEach(g => communityList.Add(communityManager.GetCommmunityById(g.Fk_commityId)));
+                            spec.SecondaryResponsibleGroupsFullNames = string.Join(",", communityList.Select(x=>x.TbName).ToArray());
                         }
 
-                        if (result.Key.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList() != null & result.Key.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().Count > 0)
+                        if (spec.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList() != null & spec.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().Count > 0)
                         {
-                            result.Key.PrimeResponsibleGroupFullName
-                                = communityManager.GetCommmunityById(result.Key.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().FirstOrDefault().Fk_commityId).TbName;
-                            result.Key.PrimeResponsibleGroupShortName
-                                = communityManager.GetCommmunityById(result.Key.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().FirstOrDefault().Fk_commityId).ShortName;
+                            spec.PrimeResponsibleGroupFullName
+                                = communityManager.GetCommmunityById(spec.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().FirstOrDefault().Fk_commityId).TbName;
+                            spec.PrimeResponsibleGroupShortName
+                                = communityManager.GetCommmunityById(spec.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().FirstOrDefault().Fk_commityId).ShortName;
                         }
                     }
 
-                    if (result.Key.SpecificationParents != null && result.Key.SpecificationParents.Count > 0)
+                    if (spec.SpecificationParents != null && spec.SpecificationParents.Count > 0)
                     {
-                        foreach (Specification s in result.Key.SpecificationParents)
+                        foreach (Specification s in spec.SpecificationParents)
                         {
                             if (s.SpecificationResponsibleGroups != null && s.SpecificationResponsibleGroups.Count > 0 && s.PrimeResponsibleGroup != null)
                             {
@@ -65,9 +67,9 @@ namespace Etsi.Ultimate.Services
                         }
                     }
 
-                    if (result.Key.SpecificationChilds != null && result.Key.SpecificationChilds.Count > 0)
+                    if (spec.SpecificationChilds != null && spec.SpecificationChilds.Count > 0)
                     {
-                        foreach (Specification s in result.Key.SpecificationChilds)
+                        foreach (Specification s in spec.SpecificationChilds)
                         {
                             if (s.SpecificationResponsibleGroups != null && s.SpecificationResponsibleGroups.Count > 0 && s.PrimeResponsibleGroup != null)
                             {
@@ -79,13 +81,13 @@ namespace Etsi.Ultimate.Services
                     // Getting list of current specification technologies
                     var specTechnologiesManager = new SpecificationTechnologiesManager();
                     specTechnologiesManager.UoW = uoW;
-                    result.Key.SpecificationTechnologiesList = specTechnologiesManager.GetASpecificationTechnologiesBySpecId(result.Key.Pk_SpecificationId);
+                    spec.SpecificationTechnologiesList = specTechnologiesManager.GetASpecificationTechnologiesBySpecId(spec.Pk_SpecificationId);
 
                     // Getting list of specification workItems including responsible groups
                     List<WorkItem> workItemsList = new List<WorkItem>();
                     WorkItem WIBuffer;
                     var workItemsManager = new WorkItemManager(uoW);
-                    foreach (Specification_WorkItem item in result.Key.Specification_WorkItem.ToList())
+                    foreach (Specification_WorkItem item in spec.Specification_WorkItem.ToList())
                     {
                         WIBuffer = workItemsManager.GetWorkItemById(personId, item.Fk_WorkItemId).Key;
                         if (WIBuffer != null)
@@ -95,7 +97,7 @@ namespace Etsi.Ultimate.Services
                             workItemsList.Add(WIBuffer);
                         }
                     }
-                    result.Key.SpecificationWIsList = workItemsList;
+                    spec.SpecificationWIsList = workItemsList;
 
 
                     // Getting list of specification releases
@@ -103,13 +105,13 @@ namespace Etsi.Ultimate.Services
                     Release releaseObj;
                     var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
                     releaseManager.UoW = uoW;
-                    foreach (Specification_Release item in result.Key.Specification_Release.ToList())
+                    foreach (Specification_Release item in spec.Specification_Release.ToList())
                     {
                         releaseObj = releaseManager.GetReleaseById(personId, item.Fk_ReleaseId).Key;
                         if (releaseObj != null)
                             releases.Add(releaseObj);
                     }
-                    result.Key.SpecificationReleases = releases;
+                    spec.SpecificationReleases = releases;
                 }
                 return result;
             }

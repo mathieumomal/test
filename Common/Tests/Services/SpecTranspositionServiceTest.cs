@@ -150,7 +150,7 @@ namespace Etsi.Ultimate.Tests.Services
         [TestCase(1,false)]//U-
         [TestCase(2, false)]//FP- SP-
         [TestCase(3, false)]//TF- F- SP-
-        [TestCase(4, true)]//U TF
+        [TestCase(4, false)]//U TF but spec and specRelease withdrawn
         [TestCase(5, true)]//U SP F
         [TestCase(7, false)] //U SP F WI-
         public void TransposeAllowed(int versionId, bool resultExpected)
@@ -320,20 +320,20 @@ namespace Etsi.Ultimate.Tests.Services
         private IDbSet<Specification> GetSpecs()
         {
             var list = new SpecificationFakeDBSet();
-            list.Add(new Specification() { Pk_SpecificationId = 1, Number = "1", IsUnderChangeControl = true, IsForPublication = false });
-            list.Add(new Specification() { Pk_SpecificationId = 2, Number = "2", IsUnderChangeControl = false, IsForPublication = true });
-            list.Add(new Specification() { Pk_SpecificationId = 3, Number = "3", IsUnderChangeControl = true, IsForPublication = false });
-            list.Add(new Specification() { Pk_SpecificationId = 4, Number = "3", IsUnderChangeControl = true, IsForPublication = true });
+            list.Add(new Specification() { Pk_SpecificationId = 1, Number = "1", IsUnderChangeControl = true, IsForPublication = false, IsActive = true });
+            list.Add(new Specification() { Pk_SpecificationId = 2, Number = "2", IsUnderChangeControl = false, IsForPublication = true, IsActive = true });
+            list.Add(new Specification() { Pk_SpecificationId = 3, Number = "3", IsUnderChangeControl = true, IsForPublication = false, IsActive = false });
+            list.Add(new Specification() { Pk_SpecificationId = 4, Number = "3", IsUnderChangeControl = true, IsForPublication = true, IsActive = true });
             return list;
         }
 
         private IDbSet<Specification_Release> GetSpecReleases()
         {
             var list = new SpecificationReleaseFakeDBSet();
-            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 1, isTranpositionForced = false });
-            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 3, Fk_ReleaseId = 2, isTranpositionForced = false });
-            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 3, Fk_ReleaseId = 3, isTranpositionForced = true });
-            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 4, Fk_ReleaseId = 1, isTranpositionForced = false });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 1, isTranpositionForced = false, isWithdrawn = false });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 3, Fk_ReleaseId = 2, isTranpositionForced = false, isWithdrawn = false });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 3, Fk_SpecificationId = 3, Fk_ReleaseId = 3, isTranpositionForced = true, isWithdrawn = true });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 4, Fk_SpecificationId = 4, Fk_ReleaseId = 1, isTranpositionForced = false, isWithdrawn = false });
             return list;
         }
 

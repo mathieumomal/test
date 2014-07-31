@@ -9,6 +9,7 @@ namespace Etsi.Ultimate.DomainClasses
     /// <summary>
     /// Helper class to carry search values
     /// </summary>
+    [Serializable]
     public class SpecificationSearch
     {
         public enum SpecificationOrder { Number, NumberDesc, Title, TitleDesc };

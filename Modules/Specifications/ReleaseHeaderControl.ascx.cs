@@ -74,17 +74,10 @@ namespace Etsi.Ultimate.Module.Specifications
                 {
                     var remarks = GetActualRemarksFromProxy(SpecRelease.Remarks.ToList());
                     releaseRemarks.DataSource = remarks;
-
                     if (IsEditMode)
-                    {
-                        if (basePage.SpecReleaseRemarks.Exists(x => x.Key == SpecRelease.Pk_Specification_ReleaseId))
-                        {
-                            var specReleaseRemarks = basePage.SpecReleaseRemarks.Find(x => x.Key == SpecRelease.Pk_Specification_ReleaseId);
-                            basePage.SpecReleaseRemarks.Remove(specReleaseRemarks);
-                        }
-                        basePage.SpecReleaseRemarks.Add(new KeyValuePair<int, List<Remark>>(SpecRelease.Pk_Specification_ReleaseId, remarks));
-                    }
+                        UpdateBasePageRemarksList();
 
+                    //Latest remark case
                     Remark latestRemark;
                     if (releaseRemarks.UserRights.HasRight(Enum_UserRights.Remarks_ViewPrivate))
                     {
@@ -96,13 +89,12 @@ namespace Etsi.Ultimate.Module.Specifications
                         latestRemark = SpecRelease.Remarks.Where(r => r.IsPublic.GetValueOrDefault()).OrderByDescending(x => x.CreationDate ?? DateTime.MinValue).FirstOrDefault();
                         lblLatestRemark.Text = ((latestRemark.CreationDate != null) ? string.Format("({0})", latestRemark.CreationDate.Value.ToString("yyyy-MM-dd")) : String.Empty) + latestRemark.RemarkText;
                     }
-
-                    
                 }
                 imgRemarks.OnClientClick = "OpenReleaseHeaderRemarksWindow" + this.ClientID + "(); return false;";
             }
             else
             {
+                //Avoid the bug to switch from public to private when we click on the input
                 if(IsEditMode)
                 {
                     var specReleaseRemarks = basePage.SpecReleaseRemarks.Find(x => x.Key == SpecRelease.Pk_Specification_ReleaseId);
@@ -114,7 +106,23 @@ namespace Etsi.Ultimate.Module.Specifications
             releaseRemarks.IsEditMode = IsEditMode;
             releaseRemarks.ScrollHeight = 100;
             if (IsEditMode)
+            {
+                //Catch the remark's event : "a remark has been created"
                 releaseRemarks.AddRemarkHandler += releaseRemarks_AddRemarkHandler;
+                //Catch the remark's event : "a remark's status has been updated"
+                releaseRemarks.ChangeStatusRemarkHandler += releaseRemarks_ChangeStatusRemarkHandler;
+            }
+                
+        }
+
+        /// <summary>
+        /// Event handler to update the specReleaseRemarks object when we change the remark status (public/private)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void releaseRemarks_ChangeStatusRemarkHandler(object sender, EventArgs e)
+        {
+            UpdateBasePageRemarksList();
         }
 
         /// <summary>
@@ -141,12 +149,7 @@ namespace Etsi.Ultimate.Module.Specifications
             });
             releaseRemarks.DataSource = datasource;
 
-            if (basePage.SpecReleaseRemarks.Exists(x => x.Key == SpecRelease.Pk_Specification_ReleaseId))
-            {
-                var specReleaseRemarks = basePage.SpecReleaseRemarks.Find(x => x.Key == SpecRelease.Pk_Specification_ReleaseId);
-                basePage.SpecReleaseRemarks.Remove(specReleaseRemarks);
-            }
-            basePage.SpecReleaseRemarks.Add(new KeyValuePair<int, List<Remark>>(SpecRelease.Pk_Specification_ReleaseId, datasource));
+            UpdateBasePageRemarksList();
         }
 
         #endregion
@@ -192,6 +195,21 @@ namespace Etsi.Ultimate.Module.Specifications
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Update the basepage SpecReleaseRemarks object
+        /// </summary>
+        private void UpdateBasePageRemarksList()
+        {
+            SpecificationBasePage basePage = (SpecificationBasePage)this.Page;
+            List<Remark> datasource = releaseRemarks.DataSource;
+            if (basePage.SpecReleaseRemarks.Exists(x => x.Key == SpecRelease.Pk_Specification_ReleaseId))
+            {
+                var specReleaseRemarks = basePage.SpecReleaseRemarks.Find(x => x.Key == SpecRelease.Pk_Specification_ReleaseId);
+                basePage.SpecReleaseRemarks.Remove(specReleaseRemarks);
+            }
+            basePage.SpecReleaseRemarks.Add(new KeyValuePair<int, List<Remark>>(SpecRelease.Pk_Specification_ReleaseId, datasource));
+        }
 
         /// <summary>
         /// Get Actual POCO entities for Remark objects

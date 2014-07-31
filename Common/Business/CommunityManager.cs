@@ -11,7 +11,7 @@ namespace Etsi.Ultimate.Business
     {
         #region Constants
 
-        private static string CACHE_KEY = "ULT_COMMUNITY_MANAGER_ALL";
+        private const string CACHE_KEY = "ULT_COMMUNITY_MANAGER_ALL";
 
         #endregion
 

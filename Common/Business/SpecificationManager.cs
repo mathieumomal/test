@@ -52,9 +52,24 @@ namespace Etsi.Ultimate.Business
             specification.SpecificationInitialRelease = string.Empty;
             if (specification.Specification_Release != null && specification.Specification_Release.Count > 0)
             {
-                var initialSpec = specification.Specification_Release.ToList().OrderBy(r => r.Pk_Specification_ReleaseId).FirstOrDefault();
-                if (initialSpec != null && initialSpec.Release != null)
-                    specification.SpecificationInitialRelease = initialSpec.Release.Name;
+                var relMgr = ManagerFactory.Resolve<IReleaseManager>();
+                relMgr.UoW = UoW;
+                var allReleases = relMgr.GetAllReleases(personId).Key.OrderBy(r => r.SortOrder);
+
+                var initialRelease = allReleases.Where( x => specification.Specification_Release.Any( y => y.Fk_ReleaseId == x.Pk_ReleaseId)).FirstOrDefault();
+                if (initialRelease != null)
+                    specification.SpecificationInitialRelease = initialRelease.Name;
+            }
+
+            // CLean up unwanted remarks.
+            if (specification.Versions != null && !personRights.HasRight(Enum_UserRights.Remarks_ViewPrivate))
+            {
+                foreach (var v in specification.Versions)
+                {
+                    var rem = v.Remarks.ToList();
+                    rem.RemoveAll(x => !x.IsPublic.GetValueOrDefault());
+                    v.Remarks = rem;
+                }
             }
            
 
@@ -193,7 +208,7 @@ namespace Etsi.Ultimate.Business
             repo.UoW = UoW;
             var result = repo
                     .All
-                    .Where(x => (x.IsActive && x.Number.Equals(specNumber)))
+                    .Where(x => x.Number.Equals(specNumber))
                     .ToList();
             if (result.Count() > 0)
                 errors.Add(String.Format(Localization.Specification_ERR003_Number_Already_Use,result.FirstOrDefault().Title));
@@ -353,6 +368,8 @@ namespace Etsi.Ultimate.Business
                     if(userRights.HasRight(Enum_UserRights.Versions_Modify_MajorVersion))
                         rights.AddRight(Enum_UserRights.Versions_Modify_MajorVersion);
                 }
+
+               
             }
 
             //Get the latest spec_release

@@ -16,7 +16,7 @@ namespace Etsi.Ultimate.Repositories
     {
         public IUltimateUnitOfWork UoW{ get; set; }
         public ReleaseRepository(){}
-        private static string CACHE_ULT_RELEASES_ID = "ULT_RELEASES_ID_{0}";
+        private const string CACHE_ULT_RELEASES_ID = "ULT_RELEASES_ID_{0}";
 
         #region IEntityRepository<Release> Membres
 

@@ -56,15 +56,50 @@ namespace Etsi.Ultimate.Module.Specifications
 
         private bool isUrlSearch;
         private bool fromSearch;
-        private static SpecificationSearch searchObj;
+
+        private const string VS_SEARCHOBJ = "VS_SEARCHOBJ";
+        private SpecificationSearch searchObj
+        {
+            get
+            {
+                return (SpecificationSearch)ViewState[VS_SEARCHOBJ];
+            }
+            set
+            {
+                ViewState[VS_SEARCHOBJ] = value;
+            }
+        }
         private static string PathExportSpec;
 
         protected Etsi.Ultimate.Controls.FullView ultFullView;
         protected Etsi.Ultimate.Controls.ShareUrlControl ultShareUrl;
         protected Etsi.Ultimate.Controls.ReleaseSearchControl ReleaseCtrl;
 
-        private static string tbId;
-        private static string subTBId;
+
+        private const string VS_TB_ID = "VS_TB_ID";
+        private const string VS_SUBTB_ID = "VS_SUBTB_ID";
+        private string TbId
+        {
+            get
+            {
+                return (string)ViewState[VS_TB_ID];
+            }
+            set
+            {
+                ViewState[VS_TB_ID] = value;
+            }
+        }
+        private string SubTBId
+        {
+            get
+            {
+                return (string)ViewState[VS_SUBTB_ID];
+            }
+            set
+            {
+                ViewState[VS_SUBTB_ID] = value;
+            }
+        }
 
         #endregion
 
@@ -134,8 +169,8 @@ namespace Etsi.Ultimate.Module.Specifications
                     Technologies = specSvc.GetTechnologyList();
                     Series = specSvc.GetSeries();
 
-                    tbId = Request.QueryString["tbid"];
-                    subTBId = Request.QueryString["SubTB"];
+                    TbId = Request.QueryString["tbid"];
+                    SubTBId = Request.QueryString["SubTB"];
 
                     BindControls();
                     ReleaseCtrl.Load += ReleaseCtrl_Load;
@@ -256,11 +291,11 @@ namespace Etsi.Ultimate.Module.Specifications
                 searchObj.SelectedReleaseIds = ReleaseCtrl.SelectedReleaseIds;
             }
 
-            if (!String.IsNullOrEmpty(subTBId))
+            if (!String.IsNullOrEmpty(SubTBId))
             {
                 List<int> tbList = new List<int>();
                 int value;
-                tbList = subTBId.Split(',').Select(x => int.TryParse(x, out value) ? value : -1).ToList();
+                tbList = SubTBId.Split(',').Select(x => int.TryParse(x, out value) ? value : -1).ToList();
                 tbList.RemoveAll(x => x == -1);
                 searchObj.SelectedCommunityIds = tbList;
             }
@@ -308,11 +343,11 @@ namespace Etsi.Ultimate.Module.Specifications
             if (trNumberNotYetAllocated.Visible)
                 searchObj.NumberNotYetAllocated = cbNumNotYetAllocated.Checked;
 
-            if (!String.IsNullOrEmpty(subTBId))
+            if (!String.IsNullOrEmpty(SubTBId))
             {
                 List<int> tbList = new List<int>();
                 int value;
-                tbList = subTBId.Split(',').Select(x => int.TryParse(x, out value) ? value : -1).ToList();
+                tbList = SubTBId.Split(',').Select(x => int.TryParse(x, out value) ? value : -1).ToList();
                 tbList.RemoveAll(x => x == -1);
                 searchObj.SelectedCommunityIds = tbList;
             }
@@ -595,10 +630,10 @@ namespace Etsi.Ultimate.Module.Specifications
                 if (searchObj.Type != null)
                     urlParams.Add("type", searchObj.Type.ToString());
 
-                if (!String.IsNullOrEmpty(tbId))
-                    urlParams.Add("tbid", tbId);
-                if (!String.IsNullOrEmpty(subTBId))
-                    urlParams.Add("SubTB", subTBId);
+                if (!String.IsNullOrEmpty(TbId))
+                    urlParams.Add("tbid", TbId);
+                if (!String.IsNullOrEmpty(SubTBId))
+                    urlParams.Add("SubTB", SubTBId);
 
                 if (searchObj.SelectedReleaseIds != null && searchObj.SelectedReleaseIds.Count > 0)
                     urlParams.Add("releases", String.Join(",", searchObj.SelectedReleaseIds));

@@ -19,7 +19,7 @@ namespace Etsi.Ultimate.Repositories
     /// </summary>
     public class UserRightsRepository : IUserRightsRepository
     {
-        private static readonly string CACHE_KEY = "ULT_REPO_RIGHTS_ALL";
+        private const string CACHE_KEY = "ULT_REPO_RIGHTS_ALL";
         
         public string XmlDocumentPath { get; set; }
 

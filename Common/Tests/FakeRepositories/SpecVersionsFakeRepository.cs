@@ -103,5 +103,15 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         #endregion
 
         public IUltimateUnitOfWork UoW { get; set; }
+
+        #region ISpecVersionsRepository Membres
+
+
+        public int CountVersionsPendingUploadByReleaseId(int releaseId)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

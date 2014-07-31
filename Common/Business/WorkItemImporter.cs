@@ -15,7 +15,7 @@ namespace Etsi.Ultimate.Business
 {
     public class WorkItemImporter
     {
-        private static readonly string CACHE_KEY = "WI_IMPORT_";
+        private readonly string CACHE_KEY = "WI_IMPORT_";
 
         public IUltimateUnitOfWork UoW { get; set; }
 

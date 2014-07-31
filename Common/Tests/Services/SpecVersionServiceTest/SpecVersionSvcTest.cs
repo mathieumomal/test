@@ -176,15 +176,17 @@ namespace Etsi.Ultimate.Tests.Services
         public void CountVersionsPendingUploadByReleaseId()
         {
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
-            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)GetSpecs());
             mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)GetSpecVersions());
-            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)GetReleases());
-            mockDataContext.Stub(x => x.Specification_Release).Return((IDbSet<Specification_Release>)GetSpecReleases());
+            mockDataContext.Stub(x => x.Specification_Release).Return((IDbSet<Specification_Release>)GetSpecReleasesForCountVersionPendingUpload());
+
+            var releaseMock = MockRepository.GenerateMock<IReleaseManager>();
+            releaseMock.Stub(r => r.GetAllReleases(0)).Return(new KeyValuePair<List<Release>, UserRightsContainer>(GetReleases().ToList(), new UserRightsContainer()));
+            ManagerFactory.Container.RegisterInstance<IReleaseManager>(releaseMock);
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
             var versionsSvc = new SpecVersionService();
             var result = versionsSvc.CountVersionsPendingUploadByReleaseId(1);
-            Assert.AreEqual(1, result);//Just the version 3 pending upload because ETSI_WKI_ID = 1 for the version 2
+            Assert.AreEqual(1, result);
         }
 
         #endregion
@@ -259,23 +261,21 @@ namespace Etsi.Ultimate.Tests.Services
             {
                 Pk_VersionId = 2,
                 Location = null,
-                MajorVersion = 20,
-                TechnicalVersion = 2,
+                MajorVersion = 10,
+                TechnicalVersion = 3,
                 EditorialVersion = 1,
                 Source = 1,
-                DocumentUploaded = new DateTime(2013, 10, 18),
                 ProvidedBy = 1,
                 Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 2, Fk_VersionId = 2, RemarkText = "R22" } },
                 Fk_SpecificationId = 1,
                 Fk_ReleaseId = 1,
-                ETSI_WKI_ID = 1,
             };
             var version3 = new SpecVersion()
             {
                 Pk_VersionId = 3,
                 Location = "aa",
-                MajorVersion = 30,
-                TechnicalVersion = 2,
+                MajorVersion = 10,
+                TechnicalVersion = 4,
                 EditorialVersion = 1,
                 Source = 1,
                 DocumentUploaded = new DateTime(2013, 11, 18),
@@ -303,7 +303,7 @@ namespace Etsi.Ultimate.Tests.Services
         private IDbSet<Release> GetReleases()
         {
             var list = new ReleaseFakeDBSet();
-            list.Add(new Release() { Pk_ReleaseId = 1, Fk_ReleaseStatus = 2, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Frozen", Enum_ReleaseStatusId = 2, Description = "Frozen" } });
+            list.Add(new Release() { Pk_ReleaseId = 1, Fk_ReleaseStatus = 2, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Frozen", Enum_ReleaseStatusId = 2, Description = "Frozen" }, Version3g=10 });
             list.Add(new Release() { Pk_ReleaseId = 2, Fk_ReleaseStatus = 1, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Open", Enum_ReleaseStatusId = 1, Description = "Open" } });
             list.Add(new Release() { Pk_ReleaseId = 3, Fk_ReleaseStatus = 1, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Open", Enum_ReleaseStatusId = 1, Description = "Open" } });
             list.Add(new Release() { Pk_ReleaseId = 4, Fk_ReleaseStatus = 2, Enum_ReleaseStatus = new Enum_ReleaseStatus { Code = "Frozen", Enum_ReleaseStatusId = 2, Description = "Frozen" } });
@@ -323,12 +323,62 @@ namespace Etsi.Ultimate.Tests.Services
             list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 2, isTranpositionForced = false });
             list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 3, Fk_ReleaseId = 2, isTranpositionForced = false });
             list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 3, Fk_SpecificationId = 2, Fk_ReleaseId = 2, isTranpositionForced = true });
-            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 4, Fk_SpecificationId = 2, Fk_ReleaseId = 1, isTranpositionForced = false });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 4, Fk_SpecificationId = 2, Fk_ReleaseId = 1, isTranpositionForced = false, Specification = new Specification() { Pk_SpecificationId = 2, Number = "2", IsUnderChangeControl = true, IsActive = true } });
             list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 5, Fk_SpecificationId = 2, Fk_ReleaseId = 4, isTranpositionForced = false });
-            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 6, Fk_SpecificationId = 3, Fk_ReleaseId = 1, isTranpositionForced = true });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 6, Fk_SpecificationId = 3, Fk_ReleaseId = 1, isTranpositionForced = true, Specification = new Specification() { Pk_SpecificationId = 3, Number = "2", IsUnderChangeControl = false, IsActive = true } });
             list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 7, Fk_SpecificationId = 1, Fk_ReleaseId = 1, isTranpositionForced = false });
             return list;
-        } 
+        }
+
+        private IDbSet<Specification_Release> GetSpecReleasesForCountVersionPendingUpload()
+        {
+            var list = new SpecificationReleaseFakeDBSet();
+            list.Add(new Specification_Release()
+            {
+                Pk_Specification_ReleaseId = 7,
+                Fk_SpecificationId = 1,
+                Fk_ReleaseId = 1,
+                isTranpositionForced = false,
+                Specification = new Specification()
+                {
+                    Pk_SpecificationId = 1,
+                    Number = "1",
+                    IsUnderChangeControl = true,
+                    IsActive = true,
+                    Versions = new List<SpecVersion>() { new SpecVersion()
+            {
+                Pk_VersionId = 1,
+                Location = "L1",
+                MajorVersion = 10,
+                TechnicalVersion = 2,
+                EditorialVersion = 1,
+                Source = 1,
+                DocumentUploaded = new DateTime(2013, 9, 18),
+                ProvidedBy = 1,
+                Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 1, Fk_VersionId = 1, RemarkText = "R1" } },
+                Fk_SpecificationId = 1,
+                Fk_ReleaseId = 1
+            }, 
+            new SpecVersion()
+            {
+                Pk_VersionId = 2,
+                Location = null,
+                MajorVersion = 20,
+                TechnicalVersion = 2,
+                EditorialVersion = 1,
+                Source = 1,
+                DocumentUploaded = new DateTime(2013, 10, 18),
+                ProvidedBy = 1,
+                Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 2, Fk_VersionId = 2, RemarkText = "R22" } },
+                Fk_SpecificationId = 1,
+                Fk_ReleaseId = 1,
+                ETSI_WKI_ID = 1,
+            }}
+                }
+            });
+            return list;
+        }
+
 
         #endregion
     }

@@ -93,35 +93,14 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
         public int CountVersionsPendingUploadByReleaseId(int releaseId)
         {
-            if (releaseId == 0)
-                return 0;
+            // Retrieve the release 3G dec field to filter
+            var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
+            releaseManager.UoW = UoW;
+            var releaseVersion = releaseManager.GetAllReleases(0).Key.Find(r => r.Pk_ReleaseId == releaseId).Version3g;
 
-            var count = 0;
-
-            ISpecificationManager specMgr = ManagerFactory.Resolve<ISpecificationManager>();
-            specMgr.UoW = UoW;
-            ISpecVersionManager versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
-            versionMgr.UoW = UoW;
-
-            //"Versions pending upload =  Latest (and only latest) versions that are : ...
-            // - that are in the Release of interest, 
-            var relatedSpecs = specMgr.GetSpecsRelatedToARelease(releaseId);
-            foreach (var spec in relatedSpecs)
-            {
-                // - and that are UCC.
-                if ((spec.IsUnderChangeControl ?? false) && spec.IsActive)
-                {
-                    var versions = versionMgr.GetVersionsForASpecRelease(spec.Pk_SpecificationId, releaseId);
-                    var latestVersion = versions.OrderByDescending(x => x.MajorVersion ?? 0)
-                                        .ThenByDescending(y => y.TechnicalVersion ?? 0)
-                                        .ThenByDescending(z => z.EditorialVersion ?? 0)
-                                        .FirstOrDefault();
-                    // - allocated and not yet uploaded of specs ".
-                    if (latestVersion != null && String.IsNullOrEmpty(latestVersion.Location))
-                        count++;
-                }
-            }
-            return count;
+            ISpecVersionsRepository specVersionMgr = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            specVersionMgr.UoW = UoW;
+            return specVersionMgr.CountVersionsPendingUploadByReleaseId(releaseVersion.GetValueOrDefault());
         }
 
 

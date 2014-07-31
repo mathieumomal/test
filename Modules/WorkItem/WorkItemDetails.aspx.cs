@@ -15,12 +15,12 @@ namespace Etsi.Ultimate.Module.WorkItem
     public partial class WorkItemDetails : System.Web.UI.Page
     {
         #region Fields
-        private static String CONST_GENERAL_TAB = "General";
-        private static String CONST_RELATED_TAB = "Related";
+        private const string CONST_GENERAL_TAB = "General";
+        private const string CONST_RELATED_TAB = "Related";
         private const string CONST_EMPTY_FIELD = " - ";
         private const string DATE_FORMAT_STRING = "yyyy-MM-dd";
         private const string CONST_BASE_URL = "/desktopmodules/WorkItem/WorkItemDetails.aspx?workitemId=";
-        public static readonly string DsId_Key = "ETSI_DS_ID";
+        public const string DsId_Key = "ETSI_DS_ID";
 
         private int UserId;
         public Nullable<int> WorkItemId;

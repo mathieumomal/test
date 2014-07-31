@@ -14,11 +14,11 @@ namespace Etsi.Ultimate.Module.Release
     public partial class ReleaseDetails : System.Web.UI.Page
     {
         #region fields
-        private static String CONST_GENERAL_TAB = "General";
-        private static String CONST_ADMIN_TAB = "Administration";
-        private static String CONST_HISTORY_TAB = "History";
+        private const string CONST_GENERAL_TAB = "General";
+        private const string CONST_ADMIN_TAB = "Administration";
+        private const string CONST_HISTORY_TAB = "History";
         private const string CONST_EMPTY_FIELD = " - ";
-        public static readonly string DsId_Key = "ETSI_DS_ID";
+        public const string DsId_Key = "ETSI_DS_ID";
 
         private int UserId;
         private bool fromEdit;

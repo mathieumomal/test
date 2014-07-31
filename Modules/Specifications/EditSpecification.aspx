@@ -113,7 +113,7 @@
                             <ContentTemplate>
                                 <table style="width: 100%">
                                     <tr>
-                                        <td class="LeftColumn">Primary responsible group:</td>
+                                        <td class="LeftColumn">Primary responsible group<span class='requiredField'>(*)</span>:</td>
                                         <td class="RightColumn">
                                             <ult:communitycontrol id="PrimaryResGrpCtrl" width="200" issingleselection="true" iseditmode="true" runat="server" />
                                         </td>

@@ -17,7 +17,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
         private int SpecId;
 
-        public static readonly string DsId_Key = "ETSI_DS_ID";
+        public const string DsId_Key = "ETSI_DS_ID";
 
         protected void Page_Load(object sender, EventArgs e)
         {

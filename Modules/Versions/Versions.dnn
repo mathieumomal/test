@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="Versions" type="Module" version="00.02.00">
+    <package name="Versions" type="Module" version="00.03.00">
       <friendlyName>Versions</friendlyName>
       <description>Versions module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
@@ -105,10 +105,26 @@
               <name>EntityFramework.dll</name>
               <path>bin</path>
             </assembly>
-            <assembly>
+			<assembly>
               <name>EntityFramework.SqlServer.dll</name>
               <path>bin</path>
             </assembly>
+            <assembly>
+              <name>NetOffice.dll</name>
+              <path>bin</path>
+            </assembly>
+			<assembly>
+              <name>OfficeApi.dll</name>
+              <path>bin</path>
+            </assembly>
+			<assembly>
+              <name>VBIDEApi.dll</name>
+              <path>bin</path>
+            </assembly>
+			<assembly>
+              <name>WordApi.dll</name>
+              <path>bin</path>
+            </assembly>			
           </assemblies>
         </component>
       </components>

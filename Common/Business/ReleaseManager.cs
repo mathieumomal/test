@@ -13,7 +13,7 @@ namespace Etsi.Ultimate.Business
         #region Variables / Properties
 
         // Used for the caching of the releases.
-        private static string CACHE_KEY = "ULT_BIZ_RELEASES_ALL";
+        private const string CACHE_KEY = "ULT_BIZ_RELEASES_ALL";
         private int personId;
         private IReleaseRepository releaseRepo;
         public IUltimateUnitOfWork UoW { get; set; }

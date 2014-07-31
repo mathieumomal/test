@@ -64,11 +64,38 @@ namespace Etsi.Ultimate.Module.WorkItem
         private string tokenWorkPlanAnalysed = "";
         private bool isUrlSearch;
 
-        private static string tbId;
-        private static string subTBId;
+        private const string VS_TB_ID = "WI_TB_ID";
+        private const string VS_SUBTB_ID = "WI_SUBTB_ID";
+        private string tbId
+        {
+            get
+            {
+                if (ViewState[VS_TB_ID] == null)
+                    ViewState[VS_TB_ID] = "";
+                return (string)ViewState[VS_TB_ID];
+            }
+            set
+            {
+                ViewState[VS_TB_ID] = value;
+            }
+        }
+
+        private string subTBId
+        {
+            get
+            {
+                if (ViewState[VS_SUBTB_ID] == null)
+                    ViewState[VS_SUBTB_ID] = "";
+                return (string)ViewState[VS_SUBTB_ID];
+            }
+            set
+            {
+                ViewState[VS_SUBTB_ID] = value;
+            }
+        }
 
         //Style
-        private static string CSS_CLASS_STOPPED_WI = "trStoppedWI";
+        private const string CSS_CLASS_STOPPED_WI = "trStoppedWI";
 
         #endregion
 

@@ -61,6 +61,11 @@ namespace Etsi.Ultimate.Repositories
             return AllIncluding().Where(x => (x.Fk_ReleaseId != null) ? x.Fk_ReleaseId.Value == ReleaseId : false).ToList();
         }
 
+        public int CountVersionsPendingUploadByReleaseId(int releaseMajorVersion)
+        {
+            return UoW.Context.SpecVersions.Where(x => x.MajorVersion == releaseMajorVersion && (x.Location == null || x.Location == "")).Count();  
+        }
+
         public void InsertOrUpdate(SpecVersion entity)
         {
             //Remove generated proxies to avoid Referential Integrity Errors
@@ -125,5 +130,12 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="ReleaseId">Release identifier</param>
         /// <returns></returns>
         List<SpecVersion> GetVersionsByReleaseId(int ReleaseId);
+
+        /// <summary>
+        /// Count the number of version which pending upload for a release
+        /// </summary>
+        /// <param name="ReleaseMajorNumber"> The 3G decimal number of version, that is used to determine.</param>
+        /// <returns></returns>
+        int CountVersionsPendingUploadByReleaseId(int releaseMajorNumber);
     }
 }

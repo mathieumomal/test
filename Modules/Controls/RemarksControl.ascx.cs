@@ -27,8 +27,14 @@ namespace Etsi.Ultimate.Controls
         #endregion
 
         #region Public Properties
-
+        /// <summary>
+        /// Event to signal that a remark has been created
+        /// </summary>
         public event EventHandler AddRemarkHandler;
+        /// <summary>
+        /// Event to signal that a status has been updated (private/public)
+        /// </summary>
+        public event EventHandler ChangeStatusRemarkHandler;
         public bool IsEditMode { get; set; }
         public UserRightsContainer UserRights
         {
@@ -132,7 +138,7 @@ namespace Etsi.Ultimate.Controls
         /// </summary>
         /// <param name="sender">Source of Event</param>
         /// <param name="e">Event Args</param>
-        protected void rddlRemarkType_SelectedIndexChanged(object sender, EventArgs e)
+        public void rddlRemarkType_SelectedIndexChanged(object sender, EventArgs e)
         {
             RadDropDownList dropdownlist = (RadDropDownList)sender;
             GridDataItem editedItem = (GridDataItem)dropdownlist.NamingContainer;
@@ -155,6 +161,7 @@ namespace Etsi.Ultimate.Controls
                     DataSource = dataSource;
                 }
             }
+            ChangeStatusRemarkHandler(sender, e);
         }
 
         #endregion

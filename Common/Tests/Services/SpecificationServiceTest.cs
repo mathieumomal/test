@@ -241,7 +241,11 @@ namespace Etsi.Ultimate.Tests.Services
             }
         }
 
-        [Test, TestCaseSource("GetSpecificicationNumbersTestAlreadyExists")]
+      
+        [Test]
+        [TestCase("01.05", false, 1)]
+        [TestCase("01.01", false, 1)]
+        [TestCase("03.98", true, 0)]
         public void TestCheckNumberAlreadyExist(string specNumber, bool expectResult, int messageCount)
         {
             var repo = MockRepository.GenerateMock<ISpecificationRepository>();
@@ -529,16 +533,7 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
 //--- Check spec number already exists
-        private IEnumerable<object[]> GetSpecificicationNumbersTestAlreadyExists
-        {
-            get
-            {
-                //Already exist
-                yield return new object[] { "01.05", true, 0 };
-                yield return new object[] { "01.01", false, 1 };
-                yield return new object[] { "03.98", true, 0 };
-            }
-        }
+       
         private IDbSet<Specification> GetSpecs()
         {
             var list = new SpecificationFakeDBSet();

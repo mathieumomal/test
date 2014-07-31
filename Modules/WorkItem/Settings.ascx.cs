@@ -41,7 +41,7 @@ namespace Etsi.Ultimate.Module.WorkItem
     /// -----------------------------------------------------------------------------
     public partial class Settings : ModuleSettingsBase
     {
-        private static readonly string regexPath = @"(.*)\\$";
+        private readonly string regexPath = @"(.*)\\$";
 
 
         #region Base Method Implementations

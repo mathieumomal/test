@@ -30,27 +30,54 @@ namespace Etsi.Ultimate.Module.Specifications
         protected SpecificationListControl childSpecifications;
 
         //Static fields
-        private static String CONST_GENERAL_TAB = "General";
-        private static String CONST_RESPONSIBILITY_TAB = "Responsibility";
-        private static String CONST_RELATED_TAB = "Related";
-        private static String CONST_RELEASES_TAB = "Releases";
-        private static String CONST_HISTORY_TAB = "History";
+        private const string CONST_GENERAL_TAB = "General";
+        private const string CONST_RESPONSIBILITY_TAB = "Responsibility";
+        private const string CONST_RELATED_TAB = "Related";
+        private const string CONST_RELEASES_TAB = "Releases";
+        private const string CONST_HISTORY_TAB = "History";
         private const string CONST_EMPTY_FIELD = " - ";
         private const string SPEC_HEADER = "Specification #: ";
-        private const String CREATION_MODE = "create";
-        private const String EDIT_MODE = "edit";
+        private const string CREATION_MODE = "create";
+        private const string EDIT_MODE = "edit";
         private List<string> LIST_OF_TABS = new List<string>() { };
-        public static readonly string DsId_Key = "ETSI_DS_ID";
-        private const String CONST_ERRORPANEL_CSS = "Spec_Edit_Error";
-        private const String CONST_ERRORTEXT_CSS = "ErrorTxt";
+        public const string DsId_Key = "ETSI_DS_ID";
+        private const string CONST_ERRORPANEL_CSS = "Spec_Edit_Error";
+        private const string CONST_ERRORTEXT_CSS = "ErrorTxt";
         private const int ErrorFadeTimeout = 10000;
 
 
         //Properties
         private int userId;
         private string selectedTab;
-        public static Nullable<int> SpecificationId;
-        private static String action;
+
+        const string VS_SPECIFICATION_ID = "Specification_ID";
+        public Nullable<int> SpecificationId
+        {
+            get
+            {
+                return (Nullable<int>)ViewState[VS_SPECIFICATION_ID];
+            }
+            set
+            {
+                ViewState[VS_SPECIFICATION_ID] = value;
+            }
+        }
+        
+        const string ACTION_VS="EDIT_SPEC_ACTION";
+        private string action
+        {
+            get
+            {
+                if (ViewState[ACTION_VS] == null)
+                    ViewState[ACTION_VS] = "";
+                return (string) ViewState[ACTION_VS];
+            }
+            set
+            {
+                ViewState[ACTION_VS] = value;
+            }
+        }
+
         private int SelectedCommunityID;
 
 
@@ -71,6 +98,19 @@ namespace Etsi.Ultimate.Module.Specifications
                 GetRequestParameters();
                 LoadSpecificationDetails();
             }
+            if (IsPostBack)
+            {
+                if (txtTitle.Text.Equals(string.Empty))
+                {
+                    btnSave.Style.Add("display", "none");
+                    btnSaveDisabled.Style.Remove("display");
+                }
+                else
+                {
+                    btnSave.Style.Remove("display");
+                    btnSaveDisabled.Style.Add("display", "none");
+                }
+            }
             specificationRemarks.AddRemarkHandler += specificationRemarks_AddRemarkHandler;
             specificationRapporteurs.AddChairmanEvent += GetSelectedCommunityID;
         }
@@ -88,7 +128,19 @@ namespace Etsi.Ultimate.Module.Specifications
 
             userId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
             spec = new Domain.Specification();
-            FillSpecificationObject(spec);
+            try
+            {
+                FillSpecificationObject(spec);
+            }
+            catch (InvalidOperationException ex)
+            {
+                specMsg.Visible = true;
+                specMsg.CssClass = CONST_ERRORPANEL_CSS;
+                specMsgTxt.CssClass = CONST_ERRORTEXT_CSS;
+                specMsgTxt.Text = ex.Message + "<br/>";
+                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "setTimeout(function(){ $('#" + specMsg.ClientID + "').hide('slow');} , " + ErrorFadeTimeout + ");", true);
+                return;
+            }
 
             // Call service, depending on mode.
             KeyValuePair<int, Domain.Report> result;
@@ -471,7 +523,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
             if (specification != null)
             {
-                PrimaryResGrpCtrl.SelectedCommunityID = specification.PrimeResponsibleGroup.Fk_commityId;
+                PrimaryResGrpCtrl.SelectedCommunityID = (specification.PrimeResponsibleGroup != null) ? specification.PrimeResponsibleGroup.Fk_commityId : default(int);
                 SecondaryResGrpCtrl.SelectedCommunityIds = specification.SpecificationResponsibleGroups.Where(x => !x.IsPrime).Select(x => x.Fk_commityId).ToList();
 
                 specificationRapporteurs.ListIdPersonSelect = specification.PrimeSpecificationRapporteurIds;
@@ -622,6 +674,7 @@ namespace Etsi.Ultimate.Module.Specifications
             spec.Remarks = specificationRemarks.DataSource;
 
             //Responsibility
+            if (PrimaryResGrpCtrl.SelectedCommunityID == default(int)) throw new InvalidOperationException("The primary responsible group is mandatory. ");
             spec.SpecificationResponsibleGroups.Add(new Domain.SpecificationResponsibleGroup() { Fk_commityId = PrimaryResGrpCtrl.SelectedCommunityID, IsPrime = true });
 
             foreach (var communityId in SecondaryResGrpCtrl.SelectedCommunityIds)

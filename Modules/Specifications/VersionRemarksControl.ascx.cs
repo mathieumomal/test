@@ -63,14 +63,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     var remarks = GetActualRemarksFromProxy(SpecVersion.Remarks.ToList());
                     versionRemarks.DataSource = remarks;
                     if (IsEditMode)
-                    {
-                        if (basePage.VersionRemarks.Exists(x => x.Key == SpecVersion.Pk_VersionId))
-                        {
-                            var specVersionRemarks = basePage.VersionRemarks.Find(x => x.Key == SpecVersion.Pk_VersionId);
-                            basePage.VersionRemarks.Remove(specVersionRemarks);
-                        }
-                        basePage.VersionRemarks.Add(new KeyValuePair<int, List<Remark>>(SpecVersion.Pk_VersionId, remarks));                       
-                    }
+                        UpdateBasePageRemarksList();                    
                 }
                 imgVersionRemarks.OnClientClick = "OpenVersionRemarksWindow" + this.ClientID + "(); return false;";
             }
@@ -87,7 +80,22 @@ namespace Etsi.Ultimate.Module.Specifications
             versionRemarks.IsEditMode = IsEditMode;
             versionRemarks.ScrollHeight = 100;
             if (IsEditMode)
+            {
+                //Catch the remark's event : "a remark has been created"
                 versionRemarks.AddRemarkHandler += versionRemarks_AddRemarkHandler;
+                //Catch the remark's event : "a remark's status has been updated"
+                versionRemarks.ChangeStatusRemarkHandler += versionRemarks_ChangeStatusRemarkHandler;
+            }
+        }
+
+        /// <summary>
+        /// !!! DON'T WORK !!! :  Event handler to update the versionRemarks object when we change the remark status (public/private)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void versionRemarks_ChangeStatusRemarkHandler(object sender, EventArgs e)
+        {
+            UpdateBasePageRemarksList();
         }
 
         /// <summary>
@@ -113,12 +121,7 @@ namespace Etsi.Ultimate.Module.Specifications
             });
             versionRemarks.DataSource = datasource;
 
-            if (basePage.VersionRemarks.Exists(x => x.Key == SpecVersion.Pk_VersionId))
-            {
-                var specVersionRemarks = basePage.VersionRemarks.Find(x => x.Key == SpecVersion.Pk_VersionId);
-                basePage.VersionRemarks.Remove(specVersionRemarks);
-            }
-            basePage.VersionRemarks.Add(new KeyValuePair<int, List<Remark>>(SpecVersion.Pk_VersionId, datasource));
+            UpdateBasePageRemarksList();
         }
 
         #endregion
@@ -164,6 +167,21 @@ namespace Etsi.Ultimate.Module.Specifications
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Update the basepage VersionRemarks object
+        /// </summary>
+        private void UpdateBasePageRemarksList()
+        {
+            SpecificationBasePage basePage = (SpecificationBasePage)this.Page;
+            List<Remark> datasource = versionRemarks.DataSource;
+            if (basePage.VersionRemarks.Exists(x => x.Key == SpecVersion.Pk_VersionId))
+            {
+                var specVersionRemarks = basePage.VersionRemarks.Find(x => x.Key == SpecVersion.Pk_VersionId);
+                basePage.VersionRemarks.Remove(specVersionRemarks);
+            }
+            basePage.VersionRemarks.Add(new KeyValuePair<int, List<Remark>>(SpecVersion.Pk_VersionId, datasource));
+        }
 
         /// <summary>
         /// Get Actual POCO entities for Remark objects

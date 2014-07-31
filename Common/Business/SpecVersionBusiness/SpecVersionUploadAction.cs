@@ -42,7 +42,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
         {
             var svcResponse = new ServiceResponse<string>();
 
-            GetRelatedSpecAndRelease(version);
+            GetRelatedSpecAndRelease(personId, version);
 
             if (svcResponse.Report.GetNumberOfErrors() == 0)
             {
@@ -168,7 +168,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
         public ServiceResponse<string> UploadVersion(int personId, SpecVersion version, string token)
         {
             var svcResponse = new ServiceResponse<string>();
-            GetRelatedSpecAndRelease(version);
+            GetRelatedSpecAndRelease(personId, version);
 
             try
             {
@@ -221,14 +221,14 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             return validFileName;
         }
 
-        private void GetRelatedSpecAndRelease(SpecVersion specVersion)
+        private void GetRelatedSpecAndRelease(int personId, SpecVersion specVersion)
         {
             //spec
             ISpecificationManager specMgr = ManagerFactory.Resolve<ISpecificationManager>();
             specMgr.UoW = UoW;
             if (!specVersion.Fk_SpecificationId.HasValue)
                 throw new InvalidOperationException("Specification id is not provided");
-            var spec = specMgr.GetSpecificationById(0, specVersion.Fk_SpecificationId.Value).Key;
+            var spec = specMgr.GetSpecificationById(personId, specVersion.Fk_SpecificationId.Value).Key;
 
             if (spec == null)
                 throw new InvalidOperationException("Specification is not found");

@@ -136,13 +136,15 @@ namespace Etsi.Ultimate.Controls
                     {
                         rcbCommunity.Visible = true;
                         lblCommunity.Visible = false;
-
-                        rcbCommunity.DataSource = dataSource.Where(x => x.ActiveCode == "ACTIVE" || x.TbId == _selectedCommunityID).OrderBy(x => x.Order);
+                        //Add element to Combobox that refer to no community is selected
+                        List<Community> rcbCommunityDataSource = new List<Community>(){new Community() { TbName = "", TbId = default(int) }};
+                        rcbCommunityDataSource.AddRange(dataSource.Where(x => x.ActiveCode == "ACTIVE" || x.TbId == _selectedCommunityID).OrderBy(x => x.Order));
+                        rcbCommunity.DataSource = rcbCommunityDataSource;
                         rcbCommunity.DataTextField = "TbName";
                         rcbCommunity.DataValueField = "TbId";
                         rcbCommunity.DataBind();
 
-                        if (_selectedCommunityID != default(int))
+                        //if (_selectedCommunityID != default(int))
                             rcbCommunity.SelectedValue = _selectedCommunityID.ToString();
                     }
                     else

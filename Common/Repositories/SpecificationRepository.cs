@@ -128,7 +128,16 @@ namespace Etsi.Ultimate.Repositories
             throw new InvalidOperationException("Cannot delete Specification entity");
         }
 
-
+        /// <summary>
+        /// Notice that : 
+        /// - Draft                                     :  IsActive && !IsUnderChangeControl
+        /// - UCC                                       :  IsActive &&  IsUnderChangeControl
+        /// - Withdrawn before change control           : !IsActive && !IsUnderChangeControl
+        /// - Withdrawn after change control            : !IsActive &&  IsUnderChangeControl
+        /// </summary>
+        /// <param name="searchObject"></param>
+        /// <param name="includeSpecRel"></param>
+        /// <returns></returns>
         public KeyValuePair<List<Specification>, int> GetSpecificationBySearchCriteria(SpecificationSearch searchObject, bool includeSpecRel)
         {
             IQueryable<Specification> query;
@@ -257,16 +266,8 @@ namespace Etsi.Ultimate.Repositories
 
         public List<Specification> GetAllRelatedSpecificationsByReleaseId(int releaseId)
         {
-            List<Specification> specs = new List<Specification>();
-            var specIdList = UoW.Context.Specification_Release.Where(x => x.Fk_ReleaseId == releaseId).Select(x => x.Fk_SpecificationId).ToList();
-            foreach(var specId in specIdList){
-                var spec = this.Find(specId);
-                if(spec != null)
-                    specs.Add(spec);
-            }
-            return specs;
+            return UoW.Context.Specification_Release.Include(t => t.Specification).Where(x => x.Fk_ReleaseId == releaseId).Select(x => x.Specification).ToList();
         }
-
     }
 
     public interface ISpecificationRepository : IEntityRepository<Specification>

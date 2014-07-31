@@ -72,7 +72,10 @@ namespace Etsi.Ultimate.Business
                     if (spec.PrimeSpecificationRapporteurIds.Count > 0 )
                     {
                         var p = responsiblePeople.Find(x => x.PERSON_ID ==  spec.PrimeSpecificationRapporteurIds.FirstOrDefault());
-                        spec.PrimeSpecificationRapporteurName = p.FIRSTNAME + " " + p.LASTNAME;
+                        if (p != null)
+                        {
+                            spec.PrimeSpecificationRapporteurName = p.FIRSTNAME + " " + p.LASTNAME;
+                        }
                     }
                 }
                 
@@ -122,7 +125,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="exportPath">Export Path</param>
         private void ExportToExcel(List<SpecificationForExport> exportSpecification, string exportPath, string baseurl)
         {
-            if (!String.IsNullOrEmpty(exportPath) && exportSpecification.Count >= 1)
+            if (!String.IsNullOrEmpty(exportPath) && exportSpecification != null)
             {
                 try
                 {

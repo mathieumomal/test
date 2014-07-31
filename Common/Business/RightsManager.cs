@@ -20,12 +20,12 @@ namespace Etsi.Ultimate.Business.Security
         /// <summary>
         /// ID of the "MCC" list of users in the DSDB database.
         /// </summary>
-        private static readonly int MCC_LIST_ID = 5240;
-        private static readonly string CACHE_BASE_STR = "BIZ_USER_RIGHTS_";
+        private readonly int MCC_LIST_ID = 5240;
+        private readonly string CACHE_BASE_STR = "BIZ_USER_RIGHTS_";
 
-        private static readonly string ADMIN_GROUP = "Administrators";
-        private static readonly string WORKPLAN_MANAGER_GROUP = "Work Plan Managers";
-        private static readonly string SUPERUSER_GROUP = "Specification Managers";
+        private readonly string ADMIN_GROUP = "Administrators";
+        private readonly string WORKPLAN_MANAGER_GROUP = "Work Plan Managers";
+        private readonly string SUPERUSER_GROUP = "Specification Managers";
 
 
         #region IRightsManager Membres

@@ -24,12 +24,12 @@ namespace Etsi.Ultimate.Module.Specifications
         protected SpecificationListControl parentSpecifications;
         protected SpecificationListControl childSpecifications;
 
-        //Static fields
-        private static String CONST_GENERAL_TAB = "General";
-        private static String CONST_RESPONSIBILITY_TAB = "Responsibility";
-        private static String CONST_RELATED_TAB = "Related";
-        private static String CONST_RELEASES_TAB = "Releases";
-        private static String CONST_HISTORY_TAB = "History";
+        //const 
+        private const string CONST_GENERAL_TAB = "General";
+        private const string CONST_RESPONSIBILITY_TAB = "Responsibility";
+        private const string CONST_RELATED_TAB = "Related";
+        private const string CONST_RELEASES_TAB = "Releases";
+        private const string CONST_HISTORY_TAB = "History";
         private const string CONST_EMPTY_FIELD = " - ";
         private const int ErrorFadeTimeout = 10000;
         
@@ -42,19 +42,45 @@ namespace Etsi.Ultimate.Module.Specifications
         
         private const string SPEC_HEADER = "Specification #: ";
         private List<string> LIST_OF_TABS = new List<string>() { };
-        public static readonly string DsId_Key = "ETSI_DS_ID";
+        public const string DsId_Key = "ETSI_DS_ID";
         private const String CONST_ERRORPANEL_CSS = "Spec_Edit_Error";
         private const String CONST_ERRORTEXT_CSS = "ErrorTxt";
 
         private const String CONST_INFOPANEL_CSS = "Spec_Edit_Info";
         private const String CONST_INFOTEXT_CSS = "InfoTxt";
+
         //Properties
         private int UserId;
         private string selectedTab;
         private bool fromEdit;
-        public static Nullable<int> SpecificationId;
+
+        private const string VIEWSTATE_SPECIFICATION_ID = "VS_SPECID";
+        public Nullable<int> SpecificationId
+        {
+            get
+            {
+                return (Nullable<int>)ViewState[VIEWSTATE_SPECIFICATION_ID];
+            }
+            set
+            {
+                ViewState[VIEWSTATE_SPECIFICATION_ID] = value;
+            }
+        }
+
         private string CreateError;
-        public static Nullable<int> FailedOperationIndex;
+
+        private const string VIEWSTATE_FAILED_OP = "VS_FAILED_OPERATION";
+        public Nullable<int> FailedOperationIndex
+        {
+            get
+            {
+                return (Nullable<int>)ViewState[VIEWSTATE_FAILED_OP];
+            }
+            set
+            {
+                ViewState[VIEWSTATE_FAILED_OP] = value;
+            }
+        }
         private static Dictionary<int, string> OperationFailureMsgs = new Dictionary<int, string>() { { 1, "forced transposition failed" } };
 
         /// <summary>

@@ -16,11 +16,12 @@ namespace Etsi.Ultimate.Module.Release
         private const String CREATION_MODE = "Creation";
         private const String EDIT_MODE = "Edit";
 
-        private static String CONST_GENERAL_TAB = "General";
-        private static String CONST_ADMIN_TAB = "Administration";
-        private static String CONST_HISTORY_TAB = "History";
+        private const string CONST_GENERAL_TAB = "General";
+        private const string CONST_ADMIN_TAB = "Administration";
+        private const string CONST_HISTORY_TAB = "History";
         private const string CONST_EMPTY_FIELD = "";
-        public static readonly string DsId_Key = "ETSI_DS_ID";
+        public const string DsId_Key = "ETSI_DS_ID";
+
         public string serverSideJSScript = "";
         private int UserId;        
         private Nullable<int> ReleaseId;

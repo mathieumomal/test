@@ -422,7 +422,7 @@ namespace Etsi.Ultimate.Tests.Services
         private IDbSet<Specification_Release> GetSpecReleases()
         {
             var list = new SpecificationReleaseFakeDBSet();
-            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 1, isTranpositionForced = false });
+            list.Add(new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 1, isTranpositionForced = false, Specification = new Specification() { Pk_SpecificationId = 1, Number = "1", IsUnderChangeControl = true, IsForPublication = true, Versions = new List<SpecVersion>() { new SpecVersion() { Pk_VersionId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 1 } } } });
             return list;
         }
 
