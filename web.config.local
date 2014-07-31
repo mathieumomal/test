@@ -91,6 +91,7 @@
 		<add key="FtpExportAddress" value="ftp://ftp.3gpp.org/Information/WORK_PLAN/"/>
 		<add key="TranspositionFolderPath" value="D:\AppTrans\transposition\"/>
     <add key="UploadVersionTemporaryPath" value="D:\AppTrans\Version\"/>
+		<add key="PortalName" value="Ultimate"/>
 	<!--  End of 3GPP Parameters  -->
   </appSettings>
   <system.web.webPages.razor>
@@ -499,10 +500,13 @@
             <message clientCredentialType="Windows" negotiateServiceCredential="true" algorithmSuite="Default" establishSecurityContext="true" />
           </security>
         </binding>
+        <binding name="UserRightsHttpEndpoint" />
       </wsHttpBinding>
     </bindings>
     <client>
       <endpoint address="http://localhost:81/SendMail" binding="wsHttpBinding" bindingConfiguration="HttpClient" contract="WcfMailService.ISendMail" name="ISendMail">
+      </endpoint>
+      <endpoint address="http://localhost:81/UserRightsService/" binding="wsHttpBinding"  bindingConfiguration="UserRightsHttpEndpoint" contract="UserRightsService.IUserRightsService" name="UserRightsHttpEndpoint">
       </endpoint>
     </client>
   </system.serviceModel>
