@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 
@@ -40,6 +41,16 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
                 // We compute the version against a complex algorithm.
                 ComputeVersion(specId, releaseId, forUpload, resultVersionsCurrentAndNew, release, isSpecUCC);
+
+                // We determine the user rights
+                var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
+                rightsMgr.UoW = UoW;
+                var userRights = rightsMgr.GetRights(personId);
+
+                var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
+                specMgr.UoW = UoW;
+
+                response.Rights = specMgr.GetRightsForSpecRelease(userRights, personId, spec, releaseId, new List<Release>() { release }).Value;
 
                 response.Result = resultVersionsCurrentAndNew;
             }

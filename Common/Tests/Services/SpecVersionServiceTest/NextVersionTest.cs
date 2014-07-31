@@ -64,6 +64,17 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
             Assert.AreEqual(awaitedEditorial, response.Result.CurrentSpecVersion.EditorialVersion);
         }
 
+        [TestCase(EffortConstants.SPECIFICATION_DRAFT_WITH_NO_DRAFT_ID, EffortConstants.RELEASE_NEWLY_OPEN_ID, true, Enum_UserRights.Versions_Modify_MajorVersion, true)]
+        public void GetNextVersion_ReturnsUserRights(int specId, int relId, bool forUpload, Enum_UserRights right, bool shouldHaveRight)
+        {
+            var response = versionSvc.GetNextVersionForSpec(1, specId, relId, forUpload);
+
+            Assert.IsNotNull(response);
+            var rights = response.Rights;
+            Assert.IsNotNull(rights);
+            Assert.AreEqual(shouldHaveRight, rights.HasRight(right));
+        }
+
         [Test]
         public void GetNextVersion_ReturnsReleaseAndSpecDetails()
         {
@@ -94,6 +105,8 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
             var noRights = new UserRightsContainer();
             var allocateRights = new UserRightsContainer();
             allocateRights.AddRight(Enum_UserRights.Versions_Allocate);
+            allocateRights.AddRight(Enum_UserRights.Versions_Upload);
+            allocateRights.AddRight(Enum_UserRights.Versions_Modify_MajorVersion);
 
             var rightsManager = MockRepository.GenerateMock<IRightsManager>();
             rightsManager.Stub(x => x.GetRights(USER_HAS_NO_RIGHT)).Return(noRights);
