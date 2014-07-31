@@ -51,7 +51,7 @@
                             <tr>
                                 <td class="LeftColumn">Reference:</td>
                                 <td class="RightColumn">
-                                    <telerik:RadTextBox ID="txtReference" runat="server" MaxLength="8" Width="198" OnTextChanged="TxtReference_OnBlur" />
+                                    <telerik:RadTextBox ID="txtReference" runat="server" MaxLength="15" Width="198" OnTextChanged="TxtReference_OnBlur" />
                                 </td>
                             </tr>
                             <tr>
