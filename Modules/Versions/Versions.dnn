@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="Versions" type="Module" version="00.03.00">
+    <package name="Versions" type="Module" version="00.03.01">
       <friendlyName>Versions</friendlyName>
       <description>Versions module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>

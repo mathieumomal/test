@@ -241,6 +241,10 @@ namespace Etsi.Ultimate.Module.Versions
             var svcResponse = new ServiceResponse<string>();
             ISpecVersionService specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
             var uploadVersionTemporaryPath = Utils.ConfigVariables.UploadVersionTemporaryPath;
+            if (!Directory.Exists(uploadVersionTemporaryPath))
+            {
+                Directory.CreateDirectory(uploadVersionTemporaryPath);
+            }
 
             //Get the version file
             UploadedFile versionUploaded = e.File;

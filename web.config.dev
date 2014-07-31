@@ -74,7 +74,7 @@
 	<add key="TranspositionFolderPath" value="D:\AppTrans\transposition\"/>
 	<add key="WIReportPath" value ="http://webapp.13.etsidev.org/workprogram/Report_WorkItem.asp?WKI_ID="/>
 	<add key="Global3GPPProjetId" value ="703"/>
-  <add key="UploadVersionTemporaryPath" value="D:\3GPPTemporary\Version\Upload\"/>
+	<add key="UploadVersionTemporaryPath" value="D:\Apptrans\Version\"/>
 	
 	<add key="EmailDefaultFrom" value="3GPP Portal&lt;3gppapp@3gpp.org&gt;"/>
 	<add key="EmailDefaultBcc" value="3gppapp@3gpp.org"/>
