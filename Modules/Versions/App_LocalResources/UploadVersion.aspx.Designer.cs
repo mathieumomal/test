@@ -88,6 +88,24 @@ namespace Etsi.Ultimate.Module.Versions.App_LocalResources {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à An error occured during the allocation of the new version. If the problem persists, contact the administrator..
+        /// </summary>
+        public static string GenericErrorAllocation {
+            get {
+                return ResourceManager.GetString("GenericErrorAllocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à An error occured during the upload of the version. If the problem persists, contact the administrator..
+        /// </summary>
+        public static string GenericErrorUpload {
+            get {
+                return ResourceManager.GetString("GenericErrorUpload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à No avaible data for the requested query.
         /// </summary>
         public static string NoAvailableDatas {

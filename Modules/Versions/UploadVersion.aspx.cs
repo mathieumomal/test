@@ -85,9 +85,6 @@ namespace Etsi.Ultimate.Module.Versions
                 ViewState[ClientID + CONST_SPEC_ID_VIEWSTATE_LABEL] = value;
             }
         }
-        /// <summary>
-        /// true : upload case, false : allocate case
-        /// </summary>
         public bool IsUploadMode
         {
             get
@@ -118,7 +115,7 @@ namespace Etsi.Ultimate.Module.Versions
         }
         #endregion
 
-        #region NEW events NEW
+        #region Events
         /// <summary>
         /// Upload Version - Constructor
         /// </summary>
@@ -189,11 +186,10 @@ namespace Etsi.Ultimate.Module.Versions
             }
             else
             {
-                DisplayWarningAndErrorInConfirmationPopUp(report);
+                //DisplayWarningAndErrorInConfirmationPopUp(report);
+                ThrowAnError(UploadVersion_aspx.GenericErrorAllocation);
             }
         }
-        //Allocate events
-
         //Upload events
         /// <summary>
         /// Click event for upload button
@@ -203,15 +199,11 @@ namespace Etsi.Ultimate.Module.Versions
         protected void UploadVersionBtn_Click(object sender, EventArgs e)
         {
             var meetingId = UploadMeeting.SelectedMeetingId;
-
-            //NEED ???
             if (meetingId > 0 || IsDraft)
             {
                 preVersionUploadScreen.Visible = false;
                 confirmation.Visible = true;
             }
-
-            //Analyse...
         }
         /// <summary>
         /// Confirm upload of the version
@@ -237,7 +229,7 @@ namespace Etsi.Ultimate.Module.Versions
             }
             else
             {
-                DisplayWarningAndErrorInConfirmationPopUp(svcResponse.Report);
+                ThrowAnError(UploadVersion_aspx.GenericErrorUpload);
             }
         }
         /// <summary>
@@ -273,26 +265,13 @@ namespace Etsi.Ultimate.Module.Versions
             //Get version file token to use it when user will press "confirm upload" button
             VersionFileToken = svcResponse.Result;
 
-            if (svcResponse.Report.GetNumberOfErrors() == 0 && svcResponse.Report.GetNumberOfWarnings() == 0)
-            {
-                lblSaveStatus.Text = String.Format(UploadVersion_aspx.SuccessMessage, version.Value.MajorVersion, version.Value.TechnicalVersion, version.Value.EditorialVersion, "uploaded.");
-                preVersionUploadScreen.Visible = false;
-                analysis.Visible = false;
-                confirmation.Visible = false;
-                state.Visible = true;
-                state_confirmation.OnClientClicked = "closeRadWindow";
-            }
-            else
-            {
-                DisplayWarningAndErrorInConfirmationPopUp(svcResponse.Report);
-                errorNumber = svcResponse.Report.GetNumberOfErrors();
-            }
-
+            //Confirmation popup
+            DisplayWarningAndErrorInConfirmationPopUp(svcResponse.Report);
+            errorNumber = svcResponse.Report.GetNumberOfErrors();
         }
-        //Upload events
         #endregion
 
-        #region NEW Private Methods NEW
+        #region Private Methods
         /// <summary>
         /// Reset version upload/allocate popup and its attributes
         /// </summary>
@@ -444,8 +423,7 @@ namespace Etsi.Ultimate.Module.Versions
                 if (svcResponseSpecVersion.Report.GetNumberOfErrors() == 0)
                 {
                     var version = svcResponseSpecVersion.Result;
-                    SpecAttributesHandler(version.NewSpecVersion.Specification);
-                    ReleaseAttributesHandler(version.NewSpecVersion.Release);
+                    SpecAndReleaseAttributesHandler(version.NewSpecVersion);
 
                     //Set Major Version Status
                     NewVersionMajorVal.Enabled = svcResponseSpecVersion.Rights.HasRight(Enum_UserRights.Versions_Modify_MajorVersion);
@@ -471,20 +449,17 @@ namespace Etsi.Ultimate.Module.Versions
             }
         }
         /// <summary>
-        /// Spec attributes handler
+        /// Spec and release attributes handler
         /// </summary>
-        private void SpecAttributesHandler(Specification spec)
+        private void SpecAndReleaseAttributesHandler(SpecVersion version)
         {
+            var spec = version.Specification;
             IsDraft = !(spec.IsUnderChangeControl.HasValue && spec.IsUnderChangeControl.Value && spec.IsActive);
             hidIsRequired.Value = (!IsDraft && IsUploadMode) ? "True" : "False";
             MeetingLbl.Text = (!IsDraft && IsUploadMode) ? "Meeting(<span class='requiredField'>*</span>):" : "Meeting:";
             SpecNumberVal.Text = spec.Number;
-        }
-        /// <summary>
-        /// Release attributes handler
-        /// </summary>
-        private void ReleaseAttributesHandler(Release release)
-        {
+
+            var release = version.Release;
             ReleaseVal.Text = release.Code;
         }
         #endregion
