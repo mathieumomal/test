@@ -244,7 +244,10 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             versionMgr.UoW = UoW;
 
             var versionsForSpecRelease = versionMgr.GetVersionsForASpecRelease(version.Fk_SpecificationId.Value, version.Fk_ReleaseId.Value);
-            if (versionsForSpecRelease.Where(v => v.MajorVersion == version.MajorVersion && v.TechnicalVersion == version.TechnicalVersion && v.EditorialVersion == version.EditorialVersion).Count() > 0)
+            if (versionsForSpecRelease.Where(v => v.MajorVersion == version.MajorVersion 
+                && v.TechnicalVersion == version.TechnicalVersion 
+                && v.EditorialVersion == version.EditorialVersion
+                && !string.IsNullOrEmpty(v.Location)).Count() > 0)
             {
                 var versionStr = version.MajorVersion + "." + version.TechnicalVersion + "." + version.EditorialVersion;
                 throw new InvalidOperationException(String.Format(Utils.Localization.Upload_Version_Error_Version_Already_Exists, versionStr));

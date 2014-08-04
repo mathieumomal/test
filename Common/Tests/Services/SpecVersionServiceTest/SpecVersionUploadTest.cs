@@ -174,6 +174,16 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsFalse(File.Exists("Ftp\\Specs\\latest-drafts\\22103-200.zip"));
         }
 
+        [Test]
+        public void CheckVersion_MustAllowToUploadAllocatedVersion()
+        {
+            myVersion.EditorialVersion = 1;
+            var fileToUpload = UPLOAD_PATH + "22103-020000.zip";
+
+            var checkResults = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
+            Assert.AreEqual(0, checkResults.Report.GetNumberOfErrors());
+        }
+
        
 
         private void UploadDraft(SpecVersion version, string fileToUpload)
