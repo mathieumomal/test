@@ -297,4 +297,10 @@
   <data name="Allocate_Error_Version_Not_Allowed" xml:space="preserve">
     <value>Version should be greater that latest uploaded version for the release.</value>
   </data>
+  <data name="Upload_Version_Error_Version_Already_Exists" xml:space="preserve">
+    <value>Version {0} already exists.</value>
+  </data>
+  <data name="Upload_Version_Error_Draft_Major_Too_High" xml:space="preserve">
+    <value>Draft versions can not have Major number higher than 2.</value>
+  </data>
 </root>

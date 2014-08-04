@@ -241,6 +241,24 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Draft versions can not have Major number higher than 2..
+        /// </summary>
+        public static string Upload_Version_Error_Draft_Major_Too_High {
+            get {
+                return ResourceManager.GetString("Upload_Version_Error_Draft_Major_Too_High", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Version {0} already exists..
+        /// </summary>
+        public static string Upload_Version_Error_Version_Already_Exists {
+            get {
+                return ResourceManager.GetString("Upload_Version_Error_Version_Already_Exists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0}, Uid {1}: Acronym {2} is more than 50 characters. It has been truncated..
         /// </summary>
         public static string WorkItem_Import_Acronym_Too_Long {

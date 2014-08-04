@@ -38,6 +38,15 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
         public IUltimateUnitOfWork UoW;
 
+
+        /// <summary>
+        /// Entry point for checking the upload of a version. Will check that the version can be parsed, 
+        /// and in this case launch the quality checks of the test.
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="version"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public ServiceResponse<string> CheckVersionForUpload(int personId, SpecVersion version, string path)
         {
             var svcResponse = new ServiceResponse<string>();
@@ -49,10 +58,13 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                 try
                 {
                     CheckPersonRightToUploadVersion(version, personId);
+                    CheckUploadAllowed(version, path);
+
                     Report validationReport = svcResponse.Report;
                     var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path);
                     var fileExtension = String.Empty;
-                    Stream fileStream = null; 
+                    string fileToAnalyzePath = String.Empty;
+                    
 
                     //[1] Check the file name
                     string validFileName = GetValidFileName(version);
@@ -60,7 +72,6 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                         validationReport.LogWarning(String.Format("Invalid file name. System will change this to '{0}'", validFileName));
 
                     bool allowToRunQualityChecks = false;
-
                     //[2] If file is in .zip format, check that .zip file and internal word file must have same name.
                     if (Path.GetExtension(path).Equals(".zip", StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -74,13 +85,13 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                         {
                             allowToRunQualityChecks = true;
                             fileExtension = ".doc";
-                            fileStream = new FileStream(Path.GetDirectoryName(zipContent.First()) + "\\" + fileNameWithoutExtension + ".doc", FileMode.Open);
+                            fileToAnalyzePath = Path.GetDirectoryName(zipContent.First()) + "\\" + fileNameWithoutExtension + ".doc";
                         }
                         else if (zipContentShortPath.Find(x => x.Equals(fileNameWithoutExtension + ".docx", StringComparison.InvariantCultureIgnoreCase)) != null)
                         {
                             allowToRunQualityChecks = true;
                             fileExtension = ".docx";
-                            fileStream = new FileStream(Path.GetDirectoryName(zipContent.First()) + "\\" + fileNameWithoutExtension + ".docx", FileMode.Open);
+                            fileToAnalyzePath = Path.GetDirectoryName(zipContent.First()) + "\\" + fileNameWithoutExtension + ".docx";
                         }
                         else
                         {
@@ -88,14 +99,14 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                             {
                                 allowToRunQualityChecks = true;
                                 fileExtension = ".doc";
-                                fileStream = new FileStream(zipContent.First(), FileMode.Open);
+                                fileToAnalyzePath = zipContent.First();
                                 validationReport.LogWarning("Zip file and internal word file must have same name");
                             }
                             else if (zipContent.Count == 1 && zipContent.First().ToLower().EndsWith(".docx"))
                             {
                                 allowToRunQualityChecks = true;
                                 fileExtension = ".docx";
-                                fileStream = new FileStream(zipContent.First(), FileMode.Open);
+                                fileToAnalyzePath = zipContent.First();
                                 validationReport.LogWarning("Zip file and internal word file must have same name");
                             }
                             else
@@ -120,11 +131,13 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                         string tsgTitle = String.Empty;
 
                         ICommunityManager communityMgr = ManagerFactory.Resolve<ICommunityManager>();
-                        var communities = communityMgr.GetCommunities();
-                        var community = communities.Where(x => x.TbId == version.Specification.PrimeResponsibleGroup.Fk_commityId).FirstOrDefault();
-                        if (community != null)
-                            tsgTitle = GetParentTSG(community, communities).TbTitle.Replace("Technical Specification Group -", "Technical Specification Group");
-
+                        if (version.Specification.PrimeResponsibleGroup != null)
+                        {
+                            var communities = communityMgr.GetCommunities();
+                            var community = communities.Where(x => x.TbId == version.Specification.PrimeResponsibleGroup.Fk_commityId).FirstOrDefault();
+                            if (community != null)
+                                tsgTitle = GetParentTSG(community, communities).TbTitle.Replace("Technical Specification Group -", "Technical Specification Group");
+                        }
                         versionStr = String.Format("{0}.{1}.{2}", version.MajorVersion.Value, version.TechnicalVersion.Value, version.EditorialVersion.Value);
 
                         if (version.Source.HasValue)
@@ -134,24 +147,26 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
                             meetingDate = meetingMgr.GetMeetingById(version.Source.Value).END_DATE.Value;
                         }
-
-                        using (MemoryStream memoryStream = new MemoryStream())
+                        using (Stream fileStream = new FileStream(fileToAnalyzePath, FileMode.Open))
                         {
-                            fileStream.CopyTo(memoryStream);
+                            using (MemoryStream memoryStream = new MemoryStream())
+                            {
+                                fileStream.CopyTo(memoryStream);
 
-                            var businessValidationReport = ValidateVersionDocument(fileExtension, 
-                                                                                       memoryStream, 
-                                                                                       Path.GetDirectoryName(path), 
-                                                                                       versionStr, 
-                                                                                       version.Specification.Title, 
-                                                                                       version.Release.Name, 
-                                                                                       meetingDate, tsgTitle, 
-                                                                                       version.Specification.IsTS.GetValueOrDefault());
+                                var businessValidationReport = ValidateVersionDocument(fileExtension,
+                                                                                           memoryStream,
+                                                                                           Path.GetDirectoryName(path),
+                                                                                           versionStr,
+                                                                                           version.Specification.Title,
+                                                                                           version.Release.Name,
+                                                                                           meetingDate, tsgTitle,
+                                                                                           version.Specification.IsTS.GetValueOrDefault());
 
-                            validationReport.ErrorList.AddRange(businessValidationReport.ErrorList);
-                            validationReport.WarningList.AddRange(businessValidationReport.WarningList);
+                                validationReport.ErrorList.AddRange(businessValidationReport.ErrorList);
+                                validationReport.WarningList.AddRange(businessValidationReport.WarningList);
 
-                            fileStream.Close();
+                                fileStream.Close();
+                            }
                         }
                     }
                     svcResponse.Result = Guid.NewGuid().ToString();
@@ -165,6 +180,14 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             return svcResponse;
         }
 
+        
+        /// <summary>
+        /// Does perform the upload of the version, given the token that was passed by CheckVersionForUpload function.
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="version"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
         public ServiceResponse<string> UploadVersion(int personId, SpecVersion version, string token)
         {
             var svcResponse = new ServiceResponse<string>();
@@ -207,6 +230,33 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             }
         }
 
+        /// <summary>
+        /// Checks that user has right to perform the upload, in so far as:
+        /// - Version does not already exist
+        /// - if version is a draft, it's major version is less or equal 2.
+        /// </summary>
+        /// <param name="version"></param>
+        /// <param name="path"></param>
+        private void CheckUploadAllowed(SpecVersion version, string path)
+        {
+            // Version should not already exist
+            var versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
+            versionMgr.UoW = UoW;
+
+            var versionsForSpecRelease = versionMgr.GetVersionsForASpecRelease(version.Fk_SpecificationId.Value, version.Fk_ReleaseId.Value);
+            if (versionsForSpecRelease.Where(v => v.MajorVersion == version.MajorVersion && v.TechnicalVersion == version.TechnicalVersion && v.EditorialVersion == version.EditorialVersion).Count() > 0)
+            {
+                var versionStr = version.MajorVersion + "." + version.TechnicalVersion + "." + version.EditorialVersion;
+                throw new InvalidOperationException(String.Format(Utils.Localization.Upload_Version_Error_Version_Already_Exists, versionStr));
+            }
+
+            // If version is a draft, then it's major number must not be higher than 2.
+            if (!version.Specification.IsUnderChangeControl.GetValueOrDefault() && version.MajorVersion > 2)
+            {
+                throw new InvalidOperationException(String.Format(Utils.Localization.Upload_Version_Error_Draft_Major_Too_High));
+            }
+        }
+
         private string GetValidFileName(SpecVersion specVersion)
         {
             var specNumber = specVersion.Specification.Number;
@@ -217,7 +267,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             string technicalVersionBase36 = utilsMgr.EncodeToBase36Digits2((long)specVersion.TechnicalVersion);
             string editorialVersionBase36 = utilsMgr.EncodeToBase36Digits2((long)specVersion.EditorialVersion);
 
-            string validFileName = String.Format(CONST_VALID_FILENAME, specNumber, majorVersionBase36, technicalVersionBase36, editorialVersionBase36);
+            string validFileName = String.Format(CONST_VALID_FILENAME, specNumber.Replace(".",""), majorVersionBase36, technicalVersionBase36, editorialVersionBase36);
             return validFileName;
         }
 
@@ -372,29 +422,10 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                 if (!isDraftPathExists)
                     Directory.CreateDirectory(draftPath);
 
-                ISpecVersionManager specVersionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
-                specVersionMgr.UoW = UoW;
-                var allDraftVersions = specVersionMgr.GetVersionsBySpecId(spec.Pk_SpecificationId);
-                var latestUploadedDraft = allDraftVersions.Where(draft => draft.Location != null)
-                                                            .OrderByDescending(x => x.MajorVersion ?? 0)
-                                                            .ThenByDescending(y => y.TechnicalVersion ?? 0)
-                                                            .ThenByDescending(z => z.EditorialVersion ?? 0)
-                                                            .FirstOrDefault();
-                if (latestUploadedDraft != null)
-                {
-                    string latestUploadedDraftVersion = String.Format("{0}{1}{2}", latestUploadedDraft.MajorVersion, latestUploadedDraft.TechnicalVersion, latestUploadedDraft.EditorialVersion);
-                    string uploadingDraftVersion = String.Format("{0}{1}{2}", version.MajorVersion, version.TechnicalVersion, version.EditorialVersion);
+                // We remove any existing draft.
+                ClearLatestDraftFolder(ftpBasePath, version);
 
-                    if((version.MajorVersion > latestUploadedDraft.MajorVersion) ||
-                        (version.MajorVersion == latestUploadedDraft.MajorVersion && version.TechnicalVersion > latestUploadedDraft.TechnicalVersion) ||
-                        (version.MajorVersion == latestUploadedDraft.MajorVersion && version.TechnicalVersion == latestUploadedDraft.TechnicalVersion && version.EditorialVersion > latestUploadedDraft.EditorialVersion))
-                    {
-                        //Delete existing draft
-                        string fileName = Path.Combine(draftPath, Path.GetFileName(latestUploadedDraft.Location));
-                        if (File.Exists(fileName))
-                            File.Delete(fileName);
-                    }
-                }
+
                 string hardLinkPath = Path.Combine(draftPath, zipFileName);
                 CreateHardLink(hardLinkPath, versionPathToSave, IntPtr.Zero);
             }
@@ -426,19 +457,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                     CreateHardLink(hardLinkPath, versionPathToSave, IntPtr.Zero);
 
                     //Delete all drafts for this version
-                    string draftPath = String.Format(CONST_FTP_LATEST_DRAFTS_PATH, ftpBasePath);
-                    string collapsedSpecNumber = spec.Number.Replace(".", String.Empty);
-
-                    if (Directory.Exists(draftPath))
-                    {
-                        DirectoryInfo di = new DirectoryInfo(draftPath);
-                        var draftFiles = di.GetFiles(collapsedSpecNumber + "-*").Select(x => x.FullName).ToList();
-                        foreach (string draftFile in draftFiles)
-                        {
-                            if (File.Exists(draftFile))
-                                File.Delete(draftFile);
-                        }
-                    }
+                    ClearLatestDraftFolder(ftpBasePath, version);
 
                     //Create hard link in 'Latest' folder
                     string latestFolderPath = String.Format(CONST_FTP_LATEST_PATH, ftpBasePath, version.Release.Code, spec.Number.Split('.')[0]);
@@ -451,6 +470,40 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             }
         }
 
+        private void ClearLatestDraftFolder(string ftpBasePath, SpecVersion version)
+        {
+            var versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
+            versionMgr.UoW = UoW;
+            var existingVersions = versionMgr.GetVersionsForASpecRelease(version.Fk_SpecificationId.Value, version.Fk_ReleaseId.Value);
+
+            // Only clear the Latest-drafts folder if the version that has just been uploaded is greater that current one.
+            if (existingVersions.Where(v => !string.IsNullOrEmpty(v.Location)
+                && (v.MajorVersion > version.MajorVersion
+                    || (v.MajorVersion == version.MajorVersion && v.TechnicalVersion > version.TechnicalVersion)
+                    || (v.MajorVersion == version.MajorVersion && v.TechnicalVersion == version.TechnicalVersion && v.EditorialVersion > version.EditorialVersion))).Count() == 0)
+            {
+                string draftPath = String.Format(CONST_FTP_LATEST_DRAFTS_PATH, ftpBasePath);
+                string collapsedSpecNumber = version.Specification.Number.Replace(".", String.Empty);
+
+                if (Directory.Exists(draftPath))
+                {
+                    DirectoryInfo di = new DirectoryInfo(draftPath);
+                    var draftFiles = di.GetFiles(collapsedSpecNumber + "-*").Select(x => x.FullName).ToList();
+                    foreach (string draftFile in draftFiles)
+                    {
+                        if (File.Exists(draftFile))
+                            File.Delete(draftFile);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Performs the update of the database.
+        /// </summary>
+        /// <param name="version"></param>
+        /// <param name="validationReport"></param>
+        /// <param name="personId"></param>
         private void UpdateDatabase(SpecVersion version, Report validationReport, int personId)
         {
             //Initialization
@@ -490,7 +543,12 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                     commentRemark.CreationDate = utcNow.AddMilliseconds(5d);
 
                 version.Remarks.Clear();
-                version.Remarks.Add(warningRemark);
+
+                // Only add the warning if version is UCC.
+                if (version.Specification.IsUnderChangeControl.GetValueOrDefault())
+                {
+                    version.Remarks.Add(warningRemark);
+                }
                 if (commentRemark != null)
                     version.Remarks.Add(commentRemark);
             }

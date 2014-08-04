@@ -14,7 +14,7 @@ using Etsi.Ultimate.Business;
 
 namespace Etsi.Ultimate.Tests
 {
-    public abstract class BaseEffortTest
+    public abstract class BaseEffortTest: BaseTest
     {
         /// <summary>
         /// Context
@@ -41,7 +41,8 @@ namespace Etsi.Ultimate.Tests
         [SetUp]
         public virtual void SetUp()
         {
-            
+            base.Setup();
+
             //CSV files are stored in a specific folder : Data_For_EffortUnitTests
             string dir = new StringBuilder()
                 .Append(Environment.CurrentDirectory)
@@ -69,10 +70,6 @@ namespace Etsi.Ultimate.Tests
                     .ToString();
                 throw new Exception(error);
             }
-
-            ManagerFactory.SetDefaultDependencies();
-            ServicesFactory.SetDefaultDependencies();
-            RepositoryFactory.SetDefaultDependencies();
             
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), Context);
             RepositoryFactory.Container.RegisterType<IUltimateUnitOfWork,EffortUnitOfWork>(new TransientLifetimeManager() );
