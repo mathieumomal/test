@@ -264,9 +264,6 @@
     </None>
     <None Include="TestData\WorkItems\BadHierarchy.csv" />
     <None Include="TestData\WorkItems\BadFormat.csv" />
-    <Content Include="TestData\Versions\FTP\latest-drafts\index.html">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="TestData\WorkItems\empty.txt" />
     <None Include="TestData\WorkItems\AcronymTooLong.csv" />
     <None Include="TestData\WorkItems\ReleaseDifferentFromParent.csv" />
@@ -321,11 +318,7 @@
       <Name>Utils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="TestData\Versions\FTP\2014-09\" />
-    <Folder Include="TestData\Versions\FTP\archive\" />
-    <Folder Include="TestData\Versions\FTP\latest\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="TestData\Rights\DuplicateData.xml" />
     <Content Include="TestData\Rights\Exemple.xml" />
