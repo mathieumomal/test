@@ -73,9 +73,10 @@
 	
 	<!--  3GPP Parameters  -->
 		<!-- These parameters depends on the environment -->
-		<add key="MeetingDetailsAddress" value="http://webapp.13.etsidev.org/meetingCalendar/MeetingDetails.asp?mid=" />
 		<add key="RapporteurDetailsAddress" value="http://webapp.13.etsidev.org/teldir/ListPersDetails.asp?PersId="/>
 		<add key="MeetingDetailsAddress" value="http://webapp.13.etsidev.org/meetingCalendar/MeetingDetails.asp?mid=" />
+		<add key="MeetingiCalAddress" value="http://webapp.13.etsidev.org/meetingCalendar/ical.asp?qMTG_ID=" />
+        <add key="MeetingParticipantsListAddress" value="http://webapp.13.etsidev.org/3GPPRegistration/fViewPart.asp?mid=" />		
 		<add key="RapporteurDetailsAddress" value="http://webapp.13.etsidev.org/teldir/ListPersDetails.asp?PersId="/>
 		<add key="WIReportPath" value ="http://webapp.13.etsidev.org/workprogram/Report_WorkItem.asp?WKI_ID="/>
     	<add key="VersionsLatestFTPFolder" value="2014-09" />
