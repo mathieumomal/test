@@ -1,4 +1,5 @@
 ﻿using Etsi.UserRights.DNNETSIDataAccess;
+using Etsi.UserRights.DSDBDataAccess;
 using Etsi.UserRights.Interface;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ namespace Etsi.UserRights.Service
     {
         #region Constants
 
+        private const int CONST_MCC_LIST_ID = 5240;
         private const string CONST_PERSON_ID_MAPPING_KEY = "ETSI_DS_ID";
         private const string CONST_ROLE_DNN_PORTAL_ADMINISTRATOR = "Administrators";
         private const string CONST_ROLE_DNN_PORTAL_MEETING_MANAGER = "Meeting Managers";
@@ -93,7 +95,18 @@ namespace Etsi.UserRights.Service
                     //************************************************
                     //************ ETSI BASED ROLES  *****************
                     //************************************************
+                    using (var context = new DSDBContext())
+                    {
 
+                        var userMCCRecord = (from personInList in context.PERSON_IN_LIST
+                                             where personInList.PLIST_ID == CONST_MCC_LIST_ID
+                                             && personInList.PERSON_ID == personID
+                                             select personInList).Any();
+
+                        //[4] StaffMember - Check 'MCC Member' role in DSDB
+                        if (userMCCRecord)
+                            personRoles.Add(Enum_UserRoles.StaffMember);
+                    }
                 }
             }
             catch (Exception ex)

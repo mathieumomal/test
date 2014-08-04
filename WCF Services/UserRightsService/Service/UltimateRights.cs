@@ -121,7 +121,7 @@ namespace Etsi.UserRights.Service
                                              && personInList.PERSON_ID == personID
                                              select personInList).Any();
 
-                        //[4] StaffMember - Check 'MCC Member' role in DSDB
+                        //[7] StaffMember - Check 'MCC Member' role in DSDB
                         if (userMCCRecord)
                             personRoles.Add(Enum_UserRoles.StaffMember);
                     }

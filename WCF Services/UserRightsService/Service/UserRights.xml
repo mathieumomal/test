@@ -5,11 +5,16 @@
       <UserRole value="Administrator">
       </UserRole>
       <UserRole value="MeetingManager">
-        <Right value="Meetings_View"/>
+        <Right value="Meeting_ViewMeetingList"/>
+        <Right value="Meeting_CreateMeeting"/>
         <Right value="Meetings_CreateEvent"/>
         <Right value="Meetings_EditEvent"/>
       </UserRole>
+      <UserRole value="StaffMember">
+        <Right value="Meeting_CreateMeeting"/>		
+      </UserRole>
       <UserRole value="Anonymous">
+        <Right value="Meeting_ViewMeetingList"/>
       </UserRole>
     </UserRoles>
   </Portal>
@@ -67,6 +72,7 @@
         <Right value="Versions_Upload"/>
         <Right value="Versions_Modify_MajorVersion"/>
         <Right value="Versions_AddRemark"/>
+        <Right value="Meeting_CreateMeeting"/>		
       </UserRole>
       <UserRole value="EolAccountOwner">
         <Right value="Release_ViewCompleteList"/>
@@ -75,7 +81,8 @@
         <Right value="Specification_ViewDetails"/>
       </UserRole>
       <UserRole value="MeetingManager">
-        <Right value="Meetings_View"/>
+        <Right value="Meeting_ViewMeetingList"/>
+        <Right value="Meeting_CreateMeeting"/>
         <Right value="Meetings_CreateEvent"/>
         <Right value="Meetings_EditEvent"/>
       </UserRole>
@@ -83,6 +90,7 @@
         <Right value="Release_ViewPartialList"/>
         <Right value="Release_ViewLimitedDetails"/>
         <Right value="Specification_ViewDetails"/>
+        <Right value="Meeting_ViewMeetingList"/>
       </UserRole>
     </UserRoles>
   </Portal>
