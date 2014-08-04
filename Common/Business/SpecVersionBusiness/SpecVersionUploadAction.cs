@@ -253,6 +253,21 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                 throw new InvalidOperationException(String.Format(Utils.Localization.Upload_Version_Error_Version_Already_Exists, versionStr));
             }
 
+            // Cannot upload a version lower than existing version, except if it's been allocated.
+            var highestUploadedVersion = versionsForSpecRelease.Where(v => !string.IsNullOrEmpty(v.Location))
+                .OrderByDescending(v => v.MajorVersion).ThenByDescending(v => v.TechnicalVersion).ThenByDescending(v => v.EditorialVersion)
+                .FirstOrDefault();
+            if (highestUploadedVersion != null && (version.MajorVersion < highestUploadedVersion.MajorVersion
+                || version.MajorVersion == highestUploadedVersion.MajorVersion && version.TechnicalVersion < highestUploadedVersion.TechnicalVersion
+                || version.MajorVersion == highestUploadedVersion.MajorVersion && version.TechnicalVersion == highestUploadedVersion.TechnicalVersion && version.EditorialVersion < highestUploadedVersion.EditorialVersion))
+            {
+                // Check allocation
+                if (versionsForSpecRelease.Where(v => v.MajorVersion == version.MajorVersion && v.TechnicalVersion == version.TechnicalVersion && v.EditorialVersion == version.EditorialVersion).FirstOrDefault() == null)
+                    throw new InvalidOperationException(Utils.Localization.Upload_Version_Error_Previous_Version);
+
+            }
+
+
             // If version is a draft, then it's major number must not be higher than 2.
             if (!version.Specification.IsUnderChangeControl.GetValueOrDefault() && version.MajorVersion > 2)
             {

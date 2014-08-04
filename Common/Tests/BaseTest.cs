@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Tests
 {
@@ -24,6 +25,7 @@ namespace Etsi.Ultimate.Tests
             ManagerFactory.SetDefaultDependencies();
             ServicesFactory.SetDefaultDependencies();
             RepositoryFactory.SetDefaultDependencies();
+            UtilsFactory.SetDefaultDependencies();
         }
 
         /// <summary>

@@ -250,6 +250,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to You are not allowed to upload a lower version than an already uploaded one, except if it has been allocated..
+        /// </summary>
+        public static string Upload_Version_Error_Previous_Version {
+            get {
+                return ResourceManager.GetString("Upload_Version_Error_Previous_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Version {0} already exists..
         /// </summary>
         public static string Upload_Version_Error_Version_Already_Exists {

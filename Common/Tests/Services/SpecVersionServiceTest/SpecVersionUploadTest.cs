@@ -11,6 +11,7 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using Microsoft.Practices.Unity;
 using System.IO;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -45,6 +46,14 @@ namespace Etsi.Ultimate.Tests.Services
             var latestDraftsDirectory = "Ftp\\Specs\\latest-drafts";
             if (!Directory.Exists(latestDraftsDirectory))
                 Directory.CreateDirectory(latestDraftsDirectory);
+
+
+            // Set up a mock for the possible email sent.
+            var mailMock = MockRepository.GenerateMock<IMailManager>();
+            mailMock.Stub(s => s.SendEmail(Arg<string>.Is.Anything,
+                    Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything,
+                    Arg<string>.Is.Anything,Arg<string>.Is.Anything)).Return(true);
+            UtilsFactory.Container.RegisterInstance<IMailManager>(mailMock);
         }
 
         [TearDown]
@@ -182,6 +191,21 @@ namespace Etsi.Ultimate.Tests.Services
 
             var checkResults = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
             Assert.AreEqual(0, checkResults.Report.GetNumberOfErrors());
+        }
+
+        /// <summary>
+        /// Version 13.1.0 is already uploaded, so system should not allow version 13.0.2 to be uploaded.
+        /// </summary>
+        [Test]
+        public void CheckVersion_MustNotAllowToUploadNonAllocatedPreviousVersion()
+        {
+            myVersion.TechnicalVersion = 0;
+            myVersion.EditorialVersion = 2;
+            var fileToUpload = UPLOAD_PATH + "22103-020000.zip";
+
+            var checkResults = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
+            Assert.AreEqual(1, checkResults.Report.GetNumberOfErrors());
+            Assert.IsTrue(checkResults.Report.ErrorList.First().Contains(Utils.Localization.Upload_Version_Error_Previous_Version));
         }
 
        

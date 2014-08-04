@@ -113,7 +113,7 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
             Assert.AreEqual(1, result.GetNumberOfErrors());
             Assert.AreEqual(Utils.Localization.Allocate_Error_SpecRelease_Does_Not_Exist, result.ErrorList.First());
         }
-
+        
         /**
          * In database, version 13.1.0 already exists, therefor it should not be able to allocate 13.0.0
          */
