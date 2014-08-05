@@ -92,6 +92,7 @@
 		<add key="FtpExportAddress" value="ftp://ftp.3gpp.org/Information/WORK_PLAN/"/>
 		<add key="TranspositionFolderPath" value="D:\AppTrans\transposition\"/>
     <add key="UploadVersionTemporaryPath" value="D:\AppTrans\Version\"/>
+	<add key="MeetingCreationAddress" value="http://webapp.13.etsidev.org/meetingManagement/NewMeeting.asp?type=create"/>
 		<add key="PortalName" value="Ultimate"/>
 	<!--  End of 3GPP Parameters  -->
   </appSettings>
