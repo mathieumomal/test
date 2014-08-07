@@ -5,6 +5,7 @@ using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Tests.FakeSets;
+using Etsi.Ultimate.Utils.Core;
 using Microsoft.Practices.Unity;
 using NUnit.Framework;
 using Rhino.Mocks;

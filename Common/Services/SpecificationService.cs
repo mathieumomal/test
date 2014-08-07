@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Etsi.Ultimate.Business.SpecVersionBusiness;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Services
 {
@@ -248,7 +249,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    Utils.LogManager.Error("Error while massively promoting a set of specification: " + e.Message);
+                    LogManager.Error("Error while massively promoting a set of specification: " + e.Message);
                     var report = new Report();
                     report.LogError(e.Message);
                     return false; 
@@ -280,7 +281,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    Utils.LogManager.Error("Error while creating specification: " + e.Message);
+                    LogManager.Error("Error while creating specification: " + e.Message);
                     var report = new Report();
                     report.LogError(e.Message);
                     return new KeyValuePair<int, Report>(-1, report);
@@ -315,7 +316,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    Utils.LogManager.Error("Error while editing specification: " + e.Message);
+                    LogManager.Error("Error while editing specification: " + e.Message);
                     var report = new Report();
                     report.LogError(e.Message);
                     return new KeyValuePair<int, Report>(-1, report);
@@ -343,7 +344,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    Utils.LogManager.Error("Error during definitive withdrawal of the specification: " + e.Message);
+                    LogManager.Error("Error during definitive withdrawal of the specification: " + e.Message);
                     return false;
                 }
             }
@@ -370,7 +371,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    Utils.LogManager.Error("ForceTransposition error: " + e.Message);
+                    LogManager.Error("ForceTransposition error: " + e.Message);
                     return false;
                 }
             }
@@ -396,7 +397,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    Utils.LogManager.Error("UnforceTransposition error: " + e.Message);
+                    LogManager.Error("UnforceTransposition error: " + e.Message);
                     return false;
                 }
             }
@@ -421,7 +422,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    Utils.LogManager.Error("InhibitPromote error: " + e.Message);
+                    LogManager.Error("InhibitPromote error: " + e.Message);
                     return false;
                 }
             }
@@ -446,7 +447,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    Utils.LogManager.Error("UnforceTransposition error: " + e.Message);
+                    LogManager.Error("UnforceTransposition error: " + e.Message);
                     return false;
                 }
             }
@@ -492,7 +493,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    Utils.LogManager.Error("Error when Withdrawing from release: " + e.Message);
+                    LogManager.Error("Error when Withdrawing from release: " + e.Message);
                     return false;
                 }
             }
@@ -517,7 +518,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    Utils.LogManager.Error("Promote Specification Error: " + e.Message);
+                    LogManager.Error("Promote Specification Error: " + e.Message);
                     return false;
                 }
             }
@@ -542,7 +543,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    Utils.LogManager.Error("Specification search error: " + e.Message);
+                    LogManager.Error("Specification search error: " + e.Message);
                 }
             }
             return spec;

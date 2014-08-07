@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Etsi.Ultimate.Business.SpecVersionBusiness;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Services
 {
@@ -143,9 +144,9 @@ namespace Etsi.Ultimate.Services
                     }
                     catch (Exception ex)
                     {
-                        Utils.LogManager.Error("[Offline] Specification Insert Error: " + ex.Message);
+                        LogManager.Error("[Offline] Specification Insert Error: " + ex.Message);
                         if (ex.InnerException != null)
-                            Utils.LogManager.Error("Inner Exception: " + ex.InnerException);
+                            LogManager.Error("Inner Exception: " + ex.InnerException);
                     }
                 }
             }
@@ -176,9 +177,9 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception ex)
                 {
-                    Utils.LogManager.Error("[Offline] Specification Update Error: " + ex.Message);
+                    LogManager.Error("[Offline] Specification Update Error: " + ex.Message);
                     if (ex.InnerException != null)
-                        Utils.LogManager.Error("Inner Exception: " + ex.InnerException);
+                        LogManager.Error("Inner Exception: " + ex.InnerException);
                     isSuccess = false;
                 }
             }
@@ -209,9 +210,9 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception ex)
                 {
-                    Utils.LogManager.Error("[Offline] Specification Delete Error: " + ex.Message);
+                    LogManager.Error("[Offline] Specification Delete Error: " + ex.Message);
                     if (ex.InnerException != null)
-                        Utils.LogManager.Error("Inner Exception: " + ex.InnerException);
+                        LogManager.Error("Inner Exception: " + ex.InnerException);
                     isSuccess = false;
                 }
             }

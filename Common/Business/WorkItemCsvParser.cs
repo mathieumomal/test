@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using CsvHelper;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Business
 {
@@ -150,7 +151,7 @@ namespace Etsi.Ultimate.Business
             catch (System.IO.FileNotFoundException e)
             {
                 // Log the error
-                Utils.LogManager.Error("Error occured in WorkplanCsvParser: cannot find file" + fileLocation);
+                LogManager.Error("Error occured in WorkplanCsvParser: cannot find file" + fileLocation);
                 var errorReport = new Report();
                 errorReport.LogError(String.Format(Utils.Localization.WorkItem_Import_FileNotFound, fileLocation));
 
@@ -167,8 +168,8 @@ namespace Etsi.Ultimate.Business
             catch (Exception e)
             {
                 // Log the error
-                Utils.LogManager.Error("Error occured in WorkplanCsvParser:" + e.Message);
-                Utils.LogManager.Error("Stacktrace:" + e.StackTrace);
+                LogManager.Error("Error occured in WorkplanCsvParser:" + e.Message);
+                LogManager.Error("Stacktrace:" + e.StackTrace);
 
                 string lastSuccessfullyTreatedWi = "None";
                 if (lastTreatedWi != null)

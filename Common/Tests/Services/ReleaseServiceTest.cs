@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Utils.Core;
 using NUnit.Framework;
 using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Services;
@@ -22,7 +23,7 @@ namespace Etsi.Ultimate.Tests.Services
 {
     class ReleaseServiceTest : BaseTest
     {
-        private static readonly string RELEASE_CACHE_KEY = "ULT_BIZ_RELEASES_ALL";
+        private const string RELEASE_CACHE_KEY = "ULT_BIZ_RELEASES_ALL";
 
         [Test]
         public void Test_GetAllReleases()
@@ -367,7 +368,7 @@ namespace Etsi.Ultimate.Tests.Services
                                                                                 
 
             mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<History>.Matches(y => y.Fk_ReleaseId == default(int) && y.Fk_PersonId == personID
-                                                                                                    && y.HistoryText == Utils.Localization.History_Release_Created)));
+                                                                                                    && y.HistoryText == Localization.History_Release_Created)));
             
             mockDataContext.AssertWasCalled(x => x.SaveChanges(), y => y.Repeat.Once());
 

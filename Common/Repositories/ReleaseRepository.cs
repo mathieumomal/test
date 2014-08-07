@@ -9,6 +9,7 @@ using Etsi.Ultimate.DataAccess;
 using System.Web;
 using Etsi.Ultimate.Utils;
 using System.Data.Entity.Core.Objects;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Repositories
 {

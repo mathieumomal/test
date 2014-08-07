@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Business
 {
@@ -83,7 +84,7 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception e)
             {
-                Utils.LogManager.Error("WPM record creation error: " + e.InnerException);
+                LogManager.Error("WPM record creation error: " + e.InnerException);
                 return false;
             }
         }

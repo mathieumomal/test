@@ -1,5 +1,6 @@
 ﻿using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.Core;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
 using System;

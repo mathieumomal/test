@@ -89,6 +89,10 @@
       <Project>{c8f93426-67f5-4a75-803b-34ad1c5730e5}</Project>
       <Name>Repositories</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Utils.Core\Utils.Core.csproj">
+      <Project>{4905e5a9-aa9b-4cc4-95e1-636b37fc27ba}</Project>
+      <Name>Utils.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Utils\Utils.csproj">
       <Project>{ad1f6a1c-95b2-4274-a0c5-1f8ca9d9bb55}</Project>
       <Name>Utils</Name>

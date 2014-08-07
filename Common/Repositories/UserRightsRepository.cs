@@ -8,6 +8,7 @@ using System.Web.Caching;
 using System.Web;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Repositories
 {

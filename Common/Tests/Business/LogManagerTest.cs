@@ -1,4 +1,5 @@
 ﻿using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.Core;
 using log4net.Appender;
 using log4net.Core;
 using NUnit.Framework;
@@ -22,7 +23,7 @@ namespace Etsi.Ultimate.Tests.Business
         [SetUp]
         public override void Setup()
         {
-            memoryAppender = ((log4net.Core.LoggerWrapperImpl)(LogManager.UltimateLogger)).Logger.Repository.GetAppenders()[0] as MemoryAppender;
+            memoryAppender = ((log4net.Core.LoggerWrapperImpl)(LogManager.Logger)).Logger.Repository.GetAppenders()[0] as MemoryAppender;
         }
 
         [TearDown]

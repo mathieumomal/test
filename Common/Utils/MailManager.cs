@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.Utils.Core;
 using Etsi.Ultimate.Utils.WcfMailService;
 
 namespace Etsi.Ultimate.Utils
@@ -56,7 +57,7 @@ namespace Etsi.Ultimate.Utils
             }
             catch (Exception e)
             {
-                Utils.LogManager.Error("Failed to send email: " + e.Message);
+                LogManager.Error("Failed to send email: " + e.Message);
                 return false;
             }
         }

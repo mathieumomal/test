@@ -7,6 +7,7 @@ using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Services
 {

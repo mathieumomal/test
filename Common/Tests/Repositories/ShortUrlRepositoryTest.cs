@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.Utils.Core;
 using NUnit.Framework;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.DomainClasses;

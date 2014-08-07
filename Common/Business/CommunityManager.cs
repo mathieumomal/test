@@ -4,6 +4,7 @@ using Etsi.Ultimate.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Business
 {

@@ -26,6 +26,7 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Etsi.Ultimate.Utils.Core;
 using Telerik.Web.UI;
 using Domain = Etsi.Ultimate.DomainClasses;
 using System.Net;

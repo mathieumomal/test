@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using System.IO;
+using Etsi.Ultimate.Utils.Core;
 
 
 namespace Etsi.Ultimate.Business
@@ -86,7 +87,7 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception e)
             {
-                Utils.LogManager.Error("ForceTransposition error: " + e.Message);
+                LogManager.Error("ForceTransposition error: " + e.Message);
                 return false;
             }
         }

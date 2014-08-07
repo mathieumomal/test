@@ -11,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Etsi.Ultimate.Utils.Core;
 using Telerik.Web.UI;
 using Telerik.Web.Zip;
 using Etsi.Ultimate.Module.Versions.App_LocalResources;

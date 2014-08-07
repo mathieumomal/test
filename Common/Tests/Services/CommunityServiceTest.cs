@@ -4,6 +4,7 @@ using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Tests.FakeRepositories;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.Core;
 using Microsoft.Practices.Unity;
 using NUnit.Framework;
 using Rhino.Mocks;

@@ -9,6 +9,7 @@ using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.Core;
 using Etsi.Ultimate.Utils.ModelMails;
 
 namespace Etsi.Ultimate.Business.SpecVersionBusiness

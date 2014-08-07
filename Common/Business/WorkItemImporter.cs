@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.Core;
 using OfficeOpenXml;
 using System.IO;
 using System.Drawing;
@@ -51,7 +52,7 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception e)
             {
-                Utils.LogManager.Error("Error while analysing workplan: " + e.Message);
+                LogManager.Error("Error while analysing workplan: " + e.Message);
                 var report = new Report();
                 report.LogError(Utils.Localization.WorkItem_Import_Error_Analysis);
                 return new KeyValuePair<string, Report>("", report);

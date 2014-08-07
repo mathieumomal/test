@@ -4,6 +4,7 @@ using Etsi.Ultimate.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Services
 {
@@ -47,9 +48,9 @@ namespace Etsi.Ultimate.Services
                     }
                     catch (Exception ex)
                     {
-                        Utils.LogManager.Error("[Offline] Remark Insert Error: " + ex.Message);
+                        LogManager.Error("[Offline] Remark Insert Error: " + ex.Message);
                         if (ex.InnerException != null)
-                            Utils.LogManager.Error("Inner Exception: " + ex.InnerException);
+                            LogManager.Error("Inner Exception: " + ex.InnerException);
                     }
                 }
             }
@@ -79,9 +80,9 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception ex)
                 {
-                    Utils.LogManager.Error("[Offline] Remark Update Error: " + ex.Message);
+                    LogManager.Error("[Offline] Remark Update Error: " + ex.Message);
                     if (ex.InnerException != null)
-                        Utils.LogManager.Error("Inner Exception: " + ex.InnerException);
+                        LogManager.Error("Inner Exception: " + ex.InnerException);
                     isSuccess = false;
                 }
             }
@@ -111,9 +112,9 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception ex)
                 {
-                    Utils.LogManager.Error("[Offline] Remark Delete Error: " + ex.Message);
+                    LogManager.Error("[Offline] Remark Delete Error: " + ex.Message);
                     if (ex.InnerException != null)
-                        Utils.LogManager.Error("Inner Exception: " + ex.InnerException);
+                        LogManager.Error("Inner Exception: " + ex.InnerException);
                     isSuccess = false;
                 }
             }
