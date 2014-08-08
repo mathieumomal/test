@@ -94,6 +94,7 @@
       </namespaces>
     </pages>
   </system.web.webPages.razor>
+  <location path="" inheritInChildApplications="false">
   <!-- The system.webServer section is required for IIS7 compatability It is ignored by IIS6-->
   <system.webServer>
     <modules>
@@ -172,7 +173,7 @@
       </files>
     </defaultDocument>
   </system.webServer>
-  <location path="" inheritInChildApplications="false">
+  
     <system.web>
       <machineKey validationKey="0A714BE6D7F9F3A8DFD475145156A0ECDB555BE5" decryptionKey="51EE1EFC27E4DD321DF5B6CC4B9962E3ABBD819A84A14A19" decryption="3DES" validation="SHA1" />
       <!-- set code access security trust level - this is generally set in the machine.config
