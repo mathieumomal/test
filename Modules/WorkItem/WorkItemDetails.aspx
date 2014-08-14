@@ -27,7 +27,7 @@
                 <span class="wiDetailsWarningTxt">No data available for the current query.</span>
             </asp:Panel>
             <asp:Panel ID="wiDetailsBody" runat="server" CssClass="wiDetailsBody">
-                <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
+                <telerik:RadScriptManager runat="server" ID="RadScriptManager1" EnableHandlerDetection="false"  />
                 <div class="HeaderText">
                     <asp:Label ID="lblHeaderText" runat="server"></asp:Label>
                 </div>
