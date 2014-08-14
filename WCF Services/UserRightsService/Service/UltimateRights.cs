@@ -1,5 +1,5 @@
-﻿using Etsi.UserRights.DNN3GPPDataAccess;
-using Etsi.UserRights.DSDBDataAccess;
+﻿using Etsi.Dsdb.DataAccess;
+using Etsi.UserRights.DNN3GPPDataAccess;
 using Etsi.UserRights.Interface;
 using System;
 using System.Collections.Generic;
@@ -116,13 +116,13 @@ namespace Etsi.UserRights.Service
                     using (var context = new DSDBContext())
                     {
 
-                        var userMCCRecord = (from personInList in context.PERSON_IN_LIST
+                        var userMccRecord = (from personInList in context.PersonInLists
                                              where personInList.PLIST_ID == CONST_MCC_LIST_ID
                                              && personInList.PERSON_ID == personID
                                              select personInList).Any();
 
                         //[7] StaffMember - Check 'MCC Member' role in DSDB
-                        if (userMCCRecord)
+                        if (userMccRecord)
                             personRoles.Add(Enum_UserRoles.StaffMember);
                     }
                 }
@@ -156,8 +156,8 @@ namespace Etsi.UserRights.Service
                     var personListTypes = new string[] { "MASTER", "OTHER" };
 
                     //Get the Committee List which the given person has Committee Official (Chairman / ViceChairman / Convenor / Secretary) Right
-                    var tbList = (from personList in context.PERSON_LIST
-                                         join personInList in context.PERSON_IN_LIST on personList.PLIST_ID equals personInList.PLIST_ID
+                    var tbList = (from personList in context.PersonLists
+                                         join personInList in context.PersonInLists on personList.PLIST_ID equals personInList.PLIST_ID
                                          join person in context.People on personInList.PERSON_ID equals person.PERSON_ID
                                          where person.DELETED_FLG == "N"
                                          && committeeOfficialRoles.Contains(personInList.PERS_ROLE_CODE)

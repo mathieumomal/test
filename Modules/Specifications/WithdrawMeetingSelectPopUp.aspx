@@ -41,7 +41,7 @@
         }
     </script>
     <form id="form1" runat="server">
-        <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
+        <telerik:RadScriptManager runat="server" ID="RadScriptManager1" EnableHandlerDetection="false" />
         <telerik:RadAjaxManager ID="RadAjaxManager" runat="server" EnablePageHeadUpdate="false">
        </telerik:RadAjaxManager>
     <div class="specificationDetailsBody">

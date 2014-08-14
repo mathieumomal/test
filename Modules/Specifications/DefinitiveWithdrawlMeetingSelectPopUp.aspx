@@ -11,8 +11,8 @@
 <body>
     
     <form id="form2" runat="server">
-       <telerik:RadScriptManager ID="RadScriptManager1" runat="server">
-        </telerik:RadScriptManager>
+        <telerik:RadScriptManager ID="RadScriptManager1" runat="server" EnableHandlerDetection="false" />
+        
         <script type="text/javascript">            
             function getRadWindow() {
                 var oWindow = null;

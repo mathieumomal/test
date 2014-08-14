@@ -1,5 +1,5 @@
-﻿using Etsi.UserRights.DNNETSIDataAccess;
-using Etsi.UserRights.DSDBDataAccess;
+﻿using Etsi.Dsdb.DataAccess;
+using Etsi.UserRights.DNNETSIDataAccess;
 using Etsi.UserRights.Interface;
 using System;
 using System.Collections.Generic;
@@ -98,7 +98,7 @@ namespace Etsi.UserRights.Service
                     using (var context = new DSDBContext())
                     {
 
-                        var userMCCRecord = (from personInList in context.PERSON_IN_LIST
+                        var userMCCRecord = (from personInList in context.PersonInLists
                                              where personInList.PLIST_ID == CONST_MCC_LIST_ID
                                              && personInList.PERSON_ID == personID
                                              select personInList).Any();

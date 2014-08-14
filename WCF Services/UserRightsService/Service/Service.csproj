@@ -47,6 +47,12 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Etsi.Dsdb.DataAccess">
+      <HintPath>..\Libs\Etsi.Dsdb.DataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="Etsi.Dsdb.DomainClasses">
+      <HintPath>..\Libs\Etsi.Dsdb.DomainClasses.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -89,10 +95,6 @@
     <ProjectReference Include="..\DataAccess\DNNETSIDataAccess\DNNETSIDataAccess.csproj">
       <Project>{979d4545-4341-4352-a26f-e9a5da116bce}</Project>
       <Name>DNNETSIDataAccess</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataAccess\DSDBDataAccess\DSDBDataAccess.csproj">
-      <Project>{2e0bec49-4b4b-418b-9a34-bb4edb8f0942}</Project>
-      <Name>DSDBDataAccess</Name>
     </ProjectReference>
     <ProjectReference Include="..\Interface\Interface.csproj">
       <Project>{bd980136-cf05-4983-a6a6-713e1765a0f9}</Project>

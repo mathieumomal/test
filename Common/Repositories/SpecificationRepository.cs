@@ -2,13 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
-using Etsi.Ultimate.DataAccess;
-using System.Web;
-using Etsi.Ultimate.Utils;
-using System.Data.Entity.Core.Objects;
 
 namespace Etsi.Ultimate.Repositories
 {

@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity.Core.EntityClient;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Effort.DataLoaders;
 using Etsi.Ultimate.DataAccess;
 using Etsi.Ultimate.Repositories;
 using NUnit.Framework;
 using Microsoft.Practices.Unity;
-using Etsi.Ultimate.Services;
-using Etsi.Ultimate.Business;
 
 namespace Etsi.Ultimate.Tests
 {

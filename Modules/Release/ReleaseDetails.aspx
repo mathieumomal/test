@@ -29,7 +29,7 @@
            <span class="releaseDetailsWarningTxt">No data available for the current query.</span>
        </asp:Panel>
        <asp:Panel ID="releaseDetailsBody" runat="server" CssClass="releaseDetailsBody">
-            <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
+            <telerik:RadScriptManager EnableHandlerDetection="false" runat="server" ID="RadScriptManager1" />
             <telerik:RadTabStrip ID="ReleaseDetailRadTabStrip" runat="server" MultiPageID="ReleaseDetailRadMultiPage" 
             AutoPostBack="false">    
             </telerik:RadTabStrip>

@@ -29,7 +29,7 @@
                 <asp:Label runat="server" ID="specMsgTxt"></asp:Label>
             </asp:Panel>
             <asp:Panel ID="specBody" runat="server" CssClass="specificationDetailsBody">
-                <telerik:RadScriptManager runat="server" ID="rsmSpecificationEdit" />
+                <telerik:RadScriptManager runat="server" ID="rsmSpecificationEdit" EnableHandlerDetection="false" />
                 <telerik:RadAjaxManager ID="wiRadAjaxManager" runat="server" EnablePageHeadUpdate="false" UpdatePanelsRenderMode="Inline">
                     <AjaxSettings>
                         <telerik:AjaxSetting AjaxControlID="txtReference">

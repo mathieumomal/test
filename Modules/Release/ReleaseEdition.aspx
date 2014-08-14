@@ -27,7 +27,7 @@
 </head>
 <body id="releaseDetailBody">
     <form id="ReleaseEditionForm" runat="server">
-        <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
+        <telerik:RadScriptManager runat="server" ID="RadScriptManager1" EnableHandlerDetection="false"/>
             <div class="containerFix">
                 <asp:Panel ID="releaseWarning" runat="server" CssClass="releaseDetailsWarning" Visible="false">
                     <span class="releaseDetailsWarningTxt">No data available for the current query.</span>

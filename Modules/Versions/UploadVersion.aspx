@@ -51,7 +51,7 @@
         }
     </style>
     <form id="VersionUploadForm" runat="server">
-        <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
+        <telerik:RadScriptManager runat="server" ID="RadScriptManager1" EnableHandlerDetection="false" />
         <asp:Panel runat="server" ID="fixContainer" CssClass="containerFix" Width="500px">
             <asp:Panel ID="versionUploadMessages" runat="server" Visible="false">
                 <asp:Label runat="server" ID="specificationMessagesTxt"></asp:Label>

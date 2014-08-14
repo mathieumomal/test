@@ -27,7 +27,7 @@
 </head>
 <body style="margin-left: 0;">
     <form id="specMassivePromoteForm" runat="server">
-        <telerik:RadScriptManager runat="server" ID="RadScriptManager1" />
+        <telerik:RadScriptManager runat="server" ID="RadScriptManager1" EnableHandlerDetection="false" />
         <telerik:RadWindowManager ID="RadWindowManager1" runat="server">
         </telerik:RadWindowManager>
         <asp:Panel runat="server" ID="fixContainer" CssClass="containerFixLarger">
