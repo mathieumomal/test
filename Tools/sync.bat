@@ -30,6 +30,7 @@ xcopy "%USERSOURCE%Etsi.Ultimate.Module.WorkItem.dll" "%USERDEST%" /b/v/y
 xcopy "%USERSOURCE%Etsi.Ultimate.Repositories.dll" "%USERDEST%" /b/v/y
 xcopy "%USERSOURCE%Etsi.Ultimate.Services.dll" "%USERDEST%" /b/v/y
 xcopy "%USERSOURCE%Etsi.Ultimate.Utils.dll" "%USERDEST%" /b/v/y
+xcopy "%USERSOURCE%Etsi.Ultimate.Utils.Core.dll" "%USERDEST%" /b/v/y
 
 xcopy "%USERSOURCE%Etsi.Ultimate.Business.pdb" "%USERDEST%" /b/v/y
 xcopy "%USERSOURCE%Etsi.Ultimate.Controls.pdb" "%USERDEST%" /b/v/y
@@ -45,6 +46,7 @@ xcopy "%USERSOURCE%Etsi.Ultimate.Module.WorkItem.pdb" "%USERDEST%" /b/v/y
 xcopy "%USERSOURCE%Etsi.Ultimate.Repositories.pdb" "%USERDEST%" /b/v/y
 xcopy "%USERSOURCE%Etsi.Ultimate.Services.pdb" "%USERDEST%" /b/v/y
 xcopy "%USERSOURCE%Etsi.Ultimate.Utils.pdb" "%USERDEST%" /b/v/y
+xcopy "%USERSOURCE%Etsi.Ultimate.Utils.Core.pdb" "%USERDEST%" /b/v/y
 
 REM Copy configuration files
 xcopy "%TRUNK_PATH%web.config.%PHASE%" "%DNN_PATH%web.config" /b/v/y
