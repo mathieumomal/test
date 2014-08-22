@@ -79,7 +79,7 @@
 	<add key="EmailDefaultFrom" value="3GPP Portal&lt;3gppapp@3gpp.org&gt;"/>
 	<add key="EmailDefaultBcc" value="3gppapp@3gpp.org"/>
 	<add key="PortalName" value="Ultimate"/>
-  <add key="ContributionAllocationBaseAddress" value="http://portal.14.etsiqa.org/..."/>
+  <add key="ContributionAllocationBaseAddress" value="http://dnn3gpp.14.etiqa.org/ngppapp/CreateTdoc.Aspx?meetingId={0}&mode=create"/>
   </appSettings>
   <system.web.webPages.razor>
     <pages pageBaseType="DotNetNuke.Web.Razor.DotNetNukeWebPage">
