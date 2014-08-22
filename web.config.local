@@ -94,6 +94,7 @@
     <add key="UploadVersionTemporaryPath" value="D:\AppTrans\Version\"/>
 	<add key="MeetingCreationAddress" value="http://webapp.13.etsidev.org/meetingManagement/NewMeeting.asp?type=create"/>
 		<add key="PortalName" value="Ultimate"/>
+    <add key="ContributionAllocationBaseAddress" value="..."/>
 	<!--  End of 3GPP Parameters  -->
   </appSettings>
   <system.web.webPages.razor>
