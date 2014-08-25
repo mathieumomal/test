@@ -29,6 +29,7 @@
     <section name="clientDependency" type="ClientDependency.Core.Config.ClientDependencySection, ClientDependency.Core" requirePermission="false" />
 	<section name="entityFramework" type="System.Data.Entity.Internal.ConfigFile.EntityFrameworkSection, EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" requirePermission="false" />
   </configSections>
+  <location path="." inheritInChildApplications="false"> 
   <connectionStrings>
     <!-- Connection String for SQL Server 2008/2012 Express -->
     <add name="SiteSqlServer" connectionString="Data Source=localhost;Initial Catalog=DNN3GPP;Integrated Security=True" providerName="System.Data.SqlClient" />
@@ -38,6 +39,7 @@
     <add name="SiteSqlServer" connectionString="Server=(local);Database=DotNetNuke;uid=;pwd=;" providerName="System.Data.SqlClient" /> 
     -->
   </connectionStrings>
+  </location>
   <appSettings>
     <!-- Connection String for SQL Server 2008/2012 Express - kept for backwards compatability - legacy modules   -->
     <add key="SiteSqlServer" value="Data Source=localhost;Initial Catalog=DNN3GPP;Integrated Security=True" />
