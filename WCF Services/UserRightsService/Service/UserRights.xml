@@ -55,7 +55,8 @@
         <Right value="Specification_RemoveInhibitPromote"/>
         <Right value="Specification_BulkPromote"/>
         <Right value="Specification_SyncHardLinksOnLatestFolder"/>
-		<Right value="Contribute_Anytime"/>
+		<Right value="Contribute_Anytime"/> 
+		<Right value="Contribution_Edit"/>
       </UserRole>
       <UserRole value="WorkPlanManager">
         <Right value="Remarks_ViewPrivate"/>
@@ -79,6 +80,7 @@
         <Right value="Versions_AddRemark"/>
         <Right value="Meeting_CreateMeeting"/>		
 		<Right value="Contribute_Anytime"/>
+		<Right value="Contribution_Edit"/>
       </UserRole>
       <UserRole value="EolAccountOwner">
         <Right value="Release_ViewCompleteList"/>
