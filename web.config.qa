@@ -34,6 +34,7 @@
     <!-- Connection String for SQL Server 2008/2012 Express -->
     <add name="SiteSqlServer" connectionString="Data Source=ETSIBASE;Initial Catalog=DNN3GPP;User ID=DNNuser;Password=anu2groW." providerName="System.Data.SqlClient" />
 	<add name="UltimateContext" connectionString="metadata=res://*/UltimateDataModel.csdl|res://*/UltimateDataModel.ssdl|res://*/UltimateDataModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=ETSIBASE;initial catalog=U3GPPDB;User ID=ngppqa;Password=ngppqa;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+	<add name="DSDBContext" connectionString="metadata=res://*/DSDBDataModel.csdl|res://*/DSDBDataModel.ssdl|res://*/DSDBDataModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=ETSIBASE;initial catalog=DSDB;User ID=ngppqa;Password=ngppqa;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
     <!-- Connection String for SQL Server 2008/2012
     <add name="SiteSqlServer" connectionString="Server=(local);Database=DotNetNuke;uid=;pwd=;" providerName="System.Data.SqlClient" /> 
     -->
