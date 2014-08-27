@@ -98,6 +98,7 @@
 		<add key="PortalName" value="Ultimate"/>
     <add key="ContributionAllocationBaseAddress" value="http://www.contribution.loc/CreateTdoc.aspx?meetingId={0}&amp;mode=create"/>
     <add key="DownloadDocumentListBaseAddress" value="http://www.contribution.loc/GenerateDocumentList.aspx?meetingId={0}"/>
+    <add key="MeetingListAdvancedQueryLink" value="http://webapp.13.etsidev.org/MeetingCalendar/QueryForm.asp"/>
 	<!--  End of 3GPP Parameters  -->
   </appSettings>
   <system.web.webPages.razor>
