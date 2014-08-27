@@ -505,10 +505,13 @@
             <message clientCredentialType="Windows" negotiateServiceCredential="true" algorithmSuite="Default" establishSecurityContext="true" />
           </security>
         </binding>
+        <binding name="UserRightsHttpEndpoint" />        
       </wsHttpBinding>
     </bindings>
     <client>
       <endpoint address="http://localhost:81/SendMail" binding="wsHttpBinding" bindingConfiguration="HttpClient" contract="WcfMailService.ISendMail" name="ISendMail">
+      </endpoint>
+      <endpoint address="http://localhost:81/UserRightsService/" binding="wsHttpBinding"  bindingConfiguration="UserRightsHttpEndpoint" contract="UserRightsService.IUserRightsService" name="UserRightsHttpEndpoint">
       </endpoint>
     </client>
   </system.serviceModel>
