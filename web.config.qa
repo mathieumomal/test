@@ -69,6 +69,8 @@
     <add key="InstallVersion" value="07.00.04" />
     <add key="DefaultDevicesDatabase" value="DesktopModules\DevicePreviewManagement\Resources\defaultDevices.xml" />
 	<add key="MeetingDetailsAddress" value="http://webapp.13.etsiqa.org/meetingCalendar/MeetingDetails.asp?mid=" />
+	<add key="MeetingiCalAddress" value="http://webapp.13.etsiqa.org/meetingCalendar/ical.asp?qMTG_ID=" />
+    <add key="MeetingParticipantsListAddress" value="http://webapp.13.etsiqa.org/3GPPRegistration/fViewPart.asp?mid=" />
 	<add key="RapporteurDetailsAddress" value="http://webapp.13.etsiqa.org/teldir/ListPersDetails.asp?PersId="/>
 	<add key="FtpExportAddress" value="ftp://ftp.3gpp.org/Information/WORK_PLAN/"/>
 	<add key="FtpBasePhysicalPath" value="D:\AppTrans\Ftp\" />
@@ -78,13 +80,15 @@
 	<add key="WIReportPath" value ="http://webapp.13.etsiqa.org/workprogram/Report_WorkItem.asp?WKI_ID="/>
 	<add key="Global3GPPProjetId" value ="703"/>
 	<add key="UploadVersionTemporaryPath" value="D:\AppTrans\Version\"/>
+<add key="MeetingCreationAddress" value="http://webapp.13.etsiqa.org/meetingManagement/NewMeeting.asp?type=create"/>
 	
 	<add key="EmailDefaultFrom" value="3GPP Portal&lt;3gppapp@3gpp.org&gt;"/>
 	<add key="EmailDefaultBcc" value="3gppapp@3gpp.org"/>
 	<add key="PortalName" value="Ultimate"/>
 	<add key="ContributionAllocationBaseAddress" value="http://dnn3gpp.13.etsiqa.org/ngppapp/CreateTdoc.Aspx?meetingId={0}&amp;mode=create"/>
 	<add key="DownloadDocumentListBaseAddress" value="http://dnn3gpp.13.etsiqa.org/ngppapp/GenerateDocumentList.Aspx?meetingId={0}"/>
-	<add key="MeetingCreationAddress" value="http://webapp.13.etsiqa.org/meetingManagement/NewMeeting.asp?type=create"/>
+	
+	
   <add key="MeetingListAdvancedQueryLink" value="http://webapp.13.etsiqa.org/MeetingCalendar/QueryForm.asp"/>
   </appSettings>
   <system.web.webPages.razor>
