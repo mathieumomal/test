@@ -81,18 +81,19 @@
         <Right value="Versions_Modify_MajorVersion"/>
         <Right value="Versions_AddRemark"/>
         <Right value="Meeting_CreateMeeting"/>		
-		<Right value="Contribute_Anytime"/>
-		<Right value="Contribution_Edit"/>
-		<Right value="Contribution_Upload"/>
-		<Right value="Contribution_Upload_Anytime"/>
+		    <Right value="Contribute_Anytime"/>
+		    <Right value="Contribution_Edit"/>
+		    <Right value="Contribution_Upload"/>
+		    <Right value="Contribution_Upload_Anytime"/>
+        <Right value="Manage_AgendaItems"/>
       </UserRole>
       <UserRole value="EolAccountOwner">
         <Right value="Release_ViewCompleteList"/>
         <Right value="Release_ViewDetails"/>
         <Right value="General_ViewPersonalData"/>
         <Right value="Specification_ViewDetails"/> 
-		<Right value="Contribute_Restricted"/>
-		<Right value="Contribution_Upload"/>
+		    <Right value="Contribute_Restricted"/>
+		    <Right value="Contribution_Upload"/>
       </UserRole>
       <UserRole value="MeetingManager">
         <Right value="Meeting_ViewMeetingList"/>
