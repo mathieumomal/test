@@ -25,6 +25,7 @@
 	<Right value="Versions_Upload"/>
     <Right value="Versions_Modify_MajorVersion"/>	
 	<Right value="Versions_AddRemark"/>
+	<Right value="Manage_AgendaItems"/>
   </UserRole>
   <!-- Chairman, Vice Chairman or Convenor of a given WG / TSG -->
   <UserRole value="CommitteeOfficial">
