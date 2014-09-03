@@ -57,6 +57,8 @@
         <Right value="Specification_SyncHardLinksOnLatestFolder"/>
 		<Right value="Contribute_Anytime"/> 
 		<Right value="Contribution_Edit"/>
+		<Right value="Contribution_Upload"/>
+		<Right value="Contribution_Upload_Anytime"/>
       </UserRole>
       <UserRole value="WorkPlanManager">
         <Right value="Remarks_ViewPrivate"/>
