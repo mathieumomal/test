@@ -29,6 +29,7 @@
         <Right value="Remarks_ViewPrivate"/>
         <Right value="Remarks_AddPrivateByDefault"/>
         <Right value="WorkItem_ImportWorkplan"/>
+        <Right value="Contribution_Import" />
       </UserRole>
 	  <!-- Super user = Specification Manager -->
       <UserRole value="SuperUser">
@@ -55,11 +56,12 @@
         <Right value="Specification_RemoveInhibitPromote"/>
         <Right value="Specification_BulkPromote"/>
         <Right value="Specification_SyncHardLinksOnLatestFolder"/>
-		<Right value="Contribute_Anytime"/> 
-		<Right value="Contribution_Edit"/>
-		<Right value="Contribution_Upload"/>
-		<Right value="Contribution_Upload_Anytime"/>
+		    <Right value="Contribute_Anytime"/> 
+		    <Right value="Contribution_Edit"/>
+		    <Right value="Contribution_Upload"/>
+		    <Right value="Contribution_Upload_Anytime"/>
         <Right value="Contribution_Withdraw" />
+        <Right value="Contribution_Import" />
       </UserRole>
       <UserRole value="WorkPlanManager">
         <Right value="Remarks_ViewPrivate"/>
@@ -82,11 +84,12 @@
         <Right value="Versions_Modify_MajorVersion"/>
         <Right value="Versions_AddRemark"/>
         <Right value="Meeting_CreateMeeting"/>		
-		<Right value="Contribute_Anytime"/>
-		<Right value="Contribution_Edit"/>
-		<Right value="Contribution_Upload"/>
-		<Right value="Contribution_Upload_Anytime"/>
-		<Right value="Contribution_Withdraw" />
+		    <Right value="Contribute_Anytime"/>
+		    <Right value="Contribution_Edit"/>
+		    <Right value="Contribution_Upload"/>
+		    <Right value="Contribution_Upload_Anytime"/>
+		    <Right value="Contribution_Withdraw" />
+        <Right value="Contribution_Import" />
         <Right value="Manage_AgendaItems"/>
       </UserRole>
       <UserRole value="EolAccountOwner">
