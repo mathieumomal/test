@@ -21,13 +21,14 @@ SET SERVICE_USERRIGHTS="%PATH_ULTIMATE%\WCF Services\UserRightsService"
 SET SERVICE_REMOTE_CONSENSUS=%PATH_NGPP%\RemoteConsensusService
 SET SERVICE_VFS_HOST_FTP=%PATH_NGPP%\Contribution
 SET SERVICE_OFFLINE_SYNC_SERVICE=%PATH_ULTIMATE%
+SET SERVICE_ULTIMATE="%PATH_ULTIMATE%\WCF Services\UltimateService"
 SET BATCHLOCATION="%~dp0"
 
 REM -----------------------------------------------------------------
 REM ------------------------- 01. SERVICES --------------------------
 REM -----------------------------------------------------------------
 ECHO Service Installation Started..
-CALL %BATCHLOCATION%\Setups\Online_Services.bat %SERVICE_USERRIGHTS% %SERVICE_REMOTE_CONSENSUS% %SERVICE_VFS_HOST_FTP% %SERVICE_OFFLINE_SYNC_SERVICE% %BASE_PATH_TARGET% %SERVICE_LOGIN% %SERVICE_PASSWORD%
+CALL %BATCHLOCATION%\Setups\Online_Services.bat %SERVICE_USERRIGHTS% %SERVICE_REMOTE_CONSENSUS% %SERVICE_VFS_HOST_FTP% %SERVICE_OFFLINE_SYNC_SERVICE% %SERVICE_ULTIMATE% %BASE_PATH_TARGET% %SERVICE_LOGIN% %SERVICE_PASSWORD%
 IF %ERRORLEVEL% NEQ 0 GOTO FAILED
 
 REM -----------------------------------------------------------------

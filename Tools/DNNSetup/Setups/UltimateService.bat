@@ -1,9 +1,7 @@
 @ECHO OFF
 
-SET BASE_PATH_USERRIGHTS=%~1
+SET BASE_PATH_ULTIMATE_SERVICE=%~1
 SET BASE_PATH_TARGET=%2
-SET SERVICE_LOGIN=%3
-SET SERVICE_PASSWORD=%4
 
 REM The following directory is for .NET 4.0
 SET DOTNETFX4=%SystemRoot%\Microsoft.NET\Framework\v4.0.30319
@@ -13,25 +11,25 @@ REM The following directory is for VS2012
 SET VS2012=C:\Program Files\Microsoft Visual Studio 11.0\Common7\IDE
 SET PATH=%PATH%;%VS2012%
 
-SET SOLUTION_PATH_USERRIGHTS="%BASE_PATH_USERRIGHTS%\UserRightsService.sln"
+SET SOLUTION_PATH_ULTIMATE_SERVICE="%BASE_PATH_ULTIMATE_SERVICE%\UltimateService.sln"
 
-SET ServiceName="ETSI User Rights Service"
-SET ServiceTargetPath="%BASE_PATH_TARGET%\UserRightsService\"
-SET ServiceOriginPath="%BASE_PATH_USERRIGHTS%\UserRightsServiceSetup\bin\Release\"
+SET ServiceName="3GU Ultimate Service"
+SET ServiceTargetPath="%BASE_PATH_TARGET%\UltimateService\"
+SET ServiceOriginPath="%BASE_PATH_ULTIMATE_SERVICE%\Etsi.Ultimate.WCF.Setup\bin\Release\"
 
-echo Step1 [UserRights]: Build UserRights application
+echo Step1 [Ultimate Service]: Build Ultimate Service application
 
-echo Building User Rights solution
-devenv %SOLUTION_PATH_USERRIGHTS% /clean Release | findstr /R /C:"===="
-devenv %SOLUTION_PATH_USERRIGHTS% /build Release | findstr /R /C:"===="
+echo Building Ultimate Service solution
+devenv %SOLUTION_PATH_ULTIMATE_SERVICE% /clean Release | findstr /R /C:"===="
+devenv %SOLUTION_PATH_ULTIMATE_SERVICE% /build Release | findstr /R /C:"===="
 
-echo Step2[UserRights]: Creating the services directory and moving the files in.
+echo Step2[Ultimate Service]: Creating the services directory and moving the files in.
 IF exist %BASE_PATH_TARGET% ( echo %BASE_PATH_TARGET% exists ) ELSE ( mkdir %BASE_PATH_TARGET% && echo %BASE_PATH_TARGET% created)
 
 REM ----------------------------------------------------------------------------
-REM                           User Rights Service
+REM                           Ultimate Service Service
 REM ----------------------------------------------------------------------------
-echo Step 2.1[UserRights]: Installing User Rights Service.
+echo Step 2.1[Ultimate Service]: Installing Ultimate Service Service.
 
 REM Stop service
 NET STOP %ServiceName%
@@ -48,16 +46,16 @@ REM Reinstall service
 chdir /D %ServiceTargetPath%
 
 REM Uninstalling service if it already existed
-installutil.exe /U "Etsi.UserRights.UserRightsServiceSetup.exe"
+installutil.exe /U "Etsi.Ultimate.WCF.Setup.exe"
 
 REM Installing the service
-installutil.exe "Etsi.UserRights.UserRightsServiceSetup.exe"
+installutil.exe "Etsi.Ultimate.WCF.Setup.exe"
 
 REM Configuring the service so that it starts automatically
-sc config %ServiceName% obj= %SERVICE_LOGIN% password= %SERVICE_PASSWORD% start= auto
+sc config %ServiceName% start= auto
 
 REM Start the service
 NET START %ServiceName%
 
-echo User Rights Service installed.
+echo Ultimate Service Service installed.
 echo
