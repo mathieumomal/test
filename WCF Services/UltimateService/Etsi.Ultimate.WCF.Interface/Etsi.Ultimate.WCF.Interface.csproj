@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Entities\Release.cs" />
+    <Compile Include="Entities\WorkItem.cs" />
     <Compile Include="IUltimateService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
