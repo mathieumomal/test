@@ -19,8 +19,10 @@ namespace Etsi.Ultimate.WCF.Service
         private const string CONST_ERROR_TEMPLATE_GET_RELEASES = "Ultimate Service Error [GetReleases]: {0}";
         private const string CONST_ERROR_TEMPLATE_GET_WORKITEMS_BY_IDS = "Ultimate Service Error [GetWorkItemsByIds]: {0}";
         private const string CONST_ERROR_TEMPLATE_GET_WORKITEMS_BY_KEYWORD = "Ultimate Service Error [GetWorkItemsByKeyWord]: {0}";
+        private const string CONST_ERROR_TEMPLATE_GET_SPECIFICATIONS_BY_KEYWORD = "Ultimate Service Error [GetSpecificationsByKeyWord]: {0}";
 
         #endregion
+
         #region Public Methods
 
         /// <summary>
@@ -122,6 +124,43 @@ namespace Etsi.Ultimate.WCF.Service
             return workItems;
         }
 
+        /// <summary>
+        /// Gets the specifications by key word.
+        /// </summary>
+        /// <param name="personID">The person identifier.</param>
+        /// <param name="keyword">The keyword.</param>
+        /// <returns>
+        /// List of specifications
+        /// </returns>
+        public List<UltimateServiceEntities.Specification> GetSpecificationsByKeyWord(int personID, string keyword)
+        {
+            List<UltimateServiceEntities.Specification> specifications = new List<UltimateServiceEntities.Specification>();
+
+            if (String.IsNullOrEmpty(keyword))
+            {
+                LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_SPECIFICATIONS_BY_KEYWORD, "Keyword should not empty"));
+            }
+            else
+            {
+                try
+                {
+                    //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
+                    RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
+                    ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
+                    var specificationsObjects = svc.GetSpecificationBySearchCriteria(personID, keyword);
+                    if (specificationsObjects != null)
+                        specificationsObjects.ForEach(x => specifications.Add(ConvertUltimateSpecificationToServiceSpecification(x)));
+                    else
+                        LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_SPECIFICATIONS_BY_KEYWORD, "Failed to get specification details"));
+                }
+                catch (Exception ex)
+                {
+                    LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_SPECIFICATIONS_BY_KEYWORD, ex.Message));
+                }
+            }
+            return specifications;
+        }
+
         #endregion
 
         #region Private Methods
@@ -161,6 +200,24 @@ namespace Etsi.Ultimate.WCF.Service
                 serviceWorkItem.ResponsibleGroups = ultimateWorkItem.ResponsibleGroups;
             }
             return serviceWorkItem;
+        }
+
+        /// <summary>
+        /// Converts the ultimate work item to service work item.
+        /// </summary>
+        /// <param name="ultimateSpecification">The ultimate specification.</param>
+        /// <returns>Service specification entity</returns>
+        private UltimateServiceEntities.Specification ConvertUltimateSpecificationToServiceSpecification(UltimateEntities.Specification ultimateSpecification)
+        {
+            UltimateServiceEntities.Specification serviceSpecification = new UltimateServiceEntities.Specification();
+            if (ultimateSpecification != null)
+            {
+                serviceSpecification.Pk_SpecificationId = ultimateSpecification.Pk_SpecificationId;
+                serviceSpecification.Title = ultimateSpecification.Title;
+                serviceSpecification.Number = ultimateSpecification.Number;
+                serviceSpecification.SpecNumberAndTitle = ultimateSpecification.SpecNumberAndTitle;
+            }
+            return serviceSpecification;
         } 
 
         #endregion

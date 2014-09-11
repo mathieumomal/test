@@ -39,5 +39,14 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>List of work items</returns>
         [OperationContract]
         List<WorkItem> GetWorkItemsByKeyWord(int personID, string keyword);
+
+        /// <summary>
+        /// Gets the specifications by key word.
+        /// </summary>
+        /// <param name="personID">The person identifier.</param>
+        /// <param name="keyword">The keyword.</param>
+        /// <returns>List of specifications</returns>
+        [OperationContract]
+        List<Specification> GetSpecificationsByKeyWord(int personID, string keyword);
     }
 }
