@@ -1,5 +1,5 @@
-﻿using Etsi.Ultimate.DomainClasses;
-using Etsi.Ultimate.WCF.Interface;
+﻿using Etsi.Ultimate.WCF.Interface;
+using Etsi.Ultimate.WCF.Interface.Entities;
 using System.Collections.Generic;
 
 namespace Etsi.Ultimate.WCF.Service
@@ -13,10 +13,11 @@ namespace Etsi.Ultimate.WCF.Service
         /// Gets the releases.
         /// </summary>
         /// <param name="personID">The person identifier.</param>
-        /// <returns>List of releases</returns>
+        /// <returns>List of Releases</returns>
         public List<Release> GetReleases(int personID)
         {
-            return new List<Release>();
+            ServiceHelper serviceHelper = new ServiceHelper();
+            return serviceHelper.GetReleases(personID);
         }
     }
 }

@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Rights>
+  <UserRole value="Anonymous">
+    <Right value="Release_ViewPartialList"/>
+	<Right value="Release_ViewLimitedDetails"/>
+	<Right value="Specification_ViewDetails"/>
+  </UserRole>
+  
+  <!-- The rights that are defined with the EOL account owner role are not repeated in the subsequent roles, because all further roles
+		are limited to eol Account owners. -->
+  <UserRole value="EolAccountOwner">
+    <Right value="Release_ViewCompleteList"/>
+	<Right value="Release_ViewDetails"/>
+	<Right value="General_ViewPersonalData"/>
+	<Right value="Specification_ViewDetails"/>
+  </UserRole>
+  <!-- StaffMember = MCC Member -->
+  <UserRole value="StaffMember">
+	<Right value="Remarks_ViewPrivate"/>
+	<Right value="Remarks_AddPrivateByDefault"/>
+	<Right value="Specification_Create"/>
+	<Right value="Specification_EditLimitted"/>
+	<Right value="Specification_View_UnAllocated_Number"/>
+	<Right value="Versions_Allocate"/>
+	<Right value="Versions_Upload"/>
+    <Right value="Versions_Modify_MajorVersion"/>	
+	<Right value="Versions_AddRemark"/>
+	<Right value="Manage_AgendaItems"/>
+  </UserRole>
+  <!-- Chairman, Vice Chairman or Convenor of a given WG / TSG -->
+  <UserRole value="CommitteeOfficial">
+  </UserRole>
+  <UserRole value="WorkPlanManager">
+	<Right value="Remarks_ViewPrivate"/>
+	<Right value="Remarks_AddPrivateByDefault"/>
+	<Right value="Release_ViewCompleteDetails"/>
+	<Right value="WorkItem_ImportWorkplan"/>
+  </UserRole>
+  <!-- Super user = Specification Manager -->
+  <UserRole value="SuperUser">
+	<Right value="Release_Create"/>
+	<Right value="Release_Edit"/>
+	<Right value="Release_Freeze"/>
+	<Right value="Release_Close"/>
+	<Right value="Remarks_ViewPrivate"/>
+	<Right value="Remarks_AddPrivateByDefault"/>
+	<Right value="Release_ViewCompleteDetails"/>
+	<Right value="WorkItem_ImportWorkplan"/>
+	<Right value="Specification_Create"/>	
+	<Right value="Specification_EditFull"/>
+	<Right value="Specification_Withdraw"/>
+	<Right value="Specification_View_UnAllocated_Number"/>
+	<Right value="Specification_ManageITURecommendations"/>
+	<Right value="Specification_ForceTransposition"/>	
+	<Right value="Versions_Allocate"/>
+	<Right value="Versions_Upload"/>
+	<Right value="Versions_AddRemark"/>
+	<Right value="Specification_UnforceTransposition"/>
+	<Right value="Specification_WithdrawFromRelease"/>
+	<Right value="Specification_InhibitPromote"/>	
+	<Right value="Specification_RemoveInhibitPromote"/>	
+	<Right value="Specification_BulkPromote"/>
+	<Right value="Specification_SyncHardLinksOnLatestFolder"/>	
+  </UserRole>
+  <!-- Administrators are members of the ETSI IT service who should be able to do everything -->
+  <UserRole value="Administrator">
+	<Right value="Release_Create"/>
+	<Right value="Release_Edit"/>
+	<Right value="Release_Freeze"/>
+	<Right value="Release_Close"/>
+	<Right value="Remarks_ViewPrivate"/>
+	<Right value="Remarks_AddPrivateByDefault"/>
+	<Right value="WorkItem_ImportWorkplan"/>
+  </UserRole>
+</Rights>
