@@ -16,11 +16,11 @@ namespace Etsi.Ultimate.WCF.Service
     {
         #region Constants
 
-        private const string CONST_ERROR_TEMPLATE_GET_RELEASES = "Ultimate Service Error [GetReleases]: {0}";
-        private const string CONST_ERROR_TEMPLATE_GET_WORKITEMS_BY_IDS = "Ultimate Service Error [GetWorkItemsByIds]: {0}";
-        private const string CONST_ERROR_TEMPLATE_GET_WORKITEMS_BY_KEYWORD = "Ultimate Service Error [GetWorkItemsByKeyWord]: {0}";
-        private const string CONST_ERROR_TEMPLATE_GET_SPECIFICATIONS_BY_KEYWORD = "Ultimate Service Error [GetSpecificationsByKeyWord]: {0}";
-        private const string CONST_ERROR_TEMPLATE_GET_SPECIFICATION_BY_ID = "Ultimate Service Error [GetSpecificationById]: {0}";
+        private const string ConstErrorTemplateGetReleases = "Ultimate Service Error [GetReleases]: {0}";
+        private const string ConstErrorTemplateGetWorkitemsByIds = "Ultimate Service Error [GetWorkItemsByIds]: {0}";
+        private const string ConstErrorTemplateGetWorkitemsByKeyword = "Ultimate Service Error [GetWorkItemsByKeyWord]: {0}";
+        private const string ConstErrorTemplateGetSpecificationsByKeyword = "Ultimate Service Error [GetSpecificationsByKeyWord]: {0}";
+        private const string ConstErrorTemplateGetSpecificationById = "Ultimate Service Error [GetSpecificationById]: {0}";
 
         #endregion
 
@@ -29,26 +29,26 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Gets the releases.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <returns>List of releases</returns>
-        public List<UltimateServiceEntities.Release> GetReleases(int personID)
+        public List<UltimateServiceEntities.Release> GetReleases(int personId)
         {
-            List<UltimateServiceEntities.Release> releases = new List<UltimateServiceEntities.Release>();
+            var releases = new List<UltimateServiceEntities.Release>();
 
             try
             {
                 //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
                 RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
-                IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
-                var releaseRightsObjects = svc.GetAllReleases(personID);
+                var svc = ServicesFactory.Resolve<IReleaseService>();
+                var releaseRightsObjects = svc.GetAllReleases(personId);
                 if (releaseRightsObjects.Key != null)
                     releaseRightsObjects.Key.ForEach(x => releases.Add(ConvertUltimateReleaseToServiceRelease(x)));
                 else
-                    LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_RELEASES, "Failed to get release details"));
+                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetReleases, "Failed to get release details"));
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_RELEASES, ex.Message));
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetReleases, ex.Message));
             }
 
             return releases;
@@ -73,12 +73,12 @@ namespace Etsi.Ultimate.WCF.Service
                 if (releaseRightsObject.Key != null)
                     release = ConvertUltimateReleaseToServiceRelease(releaseRightsObject.Key);
                 else
-                    LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_RELEASES,
+                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetReleases,
                         "Failed to get release details"));
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_RELEASES, ex.Message));
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetReleases, ex.Message));
             }
 
             return release;
@@ -87,32 +87,32 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Gets the work items by ids.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="workItemIds">The work item ids.</param>
         /// <returns>
         /// List of work items
         /// </returns>
-        public List<UltimateServiceEntities.WorkItem> GetWorkItemsByIds(int personID, List<int> workItemIds)
+        public List<UltimateServiceEntities.WorkItem> GetWorkItemsByIds(int personId, List<int> workItemIds)
         {
-            List<UltimateServiceEntities.WorkItem> workItems = new List<UltimateServiceEntities.WorkItem>();
+            var workItems = new List<UltimateServiceEntities.WorkItem>();
 
             try
             {
                 //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
                 RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
-                IWorkItemService svc = ServicesFactory.Resolve<IWorkItemService>();
-                foreach (int workItemID in workItemIds)
+                var svc = ServicesFactory.Resolve<IWorkItemService>();
+                foreach (var workItemId in workItemIds)
                 {
-                    var workItemRightsObject = svc.GetWorkItemById(personID, workItemID);
+                    var workItemRightsObject = svc.GetWorkItemById(personId, workItemId);
                     if (workItemRightsObject.Key != null)
                         workItems.Add(ConvertUltimateWorkItemToServiceWorkItem(workItemRightsObject.Key));
                     else
-                        LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_WORKITEMS_BY_IDS, "Unable to get workitem for work item id=" + workItemID));
+                        LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetWorkitemsByIds, "Unable to get workitem for work item id=" + workItemId));
                 }
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_WORKITEMS_BY_IDS, ex.Message));
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetWorkitemsByIds, ex.Message));
             }
 
             return workItems;
@@ -121,18 +121,18 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Gets the work items by key word.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="keyword">The keyword.</param>
         /// <returns>
         /// List of work items
         /// </returns>
-        public List<UltimateServiceEntities.WorkItem> GetWorkItemsByKeyWord(int personID, string keyword)
+        public List<UltimateServiceEntities.WorkItem> GetWorkItemsByKeyWord(int personId, string keyword)
         {
-            List<UltimateServiceEntities.WorkItem> workItems = new List<UltimateServiceEntities.WorkItem>();
+            var workItems = new List<UltimateServiceEntities.WorkItem>();
 
             if (String.IsNullOrEmpty(keyword))
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_WORKITEMS_BY_KEYWORD, "Keyword should not empty"));
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetWorkitemsByKeyword, "Keyword should not empty"));
             }
             else
             {
@@ -140,16 +140,16 @@ namespace Etsi.Ultimate.WCF.Service
                 {
                     //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
                     RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
-                    IWorkItemService svc = ServicesFactory.Resolve<IWorkItemService>();
-                    var workItemRightsObjects = svc.GetWorkItemsBySearchCriteria(personID, keyword);
+                    var svc = ServicesFactory.Resolve<IWorkItemService>();
+                    var workItemRightsObjects = svc.GetWorkItemsBySearchCriteria(personId, keyword);
                     if (workItemRightsObjects.Key != null)
                         workItemRightsObjects.Key.ForEach(x => workItems.Add(ConvertUltimateWorkItemToServiceWorkItem(x)));
                     else
-                        LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_WORKITEMS_BY_KEYWORD, "Failed to get workitem details"));
+                        LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetWorkitemsByKeyword, "Failed to get workitem details"));
                 }
                 catch (Exception ex)
                 {
-                    LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_WORKITEMS_BY_KEYWORD, ex.Message));
+                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetWorkitemsByKeyword, ex.Message));
                 }
             }
             return workItems;
@@ -158,18 +158,18 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Gets the specifications by key word.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="keyword">The keyword.</param>
         /// <returns>
         /// List of specifications
         /// </returns>
-        public List<UltimateServiceEntities.Specification> GetSpecificationsByKeyWord(int personID, string keyword)
+        public List<UltimateServiceEntities.Specification> GetSpecificationsByKeyWord(int personId, string keyword)
         {
-            List<UltimateServiceEntities.Specification> specifications = new List<UltimateServiceEntities.Specification>();
+            var specifications = new List<UltimateServiceEntities.Specification>();
 
             if (String.IsNullOrEmpty(keyword))
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_SPECIFICATIONS_BY_KEYWORD, "Keyword should not empty"));
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationsByKeyword, "Keyword should not empty"));
             }
             else
             {
@@ -177,16 +177,16 @@ namespace Etsi.Ultimate.WCF.Service
                 {
                     //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
                     RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
-                    ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
-                    var specificationsObjects = svc.GetSpecificationBySearchCriteria(personID, keyword);
+                    var svc = ServicesFactory.Resolve<ISpecificationService>();
+                    var specificationsObjects = svc.GetSpecificationBySearchCriteria(personId, keyword);
                     if (specificationsObjects != null)
                         specificationsObjects.ForEach(x => specifications.Add(ConvertUltimateSpecificationToServiceSpecification(x)));
                     else
-                        LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_SPECIFICATIONS_BY_KEYWORD, "Failed to get specification details"));
+                        LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationsByKeyword, "Failed to get specification details"));
                 }
                 catch (Exception ex)
                 {
-                    LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_SPECIFICATIONS_BY_KEYWORD, ex.Message));
+                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationsByKeyword, ex.Message));
                 }
             }
             return specifications;
@@ -202,21 +202,21 @@ namespace Etsi.Ultimate.WCF.Service
         /// </returns>
         public UltimateServiceEntities.Specification GetSpecificationById(int personID, int specificationId)
         {
-            UltimateServiceEntities.Specification specification = new UltimateServiceEntities.Specification();
+            var specification = new UltimateServiceEntities.Specification();
             try
             {
                 //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
                 RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
-                ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
+                var svc = ServicesFactory.Resolve<ISpecificationService>();
                 var specificationRightsObjects = svc.GetSpecificationDetailsById(personID, specificationId);
                 if (specificationRightsObjects.Key != null)
                     specification = ConvertUltimateSpecificationToServiceSpecification(specificationRightsObjects.Key);
                 else
-                    LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_SPECIFICATION_BY_ID, "Failed to get specification details"));
+                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationById, "Failed to get specification details"));
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_SPECIFICATION_BY_ID, ex.Message));
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationById, ex.Message));
             }
             return specification;
         }
@@ -232,13 +232,14 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>Service release entity</returns>
         private UltimateServiceEntities.Release ConvertUltimateReleaseToServiceRelease(UltimateEntities.Release ultimateRelease)
         {
-            UltimateServiceEntities.Release serviceRelease = new UltimateServiceEntities.Release();
+            var serviceRelease = new UltimateServiceEntities.Release();
             if (ultimateRelease != null)
             {
                 serviceRelease.Pk_ReleaseId = ultimateRelease.Pk_ReleaseId;
                 serviceRelease.Name = ultimateRelease.Name;
                 serviceRelease.ShortName = ultimateRelease.ShortName;
                 serviceRelease.Status = ultimateRelease.Enum_ReleaseStatus.Description;
+                serviceRelease.SortOrder = ultimateRelease.SortOrder;
             }
             return serviceRelease;
         }
@@ -250,7 +251,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>Service work item entity</returns>
         private UltimateServiceEntities.WorkItem ConvertUltimateWorkItemToServiceWorkItem(UltimateEntities.WorkItem ultimateWorkItem)
         {
-            UltimateServiceEntities.WorkItem serviceWorkItem = new UltimateServiceEntities.WorkItem();
+            var serviceWorkItem = new UltimateServiceEntities.WorkItem();
             if (ultimateWorkItem != null)
             {
                 serviceWorkItem.Pk_WorkItemUid = ultimateWorkItem.Pk_WorkItemUid;
@@ -269,7 +270,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>Service specification entity</returns>
         private UltimateServiceEntities.Specification ConvertUltimateSpecificationToServiceSpecification(UltimateEntities.Specification ultimateSpecification)
         {
-            UltimateServiceEntities.Specification serviceSpecification = new UltimateServiceEntities.Specification();
+            var serviceSpecification = new UltimateServiceEntities.Specification();
             if (ultimateSpecification != null)
             {
                 serviceSpecification.Pk_SpecificationId = ultimateSpecification.Pk_SpecificationId;

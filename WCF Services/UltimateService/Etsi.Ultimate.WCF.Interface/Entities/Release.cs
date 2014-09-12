@@ -43,5 +43,11 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public string Status { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sort order
+        /// </summary>
+        [DataMember]
+        public int? SortOrder { get; set; }
     }
 }
