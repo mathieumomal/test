@@ -23,6 +23,15 @@ namespace Etsi.Ultimate.WCF.Interface
         List<Release> GetReleases(int personID);
 
         /// <summary>
+        /// Gets release by identifier
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="releaseId"></param>
+        /// <returns></returns>
+        [OperationContract]
+        Release GetReleaseById(int personId, int releaseId);
+
+        /// <summary>
         /// Gets the work items by ids.
         /// </summary>
         /// <param name="personID">The person identifier.</param>

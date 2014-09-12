@@ -55,6 +55,36 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         /// <summary>
+        /// Gets the release by identifier.
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="releaseId"></param>
+        /// <returns>Return release</returns>
+        public UltimateServiceEntities.Release GetReleaseById(int personId, int releaseId)
+        {
+            var release = new UltimateServiceEntities.Release();
+
+            try
+            {
+                //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
+                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
+                var svc = ServicesFactory.Resolve<IReleaseService>();
+                var releaseRightsObject = svc.GetReleaseById(personId, releaseId);
+                if (releaseRightsObject.Key != null)
+                    release = ConvertUltimateReleaseToServiceRelease(releaseRightsObject.Key);
+                else
+                    LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_RELEASES,
+                        "Failed to get release details"));
+            }
+            catch (Exception ex)
+            {
+                LogManager.UltimateServiceLogger.Error(String.Format(CONST_ERROR_TEMPLATE_GET_RELEASES, ex.Message));
+            }
+
+            return release;
+        }
+
+        /// <summary>
         /// Gets the work items by ids.
         /// </summary>
         /// <param name="personID">The person identifier.</param>
@@ -248,7 +278,7 @@ namespace Etsi.Ultimate.WCF.Service
                 serviceSpecification.SpecNumberAndTitle = ultimateSpecification.SpecNumberAndTitle;
             }
             return serviceSpecification;
-        } 
+        }
 
         #endregion
     }

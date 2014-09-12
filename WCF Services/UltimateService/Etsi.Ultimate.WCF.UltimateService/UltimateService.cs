@@ -21,6 +21,18 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         /// <summary>
+        /// Get a release by its id
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="releaseId"></param>
+        /// <returns></returns>
+        public Release GetReleaseById(int personId, int releaseId)
+        {
+            ServiceHelper serviceHelper = new ServiceHelper();
+            return serviceHelper.GetReleaseById(personId, releaseId);
+        }
+
+        /// <summary>
         /// Gets the work items by ids.
         /// </summary>
         /// <param name="personID">The person identifier.</param>
