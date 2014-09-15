@@ -21,6 +21,7 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateGetWorkitemsByKeyword = "Ultimate Service Error [GetWorkItemsByKeyWord]: {0}";
         private const string ConstErrorTemplateGetSpecificationsByKeyword = "Ultimate Service Error [GetSpecificationsByKeyWord]: {0}";
         private const string ConstErrorTemplateGetSpecificationById = "Ultimate Service Error [GetSpecificationById]: {0}";
+        private const string ConstErrorTemplateGetSpecificationsByIds = "Ultimate Service Error [GetSpecificationsByIds]: {0}";
 
         #endregion
 
@@ -219,6 +220,40 @@ namespace Etsi.Ultimate.WCF.Service
                 LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationById, ex.Message));
             }
             return specification;
+        }
+
+        /// <summary>
+        /// Gets the specifications by ids.
+        /// </summary>
+        /// <param name="personID">The person identifier.</param>
+        /// <param name="specificationIds">The specification ids.</param>
+        /// <returns>
+        /// List of specifications
+        /// </returns>
+        public List<UltimateServiceEntities.Specification> GetSpecificationsByIds(int personID, List<int> specificationIds)
+        {
+            var specifications = new List<UltimateServiceEntities.Specification>();
+
+            try
+            {
+                //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
+                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
+                var svc = ServicesFactory.Resolve<ISpecificationService>();
+                foreach (var specificationId in specificationIds)
+                {
+                    var specificationRightsObjects = svc.GetSpecificationDetailsById(personID, specificationId);
+                    if (specificationRightsObjects.Key != null)
+                        specifications.Add(ConvertUltimateSpecificationToServiceSpecification(specificationRightsObjects.Key));
+                    else
+                        LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationsByIds, "Unable to get specification for specification id=" + specificationId));
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationsByIds, ex.Message));
+            }
+
+            return specifications;
         }
 
         #endregion

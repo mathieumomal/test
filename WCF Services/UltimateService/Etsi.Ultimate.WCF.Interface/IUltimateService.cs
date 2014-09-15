@@ -66,5 +66,14 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>Specification entity</returns>
         [OperationContract]
         Specification GetSpecificationById(int personID, int specificationId);
+
+        /// <summary>
+        /// Gets the specifications by ids.
+        /// </summary>
+        /// <param name="personID">The person identifier.</param>
+        /// <param name="specificationIds">The specification ids.</param>
+        /// <returns>List of specifications</returns>
+        [OperationContract]
+        List<Specification> GetSpecificationsByIds(int personID, List<int> specificationIds);
     }
 }

@@ -87,5 +87,19 @@ namespace Etsi.Ultimate.WCF.Service
             ServiceHelper serviceHelper = new ServiceHelper();
             return serviceHelper.GetSpecificationById(personID, specificationId);
         }
+
+        /// <summary>
+        /// Gets the specifications by ids.
+        /// </summary>
+        /// <param name="personID">The person identifier.</param>
+        /// <param name="specificationIds">The specification ids.</param>
+        /// <returns>
+        /// List of specifications
+        /// </returns>
+        public List<Specification> GetSpecificationsByIds(int personID, List<int> specificationIds)
+        {
+            ServiceHelper serviceHelper = new ServiceHelper();
+            return serviceHelper.GetSpecificationsByIds(personID, specificationIds);
+        }
     }
 }
