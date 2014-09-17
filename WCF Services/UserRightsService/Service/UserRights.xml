@@ -56,10 +56,14 @@
         <Right value="Specification_RemoveInhibitPromote"/>
         <Right value="Specification_BulkPromote"/>
         <Right value="Specification_SyncHardLinksOnLatestFolder"/>
-		    <Right value="Contribute_Anytime"/> 
-		    <Right value="Contribution_Edit"/>
-		    <Right value="Contribution_Upload"/>
-		    <Right value="Contribution_Upload_Anytime"/>
+		<Right value="Meeting_ViewMeetingList"/>
+        <Right value="Meeting_CreateMeeting"/>
+        <Right value="Meeting_CreateEvent"/>
+        <Right value="Meeting_EditEvent"/>
+		<Right value="Contribute_Anytime"/> 
+		<Right value="Contribution_Edit"/>
+		<Right value="Contribution_Upload"/>
+		<Right value="Contribution_Upload_Anytime"/>
         <Right value="Contribution_Withdraw" />
         <Right value="Contribution_Import" />
       </UserRole>
