@@ -154,7 +154,7 @@ namespace Etsi.Ultimate.Module.Release
             {
                 Fk_PersonId = UserId,
                 Fk_ReleaseId = ReleaseId,
-                IsPublic = releaseRemarks.UserRights != null ? releaseRemarks.UserRights.HasRight(Domain.Enum_UserRights.Remarks_AddPrivateByDefault): false,
+                IsPublic = releaseRemarks.UserRights != null ? !releaseRemarks.UserRights.HasRight(Domain.Enum_UserRights.Remarks_AddPrivateByDefault): false,
                 CreationDate = DateTime.UtcNow,
                 RemarkText = releaseRemarks.RemarkText,
                 PersonName = personDisplayName
