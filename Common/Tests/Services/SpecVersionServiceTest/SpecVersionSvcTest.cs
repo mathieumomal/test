@@ -172,8 +172,9 @@ namespace Etsi.Ultimate.Tests.Services
             mockDataContext.AssertWasCalled(x => x.SaveChanges());
         }
 
-        [Test]
-        public void CountVersionsPendingUploadByReleaseId()
+        [TestCase(1,1)]
+        [TestCase(2,0)]
+        public void CountVersionsPendingUploadByReleaseId(int releaseId, int expectedResult)
         {
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)GetSpecVersions());
@@ -185,8 +186,8 @@ namespace Etsi.Ultimate.Tests.Services
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
             var versionsSvc = new SpecVersionService();
-            var result = versionsSvc.CountVersionsPendingUploadByReleaseId(1);
-            Assert.AreEqual(1, result);
+            var result = versionsSvc.CountVersionsPendingUploadByReleaseId(releaseId);
+            Assert.AreEqual(expectedResult, result);
         }
 
         #endregion
@@ -273,8 +274,8 @@ namespace Etsi.Ultimate.Tests.Services
             var version3 = new SpecVersion()
             {
                 Pk_VersionId = 3,
-                Location = "aa",
-                MajorVersion = 10,
+                Location = "",
+                MajorVersion = 0,
                 TechnicalVersion = 4,
                 EditorialVersion = 1,
                 Source = 1,

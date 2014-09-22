@@ -97,6 +97,8 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
             releaseManager.UoW = UoW;
             var releaseVersion = releaseManager.GetAllReleases(0).Key.Find(r => r.Pk_ReleaseId == releaseId).Version3g;
+            if (!releaseVersion.HasValue)
+                return 0;
 
             ISpecVersionsRepository specVersionMgr = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             specVersionMgr.UoW = UoW;
