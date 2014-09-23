@@ -70,7 +70,7 @@
                                         <asp:Label ID="ReleaseDescLbl" runat="server" Text="Release description:"></asp:Label>
                                     </td>
                                     <td colspan="2" class="TabLineRight">
-                                        <asp:TextBox runat="server" ID="ReleaseDescVal" />
+                                        <asp:TextBox runat="server" ID="ReleaseDescVal" Width="99%"/>
                                     </td>
 
                                 </tr>
