@@ -11,6 +11,7 @@ namespace Etsi.Ultimate.WCF.Interface
     [ServiceKnownType(typeof(Release))]
     [ServiceKnownType(typeof(WorkItem))]
     [ServiceKnownType(typeof(ChangeRequest))]
+    [ServiceKnownType(typeof(ChangeRequestCategory))]
     public interface IUltimateService
     {
         /// <summary>
@@ -94,5 +95,12 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>Primary key of newly inserted change request</returns>
         [OperationContract]
         int CreateChangeRequest(int personID, ChangeRequest changeRequest);
+
+        /// <summary>
+        /// Changes the request category.
+        /// </summary>
+        /// <returns>Change request category list</returns>
+        [OperationContract]
+        List<ChangeRequestCategory> GetChangeRequestCategories(int personId);
     }
 }

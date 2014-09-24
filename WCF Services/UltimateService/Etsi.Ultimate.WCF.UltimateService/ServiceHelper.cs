@@ -23,6 +23,7 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateGetSpecificationById = "Ultimate Service Error [GetSpecificationById]: {0}";
         private const string ConstErrorTemplateGetSpecificationsByIds = "Ultimate Service Error [GetSpecificationsByIds]: {0}";
         private const string ConstErrorTemplateCreateChangeRequest = "Ultimate Service Error [CreateChangeRequest]: {0}";
+        private const string ConstErrorTemplateCreateChangeRequestCategories = "Ultimate Service Error [GetChangeRequestCategories]: {0}";
 
         #endregion
 
@@ -295,6 +296,21 @@ namespace Etsi.Ultimate.WCF.Service
             return primaryKeyOfNewCR;
         }
 
+        internal List<UltimateServiceEntities.ChangeRequestCategory> GetChangeRequestCategories(int personId)
+        {
+            var changeRequestCategory = new List<UltimateServiceEntities.ChangeRequestCategory>();
+            try
+            {
+                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());            
+            }
+            catch (Exception ex)
+            {
+
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequestCategories, ex.Message));
+            }
+            return changeRequestCategory;
+        }
+
         #endregion
 
         #region Private Methods
@@ -389,7 +405,7 @@ namespace Etsi.Ultimate.WCF.Service
                 ultimateCR.TSGTDoc = serviceCR.TSGTDoc;
                 ultimateCR.WGTDoc = serviceCR.WGTDoc;
                 ultimateCR.Fk_Enum_CRCategory = serviceCR.Fk_Enum_CRCategory;
-                ultimateCR.Fk_Enum_CRCategory = serviceCR.Fk_Enum_CRCategory;  
+                ultimateCR.Fk_Enum_CRCategory = serviceCR.Fk_Enum_CRCategory;
             }
             return ultimateCR;
         }

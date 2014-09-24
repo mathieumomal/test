@@ -129,5 +129,11 @@ namespace Etsi.Ultimate.WCF.Service
             ServiceHelper serviceHelper = new ServiceHelper();
             return serviceHelper.CreateChangeRequest(personID, changeRequest);
         }
+
+        public List<ChangeRequestCategory> GetChangeRequestCategories(int personId)
+        {
+            ServiceHelper svcHelper = new ServiceHelper();
+            return svcHelper.GetChangeRequestCategories(personId);
+        }
     }
 }
