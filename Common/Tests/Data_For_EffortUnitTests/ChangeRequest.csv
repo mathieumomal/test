@@ -1,0 +1,1 @@
+Pk_ChangeRequest,CRNumber,Revision,Subject,Fk_TSGStatus,Fk_WGStatus,CreationDate,TSGSourceOrganizations,WGSourceOrganizations,TSGMeeting,TSGTarget,WGSourceForTSG,TSGTDoc,WGMeeting,WGTarget,WGTDoc,Fk_Enum_CRCategory,Fk_Specification,Fk_Release,Fk_CurrentVersion,Fk_NewVersion,Fk_Impact
