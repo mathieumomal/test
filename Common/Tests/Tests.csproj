@@ -92,6 +92,7 @@
     <Compile Include="BaseEffortTest.cs" />
     <Compile Include="BaseTest.cs" />
     <Compile Include="Business\CommunityManagerTest.cs" />
+    <Compile Include="Business\CRManagerTest.cs" />
     <Compile Include="Business\RemarkManagerTest.cs" />
     <Compile Include="Business\PersonManagerTest.cs" />
     <Compile Include="Business\SpecificationDefinitiveWithdrawalActionTest.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="FakeSets\VersionFakeDBSet.cs" />
     <Compile Include="FakeSets\ViewPersonFakeDBSet.cs" />
     <Compile Include="FakeSets\WorkPlanFileFakeDBSet.cs" />
+    <Compile Include="Repositories\CRRepositoryTest.cs" />
     <Compile Include="Repositories\EnumRepositoryTest\EnumCommunityShortnameRepositoryTest.cs" />
     <Compile Include="Repositories\EnumRepositoryTest\EnumTechnologiesRepositoryTest.cs" />
     <Compile Include="Repositories\RemarkRepositoryTest.cs" />
@@ -145,6 +147,7 @@
     <Compile Include="Repositories\SpecVersionsRepositoryTest.cs" />
     <Compile Include="Repositories\SyncInfoRepositoryTest.cs" />
     <Compile Include="Repositories\WorkPlanFileRepositoryTest.cs" />
+    <Compile Include="Services\CRServiceTest.cs" />
     <Compile Include="Services\RemarkServiceTest.cs" />
     <Compile Include="Services\RightsService.cs" />
     <Compile Include="Services\RightsServiceTest.cs" />
@@ -221,6 +224,18 @@
     <Content Include="Data_For_EffortUnitTests\View_Meetings.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Data_For_EffortUnitTests\ChangeRequest.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\Enum_TDocStatus.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\Enum_CRImpact.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\Enum_CRCategory.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Data_For_EffortUnitTests\Enum_CommunitiesShortName.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

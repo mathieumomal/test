@@ -52,6 +52,7 @@ namespace Etsi.Ultimate.DataAccess
         void SetValidateOnSave(bool detect);
         void SetDetached(object entity);
         int SaveChanges();
+        IEnumerable<System.Data.Entity.Core.Objects.ObjectStateEntry> GetEntities<T>(System.Data.Entity.EntityState entityState);
 
         // ---- STORED PROCEDURES calls -----------
         int Specifications_CleanAll();

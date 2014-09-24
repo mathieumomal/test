@@ -170,6 +170,11 @@ namespace Etsi.Ultimate.Tests
             throw new NotImplementedException();
         }
 
+        public IEnumerable<ObjectStateEntry> GetEntities<T>(System.Data.Entity.EntityState entityState)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

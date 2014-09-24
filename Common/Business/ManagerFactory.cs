@@ -70,6 +70,7 @@ namespace Etsi.Ultimate.Business
             Container.RegisterType<IReleaseManager, ReleaseManager>(new TransientLifetimeManager());
             Container.RegisterType<ISpecVersionManager, SpecVersionsManager>(new TransientLifetimeManager());
             Container.RegisterType<ISpecificationTechnologiesManager, SpecificationTechnologiesManager>(new TransientLifetimeManager());
+            Container.RegisterType<ICRManager, CRManager>(new TransientLifetimeManager());
         }
     }
 }
