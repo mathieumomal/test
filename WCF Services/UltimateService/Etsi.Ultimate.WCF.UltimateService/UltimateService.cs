@@ -101,5 +101,33 @@ namespace Etsi.Ultimate.WCF.Service
             ServiceHelper serviceHelper = new ServiceHelper();
             return serviceHelper.GetSpecificationsByIds(personID, specificationIds);
         }
+
+        /// <summary>
+        /// Gets the change request by identifier.
+        /// </summary>
+        /// <param name="personID">The person identifier.</param>
+        /// <param name="changeRequestId">The change request identifier.</param>
+        /// <returns>
+        /// Change Request entity
+        /// </returns>
+        public ChangeRequest GetChangeRequestById(int personID, int changeRequestId)
+        {
+            ServiceHelper serviceHelper = new ServiceHelper();
+            return serviceHelper.GetChangeRequestById(personID, changeRequestId);
+        }
+
+        /// <summary>
+        /// Creates the change request.
+        /// </summary>
+        /// <param name="personID">The person identifier.</param>
+        /// <param name="changeRequest">The change request.</param>
+        /// <returns>
+        /// Primary key of newly inserted change request
+        /// </returns>
+        public int CreateChangeRequest(int personID, ChangeRequest changeRequest)
+        {
+            ServiceHelper serviceHelper = new ServiceHelper();
+            return serviceHelper.CreateChangeRequest(personID, changeRequest);
+        }
     }
 }

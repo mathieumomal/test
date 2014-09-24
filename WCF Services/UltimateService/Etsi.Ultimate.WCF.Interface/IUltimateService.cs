@@ -10,6 +10,7 @@ namespace Etsi.Ultimate.WCF.Interface
     [ServiceContract]
     [ServiceKnownType(typeof(Release))]
     [ServiceKnownType(typeof(WorkItem))]
+    [ServiceKnownType(typeof(ChangeRequest))]
     public interface IUltimateService
     {
         /// <summary>
@@ -75,5 +76,23 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>List of specifications</returns>
         [OperationContract]
         List<Specification> GetSpecificationsByIds(int personID, List<int> specificationIds);
+
+        /// <summary>
+        /// Gets the change request by identifier.
+        /// </summary>
+        /// <param name="personID">The person identifier.</param>
+        /// <param name="changeRequestId">The change request identifier.</param>
+        /// <returns>Change Request entity</returns>
+        [OperationContract]
+        ChangeRequest GetChangeRequestById(int personID, int changeRequestId);
+
+        /// <summary>
+        /// Creates the change request.
+        /// </summary>
+        /// <param name="personID">The person identifier.</param>
+        /// <param name="changeRequest">The change request.</param>
+        /// <returns>Primary key of newly inserted change request</returns>
+        [OperationContract]
+        int CreateChangeRequest(int personID, ChangeRequest changeRequest);
     }
 }

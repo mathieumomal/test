@@ -25,14 +25,14 @@ namespace Etsi.Ultimate.WCF.Service
 
         #endregion
 
-        #region Public Methods
+        #region Internal Methods
 
         /// <summary>
         /// Gets the releases.
         /// </summary>
         /// <param name="personId">The person identifier.</param>
         /// <returns>List of releases</returns>
-        public List<UltimateServiceEntities.Release> GetReleases(int personId)
+        internal List<UltimateServiceEntities.Release> GetReleases(int personId)
         {
             var releases = new List<UltimateServiceEntities.Release>();
 
@@ -61,7 +61,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="personId"></param>
         /// <param name="releaseId"></param>
         /// <returns>Return release</returns>
-        public UltimateServiceEntities.Release GetReleaseById(int personId, int releaseId)
+        internal UltimateServiceEntities.Release GetReleaseById(int personId, int releaseId)
         {
             var release = new UltimateServiceEntities.Release();
 
@@ -93,7 +93,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>
         /// List of work items
         /// </returns>
-        public List<UltimateServiceEntities.WorkItem> GetWorkItemsByIds(int personId, List<int> workItemIds)
+        internal List<UltimateServiceEntities.WorkItem> GetWorkItemsByIds(int personId, List<int> workItemIds)
         {
             var workItems = new List<UltimateServiceEntities.WorkItem>();
 
@@ -127,7 +127,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>
         /// List of work items
         /// </returns>
-        public List<UltimateServiceEntities.WorkItem> GetWorkItemsByKeyWord(int personId, string keyword)
+        internal List<UltimateServiceEntities.WorkItem> GetWorkItemsByKeyWord(int personId, string keyword)
         {
             var workItems = new List<UltimateServiceEntities.WorkItem>();
 
@@ -164,7 +164,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>
         /// List of specifications
         /// </returns>
-        public List<UltimateServiceEntities.Specification> GetSpecificationsByKeyWord(int personId, string keyword)
+        internal List<UltimateServiceEntities.Specification> GetSpecificationsByKeyWord(int personId, string keyword)
         {
             var specifications = new List<UltimateServiceEntities.Specification>();
 
@@ -201,7 +201,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>
         /// Specification entity
         /// </returns>
-        public UltimateServiceEntities.Specification GetSpecificationById(int personID, int specificationId)
+        internal UltimateServiceEntities.Specification GetSpecificationById(int personID, int specificationId)
         {
             var specification = new UltimateServiceEntities.Specification();
             try
@@ -230,7 +230,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>
         /// List of specifications
         /// </returns>
-        public List<UltimateServiceEntities.Specification> GetSpecificationsByIds(int personID, List<int> specificationIds)
+        internal List<UltimateServiceEntities.Specification> GetSpecificationsByIds(int personID, List<int> specificationIds)
         {
             var specifications = new List<UltimateServiceEntities.Specification>();
 
@@ -254,6 +254,28 @@ namespace Etsi.Ultimate.WCF.Service
             }
 
             return specifications;
+        }
+
+        /// <summary>
+        /// Gets the change request by identifier.
+        /// </summary>
+        /// <param name="personID">The person identifier.</param>
+        /// <param name="changeRequestId">The change request identifier.</param>
+        /// <returns>Change Request entity</returns>
+        internal UltimateServiceEntities.ChangeRequest GetChangeRequestById(int personID, int changeRequestId)
+        {
+            return new UltimateServiceEntities.ChangeRequest();
+        }
+
+        /// <summary>
+        /// Creates the change request.
+        /// </summary>
+        /// <param name="personID">The person identifier.</param>
+        /// <param name="changeRequest">The change request.</param>
+        /// <returns>Primary key of newly inserted change request</returns>
+        internal int CreateChangeRequest(int personID, UltimateServiceEntities.ChangeRequest changeRequest)
+        {
+            return 1;
         }
 
         #endregion

@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\ChangeRequest.cs" />
     <Compile Include="Entities\Release.cs" />
     <Compile Include="Entities\Specification.cs" />
     <Compile Include="Entities\WorkItem.cs" />
