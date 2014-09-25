@@ -296,12 +296,22 @@ namespace Etsi.Ultimate.WCF.Service
             return primaryKeyOfNewCR;
         }
 
+        /// <summary>
+        /// Gets the change request categories.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <returns>UltimateService ChangeRequestCategory</returns>
         internal List<UltimateServiceEntities.ChangeRequestCategory> GetChangeRequestCategories(int personId)
         {
             var changeRequestCategory = new List<UltimateServiceEntities.ChangeRequestCategory>();
             try
             {
-                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());            
+                //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
+                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
+                var svc = ServicesFactory.Resolve<ICRService>();
+                var svcChangeRequestCategory = svc.GetChangeRequestCategories(personId);
+                if (svcChangeRequestCategory.Key)
+                    changeRequestCategory = ConvertUltimateCRCategoriesToServiceCategories(svcChangeRequestCategory.Value);
             }
             catch (Exception ex)
             {
@@ -309,6 +319,27 @@ namespace Etsi.Ultimate.WCF.Service
                 LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequestCategories, ex.Message));
             }
             return changeRequestCategory;
+        }
+
+        /// <summary>
+        /// Converts the ultimate cr categories to service categories.
+        /// </summary>
+        /// <param name="list">The list.</param>
+        /// <returns>UltimateService ChangeRequestCategory</returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private List<UltimateServiceEntities.ChangeRequestCategory> ConvertUltimateCRCategoriesToServiceCategories(List<UltimateEntities.Enum_CRCategory> ultimateCRCategory)
+        {
+            var svcCRCategories = new List<UltimateServiceEntities.ChangeRequestCategory>();
+            foreach (var item in ultimateCRCategory)
+            {
+                svcCRCategories.Add(new UltimateServiceEntities.ChangeRequestCategory
+                {
+                    Pk_EnumCRCategory = item.Pk_EnumCRCategory,
+                    Code = item.Code,
+                    Description = item.Description
+                });
+            }
+            return svcCRCategories;
         }
 
         #endregion
