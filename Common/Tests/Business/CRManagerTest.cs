@@ -8,6 +8,7 @@ using Microsoft.Practices.Unity;
 using System.Collections.Generic;
 using Etsi.Ultimate.Tests.FakeSets;
 using System.Data.Entity;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Tests.Business
 {
@@ -18,6 +19,7 @@ namespace Etsi.Ultimate.Tests.Business
 
         private const int totalNoOfCRsInCSV = 0;
         private const int personID = 0;
+        private const string CACHE_KEY = "ULT_BIZ_CHANGEREQUESTCATEGORY_ALL";
 
         #endregion
 
@@ -69,6 +71,9 @@ namespace Etsi.Ultimate.Tests.Business
             crManager.UoW = UoW;
             var result = crManager.GetChangeRequestCategories(personID);
             //Assert
+            var svcChangeRequestCategory = (List<Enum_CRCategory>)CacheManager.Get(CACHE_KEY);
+
+            Assert.IsNotNull(svcChangeRequestCategory);
             Assert.AreEqual(2, result.Count);
             Assert.AreEqual("CR", result[0].Code);
 
