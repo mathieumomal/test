@@ -53,6 +53,7 @@
     <Compile Include="CommunityRepository.cs" />
     <Compile Include="CRRepository.cs" />
     <Compile Include="Enum_CommunitiesShortNameRepository.cs" />
+    <Compile Include="Enum_CRCategoryRepository.cs" />
     <Compile Include="RemarkRepository.cs" />
     <Compile Include="SyncInfoRepository.cs" />
     <Compile Include="EnumTechnologiesRepository.cs" />

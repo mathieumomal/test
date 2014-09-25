@@ -12,7 +12,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         #region Constants
 
         private const int totalNoOfCRsInCSV = 0;
-        
+
         #endregion
 
         #region Tests
@@ -36,6 +36,15 @@ namespace Etsi.Ultimate.Tests.Repositories
             var allCRs = repo.All;
 
             Assert.AreEqual(totalNoOfCRsInCSV, allCRs.ToList().Count);
+        }
+
+
+        [Test]
+        public void Repository_GetCRCategories()
+        {
+            var repo = new Enum_CRCategoryRepository() { UoW = UoW };
+            var result = repo.All;
+            Assert.AreEqual(2, result.Count());
         }
 
         #endregion

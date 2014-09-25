@@ -5,6 +5,9 @@ using Etsi.Ultimate.Repositories;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Microsoft.Practices.Unity;
+using System.Collections.Generic;
+using Etsi.Ultimate.Tests.FakeSets;
+using System.Data.Entity;
 
 namespace Etsi.Ultimate.Tests.Business
 {
@@ -54,7 +57,42 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.IsFalse(result);
         }
 
+        [Test, TestCaseSource("GetCRCategoryData")]
+        public void Business_ChangeRequestCategory(IDbSet<Enum_CRCategory> changeRequestCategories)
+        {
+            var mockCRCategoryRepository = MockRepository.GenerateMock<IEnum_CRCategoryRepository>();
+            mockCRCategoryRepository.Stub(x => x.All).Return(changeRequestCategories);
+            RepositoryFactory.Container.RegisterInstance(typeof(IEnum_CRCategoryRepository), mockCRCategoryRepository);
+
+            //Act
+            var crManager = new CRManager();
+            crManager.UoW = UoW;
+            var result = crManager.GetChangeRequestCategories(personID);
+            //Assert
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual("CR", result[0].Code);
+
+        }
+
+        /// <summary>
+        /// Provide Enum_CRCategory Data
+        /// </summary>
+        /// <returns></returns>
+        private IEnumerable<IDbSet<Enum_CRCategory>> GetCRCategoryData
+        {
+            get
+            {
+                var crCategoryDBSet = new Enum_CRCategoryFakeDbSet();
+
+                crCategoryDBSet.Add(new Enum_CRCategory() { Pk_EnumCRCategory = 1, Code = "CR", Description = "Change Request" });
+                crCategoryDBSet.Add(new Enum_CRCategory() { Pk_EnumCRCategory = 1, Code = "CD", Description = "Change Description" });
+
+
+                yield return (IDbSet<Enum_CRCategory>)crCategoryDBSet;
+            }
+        }
+
         #endregion
-        
+
     }
 }

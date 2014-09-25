@@ -93,6 +93,7 @@
     <Compile Include="BaseTest.cs" />
     <Compile Include="Business\CommunityManagerTest.cs" />
     <Compile Include="Business\CRManagerTest.cs" />
+    <Compile Include="Business\Enum_CRCategoryFakeDBSet.cs" />
     <Compile Include="Business\RemarkManagerTest.cs" />
     <Compile Include="Business\PersonManagerTest.cs" />
     <Compile Include="Business\SpecificationDefinitiveWithdrawalActionTest.cs" />
