@@ -72,9 +72,9 @@
 	<add key="MeetingiCalAddress" value="http://webapp.13.etsiqa.org/meetingCalendar/ical.asp?qMTG_ID=" />
     <add key="MeetingParticipantsListAddress" value="http://webapp.13.etsiqa.org/3GPPRegistration/fViewPart.asp?mid=" />
 	<add key="RapporteurDetailsAddress" value="http://webapp.13.etsiqa.org/teldir/ListPersDetails.asp?PersId="/>
-	<add key="FtpExportAddress" value="ftp://ftp.3gpp.org/Information/WORK_PLAN/"/>
-	<add key="FtpBasePhysicalPath" value="D:\AppTrans\Ftp\" />
-	<add key="FtpBaseAddress" value="http://www.3gpp.org/ftp/" />
+	<add key="FtpExportAddress" value="http://ftp3gpp.13.etsiqa.org/Information/WORK_PLAN/"/>
+	<add key="FtpBasePhysicalPath" value="D:\1FTPSites\ftp3GPP.13.etsiqa.org\" />
+	<add key="FtpBaseAddress" value="http://ftp3gpp.13.etsiqa.org/" />
 	<add key="VersionsLatestFTPFolder" value="2014-09" />
 	<add key="TranspositionFolderPath" value="D:\AppTrans\transposition\"/>
 	<add key="WIReportPath" value ="http://webapp.13.etsiqa.org/workprogram/Report_WorkItem.asp?WKI_ID="/>
