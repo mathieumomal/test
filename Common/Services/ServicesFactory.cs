@@ -68,7 +68,7 @@ namespace Etsi.Ultimate.Services
             Container.RegisterType<ICommunityService, CommunityService>(new TransientLifetimeManager());
             Container.RegisterType<IRightsService, RightsService>(new TransientLifetimeManager());
             Container.RegisterType<ISpecVersionService, SpecVersionService>(new TransientLifetimeManager());
-            Container.RegisterType<ICRService, CRService>(new TransientLifetimeManager());
+            Container.RegisterType<IChangeRequestService, ChangeRequestService>(new TransientLifetimeManager());
 
             //Offline Interfaces
             Container.RegisterType<IOfflineService<SpecVersion>, SpecVersionService>(new TransientLifetimeManager());

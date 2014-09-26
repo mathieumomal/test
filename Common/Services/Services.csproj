@@ -49,7 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommunityService.cs" />
-    <Compile Include="CRService.cs" />
+    <Compile Include="ChangeRequestService.cs" />
     <Compile Include="RemarkService.cs" />
     <Compile Include="IOfflineService.cs" />
     <Compile Include="SpecVersionService.cs" />

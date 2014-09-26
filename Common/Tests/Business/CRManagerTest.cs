@@ -20,6 +20,7 @@ namespace Etsi.Ultimate.Tests.Business
         private const int totalNoOfCRsInCSV = 0;
         private const int personID = 0;
         private const string CACHE_KEY = "ULT_BIZ_CHANGEREQUESTCATEGORY_ALL";
+        private int specificationId = 136080;
 
         #endregion
 
@@ -30,44 +31,58 @@ namespace Etsi.Ultimate.Tests.Business
         {
             //Arrange
             ChangeRequest changeRequest = new ChangeRequest();
-            var mockCRRepository = MockRepository.GenerateMock<ICRRepository>();
+            var mockCRRepository = MockRepository.GenerateMock<IChangeRequestRepository>();
             mockCRRepository.Stub(x => x.InsertOrUpdate(Arg<ChangeRequest>.Is.Anything));
-            RepositoryFactory.Container.RegisterInstance(typeof(ICRRepository), mockCRRepository);
+            RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockCRRepository);
 
             //Act
-            var crManager = new CRManager();
+            var crManager = new ChangeRequestManager();
             var result = crManager.CreateChangeRequest(personID, changeRequest);
 
             //Assert
             Assert.IsTrue(result);
         }
-
+             
         [Test]
         public void Business_CreateChangeRequest_Failure()
         {
             //Arrange
             ChangeRequest changeRequest = new ChangeRequest();
-            var mockCRRepository = MockRepository.GenerateMock<ICRRepository>();
+            var mockCRRepository = MockRepository.GenerateMock<IChangeRequestRepository>();
             mockCRRepository.Stub(x => x.InsertOrUpdate(Arg<ChangeRequest>.Is.Anything)).Throw(new System.Exception());
-            RepositoryFactory.Container.RegisterInstance(typeof(ICRRepository), mockCRRepository);
+            RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockCRRepository);
 
             //Act
-            var crManager = new CRManager();
+            var crManager = new ChangeRequestManager();
             var result = crManager.CreateChangeRequest(personID, changeRequest);
 
             //Assert
             Assert.IsFalse(result);
         }
 
+        [Test]
+        public void Business_CrNumberGeneration()
+        {
+            //Arrange
+            ChangeRequest changeRequest = new ChangeRequest();
+            changeRequest.Fk_Specification = specificationId;
+            var crManager = new ChangeRequestManager();
+            crManager.UoW = UoW;
+            //Act
+            var result = crManager.GenerateCrNumber(changeRequest.Fk_Specification);
+            //Assert
+            Assert.AreNotSame("AC144", result);
+        }
+
         [Test, TestCaseSource("GetCRCategoryData")]
         public void Business_ChangeRequestCategory(IDbSet<Enum_CRCategory> changeRequestCategories)
         {
-            var mockCRCategoryRepository = MockRepository.GenerateMock<IEnum_CRCategoryRepository>();
+            var mockCRCategoryRepository = MockRepository.GenerateMock<IEnum_CrCategoryRepository>();
             mockCRCategoryRepository.Stub(x => x.All).Return(changeRequestCategories);
-            RepositoryFactory.Container.RegisterInstance(typeof(IEnum_CRCategoryRepository), mockCRCategoryRepository);
+            RepositoryFactory.Container.RegisterInstance(typeof(IEnum_CrCategoryRepository), mockCRCategoryRepository);
 
             //Act
-            var crManager = new CRManager();
+            var crManager = new ChangeRequestManager();
             crManager.UoW = UoW;
             var result = crManager.GetChangeRequestCategories(personID);
             //Assert

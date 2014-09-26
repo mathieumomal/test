@@ -1,8 +1,11 @@
 ﻿using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using NUnit.Framework;
+using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Etsi.Ultimate.Tests.Repositories
 {
@@ -11,8 +14,8 @@ namespace Etsi.Ultimate.Tests.Repositories
     {
         #region Constants
 
-        private const int totalNoOfCRsInCSV = 0;
-
+        private const int totalNoOfCRsInCSV = 6;
+        int specificationId = 136080;
         #endregion
 
         #region Tests
@@ -20,7 +23,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         [Test]
         public void Repository_CR_InsertOrUpdate()
         {
-            var repo = new CRRepository() { UoW = UoW };
+            var repo = new ChangeRequestRepository() { UoW = UoW };
             var changeRequest1 = new ChangeRequest() { CRNumber = "234.12" };
             var changeRequest2 = new ChangeRequest() { CRNumber = "234.13" };
             repo.InsertOrUpdate(changeRequest1);
@@ -32,17 +35,24 @@ namespace Etsi.Ultimate.Tests.Repositories
         [Test]
         public void Repository_CR_All()
         {
-            var repo = new CRRepository() { UoW = UoW };
+            var repo = new ChangeRequestRepository() { UoW = UoW };
             var allCRs = repo.All;
 
             Assert.AreEqual(totalNoOfCRsInCSV, allCRs.ToList().Count);
+        }
+        [Test]
+        public void GetCrNumberList()
+        {
+            var repo = new ChangeRequestRepository() { UoW = UoW };
+            var repoResult = repo.FindBySpecificationId(specificationId);
+            Assert.AreEqual(6, repoResult.Count);
         }
 
 
         [Test]
         public void Repository_GetCRCategories()
         {
-            var repo = new Enum_CRCategoryRepository() { UoW = UoW };
+            var repo = new Enum_CrCategoryRepository() { UoW = UoW };
             var result = repo.All;
             Assert.AreEqual(2, result.Count());
         }
