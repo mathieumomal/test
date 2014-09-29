@@ -13,7 +13,7 @@ using System;
 namespace Etsi.Ultimate.Tests.Services
 {
     [Category("CR Tests")]
-    public class CRServiceTest : BaseEffortTest
+    public class CrServiceTest : BaseEffortTest
     {
         #region Constants
 
@@ -64,26 +64,7 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(0, result.Value);
             mockDataContext.AssertWasNotCalled(x => x.SaveChanges());
         }
-
-        [Test]
-        public void Service_UnitTest_GetchangeRequestCategories()
-        {
-            //Arrange
-            var mockChangeRequestCategories = MockRepository.GenerateMock<IChangeRequestManager>();
-            var changeRequestCategories = ChangeRequestCategoryDataObject();
-            mockChangeRequestCategories.Stub(x => x.GetChangeRequestCategories(Arg<int>.Is.Anything)).Return(changeRequestCategories);
-            ManagerFactory.Container.RegisterInstance(typeof(IChangeRequestManager), mockChangeRequestCategories);
-
-            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
-            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
-            //Act
-            var crCategoryService = new ChangeRequestService();
-            var result = crCategoryService.GetChangeRequestCategories(personID);
-            //Assert
-            Assert.IsTrue(result.Key);
-
-        }
-
+      
         [Test]
         public void Service_UnitTest_GetChangeRequestById()
         {
@@ -144,18 +125,7 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(changeRequest.Pk_ChangeRequest, result.Value);
             Assert.AreEqual(changeRequest.CRNumber, "AC0145");
         }
-
-        [Test]
-        public void Service_IntegrationTest_GetchangeRequestCategories()
-        {
-            //Act
-            var crCategoryService = new ChangeRequestService();
-            var result = crCategoryService.GetChangeRequestCategories(personID);
-            //Assert
-            Assert.IsNotNull(result.Value);
-            Assert.AreEqual("CR", result.Value[0].Code);
-        }
-
+     
         [Test]
         public void Service_IntegrationTest_GetChangeRequestById()
         {
@@ -216,17 +186,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             };
             return changeRequest.Find(x => x.Pk_ChangeRequest == changeRequestById);
-        }
-
-        private static List<Enum_CRCategory> ChangeRequestCategoryDataObject()
-        {
-            var changeRequestCategories = new List<Enum_CRCategory>
-            {
-                new Enum_CRCategory { Pk_EnumCRCategory = 1, Code = "CR", Description = "Change Request" },
-                new Enum_CRCategory { Pk_EnumCRCategory = 2, Code = "PCR", Description = "Pack Change Request" },
-            };
-            return changeRequestCategories;
-        }
+        }       
         #endregion
     }
 }

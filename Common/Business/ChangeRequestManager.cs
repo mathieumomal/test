@@ -33,9 +33,9 @@ namespace Etsi.Ultimate.Business
                 repo.UoW = UoW;
                 repo.InsertOrUpdate(changeRequest);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                //LogManager.Error("[Business] Failed to create change request: " + ex.Message);
+                LogManager.Error("[Business] Failed to create change request: " + ex.Message);
                 isSuccess = false;
             }
             return isSuccess;
@@ -64,6 +64,13 @@ namespace Etsi.Ultimate.Business
             return new StringBuilder().Append(alphaCharacter).Append(heighestCrNumber.ToString(new String('0', 4))).ToString();
         }
 
+
+        /// <summary>
+        /// Gets the change request by identifier.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="changeRequestId">The change request identifier.</param>
+        /// <returns>change Request object</returns>
         public ChangeRequest GetChangeRequestById(int personId, int changeRequestId)
         {
             var isSuccess = true;
@@ -73,45 +80,15 @@ namespace Etsi.Ultimate.Business
                 var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
                 repo.UoW = UoW;
                 changeRequest = repo.GetChangeRequestById(changeRequestId);
+                isSuccess = true;
             }
             catch (Exception ex)
-            {
+            {               
                 isSuccess = false;
+                LogManager.Error("[Business] Failed to GetChangeRequestById:" + ex.Message);
             }
             return changeRequest;
-        }
-
-        /// <summary>
-        /// Gets the change request categories.
-        /// </summary>
-        /// <param name="personId">The person identifier.</param>
-        /// <returns>
-        /// CR Category list
-        /// </returns>
-        public List<Enum_CRCategory> GetChangeRequestCategories(int personId)
-        {
-            //cheeck cache data need to check User right
-            var cachedData = (List<Enum_CRCategory>)CacheManager.Get(CacheKey);
-            try
-            {
-                if (cachedData == null)
-                {
-                    var repo = RepositoryFactory.Resolve<IEnum_CrCategoryRepository>();
-                    repo.UoW = UoW;
-                    cachedData = repo.All.ToList();
-
-                    if (CacheManager.Get(CacheKey) == null)
-                    {
-                        CacheManager.Insert(CacheKey, cachedData);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                LogManager.Error("[Business] Failed to GetChangeRequestCategories:" + ex.Message);
-            }
-            return cachedData;
-        }
+        }      
         #region Private methods
 
         /// <summary>
@@ -166,14 +143,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="changeRequest">The change request.</param>
         /// <returns>Primary key of newly inserted change request</returns>
         bool CreateChangeRequest(int personId, ChangeRequest changeRequest);
-
-        /// <summary>
-        /// Gets the change request categories.
-        /// </summary>
-        /// <param name="personId">The person identifier.</param>
-        /// <returns>CR Category list</returns>
-        List<Enum_CRCategory> GetChangeRequestCategories(int personId);
-
+       
         /// <summary>
         /// Gets the change request by identifier.
         /// </summary>

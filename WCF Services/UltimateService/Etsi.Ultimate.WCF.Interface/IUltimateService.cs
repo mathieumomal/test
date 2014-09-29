@@ -97,10 +97,10 @@ namespace Etsi.Ultimate.WCF.Interface
         int CreateChangeRequest(int personID, ChangeRequest changeRequest);
 
         /// <summary>
-        /// Changes the request category.
+        /// Changes the request categories.
         /// </summary>
-        /// <returns>Change request category list</returns>
+        /// <returns>Change request categories list</returns>
         [OperationContract]
-        List<ChangeRequestCategory> GetChangeRequestCategories(int personId);
+        List<ChangeRequestCategory> GetChangeRequestCategories();
     }
 }

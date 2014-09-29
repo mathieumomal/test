@@ -92,7 +92,8 @@
     <Compile Include="BaseEffortTest.cs" />
     <Compile Include="BaseTest.cs" />
     <Compile Include="Business\CommunityManagerTest.cs" />
-    <Compile Include="Business\CRManagerTest.cs" />
+    <Compile Include="Business\CrCategoriesManagerTest.cs" />
+    <Compile Include="Business\CrManagerTest.cs" />
     <Compile Include="Business\Enum_CRCategoryFakeDBSet.cs" />
     <Compile Include="Business\RemarkManagerTest.cs" />
     <Compile Include="Business\PersonManagerTest.cs" />
@@ -137,7 +138,8 @@
     <Compile Include="FakeSets\VersionFakeDBSet.cs" />
     <Compile Include="FakeSets\ViewPersonFakeDBSet.cs" />
     <Compile Include="FakeSets\WorkPlanFileFakeDBSet.cs" />
-    <Compile Include="Repositories\CRRepositoryTest.cs" />
+    <Compile Include="Repositories\CrCategoriesRepository.cs" />
+    <Compile Include="Repositories\CrRepositoryTest.cs" />
     <Compile Include="Repositories\EnumRepositoryTest\EnumCommunityShortnameRepositoryTest.cs" />
     <Compile Include="Repositories\EnumRepositoryTest\EnumTechnologiesRepositoryTest.cs" />
     <Compile Include="Repositories\RemarkRepositoryTest.cs" />
@@ -148,7 +150,8 @@
     <Compile Include="Repositories\SpecVersionsRepositoryTest.cs" />
     <Compile Include="Repositories\SyncInfoRepositoryTest.cs" />
     <Compile Include="Repositories\WorkPlanFileRepositoryTest.cs" />
-    <Compile Include="Services\CRServiceTest.cs" />
+    <Compile Include="Services\CrCategoriesServiceTest.cs" />
+    <Compile Include="Services\CrServiceTest.cs" />
     <Compile Include="Services\RemarkServiceTest.cs" />
     <Compile Include="Services\RightsService.cs" />
     <Compile Include="Services\RightsServiceTest.cs" />

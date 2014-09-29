@@ -317,41 +317,40 @@ namespace Etsi.Ultimate.WCF.Service
         /// Gets the change request categories.
         /// </summary>
         /// <param name="personId">The person identifier.</param>
-        /// <returns>UltimateService ChangeRequestCategory</returns>
-        internal List<UltimateServiceEntities.ChangeRequestCategory> GetChangeRequestCategories(int personId)
+        /// <returns>UltimateService ChangeRequestCategories</returns>
+        internal List<UltimateServiceEntities.ChangeRequestCategory> GetChangeRequestCategories()
         {
-            var changeRequestCategory = new List<UltimateServiceEntities.ChangeRequestCategory>();
+            var changeRequestCategories = new List<UltimateServiceEntities.ChangeRequestCategory>();
             try
             {
                 //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
                 RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
-                var svc = ServicesFactory.Resolve<IChangeRequestService>();
-                var svcChangeRequestCategory = svc.GetChangeRequestCategories(personId);
-                if (svcChangeRequestCategory.Key)
-                    svcChangeRequestCategory.Value.ForEach(x => changeRequestCategory.Add(ConvertUltimateCRCategoriesToServiceCategories(x)));
+                var svc = ServicesFactory.Resolve<ICrCategoriesService>();
+                var svcChangeRequestCategories = svc.GetChangeRequestCategories();
+                if (svcChangeRequestCategories.Key)
+                    svcChangeRequestCategories.Value.ForEach(x => changeRequestCategories.Add(ConvertUltimateCRCategoriesToServiceCategories(x)));
             }
             catch (Exception ex)
             {
-
                 LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequestCategories, ex.Message));
             }
-            return changeRequestCategory;
+            return changeRequestCategories;
         }
 
-        ///// <summary>
-        ///// Converts the ultimate cr categories to service categories.
-        ///// </summary>
-        ///// <param name="list">The list.</param>
-        ///// <returns>UltimateService ChangeRequestCategory</returns>      
+        /// <summary>
+        /// Converts the ultimate cr category to service cr category.
+        /// </summary>
+        /// <param name="list">The list.</param>
+        /// <returns>UltimateService ChangeRequestCategory</returns>      
         private UltimateServiceEntities.ChangeRequestCategory ConvertUltimateCRCategoriesToServiceCategories(UltimateEntities.Enum_CRCategory ultimateCRCategory)
         {
-            var svcCRCategories = new UltimateServiceEntities.ChangeRequestCategory
+            var svcCRCategory = new UltimateServiceEntities.ChangeRequestCategory
             {
                 Pk_EnumCRCategory = ultimateCRCategory.Pk_EnumCRCategory,
                 Code = ultimateCRCategory.Code,
                 Description = ultimateCRCategory.Description
             };
-            return svcCRCategories;
+            return svcCRCategory;
         }
 
         #endregion

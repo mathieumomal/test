@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 namespace Etsi.Ultimate.Tests.Repositories
 {
     [Category("CR Tests")]
-    public class CRRepositoryTest : BaseEffortTest
+    public class CrRepositoryTest : BaseEffortTest
     {
         #region Constants
 
@@ -56,17 +56,7 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(1, repResult.Pk_ChangeRequest); 
             Assert.AreEqual("A001", repResult.CRNumber);
             Assert.AreEqual(136080, repResult.Fk_Specification);
-        }
-
-
-        [Test]
-        public void Repository_GetCRCategories()
-        {
-            var repo = new Enum_CrCategoryRepository() { UoW = UoW };
-            var result = repo.All;
-            Assert.AreEqual(2, result.Count());
-        }
-
+        }      
         #endregion
     }
 }

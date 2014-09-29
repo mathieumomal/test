@@ -14,7 +14,7 @@ using System.Linq;
 namespace Etsi.Ultimate.Tests.Business
 {
     [Category("CR Tests")]
-    public class CRManagerTest : BaseEffortTest
+    public class CrManagerTest : BaseEffortTest
     {
         #region Constants
 
@@ -75,27 +75,7 @@ namespace Etsi.Ultimate.Tests.Business
             //Assert
             Assert.AreNotSame("AC144", result);
         }
-
-        [Test, TestCaseSource("GetCRCategoryData")]
-        public void Business_ChangeRequestCategory(IDbSet<Enum_CRCategory> changeRequestCategories)
-        {
-            var mockCRCategoryRepository = MockRepository.GenerateMock<IEnum_CrCategoryRepository>();
-            mockCRCategoryRepository.Stub(x => x.All).Return(changeRequestCategories);
-            RepositoryFactory.Container.RegisterInstance(typeof(IEnum_CrCategoryRepository), mockCRCategoryRepository);
-
-            //Act
-            var crManager = new ChangeRequestManager();
-            crManager.UoW = UoW;
-            var result = crManager.GetChangeRequestCategories(personID);
-            //Assert
-            var svcChangeRequestCategory = (List<Enum_CRCategory>)CacheManager.Get(CACHE_KEY);
-
-            Assert.IsNotNull(svcChangeRequestCategory);
-            Assert.AreEqual(2, result.Count);
-            Assert.AreEqual("CR", result[0].Code);
-
-        }
-
+       
         [Test]
         public void GetChangeRequestById()
         {
@@ -110,30 +90,6 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual("AC0144", result.CRNumber);
         }
         #endregion
-
-        #region Data object
-
-        /// <summary>
-        /// Provide Enum_CRCategory Data
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerable<IDbSet<Enum_CRCategory>> GetCRCategoryData
-        {
-            get
-            {
-                var crCategoryDBSet = new Enum_CRCategoryFakeDbSet();
-
-                crCategoryDBSet.Add(new Enum_CRCategory() { Pk_EnumCRCategory = 1, Code = "CR", Description = "Change Request" });
-                crCategoryDBSet.Add(new Enum_CRCategory() { Pk_EnumCRCategory = 1, Code = "CD", Description = "Change Description" });
-
-
-                yield return (IDbSet<Enum_CRCategory>)crCategoryDBSet;
-            }
-        }
-        #endregion
-
-
-
-
+      
     }
 }
