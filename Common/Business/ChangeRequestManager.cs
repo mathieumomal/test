@@ -35,7 +35,7 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Business] Failed to create change request: " + ex.Message);
+                //LogManager.Error("[Business] Failed to create change request: " + ex.Message);
                 isSuccess = false;
             }
             return isSuccess;
@@ -85,7 +85,7 @@ namespace Etsi.Ultimate.Business
             catch (Exception ex)
             {               
                 isSuccess = false;
-                LogManager.Error("[Business] Failed to GetChangeRequestById:" + ex.Message);
+               // LogManager.Error("[Business] Failed to GetChangeRequestById:" + ex.Message);
             }
             return changeRequest;
         }      

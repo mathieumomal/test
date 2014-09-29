@@ -42,7 +42,7 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Business] Failed to GetChangeRequestCategories:" + ex.Message);
+               // LogManager.Error("[Business] Failed to GetChangeRequestCategories:" + ex.Message);
             }
             return cachedData;
         }

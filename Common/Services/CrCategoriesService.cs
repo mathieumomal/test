@@ -31,8 +31,8 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Service] Failed to GetChangeRequestCategories request: " + ex.Message);
                 isSuccess = false;
+               // LogManager.Error("[Service] Failed to GetChangeRequestCategories request: " + ex.Message);                
             }
             return new KeyValuePair<bool, List<Enum_CRCategory>>(isSuccess, enumChangeRequestCategorylist);
         }

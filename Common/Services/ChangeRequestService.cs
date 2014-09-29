@@ -38,8 +38,9 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Service] Failed to create change request: " + ex.Message);
                 isSuccess = false;
+               // LogManager.Error("[Service] Failed to create change request: " + ex.Message);
+                
             }
 
             return new KeyValuePair<bool, int>(isSuccess, primaryKeyOfChangeRequest);
@@ -68,7 +69,7 @@ namespace Etsi.Ultimate.Services
             catch (Exception ex)
             {
                 isSuccess = false;
-                LogManager.Error("[Service] Failed to GetChangeRequestById: " + ex.Message);
+               // LogManager.Error("[Service] Failed to GetChangeRequestById: " + ex.Message);
             }
             return new KeyValuePair<bool, ChangeRequest>(isSuccess, changeRequest);
         }
