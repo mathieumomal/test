@@ -24,6 +24,7 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateGetSpecificationsByIds = "Ultimate Service Error [GetSpecificationsByIds]: {0}";
         private const string ConstErrorTemplateCreateChangeRequest = "Ultimate Service Error [CreateChangeRequest]: {0}";
         private const string ConstErrorTemplateCreateChangeRequestCategories = "Ultimate Service Error [GetChangeRequestCategories]: {0}";
+        private const string ConstErrorTemplateCreateChangeRequestById = "Ultimate Service Error [GetChangeRequestById]: {0}";
 
         #endregion
 
@@ -266,7 +267,23 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>Change Request entity</returns>
         internal UltimateServiceEntities.ChangeRequest GetChangeRequestById(int personID, int changeRequestId)
         {
-            return new UltimateServiceEntities.ChangeRequest();
+            var changeRequest = new UltimateServiceEntities.ChangeRequest();
+            try
+            {
+                //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
+                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
+                var svcChangeRequestById = ServicesFactory.Resolve<IChangeRequestService>();
+                var svcResult = svcChangeRequestById.GetChangeRequestById(personID, changeRequestId);
+                if (svcResult.Key)
+                    changeRequest = ConvertUltimateCRToServiceCR(svcResult.Value);
+            }
+            catch (Exception ex)
+            {
+
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequestById, ex.Message));
+            }
+            LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequestById, changeRequest.Pk_ChangeRequest));
+            return changeRequest;
         }
 
         /// <summary>
@@ -434,6 +451,45 @@ namespace Etsi.Ultimate.WCF.Service
                 ultimateCR.Fk_Enum_CRCategory = serviceCR.Fk_Enum_CRCategory;
             }
             return ultimateCR;
+        }
+
+        /// <summary>
+        /// Converts the ultimate cr to service CR.
+        /// </summary>
+        /// <param name="serviceCR">The service CR.</param>
+        /// <returns>Ultimate Entities to Service Entities</returns>
+        private UltimateServiceEntities.ChangeRequest ConvertUltimateCRToServiceCR(UltimateEntities.ChangeRequest ultimateCR)
+        {
+            var serviceCR = new UltimateServiceEntities.ChangeRequest();
+            if (ultimateCR != null)
+            {
+                serviceCR.Pk_ChangeRequest = ultimateCR.Pk_ChangeRequest;
+                serviceCR.CRNumber = ultimateCR.CRNumber;
+                serviceCR.Revision = ultimateCR.Revision;
+                serviceCR.Subject = ultimateCR.Subject;
+                serviceCR.Fk_TSGStatus = ultimateCR.Fk_TSGStatus;
+                serviceCR.Fk_WGStatus = ultimateCR.Fk_WGStatus;
+                serviceCR.Subject = ultimateCR.Subject;
+                serviceCR.CreationDate = ultimateCR.CreationDate;
+                serviceCR.TSGSourceOrganizations = ultimateCR.TSGSourceOrganizations;
+                serviceCR.WGSourceOrganizations = ultimateCR.WGSourceOrganizations;
+                serviceCR.TSGMeeting = ultimateCR.TSGMeeting;
+                serviceCR.TSGTarget = ultimateCR.TSGTarget;
+                serviceCR.WGSourceForTSG = ultimateCR.WGSourceForTSG;
+                serviceCR.WGMeeting = ultimateCR.WGMeeting;
+                serviceCR.WGTarget = ultimateCR.WGTarget;
+                serviceCR.Fk_Enum_CRCategory = ultimateCR.Fk_Enum_CRCategory;
+                serviceCR.Fk_Specification = ultimateCR.Fk_Specification;
+                serviceCR.Fk_Release = ultimateCR.Fk_Release;
+                serviceCR.Fk_CurrentVersion = ultimateCR.Fk_CurrentVersion;
+                serviceCR.Fk_NewVersion = ultimateCR.Fk_NewVersion;
+                serviceCR.Fk_Impact = ultimateCR.Fk_Impact;
+                serviceCR.TSGTDoc = ultimateCR.TSGTDoc;
+                serviceCR.WGTDoc = ultimateCR.WGTDoc;
+                serviceCR.Fk_Enum_CRCategory = ultimateCR.Fk_Enum_CRCategory;
+                serviceCR.Fk_Enum_CRCategory = ultimateCR.Fk_Enum_CRCategory;
+            }
+            return serviceCR;
         }
 
         #endregion

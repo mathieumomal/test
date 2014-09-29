@@ -43,7 +43,7 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsTrue(result.Key);
             mockDataContext.AssertWasCalled(x => x.SaveChanges());
         }
-      
+
         [Test]
         public void Service_UnitTest_CreateChangeRequest_Failure()
         {
@@ -83,6 +83,24 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsTrue(result.Key);
 
         }
+
+        [Test]
+        public void Service_UnitTest_GetChangeRequestById()
+        {
+            var mockChangeRequestById = MockRepository.GenerateMock<IChangeRequestManager>();
+            var changeRequestById = GetChangeRequestByIdDataObject(1);
+            mockChangeRequestById.Stub(x => x.GetChangeRequestById(0, 1)).Return(changeRequestById);
+            ManagerFactory.Container.RegisterInstance(typeof(IChangeRequestManager), mockChangeRequestById);
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            //Act
+            var svcChangeRequestById = new ChangeRequestService();
+            var result = svcChangeRequestById.GetChangeRequestById(personID, 1);
+            //Assert
+            Assert.IsTrue(result.Key);
+        }     
         #endregion
 
         #region Integration Tests
@@ -93,11 +111,9 @@ namespace Etsi.Ultimate.Tests.Services
             //Arrange
             ChangeRequest changeRequest = new ChangeRequest();
             changeRequest.CRNumber = "234.12";
-
             //Act
             var crService = new ChangeRequestService();
             var result = crService.CreateChangeRequest(personID, changeRequest);
-
             //Assert
             Assert.IsTrue(result.Key);
             Assert.AreEqual(totalNoOfCRsInCSV + 1, result.Value);
@@ -108,11 +124,9 @@ namespace Etsi.Ultimate.Tests.Services
         {
             //Arrange
             ChangeRequest changeRequest = new ChangeRequest();
-
             //Act
             var crService = new ChangeRequestService();
             var result = crService.CreateChangeRequest(personID, changeRequest);
-
             //Assert
             Assert.IsTrue(result.Key);
             Assert.AreNotEqual(6, result.Value);
@@ -122,11 +136,10 @@ namespace Etsi.Ultimate.Tests.Services
         public void Service_IntegrationTest_CreateChangeRequestwithCrNumber()
         {
             //Arange
-            var changeRequest = ChangeRequestDataObject();         
+            var changeRequest = ChangeRequestDataObject();
             //Act
             var crService = new ChangeRequestService();
             var result = crService.CreateChangeRequest(personID, changeRequest);
-
             //Assert
             Assert.AreEqual(changeRequest.Pk_ChangeRequest, result.Value);
             Assert.AreEqual(changeRequest.CRNumber, "AC0145");
@@ -134,13 +147,24 @@ namespace Etsi.Ultimate.Tests.Services
 
         [Test]
         public void Service_IntegrationTest_GetchangeRequestCategories()
-       {           
+        {
             //Act
             var crCategoryService = new ChangeRequestService();
             var result = crCategoryService.GetChangeRequestCategories(personID);
             //Assert
             Assert.IsNotNull(result.Value);
-            Assert.AreEqual("CR", result.Value[0].Code);          
+            Assert.AreEqual("CR", result.Value[0].Code);
+        }
+
+        [Test]
+        public void Service_IntegrationTest_GetChangeRequestById()
+        {
+            //Act
+            var changeRequestById = new ChangeRequestService();
+            var result = changeRequestById.GetChangeRequestById(personID, 3);
+            //Assert
+            Assert.AreEqual(3, result.Value.Pk_ChangeRequest);
+            Assert.AreEqual("A0012", result.Value.CRNumber);
         }
 
         #endregion
@@ -174,6 +198,24 @@ namespace Etsi.Ultimate.Tests.Services
                 Fk_Impact = 1
             };
             return changeRequest;
+        }
+
+        private static ChangeRequest GetChangeRequestByIdDataObject(int changeRequestById)
+        {
+            var changeRequest = new List<ChangeRequest>
+            {
+
+            new ChangeRequest{ Pk_ChangeRequest=1, CRNumber = "A001",Revision = 1,Subject = "Description",Fk_TSGStatus = 1,Fk_WGStatus = 1,CreationDate = DateTime.UtcNow,
+                TSGSourceOrganizations = "Change request",WGSourceOrganizations = "Ultimate",TSGMeeting = 2,TSGTarget = 2,WGSourceForTSG = 2,
+                TSGTDoc = "Change request",WGMeeting = 2,WGTarget = 2,WGTDoc = "Work item",Fk_Enum_CRCategory = 1,Fk_Specification = 136080,
+                Fk_Release = 2874,Fk_CurrentVersion = 428927,Fk_NewVersion = 428927,Fk_Impact = 1},
+            new ChangeRequest{ Pk_ChangeRequest=2, CRNumber = "A002",Revision = 1,Subject = "Description",Fk_TSGStatus = 1,Fk_WGStatus = 1,CreationDate = DateTime.UtcNow,
+                TSGSourceOrganizations = "Change request Desc",WGSourceOrganizations = "Ultimate Desc",TSGMeeting = 2,TSGTarget = 2,WGSourceForTSG = 2,
+                TSGTDoc = "Change request",WGMeeting = 2,WGTarget = 2,WGTDoc = "Work item",Fk_Enum_CRCategory = 1,Fk_Specification = 136080,
+                Fk_Release = 2874,Fk_CurrentVersion = 428927,Fk_NewVersion = 428927,Fk_Impact = 1},
+
+            };
+            return changeRequest.Find(x => x.Pk_ChangeRequest == changeRequestById);
         }
 
         private static List<Enum_CRCategory> ChangeRequestCategoryDataObject()

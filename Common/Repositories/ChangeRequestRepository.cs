@@ -35,10 +35,19 @@ namespace Etsi.Ultimate.Repositories
             throw new System.NotImplementedException();
         }
 
-        public List<string> FindBySpecificationId(int? specificationId)
+        /// <summary>
+        /// Finds the by specification identifier.
+        /// </summary>
+        /// <param name="specificationId">The specification identifier.</param>
+        /// <returns>string list</returns>
+        public List<string> FindCrNumberBySpecificationId(int? specificationId)
         {
-           // return UoW.Context.ChangeRequests.OrderByDescending(r => r.Pk_ChangeRequest).Where(r => r.Fk_Specification == specificationId).Select(x => x.CRNumber).ToList();
             return UoW.Context.ChangeRequests.Where(r => r.Fk_Specification == specificationId).Select(x => x.CRNumber).ToList();
+        }
+
+        public ChangeRequest GetChangeRequestById(int? changeRequestId)
+        {
+            return UoW.Context.ChangeRequests.Find(changeRequestId);
         }
 
         /// <summary>
@@ -91,11 +100,19 @@ namespace Etsi.Ultimate.Repositories
         /// The uo w.
         /// </value>
         IUltimateUnitOfWork UoW { get; set; }
+
         /// <summary>
         /// Finds the by specification identifier.
         /// </summary>
         /// <param name="specificationId">The specification identifier.</param>
         /// <returns></returns>
-        List<string> FindBySpecificationId(int? specificationId);
+        List<string> FindCrNumberBySpecificationId(int? specificationId);
+
+        /// <summary>
+        /// Finds the by change request by identifier.
+        /// </summary>
+        /// <param name="changeRequestId">The change request identifier.</param>
+        /// <returns>ChangeRequest object</returns>
+        ChangeRequest GetChangeRequestById(int? changeRequestId);
     }
 }

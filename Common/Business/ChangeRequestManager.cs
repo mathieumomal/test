@@ -28,7 +28,7 @@ namespace Etsi.Ultimate.Business
             var isSuccess = true;
             try
             {
-                changeRequest.CRNumber = GenerateCrNumber(changeRequest.Fk_Specification);
+                changeRequest.CRNumber = GenerateCrNumberBySpecificationId(changeRequest.Fk_Specification);
                 var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
                 repo.UoW = UoW;
                 repo.InsertOrUpdate(changeRequest);
@@ -46,7 +46,7 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="specificationId">The specification identifier.</param>
         /// <returns>Cr number</returns>
-        public string GenerateCrNumber(int? specificationId)
+        public string GenerateCrNumberBySpecificationId(int? specificationId)
         {
             List<int> crNumberList = new List<int>();
             var alphaCharacter = string.Empty;
@@ -55,7 +55,7 @@ namespace Etsi.Ultimate.Business
             {
                 var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
                 repo.UoW = UoW;
-                var crNumber = repo.FindBySpecificationId(specificationId);
+                var crNumber = repo.FindCrNumberBySpecificationId(specificationId);
                 crNumber.ForEach(x => crNumberList.Add(GetCrNumber(x)));
                 heighestCrNumber = crNumberList.Max();
                 alphaCharacter = GetAlphaCharacter(crNumberList, alphaCharacter, heighestCrNumber, crNumber);
@@ -64,35 +64,21 @@ namespace Etsi.Ultimate.Business
             return new StringBuilder().Append(alphaCharacter).Append(heighestCrNumber.ToString(new String('0', 4))).ToString();
         }
 
-        /// <summary>
-        /// Gets the alpha character.
-        /// </summary>
-        /// <param name="crNumberList">The cr number list.</param>
-        /// <param name="Alpha">The alpha.</param>
-        /// <param name="heighestCrNumber">The heighest cr number.</param>
-        /// <param name="crNumber">The cr number.</param>
-        /// <returns>alpha character</returns>
-        private static string GetAlphaCharacter(List<int> crNumberList, string alphaCharacter, int heighestCrNumber, List<string> crNumber)
+        public ChangeRequest GetChangeRequestById(int personId, int changeRequestId)
         {
-            var alphaIndex = crNumberList.IndexOf(heighestCrNumber);
-            Regex regex = new Regex("[^a-zA-Z]");
-            alphaCharacter = regex.Replace(crNumber[alphaIndex], "");
-            return alphaCharacter;
-        }
-        /// <summary>
-        /// Gets the number.
-        /// </summary>
-        /// <param name="str">The string.</param>
-        /// <returns>Numeric number</returns>
-        private int GetCrNumber(string strCrNumber)
-        {
-            var crNumericNumber = 0;
-            if (!String.IsNullOrEmpty(strCrNumber))
+            var isSuccess = true;
+            var changeRequest = new ChangeRequest();
+            try
             {
-                Regex regex = new Regex("[^0-9]");
-                Int32.TryParse(regex.Replace(strCrNumber, ""), out crNumericNumber);
+                var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
+                repo.UoW = UoW;
+                changeRequest = repo.GetChangeRequestById(changeRequestId);
             }
-            return crNumericNumber;
+            catch (Exception ex)
+            {
+                isSuccess = false;
+            }
+            return changeRequest;
         }
 
         /// <summary>
@@ -126,7 +112,42 @@ namespace Etsi.Ultimate.Business
             }
             return cachedData;
         }
+        #region Private methods
+
+        /// <summary>
+        /// Gets the alpha character.
+        /// </summary>
+        /// <param name="crNumberList">The cr number list.</param>
+        /// <param name="Alpha">The alpha.</param>
+        /// <param name="heighestCrNumber">The heighest cr number.</param>
+        /// <param name="crNumber">The cr number.</param>
+        /// <returns>alpha character</returns>
+        private static string GetAlphaCharacter(List<int> crNumberList, string alphaCharacter, int heighestCrNumber, List<string> crNumber)
+        {
+            var alphaIndex = crNumberList.IndexOf(heighestCrNumber);
+            Regex regex = new Regex("[^a-zA-Z]");
+            alphaCharacter = regex.Replace(crNumber[alphaIndex], "");
+            return alphaCharacter;
+        }
+        /// <summary>
+        /// Gets the number.
+        /// </summary>
+        /// <param name="str">The string.</param>
+        /// <returns>Numeric number</returns>
+        private int GetCrNumber(string strCrNumber)
+        {
+            var crNumericNumber = 0;
+            if (!String.IsNullOrEmpty(strCrNumber))
+            {
+                Regex regex = new Regex("[^0-9]");
+                Int32.TryParse(regex.Replace(strCrNumber, ""), out crNumericNumber);
+            }
+            return crNumericNumber;
+        }
+        #endregion
     }
+
+
 
     /// <summary>
     /// IChangeRequestManager
@@ -152,5 +173,13 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId">The person identifier.</param>
         /// <returns>CR Category list</returns>
         List<Enum_CRCategory> GetChangeRequestCategories(int personId);
+
+        /// <summary>
+        /// Gets the change request by identifier.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="changeRequestId">The change request identifier.</param>
+        /// <returns>change Request object</returns>
+        ChangeRequest GetChangeRequestById(int personId, int changeRequestId);
     }
 }

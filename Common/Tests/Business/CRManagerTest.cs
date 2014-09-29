@@ -1,5 +1,4 @@
-﻿
-using Etsi.Ultimate.Business;
+﻿using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using NUnit.Framework;
@@ -9,6 +8,8 @@ using System.Collections.Generic;
 using Etsi.Ultimate.Tests.FakeSets;
 using System.Data.Entity;
 using Etsi.Ultimate.Utils.Core;
+using System;
+using System.Linq;
 
 namespace Etsi.Ultimate.Tests.Business
 {
@@ -21,6 +22,7 @@ namespace Etsi.Ultimate.Tests.Business
         private const int personID = 0;
         private const string CACHE_KEY = "ULT_BIZ_CHANGEREQUESTCATEGORY_ALL";
         private int specificationId = 136080;
+        private int changeRequestId = 1;
 
         #endregion
 
@@ -42,7 +44,7 @@ namespace Etsi.Ultimate.Tests.Business
             //Assert
             Assert.IsTrue(result);
         }
-             
+
         [Test]
         public void Business_CreateChangeRequest_Failure()
         {
@@ -61,7 +63,7 @@ namespace Etsi.Ultimate.Tests.Business
         }
 
         [Test]
-        public void Business_CrNumberGeneration()
+        public void Business_GenerateCrNumberBySpecificationId()
         {
             //Arrange
             ChangeRequest changeRequest = new ChangeRequest();
@@ -69,7 +71,7 @@ namespace Etsi.Ultimate.Tests.Business
             var crManager = new ChangeRequestManager();
             crManager.UoW = UoW;
             //Act
-            var result = crManager.GenerateCrNumber(changeRequest.Fk_Specification);
+            var result = crManager.GenerateCrNumberBySpecificationId(changeRequest.Fk_Specification);
             //Assert
             Assert.AreNotSame("AC144", result);
         }
@@ -94,6 +96,23 @@ namespace Etsi.Ultimate.Tests.Business
 
         }
 
+        [Test]
+        public void GetChangeRequestById()
+        {
+            var mockChangeRequestRepository = MockRepository.GenerateMock<IChangeRequestRepository>();
+            RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockChangeRequestRepository);
+            //Act Useing Effort
+            var crManager = new ChangeRequestManager();
+            crManager.UoW = UoW;
+            var result = UoW.Context.ChangeRequests.Where(x => x.Pk_ChangeRequest == 6).FirstOrDefault();
+            //Assert
+            Assert.AreEqual(6, result.Pk_ChangeRequest);
+            Assert.AreEqual("AC0144", result.CRNumber);
+        }
+        #endregion
+
+        #region Data object
+
         /// <summary>
         /// Provide Enum_CRCategory Data
         /// </summary>
@@ -111,8 +130,10 @@ namespace Etsi.Ultimate.Tests.Business
                 yield return (IDbSet<Enum_CRCategory>)crCategoryDBSet;
             }
         }
-
         #endregion
+
+
+
 
     }
 }

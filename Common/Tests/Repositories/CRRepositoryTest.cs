@@ -41,11 +41,21 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(totalNoOfCRsInCSV, allCRs.ToList().Count);
         }
         [Test]
-        public void GetCrNumberList()
+        public void Repository_GenerateCrNumberBySpecificationId()
         {
             var repo = new ChangeRequestRepository() { UoW = UoW };
-            var repoResult = repo.FindBySpecificationId(specificationId);
+            var repoResult = repo.FindCrNumberBySpecificationId(specificationId);
             Assert.AreEqual(6, repoResult.Count);
+        }
+
+        [Test]
+        public void Repository_GetChangeRequestById()
+        {
+            var repo = new ChangeRequestRepository() { UoW = UoW };
+            var repResult = repo.GetChangeRequestById(1);
+            Assert.AreEqual(1, repResult.Pk_ChangeRequest); 
+            Assert.AreEqual("A001", repResult.CRNumber);
+            Assert.AreEqual(136080, repResult.Fk_Specification);
         }
 
 

@@ -45,6 +45,28 @@ namespace Etsi.Ultimate.Services
             return new KeyValuePair<bool, int>(isSuccess, primaryKeyOfChangeRequest);
         }
 
+        public KeyValuePair<bool,ChangeRequest> GetChangeRequestById(int personId, int changeRequestId)
+        {           
+            var changeRequest = new ChangeRequest();
+            var isSuccess = true;
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve <IUltimateUnitOfWork>())
+                {
+                    var manager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    manager.UoW = uoW;
+                    changeRequest = manager.GetChangeRequestById(personId, changeRequestId);
+                    isSuccess = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                isSuccess = false;
+               // LogManager.Error("[Service] Failed to GetChangeRequestById: " + ex.Message);
+            }
+            return new KeyValuePair<bool, ChangeRequest>(isSuccess, changeRequest);
+        }
+
         /// <summary>
         /// Gets the change request category.
         /// </summary>
@@ -95,6 +117,13 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId">The person identifier.</param>
         /// <returns>Change request Category list</returns>
         KeyValuePair<bool, List<Enum_CRCategory>> GetChangeRequestCategories(int personId);
+
+        /// <summary>
+        /// Gets the change request by identifier.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <returns>ChangeRequest object</returns>
+        KeyValuePair<bool, ChangeRequest> GetChangeRequestById(int personId,int changeRequestId);
     }
 }
 
