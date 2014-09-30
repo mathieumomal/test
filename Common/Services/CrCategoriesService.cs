@@ -7,15 +7,22 @@ using System.Collections.Generic;
 
 namespace Etsi.Ultimate.Services
 {
-    public class CrCategoriesService
+    /// <summary>
+    /// CrCategoriesService
+    /// </summary>
+    public class CrCategoriesService : ICrCategoriesService
     {
+        /// <summary>
+        /// Gets or sets the uoW.
+        /// </summary>
+        public IUltimateUnitOfWork UoW { get; set; }
         /// <summary>
         /// Gets the change request categories.
         /// </summary>
         /// <param name="personId">The person identifier.</param>
         /// <returns>
         /// Change request Categories list</returns>
-        
+
         public KeyValuePair<bool, List<Enum_CRCategory>> GetChangeRequestCategories()
         {
             List<Enum_CRCategory> enumChangeRequestCategorylist = new List<Enum_CRCategory>();
@@ -32,14 +39,21 @@ namespace Etsi.Ultimate.Services
             catch (Exception ex)
             {
                 isSuccess = false;
-               // LogManager.Error("[Service] Failed to GetChangeRequestCategories request: " + ex.Message);                
+                LogManager.Error("[Service] Failed to GetChangeRequestCategories request: " + ex.Message);                
             }
             return new KeyValuePair<bool, List<Enum_CRCategory>>(isSuccess, enumChangeRequestCategorylist);
         }
     }
 
+    /// <summary>
+    /// ICrCategoriesService
+    /// </summary>
     public interface ICrCategoriesService
     {
+        /// <summary>
+        /// Gets or sets the uoW.
+        /// </summary>
+        IUltimateUnitOfWork UoW { get; set; }
         /// <summary>
         /// Gets the change request categories.
         /// </summary>

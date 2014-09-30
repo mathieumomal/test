@@ -9,6 +9,9 @@ using System.Text.RegularExpressions;
 
 namespace Etsi.Ultimate.Business
 {
+    /// <summary>
+    /// CrCategoriesManager
+    /// </summary>
     public class CrCategoriesManager : ICrCategoriesManager
     {
 
@@ -42,12 +45,15 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception ex)
             {
-               // LogManager.Error("[Business] Failed to GetChangeRequestCategories:" + ex.Message);
+               LogManager.Error("[Business] Failed to GetChangeRequestCategories:" + ex.Message);
             }
             return cachedData;
         }
     }
 
+    /// <summary>
+    /// ICrCategoriesManager
+    /// </summary>
     public interface ICrCategoriesManager
     {
         /// <summary>
