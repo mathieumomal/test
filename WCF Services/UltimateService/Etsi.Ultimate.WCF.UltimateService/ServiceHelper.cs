@@ -448,6 +448,8 @@ namespace Etsi.Ultimate.WCF.Service
                 ultimateCR.WGTDoc = serviceCR.WGTDoc;
                 ultimateCR.Fk_Enum_CRCategory = serviceCR.Fk_Enum_CRCategory;
                 ultimateCR.Fk_Enum_CRCategory = serviceCR.Fk_Enum_CRCategory;
+                if ((serviceCR.Fk_WorkItemIds != null) && (serviceCR.Fk_WorkItemIds.Count > 0))
+                    serviceCR.Fk_WorkItemIds.ForEach(x => ultimateCR.CR_WorkItems.Add(new UltimateEntities.CR_WorkItems() { Fk_WIId = x }));
             }
             return ultimateCR;
         }

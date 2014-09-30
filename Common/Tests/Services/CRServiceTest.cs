@@ -9,6 +9,7 @@ using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.DataAccess;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -18,6 +19,7 @@ namespace Etsi.Ultimate.Tests.Services
         #region Constants
 
         private const int totalNoOfCRsInCSV = 6;
+        private const int totalNoOfCRWorkItemsInCSV = 0;
         private const int personID = 0;
 
         #endregion
@@ -92,12 +94,16 @@ namespace Etsi.Ultimate.Tests.Services
             //Arrange
             ChangeRequest changeRequest = new ChangeRequest();
             changeRequest.CRNumber = "234.12";
+            changeRequest.CR_WorkItems = new List<CR_WorkItems>() { new CR_WorkItems() { Fk_WIId = 2 }, new CR_WorkItems() { Fk_WIId = 3 } };
             //Act
             var crService = new ChangeRequestService();
             var result = crService.CreateChangeRequest(personID, changeRequest);
             //Assert
             Assert.IsTrue(result.Key);
             Assert.AreEqual(totalNoOfCRsInCSV + 1, result.Value);
+            Assert.AreEqual(totalNoOfCRWorkItemsInCSV + 2, UoW.Context.CR_WorkItems.Count());
+            Assert.IsTrue(UoW.Context.ChangeRequests.Find(result.Value).CR_WorkItems.Any(x => x.Fk_WIId == 2));
+            Assert.IsTrue(UoW.Context.ChangeRequests.Find(result.Value).CR_WorkItems.Any(x => x.Fk_WIId == 3));
         }
 
         [Test]

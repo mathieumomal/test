@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Etsi.Ultimate.WCF.Interface.Entities
@@ -202,5 +203,14 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public string WGTDoc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the work item ids.
+        /// </summary>
+        /// <value>
+        /// The work item ids.
+        /// </value>
+        [DataMember]
+        public List<int> Fk_WorkItemIds { get; set; }
     }
 }

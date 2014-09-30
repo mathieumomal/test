@@ -24,12 +24,13 @@ namespace Etsi.Ultimate.Tests.Repositories
         public void Repository_CR_InsertOrUpdate()
         {
             var repo = new ChangeRequestRepository() { UoW = UoW };
-            var changeRequest1 = new ChangeRequest() { CRNumber = "234.12" };
-            var changeRequest2 = new ChangeRequest() { CRNumber = "234.13" };
+            var changeRequest1 = new ChangeRequest() { CRNumber = "234.12", CR_WorkItems = new List<CR_WorkItems>() { new CR_WorkItems() { Fk_WIId = 2 } } };
+            var changeRequest2 = new ChangeRequest() { CRNumber = "234.13", CR_WorkItems = new List<CR_WorkItems>() { new CR_WorkItems() { Fk_WIId = 2 }, new CR_WorkItems() { Fk_WIId = 3 } } };
             repo.InsertOrUpdate(changeRequest1);
             repo.InsertOrUpdate(changeRequest2);
 
             Assert.AreEqual(2, UoW.Context.GetEntities<ChangeRequest>(EntityState.Added).Count());
+            Assert.AreEqual(3, UoW.Context.GetEntities<CR_WorkItems>(EntityState.Added).Count());
         }
 
         [Test]
