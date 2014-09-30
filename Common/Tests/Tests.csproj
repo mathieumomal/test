@@ -94,7 +94,6 @@
     <Compile Include="Business\CommunityManagerTest.cs" />
     <Compile Include="Business\CrCategoriesManagerTest.cs" />
     <Compile Include="Business\CrManagerTest.cs" />
-    <Compile Include="Business\Enum_CRCategoryFakeDBSet.cs" />
     <Compile Include="Business\RemarkManagerTest.cs" />
     <Compile Include="Business\PersonManagerTest.cs" />
     <Compile Include="Business\SpecificationDefinitiveWithdrawalActionTest.cs" />

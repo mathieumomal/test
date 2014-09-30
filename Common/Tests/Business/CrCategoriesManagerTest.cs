@@ -13,10 +13,11 @@ using System.Linq;
 
 namespace Etsi.Ultimate.Tests.Business
 {
+   
    public class CrCategoriesManagerTest:BaseEffortTest
     {
         #region Constants       
-        private const string CACHE_KEY = "ULT_BIZ_CHANGEREQUESTCATEGORY_ALL";      
+        private const string CacheKey = "ULT_BIZ_CHANGEREQUESTCATEGORY_ALL";      
         #endregion
 
         #region Tests          
@@ -33,7 +34,7 @@ namespace Etsi.Ultimate.Tests.Business
             crManager.UoW = UoW;
             var result = crManager.GetChangeRequestCategories();
             //Assert
-            var svcChangeRequestCategory = (List<Enum_CRCategory>)CacheManager.Get(CACHE_KEY);
+            var svcChangeRequestCategory = (List<Enum_CRCategory>)CacheManager.Get(CacheKey);
 
             Assert.IsNotNull(svcChangeRequestCategory);
             Assert.AreEqual(2, result.Count);

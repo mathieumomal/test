@@ -14,9 +14,7 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Gets or sets the uoW.
         /// </summary>
-        public IUltimateUnitOfWork UoW { get; set; }
-        private const string CacheKey = "ULT_BIZ_CHANGEREQUESTCATEGORY_ALL";
-
+        public IUltimateUnitOfWork UoW { get; set; }      
         /// <summary>
         /// Creates the change request.
         /// </summary>
@@ -79,13 +77,13 @@ namespace Etsi.Ultimate.Business
             {
                 var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
                 repo.UoW = UoW;
-                changeRequest = repo.GetChangeRequestById(changeRequestId);
+                changeRequest = repo.Find(changeRequestId);
                 isSuccess = true;
             }
             catch (Exception ex)
             {               
                 isSuccess = false;
-               // LogManager.Error("[Business] Failed to GetChangeRequestById:" + ex.Message);
+               LogManager.Error("[Business] Failed to GetChangeRequestById:" + ex.Message);
             }
             return changeRequest;
         }      

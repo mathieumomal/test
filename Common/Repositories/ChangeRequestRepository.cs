@@ -43,21 +43,15 @@ namespace Etsi.Ultimate.Repositories
         public List<string> FindCrNumberBySpecificationId(int? specificationId)
         {
             return UoW.Context.ChangeRequests.Where(r => r.Fk_Specification == specificationId).Select(x => x.CRNumber).ToList();
-        }
-
-        public ChangeRequest GetChangeRequestById(int? changeRequestId)
-        {
-            return UoW.Context.ChangeRequests.Find(changeRequestId);
-        }
-
+        }      
         /// <summary>
         /// Finds the specified identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns>Change request entity</returns>
-        public ChangeRequest Find(int id)
+        public ChangeRequest Find(int changeRequestId)
         {
-            throw new System.NotImplementedException();
+            return UoW.Context.ChangeRequests.Find(changeRequestId);
         }
 
         /// <summary>
@@ -106,13 +100,6 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <param name="specificationId">The specification identifier.</param>
         /// <returns></returns>
-        List<string> FindCrNumberBySpecificationId(int? specificationId);
-
-        /// <summary>
-        /// Finds the by change request by identifier.
-        /// </summary>
-        /// <param name="changeRequestId">The change request identifier.</param>
-        /// <returns>ChangeRequest object</returns>
-        ChangeRequest GetChangeRequestById(int? changeRequestId);
+        List<string> FindCrNumberBySpecificationId(int? specificationId);      
     }
 }

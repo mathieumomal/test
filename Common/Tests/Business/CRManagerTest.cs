@@ -10,6 +10,7 @@ using System.Data.Entity;
 using Etsi.Ultimate.Utils.Core;
 using System;
 using System.Linq;
+using Etsi.Ultimate.DataAccess;
 
 namespace Etsi.Ultimate.Tests.Business
 {
@@ -19,10 +20,10 @@ namespace Etsi.Ultimate.Tests.Business
         #region Constants
 
         private const int totalNoOfCRsInCSV = 0;
-        private const int personID = 0;
-        private const string CACHE_KEY = "ULT_BIZ_CHANGEREQUESTCATEGORY_ALL";
+        private const int personID = 0;     
         private int specificationId = 136080;
         private int changeRequestId = 1;
+        private IDbSet<ChangeRequest> changeRequest;
 
         #endregion
 
@@ -62,7 +63,7 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.IsFalse(result);
         }
 
-        [Test]
+        [Test, Description("Checking alphanumeric number")]
         public void Business_GenerateCrNumberBySpecificationId()
         {
             //Arrange
@@ -73,23 +74,36 @@ namespace Etsi.Ultimate.Tests.Business
             //Act
             var result = crManager.GenerateCrNumberBySpecificationId(changeRequest.Fk_Specification);
             //Assert
-            Assert.AreNotSame("AC144", result);
+            Assert.AreEqual("A0145", result);
         }
-       
-        [Test]
-        public void GetChangeRequestById()
+
+        [Test, Description("Checking numeric number")]
+        public void Business_GenerateNumericCrNumberBySpecificationId()
         {
-            var mockChangeRequestRepository = MockRepository.GenerateMock<IChangeRequestRepository>();
-            RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockChangeRequestRepository);
-            //Act Useing Effort
+            //Arrange
+            ChangeRequest changeRequest = new ChangeRequest();
+            changeRequest.Fk_Specification = 136081;
             var crManager = new ChangeRequestManager();
             crManager.UoW = UoW;
-            var result = UoW.Context.ChangeRequests.Where(x => x.Pk_ChangeRequest == 6).FirstOrDefault();
+            //Act
+            var result = crManager.GenerateCrNumberBySpecificationId(changeRequest.Fk_Specification);
             //Assert
-            Assert.AreEqual(6, result.Pk_ChangeRequest);
-            Assert.AreEqual("AC0144", result.CRNumber);
+            Assert.AreEqual("0002", result);
+        }
+
+        [Test]
+        [TestCase(1, "0001")]
+        [TestCase(2, "A002")]
+        [TestCase(3, "A0012")]
+        public void GetChangeRequestById(int changeRequestId, string crNumber)
+        {
+
+            var crManager = new ChangeRequestManager();
+            crManager.UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var result = crManager.GetChangeRequestById(personID, changeRequestId);
+            //Assert
+            Assert.AreEqual(crNumber, result.CRNumber);
         }
         #endregion
-      
     }
 }

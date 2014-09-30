@@ -46,17 +46,17 @@ namespace Etsi.Ultimate.Tests.Repositories
         {
             var repo = new ChangeRequestRepository() { UoW = UoW };
             var repoResult = repo.FindCrNumberBySpecificationId(specificationId);
-            Assert.AreEqual(6, repoResult.Count);
+            Assert.AreEqual(5, repoResult.Count);
         }
 
         [Test]
         public void Repository_GetChangeRequestById()
         {
             var repo = new ChangeRequestRepository() { UoW = UoW };
-            var repResult = repo.GetChangeRequestById(1);
+            var repResult = repo.Find(1);
             Assert.AreEqual(1, repResult.Pk_ChangeRequest); 
-            Assert.AreEqual("A001", repResult.CRNumber);
-            Assert.AreEqual(136080, repResult.Fk_Specification);
+            Assert.AreEqual("0001", repResult.CRNumber);
+            Assert.AreEqual(136081, repResult.Fk_Specification);
         }      
         #endregion
     }
