@@ -14,7 +14,7 @@ namespace DatabaseImport
 {
     class Program
     {
-        private const string logPath = "../../../import.log";
+        private const string LogPath = "../../../import.log";
         static void Main(string[] args)
         {
             var newContext = new UltimateContext();
@@ -89,8 +89,8 @@ namespace DatabaseImport
             Console.WriteLine("Changes saved, import is now finished!");
 
             Console.WriteLine("------------------- REPORT ---------------------");
-            File.WriteAllText(logPath, report.PrintReport());
-            Console.WriteLine("You could find the log file : 'import.log' in " + logPath);          
+            File.WriteAllText(LogPath, report.PrintReport());
+            Console.WriteLine("You could find the log file : 'import.log' in " + LogPath);          
             
             Console.Read();
             Console.Read();

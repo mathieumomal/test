@@ -51,12 +51,14 @@ namespace DatabaseImport.ModuleImport
         {
             foreach (var elt in LegacyContext.CR_categories)
             {
-                var newCRCategory = new Domain.Enum_CRCategory();
+                var newCrCategory = new Domain.Enum_CRCategory
+                {
+                    Code = elt.CR_category,
+                    Description =
+                        Utils.CheckString(elt.meaning, 200, RefImportForLog + " category", elt.CR_category, Report)
+                };
 
-                newCRCategory.Code = elt.CR_category;
-                newCRCategory.Description = Utils.CheckString(new StringBuilder().Append(elt.CR_category).Append(" - ").Append(elt.meaning).ToString(), 200, RefImportForLog + " category", elt.CR_category, Report);
-
-                NewContext.Enum_CRCategory.Add(newCRCategory);
+                NewContext.Enum_CRCategory.Add(newCrCategory);
             }
         }
         #endregion

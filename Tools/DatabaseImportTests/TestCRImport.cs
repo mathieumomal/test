@@ -32,23 +32,21 @@ namespace DatabaseImportTests
 
             // Legacy context mock
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
-            var legacyDbSet = new CRCategoryLegacyFakeDbSet();
-            legacyDbSet.Add(
+            var legacyDbSet = new CRCategoryLegacyFakeDbSet
+            {
                 new CR_categories()
                 {
                     Row_id = 1,
                     CR_category = "A",
                     meaning = meaningExample
-                }
-            );
-            legacyDbSet.Add(
+                },
                 new CR_categories()
                 {
                     Row_id = 2,
                     CR_category = "B",
                     meaning = meaningExample
                 }
-            );
+            };
             legacyContext.Stub(ctx => ctx.CR_categories).Return(legacyDbSet);
 
             // Report
@@ -61,9 +59,9 @@ namespace DatabaseImportTests
             // Test results
             Assert.AreEqual(2, newDbSet.All().Count);
 
-            var newCRCategory = newDbSet.All()[0];
-            Assert.AreEqual(categoryExample + " - " + meaningExample, newCRCategory.Description);
-            Assert.AreEqual(categoryExample, newCRCategory.Code);
+            var newCrCategory = newDbSet.All()[0];
+            Assert.AreEqual(meaningExample, newCrCategory.Description);
+            Assert.AreEqual(categoryExample, newCrCategory.Code);
         }
 
         /// <summary>
