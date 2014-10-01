@@ -10,7 +10,7 @@ REM ----------------  Provide Environment Parameters Below ---------------------
 REM ------------------------------------------------------------------------------
 SET PATH_ULTIMATE=D:\CG_projects\Ultimate
 SET BASE_PATH_TARGET=C:\EtsiPortalServices
-SET SERVICE_LOGIN=CORP\[your login]
+SET SERVICE_LOGIN=CORP\lbabin
 
 REM ----------------------------------------------------------------------------------------
 REM -----------------------  DON'T CHANGE ANYTHING BELOW------------------------------------

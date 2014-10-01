@@ -9,9 +9,9 @@ REM ----------------------------------------------------------------------------
 REM ----------------  Provide Environment Parameters Below -----------------------
 REM ------------------------------------------------------------------------------
 SET PATH_ULTIMATE=D:\CG_projects\Ultimate
-SET PATH_NGPP=D:\CG_projects\Solutions\UltimateContributionN
+SET PATH_NGPP=D:\CG_projects\Solutions\UltimateContributionNew
 SET BASE_PATH_TARGET=C:\EtsiPortalServices
-SET SERVICE_LOGIN=CORP\[your login]
+SET SERVICE_LOGIN=CORP\lbabin
 
 REM ----------------------------------------------------------------------------------------
 REM -----------------------  DON'T CHANGE ANYTHING BELOW------------------------------------

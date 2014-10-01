@@ -15,7 +15,6 @@ SET SOLUTION_PATH_ULTIMATE_SERVICE="%BASE_PATH_ULTIMATE_SERVICE%\UltimateService
 
 SET ServiceName="3GU Ultimate Service"
 SET ServiceTargetPath="%BASE_PATH_TARGET%\UltimateService\"
-SET ServiceOriginPath="%BASE_PATH_ULTIMATE_SERVICE%\Etsi.Ultimate.WCF.Setup\bin\Release\"
 
 echo Step1 [Ultimate Service]: Build Ultimate Service application
 
@@ -26,10 +25,12 @@ IF "%DEBUG_OR_RELEASE%" == "d" (
 	ECHO DEBUG BUILD
 	devenv %SOLUTION_PATH_ULTIMATE_SERVICE% /clean Debug | findstr /R /C:"===="
 	devenv %SOLUTION_PATH_ULTIMATE_SERVICE% /build Debug | findstr /R /C:"===="
+	SET ServiceOriginPath="%BASE_PATH_ULTIMATE_SERVICE%\Etsi.Ultimate.WCF.Setup\bin\Debug\"
 ) ELSE (
 	ECHO RELEASE BUILD
 	devenv %SOLUTION_PATH_ULTIMATE_SERVICE% /clean Release | findstr /R /C:"===="
 	devenv %SOLUTION_PATH_ULTIMATE_SERVICE% /build Release | findstr /R /C:"===="
+	SET ServiceOriginPath="%BASE_PATH_ULTIMATE_SERVICE%\Etsi.Ultimate.WCF.Setup\bin\Release\"
 )
 
 
