@@ -327,6 +327,17 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual("A0012", result.Value.CRNumber);
         }
 
+        [Test]
+        public void ervice_IntegrationTes_GetChangeRequestByContribUid()
+        {
+            
+            //Act
+            var svcCr= new ChangeRequestService();
+            var result = svcCr.GetContributionCrByUid("Change request description1");
+            //Assert
+            Assert.IsTrue(result.Key);
+        }   
+
         #endregion
 
         #region DataObject
