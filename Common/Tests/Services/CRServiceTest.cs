@@ -129,7 +129,7 @@ namespace Etsi.Ultimate.Tests.Services
             var result = crService.CreateChangeRequest(personID, changeRequest);
             //Assert
             Assert.AreEqual(changeRequest.Pk_ChangeRequest, result.Value);
-            Assert.AreEqual(changeRequest.CRNumber, "A0145");
+            Assert.AreEqual(changeRequest.CRNumber, "0001");
         }
      
         [Test]
