@@ -1,17 +1,11 @@
-﻿using System.Security.Cryptography;
-using Etsi.Ultimate.Business;
+﻿using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Microsoft.Practices.Unity;
-using System.Collections.Generic;
-using Etsi.Ultimate.Tests.FakeSets;
-using System.Data.Entity;
 using Etsi.Ultimate.Utils.Core;
 using System;
-using System.Linq;
-using Etsi.Ultimate.DataAccess;
 using log4net.Appender;
 using System.IO;
 using log4net.Core;
@@ -33,18 +27,18 @@ namespace Etsi.Ultimate.Tests.Business
         [TestFixtureSetUp]
         public void Init()
         {
-            string configFileName = Directory.GetCurrentDirectory() + "\\TestData\\LogManager\\Test.log4net.config";
+            var configFileName = Directory.GetCurrentDirectory() + "\\TestData\\LogManager\\Test.log4net.config";
             LogManager.SetConfiguration(configFileName, "TestLogger");
         }
 
         [SetUp]
         public override void Setup()
         {
-            _memoryAppender = ((log4net.Core.LoggerWrapperImpl)(LogManager.Logger)).Logger.Repository.GetAppenders()[0] as MemoryAppender;
+            _memoryAppender = ((LoggerWrapperImpl)(LogManager.Logger)).Logger.Repository.GetAppenders()[0] as MemoryAppender;
         }
 
         [TearDown]
-        public void TearDown()
+        public override void TearDown()
         {
             _memoryAppender.Clear();
         }
@@ -63,10 +57,10 @@ namespace Etsi.Ultimate.Tests.Business
         public void Business_CreateChangeRequest_Success()
         {
             //Arrange
-            ChangeRequest changeRequest = new ChangeRequest();
-            var mockCRRepository = MockRepository.GenerateMock<IChangeRequestRepository>();
-            mockCRRepository.Stub(x => x.InsertOrUpdate(Arg<ChangeRequest>.Is.Anything));
-            RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockCRRepository);
+            var changeRequest = new ChangeRequest();
+            var mockCrRepository = MockRepository.GenerateMock<IChangeRequestRepository>();
+            mockCrRepository.Stub(x => x.InsertOrUpdate(Arg<ChangeRequest>.Is.Anything));
+            RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockCrRepository);
 
             //Act
             var crManager = new ChangeRequestManager();
@@ -80,15 +74,15 @@ namespace Etsi.Ultimate.Tests.Business
         public void Business_CreateChangeRequest_Failure()
         {
             //Arrange
-            ChangeRequest changeRequest = new ChangeRequest();
-            var mockCRRepository = MockRepository.GenerateMock<IChangeRequestRepository>();
-            mockCRRepository.Stub(x => x.InsertOrUpdate(Arg<ChangeRequest>.Is.Anything)).Throw(new System.Exception("Test Exception Raised"));
-            RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockCRRepository);
+            var changeRequest = new ChangeRequest();
+            var mockCrRepository = MockRepository.GenerateMock<IChangeRequestRepository>();
+            mockCrRepository.Stub(x => x.InsertOrUpdate(Arg<ChangeRequest>.Is.Anything)).Throw(new Exception("Test Exception Raised"));
+            RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockCrRepository);
 
             //Act
             var crManager = new ChangeRequestManager();
             var result = crManager.CreateChangeRequest(PersonId, changeRequest);
-            LoggingEvent[] events = _memoryAppender.GetEvents();
+            var events = _memoryAppender.GetEvents();
 
             //Assert
             Assert.IsFalse(result);
@@ -102,7 +96,7 @@ namespace Etsi.Ultimate.Tests.Business
         [TestCase(AlphaNumericalAllocatedSpecId, "0001", Description = "System should allocate CR#0001 even if there are already some alphanumeric allocated numbers")]
         public void GenerateCrNumberReturns0001WhenNoExistingCr(int specId, string expectedCrNumber)
         { 
-            var crManager = new ChangeRequestManager() { UoW = UoW };
+            var crManager = new ChangeRequestManager { UoW = UoW };
         
             var result = crManager.GenerateCrNumberBySpecificationId(specId);
             Assert.AreEqual(expectedCrNumber, result);
@@ -112,8 +106,8 @@ namespace Etsi.Ultimate.Tests.Business
         public void Business_EditChangeRequest_Success()
         {
             //Arrange
-            var uiChangeRequest = new ChangeRequest() { Pk_ChangeRequest = 1, CRNumber = "234" };
-            var dbChangeRequest = new ChangeRequest() { Pk_ChangeRequest = 1, CRNumber = "432" };
+            var uiChangeRequest = new ChangeRequest { Pk_ChangeRequest = 1, CRNumber = "234" };
+            var dbChangeRequest = new ChangeRequest { Pk_ChangeRequest = 1, CRNumber = "432" };
             var mockCrRepository = MockRepository.GenerateMock<IChangeRequestRepository>();
             mockCrRepository.Stub(x => x.Find(1)).Return(dbChangeRequest);
             RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockCrRepository);
@@ -131,13 +125,12 @@ namespace Etsi.Ultimate.Tests.Business
         public void Business_EditChangeRequest_Failure()
         {
             //Arrange
-            var uiChangeRequest = new ChangeRequest() { Pk_ChangeRequest = 1, CRNumber = "234" };
+            var uiChangeRequest = new ChangeRequest { Pk_ChangeRequest = 1, CRNumber = "234" };
 
             //Act
-            var crManager = new ChangeRequestManager();
-            crManager.UoW = null; //Set context null to raise object reference exception
+            var crManager = new ChangeRequestManager {UoW = null};
             var result = crManager.EditChangeRequest(PersonId, uiChangeRequest);
-            LoggingEvent[] events = _memoryAppender.GetEvents();
+            var events = _memoryAppender.GetEvents();
 
             //Assert
             Assert.IsFalse(result);
@@ -155,17 +148,14 @@ namespace Etsi.Ultimate.Tests.Business
 
             Assert.IsNotNull(cr);
             Assert.AreEqual(cr.TSGTDoc,uid);
-
         }
 
         [Test, Description("Checking numeric number")]
         public void Business_GenerateNumericCrNumberBySpecificationId()
         {
             //Arrange
-            ChangeRequest changeRequest = new ChangeRequest();
-            changeRequest.Fk_Specification = 136081;
-            var crManager = new ChangeRequestManager();
-            crManager.UoW = UoW;
+            var changeRequest = new ChangeRequest {Fk_Specification = 136081};
+            var crManager = new ChangeRequestManager {UoW = UoW};
             //Act
             var result = crManager.GenerateCrNumberBySpecificationId(changeRequest.Fk_Specification);
             //Assert
@@ -179,8 +169,7 @@ namespace Etsi.Ultimate.Tests.Business
         [TestCase(3, "A0012")]
         public void GetChangeRequestById_Success(int changeRequestId, string crNumber)
         {
-            var crManager = new ChangeRequestManager();
-            crManager.UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var crManager = new ChangeRequestManager {UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>()};
             var result = crManager.GetChangeRequestById(PersonId, changeRequestId);
             //Assert
             Assert.AreEqual(crNumber, result.CRNumber);
@@ -188,8 +177,7 @@ namespace Etsi.Ultimate.Tests.Business
         [Test, Description("Test if we try to get a CR which doesn't exist. We expect a null change request object.")]
         public void GetChangeRequestById_Failure()
         {
-            var crManager = new ChangeRequestManager();
-            crManager.UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var crManager = new ChangeRequestManager {UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>()};
             var result = crManager.GetChangeRequestById(PersonId, 100);
             //Assert
             Assert.IsNull(result);
