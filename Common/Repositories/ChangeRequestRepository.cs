@@ -45,6 +45,22 @@ namespace Etsi.Ultimate.Repositories
             return UoW.Context.ChangeRequests.Where(r => r.Fk_Specification == specificationId).Select(x => x.CRNumber).ToList();
         }      
         /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="contributionUID"></param>
+        /// <returns></returns>
+        public ChangeRequest GetChangeRequestByContributionUID(string contributionUID)
+        {
+            var toto = UoW.Context.ChangeRequests.ToList();
+           /* if (toto != null)
+            {
+                return toto.First();
+            }*/
+            var result = UoW.Context.ChangeRequests.SingleOrDefault(c => c.TSGTDoc.Equals(contributionUID));
+            return result;
+        }
+
+        /// <summary>
         /// Finds the specified identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
@@ -101,5 +117,10 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="specificationId">The specification identifier.</param>
         /// <returns></returns>
         List<string> FindCrNumberBySpecificationId(int? specificationId);      
+
+        /// <summary>
+        /// Return CR by contribution UID
+        /// </summary>
+        ChangeRequest GetChangeRequestByContributionUID(string contributionUID);
     }
 }

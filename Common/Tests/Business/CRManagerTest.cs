@@ -150,6 +150,18 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual(Level.Error, events[0].Level);
         }
 
+        [Test, Description("Retrieve CR using TDoc(Contribution Uid)")]
+        public void Business_GetChangeRequestByContributionUid()
+        {
+            const string uid = "Change request description1";
+            var crManager = new ChangeRequestManager {UoW = UoW};
+            var cr = crManager.GetContributionCrByUid(uid);
+
+            Assert.IsNotNull(cr);
+            Assert.AreEqual(cr.TSGTDoc,uid);
+
+        }
+
         [Test, Description("Checking numeric number")]
         public void Business_GenerateNumericCrNumberBySpecificationId()
         {

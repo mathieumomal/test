@@ -117,6 +117,28 @@ namespace Etsi.Ultimate.Business
             return changeRequest;
         }
 
+        /// <summary>
+        /// Returns a contribution's CR data
+        /// </summary>
+        /// <param name="ContributionUID">Contribution UID</param>
+        /// <returns></returns>
+        public ChangeRequest GetContributionCrByUid(string ContributionUID)
+        {
+            try
+            {
+                var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
+                repo.UoW = UoW;
+                var result= repo.GetChangeRequestByContributionUID(ContributionUID);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error("[Business] Failed to GetContributionCRByUid:" + ex.Message);
+                return null;
+            }
+        }
+
+
         #endregion
 
         #region Private Methods
@@ -217,5 +239,12 @@ namespace Etsi.Ultimate.Business
         /// <param name="changeRequestId">The change request identifier.</param>
         /// <returns>change Request object</returns>
         ChangeRequest GetChangeRequestById(int personId, int changeRequestId);
+
+        /// <summary>
+        /// Returns a contribution's CR data
+        /// </summary>
+        /// <param name="ContributionUID">Contribution UID</param>
+        /// <returns></returns>
+        ChangeRequest GetContributionCrByUid(string ContributionUID);
     }
 }

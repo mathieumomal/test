@@ -111,5 +111,13 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>Change request categories list</returns>
         [OperationContract]
         List<ChangeRequestCategory> GetChangeRequestCategories();
+
+        /// <summary>
+        /// Returns the CR data for a contribution using it's UID
+        /// </summary>
+        /// <param name="ContributionUID">ContributionUID</param>
+        /// <returns></returns>
+        [OperationContract]
+        ChangeRequest GetChangeRequestByContributionUID(string ContributionUID);
     }
 }

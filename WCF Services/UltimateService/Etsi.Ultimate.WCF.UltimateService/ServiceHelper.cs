@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.Repositories;
+﻿using System.Linq;
+using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Services;
 using Etsi.UserRights.Service;
 using Microsoft.Practices.Unity;
@@ -26,6 +27,7 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateEditChangeRequest = "Ultimate Service Error [EditChangeRequest]: {0}";
         private const string ConstErrorTemplateCreateChangeRequestCategories = "Ultimate Service Error [GetChangeRequestCategories]: {0}";
         private const string ConstErrorTemplateCreateChangeRequestById = "Ultimate Service Error [GetChangeRequestById]: {0}";
+        private const string ConstErrorTemplateGetChangeRequestByContribUid = "Ultimate Service Error [GetChangeRequestByContributionUID]: {0}";
 
         #endregion
 
@@ -362,6 +364,57 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         /// <summary>
+        /// Returns a contribution's CR data
+        /// </summary>
+        /// <param name="ContributionUID">Contribution UID</param>
+        /// <returns></returns>
+        internal UltimateServiceEntities.ChangeRequest GetChangeRequestByContributionUID(string ContributionUID)
+        {
+            UltimateServiceEntities.ChangeRequest cr = null;
+            try
+            {
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var result = svc.GetContributionCrByUid(ContributionUID);
+                if (result.Key)
+                    cr = ConverChangeRequestToServiceChangeRequest(result.Value);
+            }
+            catch (Exception ex)
+            {
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message));
+            }
+            return cr;   
+        }
+
+        /// <summary>
+        /// Convert CR to Ultimate ServiceCR
+        /// </summary>
+        /// <param name="changeRequest"></param>
+        /// <returns></returns>
+        private UltimateServiceEntities.ChangeRequest ConverChangeRequestToServiceChangeRequest(UltimateEntities.ChangeRequest changeRequest)
+        {
+            UltimateServiceEntities.ChangeRequest svcCr = null;
+            //Set properties
+            svcCr.CRNumber = changeRequest.CRNumber;
+            svcCr.Revision = changeRequest.Revision;
+            var svc = ServicesFactory.Resolve<ICrCategoriesService>();
+            var svcChangeRequestCategories = svc.GetChangeRequestCategories();
+            if (svcChangeRequestCategories.Key && svcChangeRequestCategories.Value != null)
+            {
+                var currentCr =
+                    svcChangeRequestCategories.Value.SingleOrDefault(
+                        c => c.Pk_EnumCRCategory == changeRequest.Fk_Enum_CRCategory);
+                svcCr.Category = new UltimateServiceEntities.ChangeRequestCategory
+                {
+                    Pk_EnumCRCategory = currentCr.Pk_EnumCRCategory,
+                    Code = currentCr.Code,
+                    Description = currentCr.Code
+                };
+            }
+            return svcCr;
+        }    
+        
+
+        /// <summary>
         /// Converts the ultimate cr category to service cr category.
         /// </summary>
         /// <param name="ultimateCrCategory">The list.</param>
@@ -517,6 +570,6 @@ namespace Etsi.Ultimate.WCF.Service
             return serviceCr;
         }
 
-        #endregion
+        #endregion        
     }
 }

@@ -54,7 +54,7 @@ namespace Etsi.Ultimate.Services
         public KeyValuePair<bool, ChangeRequest> GetChangeRequestById(int personId, int changeRequestId)
         {
             var changeRequest = new ChangeRequest();
-            bool isSuccess;
+            bool isSuccess=true;
             try
             {
                 using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -62,7 +62,6 @@ namespace Etsi.Ultimate.Services
                     var manager = ManagerFactory.Resolve<IChangeRequestManager>();
                     manager.UoW = uoW;
                     changeRequest = manager.GetChangeRequestById(personId, changeRequestId);
-                    isSuccess = true;
                 }
             }
             catch (Exception ex)
@@ -102,6 +101,35 @@ namespace Etsi.Ultimate.Services
 
             return isSuccess;
         }
+        
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="ContributionUID"></param>
+        /// <returns></returns>
+        public KeyValuePair<bool, ChangeRequest> GetContributionCrByUid(string ContributionUID)
+        {
+            ChangeRequest cr = null;
+            bool isSuccess = true;
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var manager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    manager.UoW = uoW;
+                    cr = manager.GetContributionCrByUid(ContributionUID);
+                    if (cr == null)
+                        isSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error("[Service] Failed to GetContributionCrByUid request: " + ex.Message);
+                isSuccess = false;
+            }
+            return new KeyValuePair<bool, ChangeRequest>(isSuccess, cr);
+        }
+
     }
 
     /// <summary>
@@ -132,6 +160,13 @@ namespace Etsi.Ultimate.Services
         /// <param name="changeRequestId"></param>
         /// <returns>ChangeRequest object</returns>
         KeyValuePair<bool, ChangeRequest> GetChangeRequestById(int personId, int changeRequestId);
+
+        /// <summary>
+        /// Returns a contribution's CR data
+        /// </summary>
+        /// <param name="ContributionUID">Contribution UID</param>
+        /// <returns></returns>
+        KeyValuePair<bool, ChangeRequest> GetContributionCrByUid(string ContributionUID);
     }
 }
 

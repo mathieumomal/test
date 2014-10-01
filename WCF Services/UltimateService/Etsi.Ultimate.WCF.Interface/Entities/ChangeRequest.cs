@@ -209,6 +209,12 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         public string WGTDoc { get; set; }
 
         /// <summary>
+        /// CR category
+        /// </summary>
+        [DataMember]        
+        public ChangeRequestCategory Category { get; set; }
+        
+        /// <summary>
         /// Gets or sets the work item ids.
         /// </summary>
         /// <value>

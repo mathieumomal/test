@@ -9,6 +9,7 @@ namespace Etsi.Ultimate.WCF.Service
     /// </summary>
     public class UltimateService : IUltimateService
     {
+        #region Releases services        
         /// <summary>
         /// Gets the releases.
         /// </summary>
@@ -31,7 +32,9 @@ namespace Etsi.Ultimate.WCF.Service
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetReleaseById(personId, releaseId);
         }
+        #endregion
 
+        #region WI services
         /// <summary>
         /// Gets the work items by ids.
         /// </summary>
@@ -59,7 +62,9 @@ namespace Etsi.Ultimate.WCF.Service
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetWorkItemsByKeyWord(personId, keyword);
         }
+        #endregion
 
+        #region Specifications services
         /// <summary>
         /// Gets the specifications by key word.
         /// </summary>
@@ -101,7 +106,9 @@ namespace Etsi.Ultimate.WCF.Service
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetSpecificationsByIds(personId, specificationIds);
         }
+        #endregion
 
+        #region CRs services        
         /// <summary>
         /// Gets the change request by identifier.
         /// </summary>
@@ -149,5 +156,17 @@ namespace Etsi.Ultimate.WCF.Service
             var svcHelper = new ServiceHelper();
             return svcHelper.GetChangeRequestCategories();
         }
+
+        /// <summary>
+        /// Returns the CR data for a contribution using it's UID
+        /// </summary>
+        /// <param name="ContributionUID">ContributionUID</param>
+        /// <returns></returns>
+        public ChangeRequest GetChangeRequestByContributionUID(string ContributionUID)
+        {
+            ServiceHelper svcHelper = new ServiceHelper();
+            return svcHelper.GetChangeRequestByContributionUID(ContributionUID);
+        }
+        #endregion
     }
 }

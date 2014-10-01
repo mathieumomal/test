@@ -1,4 +1,5 @@
 ﻿using Etsi.Ultimate.Business;
+using Etsi.Ultimate.Business.SpecVersionBusiness;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
 using System;
