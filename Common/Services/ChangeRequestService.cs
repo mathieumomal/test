@@ -39,8 +39,7 @@ namespace Etsi.Ultimate.Services
             catch (Exception ex)
             {
                 isSuccess = false;
-               LogManager.Error("[Service] Failed to create change request: " + ex.Message);
-                
+                LogManager.Error("[Service] Failed to create change request: " + ex.Message);
             }
 
             return new KeyValuePair<bool, int>(isSuccess, primaryKeyOfChangeRequest);

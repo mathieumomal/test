@@ -316,7 +316,6 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Gets the change request categories.
         /// </summary>
-        /// <param name="personId">The person identifier.</param>
         /// <returns>UltimateService ChangeRequestCategories</returns>
         internal List<UltimateServiceEntities.ChangeRequestCategory> GetChangeRequestCategories()
         {
@@ -340,17 +339,17 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Converts the ultimate cr category to service cr category.
         /// </summary>
-        /// <param name="list">The list.</param>
+        /// <param name="ultimateCRCategory">The list.</param>
         /// <returns>UltimateService ChangeRequestCategory</returns>      
         private UltimateServiceEntities.ChangeRequestCategory ConvertUltimateCRCategoriesToServiceCategories(UltimateEntities.Enum_CRCategory ultimateCRCategory)
         {
-            var svcCRCategory = new UltimateServiceEntities.ChangeRequestCategory
+            var svcCrCategory = new UltimateServiceEntities.ChangeRequestCategory
             {
                 Pk_EnumCRCategory = ultimateCRCategory.Pk_EnumCRCategory,
                 Code = ultimateCRCategory.Code,
                 Description = ultimateCRCategory.Description
             };
-            return svcCRCategory;
+            return svcCrCategory;
         }
 
         #endregion

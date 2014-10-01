@@ -16,16 +16,14 @@ namespace Etsi.Ultimate.Services
         /// Gets or sets the uoW.
         /// </summary>
         public IUltimateUnitOfWork UoW { get; set; }
+
         /// <summary>
         /// Gets the change request categories.
         /// </summary>
-        /// <param name="personId">The person identifier.</param>
-        /// <returns>
-        /// Change request Categories list</returns>
-
+        /// <returns>Change request Categories list</returns>
         public KeyValuePair<bool, List<Enum_CRCategory>> GetChangeRequestCategories()
         {
-            List<Enum_CRCategory> enumChangeRequestCategorylist = new List<Enum_CRCategory>();
+            var enumChangeRequestCategorylist = new List<Enum_CRCategory>();
             var isSuccess = true;
             try
             {
@@ -39,7 +37,7 @@ namespace Etsi.Ultimate.Services
             catch (Exception ex)
             {
                 isSuccess = false;
-                LogManager.Error("[Service] Failed to GetChangeRequestCategories request: " + ex.Message);                
+                LogManager.Error("[Ultimate Service] Failed to GetChangeRequestCategories request: " + ex.Message);                
             }
             return new KeyValuePair<bool, List<Enum_CRCategory>>(isSuccess, enumChangeRequestCategorylist);
         }
@@ -57,7 +55,6 @@ namespace Etsi.Ultimate.Services
         /// <summary>
         /// Gets the change request categories.
         /// </summary>
-        /// <param name="personId">The person identifier.</param>
         /// <returns>Change request Categories list</returns>
         KeyValuePair<bool, List<Enum_CRCategory>> GetChangeRequestCategories();
     }

@@ -14,16 +14,18 @@ namespace Etsi.Ultimate.Business
     /// </summary>
     public class CrCategoriesManager : ICrCategoriesManager
     {
+        #region constants
+        private const string CacheKey = "ULT_BIZ_CHANGEREQUESTCATEGORY_ALL";
+        #endregion
 
         /// <summary>
         /// Gets or sets the uoW.
         /// </summary>
         public IUltimateUnitOfWork UoW { get; set; }
-        private const string CacheKey = "ULT_BIZ_CHANGEREQUESTCATEGORY_ALL";
+        
         /// <summary>
         /// Gets the change request categories.
         /// </summary>
-        /// <param name="personId">The person identifier.</param>
         /// <returns>CR Categories list </returns>
         public List<Enum_CRCategory> GetChangeRequestCategories()
         {
@@ -45,7 +47,7 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception ex)
             {
-               LogManager.Error("[Business] Failed to GetChangeRequestCategories:" + ex.Message);
+               LogManager.Error("[Ultimate Business] Failed to GetChangeRequestCategories:" + ex.Message);
             }
             return cachedData;
         }
@@ -64,7 +66,6 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Gets the change request categories.
         /// </summary>
-        /// <param name="personId">The person identifier.</param>
         /// <returns>CR Categories list</returns>
         List<Enum_CRCategory> GetChangeRequestCategories();
 

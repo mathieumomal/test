@@ -51,7 +51,7 @@ namespace Etsi.Ultimate.Business
 
                 // Check that cache is still empty
                 if (CacheManager.Get(CACHE_KEY) == null)
-                    CacheManager.Insert(CACHE_KEY, cachedData);
+                    CacheManager.InsertForLimitedTime(CACHE_KEY, cachedData, 10);
             }
             return new KeyValuePair<List<Release>, UserRightsContainer>(cachedData, personRights); ;
         }
