@@ -4,7 +4,6 @@ using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils.Core;
 using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Etsi.Ultimate.Services
 {
@@ -21,7 +20,7 @@ namespace Etsi.Ultimate.Services
         public KeyValuePair<bool, int> CreateChangeRequest(int personId, ChangeRequest changeRequest)
         {
             var primaryKeyOfChangeRequest = 0;
-            var isSuccess = false;
+            bool isSuccess;
             try
             {
                 using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -55,7 +54,7 @@ namespace Etsi.Ultimate.Services
         public KeyValuePair<bool, ChangeRequest> GetChangeRequestById(int personId, int changeRequestId)
         {
             var changeRequest = new ChangeRequest();
-            var isSuccess = true;
+            bool isSuccess;
             try
             {
                 using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -69,7 +68,7 @@ namespace Etsi.Ultimate.Services
             catch (Exception ex)
             {
                 isSuccess = false;
-               LogManager.Error("[Service] Failed to GetChangeRequestById: " + ex.Message);
+                LogManager.Error("[Service] Failed to GetChangeRequestById: " + ex.Message);
             }
             return new KeyValuePair<bool, ChangeRequest>(isSuccess, changeRequest);
         }
@@ -82,7 +81,7 @@ namespace Etsi.Ultimate.Services
         /// <returns>Success/Failure</returns>
         public bool EditChangeRequest(int personId, ChangeRequest changeRequest)
         {
-            var isSuccess = true;
+            bool isSuccess;
             try
             {
                 using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -130,6 +129,7 @@ namespace Etsi.Ultimate.Services
         /// Gets the change request by identifier.
         /// </summary>
         /// <param name="personId">The person identifier.</param>
+        /// <param name="changeRequestId"></param>
         /// <returns>ChangeRequest object</returns>
         KeyValuePair<bool, ChangeRequest> GetChangeRequestById(int personId, int changeRequestId);
     }

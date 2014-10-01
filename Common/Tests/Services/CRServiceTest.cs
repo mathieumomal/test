@@ -107,10 +107,10 @@ namespace Etsi.Ultimate.Tests.Services
         public void Service_UnitTest_EditChangeRequest_Success()
         {
             //Arrange
-            ChangeRequest changeRequest = new ChangeRequest();
-            var mockCRManager = MockRepository.GenerateMock<IChangeRequestManager>();
-            mockCRManager.Stub(x => x.EditChangeRequest(Arg<int>.Is.Anything, Arg<ChangeRequest>.Is.Anything)).Return(true);
-            ManagerFactory.Container.RegisterInstance(typeof(IChangeRequestManager), mockCRManager);
+            var changeRequest = new ChangeRequest();
+            var mockCrManager = MockRepository.GenerateMock<IChangeRequestManager>();
+            mockCrManager.Stub(x => x.EditChangeRequest(Arg<int>.Is.Anything, Arg<ChangeRequest>.Is.Anything)).Return(true);
+            ManagerFactory.Container.RegisterInstance(typeof(IChangeRequestManager), mockCrManager);
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
@@ -127,10 +127,10 @@ namespace Etsi.Ultimate.Tests.Services
         public void Service_UnitTest_EditChangeRequest_Failure()
         {
             //Arrange
-            ChangeRequest changeRequest = new ChangeRequest();
-            var mockCRManager = MockRepository.GenerateMock<IChangeRequestManager>();
-            mockCRManager.Stub(x => x.EditChangeRequest(Arg<int>.Is.Anything, Arg<ChangeRequest>.Is.Anything)).Return(false);
-            ManagerFactory.Container.RegisterInstance(typeof(IChangeRequestManager), mockCRManager);
+            var changeRequest = new ChangeRequest();
+            var mockCrManager = MockRepository.GenerateMock<IChangeRequestManager>();
+            mockCrManager.Stub(x => x.EditChangeRequest(Arg<int>.Is.Anything, Arg<ChangeRequest>.Is.Anything)).Return(false);
+            ManagerFactory.Container.RegisterInstance(typeof(IChangeRequestManager), mockCrManager);
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 

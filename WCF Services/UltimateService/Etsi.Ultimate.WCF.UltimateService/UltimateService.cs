@@ -12,12 +12,12 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Gets the releases.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <returns>List of Releases</returns>
-        public List<Release> GetReleases(int personID)
+        public List<Release> GetReleases(int personId)
         {
-            ServiceHelper serviceHelper = new ServiceHelper();
-            return serviceHelper.GetReleases(personID);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetReleases(personId);
         }
 
         /// <summary>
@@ -28,126 +28,125 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns></returns>
         public Release GetReleaseById(int personId, int releaseId)
         {
-            ServiceHelper serviceHelper = new ServiceHelper();
+            var serviceHelper = new ServiceHelper();
             return serviceHelper.GetReleaseById(personId, releaseId);
         }
 
         /// <summary>
         /// Gets the work items by ids.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="workItemIds">The work item ids.</param>
         /// <returns>
         /// List of work items
         /// </returns>
-        public List<WorkItem> GetWorkItemsByIds(int personID, List<int> workItemIds)
+        public List<WorkItem> GetWorkItemsByIds(int personId, List<int> workItemIds)
         {
-            ServiceHelper serviceHelper = new ServiceHelper();
-            return serviceHelper.GetWorkItemsByIds(personID, workItemIds);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetWorkItemsByIds(personId, workItemIds);
         }
 
         /// <summary>
         /// Gets the work items by key word.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="keyword">The keyword.</param>
         /// <returns>
         /// List of work items
         /// </returns>
-        public List<WorkItem> GetWorkItemsByKeyWord(int personID, string keyword)
+        public List<WorkItem> GetWorkItemsByKeyWord(int personId, string keyword)
         {
-            ServiceHelper serviceHelper = new ServiceHelper();
-            return serviceHelper.GetWorkItemsByKeyWord(personID, keyword);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetWorkItemsByKeyWord(personId, keyword);
         }
 
         /// <summary>
         /// Gets the specifications by key word.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="keyword">The keyword.</param>
         /// <returns>
         /// List of specifications
         /// </returns>
-        public List<Specification> GetSpecificationsByKeyWord(int personID, string keyword)
+        public List<Specification> GetSpecificationsByKeyWord(int personId, string keyword)
         {
-            ServiceHelper serviceHelper = new ServiceHelper();
-            return serviceHelper.GetSpecificationsByKeyWord(personID, keyword);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetSpecificationsByKeyWord(personId, keyword);
         }
 
         /// <summary>
         /// Gets the specification by identifier.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="specificationId">The specification identifier.</param>
         /// <returns>
         /// Specification entity
         /// </returns>
-        public Specification GetSpecificationById(int personID, int specificationId)
+        public Specification GetSpecificationById(int personId, int specificationId)
         {
-            ServiceHelper serviceHelper = new ServiceHelper();
-            return serviceHelper.GetSpecificationById(personID, specificationId);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetSpecificationById(personId, specificationId);
         }
 
         /// <summary>
         /// Gets the specifications by ids.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="specificationIds">The specification ids.</param>
         /// <returns>
         /// List of specifications
         /// </returns>
-        public List<Specification> GetSpecificationsByIds(int personID, List<int> specificationIds)
+        public List<Specification> GetSpecificationsByIds(int personId, List<int> specificationIds)
         {
-            ServiceHelper serviceHelper = new ServiceHelper();
-            return serviceHelper.GetSpecificationsByIds(personID, specificationIds);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetSpecificationsByIds(personId, specificationIds);
         }
 
         /// <summary>
         /// Gets the change request by identifier.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="changeRequestId">The change request identifier.</param>
         /// <returns>Change Request entity</returns>
-        public ChangeRequest GetChangeRequestById(int personID, int changeRequestId)
+        public ChangeRequest GetChangeRequestById(int personId, int changeRequestId)
         {
-            ServiceHelper serviceHelper = new ServiceHelper();
-            return serviceHelper.GetChangeRequestById(personID, changeRequestId);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetChangeRequestById(personId, changeRequestId);
         }
 
         /// <summary>
         /// Creates the change request.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="changeRequest">The change request.</param>
         /// <returns>
         /// Primary key of newly inserted change request
         /// </returns>
-        public int CreateChangeRequest(int personID, ChangeRequest changeRequest)
+        public int CreateChangeRequest(int personId, ChangeRequest changeRequest)
         {
-            ServiceHelper serviceHelper = new ServiceHelper();
-            return serviceHelper.CreateChangeRequest(personID, changeRequest);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.CreateChangeRequest(personId, changeRequest);
         }
 
         /// <summary>
         /// Edit the change request.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="changeRequest">The change request.</param>
         /// <returns>Success/Failure</returns>
-        public bool EditChangeRequest(int personID, ChangeRequest changeRequest)
+        public bool EditChangeRequest(int personId, ChangeRequest changeRequest)
         {
-            ServiceHelper serviceHelper = new ServiceHelper();
-            return serviceHelper.EditChangeRequest(personID, changeRequest);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.EditChangeRequest(personId, changeRequest);
         }
 
         /// <summary>
         /// Changes the request categories.
         /// </summary>
-        /// <param name="personId"></param>
         /// <returns> Change request categories list</returns>      
         public List<ChangeRequestCategory> GetChangeRequestCategories()
         {
-            ServiceHelper svcHelper = new ServiceHelper();
+            var svcHelper = new ServiceHelper();
             return svcHelper.GetChangeRequestCategories();
         }
     }

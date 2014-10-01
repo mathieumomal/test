@@ -200,12 +200,12 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Gets the specification by identifier.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="specificationId">The specification identifier.</param>
         /// <returns>
         /// Specification entity
         /// </returns>
-        internal UltimateServiceEntities.Specification GetSpecificationById(int personID, int specificationId)
+        internal UltimateServiceEntities.Specification GetSpecificationById(int personId, int specificationId)
         {
             var specification = new UltimateServiceEntities.Specification();
             try
@@ -213,7 +213,7 @@ namespace Etsi.Ultimate.WCF.Service
                 //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
                 RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                 var svc = ServicesFactory.Resolve<ISpecificationService>();
-                var specificationRightsObjects = svc.GetSpecificationDetailsById(personID, specificationId);
+                var specificationRightsObjects = svc.GetSpecificationDetailsById(personId, specificationId);
                 if (specificationRightsObjects.Key != null)
                     specification = ConvertUltimateSpecificationToServiceSpecification(specificationRightsObjects.Key);
                 else
@@ -229,12 +229,12 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Gets the specifications by ids.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="specificationIds">The specification ids.</param>
         /// <returns>
         /// List of specifications
         /// </returns>
-        internal List<UltimateServiceEntities.Specification> GetSpecificationsByIds(int personID, List<int> specificationIds)
+        internal List<UltimateServiceEntities.Specification> GetSpecificationsByIds(int personId, List<int> specificationIds)
         {
             var specifications = new List<UltimateServiceEntities.Specification>();
 
@@ -245,7 +245,7 @@ namespace Etsi.Ultimate.WCF.Service
                 var svc = ServicesFactory.Resolve<ISpecificationService>();
                 foreach (var specificationId in specificationIds)
                 {
-                    var specificationRightsObjects = svc.GetSpecificationDetailsById(personID, specificationId);
+                    var specificationRightsObjects = svc.GetSpecificationDetailsById(personId, specificationId);
                     if (specificationRightsObjects.Key != null)
                         specifications.Add(ConvertUltimateSpecificationToServiceSpecification(specificationRightsObjects.Key));
                     else
@@ -263,10 +263,10 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Gets the change request by identifier.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="changeRequestId">The change request identifier.</param>
         /// <returns>Change Request entity</returns>
-        internal UltimateServiceEntities.ChangeRequest GetChangeRequestById(int personID, int changeRequestId)
+        internal UltimateServiceEntities.ChangeRequest GetChangeRequestById(int personId, int changeRequestId)
         {
             var changeRequest = new UltimateServiceEntities.ChangeRequest();
             try
@@ -274,7 +274,7 @@ namespace Etsi.Ultimate.WCF.Service
                 //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
                 RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                 var svcChangeRequestById = ServicesFactory.Resolve<IChangeRequestService>();
-                var svcResult = svcChangeRequestById.GetChangeRequestById(personID, changeRequestId);
+                var svcResult = svcChangeRequestById.GetChangeRequestById(personId, changeRequestId);
                 if (svcResult.Key)
                     changeRequest = ConvertUltimateCRToServiceCR(svcResult.Value);
             }
@@ -290,20 +290,20 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Creates the change request.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="changeRequest">The change request.</param>
         /// <returns>Primary key of newly inserted change request</returns>
-        internal int CreateChangeRequest(int personID, UltimateServiceEntities.ChangeRequest changeRequest)
+        internal int CreateChangeRequest(int personId, UltimateServiceEntities.ChangeRequest changeRequest)
         {
-            int primaryKeyOfNewCR = 0;
+            var primaryKeyOfNewCr = 0;
             try
             {
                 //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
                 RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
-                var createCRResponse = svc.CreateChangeRequest(personID, ConvertServiceCRToUltimateCR(changeRequest));
-                if (createCRResponse.Key)
-                    primaryKeyOfNewCR = createCRResponse.Value;
+                var createCrResponse = svc.CreateChangeRequest(personId, ConvertServiceCRToUltimateCR(changeRequest));
+                if (createCrResponse.Key)
+                    primaryKeyOfNewCr = createCrResponse.Value;
                 else
                     LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequest, "Failed to get create CR record"));
             }
@@ -311,24 +311,24 @@ namespace Etsi.Ultimate.WCF.Service
             {
                 LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequest, ex.Message));
             }
-            return primaryKeyOfNewCR;
+            return primaryKeyOfNewCr;
         }
 
         /// <summary>
         /// Edits the change request.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="changeRequest">The change request.</param>
         /// <returns>Success/Failure</returns>
-        internal bool EditChangeRequest(int personID, UltimateServiceEntities.ChangeRequest changeRequest)
+        internal bool EditChangeRequest(int personId, UltimateServiceEntities.ChangeRequest changeRequest)
         {
-            bool isSuccess = true;
+            bool isSuccess;
             try
             {
                 //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
                 RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
-                isSuccess = svc.EditChangeRequest(personID, ConvertServiceCRToUltimateCR(changeRequest));
+                isSuccess = svc.EditChangeRequest(personId, ConvertServiceCRToUltimateCR(changeRequest));
             }
             catch (Exception ex)
             {
@@ -364,15 +364,15 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Converts the ultimate cr category to service cr category.
         /// </summary>
-        /// <param name="ultimateCRCategory">The list.</param>
+        /// <param name="ultimateCrCategory">The list.</param>
         /// <returns>UltimateService ChangeRequestCategory</returns>      
-        private UltimateServiceEntities.ChangeRequestCategory ConvertUltimateCRCategoriesToServiceCategories(UltimateEntities.Enum_CRCategory ultimateCRCategory)
+        private UltimateServiceEntities.ChangeRequestCategory ConvertUltimateCRCategoriesToServiceCategories(UltimateEntities.Enum_CRCategory ultimateCrCategory)
         {
             var svcCrCategory = new UltimateServiceEntities.ChangeRequestCategory
             {
-                Pk_EnumCRCategory = ultimateCRCategory.Pk_EnumCRCategory,
-                Code = ultimateCRCategory.Code,
-                Description = ultimateCRCategory.Description
+                Pk_EnumCRCategory = ultimateCrCategory.Pk_EnumCRCategory,
+                Code = ultimateCrCategory.Code,
+                Description = ultimateCrCategory.Description
             };
             return svcCrCategory;
         }
@@ -440,81 +440,81 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Converts the service cr to ultimate CR.
         /// </summary>
-        /// <param name="serviceCR">The service CR.</param>
+        /// <param name="serviceCr">The service CR.</param>
         /// <returns>Ultimate CR</returns>
-        private UltimateEntities.ChangeRequest ConvertServiceCRToUltimateCR(UltimateServiceEntities.ChangeRequest serviceCR)
+        private UltimateEntities.ChangeRequest ConvertServiceCRToUltimateCR(UltimateServiceEntities.ChangeRequest serviceCr)
         {
-            var ultimateCR = new UltimateEntities.ChangeRequest();
-            if (serviceCR != null)
+            var ultimateCr = new UltimateEntities.ChangeRequest();
+            if (serviceCr != null)
             {
-                ultimateCR.Pk_ChangeRequest = serviceCR.Pk_ChangeRequest;
-                ultimateCR.CRNumber = serviceCR.CRNumber;
-                ultimateCR.Revision = serviceCR.Revision;
-                ultimateCR.Subject = serviceCR.Subject;
-                ultimateCR.Fk_TSGStatus = serviceCR.Fk_TSGStatus;
-                ultimateCR.Fk_WGStatus = serviceCR.Fk_WGStatus;
-                ultimateCR.Subject = serviceCR.Subject;
-                ultimateCR.CreationDate = serviceCR.CreationDate;
-                ultimateCR.TSGSourceOrganizations = serviceCR.TSGSourceOrganizations;
-                ultimateCR.WGSourceOrganizations = serviceCR.WGSourceOrganizations;
-                ultimateCR.TSGMeeting = serviceCR.TSGMeeting;
-                ultimateCR.TSGTarget = serviceCR.TSGTarget;
-                ultimateCR.WGSourceForTSG = serviceCR.WGSourceForTSG;
-                ultimateCR.WGMeeting = serviceCR.WGMeeting;
-                ultimateCR.WGTarget = serviceCR.WGTarget;
-                ultimateCR.Fk_Enum_CRCategory = serviceCR.Fk_Enum_CRCategory;
-                ultimateCR.Fk_Specification = serviceCR.Fk_Specification;
-                ultimateCR.Fk_Release = serviceCR.Fk_Release;
-                ultimateCR.Fk_CurrentVersion = serviceCR.Fk_CurrentVersion;
-                ultimateCR.Fk_NewVersion = serviceCR.Fk_NewVersion;
-                ultimateCR.Fk_Impact = serviceCR.Fk_Impact;
-                ultimateCR.TSGTDoc = serviceCR.TSGTDoc;
-                ultimateCR.WGTDoc = serviceCR.WGTDoc;
-                ultimateCR.Fk_Enum_CRCategory = serviceCR.Fk_Enum_CRCategory;
-                ultimateCR.Fk_Enum_CRCategory = serviceCR.Fk_Enum_CRCategory;
-                if ((serviceCR.Fk_WorkItemIds != null) && (serviceCR.Fk_WorkItemIds.Count > 0))
-                    serviceCR.Fk_WorkItemIds.ForEach(x => ultimateCR.CR_WorkItems.Add(new UltimateEntities.CR_WorkItems() { Fk_WIId = x }));
+                ultimateCr.Pk_ChangeRequest = serviceCr.Pk_ChangeRequest;
+                ultimateCr.CRNumber = serviceCr.CRNumber;
+                ultimateCr.Revision = serviceCr.Revision;
+                ultimateCr.Subject = serviceCr.Subject;
+                ultimateCr.Fk_TSGStatus = serviceCr.Fk_TSGStatus;
+                ultimateCr.Fk_WGStatus = serviceCr.Fk_WGStatus;
+                ultimateCr.Subject = serviceCr.Subject;
+                ultimateCr.CreationDate = serviceCr.CreationDate;
+                ultimateCr.TSGSourceOrganizations = serviceCr.TSGSourceOrganizations;
+                ultimateCr.WGSourceOrganizations = serviceCr.WGSourceOrganizations;
+                ultimateCr.TSGMeeting = serviceCr.TSGMeeting;
+                ultimateCr.TSGTarget = serviceCr.TSGTarget;
+                ultimateCr.WGSourceForTSG = serviceCr.WGSourceForTSG;
+                ultimateCr.WGMeeting = serviceCr.WGMeeting;
+                ultimateCr.WGTarget = serviceCr.WGTarget;
+                ultimateCr.Fk_Enum_CRCategory = serviceCr.Fk_Enum_CRCategory;
+                ultimateCr.Fk_Specification = serviceCr.Fk_Specification;
+                ultimateCr.Fk_Release = serviceCr.Fk_Release;
+                ultimateCr.Fk_CurrentVersion = serviceCr.Fk_CurrentVersion;
+                ultimateCr.Fk_NewVersion = serviceCr.Fk_NewVersion;
+                ultimateCr.Fk_Impact = serviceCr.Fk_Impact;
+                ultimateCr.TSGTDoc = serviceCr.TSGTDoc;
+                ultimateCr.WGTDoc = serviceCr.WGTDoc;
+                ultimateCr.Fk_Enum_CRCategory = serviceCr.Fk_Enum_CRCategory;
+                ultimateCr.Fk_Enum_CRCategory = serviceCr.Fk_Enum_CRCategory;
+                if ((serviceCr.Fk_WorkItemIds != null) && (serviceCr.Fk_WorkItemIds.Count > 0))
+                    serviceCr.Fk_WorkItemIds.ForEach(x => ultimateCr.CR_WorkItems.Add(new UltimateEntities.CR_WorkItems { Fk_WIId = x }));
             }
-            return ultimateCR;
+            return ultimateCr;
         }
 
         /// <summary>
         /// Converts the ultimate cr to service CR.
         /// </summary>
-        /// <param name="serviceCR">The service CR.</param>
+        /// <param name="ultimateCr"></param>
         /// <returns>Ultimate Entities to Service Entities</returns>
-        private UltimateServiceEntities.ChangeRequest ConvertUltimateCRToServiceCR(UltimateEntities.ChangeRequest ultimateCR)
+        private UltimateServiceEntities.ChangeRequest ConvertUltimateCRToServiceCR(UltimateEntities.ChangeRequest ultimateCr)
         {
-            var serviceCR = new UltimateServiceEntities.ChangeRequest();
-            if (ultimateCR != null)
+            var serviceCr = new UltimateServiceEntities.ChangeRequest();
+            if (ultimateCr != null)
             {
-                serviceCR.Pk_ChangeRequest = ultimateCR.Pk_ChangeRequest;
-                serviceCR.CRNumber = ultimateCR.CRNumber;
-                serviceCR.Revision = ultimateCR.Revision;
-                serviceCR.Subject = ultimateCR.Subject;
-                serviceCR.Fk_TSGStatus = ultimateCR.Fk_TSGStatus;
-                serviceCR.Fk_WGStatus = ultimateCR.Fk_WGStatus;
-                serviceCR.Subject = ultimateCR.Subject;
-                serviceCR.CreationDate = ultimateCR.CreationDate;
-                serviceCR.TSGSourceOrganizations = ultimateCR.TSGSourceOrganizations;
-                serviceCR.WGSourceOrganizations = ultimateCR.WGSourceOrganizations;
-                serviceCR.TSGMeeting = ultimateCR.TSGMeeting;
-                serviceCR.TSGTarget = ultimateCR.TSGTarget;
-                serviceCR.WGSourceForTSG = ultimateCR.WGSourceForTSG;
-                serviceCR.WGMeeting = ultimateCR.WGMeeting;
-                serviceCR.WGTarget = ultimateCR.WGTarget;
-                serviceCR.Fk_Enum_CRCategory = ultimateCR.Fk_Enum_CRCategory;
-                serviceCR.Fk_Specification = ultimateCR.Fk_Specification;
-                serviceCR.Fk_Release = ultimateCR.Fk_Release;
-                serviceCR.Fk_CurrentVersion = ultimateCR.Fk_CurrentVersion;
-                serviceCR.Fk_NewVersion = ultimateCR.Fk_NewVersion;
-                serviceCR.Fk_Impact = ultimateCR.Fk_Impact;
-                serviceCR.TSGTDoc = ultimateCR.TSGTDoc;
-                serviceCR.WGTDoc = ultimateCR.WGTDoc;
-                serviceCR.Fk_Enum_CRCategory = ultimateCR.Fk_Enum_CRCategory;
-                serviceCR.Fk_Enum_CRCategory = ultimateCR.Fk_Enum_CRCategory;
+                serviceCr.Pk_ChangeRequest = ultimateCr.Pk_ChangeRequest;
+                serviceCr.CRNumber = ultimateCr.CRNumber;
+                serviceCr.Revision = ultimateCr.Revision;
+                serviceCr.Subject = ultimateCr.Subject;
+                serviceCr.Fk_TSGStatus = ultimateCr.Fk_TSGStatus;
+                serviceCr.Fk_WGStatus = ultimateCr.Fk_WGStatus;
+                serviceCr.Subject = ultimateCr.Subject;
+                serviceCr.CreationDate = ultimateCr.CreationDate;
+                serviceCr.TSGSourceOrganizations = ultimateCr.TSGSourceOrganizations;
+                serviceCr.WGSourceOrganizations = ultimateCr.WGSourceOrganizations;
+                serviceCr.TSGMeeting = ultimateCr.TSGMeeting;
+                serviceCr.TSGTarget = ultimateCr.TSGTarget;
+                serviceCr.WGSourceForTSG = ultimateCr.WGSourceForTSG;
+                serviceCr.WGMeeting = ultimateCr.WGMeeting;
+                serviceCr.WGTarget = ultimateCr.WGTarget;
+                serviceCr.Fk_Enum_CRCategory = ultimateCr.Fk_Enum_CRCategory;
+                serviceCr.Fk_Specification = ultimateCr.Fk_Specification;
+                serviceCr.Fk_Release = ultimateCr.Fk_Release;
+                serviceCr.Fk_CurrentVersion = ultimateCr.Fk_CurrentVersion;
+                serviceCr.Fk_NewVersion = ultimateCr.Fk_NewVersion;
+                serviceCr.Fk_Impact = ultimateCr.Fk_Impact;
+                serviceCr.TSGTDoc = ultimateCr.TSGTDoc;
+                serviceCr.WGTDoc = ultimateCr.WGTDoc;
+                serviceCr.Fk_Enum_CRCategory = ultimateCr.Fk_Enum_CRCategory;
+                serviceCr.Fk_Enum_CRCategory = ultimateCr.Fk_Enum_CRCategory;
             }
-            return serviceCR;
+            return serviceCr;
         }
 
         #endregion

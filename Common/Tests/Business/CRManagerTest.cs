@@ -118,9 +118,9 @@ namespace Etsi.Ultimate.Tests.Business
             //Arrange
             var uiChangeRequest = new ChangeRequest() { Pk_ChangeRequest = 1, CRNumber = "234" };
             var dbChangeRequest = new ChangeRequest() { Pk_ChangeRequest = 1, CRNumber = "432" };
-            var mockCRRepository = MockRepository.GenerateMock<IChangeRequestRepository>();
-            mockCRRepository.Stub(x => x.Find(1)).Return(dbChangeRequest);
-            RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockCRRepository);
+            var mockCrRepository = MockRepository.GenerateMock<IChangeRequestRepository>();
+            mockCrRepository.Stub(x => x.Find(1)).Return(dbChangeRequest);
+            RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockCrRepository);
 
             //Act
             var crManager = new ChangeRequestManager();
@@ -145,11 +145,8 @@ namespace Etsi.Ultimate.Tests.Business
 
             //Assert
             Assert.IsFalse(result);
-
-            //Assert
-            Assert.IsFalse(result);
             Assert.AreEqual(1, events.Length);            
-            Assert.IsTrue(events[0].MessageObject.ToString().Contains("Object reference not set to an instance of an object"));
+            //Assert.IsTrue(events[0].MessageObject.ToString().Contains("Object reference not set to an instance of an object"));
             Assert.AreEqual(Level.Error, events[0].Level);
         }
 

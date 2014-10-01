@@ -4,8 +4,6 @@ using Etsi.Ultimate.Utils.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Etsi.Ultimate.Business
 {
@@ -73,7 +71,7 @@ namespace Etsi.Ultimate.Business
         /// <returns>Cr number</returns>
         public string GenerateCrNumberBySpecificationId(int? specificationId)
         {
-            List<int> crNumberList = new List<int>();
+            var crNumberList = new List<int>();
 
             var heighestCrNumber = 0;
             if (specificationId > 0)
@@ -82,9 +80,9 @@ namespace Etsi.Ultimate.Business
                 repo.UoW = UoW;
                 var crNumber = repo.FindCrNumberBySpecificationId(specificationId);
 
-                int tmpCrNumber;
                 foreach (var num in crNumber)
                 {
+                    int tmpCrNumber;
                     if (int.TryParse(num, out tmpCrNumber))
                         crNumberList.Add(tmpCrNumber);
                 }
@@ -105,18 +103,15 @@ namespace Etsi.Ultimate.Business
         /// <returns>change Request object</returns>
         public ChangeRequest GetChangeRequestById(int personId, int changeRequestId)
         {
-            var isSuccess = true;
             var changeRequest = new ChangeRequest();
             try
             {
                 var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
                 repo.UoW = UoW;
                 changeRequest = repo.Find(changeRequestId);
-                isSuccess = true;
             }
             catch (Exception ex)
             {
-                isSuccess = false;
                 LogManager.Error("[Business] Failed to GetChangeRequestById:" + ex.Message);
             }
             return changeRequest;
