@@ -23,6 +23,7 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateGetSpecificationById = "Ultimate Service Error [GetSpecificationById]: {0}";
         private const string ConstErrorTemplateGetSpecificationsByIds = "Ultimate Service Error [GetSpecificationsByIds]: {0}";
         private const string ConstErrorTemplateCreateChangeRequest = "Ultimate Service Error [CreateChangeRequest]: {0}";
+        private const string ConstErrorTemplateEditChangeRequest = "Ultimate Service Error [EditChangeRequest]: {0}";
         private const string ConstErrorTemplateCreateChangeRequestCategories = "Ultimate Service Error [GetChangeRequestCategories]: {0}";
         private const string ConstErrorTemplateCreateChangeRequestById = "Ultimate Service Error [GetChangeRequestById]: {0}";
 
@@ -311,6 +312,30 @@ namespace Etsi.Ultimate.WCF.Service
                 LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequest, ex.Message));
             }
             return primaryKeyOfNewCR;
+        }
+
+        /// <summary>
+        /// Edits the change request.
+        /// </summary>
+        /// <param name="personID">The person identifier.</param>
+        /// <param name="changeRequest">The change request.</param>
+        /// <returns>Success/Failure</returns>
+        internal bool EditChangeRequest(int personID, UltimateServiceEntities.ChangeRequest changeRequest)
+        {
+            bool isSuccess = true;
+            try
+            {
+                //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
+                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                isSuccess = svc.EditChangeRequest(personID, ConvertServiceCRToUltimateCR(changeRequest));
+            }
+            catch (Exception ex)
+            {
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateEditChangeRequest, ex.Message));
+                isSuccess = false;
+            }
+            return isSuccess;
         }
 
         /// <summary>

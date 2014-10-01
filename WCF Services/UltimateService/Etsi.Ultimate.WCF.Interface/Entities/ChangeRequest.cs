@@ -99,6 +99,7 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public Nullable<int> TSGMeeting { get; set; }
+
         /// <summary>
         /// Gets or sets the TSG target.
         /// </summary>
@@ -107,6 +108,7 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public Nullable<int> TSGTarget { get; set; }
+
         /// <summary>
         /// Gets or sets the wg source for TSG.
         /// </summary>
@@ -115,6 +117,7 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public Nullable<int> WGSourceForTSG { get; set; }
+
         /// <summary>
         /// Gets or sets the wg meeting.
         /// </summary>
@@ -123,6 +126,7 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public Nullable<int> WGMeeting { get; set; }
+
         /// <summary>
         /// Gets or sets the wg target.
         /// </summary>

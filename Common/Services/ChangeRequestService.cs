@@ -4,6 +4,7 @@ using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils.Core;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Etsi.Ultimate.Services
 {
@@ -39,7 +40,7 @@ namespace Etsi.Ultimate.Services
             catch (Exception ex)
             {
                 isSuccess = false;
-                LogManager.Error("[Service] Failed to create change request: " + ex.Message);
+                LogManager.Error(String.Format("[Service] Failed to create change request: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
             }
 
             return new KeyValuePair<bool, int>(isSuccess, primaryKeyOfChangeRequest);
@@ -72,6 +73,36 @@ namespace Etsi.Ultimate.Services
             }
             return new KeyValuePair<bool, ChangeRequest>(isSuccess, changeRequest);
         }
+
+        /// <summary>
+        /// Edits the change request.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="changeRequest">The change request.</param>
+        /// <returns>Success/Failure</returns>
+        public bool EditChangeRequest(int personId, ChangeRequest changeRequest)
+        {
+            var isSuccess = true;
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var manager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    manager.UoW = uoW;
+
+                    isSuccess = manager.EditChangeRequest(personId, changeRequest);
+                    if (isSuccess)
+                        uoW.Save();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format("[Service] Failed to edit change request: {0}{1}", ex.Message, ((ex.InnerException != null)? "\n InnterException:" + ex.InnerException : String.Empty)));
+                isSuccess = false;
+            }
+
+            return isSuccess;
+        }
     }
 
     /// <summary>
@@ -86,6 +117,15 @@ namespace Etsi.Ultimate.Services
         /// <param name="changeRequest">The change request.</param>
         /// <returns>Primary key of newly inserted change request along with the status (success/failure)</returns>
         KeyValuePair<bool, int> CreateChangeRequest(int personId, ChangeRequest changeRequest);
+
+        /// <summary>
+        /// Edits the change request.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="changeRequest">The change request.</param>
+        /// <returns>Success/Failure</returns>
+        bool EditChangeRequest(int personId, ChangeRequest changeRequest);
+
         /// <summary>
         /// Gets the change request by identifier.
         /// </summary>

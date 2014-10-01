@@ -28,5 +28,12 @@ namespace Etsi.Ultimate.Repositories
         /// Performs a save of the modifications in context inside the database.
         /// </summary>
         void Save();
+
+        /// <summary>
+        /// Set entity state to deleted
+        /// </summary>
+        /// <typeparam name="T">Type of Entity</typeparam>
+        /// <param name="Entity">Entity</param>
+        void MarkDeleted<T>(T Entity);  
     }
 }

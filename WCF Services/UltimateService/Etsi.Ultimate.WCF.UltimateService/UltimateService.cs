@@ -129,11 +129,22 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         /// <summary>
+        /// Edit the change request.
+        /// </summary>
+        /// <param name="personID">The person identifier.</param>
+        /// <param name="changeRequest">The change request.</param>
+        /// <returns>Success/Failure</returns>
+        public bool EditChangeRequest(int personID, ChangeRequest changeRequest)
+        {
+            ServiceHelper serviceHelper = new ServiceHelper();
+            return serviceHelper.EditChangeRequest(personID, changeRequest);
+        }
+
+        /// <summary>
         /// Changes the request categories.
         /// </summary>
         /// <param name="personId"></param>
-        /// <returns> Change request categories list</returns>
-      
+        /// <returns> Change request categories list</returns>      
         public List<ChangeRequestCategory> GetChangeRequestCategories()
         {
             ServiceHelper svcHelper = new ServiceHelper();

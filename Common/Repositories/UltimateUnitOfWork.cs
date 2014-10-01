@@ -29,6 +29,17 @@ namespace Etsi.Ultimate.Repositories
         {
             context.SetAutoDetectChanges(detect);
         }
+
+        /// <summary>
+        /// Set entity state to deleted
+        /// </summary>
+        /// <typeparam name="T">Type of Entity</typeparam>
+        /// <param name="Entity">Entity</param>
+        public void MarkDeleted<T>(T Entity)
+        {
+            context.SetDeleted(Entity);
+        }
+
         #endregion
 
       

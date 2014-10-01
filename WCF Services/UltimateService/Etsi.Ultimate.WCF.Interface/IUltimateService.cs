@@ -97,6 +97,15 @@ namespace Etsi.Ultimate.WCF.Interface
         int CreateChangeRequest(int personID, ChangeRequest changeRequest);
 
         /// <summary>
+        /// Edit the change request.
+        /// </summary>
+        /// <param name="personID">The person identifier.</param>
+        /// <param name="changeRequest">The change request.</param>
+        /// <returns>Success/Failure</returns>
+        [OperationContract]
+        bool EditChangeRequest(int personID, ChangeRequest changeRequest);
+
+        /// <summary>
         /// Changes the request categories.
         /// </summary>
         /// <returns>Change request categories list</returns>

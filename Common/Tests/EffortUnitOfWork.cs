@@ -29,6 +29,11 @@ namespace Etsi.Ultimate.Tests
            
         }
 
+        public void MarkDeleted<T>(T Entity)
+        {
+            context.SetDeleted(Entity);
+        }
+
         public void Save()
         {
             context.SaveChanges();
