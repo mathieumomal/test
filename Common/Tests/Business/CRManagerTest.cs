@@ -145,8 +145,8 @@ namespace Etsi.Ultimate.Tests.Business
 
             //Assert
             Assert.IsFalse(result);
-            Assert.AreEqual(1, events.Length);            
-            //Assert.IsTrue(events[0].MessageObject.ToString().Contains("Object reference not set to an instance of an object"));
+            Assert.AreEqual(1, events.Length);
+            Assert.IsTrue(events[0].MessageObject.ToString().Contains("WcfBusinessCrEditFailed"));
             Assert.AreEqual(Level.Error, events[0].Level);
         }
 
