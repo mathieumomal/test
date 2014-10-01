@@ -21,12 +21,10 @@ namespace Etsi.Ultimate.Tests.Services
     public class CrServiceTest : BaseEffortTest
     {
         #region Constants
-
-        private const int totalNoOfCRsInCSV = 6;
-        private const int totalNoOfCRWorkItemsInCSV = 1;
-        private const int personID = 0;
-        MemoryAppender memoryAppender;
-
+        private const int TotalNoOfCrsInCsv = 6;
+        private const int TotalNoOfCrWorkItemsInCsv = 1;
+        private const int PersonId = 0;
+        MemoryAppender _memoryAppender;
         #endregion
 
         #region Logger Setup
@@ -42,14 +40,14 @@ namespace Etsi.Ultimate.Tests.Services
         public override void Setup()
         {
             base.SetUp();
-            memoryAppender = ((log4net.Core.LoggerWrapperImpl)(LogManager.Logger)).Logger.Repository.GetAppenders()[0] as MemoryAppender;
-            memoryAppender.Clear();
+            _memoryAppender = ((log4net.Core.LoggerWrapperImpl)(LogManager.Logger)).Logger.Repository.GetAppenders()[0] as MemoryAppender;
+            _memoryAppender.Clear();
         }
 
         [TearDown]
         public void TearDown()
         {
-            memoryAppender.Clear();
+            _memoryAppender.Clear();
         }
 
         [TestFixtureTearDown]
@@ -75,7 +73,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             //Act
             var crService = new ChangeRequestService();
-            var result = crService.CreateChangeRequest(personID, changeRequest);
+            var result = crService.CreateChangeRequest(PersonId, changeRequest);
 
             //Assert
             Assert.IsTrue(result.Key);
@@ -95,7 +93,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             //Act
             var crService = new ChangeRequestService();
-            var result = crService.CreateChangeRequest(personID, changeRequest);
+            var result = crService.CreateChangeRequest(PersonId, changeRequest);
 
             //Assert
             Assert.IsFalse(result.Key);
@@ -116,7 +114,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             //Act
             var crService = new ChangeRequestService();
-            var result = crService.EditChangeRequest(personID, changeRequest);
+            var result = crService.EditChangeRequest(PersonId, changeRequest);
 
             //Assert
             Assert.IsTrue(result);
@@ -136,15 +134,16 @@ namespace Etsi.Ultimate.Tests.Services
 
             //Act
             var crService = new ChangeRequestService();
-            var result = crService.EditChangeRequest(personID, changeRequest);
+            var result = crService.EditChangeRequest(PersonId, changeRequest);
 
             //Assert
             Assert.IsFalse(result);
             mockDataContext.AssertWasNotCalled(x => x.SaveChanges());
         }
 
+        // --- GetCRId ---
         [Test]
-        public void Service_UnitTest_GetChangeRequestById()
+        public void Service_UnitTest_GetChangeRequestById_Success()
         {
             var mockChangeRequestById = MockRepository.GenerateMock<IChangeRequestManager>();
             var changeRequestById = GetChangeRequestByIdDataObject(1);
@@ -156,10 +155,29 @@ namespace Etsi.Ultimate.Tests.Services
 
             //Act
             var svcChangeRequestById = new ChangeRequestService();
-            var result = svcChangeRequestById.GetChangeRequestById(personID, 1);
+            var result = svcChangeRequestById.GetChangeRequestById(PersonId, 1);
             //Assert
             Assert.IsTrue(result.Key);
-        }     
+        }
+        [Test, Description("Test if we try to get a CR which doesn't exist. We expect a true success flag and a null change request object.")]
+        public void Service_UnitTest_GetChangeRequestById_Failure()
+        {
+            var mockChangeRequestById = MockRepository.GenerateMock<IChangeRequestManager>();
+            var changeRequestById = GetChangeRequestByIdDataObject(100);
+            mockChangeRequestById.Stub(x => x.GetChangeRequestById(0, 100)).Return(changeRequestById);
+            ManagerFactory.Container.RegisterInstance(typeof(IChangeRequestManager), mockChangeRequestById);
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            //Act
+            var svcChangeRequestById = new ChangeRequestService();
+            var result = svcChangeRequestById.GetChangeRequestById(PersonId, 100);
+
+            //Assert
+            Assert.IsTrue(result.Key);
+            Assert.IsNull(result.Value);
+        }
 
         #endregion
 
@@ -174,11 +192,11 @@ namespace Etsi.Ultimate.Tests.Services
             changeRequest.CR_WorkItems = new List<CR_WorkItems>() { new CR_WorkItems() { Fk_WIId = 2 }, new CR_WorkItems() { Fk_WIId = 3 } };
             //Act
             var crService = new ChangeRequestService();
-            var result = crService.CreateChangeRequest(personID, changeRequest);
+            var result = crService.CreateChangeRequest(PersonId, changeRequest);
             //Assert
             Assert.IsTrue(result.Key);
-            Assert.AreEqual(totalNoOfCRsInCSV + 1, result.Value);
-            Assert.AreEqual(totalNoOfCRWorkItemsInCSV + 2, UoW.Context.CR_WorkItems.Count());
+            Assert.AreEqual(TotalNoOfCrsInCsv + 1, result.Value);
+            Assert.AreEqual(TotalNoOfCrWorkItemsInCsv + 2, UoW.Context.CR_WorkItems.Count());
             Assert.IsTrue(UoW.Context.ChangeRequests.Find(result.Value).CR_WorkItems.Any(x => x.Fk_WIId == 2));
             Assert.IsTrue(UoW.Context.ChangeRequests.Find(result.Value).CR_WorkItems.Any(x => x.Fk_WIId == 3));
         }
@@ -192,8 +210,8 @@ namespace Etsi.Ultimate.Tests.Services
             changeRequest.Fk_Release = 12345;
             //Act
             var crService = new ChangeRequestService();
-            var result = crService.CreateChangeRequest(personID, changeRequest);
-            LoggingEvent[] events = memoryAppender.GetEvents();
+            var result = crService.CreateChangeRequest(PersonId, changeRequest);
+            LoggingEvent[] events = _memoryAppender.GetEvents();
 
             //Assert
             Assert.IsFalse(result.Key);
@@ -233,7 +251,7 @@ namespace Etsi.Ultimate.Tests.Services
             changeRequest.CR_WorkItems = new List<CR_WorkItems>() { new CR_WorkItems() { Fk_WIId = 2 }, new CR_WorkItems() { Fk_WIId = 3 } };
             //Act
             var crService = new ChangeRequestService();
-            var result = crService.EditChangeRequest(personID, changeRequest);
+            var result = crService.EditChangeRequest(PersonId, changeRequest);
             var modifiedCR = UoW.Context.ChangeRequests.Find(1);
 
             //Assert
@@ -275,8 +293,8 @@ namespace Etsi.Ultimate.Tests.Services
 
             //Act
             var crService = new ChangeRequestService();
-            var result = crService.EditChangeRequest(personID, changeRequest);
-            LoggingEvent[] events = memoryAppender.GetEvents();
+            var result = crService.EditChangeRequest(PersonId, changeRequest);
+            LoggingEvent[] events = _memoryAppender.GetEvents();
 
             //Assert
             Assert.IsFalse(result);
@@ -292,7 +310,7 @@ namespace Etsi.Ultimate.Tests.Services
             var changeRequest = ChangeRequestDataObject();
             //Act
             var crService = new ChangeRequestService();
-            var result = crService.CreateChangeRequest(personID, changeRequest);
+            var result = crService.CreateChangeRequest(PersonId, changeRequest);
             //Assert
             Assert.AreEqual(changeRequest.Pk_ChangeRequest, result.Value);
             Assert.AreEqual(changeRequest.CRNumber, "0001");
@@ -303,7 +321,7 @@ namespace Etsi.Ultimate.Tests.Services
         {
             //Act
             var changeRequestById = new ChangeRequestService();
-            var result = changeRequestById.GetChangeRequestById(personID, 3);
+            var result = changeRequestById.GetChangeRequestById(PersonId, 3);
             //Assert
             Assert.AreEqual(3, result.Value.Pk_ChangeRequest);
             Assert.AreEqual("A0012", result.Value.CRNumber);

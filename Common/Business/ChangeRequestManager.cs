@@ -112,7 +112,7 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Business] Failed to GetChangeRequestById:" + ex.Message);
+                LogManager.Error(String.Format("[Business] Failed to get change request id : {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
             }
             return changeRequest;
         }

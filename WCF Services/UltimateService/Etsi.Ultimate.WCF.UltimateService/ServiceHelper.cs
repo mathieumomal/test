@@ -282,7 +282,6 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-
                 LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequestById, ex.Message));
             }
             LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequestById, changeRequest.Pk_ChangeRequest));

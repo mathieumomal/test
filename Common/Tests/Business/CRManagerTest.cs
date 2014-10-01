@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.Business;
+﻿using System.Security.Cryptography;
+using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using NUnit.Framework;
@@ -21,15 +22,10 @@ namespace Etsi.Ultimate.Tests.Business
     public class CrManagerTest : BaseEffortTest
     {
         #region Constants
-
-        private const int totalNoOfCRsInCSV = 0;
-        private const int personID = 0;     
-        private const int alphaNumericalAllocatedSpecId = 136080;
-        private const int oneAllocatedCrSpecId = 136081;
-        private int changeRequestId = 1;
-        private IDbSet<ChangeRequest> changeRequest;
-        MemoryAppender memoryAppender;
-
+        private const int PersonId = 0;     
+        private const int AlphaNumericalAllocatedSpecId = 136080;
+        private const int OneAllocatedCrSpecId = 136081;
+        MemoryAppender _memoryAppender;
         #endregion
 
         #region Logger Setup
@@ -44,13 +40,13 @@ namespace Etsi.Ultimate.Tests.Business
         [SetUp]
         public override void Setup()
         {
-            memoryAppender = ((log4net.Core.LoggerWrapperImpl)(LogManager.Logger)).Logger.Repository.GetAppenders()[0] as MemoryAppender;
+            _memoryAppender = ((log4net.Core.LoggerWrapperImpl)(LogManager.Logger)).Logger.Repository.GetAppenders()[0] as MemoryAppender;
         }
 
         [TearDown]
         public void TearDown()
         {
-            memoryAppender.Clear();
+            _memoryAppender.Clear();
         }
 
         [TestFixtureTearDown]
@@ -74,7 +70,7 @@ namespace Etsi.Ultimate.Tests.Business
 
             //Act
             var crManager = new ChangeRequestManager();
-            var result = crManager.CreateChangeRequest(personID, changeRequest);
+            var result = crManager.CreateChangeRequest(PersonId, changeRequest);
 
             //Assert
             Assert.IsTrue(result);
@@ -91,8 +87,8 @@ namespace Etsi.Ultimate.Tests.Business
 
             //Act
             var crManager = new ChangeRequestManager();
-            var result = crManager.CreateChangeRequest(personID, changeRequest);
-            LoggingEvent[] events = memoryAppender.GetEvents();
+            var result = crManager.CreateChangeRequest(PersonId, changeRequest);
+            LoggingEvent[] events = _memoryAppender.GetEvents();
 
             //Assert
             Assert.IsFalse(result);
@@ -102,8 +98,8 @@ namespace Etsi.Ultimate.Tests.Business
         }
 
         [TestCase(87541, "0001", Description = "Numbering system returns 0001 when there is no CR")]
-        [TestCase(oneAllocatedCrSpecId, "0002", Description = "Numbering system must return next available number (here 0002)")]
-        [TestCase(alphaNumericalAllocatedSpecId, "0001", Description = "System should allocate CR#0001 even if there are already some alphanumeric allocated numbers")]
+        [TestCase(OneAllocatedCrSpecId, "0002", Description = "Numbering system must return next available number (here 0002)")]
+        [TestCase(AlphaNumericalAllocatedSpecId, "0001", Description = "System should allocate CR#0001 even if there are already some alphanumeric allocated numbers")]
         public void GenerateCrNumberReturns0001WhenNoExistingCr(int specId, string expectedCrNumber)
         { 
             var crManager = new ChangeRequestManager() { UoW = UoW };
@@ -124,7 +120,7 @@ namespace Etsi.Ultimate.Tests.Business
 
             //Act
             var crManager = new ChangeRequestManager();
-            var result = crManager.EditChangeRequest(personID, uiChangeRequest);
+            var result = crManager.EditChangeRequest(PersonId, uiChangeRequest);
 
             //Assert
             Assert.IsTrue(result);
@@ -140,8 +136,8 @@ namespace Etsi.Ultimate.Tests.Business
             //Act
             var crManager = new ChangeRequestManager();
             crManager.UoW = null; //Set context null to raise object reference exception
-            var result = crManager.EditChangeRequest(personID, uiChangeRequest);
-            LoggingEvent[] events = memoryAppender.GetEvents();
+            var result = crManager.EditChangeRequest(PersonId, uiChangeRequest);
+            LoggingEvent[] events = _memoryAppender.GetEvents();
 
             //Assert
             Assert.IsFalse(result);
@@ -176,18 +172,27 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual("0002", result);
         }
 
+        // --- GetCRId ---
         [Test]
         [TestCase(1, "0001")]
         [TestCase(2, "A002")]
         [TestCase(3, "A0012")]
-        public void GetChangeRequestById(int changeRequestId, string crNumber)
+        public void GetChangeRequestById_Success(int changeRequestId, string crNumber)
         {
-
             var crManager = new ChangeRequestManager();
             crManager.UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
-            var result = crManager.GetChangeRequestById(personID, changeRequestId);
+            var result = crManager.GetChangeRequestById(PersonId, changeRequestId);
             //Assert
             Assert.AreEqual(crNumber, result.CRNumber);
+        }
+        [Test, Description("Test if we try to get a CR which doesn't exist. We expect a null change request object.")]
+        public void GetChangeRequestById_Failure()
+        {
+            var crManager = new ChangeRequestManager();
+            crManager.UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var result = crManager.GetChangeRequestById(PersonId, 100);
+            //Assert
+            Assert.IsNull(result);
         }
         #endregion
     }
