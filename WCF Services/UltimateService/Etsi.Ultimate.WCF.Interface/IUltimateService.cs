@@ -17,12 +17,12 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <summary>
         /// Gets the releases.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <returns>
         /// List of Releases
         /// </returns>
         [OperationContract]
-        List<Release> GetReleases(int personID);
+        List<Release> GetReleases(int personId);
 
         /// <summary>
         /// Gets release by identifier
@@ -36,74 +36,74 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <summary>
         /// Gets the work items by ids.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="workItemIds">The work item ids.</param>
         /// <returns>List of work items</returns>
         [OperationContract]
-        List<WorkItem> GetWorkItemsByIds(int personID, List<int> workItemIds);
+        List<WorkItem> GetWorkItemsByIds(int personId, List<int> workItemIds);
 
         /// <summary>
         /// Gets the work items by key word.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="keyword">The keyword.</param>
         /// <returns>List of work items</returns>
         [OperationContract]
-        List<WorkItem> GetWorkItemsByKeyWord(int personID, string keyword);
+        List<WorkItem> GetWorkItemsByKeyWord(int personId, string keyword);
 
         /// <summary>
         /// Gets the specifications by key word.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="keyword">The keyword.</param>
         /// <returns>List of specifications</returns>
         [OperationContract]
-        List<Specification> GetSpecificationsByKeyWord(int personID, string keyword);
+        List<Specification> GetSpecificationsByKeyWord(int personId, string keyword);
 
         /// <summary>
         /// Gets the specification by identifier.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="specificationId">The specification identifier.</param>
         /// <returns>Specification entity</returns>
         [OperationContract]
-        Specification GetSpecificationById(int personID, int specificationId);
+        Specification GetSpecificationById(int personId, int specificationId);
 
         /// <summary>
         /// Gets the specifications by ids.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="specificationIds">The specification ids.</param>
         /// <returns>List of specifications</returns>
         [OperationContract]
-        List<Specification> GetSpecificationsByIds(int personID, List<int> specificationIds);
+        List<Specification> GetSpecificationsByIds(int personId, List<int> specificationIds);
 
         /// <summary>
         /// Gets the change request by identifier.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="changeRequestId">The change request identifier.</param>
         /// <returns>Change Request entity</returns>
         [OperationContract]
-        ChangeRequest GetChangeRequestById(int personID, int changeRequestId);
+        ChangeRequest GetChangeRequestById(int personId, int changeRequestId);
 
         /// <summary>
         /// Creates the change request.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="changeRequest">The change request.</param>
         /// <returns>Primary key of newly inserted change request</returns>
         [OperationContract]
-        int CreateChangeRequest(int personID, ChangeRequest changeRequest);
+        int CreateChangeRequest(int personId, ChangeRequest changeRequest);
 
         /// <summary>
         /// Edit the change request.
         /// </summary>
-        /// <param name="personID">The person identifier.</param>
+        /// <param name="personId">The person identifier.</param>
         /// <param name="changeRequest">The change request.</param>
         /// <returns>Success/Failure</returns>
         [OperationContract]
-        bool EditChangeRequest(int personID, ChangeRequest changeRequest);
+        bool EditChangeRequest(int personId, ChangeRequest changeRequest);
 
         /// <summary>
         /// Changes the request categories.
