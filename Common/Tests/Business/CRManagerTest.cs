@@ -21,7 +21,8 @@ namespace Etsi.Ultimate.Tests.Business
 
         private const int totalNoOfCRsInCSV = 0;
         private const int personID = 0;     
-        private int specificationId = 136080;
+        private const int alphaNumericalAllocatedSpecId = 136080;
+        private const int oneAllocatedCrSpecId = 136081;
         private int changeRequestId = 1;
         private IDbSet<ChangeRequest> changeRequest;
 
@@ -63,18 +64,15 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.IsFalse(result);
         }
 
-        [Test, Description("Checking alphanumeric number")]
-        public void Business_GenerateCrNumberBySpecificationId()
+        [TestCase(87541,"0001", Description="Numbering system returns 0001 when there is no CR")]
+        [TestCase(oneAllocatedCrSpecId, "0002", Description="Numbering system must return next available number (here 0002)")]
+        [TestCase(alphaNumericalAllocatedSpecId, "0001", Description = "System should allocate CR#0001 even if there are already some alphanumeric allocated numbers")]
+        public void GenerateCrNumberReturns0001WhenNoExistingCr(int specId, string expectedCrNumber)
         {
-            //Arrange
-            ChangeRequest changeRequest = new ChangeRequest();
-            changeRequest.Fk_Specification = specificationId;
-            var crManager = new ChangeRequestManager();
-            crManager.UoW = UoW;
-            //Act
-            var result = crManager.GenerateCrNumberBySpecificationId(changeRequest.Fk_Specification);
-            //Assert
-            Assert.AreEqual("A0145", result);
+            var crManager = new ChangeRequestManager() { UoW = UoW };
+
+            var result = crManager.GenerateCrNumberBySpecificationId(specId);
+            Assert.AreEqual(expectedCrNumber, result);
         }
 
         [Test, Description("Checking numeric number")]

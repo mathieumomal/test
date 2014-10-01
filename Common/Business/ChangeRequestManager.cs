@@ -14,7 +14,7 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Gets or sets the uoW.
         /// </summary>
-        public IUltimateUnitOfWork UoW { get; set; }      
+        public IUltimateUnitOfWork UoW { get; set; }
         /// <summary>
         /// Creates the change request.
         /// </summary>
@@ -47,19 +47,27 @@ namespace Etsi.Ultimate.Business
         public string GenerateCrNumberBySpecificationId(int? specificationId)
         {
             List<int> crNumberList = new List<int>();
-            var alphaCharacter = string.Empty;
+
             var heighestCrNumber = 0;
             if (specificationId > 0)
             {
                 var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
                 repo.UoW = UoW;
                 var crNumber = repo.FindCrNumberBySpecificationId(specificationId);
-                crNumber.ForEach(x => crNumberList.Add(GetCrNumber(x)));
-                heighestCrNumber = crNumberList.Max();
-                alphaCharacter = GetAlphaCharacter(crNumberList, alphaCharacter, heighestCrNumber, crNumber);
+
+                int tmpCrNumber;
+                foreach (var num in crNumber)
+                {
+                    if (int.TryParse(num, out tmpCrNumber))
+                        crNumberList.Add(tmpCrNumber);
+                }
+                if (crNumberList.Count != 0)
+                { 
+                    heighestCrNumber = crNumberList.Max();
+                }
                 heighestCrNumber++;
             }
-            return new StringBuilder().Append(alphaCharacter).Append(heighestCrNumber.ToString(new String('0', 4))).ToString();
+            return heighestCrNumber.ToString(new String('0', 4));
         }
 
 
@@ -81,45 +89,12 @@ namespace Etsi.Ultimate.Business
                 isSuccess = true;
             }
             catch (Exception ex)
-            {               
+            {
                 isSuccess = false;
-               LogManager.Error("[Business] Failed to GetChangeRequestById:" + ex.Message);
+                LogManager.Error("[Business] Failed to GetChangeRequestById:" + ex.Message);
             }
             return changeRequest;
-        }      
-        #region Private methods
-
-        /// <summary>
-        /// Gets the alpha character.
-        /// </summary>
-        /// <param name="crNumberList">The cr number list.</param>
-        /// <param name="Alpha">The alpha.</param>
-        /// <param name="heighestCrNumber">The heighest cr number.</param>
-        /// <param name="crNumber">The cr number.</param>
-        /// <returns>alpha character</returns>
-        private static string GetAlphaCharacter(List<int> crNumberList, string alphaCharacter, int heighestCrNumber, List<string> crNumber)
-        {
-            var alphaIndex = crNumberList.IndexOf(heighestCrNumber);
-            Regex regex = new Regex("[^a-zA-Z]");
-            alphaCharacter = regex.Replace(crNumber[alphaIndex], "");
-            return alphaCharacter;
         }
-        /// <summary>
-        /// Gets the number.
-        /// </summary>
-        /// <param name="str">The string.</param>
-        /// <returns>Numeric number</returns>
-        private int GetCrNumber(string strCrNumber)
-        {
-            var crNumericNumber = 0;
-            if (!String.IsNullOrEmpty(strCrNumber))
-            {
-                Regex regex = new Regex("[^0-9]");
-                Int32.TryParse(regex.Replace(strCrNumber, ""), out crNumericNumber);
-            }
-            return crNumericNumber;
-        }
-        #endregion
     }
 
 
@@ -141,7 +116,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="changeRequest">The change request.</param>
         /// <returns>Primary key of newly inserted change request</returns>
         bool CreateChangeRequest(int personId, ChangeRequest changeRequest);
-       
+
         /// <summary>
         /// Gets the change request by identifier.
         /// </summary>
