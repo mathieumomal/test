@@ -8,10 +8,9 @@ REM ------------------------------------------------------------
 REM ------------------------------------------------------------------------------
 REM ----------------  Provide Environment Parameters Below -----------------------
 REM ------------------------------------------------------------------------------
-SET PATH_ULTIMATE=D:\3GPP\SourceCode\ULTIMATE\trunk
+SET PATH_ULTIMATE=D:\CG_projects\Ultimate
 SET BASE_PATH_TARGET=C:\EtsiPortalServices
-SET SERVICE_LOGIN=CORP\cneelam
-SET SERVICE_PASSWORD=SECRET
+SET SERVICE_LOGIN=CORP\[your login]
 
 REM ----------------------------------------------------------------------------------------
 REM -----------------------  DON'T CHANGE ANYTHING BELOW------------------------------------
@@ -22,6 +21,9 @@ SET BATCHLOCATION="%~dp0"
 REM -----------------------------------------------------------------
 REM ------------------------- 01. SERVICES --------------------------
 REM -----------------------------------------------------------------
+ECHO @@@ Please enter your password (feel free to skip by enter) ?
+set /P SERVICE_PASSWORD=
+CLS
 CALL %BATCHLOCATION%\Setups\Offline_Services.bat %SERVICE_OFFLINE_SYNC_CLIENT% %BASE_PATH_TARGET% %SERVICE_LOGIN% %SERVICE_PASSWORD%
 IF %ERRORLEVEL% NEQ 0 GOTO FAILED
 

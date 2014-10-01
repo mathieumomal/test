@@ -54,6 +54,11 @@ REM Installing the service
 installutil.exe "Etsi.UserRights.UserRightsServiceSetup.exe"
 
 REM Configuring the service so that it starts automatically
+IF not exist %SERVICE_PASSWORD% (
+	ECHO @@@ Please enter your password (password is required for install this service): 
+	set /P SERVICE_PASSWORD=
+	CLS
+)
 sc config %ServiceName% obj= %SERVICE_LOGIN% password= %SERVICE_PASSWORD% start= auto
 
 REM Start the service

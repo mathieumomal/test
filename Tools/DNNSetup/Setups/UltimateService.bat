@@ -20,8 +20,18 @@ SET ServiceOriginPath="%BASE_PATH_ULTIMATE_SERVICE%\Etsi.Ultimate.WCF.Setup\bin\
 echo Step1 [Ultimate Service]: Build Ultimate Service application
 
 echo Building Ultimate Service solution
-devenv %SOLUTION_PATH_ULTIMATE_SERVICE% /clean Release | findstr /R /C:"===="
-devenv %SOLUTION_PATH_ULTIMATE_SERVICE% /build Release | findstr /R /C:"===="
+echo @@@ Enter 'd' for Debug or 'r' for release build :
+set /P DEBUG_OR_RELEASE=
+IF "%DEBUG_OR_RELEASE%" == "d" (
+	ECHO DEBUG BUILD
+	devenv %SOLUTION_PATH_ULTIMATE_SERVICE% /clean Debug | findstr /R /C:"===="
+	devenv %SOLUTION_PATH_ULTIMATE_SERVICE% /build Debug | findstr /R /C:"===="
+) ELSE (
+	ECHO RELEASE BUILD
+	devenv %SOLUTION_PATH_ULTIMATE_SERVICE% /clean Release | findstr /R /C:"===="
+	devenv %SOLUTION_PATH_ULTIMATE_SERVICE% /build Release | findstr /R /C:"===="
+)
+
 
 echo Step2[Ultimate Service]: Creating the services directory and moving the files in.
 IF exist %BASE_PATH_TARGET% ( echo %BASE_PATH_TARGET% exists ) ELSE ( mkdir %BASE_PATH_TARGET% && echo %BASE_PATH_TARGET% created)

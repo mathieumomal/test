@@ -8,11 +8,10 @@ REM -----------------------------------------------------------
 REM ------------------------------------------------------------------------------
 REM ----------------  Provide Environment Parameters Below -----------------------
 REM ------------------------------------------------------------------------------
-SET PATH_ULTIMATE=D:\3GPP\SourceCode\ULTIMATE\trunk
-SET PATH_NGPP=D:\3GPP\SourceCode\NGPP
+SET PATH_ULTIMATE=D:\CG_projects\Ultimate
+SET PATH_NGPP=D:\CG_projects\Solutions\UltimateContributionN
 SET BASE_PATH_TARGET=C:\EtsiPortalServices
-SET SERVICE_LOGIN=CORP\cneelam
-SET SERVICE_PASSWORD=SECRET
+SET SERVICE_LOGIN=CORP\[your login]
 
 REM ----------------------------------------------------------------------------------------
 REM -----------------------  DON'T CHANGE ANYTHING BELOW------------------------------------
@@ -27,7 +26,11 @@ SET BATCHLOCATION="%~dp0"
 REM -----------------------------------------------------------------
 REM ------------------------- 01. SERVICES --------------------------
 REM -----------------------------------------------------------------
+ECHO @@@ Please enter your password (feel free to skip by enter) ?
+set /P SERVICE_PASSWORD=
+CLS
 ECHO Service Installation Started..
+
 CALL %BATCHLOCATION%\Setups\Online_Services.bat %SERVICE_USERRIGHTS% %SERVICE_REMOTE_CONSENSUS% %SERVICE_VFS_HOST_FTP% %SERVICE_OFFLINE_SYNC_SERVICE% %SERVICE_ULTIMATE% %BASE_PATH_TARGET% %SERVICE_LOGIN% %SERVICE_PASSWORD%
 IF %ERRORLEVEL% NEQ 0 GOTO FAILED
 
@@ -43,18 +46,19 @@ REM -----------------------------------------------------------------
 REM --------------------------------------------
 REM ---------------  SUCCESS MESSAGE -----------
 REM --------------------------------------------
-ECHO Local Environment Setup Done Successfully
+ECHO Local Environment Setup Done !!! SUCCESSFULLY !!!
 GOTO END
 
 :FAILED 
 REM --------------------------------------------
 REM ----------------  ERROR MESSAGE ------------
 REM --------------------------------------------
-ECHO Local Environment Setup Failed...!!!
+ECHO Local Environment Setup !!! FAILED !!! \n
 GOTO END
 
 :END
-ECHO Local Environment Setup - END - %date% %time%
+ECHO -
+ECHO (Local Environment Setup - END - %date% %time%)
 
 PAUSE
 ENDLOCAL
