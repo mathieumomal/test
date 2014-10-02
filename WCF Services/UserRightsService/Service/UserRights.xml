@@ -95,16 +95,19 @@
 		    <Right value="Contribution_Withdraw" />
         <Right value="Contribution_Import" />
         <Right value="Manage_AgendaItems"/>
+        <Right value="Contribution_Edit_CR_Number"/>
       </UserRole>
+
       <UserRole value="EolAccountOwner">
         <Right value="Release_ViewCompleteList"/>
         <Right value="Release_ViewDetails"/>
         <Right value="General_ViewPersonalData"/>
         <Right value="Specification_ViewDetails"/> 
-		<Right value="Contribute_Restricted"/>
-		<Right value="Contribution_Upload"/>
+		    <Right value="Contribute_Restricted"/>
+		    <Right value="Contribution_Upload"/>
         <Right value="Contribution_Withdraw_Restricted" />
       </UserRole>
+
       <UserRole value="MeetingManager">
         <Right value="Meeting_ViewMeetingList"/>
         <Right value="Meeting_CreateMeeting"/>
