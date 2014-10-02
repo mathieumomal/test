@@ -2,7 +2,6 @@
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
-using Etsi.Ultimate.WCF.Service;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Microsoft.Practices.Unity;

@@ -51,7 +51,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns></returns>
         public ChangeRequest GetChangeRequestByContributionUID(string contributionUID)
         {            
-            var result = UoW.Context.ChangeRequests.SingleOrDefault(c => c.TSGTDoc.Equals(contributionUID));
+            var result = UoW.Context.ChangeRequests.SingleOrDefault(c => (c.TSGTDoc.Equals(contributionUID) || c.WGTDoc.Equals(contributionUID)) );
             return result;
         }
 
