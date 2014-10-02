@@ -1,6 +1,7 @@
 ﻿using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
+using Etsi.Ultimate.Utils.Core;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Microsoft.Practices.Unity;
@@ -12,6 +13,10 @@ namespace Etsi.Ultimate.Tests.Services
 {
     public class CrCategoriesServiceTest : BaseEffortTest
     {
+
+        #region Constants
+        private const string CacheKey = "ULT_BIZ_CHANGEREQUESTCATEGORY_ALL";
+        #endregion
 
         #region Tests
         [Test, Category("Change Request Category")]
@@ -42,6 +47,9 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsNotNull(result.Value);
             Assert.AreEqual(2, result.Value.Count);
             Assert.AreEqual("CR", result.Value[0].Code);
+
+            //Clear cache
+            CacheManager.Clear(CacheKey);
         }
 
         #endregion

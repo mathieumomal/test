@@ -216,6 +216,7 @@
     <Compile Include="Services\WorkItemServiceTest.cs" />
     <Compile Include="Business\ConfigVariableTest.cs" />
     <Compile Include="Services\WorkPlanFileServiceTest.cs" />
+    <Compile Include="WCFTests\UltimateWCFServicesTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -314,6 +315,14 @@
     <None Include="TestData\WorkItems\WpId_NonUnique.csv" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\WCF Services\UltimateService\Etsi.Ultimate.WCF.Interface\Etsi.Ultimate.WCF.Interface.csproj">
+      <Project>{04E3E687-B60B-4499-BAFD-F8EC996E111D}</Project>
+      <Name>Etsi.Ultimate.WCF.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\WCF Services\UltimateService\Etsi.Ultimate.WCF.UltimateService\Etsi.Ultimate.WCF.Service.csproj">
+      <Project>{F4AC3CAD-15CA-4815-B971-1CF0400CE9B4}</Project>
+      <Name>Etsi.Ultimate.WCF.Service</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Business\Business.csproj">
       <Project>{b01c6fdf-c992-4d87-b67e-41afd677ea5f}</Project>
       <Name>Business</Name>

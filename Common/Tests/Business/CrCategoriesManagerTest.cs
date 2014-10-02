@@ -35,6 +35,9 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.IsNotNull(svcChangeRequestCategory);
             Assert.AreEqual(2, result.Count);
             Assert.AreEqual("CR", result[0].Code);
+
+            //Clear cache 
+            CacheManager.Clear(CacheKey);
         }
 
         #endregion

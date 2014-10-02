@@ -2,6 +2,7 @@
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
+using Etsi.Ultimate.WCF.Service;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Microsoft.Practices.Unity;
@@ -330,14 +331,19 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void ervice_IntegrationTes_GetChangeRequestByContribUid()
         {
-            
+            const string contribUid = "Change request description1";
+            const string tdocNumber = "0001";
+            const int tdocRevision = 1;
             //Act
             var svcCr= new ChangeRequestService();
-            var result = svcCr.GetContributionCrByUid("Change request description1");
+            var result = svcCr.GetContributionCrByUid(contribUid);
             //Assert
             Assert.IsTrue(result.Key);
-        }   
-
+            Assert.AreEqual(contribUid, result.Value.TSGTDoc);
+            Assert.AreEqual(tdocNumber, result.Value.CRNumber);
+            Assert.AreEqual(tdocRevision, result.Value.Revision);
+        }
+        
         #endregion
 
         #region DataObject

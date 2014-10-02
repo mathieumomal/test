@@ -391,10 +391,13 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns></returns>
         private UltimateServiceEntities.ChangeRequest ConverChangeRequestToServiceChangeRequest(UltimateEntities.ChangeRequest changeRequest)
         {
-            UltimateServiceEntities.ChangeRequest svcCr = null;
+            UltimateServiceEntities.ChangeRequest svcCr = new UltimateServiceEntities.ChangeRequest();
             //Set properties
             svcCr.CRNumber = changeRequest.CRNumber;
             svcCr.Revision = changeRequest.Revision;
+            svcCr.TSGTDoc = changeRequest.TSGTDoc;
+            svcCr.WGTDoc = changeRequest.WGTDoc; 
+
             var svc = ServicesFactory.Resolve<ICrCategoriesService>();
             var svcChangeRequestCategories = svc.GetChangeRequestCategories();
             if (svcChangeRequestCategories.Key && svcChangeRequestCategories.Value != null)
