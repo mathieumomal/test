@@ -567,8 +567,6 @@ namespace Etsi.Ultimate.WCF.Service
                 serviceCr.Fk_Impact = ultimateCr.Fk_Impact;
                 serviceCr.TSGTDoc = ultimateCr.TSGTDoc;
                 serviceCr.WGTDoc = ultimateCr.WGTDoc;
-                serviceCr.Fk_Enum_CRCategory = ultimateCr.Fk_Enum_CRCategory;
-                serviceCr.Fk_Enum_CRCategory = ultimateCr.Fk_Enum_CRCategory;
             }
             return serviceCr;
         }
