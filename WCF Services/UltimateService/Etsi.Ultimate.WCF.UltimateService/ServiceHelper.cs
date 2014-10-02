@@ -410,7 +410,7 @@ namespace Etsi.Ultimate.WCF.Service
                     {
                         Pk_EnumCRCategory = currentCr.Pk_EnumCRCategory,
                         Code = currentCr.Code,
-                        Description = currentCr.Code
+                        Description = currentCr.Description
                     };
             }
             return svcCr;
