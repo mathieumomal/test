@@ -8,30 +8,26 @@ using System.Collections.Generic;
 using Etsi.Ultimate.Tests.FakeSets;
 using System.Data.Entity;
 using Etsi.Ultimate.Utils.Core;
-using System;
-using System.Linq;
-
 namespace Etsi.Ultimate.Tests.Business
 {
    
    public class CrCategoriesManagerTest:BaseEffortTest
     {
-        #region Constants       
+        #region Constants
         private const string CacheKey = "ULT_BIZ_CHANGEREQUESTCATEGORY_ALL";      
         #endregion
 
-        #region Tests          
+        #region Tests
    
         [Test, TestCaseSource("GetCRCategoryData")]
         public void Business_ChangeRequestCategory(IDbSet<Enum_CRCategory> changeRequestCategories)
         {
-            var mockCRCategoryRepository = MockRepository.GenerateMock<IEnum_CrCategoryRepository>();
-            mockCRCategoryRepository.Stub(x => x.All).Return(changeRequestCategories);
-            RepositoryFactory.Container.RegisterInstance(typeof(IEnum_CrCategoryRepository), mockCRCategoryRepository);
+            var mockCrCategoryRepository = MockRepository.GenerateMock<IEnum_CrCategoryRepository>();
+            mockCrCategoryRepository.Stub(x => x.All).Return(changeRequestCategories);
+            RepositoryFactory.Container.RegisterInstance(typeof(IEnum_CrCategoryRepository), mockCrCategoryRepository);
 
             //Act
-            var crManager = new CrCategoriesManager();
-            crManager.UoW = UoW;
+            var crManager = new CrCategoriesManager {UoW = UoW};
             var result = crManager.GetChangeRequestCategories();
             //Assert
             var svcChangeRequestCategory = (List<Enum_CRCategory>)CacheManager.Get(CacheKey);
@@ -42,6 +38,7 @@ namespace Etsi.Ultimate.Tests.Business
         }
 
         #endregion
+
         #region Data object
 
         /// <summary>
@@ -52,10 +49,12 @@ namespace Etsi.Ultimate.Tests.Business
         {
             get
             {
-                var crCategoryDBSet = new Enum_CRCategoryFakeDbSet();
-                crCategoryDBSet.Add(new Enum_CRCategory() { Pk_EnumCRCategory = 1, Code = "CR", Description = "Change Request" });
-                crCategoryDBSet.Add(new Enum_CRCategory() { Pk_EnumCRCategory = 1, Code = "CD", Description = "Change Description" });
-                yield return (IDbSet<Enum_CRCategory>)crCategoryDBSet;
+                var crCategoryDbSet = new Enum_CRCategoryFakeDbSet
+                {
+                    new Enum_CRCategory {Pk_EnumCRCategory = 1, Code = "CR", Description = "Change Request"},
+                    new Enum_CRCategory {Pk_EnumCRCategory = 1, Code = "CD", Description = "Change Description"}
+                };
+                yield return crCategoryDbSet;
             }
         }
         #endregion

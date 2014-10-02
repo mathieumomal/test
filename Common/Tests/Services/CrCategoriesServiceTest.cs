@@ -7,7 +7,6 @@ using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.DataAccess;
 using System.Collections.Generic;
-using System;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -31,7 +30,6 @@ namespace Etsi.Ultimate.Tests.Services
             var result = crCategoryService.GetChangeRequestCategories();
             //Assert
             Assert.IsTrue(result.Key);
-
         }
 
         [Test]
@@ -42,6 +40,7 @@ namespace Etsi.Ultimate.Tests.Services
             var result = crCategoryService.GetChangeRequestCategories();
             //Assert
             Assert.IsNotNull(result.Value);
+            Assert.AreEqual(2, result.Value.Count);
             Assert.AreEqual("CR", result.Value[0].Code);
         }
 
