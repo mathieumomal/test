@@ -1,0 +1,45 @@
+Pk_Enum_SerieId,Code,Description,Series_2g,Series_3g
+3650,SER_00,00. General information,True,False
+3651,SER_01,01. Requirements,True,False
+3652,SER_02,02. Service aspects (stage 1),True,False
+3653,SER_03,03. Technical realization (stage 2),True,False
+3654,SER_04,"04. Signalling protocols (""stage 3"") - user equipment to network",True,False
+3655,SER_05,05. GSM radio  aspects,True,False
+3656,SER_06,06. CODECs,True,False
+3657,SER_07,07. Data,True,False
+3658,SER_08,"08. Signalling protocols (""stage 3"") - (RSS-CN)",True,False
+3659,SER_09,"09. Signalling protocols (""stage 3"") - (intra-fixed-network)",True,False
+3660,SER_10,10. Programme management,True,False
+3661,SER_11,11. Subscriber Identity Module,True,False
+3662,SER_12,12. OAM&P and Charging,True,False
+3663,SER_13,13. Access requirements and test specifications,True,False
+3664,SER_21,21. Requirements,False,True
+3665,SER_22,22. Service aspects,False,True
+3666,SER_23,23. Technical realization,False,True
+3667,SER_24,"24. Signalling protocols (""stage 3"") - user equipment to network",False,True
+3668,SER_25,25. UTRA radio aspects,False,True
+3669,SER_26,26. CODECs,False,True
+3670,SER_27,27. Data,False,True
+3671,SER_28,"28. Signalling protocols (""stage 3"") - (RSS-CN) and OAM&P and Charging (overflow from 32.- range)",False,True
+3672,SER_29,"29. Signalling protocols (""stage 3"") - (intra-fixed-network)",False,True
+3673,SER_30,30. Programme management,False,True
+3674,SER_31,"31. Subscriber Identity Module (SIM / USIM), IC Cards. Test specs.",False,True
+3675,SER_32,32. OAM&P and Charging,False,True
+3676,SER_33,33. Security aspects,False,True
+3677,SER_34,34. UE and (U)SIM test specifications,False,True
+3678,SER_35,35. Security algorithms,False,True
+3679,SER_36,36. LTE (Evolved UTRA) and LTE-Advanced radio aspects,False,False
+3680,SER_37,37. Multiple radio access technology aspects,False,False
+3681,SER_41,41. Requirements,True,False
+3682,SER_42,42. Service aspects (stage 1),True,False
+3683,SER_43,43. Technical realization (stage 2),True,False
+3684,SER_44,44. Signalling protocols (user equipment to network),True,False
+3685,SER_45,45. GSM radio  aspects,True,False
+3686,SER_46,46. CODECs,True,False
+3687,SER_47,47. Data,True,False
+3688,SER_48,48. Signalling protocols (RSS-CN),True,False
+3689,SER_49,49. Signalling protocols (intra-fixed-network),True,False
+3690,SER_50,50. Programme management,True,False
+3691,SER_51,51. Subscriber Identity Module,True,False
+3692,SER_52,52. O&M,True,False
+3693,SER_55,55. Security algorithms,True,False

@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils.Core", "..\..\Common\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "..\..\Common\Tests\Tests.csproj", "{A03F686E-BF8D-45CB-9D5E-83D13FA98823}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etsi.Ultimate.WCF.Test", "Etsi.Ultimate.WCF.Test\Etsi.Ultimate.WCF.Test.csproj", "{154D1186-EB76-4E2E-983C-C6E06BF6E73B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{A03F686E-BF8D-45CB-9D5E-83D13FA98823}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A03F686E-BF8D-45CB-9D5E-83D13FA98823}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A03F686E-BF8D-45CB-9D5E-83D13FA98823}.Release|Any CPU.Build.0 = Release|Any CPU
+		{154D1186-EB76-4E2E-983C-C6E06BF6E73B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{154D1186-EB76-4E2E-983C-C6E06BF6E73B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{154D1186-EB76-4E2E-983C-C6E06BF6E73B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{154D1186-EB76-4E2E-983C-C6E06BF6E73B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

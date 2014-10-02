@@ -1,0 +1,5 @@
+Pk_ReleaseId,Code,Name,ShortName,Description,Fk_ReleaseStatus,StartDate,Stage1FreezeDate,Stage1FreezeMtgRef,Stage1FreezeMtgId,Stage2FreezeDate,Stage2FreezeMtgRef,Stage2FreezeMtgId,Stage3FreezeMtgRef,Stage3FreezeDate,Stage3FreezeMtgId,EndDate,EndMtgRef,EndMtgId,ClosureDate,ClosureMtgRef,ClosureMtgId,SortOrder,Version2g,Version3g,WpmCode2g,WpmCode3g,WpmProjectId,IturCode,LAST_MOD_BY,LAST_MOD_TS
+2874,R00,A closed Release,R2000,,3,,,,,,,,,,,,,,,,9656,700,9,,,,711,,System,
+2882,Rel-12,A Frozen Release,Rel-12,,2,,,,,,,,,,30573,,,,,,,870,12,12,GSM_Release_12,3G4G_Rel-12,763,Release 12,System,
+2883,Rel-13,An open Release,Rel-13,,1,,,,,,,,,,30778,,,,,,,880,13,13,GSM_Release_13,3G4G_Rel-13,768,Release 13,System,
+2884,Rel-14,Another open release,Rel-14,,1,,,,,,,,,,30778,,,,,,,890,14,14,GSM_Release_14,3G4G_Rel-14,780,Release 14,System,

@@ -216,7 +216,6 @@
     <Compile Include="Services\WorkItemServiceTest.cs" />
     <Compile Include="Business\ConfigVariableTest.cs" />
     <Compile Include="Services\WorkPlanFileServiceTest.cs" />
-    <Compile Include="WCFTests\UltimateWCFServicesTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
