@@ -165,7 +165,7 @@ namespace Etsi.Ultimate.WCF.Service
         public ChangeRequest GetChangeRequestByContributionUID(string ContributionUID)
         {
             ServiceHelper svcHelper = new ServiceHelper();
-            return svcHelper.GetChangeRequestByContributionUID(ContributionUID);
+            return svcHelper.GetChangeRequestByContributionUid(ContributionUID);
         }
         #endregion
     }

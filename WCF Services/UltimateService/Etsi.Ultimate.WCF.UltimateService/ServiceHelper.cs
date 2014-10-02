@@ -1,9 +1,9 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Services;
 using Etsi.UserRights.Service;
 using Microsoft.Practices.Unity;
-using System;
 using System.Collections.Generic;
 using UltimateEntities = Etsi.Ultimate.DomainClasses;
 using UltimateServiceEntities = Etsi.Ultimate.WCF.Interface.Entities;
@@ -365,15 +365,15 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Returns a contribution's CR data
         /// </summary>
-        /// <param name="ContributionUID">Contribution UID</param>
+        /// <param name="contributionUid">Contribution UID</param>
         /// <returns></returns>
-        internal UltimateServiceEntities.ChangeRequest GetChangeRequestByContributionUID(string ContributionUID)
+        internal UltimateServiceEntities.ChangeRequest GetChangeRequestByContributionUid(string contributionUid)
         {
             UltimateServiceEntities.ChangeRequest cr = null;
             try
             {
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
-                var result = svc.GetContributionCrByUid(ContributionUID);
+                var result = svc.GetContributionCrByUid(contributionUid);
                 if (result.Key)
                     cr = ConverChangeRequestToServiceChangeRequest(result.Value);
             }
@@ -391,7 +391,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns></returns>
         private UltimateServiceEntities.ChangeRequest ConverChangeRequestToServiceChangeRequest(UltimateEntities.ChangeRequest changeRequest)
         {
-            UltimateServiceEntities.ChangeRequest svcCr = new UltimateServiceEntities.ChangeRequest();
+            var svcCr = new UltimateServiceEntities.ChangeRequest();
             //Set properties
             svcCr.CRNumber = changeRequest.CRNumber;
             svcCr.Revision = changeRequest.Revision;
@@ -405,12 +405,13 @@ namespace Etsi.Ultimate.WCF.Service
                 var currentCr =
                     svcChangeRequestCategories.Value.SingleOrDefault(
                         c => c.Pk_EnumCRCategory == changeRequest.Fk_Enum_CRCategory);
-                svcCr.Category = new UltimateServiceEntities.ChangeRequestCategory
-                {
-                    Pk_EnumCRCategory = currentCr.Pk_EnumCRCategory,
-                    Code = currentCr.Code,
-                    Description = currentCr.Code
-                };
+                if (currentCr != null)
+                    svcCr.Category = new UltimateServiceEntities.ChangeRequestCategory
+                    {
+                        Pk_EnumCRCategory = currentCr.Pk_EnumCRCategory,
+                        Code = currentCr.Code,
+                        Description = currentCr.Code
+                    };
             }
             return svcCr;
         }    
