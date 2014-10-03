@@ -66,6 +66,7 @@
 		<Right value="Contribution_Upload_Anytime"/>
         <Right value="Contribution_Withdraw" />
         <Right value="Contribution_Import" />
+		<Right value="Contribution_Edit_CR_Number"/>
       </UserRole>
       <UserRole value="WorkPlanManager">
         <Right value="Remarks_ViewPrivate"/>
