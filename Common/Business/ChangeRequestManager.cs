@@ -121,7 +121,7 @@ namespace Etsi.Ultimate.Business
         /// Returns a contribution's CR data
         /// </summary>
         /// <param name="ContributionUID">Contribution UID</param>
-        /// <returns></returns>
+        /// <returns>ChangeRequest entity</returns>
         public ChangeRequest GetContributionCrByUid(string ContributionUID)
         {
             try
@@ -137,7 +137,6 @@ namespace Etsi.Ultimate.Business
                 return null;
             }
         }
-
 
         #endregion
 
@@ -244,7 +243,7 @@ namespace Etsi.Ultimate.Business
         /// Returns a contribution's CR data
         /// </summary>
         /// <param name="ContributionUID">Contribution UID</param>
-        /// <returns></returns>
+        /// <returns>ChangeRequest entity</returns>
         ChangeRequest GetContributionCrByUid(string ContributionUID);
     }
 }

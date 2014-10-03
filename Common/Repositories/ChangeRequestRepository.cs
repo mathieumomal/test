@@ -1,6 +1,7 @@
 ﻿using Etsi.Ultimate.DomainClasses;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 
 namespace Etsi.Ultimate.Repositories
 {
@@ -32,7 +33,12 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>Change request details query</returns>
         public IQueryable<ChangeRequest> AllIncluding(params System.Linq.Expressions.Expression<System.Func<ChangeRequest, object>>[] includeProperties)
         {
-            throw new System.NotImplementedException();
+            IQueryable<ChangeRequest> query = UoW.Context.ChangeRequests;
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+            return query;
         }
 
         /// <summary>
@@ -43,16 +49,17 @@ namespace Etsi.Ultimate.Repositories
         public List<string> FindCrNumberBySpecificationId(int? specificationId)
         {
             return UoW.Context.ChangeRequests.Where(r => r.Fk_Specification == specificationId).Select(x => x.CRNumber).ToList();
-        }      
+        }
+
         /// <summary>
-        /// See interface
+        /// Return CR by contribution UID
         /// </summary>
-        /// <param name="contributionUID"></param>
-        /// <returns></returns>
+        /// <param name="contributionUID">Contribution Uid</param>
+        /// <returns>ChangeRequest entity</returns>
         public ChangeRequest GetChangeRequestByContributionUID(string contributionUID)
-        {            
-            var result = UoW.Context.ChangeRequests.SingleOrDefault(c => c.TSGTDoc.Equals(contributionUID)) ??
-                         UoW.Context.ChangeRequests.SingleOrDefault(c => c.WGTDoc.Equals(contributionUID));
+        {
+            var result = AllIncluding(t => t.Enum_CRCategory).SingleOrDefault(c => c.TSGTDoc.Equals(contributionUID)) ??
+                         AllIncluding(t => t.Enum_CRCategory).SingleOrDefault(c => c.WGTDoc.Equals(contributionUID));
             return result;
         }
 
@@ -98,7 +105,6 @@ namespace Etsi.Ultimate.Repositories
     /// </summary>
     public interface IChangeRequestRepository : IEntityRepository<ChangeRequest>
     {
-
         /// <summary>
         /// Gets or sets the uo w.
         /// </summary>
@@ -117,6 +123,8 @@ namespace Etsi.Ultimate.Repositories
         /// <summary>
         /// Return CR by contribution UID
         /// </summary>
+        /// <param name="contributionUID">Contribution Uid</param>
+        /// <returns>ChangeRequest entity</returns>
         ChangeRequest GetChangeRequestByContributionUID(string contributionUID);
     }
 }

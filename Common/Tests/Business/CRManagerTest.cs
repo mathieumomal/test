@@ -142,7 +142,7 @@ namespace Etsi.Ultimate.Tests.Business
         [Test, Description("Retrieve CR using TDoc(Contribution Uid)")]
         public void Business_GetChangeRequestByContributionUid()
         {
-            const string uid = "Change request description1";
+            const string uid = "TSG1";
             var crManager = new ChangeRequestManager {UoW = UoW};
             var cr = crManager.GetContributionCrByUid(uid);
 

@@ -105,8 +105,8 @@ namespace Etsi.Ultimate.Services
         /// <summary>
         /// See interface
         /// </summary>
-        /// <param name="ContributionUID"></param>
-        /// <returns></returns>
+        /// <param name="ContributionUID">Contribution UID</param>
+        /// <returns>ChangeRequest entity</returns>
         public KeyValuePair<bool, ChangeRequest> GetContributionCrByUid(string ContributionUID)
         {
             ChangeRequest cr = null;
@@ -165,7 +165,7 @@ namespace Etsi.Ultimate.Services
         /// Returns a contribution's CR data
         /// </summary>
         /// <param name="ContributionUID">Contribution UID</param>
-        /// <returns></returns>
+        /// <returns>ChangeRequest entity</returns>
         KeyValuePair<bool, ChangeRequest> GetContributionCrByUid(string ContributionUID);
     }
 }

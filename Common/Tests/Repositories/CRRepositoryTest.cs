@@ -41,6 +41,16 @@ namespace Etsi.Ultimate.Tests.Repositories
 
             Assert.AreEqual(totalNoOfCRsInCSV, allCRs.ToList().Count);
         }
+
+        [Test]
+        public void Repository_CR_AllIncluding()
+        {
+            var repo = new ChangeRequestRepository() { UoW = UoW };
+            var allIncludingCRs = repo.AllIncluding(x => x.Enum_CRCategory);
+
+            Assert.AreEqual(totalNoOfCRsInCSV, allIncludingCRs.ToList().Count);
+        }
+
         [Test]
         public void Repository_GenerateCrNumberBySpecificationId()
         {
@@ -57,7 +67,18 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(1, repResult.Pk_ChangeRequest); 
             Assert.AreEqual("0001", repResult.CRNumber);
             Assert.AreEqual(136081, repResult.Fk_Specification);
-        }      
+        }
+
+        [Test]
+        public void Repository_GetChangeRequestByContributionUID()
+        {
+            var repo = new ChangeRequestRepository() { UoW = UoW };
+            var repResult = repo.GetChangeRequestByContributionUID("TSG1");
+            Assert.AreEqual(1, repResult.Pk_ChangeRequest);
+            Assert.AreEqual("0001", repResult.CRNumber);
+            Assert.AreEqual(136081, repResult.Fk_Specification);
+        } 
+
         #endregion
     }
 }

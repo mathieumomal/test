@@ -328,9 +328,9 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [Test]
-        public void ervice_IntegrationTes_GetChangeRequestByContribUid()
+        public void Service_IntegrationTest_GetChangeRequestByContribUid()
         {
-            const string contribUid = "Change request description1";
+            const string contribUid = "TSG1";
             const string tdocNumber = "0001";
             const int tdocRevision = 1;
             //Act
@@ -341,6 +341,8 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(contribUid, result.Value.TSGTDoc);
             Assert.AreEqual(tdocNumber, result.Value.CRNumber);
             Assert.AreEqual(tdocRevision, result.Value.Revision);
+            Assert.AreEqual("CR", result.Value.Enum_CRCategory.Code);
+            Assert.AreEqual("ChangeRequest", result.Value.Enum_CRCategory.Description);
         }
         
         #endregion

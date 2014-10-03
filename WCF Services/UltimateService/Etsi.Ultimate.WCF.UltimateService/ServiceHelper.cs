@@ -375,7 +375,7 @@ namespace Etsi.Ultimate.WCF.Service
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
                 var result = svc.GetContributionCrByUid(contributionUid);
                 if (result.Key)
-                    cr = ConverChangeRequestToServiceChangeRequest(result.Value);
+                    cr = ConvertUltimateCRToServiceCR(result.Value);
             }
             catch (Exception ex)
             {
@@ -384,38 +384,9 @@ namespace Etsi.Ultimate.WCF.Service
             return cr;   
         }
 
-        /// <summary>
-        /// Convert CR to Ultimate ServiceCR
-        /// </summary>
-        /// <param name="changeRequest"></param>
-        /// <returns></returns>
-        private UltimateServiceEntities.ChangeRequest ConverChangeRequestToServiceChangeRequest(UltimateEntities.ChangeRequest changeRequest)
-        {
-            var svcCr = new UltimateServiceEntities.ChangeRequest();
-            //Set properties
-            svcCr.CRNumber = changeRequest.CRNumber;
-            svcCr.Revision = changeRequest.Revision;
-            svcCr.TSGTDoc = changeRequest.TSGTDoc;
-            svcCr.WGTDoc = changeRequest.WGTDoc; 
+        #endregion
 
-            var svc = ServicesFactory.Resolve<ICrCategoriesService>();
-            var svcChangeRequestCategories = svc.GetChangeRequestCategories();
-            if (svcChangeRequestCategories.Key && svcChangeRequestCategories.Value != null)
-            {
-                var currentCr =
-                    svcChangeRequestCategories.Value.SingleOrDefault(
-                        c => c.Pk_EnumCRCategory == changeRequest.Fk_Enum_CRCategory);
-                if (currentCr != null)
-                    svcCr.Category = new UltimateServiceEntities.ChangeRequestCategory
-                    {
-                        Pk_EnumCRCategory = currentCr.Pk_EnumCRCategory,
-                        Code = currentCr.Code,
-                        Description = currentCr.Description
-                    };
-            }
-            return svcCr;
-        }    
-        
+        #region Private Methods
 
         /// <summary>
         /// Converts the ultimate cr category to service cr category.
@@ -432,10 +403,6 @@ namespace Etsi.Ultimate.WCF.Service
             };
             return svcCrCategory;
         }
-
-        #endregion
-
-        #region Private Methods
 
         /// <summary>
         /// Converts the ultimate release to service release.
@@ -567,6 +534,17 @@ namespace Etsi.Ultimate.WCF.Service
                 serviceCr.Fk_Impact = ultimateCr.Fk_Impact;
                 serviceCr.TSGTDoc = ultimateCr.TSGTDoc;
                 serviceCr.WGTDoc = ultimateCr.WGTDoc;
+
+                //Referenced objects
+                if (ultimateCr.Enum_CRCategory != null)
+                {
+                    serviceCr.Category = new UltimateServiceEntities.ChangeRequestCategory()
+                    {
+                        Pk_EnumCRCategory = ultimateCr.Enum_CRCategory.Pk_EnumCRCategory,
+                        Code = ultimateCr.Enum_CRCategory.Code,
+                        Description = ultimateCr.Enum_CRCategory.Description
+                    };
+                }
             }
             return serviceCr;
         }
