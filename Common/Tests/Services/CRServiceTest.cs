@@ -328,7 +328,7 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [Test]
-        public void Service_IntegrationTest_GetChangeRequestByContribUid()
+        public void Service_IntegrationTes_GetChangeRequestByContribUid()
         {
             const string contribUid = "TSG1";
             const string tdocNumber = "0001";
@@ -341,8 +341,30 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(contribUid, result.Value.TSGTDoc);
             Assert.AreEqual(tdocNumber, result.Value.CRNumber);
             Assert.AreEqual(tdocRevision, result.Value.Revision);
-            Assert.AreEqual("CR", result.Value.Enum_CRCategory.Code);
-            Assert.AreEqual("ChangeRequest", result.Value.Enum_CRCategory.Description);
+        }
+
+        [Test]
+        public void Service_IntegrationTes_GetChangeRequestListByContribUids()
+        {
+            var uids = new List<string>() { "TSG1", "Change request description6" };
+            var tdocNumbers = new List<string>(){ "0001", "A0144"};
+            var tdocRevisions = new List<int>(){1,2};
+            //Act
+            var svcCr = new ChangeRequestService();
+            var result = svcCr.GetChangeRequestListByContributionUidList(uids);
+            //Assert
+            Assert.IsTrue(result.Key);
+            var crList = result.Value;
+            Assert.IsNotNull(crList);
+            if (crList != null)
+            {
+                for (int i = 0; i < uids.Count; i++)
+                {
+                    Assert.AreEqual(uids[i], crList[i].TSGTDoc);
+                    Assert.AreEqual(tdocNumbers[i], crList[i].CRNumber);
+                    Assert.AreEqual(tdocRevisions[i], crList[i].Revision);
+                }
+            }            
         }
         
         #endregion

@@ -384,6 +384,29 @@ namespace Etsi.Ultimate.WCF.Service
             return cr;   
         }
 
+        /// <summary>
+        /// Returns list of CRs using list of contribution UIDs. 
+        /// </summary>
+        /// <returns></returns>
+        internal List<UltimateServiceEntities.ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUids)
+        {
+            var crList = new List<UltimateServiceEntities.ChangeRequest>();
+            try
+            {
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var result = svc.GetChangeRequestListByContributionUidList(contributionUids);
+                if (result.Key)
+                {
+                    result.Value.ForEach(e => crList.Add(ConvertUltimateCRToServiceCR(e)));
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message));
+            }
+            return crList;
+        }
+
         #endregion
 
         #region Private Methods
@@ -538,7 +561,7 @@ namespace Etsi.Ultimate.WCF.Service
                 //Referenced objects
                 if (ultimateCr.Enum_CRCategory != null)
                 {
-                    serviceCr.Category = new UltimateServiceEntities.ChangeRequestCategory()
+                    serviceCr.Category = new UltimateServiceEntities.ChangeRequestCategory
                     {
                         Pk_EnumCRCategory = ultimateCr.Enum_CRCategory.Pk_EnumCRCategory,
                         Code = ultimateCr.Enum_CRCategory.Code,

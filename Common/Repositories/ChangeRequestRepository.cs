@@ -64,6 +64,24 @@ namespace Etsi.Ultimate.Repositories
         }
 
         /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="contributionUID"></param>
+        /// <returns></returns>
+        public List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUIDs)
+        {
+            var result = new List<ChangeRequest>();
+            contributionUIDs.ForEach(e =>
+            {
+                var cr = UoW.Context.ChangeRequests.SingleOrDefault(c => c.TSGTDoc.Equals(e)) ??
+                         UoW.Context.ChangeRequests.SingleOrDefault(c => c.WGTDoc.Equals(e));
+                if(cr != null)
+                result.Add(cr);
+            });
+            
+            return result;
+        }
+        /// <summary>
         /// Finds the specified identifier.
         /// </summary>
         /// <param name="id">The identifier.</param>
@@ -126,5 +144,12 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="contributionUID">Contribution Uid</param>
         /// <returns>ChangeRequest entity</returns>
         ChangeRequest GetChangeRequestByContributionUID(string contributionUID);
+
+        /// <summary>
+        /// Returns list of CRs using list of contribution UIDs. 
+        /// </summary>
+        /// <param name="contributionUIDs"></param>
+        /// <returns></returns>
+        List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUids);
     }
 }

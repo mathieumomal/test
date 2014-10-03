@@ -160,12 +160,24 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Returns the CR data for a contribution using it's UID
         /// </summary>
-        /// <param name="ContributionUID">ContributionUID</param>
+        /// <param name="contributionUid">ContributionUID</param>
         /// <returns></returns>
-        public ChangeRequest GetChangeRequestByContributionUID(string ContributionUID)
+        public ChangeRequest GetChangeRequestByContributionUid(string contributionUid)
         {
-            ServiceHelper svcHelper = new ServiceHelper();
-            return svcHelper.GetChangeRequestByContributionUid(ContributionUID);
+            var svcHelper = new ServiceHelper();
+            return svcHelper.GetChangeRequestByContributionUid(contributionUid);
+        }
+
+        /// <summary>
+        /// Returns list of Crs using list of contribution uids
+        /// </summary>
+        /// <param name="contributionUids"></param>
+        /// <returns></returns>
+        public List<ChangeRequest> GetChangeRequestListByContributionUidList(
+            List<string> contributionUids)
+        {
+            var svcHelper = new ServiceHelper();
+            return svcHelper.GetChangeRequestListByContributionUidList(contributionUids);
         }
         #endregion
     }

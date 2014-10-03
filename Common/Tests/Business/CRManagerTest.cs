@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.Business;
+﻿using System.Collections.Generic;
+using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using NUnit.Framework;
@@ -148,6 +149,26 @@ namespace Etsi.Ultimate.Tests.Business
 
             Assert.IsNotNull(cr);
             Assert.AreEqual(cr.TSGTDoc,uid);
+        }
+
+        [Test, Description("Retrieve CR using TDoc(Contribution Uid)")]
+        public void Business_GetChangeRequestListByContributionUidList()
+        {
+            var uids = new List<string>() { "TSG1", "Change request description6" };
+            var crManager = new ChangeRequestManager { UoW = UoW };
+            var crList = crManager.GetChangeRequestListByContributionUIDList(uids);
+
+            Assert.IsNotNull(crList);
+            if (crList != null)
+            {
+                //First
+                Assert.IsNotNull(crList[0]);
+                Assert.AreEqual(crList[0].TSGTDoc, uids[0]);
+                //Second
+                Assert.IsNotNull(crList[1]);
+                Assert.AreEqual(crList[1].TSGTDoc, uids[1]);
+            }
+            
         }
 
         [Test, Description("Checking numeric number")]

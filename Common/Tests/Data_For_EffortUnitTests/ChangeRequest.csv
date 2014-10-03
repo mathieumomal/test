@@ -4,4 +4,4 @@ Pk_ChangeRequest,CRNumber,Revision,Subject,Fk_TSGStatus,Fk_WGStatus,CreationDate
 3,A0012,1,Subject,1,1,2008-01-30 12:12,Change request,Ultimate,2,2,2,TSG3,2,2,,1,136080,2874,428927,428927,1
 4,AB013,1,Subject,1,1,2008-01-30 12:12,Change request,Ultimate,2,2,2,,2,2,WG1,1,136080,2874,428927,428927,1
 5,AC014,1,Subject,1,1,2008-01-30 12:12,Change request,Ultimate,2,2,2,,2,2,WG2,1,136080,2874,428927,428927,1
-6,A0144,1,Subject,1,1,2008-01-30 12:12,Change request,Ultimate,2,2,2,,2,2,WG3,1,136080,2874,428927,428927,1
+6,A0144,2,Subject,1,1,2008-01-30 12:12,Change request,Ultimate,2,2,2,Change request description6,2,2,Work item,1,136080,2874,428927,428927,1

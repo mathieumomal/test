@@ -115,9 +115,17 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <summary>
         /// Returns the CR data for a contribution using it's UID
         /// </summary>
-        /// <param name="ContributionUID">ContributionUID</param>
+        /// <param name="contributionUid">ContributionUID</param>
         /// <returns></returns>
         [OperationContract]
-        ChangeRequest GetChangeRequestByContributionUID(string ContributionUID);
+        ChangeRequest GetChangeRequestByContributionUid(string contributionUid);
+
+        /// <summary>
+        /// Return list of CRs using list of contribution unique identifiers
+        /// </summary>
+        /// <param name="contributionUids"></param>
+        /// <returns></returns>
+        [OperationContract]
+        List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUids);
     }
 }

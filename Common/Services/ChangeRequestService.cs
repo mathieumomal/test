@@ -130,6 +130,34 @@ namespace Etsi.Ultimate.Services
             return new KeyValuePair<bool, ChangeRequest>(isSuccess, cr);
         }
 
+        /// <summary>
+        /// Returns list of CRs using list of contribution UIDs. 
+        /// </summary>
+        /// <param name="contributionUiDs"></param>
+        /// <returns></returns>    
+        public KeyValuePair<bool, List<ChangeRequest>> GetChangeRequestListByContributionUidList(List<string> contributionUiDs)    
+        {
+            List<ChangeRequest> crList = null;
+            bool isSuccess = true;
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var manager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    manager.UoW = uoW;
+                    crList = manager.GetChangeRequestListByContributionUIDList(contributionUiDs);
+                    if (crList == null || crList.Count == 0)
+                        isSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error("[Service] Failed to GetContributionCrByUid request: " + ex.Message);
+                isSuccess = false;
+            }
+            return new KeyValuePair<bool, List<ChangeRequest>>(isSuccess, crList);
+        }
+
     }
 
     /// <summary>
@@ -167,6 +195,13 @@ namespace Etsi.Ultimate.Services
         /// <param name="ContributionUID">Contribution UID</param>
         /// <returns>ChangeRequest entity</returns>
         KeyValuePair<bool, ChangeRequest> GetContributionCrByUid(string ContributionUID);
-    }
+
+        /// <summary>
+        /// Returns list of CRs using list of contribution UIDs. 
+        /// </summary>
+        /// <param name="contributionUiDs"></param>
+        /// <returns></returns>
+        KeyValuePair<bool, List<ChangeRequest>> GetChangeRequestListByContributionUidList(List<string> contributionUiDs);
+    }    
 }
 
