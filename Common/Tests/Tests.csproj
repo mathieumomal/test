@@ -123,7 +123,7 @@
     <Compile Include="FakeSets\Enum_CRCategoryFakeDbSet.cs" />
     <Compile Include="FakeSets\Enum_CRImpactFakeDbSet.cs" />
     <Compile Include="FakeSets\Enum_SerieFakeDBSet.cs" />
-    <Compile Include="FakeSets\Enum_TDocStatusFakeDbSet.cs" />
+    <Compile Include="FakeSets\Enum_ChangeRequestStatusFakeDbSet.cs" />
     <Compile Include="FakeSets\Enum_TechnologyFakeDBSet.cs" />
     <Compile Include="FakeSets\ResponsibleGroupSecretaryFakeDBSet.cs" />
     <Compile Include="FakeSets\SpecificationDBSet.cs" />
@@ -233,7 +233,7 @@
     <None Include="Data_For_EffortUnitTests\CR_WorkItems.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Data_For_EffortUnitTests\Enum_TDocStatus.csv">
+    <None Include="Data_For_EffortUnitTests\Enum_ChangeRequestStatus.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Data_For_EffortUnitTests\Enum_CRImpact.csv">
@@ -313,7 +313,7 @@
     <None Include="TestData\WorkItems\OneLine_Nominal.csv" />
     <None Include="TestData\WorkItems\WpId_NonUnique.csv" />
   </ItemGroup>
-  <ItemGroup>    
+  <ItemGroup>
     <ProjectReference Include="..\Business\Business.csproj">
       <Project>{b01c6fdf-c992-4d87-b67e-41afd677ea5f}</Project>
       <Name>Business</Name>

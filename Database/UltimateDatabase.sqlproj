@@ -192,6 +192,10 @@
     </Build>
     <Build Include="dbo\Stored Procedures\Transposition_CreateWiScheduleEntries.sql" />
     <Build Include="dbo\Tables\SyncInfo.sql" />
+    <Build Include="dbo\Tables\Enum_ChangeRequestStatus.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />
@@ -203,6 +207,7 @@
     <None Include="Common\WPMDB.dacpac" />
     <None Include="Data feeds\Enum_CommunitiesShortNames.data.sql" />
     <None Include="Data feeds\Enum_ReleaseStatus.data.sql" />
+    <None Include="Scripts\Post-Deployment\Enum_ChangeRequestStatus.data.sql" />
   </ItemGroup>
   <ItemGroup>
     <SqlCmdVariable Include="DNN3GPP">

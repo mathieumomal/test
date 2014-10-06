@@ -13,15 +13,11 @@ namespace Etsi.Ultimate.DomainClasses
     using System.Collections.Generic;
     
     [Serializable]
-    public partial class WorkItems_ResponsibleGroups
+    public partial class Enum_ChangeRequestStatus
     {
-        public int Pk_WorkItemResponsibleGroups { get; set; }
-        public Nullable<int> Fk_WorkItemId { get; set; }
-        public Nullable<int> Fk_TbId { get; set; }
-        public string ResponsibleGroup { get; set; }
-        public Nullable<bool> IsPrimeResponsible { get; set; }
-    
-        public virtual WorkItem WorkItem { get; set; }
+        public int Pk_EnumChangeRequestStatus { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

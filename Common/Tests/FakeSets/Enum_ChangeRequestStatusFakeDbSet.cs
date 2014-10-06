@@ -7,12 +7,12 @@ using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Tests.FakeSets
 {
-    public class Enum_TDocStatusFakeDbSet : FakeDBSet<Enum_TDocStatus>
+    public class Enum_ChangeRequestStatusFakeDbSet : FakeDBSet<Enum_ChangeRequestStatus>
     {
-        public override Enum_TDocStatus Find(params object[] keyValues)
+        public override Enum_ChangeRequestStatus Find(params object[] keyValues)
         {
             var keyValue = (int)keyValues.FirstOrDefault();
-            return this.SingleOrDefault(x => x.Pk_EnumTDocStatus == keyValue);
+            return this.SingleOrDefault(x => x.Pk_EnumChangeRequestStatus == keyValue);
         }
     }
 }

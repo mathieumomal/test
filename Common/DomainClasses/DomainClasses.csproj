@@ -56,6 +56,9 @@
     </Compile>
     <Compile Include="DocxStyle.cs" />
     <Compile Include="DocxStylePool.cs" />
+    <Compile Include="Enum_ChangeRequestStatus.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Enum_CommunitiesShortName.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
@@ -74,9 +77,6 @@
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Enum_Settings.cs" />
-    <Compile Include="Enum_TDocStatus.cs">
-      <DependentUpon>UltimateModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Enum_Technology.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

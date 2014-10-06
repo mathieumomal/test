@@ -329,8 +329,8 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual("R2000", result.Value.Release.ShortName);
             Assert.AreEqual("13.0.1", result.Value.CurrentVersion.Version);
             Assert.AreEqual("13.0.1", result.Value.NewVersion.Version);
-            Assert.AreEqual("Change request", result.Value.Enum_TDocStatusTSG.Description);
-            Assert.AreEqual("Change Impact", result.Value.Enum_TDocStatusWG.Description);
+            Assert.AreEqual("Agreed", result.Value.TsgStatus.Description);
+            Assert.AreEqual("Approved", result.Value.WgStatus.Description);
         }
 
         [Test]
@@ -351,8 +351,8 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual("R2000", result.Value.Release.ShortName);
             Assert.AreEqual("13.0.1", result.Value.CurrentVersion.Version);
             Assert.AreEqual("13.0.1", result.Value.NewVersion.Version);
-            Assert.AreEqual("Change request", result.Value.Enum_TDocStatusTSG.Description);
-            Assert.AreEqual("Change Impact", result.Value.Enum_TDocStatusWG.Description);
+            Assert.AreEqual("Agreed", result.Value.TsgStatus.Description);
+            Assert.AreEqual("Approved", result.Value.WgStatus.Description);
         }
 
         [Test]
@@ -365,8 +365,8 @@ namespace Etsi.Ultimate.Tests.Services
             var tdocReleaseShortNames = new List<string>() { "R2000", "R2000" };
             var tdocCurrentVersions = new List<string>() { "13.0.1", "13.0.1" };
             var tdocNewVersions = new List<string>() { "13.0.1", "13.0.1" };
-            var tdocTSGStatus = new List<string>() { "Change request", "Change request" };
-            var tdocWGStatus = new List<string>() { "Change Impact", "Change request" };
+            var tdocTSGStatus = new List<string>() { "Agreed", "Agreed" };
+            var tdocWGStatus = new List<string>() { "Approved", "Agreed" };
             //Act
             var svcCr = new ChangeRequestService();
             var result = svcCr.GetChangeRequestListByContributionUidList(uids);
@@ -385,8 +385,8 @@ namespace Etsi.Ultimate.Tests.Services
                     Assert.AreEqual(tdocReleaseShortNames[i], crList[i].Release.ShortName);
                     Assert.AreEqual(tdocCurrentVersions[i], crList[i].CurrentVersion.Version);
                     Assert.AreEqual(tdocNewVersions[i], crList[i].NewVersion.Version);
-                    Assert.AreEqual(tdocTSGStatus[i], crList[i].Enum_TDocStatusTSG.Description);
-                    Assert.AreEqual(tdocWGStatus[i], crList[i].Enum_TDocStatusWG.Description);
+                    Assert.AreEqual(tdocTSGStatus[i], crList[i].TsgStatus.Description);
+                    Assert.AreEqual(tdocWGStatus[i], crList[i].WgStatus.Description);
                 }
             }            
         }

@@ -539,9 +539,9 @@ namespace Etsi.Ultimate.WCF.Service
                 serviceCr.Revision = ultimateCr.Revision;
                 serviceCr.Subject = ultimateCr.Subject;
                 serviceCr.Fk_TSGStatus = ultimateCr.Fk_TSGStatus;
-                serviceCr.TSGStatus = (ultimateCr.Enum_TDocStatusTSG == null) ? String.Empty : ultimateCr.Enum_TDocStatusTSG.Description;
+                serviceCr.TSGStatus = (ultimateCr.TsgStatus == null) ? String.Empty : ultimateCr.TsgStatus.Description;
                 serviceCr.Fk_WGStatus = ultimateCr.Fk_WGStatus;
-                serviceCr.WGStatus = (ultimateCr.Enum_TDocStatusWG == null) ? String.Empty : ultimateCr.Enum_TDocStatusWG.Description;
+                serviceCr.WGStatus = (ultimateCr.WgStatus == null) ? String.Empty : ultimateCr.WgStatus.Description;
                 serviceCr.Subject = ultimateCr.Subject;
                 serviceCr.CreationDate = ultimateCr.CreationDate;
                 serviceCr.TSGSourceOrganizations = ultimateCr.TSGSourceOrganizations;

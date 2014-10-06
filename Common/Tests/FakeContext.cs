@@ -38,7 +38,7 @@ namespace Etsi.Ultimate.Tests
         public System.Data.Entity.IDbSet<ResponsibleGroup_Secretary> ResponsibleGroupSecretaries{get;set;}
         public System.Data.Entity.IDbSet<SpecVersion> SpecVersions{get;set;}
         public System.Data.Entity.IDbSet<Enum_CRCategory> Enum_CRCategory{get;set;}
-        public System.Data.Entity.IDbSet<Enum_TDocStatus> Enum_TDocStatus{ get; set;}
+        public System.Data.Entity.IDbSet<Enum_ChangeRequestStatus> Enum_ChangeRequestStatus{ get; set;}
         public System.Data.Entity.IDbSet<Enum_CRImpact> Enum_CRImpact { get; set; }
         public System.Data.Entity.IDbSet<ChangeRequest> ChangeRequests { get; set; }
         public System.Data.Entity.IDbSet<CR_WorkItems> CR_WorkItems { get; set; }
