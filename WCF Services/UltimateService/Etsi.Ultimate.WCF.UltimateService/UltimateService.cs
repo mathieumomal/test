@@ -179,6 +179,16 @@ namespace Etsi.Ultimate.WCF.Service
             var svcHelper = new ServiceHelper();
             return svcHelper.GetChangeRequestListByContributionUidList(contributionUids);
         }
+
+        /// <summary>
+        /// Default implementation. Asks the service to return all the possible statuses for a CR
+        /// </summary>
+        /// <returns></returns>
+        public List<ChangeRequestStatus> GetAllChangeRequestStatuses()
+        {
+            var svcHelper = new ServiceHelper();
+            return svcHelper.GetAllChangeRequestStatuses();
+        }
         #endregion
     }
 }

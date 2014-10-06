@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChangeRequestStatusRepository.cs" />
     <Compile Include="CommunityRepository.cs" />
     <Compile Include="ChangeRequestRepository.cs" />
     <Compile Include="CRRepository.cs" />

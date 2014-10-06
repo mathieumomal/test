@@ -407,6 +407,31 @@ namespace Etsi.Ultimate.WCF.Service
             return crList;
         }
 
+        /// <summary>
+        /// Returns all the change requests statuses
+        /// </summary>
+        /// <returns></returns>
+        internal List<UltimateServiceEntities.ChangeRequestStatus> GetAllChangeRequestStatuses()
+        {
+            var crStatusesList = new List<UltimateServiceEntities.ChangeRequestStatus>();
+            try{
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var result = svc.GetChangeRequestStatuses();
+                if (result.Key)
+                {
+                    result.Value.ForEach(e => crStatusesList.Add(ConvertToServiceCrStatus(e)));
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message));
+            }
+            return crStatusesList;
+
+        }
+
+        
+
         #endregion
 
         #region Private Methods
@@ -578,6 +603,24 @@ namespace Etsi.Ultimate.WCF.Service
             return serviceCr;
         }
 
+        /// <summary>
+        /// Converts an ultimate status to a service status
+        /// </summary>
+        /// <param name="e"></param>
+        /// <returns></returns>
+        private UltimateServiceEntities.ChangeRequestStatus ConvertToServiceCrStatus(UltimateEntities.Enum_ChangeRequestStatus ultimateCrStatus)
+        {
+            var serviceCrStatus = new UltimateServiceEntities.ChangeRequestStatus();
+            if (ultimateCrStatus != null)
+            {
+                serviceCrStatus.Pk_ChangeRequestStatus = ultimateCrStatus.Pk_EnumChangeRequestStatus;
+                serviceCrStatus.Code = ultimateCrStatus.Code;
+                serviceCrStatus.Description = ultimateCrStatus.Description;
+            }
+            return serviceCrStatus;
+        }
         #endregion        
+    
+       
     }
 }

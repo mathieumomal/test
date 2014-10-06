@@ -127,5 +127,13 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns></returns>
         [OperationContract]
         List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUids);
+
+        /// <summary>
+        /// Return the list of all change request categories, that can be used to fill the ChangeRequest.Fk_TSGStatus and ChangeRequest.Fk_WGStatus fields
+        /// </summary>
+        /// <returns></returns>
+        [OperationContract]
+        List<ChangeRequestStatus> GetAllChangeRequestStatuses();
+
     }
 }

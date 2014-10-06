@@ -164,7 +164,26 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public KeyValuePair<bool, List<Enum_ChangeRequestStatus>> GetChangeRequestStatuses()
         {
-            throw new NotImplementedException();
+            var crStatusList = new List<Enum_ChangeRequestStatus>();
+            bool isSuccess = true;
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var manager = ManagerFactory.Resolve<IChangeRequestStatusManager>();
+                    manager.UoW = uoW;
+                    crStatusList = manager.GetAllChangeRequestStatuses();
+                    if (crStatusList == null || crStatusList.Count == 0)
+                        isSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error("[Service] Failed to get list of change request status: " + ex.Message);
+                isSuccess = false;
+            }
+            return new KeyValuePair<bool, List<Enum_ChangeRequestStatus>>(isSuccess, crStatusList);
+
         }
 
     }

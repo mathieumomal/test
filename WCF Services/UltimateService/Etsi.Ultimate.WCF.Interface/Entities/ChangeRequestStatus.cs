@@ -11,7 +11,7 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
     /// Represents a change request status
     /// </summary>
     [DataContract]
-    class Enum_ChangeRequestStatus
+    public class ChangeRequestStatus
     {
         /// <summary>
         /// The change request identifier, for further linking with Change requests

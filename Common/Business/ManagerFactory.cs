@@ -72,6 +72,7 @@ namespace Etsi.Ultimate.Business
             Container.RegisterType<ISpecificationTechnologiesManager, SpecificationTechnologiesManager>(new TransientLifetimeManager());
             Container.RegisterType<IChangeRequestManager, ChangeRequestManager>(new TransientLifetimeManager());
             Container.RegisterType<ICrCategoriesManager, CrCategoriesManager>(new TransientLifetimeManager());
+            Container.RegisterType<IChangeRequestStatusManager, ChangeRequestStatusManager>(new TransientLifetimeManager());
         }
     }
 }
