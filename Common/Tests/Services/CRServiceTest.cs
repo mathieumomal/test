@@ -201,6 +201,42 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsTrue(UoW.Context.ChangeRequests.Find(result.Value).CR_WorkItems.Any(x => x.Fk_WIId == 3));
         }
 
+        [Test, Description("System sets CR WG and TSG decisions")]
+        public void CreateChangeRequest_SetsDecisions()
+        {
+            var changeRequest = new ChangeRequest
+            {
+                CRNumber = "234.12",
+                Revision = 1,
+                Fk_WGStatus = 1,
+                Fk_TSGStatus = 2,
+            };
+            var crService = new ChangeRequestService();
+            var result = crService.CreateChangeRequest(PersonId, changeRequest);
+            Assert.IsTrue(result.Key);
+
+            //Retrieve result.
+            var newCr = UoW.Context.ChangeRequests.Find(result.Value);
+            Assert.IsNotNull(newCr);
+            Assert.AreEqual(1, newCr.Fk_WGStatus);
+            Assert.AreEqual(2, newCr.Fk_TSGStatus);
+        }
+
+        [Test, Description("System checks CR WG decision is valid")]
+        public void CreateChangeRequest_ErrorInvalidWgDecision()
+        {
+            var changeRequest = new ChangeRequest
+            {
+                CRNumber = "234.12",
+                Revision = 1,
+                Fk_WGStatus = 235684,
+                Fk_TSGStatus = 2
+            };
+            var crService = new ChangeRequestService();
+            var result = crService.CreateChangeRequest(PersonId, changeRequest);
+            Assert.IsFalse(result.Key);
+        }
+
         [Test]
         public void Service_IntegrationTest_CreateChangeRequest_Failure()
         {
@@ -315,7 +351,7 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(changeRequest.Pk_ChangeRequest, result.Value);
             Assert.AreEqual(changeRequest.CRNumber, "0001");
         }
-     
+
         [Test]
         public void Service_IntegrationTest_GetChangeRequestById()
         {
@@ -340,7 +376,7 @@ namespace Etsi.Ultimate.Tests.Services
             const string tdocNumber = "0001";
             const int tdocRevision = 1;
             //Act
-            var svcCr= new ChangeRequestService();
+            var svcCr = new ChangeRequestService();
             var result = svcCr.GetContributionCrByUid(contribUid);
             //Assert
             Assert.IsTrue(result.Key);
@@ -359,8 +395,8 @@ namespace Etsi.Ultimate.Tests.Services
         public void Service_IntegrationTes_GetChangeRequestListByContribUids()
         {
             var uids = new List<string>() { "TSG1", "Change request description6" };
-            var tdocNumbers = new List<string>(){ "0001", "A0144"};
-            var tdocRevisions = new List<int>(){1,2};
+            var tdocNumbers = new List<string>() { "0001", "A0144" };
+            var tdocRevisions = new List<int>() { 1, 2 };
             var tdocSpecNumbers = new List<string>() { "22.102", "22.101" };
             var tdocReleaseShortNames = new List<string>() { "R2000", "R2000" };
             var tdocCurrentVersions = new List<string>() { "13.0.1", "13.0.1" };
@@ -388,7 +424,7 @@ namespace Etsi.Ultimate.Tests.Services
                     Assert.AreEqual(tdocTSGStatus[i], crList[i].TsgStatus.Description);
                     Assert.AreEqual(tdocWGStatus[i], crList[i].WgStatus.Description);
                 }
-            }            
+            }
         }
 
         [Test, Description("System must fetch the list of statuses in database")]
@@ -399,14 +435,14 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsTrue(response.Key);
             Assert.IsNotNull(response.Value);
 
-            var agreedStatus = response.Value.Find(s => s.Pk_EnumChangeRequestStatus==1);
+            var agreedStatus = response.Value.Find(s => s.Pk_EnumChangeRequestStatus == 1);
             Assert.IsNotNull(agreedStatus);
             Assert.AreEqual(1, agreedStatus.Pk_EnumChangeRequestStatus);
             Assert.AreEqual("Agreed", agreedStatus.Code);
             Assert.AreEqual("Agreed", agreedStatus.Description);
-            
+
         }
-        
+
         #endregion
 
         #region DataObject
@@ -456,7 +492,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             };
             return changeRequest.Find(x => x.Pk_ChangeRequest == changeRequestById);
-        }       
+        }
         #endregion
     }
 }
