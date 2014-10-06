@@ -158,6 +158,15 @@ namespace Etsi.Ultimate.Services
             return new KeyValuePair<bool, List<ChangeRequest>>(isSuccess, crList);
         }
 
+        /// <summary>
+        /// Fetches the list of change request statuses via the manager
+        /// </summary>
+        /// <returns></returns>
+        public KeyValuePair<bool, List<Enum_ChangeRequestStatus>> GetChangeRequestStatuses()
+        {
+            throw new NotImplementedException();
+        }
+
     }
 
     /// <summary>
@@ -202,6 +211,12 @@ namespace Etsi.Ultimate.Services
         /// <param name="contributionUiDs"></param>
         /// <returns></returns>
         KeyValuePair<bool, List<ChangeRequest>> GetChangeRequestListByContributionUidList(List<string> contributionUiDs);
+
+        /// <summary>
+        /// Returns the list of all change request statuses.
+        /// </summary>
+        /// <returns></returns>
+        KeyValuePair<bool, List<Enum_ChangeRequestStatus>> GetChangeRequestStatuses();
     }    
 }
 

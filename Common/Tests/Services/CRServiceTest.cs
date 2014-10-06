@@ -390,6 +390,22 @@ namespace Etsi.Ultimate.Tests.Services
                 }
             }            
         }
+
+        /*[Test, Description("System must fetch the list of statuses in database")]
+        public void GetStatus_ReturnsTrueAndEnum()
+        {
+            var svcCr = new ChangeRequestService();
+            var response = svcCr.GetChangeRequestStatuses();
+            Assert.IsTrue(response.Key);
+            Assert.IsNotNull(response.Value);
+
+            var agreedStatus = response.Value.Find(s => s.Pk_EnumChangeRequestStatus==1);
+            Assert.IsNotNull(agreedStatus);
+            Assert.AreEqual(1, agreedStatus.Pk_EnumChangeRequestStatus);
+            Assert.AreEqual("Agreed", agreedStatus.Code);
+            Assert.AreEqual("Agreed", agreedStatus.Description);
+            
+        }*/
         
         #endregion
 
