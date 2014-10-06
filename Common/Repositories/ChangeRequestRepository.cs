@@ -58,7 +58,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>ChangeRequest entity</returns>
         public ChangeRequest GetChangeRequestByContributionUID(string contributionUID)
         {
-            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion ).SingleOrDefault(c => c.TSGTDoc.Equals(contributionUID) || c.WGTDoc.Equals(contributionUID));
+            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.Enum_TDocStatusTSG, t => t.Enum_TDocStatusWG).SingleOrDefault(c => c.TSGTDoc.Equals(contributionUID) || c.WGTDoc.Equals(contributionUID));
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>List of CRs</returns>
         public List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUIDs)
         {
-            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion).Where(x => contributionUIDs.Contains(x.TSGTDoc) || contributionUIDs.Contains(x.WGTDoc)).ToList();
+            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.Enum_TDocStatusTSG, t => t.Enum_TDocStatusWG).Where(x => contributionUIDs.Contains(x.TSGTDoc) || contributionUIDs.Contains(x.WGTDoc)).ToList();
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>Change request entity</returns>
         public ChangeRequest Find(int changeRequestId)
         {
-            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion).SingleOrDefault( x => x.Pk_ChangeRequest == changeRequestId);
+            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.Enum_TDocStatusTSG, t => t.Enum_TDocStatusWG).SingleOrDefault( x => x.Pk_ChangeRequest == changeRequestId);
         }
 
         /// <summary>

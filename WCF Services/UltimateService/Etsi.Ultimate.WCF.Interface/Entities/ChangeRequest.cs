@@ -56,6 +56,15 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         public Nullable<int> Fk_TSGStatus { get; set; }
 
         /// <summary>
+        /// Gets or sets the TSG status.
+        /// </summary>
+        /// <value>
+        /// The TSG status.
+        /// </value>
+        [DataMember]
+        public string TSGStatus { get; set; }
+
+        /// <summary>
         /// Gets or sets the FK_ wg status.
         /// </summary>
         /// <value>
@@ -63,6 +72,15 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public Nullable<int> Fk_WGStatus { get; set; }
+
+        /// <summary>
+        /// Gets or sets the wg status.
+        /// </summary>
+        /// <value>
+        /// The wg status.
+        /// </value>
+        [DataMember]
+        public string WGStatus { get; set; }
 
         /// <summary>
         /// Gets or sets the creation date.
