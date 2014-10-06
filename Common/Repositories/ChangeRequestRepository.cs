@@ -58,29 +58,19 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>ChangeRequest entity</returns>
         public ChangeRequest GetChangeRequestByContributionUID(string contributionUID)
         {
-            var result = AllIncluding(t => t.Enum_CRCategory).SingleOrDefault(c => c.TSGTDoc.Equals(contributionUID)) ??
-                         AllIncluding(t => t.Enum_CRCategory).SingleOrDefault(c => c.WGTDoc.Equals(contributionUID));
-            return result;
+            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion ).SingleOrDefault(c => c.TSGTDoc.Equals(contributionUID) || c.WGTDoc.Equals(contributionUID));
         }
 
         /// <summary>
-        /// See interface
+        /// Returns list of CRs using list of contribution UIDs. 
         /// </summary>
-        /// <param name="contributionUID"></param>
-        /// <returns></returns>
+        /// <param name="contributionUIDs">Contribution Uid list</param>
+        /// <returns>List of CRs</returns>
         public List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUIDs)
         {
-            var result = new List<ChangeRequest>();
-            contributionUIDs.ForEach(e =>
-            {
-                var cr = UoW.Context.ChangeRequests.SingleOrDefault(c => c.TSGTDoc.Equals(e)) ??
-                         UoW.Context.ChangeRequests.SingleOrDefault(c => c.WGTDoc.Equals(e));
-                if(cr != null)
-                result.Add(cr);
-            });
-            
-            return result;
+            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion).Where(x => contributionUIDs.Contains(x.TSGTDoc) || contributionUIDs.Contains(x.WGTDoc)).ToList();
         }
+
         /// <summary>
         /// Finds the specified identifier.
         /// </summary>
@@ -88,7 +78,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>Change request entity</returns>
         public ChangeRequest Find(int changeRequestId)
         {
-            return UoW.Context.ChangeRequests.Find(changeRequestId);
+            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion).SingleOrDefault( x => x.Pk_ChangeRequest == changeRequestId);
         }
 
         /// <summary>
@@ -148,8 +138,8 @@ namespace Etsi.Ultimate.Repositories
         /// <summary>
         /// Returns list of CRs using list of contribution UIDs. 
         /// </summary>
-        /// <param name="contributionUIDs"></param>
-        /// <returns></returns>
+        /// <param name="contributionUIDs">Contribution Uid list</param>
+        /// <returns>List of CRs</returns>
         List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUids);
     }
 }

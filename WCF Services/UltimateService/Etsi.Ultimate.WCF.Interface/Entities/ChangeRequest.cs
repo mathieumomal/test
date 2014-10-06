@@ -155,6 +155,15 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         public Nullable<int> Fk_Specification { get; set; }
 
         /// <summary>
+        /// Gets or sets the specification number.
+        /// </summary>
+        /// <value>
+        /// The specification number.
+        /// </value>
+        [DataMember]
+        public string SpecificationNumber { get; set; }
+
+        /// <summary>
         /// Gets or sets the FK_ release.
         /// </summary>
         /// <value>
@@ -162,6 +171,15 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public Nullable<int> Fk_Release { get; set; }
+
+        /// <summary>
+        /// Gets or sets the release short name.
+        /// </summary>
+        /// <value>
+        /// The release stort name.
+        /// </value>
+        [DataMember]
+        public string ReleaseShortName { get; set; }
 
         /// <summary>
         /// Gets or sets the FK_ current version.
@@ -173,6 +191,15 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         public Nullable<int> Fk_CurrentVersion { get; set; }
 
         /// <summary>
+        /// Gets or sets the current version.
+        /// </summary>
+        /// <value>
+        /// The current version.
+        /// </value>
+        [DataMember]
+        public string CurrentVersion { get; set; }
+
+        /// <summary>
         /// Gets or sets the FK_ new version.
         /// </summary>
         /// <value>
@@ -180,6 +207,15 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public Nullable<int> Fk_NewVersion { get; set; }
+
+        /// <summary>
+        /// Gets or sets the new version.
+        /// </summary>
+        /// <value>
+        /// The new version.
+        /// </value>
+        [DataMember]
+        public string NewVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the FK_ impact.

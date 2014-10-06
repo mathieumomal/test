@@ -551,9 +551,13 @@ namespace Etsi.Ultimate.WCF.Service
                 serviceCr.WGTarget = ultimateCr.WGTarget;
                 serviceCr.Fk_Enum_CRCategory = ultimateCr.Fk_Enum_CRCategory;
                 serviceCr.Fk_Specification = ultimateCr.Fk_Specification;
+                serviceCr.SpecificationNumber = (ultimateCr.Specification == null) ? String.Empty : ultimateCr.Specification.Number;
                 serviceCr.Fk_Release = ultimateCr.Fk_Release;
+                serviceCr.ReleaseShortName = (ultimateCr.Release == null) ? String.Empty : ultimateCr.Release.ShortName;
                 serviceCr.Fk_CurrentVersion = ultimateCr.Fk_CurrentVersion;
+                serviceCr.CurrentVersion = (ultimateCr.CurrentVersion == null) ? String.Empty : ultimateCr.CurrentVersion.Version;
                 serviceCr.Fk_NewVersion = ultimateCr.Fk_NewVersion;
+                serviceCr.NewVersion = (ultimateCr.NewVersion == null) ? String.Empty : ultimateCr.NewVersion.Version;
                 serviceCr.Fk_Impact = ultimateCr.Fk_Impact;
                 serviceCr.TSGTDoc = ultimateCr.TSGTDoc;
                 serviceCr.WGTDoc = ultimateCr.WGTDoc;

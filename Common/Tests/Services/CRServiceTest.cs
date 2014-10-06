@@ -325,6 +325,10 @@ namespace Etsi.Ultimate.Tests.Services
             //Assert
             Assert.AreEqual(3, result.Value.Pk_ChangeRequest);
             Assert.AreEqual("A0012", result.Value.CRNumber);
+            Assert.AreEqual("22.101", result.Value.Specification.Number);
+            Assert.AreEqual("R2000", result.Value.Release.ShortName);
+            Assert.AreEqual("13.0.1", result.Value.CurrentVersion.Version);
+            Assert.AreEqual("13.0.1", result.Value.NewVersion.Version);
         }
 
         [Test]
@@ -341,6 +345,10 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(contribUid, result.Value.TSGTDoc);
             Assert.AreEqual(tdocNumber, result.Value.CRNumber);
             Assert.AreEqual(tdocRevision, result.Value.Revision);
+            Assert.AreEqual("22.102", result.Value.Specification.Number);
+            Assert.AreEqual("R2000", result.Value.Release.ShortName);
+            Assert.AreEqual("13.0.1", result.Value.CurrentVersion.Version);
+            Assert.AreEqual("13.0.1", result.Value.NewVersion.Version);
         }
 
         [Test]
@@ -349,6 +357,10 @@ namespace Etsi.Ultimate.Tests.Services
             var uids = new List<string>() { "TSG1", "Change request description6" };
             var tdocNumbers = new List<string>(){ "0001", "A0144"};
             var tdocRevisions = new List<int>(){1,2};
+            var tdocSpecNumbers = new List<string>() { "22.102", "22.101" };
+            var tdocReleaseShortNames = new List<string>() { "R2000", "R2000" };
+            var tdocCurrentVersions = new List<string>() { "13.0.1", "13.0.1" };
+            var tdocNewVersions = new List<string>() { "13.0.1", "13.0.1" };
             //Act
             var svcCr = new ChangeRequestService();
             var result = svcCr.GetChangeRequestListByContributionUidList(uids);
@@ -363,6 +375,10 @@ namespace Etsi.Ultimate.Tests.Services
                     Assert.AreEqual(uids[i], crList[i].TSGTDoc);
                     Assert.AreEqual(tdocNumbers[i], crList[i].CRNumber);
                     Assert.AreEqual(tdocRevisions[i], crList[i].Revision);
+                    Assert.AreEqual(tdocSpecNumbers[i], crList[i].Specification.Number);
+                    Assert.AreEqual(tdocReleaseShortNames[i], crList[i].Release.ShortName);
+                    Assert.AreEqual(tdocCurrentVersions[i], crList[i].CurrentVersion.Version);
+                    Assert.AreEqual(tdocNewVersions[i], crList[i].NewVersion.Version);
                 }
             }            
         }
