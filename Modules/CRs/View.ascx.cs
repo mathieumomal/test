@@ -60,10 +60,10 @@ namespace Etsi.Ultimate.Module.CRs
                 c.Subject = "New CR for test";
                 c.WgMtgShortRef = "WG_MTG54";
                 c.WgTDocLink = "#";
-                c.Enum_TDocStatusWG = new Enum_TDocStatus() { Pk_EnumTDocStatus = 1, WGUsable = true, Code = "WG status" };
+                c.WgStatus = new Enum_ChangeRequestStatus() { Pk_EnumChangeRequestStatus= 1, Code = "Agreed", Description="Agreed" };
                 c.TsgMtgShortRef = "TSG_MTG54";
                 c.TsgTDocLink = "#";
-                c.Enum_TDocStatusTSG = new Enum_TDocStatus() { Pk_EnumTDocStatus = 2, TSGUsable = true, Code = "TSG status" };
+                c.TsgStatus= new Enum_ChangeRequestStatus() { Pk_EnumChangeRequestStatus= 2, Code = "Approved", Description = "Approved" };
                 c.ImplementationStatus = "Done";
                 c.IsRevisionCreationEnabled = true;
                 c.IsTDocCreationEnabled = true;
@@ -97,7 +97,7 @@ namespace Etsi.Ultimate.Module.CRs
             c.WgTDocLink = cr.WgTDocLink;
             c.TsgMtgShortRef = cr.TsgMtgShortRef;
             c.TsgTDocLink = cr.TsgTDocLink;
-            c.Enum_TDocStatusTSG = cr.Enum_TDocStatusTSG;
+            c.TsgStatus = cr.TsgStatus;
             c.ImplementationStatus = cr.ImplementationStatus;
             c.IsRevisionCreationEnabled = cr.IsRevisionCreationEnabled;
             c.IsTDocCreationEnabled = cr.IsTDocCreationEnabled;
