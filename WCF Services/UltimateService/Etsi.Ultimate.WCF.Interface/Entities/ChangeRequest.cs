@@ -276,5 +276,14 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public List<int> Fk_WorkItemIds { get; set; }
+
+        /// <summary>
+        /// Gets or sets the uid of the parent tdoc
+        /// </summary>
+        /// <value>
+        /// the uid of the parent tdoc
+        /// </value>
+        [DataMember]
+        public string RevisionOf { get; set; } 
     }
 }

@@ -10,7 +10,6 @@ using System.Data.Entity;
 using Etsi.Ultimate.Utils.Core;
 namespace Etsi.Ultimate.Tests.Business
 {
-   
    public class CrCategoriesManagerTest:BaseEffortTest
     {
         #region Constants
