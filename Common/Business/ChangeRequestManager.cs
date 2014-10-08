@@ -29,7 +29,7 @@ namespace Etsi.Ultimate.Business
             {
                 var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
                 repo.UoW = UoW;
-                if (string.IsNullOrEmpty(changeRequest.CRNumber))
+                if (string.IsNullOrEmpty(changeRequest.CRNumber) || (changeRequest.RevisionOf != null && !changeRequest.Revision.HasValue) )
                 {
                     if (changeRequest.RevisionOf != null)
                         ManageChangeRequestRevision(changeRequest, repo);
