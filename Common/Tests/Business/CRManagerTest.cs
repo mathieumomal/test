@@ -145,7 +145,7 @@ namespace Etsi.Ultimate.Tests.Business
         {
             const string uid = "TSG1";
             var crManager = new ChangeRequestManager {UoW = UoW};
-            var cr = crManager.GetContributionCrByUid(uid);
+            var cr = crManager.GetChangeRequestByContributionUid(uid);
 
             Assert.IsNotNull(cr);
             Assert.AreEqual(cr.TSGTDoc,uid);

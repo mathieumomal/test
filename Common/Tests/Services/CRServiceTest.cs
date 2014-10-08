@@ -213,7 +213,6 @@ namespace Etsi.Ultimate.Tests.Services
             //Arrange
             var changeRequest = new ChangeRequest
             {
-                CRNumber = "defaultValue",
                 RevisionOf = wgTdocUid,
                 Fk_Specification = specId
             };
@@ -235,7 +234,6 @@ namespace Etsi.Ultimate.Tests.Services
             //Arrange
             var changeRequest = new ChangeRequest
             {
-                CRNumber = "defaultValue",
                 RevisionOf = wgTdocUid,
                 Fk_Specification = specId
             };
@@ -259,7 +257,6 @@ namespace Etsi.Ultimate.Tests.Services
             //Arrange
             var changeRequest = new ChangeRequest
             {
-                CRNumber = "defaultValue",
                 RevisionOf = "uidDontExist",
                 Fk_Specification = 136083
             };
@@ -269,7 +266,7 @@ namespace Etsi.Ultimate.Tests.Services
             var result = crService.CreateChangeRequest(PersonId, changeRequest);
             var events = _memoryAppender.GetEvents();
             Assert.AreEqual(1, events.Length);
-            Assert.IsTrue(events[0].MessageObject.ToString().Contains("Contribution not found"));
+            Assert.IsTrue(events[0].MessageObject.ToString().Contains("uidDontExist not found"));
             Assert.AreEqual(Level.Error, events[0].Level);
         }
 
@@ -420,7 +417,7 @@ namespace Etsi.Ultimate.Tests.Services
             var result = crService.CreateChangeRequest(PersonId, changeRequest);
             //Assert
             Assert.AreEqual(changeRequest.Pk_ChangeRequest, result.Value);
-            Assert.AreEqual(changeRequest.CRNumber, "0001");
+            Assert.AreEqual("A001", changeRequest.CRNumber);
         }
 
         [Test]

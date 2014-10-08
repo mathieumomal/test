@@ -117,7 +117,7 @@ namespace Etsi.Ultimate.Services
                 {
                     var manager = ManagerFactory.Resolve<IChangeRequestManager>();
                     manager.UoW = uoW;
-                    cr = manager.GetContributionCrByUid(ContributionUID);
+                    cr = manager.GetChangeRequestByContributionUid(ContributionUID);
                     if (cr == null)
                         isSuccess = false;
                 }

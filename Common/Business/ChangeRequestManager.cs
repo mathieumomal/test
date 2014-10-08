@@ -29,10 +29,16 @@ namespace Etsi.Ultimate.Business
             {
                 var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
                 repo.UoW = UoW;
-                if (changeRequest.RevisionOf != null)
-                    ChangeRequestRevisionOfHandler(changeRequest, repo); 
-                else
-                    changeRequest.CRNumber = GenerateCrNumberBySpecificationId(changeRequest.Fk_Specification);
+                if (string.IsNullOrEmpty(changeRequest.CRNumber))
+                {
+                    if (changeRequest.RevisionOf != null)
+                        ManageChangeRequestRevision(changeRequest, repo);
+                    else
+                    {
+                        changeRequest.CRNumber = GenerateCrNumberBySpecificationId(changeRequest.Fk_Specification);
+                        changeRequest.Revision = null;
+                    }
+                }
                 repo.InsertOrUpdate(changeRequest);
             }
             catch (Exception ex)
@@ -125,7 +131,7 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="contributionUid">Contribution UID</param>
         /// <returns>ChangeRequest entity</returns>
-        public ChangeRequest GetContributionCrByUid(string contributionUid)
+        public ChangeRequest GetChangeRequestByContributionUid(string contributionUid)
         {
             try
             {
@@ -231,32 +237,32 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Set CR number and Revision of the new CR according to its "revision of" CR
         /// </summary>
-        private void ChangeRequestRevisionOfHandler(ChangeRequest newCr, IChangeRequestRepository repo)
+        private void ManageChangeRequestRevision(ChangeRequest newCr, IChangeRequestRepository repo)
         {
             //Get CRNumber
-            var parentCr = GetContributionCrByUid(newCr.RevisionOf);
+            var parentCr = GetChangeRequestByContributionUid(newCr.RevisionOf);
             if (parentCr == null)
-                throw new InvalidOperationException(String.Format("UID : {0} - Contribution not found", newCr.RevisionOf));
+                throw new InvalidOperationException(String.Format("Change request with contribution UID : {0} not found", newCr.RevisionOf));
             newCr.CRNumber = parentCr.CRNumber;
 
             //Get revision
             var revisionMaxFound = repo.FindCrMaxRevisionBySpecificationIdAndCrNumber(parentCr.Fk_Specification, parentCr.CRNumber);
-            newCr.Revision = ++revisionMaxFound;
+            newCr.Revision = revisionMaxFound+1;
 
-            //Put the parent CR contribution as Revised
+            //Put the parent CR contribution as Revised if not yet decided
             var crStatusMgr = ManagerFactory.Resolve<IChangeRequestStatusManager>();
             crStatusMgr.UoW = UoW;
-            var crStatus = crStatusMgr.GetAllChangeRequestStatuses();
-            var statusRevised = crStatus.FirstOrDefault(x => x.Code == Enum_ChangeRequestStatuses.Revised.ToString());
-            if (statusRevised != null)
+            var allChangeRequestStatuses = crStatusMgr.GetAllChangeRequestStatuses();
+            var revisedStatus = allChangeRequestStatuses.FirstOrDefault(x => x.Code == Enum_ChangeRequestStatuses.Revised.ToString());
+            if (revisedStatus != null)
             {
                 if (newCr.RevisionOf.Equals(parentCr.WGTDoc) && parentCr.Fk_WGStatus.GetValueOrDefault() == 0)
                 {
-                    parentCr.Fk_WGStatus = statusRevised.Pk_EnumChangeRequestStatus;
+                    parentCr.Fk_WGStatus = revisedStatus.Pk_EnumChangeRequestStatus;
                 }
                 else if(newCr.RevisionOf.Equals(parentCr.TSGTDoc) && parentCr.Fk_TSGStatus.GetValueOrDefault() == 0)
                 {
-                    parentCr.Fk_TSGStatus = statusRevised.Pk_EnumChangeRequestStatus; 
+                    parentCr.Fk_TSGStatus = revisedStatus.Pk_EnumChangeRequestStatus; 
                 }
             }
             
@@ -304,7 +310,7 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="contributionUid">Contribution UID</param>
         /// <returns>ChangeRequest entity</returns>
-        ChangeRequest GetContributionCrByUid(string contributionUid);
+        ChangeRequest GetChangeRequestByContributionUid(string contributionUid);
 
         /// <summary>
         /// Returns list of CRs using list of contribution UIDs. 
