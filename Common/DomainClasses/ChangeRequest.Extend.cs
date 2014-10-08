@@ -37,5 +37,7 @@ namespace Etsi.Ultimate.DomainClasses
         public bool IsTDocCreationEnabled { get; set; }
 
         public string ImplementationStatus { get; set; } 
+
+        public string RevisionOf { get; set; }
     }
 }

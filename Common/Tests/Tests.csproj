@@ -137,6 +137,7 @@
     <Compile Include="FakeSets\VersionFakeDBSet.cs" />
     <Compile Include="FakeSets\ViewPersonFakeDBSet.cs" />
     <Compile Include="FakeSets\WorkPlanFileFakeDBSet.cs" />
+    <Compile Include="Repositories\CrCategoriesRepository.cs" />
     <Compile Include="Repositories\CrCategoriesRepositoryTest.cs" />
     <Compile Include="Repositories\CrRepositoryTest.cs" />
     <Compile Include="Repositories\EnumRepositoryTest\EnumCommunityShortnameRepositoryTest.cs" />

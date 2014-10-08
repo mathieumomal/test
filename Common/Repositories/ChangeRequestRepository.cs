@@ -52,29 +52,40 @@ namespace Etsi.Ultimate.Repositories
         }
 
         /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="specificationId"></param>
+        /// <param name="crNumber"></param>
+        /// <returns></returns>
+        public int FindCrMaxRevisionBySpecificationIdAndCrNumber(int? specificationId, string crNumber)
+        {
+            return UoW.Context.ChangeRequests.Where(r => r.Fk_Specification == specificationId && r.CRNumber == crNumber).Max(x => x.Revision).GetValueOrDefault();
+        } 
+
+        /// <summary>
         /// Return CR by contribution UID
         /// </summary>
-        /// <param name="contributionUID">Contribution Uid</param>
+        /// <param name="contributionUid">Contribution Uid</param>
         /// <returns>ChangeRequest entity</returns>
-        public ChangeRequest GetChangeRequestByContributionUID(string contributionUID)
+        public ChangeRequest GetChangeRequestByContributionUID(string contributionUid)
         {
-            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.TsgStatus, t => t.WgStatus).SingleOrDefault(c => c.TSGTDoc.Equals(contributionUID) || c.WGTDoc.Equals(contributionUID));
+            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.TsgStatus, t => t.WgStatus).SingleOrDefault(c => c.TSGTDoc.Equals(contributionUid) || c.WGTDoc.Equals(contributionUid));
         }
 
         /// <summary>
         /// Returns list of CRs using list of contribution UIDs. 
         /// </summary>
-        /// <param name="contributionUIDs">Contribution Uid list</param>
+        /// <param name="contributionUiDs">Contribution Uid list</param>
         /// <returns>List of CRs</returns>
-        public List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUIDs)
+        public List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUiDs)
         {
-            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.TsgStatus, t => t.WgStatus).Where(x => contributionUIDs.Contains(x.TSGTDoc) || contributionUIDs.Contains(x.WGTDoc)).ToList();
+            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.TsgStatus, t => t.WgStatus).Where(x => contributionUiDs.Contains(x.TSGTDoc) || contributionUiDs.Contains(x.WGTDoc)).ToList();
         }
 
         /// <summary>
         /// Finds the specified identifier.
         /// </summary>
-        /// <param name="id">The identifier.</param>
+        /// <param name="changeRequestId"></param>
         /// <returns>Change request entity</returns>
         public ChangeRequest Find(int changeRequestId)
         {
@@ -131,15 +142,23 @@ namespace Etsi.Ultimate.Repositories
         /// <summary>
         /// Return CR by contribution UID
         /// </summary>
-        /// <param name="contributionUID">Contribution Uid</param>
+        /// <param name="contributionUid">Contribution Uid</param>
         /// <returns>ChangeRequest entity</returns>
-        ChangeRequest GetChangeRequestByContributionUID(string contributionUID);
+        ChangeRequest GetChangeRequestByContributionUID(string contributionUid);
 
         /// <summary>
         /// Returns list of CRs using list of contribution UIDs. 
         /// </summary>
-        /// <param name="contributionUIDs">Contribution Uid list</param>
+        /// <param name="contributionUiDs"></param>
         /// <returns>List of CRs</returns>
-        List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUids);
+        List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUiDs);
+
+        /// <summary>
+        /// Find max CR revision by specId and CR number
+        /// </summary>
+        /// <param name="specificationId"></param>
+        /// <param name="crNumber"></param>
+        /// <returns></returns>
+        int FindCrMaxRevisionBySpecificationIdAndCrNumber(int? specificationId, string crNumber);
     }
 }

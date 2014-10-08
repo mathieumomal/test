@@ -541,8 +541,7 @@ namespace Etsi.Ultimate.WCF.Service
                 ultimateCr.Fk_Impact = serviceCr.Fk_Impact;
                 ultimateCr.TSGTDoc = serviceCr.TSGTDoc;
                 ultimateCr.WGTDoc = serviceCr.WGTDoc;
-                ultimateCr.Fk_Enum_CRCategory = serviceCr.Fk_Enum_CRCategory;
-                ultimateCr.Fk_Enum_CRCategory = serviceCr.Fk_Enum_CRCategory;
+                ultimateCr.RevisionOf = serviceCr.RevisionOf;
                 if ((serviceCr.Fk_WorkItemIds != null) && (serviceCr.Fk_WorkItemIds.Count > 0))
                     serviceCr.Fk_WorkItemIds.ForEach(x => ultimateCr.CR_WorkItems.Add(new UltimateEntities.CR_WorkItems { Fk_WIId = x }));
             }

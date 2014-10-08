@@ -1,4 +1,5 @@
 ﻿
+using System.Security.Cryptography;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
@@ -21,7 +22,7 @@ namespace Etsi.Ultimate.Tests.Services
     public class CrServiceTest : BaseEffortTest
     {
         #region Constants
-        private const int TotalNoOfCrsInCsv = 6;
+        private const int TotalNoOfCrsInCsv = 10;
         private const int TotalNoOfCrWorkItemsInCsv = 1;
         private const int PersonId = 0;
         MemoryAppender _memoryAppender;
@@ -40,12 +41,12 @@ namespace Etsi.Ultimate.Tests.Services
         public override void Setup()
         {
             base.SetUp();
-            _memoryAppender = ((log4net.Core.LoggerWrapperImpl)(LogManager.Logger)).Logger.Repository.GetAppenders()[0] as MemoryAppender;
-            _memoryAppender.Clear();
+            _memoryAppender = ((LoggerWrapperImpl)(LogManager.Logger)).Logger.Repository.GetAppenders()[0] as MemoryAppender;
+            if (_memoryAppender != null) _memoryAppender.Clear();
         }
 
         [TearDown]
-        public void TearDown()
+        public override void TearDown()
         {
             _memoryAppender.Clear();
         }
@@ -64,10 +65,10 @@ namespace Etsi.Ultimate.Tests.Services
         public void Service_UnitTest_CreateChangeRequest_Success()
         {
             //Arrange
-            ChangeRequest changeRequest = new ChangeRequest();
-            var mockCRManager = MockRepository.GenerateMock<IChangeRequestManager>();
-            mockCRManager.Stub(x => x.CreateChangeRequest(Arg<int>.Is.Anything, Arg<ChangeRequest>.Is.Anything)).Return(true);
-            ManagerFactory.Container.RegisterInstance(typeof(IChangeRequestManager), mockCRManager);
+            var changeRequest = new ChangeRequest();
+            var mockCrManager = MockRepository.GenerateMock<IChangeRequestManager>();
+            mockCrManager.Stub(x => x.CreateChangeRequest(Arg<int>.Is.Anything, Arg<ChangeRequest>.Is.Anything)).Return(true);
+            ManagerFactory.Container.RegisterInstance(typeof(IChangeRequestManager), mockCrManager);
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
@@ -84,10 +85,10 @@ namespace Etsi.Ultimate.Tests.Services
         public void Service_UnitTest_CreateChangeRequest_Failure()
         {
             //Arrange
-            ChangeRequest changeRequest = new ChangeRequest();
-            var mockCRManager = MockRepository.GenerateMock<IChangeRequestManager>();
-            mockCRManager.Stub(x => x.CreateChangeRequest(Arg<int>.Is.Anything, Arg<ChangeRequest>.Is.Anything)).Return(false);
-            ManagerFactory.Container.RegisterInstance(typeof(IChangeRequestManager), mockCRManager);
+            var changeRequest = new ChangeRequest();
+            var mockCrManager = MockRepository.GenerateMock<IChangeRequestManager>();
+            mockCrManager.Stub(x => x.CreateChangeRequest(Arg<int>.Is.Anything, Arg<ChangeRequest>.Is.Anything)).Return(false);
+            ManagerFactory.Container.RegisterInstance(typeof(IChangeRequestManager), mockCrManager);
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
@@ -187,9 +188,12 @@ namespace Etsi.Ultimate.Tests.Services
         public void Service_IntegrationTest_CreateChangeRequest_Success()
         {
             //Arrange
-            ChangeRequest changeRequest = new ChangeRequest();
-            changeRequest.CRNumber = "234.12";
-            changeRequest.CR_WorkItems = new List<CR_WorkItems>() { new CR_WorkItems() { Fk_WIId = 2 }, new CR_WorkItems() { Fk_WIId = 3 } };
+            var changeRequest = new ChangeRequest
+            {
+                CRNumber = "234.12",
+                CR_WorkItems =
+                    new List<CR_WorkItems> {new CR_WorkItems {Fk_WIId = 2}, new CR_WorkItems {Fk_WIId = 3}}
+            };
             //Act
             var crService = new ChangeRequestService();
             var result = crService.CreateChangeRequest(PersonId, changeRequest);
@@ -199,6 +203,74 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(TotalNoOfCrWorkItemsInCsv + 2, UoW.Context.CR_WorkItems.Count());
             Assert.IsTrue(UoW.Context.ChangeRequests.Find(result.Value).CR_WorkItems.Any(x => x.Fk_WIId == 2));
             Assert.IsTrue(UoW.Context.ChangeRequests.Find(result.Value).CR_WorkItems.Any(x => x.Fk_WIId == 3));
+        }
+
+        [TestCase("WG3", 136083, "AZE", 2, Description = "WG revision of uid, create a CR as Revision of another CR")]
+        [TestCase("WG4", 136083, "AZEE", 4, Description = "WG revision of uid, create a CR as Revision of another CR")]
+        [TestCase("TSG4", 136083, "AZEEE", 5, Description = "TSG revision of uid, create a CR as Revision of another CR")]
+        public void Service_IntegrationTest_CreateChangeRequest_RevisionOf_Success(string wgTdocUid, int specId, string crNumberExpected, int revisionExpected)
+        {
+            //Arrange
+            var changeRequest = new ChangeRequest
+            {
+                CRNumber = "defaultValue",
+                RevisionOf = wgTdocUid,
+                Fk_Specification = specId
+            };
+
+            //Act
+            var crService = new ChangeRequestService();
+            var result = crService.CreateChangeRequest(PersonId, changeRequest);
+            //Assert
+            Assert.IsTrue(result.Key);
+            Assert.AreEqual(TotalNoOfCrsInCsv + 1, result.Value);
+            Assert.IsTrue(UoW.Context.ChangeRequests.Find(result.Value).CRNumber == crNumberExpected);
+            Assert.IsTrue(UoW.Context.ChangeRequests.Find(result.Value).Revision == revisionExpected);
+        }
+
+        [TestCase("WG3", 136083, 7, 6, 0, Description = "Parent CR mark as 'revised'")]
+        [TestCase("TSG4", 136083, 10, 0, 6, Description = "Parent CR mark as 'revised'")]
+        public void Service_IntegrationTest_CreateChangeRequest_RevisionOfParentStatus_Success(string wgTdocUid, int specId, int parentId, int statusWgExpected, int statusTsgExpected)
+        {
+            //Arrange
+            var changeRequest = new ChangeRequest
+            {
+                CRNumber = "defaultValue",
+                RevisionOf = wgTdocUid,
+                Fk_Specification = specId
+            };
+
+            //Act
+            var crService = new ChangeRequestService();
+            var result = crService.CreateChangeRequest(PersonId, changeRequest);
+            //Assert
+            Assert.IsTrue(result.Key);
+            Assert.AreEqual(TotalNoOfCrsInCsv + 1, result.Value);
+
+            //Check parent status
+            var parentCr = UoW.Context.ChangeRequests.Find(parentId);
+            Assert.AreEqual(statusTsgExpected, parentCr.Fk_TSGStatus.GetValueOrDefault());
+            Assert.AreEqual(statusWgExpected, parentCr.Fk_WGStatus.GetValueOrDefault());
+        }
+
+        [Test, Description("RevisionOfUid don't exist")]
+        public void Service_IntegrationTest_CreateChangeRequest_RevisionOf_Failure()
+        {
+            //Arrange
+            var changeRequest = new ChangeRequest
+            {
+                CRNumber = "defaultValue",
+                RevisionOf = "uidDontExist",
+                Fk_Specification = 136083
+            };
+
+            //Act
+            var crService = new ChangeRequestService();
+            var result = crService.CreateChangeRequest(PersonId, changeRequest);
+            var events = _memoryAppender.GetEvents();
+            Assert.AreEqual(1, events.Length);
+            Assert.IsTrue(events[0].MessageObject.ToString().Contains("Contribution not found"));
+            Assert.AreEqual(Level.Error, events[0].Level);
         }
 
         [Test, Description("System sets CR WG and TSG decisions")]
@@ -241,13 +313,11 @@ namespace Etsi.Ultimate.Tests.Services
         public void Service_IntegrationTest_CreateChangeRequest_Failure()
         {
             //Arrange
-            ChangeRequest changeRequest = new ChangeRequest();
-            changeRequest.Fk_Specification = 136080;
-            changeRequest.Fk_Release = 12345;
+            var changeRequest = new ChangeRequest {Fk_Specification = 136080, Fk_Release = 12345};
             //Act
             var crService = new ChangeRequestService();
             var result = crService.CreateChangeRequest(PersonId, changeRequest);
-            LoggingEvent[] events = _memoryAppender.GetEvents();
+            var events = _memoryAppender.GetEvents();
 
             //Assert
             Assert.IsFalse(result.Key);
@@ -261,71 +331,72 @@ namespace Etsi.Ultimate.Tests.Services
         public void Service_IntegrationTest_EditChangeRequest_Success()
         {
             //Arrange
-            var changeRequest = new ChangeRequest();
-            changeRequest.Pk_ChangeRequest = 1;
-            changeRequest.CRNumber = "#CRChanged";
-            changeRequest.Revision = 2;
-            changeRequest.Subject = "Subject Changed";
-            changeRequest.Fk_TSGStatus = 2;
-            changeRequest.Fk_WGStatus = 2;
-            changeRequest.CreationDate = Convert.ToDateTime("2009-01-30 12:12");
-            changeRequest.TSGSourceOrganizations = "Change request Changed";
-            changeRequest.WGSourceOrganizations = "Ultimate Changed";
-            changeRequest.TSGMeeting = 3;
-            changeRequest.TSGTarget = 3;
-            changeRequest.WGSourceForTSG = 3;
-            changeRequest.TSGTDoc = "Change request description Changed";
-            changeRequest.WGMeeting = 3;
-            changeRequest.WGTarget = 3;
-            changeRequest.WGTDoc = "Work item Changed";
-            changeRequest.Fk_Enum_CRCategory = 2;
-            changeRequest.Fk_Specification = 136082;
-            changeRequest.Fk_Release = 2882;
-            changeRequest.Fk_CurrentVersion = 428928;
-            changeRequest.Fk_NewVersion = 428928;
-            changeRequest.Fk_Impact = 2;
-            changeRequest.CR_WorkItems = new List<CR_WorkItems>() { new CR_WorkItems() { Fk_WIId = 2 }, new CR_WorkItems() { Fk_WIId = 3 } };
+            var changeRequest = new ChangeRequest
+            {
+                Pk_ChangeRequest = 1,
+                CRNumber = "#CRChanged",
+                Revision = 2,
+                Subject = "Subject Changed",
+                Fk_TSGStatus = 2,
+                Fk_WGStatus = 2,
+                CreationDate = Convert.ToDateTime("2009-01-30 12:12"),
+                TSGSourceOrganizations = "Change request Changed",
+                WGSourceOrganizations = "Ultimate Changed",
+                TSGMeeting = 3,
+                TSGTarget = 3,
+                WGSourceForTSG = 3,
+                TSGTDoc = "Change request description Changed",
+                WGMeeting = 3,
+                WGTarget = 3,
+                WGTDoc = "Work item Changed",
+                Fk_Enum_CRCategory = 2,
+                Fk_Specification = 136082,
+                Fk_Release = 2882,
+                Fk_CurrentVersion = 428928,
+                Fk_NewVersion = 428928,
+                Fk_Impact = 2,
+                CR_WorkItems =
+                    new List<CR_WorkItems> {new CR_WorkItems {Fk_WIId = 2}, new CR_WorkItems {Fk_WIId = 3}}
+            };
             //Act
             var crService = new ChangeRequestService();
             var result = crService.EditChangeRequest(PersonId, changeRequest);
-            var modifiedCR = UoW.Context.ChangeRequests.Find(1);
+            var modifiedCr = UoW.Context.ChangeRequests.Find(1);
 
             //Assert
             Assert.IsTrue(result);
-            Assert.AreEqual(changeRequest.CRNumber, modifiedCR.CRNumber);
-            Assert.AreEqual(changeRequest.Revision, modifiedCR.Revision);
-            Assert.AreEqual(changeRequest.Subject, modifiedCR.Subject);
-            Assert.AreEqual(changeRequest.Fk_TSGStatus, modifiedCR.Fk_TSGStatus);
-            Assert.AreEqual(changeRequest.Fk_WGStatus, modifiedCR.Fk_WGStatus);
-            Assert.AreEqual(changeRequest.CreationDate, modifiedCR.CreationDate);
-            Assert.AreEqual(changeRequest.TSGSourceOrganizations, modifiedCR.TSGSourceOrganizations);
-            Assert.AreEqual(changeRequest.WGSourceOrganizations, modifiedCR.WGSourceOrganizations);
-            Assert.AreEqual(changeRequest.TSGMeeting, modifiedCR.TSGMeeting);
-            Assert.AreEqual(changeRequest.TSGTarget, modifiedCR.TSGTarget);
-            Assert.AreEqual(changeRequest.WGSourceForTSG, modifiedCR.WGSourceForTSG);
-            Assert.AreEqual(changeRequest.TSGTDoc, modifiedCR.TSGTDoc);
-            Assert.AreEqual(changeRequest.WGMeeting, modifiedCR.WGMeeting);
-            Assert.AreEqual(changeRequest.WGTarget, modifiedCR.WGTarget);
-            Assert.AreEqual(changeRequest.WGTDoc, modifiedCR.WGTDoc);
-            Assert.AreEqual(changeRequest.Fk_Enum_CRCategory, modifiedCR.Fk_Enum_CRCategory);
-            Assert.AreEqual(changeRequest.Fk_Specification, modifiedCR.Fk_Specification);
-            Assert.AreEqual(changeRequest.Fk_Release, modifiedCR.Fk_Release);
-            Assert.AreEqual(changeRequest.Fk_CurrentVersion, modifiedCR.Fk_CurrentVersion);
-            Assert.AreEqual(changeRequest.Fk_NewVersion, modifiedCR.Fk_NewVersion);
-            Assert.AreEqual(changeRequest.Fk_Impact, modifiedCR.Fk_Impact);
-            Assert.AreEqual(2, modifiedCR.CR_WorkItems.Count());
-            Assert.IsTrue(modifiedCR.CR_WorkItems.Any(x => x.Fk_WIId == 2));
-            Assert.IsTrue(modifiedCR.CR_WorkItems.Any(x => x.Fk_WIId == 3));
-            Assert.IsFalse(modifiedCR.CR_WorkItems.Any(x => x.Fk_WIId == 1274));
+            Assert.AreEqual(changeRequest.CRNumber, modifiedCr.CRNumber);
+            Assert.AreEqual(changeRequest.Revision, modifiedCr.Revision);
+            Assert.AreEqual(changeRequest.Subject, modifiedCr.Subject);
+            Assert.AreEqual(changeRequest.Fk_TSGStatus, modifiedCr.Fk_TSGStatus);
+            Assert.AreEqual(changeRequest.Fk_WGStatus, modifiedCr.Fk_WGStatus);
+            Assert.AreEqual(changeRequest.CreationDate, modifiedCr.CreationDate);
+            Assert.AreEqual(changeRequest.TSGSourceOrganizations, modifiedCr.TSGSourceOrganizations);
+            Assert.AreEqual(changeRequest.WGSourceOrganizations, modifiedCr.WGSourceOrganizations);
+            Assert.AreEqual(changeRequest.TSGMeeting, modifiedCr.TSGMeeting);
+            Assert.AreEqual(changeRequest.TSGTarget, modifiedCr.TSGTarget);
+            Assert.AreEqual(changeRequest.WGSourceForTSG, modifiedCr.WGSourceForTSG);
+            Assert.AreEqual(changeRequest.TSGTDoc, modifiedCr.TSGTDoc);
+            Assert.AreEqual(changeRequest.WGMeeting, modifiedCr.WGMeeting);
+            Assert.AreEqual(changeRequest.WGTarget, modifiedCr.WGTarget);
+            Assert.AreEqual(changeRequest.WGTDoc, modifiedCr.WGTDoc);
+            Assert.AreEqual(changeRequest.Fk_Enum_CRCategory, modifiedCr.Fk_Enum_CRCategory);
+            Assert.AreEqual(changeRequest.Fk_Specification, modifiedCr.Fk_Specification);
+            Assert.AreEqual(changeRequest.Fk_Release, modifiedCr.Fk_Release);
+            Assert.AreEqual(changeRequest.Fk_CurrentVersion, modifiedCr.Fk_CurrentVersion);
+            Assert.AreEqual(changeRequest.Fk_NewVersion, modifiedCr.Fk_NewVersion);
+            Assert.AreEqual(changeRequest.Fk_Impact, modifiedCr.Fk_Impact);
+            Assert.AreEqual(2, modifiedCr.CR_WorkItems.Count());
+            Assert.IsTrue(modifiedCr.CR_WorkItems.Any(x => x.Fk_WIId == 2));
+            Assert.IsTrue(modifiedCr.CR_WorkItems.Any(x => x.Fk_WIId == 3));
+            Assert.IsFalse(modifiedCr.CR_WorkItems.Any(x => x.Fk_WIId == 1274));
         }
 
         [Test]
         public void Service_IntegrationTest_EditChangeRequest_Failure()
         {
             //Arrange
-            var changeRequest = new ChangeRequest();
-            changeRequest.Pk_ChangeRequest = 1;
-            changeRequest.CRNumber = "#CRChangedMorethan10Characters";
+            var changeRequest = new ChangeRequest {Pk_ChangeRequest = 1, CRNumber = "#CRChangedMorethan10Characters"};
 
             //Act
             var crService = new ChangeRequestService();
@@ -394,15 +465,15 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void Service_IntegrationTes_GetChangeRequestListByContribUids()
         {
-            var uids = new List<string>() { "TSG1", "Change request description6" };
-            var tdocNumbers = new List<string>() { "0001", "A0144" };
-            var tdocRevisions = new List<int>() { 1, 2 };
-            var tdocSpecNumbers = new List<string>() { "22.102", "22.101" };
-            var tdocReleaseShortNames = new List<string>() { "R2000", "R2000" };
-            var tdocCurrentVersions = new List<string>() { "13.0.1", "13.0.1" };
-            var tdocNewVersions = new List<string>() { "13.0.1", "13.0.1" };
-            var tdocTSGStatus = new List<string>() { "Agreed", "Agreed" };
-            var tdocWGStatus = new List<string>() { "Approved", "Agreed" };
+            var uids = new List<string> { "TSG1", "Change request description6" };
+            var tdocNumbers = new List<string> { "0001", "A0144" };
+            var tdocRevisions = new List<int> { 1, 2 };
+            var tdocSpecNumbers = new List<string> { "22.102", "22.101" };
+            var tdocReleaseShortNames = new List<string> { "R2000", "R2000" };
+            var tdocCurrentVersions = new List<string> { "13.0.1", "13.0.1" };
+            var tdocNewVersions = new List<string> { "13.0.1", "13.0.1" };
+            var tdocTsgStatus = new List<string> { "Agreed", "Agreed" };
+            var tdocWgStatus = new List<string> { "Approved", "Agreed" };
             //Act
             var svcCr = new ChangeRequestService();
             var result = svcCr.GetChangeRequestListByContributionUidList(uids);
@@ -421,8 +492,8 @@ namespace Etsi.Ultimate.Tests.Services
                     Assert.AreEqual(tdocReleaseShortNames[i], crList[i].Release.ShortName);
                     Assert.AreEqual(tdocCurrentVersions[i], crList[i].CurrentVersion.Version);
                     Assert.AreEqual(tdocNewVersions[i], crList[i].NewVersion.Version);
-                    Assert.AreEqual(tdocTSGStatus[i], crList[i].TsgStatus.Description);
-                    Assert.AreEqual(tdocWGStatus[i], crList[i].WgStatus.Description);
+                    Assert.AreEqual(tdocTsgStatus[i], crList[i].TsgStatus.Description);
+                    Assert.AreEqual(tdocWgStatus[i], crList[i].WgStatus.Description);
                 }
             }
         }
@@ -449,7 +520,7 @@ namespace Etsi.Ultimate.Tests.Services
 
         private static ChangeRequest ChangeRequestDataObject()
         {
-            ChangeRequest changeRequest = new ChangeRequest
+            var changeRequest = new ChangeRequest
             {
                 CRNumber = "A001",
                 Revision = 1,
