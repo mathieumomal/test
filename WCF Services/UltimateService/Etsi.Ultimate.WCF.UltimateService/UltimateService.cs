@@ -9,7 +9,7 @@ namespace Etsi.Ultimate.WCF.Service
     /// </summary>
     public class UltimateService : IUltimateService
     {
-        #region Releases services        
+        #region Releases services
         /// <summary>
         /// Gets the releases.
         /// </summary>
@@ -108,7 +108,7 @@ namespace Etsi.Ultimate.WCF.Service
         }
         #endregion
 
-        #region CRs services        
+        #region CRs services
         /// <summary>
         /// Gets the change request by identifier.
         /// </summary>
@@ -188,6 +188,12 @@ namespace Etsi.Ultimate.WCF.Service
         {
             var svcHelper = new ServiceHelper();
             return svcHelper.GetAllChangeRequestStatuses();
+        }
+
+        public void UpdateCrpackDecision(List<KeyValuePair<string, string>> crpackDicisionlst)
+        {
+            var svcHelper = new ServiceHelper();
+            svcHelper.UpdateCrpackDecision(crpackDicisionlst);
         }
         #endregion
     }

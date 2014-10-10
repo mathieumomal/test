@@ -381,7 +381,7 @@ namespace Etsi.Ultimate.WCF.Service
             {
                 LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message));
             }
-            return cr;   
+            return cr;
         }
 
         /// <summary>
@@ -414,7 +414,8 @@ namespace Etsi.Ultimate.WCF.Service
         internal List<UltimateServiceEntities.ChangeRequestStatus> GetAllChangeRequestStatuses()
         {
             var crStatusesList = new List<UltimateServiceEntities.ChangeRequestStatus>();
-            try{
+            try
+            {
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
                 var result = svc.GetChangeRequestStatuses();
                 if (result.Key)
@@ -430,7 +431,14 @@ namespace Etsi.Ultimate.WCF.Service
 
         }
 
-        
+        internal void UpdateCrpackDecision(List<KeyValuePair<string, string>> crPackDecision)
+        {
+            var crPackDecisionDetail = new UltimateServiceEntities.ChangeRequestPackInfo
+            {
+                ChangeRequestsUidDecisionList = new List<KeyValuePair<string, string>>()
+            };
+        }
+
 
         #endregion
 
@@ -618,8 +626,8 @@ namespace Etsi.Ultimate.WCF.Service
             }
             return serviceCrStatus;
         }
-        #endregion        
-    
-       
+        #endregion
+
+
     }
 }
