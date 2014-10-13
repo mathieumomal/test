@@ -74,7 +74,6 @@
     <Compile Include="SpecificationWorkItemRepository.cs" />
     <Compile Include="SpecVersionsRepository.cs" />
     <Compile Include="UrlRepository.cs" />
-    <Compile Include="UserRightsRepository.cs" />
     <Compile Include="UltimateUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserRolesRepository.cs" />

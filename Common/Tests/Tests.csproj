@@ -173,7 +173,6 @@
     <Compile Include="FakeRepositories\ShortUrlFakeRepository.cs" />
     <Compile Include="FakeRepositories\WorkItemFakeRepository.cs" />
     <Compile Include="FakeRepositories\ReleaseFakeRepository.cs" />
-    <Compile Include="FakeRepositories\RightsFakeRepository.cs" />
     <Compile Include="FakeRepositories\UserRolesFakeRepository.cs" />
     <Compile Include="FakeSets\CommunityFakeDBSet.cs" />
     <Compile Include="FakeSets\HistoryFakeDBSet.cs" />
@@ -198,7 +197,6 @@
     <Compile Include="Repositories\SpecificationRepositoryTest.cs" />
     <Compile Include="Repositories\WorkItemRepositoryTest.cs" />
     <Compile Include="Repositories\UserRolesRepositoryTest.cs" />
-    <Compile Include="Repositories\RightsRepositoryTest.cs" />
     <Compile Include="Repositories\TestEnum_ReleaseStatusRepository.cs" />
     <Compile Include="Repositories\TestReleaseRepository.cs" />
     <Compile Include="Services\CommunityServiceTest.cs" />
@@ -344,14 +342,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
-  <ItemGroup>
-    <Content Include="TestData\Rights\DuplicateData.xml" />
-    <Content Include="TestData\Rights\Exemple.xml" />
-    <Content Include="TestData\Rights\InvalidData.xml" />
-    <Content Include="TestData\Rights\SimpleData.xml">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

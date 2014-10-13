@@ -56,16 +56,7 @@
               <name>Resources.zip</name>
             </resourceFile>
           </resourceFiles>
-        </component>
-        <component type="File">
-          <files>
-            <basePath>/</basePath>
-            <file>
-              <name>UserRights.xml</name>
-            </file>
-          </files>
-        </component>
-        
+        </component>       
       </components>
     </package>
   </packages>
