@@ -14,6 +14,7 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         static public readonly int MCC_MEMBER_ID = 27900;
         static public readonly int ADMINISTRATOR_ID = 53388;
         static public readonly int WORKPLANMGR_ID = 27904;
+        static public readonly int ANONYMOUS_ID = 0;
         public const int SPECMGR_ID = 637;
         static public readonly int CHAIRMAN_ID = 12;
         static public readonly int VICECHAIRMAN_ID = 13;

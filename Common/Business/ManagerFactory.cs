@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.Business.SpecVersionBusiness;
 using Microsoft.Practices.Unity;
+using Etsi.Ultimate.Business.UserRightsService;
 
 namespace Etsi.Ultimate.Business
 {
@@ -61,6 +62,7 @@ namespace Etsi.Ultimate.Business
         public static void SetDefaultDependencies()
         {
             //Map of relation between Interfaces and classes
+            Container.RegisterType<IUserRightsService, UserRightsServiceClient>(new TransientLifetimeManager(), new InjectionConstructor("UserRightsHttpEndpoint"));
             Container.RegisterType<IRightsManager, RightsManager>(new TransientLifetimeManager());
             Container.RegisterType<IPersonManager, PersonManager>(new TransientLifetimeManager());
             Container.RegisterType<IWorkItemCsvParser, WorkItemCsvParser>(new TransientLifetimeManager());

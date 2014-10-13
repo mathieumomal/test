@@ -194,5 +194,18 @@ namespace Etsi.Ultimate.Utils
                 return "/tmp/";
             }
         }
+
+        /// <summary>
+        /// Gets the name of the portal (ETSI / Ultimate).
+        /// </summary>
+        public static string PortalName
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["PortalName"] != null)
+                    return ConfigurationManager.AppSettings["PortalName"].ToString();
+                return "";
+            }
+        }
     }
 }

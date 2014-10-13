@@ -50,7 +50,6 @@ xcopy "%USERSOURCE%Etsi.Ultimate.Utils.Core.pdb" "%USERDEST%" /b/v/y
 
 REM Copy configuration files
 xcopy "%TRUNK_PATH%web.config.%PHASE%" "%DNN_PATH%web.config" /b/v/y
-xcopy "%TRUNK_PATH%UserRights.xml" "%DNN_PATH%" /b/v/y
 
 REM Release component
 SET RELEASESOURCES=%TRUNK_PATH%Modules\Release\

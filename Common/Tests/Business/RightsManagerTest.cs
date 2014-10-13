@@ -18,126 +18,28 @@ namespace Etsi.Ultimate.Tests.Business
 {
     class RightsManagerTest: BaseTest
     {
-
-        private static readonly string CACHE_STRING = "BIZ_USER_RIGHTS_";
-
-        [Test]
-        public void GetNonCommitteeRelated_RolesReturnAnonymousOnPersonIdZero()
-        {
-            var rightsRetriever = new RightsManager();
-
-            var roles = rightsRetriever.GetNonCommitteeRelatedRoles(0);
-            var roles2 = rightsRetriever.GetNonCommitteeRelatedRoles(-1);
-
-            Assert.AreEqual(1, roles.Count);
-            Assert.AreEqual(1, roles2.Count);
-
-            Assert.AreEqual(Enum_UserRoles.Anonymous, roles.FirstOrDefault());
-            Assert.AreEqual(Enum_UserRoles.Anonymous, roles2.FirstOrDefault());
-        }
-
-        [Test]
-        public void GetNonCommitteeRelated_RolesReturnEolOnPersonIdPositive()
-        {
-            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
-            var rightsRetriever = new RightsManager();
-
-            var roles = rightsRetriever.GetNonCommitteeRelatedRoles(2335);
-            Assert.AreEqual(1, roles.Count);
-            Assert.AreEqual(Enum_UserRoles.EolAccountOwner, roles.FirstOrDefault());
-        }
-
-        [Test]
-        public void GetNonCommitteeRelated_RolesReturnStaffMemberIfUserBelongsToEtsi()
-        {
-            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
-
-            var rightsRetriever = new RightsManager();
-
-            var roles = rightsRetriever.GetNonCommitteeRelatedRoles(UserRolesFakeRepository.MCC_MEMBER_ID);
-            Assert.AreEqual(2, roles.Count);
-            Assert.Contains(Enum_UserRoles.StaffMember, roles);
-        }
-
-        [Test]
-        public void GetNonCommitteeRelated_RolesChecksForAdministrators()
-        {
-            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
-
-            var rightsRetriever = new RightsManager();
-
-            var roles = rightsRetriever.GetNonCommitteeRelatedRoles(UserRolesFakeRepository.ADMINISTRATOR_ID);
-            Assert.AreEqual(2, roles.Count);
-            Assert.Contains(Enum_UserRoles.Administrator, roles);
-        }
-
-        [Test]
-        public void GetNonCommitteeRelated_RolesChecksForWorkplanManagers()
-        {
-            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
-
-            var rightsRetriever = new RightsManager();
-
-            var roles = rightsRetriever.GetNonCommitteeRelatedRoles(UserRolesFakeRepository.WORKPLANMGR_ID);
-            Assert.AreEqual(2, roles.Count);
-            Assert.Contains(Enum_UserRoles.WorkPlanManager, roles);
-        }
-
-        [Test]
-        public void GetNonCommitteeRelated_RolesChecksForSpecManager()
-        {
-            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
-
-            var rightsRetriever = new RightsManager();
-
-            var roles = rightsRetriever.GetNonCommitteeRelatedRoles(UserRolesFakeRepository.SPECMGR_ID);
-            Assert.AreEqual(2, roles.Count);
-            Assert.Contains(Enum_UserRoles.SuperUser, roles);
-        }
-
-        [Test]
-        public void GetCommitteeRelated_RolesChecksForCommitteeOfficials()
-        {
-            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
-
-            var rightsRetriever = new RightsManager();
-
-            var chairmanRoles = rightsRetriever.GetCommitteeRelatedRoles(UserRolesFakeRepository.CHAIRMAN_ID);
-            Assert.Contains(Enum_UserRoles.CommitteeOfficial, chairmanRoles[15]);
-            Assert.Contains(Enum_UserRoles.CommitteeOfficial, chairmanRoles[16]);
-
-            var secretaryRoles = rightsRetriever.GetCommitteeRelatedRoles(UserRolesFakeRepository.SECRETARY_ID);
-            Assert.Contains(Enum_UserRoles.CommitteeOfficial, secretaryRoles[15]);
-
-            var viceChairmanRoles = rightsRetriever.GetCommitteeRelatedRoles(UserRolesFakeRepository.VICECHAIRMAN_ID);
-            Assert.Contains(Enum_UserRoles.CommitteeOfficial, viceChairmanRoles[15]);
-        }
+        private static readonly string CACHE_STRING = "ULTIMATE_BIZ_USER_RIGHTS_";
 
         [Test]
         public void GetRights_RetrievesRightsForAnonymous()
         {
+            InitializeUserRightsMock();
             CacheManager.Clear(CACHE_STRING + "0");
-            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
-            RepositoryFactory.Container.RegisterType<IUserRightsRepository, RightsFakeRepository>(new TransientLifetimeManager());
 
             var rightsRetriever = new RightsManager();
-            rightsRetriever.UoW = GetUnitOfWork();
 
             var rights = rightsRetriever.GetRights(0);
             Assert.IsTrue(rights.HasRight(Enum_UserRights.Release_ViewLimitedDetails));
         }
 
-
         [Test]
         public void GetRights_RetrievesRightsForSuperUser()
         {
+            InitializeUserRightsMock();
             CacheManager.Clear(CACHE_STRING + UserRolesFakeRepository.SPECMGR_ID);
-            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
-            RepositoryFactory.Container.RegisterType<IUserRightsRepository, RightsFakeRepository>(new TransientLifetimeManager());
 
             var rightsRetriever = new RightsManager();
-            rightsRetriever.UoW = GetUnitOfWork();
-
+            
             var rights = rightsRetriever.GetRights(UserRolesFakeRepository.SPECMGR_ID);
             Assert.IsTrue(rights.HasRight(Enum_UserRights.Release_ViewDetails));
             Assert.IsTrue(rights.HasRight(Enum_UserRights.Release_ViewCompleteDetails));
@@ -146,28 +48,24 @@ namespace Etsi.Ultimate.Tests.Business
         [Test]
         public void GetRights_RetrievesRightsForOfficials()
         {
-            CacheManager.Clear(CACHE_STRING + UserRolesFakeRepository.SPECMGR_ID);
-            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
-            RepositoryFactory.Container.RegisterType<IUserRightsRepository, RightsFakeRepository>(new TransientLifetimeManager());
+            InitializeUserRightsMock();
+            CacheManager.Clear(CACHE_STRING + UserRolesFakeRepository.CHAIRMAN_ID);
 
             var rightsRetriever = new RightsManager();
-            rightsRetriever.UoW = GetUnitOfWork();
 
             var rights = rightsRetriever.GetRights(UserRolesFakeRepository.CHAIRMAN_ID);
-            Assert.IsTrue(rights.HasRight(Enum_UserRights.Release_Close, UserRolesFakeRepository.TB_ID1));
-            Assert.IsTrue(rights.HasRight(Enum_UserRights.Release_Close, UserRolesFakeRepository.TB_ID2));
+            Assert.IsTrue(rights.HasRight(Enum_UserRights.Versions_Allocate, UserRolesFakeRepository.TB_ID1));
+            Assert.IsTrue(rights.HasRight(Enum_UserRights.Versions_Modify_MajorVersion, UserRolesFakeRepository.TB_ID2));
         }
 
         [Test]
         public void GetRights_LooksInCache()
         {
+            InitializeUserRightsMock();
             var cacheKey = CACHE_STRING + UserRolesFakeRepository.ADMINISTRATOR_ID;
             CacheManager.Clear( cacheKey );
-            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
-            RepositoryFactory.Container.RegisterType<IUserRightsRepository, RightsFakeRepository>(new TransientLifetimeManager());
 
             var rightsRetriever = new RightsManager();
-            rightsRetriever.UoW = GetUnitOfWork();
 
             var rights = rightsRetriever.GetRights(UserRolesFakeRepository.ADMINISTRATOR_ID);
             Assert.IsNotNull(CacheManager.Get(cacheKey));
@@ -186,13 +84,11 @@ namespace Etsi.Ultimate.Tests.Business
         [Test]
         public void GetRights_ReturnsCopy()
         {
+            InitializeUserRightsMock();
             var cacheKey = CACHE_STRING + UserRolesFakeRepository.ADMINISTRATOR_ID;
             CacheManager.Clear(cacheKey);
-            RepositoryFactory.Container.RegisterType<IUserRolesRepository, UserRolesFakeRepository>(new TransientLifetimeManager());
-            RepositoryFactory.Container.RegisterType<IUserRightsRepository, RightsFakeRepository>(new TransientLifetimeManager());
 
             var rightsRetriever = new RightsManager();
-            rightsRetriever.UoW = GetUnitOfWork();
 
             // System should have computed the rights, and put them in cache.
             var rights = rightsRetriever.GetRights(UserRolesFakeRepository.ADMINISTRATOR_ID);
@@ -202,7 +98,6 @@ namespace Etsi.Ultimate.Tests.Business
             // Thus if we call it again, we should still have it.
             rights = rightsRetriever.GetRights(UserRolesFakeRepository.ADMINISTRATOR_ID);
             Assert.IsTrue(rights.HasRight(Enum_UserRights.Release_ViewDetails));
-
         }
 
         [TestCase(53388, false)] 
@@ -221,24 +116,10 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual(result, isUserMCCMember);
         }
 
-        [Test]
-        [ExpectedException(typeof(InvalidOperationException))]
-        public void GetRights_UoWShouldBeInitialized()
-        {
-
-            var rightsRetriever = new RightsManager();
-            var rightsUoW = rightsRetriever.GetRights(UserRolesFakeRepository.ADMINISTRATOR_ID); 
-
-        }
-
         private IUltimateUnitOfWork GetUnitOfWork()
         {
             var iUnitOfWork = MockRepository.GenerateMock<IUltimateUnitOfWork>();
             return iUnitOfWork;
         }
-
-
-
-
     }
 }
