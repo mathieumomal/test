@@ -64,6 +64,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>DNN3GPP.edmx</DependentUpon>
     </Compile>
+    <Compile Include="DNN3GPPContext.cs" />
+    <Compile Include="IDnn3gppContext.cs" />
     <Compile Include="ProfilePropertyDefinition.cs">
       <DependentUpon>DNN3GPP.tt</DependentUpon>
     </Compile>

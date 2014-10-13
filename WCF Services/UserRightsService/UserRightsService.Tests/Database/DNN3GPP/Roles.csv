@@ -1,0 +1,10 @@
+RoleID,PortalID,RoleName,Description,ServiceFee,BillingFrequency,TrialPeriod,TrialFrequency,BillingPeriod,TrialFee,IsPublic,AutoAssignment,RoleGroupID,RSVPCode,IconFile,CreatedByUserID,CreatedOnDate,LastModifiedByUserID,LastModifiedOnDate,Status,SecurityMode,IsSystemRole
+0,0,Administrators,Administrators of this Website,0,N,-1,N,-1,0,false,false,,,,-1,2013-01-01,-1,2013-01-01,1,0,true
+1,0,Registered Users,Registered Users,0,N,-1,N,-1,0,false,true,,,,-1,2013-01-02,-1,2013-01-02,1,0,true
+2,0,Subscribers,A public role for site subscriptions,0,N,-1,N,-1,0,true,true,,,,-1,2013-01-03,-1,2013-01-03,1,0,true
+3,0,Translator (en-US),A role for English (United States) translators,0,N,-1,N,-1,0,false,false,,,,-1,2013-01-04,-1,2013-01-04,1,0,false
+4,0,Unverified Users,Unverified Users,0,N,-1,N,-1,0,false,false,,,,-1,2013-01-05,-1,2013-01-05,1,0,true
+5,0,Domain Users,GS ADPro Active Directory Role,0,N,1,N,1,0,false,false,,,,-1,2013-01-06,-1,2013-01-06,1,0,false
+6,0,Specification Managers,,0,N,-1,N,-1,0,false,false,,,,1,2013-01-07,1,2013-01-07,1,0,false
+7,0,Work Plan Managers,,0,N,-1,N,-1,0,false,false,,,,1,2013-01-08,1,2013-01-08,1,0,false
+8,0,Meeting Managers,The meeting Manager. ,0,N,-1,N,-1,0,false,false,,,,1,2013-01-09,1,2013-01-09,1,0,false

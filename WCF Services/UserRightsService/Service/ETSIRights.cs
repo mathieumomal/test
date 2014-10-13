@@ -95,7 +95,7 @@ namespace Etsi.UserRights.Service
                     //************************************************
                     //************ ETSI BASED ROLES  *****************
                     //************************************************
-                    using (var context = new DSDBContext())
+                    using (var context = DatabaseFactory.Resolve<IDSDBContext>())
                     {
 
                         var userMCCRecord = (from personInList in context.PersonInLists

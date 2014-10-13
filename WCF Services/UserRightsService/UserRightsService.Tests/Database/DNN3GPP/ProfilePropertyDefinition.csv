@@ -1,0 +1,2 @@
+PropertyDefinitionID,PortalID,ModuleDefID,Deleted,DataType,DefaultValue,PropertyCategory,PropertyName,Length,Required,ValidationExpression,ViewOrder,Visible,CreatedByUserID,CreatedOnDate,LastModifiedByUserID,LastModifiedOnDate,DefaultVisibility,ReadOnly
+43,0,-1,false,350,,ETSI,ETSI_DS_ID,0,false,,0,false,-1,2013-09-09,1,2013-09-09,0,false
