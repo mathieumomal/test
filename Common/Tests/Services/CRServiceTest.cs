@@ -24,7 +24,7 @@ namespace Etsi.Ultimate.Tests.Services
         #region Constants
         private const int TotalNoOfCrsInCsv = 10;
         private const int TotalNoOfCrWorkItemsInCsv = 1;
-        private const int PersonId = 0;
+        private const int PersonId = 0;       
         MemoryAppender _memoryAppender;
         #endregion
 
@@ -180,6 +180,21 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsNull(result.Value);
         }
 
+        [Test, Description("Update TsgTDocDecision")]
+        public void Unit_UpdateTsgTdocDecisions()
+        {
+            var changeRequestSvc = new ChangeRequestService();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            var mockRepository = MockRepository.GenerateMock<IChangeRequestManager>();
+            mockRepository.Stub(x => x.UpdateChangeRequestpackTsgDecision(Arg<List<KeyValuePair<string, string>>>.Is.Anything)).Return(true);
+            ManagerFactory.Container.RegisterInstance(typeof(IChangeRequestManager), mockRepository);
+            var response = changeRequestSvc.UpdateChangeRequestTsgStatus(TsgTDocDecisions());
+            //Assert
+            Assert.IsTrue(response);
+            mockDataContext.AssertWasCalled(x => x.SaveChanges());
+        }
+
         #endregion
 
         #region Integration Tests
@@ -192,7 +207,7 @@ namespace Etsi.Ultimate.Tests.Services
             {
                 CRNumber = "234.12",
                 CR_WorkItems =
-                    new List<CR_WorkItems> {new CR_WorkItems {Fk_WIId = 2}, new CR_WorkItems {Fk_WIId = 3}}
+                    new List<CR_WorkItems> { new CR_WorkItems { Fk_WIId = 2 }, new CR_WorkItems { Fk_WIId = 3 } }
             };
             //Act
             var crService = new ChangeRequestService();
@@ -310,7 +325,7 @@ namespace Etsi.Ultimate.Tests.Services
         public void Service_IntegrationTest_CreateChangeRequest_Failure()
         {
             //Arrange
-            var changeRequest = new ChangeRequest {Fk_Specification = 136080, Fk_Release = 12345};
+            var changeRequest = new ChangeRequest { Fk_Specification = 136080, Fk_Release = 12345 };
             //Act
             var crService = new ChangeRequestService();
             var result = crService.CreateChangeRequest(PersonId, changeRequest);
@@ -353,7 +368,7 @@ namespace Etsi.Ultimate.Tests.Services
                 Fk_NewVersion = 428928,
                 Fk_Impact = 2,
                 CR_WorkItems =
-                    new List<CR_WorkItems> {new CR_WorkItems {Fk_WIId = 2}, new CR_WorkItems {Fk_WIId = 3}}
+                    new List<CR_WorkItems> { new CR_WorkItems { Fk_WIId = 2 }, new CR_WorkItems { Fk_WIId = 3 } }
             };
             //Act
             var crService = new ChangeRequestService();
@@ -393,7 +408,7 @@ namespace Etsi.Ultimate.Tests.Services
         public void Service_IntegrationTest_EditChangeRequest_Failure()
         {
             //Arrange
-            var changeRequest = new ChangeRequest {Pk_ChangeRequest = 1, CRNumber = "#CRChangedMorethan10Characters"};
+            var changeRequest = new ChangeRequest { Pk_ChangeRequest = 1, CRNumber = "#CRChangedMorethan10Characters" };
 
             //Act
             var crService = new ChangeRequestService();
@@ -511,10 +526,23 @@ namespace Etsi.Ultimate.Tests.Services
 
         }
 
+        [Test, Description("Update TsgTDocDecision")]
+        public void Service_Integration_UpdateTsgTdocDecisions()
+        {
+            var svc = new ChangeRequestService();
+            var response = svc.UpdateChangeRequestTsgStatus(TsgTDocDecisions());
+            Assert.IsTrue(response);
+        }
+
+
         #endregion
 
         #region DataObject
 
+        /// <summary>
+        /// Changes the request data object.
+        /// </summary>
+        /// <returns></returns>
         private static ChangeRequest ChangeRequestDataObject()
         {
             var changeRequest = new ChangeRequest
@@ -544,6 +572,11 @@ namespace Etsi.Ultimate.Tests.Services
             return changeRequest;
         }
 
+        /// <summary>
+        /// Gets the change request by identifier data object.
+        /// </summary>
+        /// <param name="changeRequestById">The change request by identifier.</param>
+        /// <returns></returns>
         private static ChangeRequest GetChangeRequestByIdDataObject(int changeRequestById)
         {
             var changeRequest = new List<ChangeRequest>
@@ -561,6 +594,22 @@ namespace Etsi.Ultimate.Tests.Services
             };
             return changeRequest.Find(x => x.Pk_ChangeRequest == changeRequestById);
         }
+
+        /// <summary>
+        /// TSGs the t document decisions.
+        /// </summary>
+        /// <returns></returns>
+        private static List<KeyValuePair<string, string>> TsgTDocDecisions()
+        {
+            var TsgTDocDecisions = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string,string>("WG2", "Approved"),
+                new KeyValuePair<string,string>("WG1", "Agreed"),
+                new KeyValuePair<string,string>("TSG3", "Noted")      
+            };
+            return TsgTDocDecisions;
+        }
+
         #endregion
     }
 }

@@ -54,7 +54,7 @@ namespace Etsi.Ultimate.Services
         public KeyValuePair<bool, ChangeRequest> GetChangeRequestById(int personId, int changeRequestId)
         {
             var changeRequest = new ChangeRequest();
-            bool isSuccess=true;
+            bool isSuccess = true;
             try
             {
                 using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -95,13 +95,13 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format("[Service] Failed to edit change request: {0}{1}", ex.Message, ((ex.InnerException != null)? "\n InnterException:" + ex.InnerException : String.Empty)));
+                LogManager.Error(String.Format("[Service] Failed to edit change request: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
                 isSuccess = false;
             }
 
             return isSuccess;
         }
-        
+
         /// <summary>
         /// See interface
         /// </summary>
@@ -135,7 +135,7 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="contributionUiDs"></param>
         /// <returns></returns>    
-        public KeyValuePair<bool, List<ChangeRequest>> GetChangeRequestListByContributionUidList(List<string> contributionUiDs)    
+        public KeyValuePair<bool, List<ChangeRequest>> GetChangeRequestListByContributionUidList(List<string> contributionUiDs)
         {
             List<ChangeRequest> crList = null;
             bool isSuccess = true;
@@ -184,6 +184,30 @@ namespace Etsi.Ultimate.Services
             }
             return new KeyValuePair<bool, List<Enum_ChangeRequestStatus>>(isSuccess, crStatusList);
 
+        }
+
+        public bool UpdateChangeRequestTsgStatus(List<KeyValuePair<string, string>> crPackDecisionlst)
+        {
+            bool isSuccess;
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var manager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    manager.UoW = uoW;
+
+                    isSuccess = manager.UpdateChangeRequestpackTsgDecision(crPackDecisionlst);
+                    if (isSuccess)
+                        uoW.Save();
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format("[Service] Failed to UpdateChangeRequestTsgStatus: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
+                isSuccess = false;
+            }
+
+            return isSuccess;
         }
 
     }
@@ -236,6 +260,12 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <returns></returns>
         KeyValuePair<bool, List<Enum_ChangeRequestStatus>> GetChangeRequestStatuses();
-    }    
+
+        /// <summary>
+        /// Updates the cr TSG status.
+        /// </summary>
+        /// <param name="crPackDecisionlst">The cr pack decisionlst.</param>
+        bool UpdateChangeRequestTsgStatus(List<KeyValuePair<string, string>> crPackDecisionlst);
+    }
 }
 

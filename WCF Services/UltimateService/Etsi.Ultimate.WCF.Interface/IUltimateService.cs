@@ -136,7 +136,7 @@ namespace Etsi.Ultimate.WCF.Interface
         List<ChangeRequestStatus> GetAllChangeRequestStatuses();
 
         [OperationContract]
-        void UpdateCrTsgStatus(List<KeyValuePair<string, string>> crpackDicisionlst);
+        void UpdateChangeRequestTsgStatus(List<KeyValuePair<string, string>> crpackDicisionlst);
         
     }
 }

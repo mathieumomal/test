@@ -11,7 +11,7 @@ namespace Etsi.Ultimate.Repositories
     /// Default implementation of the IChangeREquestStatusRepository. Uses Entity Framework to 
     /// fetch the change request statuses in database.
     /// </summary>
-    public class ChangeRequestStatusRepository: IChangeRequestStatusRepository
+    public class ChangeRequestStatusRepository : IChangeRequestStatusRepository
     {
         #region IEntityRepository<Enum_ChangeRequestStatus> Members
 
@@ -20,7 +20,8 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         public IUltimateUnitOfWork UoW
         {
-            get; set;
+            get;
+            set;
         }
 
         /// <summary>
@@ -28,7 +29,8 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         public IQueryable<Enum_ChangeRequestStatus> All
         {
-            get {
+            get
+            {
                 return UoW.Context.Enum_ChangeRequestStatus;
             }
         }
@@ -61,7 +63,7 @@ namespace Etsi.Ultimate.Repositories
         public void InsertOrUpdate(Enum_ChangeRequestStatus entity)
         {
             throw new NotImplementedException();
-        }
+        }      
 
         /// <summary>
         /// Not implemented
@@ -90,6 +92,6 @@ namespace Etsi.Ultimate.Repositories
     /// </summary>
     public interface IChangeRequestStatusRepository : IEntityRepository<Enum_ChangeRequestStatus>
     {
-
+       
     }
 }

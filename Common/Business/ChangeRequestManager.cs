@@ -29,7 +29,7 @@ namespace Etsi.Ultimate.Business
             {
                 var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
                 repo.UoW = UoW;
-                if (string.IsNullOrEmpty(changeRequest.CRNumber) || (changeRequest.RevisionOf != null && !changeRequest.Revision.HasValue) )
+                if (string.IsNullOrEmpty(changeRequest.CRNumber) || (changeRequest.RevisionOf != null && !changeRequest.Revision.HasValue))
                 {
                     if (changeRequest.RevisionOf != null)
                         ManageChangeRequestRevision(changeRequest, repo);
@@ -63,7 +63,7 @@ namespace Etsi.Ultimate.Business
                 var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
                 repo.UoW = UoW;
                 var dbChangeRequest = repo.Find(changeRequest.Pk_ChangeRequest);
-                CompareAndUpdate(changeRequest, dbChangeRequest);                
+                CompareAndUpdate(changeRequest, dbChangeRequest);
             }
             catch (Exception ex)
             {
@@ -96,8 +96,8 @@ namespace Etsi.Ultimate.Business
                         crNumberList.Add(tmpCrNumber);
                 }
                 if (crNumberList.Count != 0)
-                { 
-                heighestCrNumber = crNumberList.Max();
+                {
+                    heighestCrNumber = crNumberList.Max();
                 }
                 heighestCrNumber++;
             }
@@ -137,7 +137,7 @@ namespace Etsi.Ultimate.Business
             {
                 var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
                 repo.UoW = UoW;
-                var result= repo.GetChangeRequestByContributionUID(contributionUid);
+                var result = repo.GetChangeRequestByContributionUID(contributionUid);
                 return result;
             }
             catch (Exception ex)
@@ -168,8 +168,31 @@ namespace Etsi.Ultimate.Business
             }
         }
 
-
-
+        /// <summary>
+        /// Updates the change requestpack TSG decision.
+        /// </summary>
+        /// <param name="crPackTsgDecisions">The cr pack TSG decisions.</param>
+        /// <returns></returns>
+        public bool UpdateChangeRequestpackTsgDecision(List<KeyValuePair<string, string>> crPackTsgDecisions)
+        {
+            var isSuccess = true;          
+            var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
+            crRepository.UoW = UoW;
+            var crStatusRepository = RepositoryFactory.Resolve<IChangeRequestStatusRepository>();
+            crStatusRepository.UoW = UoW;
+            var crStatuses = crStatusRepository.All.ToList();
+            foreach (var crPackDecision in crPackTsgDecisions)
+            {
+                var changeRequest = crRepository.FindStatusByWgTDoc(crPackDecision.Key);
+                if (changeRequest != null)
+                {
+                    var crStatus = crStatuses.Find(x => x.Code == crPackDecision.Value);
+                    if ((crStatus != null) && (changeRequest.Fk_TSGStatus != crStatus.Pk_EnumChangeRequestStatus))
+                        changeRequest.Fk_TSGStatus = crStatus.Pk_EnumChangeRequestStatus;                    
+                }
+            }          
+            return isSuccess;
+        }
         #endregion
 
         #region Private Methods
@@ -247,7 +270,7 @@ namespace Etsi.Ultimate.Business
 
             //Get revision
             var revisionMaxFound = repo.FindCrMaxRevisionBySpecificationIdAndCrNumber(parentCr.Fk_Specification, parentCr.CRNumber);
-            newCr.Revision = revisionMaxFound+1;
+            newCr.Revision = revisionMaxFound + 1;
 
             //Put the parent CR contribution as Revised if not yet decided
             var crStatusMgr = ManagerFactory.Resolve<IChangeRequestStatusManager>();
@@ -260,14 +283,14 @@ namespace Etsi.Ultimate.Business
                 {
                     parentCr.Fk_WGStatus = revisedStatus.Pk_EnumChangeRequestStatus;
                 }
-                else if(newCr.RevisionOf.Equals(parentCr.TSGTDoc) && parentCr.Fk_TSGStatus.GetValueOrDefault() == 0)
+                else if (newCr.RevisionOf.Equals(parentCr.TSGTDoc) && parentCr.Fk_TSGStatus.GetValueOrDefault() == 0)
                 {
-                    parentCr.Fk_TSGStatus = revisedStatus.Pk_EnumChangeRequestStatus; 
+                    parentCr.Fk_TSGStatus = revisedStatus.Pk_EnumChangeRequestStatus;
                 }
             }
-            
-        }
 
+        }
+       
         #endregion
     }
 
@@ -318,5 +341,13 @@ namespace Etsi.Ultimate.Business
         /// <param name="contributionUiDs"></param>
         /// <returns></returns>
         List<ChangeRequest> GetChangeRequestListByContributionUIDList(List<string> contributionUiDs);
+
+
+        /// <summary>
+        /// Updates the change requestpack TSG decision.
+        /// </summary>
+        /// <param name="crPackTsgDecisionlst">The cr pack TSG decisionlst.</param>
+        /// <returns></returns>
+        bool UpdateChangeRequestpackTsgDecision(List<KeyValuePair<string, string>> crPackTsgDecisionlst);
     }
 }

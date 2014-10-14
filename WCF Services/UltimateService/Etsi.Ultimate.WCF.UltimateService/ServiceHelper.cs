@@ -45,7 +45,7 @@ namespace Etsi.Ultimate.WCF.Service
             try
             {
                 //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
-                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
+               RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                 var svc = ServicesFactory.Resolve<IReleaseService>();
                 var releaseRightsObjects = svc.GetAllReleases(personId);
                 if (releaseRightsObjects.Key != null)
@@ -437,9 +437,14 @@ namespace Etsi.Ultimate.WCF.Service
             {
                 ChangeRequestsUidDecisionList = new List<KeyValuePair<string, string>>()
             };
+            var svc = ServicesFactory.Resolve<IChangeRequestService>();
+
+            if (crPackDecision.Count > 0)
+            {              
+                var result = svc.UpdateChangeRequestTsgStatus(crPackDecision);
+            }
+
         }
-
-
         #endregion
 
         #region Private Methods
@@ -626,6 +631,12 @@ namespace Etsi.Ultimate.WCF.Service
             }
             return serviceCrStatus;
         }
+
+        private KeyValuePair<string, string> ConvertCrpackToService(KeyValuePair<string, string> crPackDecision)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
 

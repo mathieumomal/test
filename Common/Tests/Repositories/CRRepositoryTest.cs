@@ -61,7 +61,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         {
             var repo = new ChangeRequestRepository { UoW = UoW };
             var repResult = repo.Find(1);
-            Assert.AreEqual(1, repResult.Pk_ChangeRequest); 
+            Assert.AreEqual(1, repResult.Pk_ChangeRequest);
             Assert.AreEqual("0001", repResult.CRNumber);
             Assert.AreEqual(136081, repResult.Fk_Specification);
         }
@@ -74,7 +74,28 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(1, repResult.Pk_ChangeRequest);
             Assert.AreEqual("0001", repResult.CRNumber);
             Assert.AreEqual(136081, repResult.Fk_Specification);
-        } 
+        }
+
+        [Test]
+        [TestCase(0, "WG3")]
+        [TestCase(1, "WG1")]
+        public void Repository_FindStatusByWgTDoc(int result, string wgTDoc)
+        {
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var respresult = repo.FindStatusByWgTDoc(wgTDoc);
+
+
+            if (respresult.Fk_TSGStatus == null)
+            {
+                Assert.AreEqual(result, 0);
+                Assert.AreEqual(result, 0);
+            }
+            else
+            {
+                Assert.AreEqual(result, respresult.Fk_TSGStatus);
+                Assert.AreEqual(result, respresult.Fk_TSGStatus);
+            }
+        }
 
         #endregion
     }

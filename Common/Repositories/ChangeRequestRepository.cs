@@ -60,7 +60,7 @@ namespace Etsi.Ultimate.Repositories
         public int FindCrMaxRevisionBySpecificationIdAndCrNumber(int? specificationId, string crNumber)
         {
             return UoW.Context.ChangeRequests.Where(r => r.Fk_Specification == specificationId && r.CRNumber == crNumber).Max(x => x.Revision).GetValueOrDefault();
-        } 
+        }
 
         /// <summary>
         /// Return CR by contribution UID
@@ -89,7 +89,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>Change request entity</returns>
         public ChangeRequest Find(int changeRequestId)
         {
-            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.TsgStatus, t => t.WgStatus).SingleOrDefault( x => x.Pk_ChangeRequest == changeRequestId);
+            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.TsgStatus, t => t.WgStatus).SingleOrDefault(x => x.Pk_ChangeRequest == changeRequestId);
         }
 
         /// <summary>
@@ -117,6 +117,16 @@ namespace Etsi.Ultimate.Repositories
         {
             throw new System.NotImplementedException();
         }
+
+        /// <summary>
+        /// Finds the status by wgtdocument.
+        /// </summary>
+        /// <param name="wgTDoc">The wgtdocument.</param>
+        /// <returns></returns>
+        public ChangeRequest FindStatusByWgTDoc(string wgTDoc)
+        {
+            return UoW.Context.ChangeRequests.Where(wg => wg.WGTDoc == wgTDoc).SingleOrDefault();
+        }
     }
 
     /// <summary>
@@ -137,7 +147,7 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <param name="specificationId">The specification identifier.</param>
         /// <returns></returns>
-        List<string> FindCrNumberBySpecificationId(int? specificationId);      
+        List<string> FindCrNumberBySpecificationId(int? specificationId);
 
         /// <summary>
         /// Return CR by contribution UID
@@ -160,5 +170,12 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="crNumber"></param>
         /// <returns></returns>
         int FindCrMaxRevisionBySpecificationIdAndCrNumber(int? specificationId, string crNumber);
+
+        /// <summary>
+        /// Finds the status by wgtdocument.
+        /// </summary>
+        /// <param name="wgTDoc">The wgtdocument.</param>
+        /// <returns></returns>
+        ChangeRequest FindStatusByWgTDoc(string wgTDoc);
     }
 }

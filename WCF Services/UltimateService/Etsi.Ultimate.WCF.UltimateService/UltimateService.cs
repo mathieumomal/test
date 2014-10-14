@@ -190,7 +190,7 @@ namespace Etsi.Ultimate.WCF.Service
             return svcHelper.GetAllChangeRequestStatuses();
         }
 
-        public void UpdateCrTsgStatus(List<KeyValuePair<string, string>> crpackDicisionlst)
+        public void UpdateChangeRequestTsgStatus(List<KeyValuePair<string, string>> crpackDicisionlst)
         {
             var svcHelper = new ServiceHelper();
             svcHelper.UpdateCrpackDecision(crpackDicisionlst);

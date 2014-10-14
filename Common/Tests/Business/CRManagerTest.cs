@@ -10,6 +10,7 @@ using System;
 using log4net.Appender;
 using System.IO;
 using log4net.Core;
+using System.Data.Entity;
 
 namespace Etsi.Ultimate.Tests.Business
 {
@@ -17,7 +18,7 @@ namespace Etsi.Ultimate.Tests.Business
     public class CrManagerTest : BaseEffortTest
     {
         #region Constants
-        private const int PersonId = 0;     
+        private const int PersonId = 0;
         private const int AlphaNumericalAllocatedSpecId = 136080;
         private const int OneAllocatedCrSpecId = 136081;
         MemoryAppender _memoryAppender;
@@ -48,7 +49,7 @@ namespace Etsi.Ultimate.Tests.Business
         public void Cleanup()
         {
             LogManager.SetConfiguration(String.Empty, String.Empty);
-        } 
+        }
 
         #endregion
 
@@ -96,9 +97,9 @@ namespace Etsi.Ultimate.Tests.Business
         [TestCase(OneAllocatedCrSpecId, "0002", Description = "Numbering system must return next available number (here 0002)")]
         [TestCase(AlphaNumericalAllocatedSpecId, "0001", Description = "System should allocate CR#0001 even if there are already some alphanumeric allocated numbers")]
         public void GenerateCrNumberReturns0001WhenNoExistingCr(int specId, string expectedCrNumber)
-        { 
+        {
             var crManager = new ChangeRequestManager { UoW = UoW };
-        
+
             var result = crManager.GenerateCrNumberBySpecificationId(specId);
             Assert.AreEqual(expectedCrNumber, result);
         }
@@ -129,7 +130,7 @@ namespace Etsi.Ultimate.Tests.Business
             var uiChangeRequest = new ChangeRequest { Pk_ChangeRequest = 1, CRNumber = "234" };
 
             //Act
-            var crManager = new ChangeRequestManager {UoW = null};
+            var crManager = new ChangeRequestManager { UoW = null };
             var result = crManager.EditChangeRequest(PersonId, uiChangeRequest);
             var events = _memoryAppender.GetEvents();
 
@@ -144,11 +145,11 @@ namespace Etsi.Ultimate.Tests.Business
         public void Business_GetChangeRequestByContributionUid()
         {
             const string uid = "TSG1";
-            var crManager = new ChangeRequestManager {UoW = UoW};
+            var crManager = new ChangeRequestManager { UoW = UoW };
             var cr = crManager.GetChangeRequestByContributionUid(uid);
 
             Assert.IsNotNull(cr);
-            Assert.AreEqual(cr.TSGTDoc,uid);
+            Assert.AreEqual(cr.TSGTDoc, uid);
         }
 
         [Test, Description("Retrieve CR using TDoc(Contribution Uid)")]
@@ -168,15 +169,15 @@ namespace Etsi.Ultimate.Tests.Business
                 Assert.IsNotNull(crList[1]);
                 Assert.AreEqual(crList[1].TSGTDoc, uids[1]);
             }
-            
+
         }
 
         [Test, Description("Checking numeric number")]
         public void Business_GenerateNumericCrNumberBySpecificationId()
         {
             //Arrange
-            var changeRequest = new ChangeRequest {Fk_Specification = 136081};
-            var crManager = new ChangeRequestManager {UoW = UoW};
+            var changeRequest = new ChangeRequest { Fk_Specification = 136081 };
+            var crManager = new ChangeRequestManager { UoW = UoW };
             //Act
             var result = crManager.GenerateCrNumberBySpecificationId(changeRequest.Fk_Specification);
             //Assert
@@ -190,7 +191,7 @@ namespace Etsi.Ultimate.Tests.Business
         [TestCase(3, "A0012")]
         public void GetChangeRequestById_Success(int changeRequestId, string crNumber)
         {
-            var crManager = new ChangeRequestManager {UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>()};
+            var crManager = new ChangeRequestManager { UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>() };
             var result = crManager.GetChangeRequestById(PersonId, changeRequestId);
             //Assert
             Assert.AreEqual(crNumber, result.CRNumber);
@@ -198,10 +199,37 @@ namespace Etsi.Ultimate.Tests.Business
         [Test, Description("Test if we try to get a CR which doesn't exist. We expect a null change request object.")]
         public void GetChangeRequestById_Failure()
         {
-            var crManager = new ChangeRequestManager {UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>()};
+            var crManager = new ChangeRequestManager { UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>() };
             var result = crManager.GetChangeRequestById(PersonId, 100);
             //Assert
             Assert.IsNull(result);
+        }
+
+
+        [Test, Description(" Update TsgTDocDecisions")]
+        public void Business_UpdateChangeRequestpackTsgDecision()
+        {
+            var changeRequestMgr = new ChangeRequestManager { UoW = UoW };        
+           var result= changeRequestMgr.UpdateChangeRequestpackTsgDecision(TsgTDocDecisions());
+
+           Assert.IsTrue(result);            
+        }
+        #endregion
+
+        #region Data object
+        /// <summary>
+        /// TSGs the t document decisions.
+        /// </summary>
+        /// <returns></returns>
+        private static List<KeyValuePair<string, string>> TsgTDocDecisions()
+        {
+            var TsgTDocDecisions = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string,string>("WG2", "Approved"),
+                new KeyValuePair<string,string>("WG1", "Agreed"),
+                new KeyValuePair<string,string>("TSG3", "Noted")      
+            };
+            return TsgTDocDecisions;
         }
         #endregion
     }
