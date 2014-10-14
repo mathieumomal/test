@@ -117,7 +117,6 @@
     <Compile Include="Remark.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Enum_UserRoles.cs" />
     <Compile Include="ShortUrl.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

@@ -24,13 +24,6 @@ namespace Etsi.Ultimate.Tests.Repositories
         }
 
         [Test]
-        public void GetAllAdHocRoles()
-        {
-            var repo = new UserRolesRepository() { UoW = GetUnitOfWork() };
-            Assert.AreEqual(2, repo.GetAllAdHocRoles().ToList().Count);
-        }
-
-        [Test]
         public void GetWpMgrIds()
         {
             var repo = new UserRolesRepository() { UoW = GetUnitOfWork() };

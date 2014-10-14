@@ -15,23 +15,17 @@ namespace Etsi.Ultimate.Repositories
     /// </summary>
     public class UserRolesRepository : IUserRolesRepository
     {
-        public const string admins = "Administrators";
         public const string wpMgr = "Work Plan Managers";
         public const string specMgr = "Specification Managers";
 
+        #region IUserRolesRepository Membres
+
+        /// <summary>
+        /// Gets or sets the ultimate unit of work.
+        /// </summary>
         public IUltimateUnitOfWork UoW
         {
             get; set;
-        }
-
-        /// <summary>
-        /// Returns the association between the roles defined outside of ETSI system 
-        /// (i.e. in DNN : Administrator, WorkPlanManager, Specification Manager) and the users.
-        /// </summary>
-        /// <returns></returns>
-        public IQueryable<Users_AdHoc_Roles> GetAllAdHocRoles()
-        {
-            return UoW.Context.Users_AdHoc_Roles;
         }
 
         /// <summary>
@@ -43,10 +37,10 @@ namespace Etsi.Ultimate.Repositories
             return UoW.Context.Users_Groups;
         }
 
-
-
-        #region IUserRolesRepository Membres
-
+        /// <summary>
+        /// Return list of Specification manager ids
+        /// </summary>
+        /// <returns>Specification manager ids</returns>
         public List<int> GetSpecMgr()
         {
             var idList = UoW.Context.Users_AdHoc_Roles.Where(x => x.RoleName.Equals(specMgr)).Select(x => x.PERSON_ID).ToList();
@@ -67,6 +61,10 @@ namespace Etsi.Ultimate.Repositories
             return specMgrIdList;
         }
 
+        /// <summary>
+        /// Return list of Workplan manager ids
+        /// </summary>
+        /// <returns>Workplan manager ids</returns>
         public List<int> GetWpMgr()
         {
             var idList = UoW.Context.Users_AdHoc_Roles.Where(x => x.RoleName.Equals(wpMgr)).Select(x => x.PERSON_ID).ToList();
@@ -87,10 +85,6 @@ namespace Etsi.Ultimate.Repositories
             }
             return wpMgrIdList;
         }
-
-        #endregion
-
-        #region IUserRolesRepository Members
 
         /// <summary>
         /// Returns latest known chairman. Returns 0 if no chairman is found.
@@ -115,12 +109,6 @@ namespace Etsi.Ultimate.Repositories
     public interface IUserRolesRepository
     {
         IUltimateUnitOfWork UoW { get; set; }
-
-        /// <summary>
-        /// Return roles associated outside ETSI (for example in DNN)
-        /// </summary>
-        /// <returns></returns>
-        IQueryable<Users_AdHoc_Roles> GetAllAdHocRoles();
         
         /// <summary>
         /// Return roles associated inside ETSI.

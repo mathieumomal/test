@@ -31,21 +31,7 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         {
             get; set;
         }
-
-       
-
-        public IQueryable<Users_AdHoc_Roles> GetAllAdHocRoles()
-        {
-            
-            var dbSet = new UsersAdHocRolesFakeDBSet();
-            dbSet.Add(new Users_AdHoc_Roles() { PERSON_ID=""+WORKPLANMGR_ID, UserID=9, RoleName="Work Plan Managers" });
-            dbSet.Add(new Users_AdHoc_Roles() { PERSON_ID = "" + ADMINISTRATOR_ID, UserID = 10, RoleName = "Administrators" });
-            dbSet.Add(new Users_AdHoc_Roles() { PERSON_ID = "" + SPECMGR_ID, UserID = 39, RoleName = "Specification Managers" });
-
-            return dbSet.AsQueryable();
-        }
-
-      
+     
         public IQueryable<Users_Groups> GetAllEtsiBasedRoles()
         {
             // User 27904 is MCC
