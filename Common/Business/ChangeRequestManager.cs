@@ -169,13 +169,14 @@ namespace Etsi.Ultimate.Business
         }
 
         /// <summary>
-        /// Updates the change requestpack TSG decision.
+        /// See interface
         /// </summary>
         /// <param name="crPackTsgDecisions">The cr pack TSG decisions.</param>
+        /// <param name="tsgTdocNumber"></param>
         /// <returns></returns>
-        public bool UpdateChangeRequestpackTsgDecision(List<KeyValuePair<string, string>> crPackTsgDecisions)
+        public ServiceResponse<bool> UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackTsgDecisions, string tsgTdocNumber)
         {
-            var isSuccess = true;          
+            var response = new ServiceResponse<bool>{Result = true};
             var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
             crRepository.UoW = UoW;
             var crStatusRepository = RepositoryFactory.Resolve<IChangeRequestStatusRepository>();
@@ -184,14 +185,28 @@ namespace Etsi.Ultimate.Business
             foreach (var crPackDecision in crPackTsgDecisions)
             {
                 var changeRequest = crRepository.FindStatusByWgTDoc(crPackDecision.Key);
-                if (changeRequest != null)
+                if (changeRequest == null)
                 {
-                    var crStatus = crStatuses.Find(x => x.Code == crPackDecision.Value);
-                    if ((crStatus != null) && (changeRequest.Fk_TSGStatus != crStatus.Pk_EnumChangeRequestStatus))
-                        changeRequest.Fk_TSGStatus = crStatus.Pk_EnumChangeRequestStatus;                    
+                    response.Report.LogError("Change request not found : " + crPackDecision.Key);
+                    break;
                 }
-            }          
-            return isSuccess;
+                //Update status
+                var crStatus = crStatuses.Find(x => x.Code == crPackDecision.Value);
+                if (crStatus == null)
+                {
+                    response.Report.LogError("Status not found : " + crPackDecision.Value);
+                    break;
+                }
+                if ((crStatus != null) && (changeRequest.Fk_TSGStatus != crStatus.Pk_EnumChangeRequestStatus))
+                    changeRequest.Fk_TSGStatus = crStatus.Pk_EnumChangeRequestStatus;
+                //Update TSG TDoc number
+                if (changeRequest.TSGTDoc != tsgTdocNumber)
+                    changeRequest.TSGTDoc = tsgTdocNumber;
+            }
+
+            if (response.Report.GetNumberOfErrors() > 0)
+                response.Result = false;
+            return response;
         }
         #endregion
 
@@ -344,10 +359,11 @@ namespace Etsi.Ultimate.Business
 
 
         /// <summary>
-        /// Updates the change requestpack TSG decision.
+        /// Updates the CRs related to a CR Pack (TSG decision and TsgTdocNumber)
         /// </summary>
-        /// <param name="crPackTsgDecisionlst">The cr pack TSG decisionlst.</param>
+        /// <param name="crPackTsgDecisions">The cr pack TSG decisionlst.</param>
+        /// <param name="tsgTdocNumber"></param>
         /// <returns></returns>
-        bool UpdateChangeRequestpackTsgDecision(List<KeyValuePair<string, string>> crPackTsgDecisionlst);
+        ServiceResponse<bool> UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackTsgDecisions, string tsgTdocNumber);
     }
 }

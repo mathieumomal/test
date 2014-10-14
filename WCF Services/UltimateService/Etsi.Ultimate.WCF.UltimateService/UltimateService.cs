@@ -190,10 +190,15 @@ namespace Etsi.Ultimate.WCF.Service
             return svcHelper.GetAllChangeRequestStatuses();
         }
 
-        public void UpdateChangeRequestTsgStatus(List<KeyValuePair<string, string>> crpackDicisionlst)
+        /// <summary>
+        /// The aim of this method is to be able to update the CRs related to a CR Pack (TSG decision and TsgTdocNumber)
+        /// </summary>
+        /// <param name="crPackDecisionlist"></param>
+        /// <param name="tsgTdocNumber"></param>
+        public bool UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackDecisionlist, string tsgTdocNumber)
         {
             var svcHelper = new ServiceHelper();
-            svcHelper.UpdateCrpackDecision(crpackDicisionlst);
+            return svcHelper.UpdateChangeRequestPackRelatedCrs(crPackDecisionlist, tsgTdocNumber);
         }
         #endregion
     }

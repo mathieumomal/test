@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Linq;
-using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Services;
 using Etsi.UserRights.Service;
-using Microsoft.Practices.Unity;
 using System.Collections.Generic;
 using UltimateEntities = Etsi.Ultimate.DomainClasses;
 using UltimateServiceEntities = Etsi.Ultimate.WCF.Interface.Entities;
@@ -25,6 +22,7 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateGetSpecificationsByIds = "Ultimate Service Error [GetSpecificationsByIds]: {0}";
         private const string ConstErrorTemplateCreateChangeRequest = "Ultimate Service Error [CreateChangeRequest]: {0}";
         private const string ConstErrorTemplateEditChangeRequest = "Ultimate Service Error [EditChangeRequest]: {0}";
+        private const string ConstErrorTemplateUpdateChangeRequestPackRelatedCrs = "Ultimate Service Error [UpdateChangeRequestPackRelatedCrs]: {0}";
         private const string ConstErrorTemplateCreateChangeRequestCategories = "Ultimate Service Error [GetChangeRequestCategories]: {0}";
         private const string ConstErrorTemplateCreateChangeRequestById = "Ultimate Service Error [GetChangeRequestById]: {0}";
         private const string ConstErrorTemplateGetChangeRequestByContribUid = "Ultimate Service Error [GetChangeRequestByContributionUID]: {0}";
@@ -409,19 +407,33 @@ namespace Etsi.Ultimate.WCF.Service
 
         }
 
-        internal void UpdateCrpackDecision(List<KeyValuePair<string, string>> crPackDecision)
+        /// <summary>
+        /// Updates the CRs related to a CR Pack (TSG decision and TsgTdocNumber)
+        /// </summary>
+        /// <param name="crPackDecision"></param>
+        /// <param name="tsgTdocNumber"></param>
+        internal bool UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackDecision, string tsgTdocNumber)
         {
-            var crPackDecisionDetail = new UltimateServiceEntities.ChangeRequestPackInfo
+            try
             {
-                ChangeRequestsUidDecisionList = new List<KeyValuePair<string, string>>()
-            };
-            var svc = ServicesFactory.Resolve<IChangeRequestService>();
-
-            if (crPackDecision.Count > 0)
-            {              
-                var result = svc.UpdateChangeRequestTsgStatus(crPackDecision);
-        }
-
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                if (crPackDecision.Count > 0)
+                {
+                    var response = svc.UpdateChangeRequestPackRelatedCrs(crPackDecision, tsgTdocNumber);
+                    if (response.Report.GetNumberOfErrors() <= 0)
+                        return true;
+                    foreach (var error in response.Report.ErrorList)
+                    {
+                        LogManager.UltimateServiceLogger.Error("UpdateChangeRequestPackRelatedCrs failed cause by : " + error);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateUpdateChangeRequestPackRelatedCrs, ex.Message));
+                return false;
+            }
+            return false;
         }
         #endregion
 

@@ -78,7 +78,7 @@ namespace Etsi.Ultimate.Tests.Repositories
 
         [Test]
         [TestCase(0, "WG3")]
-        [TestCase(1, "WG1")]
+        [TestCase(5, "WG1")]
         public void Repository_FindStatusByWgTDoc(int result, string wgTDoc)
         {
             var repo = new ChangeRequestRepository { UoW = UoW };

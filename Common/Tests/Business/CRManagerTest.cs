@@ -204,33 +204,6 @@ namespace Etsi.Ultimate.Tests.Business
             //Assert
             Assert.IsNull(result);
         }
-
-
-        [Test, Description(" Update TsgTDocDecisions")]
-        public void Business_UpdateChangeRequestpackTsgDecision()
-        {
-            var changeRequestMgr = new ChangeRequestManager { UoW = UoW };        
-           var result= changeRequestMgr.UpdateChangeRequestpackTsgDecision(TsgTDocDecisions());
-
-           Assert.IsTrue(result);            
-        }
-        #endregion
-
-        #region Data object
-        /// <summary>
-        /// TSGs the t document decisions.
-        /// </summary>
-        /// <returns></returns>
-        private static List<KeyValuePair<string, string>> TsgTDocDecisions()
-        {
-            var TsgTDocDecisions = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string,string>("WG2", "Approved"),
-                new KeyValuePair<string,string>("WG1", "Agreed"),
-                new KeyValuePair<string,string>("TSG3", "Noted")      
-            };
-            return TsgTDocDecisions;
-        }
         #endregion
     }
 }

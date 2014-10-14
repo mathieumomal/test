@@ -186,9 +186,15 @@ namespace Etsi.Ultimate.Services
 
         }
 
-        public bool UpdateChangeRequestTsgStatus(List<KeyValuePair<string, string>> crPackDecisionlst)
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="crPackDecisionlst"></param>
+        /// <param name="tsgTdocNumber"></param>
+        /// <returns></returns>
+        public ServiceResponse<bool> UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackDecisionlst, string tsgTdocNumber)
         {
-            bool isSuccess;
+            var response = new ServiceResponse<bool>{Result = false};
             try
             {
                 using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -196,18 +202,17 @@ namespace Etsi.Ultimate.Services
                     var manager = ManagerFactory.Resolve<IChangeRequestManager>();
                     manager.UoW = uoW;
 
-                    isSuccess = manager.UpdateChangeRequestpackTsgDecision(crPackDecisionlst);
-                    if (isSuccess)
+                    response = manager.UpdateChangeRequestPackRelatedCrs(crPackDecisionlst, tsgTdocNumber);
+                    if (response.Result)
                         uoW.Save();
                 }
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format("[Service] Failed to UpdateChangeRequestTsgStatus: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
-                isSuccess = false;
+                LogManager.Error(String.Format("[Service] Failed to UpdateChangeRequestPackRelatedCrs: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
+                return response;
             }
-
-            return isSuccess;
+            return response;
         }
 
     }
@@ -262,10 +267,11 @@ namespace Etsi.Ultimate.Services
         KeyValuePair<bool, List<Enum_ChangeRequestStatus>> GetChangeRequestStatuses();
 
         /// <summary>
-        /// Updates the cr TSG status.
+        /// Updates the CRs related to a CR Pack (TSG decision and TsgTdocNumber)
         /// </summary>
         /// <param name="crPackDecisionlst">The cr pack decisionlst.</param>
-        bool UpdateChangeRequestTsgStatus(List<KeyValuePair<string, string>> crPackDecisionlst);
+        /// <param name="tsgTdocNumber"></param>
+        ServiceResponse<bool> UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackDecisionlst, string tsgTdocNumber);
     }
 }
 

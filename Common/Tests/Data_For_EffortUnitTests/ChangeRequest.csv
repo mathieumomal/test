@@ -2,8 +2,8 @@ Pk_ChangeRequest,CRNumber,Revision,Subject,Fk_TSGStatus,Fk_WGStatus,CreationDate
 1,0001,1,Subject,1,2,2008-01-30 12:12,Change request,Ultimate,2,2,2,TSG1,2,2,,1,136081,2874,428927,428927,1
 2,A002,1,Subject,1,1,2008-01-30 12:12,Change request,Ultimate,2,2,2,TSG2,2,2,,1,136080,2874,428927,428927,1
 3,A0012,1,Subject,1,2,2008-01-30 12:12,Change request,Ultimate,2,2,2,TSG3,2,2,,1,136080,2874,428927,428927,1
-4,AB013,1,Subject,1,1,2008-01-30 12:12,Change request,Ultimate,2,2,2,,2,2,WG1,1,136080,2874,428927,428927,1
-5,AC014,1,Subject,1,1,2008-01-30 12:12,Change request,Ultimate,2,2,2,,2,2,WG2,1,136080,2874,428927,428927,1
+4,AB013,1,Subject,5,1,2008-01-30 12:12,Change request,Ultimate,2,2,2,TSG_ABC,2,2,WG1,1,136080,2874,428927,428927,1
+5,AC014,1,Subject,5,1,2008-01-30 12:12,Change request,Ultimate,2,2,2,,2,2,WG2,1,136080,2874,428927,428927,1
 6,A0144,2,Subject,1,1,2008-01-30 12:12,Change request,Ultimate,2,2,2,Change request description6,2,2,Work item,1,136080,2874,428927,428927,1
 7,AZE,1,Subject,,,2008-01-30 12:12,Change request,Ultimate,2,2,2,Change request description6,2,2,WG3,1,136083,2874,428927,428927,1
 8,AZEE,2,Subject,,,2008-01-30 12:12,Change request,Ultimate,2,2,2,Change request description6,2,2,WG4,1,136083,2874,428927,428927,1

@@ -180,21 +180,6 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsNull(result.Value);
         }
 
-        [Test, Description("Update TsgTDocDecision")]
-        public void Unit_UpdateTsgTdocDecisions()
-        {
-            var changeRequestSvc = new ChangeRequestService();
-            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
-            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
-            var mockRepository = MockRepository.GenerateMock<IChangeRequestManager>();
-            mockRepository.Stub(x => x.UpdateChangeRequestpackTsgDecision(Arg<List<KeyValuePair<string, string>>>.Is.Anything)).Return(true);
-            ManagerFactory.Container.RegisterInstance(typeof(IChangeRequestManager), mockRepository);
-            var response = changeRequestSvc.UpdateChangeRequestTsgStatus(TsgTDocDecisions());
-            //Assert
-            Assert.IsTrue(response);
-            mockDataContext.AssertWasCalled(x => x.SaveChanges());
-        }
-
         #endregion
 
         #region Integration Tests
@@ -525,16 +510,6 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual("Agreed", agreedStatus.Description);
 
         }
-
-        [Test, Description("Update TsgTDocDecision")]
-        public void Service_Integration_UpdateTsgTdocDecisions()
-        {
-            var svc = new ChangeRequestService();
-            var response = svc.UpdateChangeRequestTsgStatus(TsgTDocDecisions());
-            Assert.IsTrue(response);
-        }
-
-
         #endregion
 
         #region DataObject
@@ -594,22 +569,6 @@ namespace Etsi.Ultimate.Tests.Services
             };
             return changeRequest.Find(x => x.Pk_ChangeRequest == changeRequestById);
         }
-
-        /// <summary>
-        /// TSGs the t document decisions.
-        /// </summary>
-        /// <returns></returns>
-        private static List<KeyValuePair<string, string>> TsgTDocDecisions()
-        {
-            var TsgTDocDecisions = new List<KeyValuePair<string, string>>
-            {
-                new KeyValuePair<string,string>("WG2", "Approved"),
-                new KeyValuePair<string,string>("WG1", "Agreed"),
-                new KeyValuePair<string,string>("TSG3", "Noted")      
-            };
-            return TsgTDocDecisions;
-        }
-
         #endregion
     }
 }

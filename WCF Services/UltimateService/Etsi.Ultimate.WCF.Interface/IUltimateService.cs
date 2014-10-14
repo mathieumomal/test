@@ -135,8 +135,13 @@ namespace Etsi.Ultimate.WCF.Interface
         [OperationContract]
         List<ChangeRequestStatus> GetAllChangeRequestStatuses();
 
+        /// <summary>
+        /// The aim of this method is to be able to update the CRs related to a CR Pack (TSG decision and TsgTdocNumber)
+        /// </summary>
+        /// <param name="crPackDecisionlist"></param>
+        /// <param name="tsgTdocNumber"></param>
         [OperationContract]
-        void UpdateChangeRequestTsgStatus(List<KeyValuePair<string, string>> crpackDicisionlst);
+        bool UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackDecisionlist, string tsgTdocNumber);
         
     }
 }
