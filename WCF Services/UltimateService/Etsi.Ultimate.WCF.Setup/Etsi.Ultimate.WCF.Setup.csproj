@@ -31,6 +31,26 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release.Dev|AnyCPU'">
+    <OutputPath>bin\Release.Dev\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release.Qa|AnyCPU'">
+    <OutputPath>bin\Release.Qa\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -109,4 +129,16 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="BeforeBuild">
+    <CallTarget Targets="TransformAppConfig" />
+  </Target>
+  <Target Name="TransformAppConfig" Condition="'$(Configuration)'=='Release.Dev' Or '$(Configuration)'=='Release.Qa'">
+    <Copy SourceFiles="$(ProjectDir)DeployementConf\App.$(Configuration).config" DestinationFiles="$(ProjectDir)App.config" ContinueOnError="false" />
+  </Target>
+  <Target Name="AfterBuild">
+    <CallTarget Targets="RecoverAppConfig" />
+  </Target>
+  <Target Name="RecoverAppConfig">
+    <Copy SourceFiles="$(ProjectDir)DeployementConf\App.config" DestinationFiles="$(ProjectDir)App.config" ContinueOnError="false" />
+  </Target>
 </Project>
