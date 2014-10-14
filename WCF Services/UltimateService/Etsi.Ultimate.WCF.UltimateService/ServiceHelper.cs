@@ -44,8 +44,6 @@ namespace Etsi.Ultimate.WCF.Service
 
             try
             {
-                //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
-               RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                 var svc = ServicesFactory.Resolve<IReleaseService>();
                 var releaseRightsObjects = svc.GetAllReleases(personId);
                 if (releaseRightsObjects.Key != null)
@@ -73,8 +71,6 @@ namespace Etsi.Ultimate.WCF.Service
 
             try
             {
-                //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
-                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                 var svc = ServicesFactory.Resolve<IReleaseService>();
                 var releaseRightsObject = svc.GetReleaseById(personId, releaseId);
                 if (releaseRightsObject.Key != null)
@@ -105,8 +101,6 @@ namespace Etsi.Ultimate.WCF.Service
 
             try
             {
-                //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
-                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                 var svc = ServicesFactory.Resolve<IWorkItemService>();
                 foreach (var workItemId in workItemIds)
                 {
@@ -145,8 +139,6 @@ namespace Etsi.Ultimate.WCF.Service
             {
                 try
                 {
-                    //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
-                    RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                     var svc = ServicesFactory.Resolve<IWorkItemService>();
                     var workItemRightsObjects = svc.GetWorkItemsBySearchCriteria(personId, keyword);
                     if (workItemRightsObjects.Key != null)
@@ -182,8 +174,6 @@ namespace Etsi.Ultimate.WCF.Service
             {
                 try
                 {
-                    //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
-                    RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                     var svc = ServicesFactory.Resolve<ISpecificationService>();
                     var specificationsObjects = svc.GetSpecificationBySearchCriteria(personId, keyword);
                     if (specificationsObjects != null)
@@ -212,8 +202,6 @@ namespace Etsi.Ultimate.WCF.Service
             var specification = new UltimateServiceEntities.Specification();
             try
             {
-                //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
-                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                 var svc = ServicesFactory.Resolve<ISpecificationService>();
                 var specificationRightsObjects = svc.GetSpecificationDetailsById(personId, specificationId);
                 if (specificationRightsObjects.Key != null)
@@ -242,8 +230,6 @@ namespace Etsi.Ultimate.WCF.Service
 
             try
             {
-                //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
-                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                 var svc = ServicesFactory.Resolve<ISpecificationService>();
                 foreach (var specificationId in specificationIds)
                 {
@@ -273,8 +259,6 @@ namespace Etsi.Ultimate.WCF.Service
             var changeRequest = new UltimateServiceEntities.ChangeRequest();
             try
             {
-                //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
-                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                 var svcChangeRequestById = ServicesFactory.Resolve<IChangeRequestService>();
                 var svcResult = svcChangeRequestById.GetChangeRequestById(personId, changeRequestId);
                 if (svcResult.Key)
@@ -299,8 +283,6 @@ namespace Etsi.Ultimate.WCF.Service
             var primaryKeyOfNewCr = 0;
             try
             {
-                //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
-                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
                 var createCrResponse = svc.CreateChangeRequest(personId, ConvertServiceCRToUltimateCR(changeRequest));
                 if (createCrResponse.Key)
@@ -326,8 +308,6 @@ namespace Etsi.Ultimate.WCF.Service
             bool isSuccess;
             try
             {
-                //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
-                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
                 isSuccess = svc.EditChangeRequest(personId, ConvertServiceCRToUltimateCR(changeRequest));
             }
@@ -348,8 +328,6 @@ namespace Etsi.Ultimate.WCF.Service
             var changeRequestCategories = new List<UltimateServiceEntities.ChangeRequestCategory>();
             try
             {
-                //TODO:: Following line will be removed after UserRights integration with Ultimate Solution
-                RepositoryFactory.Container.RegisterType<IUserRightsRepository, UserRights.UserRights>(new TransientLifetimeManager());
                 var svc = ServicesFactory.Resolve<ICrCategoriesService>();
                 var svcChangeRequestCategories = svc.GetChangeRequestCategories();
                 if (svcChangeRequestCategories.Key)
@@ -442,7 +420,7 @@ namespace Etsi.Ultimate.WCF.Service
             if (crPackDecision.Count > 0)
             {              
                 var result = svc.UpdateChangeRequestTsgStatus(crPackDecision);
-            }
+        }
 
         }
         #endregion
@@ -638,7 +616,5 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         #endregion
-
-
     }
 }
