@@ -133,6 +133,7 @@
     <CallTarget Targets="TransformAppConfig" />
   </Target>
   <Target Name="TransformAppConfig" Condition="'$(Configuration)'=='Release.Dev' Or '$(Configuration)'=='Release.Qa'">
+	<Copy DestinationFiles="$(ProjectDir)DeployementConf\App.config" SourceFiles="$(ProjectDir)App.config" ContinueOnError="false" />
     <Copy SourceFiles="$(ProjectDir)DeployementConf\App.$(Configuration).config" DestinationFiles="$(ProjectDir)App.config" ContinueOnError="false" />
   </Target>
   <Target Name="AfterBuild">
