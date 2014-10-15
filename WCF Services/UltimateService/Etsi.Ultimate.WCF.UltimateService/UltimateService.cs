@@ -129,7 +129,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>
         /// Primary key of newly inserted change request
         /// </returns>
-        public int CreateChangeRequest(int personId, ChangeRequest changeRequest)
+        public ServiceResponse<int> CreateChangeRequest(int personId, ChangeRequest changeRequest)
         {
             var serviceHelper = new ServiceHelper();
             return serviceHelper.CreateChangeRequest(personId, changeRequest);

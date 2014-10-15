@@ -306,4 +306,10 @@
   <data name="Upload_Version_Error_Previous_Version" xml:space="preserve">
     <value>You are not allowed to upload a lower version than an already uploaded one, except if it has been allocated.</value>
   </data>
+  <data name="ChangeRequest_Create_AlreadyExists" xml:space="preserve">
+    <value>ChangeRequest {0}, revision {1} already exists for indicated specification.</value>
+  </data>
+  <data name="GenericError" xml:space="preserve">
+    <value>An error has occured. Please try again. If problem persists, please contact IT support.</value>
+  </data>
 </root>

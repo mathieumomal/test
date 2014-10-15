@@ -1,5 +1,6 @@
 ﻿using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,9 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId">The person identifier.</param>
         /// <param name="changeRequest">The change request.</param>
         /// <returns>Primary key of newly inserted change request</returns>
-        public bool CreateChangeRequest(int personId, ChangeRequest changeRequest)
+        public ServiceResponse<bool> CreateChangeRequest(int personId, ChangeRequest changeRequest)
         {
-            var isSuccess = true;
+            var response = new ServiceResponse<bool> { Result = true };
             try
             {
                 var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
@@ -39,14 +40,26 @@ namespace Etsi.Ultimate.Business
                         changeRequest.Revision = null;
                     }
                 }
+                //Verify that values provided are correct
+                else
+                {
+                    var existingCr = repo.All.Where(cr => cr.Fk_Specification == changeRequest.Fk_Specification && cr.CRNumber == changeRequest.CRNumber && cr.Revision == changeRequest.Revision).FirstOrDefault();
+                    if (existingCr != null)
+                    {
+                        response.Report.LogError(string.Format(Localization.ChangeRequest_Create_AlreadyExists, changeRequest.CRNumber, changeRequest.Revision.HasValue? changeRequest.Revision.Value.ToString(): "none"));
+                        response.Result = false;
+                        return response;
+                    }
+                }
                 repo.InsertOrUpdate(changeRequest);
             }
             catch (Exception ex)
             {
                 LogManager.Error(String.Format("[Business] Failed to create change request: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
-                isSuccess = false;
+                response.Result = false;
+                response.Report.LogError(Localization.GenericError);
             }
-            return isSuccess;
+            return response;
         }
 
         /// <summary>
@@ -325,7 +338,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId">The person identifier.</param>
         /// <param name="changeRequest">The change request.</param>
         /// <returns>Primary key of newly inserted change request</returns>
-        bool CreateChangeRequest(int personId, ChangeRequest changeRequest);
+        ServiceResponse<bool> CreateChangeRequest(int personId, ChangeRequest changeRequest);
 
         /// <summary>
         /// Edits the change request.

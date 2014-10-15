@@ -17,10 +17,10 @@ namespace Etsi.Ultimate.Services
         /// <returns>
         /// Primary key of newly inserted change request along with the status (success/failure)
         /// </returns>
-        public KeyValuePair<bool, int> CreateChangeRequest(int personId, ChangeRequest changeRequest)
+        public ServiceResponse<int> CreateChangeRequest(int personId, ChangeRequest changeRequest)
         {
-            var primaryKeyOfChangeRequest = 0;
-            bool isSuccess;
+            var response = new ServiceResponse<int>();
+            ServiceResponse<bool> isSuccess;
             try
             {
                 using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -29,20 +29,26 @@ namespace Etsi.Ultimate.Services
                     manager.UoW = uoW;
 
                     isSuccess = manager.CreateChangeRequest(personId, changeRequest);
-                    if (isSuccess)
+                    if (isSuccess.Result)
                     {
                         uoW.Save();
-                        primaryKeyOfChangeRequest = changeRequest.Pk_ChangeRequest;
+                        response.Result = changeRequest.Pk_ChangeRequest;
+                    }
+                    else
+                    {
+                        response.Report = isSuccess.Report;
+                        response.Result = 0;
                     }
                 }
             }
             catch (Exception ex)
             {
-                isSuccess = false;
+                response.Result = 0;
+                response.Report.LogError(Utils.Localization.GenericError);
                 LogManager.Error(String.Format("[Service] Failed to create change request: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
             }
 
-            return new KeyValuePair<bool, int>(isSuccess, primaryKeyOfChangeRequest);
+            return response;
         }
 
         /// <summary>
@@ -227,8 +233,8 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="personId">The person identifier.</param>
         /// <param name="changeRequest">The change request.</param>
-        /// <returns>Primary key of newly inserted change request along with the status (success/failure)</returns>
-        KeyValuePair<bool, int> CreateChangeRequest(int personId, ChangeRequest changeRequest);
+        /// <returns>Response containing success/failure information.</returns>
+        ServiceResponse<int> CreateChangeRequest(int personId, ChangeRequest changeRequest);
 
         /// <summary>
         /// Edits the change request.

@@ -68,6 +68,8 @@
     <Compile Include="Entities\WorkItem.cs" />
     <Compile Include="IUltimateService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceReport.cs" />
+    <Compile Include="ServiceResponse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

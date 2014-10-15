@@ -11,6 +11,8 @@ using log4net.Appender;
 using System.IO;
 using log4net.Core;
 using System.Data.Entity;
+using System.Linq;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Tests.Business
 {
@@ -66,10 +68,10 @@ namespace Etsi.Ultimate.Tests.Business
 
             //Act
             var crManager = new ChangeRequestManager();
-            var result = crManager.CreateChangeRequest(PersonId, changeRequest);
+            var response = crManager.CreateChangeRequest(PersonId, changeRequest);
 
             //Assert
-            Assert.IsTrue(result);
+            Assert.IsTrue(response.Result);
         }
 
         [Test]
@@ -83,14 +85,30 @@ namespace Etsi.Ultimate.Tests.Business
 
             //Act
             var crManager = new ChangeRequestManager();
-            var result = crManager.CreateChangeRequest(PersonId, changeRequest);
+            var response = crManager.CreateChangeRequest(PersonId, changeRequest);
             var events = _memoryAppender.GetEvents();
 
             //Assert
-            Assert.IsFalse(result);
+            Assert.IsFalse(response.Result);
             Assert.AreEqual(1, events.Length);
             Assert.IsTrue(events[0].MessageObject.ToString().Contains("Test Exception Raised"));
             Assert.AreEqual(Level.Error, events[0].Level);
+        }
+
+        [Test]
+        public void Business_CreateChangeRequest_ReturnsError_IfSpecCrNumberCrRevAlreadyExist()
+        {
+            var changeRequest = new ChangeRequest();
+            var mockCrRepository = MockRepository.GenerateMock<IChangeRequestRepository>();
+            var crs = new List<ChangeRequest>{ new ChangeRequest { Fk_Specification = 12, CRNumber="0001", Revision=null }};
+            mockCrRepository.Stub(x => x.All).Return(crs.AsQueryable());
+            RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockCrRepository);
+            
+            var crManager = new ChangeRequestManager { UoW = UoW };
+            var result = crManager.CreateChangeRequest(PersonId, new ChangeRequest { Fk_Specification = 12, CRNumber = "0001", Revision = null });
+            Assert.IsFalse(result.Result);
+            Assert.AreEqual(1, result.Report.GetNumberOfErrors());
+            Assert.AreEqual(string.Format(Localization.ChangeRequest_Create_AlreadyExists, "0001", "none"), result.Report.ErrorList.First());
         }
 
         [TestCase(87541, "0001", Description = "Numbering system returns 0001 when there is no CR")]

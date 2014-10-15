@@ -88,6 +88,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ChangeRequest {0}, revision {1} already exists for indicated specification..
+        /// </summary>
+        public static string ChangeRequest_Create_AlreadyExists {
+            get {
+                return ResourceManager.GetString("ChangeRequest_Create_AlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Release does not exist.
         /// </summary>
         public static string Error_Release_Does_Not_Exist {
@@ -102,6 +111,15 @@ namespace Etsi.Ultimate.Utils {
         public static string Error_Spec_Does_Not_Exist {
             get {
                 return ResourceManager.GetString("Error_Spec_Does_Not_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error has occured. Please try again. If problem persists, please contact IT support..
+        /// </summary>
+        public static string GenericError {
+            get {
+                return ResourceManager.GetString("GenericError", resourceCulture);
             }
         }
         

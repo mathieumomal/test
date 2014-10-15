@@ -4,6 +4,7 @@ using Etsi.UserRights.Service;
 using System.Collections.Generic;
 using UltimateEntities = Etsi.Ultimate.DomainClasses;
 using UltimateServiceEntities = Etsi.Ultimate.WCF.Interface.Entities;
+using Etsi.Ultimate.WCF.Interface;
 
 namespace Etsi.Ultimate.WCF.Service
 {
@@ -276,23 +277,27 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="personId">The person identifier.</param>
         /// <param name="changeRequest">The change request.</param>
         /// <returns>Primary key of newly inserted change request</returns>
-        internal int CreateChangeRequest(int personId, UltimateServiceEntities.ChangeRequest changeRequest)
+        internal ServiceResponse<int> CreateChangeRequest(int personId, UltimateServiceEntities.ChangeRequest changeRequest)
         {
+            var response = new ServiceResponse<int>();
             var primaryKeyOfNewCr = 0;
             try
             {
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
                 var createCrResponse = svc.CreateChangeRequest(personId, ConvertServiceCRToUltimateCR(changeRequest));
-                if (createCrResponse.Key)
-                    primaryKeyOfNewCr = createCrResponse.Value;
+                if (createCrResponse.Report.GetNumberOfErrors() == 0)
+                    response.Result = createCrResponse.Result;
                 else
+                {
+                    response.Report.ErrorList = createCrResponse.Report.ErrorList;
                     LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequest, "Failed to get create CR record"));
+                }
             }
             catch (Exception ex)
             {
                 LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequest, ex.Message));
             }
-            return primaryKeyOfNewCr;
+            return response;
         }
 
         /// <summary>

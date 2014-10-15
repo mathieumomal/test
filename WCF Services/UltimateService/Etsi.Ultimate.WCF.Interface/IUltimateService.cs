@@ -94,7 +94,7 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <param name="changeRequest">The change request.</param>
         /// <returns>Primary key of newly inserted change request</returns>
         [OperationContract]
-        int CreateChangeRequest(int personId, ChangeRequest changeRequest);
+        ServiceResponse<int> CreateChangeRequest(int personId, ChangeRequest changeRequest);
 
         /// <summary>
         /// Edit the change request.
