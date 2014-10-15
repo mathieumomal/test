@@ -197,7 +197,7 @@ namespace Etsi.Ultimate.Business
             var crStatuses = crStatusRepository.All.ToList();
             foreach (var crPackDecision in crPackTsgDecisions)
             {
-                var changeRequest = crRepository.FindStatusByWgTDoc(crPackDecision.Key);
+                var changeRequest = crRepository.FindByWgTDoc(crPackDecision.Key);
                 if (changeRequest == null)
                 {
                     response.Report.LogError("Change request not found : " + crPackDecision.Key);

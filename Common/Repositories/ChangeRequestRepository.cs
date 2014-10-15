@@ -123,7 +123,7 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <param name="wgTDoc">The wgtdocument.</param>
         /// <returns></returns>
-        public ChangeRequest FindStatusByWgTDoc(string wgTDoc)
+        public ChangeRequest FindByWgTDoc(string wgTDoc)
         {
             return UoW.Context.ChangeRequests.Where(wg => wg.WGTDoc == wgTDoc).SingleOrDefault();
         }
@@ -176,6 +176,6 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <param name="wgTDoc">The wgtdocument.</param>
         /// <returns></returns>
-        ChangeRequest FindStatusByWgTDoc(string wgTDoc);
+        ChangeRequest FindByWgTDoc(string wgTDoc);
     }
 }

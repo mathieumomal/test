@@ -79,10 +79,10 @@ namespace Etsi.Ultimate.Tests.Repositories
         [Test]
         [TestCase(0, "WG3")]
         [TestCase(5, "WG1")]
-        public void Repository_FindStatusByWgTDoc(int result, string wgTDoc)
+        public void Repository_FindByWgTDoc(int result, string wgTDoc)
         {
             var repo = new ChangeRequestRepository { UoW = UoW };
-            var respresult = repo.FindStatusByWgTDoc(wgTDoc);
+            var respresult = repo.FindByWgTDoc(wgTDoc);
 
 
             if (respresult.Fk_TSGStatus == null)
