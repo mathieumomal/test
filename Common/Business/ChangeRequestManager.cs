@@ -204,17 +204,24 @@ namespace Etsi.Ultimate.Business
                     break;
                 }
                 //Update status
-                var crStatus = crStatuses.Find(x => x.Code == crPackDecision.Value);
-                if (crStatus == null)
+                // If status is empty, it means we need to empty it.
+                if (String.IsNullOrEmpty(crPackDecision.Value))
+                    changeRequest.Fk_TSGStatus = null;
+                else
                 {
-                    response.Report.LogError("Status not found : " + crPackDecision.Value);
-                    break;
+                    var crStatus = crStatuses.Find(x => x.Code == crPackDecision.Value);
+                    if (crStatus == null)
+                    {
+                        response.Report.LogError("Status not found : " + crPackDecision.Value);
+                        break;
+                    }
+                    if ((crStatus != null) && (changeRequest.Fk_TSGStatus != crStatus.Pk_EnumChangeRequestStatus))
+                        changeRequest.Fk_TSGStatus = crStatus.Pk_EnumChangeRequestStatus;
                 }
-                if ((crStatus != null) && (changeRequest.Fk_TSGStatus != crStatus.Pk_EnumChangeRequestStatus))
-                    changeRequest.Fk_TSGStatus = crStatus.Pk_EnumChangeRequestStatus;
                 //Update TSG TDoc number
                 if (changeRequest.TSGTDoc != tsgTdocNumber)
                     changeRequest.TSGTDoc = tsgTdocNumber;
+
             }
 
             if (response.Report.GetNumberOfErrors() > 0)
