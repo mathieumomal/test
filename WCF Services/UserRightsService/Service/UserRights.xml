@@ -20,107 +20,181 @@
   </Portal>
   <Portal value="Ultimate">
     <UserRoles>
-      <!-- Administrators are members of the ETSI IT service who should be able to do everything -->
-      <UserRole value="Administrator">
-        <Right value="Release_Create"/>
-        <Right value="Release_Edit"/>
-        <Right value="Release_Freeze"/>
-        <Right value="Release_Close"/>
-        <Right value="Remarks_ViewPrivate"/>
-        <Right value="Remarks_AddPrivateByDefault"/>
-        <Right value="WorkItem_ImportWorkplan"/>
-        <Right value="Contribution_Import" />
-      </UserRole>
-      <!-- Super user = Specification Manager -->
-      <UserRole value="SuperUser">
-        <Right value="Release_Create"/>
-        <Right value="Release_Edit"/>
-        <Right value="Release_Freeze"/>
-        <Right value="Release_Close"/>
-        <Right value="Remarks_ViewPrivate"/>
-        <Right value="Remarks_AddPrivateByDefault"/>
-        <Right value="Release_ViewCompleteDetails"/>
-        <Right value="WorkItem_ImportWorkplan"/>
-        <Right value="Specification_Create"/>
-        <Right value="Specification_EditFull"/>
-        <Right value="Specification_Withdraw"/>
-        <Right value="Specification_View_UnAllocated_Number"/>
-        <Right value="Specification_ManageITURecommendations"/>
-        <Right value="Specification_ForceTransposition"/>
-        <Right value="Versions_Allocate"/>
-        <Right value="Versions_Upload"/>
-        <Right value="Versions_AddRemark"/>
-        <Right value="Specification_UnforceTransposition"/>
-        <Right value="Specification_WithdrawFromRelease"/>
-        <Right value="Specification_InhibitPromote"/>
-        <Right value="Specification_RemoveInhibitPromote"/>
-        <Right value="Specification_BulkPromote"/>
-        <Right value="Specification_SyncHardLinksOnLatestFolder"/>
-        <Right value="Meeting_ViewMeetingList"/>
-        <Right value="Meeting_CreateMeeting"/>
-        <Right value="Meeting_CreateEvent"/>
-        <Right value="Meeting_EditEvent"/>
-        <Right value="Contribute_Anytime"/>
-        <Right value="Contribution_Edit"/>
-        <Right value="Contribution_Upload"/>
-        <Right value="Contribution_Upload_Anytime"/>
-        <Right value="Contribution_Withdraw" />
-        <Right value="Contribution_Import" />
-        <Right value="Contribution_Edit_CR_Number"/>
-      </UserRole>
-      <UserRole value="WorkPlanManager">
-        <Right value="Remarks_ViewPrivate"/>
-        <Right value="Remarks_AddPrivateByDefault"/>
-        <Right value="Release_ViewCompleteDetails"/>
-        <Right value="WorkItem_ImportWorkplan"/>
-      </UserRole>
-      <!-- Chairman, Vice Chairman or Convenor of a given WG / TSG -->
-      <UserRole value="CommitteeOfficial">
-      </UserRole>
-      <!-- StaffMember = MCC Member -->
-      <UserRole value="StaffMember">
-        <Right value="Remarks_ViewPrivate"/>
-        <Right value="Remarks_AddPrivateByDefault"/>
-        <Right value="Specification_Create"/>
-        <Right value="Specification_EditLimitted"/>
-        <Right value="Specification_View_UnAllocated_Number"/>
-        <Right value="Versions_Allocate"/>
-        <Right value="Versions_Upload"/>
-        <Right value="Versions_Modify_MajorVersion"/>
-        <Right value="Versions_AddRemark"/>
-        <Right value="Meeting_CreateMeeting"/>
-        <Right value="Contribute_Anytime"/>
-        <Right value="Contribution_Edit"/>
-        <Right value="Contribution_Upload"/>
-        <Right value="Contribution_Upload_Anytime"/>
-        <Right value="Contribution_Withdraw" />
-        <Right value="Contribution_Import" />
-        <Right value="Manage_AgendaItems"/>
-        <Right value="Contribution_Edit_CR_Number"/>
-      </UserRole>
-      <UserRole value="EolAccountOwner">
-      </UserRole>
-      <!-- 3GPPMember = Delegate -->
-      <UserRole value="3GPPMember">
-        <Right value="Release_ViewCompleteList"/>
-        <Right value="Release_ViewDetails"/>
-        <Right value="General_ViewPersonalData"/>
-        <Right value="Specification_ViewDetails"/>
-        <Right value="Contribute_Restricted"/>
-        <Right value="Contribution_Upload"/>
-        <Right value="Contribution_Withdraw_Restricted" />
-      </UserRole>      
-      <UserRole value="MeetingManager">
-        <Right value="Meeting_ViewMeetingList"/>
-        <Right value="Meeting_CreateMeeting"/>
-        <Right value="Meeting_CreateEvent"/>
-        <Right value="Meeting_EditEvent"/>
-      </UserRole>
+      <!-- Anonymous are unlogged users -->
       <UserRole value="Anonymous">
         <Right value="Release_ViewPartialList"/>
         <Right value="Release_ViewLimitedDetails"/>
         <Right value="Specification_ViewDetails"/>
         <Right value="Meeting_ViewMeetingList"/>
+      </UserRole>
+
+      <!-- Eol account owners are logged users. If they do not have additional role, they don't have more rights than anonymous -->
+      <UserRole value="EolAccountOwner">
+        <Right value="Release_ViewPartialList"/>
+        <Right value="Release_ViewLimitedDetails"/>
+        <Right value="Specification_ViewDetails"/>
+        <Right value="Meeting_ViewMeetingList"/>
+      </UserRole>
+
+      <!-- 3GPPMember = Delegate = Logged user whose company is a 3GPPMember -->
+      <UserRole value="3GPPMember">
+        <Right value="General_ViewPersonalData"/>
+        <Right value="Release_ViewCompleteList"/>
+        <Right value="Release_ViewDetails"/>
+        <Right value="Specification_ViewDetails"/>
+        <Right value="Meeting_ViewMeetingList"/>
+        <Right value="Contribute_Restricted"/>
+        <Right value="Contribution_Upload"/>
+        <Right value="Contribution_Withdraw_Restricted" />
+      </UserRole>
+
+      <!-- Chairman, Vice Chairman or Convenor of a given WG / TSG -->
+      <UserRole value="CommitteeOfficial">
+      </UserRole>
+
+      <!-- StaffMember = MCC Member -->
+      <UserRole value="StaffMember">
+        <Right value="General_ViewPersonalData"/>
+        <Right value="Release_ViewCompleteList"/>
+        <Right value="Release_ViewDetails"/>
+        
+        <Right value="Remarks_ViewPrivate"/>
+        <Right value="Remarks_AddPrivateByDefault"/>
+
+        
+        <Right value="Specification_Create"/>
+        <Right value="Specification_EditLimitted"/>
+        <Right value="Specification_View_UnAllocated_Number"/>
+        <Right value="Specification_ViewDetails"/>
+
+        <Right value="Versions_Allocate"/>
+        <Right value="Versions_Upload"/>
+        <Right value="Versions_Modify_MajorVersion"/>
+        <Right value="Versions_AddRemark"/>
+        
+        <Right value="Meeting_ViewMeetingList"/>
+        <Right value="Meeting_CreateMeeting"/>
+        <Right value="Manage_AgendaItems"/>
+        
+        <Right value="Contribute_Anytime"/>
+        <Right value="Contribution_Edit"/>
+        <Right value="Contribution_Upload"/>
+        <Right value="Contribution_Upload_Anytime"/>
+        <Right value="Contribution_Withdraw" />
+        <Right value="Contribution_Import" />
+        <Right value="Contribution_Edit_CR_Number"/>
+
+      </UserRole>
+      
+      <!-- Meeting Manager is a special role that gives additional rights on meetings. -->
+      <UserRole value="MeetingManager">
+        <Right value="Meeting_ViewMeetingList"/>
+        <Right value="Meeting_CreateMeeting"/>
+        <Right value="Meeting_CreateEvent"/>
+        <Right value="Meeting_EditEvent"/>
+        <Right value="Manage_AgendaItems"/>
+      </UserRole>
+      
+      <!-- Workplan manager is a special role that gives additional rights on work plan and releases -->
+      <UserRole value="WorkPlanManager">
+        <Right value="Release_ViewCompleteDetails"/>
+        <Right value="WorkItem_ImportWorkplan"/>
+      </UserRole>
+
+      <!-- Super user = Specification Manager -->
+      <UserRole value="SuperUser">
+        <Right value="General_ViewPersonalData"/>
+        <Right value="Release_ViewCompleteList"/>
+        <Right value="Release_ViewCompleteDetails"/>
+        <Right value="Release_Create"/>
+        <Right value="Release_Edit"/>
+        <Right value="Release_Freeze"/>
+        <Right value="Release_Close"/>
+        
+        <Right value="Remarks_ViewPrivate"/>
+        <Right value="Remarks_AddPrivateByDefault"/>
+        
+        <Right value="WorkItem_ImportWorkplan"/>
+
+        <Right value="Specification_BulkPromote"/>
+        <Right value="Specification_Create"/>
+        <Right value="Specification_EditFull"/>
+        <Right value="Specification_ForceTransposition"/>
+        <Right value="Specification_InhibitPromote"/>
+        <Right value="Specification_ManageITURecommendations"/>
+        <Right value="Specification_RemoveInhibitPromote"/>
+        <Right value="Specification_SyncHardLinksOnLatestFolder"/>
+        <Right value="Specification_Withdraw"/>
+        <Right value="Specification_WithdrawFromRelease"/>
+        <Right value="Specification_UnforceTransposition"/>
+        <Right value="Specification_View_UnAllocated_Number"/>
+        <Right value="Specification_ViewDetails"/>
+        
+        <Right value="Versions_Allocate"/>
+        <Right value="Versions_Upload"/>
+        <Right value="Versions_AddRemark"/>
+
+        <Right value="Manage_AgendaItems"/>
+        <Right value="Meeting_ViewMeetingList"/>
+        <Right value="Meeting_CreateMeeting"/>
+        <Right value="Meeting_CreateEvent"/>
+        <Right value="Meeting_EditEvent"/>
+        
+        <Right value="Contribute_Anytime"/>
+        <Right value="Contribution_Edit"/>
+        <Right value="Contribution_Upload"/>
+        <Right value="Contribution_Upload_Anytime"/>
+        <Right value="Contribution_Withdraw" />
+        <Right value="Contribution_Import" />
+        <Right value="Contribution_Edit_CR_Number"/>
+      </UserRole>
+
+      <!-- Administrators are members of the ETSI IT service who should be able to do everything -->
+      <UserRole value="Administrator">
+        <Right value="General_ViewPersonalData"/>
+        <Right value="Release_ViewCompleteList"/>
+        <Right value="Release_ViewCompleteDetails"/>
+        <Right value="Release_Create"/>
+        <Right value="Release_Edit"/>
+        <Right value="Release_Freeze"/>
+        <Right value="Release_Close"/>
+
+        <Right value="Remarks_ViewPrivate"/>
+        <Right value="Remarks_AddPrivateByDefault"/>
+
+        <Right value="WorkItem_ImportWorkplan"/>
+
+        <Right value="Specification_BulkPromote"/>
+        <Right value="Specification_Create"/>
+        <Right value="Specification_EditFull"/>
+        <Right value="Specification_ForceTransposition"/>
+        <Right value="Specification_InhibitPromote"/>
+        <Right value="Specification_ManageITURecommendations"/>
+        <Right value="Specification_RemoveInhibitPromote"/>
+        <Right value="Specification_SyncHardLinksOnLatestFolder"/>
+        <Right value="Specification_Withdraw"/>
+        <Right value="Specification_WithdrawFromRelease"/>
+        <Right value="Specification_UnforceTransposition"/>
+        <Right value="Specification_View_UnAllocated_Number"/>
+        <Right value="Specification_ViewDetails"/>
+
+        <Right value="Versions_Allocate"/>
+        <Right value="Versions_Upload"/>
+        <Right value="Versions_AddRemark"/>
+
+        <Right value="Manage_AgendaItems"/>
+        <Right value="Meeting_ViewMeetingList"/>
+        <Right value="Meeting_CreateMeeting"/>
+        <Right value="Meeting_CreateEvent"/>
+        <Right value="Meeting_EditEvent"/>
+
+        <Right value="Contribute_Anytime"/>
+        <Right value="Contribution_Edit"/>
+        <Right value="Contribution_Upload"/>
+        <Right value="Contribution_Upload_Anytime"/>
+        <Right value="Contribution_Withdraw" />
+        <Right value="Contribution_Import" />
+        <Right value="Contribution_Edit_CR_Number"/>
       </UserRole>
     </UserRoles>
   </Portal>

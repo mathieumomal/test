@@ -2,6 +2,7 @@
 using Etsi.Dsdb.DataAccess;
 using Microsoft.Practices.Unity;
 using Etsi.UserRights.DNN3GPPDataAccess;
+using Etsi.UserRights.DNNETSIDataAccess;
 
 namespace Etsi.UserRights.Service
 {
@@ -71,6 +72,8 @@ namespace Etsi.UserRights.Service
             Container.RegisterType<DSDBContext>(new InjectionConstructor());
             Container.RegisterType<IDnn3gppContext, DNN3GPPContext>(new TransientLifetimeManager());
             Container.RegisterType<DNN3GPPContext>(new InjectionConstructor());
+            Container.RegisterType<IDnnEtsiContext, DNNETSIContext>(new TransientLifetimeManager());
+            Container.RegisterType<DNNETSIContext>(new InjectionConstructor());
         }
 
         #endregion

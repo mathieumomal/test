@@ -76,7 +76,7 @@ namespace UserRightsService.Tests
             }
 
             DatabaseFactory.Container.RegisterInstance(typeof(IDnn3gppContext), Dnn3gppContext);
-            DatabaseFactory.Container.RegisterInstance(typeof(DSDBContext), DsdbContext);
+            DatabaseFactory.Container.RegisterInstance(typeof(IDSDBContext), DsdbContext);
         }
 
         [TearDown]
