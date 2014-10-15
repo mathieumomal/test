@@ -11,7 +11,7 @@
         <Right value="Meeting_EditEvent"/>
       </UserRole>
       <UserRole value="StaffMember">
-        <Right value="Meeting_CreateMeeting"/>		
+        <Right value="Meeting_CreateMeeting"/>
       </UserRole>
       <UserRole value="Anonymous">
         <Right value="Meeting_ViewMeetingList"/>
@@ -20,7 +20,7 @@
   </Portal>
   <Portal value="Ultimate">
     <UserRoles>
-		<!-- Administrators are members of the ETSI IT service who should be able to do everything -->
+      <!-- Administrators are members of the ETSI IT service who should be able to do everything -->
       <UserRole value="Administrator">
         <Right value="Release_Create"/>
         <Right value="Release_Edit"/>
@@ -31,7 +31,7 @@
         <Right value="WorkItem_ImportWorkplan"/>
         <Right value="Contribution_Import" />
       </UserRole>
-	  <!-- Super user = Specification Manager -->
+      <!-- Super user = Specification Manager -->
       <UserRole value="SuperUser">
         <Right value="Release_Create"/>
         <Right value="Release_Edit"/>
@@ -56,17 +56,17 @@
         <Right value="Specification_RemoveInhibitPromote"/>
         <Right value="Specification_BulkPromote"/>
         <Right value="Specification_SyncHardLinksOnLatestFolder"/>
-		<Right value="Meeting_ViewMeetingList"/>
+        <Right value="Meeting_ViewMeetingList"/>
         <Right value="Meeting_CreateMeeting"/>
         <Right value="Meeting_CreateEvent"/>
         <Right value="Meeting_EditEvent"/>
-		<Right value="Contribute_Anytime"/> 
-		<Right value="Contribution_Edit"/>
-		<Right value="Contribution_Upload"/>
-		<Right value="Contribution_Upload_Anytime"/>
+        <Right value="Contribute_Anytime"/>
+        <Right value="Contribution_Edit"/>
+        <Right value="Contribution_Upload"/>
+        <Right value="Contribution_Upload_Anytime"/>
         <Right value="Contribution_Withdraw" />
         <Right value="Contribution_Import" />
-		<Right value="Contribution_Edit_CR_Number"/>
+        <Right value="Contribution_Edit_CR_Number"/>
       </UserRole>
       <UserRole value="WorkPlanManager">
         <Right value="Remarks_ViewPrivate"/>
@@ -74,10 +74,10 @@
         <Right value="Release_ViewCompleteDetails"/>
         <Right value="WorkItem_ImportWorkplan"/>
       </UserRole>
-	  <!-- Chairman, Vice Chairman or Convenor of a given WG / TSG -->
+      <!-- Chairman, Vice Chairman or Convenor of a given WG / TSG -->
       <UserRole value="CommitteeOfficial">
       </UserRole>
-	  <!-- StaffMember = MCC Member -->
+      <!-- StaffMember = MCC Member -->
       <UserRole value="StaffMember">
         <Right value="Remarks_ViewPrivate"/>
         <Right value="Remarks_AddPrivateByDefault"/>
@@ -88,27 +88,28 @@
         <Right value="Versions_Upload"/>
         <Right value="Versions_Modify_MajorVersion"/>
         <Right value="Versions_AddRemark"/>
-        <Right value="Meeting_CreateMeeting"/>		
-		    <Right value="Contribute_Anytime"/>
-		    <Right value="Contribution_Edit"/>
-		    <Right value="Contribution_Upload"/>
-		    <Right value="Contribution_Upload_Anytime"/>
-		    <Right value="Contribution_Withdraw" />
+        <Right value="Meeting_CreateMeeting"/>
+        <Right value="Contribute_Anytime"/>
+        <Right value="Contribution_Edit"/>
+        <Right value="Contribution_Upload"/>
+        <Right value="Contribution_Upload_Anytime"/>
+        <Right value="Contribution_Withdraw" />
         <Right value="Contribution_Import" />
         <Right value="Manage_AgendaItems"/>
         <Right value="Contribution_Edit_CR_Number"/>
       </UserRole>
-
       <UserRole value="EolAccountOwner">
+      </UserRole>
+      <!-- 3GPPMember = Delegate -->
+      <UserRole value="3GPPMember">
         <Right value="Release_ViewCompleteList"/>
         <Right value="Release_ViewDetails"/>
         <Right value="General_ViewPersonalData"/>
-        <Right value="Specification_ViewDetails"/> 
-		    <Right value="Contribute_Restricted"/>
-		    <Right value="Contribution_Upload"/>
+        <Right value="Specification_ViewDetails"/>
+        <Right value="Contribute_Restricted"/>
+        <Right value="Contribution_Upload"/>
         <Right value="Contribution_Withdraw_Restricted" />
-      </UserRole>
-
+      </UserRole>      
       <UserRole value="MeetingManager">
         <Right value="Meeting_ViewMeetingList"/>
         <Right value="Meeting_CreateMeeting"/>
