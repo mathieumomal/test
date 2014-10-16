@@ -50,6 +50,7 @@
 
       <!-- Chairman, Vice Chairman or Convenor of a given WG / TSG -->
       <UserRole value="CommitteeOfficial">
+        <Right value="CommitteeOfficial_TestRight"/>
       </UserRole>
 
       <!-- StaffMember = MCC Member -->

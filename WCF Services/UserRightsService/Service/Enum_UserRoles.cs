@@ -13,6 +13,7 @@ namespace Etsi.UserRights.Service
         StaffMember,
         EolAccountOwner,
         MeetingManager,
+        U3GPPMember,
         Anonymous
     }
 }

@@ -15,6 +15,7 @@ namespace UserRightsService.Tests
         public const int ADMINISTRATOR_ID = 53388;
         public const int WORKPLANMGR_ID = 915;
         public const int SPECMGR_ID = 637;
+        public const int U3GPPMEMBER_ID = 758;
 
         public const int SA1ChairmanId = 35011;
         public const int SASecretary = 10343;
@@ -87,6 +88,15 @@ namespace UserRightsService.Tests
 
             var roles = rightsRetriever.GetApplicationRoles(SPECMGR_ID);
             Assert.Contains(Enum_UserRoles.SuperUser, roles);
+        }
+
+        [Test, Description("System must return SuperUser roles for specifications managers (such as 637 = John M. Meredith)")]
+        public void GetNonCommitteeRelated_RolesChecksForU3gppMember()
+        {
+            var rightsRetriever = new UltimateRights();
+
+            var roles = rightsRetriever.GetApplicationRoles(U3GPPMEMBER_ID);
+            Assert.Contains(Enum_UserRoles.U3GPPMember, roles);
         }
 
         [TestCase(SA1ChairmanId, Sa1WgId, true, Description="System should return Committee Official for Mona Mustapha, for SA 1 (as she's Chairman)") ]

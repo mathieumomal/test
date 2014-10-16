@@ -23,6 +23,19 @@ namespace Etsi.UserRights.Service
         private const string CONST_ROLE_DNN_PORTAL_WORK_PLAN_MANAGER = "Work Plan Managers";
         private const string CONST_ROLE_DNN_PORTAL_SPECIFICATION_MANAGER = "Specification Managers";
         private const string CONST_ROLE_DNN_PORTAL_MEETING_MANAGER = "Meeting Managers";
+        private const string CONST_ORGA_STATUS_3GPPMARK_REP = "3GPPMARK_REP";
+        private const string CONST_ORGA_STATUS_3GPPMEMBER = "3GPPMEMBER";
+        private const string CONST_ORGA_STATUS_3GPPOBSERV = "3GPPOBSERV";
+        private const string CONST_ORGA_STATUS_3GPPORG_REP = "3GPPORG_REP";
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets or sets the user rights XML path.
+        /// </summary>
+        public string UserRightsXmlPath { get; set; }
 
         #endregion
 
@@ -126,6 +139,22 @@ namespace Etsi.UserRights.Service
                     //[7] StaffMember - Check 'MCC Member' role in DSDB
                     if (userMccRecord)
                         personRoles.Add(Enum_UserRoles.StaffMember);
+
+                    var allowedOrganisationStatus = new string[] { CONST_ORGA_STATUS_3GPPMARK_REP, 
+                                                                   CONST_ORGA_STATUS_3GPPMEMBER,
+                                                                   CONST_ORGA_STATUS_3GPPOBSERV,
+                                                                   CONST_ORGA_STATUS_3GPPORG_REP };
+
+                    var isU3gppMember = (from people in context.People
+                                         join organisation in context.Organisations on people.ORGA_ID equals organisation.ORGA_ID
+                                         join organisationStatus in context.OrganisationStatus on organisation.ORGA_ID equals organisationStatus.ORGA_ID
+                                         where allowedOrganisationStatus.Contains(organisationStatus.ORGS_CODE)
+                                         && people.PERSON_ID == personID
+                                         select people).Any();
+
+                    //[8] U3GPPMember - Check 'Organisation Status' in DSDB
+                    if (isU3gppMember)
+                        personRoles.Add(Enum_UserRoles.U3GPPMember);
                 }
             }
             catch (Exception ex)
@@ -217,7 +246,7 @@ namespace Etsi.UserRights.Service
         {
             var personRights = new List<string>();
 
-            var doc = XDocument.Load(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserRights.xml"));
+            var doc = XDocument.Load(UserRightsXmlPath ?? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserRights.xml"));
 
             foreach (var personRole in personRoles)
             {
