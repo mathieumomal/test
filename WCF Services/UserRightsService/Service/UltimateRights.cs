@@ -28,6 +28,8 @@ namespace Etsi.UserRights.Service
         private const string ConstOrgaStatus3Gppmember = "3GPPMEMBER";
         private const string ConstOrgaStatus3Gppobserv = "3GPPOBSERV";
         private const string ConstOrgaStatus3GpporgRep = "3GPPORG_REP";
+        private const string ConstOrgaStatus3Gppexpelled = "3GPPEXPELLED";
+        private const string ConstOrgaStatus3Gppwithdraw = "3GPPWITHDRAW";
 
         #endregion
 
@@ -145,17 +147,20 @@ namespace Etsi.UserRights.Service
                                                                    ConstOrgaStatus3Gppmember,
                                                                    ConstOrgaStatus3Gppobserv,
                                                                    ConstOrgaStatus3GpporgRep };
+                    var prohibitedOrganisationStatus = new string[] { ConstOrgaStatus3Gppexpelled, ConstOrgaStatus3Gppwithdraw };
 
-                    var isU3GppMember = (from people in context.People
-                                         join organisation in context.Organisations on people.ORGA_ID equals organisation.ORGA_ID
-                                         join organisationStatus in context.OrganisationStatus on organisation.ORGA_ID equals organisationStatus.ORGA_ID
-                                         where allowedOrganisationStatus.Contains(organisationStatus.ORGS_CODE)
-                                         && people.PERSON_ID == personId
-                                         select people).Any();
+                    var organisationStatues = (from people in context.People
+                                               join organisation in context.Organisations on people.ORGA_ID equals organisation.ORGA_ID
+                                               join organisationStatus in context.OrganisationStatus on organisation.ORGA_ID equals organisationStatus.ORGA_ID
+                                               where people.PERSON_ID == personId
+                                               select organisationStatus.ORGS_CODE).ToList();
 
-                    //[8] U3GPPMember - Check 'Organisation Status' in DSDB
-                    if (isU3GppMember)
-                        personRoles.Add(Enum_UserRoles.U3GPPMember);
+                    if (!organisationStatues.Any(x => prohibitedOrganisationStatus.Contains(x))) //Organisation status should not be in prohibited list
+                    {
+                        //[8] U3GPPMember - Check 'Organisation Status' in DSDB
+                        if (organisationStatues.Any(x => allowedOrganisationStatus.Contains(x)))
+                            personRoles.Add(Enum_UserRoles.U3GPPMember);
+                    }
                 }
             }
             catch (Exception ex)

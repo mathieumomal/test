@@ -16,6 +16,7 @@ namespace UserRightsService.Tests
         public const int WORKPLANMGR_ID = 915;
         public const int SPECMGR_ID = 637;
         public const int U3GPPMEMBER_ID = 758;
+        public const int U3GPPMEMBER_EXPELLED_ID = 18782;
 
         public const int SA1ChairmanId = 35011;
         public const int SASecretary = 10343;
@@ -90,13 +91,22 @@ namespace UserRightsService.Tests
             Assert.Contains(Enum_UserRoles.SuperUser, roles);
         }
 
-        [Test, Description("System must return SuperUser roles for specifications managers (such as 637 = John M. Meredith)")]
+        [Test, Description("System must return U3GPPMember role for delegates (such as 758 = Scrase, Adrian)")]
         public void GetNonCommitteeRelated_RolesChecksForU3gppMember()
         {
             var rightsRetriever = new UltimateRights();
 
             var roles = rightsRetriever.GetApplicationRoles(U3GPPMEMBER_ID);
             Assert.Contains(Enum_UserRoles.U3GPPMember, roles);
+        }
+
+        [Test, Description("System must not return U3GPPMember role for the organisations which are expelled and withdrawn (such as 18782 = Guttman, Erik)")]
+        public void GetNonCommitteeRelated_RolesChecksForU3gppMember_Expelled()
+        {
+            var rightsRetriever = new UltimateRights();
+
+            var roles = rightsRetriever.GetApplicationRoles(U3GPPMEMBER_EXPELLED_ID);
+            Assert.IsFalse(roles.Contains(Enum_UserRoles.U3GPPMember));
         }
 
         [TestCase(SA1ChairmanId, Sa1WgId, true, Description="System should return Committee Official for Mona Mustapha, for SA 1 (as she's Chairman)") ]
