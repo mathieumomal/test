@@ -39,15 +39,15 @@ namespace UserRightsService.Tests
         private static EntityConnection GetEntityConnection()
         {
             //CSV files are stored in a specific folder : Data_For_EffortUnitTests
-            string DsdbDir = Environment.CurrentDirectory + CsvPathForDsdb;
+            var dsdbDir = Environment.CurrentDirectory + CsvPathForDsdb;
 
             //Load DS related data
-            IDataLoader DsLoader = new CsvDataLoader(DsdbDir);
+            var dsLoader = new CsvDataLoader(dsdbDir);
             try
             {
-                EntityConnection dsdbConnection = Effort.EntityConnectionFactory.CreateTransient(
+                var dsdbConnection = Effort.EntityConnectionFactory.CreateTransient(
                     new StringBuilder().Append("name=").Append(DsdbContextName).ToString(),
-                    DsLoader);
+                    dsLoader);
                 return dsdbConnection;
             }
             catch (Exception e)

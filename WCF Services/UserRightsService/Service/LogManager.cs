@@ -5,12 +5,12 @@ using System.IO;
 
 namespace Etsi.UserRights.Service
 {
-    public class LogManager
+    public static class LogManager
     {
         #region Properties
 
-        private static string CONFIG_FILE_PATH = String.Empty;
-        private static string LOGGER_NAME = String.Empty;
+        private static string _configFilePath = String.Empty;
+        private static string _loggerName = String.Empty;
         private static ILog _userRightsLogger;
         public static ILog UserRightsLogger
         {
@@ -28,8 +28,8 @@ namespace Etsi.UserRights.Service
 
         private static void ConfigureLogger()
         {
-            XmlConfigurator.ConfigureAndWatch(new System.IO.FileInfo(String.IsNullOrEmpty(CONFIG_FILE_PATH) ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserRights.log4net.config") : CONFIG_FILE_PATH));
-            _userRightsLogger = LoggerSource.Instance.GetLogger(String.IsNullOrEmpty(LOGGER_NAME) ? "UserRightsLogger" : LOGGER_NAME);
+            XmlConfigurator.ConfigureAndWatch(new FileInfo(String.IsNullOrEmpty(_configFilePath) ? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "UserRights.log4net.config") : _configFilePath));
+            _userRightsLogger = LoggerSource.Instance.GetLogger(String.IsNullOrEmpty(_loggerName) ? "UserRightsLogger" : _loggerName);
         }
 
         #endregion
@@ -38,8 +38,8 @@ namespace Etsi.UserRights.Service
 
         public static void SetConfiguration(string filePath, string loggerName)
         {
-            CONFIG_FILE_PATH = filePath;
-            LOGGER_NAME = loggerName;
+            _configFilePath = filePath;
+            _loggerName = loggerName;
         }
 
         #endregion

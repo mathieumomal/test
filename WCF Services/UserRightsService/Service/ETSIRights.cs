@@ -1,4 +1,5 @@
-﻿using Etsi.Dsdb.DataAccess;
+﻿using System.Globalization;
+using Etsi.Dsdb.DataAccess;
 using Etsi.UserRights.DNNETSIDataAccess;
 using Etsi.UserRights.Interface;
 using System;
@@ -17,10 +18,10 @@ namespace Etsi.UserRights.Service
     {
         #region Constants
 
-        private const int CONST_MCC_LIST_ID = 5240;
-        private const string CONST_PERSON_ID_MAPPING_KEY = "ETSI_DS_ID";
-        private const string CONST_ROLE_DNN_PORTAL_ADMINISTRATOR = "Administrators";
-        private const string CONST_ROLE_DNN_PORTAL_MEETING_MANAGER = "Meeting Managers";
+        private const int ConstMccListId = 5240;
+        private const string ConstPersonIdMappingKey = "ETSI_DS_ID";
+        private const string ConstRoleDnnPortalAdministrator = "Administrators";
+        private const string ConstRoleDnnPortalMeetingManager = "Meeting Managers";
 
         #endregion
 
@@ -29,14 +30,14 @@ namespace Etsi.UserRights.Service
         /// <summary>
         /// Get Rights for User
         /// </summary>
-        /// <param name="personID">Person ID</param>
+        /// <param name="personId">Person ID</param>
         /// <returns>User Rights object</returns>
-        public PersonRights GetRights(int personID)
+        public PersonRights GetRights(int personId)
         {
             PersonRights personRights = new PersonRights();
 
             //Compute User Application Rights
-            var applicationRoles = GetApplicationRoles(personID);
+            var applicationRoles = GetApplicationRoles(personId);
             personRights.ApplicationRights = GetRightsForRoles(applicationRoles);
 
             return personRights;
@@ -49,9 +50,9 @@ namespace Etsi.UserRights.Service
         /// <summary>
         /// Get User Roles
         /// </summary>
-        /// <param name="personID">Person ID</param>
+        /// <param name="personId">Person ID</param>
         /// <returns>List of Roles</returns>
-        private List<Enum_UserRoles> GetApplicationRoles(int personID)
+        private List<Enum_UserRoles> GetApplicationRoles(int personId)
         {
             var personRoles = new List<Enum_UserRoles>();
 
@@ -61,7 +62,7 @@ namespace Etsi.UserRights.Service
                 personRoles.Add(Enum_UserRoles.Anonymous);
 
                 //Check the rest of roles for logged in user
-                if (personID > 0)
+                if (personId > 0)
                 {
                     //************************************************
                     //************ DNN BASED ROLES  ******************
@@ -69,26 +70,26 @@ namespace Etsi.UserRights.Service
 
                     using (var context = new DNNETSIContext())
                     {
-                        var rolesInDNNPortal = new string[] { CONST_ROLE_DNN_PORTAL_ADMINISTRATOR, 
-                                                              CONST_ROLE_DNN_PORTAL_MEETING_MANAGER };
+                        var rolesInDnnPortal = new[] { ConstRoleDnnPortalAdministrator, 
+                                                              ConstRoleDnnPortalMeetingManager };
 
-                        string strPersonID = personID.ToString();
+                        var strPersonId = personId.ToString(CultureInfo.InvariantCulture);
 
-                        var userRolesInDNN = (from userProfile in context.UserProfiles
+                        var userRolesInDnn = (from userProfile in context.UserProfiles
                                               join propertyDefiniton in context.ProfilePropertyDefinitions on userProfile.PropertyDefinitionID equals propertyDefiniton.PropertyDefinitionID
                                               join userRole in context.UserRoles on userProfile.UserID equals userRole.UserID
                                               join role in context.Roles on userRole.RoleID equals role.RoleID
-                                              where propertyDefiniton.PropertyName == CONST_PERSON_ID_MAPPING_KEY
-                                                    && rolesInDNNPortal.Contains(role.RoleName)
-                                                    && userProfile.PropertyValue == strPersonID
+                                              where propertyDefiniton.PropertyName == ConstPersonIdMappingKey
+                                                    && rolesInDnnPortal.Contains(role.RoleName)
+                                                    && userProfile.PropertyValue == strPersonId
                                               select role.RoleName).ToList();
 
                         //[2] Administrators - Check 'Administrators' role in DNN
-                        if (userRolesInDNN.Contains(CONST_ROLE_DNN_PORTAL_ADMINISTRATOR))
+                        if (userRolesInDnn.Contains(ConstRoleDnnPortalAdministrator))
                             personRoles.Add(Enum_UserRoles.Administrator);
 
                         //[3] Meeting Manager - Check 'Meeting Managers' role in DNN
-                        if (userRolesInDNN.Contains(CONST_ROLE_DNN_PORTAL_MEETING_MANAGER))
+                        if (userRolesInDnn.Contains(ConstRoleDnnPortalMeetingManager))
                             personRoles.Add(Enum_UserRoles.MeetingManager);
                     }
 
@@ -98,13 +99,13 @@ namespace Etsi.UserRights.Service
                     using (var context = DatabaseFactory.Resolve<IDSDBContext>())
                     {
 
-                        var userMCCRecord = (from personInList in context.PersonInLists
-                                             where personInList.PLIST_ID == CONST_MCC_LIST_ID
-                                             && personInList.PERSON_ID == personID
+                        var userMccRecord = (from personInList in context.PersonInLists
+                                             where personInList.PLIST_ID == ConstMccListId
+                                             && personInList.PERSON_ID == personId
                                              select personInList).Any();
 
                         //[4] StaffMember - Check 'MCC Member' role in DSDB
-                        if (userMCCRecord)
+                        if (userMccRecord)
                             personRoles.Add(Enum_UserRoles.StaffMember);
                     }
                 }

@@ -11,10 +11,10 @@ namespace Etsi.UserRights.Interface
         /// <summary>
         /// Get Rights for User
         /// </summary>
-        /// <param name="personID">Person ID</param>
+        /// <param name="personId">Person ID</param>
         /// <param name="portal">Portal Name (ETSI / Ultimate)</param>
         /// <returns>User Rights object</returns>
         [OperationContract]
-        PersonRights GetRights(int personID, string portal);
+        PersonRights GetRights(int personId, string portal);
     }
 }

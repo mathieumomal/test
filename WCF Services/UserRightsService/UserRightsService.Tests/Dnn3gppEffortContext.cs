@@ -13,8 +13,8 @@ namespace UserRightsService.Tests
     {
         #region Constants
 
-        const string CsvPathFor3gpp = "\\Database\\DNN3GPP";
-        const string Dnn3gppContextName = "DNN3GPPContext"; 
+        const string CsvPathFor3Gpp = "\\Database\\DNN3GPP";
+        const string Dnn3GppContextName = "DNN3GPPContext"; 
 
         #endregion
 
@@ -39,15 +39,15 @@ namespace UserRightsService.Tests
         private static EntityConnection GetEntityConnection()
         {
             //CSV files are stored in a specific folder : Data_For_EffortUnitTests
-            string Dnn3gppDir = Environment.CurrentDirectory + CsvPathFor3gpp;
+            var dnn3GppDir = Environment.CurrentDirectory + CsvPathFor3Gpp;
 
             //Load DS related data
-            IDataLoader Dnn3gppLoader = new CsvDataLoader(Dnn3gppDir);
+            var dnn3GppLoader = new CsvDataLoader(dnn3GppDir);
             try
             {
-                EntityConnection ngppdbConnection = Effort.EntityConnectionFactory.CreateTransient(
-                    new StringBuilder().Append("name=").Append(Dnn3gppContextName).ToString(),
-                    Dnn3gppLoader);
+                var ngppdbConnection = Effort.EntityConnectionFactory.CreateTransient(
+                    new StringBuilder().Append("name=").Append(Dnn3GppContextName).ToString(),
+                    dnn3GppLoader);
                 return ngppdbConnection;
             }
             catch (Exception e)

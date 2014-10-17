@@ -1,4 +1,5 @@
-﻿using Etsi.Dsdb.DataAccess;
+﻿using System.Globalization;
+using Etsi.Dsdb.DataAccess;
 using Etsi.UserRights.DNN3GPPDataAccess;
 using Etsi.UserRights.Interface;
 using System;
@@ -17,16 +18,16 @@ namespace Etsi.UserRights.Service
     {
         #region Constants
 
-        private const int CONST_MCC_LIST_ID = 5240;
-        private const string CONST_PERSON_ID_MAPPING_KEY = "ETSI_DS_ID";
-        private const string CONST_ROLE_DNN_PORTAL_ADMINISTRATOR = "Administrators";
-        private const string CONST_ROLE_DNN_PORTAL_WORK_PLAN_MANAGER = "Work Plan Managers";
-        private const string CONST_ROLE_DNN_PORTAL_SPECIFICATION_MANAGER = "Specification Managers";
-        private const string CONST_ROLE_DNN_PORTAL_MEETING_MANAGER = "Meeting Managers";
-        private const string CONST_ORGA_STATUS_3GPPMARK_REP = "3GPPMARK_REP";
-        private const string CONST_ORGA_STATUS_3GPPMEMBER = "3GPPMEMBER";
-        private const string CONST_ORGA_STATUS_3GPPOBSERV = "3GPPOBSERV";
-        private const string CONST_ORGA_STATUS_3GPPORG_REP = "3GPPORG_REP";
+        private const int ConstMccListId = 5240;
+        private const string ConstPersonIdMappingKey = "ETSI_DS_ID";
+        private const string ConstRoleDnnPortalAdministrator = "Administrators";
+        private const string ConstRoleDnnPortalWorkPlanManager = "Work Plan Managers";
+        private const string ConstRoleDnnPortalSpecificationManager = "Specification Managers";
+        private const string ConstRoleDnnPortalMeetingManager = "Meeting Managers";
+        private const string ConstOrgaStatus3GppmarkRep = "3GPPMARK_REP";
+        private const string ConstOrgaStatus3Gppmember = "3GPPMEMBER";
+        private const string ConstOrgaStatus3Gppobserv = "3GPPOBSERV";
+        private const string ConstOrgaStatus3GpporgRep = "3GPPORG_REP";
 
         #endregion
 
@@ -44,18 +45,18 @@ namespace Etsi.UserRights.Service
         /// <summary>
         /// Get Rights for User
         /// </summary>
-        /// <param name="personID">Person ID</param>
+        /// <param name="personId">Person ID</param>
         /// <returns>User Rights object</returns>
-        public PersonRights GetRights(int personID)
+        public PersonRights GetRights(int personId)
         {
-            PersonRights personRights = new PersonRights();
+            var personRights = new PersonRights();
 
             //Compute User Application Rights
-            var applicationRoles = GetApplicationRoles(personID);
+            var applicationRoles = GetApplicationRoles(personId);
             personRights.ApplicationRights = GetRightsForRoles(applicationRoles);
 
             //Compute User Committee Rights
-            var committeeRoles = GetCommitteeRoles(personID);
+            var committeeRoles = GetCommitteeRoles(personId);
             personRights.CommitteeRights = GetCommitteeRights(committeeRoles);
 
             return personRights;
@@ -68,16 +69,16 @@ namespace Etsi.UserRights.Service
         /// <summary>
         /// Get User Roles
         /// </summary>
-        /// <param name="personID">Person ID</param>
+        /// <param name="personId">Person ID</param>
         /// <returns>List of Non Committee Roles</returns>
-        public List<Enum_UserRoles> GetApplicationRoles(int personID)
+        public List<Enum_UserRoles> GetApplicationRoles(int personId)
         {
             var personRoles = new List<Enum_UserRoles>();
 
             try
             {
                 //[1] Anonymous - Return without going any further
-                if (personID <= 0)
+                if (personId <= 0)
                 {
                     personRoles.Add(Enum_UserRoles.Anonymous);
                     return personRoles;
@@ -92,36 +93,36 @@ namespace Etsi.UserRights.Service
                 //************************************************
                 using (var context = DatabaseFactory.Resolve<IDnn3gppContext>())
                 {
-                    var rolesInDNNPortal = new string[] { CONST_ROLE_DNN_PORTAL_ADMINISTRATOR, 
-                                                      CONST_ROLE_DNN_PORTAL_WORK_PLAN_MANAGER,
-                                                      CONST_ROLE_DNN_PORTAL_SPECIFICATION_MANAGER,
-                                                      CONST_ROLE_DNN_PORTAL_MEETING_MANAGER };
+                    var rolesInDnnPortal = new[] { ConstRoleDnnPortalAdministrator, 
+                                                      ConstRoleDnnPortalWorkPlanManager,
+                                                      ConstRoleDnnPortalSpecificationManager,
+                                                      ConstRoleDnnPortalMeetingManager };
 
-                    string strPersonID = personID.ToString();
+                    var strPersonId = personId.ToString(CultureInfo.InvariantCulture);
 
-                    var userRolesInDNN = (from userProfile in context.UserProfiles
+                    var userRolesInDnn = (from userProfile in context.UserProfiles
                                           join propertyDefiniton in context.ProfilePropertyDefinitions on userProfile.PropertyDefinitionID equals propertyDefiniton.PropertyDefinitionID
                                           join userRole in context.UserRoles on userProfile.UserID equals userRole.UserID
                                           join role in context.Roles on userRole.RoleID equals role.RoleID
-                                          where propertyDefiniton.PropertyName == CONST_PERSON_ID_MAPPING_KEY
-                                                && rolesInDNNPortal.Contains(role.RoleName)
-                                                && userProfile.PropertyValue == strPersonID
+                                          where propertyDefiniton.PropertyName == ConstPersonIdMappingKey
+                                                && rolesInDnnPortal.Contains(role.RoleName)
+                                                && userProfile.PropertyValue == strPersonId
                                           select role.RoleName).ToList();
 
                     //[3] Administrators - Check 'Administrators' role in DNN
-                    if (userRolesInDNN.Contains(CONST_ROLE_DNN_PORTAL_ADMINISTRATOR))
+                    if (userRolesInDnn.Contains(ConstRoleDnnPortalAdministrator))
                         personRoles.Add(Enum_UserRoles.Administrator);
 
                     //[4] SuperUser - Check 'Specification Managers' role in DNN
-                    if (userRolesInDNN.Contains(CONST_ROLE_DNN_PORTAL_SPECIFICATION_MANAGER))
+                    if (userRolesInDnn.Contains(ConstRoleDnnPortalSpecificationManager))
                         personRoles.Add(Enum_UserRoles.SuperUser);
 
                     //[5] WorkPlanManager - Check 'Work Plan Managers' role in DNN
-                    if (userRolesInDNN.Contains(CONST_ROLE_DNN_PORTAL_WORK_PLAN_MANAGER))
+                    if (userRolesInDnn.Contains(ConstRoleDnnPortalWorkPlanManager))
                         personRoles.Add(Enum_UserRoles.WorkPlanManager);
 
                     //[6] Meeting Manager - Check 'Meeting Managers' role in DNN
-                    if (userRolesInDNN.Contains(CONST_ROLE_DNN_PORTAL_MEETING_MANAGER))
+                    if (userRolesInDnn.Contains(ConstRoleDnnPortalMeetingManager))
                         personRoles.Add(Enum_UserRoles.MeetingManager);
                 }
 
@@ -132,28 +133,28 @@ namespace Etsi.UserRights.Service
                 {
 
                     var userMccRecord = (from personInList in context.PersonInLists
-                                         where personInList.PLIST_ID == CONST_MCC_LIST_ID
-                                         && personInList.PERSON_ID == personID
+                                         where personInList.PLIST_ID == ConstMccListId
+                                         && personInList.PERSON_ID == personId
                                          select personInList).Any();
 
                     //[7] StaffMember - Check 'MCC Member' role in DSDB
                     if (userMccRecord)
                         personRoles.Add(Enum_UserRoles.StaffMember);
 
-                    var allowedOrganisationStatus = new string[] { CONST_ORGA_STATUS_3GPPMARK_REP, 
-                                                                   CONST_ORGA_STATUS_3GPPMEMBER,
-                                                                   CONST_ORGA_STATUS_3GPPOBSERV,
-                                                                   CONST_ORGA_STATUS_3GPPORG_REP };
+                    var allowedOrganisationStatus = new[] { ConstOrgaStatus3GppmarkRep, 
+                                                                   ConstOrgaStatus3Gppmember,
+                                                                   ConstOrgaStatus3Gppobserv,
+                                                                   ConstOrgaStatus3GpporgRep };
 
-                    var isU3gppMember = (from people in context.People
+                    var isU3GppMember = (from people in context.People
                                          join organisation in context.Organisations on people.ORGA_ID equals organisation.ORGA_ID
                                          join organisationStatus in context.OrganisationStatus on organisation.ORGA_ID equals organisationStatus.ORGA_ID
                                          where allowedOrganisationStatus.Contains(organisationStatus.ORGS_CODE)
-                                         && people.PERSON_ID == personID
+                                         && people.PERSON_ID == personId
                                          select people).Any();
 
                     //[8] U3GPPMember - Check 'Organisation Status' in DSDB
-                    if (isU3gppMember)
+                    if (isU3GppMember)
                         personRoles.Add(Enum_UserRoles.U3GPPMember);
                 }
             }
@@ -168,11 +169,11 @@ namespace Etsi.UserRights.Service
         /// <summary>
         /// Get User Roles
         /// </summary>
-        /// <param name="personID">Person ID</param>
+        /// <param name="personId">Person ID</param>
         /// <returns>List of Non Committee Roles</returns>
-        public Dictionary<Enum_UserRoles, List<int>> GetCommitteeRoles(int personID)
+        public Dictionary<Enum_UserRoles, List<int>> GetCommitteeRoles(int personId)
         {
-            Dictionary<Enum_UserRoles, List<int>> committeeRoles = new Dictionary<Enum_UserRoles, List<int>>();
+            var committeeRoles = new Dictionary<Enum_UserRoles, List<int>>();
 
             try
             {
@@ -182,8 +183,8 @@ namespace Etsi.UserRights.Service
 
                 using (var context = DatabaseFactory.Resolve<IDSDBContext>())
                 {
-                    var committeeOfficialRoles = new string[] { "chairman", "vicechairman", "convenor", "secretary" };
-                    var personListTypes = new string[] { "MASTER", "OTHER" };
+                    var committeeOfficialRoles = new[] { "chairman", "vicechairman", "convenor", "secretary" };
+                    var personListTypes = new[] { "MASTER", "OTHER" };
 
                     //Get the Committee List which the given person has Committee Official (Chairman / ViceChairman / Convenor / Secretary) Right
                     var tbList = (from personList in context.PersonLists
@@ -192,7 +193,7 @@ namespace Etsi.UserRights.Service
                                   where person.DELETED_FLG == "N"
                                   && committeeOfficialRoles.Contains(personInList.PERS_ROLE_CODE.ToLower())
                                   && personListTypes.Contains(personList.PLIST_TYPE)
-                                  && person.PERSON_ID == personID
+                                  && person.PERSON_ID == personId
                                   select personList.TB_ID ?? 0).ToList();
                     tbList.RemoveAll(x => x == 0); //Avoid NULL TB_ID records
 
@@ -216,20 +217,20 @@ namespace Etsi.UserRights.Service
         /// <returns>Committee Rights</returns>
         private Dictionary<int, List<string>> GetCommitteeRights(Dictionary<Enum_UserRoles, List<int>> committeeRoles)
         {
-            Dictionary<int, List<string>> committeeRights = new Dictionary<int, List<string>>();
+            var committeeRights = new Dictionary<int, List<string>>();
             foreach (var committeeRole in committeeRoles)
             {
                 var committeeRoleRights = GetRightsForRoles(new List<Enum_UserRoles> { committeeRole.Key });
-                foreach (var committeeID in committeeRole.Value)
+                foreach (var committeeId in committeeRole.Value)
                 {
                     if (committeeRoleRights.Count > 0)
                     {
-                        if (!committeeRights.ContainsKey(committeeID))
-                            committeeRights.Add(committeeID, new List<string>());
+                        if (!committeeRights.ContainsKey(committeeId))
+                            committeeRights.Add(committeeId, new List<string>());
 
                         foreach (var committeeRight in committeeRoleRights)
                         {
-                            committeeRights[committeeID].Add(committeeRight);
+                            committeeRights[committeeId].Add(committeeRight);
                         }
                     }
                 }

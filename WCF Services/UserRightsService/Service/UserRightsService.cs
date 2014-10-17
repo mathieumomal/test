@@ -11,10 +11,10 @@ namespace Etsi.UserRights.Service
         /// <summary>
         /// Get Rights for User
         /// </summary>
-        /// <param name="personID">Person ID</param>
+        /// <param name="personId">Person ID</param>
         /// <param name="portal">Portal Name (ETSI / Ultimate)</param>
         /// <returns>User Rights object</returns>
-        public PersonRights GetRights(int personID, string portal)
+        public PersonRights GetRights(int personId, string portal)
         {
             PersonRights userRights = null;
             IRights rights = null;
@@ -28,7 +28,7 @@ namespace Etsi.UserRights.Service
             }
 
             if (rights != null)
-                userRights = rights.GetRights(personID);
+                userRights = rights.GetRights(personId);
 
             return userRights;    
         }       

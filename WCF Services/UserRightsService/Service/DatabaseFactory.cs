@@ -1,5 +1,4 @@
-﻿using System;
-using Etsi.Dsdb.DataAccess;
+﻿using Etsi.Dsdb.DataAccess;
 using Microsoft.Practices.Unity;
 using Etsi.UserRights.DNN3GPPDataAccess;
 using Etsi.UserRights.DNNETSIDataAccess;
