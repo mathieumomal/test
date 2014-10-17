@@ -262,12 +262,20 @@ namespace Etsi.Ultimate.Repositories
         {
             return UoW.Context.Specification_Release.Include(t => t.Specification).Where(x => x.Fk_ReleaseId == releaseId).Select(x => x.Specification).ToList();
         }
+
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public List<Specification> GetSpecifications(List<int> ids)
+        {
+            return UoW.Context.Specifications.Where(x => ids.Contains(x.Pk_SpecificationId)).ToList();
+        }
     }
 
     public interface ISpecificationRepository : IEntityRepository<Specification>
     {
-
-
         /// <summary>
         /// Returns a page of specifications that are matching the search criteria, along with the total number of specifications matching this criteria.
         /// </summary>
@@ -310,5 +318,12 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="number">Specification Number</param>
         /// <returns>Specification Details</returns>
         Specification GetSpecificationByNumber(string number);
+
+        /// <summary>
+        /// Get list of specifications by ids
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        List<Specification> GetSpecifications(List<int> ids);
     }
 }

@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DataAccess;
@@ -15,8 +13,6 @@ using Rhino.Mocks;
 using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Tests.FakeRepositories;
-using Etsi.Ultimate.Utils;
-using Etsi.Ultimate.Utils.ModelMails;
 using System.IO;
 
 namespace Etsi.Ultimate.Tests.Services
@@ -31,6 +27,20 @@ namespace Etsi.Ultimate.Tests.Services
         {
             base.Setup();
             _editSpecInstance = null;
+        }
+
+        [Test, Description("Get specifications by their ids")]
+        public void GetSpecifications_NominalCase()
+        {
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)GetSpecs());
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var specSvc = new SpecificationService();
+            var specifications = specSvc.GetSpecifications(0, new List<int> { 1, 2, 40}).Key;
+            Assert.AreEqual(2, specifications.Count);
+            Assert.AreEqual("01.01", specifications.FirstOrDefault(x => x.Pk_SpecificationId == 1).Number);
+            Assert.AreEqual("12.123", specifications.FirstOrDefault(x => x.Pk_SpecificationId == 2).Number);
         }
 
         [Test, TestCaseSource("SpecificationData")]

@@ -21,6 +21,21 @@ namespace Etsi.Ultimate.Business
         public SpecificationManager() { }
 
         /// <summary>
+        /// See interface
+        /// No rights consideration : we get only the basic spec information
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecifications(int personId, List<int> ids)
+        {
+            var repo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            repo.UoW = UoW;
+            var specifications = repo.GetSpecifications(ids);
+            return new KeyValuePair<List<Specification>, UserRightsContainer>(specifications, null);
+        }
+
+        /// <summary>
         /// Default implementation of the Interface. See interface
         /// </summary>
         /// <param name="personId"></param>
@@ -437,6 +452,5 @@ namespace Etsi.Ultimate.Business
             return repo.GetSpecificationByNumber(number);
         }
 
-        
     }
 }

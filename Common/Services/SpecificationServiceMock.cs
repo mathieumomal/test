@@ -516,5 +516,15 @@ namespace Etsi.Ultimate.Services
         {
             throw new NotImplementedException();
         }
+
+        #region ISpecificationService Membres
+
+
+        public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecifications(int personId, List<int> ids)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

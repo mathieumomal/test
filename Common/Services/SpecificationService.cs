@@ -24,6 +24,22 @@ namespace Etsi.Ultimate.Services
             return exportPath;
         }
 
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecifications(int personId, List<int> ids)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specificationManager = new SpecificationManager();
+                specificationManager.UoW = uoW;
+                return specificationManager.GetSpecifications(personId, ids);
+            }
+        }
+
         public KeyValuePair<Specification, UserRightsContainer> GetSpecificationDetailsById(int personId, int specificationId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())

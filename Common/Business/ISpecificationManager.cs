@@ -96,5 +96,13 @@ namespace Etsi.Ultimate.Business
         /// <param name="releaseId"></param>
         /// <returns></returns>
         List<Specification> GetSpecsRelatedToARelease(int releaseId);
+
+        /// <summary>
+        /// Get specifications corresponding to a list of ids
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        KeyValuePair<List<Specification>, UserRightsContainer> GetSpecifications(int personId, List<int> ids);
     }
 }

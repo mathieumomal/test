@@ -26,8 +26,6 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(1, results[0].SpecificationResponsibleGroups.ToList().Count);
         }
 
-        
-
         [Test]
         public void Specification_Find()
         {
@@ -37,6 +35,25 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(2, repo.Find(1).SpecificationTechnologies.ToList().Count);
             Assert.AreEqual(2, repo.Find(1).Remarks.ToList().Count);
             Assert.AreEqual(2, repo.Find(1).Histories.ToList().Count);
+        }
+
+        [Test, Description("Get All specifications corresponding to a list of id")]
+        public void GetSpecifications_NominalCase()
+        {
+            var repo = new SpecificationRepository { UoW = GetSimplifiedUnitOfWork() };
+            var specificationsFound = repo.GetSpecifications(new List<int>() {1, 2});
+            Assert.AreEqual(2, specificationsFound.Count);
+            Assert.AreEqual("00.01", specificationsFound.FirstOrDefault(x => x.Pk_SpecificationId == 1).Number);
+            Assert.AreEqual("00.02", specificationsFound.FirstOrDefault(x => x.Pk_SpecificationId == 2).Number);
+        }
+
+        [Test, Description("Get All specifications corresponding to a list of id but a spec not exist : we get only the list of specs found")]
+        public void GetSpecifications_ASpecNoExist()
+        {
+            var repo = new SpecificationRepository { UoW = GetSimplifiedUnitOfWork() };
+            var specificationsFound = repo.GetSpecifications(new List<int>() { 1, 4 });
+            Assert.AreEqual(1, specificationsFound.Count);
+            Assert.AreEqual("00.01", specificationsFound.FirstOrDefault(x => x.Pk_SpecificationId == 1).Number);
         }
 
         [Test]

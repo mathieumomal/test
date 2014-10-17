@@ -226,18 +226,14 @@ namespace Etsi.Ultimate.WCF.Service
         internal List<UltimateServiceEntities.Specification> GetSpecificationsByIds(int personId, List<int> specificationIds)
         {
             var specifications = new List<UltimateServiceEntities.Specification>();
-
             try
             {
                 var svc = ServicesFactory.Resolve<ISpecificationService>();
-                foreach (var specificationId in specificationIds)
-                {
-                    var specificationRightsObjects = svc.GetSpecificationDetailsById(personId, specificationId);
-                    if (specificationRightsObjects.Key != null)
-                        specifications.Add(ConvertUltimateSpecificationToServiceSpecification(specificationRightsObjects.Key));
-                    else
-                        LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationsByIds, "Unable to get specification for specification id=" + specificationId));
-                }
+                var specsFound = svc.GetSpecifications(personId, specificationIds).Key;
+                if (specsFound != null)
+                    specsFound.ForEach(spec => specifications.Add(ConvertUltimateSpecificationToServiceSpecification(spec)));
+                else
+                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationsByIds, "Failed to get specs"));
             }
             catch (Exception ex)
             {

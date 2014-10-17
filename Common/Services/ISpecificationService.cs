@@ -16,6 +16,14 @@ namespace Etsi.Ultimate.Services
         KeyValuePair<Specification, UserRightsContainer> GetSpecificationDetailsById(int personId, int specificationId);
 
         /// <summary>
+        /// Get list of specifications by their ids
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        KeyValuePair<List<Specification>, UserRightsContainer> GetSpecifications(int personId, List<int> ids);
+            
+        /// <summary>
         /// Returns list of specifications including RGs
         /// </summary>
         /// <param name="personId"></param>
