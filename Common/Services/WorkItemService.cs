@@ -132,15 +132,12 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-
         /// <summary>
-        /// Get the workitem based on the id
+        /// Gets the work item by ids.
         /// </summary>
-        /// <param name="personId">Person Id</param>
-        /// <param name="workItemId">Work Item Id</param>
-        /// <returns>
-        /// Work Item along with right container
-        /// </returns>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="workItemIds">The work item ids.</param>
+        /// <returns></returns>
         public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemByIds(int personId, List<int> workItemIds)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())

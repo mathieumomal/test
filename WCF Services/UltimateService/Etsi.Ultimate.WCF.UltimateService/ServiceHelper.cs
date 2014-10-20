@@ -86,14 +86,13 @@ namespace Etsi.Ultimate.WCF.Service
             return release;
         }
 
+
         /// <summary>
         /// Gets the work items by ids.
         /// </summary>
         /// <param name="personId">The person identifier.</param>
         /// <param name="workItemIds">The work item ids.</param>
-        /// <returns>
-        /// List of work items
-        /// </returns>
+        /// <returns></returns>
         internal List<UltimateServiceEntities.WorkItem> GetWorkItemsByIds(int personId, List<int> workItemIds)
         {
             var workItems = new List<UltimateServiceEntities.WorkItem>();

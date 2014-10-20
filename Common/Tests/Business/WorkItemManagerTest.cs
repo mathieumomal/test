@@ -123,10 +123,12 @@ namespace Etsi.Ultimate.Tests.Business
             userRights.AddRight(Enum_UserRights.WorkItem_ImportWorkplan);
 
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
-            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(2);
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(1);
+
 
             var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
             mockRightsManager.Stub(x => x.GetRights(personID)).Return(userRights).Repeat.Times(2);
+
 
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
             ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
@@ -134,16 +136,16 @@ namespace Etsi.Ultimate.Tests.Business
 
             //No Release Ids
             var wiManager = new WorkItemManager(uow);
-            var workItemIds=new List<int>()
+            var workItemIds = new List<int>()
             {
                 110,
                 111
             };
-           var response= wiManager.GetWorkItemByIds(personID, workItemIds);
-           Assert.AreEqual(2, response.Key.Count);
-           Assert.AreEqual("Stage 1 for Mission Critical Push To Talk over LTE", response.Key[0].Name);
-           Assert.AreEqual("eWebRTCi", response.Key[1].Acronym);
-           mockDataContext.VerifyAllExpectations();
+            var response = wiManager.GetWorkItemByIds(personID, workItemIds);
+            Assert.AreEqual(2, response.Key.Count);
+            Assert.AreEqual("Stage 1 for Mission Critical Push To Talk over LTE", response.Key[0].Name);
+            Assert.AreEqual("eWebRTCi", response.Key[1].Acronym);
+             mockDataContext.VerifyAllExpectations();
         }
 
         [Test, TestCaseSource("WorkItemData")]

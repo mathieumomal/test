@@ -42,7 +42,7 @@ namespace Etsi.Ultimate.Business
                 if (tbIds.Count > 0)
                 {
                     // Get all the WIs for current granularity who are not using the TBs.
-                    var nonEligibleWis = wiList.Where(x => x.WiLevel == granularity && ! x.WorkItems_ResponsibleGroups.Any(y => tbIds.Contains(y.Fk_TbId.Value))).ToList();
+                    var nonEligibleWis = wiList.Where(x => x.WiLevel == granularity && !x.WorkItems_ResponsibleGroups.Any(y => tbIds.Contains(y.Fk_TbId.Value))).ToList();
                     List<WorkItem> children = new List<WorkItem>();
                     while (nonEligibleWis.Count != 0)
                     {
@@ -173,20 +173,28 @@ namespace Etsi.Ultimate.Business
             return new KeyValuePair<WorkItem, UserRightsContainer>(workItem, GetRights(personId));
         }
 
-    
+
+        /// <summary>
+        /// Gets the work item by ids.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="workItemIds">The work item ids.</param>
+        /// <returns></returns>
         public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemByIds(int personId, List<int> workItemIds)
         {
             IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
             repo.UoW = _uoW;
-            var workItems = new List<WorkItem>();           
-            foreach (var item in workItemIds)
-            {
-                var response=repo.Find(item);
-                workItems.Add(response);
-            }
+            var workItems = new List<WorkItem>();
+            workItems = repo.GetWorkItems(workItemIds);
             return new KeyValuePair<List<WorkItem>, UserRightsContainer>(workItems, GetRights(personId));
         }
 
+        /// <summary>
+        /// Gets the work item by identifier extend.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="workItemId">The work item identifier.</param>
+        /// <returns></returns>
         public KeyValuePair<WorkItem, UserRightsContainer> GetWorkItemByIdExtend(int personId, int workItemId)
         {
             IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();

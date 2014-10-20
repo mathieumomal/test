@@ -160,6 +160,16 @@ namespace Etsi.Ultimate.Repositories
             return UoW.Context.WorkItems.Where(x => ((!String.IsNullOrEmpty(x.Acronym)) && (x.Fk_ReleaseId != null))).Select(y => y.Acronym).Distinct().ToList();
         }
 
+        /// <summary>
+        /// Gets the work items.
+        /// </summary>
+        /// <param name="workItems">The work items.</param>
+        /// <returns></returns>
+        public List<WorkItem> GetWorkItems(List<int> workItems)
+        {
+            return UoW.Context.WorkItems.Where(x => workItems.Contains(x.Pk_WorkItemUid)).ToList();
+        }
+
         #endregion
 
         #region IDisposable Members
@@ -216,5 +226,12 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <returns>List of Acronyms</returns>
         List<string> GetAllAcronyms();
+
+        /// <summary>
+        /// Gets the work items.
+        /// </summary>
+        /// <param name="workitemIds">The workitem ids.</param>
+        /// <returns></returns>
+        List<WorkItem> GetWorkItems(List<int> workitemIds);
     }
 }

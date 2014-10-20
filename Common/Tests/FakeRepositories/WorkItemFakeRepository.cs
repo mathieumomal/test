@@ -26,7 +26,7 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         /// <summary>
         /// Dedicated input source
         /// </summary>
-        public abstract Sources Source { get;  }
+        public abstract Sources Source { get; }
 
         public IQueryable<Ultimate.DomainClasses.WorkItem> All
         {
@@ -70,10 +70,10 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                         PcgApprovalMtgRef = "PCG-32",
                         TsgStoppedMtgRef = "SP-64",
                         PcgStoppedMtgRef = "PCG-33",
-                        CreationDate = new DateTime(2014,2,5),
-                        LastModification = new DateTime(2014,2,6)
-                        
-                        
+                        CreationDate = new DateTime(2014, 2, 5),
+                        LastModification = new DateTime(2014, 2, 6)
+
+
                     });
                     return list;
 
@@ -140,6 +140,11 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         }
 
         public List<WorkItem> GetWorkItemsBySearchCriteria(string searchString)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<WorkItem> GetWorkItems(List<int> workItems)
         {
             throw new NotImplementedException();
         }

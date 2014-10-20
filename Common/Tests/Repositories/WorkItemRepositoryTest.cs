@@ -30,7 +30,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         public void WorkItem_GetAllIncluding()
         {
             var repo = new WorkItemRepository() { UoW = GetUnitOfWork() };
-            var results = repo.AllIncluding( w => w.Remarks).ToList();
+            var results = repo.AllIncluding(w => w.Remarks).ToList();
 
             Assert.AreEqual(1, results.Count);
         }
@@ -56,9 +56,23 @@ namespace Etsi.Ultimate.Tests.Repositories
         [Test]
         public void WorkItem_Delete()
         {
-            var repo = new WorkItemRepository() { UoW = GetUnitOfWork() }; 
+            var repo = new WorkItemRepository() { UoW = GetUnitOfWork() };
             repo.Delete(1);
             Assert.AreEqual(0, repo.All.ToList().Count);
+        }
+
+        [Test, TestCaseSource("WorkItemData")]
+        public void GetWorkItems(WorkItemFakeDBSet workItemData)
+        {
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(2);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+         
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var wiRepository = new WorkItemRepository() { UoW = uow };
+            var response = wiRepository.GetWorkItems(new List<int>() { 100, 101 });
+
+            Assert.AreEqual(2, response.Count);
         }
 
         [Test, TestCaseSource("WorkItemData")]
@@ -189,7 +203,7 @@ namespace Etsi.Ultimate.Tests.Repositories
                 Fk_ReleaseId = 1,
                 LastModification = DateTime.Now
             });
-            
+
             iUltimateContext.WorkItems = wiDbSet;
 
             iUnitOfWork.Stub(uow => uow.Context).Return(iUltimateContext);
