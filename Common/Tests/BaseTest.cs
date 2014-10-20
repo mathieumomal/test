@@ -85,14 +85,14 @@ namespace Etsi.Ultimate.Tests
             var eolAccountOwner_Application_Rights = new List<string>() { "Release_ViewLimitedDetails", "Release_ViewDetails" };
             var superUser_Application_Rights = new List<string>() { "Release_ViewLimitedDetails", "Release_ViewDetails", "Release_ViewCompleteDetails" };
             var committeeOfficial_Application_Rights = new List<string>() { "Release_ViewLimitedDetails", "Release_ViewDetails", "Release_Close" };
-            var committeeOfficial_Committee_Rights = new Dictionary<int, string[]>();
-            committeeOfficial_Committee_Rights.Add(UserRolesFakeRepository.TB_ID1, new string[] { "Versions_Allocate" });
-            committeeOfficial_Committee_Rights.Add(UserRolesFakeRepository.TB_ID2, new string[] { "Versions_Modify_MajorVersion" });
+            var committeeOfficial_Committee_Rights = new Dictionary<int, List<string>>();
+            committeeOfficial_Committee_Rights.Add(UserRolesFakeRepository.TB_ID1, new List<string> { "Versions_Allocate" });
+            committeeOfficial_Committee_Rights.Add(UserRolesFakeRepository.TB_ID2, new List<string> { "Versions_Modify_MajorVersion" });
 
-            var anonymousRights = new PersonRights() { ApplicationRights = anonymous_Applicatin_Rights.ToArray() };
-            var specManagerRights = new PersonRights() { ApplicationRights = superUser_Application_Rights.ToArray() };
-            var administratorRights = new PersonRights() { ApplicationRights = eolAccountOwner_Application_Rights.ToArray() };
-            var chairmanRights = new PersonRights() { ApplicationRights = committeeOfficial_Application_Rights.ToArray(), CommitteeRights = committeeOfficial_Committee_Rights };
+            var anonymousRights = new PersonRights() { ApplicationRights = anonymous_Applicatin_Rights };
+            var specManagerRights = new PersonRights() { ApplicationRights = superUser_Application_Rights };
+            var administratorRights = new PersonRights() { ApplicationRights = eolAccountOwner_Application_Rights };
+            var chairmanRights = new PersonRights() { ApplicationRights = committeeOfficial_Application_Rights, CommitteeRights = committeeOfficial_Committee_Rights };
 
             mockUserRightsService.Stub(x => x.GetRights(UserRolesFakeRepository.SPECMGR_ID, ConfigVariables.PortalName)).Return(specManagerRights);
             mockUserRightsService.Stub(x => x.GetRights(UserRolesFakeRepository.ADMINISTRATOR_ID, ConfigVariables.PortalName)).Return(administratorRights);

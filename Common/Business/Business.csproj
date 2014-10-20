@@ -182,7 +182,7 @@
     <None Include="Service References\UserRightsService\Arrays.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Service References\UserRightsService\Etsi.Ultimate.Business.UserRightsService.PersonRights.datasource">
+    <None Include="Service References\UserRightsService\Etsi.Ultimate.Business.UserRightsService.PersonRights1.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
     <None Include="Service References\UserRightsService\Etsi.UserRights.Interface.xsd">
