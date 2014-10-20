@@ -182,10 +182,9 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemByIds(int personId, List<int> workItemIds)
         {
-            IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
+            var repo = RepositoryFactory.Resolve<IWorkItemRepository>();
             repo.UoW = _uoW;
-            var workItems = new List<WorkItem>();
-            workItems = repo.GetWorkItems(workItemIds);
+            var workItems = repo.GetWorkItems(workItemIds);
             return new KeyValuePair<List<WorkItem>, UserRightsContainer>(workItems, GetRights(personId));
         }
 

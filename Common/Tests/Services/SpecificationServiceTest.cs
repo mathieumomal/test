@@ -29,7 +29,7 @@ namespace Etsi.Ultimate.Tests.Services
             _editSpecInstance = null;
         }
 
-        [Test, Description("Get specifications by their ids")]
+        [Test, Description("Get specifications by their ids, one of spec requested don't exist (id : 40)")]
         public void GetSpecifications_NominalCase()
         {
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
