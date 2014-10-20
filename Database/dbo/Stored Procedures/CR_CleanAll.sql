@@ -13,7 +13,6 @@ BEGIN
 	DELETE FROM Remarks;
 	DELETE FROM ChangeRequest;
 	DELETE FROM Enum_CRCategory;
-	DELETE FROM Enum_TDocStatus;
 	DELETE FROM Enum_CRImpact;
 	
 	
