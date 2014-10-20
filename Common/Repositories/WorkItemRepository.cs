@@ -165,9 +165,9 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <param name="workItems">The work items.</param>
         /// <returns></returns>
-        public List<WorkItem> GetWorkItems(List<int> workItems)
+        public List<WorkItem> GetWorkItemsByIds(List<int> workItems)
         {
-            return UoW.Context.WorkItems.Where(x => workItems.Contains(x.Pk_WorkItemUid)).ToList();
+            return AllIncluding(wi => wi.WorkItems_ResponsibleGroups).Where(x => workItems.Contains(x.Pk_WorkItemUid)).ToList();
         }
 
         #endregion
@@ -232,6 +232,6 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <param name="workitemIds">The workitem ids.</param>
         /// <returns></returns>
-        List<WorkItem> GetWorkItems(List<int> workitemIds);
+        List<WorkItem> GetWorkItemsByIds(List<int> workitemIds);
     }
 }

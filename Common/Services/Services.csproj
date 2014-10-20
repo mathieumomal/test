@@ -92,7 +92,6 @@
     <Compile Include="UrlService.cs" />
     <Compile Include="UtilsService.cs" />
     <Compile Include="WorkItemService.cs" />
-    <Compile Include="WorkItemServiceMock.cs" />
     <Compile Include="WorkPlanFileService.cs" />
   </ItemGroup>
   <ItemGroup>

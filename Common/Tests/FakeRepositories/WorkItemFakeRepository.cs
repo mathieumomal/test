@@ -144,7 +144,7 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             throw new NotImplementedException();
         }
 
-        public List<WorkItem> GetWorkItems(List<int> workItems)
+        public List<WorkItem> GetWorkItemsByIds(List<int> workItems)
         {
             throw new NotImplementedException();
         }

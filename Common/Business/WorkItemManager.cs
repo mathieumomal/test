@@ -184,7 +184,7 @@ namespace Etsi.Ultimate.Business
         {
             var repo = RepositoryFactory.Resolve<IWorkItemRepository>();
             repo.UoW = _uoW;
-            var workItems = repo.GetWorkItems(workItemIds);
+            var workItems = repo.GetWorkItemsByIds(workItemIds);
             return new KeyValuePair<List<WorkItem>, UserRightsContainer>(workItems, GetRights(personId));
         }
 

@@ -70,7 +70,7 @@ namespace Etsi.Ultimate.Tests.Repositories
          
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             var wiRepository = new WorkItemRepository() { UoW = uow };
-            var response = wiRepository.GetWorkItems(new List<int>() { 100, 101 });
+            var response = wiRepository.GetWorkItemsByIds(new List<int>() { 100, 101 });
 
             Assert.AreEqual(2, response.Count);
         }
