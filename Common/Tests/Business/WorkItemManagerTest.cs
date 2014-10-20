@@ -34,9 +34,9 @@ namespace Etsi.Ultimate.Tests.Business
             mockRightsManager.Stub(x => x.GetRights(personID)).Return(userRights).Repeat.Times(6);
 
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
-            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager); 
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
-            
+
 
             var wiManager = new WorkItemManager(uow);
 
@@ -117,6 +117,36 @@ namespace Etsi.Ultimate.Tests.Business
         }
 
         [Test, TestCaseSource("WorkItemData")]
+        public void GetWorkItemIds(WorkItemFakeDBSet workItemData)
+        {
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.WorkItem_ImportWorkplan);
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(2);
+
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(personID)).Return(userRights).Repeat.Times(2);
+
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+
+            //No Release Ids
+            var wiManager = new WorkItemManager(uow);
+            var workItemIds=new List<int>()
+            {
+                110,
+                111
+            };
+           var response= wiManager.GetWorkItemByIds(personID, workItemIds);
+           Assert.AreEqual(2, response.Key.Count);
+           Assert.AreEqual("Stage 1 for Mission Critical Push To Talk over LTE", response.Key[0].Name);
+           Assert.AreEqual("eWebRTCi", response.Key[1].Acronym);
+           mockDataContext.VerifyAllExpectations();
+        }
+
+        [Test, TestCaseSource("WorkItemData")]
         public void GetWorkItemsCountBySearchCriteria(WorkItemFakeDBSet workItemData)
         {
             List<int> releaseIds = new List<int>();
@@ -173,7 +203,7 @@ namespace Etsi.Ultimate.Tests.Business
             var releases = new List<int>() { releaseId };
             var tbs = new List<int>() { 1 };
             var result = wiManager.GetWorkItemsBySearchCriteria(personID, releases, 1, false, String.Empty, String.Empty, tbs).Key;
-            Assert.AreEqual( 3, result.Count ) ;
+            Assert.AreEqual(3, result.Count);
         }
 
         [Test]
@@ -216,7 +246,7 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.Contains("eWebRTCi", wiManager.GetAllAcronyms());
             Assert.Contains("IOPS", wiManager.GetAllAcronyms());
             Assert.Contains("UPCON-DOT", wiManager.GetAllAcronyms());
-        }        
+        }
 
         [Test, TestCaseSource("WorkItemData")]
         public void GetAllWorkItems(WorkItemFakeDBSet workItemData)
@@ -274,7 +304,7 @@ namespace Etsi.Ultimate.Tests.Business
                     new WorkItems_ResponsibleGroups() { Fk_TbId = 3, IsPrimeResponsible = true },
                 };
 
-                var wi1 = new WorkItem() { Pk_WorkItemUid = 1, Acronym = "Test", Name="Test", Fk_ReleaseId = 1, WiLevel = 1, WorkItems_ResponsibleGroups = sa1Responsible };
+                var wi1 = new WorkItem() { Pk_WorkItemUid = 1, Acronym = "Test", Name = "Test", Fk_ReleaseId = 1, WiLevel = 1, WorkItems_ResponsibleGroups = sa1Responsible };
                 var wi11 = new WorkItem() { Pk_WorkItemUid = 2, Acronym = "Test1.1", Name = "Test1.1", Fk_ReleaseId = 1, WiLevel = 2, Fk_ParentWiId = 1, WorkItems_ResponsibleGroups = sa1Responsible };
                 var wi12 = new WorkItem() { Pk_WorkItemUid = 3, Acronym = "Test1.2", Name = "Test1.2", Fk_ReleaseId = 1, WiLevel = 2, Fk_ParentWiId = 1, WorkItems_ResponsibleGroups = sa2Responsible };
                 wi1.ChildWis.Add(wi11);
@@ -285,7 +315,7 @@ namespace Etsi.Ultimate.Tests.Business
                 var wi22 = new WorkItem() { Pk_WorkItemUid = 6, Acronym = "Test2.2", Name = "Test2.2", Fk_ReleaseId = 1, WiLevel = 2, Fk_ParentWiId = 4, WorkItems_ResponsibleGroups = sa3Responsible };
                 wi2.ChildWis.Add(wi21);
                 wi2.ChildWis.Add(wi22);
-               
+
                 var wis = new WorkItemFakeDBSet();
                 wis.Add(wi1);
                 wis.Add(wi11);
@@ -293,7 +323,7 @@ namespace Etsi.Ultimate.Tests.Business
                 wis.Add(wi2);
                 wis.Add(wi21);
                 wis.Add(wi22);
-                                
+
 
                 return wis;
             }
