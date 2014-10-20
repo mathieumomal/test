@@ -60,6 +60,14 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="personId">Person Id</param>
         /// <param name="workItemId">Work Item Id</param>
+        /// <returns>Work Item along with right container</returns>
+        KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemByIds(int personId, List<int> workItemId);
+
+        /// <summary>
+        /// Get the workitem based on the id
+        /// </summary>
+        /// <param name="personId">Person Id</param>
+        /// <param name="workItemId">Work Item Id</param>
         /// <returns>Work Item, right container and other required properties</returns>
         KeyValuePair<WorkItem, UserRightsContainer> GetWorkItemByIdExtend(int personId, int workItemId);
 

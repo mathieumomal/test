@@ -99,15 +99,16 @@ namespace Etsi.Ultimate.WCF.Service
             var workItems = new List<UltimateServiceEntities.WorkItem>();
 
             try
-            {
-                var svc = ServicesFactory.Resolve<IWorkItemService>();
-                foreach (var workItemId in workItemIds)
+            {                
+                var svc = ServicesFactory.Resolve<IWorkItemService>();               
+                var workItemRightsObject = svc.GetWorkItemByIds(personId, workItemIds);
+                if (workItemRightsObject.Key != null)
                 {
-                    var workItemRightsObject = svc.GetWorkItemById(personId, workItemId);
-                    if (workItemRightsObject.Key != null)
-                        workItems.Add(ConvertUltimateWorkItemToServiceWorkItem(workItemRightsObject.Key));
-                    else
-                        LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetWorkitemsByIds, "Unable to get workitem for work item id=" + workItemId));
+                    workItemRightsObject.Key.ForEach(x => workItems.Add(ConvertUltimateWorkItemToServiceWorkItem(x)));
+                }
+                else
+                {
+                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetWorkitemsByIds, "Unable to get workitem for work item id=" + workItemIds.FindAll(x=>string.IsNullOrEmpty(x.ToString()))));
                 }
             }
             catch (Exception ex)

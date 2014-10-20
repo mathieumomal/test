@@ -39,6 +39,11 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemByIds(int personId, List<int> workItemIds)
+        {
+            throw new NotImplementedException();
+        }
+
         public int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName, List<int> tbIds)
         {
             throw new NotImplementedException();

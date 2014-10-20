@@ -24,7 +24,7 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public KeyValuePair<string, Report> AnalyseWorkPlanForImport(String path)
         {
-           
+
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var csvImport = new WorkItemImporter() { UoW = uoW };
@@ -47,21 +47,21 @@ namespace Etsi.Ultimate.Services
                     {
                         uoW.Save();
                         var csvExport = new WorkPlanExporter(uoW);
-                        isExportSuccess = csvExport.ExportWorkPlan(exportPath);                        
+                        isExportSuccess = csvExport.ExportWorkPlan(exportPath);
                     }
-                                     
-                }                
-                return (isImportSuccess && isExportSuccess);   
+
+                }
+                return (isImportSuccess && isExportSuccess);
             }
             catch (Exception e)
             {
-                LogManager.Error("Failed to import Workplan: " + e.Message+"\n"+e.StackTrace);
+                LogManager.Error("Failed to import Workplan: " + e.Message + "\n" + e.StackTrace);
                 Exception e2 = e;
                 while (e2 != null)
                 {
                     if (e2.InnerException != null)
                     {
-                        LogManager.Error("Workplan import innerException: "+ e2.InnerException.Message);
+                        LogManager.Error("Workplan import innerException: " + e2.InnerException.Message);
                         e2 = e2.InnerException;
                     }
                     else
@@ -138,6 +138,24 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="personId">Person Id</param>
         /// <param name="workItemId">Work Item Id</param>
+        /// <returns>
+        /// Work Item along with right container
+        /// </returns>
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemByIds(int personId, List<int> workItemIds)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var workItemManager = new WorkItemManager(uoW);
+                return workItemManager.GetWorkItemByIds(personId, workItemIds);
+            }
+        }
+
+
+        /// <summary>
+        /// Get the workitem based on the id
+        /// </summary>
+        /// <param name="personId">Person Id</param>
+        /// <param name="workItemId">Work Item Id</param>
         /// <returns>Work Item, right container and other required properties</returns>
         public KeyValuePair<WorkItem, UserRightsContainer> GetWorkItemByIdExtend(int personId, int workItemId)
         {
@@ -179,7 +197,7 @@ namespace Etsi.Ultimate.Services
                 return workItemManager.GetAllAcronyms();
             }
         }
-        
+
         #endregion
 
 
