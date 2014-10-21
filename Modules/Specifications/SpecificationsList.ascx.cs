@@ -277,14 +277,9 @@ namespace Etsi.Ultimate.Module.Specifications
                     searchObj.NumberNotYetAllocated = Convert.ToBoolean(Request.QueryString["numberNYA"]);
                     cbNumNotYetAllocated.Checked = searchObj.NumberNotYetAllocated;
                 }
+
                 // Management of the WiUid
-                // Add it to the search object only if string is an integer
-                if (!String.IsNullOrEmpty(Request.QueryString["WiUid"]))
-                {
-                    int tmpUid;
-                    if (Int32.TryParse(Request.QueryString["WiUid"], out tmpUid))
-                        searchObj.WiUid = tmpUid;
-                }
+                ParseWiUid(searchObj);
 
             }
             else
@@ -370,6 +365,10 @@ namespace Etsi.Ultimate.Module.Specifications
 
             if (cbForPublication.Checked != cbInternal.Checked)
                 searchObj.IsForPublication = (cbForPublication.Checked) ? true : ((cbInternal.Checked) ? (bool?)false : null);
+
+            // There might be a filter by WI Id.
+            ParseWiUid(searchObj);
+
             return searchObj;
         }
 
@@ -473,6 +472,21 @@ namespace Etsi.Ultimate.Module.Specifications
         #endregion
 
         #region Helper methods
+
+        /// <summary>
+        /// Retrieves Uid from address
+        /// </summary>
+        /// <param name="searchObj"></param>
+        protected void ParseWiUid(SpecificationSearch searchObj)
+        {
+            // Add it to the search object only if string is an integer
+            if (!String.IsNullOrEmpty(Request.QueryString["WiUid"]))
+            {
+                int tmpUid;
+                if (Int32.TryParse(Request.QueryString["WiUid"], out tmpUid))
+                    searchObj.WiUid = tmpUid;
+            }
+        }
 
         /// <summary>
         /// Load Specification list data
