@@ -104,7 +104,7 @@ namespace Etsi.Ultimate.Business
 
             IResponsibleGroupSecretaryRepository repoSecretary = RepositoryFactory.Resolve<IResponsibleGroupSecretaryRepository>();
             repoSecretary.UoW = UoW;
-            var secretaries = repoSecretary.FindAllByCommiteeId(primeResponsibleGroupId);
+            var secretaries = repoSecretary.FindAllByCommiteeId(primeResponsibleGroupId).Where(x => (!x.roleExpirationDate.HasValue) || (x.roleExpirationDate >= DateTime.UtcNow)).ToList();
 
             foreach(var secretary in secretaries)
             {

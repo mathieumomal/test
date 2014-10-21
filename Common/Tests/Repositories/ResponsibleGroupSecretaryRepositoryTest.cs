@@ -26,14 +26,14 @@ namespace Etsi.Ultimate.Tests.Repositories
             }
 
             [Test]
-            [TestCase(2, 1)]//Two secretaries for the comittee id = 1 (TbId)
-            [TestCase(1, 2)]//One secretary for the commitee id = 2
-            [TestCase(0, 3)]//0 secretary for the ommitee id which isn't in the database
+            [TestCase(2, 1)]//Two secretaries for the committee id = 1 (TbId)
+            [TestCase(1, 2)]//One secretary for the committee id = 2
+            [TestCase(0, 3)]//0 secretary for the committee id which isn't in the database            
             public void ResponsibleGroupSecretaryRepository_FindAllByCommiteeId(int result, int tbId)
             {
                 var repo = new ResponsibleGroupSecretaryRepository();
                 repo.UoW = GetUnitOfWork();
-                Assert.AreEqual(result, repo.FindAllByCommiteeId(tbId).Count());
+                Assert.AreEqual(result, repo.FindAllByCommiteeId(tbId).Count());                
             }
 
             [Test]
@@ -83,7 +83,7 @@ namespace Etsi.Ultimate.Tests.Repositories
                 var dbSet = new ResponsibleGroupSecretaryFakeDBSet();
                 dbSet.Add(new ResponsibleGroup_Secretary() { TbId = 1, Email = "one@capgemini.com", PersonId = 1 });
                 dbSet.Add(new ResponsibleGroup_Secretary() { TbId = 1, Email = "onebis@capgemini.com", PersonId = 43 });
-                dbSet.Add(new ResponsibleGroup_Secretary() { TbId = 2, Email = "two@capgemini.com", PersonId = 2 });
+                dbSet.Add(new ResponsibleGroup_Secretary() { TbId = 2, Email = "two@capgemini.com", PersonId = 2 });                
 
                 iUnitOfWork.Stub(uow => uow.Context).Return(iUltimateContext);
                 iUltimateContext.Stub(ctx => ctx.ResponsibleGroupSecretaries).Return(dbSet);

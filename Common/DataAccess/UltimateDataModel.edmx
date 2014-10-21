@@ -41,7 +41,8 @@
             <DefiningQuery>SELECT 
       [ResponsibleGroup_Secretary].[TbId] AS [TbId], 
       [ResponsibleGroup_Secretary].[Email] AS [Email], 
-      [ResponsibleGroup_Secretary].[PersonId] AS [PersonId]
+      [ResponsibleGroup_Secretary].[PersonId] AS [PersonId], 
+      [ResponsibleGroup_Secretary].[roleExpirationDate] AS [roleExpirationDate]
       FROM [dbo].[ResponsibleGroup_Secretary] AS [ResponsibleGroup_Secretary]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Users_AdHoc_Roles" EntityType="Etsi.Ultimate.DataAccess.Store.Users_AdHoc_Roles" store:Type="Views" store:Schema="dbo" store:Name="Users_AdHoc_Roles">
@@ -622,6 +623,7 @@
           <Property Name="TbId" Type="int" />
           <Property Name="Email" Type="varchar" MaxLength="100" />
           <Property Name="PersonId" Type="int" Nullable="false" />
+          <Property Name="roleExpirationDate" Type="datetime" />
         </EntityType>
         <!--Erreurs détectées durant la génération :
       Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_AdHoc_Roles » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
@@ -2134,6 +2136,7 @@
           <Property Type="Int32" Name="TbId" />
           <Property Type="String" Name="Email" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="PersonId" Nullable="false" />
+          <Property Type="DateTime" Name="roleExpirationDate" Precision="3" />
         </EntityType>
         <EntityType Name="Enum_CRCategory">
           <Key>
@@ -2782,6 +2785,7 @@
           <EntitySetMapping Name="ResponsibleGroupSecretaries">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ResponsibleGroup_Secretary">
               <MappingFragment StoreEntitySet="ResponsibleGroup_Secretary">
+                <ScalarProperty Name="roleExpirationDate" ColumnName="roleExpirationDate" />
                 <ScalarProperty Name="PersonId" ColumnName="PersonId" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
                 <ScalarProperty Name="TbId" ColumnName="TbId" />

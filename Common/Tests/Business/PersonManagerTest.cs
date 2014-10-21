@@ -18,9 +18,10 @@ namespace Etsi.Ultimate.Tests.Business
     public class PersonManagerTest
     {
         [Test]
-        [TestCase(2, 1)]//Two secretaries for the comittee id = 1 (TbId)
-        [TestCase(1, 2)]//One secretary for the commitee id = 2
-        [TestCase(0, 3)]//0 secretary for the ommitee id which isn't in the database
+        [TestCase(2, 1)]//Two secretaries for the committee id = 1 (TbId)
+        [TestCase(1, 2)]//One secretary for the committee id = 2
+        [TestCase(0, 3)]//0 secretary for the committee id which isn't in the database
+        [TestCase(0, 4)]//0 secretary for the committee id = 4 because role expired
         public void GetEmailSecretariesFromAPrimeResponsibleGroupByCommityId_Test(int result, int tbId)
         {
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
@@ -42,6 +43,7 @@ namespace Etsi.Ultimate.Tests.Business
                 new ResponsibleGroup_Secretary() { TbId = 1, Email = "one@capgemini.com", PersonId = 1 },
                 new ResponsibleGroup_Secretary() { TbId = 1, Email = "onBis@capgemini.com", PersonId = 11 },
                 new ResponsibleGroup_Secretary() { TbId = 2, Email = "two@capgemini.com", PersonId = 2 },
+                new ResponsibleGroup_Secretary() { TbId = 4, Email = "expired@capgemini.com", PersonId = 3, roleExpirationDate = DateTime.UtcNow.AddDays(-1) },
             };
             return ResponsibleGroupSecretaries;
         }
