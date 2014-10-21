@@ -39,6 +39,12 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Etsi.Ngppdb.DataAccess">
+      <HintPath>libs\Etsi.Ngppdb.DataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="Etsi.Ngppdb.DomainClasses">
+      <HintPath>libs\Etsi.Ngppdb.DomainClasses.dll</HintPath>
+    </Reference>
     <Reference Include="Etsi.Ultimate.Tests">
       <HintPath>..\..\Common\Tests\bin\Debug\Etsi.Ultimate.Tests.dll</HintPath>
     </Reference>
@@ -52,24 +58,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ModuleImport\CR\CRImport.cs" />
-    <Compile Include="ModuleImport\CR\EnumCrCategoryImport.cs" />
-    <Compile Include="ModuleImport\CR\EnumCrImpactImport.cs" />
-    <Compile Include="ModuleImport\CR\TDocImport.cs" />
+    <Compile Include="ModuleImport\NGPPDB\PartialImport\ContributionData.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\CR\CRImport.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\CR\EnumCrCategoryImport.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\CR\EnumCrImpactImport.cs" />
+    <Compile Include="ModuleImport\NGPPDB\Contribution\ContributionImport.cs" />
     <Compile Include="ModuleImport\IModuleImport.cs" />
-    <Compile Include="ModuleImport\ReleaseImport.cs" />
-    <Compile Include="ModuleImport\Specification\Enum_SerieImport.cs" />
-    <Compile Include="ModuleImport\Specification\Enum_TechnologyImport.cs" />
-    <Compile Include="ModuleImport\Specification\SpecificationImport.cs" />
-    <Compile Include="ModuleImport\Specification\SpecificationRapporteurImport.cs" />
-    <Compile Include="ModuleImport\Specification\SpecificationReleaseImport.cs" />
-    <Compile Include="ModuleImport\Specification\SpecificationResponsibleGroupImport.cs" />
-    <Compile Include="ModuleImport\Specification\SpecificationsGenealogyImport.cs" />
-    <Compile Include="ModuleImport\Specification\SpecificationWorkitemImport.cs" />
-    <Compile Include="ModuleImport\Version\VersionImport.cs" />
-    <Compile Include="ModuleImport\WorkItemImport.cs" />
-    <Compile Include="PartialImport\BaseU3GppdbData.cs" />
-    <Compile Include="PartialImport\ContributionData.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\ReleaseImport.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\Specification\Enum_SerieImport.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\Specification\Enum_TechnologyImport.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\Specification\SpecificationImport.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\Specification\SpecificationRapporteurImport.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\Specification\SpecificationReleaseImport.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\Specification\SpecificationResponsibleGroupImport.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\Specification\SpecificationsGenealogyImport.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\Specification\SpecificationWorkitemImport.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\Version\VersionImport.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\WorkItemImport.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\PartialImport\BaseU3GppdbData.cs" />
+    <Compile Include="ModuleImport\U3GPPDB\PartialImport\ChangeRequestData.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utils.cs" />

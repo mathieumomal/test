@@ -39,6 +39,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Etsi.Ngppdb.DataAccess">
+      <HintPath>..\DatabaseImport\libs\Etsi.Ngppdb.DataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="Etsi.Ngppdb.DomainClasses">
+      <HintPath>..\DatabaseImport\libs\Etsi.Ngppdb.DomainClasses.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -58,17 +64,20 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="LegacyDBSets\CRCategoryLegacyFakeDbSet.cs" />
-    <Compile Include="LegacyDBSets\CRStatusValuesLegacyFakeDbSet.cs" />
-    <Compile Include="LegacyDBSets\FakeDBSet.cs" />
-    <Compile Include="LegacyDBSets\FiliusPatrisFakeDBSet.cs" />
-    <Compile Include="LegacyDBSets\ListOfGSM3GCRsFakeDbSet.cs" />
-    <Compile Include="LegacyDBSets\ReleaseInfoFakeDBSet.cs" />
-    <Compile Include="LegacyDBSets\ReleaseLegacyFakeDBSet.cs" />
-    <Compile Include="LegacyDBSets\ScheduleLegacyFakeDBSet.cs" />
-    <Compile Include="LegacyDBSets\SpecificationLegacyFakeDBSet.cs" />
-    <Compile Include="LegacyDBSets\SpecificationWILegacyFakeDBSet.cs" />
-    <Compile Include="LegacyDBSets\TdocLegacyFakeDbSet.cs" />
+    <Compile Include="FakeDBSets\CRCategoryLegacyFakeDbSet.cs" />
+    <Compile Include="FakeDBSets\CRStatusValuesLegacyFakeDbSet.cs" />
+    <Compile Include="FakeDBSets\EnumContributionStatusFakeDbSet.cs" />
+    <Compile Include="FakeDBSets\FakeDBSet.cs" />
+    <Compile Include="FakeDBSets\FiliusPatrisFakeDBSet.cs" />
+    <Compile Include="FakeDBSets\ListOfGSM3GCRsFakeDbSet.cs" />
+    <Compile Include="FakeDBSets\ReleaseInfoFakeDBSet.cs" />
+    <Compile Include="FakeDBSets\ReleaseLegacyFakeDBSet.cs" />
+    <Compile Include="FakeDBSets\ScheduleLegacyFakeDBSet.cs" />
+    <Compile Include="FakeDBSets\SpecificationLegacyFakeDBSet.cs" />
+    <Compile Include="FakeDBSets\SpecificationWILegacyFakeDBSet.cs" />
+    <Compile Include="FakeDBSets\TdocLegacyFakeDbSet.cs" />
+    <Compile Include="FakeDBSets\ContributionFakeDbSet.cs" />
+    <Compile Include="TestContributionImport.cs" />
     <Compile Include="TestCrImport.cs" />
     <Compile Include="TestReleaseImport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

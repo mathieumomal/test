@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Text.RegularExpressions;
-using DatabaseImport.ModuleImport.CR;
-using DatabaseImportTests.LegacyDBSets;
+using DatabaseImport.ModuleImport.U3GPPDB.CR;
+using DatabaseImportTests.FakeDBSets;
 using Etsi.Ultimate.DataAccess;
 using Domain = Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Tools.TmpDbDataAccess;
@@ -56,7 +56,7 @@ namespace DatabaseImportTests
             var report = new Report();
 
             // Execute
-            var import = new EnumCrCategoryImport { LegacyContext = legacyContext, NewContext = newContext, Report = report };
+            var import = new EnumCrCategoryImport { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
             import.FillDatabase();
 
             // Test results
@@ -84,7 +84,7 @@ namespace DatabaseImportTests
             var report = new Report();
 
             // Execute
-            var import = new EnumCrImpactImport { LegacyContext = null, NewContext = newContext, Report = report };
+            var import = new EnumCrImpactImport { LegacyContext = null, UltimateContext = newContext, Report = report };
             import.FillDatabase();
 
             // Test results
@@ -93,40 +93,6 @@ namespace DatabaseImportTests
             var newTDocStatus = newDbSet.All()[0];
             Assert.AreEqual("UICS Apps", newTDocStatus.Code);
         }
-        #endregion
-
-        #region TDoc
-        /*[TestCaseSource("GetTDocObjects")]
-        public void Test_FillDatabase_TDoc(C2006_03_17_tdocs legacyObject, TDoc expectedObject)
-        {
-            // New context mock
-            var newContext = MockRepository.GenerateMock<IUltimateContext>();
-            var newDbSet = new TDocFakeDbSet();
-            newContext.Stub(ctx => ctx.TDocs).Return(newDbSet);
-            newContext.Stub(ctx => ctx.Enum_TDocStatus).Return(GetTDocStatus());
-
-            // Legacy context mock
-            var legacyContext = MockRepository.GenerateMock<ITmpDb>();
-            var legacyDbSet = new TdocLegacyFakeDbSet();
-            legacyDbSet.Add(legacyObject);
-            legacyContext.Stub(ctx => ctx.C2006_03_17_tdocs).Return(legacyDbSet);
-
-            // Report
-            var report = new Report();
-
-            // Execute
-            var import = new TDocImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
-            import.FillDatabase();
-
-            // Test results
-            Assert.AreEqual(1, newDbSet.All().Count);
-
-            var newTDoc = newDbSet.All()[0];
-            Assert.AreEqual(expectedObject.UID, newTDoc.UID);
-            Assert.AreEqual(expectedObject.Title, newTDoc.Title);
-            Assert.AreEqual(expectedObject.Source, newTDoc.Source);
-            Assert.AreEqual(expectedObject.Fk_TDocStatus, newTDoc.Fk_TDocStatus);
-        }*/
         #endregion
 
         #region CR
@@ -160,7 +126,7 @@ namespace DatabaseImportTests
             var report = new Report();
 
             // Execute
-            var import = new CrImport { LegacyContext = legacyContext, NewContext = newContext, Report = report };
+            var import = new CrImport { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
             import.FillDatabase();
 
             // Test results
@@ -325,53 +291,6 @@ namespace DatabaseImportTests
                 );
             }
         }
-        /// <summary>
-        /// Send to the test method the legacy TDoc object and the new expected TDoc object
-        /// </summary>
-        /*public IEnumerable<TestCaseData> GetTDocObjects
-        {
-            get
-            {
-                yield return new TestCaseData(
-                    new C2006_03_17_tdocs()
-                    {
-                        Row_id = 1,
-                        doc_tdoc = "C1-131002",
-                        doc_title = "Tunneling of UE services over restrictive access networks; Protocol Details",
-                        doc_source = "Vodafone",
-                        doc_remarks = "aGreed"
-                    },
-                    new TDoc()
-                    {
-                        UID = "C1-131002",
-                        Title = "Tunneling of UE services over restrictive access networks; Protocol Details",
-                        Source = "Vodafone",
-                        Fk_TDocStatus = 1,
-                    }
-                );
-
-                yield return new TestCaseData(
-                    new C2006_03_17_tdocs()
-                    {
-                        Row_id = 2,
-                        doc_tdoc = "C1-131004",
-                        doc_title = "Pseudo-CR on iFire Firewall Detection and Traversal",
-                        doc_source = "Vodafone/Acme Packet",
-                        doc_remarks = "postponed"
-                    },
-                    new TDoc()
-                    {
-                        UID = "C1-131004",
-                        Title = "Pseudo-CR on iFire Firewall Detection and Traversal",
-                        Source = "Vodafone/Acme Packet",
-                        Fk_TDocStatus = 3,
-                    }
-                );
-
-
-            }
-        }*/
-
 
         private IDbSet<Enum_CRCategory> GetCRCategory()
         {

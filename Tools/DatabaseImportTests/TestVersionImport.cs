@@ -1,6 +1,7 @@
 ﻿using System;
 using DatabaseImport.ModuleImport;
-using DatabaseImportTests.LegacyDBSets;
+using DatabaseImport.ModuleImport.U3GPPDB.Version;
+using DatabaseImportTests.FakeDBSets;
 using Etsi.Ultimate.DataAccess;
 using Domain = Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Tools.TmpDbDataAccess;
@@ -42,7 +43,7 @@ namespace DatabaseImportTests
             // Report
             var report = new Domain.Report();
             // Execute
-            var import = new VersionImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
+            var import = new VersionImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
             import.FillDatabase();
 
 

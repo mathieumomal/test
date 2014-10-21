@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using DatabaseImport.ModuleImport.CR;
-using DatabaseImport.PartialImport;
+using DatabaseImport.ModuleImport.NGPPDB.PartialImport;
+using DatabaseImport.ModuleImport.U3GPPDB.PartialImport;
+using Etsi.Ngppdb.DataAccess;
 using Etsi.Ultimate.Tools.TmpDbDataAccess;
 using Etsi.Ultimate.DataAccess;
 using domain = Etsi.Ultimate.DomainClasses;
@@ -16,30 +17,37 @@ namespace DatabaseImport
         private const string LogPath = "../../../import.log";
         static void Main()
         {
-            var newContext = new UltimateContext();
+            var u3GppContext = new UltimateContext();
+            var ngppContext = new NGPPDBContext();
             var oldContext = new TmpDB();
             var report = new Report();
             List<IModuleImport> operations;
 
             Console.WriteLine("Which data would you import ?");
-            Console.WriteLine("Enter 'A' for All next data");
+            Console.WriteLine("Enter 'A' for All next data (inside U3GPPDB & NGPPDB)");
             Console.WriteLine("Enter 'B' for Base U3GPPDB data (releases, specs, ...)");
-            Console.WriteLine("Enter 'C' for Contribution data (CR, TDoc,...)");
-            var response = Console.Read();
-            switch (response)
+            Console.WriteLine("Enter 'C' for CR data (CR,... inside U3GPPDB)");
+            Console.WriteLine("Enter 'N' for Ngppdb data (Contribution inside NGPPDB)");
+            var responsePartialData = Console.Read();
+            switch (responsePartialData)
             {
                 case 'A':
-                    Console.WriteLine("Import ALL data...");
+                    Console.WriteLine("Import ALL data (U3GPPDB & NGPPDB)...");
                     operations = new List<IModuleImport>();
                     operations.AddRange(new BaseU3GppdbData().Operations);
+                    operations.AddRange(new ChangeRequestData().Operations);
                     operations.AddRange(new ContributionData().Operations);
                     break;
                 case 'B':
-                    Console.WriteLine("Import base U3GPPDB data...");
+                    Console.WriteLine("Import base U3GPPDB data (U3GPPDB)...");
                     operations = new BaseU3GppdbData().Operations;
                     break;
                 case 'C':
-                    Console.WriteLine("Import contribution data...");
+                    Console.WriteLine("Import CR data (U3GPPDB)...");
+                    operations = new ChangeRequestData().Operations;
+                    break;
+                case 'N':
+                    Console.WriteLine("Import Contribution data (NGPPDB)...");
                     operations = new ContributionData().Operations;
                     break;
                 default:
@@ -50,7 +58,8 @@ namespace DatabaseImport
             foreach (var import in operations)
             {
                 import.LegacyContext = oldContext;
-                import.NewContext = newContext;
+                import.UltimateContext = u3GppContext;
+                import.NgppdbContext = ngppContext;
                 import.Report = report;
             }
 
@@ -75,7 +84,8 @@ namespace DatabaseImport
 
             Console.WriteLine("Saving changes...");
             // Save new context
-            newContext.SaveChanges();
+            u3GppContext.SaveChanges();
+            ngppContext.SaveChanges();
 
             Console.WriteLine("Changes saved, import is now finished!");
 

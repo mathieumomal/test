@@ -1,13 +1,12 @@
 ﻿using System;
-using DatabaseImport.ModuleImport;
-using DatabaseImportTests.LegacyDBSets;
+using DatabaseImport.ModuleImport.U3GPPDB;
+using DatabaseImportTests.FakeDBSets;
 using Etsi.Ultimate.DataAccess;
 using Domain = Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Tools.TmpDbDataAccess;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Etsi.Ultimate.Tests.FakeSets;
-using System.Collections.Generic;
 using System.Data.Entity;
 
 namespace DatabaseImportTests
@@ -32,7 +31,7 @@ namespace DatabaseImportTests
             newContext.Stub(ctx => ctx.Remarks).Return(remarkSet);
             newContext.Stub(ctx => ctx.Histories).Return(historiesSet);
 
-            var import = new ReleaseImport() { LegacyContext = null, NewContext = newContext, Report = null };
+            var import = new ReleaseImport() { LegacyContext = null, UltimateContext = newContext, Report = null };
             import.CleanDatabase();
 
             Assert.AreEqual(0, newDbSet.All().Count);
@@ -82,7 +81,7 @@ namespace DatabaseImportTests
             var report = new Domain.Report();
 
             // Execute
-            var import = new ReleaseImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
+            var import = new ReleaseImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
             import.FillDatabase();
 
 
@@ -148,7 +147,7 @@ namespace DatabaseImportTests
             var report = new Domain.Report();
 
             // Execute
-            var import = new ReleaseImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
+            var import = new ReleaseImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
             import.FillDatabase();
 
             // Test results
@@ -251,7 +250,7 @@ namespace DatabaseImportTests
             var report = new Domain.Report();
 
             // Execute
-            var import = new ReleaseImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
+            var import = new ReleaseImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
             import.FillDatabase();
 
             // Test results
