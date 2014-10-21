@@ -15,6 +15,8 @@ namespace Etsi.Ultimate.DomainClasses
                 StringBuilder sb = new StringBuilder();
                 if (!String.IsNullOrEmpty(this.FIRSTNAME))
                     sb.Append(this.FIRSTNAME).Append(" ");
+                if (!String.IsNullOrEmpty(this.LASTNAME))
+                    sb.Append(this.LASTNAME).Append(" ");
                 if (!String.IsNullOrEmpty(this.ORGA_SHORT))
                 {
                     sb.Append("(");
