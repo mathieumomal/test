@@ -28,6 +28,8 @@ namespace Etsi.UserRights.Service
         private const string ConstOrgaStatus3Gppmember = "3GPPMEMBER";
         private const string ConstOrgaStatus3Gppobserv = "3GPPOBSERV";
         private const string ConstOrgaStatus3GpporgRep = "3GPPORG_REP";
+        private const string ConstOrgaStatus3GppGuest = "3GPPGUEST";
+        private const string ConstOrgaStatus3GppInvite = "3GPPINVITE";
         private const string ConstOrgaStatus3Gppexpelled = "3GPPEXPELLED";
         private const string ConstOrgaStatus3Gppwithdraw = "3GPPWITHDRAW";
 
@@ -146,7 +148,9 @@ namespace Etsi.UserRights.Service
                     var allowedOrganisationStatus = new[] { ConstOrgaStatus3GppmarkRep, 
                                                                    ConstOrgaStatus3Gppmember,
                                                                    ConstOrgaStatus3Gppobserv,
-                                                                   ConstOrgaStatus3GpporgRep };
+                                                                   ConstOrgaStatus3GpporgRep, 
+                                                                   ConstOrgaStatus3GppGuest, 
+                                                                   ConstOrgaStatus3GppInvite };
                     var prohibitedOrganisationStatus = new string[] { ConstOrgaStatus3Gppexpelled, ConstOrgaStatus3Gppwithdraw };
 
                     var organisationStatues = (from people in context.People
