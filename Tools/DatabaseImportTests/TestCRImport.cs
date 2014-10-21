@@ -1,5 +1,7 @@
 ﻿using System;
-using DatabaseImport.ModuleImport;
+using System.Linq;
+using System.Text.RegularExpressions;
+using DatabaseImport.ModuleImport.CR;
 using DatabaseImportTests.LegacyDBSets;
 using Etsi.Ultimate.DataAccess;
 using Domain = Etsi.Ultimate.DomainClasses;
@@ -14,16 +16,17 @@ using Etsi.Ultimate.DomainClasses;
 
 namespace DatabaseImportTests
 {
-    public class TestCRImport
+    public class TestCrImport
     {
+        #region CR categories
         /// <summary>
         /// CR Category insertion test
         /// </summary>
         [Test]
         public void Test_FillDatabase_CRCategory()
         {
-            var categoryExample = "A";
-            var meaningExample = "test";
+            const string categoryExample = "A";
+            const string meaningExample = "test";
 
             // New context mock
             var newContext = MockRepository.GenerateMock<IUltimateContext>();
@@ -34,13 +37,13 @@ namespace DatabaseImportTests
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
             var legacyDbSet = new CRCategoryLegacyFakeDbSet
             {
-                new CR_categories()
+                new CR_categories
                 {
                     Row_id = 1,
                     CR_category = "A",
                     meaning = meaningExample
                 },
-                new CR_categories()
+                new CR_categories
                 {
                     Row_id = 2,
                     CR_category = "B",
@@ -50,10 +53,10 @@ namespace DatabaseImportTests
             legacyContext.Stub(ctx => ctx.CR_categories).Return(legacyDbSet);
 
             // Report
-            var report = new Domain.Report();
+            var report = new Report();
 
             // Execute
-            var import = new Enum_CRCategoryImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
+            var import = new EnumCrCategoryImport { LegacyContext = legacyContext, NewContext = newContext, Report = report };
             import.FillDatabase();
 
             // Test results
@@ -63,67 +66,9 @@ namespace DatabaseImportTests
             Assert.AreEqual(meaningExample, newCrCategory.Description);
             Assert.AreEqual(categoryExample, newCrCategory.Code);
         }
+        #endregion
 
-        /// <summary>
-        /// TDoc Status insertion test
-        /// </summary>
-        [Test]
-        public void Test_FillDatabase_TDocStatus()
-        {
-            var validStatus = "tech endorsed";
-            var statusToRemove = " - ";
-            var meaningExample = "test";
-
-            // New context mock
-            var newContext = MockRepository.GenerateMock<IUltimateContext>();
-            var newDbSet = new Enum_TDocStatusFakeDbSet();
-            newContext.Stub(ctx => ctx.Enum_TDocStatus).Return(newDbSet);
-
-            // Legacy context mock
-            var legacyContext = MockRepository.GenerateMock<ITmpDb>();
-            var legacyDbSet = new CRStatusValuesLegacyFakeDbSet();
-            legacyDbSet.Add(
-                new CR_status_values()
-                {
-                    Row_id = 1,
-                    CR_status_value = statusToRemove,
-                    sort_order = 43,
-                    use = meaningExample,
-                    WG = true,
-                    TSG = false
-                }
-            );
-            legacyDbSet.Add(
-                new CR_status_values()
-                {
-                    Row_id = 2,
-                    CR_status_value = validStatus,
-                    sort_order = 60,
-                    use = meaningExample,
-                    WG = true,
-                    TSG = true
-                }
-            );
-            legacyContext.Stub(ctx => ctx.CR_status_values).Return(legacyDbSet);
-
-            // Report
-            var report = new Domain.Report();
-
-            // Execute
-            var import = new Enum_TDocStatusImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
-            import.FillDatabase();
-
-            // Test results
-            Assert.AreEqual(1, newDbSet.All().Count);
-
-            var newTDocStatus = newDbSet.All()[0];
-            Assert.AreEqual(validStatus + " - " + meaningExample, newTDocStatus.Description);
-            Assert.AreEqual(validStatus, newTDocStatus.Code);
-            Assert.AreEqual(true, newTDocStatus.WGUsable);
-            Assert.AreEqual(true, newTDocStatus.TSGUsable);
-            Assert.AreEqual(60, newTDocStatus.SortOrder);
-        }
-
+        #region CR impact
         /// <summary>
         /// TDoc Status insertion test
         /// </summary>
@@ -136,10 +81,10 @@ namespace DatabaseImportTests
             newContext.Stub(ctx => ctx.Enum_CRImpact).Return(newDbSet);
 
             // Report
-            var report = new Domain.Report();
+            var report = new Report();
 
             // Execute
-            var import = new Enum_CRImpactImport() { LegacyContext = null, NewContext = newContext, Report = report };
+            var import = new EnumCrImpactImport { LegacyContext = null, NewContext = newContext, Report = report };
             import.FillDatabase();
 
             // Test results
@@ -148,7 +93,9 @@ namespace DatabaseImportTests
             var newTDocStatus = newDbSet.All()[0];
             Assert.AreEqual("UICS Apps", newTDocStatus.Code);
         }
+        #endregion
 
+        #region TDoc
         /*[TestCaseSource("GetTDocObjects")]
         public void Test_FillDatabase_TDoc(C2006_03_17_tdocs legacyObject, TDoc expectedObject)
         {
@@ -165,7 +112,7 @@ namespace DatabaseImportTests
             legacyContext.Stub(ctx => ctx.C2006_03_17_tdocs).Return(legacyDbSet);
 
             // Report
-            var report = new Domain.Report();
+            var report = new Report();
 
             // Execute
             var import = new TDocImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
@@ -180,20 +127,22 @@ namespace DatabaseImportTests
             Assert.AreEqual(expectedObject.Source, newTDoc.Source);
             Assert.AreEqual(expectedObject.Fk_TDocStatus, newTDoc.Fk_TDocStatus);
         }*/
-        
+        #endregion
+
+        #region CR
         [TestCaseSource("GetCRObjects")]
-        public void test_FillDatabase_CR(List_of_GSM___3G_CRs legacyObject, ChangeRequest expectedObject)
+        public void FillDatabase_CR_NominalCase(List_of_GSM___3G_CRs legacyObject, ChangeRequest expectedObject)
         {
             // New context mock
             var newContext = MockRepository.GenerateMock<IUltimateContext>();
             var newDbSet = new ChangeRequestFakeDbSet();
-            var newWIDbSet = new CRWIFakeDbSet();
+            var newWiDbSet = new CRWIFakeDbSet();
             var newRemarksDbSet = new RemarkFakeDbSet();
             newContext.Stub(ctx => ctx.ChangeRequests).Return(newDbSet);
             newContext.Stub(ctx => ctx.Remarks).Return(newRemarksDbSet);
-            newContext.Stub(ctx => ctx.CR_WorkItems).Return(newWIDbSet);
+            newContext.Stub(ctx => ctx.CR_WorkItems).Return(newWiDbSet);
             newContext.Stub(ctx => ctx.Enum_CRCategory).Return(GetCRCategory());
-            newContext.Stub(ctx => ctx.Enum_TDocStatus).Return(GetTDocStatus());
+            newContext.Stub(ctx => ctx.Enum_ChangeRequestStatus).Return(getChangeRequestStatus());
             newContext.Stub(ctx => ctx.Specifications).Return(GetSpecs());
             newContext.Stub(ctx => ctx.Releases).Return(GetReleases());
             newContext.Stub(ctx => ctx.Specification_Release).Return(GetSpecRelease());
@@ -204,54 +153,78 @@ namespace DatabaseImportTests
 
             // Legacy context mock
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
-            var legacyDbSet = new ListOfGSM3GCRsFakeDbSet();
-            legacyDbSet.Add(legacyObject);
+            var legacyDbSet = new ListOfGSM3GCRsFakeDbSet { legacyObject };
             legacyContext.Stub(ctx => ctx.List_of_GSM___3G_CRs).Return(legacyDbSet);
 
             // Report
-            var report = new Domain.Report();
+            var report = new Report();
 
             // Execute
-            var import = new CRImport() { LegacyContext = legacyContext, NewContext = newContext, Report = report };
+            var import = new CrImport { LegacyContext = legacyContext, NewContext = newContext, Report = report };
             import.FillDatabase();
 
             // Test results
             Assert.AreEqual(1, newDbSet.All().Count);
 
-            var newCR = newDbSet.All()[0];
-            Assert.AreEqual(expectedObject.CRNumber, newCR.CRNumber);
-            Assert.AreEqual(expectedObject.Revision, newCR.Revision);
-            Assert.AreEqual(expectedObject.CreationDate, newCR.CreationDate);
-            Assert.AreEqual(expectedObject.Subject, newCR.Subject);
-            Assert.AreEqual(expectedObject.Fk_Enum_CRCategory, newCR.Fk_Enum_CRCategory);
-            Assert.AreEqual(expectedObject.Fk_WGStatus, newCR.Fk_WGStatus);
-            Assert.AreEqual(expectedObject.Fk_TSGStatus,newCR.Fk_TSGStatus);
-            Assert.AreEqual(expectedObject.Fk_Release, newCR.Fk_Release);
-            Assert.AreEqual(expectedObject.Fk_Specification, newCR.Fk_Specification);
-            Assert.AreEqual(expectedObject.TSGSourceOrganizations, newCR.TSGSourceOrganizations);
-            Assert.AreEqual(expectedObject.WGSourceOrganizations, newCR.WGSourceOrganizations);
-            Assert.AreEqual(expectedObject.Fk_CurrentVersion, newCR.Fk_CurrentVersion);
-            Assert.AreEqual(expectedObject.Fk_NewVersion, newCR.Fk_NewVersion);
-            Assert.AreEqual(expectedObject.TSGMeeting, newCR.TSGMeeting);
-            Assert.AreEqual(expectedObject.WGMeeting, newCR.WGMeeting);
-            Assert.AreEqual(expectedObject.TSGTDoc, newCR.TSGTDoc);
-            Assert.AreEqual(expectedObject.WGTDoc, newCR.WGTDoc);
-            Assert.AreEqual(expectedObject.WGTarget, newCR.WGTarget);
-            Assert.AreEqual(expectedObject.TSGTarget, newCR.TSGTarget);
-            Assert.AreEqual(expectedObject.WGSourceForTSG, newCR.WGSourceForTSG);
-            Assert.AreEqual(1, newCR.Remarks.Count);
-            Assert.AreEqual(2, newCR.CR_WorkItems.Count);
+            var newCr = newDbSet.All()[0];
+            Assert.AreEqual(expectedObject.CRNumber, newCr.CRNumber);
+            Assert.AreEqual(expectedObject.Revision, newCr.Revision);
+            Assert.AreEqual(expectedObject.CreationDate, newCr.CreationDate);
+            Assert.AreEqual(expectedObject.Subject, newCr.Subject);
+            Assert.AreEqual(expectedObject.Fk_Enum_CRCategory, newCr.Fk_Enum_CRCategory);
+            Assert.AreEqual(expectedObject.Fk_WGStatus, newCr.Fk_WGStatus);
+            Assert.AreEqual(expectedObject.Fk_TSGStatus, newCr.Fk_TSGStatus);
+            Assert.AreEqual(expectedObject.Fk_Release, newCr.Fk_Release);
+            Assert.AreEqual(expectedObject.Fk_Specification, newCr.Fk_Specification);
+            Assert.AreEqual(expectedObject.TSGSourceOrganizations, newCr.TSGSourceOrganizations);
+            Assert.AreEqual(expectedObject.WGSourceOrganizations, newCr.WGSourceOrganizations);
+            Assert.AreEqual(expectedObject.Fk_CurrentVersion, newCr.Fk_CurrentVersion);
+            Assert.AreEqual(expectedObject.Fk_NewVersion, newCr.Fk_NewVersion);
+            Assert.AreEqual(expectedObject.TSGMeeting, newCr.TSGMeeting);
+            Assert.AreEqual(expectedObject.WGMeeting, newCr.WGMeeting);
+            Assert.AreEqual(expectedObject.TSGTDoc, newCr.TSGTDoc);
+            Assert.AreEqual(expectedObject.WGTDoc, newCr.WGTDoc);
+            Assert.AreEqual(expectedObject.WGTarget, newCr.WGTarget);
+            Assert.AreEqual(expectedObject.TSGTarget, newCr.TSGTarget);
+            Assert.AreEqual(expectedObject.WGSourceForTSG, newCr.WGSourceForTSG);
+            Assert.AreEqual(1, newCr.Remarks.Count);
+            Assert.AreEqual(2, newCr.CR_WorkItems.Count);
         }
+        #endregion
 
+        #region scratch test
+        [TestCase("agreed", true)]
+        [TestCase("Agreed", true)]
+        [TestCase("BadStatus", false)]
+        [TestCase("agreed - test", true)]
+        [TestCase("test - agreed - test", true)]
+        public void StringContain_CaseInsensitive(string stringToFound, bool expectedResult)
+        {
+            var statuses = new List<string> {"Approved", "Agreed"};
+            var result = statuses.FirstOrDefault(x => stringToFound.ToLower().Contains(x.ToLower()));
+
+            if (expectedResult)
+            {
+                Assert.AreEqual("Agreed", result);
+            }
+            else
+            {
+                Assert.IsNull(result);
+            }
+        }
+        #endregion
+
+        #region data
         /// <summary>
         /// Send to the test method the legacy CR object and the new expected CR object
         /// </summary>
-        public IEnumerable<TestCaseData> GetCRObjects
+        private IEnumerable<TestCaseData> GetCRObjects
         {
             get
             {
+                //Test 1
                 yield return new TestCaseData(
-                    new List_of_GSM___3G_CRs()
+                    new List_of_GSM___3G_CRs//Legacy data
                     {
                         Row_id = 1,
                         CR = "0013",
@@ -259,8 +232,8 @@ namespace DatabaseImportTests
                         Rev = "-",
                         Subject = "test",
                         Cat = "-",
-                        Status_1st_Level = "agreed",
-                        Status_2nd_Level = "approved",
+                        Status_1st_Level = "agreed",//TSG level
+                        Status_2nd_Level = "approved",//WG level
                         Spec = "1",
                         Phase = "Ph2",
                         Version_Current = "1.1.0",
@@ -275,7 +248,7 @@ namespace DatabaseImportTests
                         Workitem = "AZE/RTY",
                         WG_Responsible = "C3"
                     },
-                    new ChangeRequest()
+                    new ChangeRequest//New data
                     {
                         CRNumber = "0013",
                         CreationDate = new DateTime(2010, 1, 18),
@@ -300,8 +273,9 @@ namespace DatabaseImportTests
                     }
                 );
 
+                //Test 2
                 yield return new TestCaseData(
-                    new List_of_GSM___3G_CRs()
+                    new List_of_GSM___3G_CRs//Legacy data
                     {
                         Row_id = 2,
                         CR = "A018",
@@ -309,8 +283,8 @@ namespace DatabaseImportTests
                         Rev = "2",
                         Subject = "test2",
                         Cat = "B",
-                        Status_1st_Level = "posTponed",
-                        Status_2nd_Level = "postPoned",
+                        Status_1st_Level = "--- RejEcted - -",//TSG level
+                        Status_2nd_Level = "postponed",//WG level
                         Spec = "2",
                         Phase = "Ph2",
                         Version_Current = "1.2.0",
@@ -325,7 +299,7 @@ namespace DatabaseImportTests
                         Workitem = "RTY/AZE",
                         WG_Responsible = "C9"
                     },
-                    new ChangeRequest()
+                    new ChangeRequest//New data
                     {
                         CRNumber = "A018",
                         CreationDate = new DateTime(2010, 1, 18),
@@ -349,8 +323,6 @@ namespace DatabaseImportTests
                         WGSourceForTSG = 2
                     }
                 );
-
-
             }
         }
         /// <summary>
@@ -401,79 +373,128 @@ namespace DatabaseImportTests
         }*/
 
 
-        private IDbSet<Domain.Enum_CRCategory> GetCRCategory()
+        private IDbSet<Enum_CRCategory> GetCRCategory()
         {
-            var list = new Enum_CRCategoryFakeDbSet();
-            list.Add(new Domain.Enum_CRCategory() { Pk_EnumCRCategory = 1, Code = "A", Description = "test1" });
-            list.Add(new Domain.Enum_CRCategory() { Pk_EnumCRCategory = 2, Code = "B", Description = "test2" });
-            list.Add(new Domain.Enum_CRCategory() { Pk_EnumCRCategory = 3, Code = "C", Description = "test3" });
+            var list = new Enum_CRCategoryFakeDbSet
+            {
+                new Enum_CRCategory {Pk_EnumCRCategory = 1, Code = "A", Description = "test1"},
+                new Enum_CRCategory {Pk_EnumCRCategory = 2, Code = "B", Description = "test2"},
+                new Enum_CRCategory {Pk_EnumCRCategory = 3, Code = "C", Description = "test3"}
+            };
 
             return list;
         }
 
-        private IDbSet<Domain.Enum_TDocStatus> GetTDocStatus()
+        private IDbSet<Enum_ChangeRequestStatus> getChangeRequestStatus()
         {
-            var list = new Enum_TDocStatusFakeDbSet();
-            list.Add(new Domain.Enum_TDocStatus() { Pk_EnumTDocStatus = 1, SortOrder = 1, TSGUsable = true, WGUsable = true, Description = "test", Code = "agreed" });
-            list.Add(new Domain.Enum_TDocStatus() { Pk_EnumTDocStatus = 2, SortOrder = 2, TSGUsable = false, WGUsable = true, Description = "test", Code = "approved" });
-            list.Add(new Domain.Enum_TDocStatus() { Pk_EnumTDocStatus = 3, SortOrder = 3, TSGUsable = true, WGUsable = false, Description = "test", Code = "postponed" });
+            var list = new Enum_ChangeRequestStatusFakeDbSet
+            {
+                new Enum_ChangeRequestStatus
+                {
+                    Pk_EnumChangeRequestStatus = 1,
+                    Description = "Agreed",
+                    Code = "Agreed"
+                },
+                new Enum_ChangeRequestStatus
+                {
+                    Pk_EnumChangeRequestStatus = 2,
+                    Description = "Approved",
+                    Code = "Approved"
+                },
+                new Enum_ChangeRequestStatus
+                {
+                    Pk_EnumChangeRequestStatus = 3,
+                    Description = "Rejected",
+                    Code = "Rejected"
+                }
+            };
 
             return list;
         }
 
-        private IDbSet<Domain.Specification> GetSpecs()
+        private IDbSet<Specification> GetSpecs()
         {
-            var list = new SpecificationFakeDBSet();
-            list.Add(new Domain.Specification() { Pk_SpecificationId = 1, Number = "1" });
-            list.Add(new Domain.Specification() { Pk_SpecificationId = 2, Number = "2" });
+            var list = new SpecificationFakeDBSet
+            {
+                new Specification {Pk_SpecificationId = 1, Number = "1"},
+                new Specification {Pk_SpecificationId = 2, Number = "2"}
+            };
             return list;
         }
 
-        private IDbSet<Domain.WorkItem> GetWIs()
+        private IDbSet<WorkItem> GetWIs()
         {
-            var list = new WorkItemFakeDBSet();
-            list.Add(new Domain.WorkItem() { Pk_WorkItemUid = 1, Acronym = "AZE" });
-            list.Add(new Domain.WorkItem() { Pk_WorkItemUid = 2, Acronym = "RTY" });
+            var list = new WorkItemFakeDBSet
+            {
+                new WorkItem {Pk_WorkItemUid = 1, Acronym = "AZE"},
+                new WorkItem {Pk_WorkItemUid = 2, Acronym = "RTY"}
+            };
             return list;
         }
 
-        private IDbSet<Domain.Community> GetCommunities()
+        private IDbSet<Community> GetCommunities()
         {
-            var list = new CommunityFakeDBSet();
-            list.Add(new Domain.Community() { TbId = 1, ShortName = "C3", ParentTbId = 2 });
-            list.Add(new Domain.Community() { TbId = 2, ShortName = "C9", ParentTbId = 3 });
+            var list = new CommunityFakeDBSet
+            {
+                new Community {TbId = 1, ShortName = "C3", ParentTbId = 2},
+                new Community {TbId = 2, ShortName = "C9", ParentTbId = 3}
+            };
             return list;
         }
 
         private IDbSet<Domain.Release> GetReleases()
         {
-            var list = new ReleaseFakeDBSet();
-            list.Add(new Domain.Release() { Pk_ReleaseId = 1, Code = "Ph1" });
-            list.Add(new Domain.Release() { Pk_ReleaseId = 2, Code = "Ph2" });
+            var list = new ReleaseFakeDBSet
+            {
+                new Domain.Release {Pk_ReleaseId = 1, Code = "Ph1"},
+                new Domain.Release {Pk_ReleaseId = 2, Code = "Ph2"}
+            };
             return list;
         }
-        private IDbSet<Domain.Specification_Release> GetSpecRelease()
+        private IDbSet<Specification_Release> GetSpecRelease()
         {
-            var list = new SpecificationReleaseFakeDBSet();
-            list.Add(new Domain.Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 2 });
-            list.Add(new Domain.Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 1, Fk_ReleaseId = 5 });
+            var list = new SpecificationReleaseFakeDBSet
+            {
+                new Specification_Release {Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 2},
+                new Specification_Release {Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 1, Fk_ReleaseId = 5}
+            };
             return list;
         }
 
-        private IDbSet<Domain.SpecVersion> GetVersions()
+        private IDbSet<SpecVersion> GetVersions()
         {
-            var list = new SpecVersionFakeDBSet();
-            list.Add(new Domain.SpecVersion() { Pk_VersionId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 2, MajorVersion = 1, TechnicalVersion = 1, EditorialVersion = 0 });
-            list.Add(new Domain.SpecVersion() { Pk_VersionId = 2, Fk_SpecificationId = 2, Fk_ReleaseId = 2, MajorVersion = 2, TechnicalVersion = 1, EditorialVersion = 5 });
+            var list = new SpecVersionFakeDBSet
+            {
+                new SpecVersion
+                {
+                    Pk_VersionId = 1,
+                    Fk_SpecificationId = 1,
+                    Fk_ReleaseId = 2,
+                    MajorVersion = 1,
+                    TechnicalVersion = 1,
+                    EditorialVersion = 0
+                },
+                new SpecVersion
+                {
+                    Pk_VersionId = 2,
+                    Fk_SpecificationId = 2,
+                    Fk_ReleaseId = 2,
+                    MajorVersion = 2,
+                    TechnicalVersion = 1,
+                    EditorialVersion = 5
+                }
+            };
             return list;
         }
-        private IDbSet<Domain.Meeting> GetMeetings()
+        private IDbSet<Meeting> GetMeetings()
         {
-            var list = new MeetingFakeDBSet();
-            list.Add(new Domain.Meeting() { MTG_ID = 1, MtgShortRef = "S3-48" });
-            list.Add(new Domain.Meeting() { MTG_ID = 2, MtgShortRef = "S3-49" });
+            var list = new MeetingFakeDBSet
+            {
+                new Meeting {MTG_ID = 1, MtgShortRef = "S3-48"},
+                new Meeting {MTG_ID = 2, MtgShortRef = "S3-49"}
+            };
             return list;
         }
-
+        #endregion
     }
 }

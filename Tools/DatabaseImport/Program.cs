@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using DatabaseImport.ModuleImport.CR;
+using DatabaseImport.PartialImport;
 using Etsi.Ultimate.Tools.TmpDbDataAccess;
 using Etsi.Ultimate.DataAccess;
 using domain = Etsi.Ultimate.DomainClasses;
@@ -12,51 +11,42 @@ using System.IO;
 
 namespace DatabaseImport
 {
-    class Program
+    static class Program
     {
         private const string LogPath = "../../../import.log";
-        static void Main(string[] args)
+        static void Main()
         {
             var newContext = new UltimateContext();
-
             var oldContext = new TmpDB();
             var report = new Report();
+            List<IModuleImport> operations;
 
+            Console.WriteLine("Which data would you import ?");
+            Console.WriteLine("Enter 'A' for All next data");
+            Console.WriteLine("Enter 'B' for Base U3GPPDB data (releases, specs, ...)");
+            Console.WriteLine("Enter 'C' for Contribution data (CR, TDoc,...)");
+            var response = Console.Read();
+            switch (response)
+            {
+                case 'A':
+                    Console.WriteLine("Import ALL data...");
+                    operations = new List<IModuleImport>();
+                    operations.AddRange(new BaseU3GppdbData().Operations);
+                    operations.AddRange(new ContributionData().Operations);
+                    break;
+                case 'B':
+                    Console.WriteLine("Import base U3GPPDB data...");
+                    operations = new BaseU3GppdbData().Operations;
+                    break;
+                case 'C':
+                    Console.WriteLine("Import contribution data...");
+                    operations = new ContributionData().Operations;
+                    break;
+                default:
+                    return;
+            }
 
-            // CONFIGURE HERE
-            var operations = new List<IModuleImport>();
-            
-            //---> (First to FILLDATABASE)
-            
-            operations.Add(new ReleaseImport());
-            operations.Add(new WorkItemImport());
-            operations.Add(new Enum_SerieImport());
-            operations.Add(new Enum_TechnologyImport());
-            operations.Add(new SpecificationImport());//+SpecificationTechnologies
-            operations.Add(new SpecificationResponsibleGroupImport());
-            operations.Add(new SpecificationsGenealogyImport());
-            operations.Add(new SpecificationRapporteurImport());
-            operations.Add(new SpecificationWorkitemImport());
-            operations.Add(new SpecificationReleaseImport());
-            operations.Add(new VersionImport());
-
-            // Cleanup CRs -- TEMPORARY FIX AS WE ARE NOT USING CRs.
-            var crImport = new CRImport();
-            crImport.NewContext = newContext;
-            crImport.CleanDatabase();
-            newContext.SaveChanges();
-
-            /*operations.Add(new Enum_CRCategoryImport());
-            operations.Add(new Enum_TDocStatusImport());
-            operations.Add(new Enum_CRImpactImport());
-            //operations.Add(new TDocImport());
-            operations.Add(new CRImport());*/
-            
-            //---> (First to CLEANDATABASE)
-
-            Console.WriteLine("Setting up the different classes");
-
-            // set up all contexts and reports
+            // SET UP all contexts and reports
             foreach (var import in operations)
             {
                 import.LegacyContext = oldContext;
@@ -64,16 +54,16 @@ namespace DatabaseImport
                 import.Report = report;
             }
 
-            Console.WriteLine("Cleaning database");
+            Console.WriteLine("Cleaning database...");
 
-            // Clean up in reverse order
+            // CLEAN UP in reverse order
             operations.Reverse();
             foreach (var toClean in operations)
             {
                 toClean.CleanDatabase();
             }
 
-            Console.WriteLine("Filling in database");
+            Console.WriteLine("Filling in database...");
 
             // Load in normal order
             operations.Reverse();
@@ -82,7 +72,8 @@ namespace DatabaseImport
                 toImport.FillDatabase();
             }
 
-            Console.WriteLine("Saving changes");
+
+            Console.WriteLine("Saving changes...");
             // Save new context
             newContext.SaveChanges();
 
@@ -90,11 +81,12 @@ namespace DatabaseImport
 
             Console.WriteLine("------------------- REPORT ---------------------");
             File.WriteAllText(LogPath, report.PrintReport());
-            Console.WriteLine("You could find the log file : 'import.log' in " + LogPath);          
-            
+            Console.WriteLine("You could find the log file : 'import.log' in " + LogPath);
+
             Console.Read();
             Console.Read();
             Console.Read();
+
         }
     }
 }

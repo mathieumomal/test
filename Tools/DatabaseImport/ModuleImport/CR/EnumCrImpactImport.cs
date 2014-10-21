@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Etsi.Ultimate.DomainClasses;
-using Domain = Etsi.Ultimate.DomainClasses;
-using OldDomain = Etsi.Ultimate.Tools.TmpDbDataAccess;
 
-
-namespace DatabaseImport.ModuleImport
+namespace DatabaseImport.ModuleImport.CR
 {
-    public class Enum_CRCategoryImport : IModuleImport
+    public class EnumCrImpactImport : IModuleImport
     {
-        public const string RefImportForLog = "[ENUM_CRCategory]";
+        public const string RefImportForLog = "[ENUM_CRImpact]";
+
+        private readonly List<string> _impacts = new List<string>{
+            "UICS Apps",
+            "ME",
+            "Radio Access Network",
+            "Core Network"
+        };
 
         /// <summary>
         /// Old table(s) : 
-        /// CR-categories
+        /// NO EXIST (MANUALLY CREATED)
         /// </summary>
         #region IModuleImport Membres
 
@@ -25,9 +26,7 @@ namespace DatabaseImport.ModuleImport
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
         public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
 
-        public void CleanDatabase()
-        {
-        }
+        public void CleanDatabase() { }
 
         public void FillDatabase()
         {
@@ -49,16 +48,14 @@ namespace DatabaseImport.ModuleImport
         #region migration methods
         private void CreateTable()
         {
-            foreach (var elt in LegacyContext.CR_categories)
+            foreach (var impact in _impacts)
             {
-                var newCrCategory = new Domain.Enum_CRCategory
+                var newCrImpact = new Etsi.Ultimate.DomainClasses.Enum_CRImpact
                 {
-                    Code = elt.CR_category,
-                    Description =
-                        Utils.CheckString(elt.meaning, 200, RefImportForLog + " category", elt.CR_category, Report)
+                    Code = impact,
+                    Description = new StringBuilder().Append(impact).Append(" - ").ToString()
                 };
-
-                NewContext.Enum_CRCategory.Add(newCrCategory);
+                NewContext.Enum_CRImpact.Add(newCrImpact);
             }
         }
         #endregion

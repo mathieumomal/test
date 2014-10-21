@@ -9,6 +9,7 @@ BEGIN
 	Declare @Error int
 
 	-- Delete from CR
+	DELETE FROM SyncInfo;
 	DELETE FROM CR_WorkItems;
 	DELETE FROM Remarks;
 	DELETE FROM ChangeRequest;

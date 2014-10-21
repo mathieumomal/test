@@ -87,7 +87,6 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
     <EntityDeploy Include="UltimateDataModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>

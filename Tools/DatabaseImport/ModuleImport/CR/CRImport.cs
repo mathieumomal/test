@@ -1,28 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
-using Domain = Etsi.Ultimate.DomainClasses;
-using OldDomain = Etsi.Ultimate.Tools.TmpDbDataAccess;
+using Release = Etsi.Ultimate.DomainClasses.Release;
 
-namespace DatabaseImport.ModuleImport
+namespace DatabaseImport.ModuleImport.CR
 {
-    public class CRImport : IModuleImport
+    public class CrImport : IModuleImport
     {
         //Report part indicator
-        public const string RefImportForLog = "[CR]";
+        private const string RefImportForLog = "[CR]";
         //Objects list initialize one shoot
-        List<Enum_CRCategory> enumCategory;
-        List<Enum_TDocStatus> enumTDocStatus;
-        List<Specification> specs;
-        List<Release> releases;
-        List<Specification_Release> specRelease;
-        List<SpecVersion> specVersions;
-        List<Meeting> meetings;
-        List<WorkItem> wis;
+        List<Enum_CRCategory> _enumChangeRequestCategory;
+        List<Enum_ChangeRequestStatus> _enumChangeRequestStatus;
+        List<Specification> _specs;
+        List<Release> _releases;
+        List<SpecVersion> _specVersions;
+        List<Meeting> _meetings;
+        List<WorkItem> _wis;
 
         /// <summary>
         /// Old table(s) : 
@@ -32,34 +30,64 @@ namespace DatabaseImport.ModuleImport
 
         public Etsi.Ultimate.DataAccess.IUltimateContext NewContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
-        public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
+        public Report Report { get; set; }
 
         public void CleanDatabase(){
-            NewContext.CR_CleanAll();
+            //NewContext.CR_CleanAll();
         }
 
         public void FillDatabase()
         {
+            const int dataSortNumber = 7;
+            var count = 1;
             //Initialization
-            enumCategory = NewContext.Enum_CRCategory.ToList();
-            enumTDocStatus = NewContext.Enum_TDocStatus.ToList();
-            specs = NewContext.Specifications.ToList();
-            releases = NewContext.Releases.ToList();
-            specRelease = NewContext.Specification_Release.ToList();
-            specVersions = NewContext.SpecVersions.ToList();
-            meetings = NewContext.Meetings.ToList();
-            wis = NewContext.WorkItems.ToList();
+            Console.WriteLine("Loading data relative to CR... (could be a long operation...)");
+            Console.WriteLine("Loading CR Category... ({0}/{1})", count, dataSortNumber);
+            _enumChangeRequestCategory = NewContext.Enum_CRCategory.ToList(); count+=1;
+            Console.WriteLine("Loading CR Status... ({0}/{1})", count, dataSortNumber);
+            _enumChangeRequestStatus = NewContext.Enum_ChangeRequestStatus.ToList(); count += 1;
+            Console.WriteLine("Loading Specs... ({0}/{1})", count, dataSortNumber);
+            _specs = NewContext.Specifications.ToList(); count += 1;
+            Console.WriteLine("Loading Releases... ({0}/{1})", count, dataSortNumber);
+            _releases = NewContext.Releases.ToList(); count += 1;
+            Console.WriteLine("Loading Specs version... ({0}/{1})", count, dataSortNumber);
+            _specVersions = NewContext.SpecVersions.ToList(); count += 1;
+            Console.WriteLine("Loading Meetings... ({0}/{1})", count, dataSortNumber);
+            _meetings = NewContext.Meetings.ToList(); count += 1;
+            Console.WriteLine("Loading WIs... ({0}/{1})", count, dataSortNumber);
+            _wis = NewContext.WorkItems.ToList();
 
+            NewContext.SetAutoDetectChanges(false);
             CreateDatas();
-            
+            NewContext.SetAutoDetectChanges(true);
+
             try
             {
                 NewContext.SaveChanges();
             }
+            catch (DbEntityValidationException e)
+            {
+                foreach (var eve in e.EntityValidationErrors)
+                {
+                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                            ve.PropertyName, ve.ErrorMessage);
+                    }
+                }
+                throw;
+            }
             catch (DbUpdateException ex)
             {
                 var test = ex;
-                Console.WriteLine(ex.InnerException);
+                Console.WriteLine("[ERROR GRAVE] DB update exception : " + ex.InnerException);
+                Console.ReadLine();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("[ERROR GRAVE] Exception : " + ex.InnerException);
                 Console.ReadLine();
             }
         }
@@ -75,55 +103,56 @@ namespace DatabaseImport.ModuleImport
             NewContext.SetAutoDetectChanges(false);
             var total = LegacyContext.List_of_GSM___3G_CRs.Count();
             var count = 0;
-            foreach (var legacyCR in LegacyContext.List_of_GSM___3G_CRs)
+            foreach (var legacyCr in LegacyContext.List_of_GSM___3G_CRs)
             {
                 //Log legacy CR indicator
-                var logID = new StringBuilder()
-                    .Append(legacyCR.Spec)
+                var logId = new StringBuilder()
+                    .Append(legacyCr.Spec)
                     .Append("#")
-                    .Append(legacyCR.CR)
+                    .Append(legacyCr.CR)
                     .Append("#")
-                    .Append(legacyCR.Rev)
+                    .Append(legacyCr.Rev)
                     .ToString();
 
-                var newCR = new Domain.ChangeRequest();
-
-                //CR baseline attribute initialization
-                newCR.CRNumber = Utils.CheckString(legacyCR.CR, 10, RefImportForLog + " CRNumber", logID, Report);
-                newCR.Subject = Utils.CheckString(legacyCR.Subject, 300, RefImportForLog + " Subject", logID, Report);
-                newCR.CreationDate = legacyCR.created;
+                var newCr = new ChangeRequest
+                {
+                    //CR baseline attribute initialization
+                    CRNumber = Utils.CheckString(legacyCr.CR, 10, RefImportForLog + " CRNumber", logId, Report),
+                    Subject = Utils.CheckString(legacyCr.Subject, 300, RefImportForLog + " Subject", logId, Report),
+                    CreationDate = legacyCr.created
+                };
 
                 //Others cases
-                RevisionCase(newCR, legacyCR, logID);
+                RevisionCase(newCr, legacyCr, logId);
 
-                SpecReleaseAndVersionCase(newCR, legacyCR, logID);
+                SpecReleaseAndVersionCase(newCr, legacyCr, logId);
 
-                RemarksCase(newCR, legacyCR, logID);
+                RemarksCase(newCr, legacyCr, logId);
 
-                MeetingsCase(newCR, legacyCR, logID);
+                MeetingsCase(newCr, legacyCr, logId);
 
-                CategoryCase(newCR, legacyCR, logID);
+                CategoryCase(newCr, legacyCr, logId);
 
-                StatusCase(newCR, legacyCR, logID);
+                StatusCase(newCr, legacyCr, logId);
 
-                WICase(newCR, legacyCR, logID);
+                WiCase(newCr, legacyCr, logId);
 
-                newCR.TSGTDoc = Utils.CheckString(legacyCR.Doc_1st_Level, 50, RefImportForLog + " TSG Tdoc ", logID, Report);
-                newCR.WGTDoc = Utils.CheckString(legacyCR.Doc_2nd_Level, 50, RefImportForLog + " WG Tdoc ", logID, Report);
+                newCr.TSGTDoc = Utils.CheckString(legacyCr.Doc_1st_Level, 50, RefImportForLog + " TSG Tdoc ", logId, Report);
+                newCr.WGTDoc = Utils.CheckString(legacyCr.Doc_2nd_Level, 50, RefImportForLog + " WG Tdoc ", logId, Report);
 
-                newCR.TSGSourceOrganizations = Utils.CheckString(legacyCR.Source_1st_Level, 100, RefImportForLog + " TSGSourceorganization ", logID, Report);
-                newCR.WGSourceOrganizations = Utils.CheckString(legacyCR.Source_2nd_Level, 100, RefImportForLog + " WGSourceorganization ", logID, Report);
+                newCr.TSGSourceOrganizations = Utils.CheckString(legacyCr.Source_1st_Level, 100, RefImportForLog + " TSGSourceOrganization ", logId, Report);
+                newCr.WGSourceOrganizations = Utils.CheckString(legacyCr.Source_2nd_Level, 100, RefImportForLog + " WGSourceOrganization ", logId, Report);
 
-                TSGWGTargetCase(newCR, legacyCR, logID);
+                TsgwgTargetCase(newCr, legacyCr, logId);
 
-                //no take in consideration for the moment : Impact
+                //not taking in consideration for the moment : Impact
                 
-                NewContext.ChangeRequests.Add(newCR);
+                NewContext.ChangeRequests.Add(newCr);
                 count++;
                 if (count % 100 == 0)
-                    Console.Write(String.Format("\r" + RefImportForLog + " {0}/{1}  ", count, total));
+                    Console.Write("\r" + RefImportForLog + " {0}/{1}  ", count, total);
                 //Save each 10000 CRs cause of memory reasons
-                if (count % 10000 == 0)
+                if (count % 1000 == 0)
                 {
                     Console.Write("\r" + RefImportForLog + " Intermediary Recording  ");
                     NewContext.SetValidateOnSave(false);
@@ -140,58 +169,58 @@ namespace DatabaseImport.ModuleImport
         /// <summary>
         /// Interpret and assign a revision
         /// </summary>
-        /// <param name="newCR"></param>
-        /// <param name="legacyCR"></param>
-        /// <param name="logID"></param>
-        private void RevisionCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
+        /// <param name="newCr"></param>
+        /// <param name="legacyCr"></param>
+        /// <param name="logId"></param>
+        private void RevisionCase(ChangeRequest newCr, Etsi.Ultimate.Tools.TmpDbDataAccess.List_of_GSM___3G_CRs legacyCr, string logId)
         {
-            var legacyVersion = Utils.CheckString(legacyCR.Rev,10,RefImportForLog + " Revision ", logID, Report);
+            var legacyVersion = Utils.CheckString(legacyCr.Rev,10,RefImportForLog + " Revision ", logId, Report);
             if (!String.IsNullOrEmpty(legacyVersion) && !legacyVersion.Equals("-"))
             {
-                newCR.Revision = Utils.CheckStringToInt(legacyVersion, null, RefImportForLog + " Revision ", logID, Report);
+                newCr.Revision = Utils.CheckStringToInt(legacyVersion, null, RefImportForLog + " Revision ", logId, Report);
             }
             else
             {
-                newCR.Revision = 0;
+                newCr.Revision = 0;
             }
         }
 
         /// <summary>
         /// Assigned TSG/WG TDOC status
         /// </summary>
-        /// <param name="newCR"></param>
-        /// <param name="legacyCR"></param>
-        /// <param name="logID"></param>
-        private void StatusCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
+        /// <param name="newCr"></param>
+        /// <param name="legacyCr"></param>
+        /// <param name="logId"></param>
+        private void StatusCase(ChangeRequest newCr, Etsi.Ultimate.Tools.TmpDbDataAccess.List_of_GSM___3G_CRs legacyCr, string logId)
         {
-            var legacyWGStatus = Utils.CheckString(legacyCR.Status_2nd_Level, 20, RefImportForLog + " WG status ", logID, Report).ToLower();
-            var legacyTSGStatus = Utils.CheckString(legacyCR.Status_1st_Level, 20, RefImportForLog + " TSG status ", logID, Report).ToLower();
-            var WGStatus = enumTDocStatus.Where(x => x.Code == legacyWGStatus && x.WGUsable).FirstOrDefault();
-            var TSGStatus = enumTDocStatus.Where(x => x.Code == legacyTSGStatus && x.TSGUsable).FirstOrDefault();
+            var legacyWgStatus = Utils.CheckString(legacyCr.Status_2nd_Level, 20, RefImportForLog + " WG status ", logId, Report).ToLower();
+            var legacyTsgStatus = Utils.CheckString(legacyCr.Status_1st_Level, 20, RefImportForLog + " TSG status ", logId, Report).ToLower();
+            var wgStatus = _enumChangeRequestStatus.FirstOrDefault(x => legacyWgStatus.ToLower().Contains(x.Code.ToLower()));
+            var tsgStatus = _enumChangeRequestStatus.FirstOrDefault(x => legacyTsgStatus.ToLower().Contains(x.Code.ToLower()));
 
-            if (WGStatus != null)
+            if (wgStatus != null)
             {
-                newCR.Enum_TDocStatusWG = WGStatus;
-                newCR.Fk_WGStatus = WGStatus.Pk_EnumTDocStatus;
+                newCr.WgStatus = wgStatus;
+                newCr.Fk_WGStatus = wgStatus.Pk_EnumChangeRequestStatus;
             }
             else
             {
-                if (!legacyWGStatus.Equals("-"))
+                if (!legacyWgStatus.Equals("-"))
                 {
-                    Report.LogWarning(RefImportForLog + "WG Status not found : " + legacyWGStatus + " for CR : " + logID);
+                    Report.LogWarning(RefImportForLog + "WG Status not found : " + legacyWgStatus + " for CR : " + logId);
                 }
             }
 
-            if (TSGStatus != null)
+            if (tsgStatus != null)
             {
-                newCR.Enum_TDocStatusTSG = TSGStatus;
-                newCR.Fk_TSGStatus = TSGStatus.Pk_EnumTDocStatus;
+                newCr.TsgStatus = tsgStatus;
+                newCr.Fk_TSGStatus = tsgStatus.Pk_EnumChangeRequestStatus;
             }
             else
             {
-                if (!legacyTSGStatus.Equals("-"))
+                if (!legacyTsgStatus.Equals("-"))
                 {
-                    Report.LogWarning(RefImportForLog + "TSG Status not found : " + legacyTSGStatus + " for CR : " + logID);
+                    Report.LogWarning(RefImportForLog + "TSG Status not found : " + legacyTsgStatus + " for CR : " + logId);
                 }
             }
         }
@@ -199,25 +228,25 @@ namespace DatabaseImport.ModuleImport
         /// <summary>
         /// Assigned category
         /// </summary>
-        /// <param name="newCR"></param>
-        /// <param name="legacyCR"></param>
-        /// <param name="logID"></param>
-        private void CategoryCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
+        /// <param name="newCr"></param>
+        /// <param name="legacyCr"></param>
+        /// <param name="logId"></param>
+        private void CategoryCase(ChangeRequest newCr, Etsi.Ultimate.Tools.TmpDbDataAccess.List_of_GSM___3G_CRs legacyCr, string logId)
         {
-            var legacyCRCategory = Utils.CheckString(legacyCR.Cat, 5, RefImportForLog + " category ", logID, Report);
+            var legacyCrCategory = Utils.CheckString(legacyCr.Cat, 5, RefImportForLog + " category ", logId, Report);
 
-            if (!String.IsNullOrEmpty(legacyCRCategory))
+            if (!String.IsNullOrEmpty(legacyCrCategory))
             {
-                var categoryAssiocated = enumCategory.Where(x => x.Code == legacyCRCategory).FirstOrDefault();
+                var categoryAssiocated = _enumChangeRequestCategory.FirstOrDefault(x => x.Code == legacyCrCategory);
 
                 if (categoryAssiocated != null)
                 {
-                    newCR.Enum_CRCategory = categoryAssiocated;
-                    newCR.Fk_Enum_CRCategory = categoryAssiocated.Pk_EnumCRCategory;
+                    newCr.Enum_CRCategory = categoryAssiocated;
+                    newCr.Fk_Enum_CRCategory = categoryAssiocated.Pk_EnumCRCategory;
                 }
                 else
                 {
-                    Report.LogWarning(RefImportForLog + "Category not found : " + legacyCRCategory + " for CR : " + logID);
+                    Report.LogWarning(RefImportForLog + "Category not found : " + legacyCrCategory + " for CR : " + logId);
                 }
             }
         }
@@ -228,46 +257,46 @@ namespace DatabaseImport.ModuleImport
         /// + a release 
         /// + a new/current version
         /// </summary>
-        /// <param name="newCR"></param>
-        /// <param name="legacyCR"></param>
-        /// <param name="logID"></param>
-        private void SpecReleaseAndVersionCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
+        /// <param name="newCr"></param>
+        /// <param name="legacyCr"></param>
+        /// <param name="logId"></param>
+        private void SpecReleaseAndVersionCase(ChangeRequest newCr, Etsi.Ultimate.Tools.TmpDbDataAccess.List_of_GSM___3G_CRs legacyCr, string logId)
         {
-            var legacyCRSpecNumber = Utils.CheckString(legacyCR.Spec, 10, RefImportForLog + " Spec Number ", logID, Report);
-            var legacyCRReleaseCode = Utils.CheckString(legacyCR.Phase, 10, RefImportForLog + " Release Code ", logID, Report);
-            var specAssociated = specs.Where(x => x.Number == legacyCRSpecNumber).FirstOrDefault();
-            var releaseAssociated = releases.Where(x => x.Code == legacyCRReleaseCode).FirstOrDefault();
+            var legacyCrSpecNumber = Utils.CheckString(legacyCr.Spec, 10, RefImportForLog + " Spec Number ", logId, Report);
+            var legacyCrReleaseCode = Utils.CheckString(legacyCr.Phase, 10, RefImportForLog + " Release Code ", logId, Report);
+            var specAssociated = _specs.FirstOrDefault(x => x.Number == legacyCrSpecNumber);
+            var releaseAssociated = _releases.FirstOrDefault(x => x.Code == legacyCrReleaseCode);
 
             //Spec 
             if (specAssociated == null)
             {
-                Report.LogWarning(RefImportForLog + "Spec not found : " + legacyCRSpecNumber + ", for CR : " + logID);
+                Report.LogWarning(RefImportForLog + "Spec not found : " + legacyCrSpecNumber + ", for CR : " + logId);
             }
             else
             {
-                newCR.Specification = specAssociated;
-                newCR.Fk_Specification = specAssociated.Pk_SpecificationId;
+                newCr.Specification = specAssociated;
+                newCr.Fk_Specification = specAssociated.Pk_SpecificationId;
             }
 
             //Release
             if (releaseAssociated == null)
             {
-                Report.LogWarning(RefImportForLog + "Release not found : " + legacyCRReleaseCode + ", for CR : " + logID);
+                Report.LogWarning(RefImportForLog + "Release not found : " + legacyCrReleaseCode + ", for CR : " + logId);
             }
             else
             {
-                newCR.Release = releaseAssociated;
-                newCR.Fk_Release = releaseAssociated.Pk_ReleaseId;
+                newCr.Release = releaseAssociated;
+                newCr.Fk_Release = releaseAssociated.Pk_ReleaseId;
             }
 
             //Version NEW
             if (releaseAssociated == null || specAssociated == null)
             {
-                //Report.LogWarning(RefImportForLog + "Versions (target and current) undefined because spec or release undefined, for CR : " + logID);
+                Report.LogWarning(RefImportForLog + "Versions (target and current) undefined because spec or release undefined, for CR : " + logId);
             }
             else
             {
-                var legacyVersion = Utils.CheckString(legacyCR.Version_New, 0, RefImportForLog + " version Checkstring ", logID, Report);
+                var legacyVersion = Utils.CheckString(legacyCr.Version_New, 0, RefImportForLog + " version Checkstring ", logId, Report);
                 if (!String.IsNullOrEmpty(legacyVersion) && !legacyVersion.Equals("-"))
                 {
                     //VERSION NEW
@@ -275,64 +304,60 @@ namespace DatabaseImport.ModuleImport
 
                     if (newVersionExploded.Count() != 3)
                     {
-                        Report.LogWarning(RefImportForLog + "New version invalid format : " + legacyVersion + ", for CR : " + logID);
+                        Report.LogWarning(RefImportForLog + "New version invalid format : " + legacyVersion + ", for CR : " + logId);
                     }
                     else
                     {
-                        var mv = Utils.CheckStringToInt(newVersionExploded[0], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the majorVersion : " + newVersionExploded[0], logID, Report);
-                        var tv = Utils.CheckStringToInt(newVersionExploded[1], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the technicalVersion : " + newVersionExploded[1], logID, Report);
-                        var ev = Utils.CheckStringToInt(newVersionExploded[2], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the editorialVersion : " + newVersionExploded[2], logID, Report);
-                        var newVersionAssociated = specVersions.Where(x =>
-                            x.Fk_ReleaseId == releaseAssociated.Pk_ReleaseId
-                            && x.Fk_SpecificationId == specAssociated.Pk_SpecificationId
-                            && x.MajorVersion == mv
-                            && x.TechnicalVersion == tv
-                            && x.EditorialVersion == ev)
-                            .FirstOrDefault();
+                        var mv = Utils.CheckStringToInt(newVersionExploded[0], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the majorVersion : " + newVersionExploded[0], logId, Report);
+                        var tv = Utils.CheckStringToInt(newVersionExploded[1], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the technicalVersion : " + newVersionExploded[1], logId, Report);
+                        var ev = Utils.CheckStringToInt(newVersionExploded[2], 0, RefImportForLog + "(legacyNewVersion) cannot convert string to int for the editorialVersion : " + newVersionExploded[2], logId, Report);
+                        var newVersionAssociated = _specVersions.FirstOrDefault(x => x.Fk_ReleaseId == releaseAssociated.Pk_ReleaseId
+                                                                                     && x.Fk_SpecificationId == specAssociated.Pk_SpecificationId
+                                                                                     && x.MajorVersion == mv
+                                                                                     && x.TechnicalVersion == tv
+                                                                                     && x.EditorialVersion == ev);
 
                         if (newVersionAssociated != null)
                         {
-                            newCR.NewVersion = newVersionAssociated;
-                            newCR.Fk_NewVersion = newVersionAssociated.Pk_VersionId;
+                            newCr.NewVersion = newVersionAssociated;
+                            newCr.Fk_NewVersion = newVersionAssociated.Pk_VersionId;
                         }
                         else
                         {
-                            Report.LogWarning(RefImportForLog + "New version not found : " + legacyVersion + " with releaseId = " + releaseAssociated.Pk_ReleaseId + " and specId = " + specAssociated.Pk_SpecificationId + ", for CR : " + logID);
+                            Report.LogWarning(RefImportForLog + "New version not found : " + legacyVersion + " with releaseId = " + releaseAssociated.Pk_ReleaseId + " and specId = " + specAssociated.Pk_SpecificationId + ", for CR : " + logId);
                         }
                     }
                 }
-                if (!String.IsNullOrEmpty(legacyCR.Version_Current))
+                if (!String.IsNullOrEmpty(legacyCr.Version_Current))
                 {
-                    var legacyCRTargetVersion = Utils.CheckString(legacyCR.Version_Current, 10, RefImportForLog + " Version-current ", logID, Report);
+                    var legacyCrTargetVersion = Utils.CheckString(legacyCr.Version_Current, 10, RefImportForLog + " Version-current ", logId, Report);
                     //Version TARGET (<=> CURRENT)
-                    var targetVersionExploded = legacyCRTargetVersion.Split('.');
+                    var targetVersionExploded = legacyCrTargetVersion.Split('.');
 
                     if (targetVersionExploded.Count() != 3)
                     {
-                        Report.LogWarning(RefImportForLog + "Target version invalid format : " + legacyCRTargetVersion + ", for CR : " + logID);
+                        Report.LogWarning(RefImportForLog + "Target version invalid format : " + legacyCrTargetVersion + ", for CR : " + logId);
                     }
                     else
                     {
-                        var mv = Utils.CheckStringToInt(targetVersionExploded[0], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the majorVersion : " + targetVersionExploded[0], logID, Report);
-                        var tv = Utils.CheckStringToInt(targetVersionExploded[1], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the technicalVersion : " + targetVersionExploded[1], logID, Report);
-                        var ev = Utils.CheckStringToInt(targetVersionExploded[2], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the editorialVersion : " + targetVersionExploded[2], logID, Report);
+                        var mv = Utils.CheckStringToInt(targetVersionExploded[0], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the majorVersion : " + targetVersionExploded[0], logId, Report);
+                        var tv = Utils.CheckStringToInt(targetVersionExploded[1], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the technicalVersion : " + targetVersionExploded[1], logId, Report);
+                        var ev = Utils.CheckStringToInt(targetVersionExploded[2], 0, RefImportForLog + "(legacyTargetVersion) cannot convert string to int for the editorialVersion : " + targetVersionExploded[2], logId, Report);
 
-                        var targetVersionAssociated = specVersions.Where(x =>
-                            x.Fk_ReleaseId == releaseAssociated.Pk_ReleaseId
-                            && x.Fk_SpecificationId == specAssociated.Pk_SpecificationId
-                            && x.MajorVersion == mv
-                            && x.TechnicalVersion == tv
-                            && x.EditorialVersion == ev)
-                            .FirstOrDefault();
+                        var targetVersionAssociated = _specVersions.FirstOrDefault(x => x.Fk_ReleaseId == releaseAssociated.Pk_ReleaseId
+                                                                                        && x.Fk_SpecificationId == specAssociated.Pk_SpecificationId
+                                                                                        && x.MajorVersion == mv
+                                                                                        && x.TechnicalVersion == tv
+                                                                                        && x.EditorialVersion == ev);
 
                         if (targetVersionAssociated != null)
                         {
-                            newCR.CurrentVersion = targetVersionAssociated;
-                            newCR.Fk_CurrentVersion = targetVersionAssociated.Pk_VersionId;
+                            newCr.CurrentVersion = targetVersionAssociated;
+                            newCr.Fk_CurrentVersion = targetVersionAssociated.Pk_VersionId;
                         }
                         else
                         {
-                            Report.LogWarning(RefImportForLog + "Target version not found : " + legacyCRTargetVersion + ", for CR : " + logID);
+                            Report.LogWarning(RefImportForLog + "Target version not found : " + legacyCrTargetVersion + ", for CR : " + logId);
                         }
                     }
                 }
@@ -342,88 +367,84 @@ namespace DatabaseImport.ModuleImport
         /// <summary>
         /// Assigned meetings
         /// </summary>
-        /// <param name="newCR"></param>
-        /// <param name="legacyCR"></param>
-        /// <param name="logID"></param>
-        private void MeetingsCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
+        /// <param name="newCr"></param>
+        /// <param name="legacyCr"></param>
+        /// <param name="logId"></param>
+        private void MeetingsCase(ChangeRequest newCr, Etsi.Ultimate.Tools.TmpDbDataAccess.List_of_GSM___3G_CRs legacyCr, string logId)
         {
-            var TSGMeeting = Utils.CheckString(legacyCR.Meeting_1st_Level, 10, RefImportForLog + "TSG meeting string format : " + legacyCR.Meeting_1st_Level, logID, Report);
-            var WGMeeting = Utils.CheckString(legacyCR.Meeting_2nd_Level, 10, RefImportForLog + "WG meeting string format : " + legacyCR.Meeting_2nd_Level, logID, Report);
+            var tsgMeeting = Utils.CheckString(legacyCr.Meeting_1st_Level, 10, RefImportForLog + "TSG meeting string format : " + legacyCr.Meeting_1st_Level, logId, Report);
+            var wgMeeting = Utils.CheckString(legacyCr.Meeting_2nd_Level, 10, RefImportForLog + "WG meeting string format : " + legacyCr.Meeting_2nd_Level, logId, Report);
             
             //TSG
-            if (!String.IsNullOrEmpty(TSGMeeting) && !TSGMeeting.Equals("-"))
+            if (!String.IsNullOrEmpty(tsgMeeting) && !tsgMeeting.Equals("-"))
             {
-                var mtg = meetings.Where(m => m.MtgShortRef.Equals(TSGMeeting)).FirstOrDefault();
+                var mtg = _meetings.FirstOrDefault(m => m.MtgShortRef.Equals(tsgMeeting));
 
                 if (mtg == null)
-                    Report.LogWarning(RefImportForLog + "TSG meeting not found: " + TSGMeeting + " for CR : " + logID );
+                    Report.LogWarning(RefImportForLog + "TSG meeting not found: " + tsgMeeting + " for CR : " + logId );
                 else
-                    newCR.TSGMeeting = mtg.MTG_ID;
+                    newCr.TSGMeeting = mtg.MTG_ID;
             }
 
             //WG
-            if (!String.IsNullOrEmpty(WGMeeting) && !WGMeeting.Equals("-"))
+            if (!String.IsNullOrEmpty(wgMeeting) && !wgMeeting.Equals("-"))
             {
-                var mtg = meetings.Where(m => m.MtgShortRef.Equals(WGMeeting)).FirstOrDefault();
+                var mtg = _meetings.FirstOrDefault(m => m.MtgShortRef.Equals(wgMeeting));
 
                 if (mtg == null)
-                    Report.LogWarning(RefImportForLog + "WG meeting not found: " + WGMeeting + " for CR : " + logID);
+                    Report.LogWarning(RefImportForLog + "WG meeting not found: " + wgMeeting + " for CR : " + logId);
                 else
-                    newCR.WGMeeting = mtg.MTG_ID;
+                    newCr.WGMeeting = mtg.MTG_ID;
             }
         }
 
         /// <summary>
         /// Insert remark associated 
         /// </summary>
-        /// <param name="newCR"></param>
-        /// <param name="legacyCR"></param>
-        /// <param name="logID"></param>
-        private void RemarksCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
+        /// <param name="newCr"></param>
+        /// <param name="legacyCr"></param>
+        /// <param name="logId"></param>
+        private void RemarksCase(ChangeRequest newCr, Etsi.Ultimate.Tools.TmpDbDataAccess.List_of_GSM___3G_CRs legacyCr, string logId)
         {
-            var remarksField = Utils.CheckString(legacyCR.Remarks, 255, RefImportForLog + " Remarks ", logID, Report);
+            var remarksField = Utils.CheckString(legacyCr.Remarks, 255, RefImportForLog + " Remarks ", logId, Report);
 
-            if (remarksField == null || remarksField.Length == 0)
+            if (string.IsNullOrEmpty(remarksField))
                 return;
 
-            var remark = new Domain.Remark()
+            var remark = new Remark
             {
                 CreationDate = DateTime.Now,
                 IsPublic = true,
                 RemarkText = remarksField,
-                ChangeRequest = newCR
+                ChangeRequest = newCr
             };
-            newCR.Remarks.Add(remark);
+            newCr.Remarks.Add(remark);
         }
 
         /// <summary>
         /// Assigned a list of WI (separate by '/')
         /// </summary>
-        /// <param name="newCR"></param>
-        /// <param name="legacyCR"></param>
-        /// <param name="logID"></param>
-        private void WICase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
+        /// <param name="newCr"></param>
+        /// <param name="legacyCr"></param>
+        /// <param name="logId"></param>
+        private void WiCase(ChangeRequest newCr, Etsi.Ultimate.Tools.TmpDbDataAccess.List_of_GSM___3G_CRs legacyCr, string logId)
         {
-            var WIField = Utils.CheckString(legacyCR.Workitem, 50, RefImportForLog + " WI ", logID, Report);
+            var wiField = Utils.CheckString(legacyCr.Workitem, 50, RefImportForLog + " WI ", logId, Report);
 
-            if (WIField == null || WIField.Length == 0)
-                return;
-            else
+            if (!string.IsNullOrEmpty(wiField))
             {
-                var wiExploded = WIField.Split('/');
+                var wiExploded = wiField.Split('/');
 
                 foreach (var wilabel in wiExploded)
                 {
-                    var wi = wis.Where(m => m.Acronym == wilabel).FirstOrDefault();
+                    var wi = _wis.FirstOrDefault(m => m.Acronym == wilabel);
 
                     if (wi == null)
-                        Report.LogWarning(RefImportForLog + "WI not found: " + WIField + " for CR : " + logID);
+                        Report.LogWarning(RefImportForLog + "WI not found: " + wiField + " for CR : " + logId);
                     else
                     {
-                        var crWi = new CR_WorkItems();
-                        crWi.ChangeRequest = newCR;
-                        crWi.WorkItem = wi;
-                        newCR.CR_WorkItems.Add(crWi);
+                        var crWi = new CR_WorkItems {ChangeRequest = newCr, WorkItem = wi};
+                        newCr.CR_WorkItems.Add(crWi);
                     }
                 }
             }
@@ -438,27 +459,27 @@ namespace DatabaseImport.ModuleImport
         /// - TSGTarget -> WG_Responsible PARENT
         /// - WGSourceForTSG -> WG_Responsible
         /// </summary>
-        /// <param name="newCR"></param>
-        /// <param name="legacyCR"></param>
-        /// <param name="logID"></param>
-        private void TSGWGTargetCase(Domain.ChangeRequest newCR, OldDomain.List_of_GSM___3G_CRs legacyCR, string logID)
+        /// <param name="newCr"></param>
+        /// <param name="legacyCr"></param>
+        /// <param name="logId"></param>
+        private void TsgwgTargetCase(ChangeRequest newCr, Etsi.Ultimate.Tools.TmpDbDataAccess.List_of_GSM___3G_CRs legacyCr, string logId)
         {
             //WGSourceForTSG
-            var WGResponsibleLegacy = legacyCR.WG_Responsible;
+            var wgResponsibleLegacy = legacyCr.WG_Responsible;
 
-            if (WGResponsibleLegacy != null && !String.IsNullOrEmpty(WGResponsibleLegacy))
+            if (wgResponsibleLegacy != null && !String.IsNullOrEmpty(wgResponsibleLegacy))
             {
-                var community = NewContext.Communities.Where(x => x.ShortName == WGResponsibleLegacy).FirstOrDefault();
+                var community = NewContext.Communities.FirstOrDefault(x => x.ShortName == wgResponsibleLegacy);
                 if (community != null)
                 {
                     //If the community (WG responsible) is found : we take it as the WGTarget and its parent as TSGtarget
-                    newCR.WGTarget = community.TbId;
-                    newCR.TSGTarget = community.ParentTbId;
-                    newCR.WGSourceForTSG = community.TbId;
+                    newCr.WGTarget = community.TbId;
+                    newCr.TSGTarget = community.ParentTbId;
+                    newCr.WGSourceForTSG = community.TbId;
                 }
                 else
                 {
-                    Report.LogWarning(RefImportForLog + "Community not found: " + WGResponsibleLegacy + " for CR : " + logID + " (WG and TSG target not assigned)");
+                    Report.LogWarning(RefImportForLog + "Community not found: " + wgResponsibleLegacy + " for CR : " + logId + " (WG and TSG target not assigned)");
                 }
             }
         }
