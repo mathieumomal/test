@@ -67,6 +67,7 @@
     <Compile Include="FakeDBSets\CRCategoryLegacyFakeDbSet.cs" />
     <Compile Include="FakeDBSets\CRStatusValuesLegacyFakeDbSet.cs" />
     <Compile Include="FakeDBSets\EnumContributionStatusFakeDbSet.cs" />
+    <Compile Include="FakeDBSets\EnumContributionTypeFakeDbSet.cs" />
     <Compile Include="FakeDBSets\FakeDBSet.cs" />
     <Compile Include="FakeDBSets\FiliusPatrisFakeDBSet.cs" />
     <Compile Include="FakeDBSets\ListOfGSM3GCRsFakeDbSet.cs" />

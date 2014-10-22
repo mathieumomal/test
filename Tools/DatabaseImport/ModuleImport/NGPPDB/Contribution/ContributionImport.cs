@@ -4,6 +4,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using Etsi.Ngppdb.DomainClasses;
+using Etsi.Ultimate.DomainClasses;
 
 namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
 {
@@ -11,6 +12,8 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
     {
         private const string RefImportForLog = "[Contribution(NGPPDB)]";
         List<Enum_ContributionStatus> _enumContributionStatus;
+        List<Enum_ContributionType> _enumContributionType;
+        List<Meeting> _meetings;
 
         /// <summary>
         /// Old table(s) : 
@@ -21,14 +24,19 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
         public Etsi.Ultimate.DataAccess.IUltimateContext UltimateContext { get; set; }
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
-        public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
+        public Report Report { get; set; }
 
-        public void CleanDatabase(){}
+        public void CleanDatabase()
+        {
+            NgppdbContext.Contribution_CleanAll();
+        }
 
         public void FillDatabase()
         {
             //Init necessary objects
             _enumContributionStatus = NgppdbContext.Enum_ContributionStatus.ToList();
+            _enumContributionType = NgppdbContext.Enum_ContributionType.ToList();
+            _meetings = UltimateContext.Meetings.ToList();
 
             NgppdbContext.SetAutoDetectChanges(false);
             CreateDatas();
@@ -74,32 +82,30 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
             var count = 0;
             foreach (var legacyTdoc in LegacyContext.C2006_03_17_tdocs)
             {
-                var newTDoc = new Etsi.Ngppdb.DomainClasses.Contribution();
+                var newTDoc = new Etsi.Ngppdb.DomainClasses.Contribution
+                {
+                    uid = Utils.CheckString(legacyTdoc.doc_tdoc, 200, RefImportForLog + " UID ", legacyTdoc.doc_tdoc, Report),
+                    title = Utils.CheckString(legacyTdoc.doc_title, 200, RefImportForLog + " Title ", legacyTdoc.doc_tdoc, Report),
+                    MainContact = "Import from MS Access",
+                    fk_Owner = 0,
+                    Denorm_Source = Utils.CheckString(legacyTdoc.doc_source, 500, RefImportForLog + " Source ", legacyTdoc.doc_tdoc, Report),
+                    lastModificationDate = DateTime.Now,
+                    fk_Enum_For = 1,//Decision
+                };
 
-                newTDoc.uid = Utils.CheckString(legacyTdoc.doc_tdoc, 255, RefImportForLog + " UID ", legacyTdoc.doc_tdoc, Report);//NOT SURE !!!!!!!!!!!!!!!!!!!!!!
-                newTDoc.title = Utils.CheckString(legacyTdoc.doc_title,255,RefImportForLog + " Title ",legacyTdoc.doc_tdoc, Report);
-                //newTDoc.DecisionDate = ;
-                //newTDoc.Filename = ;
+                StatusCase(newTDoc, legacyTdoc);
 
-                //newTDoc.SubmittedAt = ;
-                //newTDoc.ReservedAt = ;
-                //newTDoc.Abstract = ;
-                //newTDoc.Source = Utils.CheckString(legacyTdoc.doc_source, 255, RefImportForLog + " Source ", legacyTdoc.doc_tdoc, Report); ;
+                TypeCase(newTDoc, legacyTdoc);
 
-                //newTDoc.Fk_InputGroup = ;
-                //newTDoc.Fk_MainContact = ;
-                //newTDoc.Fk_MeetingAllocation = ;
+                MeetingCase(newTDoc, legacyTdoc);
 
-                //newTDoc.Fk_AgendaAllocation = ;
-                //StatusCase(newTDoc, legacyTdoc, CountStatusUndefinded);//Accès via remarques
-                //newTDoc.Fk_TDocFor = ;
-                //newTDoc.Fk_TDocType = ;
+                
                 NgppdbContext.Contribution.Add(newTDoc);
                 count++;
                 if (count % 100 == 0)
                     Console.Write("\r" + RefImportForLog + " {0}/{1}  ", count, total);
                 //Save each 10000 CRs cause of memory reasons
-                if (count % 1000 == 0)
+                if (count % 10000 == 0)
                 {
                     Console.Write("\r" + RefImportForLog + " Intermediary Recording  ");
                     NgppdbContext.SetValidateOnSave(false);
@@ -113,10 +119,17 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
             }
         }
 
-        /*private void StatusCase(Etsi.Ngppdb.DomainClasses.Contribution newTDoc, Etsi.Ultimate.Tools.TmpDbDataAccess.C2006_03_17_tdocs legacyTDoc, int countStatusUndefinded)
+        /// <summary>
+        /// Status case
+        /// Default value : treated
+        /// </summary>
+        /// <param name="newTDoc"></param>
+        /// <param name="legacyTDoc"></param>
+        private void StatusCase(Etsi.Ngppdb.DomainClasses.Contribution newTDoc, Etsi.Ultimate.Tools.TmpDbDataAccess.C2006_03_17_tdocs legacyTDoc)
         {
             var legacyStatus = Utils.CheckString(legacyTDoc.doc_remarks, 0, RefImportForLog + " status ", legacyTDoc.doc_tdoc, Report).ToLower();
-            var status = _enumContributionStatus.Where(x => x.Enum_Code == legacyStatus).FirstOrDefault();
+            var status = _enumContributionStatus.FirstOrDefault(x => legacyStatus.ToLower().Contains(x.Enum_Value.ToLower()));
+            var defaultStatus = _enumContributionStatus.FirstOrDefault(x => x.Enum_Code.Trim() == Enum_ContributionStatus.Treated);
 
             if (status != null)
             {
@@ -125,9 +138,54 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
             }
             else
             {
-                countStatusUndefinded++;
+                newTDoc.Enum_ContributionStatus = defaultStatus;
+                newTDoc.fk_Enum_ContributionStatus = defaultStatus.pk_Enum_ContributionStatus;
+                Report.LogWarning(RefImportForLog + "Status not found : " + legacyStatus + " for contribution : " + legacyTDoc.doc_tdoc + "default value setted : " + defaultStatus.Enum_Value);
             }
-        }*/
+        }
+
+        /// <summary>
+        /// Status case
+        /// Remark : crFlag is always false for each contribution. We cannot determine easily if a contribution is a CR
+        /// </summary>
+        /// <param name="newTDoc"></param>
+        /// <param name="legacyTDoc"></param>
+        private void TypeCase(Etsi.Ngppdb.DomainClasses.Contribution newTDoc, Etsi.Ultimate.Tools.TmpDbDataAccess.C2006_03_17_tdocs legacyTDoc)
+        {
+            var type = _enumContributionType.Find(x => x.Enum_Code == Enum_ContributionType.OtherContribution);
+            newTDoc.Enum_ContributionType = type;
+            newTDoc.fk_Enum_ContributionType = type.pk_Enum_ContributionType;
+        }
+
+        /// <summary>
+        /// Assigned meeting
+        /// </summary>
+        private void MeetingCase(Etsi.Ngppdb.DomainClasses.Contribution newTDoc, Etsi.Ultimate.Tools.TmpDbDataAccess.C2006_03_17_tdocs legacyTDoc)
+        {
+            var meetingUid = Utils.CheckString(legacyTDoc.doc_mtg, 25, RefImportForLog + "Meeting string format : " + legacyTDoc.doc_mtg, legacyTDoc.doc_tdoc, Report);
+
+            if (!String.IsNullOrEmpty(meetingUid) && !meetingUid.Equals("-"))
+            {
+                var mtg = _meetings.FirstOrDefault(m => m.MtgShortRef.Equals(meetingUid));
+
+                if (mtg == null)
+                    Report.LogWarning(RefImportForLog + "Meeting not found: " + meetingUid + " for contribution : " + legacyTDoc.doc_tdoc);
+                else
+                    newTDoc.ContribAllocation.Add(new ContribAllocation
+                    {
+                        fk_Meeting = mtg.MTG_ID,
+                        lastModificationAuthor = "Import from MS Access",
+                        lastModificationDate = DateTime.Now,
+                        ContribAllocation_Date = DateTime.Now,
+                        ContribAllocation_Number = 0
+                    });
+            }
+            else
+            {
+                Report.LogWarning(RefImportForLog + "Meeting not found: " + meetingUid + " for contribution : " + legacyTDoc.doc_tdoc);
+            }
+        }
+
         #endregion
          
     }

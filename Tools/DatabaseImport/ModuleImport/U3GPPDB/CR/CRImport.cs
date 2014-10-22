@@ -151,7 +151,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
                 if (count % 100 == 0)
                     Console.Write("\r" + RefImportForLog + " {0}/{1}  ", count, total);
                 //Save each 10000 CRs cause of memory reasons
-                if (count % 1000 == 0)
+                if (count % 10000 == 0)
                 {
                     Console.Write("\r" + RefImportForLog + " Intermediary Recording  ");
                     UltimateContext.SaveChanges();
