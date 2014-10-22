@@ -10,7 +10,7 @@
 <%@ Register TagPrefix="ult" TagName="ReleaseSearchControl" Src="../../controls/Ultimate/ReleaseSearchControl.ascx" %>
 <%@ Register TagPrefix="ult" TagName="CommunityControl" Src="../../controls/Ultimate/CommunityControl.ascx" %>
 
-<div id="componentSpecList">
+<asp:Panel ID="componentSpecList" runat="server" Visible="false">
     <asp:UpdateProgress ID="updateProgressSpecificationGrid" runat="server" DisplayAfter="200">
         <ProgressTemplate>
             <div class="modalBackground">
@@ -283,5 +283,5 @@
             }
         }
     </script>
-</div>
+</asp:Panel>
 

@@ -151,8 +151,11 @@ namespace Etsi.Ultimate.Module.Specifications
             try
             {
                 GetRequestParameters();
-                if (!IsPostBack)
+                if (!IsPostBack || !componentSpecList.Visible)
                 {
+                    //Set panel visibility to true
+                    componentSpecList.Visible = true; 
+
                     // Display or not NumberNotYetAllocated
                     var personService = ServicesFactory.Resolve<IPersonService>();
 

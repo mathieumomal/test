@@ -13,7 +13,16 @@ namespace Etsi.Ultimate.Module.Specifications {
     public partial class SpecificationsList {
         
         /// <summary>
-        /// updateProgressSpecificationGrid control.
+        /// Contrôle componentSpecList.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel componentSpecList;
+        
+        /// <summary>
+        /// Contrôle updateProgressSpecificationGrid.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
