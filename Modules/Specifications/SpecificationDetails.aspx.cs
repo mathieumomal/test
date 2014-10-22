@@ -100,7 +100,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
                 //Load parent page to reflect changes
                 if (fromEdit)
-                    this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Refresh", "window.opener.location.reload(true);", true);
+                    this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Refresh", "window.opener.refreshSpecList();", true);
 
                 if (!String.IsNullOrEmpty(CreateError))
                 {

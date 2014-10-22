@@ -296,7 +296,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 searchObj.SelectedCommunityIds = tbList;
             }
 
-            LoadGridData();
+            LoadGridData(true);
         }
 
         /// <summary>
@@ -306,19 +306,25 @@ namespace Etsi.Ultimate.Module.Specifications
         /// <param name="e"></param>
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            //flag used in ShortURL generation
-            fromSearch = true;
-            searchObj = FillInSearchObj();
-            
-            ultShareUrl.IsShortUrlChecked = false;
-            LoadGridData();
+            LoadDataWithSearchParameters(true);
+        }
+
+      
+        /// <summary>
+        /// On Refresh btn click populate searchObj
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnRefresh_Click(object sender, EventArgs e)
+        {
+            LoadDataWithSearchParameters(false);
         }
 
         /// <summary>
         /// Fills in search object from the search form.
         /// </summary>
         /// <returns></returns>
-        private SpecificationSearch FillInSearchObj()
+        private SpecificationSearch FillInSearchObj(bool shouldResetPageNumber)
         {
             searchObj = new SpecificationSearch();
 
@@ -365,6 +371,12 @@ namespace Etsi.Ultimate.Module.Specifications
 
             if (cbForPublication.Checked != cbInternal.Checked)
                 searchObj.IsForPublication = (cbForPublication.Checked) ? true : ((cbInternal.Checked) ? (bool?)false : null);
+
+            if (!shouldResetPageNumber)
+            {
+                searchObj.SkipRecords = rgSpecificationList.CurrentPageIndex * rgSpecificationList.PageSize;
+                searchObj.PageSize = rgSpecificationList.PageSize;
+            }
 
             // There might be a filter by WI Id.
             ParseWiUid(searchObj);
@@ -489,15 +501,31 @@ namespace Etsi.Ultimate.Module.Specifications
         }
 
         /// <summary>
+        /// This method is in charge of loading the data following a search or a refresh.
+        /// </summary>
+        /// <param name="shouldResetPageNumber">Whether pagination should be back to 1.</param>
+        private void LoadDataWithSearchParameters(bool shouldResetPageNumber)
+        {
+            //flag used in ShortURL generation
+            fromSearch = true;
+            searchObj = FillInSearchObj(shouldResetPageNumber);
+
+            ultShareUrl.IsShortUrlChecked = false;
+            LoadGridData(shouldResetPageNumber);
+        }
+
+
+        /// <summary>
         /// Load Specification list data
         /// </summary>
-        private void LoadGridData()
+        private void LoadGridData(bool shouldReinitializePage)
         {
             ManageShareUrl();
             fromSearch = true;
             ManageFullView();
             SetSearchLabel();
-            rgSpecificationList.CurrentPageIndex = 0;
+            if (shouldReinitializePage)
+                rgSpecificationList.CurrentPageIndex = 0;
             rgSpecificationList.Rebind();
         }
 
@@ -705,7 +733,7 @@ namespace Etsi.Ultimate.Module.Specifications
         protected void btnSpecExport_Click(object sender, ImageClickEventArgs e)
         {
             ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
-            searchObj = FillInSearchObj();
+            searchObj = FillInSearchObj(false);
             var filepath = svc.ExportSpecification(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj, Request.Url.GetLeftPart(UriPartial.Authority));
 
             hidSpecAddress.Value = filepath;

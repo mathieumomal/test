@@ -221,6 +221,10 @@ span.requiredField {
     float: right;
 }
 
+.btnHidden {
+    display:none;
+}
+
 #componentSpecList .modalBackground 
 {
     background-color: Gray;
@@ -270,3 +274,4 @@ span.requiredField {
 {
 	padding:0;
 }
+

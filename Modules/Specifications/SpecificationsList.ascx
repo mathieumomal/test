@@ -126,6 +126,7 @@
                                                                 <td colspan="2" style="text-align: right; padding-right: 20px">
                                                                     <asp:Button ID="btnDefault" Visible="false" runat="server" Text="Default" Width="150px" OnClientClick="collapseItem()"></asp:Button>
                                                                     <asp:Button ID="btnSearch" runat="server" Text="Search" Width="150px" OnClick="btnSearch_Click" OnClientClick="collapseItem()"></asp:Button></td>
+                                                                    <asp:Button ID="btnRefresh" runat="server" Text="Refresh" Width="150px" OnClick="btnRefresh_Click" OnClientClick="collapseItem()" CssClass="BtnHidden"></asp:Button></td>
                                                             </tr>
                                                         </table>
                                                     </td>
@@ -224,23 +225,21 @@
     </telerik:RadWindowManager>
     <script type="text/javascript">
         var lastVal = "";
+
+        /** Function used after each query **/
+        function processEndRequest() {
+            checkExport();
+            adaptContentHeight();
+        }
+
         function checkExport() {
             var hidExport = $("#<%=hidSpecAddress.ClientID %>");
             if (hidExport != null && hidExport.val() != "" && hidExport.val() != lastVal) {
                 lastVal = hidExport.val();
                 window.location.replace(hidExport.val());
             }
+            adaptContentHeight();
         }
-
-        function removeBg() {
-            setTimeout(function () {
-                alert('test');
-                var greyArea = $("#<%=updateProgressSpecificationGrid.ClientID %>");
-                greyArea.css('visibility', 'hidden');
-            }, 2000);
-        }
-
-
 
 
         function collapseItem() {
@@ -263,7 +262,7 @@
             gridDiv.style.height = (hContent - securityValue) + "px";
         });
 
-        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(checkExport);
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(processEndRequest);
 
         function openFTPConfiguration() {
             var radWindowFTPConfiguration = $find("<%= rwFTPConfiguration.ClientID %>");
@@ -276,6 +275,13 @@
             return false;
         }
 
+        // Function called by outside page to trigger a click on the search button.
+        function refreshSpecList() {
+            var searchButton = $("#<%= btnRefresh.ClientID %>");
+            if (searchButton != null) {
+                searchButton.click();
+            }
+        }
     </script>
 </div>
 
