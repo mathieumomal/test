@@ -148,6 +148,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 var wiService = ServicesFactory.Resolve<IWorkItemService>();
                 if (!IsPostBack || !moduleWI.Visible)
                 {
+                    moduleWI.Visible = true; 
                     //Get settings
                     if (Settings.Contains(Enum_Settings.WorkItem_ExportPath.ToString()))
                         PathExportWorkPlan = Settings[Enum_Settings.WorkItem_ExportPath.ToString()].ToString();
