@@ -221,7 +221,7 @@ span.requiredField {
     float: right;
 }
 
-.btnHidden {
+#componentSpecList .btnHidden {
     display:none;
 }
 

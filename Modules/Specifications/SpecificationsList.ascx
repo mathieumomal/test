@@ -126,7 +126,7 @@
                                                                 <td colspan="2" style="text-align: right; padding-right: 20px">
                                                                     <asp:Button ID="btnDefault" Visible="false" runat="server" Text="Default" Width="150px" OnClientClick="collapseItem()"></asp:Button>
                                                                     <asp:Button ID="btnSearch" runat="server" Text="Search" Width="150px" OnClick="btnSearch_Click" OnClientClick="collapseItem()"></asp:Button></td>
-                                                                    <asp:Button ID="btnRefresh" runat="server" Text="Refresh" Width="150px" OnClick="btnRefresh_Click" OnClientClick="collapseItem()" CssClass="BtnHidden"></asp:Button></td>
+                                                                    <asp:Button ID="btnRefresh" runat="server" Text="Refresh" Width="150px" OnClick="btnRefresh_Click" OnClientClick="collapseItem()" CssClass="btnHidden"></asp:Button></td>
                                                             </tr>
                                                         </table>
                                                     </td>
