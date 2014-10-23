@@ -13,6 +13,7 @@ namespace Etsi.Ultimate.Controls
 
         public int Width { get; set; }
         public int DropDownWidth { get; set; }
+        public bool IsLoadingNeeded { get; set; }
         public List<int> SelectedReleaseIds
         {
             get
@@ -119,7 +120,7 @@ namespace Etsi.Ultimate.Controls
         /// <param name="e">Event Args</param>
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            if (!IsPostBack || IsLoadingNeeded)
             {
                 rcbReleases.Width = Width;
                 rcbReleases.DropDownWidth = DropDownWidth;
