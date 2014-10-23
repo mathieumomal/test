@@ -146,7 +146,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 ManageFullView("");
 
                 var wiService = ServicesFactory.Resolve<IWorkItemService>();
-                if (!IsPostBack)
+                if (!IsPostBack || !moduleWI.Visible)
                 {
                     //Get settings
                     if (Settings.Contains(Enum_Settings.WorkItem_ExportPath.ToString()))

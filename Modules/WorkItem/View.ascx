@@ -63,7 +63,7 @@
         word-break: break-all !important;
     }
 </style>
-<div id="moduleWI">
+<asp:Panel ID="moduleWI" runat="server" Visible="false" ClientIDMode="Static">
     <asp:UpdateProgress ID="updateProgressWorkItemsTree" runat="server" DisplayAfter="200">
         <ProgressTemplate>
             <div class="modalBackground">
@@ -519,4 +519,4 @@
         </script>
     </telerik:RadScriptBlock>
 
-</div>
+</asp:Panel>
