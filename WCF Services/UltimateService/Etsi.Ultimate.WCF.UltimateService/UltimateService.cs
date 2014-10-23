@@ -1,5 +1,6 @@
 ﻿using Etsi.Ultimate.WCF.Interface;
 using Etsi.Ultimate.WCF.Interface.Entities;
+using Etsi.Ultimate.WCF.Service.Logger;
 using System.Collections.Generic;
 
 namespace Etsi.Ultimate.WCF.Service
@@ -17,6 +18,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>List of Releases</returns>
         public List<Release> GetReleases(int personId)
         {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][GetReleases] PersonId=" + personId);
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetReleases(personId);
         }
@@ -29,6 +31,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns></returns>
         public Release GetReleaseById(int personId, int releaseId)
         {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][GetReleaseById] PersonId=" + personId+"; ReleaseId="+releaseId);
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetReleaseById(personId, releaseId);
         }
@@ -44,6 +47,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns></returns>
         public List<WorkItem> GetWorkItemsByIds(int personId, List<int> workItemIds)
         {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][GetWorkItemsByIds] PersonId=" + personId + "; WorkitemIds=" + string.Join(", ",workItemIds));
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetWorkItemsByIds(personId, workItemIds);
         }
@@ -58,6 +62,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// </returns>
         public List<WorkItem> GetWorkItemsByKeyWord(int personId, string keyword)
         {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][GetWorkItemsByKeyWord] PersonId=" + personId + "; keyword=" + keyword);
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetWorkItemsByKeyWord(personId, keyword);
         }
@@ -74,6 +79,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// </returns>
         public List<Specification> GetSpecificationsByKeyWord(int personId, string keyword)
         {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][GetSpecificationsByKeyWord] PersonId=" + personId + "; keyword=" + keyword);
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetSpecificationsByKeyWord(personId, keyword);
         }
@@ -88,6 +94,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// </returns>
         public Specification GetSpecificationById(int personId, int specificationId)
         {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][GetSpecificationById] PersonId=" + personId + "; specificationId=" + specificationId);
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetSpecificationById(personId, specificationId);
         }
@@ -102,6 +109,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// </returns>
         public List<Specification> GetSpecificationsByIds(int personId, List<int> specificationIds)
         {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][GetSpecificationsByIds] PersonId=" + personId + "; specificationIds=" + string.Join(", ",specificationIds));
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetSpecificationsByIds(personId, specificationIds);
         }
@@ -116,6 +124,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>Change Request entity</returns>
         public ChangeRequest GetChangeRequestById(int personId, int changeRequestId)
         {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][GetChangeRequestById] PersonId=" + personId + "; changeRequestId=" + changeRequestId);
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetChangeRequestById(personId, changeRequestId);
         }
@@ -130,6 +139,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// </returns>
         public ServiceResponse<int> CreateChangeRequest(int personId, ChangeRequest changeRequest)
         {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][CreateChangeRequest] PersonId=" + personId);
             var serviceHelper = new ServiceHelper();
             return serviceHelper.CreateChangeRequest(personId, changeRequest);
         }
@@ -142,6 +152,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>Success/Failure</returns>
         public bool EditChangeRequest(int personId, ChangeRequest changeRequest)
         {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][EditChangeRequest] PersonId=" + personId);
             var serviceHelper = new ServiceHelper();
             return serviceHelper.EditChangeRequest(personId, changeRequest);
         }
@@ -152,6 +163,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns> Change request categories list</returns>      
         public List<ChangeRequestCategory> GetChangeRequestCategories()
         {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][GetChangeRequestCategories]");
             var svcHelper = new ServiceHelper();
             return svcHelper.GetChangeRequestCategories();
         }
@@ -163,6 +175,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns></returns>
         public ChangeRequest GetChangeRequestByContributionUid(string contributionUid)
         {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][GetChangeRequestByContributionUid] contributionUid=" + contributionUid);
             var svcHelper = new ServiceHelper();
             return svcHelper.GetChangeRequestByContributionUid(contributionUid);
         }
@@ -175,6 +188,7 @@ namespace Etsi.Ultimate.WCF.Service
         public List<ChangeRequest> GetChangeRequestListByContributionUidList(
             List<string> contributionUids)
         {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][GetChangeRequestListByContributionUidList] contributionUids=" + string.Join(", ",contributionUids));
             var svcHelper = new ServiceHelper();
             return svcHelper.GetChangeRequestListByContributionUidList(contributionUids);
         }
@@ -185,6 +199,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns></returns>
         public List<ChangeRequestStatus> GetAllChangeRequestStatuses()
         {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][GetAllChangeRequestStatuses]");
             var svcHelper = new ServiceHelper();
             return svcHelper.GetAllChangeRequestStatuses();
         }
@@ -196,6 +211,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="tsgTdocNumber"></param>
         public bool UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackDecisionlist, string tsgTdocNumber)
         {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][UpdateChangeRequestPackRelatedCrs]");
             var svcHelper = new ServiceHelper();
             return svcHelper.UpdateChangeRequestPackRelatedCrs(crPackDecisionlist, tsgTdocNumber);
         }

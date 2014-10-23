@@ -3,7 +3,7 @@ using log4net.Config;
 using System;
 using System.IO;
 
-namespace Etsi.UserRights.Service
+namespace Etsi.Ultimate.WCF.Service.Logger
 {
     /// <summary>
     /// Log Manager class to log errors / warnings

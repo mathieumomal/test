@@ -1,10 +1,10 @@
 ﻿using System;
 using Etsi.Ultimate.Services;
-using Etsi.UserRights.Service;
 using System.Collections.Generic;
 using UltimateEntities = Etsi.Ultimate.DomainClasses;
 using UltimateServiceEntities = Etsi.Ultimate.WCF.Interface.Entities;
 using Etsi.Ultimate.WCF.Interface;
+using Etsi.Ultimate.WCF.Service.Logger;
 
 namespace Etsi.Ultimate.WCF.Service
 {
