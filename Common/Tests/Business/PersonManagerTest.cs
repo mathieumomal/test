@@ -41,7 +41,7 @@ namespace Etsi.Ultimate.Tests.Business
         {
             var ResponsibleGroupSecretaries = new ResponsibleGroupSecretaryFakeDBSet { 
                 new ResponsibleGroup_Secretary() { TbId = 1, Email = "one@capgemini.com", PersonId = 1 },
-                new ResponsibleGroup_Secretary() { TbId = 1, Email = "onBis@capgemini.com", PersonId = 11 },
+                new ResponsibleGroup_Secretary() { TbId = 1, Email = "onBis@capgemini.com", PersonId = 11, roleExpirationDate = DateTime.UtcNow.AddDays(7) },
                 new ResponsibleGroup_Secretary() { TbId = 2, Email = "two@capgemini.com", PersonId = 2 },
                 new ResponsibleGroup_Secretary() { TbId = 4, Email = "expired@capgemini.com", PersonId = 3, roleExpirationDate = DateTime.UtcNow.AddDays(-1) },
             };
