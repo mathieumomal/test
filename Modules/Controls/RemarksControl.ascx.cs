@@ -161,7 +161,8 @@ namespace Etsi.Ultimate.Controls
                     DataSource = dataSource;
                 }
             }
-            ChangeStatusRemarkHandler(sender, e);
+            if (ChangeStatusRemarkHandler != null)
+                ChangeStatusRemarkHandler(sender, e);
         }
 
         #endregion
