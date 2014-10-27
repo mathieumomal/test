@@ -242,12 +242,13 @@ namespace DatabaseImportTests
             // Legacy context mock
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
             legacyContext.Stub(ctx => ctx.Specs_GSM_3G_release_info).Return(GetReleaseInfos_legacy());
+            legacyContext.Stub(ctx => ctx.plenary_meetings_with_end_dates).Return(new MeetingsWithEndDatesFakeDbSet());
 
 
             //Report
             var report = new Domain.Report();
             // Execute
-            var import_fill = new SpecificationReleaseImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
+            var import_fill = new SpecificationReleaseImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report, MtgHelper = new MeetingHelper(legacyContext,newContext) };
             import_fill.FillDatabase();
 
             Assert.AreEqual(1, specReleaseDbSet.All().Count);

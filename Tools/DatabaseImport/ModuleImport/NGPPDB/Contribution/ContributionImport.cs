@@ -5,6 +5,7 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using Etsi.Ngppdb.DomainClasses;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Tools.TmpDbDataAccess;
 
 namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
 {
@@ -14,6 +15,9 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
         List<Enum_ContributionStatus> _enumContributionStatus;
         List<Enum_ContributionType> _enumContributionType;
         List<Meeting> _meetings;
+        List<plenary_meetings_with_end_dates> _legacyMeetings;
+
+
 
         /// <summary>
         /// Old table(s) : 
@@ -24,6 +28,7 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
         public Etsi.Ultimate.DataAccess.IUltimateContext UltimateContext { get; set; }
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
+        public MeetingHelper MtgHelper { get; set; }
         public Report Report { get; set; }
 
         public void CleanDatabase()
@@ -37,6 +42,7 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
             _enumContributionStatus = NgppdbContext.Enum_ContributionStatus.ToList();
             _enumContributionType = NgppdbContext.Enum_ContributionType.ToList();
             _meetings = UltimateContext.Meetings.ToList();
+            _legacyMeetings = LegacyContext.plenary_meetings_with_end_dates.ToList();
 
             NgppdbContext.SetAutoDetectChanges(false);
             CreateDatas();
@@ -151,7 +157,7 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
             {
                 type = _enumContributionType.Find(x => x.Enum_Code == Enum_ContributionType.ChangeRequest);
             }
-               
+
             newTDoc.Enum_ContributionType = type;
             newTDoc.fk_Enum_ContributionType = type.pk_Enum_ContributionType;
         }
@@ -165,19 +171,24 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
 
             if (!String.IsNullOrEmpty(meetingUid) && !meetingUid.Equals("-"))
             {
-                var mtg = _meetings.FirstOrDefault(m => m.MtgShortRef.Equals(meetingUid));
+                var mtgId = MtgHelper.FindMeetingId(meetingUid);
 
-                if (mtg == null)
-                    Report.LogWarning(RefImportForLog + "Meeting not found: " + meetingUid + " for contribution : " + legacyTDoc.doc_tdoc);
-                else
+                if (mtgId.HasValue)
+                {
+                    // Check in legacy meeting db.
                     newTDoc.ContribAllocation.Add(new ContribAllocation
                     {
-                        fk_Meeting = mtg.MTG_ID,
+                        fk_Meeting = mtgId.Value,
                         lastModificationAuthor = "Import from MS Access",
                         lastModificationDate = DateTime.Now,
                         ContribAllocation_Date = DateTime.Now,
                         ContribAllocation_Number = 0
                     });
+                }
+                else
+                {
+                    Report.LogWarning(RefImportForLog + "Meeting not found: " + meetingUid + " for contribution : " + legacyTDoc.doc_tdoc);
+                }
             }
             else
             {

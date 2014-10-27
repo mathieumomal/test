@@ -12,6 +12,7 @@ using Etsi.Ultimate.Tests.FakeSets;
 using System.Collections.Generic;
 using System.Data.Entity;
 using Etsi.Ultimate.DomainClasses;
+using DatabaseImport.ModuleImport;
 
 
 namespace DatabaseImportTests
@@ -121,12 +122,13 @@ namespace DatabaseImportTests
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
             var legacyDbSet = new ListOfGSM3GCRsFakeDbSet { legacyObject };
             legacyContext.Stub(ctx => ctx.List_of_GSM___3G_CRs).Return(legacyDbSet);
+            legacyContext.Stub(ctx => ctx.plenary_meetings_with_end_dates).Return(new MeetingsWithEndDatesFakeDbSet());
 
             // Report
             var report = new Report();
 
             // Execute
-            var import = new CrImport { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
+            var import = new CrImport { LegacyContext = legacyContext, UltimateContext = newContext, Report = report, MtgHelper = new MeetingHelper(legacyContext,newContext) };
             import.FillDatabase();
 
             // Test results

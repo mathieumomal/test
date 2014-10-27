@@ -25,6 +25,7 @@
           <EntitySet Name="CR-status-values" EntityType="TmpDbContext.Store.CR-status-values" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="jmm_spec_series" EntityType="TmpDbContext.Store.jmm_spec_series" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="List_of_GSM_&amp;_3G_CRs" EntityType="TmpDbContext.Store.List_of_GSM_&amp;_3G_CRs" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="plenary-meetings-with-end-dates" EntityType="TmpDbContext.Store.plenary-meetings-with-end-dates" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Releases" EntityType="TmpDbContext.Store.Releases" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Specs_GSM+3G" EntityType="TmpDbContext.Store.Specs_GSM+3G" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Specs_GSM+3G_release-info" EntityType="TmpDbContext.Store.Specs_GSM+3G_release-info" store:Type="Tables" Schema="dbo" />
@@ -122,6 +123,7 @@
           <Property Name="TSG approved" Type="nvarchar" MaxLength="25" />
           <Property Name="PCG approved" Type="nvarchar" MaxLength="25" />
           <Property Name="Status Report" Type="nvarchar" MaxLength="255" />
+          <Property Name="Study" Type="bit" />
           <Property Name="L1uid" Type="float" />
           <Property Name="L2uid" Type="float" />
           <Property Name="L3uid" Type="float" />
@@ -186,6 +188,7 @@
           <Property Name="title-source_checked" Type="datetime" />
           <Property Name="crHarvested" Type="datetime" />
           <Property Name="crFlag" Type="bit" />
+          <Property Name="badURL" Type="bit" />
           <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="2008-03-08_Specs-vs-WIs">
@@ -204,6 +207,7 @@
           <Property Name="wispec" Type="nvarchar" MaxLength="250" />
           <Property Name="wicr" Type="nvarchar" MaxLength="250" />
           <Property Name="wicrrev" Type="nvarchar" MaxLength="250" />
+          <Property Name="wicrsubj" Type="nvarchar" MaxLength="255" />
           <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="2010-02-08_SpecXRef">
@@ -268,9 +272,10 @@
             <PropertyRef Name="Row_id" />
           </Key>
           <Property Name="series_id" Type="nvarchar" MaxLength="4" />
-          <Property Name="series_description" Type="nvarchar" MaxLength="50" />
+          <Property Name="series_description" Type="nvarchar" MaxLength="255" />
           <Property Name="series_3g" Type="bit" />
           <Property Name="series_2g" Type="bit" />
+          <Property Name="series_LTE" Type="bit" />
           <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="List_of_GSM_&amp;_3G_CRs">
@@ -300,6 +305,37 @@
           <Property Name="Source-2nd-Level" Type="nvarchar" MaxLength="255" />
           <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
         </EntityType>
+        <EntityType Name="plenary-meetings-with-end-dates">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="meeting" Type="nvarchar" MaxLength="20" />
+          <Property Name="end date" Type="datetime" />
+          <Property Name="target" Type="datetime" />
+          <Property Name="dealine-090pc" Type="datetime" />
+          <Property Name="dealine-100pc" Type="datetime" />
+          <Property Name="meeting directory" Type="ntext" />
+          <Property Name="specs directory" Type="nvarchar" MaxLength="50" />
+          <Property Name="min doc nbr" Type="nvarchar" MaxLength="20" />
+          <Property Name="max doc nbr" Type="nvarchar" MaxLength="20" />
+          <Property Name="tdocs directory" Type="ntext" />
+          <Property Name="start date" Type="datetime" />
+          <Property Name="mtg-id" Type="int" />
+          <Property Name="location" Type="nvarchar" MaxLength="50" />
+          <Property Name="body" Type="nvarchar" MaxLength="50" />
+          <Property Name="tb-id" Type="int" />
+          <Property Name="record-created" Type="datetime" />
+          <Property Name="locCountry" Type="nvarchar" MaxLength="5" />
+          <Property Name="UTCoffset" Type="nvarchar" MaxLength="10" />
+          <Property Name="title" Type="nvarchar" MaxLength="250" />
+          <Property Name="suppress" Type="bit" />
+          <Property Name="dosPath" Type="nvarchar" MaxLength="250" />
+          <Property Name="tdoclist" Type="datetime" />
+          <Property Name="satisfactionURL" Type="ntext" />
+          <Property Name="ItSupportPerson" Type="int" />
+          <Property Name="colloc_mtg-id" Type="int" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
         <EntityType Name="Releases">
           <Key>
             <PropertyRef Name="Row_id" />
@@ -327,6 +363,7 @@
           <Property Name="Stage3_freeze" Type="nvarchar" MaxLength="255" />
           <Property Name="Protocols_freeze" Type="nvarchar" MaxLength="255" />
           <Property Name="Closed" Type="nvarchar" MaxLength="255" />
+          <Property Name="Field1" Type="nvarchar" MaxLength="255" />
           <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="Specs_GSM+3G">
@@ -416,6 +453,7 @@
           <EntitySet Name="Specs_GSM_3G" EntityType="TmpDbContext.Specs_GSM_3G" />
           <EntitySet Name="Specs_GSM_3G_release_info" EntityType="TmpDbContext.Specs_GSM_3G_release_info" />
           <EntitySet Name="wpm_spec_release_mapping" EntityType="TmpDbContext.wpm_spec_release_mapping" />
+          <EntitySet Name="plenary_meetings_with_end_dates" EntityType="TmpDbContext.plenary_meetings_with_end_dates" />
         </EntityContainer>
         <EntityType Name="C2001_04_25_schedule">
           <Key>
@@ -515,6 +553,7 @@
           <Property Type="Double" Name="L4uid" />
           <Property Type="Double" Name="parent_uid" />
           <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Boolean" Name="Study" />
         </EntityType>
         <EntityType Name="C2003_06_25_schedule_essentials_table">
           <Key>
@@ -574,6 +613,7 @@
           <Property Type="DateTime" Name="crHarvested" Precision="3" />
           <Property Type="Boolean" Name="crFlag" />
           <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Boolean" Name="badURL" />
         </EntityType>
         <EntityType Name="C2008_03_08_Specs_vs_WIs">
           <Key>
@@ -592,6 +632,7 @@
           <Property Type="String" Name="wicr" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="wicrrev" MaxLength="250" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="String" Name="wicrsubj" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="C2010_02_08_SpecXRef">
           <Key>
@@ -655,10 +696,11 @@
             <PropertyRef Name="Row_id" />
           </Key>
           <Property Type="String" Name="series_id" MaxLength="4" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="series_description" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="series_description" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="Boolean" Name="series_3g" />
           <Property Type="Boolean" Name="series_2g" />
           <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Type="Boolean" Name="series_LTE" />
         </EntityType>
         <EntityType Name="List_of_GSM___3G_CRs">
           <Key>
@@ -715,6 +757,7 @@
           <Property Type="String" Name="Stage3_freeze" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Protocols_freeze" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Type="String" Name="Closed" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Field1" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Specs_GSM_3G">
           <Key>
@@ -773,6 +816,37 @@
           </Key>
           <Property Type="Int32" Name="WKI_ID" />
           <Property Type="String" Name="Release_short_description" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="plenary_meetings_with_end_dates">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="String" Name="meeting" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="end_date" Precision="3" />
+          <Property Type="DateTime" Name="target" Precision="3" />
+          <Property Type="DateTime" Name="dealine_090pc" Precision="3" />
+          <Property Type="DateTime" Name="dealine_100pc" Precision="3" />
+          <Property Type="String" Name="meeting_directory" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="specs_directory" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="min_doc_nbr" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="max_doc_nbr" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="tdocs_directory" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="start_date" Precision="3" />
+          <Property Type="Int32" Name="mtg_id" />
+          <Property Type="String" Name="location" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="body" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="tb_id" />
+          <Property Type="DateTime" Name="record_created" Precision="3" />
+          <Property Type="String" Name="locCountry" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="UTCoffset" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="title" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="suppress" />
+          <Property Type="String" Name="dosPath" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="tdoclist" Precision="3" />
+          <Property Type="String" Name="satisfactionURL" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="ItSupportPerson" />
+          <Property Type="Int32" Name="colloc_mtg_id" />
           <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
       </Schema>
@@ -853,6 +927,7 @@
           <EntitySetMapping Name="C2003_03_04_work_plan">
             <EntityTypeMapping TypeName="TmpDbContext.C2003_03_04_work_plan">
               <MappingFragment StoreEntitySet="2003-03-04_work-plan">
+                <ScalarProperty Name="Study" ColumnName="Study" />
                 <ScalarProperty Name="Row_id" ColumnName="Row_id" />
                 <ScalarProperty Name="parent_uid" ColumnName="parent-uid" />
                 <ScalarProperty Name="L4uid" ColumnName="L4uid" />
@@ -933,6 +1008,7 @@
           <EntitySetMapping Name="C2006_03_17_tdocs">
             <EntityTypeMapping TypeName="TmpDbContext.C2006_03_17_tdocs">
               <MappingFragment StoreEntitySet="2006-03-17_tdocs">
+                <ScalarProperty Name="badURL" ColumnName="badURL" />
                 <ScalarProperty Name="Row_id" ColumnName="Row_id" />
                 <ScalarProperty Name="crFlag" ColumnName="crFlag" />
                 <ScalarProperty Name="crHarvested" ColumnName="crHarvested" />
@@ -961,6 +1037,7 @@
           <EntitySetMapping Name="C2009_06_11_CRs_to_WIs">
             <EntityTypeMapping TypeName="TmpDbContext.C2009_06_11_CRs_to_WIs">
               <MappingFragment StoreEntitySet="2009-06-11_CRs-to-WIs">
+                <ScalarProperty Name="wicrsubj" ColumnName="wicrsubj" />
                 <ScalarProperty Name="Row_id" ColumnName="Row_id" />
                 <ScalarProperty Name="wicrrev" ColumnName="wicrrev" />
                 <ScalarProperty Name="wicr" ColumnName="wicr" />
@@ -1034,6 +1111,7 @@
           <EntitySetMapping Name="jmm_spec_series">
             <EntityTypeMapping TypeName="TmpDbContext.jmm_spec_series">
               <MappingFragment StoreEntitySet="jmm_spec_series">
+                <ScalarProperty Name="series_LTE" ColumnName="series_LTE" />
                 <ScalarProperty Name="Row_id" ColumnName="Row_id" />
                 <ScalarProperty Name="series_2g" ColumnName="series_2g" />
                 <ScalarProperty Name="series_3g" ColumnName="series_3g" />
@@ -1073,6 +1151,7 @@
           <EntitySetMapping Name="Releases">
             <EntityTypeMapping TypeName="TmpDbContext.Release">
               <MappingFragment StoreEntitySet="Releases">
+                <ScalarProperty Name="Field1" ColumnName="Field1" />
                 <ScalarProperty Name="Closed" ColumnName="Closed" />
                 <ScalarProperty Name="Protocols_freeze" ColumnName="Protocols_freeze" />
                 <ScalarProperty Name="Stage3_freeze" ColumnName="Stage3_freeze" />
@@ -1159,6 +1238,38 @@
                 <ScalarProperty Name="Row_id" ColumnName="Row_id" />
                 <ScalarProperty Name="Release_short_description" ColumnName="Release_short_description" />
                 <ScalarProperty Name="WKI_ID" ColumnName="WKI_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="plenary_meetings_with_end_dates">
+            <EntityTypeMapping TypeName="TmpDbContext.plenary_meetings_with_end_dates">
+              <MappingFragment StoreEntitySet="plenary-meetings-with-end-dates">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="colloc_mtg_id" ColumnName="colloc_mtg-id" />
+                <ScalarProperty Name="ItSupportPerson" ColumnName="ItSupportPerson" />
+                <ScalarProperty Name="satisfactionURL" ColumnName="satisfactionURL" />
+                <ScalarProperty Name="tdoclist" ColumnName="tdoclist" />
+                <ScalarProperty Name="dosPath" ColumnName="dosPath" />
+                <ScalarProperty Name="suppress" ColumnName="suppress" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="UTCoffset" ColumnName="UTCoffset" />
+                <ScalarProperty Name="locCountry" ColumnName="locCountry" />
+                <ScalarProperty Name="record_created" ColumnName="record-created" />
+                <ScalarProperty Name="tb_id" ColumnName="tb-id" />
+                <ScalarProperty Name="body" ColumnName="body" />
+                <ScalarProperty Name="location" ColumnName="location" />
+                <ScalarProperty Name="mtg_id" ColumnName="mtg-id" />
+                <ScalarProperty Name="start_date" ColumnName="start date" />
+                <ScalarProperty Name="tdocs_directory" ColumnName="tdocs directory" />
+                <ScalarProperty Name="max_doc_nbr" ColumnName="max doc nbr" />
+                <ScalarProperty Name="min_doc_nbr" ColumnName="min doc nbr" />
+                <ScalarProperty Name="specs_directory" ColumnName="specs directory" />
+                <ScalarProperty Name="meeting_directory" ColumnName="meeting directory" />
+                <ScalarProperty Name="dealine_100pc" ColumnName="dealine-100pc" />
+                <ScalarProperty Name="dealine_090pc" ColumnName="dealine-090pc" />
+                <ScalarProperty Name="target" ColumnName="target" />
+                <ScalarProperty Name="end_date" ColumnName="end date" />
+                <ScalarProperty Name="meeting" ColumnName="meeting" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

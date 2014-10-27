@@ -55,12 +55,14 @@ namespace DatabaseImport
             }
 
             // SET UP all contexts and reports
+            var meetingHelper = new MeetingHelper(oldContext, u3GppContext);
             foreach (var import in operations)
             {
                 import.LegacyContext = oldContext;
                 import.UltimateContext = u3GppContext;
                 import.NgppdbContext = ngppContext;
                 import.Report = report;
+                import.MtgHelper = meetingHelper;
             }
 
             Console.WriteLine("Cleaning database...");

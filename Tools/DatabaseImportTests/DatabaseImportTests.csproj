@@ -64,6 +64,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="FakeDBSets\MeetingsWithEndDatesFakeDbSet.cs" />
     <Compile Include="FakeDBSets\CRCategoryLegacyFakeDbSet.cs" />
     <Compile Include="FakeDBSets\CRStatusValuesLegacyFakeDbSet.cs" />
     <Compile Include="FakeDBSets\EnumContributionStatusFakeDbSet.cs" />

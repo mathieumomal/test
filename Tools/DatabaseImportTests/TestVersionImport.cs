@@ -39,11 +39,12 @@ namespace DatabaseImportTests
             // Legacy context mock
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
             legacyContext.Stub(ctx => ctx.C2001_04_25_schedule).Return(GetSchedule_Legacy());
+            legacyContext.Stub(ctx => ctx.plenary_meetings_with_end_dates).Return(new MeetingsWithEndDatesFakeDbSet());
 
             // Report
             var report = new Domain.Report();
             // Execute
-            var import = new VersionImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
+            var import = new VersionImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report, MtgHelper = new MeetingHelper(legacyContext,newContext) };
             import.FillDatabase();
 
 

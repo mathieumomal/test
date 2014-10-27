@@ -18,7 +18,6 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
         List<Etsi.Ultimate.DomainClasses.Specification> _specs;
         List<Release> _releases;
         List<SpecVersion> _specVersions;
-        List<Meeting> _meetings;
         List<WorkItem> _wis;
 
         /// <summary>
@@ -30,9 +29,11 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
         public Etsi.Ultimate.DataAccess.IUltimateContext UltimateContext { get; set; }
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
+        public MeetingHelper MtgHelper { get; set; }
         public Report Report { get; set; }
 
-        public void CleanDatabase(){
+        public void CleanDatabase()
+        {
             //NewContext.CR_CleanAll();
         }
 
@@ -43,7 +44,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
             //Initialization
             Console.WriteLine("Loading data relative to CR... (could be a long operation...)");
             Console.WriteLine("Loading CR Category... ({0}/{1})", count, dataSortNumber);
-            _enumChangeRequestCategory = UltimateContext.Enum_CRCategory.ToList(); count+=1;
+            _enumChangeRequestCategory = UltimateContext.Enum_CRCategory.ToList(); count += 1;
             Console.WriteLine("Loading CR Status... ({0}/{1})", count, dataSortNumber);
             _enumChangeRequestStatus = UltimateContext.Enum_ChangeRequestStatus.ToList(); count += 1;
             Console.WriteLine("Loading Specs... ({0}/{1})", count, dataSortNumber);
@@ -52,8 +53,6 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
             _releases = UltimateContext.Releases.ToList(); count += 1;
             Console.WriteLine("Loading Specs version... ({0}/{1})", count, dataSortNumber);
             _specVersions = UltimateContext.SpecVersions.ToList(); count += 1;
-            Console.WriteLine("Loading Meetings... ({0}/{1})", count, dataSortNumber);
-            _meetings = UltimateContext.Meetings.ToList(); count += 1;
             Console.WriteLine("Loading WIs... ({0}/{1})", count, dataSortNumber);
             _wis = UltimateContext.WorkItems.ToList();
 
@@ -145,7 +144,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
                 TsgwgTargetCase(newCr, legacyCr, logId);
 
                 //not taking in consideration for the moment : Impact
-                
+
                 UltimateContext.ChangeRequests.Add(newCr);
                 count++;
                 if (count % 100 == 0)
@@ -174,7 +173,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
         /// <param name="logId"></param>
         private void RevisionCase(ChangeRequest newCr, Etsi.Ultimate.Tools.TmpDbDataAccess.List_of_GSM___3G_CRs legacyCr, string logId)
         {
-            var legacyVersion = Utils.CheckString(legacyCr.Rev,10,RefImportForLog + " Revision ", logId, Report);
+            var legacyVersion = Utils.CheckString(legacyCr.Rev, 10, RefImportForLog + " Revision ", logId, Report);
             if (!String.IsNullOrEmpty(legacyVersion) && !legacyVersion.Equals("-"))
             {
                 newCr.Revision = Utils.CheckStringToInt(legacyVersion, null, RefImportForLog + " Revision ", logId, Report);
@@ -374,27 +373,27 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
         {
             var tsgMeeting = Utils.CheckString(legacyCr.Meeting_1st_Level, 10, RefImportForLog + "TSG meeting string format : " + legacyCr.Meeting_1st_Level, logId, Report);
             var wgMeeting = Utils.CheckString(legacyCr.Meeting_2nd_Level, 10, RefImportForLog + "WG meeting string format : " + legacyCr.Meeting_2nd_Level, logId, Report);
-            
+
             //TSG
             if (!String.IsNullOrEmpty(tsgMeeting) && !tsgMeeting.Equals("-"))
             {
-                var mtg = _meetings.FirstOrDefault(m => m.MtgShortRef.Equals(tsgMeeting));
+                var mtg = MtgHelper.FindMeetingId(tsgMeeting);
 
-                if (mtg == null)
-                    Report.LogWarning(RefImportForLog + "TSG meeting not found: " + tsgMeeting + " for CR : " + logId );
+                if (!mtg.HasValue)
+                    Report.LogWarning(RefImportForLog + "TSG meeting not found: " + tsgMeeting + " for CR : " + logId);
                 else
-                    newCr.TSGMeeting = mtg.MTG_ID;
+                    newCr.TSGMeeting = mtg.Value;
             }
 
             //WG
             if (!String.IsNullOrEmpty(wgMeeting) && !wgMeeting.Equals("-"))
             {
-                var mtg = _meetings.FirstOrDefault(m => m.MtgShortRef.Equals(wgMeeting));
+                var mtg = MtgHelper.FindMeetingId(wgMeeting);
 
-                if (mtg == null)
+                if (!mtg.HasValue)
                     Report.LogWarning(RefImportForLog + "WG meeting not found: " + wgMeeting + " for CR : " + logId);
                 else
-                    newCr.WGMeeting = mtg.MTG_ID;
+                    newCr.WGMeeting = mtg.Value;
             }
         }
 
@@ -443,7 +442,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
                         Report.LogWarning(RefImportForLog + "WI not found: " + wiField + " for CR : " + logId);
                     else
                     {
-                        var crWi = new CR_WorkItems {ChangeRequest = newCr, WorkItem = wi};
+                        var crWi = new CR_WorkItems { ChangeRequest = newCr, WorkItem = wi };
                         newCr.CR_WorkItems.Add(crWi);
                     }
                 }

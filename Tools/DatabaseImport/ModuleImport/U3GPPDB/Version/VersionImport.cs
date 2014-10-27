@@ -30,6 +30,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Version
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
         public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
+        public MeetingHelper MtgHelper { get; set; }
 
         public void CleanDatabase()
         {
@@ -179,10 +180,10 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Version
         private void MeetingCase(Etsi.Ultimate.DomainClasses.SpecVersion newVersion, Etsi.Ultimate.Tools.TmpDbDataAccess.C2001_04_25_schedule legacyVersion, String idVersion)
         {
             var versionMeeting = Utils.CheckString(legacyVersion.meeting, 0, RefImportForLog + " Meeting", idVersion, Report);
-            var mtg = mtgs.Where(m => m.MtgShortRef == versionMeeting).FirstOrDefault();
-            if (mtg != null)
+            var mtg = MtgHelper.FindMeetingId(versionMeeting);
+            if (mtg.HasValue)
             {
-                newVersion.Source = mtg.MTG_ID;
+                newVersion.Source = mtg.Value;
             }
             else
             {

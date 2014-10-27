@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ModuleImport\MeetingHelper.cs" />
     <Compile Include="ModuleImport\NGPPDB\PartialImport\ContributionData.cs" />
     <Compile Include="ModuleImport\U3GPPDB\CR\CRImport.cs" />
     <Compile Include="ModuleImport\U3GPPDB\CR\EnumCrCategoryImport.cs" />

@@ -12,6 +12,7 @@ using Etsi.Ultimate.Tests.FakeSets;
 using Etsi.Ultimate.Tools.TmpDbDataAccess;
 using NUnit.Framework;
 using Rhino.Mocks;
+using DatabaseImport.ModuleImport;
 
 namespace DatabaseImportTests
 {
@@ -38,6 +39,7 @@ namespace DatabaseImportTests
             legacyContext.Stub(ctx => ctx.C2006_03_17_tdocs).Return(legacyDbSet);
             var legacyCrSet = new ListOfGSM3GCRsFakeDbSet { new List_of_GSM___3G_CRs{ Doc_1st_Level="C1-131002"}};
             legacyContext.Stub(ctx => ctx.List_of_GSM___3G_CRs).Return(legacyCrSet);
+            legacyContext.Stub(ctx => ctx.plenary_meetings_with_end_dates).Return(GetLegaycMeetings());
 
             // Report
             var report = new Report();
@@ -48,7 +50,8 @@ namespace DatabaseImportTests
                 LegacyContext = legacyContext, 
                 Report = report, 
                 NgppdbContext = newNgppDbContext, 
-                UltimateContext = new3GppDbContext
+                UltimateContext = new3GppDbContext,
+                MtgHelper = new MeetingHelper(legacyContext, new3GppDbContext)
             };
             import.FillDatabase();
 
@@ -183,6 +186,18 @@ namespace DatabaseImportTests
                         fk_Enum_ContributionType = 1,
                         fk_Enum_For = 1,
 
+                        ContribAllocation = new List<ContribAllocation>
+                        {
+                            new ContribAllocation
+                            {
+                                fk_Meeting = 3,
+                                lastModificationAuthor = "Import from MS Access",
+                                lastModificationDate = DateTime.Now,
+                                ContribAllocation_Date = DateTime.Now,
+                                ContribAllocation_Number = 0
+                            }
+                        },
+
                         meetingNotes = null,
                         @abstract = "",
                         dateAvailable = new DateTime(2010, 1, 18),
@@ -255,6 +270,15 @@ namespace DatabaseImportTests
             {
                 new Meeting {MTG_ID = 1, MtgShortRef = "C1-82b"},
                 new Meeting {MTG_ID = 2, MtgShortRef = "C1-82c"}
+            };
+            return list;
+        }
+
+        private MeetingsWithEndDatesFakeDbSet GetLegaycMeetings()
+        {
+            var list = new MeetingsWithEndDatesFakeDbSet
+            {
+                new plenary_meetings_with_end_dates{ meeting= "C1-82X", mtg_id=3 }
             };
             return list;
         }

@@ -20,6 +20,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
         public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
+        public MeetingHelper MtgHelper { get; set; }
 
         public void CleanDatabase()
         {
@@ -86,13 +87,13 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
             var withdrawnMeetingId = Utils.CheckString(legacySpecInfo.stopped_at_meeting, 0, RefImportForLog + " WithdrawnMeeting", legacySpecInfo.Release, Report);
             if (withdrawnMeetingId != "" && withdrawnMeetingId != "-")
             {
-                var mtg = tmpMeetings.Where(m => m.MtgShortRef.Equals(withdrawnMeetingId)).FirstOrDefault();
+                var mtg = MtgHelper.FindMeetingId(withdrawnMeetingId);
 
-                if (mtg == null)
+                if (!mtg.HasValue)
                     Report.LogWarning(RefImportForLog + "Release " + legacySpecInfo.Release + ": could not find withdraw meeting " + withdrawnMeetingId);
                 else
                 {
-                    newSpecRelease.WithdrawMeetingId = mtg.MTG_ID;
+                    newSpecRelease.WithdrawMeetingId = mtg.Value;
                 }
             }
         }

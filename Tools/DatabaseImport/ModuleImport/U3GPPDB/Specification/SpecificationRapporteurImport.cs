@@ -20,6 +20,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
         public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
+        public MeetingHelper MtgHelper { get; set; }
 
         public void CleanDatabase()
         {

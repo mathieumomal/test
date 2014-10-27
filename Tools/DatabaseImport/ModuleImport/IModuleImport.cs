@@ -10,6 +10,8 @@ namespace DatabaseImport.ModuleImport
         IUltimateContext UltimateContext { get; set; }
         INGPPDBContext NgppdbContext { get; set; }
 
+        MeetingHelper MtgHelper { get; set; }
+
         ITmpDb LegacyContext { get; set; }
 
         Report Report { get; set; }
