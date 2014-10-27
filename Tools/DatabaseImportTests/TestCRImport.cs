@@ -200,7 +200,7 @@ namespace DatabaseImportTests
                         Rev = "-",
                         Subject = "test",
                         Cat = "-",
-                        Status_1st_Level = "agreed",//TSG level
+                        Status_1st_Level = "tech endorsed yeah",//TSG level
                         Status_2nd_Level = "approved",//WG level
                         Spec = "1",
                         Phase = "Ph2",
@@ -224,7 +224,7 @@ namespace DatabaseImportTests
                         Subject = "test",
                         Fk_Enum_CRCategory = null,
                         Fk_WGStatus = 2,
-                        Fk_TSGStatus = 1,
+                        Fk_TSGStatus = 4,
                         Fk_Specification = 1,
                         Fk_Release = 2,
                         TSGSourceOrganizations = "Vodafone",
@@ -327,6 +327,12 @@ namespace DatabaseImportTests
                     Pk_EnumChangeRequestStatus = 3,
                     Description = "Rejected",
                     Code = "Rejected"
+                },
+                new Enum_ChangeRequestStatus
+                {
+                    Pk_EnumChangeRequestStatus = 4,
+                    Description = "Technically Endorsed",
+                    Code = "TechEndorsed"
                 }
             };
 

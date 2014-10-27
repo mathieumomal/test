@@ -197,6 +197,12 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
             var wgStatus = _enumChangeRequestStatus.FirstOrDefault(x => legacyWgStatus.ToLower().Contains(x.Code.ToLower()));
             var tsgStatus = _enumChangeRequestStatus.FirstOrDefault(x => legacyTsgStatus.ToLower().Contains(x.Code.ToLower()));
 
+            // Specific addition for the tech endorsed status to go here.
+            if (legacyWgStatus.Contains("tech endorsed"))
+                wgStatus = _enumChangeRequestStatus.FirstOrDefault(x => x.Code.ToLower() == "techendorsed");
+            if (legacyTsgStatus.Contains("tech endorsed"))
+                tsgStatus = _enumChangeRequestStatus.FirstOrDefault(x => x.Code.ToLower() == "techendorsed");
+
             if (wgStatus != null)
             {
                 newCr.WgStatus = wgStatus;
