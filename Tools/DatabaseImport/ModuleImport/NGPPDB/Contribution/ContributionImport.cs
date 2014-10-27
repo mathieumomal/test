@@ -99,7 +99,7 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
 
                 MeetingCase(newTDoc, legacyTdoc);
 
-                
+
                 NgppdbContext.Contribution.Add(newTDoc);
                 count++;
                 if (count % 100 == 0)
@@ -117,7 +117,7 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
                     NgppdbContext.SetValidateOnSave(true);
                 }
 
-                if (count == 10000 )
+                if (count == 10000)
                     break;
             }
         }
@@ -145,6 +145,13 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
         private void TypeCase(Etsi.Ngppdb.DomainClasses.Contribution newTDoc, Etsi.Ultimate.Tools.TmpDbDataAccess.C2006_03_17_tdocs legacyTDoc)
         {
             var type = _enumContributionType.Find(x => x.Enum_Code == Enum_ContributionType.OtherContribution);
+
+            var attachedCr = LegacyContext.List_of_GSM___3G_CRs.Where(cr => cr.Doc_1st_Level == newTDoc.uid).FirstOrDefault();
+            if (attachedCr != null)
+            {
+                type = _enumContributionType.Find(x => x.Enum_Code == Enum_ContributionType.ChangeRequest);
+            }
+               
             newTDoc.Enum_ContributionType = type;
             newTDoc.fk_Enum_ContributionType = type.pk_Enum_ContributionType;
         }
@@ -179,7 +186,7 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
         }
 
         #endregion
-         
+
     }
-         
+
 }

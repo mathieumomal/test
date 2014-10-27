@@ -36,6 +36,8 @@ namespace DatabaseImportTests
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
             var legacyDbSet = new TdocLegacyFakeDbSet {legacyObject};
             legacyContext.Stub(ctx => ctx.C2006_03_17_tdocs).Return(legacyDbSet);
+            var legacyCrSet = new ListOfGSM3GCRsFakeDbSet { new List_of_GSM___3G_CRs{ Doc_1st_Level="C1-131002"}};
+            legacyContext.Stub(ctx => ctx.List_of_GSM___3G_CRs).Return(legacyCrSet);
 
             // Report
             var report = new Report();
@@ -107,7 +109,7 @@ namespace DatabaseImportTests
                         MainContact = "Import from MS Access",
                         fk_Enum_ContributionStatus = 17,
                         fk_Owner = 0,
-                        fk_Enum_ContributionType = 1,
+                        fk_Enum_ContributionType = 2,
                         ContribAllocation = new List<ContribAllocation>
                         {
                             new ContribAllocation
