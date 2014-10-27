@@ -8,10 +8,10 @@ REM -----------------------------------------------------------
 REM ------------------------------------------------------------------------------
 REM ----------------  Provide Environment Parameters Below -----------------------
 REM ------------------------------------------------------------------------------
-SET PATH_ULTIMATE=D:\CG_projects\Ultimate
+SET PATH_ULTIMATE=D:\WS\ETSI_3GPP_Ultimate\dev\ULTIMATE_trunk
 SET PATH_NGPP=D:\CG_projects\Solutions\UltimateContributionNew
 SET BASE_PATH_TARGET=C:\EtsiPortalServices
-SET SERVICE_LOGIN=CORP\lbabin
+SET SERVICE_LOGIN=CORP\fhemery
 
 REM ----------------------------------------------------------------------------------------
 REM -----------------------  DON'T CHANGE ANYTHING BELOW------------------------------------

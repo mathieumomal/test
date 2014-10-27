@@ -105,7 +105,7 @@ namespace DatabaseImportTests
                         name = null,
                         uid = "C1-131002",
                         MainContact = "Import from MS Access",
-                        fk_Enum_ContributionStatus = 8,
+                        fk_Enum_ContributionStatus = 17,
                         fk_Owner = 0,
                         fk_Enum_ContributionType = 1,
                         ContribAllocation = new List<ContribAllocation>
@@ -176,7 +176,7 @@ namespace DatabaseImportTests
                         name = null,
                         uid = "C1-131003",
                         MainContact = "Import from MS Access",
-                        fk_Enum_ContributionStatus = 16,
+                        fk_Enum_ContributionStatus = 17,
                         fk_Owner = 0,
                         fk_Enum_ContributionType = 1,
                         fk_Enum_For = 1,
@@ -231,7 +231,8 @@ namespace DatabaseImportTests
                 new Enum_ContributionStatus() {pk_Enum_ContributionStatus = 13, Enum_Value = "Technically endorsed", Enum_Code = "TechEndorsed"},
                 new Enum_ContributionStatus() {pk_Enum_ContributionStatus = 14, Enum_Value = "Merged", Enum_Code = "Merged"},
                 new Enum_ContributionStatus() {pk_Enum_ContributionStatus = 15, Enum_Value = "Reissued", Enum_Code = "Reissued"},
-                new Enum_ContributionStatus() {pk_Enum_ContributionStatus = 16, Enum_Value = "Treated", Enum_Code = "Treated"}
+                new Enum_ContributionStatus() {pk_Enum_ContributionStatus = 16, Enum_Value = "Treated", Enum_Code = "Treated"},
+                new Enum_ContributionStatus() {pk_Enum_ContributionStatus = 17, Enum_Value = "-", Enum_Code = "Unknown"}
             };
             return dbSet;
         }

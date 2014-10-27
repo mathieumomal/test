@@ -82,12 +82,12 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
             catch (DbUpdateException ex)
             {
                 var test = ex;
-                Console.WriteLine("[ERROR GRAVE] DB update exception : " + ex.InnerException);
+                Console.WriteLine("[CRITICAL ERROR] DB update exception : " + ex.InnerException);
                 Console.ReadLine();
             }
             catch (Exception ex)
             {
-                Console.WriteLine("[ERROR GRAVE] Exception : " + ex.InnerException);
+                Console.WriteLine("[CRITICAL ERROR] Exception : " + ex.InnerException);
                 Console.ReadLine();
             }
         }
@@ -160,6 +160,9 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
                         UltimateContext.SetDetached(elt);
                     }
                 }
+
+                if (count == 10000)
+                    break;
             }
         }
 
@@ -204,7 +207,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
             {
                 if (!legacyWgStatus.Equals("-"))
                 {
-                    Report.LogWarning(RefImportForLog + "WG Status not found : " + legacyWgStatus + " for CR : " + logId);
+                    Report.LogWarning(RefImportForLog + "WG Status not found: " + legacyWgStatus + " for CR " + logId);
                 }
             }
 
@@ -217,7 +220,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
             {
                 if (!legacyTsgStatus.Equals("-"))
                 {
-                    Report.LogWarning(RefImportForLog + "TSG Status not found : " + legacyTsgStatus + " for CR : " + logId);
+                    Report.LogWarning(RefImportForLog + "TSG Status not found: " + legacyTsgStatus + " for CR " + logId);
                 }
             }
         }
@@ -243,7 +246,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
                 }
                 else
                 {
-                    Report.LogWarning(RefImportForLog + "Category not found : " + legacyCrCategory + " for CR : " + logId);
+                    Report.LogWarning(RefImportForLog + "Category not found: " + legacyCrCategory + " for CR " + logId);
                 }
             }
         }
@@ -267,7 +270,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
             //Spec 
             if (specAssociated == null)
             {
-                Report.LogWarning(RefImportForLog + "Spec not found : " + legacyCrSpecNumber + ", for CR : " + logId);
+                Report.LogWarning(RefImportForLog + "Spec not found: " + legacyCrSpecNumber + ", for CR: " + logId);
             }
             else
             {
@@ -278,7 +281,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
             //Release
             if (releaseAssociated == null)
             {
-                Report.LogWarning(RefImportForLog + "Release not found : " + legacyCrReleaseCode + ", for CR : " + logId);
+                Report.LogWarning(RefImportForLog + "Release not found: " + legacyCrReleaseCode + ", for CR: " + logId);
             }
             else
             {
@@ -289,7 +292,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
             //Version NEW
             if (releaseAssociated == null || specAssociated == null)
             {
-                Report.LogWarning(RefImportForLog + "Versions (target and current) undefined because spec or release undefined, for CR : " + logId);
+                Report.LogWarning(RefImportForLog + "Versions (target and current) undefined because spec or release undefined, for CR " + logId);
             }
             else
             {

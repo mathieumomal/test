@@ -116,6 +116,9 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
                     }
                     NgppdbContext.SetValidateOnSave(true);
                 }
+
+                if (count == 10000 )
+                    break;
             }
         }
 
@@ -127,21 +130,10 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
         /// <param name="legacyTDoc"></param>
         private void StatusCase(Etsi.Ngppdb.DomainClasses.Contribution newTDoc, Etsi.Ultimate.Tools.TmpDbDataAccess.C2006_03_17_tdocs legacyTDoc)
         {
-            var legacyStatus = Utils.CheckString(legacyTDoc.doc_remarks, 0, RefImportForLog + " status ", legacyTDoc.doc_tdoc, Report).ToLower();
-            var status = _enumContributionStatus.FirstOrDefault(x => legacyStatus.ToLower().Contains(x.Enum_Value.ToLower()));
-            var defaultStatus = _enumContributionStatus.FirstOrDefault(x => x.Enum_Code.Trim() == Enum_ContributionStatus.Treated);
+            var defaultStatus = _enumContributionStatus.FirstOrDefault(x => x.Enum_Code.Trim() == Enum_ContributionStatus.Unknown);
 
-            if (status != null)
-            {
-                newTDoc.Enum_ContributionStatus = status;
-                newTDoc.fk_Enum_ContributionStatus = status.pk_Enum_ContributionStatus;
-            }
-            else
-            {
-                newTDoc.Enum_ContributionStatus = defaultStatus;
-                newTDoc.fk_Enum_ContributionStatus = defaultStatus.pk_Enum_ContributionStatus;
-                Report.LogWarning(RefImportForLog + "Status not found : " + legacyStatus + " for contribution : " + legacyTDoc.doc_tdoc + "default value setted : " + defaultStatus.Enum_Value);
-            }
+            newTDoc.Enum_ContributionStatus = defaultStatus;
+            newTDoc.fk_Enum_ContributionStatus = defaultStatus.pk_Enum_ContributionStatus;
         }
 
         /// <summary>
