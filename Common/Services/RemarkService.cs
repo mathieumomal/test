@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Etsi.Ultimate.Utils.Core;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Services
 {
@@ -15,29 +16,46 @@ namespace Etsi.Ultimate.Services
     {
         #region IRemarkService
 
+        /// <summary>
+        /// Delegats the GetRemarks to the repositories
+        /// </summary>
+        /// <param name="entityName"></param>
+        /// <param name="primaryKey"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
         public ServiceResponse<List<Remark>> GetRemarks(string entityName, int primaryKey, int personId)
         {
-            var remarks = new ServiceResponse<List<Remark>>();
-
-            if (!String.IsNullOrEmpty(entityName))
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                switch (entityName.ToLower())
-                {
-                    case "version":
-                        break;
-                    case "specrelease":
-                        break;
-                }
-            }
+                var remarkMgr = new RemarkManager(uoW);
 
-            return remarks;
+                return remarkMgr.GetRemarks(entityName, primaryKey, personId);
+            }
         }
 
         public ServiceResponse<bool> UpdateRemarks(List<Remark> remarks, int personId)
         {
-            var isSuccess = new ServiceResponse<bool>();
+            try
+            {
 
-            return isSuccess;
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var remarkMgr = new RemarkManager(uoW);
+
+                    var mgrResponse = remarkMgr.UpdateRemarks(remarks, personId);
+                    if (mgrResponse.Result)
+                    {
+                        uoW.Save();
+                    }
+                    return mgrResponse;
+                }
+            }
+            catch (Exception e)
+            {
+                var response = new ServiceResponse<bool> { Result = false };
+                response.Report.LogError(Localization.GenericError);
+                return response;
+            }
         }
 
         #endregion
@@ -156,7 +174,25 @@ namespace Etsi.Ultimate.Services
 
     public interface IRemarkService
     {
+        /// <summary>
+        /// This method returns the remark for a given Version of SpecRelease entry
+        /// </summary>
+        /// <param name="entityName">"version" or "specrelease". Any other value will return an empty list</param>
+        /// <param name="primaryKey">The id of the version or the specrelease object</param>
+        /// <param name="personId">The id of the person performing the action</param>
+        /// <returns>The list of remarks concerning the record.
+        /// IMPORTANT: if user does not have right to see private remarks, the system will not provide them.</returns>
         ServiceResponse<List<Remark>> GetRemarks(string entityName, int primaryKey, int personId);
+
+        /// <summary>
+        /// Enables to update a list of remarks for specrelease or versions records. 
+        /// In case of an update of an existing record, the system will only fetch the IsPublic parameter of the remark.
+        /// 
+        /// Note that it is not necessary that all the records concern the same version of specrelease.
+        /// </summary>
+        /// <param name="remarks"></param>
+        /// <param name="personId"></param>
+        /// <returns> true if things went well, else false</returns>
         ServiceResponse<bool> UpdateRemarks(List<Remark> remarks, int personId);
     }
 }

@@ -90,20 +90,6 @@ namespace Etsi.Ultimate.Tests.Repositories
         }
 
         [Test]
-        [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Cannot add or update a Remark entity as its own")]
-        public void RemarkRepository_InsertOrUpdate()
-        {
-            //Arrange
-            Remark remark = new Remark() { Pk_RemarkId = 1, Fk_PersonId = 121, IsPublic = true, RemarkText = "Remark 1" };
-            
-            //Action
-            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
-            var repo = new RemarkRepository();
-            repo.UoW = uow;
-            repo.InsertOrUpdate(remark);
-        }
-
-        [Test]
         [ExpectedException(typeof(InvalidOperationException), ExpectedMessage = "Cannot delete Remark entity as its own")]
         public void RemarkRepository_Delete()
         {

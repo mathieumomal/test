@@ -64,7 +64,14 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="entity">The entity to add or update</param>
         public void InsertOrUpdate(Remark entity)
         {
-            throw new InvalidOperationException("Cannot add or update a Remark entity as its own");
+            if (entity.Pk_RemarkId == 0)
+            {
+                UoW.Context.SetAdded(entity);
+            }
+            else
+            {
+                UoW.Context.SetModified(entity);
+            }
         }
 
         /// <summary>

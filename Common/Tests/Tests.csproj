@@ -172,8 +172,9 @@
     <Compile Include="Services\CrCategoriesServiceTest.cs" />
     <Compile Include="Services\CrPackServiceTest.cs" />
     <Compile Include="Services\CrServiceTest.cs" />
+    <Compile Include="Services\RemarkServiceGetTests.cs" />
     <Compile Include="Services\RemarkServiceTest.cs" />
-    <Compile Include="Services\RightsService.cs" />
+    <Compile Include="Services\RemarksServiceUpdateTests.cs" />
     <Compile Include="Services\RightsServiceTest.cs" />
     <Compile Include="Services\SpecDefinitiveWithdrawalTest.cs" />
     <Compile Include="Services\SpecificationCreateServiceTest.cs" />
@@ -269,6 +270,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Data_For_EffortUnitTests\Releases.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\Remarks.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Data_For_EffortUnitTests\Specification.csv">

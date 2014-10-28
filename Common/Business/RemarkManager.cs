@@ -1,6 +1,9 @@
 ﻿using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using System;
+using System.Linq;
+using System.Collections.Generic;
+using Etsi.Ultimate.Business.Security;
 
 namespace Etsi.Ultimate.Business
 {
@@ -24,7 +27,91 @@ namespace Etsi.Ultimate.Business
         public RemarkManager(IUltimateUnitOfWork uow)
         {
             _uoW = uow;
-        } 
+        }
+
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Returns the list of remark given an entity name.
+        /// </summary>
+        /// <param name="entityName">version or specrelease. Any other keyword will return an empty list.</param>
+        /// <param name="primaryKey"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        public ServiceResponse<List<Remark>> GetRemarks(string entityName, int primaryKey, int personId)
+        {
+            var remarksResponse = new ServiceResponse<List<Remark>> { Result = new List<Remark>() };
+
+            var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
+            rightsMgr.UoW = _uoW;
+            remarksResponse.Rights = rightsMgr.GetRights(personId);
+
+            if (!String.IsNullOrEmpty(entityName))
+            {
+                var remarkRepository = RepositoryFactory.Resolve<IRemarkRepository>();
+                remarkRepository.UoW = _uoW;
+
+                switch (entityName.ToLower())
+                {
+                    case "version":
+                        remarksResponse.Result = remarkRepository.All.Where(r => r.Fk_VersionId == primaryKey).ToList();
+                        break;
+                    case "specrelease":
+                        remarksResponse.Result = remarkRepository.All.Where(r => r.Fk_SpecificationReleaseId == primaryKey).ToList();
+                        break;
+                }
+            }
+
+            if (!remarksResponse.Rights.HasRight(Enum_UserRights.Remarks_ViewPrivate))
+            {
+                remarksResponse.Result.RemoveAll(r => !r.IsPublic.GetValueOrDefault());
+            }
+
+            return remarksResponse;
+        }
+
+        /// <summary>
+        /// Updates the remarks for the given version or specRelease.
+        /// </summary>
+        /// <param name="remarks"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        public ServiceResponse<bool> UpdateRemarks(List<Remark> remarks, int personId)
+        {
+            var response = new ServiceResponse<bool>();
+
+            var repository = RepositoryFactory.Resolve<IRemarkRepository>();
+            repository.UoW = _uoW;
+
+            if (remarks.Count == 0)
+            {
+                response.Result = false;
+                return response;
+            }
+
+            foreach (var remark in remarks)
+            {
+                if (remark.Fk_VersionId != null || remark.Fk_SpecificationReleaseId != null)
+                {
+                    // We can only change remark visibility in case of update
+                    if (remark.Pk_RemarkId != 0)
+                    {
+                        var oldRemark = repository.Find(remark.Pk_RemarkId);
+                        oldRemark.IsPublic = remark.IsPublic;
+                    }
+                    else
+                    {
+                        repository.InsertOrUpdate(remark);
+                    }
+                }
+            }
+
+            response.Result = true;
+            return response;
+
+        }
 
         #endregion
 
@@ -168,5 +255,7 @@ namespace Etsi.Ultimate.Business
         }
 
         #endregion
+
+        
     }
 }
