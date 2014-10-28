@@ -11,8 +11,37 @@ namespace Etsi.Ultimate.Services
     /// <summary>
     /// This class is the implementation in charge of all the operations concerning the remarks.
     /// </summary>
-    public class RemarkService : IOfflineService<Remark>
+    public class RemarkService : IRemarkService, IOfflineService<Remark>
     {
+        #region IRemarkService
+
+        public ServiceResponse<List<Remark>> GetRemarks(string entityName, int primaryKey, int personId)
+        {
+            var remarks = new ServiceResponse<List<Remark>>();
+
+            if (!String.IsNullOrEmpty(entityName))
+            {
+                switch (entityName.ToLower())
+                {
+                    case "version":
+                        break;
+                    case "specrelease":
+                        break;
+                }
+            }
+
+            return remarks;
+        }
+
+        public ServiceResponse<bool> UpdateRemarks(List<Remark> remarks, int personId)
+        {
+            var isSuccess = new ServiceResponse<bool>();
+
+            return isSuccess;
+        }
+
+        #endregion
+
         #region IOfflineService Members
 
         /// <summary>
@@ -123,6 +152,12 @@ namespace Etsi.Ultimate.Services
         }
 
         #endregion
+    }
+
+    public interface IRemarkService
+    {
+        ServiceResponse<List<Remark>> GetRemarks(string entityName, int primaryKey, int personId);
+        ServiceResponse<bool> UpdateRemarks(List<Remark> remarks, int personId);
     }
 }
 
