@@ -44,7 +44,7 @@ namespace DatabaseImportTests
             // Report
             var report = new Domain.Report();
             // Execute
-            var import = new VersionImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report, MtgHelper = new MeetingHelper(legacyContext,newContext) };
+            var import = new VersionImport() { LegacyContext = legacyContext, UltimateContext = newContext, MtgHelper = new MeetingHelper(legacyContext,newContext) };
             import.FillDatabase();
 
 

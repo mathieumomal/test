@@ -29,7 +29,6 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Version
         public Etsi.Ultimate.DataAccess.IUltimateContext UltimateContext { get; set; }
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
-        public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
         public MeetingHelper MtgHelper { get; set; }
 
         public void CleanDatabase()
@@ -74,25 +73,25 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Version
 
                 var newVersion = new Etsi.Ultimate.DomainClasses.SpecVersion();
 
-                newVersion.MajorVersion = Utils.CheckInt(legacyVersion.MAJOR_VERSION_NB, RefImportForLog + " MajorVersion", idVersion, Report);
+                newVersion.MajorVersion = Utils.CheckInt(legacyVersion.MAJOR_VERSION_NB, RefImportForLog + " MajorVersion", idVersion);
 
-                newVersion.TechnicalVersion = Utils.CheckInt(legacyVersion.TECHNICAL_VERSION_NB, RefImportForLog + " TechnicalVersion", idVersion, Report);
+                newVersion.TechnicalVersion = Utils.CheckInt(legacyVersion.TECHNICAL_VERSION_NB, RefImportForLog + " TechnicalVersion", idVersion);
 
-                newVersion.EditorialVersion = Utils.CheckInt(legacyVersion.EDITORIAL_VERSION_NB, RefImportForLog + " EditorialVersion", idVersion, Report);
+                newVersion.EditorialVersion = Utils.CheckInt(legacyVersion.EDITORIAL_VERSION_NB, RefImportForLog + " EditorialVersion", idVersion);
 
                 newVersion.AchievedDate = legacyVersion.ACHIEVED_DATE;
 
                 newVersion.ExpertProvided = legacyVersion.expert_provided;
 
-                newVersion.SupressFromSDO_Pub = Utils.NullBooleanCheck(legacyVersion.suppress_SDO_publication, RefImportForLog + " SupressFromSDO_Pub", false, Report);
+                newVersion.SupressFromSDO_Pub = Utils.NullBooleanCheck(legacyVersion.suppress_SDO_publication, RefImportForLog + " SupressFromSDO_Pub", false);
 
-                newVersion.ForcePublication = Utils.NullBooleanCheck(legacyVersion.force_publication, RefImportForLog + " ForcePublication", false, Report);
+                newVersion.ForcePublication = Utils.NullBooleanCheck(legacyVersion.force_publication, RefImportForLog + " ForcePublication", false);
 
                 newVersion.DocumentUploaded = legacyVersion.uploaded;
 
                 newVersion.DocumentPassedToPub = legacyVersion.toETSI;
 
-                newVersion.Multifile = Utils.NullBooleanCheck(legacyVersion.multifile, RefImportForLog + " ForcePublication", false, Report);
+                newVersion.Multifile = Utils.NullBooleanCheck(legacyVersion.multifile, RefImportForLog + " ForcePublication", false);
 
                 newVersion.ETSI_WKI_ID = legacyVersion.WKI_ID;
 
@@ -113,12 +112,12 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Version
                 if (count % 100 == 0)
                     Console.Write(String.Format("\r" + RefImportForLog + " {0}/{1}  ", count, total));
             }
-            Report.LogWarning(RefImportForLog + " " + MeetingsNotFound + " meetings not found...");
+            LogManager.LogWarning(RefImportForLog + " " + MeetingsNotFound + " meetings not found...");
         }
 
         private void LocationCase(Etsi.Ultimate.DomainClasses.SpecVersion newVersion, Etsi.Ultimate.Tools.TmpDbDataAccess.C2001_04_25_schedule legacyVersion, String idVersion)
         {
-            var legacyLocation = Utils.CheckString(legacyVersion.location, 150, RefImportForLog + " Location", idVersion, Report);
+            var legacyLocation = Utils.CheckString(legacyVersion.location, 150, RefImportForLog + " Location", idVersion);
             Match match = Regex.Match(legacyLocation, "(#).*(#)");
             if (!String.IsNullOrEmpty(legacyLocation) && match.Success)
             {
@@ -139,7 +138,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Version
         /// <param name="idVersion"></param>
         private void ReleaseCase(Etsi.Ultimate.DomainClasses.SpecVersion newVersion, Etsi.Ultimate.Tools.TmpDbDataAccess.C2001_04_25_schedule legacyVersion, String idVersion)
         {
-            var versionRelease = Utils.CheckString(legacyVersion.release, 0, RefImportForLog + " Release", idVersion, Report);
+            var versionRelease = Utils.CheckString(legacyVersion.release, 0, RefImportForLog + " Release", idVersion);
             var release = UltimateContext.Releases.Where(x => x.Code.Equals(versionRelease)).FirstOrDefault();
             if (release != null)
             {
@@ -147,7 +146,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Version
             }
             else
             {
-                Report.LogWarning(RefImportForLog + " release not found (" + legacyVersion.release + ")");
+                LogManager.LogWarning(RefImportForLog + " release not found (" + legacyVersion.release + ")");
             }
         }
 
@@ -159,7 +158,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Version
         /// <param name="idVersion"></param>
         private void SpecificationCase(Etsi.Ultimate.DomainClasses.SpecVersion newVersion, Etsi.Ultimate.Tools.TmpDbDataAccess.C2001_04_25_schedule legacyVersion, String idVersion)
         {
-            var versionSpec = Utils.CheckString(legacyVersion.spec, 0, RefImportForLog + " Specification", idVersion, Report);
+            var versionSpec = Utils.CheckString(legacyVersion.spec, 0, RefImportForLog + " Specification", idVersion);
             var spec = UltimateContext.Specifications.Where(x => x.Number.Equals(versionSpec)).FirstOrDefault();
             if (spec != null)
             {
@@ -167,7 +166,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Version
             }
             else
             {
-                Report.LogWarning(RefImportForLog + " specification not found (" + legacyVersion.spec + ")");
+                LogManager.LogWarning(RefImportForLog + " specification not found (" + legacyVersion.spec + ")");
             }
         }
 
@@ -179,7 +178,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Version
         /// <param name="idVersion"></param>
         private void MeetingCase(Etsi.Ultimate.DomainClasses.SpecVersion newVersion, Etsi.Ultimate.Tools.TmpDbDataAccess.C2001_04_25_schedule legacyVersion, String idVersion)
         {
-            var versionMeeting = Utils.CheckString(legacyVersion.meeting, 0, RefImportForLog + " Meeting", idVersion, Report);
+            var versionMeeting = Utils.CheckString(legacyVersion.meeting, 0, RefImportForLog + " Meeting", idVersion);
             var mtg = MtgHelper.FindMeetingId(versionMeeting);
             if (mtg.HasValue)
             {

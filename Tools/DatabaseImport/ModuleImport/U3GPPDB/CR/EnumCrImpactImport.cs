@@ -25,7 +25,6 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
         public Etsi.Ultimate.DataAccess.IUltimateContext UltimateContext { get; set; }
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
-        public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
         public MeetingHelper MtgHelper { get; set; }
 
         public void CleanDatabase() { }

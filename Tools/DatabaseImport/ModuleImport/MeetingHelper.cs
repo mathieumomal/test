@@ -15,14 +15,26 @@ namespace DatabaseImport.ModuleImport
 
         public MeetingHelper(ITmpDb iLegacyContext, IUltimateContext iUltimateContext)
         {
-            MeetingIds = new Dictionary<string,int>();
-            
-            iLegacyContext.plenary_meetings_with_end_dates.ToList().ForEach(m => 
-                MeetingIds.Add(m.meeting, m.mtg_id.GetValueOrDefault())
+            MeetingIds = new Dictionary<string, int>();
+
+            iLegacyContext.plenary_meetings_with_end_dates.ToList().ForEach(m =>
+                {
+                    if (!string.IsNullOrEmpty(m.meeting))
+                    {
+                        MeetingIds.Remove(m.meeting);
+                        MeetingIds.Add(m.meeting, m.mtg_id.GetValueOrDefault());
+                    }
+                }
             );
 
-            iUltimateContext.Meetings.ToList().ForEach( m =>
-                MeetingIds.Add(m.MtgShortRef, m.MTG_ID)
+            iUltimateContext.Meetings.ToList().ForEach(m =>
+                {
+                    if (!string.IsNullOrEmpty(m.MtgShortRef))
+                    {
+                        MeetingIds.Remove(m.MtgShortRef);
+                        MeetingIds.Add(m.MtgShortRef, m.MTG_ID);
+                    }
+                }
             );
 
         }

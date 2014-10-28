@@ -13,7 +13,6 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
         public Etsi.Ultimate.DataAccess.IUltimateContext UltimateContext { get; set; }
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
-        public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
         public MeetingHelper MtgHelper { get; set; }
 
         public void CleanDatabase()
@@ -48,9 +47,9 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
                     else
                     {
                         if(child == null)
-                            Report.LogWarning(RefImportForLog + " Spec : " + legacyGenealogie.filius + "not found.");
+                            LogManager.LogWarning(RefImportForLog + " Spec : " + legacyGenealogie.filius + "not found.");
                         if(parent == null)
-                            Report.LogWarning(RefImportForLog + " Spec : " + legacyGenealogie.patrem + "not found.");
+                            LogManager.LogWarning(RefImportForLog + " Spec : " + legacyGenealogie.patrem + "not found.");
                     }
                 }
                 else
@@ -58,7 +57,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
                     countTooSmallNumber++;
                 }
             }
-            Report.LogWarning(RefImportForLog + "!!! TOTAL !!! Spec Number not valid (lgth<4 or null): " + countTooSmallNumber + ".");
+            LogManager.LogWarning(RefImportForLog + "!!! TOTAL !!! Spec Number not valid (lgth<4 or null): " + countTooSmallNumber + ".");
         }
         #endregion
     }

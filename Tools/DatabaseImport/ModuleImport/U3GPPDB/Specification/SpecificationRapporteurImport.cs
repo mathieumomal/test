@@ -19,7 +19,6 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
         public Etsi.Ultimate.DataAccess.IUltimateContext UltimateContext { get; set; }
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
-        public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
         public MeetingHelper MtgHelper { get; set; }
 
         public void CleanDatabase()
@@ -60,17 +59,17 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
                     var person = UltimateContext.View_Persons.Where(x => x.PERSON_ID == legacySpecifification.rapporteur_id).FirstOrDefault();
                     if (spec == null)
                     {
-                        Report.LogWarning(RefImportForLog + " Spec : " + legacySpecifification.Number + " not found.");
+                        LogManager.LogWarning(RefImportForLog + " Spec : " + legacySpecifification.Number + " not found.");
                     }
                     else if (person == null)
                     {
-                        Report.LogWarning(RefImportForLog + " Rapporteur id : " + legacySpecifification.rapporteur_id + " not found.");
+                        LogManager.LogWarning(RefImportForLog + " Rapporteur id : " + legacySpecifification.rapporteur_id + " not found.");
                     }
                     else
                     {
                         specRapporteur.IsPrime = true;
                         specRapporteur.Fk_SpecificationId = spec.Pk_SpecificationId;
-                        specRapporteur.Fk_RapporteurId = Utils.CheckInt(legacySpecifification.rapporteur_id, RefImportForLog + "Rapporteur id undefined", spec.Number, Report);
+                        specRapporteur.Fk_RapporteurId = Utils.CheckInt(legacySpecifification.rapporteur_id, RefImportForLog + "Rapporteur id undefined", spec.Number);
                         UltimateContext.SpecificationRapporteurs.Add(specRapporteur);
                     }
                 }

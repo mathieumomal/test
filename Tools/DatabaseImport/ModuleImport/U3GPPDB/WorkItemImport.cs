@@ -21,12 +21,6 @@ namespace DatabaseImport.ModuleImport.U3GPPDB
             set;
         }
 
-        public Report Report
-        {
-            get;
-            set;
-        }
-
         /// <summary>
         /// Removes all the releases from the database.
         /// 

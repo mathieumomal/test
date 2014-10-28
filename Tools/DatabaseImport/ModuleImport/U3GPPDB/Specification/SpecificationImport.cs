@@ -20,7 +20,6 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
         public Etsi.Ultimate.DataAccess.IUltimateContext UltimateContext { get; set; }
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
-        public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
         public MeetingHelper MtgHelper { get; set; }
 
         public void CleanDatabase()
@@ -47,9 +46,9 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
 
                 IsTsCase(newSpec, legacySpec);
 
-                newSpec.Number = Utils.CheckString(legacySpec.Number, 20, RefImportForLog + " Number", newSpec.Number, Report);
+                newSpec.Number = Utils.CheckString(legacySpec.Number, 20, RefImportForLog + " Number", newSpec.Number);
 
-                newSpec.IsActive = !Utils.NullBooleanCheck(legacySpec.definitively_withdrawn, RefImportForLog + "IsActive (<=> OLD DefinitivelyWithdrawn)", false, Report);
+                newSpec.IsActive = !Utils.NullBooleanCheck(legacySpec.definitively_withdrawn, RefImportForLog + "IsActive (<=> OLD DefinitivelyWithdrawn)", false);
 
                 IsUnderChangeControlCase(newSpec, legacySpec);
 
@@ -57,7 +56,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
 
                 newSpec.IsForPublication = legacySpec.For_publication;
 
-                newSpec.Title = Utils.CheckString(legacySpec.Title, 2000, RefImportForLog + " Title", newSpec.Number, Report);
+                newSpec.Title = Utils.CheckString(legacySpec.Title, 2000, RefImportForLog + " Title", newSpec.Number);
 
                 newSpec.ComIMS = legacySpec.ComIMS;
 
@@ -69,13 +68,13 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
 
                 newSpec.MOD_TS = legacySpec.update_date;
 
-                newSpec.MOD_BY = Utils.CheckString(null, 20, RefImportForLog + " MOD_BY", newSpec.Number, Report);
+                newSpec.MOD_BY = Utils.CheckString(null, 20, RefImportForLog + " MOD_BY", newSpec.Number);
 
                 newSpec.TitleVerified = legacySpec.title_verified;
 
                 newSpec.URL = URLCase(legacySpec.URL);
 
-                newSpec.ITU_Description = Utils.CheckString(legacySpec.description, 1000, RefImportForLog + " ITU_Description", newSpec.Number, Report);
+                newSpec.ITU_Description = Utils.CheckString(legacySpec.description, 1000, RefImportForLog + " ITU_Description", newSpec.Number);
 
                 SerieCase(newSpec, legacySpec);
 
@@ -107,7 +106,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
                     break;
                 default:
                     newSpec.IsTS = true;
-                    Report.LogError(RefImportForLog + " type is not TS or TR but (" + legacySpec.Type + ") (We applied TS by default).");
+                    LogManager.LogWarning(RefImportForLog + " type is not TS or TR but (" + legacySpec.Type + ") (We applied TS by default).");
                     break;
             }
         }
@@ -124,7 +123,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
             var isPromoteInhibitedCase = false;
             foreach (var spec_release in spec_releases)
             {
-                if (Utils.NullBooleanCheck(spec_release.inhibitUpgrade, RefImportForLog + "IsPromoteInhibited", false, Report))
+                if (Utils.NullBooleanCheck(spec_release.inhibitUpgrade, RefImportForLog + "IsPromoteInhibited", false))
                     isPromoteInhibitedCase = true;
                 else
                     isPromoteInhibitedCase = false;
@@ -140,7 +139,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
         private void TechnologieCase(Etsi.Ultimate.DomainClasses.Specification newSpec, Etsi.Ultimate.Tools.TmpDbDataAccess.Specs_GSM_3G legacySpec)
         {
             //SpecificationTechnologies relation table creation
-            if (Utils.NullBooleanCheck(legacySpec.C2g, RefImportForLog + "C2g", false, Report))
+            if (Utils.NullBooleanCheck(legacySpec.C2g, RefImportForLog + "C2g", false))
             {
                 Etsi.Ultimate.DomainClasses.Enum_Technology enumTechno = UltimateContext.Enum_Technology.Where(x => x.Code.Equals(Enum_TechnologyImport._2gCode)).FirstOrDefault();
                 Etsi.Ultimate.DomainClasses.SpecificationTechnology relationSpecTechno = new SpecificationTechnology()
@@ -151,7 +150,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
                 UltimateContext.SpecificationTechnologies.Add(relationSpecTechno);
                 newSpec.SpecificationTechnologies.Add(relationSpecTechno);
             }
-            if (Utils.NullBooleanCheck(legacySpec.C3g, RefImportForLog + "C3g", false, Report))
+            if (Utils.NullBooleanCheck(legacySpec.C3g, RefImportForLog + "C3g", false))
             {
                 Etsi.Ultimate.DomainClasses.Enum_Technology enumTechno = UltimateContext.Enum_Technology.Where(x => x.Code.Equals(Enum_TechnologyImport._3gCode)).FirstOrDefault();
                 Etsi.Ultimate.DomainClasses.SpecificationTechnology relationSpecTechno = new SpecificationTechnology()
@@ -162,7 +161,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
                 UltimateContext.SpecificationTechnologies.Add(relationSpecTechno);
                 newSpec.SpecificationTechnologies.Add(relationSpecTechno);
             }
-            if (Utils.NullBooleanCheck(legacySpec.LTE, RefImportForLog + "LTE", false, Report))
+            if (Utils.NullBooleanCheck(legacySpec.LTE, RefImportForLog + "LTE", false))
             {
                 Etsi.Ultimate.DomainClasses.Enum_Technology enumTechno = UltimateContext.Enum_Technology.Where(x => x.Code.Equals(Enum_TechnologyImport._lteCode)).FirstOrDefault();
                 Etsi.Ultimate.DomainClasses.SpecificationTechnology relationSpecTechno = new SpecificationTechnology()
@@ -188,7 +187,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
             }
             else
             {
-                Report.LogWarning(RefImportForLog + "Serie not found : " + serie + " for Spec : " + legacySpec.Number);
+                LogManager.LogWarning(RefImportForLog + "Serie not found : " + serie + " for Spec : " + legacySpec.Number);
             }
         }
 
@@ -209,7 +208,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
         /// <param name="legacySpec"></param>
         private void RemarksCase(Etsi.Ultimate.DomainClasses.Specification newSpec, Etsi.Ultimate.Tools.TmpDbDataAccess.Specs_GSM_3G legacySpec)
         {
-            var remarksField = Utils.CheckString(legacySpec.general_remarks, 255, RefImportForLog + " remarks text", newSpec.Number, Report);
+            var remarksField = Utils.CheckString(legacySpec.general_remarks, 255, RefImportForLog + " remarks text", newSpec.Number);
             
             if (!String.IsNullOrEmpty(remarksField))
             {

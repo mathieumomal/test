@@ -14,8 +14,6 @@ namespace DatabaseImport.ModuleImport
 
         ITmpDb LegacyContext { get; set; }
 
-        Report Report { get; set; }
-
         void CleanDatabase();
 
         void FillDatabase();

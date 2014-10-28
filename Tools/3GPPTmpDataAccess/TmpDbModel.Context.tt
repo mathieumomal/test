@@ -69,6 +69,11 @@ if (!loader.IsLazyLoadingEnabled(container))
 #>
     }
 
+    public void SetDetached(object entity)
+    {
+        Entry(entity).State = EntityState.Detached;
+    }
+
     protected override void OnModelCreating(DbModelBuilder modelBuilder)
     {
         throw new UnintentionalCodeFirstException();

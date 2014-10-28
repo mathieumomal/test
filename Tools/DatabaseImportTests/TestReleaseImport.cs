@@ -31,7 +31,7 @@ namespace DatabaseImportTests
             newContext.Stub(ctx => ctx.Remarks).Return(remarkSet);
             newContext.Stub(ctx => ctx.Histories).Return(historiesSet);
 
-            var import = new ReleaseImport() { LegacyContext = null, UltimateContext = newContext, Report = null };
+            var import = new ReleaseImport() { LegacyContext = null, UltimateContext = newContext };
             import.CleanDatabase();
 
             Assert.AreEqual(0, newDbSet.All().Count);
@@ -81,7 +81,7 @@ namespace DatabaseImportTests
             var report = new Domain.Report();
 
             // Execute
-            var import = new ReleaseImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
+            var import = new ReleaseImport() { LegacyContext = legacyContext, UltimateContext = newContext };
             import.FillDatabase();
 
 
@@ -147,7 +147,7 @@ namespace DatabaseImportTests
             var report = new Domain.Report();
 
             // Execute
-            var import = new ReleaseImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
+            var import = new ReleaseImport() { LegacyContext = legacyContext, UltimateContext = newContext};
             import.FillDatabase();
 
             // Test results
@@ -250,7 +250,7 @@ namespace DatabaseImportTests
             var report = new Domain.Report();
 
             // Execute
-            var import = new ReleaseImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
+            var import = new ReleaseImport() { LegacyContext = legacyContext, UltimateContext = newContext };
             import.FillDatabase();
 
             // Test results

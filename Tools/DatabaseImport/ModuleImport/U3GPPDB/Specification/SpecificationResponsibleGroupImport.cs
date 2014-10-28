@@ -23,7 +23,6 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
         public Etsi.Ultimate.DataAccess.IUltimateContext UltimateContext { get; set; }
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
-        public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
         public MeetingHelper MtgHelper { get; set; }
 
         public void CleanDatabase()
@@ -75,16 +74,16 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
         {
             string groupsCode = "";
             if(isPrime)//We get WG_prime value from legacy specs column because we search the prime Responsiblegroups
-                groupsCode = Utils.CheckString(legacySpecifification.WG_prime, 0, RefImportForLog + "PrimeResponGroup", "", Report);
+                groupsCode = Utils.CheckString(legacySpecifification.WG_prime, 0, RefImportForLog + "PrimeResponGroup", "");
             else//We get WG_other value from legacy specs column because we search the other Responsiblegroups
-                groupsCode = Utils.CheckString(legacySpecifification.WG_other, 0, RefImportForLog + "NoPrimeResponGroup", "", Report);
+                groupsCode = Utils.CheckString(legacySpecifification.WG_other, 0, RefImportForLog + "NoPrimeResponGroup", "");
             //If we had found any groupCode :
             if (!String.IsNullOrEmpty(groupsCode) && groupsCode != "-")
             {
                 String[] respGroups = null;
                 //We split the geting field to have a GroupCode table
                 if (groupsCode.Contains(',') && groupsCode.Contains('/'))
-                    Report.LogWarning(RefImportForLog + " too many kind of separator.");
+                    LogManager.LogWarning(RefImportForLog + " too many kind of separator.");
                 else if (groupsCode.Contains(','))
                     respGroups = groupsCode.Split(',');
                 else
@@ -92,7 +91,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
                 //Foreach groups found
                 foreach (var respGroup in respGroups)
                 {
-                    var cleanRespGroup = Utils.CheckString(respGroup, 0, RefImportForLog, "", Report);
+                    var cleanRespGroup = Utils.CheckString(respGroup, 0, RefImportForLog, "");
                     if (!String.IsNullOrEmpty(cleanRespGroup))
                     {
                         //If we found a community corresponding to this GroupCode : 
@@ -103,7 +102,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
                             var spec = tmpSpecs.Where(x => x.Number == legacySpecifification.Number).FirstOrDefault();
                             if (spec == null)
                             {
-                                Report.LogWarning(RefImportForLog + " Spec : " + legacySpecifification.Number + " not found.");
+                                LogManager.LogWarning(RefImportForLog + " Spec : " + legacySpecifification.Number + " not found.");
                             }
                             else
                             {
@@ -119,7 +118,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
                         }
                         else
                         {
-                            Report.LogWarning(RefImportForLog + " Group : " + cleanRespGroup + " not found in community table.");
+                            LogManager.LogWarning(RefImportForLog + " Group : " + cleanRespGroup + " not found in community table.");
                         }
                     }
                 }

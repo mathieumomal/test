@@ -48,7 +48,6 @@ namespace DatabaseImportTests
             var import = new ContributionImport()
             {
                 LegacyContext = legacyContext, 
-                Report = report, 
                 NgppdbContext = newNgppDbContext, 
                 UltimateContext = new3GppDbContext,
                 MtgHelper = new MeetingHelper(legacyContext, new3GppDbContext)

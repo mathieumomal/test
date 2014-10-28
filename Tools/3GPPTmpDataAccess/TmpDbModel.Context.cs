@@ -20,6 +20,11 @@ namespace Etsi.Ultimate.Tools.TmpDbDataAccess
         {
         }
     
+        public void SetDetached(object entity)
+        {
+            Entry(entity).State = EntityState.Detached;
+        }
+    
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();

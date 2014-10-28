@@ -19,7 +19,6 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
         public Etsi.Ultimate.DataAccess.IUltimateContext UltimateContext { get; set; }
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
-        public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
         public MeetingHelper MtgHelper { get; set; }
 
         public void CleanDatabase()
@@ -67,11 +66,11 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
                 {
                     if (spec == null)
                     {
-                        Report.LogWarning(RefImportForLog + " Specification not found (Spec : " + legacySpecInfo.Spec + ", for Release : " + legacySpecInfo.Release + ")");
+                        LogManager.LogWarning(RefImportForLog + " Specification not found (Spec : " + legacySpecInfo.Spec + ", for Release : " + legacySpecInfo.Release + ")");
                     }
                     if (release == null)
                     {
-                        Report.LogWarning(RefImportForLog + " Release not found (Release : " + legacySpecInfo.Release + ", for Spec : " + legacySpecInfo.Spec + ")");
+                        LogManager.LogWarning(RefImportForLog + " Release not found (Release : " + legacySpecInfo.Release + ", for Spec : " + legacySpecInfo.Spec + ")");
                     }
                 }
                 
@@ -84,13 +83,13 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
 
         private void WithdrawnMeetingCase(Specification_Release newSpecRelease, Etsi.Ultimate.Tools.TmpDbDataAccess.Specs_GSM_3G_release_info legacySpecInfo)
         {
-            var withdrawnMeetingId = Utils.CheckString(legacySpecInfo.stopped_at_meeting, 0, RefImportForLog + " WithdrawnMeeting", legacySpecInfo.Release, Report);
+            var withdrawnMeetingId = Utils.CheckString(legacySpecInfo.stopped_at_meeting, 0, RefImportForLog + " WithdrawnMeeting", legacySpecInfo.Release);
             if (withdrawnMeetingId != "" && withdrawnMeetingId != "-")
             {
                 var mtg = MtgHelper.FindMeetingId(withdrawnMeetingId);
 
                 if (!mtg.HasValue)
-                    Report.LogWarning(RefImportForLog + "Release " + legacySpecInfo.Release + ": could not find withdraw meeting " + withdrawnMeetingId);
+                    LogManager.LogWarning(RefImportForLog + "Release " + legacySpecInfo.Release + ": could not find withdraw meeting " + withdrawnMeetingId);
                 else
                 {
                     newSpecRelease.WithdrawMeetingId = mtg.Value;

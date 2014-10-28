@@ -50,7 +50,7 @@ namespace DatabaseImportTests
             // Report
             var report = new Domain.Report();
             // Execute
-            var import = new SpecificationImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
+            var import = new SpecificationImport() { LegacyContext = legacyContext, UltimateContext = newContext };
             import.FillDatabase();
 
 
@@ -103,7 +103,7 @@ namespace DatabaseImportTests
             // Report
             var report = new Domain.Report();
             // Execute
-            var import_fill = new SpecificationResponsibleGroupImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
+            var import_fill = new SpecificationResponsibleGroupImport() { LegacyContext = legacyContext, UltimateContext = newContext };
             import_fill.FillDatabase();
 
 
@@ -141,7 +141,7 @@ namespace DatabaseImportTests
             //Report
             var report = new Domain.Report();
             // Execute
-            var import_fill = new SpecificationsGenealogyImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
+            var import_fill = new SpecificationsGenealogyImport() { LegacyContext = legacyContext, UltimateContext = newContext };
             import_fill.FillDatabase();
 
             Assert.AreEqual(4, newDbSet.All().Count);
@@ -175,7 +175,7 @@ namespace DatabaseImportTests
             //Report
             var report = new Domain.Report();
             // Execute
-            var import_fill = new SpecificationRapporteurImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
+            var import_fill = new SpecificationRapporteurImport() { LegacyContext = legacyContext, UltimateContext = newContext };
             import_fill.FillDatabase();
 
             Assert.AreEqual(4, newDbSet.All().Count);
@@ -211,7 +211,7 @@ namespace DatabaseImportTests
             //Report
             var report = new Domain.Report();
             // Execute
-            var import_fill = new SpecificationWorkitemImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
+            var import_fill = new SpecificationWorkitemImport() { LegacyContext = legacyContext, UltimateContext = newContext };
             import_fill.FillDatabase();
 
             Assert.AreEqual(1, specWorkItemDbSet.All().Count);
@@ -248,7 +248,7 @@ namespace DatabaseImportTests
             //Report
             var report = new Domain.Report();
             // Execute
-            var import_fill = new SpecificationReleaseImport() { LegacyContext = legacyContext, UltimateContext = newContext, Report = report, MtgHelper = new MeetingHelper(legacyContext,newContext) };
+            var import_fill = new SpecificationReleaseImport() { LegacyContext = legacyContext, UltimateContext = newContext, MtgHelper = new MeetingHelper(legacyContext,newContext) };
             import_fill.FillDatabase();
 
             Assert.AreEqual(1, specReleaseDbSet.All().Count);

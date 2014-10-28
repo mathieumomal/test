@@ -11,7 +11,6 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
         public Etsi.Ultimate.DataAccess.IUltimateContext UltimateContext { get; set; }
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
-        public Etsi.Ultimate.DomainClasses.Report Report { get; set; }
         public MeetingHelper MtgHelper { get; set; }
 
         public void CleanDatabase()
@@ -57,18 +56,18 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
                     }
                     else
                     {
-                        Report.LogWarning(RefImportForLog + " Specification not found (Spec Number : " + old_spec_work.Spec + ", for WorkItem UID : " + old_spec_work.WI_UID + ")");
+                        LogManager.LogWarning(RefImportForLog + " Specification not found (Spec Number : " + old_spec_work.Spec + ", for WorkItem UID : " + old_spec_work.WI_UID + ")");
                     }
                 }
                 else
                 {
                     if (spec == null)
                     {
-                        Report.LogWarning(RefImportForLog + " Specification not found (Spec Number : " + old_spec_work.Spec + ", for WorkItem UID : " + old_spec_work.WI_UID + ")");
+                        LogManager.LogWarning(RefImportForLog + " Specification not found (Spec Number : " + old_spec_work.Spec + ", for WorkItem UID : " + old_spec_work.WI_UID + ")");
                     }
                     if (work == null)
                     {
-                        Report.LogWarning(RefImportForLog + " WorkItem not found (Spec Number : " + old_spec_work.Spec + ", for WorkItem UID : " + old_spec_work.WI_UID + ")");
+                        LogManager.LogWarning(RefImportForLog + " WorkItem not found (Spec Number : " + old_spec_work.Spec + ", for WorkItem UID : " + old_spec_work.WI_UID + ")");
                     }
                 }
                 count++;

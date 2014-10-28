@@ -61,7 +61,6 @@ namespace DatabaseImport
                 import.LegacyContext = oldContext;
                 import.UltimateContext = u3GppContext;
                 import.NgppdbContext = ngppContext;
-                import.Report = report;
                 import.MtgHelper = meetingHelper;
             }
 

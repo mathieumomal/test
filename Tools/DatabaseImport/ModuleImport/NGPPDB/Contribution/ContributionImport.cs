@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using Etsi.Ngppdb.DomainClasses;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Tools.TmpDbDataAccess;
+using Etsi.Ngppdb.DataAccess;
+using System.Diagnostics;
 
 namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
 {
@@ -29,7 +32,7 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
         public MeetingHelper MtgHelper { get; set; }
-        public Report Report { get; set; }
+        public HashSet<string> CrWgTdocUids { get; set; }
 
         public void CleanDatabase()
         {
@@ -41,8 +44,12 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
             //Init necessary objects
             _enumContributionStatus = NgppdbContext.Enum_ContributionStatus.ToList();
             _enumContributionType = NgppdbContext.Enum_ContributionType.ToList();
-            _meetings = UltimateContext.Meetings.ToList();
-            _legacyMeetings = LegacyContext.plenary_meetings_with_end_dates.ToList();
+            _legacyMeetings = LegacyContext.plenary_meetings_with_end_dates.AsNoTracking().ToList();
+
+            CrWgTdocUids = new HashSet<string>(LegacyContext.List_of_GSM___3G_CRs.Where(c => c.Doc_2nd_Level != null && !string.IsNullOrEmpty(c.Doc_2nd_Level))
+                .AsNoTracking().Select(c => c.Doc_2nd_Level).Distinct());
+
+
 
             NgppdbContext.SetAutoDetectChanges(false);
             CreateDatas();
@@ -69,12 +76,12 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
             catch (DbUpdateException ex)
             {
                 var test = ex;
-                Console.WriteLine("[ERROR GRAVE] DB update exception : " + ex.InnerException);
+                Console.WriteLine("[CRITICAL ERROR] DB update exception : " + ex.InnerException);
                 Console.ReadLine();
             }
             catch (Exception ex)
             {
-                Console.WriteLine("[ERROR GRAVE] Exception : " + ex.InnerException);
+                Console.WriteLine("[CRITICAL ERROR] Exception : " + ex.InnerException);
                 Console.ReadLine();
             }
         }
@@ -86,45 +93,69 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
         {
             var total = LegacyContext.C2006_03_17_tdocs.Count();
             var count = 0;
-            foreach (var legacyTdoc in LegacyContext.C2006_03_17_tdocs)
+
+            var t = new Stopwatch();
+            t.Start();
+
+            var legacyTDocs = LegacyContext.C2006_03_17_tdocs.OrderBy(r => r.Row_id).Skip(count).Take(10000).AsNoTracking().ToList();
+
+
+            while (count != total)
             {
-                var newTDoc = new Etsi.Ngppdb.DomainClasses.Contribution
+                foreach (var legacyTdoc in legacyTDocs)
                 {
-                    uid = Utils.CheckString(legacyTdoc.doc_tdoc, 200, RefImportForLog + " UID ", legacyTdoc.doc_tdoc, Report),
-                    title = Utils.CheckString(legacyTdoc.doc_title, 200, RefImportForLog + " Title ", legacyTdoc.doc_tdoc, Report),
-                    MainContact = "Import from MS Access",
-                    fk_Owner = 0,
-                    Denorm_Source = Utils.CheckString(legacyTdoc.doc_source, 500, RefImportForLog + " Source ", legacyTdoc.doc_tdoc, Report),
-                    lastModificationDate = DateTime.Now,
-                    fk_Enum_For = 1,//Decision
-                };
-
-                StatusCase(newTDoc, legacyTdoc);
-
-                TypeCase(newTDoc, legacyTdoc);
-
-                MeetingCase(newTDoc, legacyTdoc);
-
-
-                NgppdbContext.Contribution.Add(newTDoc);
-                count++;
-                if (count % 100 == 0)
-                    Console.Write("\r" + RefImportForLog + " {0}/{1}  ", count, total);
-                //Save each 10000 CRs cause of memory reasons
-                if (count % 10000 == 0)
-                {
-                    Console.Write("\r" + RefImportForLog + " Intermediary Recording  ");
-                    NgppdbContext.SetValidateOnSave(false);
-                    NgppdbContext.SaveChanges();
-                    foreach (var elt in NgppdbContext.Contribution)
+                    var newTDoc = new Etsi.Ngppdb.DomainClasses.Contribution
                     {
-                        NgppdbContext.SetDetached(elt);
-                    }
-                    NgppdbContext.SetValidateOnSave(true);
-                }
+                        uid = Utils.CheckString(legacyTdoc.doc_tdoc, 200, RefImportForLog + " UID ", legacyTdoc.doc_tdoc),
+                        title = Utils.CheckString(legacyTdoc.doc_title, 200, RefImportForLog + " Title ", legacyTdoc.doc_tdoc),
+                        MainContact = "Import from MS Access",
+                        fk_Owner = 0,
+                        Denorm_Source = Utils.CheckString(legacyTdoc.doc_source, 500, RefImportForLog + " Source ", legacyTdoc.doc_tdoc),
+                        lastModificationDate = DateTime.Now,
+                        fk_Enum_For = 1,//Decision
+                    };
 
-                if (count == 10000)
-                    break;
+                    StatusCase(newTDoc, legacyTdoc);
+
+                    TypeCase(newTDoc, legacyTdoc);
+
+                    MeetingCase(newTDoc, legacyTdoc);
+
+
+                    NgppdbContext.Contribution.Add(newTDoc);
+                    count++;
+                    if (count % 100 == 0)
+                    {
+                        t.Stop();
+                        Console.Write("\r" + RefImportForLog + " {0}/{1} ({2} ms)  ", count, total, t.ElapsedMilliseconds);
+                        t.Restart();
+
+                    }
+                }
+                //Save each 10000 CRs cause of memory reasons
+                t.Restart();
+                Console.WriteLine();
+                Console.Write("\r" + RefImportForLog + " Intermediary Recording  ");
+                NgppdbContext.SetValidateOnSave(false);
+                NgppdbContext.SaveChanges();
+                t.Stop();
+
+                Console.Write("\r" + RefImportForLog + " Saved changes in " + t.ElapsedMilliseconds + " ms");
+                legacyTDocs = LegacyContext.C2006_03_17_tdocs.OrderBy(leg => leg.Row_id).Skip(count).Take(10000).AsNoTracking().ToList();
+                t.Restart();
+                foreach (var elt in NgppdbContext.Contribution)
+                {
+                    NgppdbContext.SetDetached(elt);
+                }
+                foreach (var elt in NgppdbContext.MeetingAllocations)
+                {
+                    NgppdbContext.SetDetached(elt);
+                }
+                t.Stop();
+                Console.Write("\r" + RefImportForLog + " Cleaned context in " + t.ElapsedMilliseconds + " ms");
+                Console.WriteLine();
+                //NgppdbContext = new NGPPDBContext();*/
+                t.Restart();
             }
         }
 
@@ -152,7 +183,7 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
         {
             var type = _enumContributionType.Find(x => x.Enum_Code == Enum_ContributionType.OtherContribution);
 
-            var attachedCr = LegacyContext.List_of_GSM___3G_CRs.Where(cr => cr.Doc_1st_Level == newTDoc.uid).FirstOrDefault();
+            var attachedCr = CrWgTdocUids.FirstOrDefault(t => t == newTDoc.uid);
             if (attachedCr != null)
             {
                 type = _enumContributionType.Find(x => x.Enum_Code == Enum_ContributionType.ChangeRequest);
@@ -167,7 +198,7 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
         /// </summary>
         private void MeetingCase(Etsi.Ngppdb.DomainClasses.Contribution newTDoc, Etsi.Ultimate.Tools.TmpDbDataAccess.C2006_03_17_tdocs legacyTDoc)
         {
-            var meetingUid = Utils.CheckString(legacyTDoc.doc_mtg, 25, RefImportForLog + "Meeting string format : " + legacyTDoc.doc_mtg, legacyTDoc.doc_tdoc, Report);
+            var meetingUid = Utils.CheckString(legacyTDoc.doc_mtg, 25, RefImportForLog + "Meeting string format : " + legacyTDoc.doc_mtg, legacyTDoc.doc_tdoc);
 
             if (!String.IsNullOrEmpty(meetingUid) && !meetingUid.Equals("-"))
             {
@@ -187,12 +218,12 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
                 }
                 else
                 {
-                    Report.LogWarning(RefImportForLog + "Meeting not found: " + meetingUid + " for contribution : " + legacyTDoc.doc_tdoc);
+                    LogManager.LogWarning(RefImportForLog + "Meeting not found: " + meetingUid + " for contribution : " + legacyTDoc.doc_tdoc);
                 }
             }
             else
             {
-                Report.LogWarning(RefImportForLog + "Meeting not found: " + meetingUid + " for contribution : " + legacyTDoc.doc_tdoc);
+                LogManager.LogWarning(RefImportForLog + "Meeting not found: " + meetingUid + " for contribution : " + legacyTDoc.doc_tdoc);
             }
         }
 

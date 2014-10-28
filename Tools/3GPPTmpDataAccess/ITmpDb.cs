@@ -33,5 +33,7 @@ namespace Etsi.Ultimate.Tools.TmpDbDataAccess
         IDbSet<Specs_GSM_3G_release_info> Specs_GSM_3G_release_info { get; set; }
         IDbSet<wpm_spec_release_mapping> wpm_spec_release_mapping { get; set; }
         IDbSet<plenary_meetings_with_end_dates> plenary_meetings_with_end_dates { get; set; }
+
+        void SetDetached(object elt);
     }
 }

@@ -57,7 +57,7 @@ namespace DatabaseImportTests
             var report = new Report();
 
             // Execute
-            var import = new EnumCrCategoryImport { LegacyContext = legacyContext, UltimateContext = newContext, Report = report };
+            var import = new EnumCrCategoryImport { LegacyContext = legacyContext, UltimateContext = newContext };
             import.FillDatabase();
 
             // Test results
@@ -85,7 +85,7 @@ namespace DatabaseImportTests
             var report = new Report();
 
             // Execute
-            var import = new EnumCrImpactImport { LegacyContext = null, UltimateContext = newContext, Report = report };
+            var import = new EnumCrImpactImport { LegacyContext = null, UltimateContext = newContext};
             import.FillDatabase();
 
             // Test results
@@ -128,7 +128,7 @@ namespace DatabaseImportTests
             var report = new Report();
 
             // Execute
-            var import = new CrImport { LegacyContext = legacyContext, UltimateContext = newContext, Report = report, MtgHelper = new MeetingHelper(legacyContext,newContext) };
+            var import = new CrImport { LegacyContext = legacyContext, UltimateContext = newContext, MtgHelper = new MeetingHelper(legacyContext,newContext) };
             import.FillDatabase();
 
             // Test results

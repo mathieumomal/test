@@ -19,12 +19,6 @@ namespace DatabaseImport.ModuleImport.U3GPPDB
             set;
         }
 
-        public Report Report
-        {
-            get;
-            set;
-        }
-
         /// <summary>
         /// Removes all the releases from the database.
         /// 
@@ -86,7 +80,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB
                 {
                     var previousRelease = UltimateContext.Releases.Where(r => r.Code == legacyRelease.previousRelease).FirstOrDefault();
                     if (previousRelease == null)
-                        Report.LogWarning("Coudln't find release " + legacyRelease.previousRelease + " as previous release of release " + newRelease.Code, "Releases");
+                        LogManager.LogWarning("Coudln't find release " + legacyRelease.previousRelease + " as previous release of release " + newRelease.Code, "Releases");
                 }
 
                 // Last modification
@@ -137,7 +131,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB
             }
             catch (Exception e)
             {
-                Report.LogError("While parsing 2gversion for release " + newRelease.Code + ": " + e.Message, "Releases");
+                LogManager.LogWarning("While parsing 2gversion for release " + newRelease.Code + ": " + e.Message, "Releases");
             }
 
             if (legacyRelease.version_3g_dec != "-")
@@ -148,7 +142,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB
                 }
                 catch (Exception e)
                 {
-                    Report.LogError("While parsing 3gversion for release " + newRelease.Code + ": " + e.Message, "Releases");
+                    LogManager.LogWarning("While parsing 3gversion for release " + newRelease.Code + ": " + e.Message, "Releases");
                 }
             }
 
@@ -202,7 +196,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB
                 var mtg = UltimateContext.Meetings.Where(m => m.MtgShortRef == legacyRelease.Stage1_freeze).FirstOrDefault();
 
                 if (mtg == null)
-                    Report.LogWarning("Release " + newRelease.Code + ": could not find freeze meeting " + legacyRelease.Stage1_freeze);
+                    LogManager.LogWarning("Release " + newRelease.Code + ": could not find freeze meeting " + legacyRelease.Stage1_freeze);
                 else
                 {
                     newRelease.Stage1FreezeMtgId = mtg.MTG_ID;
@@ -216,7 +210,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB
                 var mtg = UltimateContext.Meetings.Where(m => m.MtgShortRef == legacyRelease.Stage2_freeze).FirstOrDefault();
 
                 if (mtg == null)
-                    Report.LogWarning("Release " + newRelease.Code + ": could not find freeze meeting " + legacyRelease.Stage2_freeze);
+                    LogManager.LogWarning("Release " + newRelease.Code + ": could not find freeze meeting " + legacyRelease.Stage2_freeze);
                 else
                 {
                     newRelease.Stage2FreezeMtgId = mtg.MTG_ID;
@@ -230,7 +224,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB
                 var mtg = UltimateContext.Meetings.Where(m => m.MtgShortRef == legacyRelease.Stage3_freeze).FirstOrDefault();
 
                 if (mtg == null)
-                    Report.LogWarning("Release " + newRelease.Code + ": could not find freeze meeting " + legacyRelease.Stage3_freeze);
+                    LogManager.LogWarning("Release " + newRelease.Code + ": could not find freeze meeting " + legacyRelease.Stage3_freeze);
                 else
                 {
                     newRelease.Stage3FreezeMtgId = mtg.MTG_ID;
@@ -252,7 +246,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB
                 var mtg = UltimateContext.Meetings.Where(m => m.MtgShortRef == legacyRelease.Closed).FirstOrDefault();
 
                 if (mtg == null)
-                    Report.LogWarning("Release " + newRelease.Code + ": could not find Closure meeting " + legacyRelease.Closed);
+                    LogManager.LogWarning("Release " + newRelease.Code + ": could not find Closure meeting " + legacyRelease.Closed);
                 else
                 {
                     newRelease.ClosureMtgId = mtg.MTG_ID;
@@ -274,7 +268,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB
                 var mtg = UltimateContext.Meetings.Where(m => m.MtgShortRef == legacyRelease.Protocols_freeze).FirstOrDefault();
 
                 if (mtg == null)
-                    Report.LogWarning("Release " + newRelease.Code + ": could not find End meeting " + legacyRelease.Protocols_freeze);
+                    LogManager.LogWarning("Release " + newRelease.Code + ": could not find End meeting " + legacyRelease.Protocols_freeze);
                 else
                 {
                     newRelease.EndMtgId = mtg.MTG_ID;
@@ -311,7 +305,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB
             }
             catch (Exception e)
             {
-                Report.LogError("While retrieving status for release " + newRelease.Code + ": " + e.Message, "Releases");
+                LogManager.LogWarning("While retrieving status for release " + newRelease.Code + ": " + e.Message, "Releases");
             }
         }
     }
