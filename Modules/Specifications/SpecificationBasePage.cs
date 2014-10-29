@@ -19,20 +19,6 @@ namespace Etsi.Ultimate.Module.Specifications
         #region Public Properties
 
         /// <summary>
-        /// Version Remarks - Stored in ViewState to access from child user controls
-        /// </summary>
-        public List<KeyValuePair<int, List<Remark>>> VersionRemarks
-        {
-            get
-            {
-                if (ViewState[CONST_VERSION_REMARKS] == null)
-                    ViewState[CONST_VERSION_REMARKS] = new List<KeyValuePair<int, List<Remark>>>();
-
-                return (List<KeyValuePair<int, List<Remark>>>)ViewState[CONST_VERSION_REMARKS];
-            }
-        }
-
-        /// <summary>
         /// Specification Release Remarks - Stored in ViewState to access from child user controls
         /// </summary>
         public List<KeyValuePair<int, List<Remark>>> SpecReleaseRemarks

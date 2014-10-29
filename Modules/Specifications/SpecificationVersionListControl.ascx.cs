@@ -125,7 +125,6 @@ namespace Etsi.Ultimate.Module.Specifications
             specificationsVersionGrid.DataSource = Versions;
             specificationsVersionGrid.DataBind();
         }
-
         
         protected void specificationsVersionGrid_NeedDataSource(object sender, Telerik.Web.UI.GridNeedDataSourceEventArgs e)
         {
@@ -146,11 +145,8 @@ namespace Etsi.Ultimate.Module.Specifications
                 SpecVersion specVersion = (SpecVersion)item.DataItem;
                 if (specVersion != null)
                 {
-                    VersionRemarksControl versionRemarks = (VersionRemarksControl)item["LatestRemark"].FindControl("versionRemarksControl");
-                    versionRemarks.IsEditMode = IsEditMode;
-                    versionRemarks.PersonId = PersonId;
-                    versionRemarks.SpecVersion = specVersion;
-                    versionRemarks.SpecReleaseID = SpecReleaseID;
+                    ImageButton versionRemarks = (ImageButton)item["LatestRemark"].FindControl("imgVersionRemarks");
+                    versionRemarks.OnClientClick = "openRemarksPopup('version','" + specVersion.Pk_VersionId + "','" + IsEditMode + "', 'Version Remarks'); return false;";                    
                 }
 
                 if (!String.IsNullOrEmpty(item["Source"].Text))

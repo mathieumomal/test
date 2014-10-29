@@ -94,19 +94,19 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SpecificationDetails.aspx.resx</DependentUpon>
     </Compile>
+    <Compile Include="RemarksPopup.aspx.cs">
+      <DependentUpon>RemarksPopup.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="RemarksPopup.aspx.designer.cs">
+      <DependentUpon>RemarksPopup.aspx</DependentUpon>
+    </Compile>
     <Compile Include="SpecificationBasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Components\FeatureController.cs" />
     <Compile Include="Components\ItemController.cs" />
     <Compile Include="Components\Item.cs" />
-    <Compile Include="VersionRemarksControl.ascx.cs">
-      <DependentUpon>VersionRemarksControl.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="VersionRemarksControl.ascx.designer.cs">
-      <DependentUpon>VersionRemarksControl.ascx</DependentUpon>
-    </Compile>
     <Compile Include="MassivePromote.aspx.cs">
       <DependentUpon>MassivePromote.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -192,7 +192,7 @@
     <Content Include="images\ftp.png" />
     <Content Include="images\success.png" />
     <Content Include="MassivePromote.aspx" />
-    <Content Include="VersionRemarksControl.ascx" />
+    <Content Include="RemarksPopup.aspx" />
     <Content Include="DefinitiveWithdrawlMeetingSelectPopUp.aspx" />
     <Content Include="images\busy.gif" />
     <Content Include="images\spec_rel-a.png" />

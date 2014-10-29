@@ -1,7 +1,6 @@
 ﻿<%@ Control Language="C#" ClassName="SpecificationVersionListControl" AutoEventWireup="true" CodeBehind="SpecificationVersionListControl.ascx.cs" Inherits="Etsi.Ultimate.Module.Specifications.SpecificationVersionListControl" %>
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 <%@ Register TagPrefix="ult" TagName="RemarksControl" Src="../../controls/Ultimate/RemarksControl.ascx" %>
-<%@ Register TagPrefix="ult" TagName="VersionRemarksControl" Src="VersionRemarksControl.ascx" %>
 
 <style type="text/css">
     .RadGrid_Default th.rgHeader {
@@ -71,6 +70,20 @@
         win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
         win.set_modal(true);
         win.add_close(radWinVersionCloseCallBack);
+        win.set_visibleStatusbar(false);
+        win.set_title(title);
+        win.show();
+        return false;
+    }
+
+    function openRemarksPopup(remarksModule, remarksModulePrimaryKey, isEditMode, title) {
+        var win = radopen("/desktopmodules/Specifications/RemarksPopup.aspx?remarksModule=" + remarksModule + "&remarksModulePrimaryKey=" + remarksModulePrimaryKey + "&isEditMode=" + isEditMode, "Remarks");
+        var height = 200;
+        if (isEditMode)
+            height = height + 85;
+        win.setSize(550, height);
+        win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
+        win.set_modal(true);
         win.set_visibleStatusbar(false);
         win.set_title(title);
         win.show();
@@ -152,7 +165,7 @@
                     <ItemTemplate>
                         <div class="text-left">
                             <asp:Label ID="lblRemarkText" Text='<%# DataBinder.Eval(Container.DataItem,"LatestRemark") %>' runat="server" />
-                            <ult:VersionRemarksControl runat="server" ID="versionRemarksControl" />
+                            <asp:ImageButton ID="imgVersionRemarks" ImageUrl="images/spec_rel-remarks.png" runat="server" ToolTip="Remarks" CssClass="float_right remarks_btn"/>
                         </div>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>

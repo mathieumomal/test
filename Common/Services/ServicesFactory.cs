@@ -70,6 +70,7 @@ namespace Etsi.Ultimate.Services
             Container.RegisterType<ISpecVersionService, SpecVersionService>(new TransientLifetimeManager());
             Container.RegisterType<IChangeRequestService, ChangeRequestService>(new TransientLifetimeManager());
             Container.RegisterType<ICrCategoriesService, CrCategoriesService>(new TransientLifetimeManager());
+            Container.RegisterType<IRemarkService, RemarkService>(new TransientLifetimeManager());
 
             //Offline Interfaces
             Container.RegisterType<IOfflineService<SpecVersion>, SpecVersionService>(new TransientLifetimeManager());

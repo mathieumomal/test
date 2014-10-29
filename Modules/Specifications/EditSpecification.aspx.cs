@@ -94,7 +94,6 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if (!IsPostBack)
             {
-                VersionRemarks.Clear();
                 GetRequestParameters();
                 LoadSpecificationDetails();
             }
@@ -703,13 +702,6 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 if (SpecReleaseRemarks.Exists(x => x.Key == specRelease.Pk_Specification_ReleaseId))
                     specRelease.Remarks = SpecReleaseRemarks.Find(x => x.Key == specRelease.Pk_Specification_ReleaseId).Value;
-            }
-
-            //[2] Version Remarks
-            foreach (var specVersion in spec.Versions)
-            {
-                if (VersionRemarks.Exists(x => x.Key == specVersion.Pk_VersionId))
-                    specVersion.Remarks = VersionRemarks.Find(x => x.Key == specVersion.Pk_VersionId).Value;
             }
         }
 
