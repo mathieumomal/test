@@ -120,10 +120,13 @@ namespace Etsi.Ultimate.Business
             if (currentSpec.ComIMS != newSpec.ComIMS) currentSpec.ComIMS = newSpec.ComIMS;
 
             //Number & serie
-            if (!currentSpec.Number.Equals(newSpec.Number))
+            if (currentSpec.Number != null && newSpec.Number != null)
             {
-                currentSpec.Number = newSpec.Number;
-                currentSpec.Fk_SerieId = newSpec.Fk_SerieId;
+                if (!currentSpec.Number.Equals(newSpec.Number))
+                {
+                    currentSpec.Number = newSpec.Number;
+                    currentSpec.Fk_SerieId = newSpec.Fk_SerieId;
+                }
             }
             //Specification Technologies (Insert / Delete)
             var specTechnologiesToInsert = newSpec.SpecificationTechnologies.ToList().Where(x => currentSpec.SpecificationTechnologies.ToList().All(y => y.Fk_Enum_Technology != x.Fk_Enum_Technology));

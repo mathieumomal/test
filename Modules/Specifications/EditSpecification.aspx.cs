@@ -695,14 +695,6 @@ namespace Etsi.Ultimate.Module.Specifications
                 spec.SpecificationParents.Add(sp);
             foreach (Domain.Specification sp in childSpecifications.DataSource)
                 spec.SpecificationChilds.Add(sp);
-
-            //Releases Tab
-            //[1] Spec-Release Remarks
-            foreach (var specRelease in spec.Specification_Release)
-            {
-                if (SpecReleaseRemarks.Exists(x => x.Key == specRelease.Pk_Specification_ReleaseId))
-                    specRelease.Remarks = SpecReleaseRemarks.Find(x => x.Key == specRelease.Pk_Specification_ReleaseId).Value;
-            }
         }
 
         protected void GetSelectedCommunityID(object sender, EventArgs e)

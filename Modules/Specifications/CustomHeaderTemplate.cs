@@ -10,12 +10,8 @@ namespace Etsi.Ultimate.Module.Specifications
     {
         #region Private Methods
 
-        private Release _release;
-        private Specification _specification;
         private Page _page;
         private bool _isEditMode;
-        private UserRightsContainer _releaseRights;
-        private int? _personId;
         private Specification_Release _specRelease;
 
         #endregion
@@ -27,13 +23,11 @@ namespace Etsi.Ultimate.Module.Specifications
         /// </summary>
         /// <param name="specRelease">Specification Release</param>
         /// <param name="isEditMode">True - Edit Mode / False - View Mode</param>
-        /// <param name="personId">Person ID</param>
         /// <param name="page">Page</param>
-        public CustomHeaderTemplate(Specification_Release specRelease, bool isEditMode, int personId, Page page)
+        public CustomHeaderTemplate(Specification_Release specRelease, bool isEditMode, Page page)
         {
             _specRelease = specRelease;
             _isEditMode = isEditMode;
-            _personId = personId;
             _page = page;
         }
 
@@ -52,7 +46,6 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 ctrl.SpecRelease = _specRelease;
                 ctrl.IsEditMode = _isEditMode;
-                ctrl.PersonId = _personId;
             }
             container.Controls.Add(ctrl);
         }

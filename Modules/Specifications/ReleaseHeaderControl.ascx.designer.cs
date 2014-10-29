@@ -8,10 +8,9 @@
 //------------------------------------------------------------------------------
 
 namespace Etsi.Ultimate.Module.Specifications {
-
-
-    public partial class ReleaseHeaderControl
-    {
+    
+    
+    public partial class ReleaseHeaderControl {
         
         /// <summary>
         /// lblReleaseName control.
@@ -66,32 +65,5 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgRemarks;
-        
-        /// <summary>
-        /// rwmSpecReleaseHeader control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadWindowManager rwmSpecReleaseHeader;
-        
-        /// <summary>
-        /// rwReleaseHeaderRemarks control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadWindow rwReleaseHeaderRemarks;
-        
-        /// <summary>
-        /// upHeaderRemarks control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.UpdatePanel upHeaderRemarks;
     }
 }

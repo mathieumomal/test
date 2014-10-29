@@ -18,9 +18,18 @@
 
 <script type="text/javascript">
 
-    function OpenReleaseHeaderRemarksWindow<%= this.ClientID %>() {
-        var radWindowRemarks = $find("<%= rwReleaseHeaderRemarks.ClientID %>");
-        radWindowRemarks.show();
+    function openRemarksPopup(remarksModule, remarksModulePrimaryKey, isEditMode, title) {
+        var win = radopen("/desktopmodules/Specifications/RemarksPopup.aspx?remarksModule=" + remarksModule + "&remarksModulePrimaryKey=" + remarksModulePrimaryKey + "&isEditMode=" + isEditMode, "Remarks");
+        var height = 200;
+        if (isEditMode)
+            height = height + 85;
+        win.setSize(550, height);
+        win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
+        win.set_modal(true);
+        win.set_visibleStatusbar(false);
+        win.set_title(title);
+        win.show();
+        return false;
     }
 
 </script>
@@ -40,16 +49,3 @@
         </td>
     </tr>
 </table>
-<telerik:RadWindowManager ID="rwmSpecReleaseHeader" runat="server">
-    <Windows>
-        <telerik:RadWindow ID="rwReleaseHeaderRemarks" runat="server" Modal="true" Title="Remarks" Width="550" Height="230" VisibleStatusbar="false" Behaviors="Close">
-            <ContentTemplate>
-                    <asp:UpdatePanel ID="upHeaderRemarks" runat="server">
-                        <ContentTemplate>
-                            <ult:remarkscontrol runat="server" id="releaseRemarks" />
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-            </ContentTemplate>
-        </telerik:RadWindow>
-    </Windows>
-</telerik:RadWindowManager>

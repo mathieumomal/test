@@ -111,7 +111,7 @@ namespace Etsi.Ultimate.Module.Specifications
                         isSpecNumberAssigned = false;
 
                     var specRelease = DataSource.Specification_Release.Where(x => x.Fk_ReleaseId.ToString() == item.Value && x.Fk_SpecificationId == DataSource.Pk_SpecificationId).FirstOrDefault();
-                    CustomHeaderTemplate customHeaderTemplate = new CustomHeaderTemplate(specRelease, IsEditMode, PersonId.GetValueOrDefault(), this.Page);
+                    CustomHeaderTemplate customHeaderTemplate = new CustomHeaderTemplate(specRelease, IsEditMode, this.Page);
                     CustomContentTemplate customContentTemplate = new CustomContentTemplate(isSpecNumberAssigned, specRelease, versions, IsEditMode, PersonId.GetValueOrDefault(), this.Page, scrollHeight);
                     item.HeaderTemplate = customHeaderTemplate;
                     item.ApplyHeaderTemplate();
