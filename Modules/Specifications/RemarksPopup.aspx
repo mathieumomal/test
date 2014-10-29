@@ -25,7 +25,7 @@
         <asp:Panel ID="pnlSuccessMessage" runat="server" Visible="false" CssClass="Spec_Edit_Info">
             <asp:Label runat="server" ID="lblSuccessMessage" CssClass="InfoTxt"></asp:Label>
         </asp:Panel>
-        <div class="contentModal" id="divRemarksPopup" style="padding: 5px;">
+        <div class="contentModal" id="divRemarksPopup" style="padding: 5px 5px 15px 5px;">
             <div class="center">
                 <asp:UpdatePanel ID="upContentRemarks" runat="server">
                     <ContentTemplate>

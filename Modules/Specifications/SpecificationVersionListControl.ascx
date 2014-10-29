@@ -81,8 +81,10 @@
         var height = 200;
         if (isEditMode)
             height = height + 85;
-        win.setSize(550, height);
+        win.setSize(650, height);
         win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
+        win.set_autoSize(true);
+        win.set_autoSizeBehaviors(Telerik.Web.UI.WindowAutoSizeBehaviors.Height);
         win.set_modal(true);
         win.set_visibleStatusbar(false);
         win.set_title(title);
