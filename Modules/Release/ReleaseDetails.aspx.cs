@@ -171,7 +171,7 @@ namespace Etsi.Ultimate.Module.Release
             fixContainer.Height = new System.Web.UI.WebControls.Unit(580, UnitType.Pixel);
             ReleaseDetailRadMultiPage.Height = new System.Web.UI.WebControls.Unit(530, UnitType.Pixel);
             //FreezeStagesPanel
-            if (!(userRights.HasRight(Domain.Enum_UserRights.Release_ViewLimitedDetails)))
+            if (userRights.HasRight(Domain.Enum_UserRights.Release_ViewDetails) || userRights.HasRight(Domain.Enum_UserRights.Release_ViewCompleteList))
             {
 
 
