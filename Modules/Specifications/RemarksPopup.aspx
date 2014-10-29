@@ -25,7 +25,7 @@
         <asp:Panel ID="pnlSuccessMessage" runat="server" Visible="false" CssClass="Spec_Edit_Info">
             <asp:Label runat="server" ID="lblSuccessMessage" CssClass="InfoTxt"></asp:Label>
         </asp:Panel>
-        <div class="contentModal" id="divRemarksPopup" style="padding: 5px 5px 15px 5px;">
+        <div class="contentModal" id="divRemarksPopup">
             <div class="center">
                 <asp:UpdatePanel ID="upContentRemarks" runat="server">
                     <ContentTemplate>
@@ -33,7 +33,7 @@
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>
-            <div class="footer" id="remarksFooter" runat="server" style="position: absolute; bottom: 10px; right: 20px;">
+            <div class="footer" id="remarksFooter" runat="server" style="position: relative; top: 10px; text-align:right;">
                 <asp:Button ID="btnSave" runat="server" Text="Save" CssClass="btn3GPP-success" OnClick="btnSave_Click" />
                 <asp:Button ID="btnClose" runat="server" Text="Close" CssClass="btn3GPP-success" OnClientClick="return window.close();" />
             </div>
