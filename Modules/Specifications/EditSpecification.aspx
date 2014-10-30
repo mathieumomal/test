@@ -21,6 +21,7 @@
     <script src="JS/jquery.min.js"></script>
     <script src="JS/jquery-validate.min.js"></script>
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script src="JS/CommonScript.js"></script>
 </head>
 <body>
     <form id="specEditForm" runat="server">

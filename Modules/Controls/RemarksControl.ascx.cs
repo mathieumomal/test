@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using System.Linq;
-using System.Web.UI;
-using System.Reflection;
 
 namespace Etsi.Ultimate.Controls
 {
@@ -86,7 +84,7 @@ namespace Etsi.Ultimate.Controls
             {
                 if (!IsEditMode)
                 {
-                    GridTemplateColumn isPublicColumn = (GridTemplateColumn)remarksGrid.MasterTableView.GetColumn(CONST_ISPUBLIC);
+                    var isPublicColumn = (GridTemplateColumn)remarksGrid.MasterTableView.GetColumn(CONST_ISPUBLIC);
                     isPublicColumn.Visible = false;
 
                     txtAddRemark.Visible = false;

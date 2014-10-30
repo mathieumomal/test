@@ -1,6 +1,5 @@
 ﻿<%@ Control Language="C#" ClassName="SpecificationVersionListControl" AutoEventWireup="true" CodeBehind="SpecificationVersionListControl.ascx.cs" Inherits="Etsi.Ultimate.Module.Specifications.SpecificationVersionListControl" %>
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
-<%@ Register TagPrefix="ult" TagName="RemarksControl" Src="../../controls/Ultimate/RemarksControl.ascx" %>
 
 <style type="text/css">
     .RadGrid_Default th.rgHeader {
@@ -70,22 +69,6 @@
         win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
         win.set_modal(true);
         win.add_close(radWinVersionCloseCallBack);
-        win.set_visibleStatusbar(false);
-        win.set_title(title);
-        win.show();
-        return false;
-    }
-
-    function openRemarksPopup(remarksModule, remarksModulePrimaryKey, isEditMode, title) {
-        var win = radopen("/desktopmodules/Specifications/RemarksPopup.aspx?remarksModule=" + remarksModule + "&remarksModulePrimaryKey=" + remarksModulePrimaryKey + "&isEditMode=" + isEditMode, "Remarks");
-        var height = 200;
-        if (isEditMode)
-            height = height + 85;
-        win.setSize(650, height);
-        win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
-        win.set_autoSize(true);
-        win.set_autoSizeBehaviors(Telerik.Web.UI.WindowAutoSizeBehaviors.Height);
-        win.set_modal(true);
         win.set_visibleStatusbar(false);
         win.set_title(title);
         win.show();

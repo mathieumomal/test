@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="module.css">
     <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon">
     <script src="JS/jquery.min.js"></script>
+    <script src="JS/CommonScript.js"></script>
 </head>
 <body>
     <form id="specificationDetailsForm" runat="server">

@@ -1,10 +1,8 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="RemarksPopup.aspx.cs" Inherits="Etsi.Ultimate.Module.Specifications.RemarksPopup" %>
-
-<%@ Register TagPrefix="ult" TagName="RemarksControl" Src="../../controls/Ultimate/RemarksControl.ascx" %>
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
+<%@ Register TagPrefix="ult" TagName="RemarksControl" Src="../../controls/Ultimate/RemarksControl.ascx" %>
 
 <!DOCTYPE html>
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -22,14 +20,11 @@
         <asp:Panel ID="pnlErrorMessage" runat="server" Visible="false" CssClass="Spec_Edit_Error">
             <asp:Label runat="server" ID="lblErrorMessage" CssClass="ErrorTxt"></asp:Label>
         </asp:Panel>
-        <asp:Panel ID="pnlSuccessMessage" runat="server" Visible="false" CssClass="Spec_Edit_Info">
-            <asp:Label runat="server" ID="lblSuccessMessage" CssClass="InfoTxt"></asp:Label>
-        </asp:Panel>
         <div class="contentModal" id="divRemarksPopup">
             <div class="center">
                 <asp:UpdatePanel ID="upContentRemarks" runat="server">
                     <ContentTemplate>
-                        <ult:remarkscontrol runat="server" id="remarksControl" />
+                        <ult:RemarksControl runat="server" id="remarksControl" />
                     </ContentTemplate>
                 </asp:UpdatePanel>
             </div>

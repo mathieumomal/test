@@ -190,7 +190,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="images\ftp.png" />
+    <Content Include="images\loader.gif" />
     <Content Include="images\success.png" />
+    <Content Include="JS\CommonScript.js" />
     <Content Include="MassivePromote.aspx" />
     <Content Include="RemarksPopup.aspx" />
     <Content Include="DefinitiveWithdrawlMeetingSelectPopUp.aspx" />

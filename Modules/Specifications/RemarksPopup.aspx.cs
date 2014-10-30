@@ -76,9 +76,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 }
                 else
                 {
-                    pnlSuccessMessage.Visible = true;
-                    lblSuccessMessage.Text = "Remarks saved successfully!!";
-                    this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "setTimeout(function(){ $('#" + pnlSuccessMessage.ClientID + "').hide('slow');} , " + ErrorFadeTimeout + ");", true);
+                    this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "setTimeout(function(){ $('#" + btnClose.ClientID + "').trigger('click');}, " + 100 + ");", true);
                 }
             }
         } 
