@@ -8,3 +8,11 @@
 function closeRadWindow() {
     GetRadWindow().close();
 }
+
+function waitForSaving() {
+    $('#btnSave').css('visibility', 'hidden');
+    $('#btnSave').attr('disabled', 'disabled');
+    $('#btnSave').attr('value', 'Save...');
+    $('#btnSave').css('visibility', 'visible');
+    return true;
+}
