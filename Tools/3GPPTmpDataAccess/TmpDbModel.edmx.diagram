@@ -29,6 +29,7 @@
         <EntityTypeShape EntityType="TmpDbContext.Specs_GSM_3G_release_info" Width="1.5" PointX="10.78838875460829" PointY="31.828262701550621" />
         <EntityTypeShape EntityType="TmpDbContext.wpm_spec_release_mapping" Width="1.5" PointX="4.9751579281758316" PointY="28.520906446744178" />
         <EntityTypeShape EntityType="TmpDbContext.plenary_meetings_with_end_dates" Width="1.5" PointX="10.85179806447206" PointY="8.765150566010341" />
+        <EntityTypeShape EntityType="TmpDbContext.LSs_importedSnapshot" Width="1.5" PointX="6.4341040320853251" PointY="0.58610561517351567" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

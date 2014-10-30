@@ -435,11 +435,11 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
 
             if (!string.IsNullOrEmpty(wiField))
             {
-                var wiExploded = wiField.Split('/');
+                var wiExploded = wiField.Split(new [] {',','/'});
 
                 foreach (var wilabel in wiExploded)
                 {
-                    var wi = _wis.FirstOrDefault(m => m.Acronym == wilabel);
+                    var wi = _wis.FirstOrDefault(m => m.Acronym == wilabel.Trim());
 
                     if (wi == null)
                         LogManager.LogWarning(RefImportForLog + "WI not found: " + wiField + " for CR : " + logId);

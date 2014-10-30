@@ -32,14 +32,17 @@ namespace DatabaseImportTests
             newNgppDbContext.Stub(ctx => ctx.Contribution).Return(newDbSet);
             newNgppDbContext.Stub(ctx => ctx.Enum_ContributionStatus).Return(GetContributionStatus());
             newNgppDbContext.Stub(ctx => ctx.Enum_ContributionType).Return(GetContributionTypes());
+            newNgppDbContext.Stub(ctx => ctx.MeetingAllocations).Return( new MeetingAllocationsFakeDbSet());
 
             // Legacy context mock
             var legacyContext = MockRepository.GenerateMock<ITmpDb>();
             var legacyDbSet = new TdocLegacyFakeDbSet {legacyObject};
             legacyContext.Stub(ctx => ctx.C2006_03_17_tdocs).Return(legacyDbSet);
-            var legacyCrSet = new ListOfGSM3GCRsFakeDbSet { new List_of_GSM___3G_CRs{ Doc_1st_Level="C1-131002"}};
+            var legacyCrSet = new ListOfGSM3GCRsFakeDbSet { new List_of_GSM___3G_CRs{ Doc_2nd_Level="C1-131002"}};
             legacyContext.Stub(ctx => ctx.List_of_GSM___3G_CRs).Return(legacyCrSet);
             legacyContext.Stub(ctx => ctx.plenary_meetings_with_end_dates).Return(GetLegaycMeetings());
+            var legacyLsOutDbSet = new LsFakeDbSet { new LSs_importedSnapshot { Tdoc = "C1-131004" } };
+            legacyContext.Stub(ctx => ctx.LSs_importedSnapshot).Return(legacyLsOutDbSet);
 
             // Report
             var report = new Report();
@@ -230,6 +233,77 @@ namespace DatabaseImportTests
                         LastStatusChangeAuthor_old = null
                     }
                 );
+
+                yield return new TestCaseData(
+                    new C2006_03_17_tdocs()
+                    {
+                        Row_id = 1,
+                        doc_mtgId = 30290,
+                        doc_mtg = "C1-82b",
+                        doc_tdoc = "C1-131004",
+                        doc_title = "A LS OUT",
+                        doc_source = "Vodafone",
+                        doc_remarks = "ReServeD",
+                        doc_hlink = "http://www.3gpp.org/ftp/tsg_ct/WG1_mm-cc-sm_ex-CN1/TSGC1_82bis_San-Diego/Docs/C1-131003.zip",
+                        record_added = new DateTime(2010, 1, 18),
+                        url_checked = new DateTime(2010, 1, 18),
+                        crHarvested = null,
+                        crFlag = true
+                    },
+                    new Contribution()
+                    {
+                        title = "A LS OUT",
+                        name = null,
+                        uid = "C1-131004",
+                        MainContact = "Import from MS Access",
+                        fk_Enum_ContributionStatus = 17,
+                        fk_Owner = 0,
+                        fk_Enum_ContributionType = 3,
+                        ContribAllocation = new List<ContribAllocation>
+                        {
+                            new ContribAllocation
+                            {
+                                fk_Meeting = 1,
+                                lastModificationAuthor = "Import from MS Access",
+                                lastModificationDate = DateTime.Now,
+                                ContribAllocation_Date = DateTime.Now,
+                                ContribAllocation_Number = 0
+                            }
+                        },
+                        fk_Enum_For = 1,
+
+                        meetingNotes = null,
+                        @abstract = "",
+                        dateAvailable = new DateTime(2010, 1, 18),
+                        isPostponed = false,
+                        fk_ContributionSource = null,
+                        fk_Commitee = null,
+                        fk_AssignedTo = null,
+                        fk_SubmittedAsRole = null,
+                        fk_RevisionOf = 2,
+                        fk_ContributionFile = null,
+                        fk_Enum_Vote = null,
+                        lastModificationDate = new DateTime(2010, 1, 18),
+                        lastModificationAuthor = "MEREDITH",
+                        Contact = null,
+                        fk_SubmittedBy = null,
+                        revisionRequested = null,
+                        revisionPreApproved = null,
+                        isTreated = null,
+                        Denorm_Source = "ETSI",
+                        Status_Comment = null,
+                        CurrentStatusDate = null,
+                        isLocked = false,
+                        statusInRC = null,
+                        commentsInRC = null,
+                        ActiveRemoteConsensus = null,
+                        LastStatusChangeAuthor = null,
+                        fk_RevisedIn = null,
+                        LongName = null,
+                        Fk_LatestAllocation = null,
+                        LastStatusChangeAuthor_old = null
+                    }
+                );
             }
         }
 
@@ -259,6 +333,7 @@ namespace DatabaseImportTests
             {
                 new Enum_ContributionType() {pk_Enum_ContributionType = 1, Enum_Code="Other", Enum_Value = "Other Contribution"},
                 new Enum_ContributionType() {pk_Enum_ContributionType = 2, Enum_Code = "CR", Enum_Value="Change Request"}, 
+                new Enum_ContributionType() {pk_Enum_ContributionType = 3, Enum_Code = "LSout", Enum_Value="Liaison Statement OUT"}, 
             };
             return dbSet;
         }

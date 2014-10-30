@@ -1,3 +1,5 @@
+USE [TMP3GPPDB]
+
 SET NOCOUNT ON
 
 DECLARE @CURRENT_TABLE_NAME nvarchar(100)
@@ -33,6 +35,8 @@ INSERT INTO @LIST_TABLES VALUES ('Specs_GSM+3G')
 INSERT INTO @LIST_TABLES VALUES ('Specs_GSM+3G_release-info')
 INSERT INTO @LIST_TABLES VALUES ('List_of_GSM_&_3G_CRs')
 INSERT INTO @LIST_TABLES VALUES ('wpm_spec-release_mapping')
+INSERT INTO @LIST_TABLES VALUES ('plenary-meetings-with-end-dates')
+INSERT INTO @LIST_TABLES VALUES ('LSs_importedSnapshot')
 
 --for each table to import
 WHILE (EXISTS(SELECT TOP 1 * FROM @LIST_TABLES))

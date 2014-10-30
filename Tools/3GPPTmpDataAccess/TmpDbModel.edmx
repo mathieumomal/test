@@ -25,6 +25,7 @@
           <EntitySet Name="CR-status-values" EntityType="TmpDbContext.Store.CR-status-values" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="jmm_spec_series" EntityType="TmpDbContext.Store.jmm_spec_series" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="List_of_GSM_&amp;_3G_CRs" EntityType="TmpDbContext.Store.List_of_GSM_&amp;_3G_CRs" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="LSs_importedSnapshot" EntityType="TmpDbContext.Store.LSs_importedSnapshot" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="plenary-meetings-with-end-dates" EntityType="TmpDbContext.Store.plenary-meetings-with-end-dates" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Releases" EntityType="TmpDbContext.Store.Releases" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Specs_GSM+3G" EntityType="TmpDbContext.Store.Specs_GSM+3G" store:Type="Tables" Schema="dbo" />
@@ -305,6 +306,24 @@
           <Property Name="Source-2nd-Level" Type="nvarchar" MaxLength="255" />
           <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
         </EntityType>
+        <EntityType Name="LSs_importedSnapshot">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Name="id" Type="int" />
+          <Property Name="Tdoc" Type="nvarchar" MaxLength="100" />
+          <Property Name="source cmtee" Type="nvarchar" MaxLength="50" />
+          <Property Name="source mtg" Type="nvarchar" MaxLength="50" />
+          <Property Name="destination cmtee" Type="nvarchar" MaxLength="255" />
+          <Property Name="destination meeting" Type="nvarchar" MaxLength="50" />
+          <Property Name="cc cmtee" Type="nvarchar" MaxLength="50" />
+          <Property Name="cc meeting" Type="nvarchar" MaxLength="50" />
+          <Property Name="title" Type="nvarchar" MaxLength="255" />
+          <Property Name="date at coord" Type="datetime" />
+          <Property Name="treated at mtg" Type="nvarchar" MaxLength="255" />
+          <Property Name="done" Type="bit" />
+          <Property Name="Row_id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+        </EntityType>
         <EntityType Name="plenary-meetings-with-end-dates">
           <Key>
             <PropertyRef Name="Row_id" />
@@ -454,6 +473,7 @@
           <EntitySet Name="Specs_GSM_3G_release_info" EntityType="TmpDbContext.Specs_GSM_3G_release_info" />
           <EntitySet Name="wpm_spec_release_mapping" EntityType="TmpDbContext.wpm_spec_release_mapping" />
           <EntitySet Name="plenary_meetings_with_end_dates" EntityType="TmpDbContext.plenary_meetings_with_end_dates" />
+          <EntitySet Name="LSs_importedSnapshot" EntityType="TmpDbContext.LSs_importedSnapshot" />
         </EntityContainer>
         <EntityType Name="C2001_04_25_schedule">
           <Key>
@@ -847,6 +867,24 @@
           <Property Type="String" Name="satisfactionURL" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="ItSupportPerson" />
           <Property Type="Int32" Name="colloc_mtg_id" />
+          <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
+        <EntityType Name="LSs_importedSnapshot">
+          <Key>
+            <PropertyRef Name="Row_id" />
+          </Key>
+          <Property Type="Int32" Name="id" />
+          <Property Type="String" Name="Tdoc" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="source_cmtee" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="source_mtg" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="destination_cmtee" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="destination_meeting" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="cc_cmtee" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="cc_meeting" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="title" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="date_at_coord" Precision="3" />
+          <Property Type="String" Name="treated_at_mtg" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="Boolean" Name="done" />
           <Property Type="Int32" Name="Row_id" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
       </Schema>
@@ -1270,6 +1308,25 @@
                 <ScalarProperty Name="target" ColumnName="target" />
                 <ScalarProperty Name="end_date" ColumnName="end date" />
                 <ScalarProperty Name="meeting" ColumnName="meeting" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LSs_importedSnapshot">
+            <EntityTypeMapping TypeName="TmpDbContext.LSs_importedSnapshot">
+              <MappingFragment StoreEntitySet="LSs_importedSnapshot">
+                <ScalarProperty Name="Row_id" ColumnName="Row_id" />
+                <ScalarProperty Name="done" ColumnName="done" />
+                <ScalarProperty Name="treated_at_mtg" ColumnName="treated at mtg" />
+                <ScalarProperty Name="date_at_coord" ColumnName="date at coord" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="cc_meeting" ColumnName="cc meeting" />
+                <ScalarProperty Name="cc_cmtee" ColumnName="cc cmtee" />
+                <ScalarProperty Name="destination_meeting" ColumnName="destination meeting" />
+                <ScalarProperty Name="destination_cmtee" ColumnName="destination cmtee" />
+                <ScalarProperty Name="source_mtg" ColumnName="source mtg" />
+                <ScalarProperty Name="source_cmtee" ColumnName="source cmtee" />
+                <ScalarProperty Name="Tdoc" ColumnName="Tdoc" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

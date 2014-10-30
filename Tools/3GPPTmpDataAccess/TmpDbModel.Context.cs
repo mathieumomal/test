@@ -54,5 +54,6 @@ namespace Etsi.Ultimate.Tools.TmpDbDataAccess
         public IDbSet<Specs_GSM_3G_release_info> Specs_GSM_3G_release_info { get; set; }
         public IDbSet<wpm_spec_release_mapping> wpm_spec_release_mapping { get; set; }
         public IDbSet<plenary_meetings_with_end_dates> plenary_meetings_with_end_dates { get; set; }
+        public IDbSet<LSs_importedSnapshot> LSs_importedSnapshot { get; set; }
     }
 }

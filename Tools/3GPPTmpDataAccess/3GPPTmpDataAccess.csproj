@@ -109,6 +109,9 @@
     <Compile Include="List_of_GSM___3G_CRs.cs">
       <DependentUpon>TmpDbModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="LSs_importedSnapshot.cs">
+      <DependentUpon>TmpDbModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="plenary_meetings_with_end_dates.cs">
       <DependentUpon>TmpDbModel.tt</DependentUpon>
     </Compile>

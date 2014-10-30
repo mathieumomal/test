@@ -33,6 +33,7 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
         public MeetingHelper MtgHelper { get; set; }
         public HashSet<string> CrWgTdocUids { get; set; }
+        private List<string> _lsTDocs;
 
         public void CleanDatabase()
         {
@@ -45,6 +46,7 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
             _enumContributionStatus = NgppdbContext.Enum_ContributionStatus.ToList();
             _enumContributionType = NgppdbContext.Enum_ContributionType.ToList();
             _legacyMeetings = LegacyContext.plenary_meetings_with_end_dates.AsNoTracking().ToList();
+            _lsTDocs = LegacyContext.LSs_importedSnapshot.Select(x => x.Tdoc).Distinct().ToList();
 
             CrWgTdocUids = new HashSet<string>(LegacyContext.List_of_GSM___3G_CRs.Where(c => c.Doc_2nd_Level != null && !string.IsNullOrEmpty(c.Doc_2nd_Level))
                 .AsNoTracking().Select(c => c.Doc_2nd_Level).Distinct());
@@ -188,6 +190,13 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
             {
                 type = _enumContributionType.Find(x => x.Enum_Code == Enum_ContributionType.ChangeRequest);
             }
+
+            var lsTDoc = _lsTDocs.Find(x => x == newTDoc.uid);
+            if (lsTDoc != null)
+            {
+                type = _enumContributionType.Find(x => x.Enum_Code == Enum_ContributionType.LiaisonStatementOut);
+            }
+
 
             newTDoc.Enum_ContributionType = type;
             newTDoc.fk_Enum_ContributionType = type.pk_Enum_ContributionType;

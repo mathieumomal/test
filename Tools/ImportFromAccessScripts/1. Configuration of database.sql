@@ -1,3 +1,5 @@
+USE [TMP3GPPDB]
+
 sp_configure 'show advanced options', 1;
 GO
 RECONFIGURE;
