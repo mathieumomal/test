@@ -11,6 +11,7 @@
     <script src="JS/jquery.min.js"></script>
     <script src="JS/jquery-validate.min.js"></script>
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <script src="JS/RemarksPopup.js"></script>
 </head>
 <body>
     <form id="frmRemarksPopup" runat="server">
@@ -30,7 +31,7 @@
             </div>
             <div class="footer" id="remarksFooter" runat="server" style="position: relative; top: 10px; text-align:right;">
                 <asp:Button ID="btnSave" runat="server" Text="Save" CssClass="btn3GPP-success" OnClick="btnSave_Click" />
-                <asp:Button ID="btnClose" runat="server" Text="Close" CssClass="btn3GPP-success" OnClientClick="return window.close();" />
+                <asp:Button ID="btnClose" runat="server" Text="Close" CssClass="btn3GPP-success" OnClientClick="return closeRadWindow()" />
             </div>
         </div>
     </form>
