@@ -30,7 +30,7 @@
                 </asp:UpdatePanel>
             </div>
             <div class="footer" id="remarksFooter" runat="server" style="position: relative; top: 10px; text-align:right;">
-                <asp:Button ID="btnSave" ClientIDMode="Static" runat="server" Text="Save" CssClass="btn3GPP-success" OnClick="btnSave_Click" OnClientClick="return waitForSaving()" />
+                <asp:Button ID="btnSave" runat="server" Text="Save" CssClass="btn3GPP-success" OnClick="btnSave_Click" />
                 <asp:Button ID="btnClose" runat="server" Text="Close" CssClass="btn3GPP-success" OnClientClick="return closeRadWindow()" />
             </div>
         </div>
