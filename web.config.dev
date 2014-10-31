@@ -70,6 +70,7 @@
     <add key="InstallVersion" value="07.00.04" />
     <add key="DefaultDevicesDatabase" value="DesktopModules\DevicePreviewManagement\Resources\defaultDevices.xml" />
 	<add key="MeetingDetailsAddress" value="http://webapp.13.etsidev.org/meetingCalendar/MeetingDetails.asp?mid=" />
+	 <add key="ContributionStorageFolder" value="D:\1FTPSites\ftp3GPP.13.etsidev.org\" xdt:Transform="SetAttributes" xdt:Locator="Match(key)" />
     <add key="MeetingiCalAddress" value="http://webapp.13.etsidev.org/meetingCalendar/ical.asp?qMTG_ID=" />
     <add key="MeetingParticipantsListAddress" value="http://webapp.13.etsidev.org/3GPPRegistration/fViewPart.asp?mid=" />
 	<add key="RapporteurDetailsAddress" value="http://webapp.13.etsidev.org/teldir/ListPersDetails.asp?PersId="/>
