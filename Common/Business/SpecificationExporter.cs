@@ -392,7 +392,7 @@ namespace Etsi.Ultimate.Business
             InitialPlannedRelease = String.IsNullOrEmpty(spec.SpecificationInitialRelease) ? BLANK_CELL : spec.SpecificationInitialRelease;
             IsForPublication = (spec.IsForPublication != null) ? (spec.IsForPublication.Value ? "For publication" : "Internal") : BLANK_CELL;
             CommonIMS = spec.ComIMS != null ? spec.ComIMS.Value.ToString() : BLANK_CELL;
-            Technologies = String.Join(",", spec.SpecificationTechnologies.ToList().Select(x => x.Enum_Technology.Code));
+            Technologies = String.Join(",", spec.SpecificationTechnologies.ToList().Select(x => x.Enum_Technology.Code).OrderBy(y => y));
 
             //Hyperlink element
             SpecId = spec.Pk_SpecificationId;
