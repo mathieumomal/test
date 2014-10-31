@@ -267,7 +267,7 @@ span.requiredField {
 	padding-right: 6px;
 	margin-left: 2px;
 	margin-right: 2px;
-	vertical-align: bottom;
+	vertical-align: top;
 }
 
 #componentSpecList .customizeButtonsImages
