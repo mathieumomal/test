@@ -38,11 +38,11 @@
         border-radius: 15px;
     }
 
-    .updateProgress .Fixed {
-        top: 45%;
-        position: fixed;
-        right: 45%;
-    }
+        .updateProgress .Fixed {
+            top: 45%;
+            position: fixed;
+            right: 45%;
+        }
 
     .workItem_0 {
         color: red;
@@ -94,67 +94,69 @@
                     <td>
                         <telerik:RadPanelBar runat="server" ID="rpbSearch" Width="100%">
                             <items>
-                        <telerik:RadPanelItem runat="server" ID="searchPanel" Expanded="True">
-                            <HeaderTemplate>
-                                <table style="width:100%;vertical-align:middle" class="WorkItemSearchHeader">
-                                    <tr>
+                                <telerik:RadPanelItem runat="server" ID="searchPanel" Expanded="True">
+                                    <HeaderTemplate>
+                                        <table style="width: 100%; vertical-align: middle" class="WorkItemSearchHeader">
+                                            <tr>
                                         <td style="width:20px;"><ult:shareurlcontrol runat="server" id="ultShareUrl" /></td>
                                         <td style="text-align:center"><asp:Label ID="lblSearchHeader" runat="server" /></td>
-                                        <td style="width: 20px;"><a class="rpExpandable">
-                                            <span class="rpExpandHandle"></span>
-                                        </a></td>
-                                    </tr>
-                                </table>
-                            </HeaderTemplate>
-                            <ContentTemplate>
-                                <table style="width:100%; padding:20px 50px 20px 50px">
-                                    <tr>
-                                        <td>Release</td>
-                                        <td>
+                                                <td style="width: 20px;"><a class="rpExpandable">
+                                                    <span class="rpExpandHandle"></span>
+                                                </a></td>
+                                            </tr>
+                                        </table>
+                                    </HeaderTemplate>
+                                    <ContentTemplate>
+                                        <asp:Panel ID="pnlSearchContainer" runat="server" DefaultButton="btnSearch">
+                                            <table style="width: 100%; padding: 20px 50px 20px 50px">
+                                                <tr>
+                                                    <td>Release</td>
+                                                    <td>
                                             <ult:ReleaseSearchControl id="releaseSearchControl" runat="server" Width="200" DropDownWidth="200"/>
-                                        </td>
-                                        <td>Granularity (Level)</td>
-                                        <td>
-                                            <telerik:RadDropDownList ID="rddGranularity" runat="server" Width="200" DropDownWidth="200px" AutoPostBack="false">
-                                                <Items>
-                                                    <telerik:DropDownListItem Text="Feature (1st level)" Value="1"/>
-                                                    <telerik:DropDownListItem Text="Building Block (Up to 2nd level)" Value="2"/>
-                                                    <telerik:DropDownListItem Text="Working Task (Up to 3rd Level)" Value="3"/>
-                                                    <telerik:DropDownListItem Text="Up to 4th level" Value="4"/>
-                                                    <telerik:DropDownListItem Text="Up to 5th level" Value="5"/>
-                                                </Items>
-                                            </telerik:RadDropDownList>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Acronym</td>
-                                        <td>
-                                            <telerik:RadAutoCompleteBox ID="racAcronym" OnClientTextChanged="racAcronym_TextChanged" runat="server" InputType="Text" AllowCustomEntry="true" Width="200" DropDownWidth="200" DropDownHeight="150" Filter="StartsWith">
-                                                <TextSettings SelectionMode="Single" />
-                                            </telerik:RadAutoCompleteBox>
-                                            <asp:HiddenField ID="hidAcronym" runat="server"/>
-                                        </td>
-                                        <td>Hide Completed Items</td>
-                                        <td>
-                                            <telerik:RadButton ID="chkHideCompletedItems" ToggleType="CheckBox" runat="server" ButtonType="ToggleButton" AutoPostBack="false"/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Name / UID</td>
-                                        <td>
-                                            <telerik:RadTextBox ID="txtName" runat="server" Width="200"></telerik:RadTextBox>
-                                        </td>
-                                        <td/>
-                                        <td/>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="4" style="text-align:right; padding-right:20px">
-                                            <asp:Button ID="btnDefault" runat="server" Text="Default" Width="150px" OnClick="btnDefault_Click" OnClientClick="collapseItem()"></asp:Button>                   
-                                            <asp:Button ID="btnSearch" runat="server" Text="Search"  Width="150px" OnClick="btnSearch_Click" OnClientClick="collapseItem()"></asp:Button></td>
-                                    </tr>
-                                </table>
-                            </ContentTemplate>
-                        </telerik:RadPanelItem>
+                                                    </td>
+                                                    <td>Granularity (Level)</td>
+                                                    <td>
+                                                        <telerik:RadDropDownList ID="rddGranularity" runat="server" Width="200" DropDownWidth="200px" AutoPostBack="false">
+                                                            <Items>
+                                                                <telerik:DropDownListItem Text="Feature (1st level)" Value="1" />
+                                                                <telerik:DropDownListItem Text="Building Block (Up to 2nd level)" Value="2" />
+                                                                <telerik:DropDownListItem Text="Working Task (Up to 3rd Level)" Value="3" />
+                                                                <telerik:DropDownListItem Text="Up to 4th level" Value="4" />
+                                                                <telerik:DropDownListItem Text="Up to 5th level" Value="5" />
+                                                            </Items>
+                                                        </telerik:RadDropDownList>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Acronym</td>
+                                                    <td>
+                                                        <telerik:RadAutoCompleteBox ID="racAcronym" OnClientTextChanged="racAcronym_TextChanged" runat="server" InputType="Text" AllowCustomEntry="true" Width="200" DropDownWidth="200" DropDownHeight="150" Filter="StartsWith">
+                                                            <TextSettings SelectionMode="Single" />
+                                                        </telerik:RadAutoCompleteBox>
+                                                        <asp:HiddenField ID="hidAcronym" runat="server" />
+                                                    </td>
+                                                    <td>Hide Completed Items</td>
+                                                    <td>
+                                                        <telerik:RadButton ID="chkHideCompletedItems" ToggleType="CheckBox" runat="server" ButtonType="ToggleButton" AutoPostBack="false" />
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Name / UID</td>
+                                                    <td>
+                                                        <telerik:RadTextBox ID="txtName" runat="server" Width="200"></telerik:RadTextBox>
+                                                    </td>
+                                                    <td />
+                                                    <td />
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="4" style="text-align: right; padding-right: 20px">
+                                                        <asp:Button ID="btnDefault" runat="server" Text="Default" Width="150px" OnClick="btnDefault_Click" OnClientClick="collapseItem()"></asp:Button>
+                                                        <asp:Button ID="btnSearch" runat="server" Text="Search" Width="150px" OnClick="btnSearch_Click" OnClientClick="collapseItem()"></asp:Button></td>
+                                                </tr>
+                                            </table>
+                                        </asp:Panel>
+                                    </ContentTemplate>
+                                </telerik:RadPanelItem>
                     </items>
                         </telerik:RadPanelBar>
                     </td>
@@ -169,62 +171,62 @@
                                 <ClientEvents OnTreeListCreated="TreeListCreated" />
                             </clientsettings>
                             <columns>
-                            <telerik:TreeListTemplateColumn  DataField="Name" UniqueName="Name" HeaderText="Name" ItemStyle-CssClass="breakWord">
-                                <HeaderStyle Font-Bold="True" Width="20%"/> 
-                                <ItemTemplate>
-                                    <div class="workItem_<%# DataBinder.Eval(Container.DataItem,"WiLevel")%>" style="text-align:left;"><%# DataBinder.Eval(Container.DataItem,"Name")%></div>  
-                                </ItemTemplate>
-                            </telerik:TreeListTemplateColumn>
-                            <telerik:TreeListBoundColumn DataField="Acronym" UniqueName="Acronym" HeaderText="Acronym" ItemStyle-CssClass="breakWord">
-                                <HeaderStyle Font-Bold="True"/> 
-                            </telerik:TreeListBoundColumn>
-                            <telerik:TreeListBoundColumn DataField="UID" UniqueName="UID" HeaderText="<span title='Unique Work Item Identifier' class='helpTooltip'>UID</span>"  ItemStyle-CssClass="breakWord">
-                                <HeaderStyle Font-Bold="True"/>
-                            </telerik:TreeListBoundColumn>
-                            <telerik:TreeListTemplateColumn DataField="Release" UniqueName="Release" HeaderText="Release" ItemStyle-CssClass="breakWord">
-                                <HeaderStyle Font-Bold="True"/> 
-                                <ItemTemplate>
-                                    <span><%# DataBinder.Eval(Container.DataItem,"Release.Code") %></span>  
-                                </ItemTemplate>      
-                            </telerik:TreeListTemplateColumn>
-                            <telerik:TreeListTemplateColumn DataField="StartDate" UniqueName="StartDate"  HeaderText="Start date" ItemStyle-CssClass="breakWord">
-                                <HeaderStyle Font-Bold="True"/> 
-                                <ItemTemplate>
-                                    <span><%# DataBinder.Eval(Container.DataItem,"StartDate", "{0:yyyy-MM-dd}") %></span>  
-                                </ItemTemplate>      
-                            </telerik:TreeListTemplateColumn>
-                            <telerik:TreeListTemplateColumn DataField="EndDate" UniqueName="EndDate"  HeaderText="End date" ItemStyle-CssClass="breakWord">
-                                <HeaderStyle Font-Bold="True"/> 
-                                <ItemTemplate>
-                                    <span><%# DataBinder.Eval(Container.DataItem,"EndDate", "{0:yyyy-MM-dd}") %></span>  
-                                </ItemTemplate>   
-                            </telerik:TreeListTemplateColumn>
-                            <telerik:TreeListTemplateColumn DataField="Completion" UniqueName="Completion"  HeaderText="Completion rate" ItemStyle-CssClass="breakWord">
-                                <HeaderStyle Font-Bold="True"/> 
-                                <ItemTemplate>
-                                    <span><%# String.Format("{0:0'%}",  DataBinder.Eval(Container.DataItem,"Completion") )%></span>  
-                                </ItemTemplate>     
-                            </telerik:TreeListTemplateColumn>
-                            <telerik:TreeListBoundColumn DataField="ResponsibleGroups" UniqueName="ResponsibleGroups" HeaderText="Responsible groups" ItemStyle-CssClass="breakWord">
-                                <HeaderStyle Font-Bold="True"/> 
-                            </telerik:TreeListBoundColumn>
-                            <telerik:TreeListTemplateColumn  UniqueName="LatestRemark"   HeaderText="Latest remark" ItemStyle-CssClass="breakWord">
-                                <HeaderStyle Font-Bold="True" Width="16%"/> 
-                                <ItemTemplate>
-                                    <div style="text-align:left"><%# DataBinder.Eval(Container.DataItem,"ShortLatestRemark")%></div>  
-                                </ItemTemplate>
-                            </telerik:TreeListTemplateColumn>
-                            <telerik:TreeListTemplateColumn UniqueName="ViewWorkItem">
-                                <HeaderStyle Width="50px"/> 
-                                <ItemTemplate>
-					                <span></span>
-                                    <img id="imgViewWorkItems" alt="See details" src="/DesktopModules/WorkItem/images/details.png" style='display: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsLevel0Record")) ? "none" : "block" %>'
-                                        onclick="var popUp=window.open('/desktopmodules/WorkItem/WorkItemDetails.aspx?workitemId=<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>',
+                                <telerik:TreeListTemplateColumn DataField="Name" UniqueName="Name" HeaderText="Name" ItemStyle-CssClass="breakWord">
+                                    <HeaderStyle Font-Bold="True" Width="20%" />
+                                    <ItemTemplate>
+                                        <div class="workItem_<%# DataBinder.Eval(Container.DataItem,"WiLevel")%>" style="text-align: left;"><%# DataBinder.Eval(Container.DataItem,"Name")%></div>
+                                    </ItemTemplate>
+                                </telerik:TreeListTemplateColumn>
+                                <telerik:TreeListBoundColumn DataField="Acronym" UniqueName="Acronym" HeaderText="Acronym" ItemStyle-CssClass="breakWord">
+                                    <HeaderStyle Font-Bold="True" />
+                                </telerik:TreeListBoundColumn>
+                                <telerik:TreeListBoundColumn DataField="UID" UniqueName="UID" HeaderText="<span title='Unique Work Item Identifier' class='helpTooltip'>UID</span>" ItemStyle-CssClass="breakWord">
+                                    <HeaderStyle Font-Bold="True" />
+                                </telerik:TreeListBoundColumn>
+                                <telerik:TreeListTemplateColumn DataField="Release" UniqueName="Release" HeaderText="Release" ItemStyle-CssClass="breakWord">
+                                    <HeaderStyle Font-Bold="True" />
+                                    <ItemTemplate>
+                                        <span><%# DataBinder.Eval(Container.DataItem,"Release.Code") %></span>
+                                    </ItemTemplate>
+                                </telerik:TreeListTemplateColumn>
+                                <telerik:TreeListTemplateColumn DataField="StartDate" UniqueName="StartDate" HeaderText="Start date" ItemStyle-CssClass="breakWord">
+                                    <HeaderStyle Font-Bold="True" />
+                                    <ItemTemplate>
+                                        <span><%# DataBinder.Eval(Container.DataItem,"StartDate", "{0:yyyy-MM-dd}") %></span>
+                                    </ItemTemplate>
+                                </telerik:TreeListTemplateColumn>
+                                <telerik:TreeListTemplateColumn DataField="EndDate" UniqueName="EndDate" HeaderText="End date" ItemStyle-CssClass="breakWord">
+                                    <HeaderStyle Font-Bold="True" />
+                                    <ItemTemplate>
+                                        <span><%# DataBinder.Eval(Container.DataItem,"EndDate", "{0:yyyy-MM-dd}") %></span>
+                                    </ItemTemplate>
+                                </telerik:TreeListTemplateColumn>
+                                <telerik:TreeListTemplateColumn DataField="Completion" UniqueName="Completion" HeaderText="Completion rate" ItemStyle-CssClass="breakWord">
+                                    <HeaderStyle Font-Bold="True" />
+                                    <ItemTemplate>
+                                        <span><%# String.Format("{0:0'%}",  DataBinder.Eval(Container.DataItem,"Completion") )%></span>
+                                    </ItemTemplate>
+                                </telerik:TreeListTemplateColumn>
+                                <telerik:TreeListBoundColumn DataField="ResponsibleGroups" UniqueName="ResponsibleGroups" HeaderText="Responsible groups" ItemStyle-CssClass="breakWord">
+                                    <HeaderStyle Font-Bold="True" />
+                                </telerik:TreeListBoundColumn>
+                                <telerik:TreeListTemplateColumn UniqueName="LatestRemark" HeaderText="Latest remark" ItemStyle-CssClass="breakWord">
+                                    <HeaderStyle Font-Bold="True" Width="16%" />
+                                    <ItemTemplate>
+                                        <div style="text-align: left"><%# DataBinder.Eval(Container.DataItem,"ShortLatestRemark")%></div>
+                                    </ItemTemplate>
+                                </telerik:TreeListTemplateColumn>
+                                <telerik:TreeListTemplateColumn UniqueName="ViewWorkItem">
+                                    <HeaderStyle Width="50px" />
+                                    <ItemTemplate>
+                                        <span></span>
+                                        <img id="imgViewWorkItems" alt="See details" src="/DesktopModules/WorkItem/images/details.png" style='display: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsLevel0Record")) ? "none" : "block" %>'
+                                            onclick="var popUp=window.open('/desktopmodules/WorkItem/WorkItemDetails.aspx?workitemId=<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>',
 								                'Rel-<%# DataBinder.Eval(Container.DataItem,"Pk_WorkItemUid").ToString() %>', 'height=550,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
-                                </ItemTemplate>      
-                            </telerik:TreeListTemplateColumn>
-                            <telerik:TreeListBoundColumn DataField="TsgStoppedMtgRef" UniqueName="TsgStoppedMtgRef" Visible="false">
-                            </telerik:TreeListBoundColumn>
+                                    </ItemTemplate>
+                                </telerik:TreeListTemplateColumn>
+                                <telerik:TreeListBoundColumn DataField="TsgStoppedMtgRef" UniqueName="TsgStoppedMtgRef" Visible="false">
+                                </telerik:TreeListBoundColumn>
                         </columns>
                         </telerik:RadTreeList>
                     </td>
@@ -264,24 +266,24 @@
                             You are about to update the Work Items database.<br/>Please select the work plan file to upload.
                         </div>
                         <div class="wiCenter">
-                            <telerik:RadAsyncUpload ID="RdAsyncUpload" runat="server" 
-                                AllowedFileExtensions="csv,zip" 
-                                Localization-Select="Browse" 
-                                MaxFileInputsCount="1" 
-                                OnClientFileUploaded="OnClientFileUploaded" 
-                                OnClientValidationFailed="OnClientValidationFailed" 
-                                OnFileUploaded="AsyncUpload_FileImport" 
-                                OnClientFileSelected="EnabledButtonImport" 
-                                OnClientFileUploadRemoved="DisabledButtonImport" 
+                            <telerik:RadAsyncUpload ID="RdAsyncUpload" runat="server"
+                                AllowedFileExtensions="csv,zip"
+                                Localization-Select="Browse"
+                                MaxFileInputsCount="1"
+                                OnClientFileUploaded="OnClientFileUploaded"
+                                OnClientValidationFailed="OnClientValidationFailed"
+                                OnFileUploaded="AsyncUpload_FileImport"
+                                OnClientFileSelected="EnabledButtonImport"
+                                OnClientFileUploadRemoved="DisabledButtonImport"
                                 OverwriteExistingFiles="True"
                                 ManualUpload="true">
                             </telerik:RadAsyncUpload>
                         </div>
                         <div class="wiFooter">
-                            <telerik:RadButton ID="importButton" runat="server" Text="Import" OnClientClicked="startImport" AutoPostBack="false" Enabled="false" ></telerik:RadButton>
-                            <telerik:RadButton ID="import_cancel" runat="server" Text="Cancel" OnClientClicked="cancel" AutoPostBack="false" ></telerik:RadButton>
+                            <telerik:RadButton ID="importButton" runat="server" Text="Import" OnClientClicked="startImport" AutoPostBack="false" Enabled="false"></telerik:RadButton>
+                            <telerik:RadButton ID="import_cancel" runat="server" Text="Cancel" OnClientClicked="cancel" AutoPostBack="false"></telerik:RadButton>
                         </div>
-                    
+
                     </div>
                 </ContentTemplate>
             </telerik:RadWindow>
@@ -307,7 +309,7 @@
                     <div class="contentModal" id="confirmation">
                         <div class="wiHeader">
                             <div><asp:Label ID="lblCountWarningErrors" runat="server" Text="Operation timed out" /></div>
-                        </div>
+                            </div>
                         <div>
                             <h2>Errors and Warnings</h2>
                             <div class="scrollable">
@@ -320,7 +322,7 @@
                                 </ul>
                             </div>
                             <div>
-                                <asp:Label runat="server" ID="lblExportPath" Text=""/>
+                                <asp:Label runat="server" ID="lblExportPath" Text="" />
                             </div>
                         </div>
                         <div class="wiFooter">
@@ -351,17 +353,17 @@
             <telerik:RadWindow ID="RadWindow_workItemCount" runat="server" Modal="true" Title="Warning." Width="400" Height="180" VisibleStatusbar="false" Behaviors="Close">
                 <ContentTemplate>
                     <asp:UpdatePanel ID="upWorkItemCount" runat="server" UpdateMode="Always">
-                    <ContentTemplate>
-                    <div class="contentModal" id="wiCount">
-                        <div class="wiHeader">
-                            Query will return many records and might therefore be long to display.
-                        </div>
-                        <div class="wiFooter">
-                            <telerik:RadButton ID="rbworkItemCountOk" runat="server" Text="Confirm" OnClientClicked="closeAllModals" OnClick="rbWorkItemCountOk_Click"></telerik:RadButton>
-                            <telerik:RadButton ID="rbworkItemCountCancel" runat="server" Text="Cancel" OnClientClicked="cancel" AutoPostBack="false"></telerik:RadButton>
-                        </div>
-                    </div>
-                                </ContentTemplate>
+                        <ContentTemplate>
+                            <div class="contentModal" id="wiCount">
+                                <div class="wiHeader">
+                                    Query will return many records and might therefore be long to display.
+                                </div>
+                                <div class="wiFooter">
+                                    <telerik:RadButton ID="rbworkItemCountOk" runat="server" Text="Confirm" OnClientClicked="closeAllModals" OnClick="rbWorkItemCountOk_Click"></telerik:RadButton>
+                                    <telerik:RadButton ID="rbworkItemCountCancel" runat="server" Text="Cancel" OnClientClicked="cancel" AutoPostBack="false"></telerik:RadButton>
+                                </div>
+                            </div>
+                        </ContentTemplate>
                     </asp:UpdatePanel>
                 </ContentTemplate>
             </telerik:RadWindow>

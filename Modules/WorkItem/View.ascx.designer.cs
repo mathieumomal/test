@@ -94,6 +94,15 @@ namespace Etsi.Ultimate.Module.WorkItem {
         protected global::System.Web.UI.WebControls.Label lblSearchHeader;
         
         /// <summary>
+        /// pnlSearchContainer control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlSearchContainer;
+        
+        /// <summary>
         /// Contrôle rddGranularity.
         /// </summary>
         /// <remarks>
