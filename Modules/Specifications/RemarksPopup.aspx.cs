@@ -71,6 +71,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 if ((!remarkServiceResult.Result) && (remarkServiceResult.Report.ErrorList.Count > 0))
                 {
                     pnlErrorMessage.Visible = true;
+                    lblErrorMessage.Text = String.Empty;
                     remarkServiceResult.Report.ErrorList.ForEach(x => lblErrorMessage.Text = lblErrorMessage.Text + x + "<br/>");
                     this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "setTimeout(function(){ $('#" + pnlErrorMessage.ClientID + "').hide('slow');} , " + ErrorFadeTimeout + ");", true);
                 }
