@@ -183,20 +183,22 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
         /// <param name="legacyTDoc"></param>
         private void TypeCase(Etsi.Ngppdb.DomainClasses.Contribution newTDoc, Etsi.Ultimate.Tools.TmpDbDataAccess.C2006_03_17_tdocs legacyTDoc)
         {
-            var type = _enumContributionType.Find(x => x.Enum_Code == Enum_ContributionType.OtherContribution);
+            Enum_ContributionType type = null;
 
             var attachedCr = CrWgTdocUids.FirstOrDefault(t => t == newTDoc.uid);
+            var lsTDoc = _lsTDocs.Find(x => x == newTDoc.uid);
             if (attachedCr != null)
             {
                 type = _enumContributionType.Find(x => x.Enum_Code == Enum_ContributionType.ChangeRequest);
             }
-
-            var lsTDoc = _lsTDocs.Find(x => x == newTDoc.uid);
-            if (lsTDoc != null)
+            else if (lsTDoc != null)
             {
                 type = _enumContributionType.Find(x => x.Enum_Code == Enum_ContributionType.LiaisonStatementOut);
             }
-
+            else
+            {
+                type = _enumContributionType.Find(x => x.Enum_Code == Enum_ContributionType.OtherContribution);
+            }
 
             newTDoc.Enum_ContributionType = type;
             newTDoc.fk_Enum_ContributionType = type.pk_Enum_ContributionType;
