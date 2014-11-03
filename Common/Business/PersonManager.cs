@@ -75,10 +75,12 @@ namespace Etsi.Ultimate.Business
 
             return repo
                     .All
-                    .Where(x => (x.FIRSTNAME != null && x.FIRSTNAME.ToLower().Contains(keywords.ToLower()) && x.DELETED_FLG.Equals("N")) ||
-                            (x.LASTNAME != null && x.LASTNAME.ToLower().Contains(keywords.ToLower()) && x.DELETED_FLG.Equals("N")) ||
-                            (x.Email != null && x.Email.ToLower().Contains(keywords.ToLower())) && x.DELETED_FLG.Equals("N"))
-                    .ToList();
+                    .Where(x => (x.DELETED_FLG.Equals("N") && ((x.FIRSTNAME != null && x.FIRSTNAME.ToLower().Contains(keywords.ToLower())) ||
+                                                               (x.LASTNAME != null && x.LASTNAME.ToLower().Contains(keywords.ToLower())) ||
+                                                               (x.FIRSTNAME != null && x.LASTNAME != null && ((x.FIRSTNAME.ToLower() + " " + x.LASTNAME.ToLower()).Contains(keywords.ToLower()) 
+                                                                                                           || (x.LASTNAME.ToLower() + " " + x.FIRSTNAME.ToLower()).Contains(keywords.ToLower()))) ||
+                                                               (x.Email != null && x.Email.ToLower().Contains(keywords.ToLower())))))
+                                                               .ToList();
         }
 
         public View_Persons FindPerson(int id)

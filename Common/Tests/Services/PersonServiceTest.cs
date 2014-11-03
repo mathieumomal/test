@@ -195,7 +195,10 @@ namespace Etsi.Ultimate.Tests.Services
                 yield return new object[] { "uN", (IDbSet<View_Persons>)persons, 1 };
                 yield return new object[] { "justine", (IDbSet<View_Persons>)persons, 1 };
                 yield return new object[] { "DeUx", (IDbSet<View_Persons>)persons, 1 };
-                yield return new object[] { "capgemini", (IDbSet<View_Persons>)persons, 6 };
+                yield return new object[] { "capgemini", (IDbSet<View_Persons>)persons, 7 };
+                yield return new object[] { "Un ma", (IDbSet<View_Persons>)persons, 1 };
+                yield return new object[] { "paul de", (IDbSet<View_Persons>)persons, 1 };
+                yield return new object[] { "bernard t", (IDbSet<View_Persons>)persons, 2 };
             }
         }
 
@@ -226,7 +229,8 @@ namespace Etsi.Ultimate.Tests.Services
                 new View_Persons { PERSON_ID = 4, FIRSTNAME = "Quatre", LASTNAME = "justine", Email = "justine@capgemini.com", DELETED_FLG="N"  },
                 new View_Persons { PERSON_ID = 5, FIRSTNAME = "Cinq", LASTNAME = "pauline", Email = "pauline@capgemini.com", DELETED_FLG="N"  },
                 new View_Persons { PERSON_ID = 6, FIRSTNAME = "Six", LASTNAME = "franck", Email = "franck@capgemini.com", DELETED_FLG="N" },
-                new View_Persons { PERSON_ID = 7, FIRSTNAME = "sept", LASTNAME = "franck", Email = "delete@capgemini.com", DELETED_FLG="Y" }
+                new View_Persons { PERSON_ID = 7, FIRSTNAME = "sept", LASTNAME = "franck", Email = "delete@capgemini.com", DELETED_FLG="Y" },
+                new View_Persons { PERSON_ID = 8, FIRSTNAME = "tom", LASTNAME = "bernard", Email = "bernard.tom@capgemini.com", DELETED_FLG="N" }
             };
             return persons;
         }
