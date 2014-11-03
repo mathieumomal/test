@@ -278,3 +278,5 @@ span.requiredField {
 #componentSpecList .rpExpandHandle {
 	background-color: white;
 }
+
+#RadPageGeneral, #RadPageResponsibility {padding-top: 20px;}

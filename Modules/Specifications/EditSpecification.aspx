@@ -45,6 +45,13 @@
                 </div>
                 <telerik:RadTabStrip ID="rtsSpecEdit" runat="server" MultiPageID="rmpSpecEdit"
                     AutoPostBack="false">
+                    <Tabs>
+                        <telerik:RadTab runat="server" PageViewID="RadPageGeneral" Text="General" Selected="true"></telerik:RadTab>
+                        <telerik:RadTab runat="server" PageViewID="RadPageResponsibility" Text="Responsibility" Selected="false"></telerik:RadTab>
+                        <telerik:RadTab runat="server" PageViewID="RadPageRelated" Text="Related" Selected="false"></telerik:RadTab>
+                        <telerik:RadTab runat="server" PageViewID="RadPageReleases" Text="Releases" Selected="false"></telerik:RadTab>
+                        <telerik:RadTab runat="server" PageViewID="RadPageHistory" Text="History" Selected="false"></telerik:RadTab>
+                    </Tabs>
                 </telerik:RadTabStrip>
                 <telerik:RadMultiPage ID="rmpSpecEdit" runat="server" Width="100%" Height="560" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px">
                     <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true">

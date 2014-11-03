@@ -5,12 +5,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Web.UI.WebControls;
-using Telerik.Web.UI;
 using Domain = Etsi.Ultimate.DomainClasses;
-using System.Text;
-using System.Web;
-using System.IO;
-using System.Net;
 using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Module.Specifications
@@ -30,11 +25,8 @@ namespace Etsi.Ultimate.Module.Specifications
         protected SpecificationListControl childSpecifications;
 
         //Static fields
-        private const string CONST_GENERAL_TAB = "General";
-        private const string CONST_RESPONSIBILITY_TAB = "Responsibility";
         private const string CONST_RELATED_TAB = "Related";
-        private const string CONST_RELEASES_TAB = "Releases";
-        private const string CONST_HISTORY_TAB = "History";
+
         private const string CONST_EMPTY_FIELD = " - ";
         private const string SPEC_HEADER = "Specification #: ";
         private const string CREATION_MODE = "create";
@@ -173,7 +165,10 @@ namespace Etsi.Ultimate.Module.Specifications
             }
             else
             {
-                Response.Redirect("SpecificationDetails.aspx?specificationId=" + spec.Pk_SpecificationId+"&fromEdit=1");
+                var selectedTabTitle = rtsSpecEdit.SelectedTab != null
+                    ? rtsSpecEdit.SelectedTab.Text
+                    : null;
+                Response.Redirect(string.Format("SpecificationDetails.aspx?specificationId={0}&fromEdit={1}&selectedTab={2}", spec.Pk_SpecificationId, "1", selectedTabTitle));
             }
         }
 
@@ -209,7 +204,12 @@ namespace Etsi.Ultimate.Module.Specifications
         protected void ExitSpecEdit_Click(object sender, EventArgs e)
         {
             if (action.Equals(EDIT_MODE))
-                Response.Redirect("SpecificationDetails.aspx?specificationId=" + SpecificationId, true);
+            {
+                var selectedTabTitle = rtsSpecEdit.SelectedTab != null
+                    ? rtsSpecEdit.SelectedTab.Text
+                    : null;
+                Response.Redirect(string.Format("SpecificationDetails.aspx?specificationId={0}&selectedTab={1}", SpecificationId, selectedTabTitle), true);
+            }
             else
                 this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close()", true);
         }
@@ -314,7 +314,6 @@ namespace Etsi.Ultimate.Module.Specifications
                     {
                         lblHeaderText.Text = SPEC_HEADER + ((String.IsNullOrEmpty(specification.Number)) ? CONST_EMPTY_FIELD : specification.Number);
 
-                        BuildTabsDisplay();
                         FillReleasesTab(specification);
                         SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
                         FillGeneralTab(userRights, specification, releases);
@@ -348,7 +347,6 @@ namespace Etsi.Ultimate.Module.Specifications
                 }
                 else
                 {
-                    BuildTabsDisplay();
                     SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
                     FillGeneralTab(userRights, null, releases);
                     FillResponsiblityTab(null);
@@ -368,57 +366,6 @@ namespace Etsi.Ultimate.Module.Specifications
             ctrlSpecificationReleases.DataSource = specification;
             ctrlSpecificationReleases.PersonId = userId;
             ctrlSpecificationReleases.IsEditMode = true;
-        }
-
-        /// <summary>
-        /// Set the tabs display
-        /// </summary>
-        /// <param name="userRights"></param>
-        private void BuildTabsDisplay()
-        {
-
-            rtsSpecEdit.Tabs.Add(
-                new RadTab()
-                {
-                    PageViewID = "RadPage" + CONST_GENERAL_TAB,
-                    Text = CONST_GENERAL_TAB,
-                    Selected = true
-                });
-
-            rtsSpecEdit.Tabs.Add(
-                new RadTab()
-                {
-                    PageViewID = "RadPage" + CONST_RESPONSIBILITY_TAB,
-                    Text = CONST_RESPONSIBILITY_TAB,
-                    Selected = false
-                });
-
-            rtsSpecEdit.Tabs.Add(
-                new RadTab()
-                {
-                    PageViewID = "RadPage" + CONST_RELATED_TAB,
-                    Text = CONST_RELATED_TAB,
-                    Selected = false
-                });
-
-            if (action.Equals(EDIT_MODE))
-            {
-                rtsSpecEdit.Tabs.Add(
-                    new RadTab()
-                    {
-                        PageViewID = "RadPage" + CONST_RELEASES_TAB,
-                        Text = CONST_RELEASES_TAB,
-                        Selected = false
-                    });
-
-                rtsSpecEdit.Tabs.Add(
-                    new RadTab()
-                    {
-                        PageViewID = "RadPage" + CONST_HISTORY_TAB,
-                        Text = CONST_HISTORY_TAB,
-                        Selected = false
-                    });
-            }
         }
 
         /// <summary>

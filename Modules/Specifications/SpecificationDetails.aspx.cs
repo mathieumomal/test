@@ -25,11 +25,8 @@ namespace Etsi.Ultimate.Module.Specifications
         protected SpecificationListControl childSpecifications;
 
         //const 
-        private const string CONST_GENERAL_TAB = "General";
-        private const string CONST_RESPONSIBILITY_TAB = "Responsibility";
         private const string CONST_RELATED_TAB = "Related";
-        private const string CONST_RELEASES_TAB = "Releases";
-        private const string CONST_HISTORY_TAB = "History";
+
         private const string CONST_EMPTY_FIELD = " - ";
         private const int ErrorFadeTimeout = 10000;
         
@@ -171,7 +168,6 @@ namespace Etsi.Ultimate.Module.Specifications
                             notifMsgTxt.CssClass = "ErrorTxt";
                         }
                         lblHeaderText.Text = SPEC_HEADER + ((String.IsNullOrEmpty(specification.Number)) ? CONST_EMPTY_FIELD : specification.Number);
-                        BuildTabsDisplay();
                         SetRadioTechnologiesItems(svc.GetAllSpecificationTechnologies());
                         FillGeneralTab(userRights, specification);
                         FillResponsiblityTab(specification);
@@ -207,54 +203,6 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             SpecificationReleaseControl1.DataSource = specification;
             SpecificationReleaseControl1.PersonId = UserId;
-        }
-
-        /// <summary>
-        /// Set the tabs display
-        /// </summary>
-        /// <param name="userRights"></param>
-        private void BuildTabsDisplay()
-        {
-
-            SpecificationDetailsRadTabStrip.Tabs.Add(
-                new RadTab()
-                {
-                    PageViewID = "RadPage" + CONST_GENERAL_TAB,
-                    Text = CONST_GENERAL_TAB,
-                    Selected = true
-                });
-
-            SpecificationDetailsRadTabStrip.Tabs.Add(
-                new RadTab()
-                {
-                    PageViewID = "RadPage" + CONST_RESPONSIBILITY_TAB,
-                    Text = CONST_RESPONSIBILITY_TAB,
-                    Selected = false
-                });
-
-            SpecificationDetailsRadTabStrip.Tabs.Add(
-                new RadTab()
-                {
-                    PageViewID = "RadPage" + CONST_RELATED_TAB,
-                    Text = CONST_RELATED_TAB,
-                    Selected = false
-                });
-
-            SpecificationDetailsRadTabStrip.Tabs.Add(
-                new RadTab()
-                {
-                    PageViewID = "RadPage" + CONST_RELEASES_TAB,
-                    Text = CONST_RELEASES_TAB,
-                    Selected = false
-                });
-
-            SpecificationDetailsRadTabStrip.Tabs.Add(
-                new RadTab()
-                {
-                    PageViewID = "RadPage" + CONST_HISTORY_TAB,
-                    Text = CONST_HISTORY_TAB,
-                    Selected = false
-                });
         }
 
         /// <summary>
@@ -476,7 +424,12 @@ namespace Etsi.Ultimate.Module.Specifications
         protected void EditSpecificationDetails_Click(object sender, EventArgs e)
         {
             if (SpecificationId != null)
-                Response.Redirect("EditSpecification.aspx?specificationId=" + SpecificationId + "&action=edit", true);
+            {
+                var selectedTabTitle = SpecificationDetailsRadTabStrip.SelectedTab != null
+                    ? SpecificationDetailsRadTabStrip.SelectedTab.Text
+                    : null;
+                Response.Redirect(string.Format("EditSpecification.aspx?specificationId={0}&action={1}&selectedTab={2}", SpecificationId, "edit", selectedTabTitle), true);
+            }
         }
 
 

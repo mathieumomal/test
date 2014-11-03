@@ -37,9 +37,16 @@
                 </div>
                 <telerik:RadTabStrip ID="SpecificationDetailsRadTabStrip" runat="server" MultiPageID="SpecificationDetailsRadMultiPage"
                     AutoPostBack="false">
+                    <Tabs>
+                        <telerik:RadTab runat="server" PageViewID="RadPageGeneral" Text="General" Selected="true"></telerik:RadTab>
+                        <telerik:RadTab runat="server" PageViewID="RadPageResponsibility" Text="Responsibility" Selected="false"></telerik:RadTab>
+                        <telerik:RadTab runat="server" PageViewID="RadPageRelated" Text="Related" Selected="false"></telerik:RadTab>
+                        <telerik:RadTab runat="server" PageViewID="RadPageReleases" Text="Releases" Selected="false"></telerik:RadTab>
+                        <telerik:RadTab runat="server" PageViewID="RadPageHistory" Text="History" Selected="false"></telerik:RadTab>
+                    </Tabs>
                 </telerik:RadTabStrip>
                 <telerik:RadMultiPage ID="SpecificationDetailsRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px" >
-                    <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true">
+                    <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true" >
                         <table style="width: 100%">
                             <tr>
                                 <td class="TabLineLeft">
@@ -116,7 +123,7 @@
                             </tr>
                             <tr style="max-height: 150px; overflow-y: scroll; margin-top: 10px">
                                 <td colspan="2" class="specificationRapporteurs">
-                                    <ult:rapporteurcontrol runat="server" id="specificationRapporteurs" />
+                                    <ult:RapporteurControl runat="server" id="specificationRapporteurs" />
                                 </td>
                             </tr>
                         </table>
