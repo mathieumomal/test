@@ -81,7 +81,7 @@
         <add key="MeetingParticipantsListAddress" value="http://webapp.13.etsidev.org/3GPPRegistration/fViewPart.asp?mid=" />		
 		<add key="RapporteurDetailsAddress" value="http://webapp.13.etsidev.org/teldir/ListPersDetails.asp?PersId="/>
 		<add key="WIReportPath" value ="http://webapp.13.etsidev.org/workprogram/Report_WorkItem.asp?WKI_ID="/>
-		 <add key="ContributionStorageFolder" value="D:/AppTrans/TDocs/" />  
+		 <add key="FtpContributionAddress" value="http://www.3gpp.org/ftp/" />  
     	<add key="VersionsLatestFTPFolder" value="2014-09" />
     <add key="DownloadDocumentListBaseAddress" value="http://www.contribution.loc/GenerateDocumentList.aspx?meetingId={0}"/>
     <add key="MeetingListAdvancedQueryLink" value="http://webapp.13.etsidev.org/MeetingCalendar/QueryForm.asp"/>
