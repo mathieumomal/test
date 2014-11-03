@@ -275,3 +275,6 @@ span.requiredField {
 	padding:0;
 }
 
+#componentSpecList .rpExpandHandle {
+	background-color: white;
+}

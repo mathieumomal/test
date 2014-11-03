@@ -38,7 +38,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <telerik:RadPanelBar runat="server" ID="rpbSpecSearch" Width="100%">
+                        <telerik:RadPanelBar runat="server" ID="rpbSpecSearch" Width="100%" OnClientItemClicking="PreventCollapse">
                             <Items>
                                 <telerik:RadPanelItem runat="server" ID="searchPanel">
                                     <HeaderTemplate>
@@ -47,8 +47,9 @@
                                                 <td style="width: 20px;">
                                                     <ult:shareurlcontrol id="ultShareUrl" runat="server" />
                                                 </td>
-                                                <td style="text-align: center">
-                                                    <asp:Label ID="lblSearchHeader" runat="server" /></td>
+                                                <td style="text-align: center" class="openCloseRadPanelBar">
+                                                    <asp:Label ID="lblSearchHeader" runat="server" CssClass="openCloseRadPanelBar"/>
+                                                </td>
                                                 <td style="width: 20px;">
                                                     <a class="rpExpandable">
                                                         <span class="rpExpandHandle"></span>
@@ -224,6 +225,13 @@
         </Windows>
     </telerik:RadWindowManager>
     <script type="text/javascript">
+        /** open or close RadPanelBar only if element has openCloseRadPanelBar class **/
+        function PreventCollapse(sender, eventArgs) {
+            if (eventArgs.get_domEvent().target.className != "openCloseRadPanelBar") {
+                eventArgs.set_cancel(true);
+            }
+        }
+
         var lastVal = "";
 
         /** Function used after each query **/
@@ -234,16 +242,16 @@
 
         function checkExport() {
             var hidExport = $("#<%=hidSpecAddress.ClientID %>");
-            if (hidExport != null && hidExport.val() != "" && hidExport.val() != lastVal) {
-                lastVal = hidExport.val();
-                window.location.replace(hidExport.val());
-            }
-            adaptContentHeight();
-        }
+		    if (hidExport != null && hidExport.val() != "" && hidExport.val() != lastVal) {
+		        lastVal = hidExport.val();
+		        window.location.replace(hidExport.val());
+		    }
+		    adaptContentHeight();
+		}
 
 
-        function collapseItem() {
-            var panelBar = $find("<%= rpbSpecSearch.ClientID %>");
+		function collapseItem() {
+		    var panelBar = $find("<%= rpbSpecSearch.ClientID %>");
             var item = panelBar.get_items().getItem(0);
             if (item) {
                 item.collapse();
