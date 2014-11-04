@@ -331,7 +331,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             }
         }
 
-        private Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTS)
+        public Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTS)
         {
             Report validationReport;
 

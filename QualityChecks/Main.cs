@@ -142,8 +142,8 @@ namespace QualityChecks
 
                             if (isValidFile)
                             {
-                                SpecVersionsManager specVersionsManager = new SpecVersionsManager();
-                                Report report = specVersionsManager.ValidateVersionDocument(extension, ms, System.IO.Path.GetTempPath(), version, spec.Title, specVersion.Release.Name, meetingStartDate, tsgTitle, spec.IsTS ?? true);
+                                SpecVersionUploadAction specVersionUploadAction = new SpecVersionUploadAction();
+                                Report report = specVersionUploadAction.ValidateVersionDocument(extension, ms, System.IO.Path.GetTempPath(), version, spec.Title, specVersion.Release.Name, meetingStartDate, tsgTitle, spec.IsTS ?? true);
 
                                 StringBuilder output = new StringBuilder();
                                 if (report.ErrorList.Count > 0)
