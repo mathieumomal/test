@@ -447,7 +447,9 @@ namespace Etsi.Ultimate.Business
             string outputText = inputText.Replace("\r", String.Empty)
                                          .Replace("\n", String.Empty)
                                          .Replace("\t", String.Empty)
-                                         .Replace("\a", String.Empty);
+                                         .Replace("\a", String.Empty)
+                                         .Replace("", String.Empty)
+                                         .Replace("", String.Empty);
             if(removeEmptySpace)
                 outputText = outputText.Replace(" ", String.Empty);
 

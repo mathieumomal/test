@@ -118,9 +118,10 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                     }
                     else //Copy to stream from .doc / .docx
                     {
-                        if (!Path.GetExtension(path).Equals("doc", StringComparison.InvariantCultureIgnoreCase) &&
-                            !Path.GetExtension(path).Equals("docx", StringComparison.InvariantCultureIgnoreCase))
+                        if (!Path.GetExtension(path).Equals(".doc", StringComparison.InvariantCultureIgnoreCase) &&
+                            !Path.GetExtension(path).Equals(".docx", StringComparison.InvariantCultureIgnoreCase))
                             throw new InvalidOperationException("Invalid file format provided");
+                        fileToAnalyzePath = path;
                         allowToRunQualityChecks = true;
                     }
 
