@@ -92,14 +92,14 @@
                 </tr>
                 <tr>
                     <td>
-                        <telerik:RadPanelBar runat="server" ID="rpbSearch" Width="100%">
+                        <telerik:RadPanelBar runat="server" ID="rpbSearch" Width="100%" OnClientItemClicking="PreventCollapse">
                             <items>
                                 <telerik:RadPanelItem runat="server" ID="searchPanel" Expanded="True">
                                     <HeaderTemplate>
                                         <table style="width: 100%; vertical-align: middle" class="WorkItemSearchHeader">
                                             <tr>
                                         <td style="width:20px;"><ult:shareurlcontrol runat="server" id="ultShareUrl" /></td>
-                                        <td style="text-align:center"><asp:Label ID="lblSearchHeader" runat="server" /></td>
+                                        <td style="text-align:center" class="openCloseRadPanelBar"><asp:Label ID="lblSearchHeader" runat="server" CssClass="openCloseRadPanelBar"/></td>
                                                 <td style="width: 20px;"><a class="rpExpandable">
                                                     <span class="rpExpandHandle"></span>
                                                 </a></td>
@@ -309,7 +309,7 @@
                     <div class="contentModal" id="confirmation">
                         <div class="wiHeader">
                             <div><asp:Label ID="lblCountWarningErrors" runat="server" Text="Operation timed out" /></div>
-                            </div>
+                        </div>
                         <div>
                             <h2>Errors and Warnings</h2>
                             <div class="scrollable">
@@ -417,6 +417,13 @@
             var item = panelBar.get_items().getItem(0);
             if (item) {
                 item.expand();
+            }
+        }
+
+        /** open or close RadPanelBar only if element has openCloseRadPanelBar class **/
+        function PreventCollapse(sender, eventArgs) {
+            if (eventArgs.get_domEvent().target.className != "openCloseRadPanelBar") {
+                eventArgs.set_cancel(true);
             }
         }
 
