@@ -83,7 +83,7 @@
         <Right value="Contribution_Withdraw" />
         <Right value="Contribution_Import" />
         <Right value="Contribution_Edit_CR_Number"/>
-
+        <Right value="Contribution_Commit_Decisions"/>
       </UserRole>
       
       <!-- Meeting Manager is a special role that gives additional rights on meetings. -->
