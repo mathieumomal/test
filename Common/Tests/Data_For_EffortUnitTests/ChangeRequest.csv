@@ -9,3 +9,11 @@ Pk_ChangeRequest,CRNumber,Revision,Subject,Fk_TSGStatus,Fk_WGStatus,CreationDate
 8,AZEE,2,Subject,,,2008-01-30 12:12,Change request,Ultimate,2,2,2,Change request description6,2,2,WG4,1,136083,2874,428927,428927,1
 9,AZEE,3,Subject,,,2008-01-30 12:12,Change request,Ultimate,2,2,2,Change request description6,2,2,WG5,1,136083,2874,428927,428927,1
 10,AZEEE,4,Subject,,,2008-01-30 12:12,Change request,Ultimate,2,2,2,TSG4,2,2,WGGG,1,136083,2874,428927,428927,1
+11,0001,0,A non TSG approved CR,5,1,2014-01-01,TsgOrg,WgOrg,2,2,2,RP-CR0001,,,,1,136084,2882,,,1
+12,0002,0,An approved CR for a closed release,2,1,2014-01-01,TsgOrg,WgOrg,2,2,2,RP-CR0002,,,,1,136084,2874,,,1
+13,0003,0,An approved CR for an open release with no version allocated,2,1,2014-01-01,TsgOrg,WgOrg,2,2,2,RP-CR0003,,,,1,136084,2882,,,1
+14,0004,0,An approved CR for an open release with one version allocated,2,1,2014-01-01,TsgOrg,WgOrg,2,2,2,RP-CR0004,,,,1,136084,2883,,,1
+15,0005,0,An approved CR for an open release with no spec release,2,1,2014-01-01,TsgOrg,WgOrg,2,2,2,RP-CR0005,,,,1,136084,2884,,,1
+16,0006,0,An approved CR already linked to a version,2,1,2014-01-01,TsgOrg,WgOrg,2,2,2,RP-CR0006,,,,1,136084,2883,,428933,1
+17,0001,1,An approved CR for a withdrawn spec,2,1,2014-01-01,TsgOrg,WgOrg,2,2,2,RP-CR0007,,,,1,136081,2883,,,1
+18,0008,0,An approved CR for a draft spec,2,1,2014-01-01,TsgOrg,WgOrg,2,2,2,RP-CR0008,,,,1,136083,2883,,,1

@@ -22,7 +22,7 @@ namespace Etsi.Ultimate.Tests.Services
     public class CrServiceTest : BaseEffortTest
     {
         #region Constants
-        private const int TotalNoOfCrsInCsv = 10;
+        private const int TotalNoOfCrsInCsv = 18;
         private const int TotalNoOfCrWorkItemsInCsv = 1;
         private const int PersonId = 0;       
         MemoryAppender _memoryAppender;

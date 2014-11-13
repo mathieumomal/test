@@ -211,6 +211,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             }
             catch (Exception e)
             {
+                LogManager.Error("An error occured while uploading: " + e.Message);
                 svcResponse.Report.LogError("An error occured while uploading: "+e.Message);
             }
             return svcResponse;
