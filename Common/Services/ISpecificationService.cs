@@ -212,5 +212,13 @@ namespace Etsi.Ultimate.Services
         /// <param name="number">Specification Number</param>
         /// <returns>Specification Details</returns>
         Specification GetSpecificationByNumber(string number);
+
+        /// <summary>
+        /// Changes the specifications status to under change control.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specIdsForUcc">The spec ids.</param>
+        /// <returns>Status report</returns>
+        ServiceResponse<bool> ChangeSpecificationsStatusToUnderChangeControl(int personId, List<int> specIdsForUcc);
     }
 }

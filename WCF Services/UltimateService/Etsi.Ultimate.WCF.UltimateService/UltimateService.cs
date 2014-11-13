@@ -113,6 +113,33 @@ namespace Etsi.Ultimate.WCF.Service
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetSpecificationsByIds(personId, specificationIds);
         }
+
+        /// <summary>
+        /// Changes the specifications status to under change control.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specIdsForUcc">The spec ids</param>
+        /// <returns>Status report</returns>
+        public ServiceResponse<bool> ChangeSpecificationsStatusToUnderChangeControl(int personId, List<int> specIdsForUcc)
+        {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][ChangeSpecificationsStatusToUnderChangeControl] specNumbersForUcc=" + string.Join(", ", specIdsForUcc));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.ChangeSpecificationsStatusToUnderChangeControl(personId, specIdsForUcc);
+        }
+
+        /// <summary>
+        /// Sets the CRS as final.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="tdocNumbers">The tdoc numbers.</param>
+        /// <returns>Status report</returns>
+        public ServiceResponse<bool> SetCrsAsFinal(int personId, List<string> tdocNumbers)
+        {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][SetCrsAsFinal] PersonId=" + personId + "; tdocNumbers=" + string.Join(", ", tdocNumbers));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.SetCrsAsFinal(personId, tdocNumbers);        
+        }
+
         #endregion
 
         #region CRs services

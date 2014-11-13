@@ -26,7 +26,11 @@ namespace Etsi.Ultimate.Tests.Services
         private const int NO_EDIT_RIGHT_USER = 2;
         private const int EDIT_RIGHT_USER = 3;
         private const int EDIT_LIMITED_RIGHT_USER = 4;
-
+        private const int SPEC_ID_UNDER_CHANGE_CONTROL = 1;
+        private const int SPEC_ID_NOT_UNDER_CHANGE_CONTROL = 2;
+        private const int SPEC_ID_UCC_FLAG_NOT_SET = 3;
+        private List<int> specIdList = new List<int> { SPEC_ID_UNDER_CHANGE_CONTROL, SPEC_ID_NOT_UNDER_CHANGE_CONTROL, SPEC_ID_UCC_FLAG_NOT_SET };
+        private List<int> specIdsUcc = new List<int> { SPEC_ID_UNDER_CHANGE_CONTROL };
         public override void Setup()
         {
             base.Setup();
@@ -263,6 +267,21 @@ namespace Etsi.Ultimate.Tests.Services
                 Assert.AreEqual(1, report.ErrorList.Count);
         }
 
+        [Test, TestCaseSource("GetSpecsForStatusChange")]
+        public void EditSpecification_ChangeSpecificationsStatusToUnderChangeControl(int personId, List<int> specIds, bool result, string errorMessage)
+        {
+            // Set up the rights
+            RegisterAllMocks();
+
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var specSvcResponse = specSvc.ChangeSpecificationsStatusToUnderChangeControl(personId, specIds);
+            Assert.AreEqual(result, specSvcResponse.Result);
+            if (result)
+                Assert.IsTrue(specSvcResponse.Report.InfoList.Contains(errorMessage));
+            else
+                Assert.IsTrue(specSvcResponse.Report.ErrorList.Contains(errorMessage));
+        }
+
         #region datas
         private Specification GetSpecsToCreate(int spec)
         {
@@ -331,6 +350,8 @@ namespace Etsi.Ultimate.Tests.Services
             );
             repo.Stub(r => r.Find(12)).Return(GetCorrectSpecificationForEdit(false));
             repo.Stub(r => r.All).Return(GetSpecs());
+            repo.Stub(r => r.GetSpecifications(specIdList)).Return(GetSpecs().ToList().Where(x => specIdList.Contains(x.Pk_SpecificationId)).ToList());
+            repo.Stub(r => r.GetSpecifications(specIdsUcc)).Return(GetSpecs().ToList().Where(x => specIdsUcc.Contains(x.Pk_SpecificationId)).ToList());
             RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(repo);
 
             var communityManager = MockRepository.GenerateMock<ICommunityManager>();
@@ -416,8 +437,8 @@ namespace Etsi.Ultimate.Tests.Services
         private IDbSet<Specification> GetSpecs()
         {
             var list = new SpecificationFakeDBSet();
-            list.Add(new Specification() { Pk_SpecificationId = 1, Number = "01.01", IsActive = true });
-            list.Add(new Specification() { Pk_SpecificationId = 2, Number = "12.123", IsActive = true });
+            list.Add(new Specification() { Pk_SpecificationId = 1, Number = "01.01", IsActive = true, IsUnderChangeControl = true });
+            list.Add(new Specification() { Pk_SpecificationId = 2, Number = "12.123", IsActive = true, IsUnderChangeControl = false });
             list.Add(new Specification() { Pk_SpecificationId = 3, Number = "12.189", IsActive = true });
             list.Add(new Specification() { Pk_SpecificationId = 4, Number = "02.72", IsActive = true });
             return list;
@@ -445,7 +466,18 @@ namespace Etsi.Ultimate.Tests.Services
             };
             return ResponsibleGroupSecretaries;
         }
-        
+
+        private IEnumerable<object[]> GetSpecsForStatusChange
+        {
+            get
+            {
+                yield return new object[] { NO_EDIT_RIGHT_USER, specIdList, false, "User not allowed to edit a specification" };
+                yield return new object[] { EDIT_RIGHT_USER, specIdList, true, "Following specifications changed to Under Change Control.\n\n\t12.123, 12.189" };
+                yield return new object[] { EDIT_LIMITED_RIGHT_USER, specIdList, true, "Following specifications changed to Under Change Control.\n\n\t12.123, 12.189" };
+                yield return new object[] { EDIT_RIGHT_USER, specIdsUcc, true, "None of the specifications changed to Under Change Control." };
+            }
+        }
+
         #endregion
 
     }

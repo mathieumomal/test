@@ -80,6 +80,24 @@ namespace Etsi.Ultimate.WCF.Interface
         List<Specification> GetSpecificationsByIds(int personId, List<int> specificationIds);
 
         /// <summary>
+        /// Changes the specifications status to under change control.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specIdsForUcc">The spec ids.</param>
+        /// <returns>Status report</returns>
+        [OperationContract]
+        ServiceResponse<bool> ChangeSpecificationsStatusToUnderChangeControl(int personId, List<int> specIdsForUcc);
+
+        /// <summary>
+        /// Sets the CRS as final.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="tdocNumbers">The tdoc numbers.</param>
+        /// <returns>Status report</returns>
+        [OperationContract]
+        ServiceResponse<bool> SetCrsAsFinal(int personId, List<string> tdocNumbers);
+
+        /// <summary>
         /// Gets the change request by identifier.
         /// </summary>
         /// <param name="personId">The person identifier.</param>

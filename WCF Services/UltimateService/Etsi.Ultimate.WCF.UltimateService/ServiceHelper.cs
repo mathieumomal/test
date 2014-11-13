@@ -27,7 +27,7 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateCreateChangeRequestCategories = "Ultimate Service Error [GetChangeRequestCategories]: {0}";
         private const string ConstErrorTemplateCreateChangeRequestById = "Ultimate Service Error [GetChangeRequestById]: {0}";
         private const string ConstErrorTemplateGetChangeRequestByContribUid = "Ultimate Service Error [GetChangeRequestByContributionUID]: {0}";
-
+        private const string ConstErrorTemplateChangeSpecificationsStatusToUnderChangeControl = "Ultimate Service Error [ChangeSpecificationsStatusToUnderChangeControl]: {0}";
         #endregion
 
         #region Internal Methods
@@ -241,6 +241,50 @@ namespace Etsi.Ultimate.WCF.Service
             }
 
             return specifications;
+        }
+
+        /// <summary>
+        /// Changes the specifications status to under change control.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specIdsForUcc">The spec ids</param>
+        /// <returns>Status report</returns>
+        internal ServiceResponse<bool> ChangeSpecificationsStatusToUnderChangeControl(int personId, List<int> specIdsForUcc)
+        {
+            var statusChangeReport = new ServiceResponse<bool>();
+            try
+            {
+                var svc = ServicesFactory.Resolve<ISpecificationService>();
+                var ultimateStatusResponse = svc.ChangeSpecificationsStatusToUnderChangeControl(personId, specIdsForUcc);
+                statusChangeReport = ConvertUltimateServiceResponseToWcfServiceResponse<bool>(ultimateStatusResponse);
+            }
+            catch (Exception ex)
+            {
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateChangeSpecificationsStatusToUnderChangeControl, ex.Message));
+                statusChangeReport.Result = false;
+                statusChangeReport.Report.ErrorList.Add("Specifications status change process failed");
+            }
+            return statusChangeReport;
+        }
+
+        /// <summary>
+        /// Sets the CRS as final.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="tdocNumbers">The tdoc numbers.</param>
+        /// <returns>Status report</returns>
+        internal ServiceResponse<bool> SetCrsAsFinal(int personId, List<string> tdocNumbers)
+        {
+            var statusReport = new ServiceResponse<bool>();
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return statusReport;
         }
 
         /// <summary>
@@ -626,6 +670,24 @@ namespace Etsi.Ultimate.WCF.Service
         private KeyValuePair<string, string> ConvertCrpackToService(KeyValuePair<string, string> crPackDecision)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Converts the ultimate service response to WCF service response.
+        /// </summary>
+        /// <typeparam name="T">Type</typeparam>
+        /// <param name="ultimateServiceResponse">The ultimate service response.</param>
+        /// <returns>The Wcf compatiable service response</returns>
+        private ServiceResponse<T> ConvertUltimateServiceResponseToWcfServiceResponse<T>(UltimateEntities.ServiceResponse<T> ultimateServiceResponse)
+        {
+            var wcfServiceResponse = new ServiceResponse<T>();
+
+            wcfServiceResponse.Result = ultimateServiceResponse.Result;
+            wcfServiceResponse.Report.ErrorList = ultimateServiceResponse.Report.ErrorList;
+            wcfServiceResponse.Report.WarningList = ultimateServiceResponse.Report.WarningList;
+            wcfServiceResponse.Report.InfoList = ultimateServiceResponse.Report.InfoList;
+
+            return wcfServiceResponse;
         }
 
         #endregion

@@ -565,6 +565,38 @@ namespace Etsi.Ultimate.Services
             return spec;
         }
 
+        /// <summary>
+        /// Changes the specifications status to under change control.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specIdsForUcc">The spec ids.</param>
+        /// <returns>Status report</returns>
+        public ServiceResponse<bool> ChangeSpecificationsStatusToUnderChangeControl(int personId, List<int> specIdsForUcc)
+        {
+            var statusChangeReport = new ServiceResponse<bool>();
+
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var editAction = new SpecificationEditAction();
+                editAction.UoW = uoW;
+                try
+                {
+                    statusChangeReport = editAction.ChangeSpecificationsStatusToUnderChangeControl(personId, specIdsForUcc);
+                    if (statusChangeReport.Result)
+                        uoW.Save();                        
+                }
+                catch (Exception ex)
+                {
+                    LogManager.Error(String.Format("Error while changing specifications status to under change control: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
+                    statusChangeReport.Report.InfoList.Clear();
+                    statusChangeReport.Result = false;
+                    statusChangeReport.Report.LogError("Failed to change specifications status to under change control");
+                }
+            }
+
+            return statusChangeReport;
+        }
+
         #endregion
     }
 }
