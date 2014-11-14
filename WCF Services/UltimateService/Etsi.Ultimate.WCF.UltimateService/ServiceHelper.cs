@@ -28,6 +28,7 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateCreateChangeRequestById = "Ultimate Service Error [GetChangeRequestById]: {0}";
         private const string ConstErrorTemplateGetChangeRequestByContribUid = "Ultimate Service Error [GetChangeRequestByContributionUID]: {0}";
         private const string ConstErrorTemplateChangeSpecificationsStatusToUnderChangeControl = "Ultimate Service Error [ChangeSpecificationsStatusToUnderChangeControl]: {0}";
+        private const string ConstErrorTemplateSetCrsAsFinal = "Ultimate Service Error [SetCrsAsFinal]: {0}";
         #endregion
 
         #region Internal Methods
@@ -278,13 +279,15 @@ namespace Etsi.Ultimate.WCF.Service
             var statusReport = new ServiceResponse<bool>();
             try
             {
-                var svc = ServicesFactory.Resolve<ISpecificationService>();
-                var ultimateStatusResponse = new UltimateEntities.ServiceResponse<bool>() { Result = true };
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var ultimateStatusResponse = svc.SetCrsAsFinal(personId, tdocNumbers);
                 statusReport = ConvertUltimateServiceResponseToWcfServiceResponse<bool>(ultimateStatusResponse);
             }
             catch (Exception ex)
             {
-
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateSetCrsAsFinal, ex.Message));
+                statusReport.Result = false;
+                statusReport.Report.ErrorList.Add("Specifications status change process failed");
             }
             return statusReport;
         }
