@@ -278,7 +278,9 @@ namespace Etsi.Ultimate.WCF.Service
             var statusReport = new ServiceResponse<bool>();
             try
             {
-
+                var svc = ServicesFactory.Resolve<ISpecificationService>();
+                var ultimateStatusResponse = new UltimateEntities.ServiceResponse<bool>() { Result = true };
+                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse<bool>(ultimateStatusResponse);
             }
             catch (Exception ex)
             {
@@ -680,12 +682,16 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>The Wcf compatiable service response</returns>
         private ServiceResponse<T> ConvertUltimateServiceResponseToWcfServiceResponse<T>(UltimateEntities.ServiceResponse<T> ultimateServiceResponse)
         {
-            var wcfServiceResponse = new ServiceResponse<T>();
+            var serviceReport = new ServiceReport() { ErrorList = new List<string>(), InfoList = new List<string>(), WarningList = new List<string>() };
+            var wcfServiceResponse = new ServiceResponse<T>() { Report = serviceReport };
 
-            wcfServiceResponse.Result = ultimateServiceResponse.Result;
-            wcfServiceResponse.Report.ErrorList = ultimateServiceResponse.Report.ErrorList;
-            wcfServiceResponse.Report.WarningList = ultimateServiceResponse.Report.WarningList;
-            wcfServiceResponse.Report.InfoList = ultimateServiceResponse.Report.InfoList;
+            if (ultimateServiceResponse != null)
+            {
+                wcfServiceResponse.Result = ultimateServiceResponse.Result;
+                wcfServiceResponse.Report.ErrorList = ultimateServiceResponse.Report.ErrorList;
+                wcfServiceResponse.Report.WarningList = ultimateServiceResponse.Report.WarningList;
+                wcfServiceResponse.Report.InfoList = ultimateServiceResponse.Report.InfoList;
+            }
 
             return wcfServiceResponse;
         }

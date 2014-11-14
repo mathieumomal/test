@@ -85,13 +85,13 @@ namespace Etsi.Ultimate.Business
                 {
                     if (!x.IsUnderChangeControl.GetValueOrDefault())
                     {
-                        specNumbers.Add(x.Number);
+                        specNumbers.Add(x.Title);
                         x.IsUnderChangeControl = true;
                     }
                 });
                 statusChangeReport.Result = true;
                 if (specNumbers.Count > 0)
-                    statusChangeReport.Report.LogInfo("Following specifications changed to Under Change Control.\n\n\t" + String.Join(", ", specNumbers));
+                    statusChangeReport.Report.LogInfo("Following specifications changed to Under Change Control.\n\t" + String.Join("\n\t", specNumbers));
                 else
                     statusChangeReport.Report.LogInfo("None of the specifications changed to Under Change Control.");
             }
