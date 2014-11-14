@@ -224,7 +224,7 @@ namespace Etsi.Ultimate.Services
             {
                 var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction();
                 specificationsMassivePromotionAction.UoW = uoW;
-                ReleaseManager releaseManager = new ReleaseManager();
+                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
                 releaseManager.UoW = uoW;
                 int targetReleaseId = releaseManager.GetNextRelease(initialReleaseId).Pk_ReleaseId; 
                 return specificationsMassivePromotionAction.GetSpecificationForMassivePromotion(personId, initialReleaseId, targetReleaseId);

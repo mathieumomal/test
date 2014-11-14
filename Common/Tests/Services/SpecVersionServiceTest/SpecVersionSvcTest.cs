@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.Business;
+using Etsi.Ultimate.Tests.FakeRepositories;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -55,9 +56,11 @@ namespace Etsi.Ultimate.Tests.Services
         [Test, TestCaseSource("SpecVersionsData")]
         public void GetVersionsById(SpecVersionFakeDBSet specVersionsData)
         {
+            InitializeUserRightsMock();
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)specVersionsData);
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
             var versionsSvc = new SpecVersionService();
             SpecVersion result = versionsSvc.GetVersionsById(2, 0).Key;
             Assert.AreEqual("Location2", result.Location);

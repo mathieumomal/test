@@ -9,6 +9,7 @@ using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Business
 {
+    public enum Enum_ChangeRequestStatuses { Agreed, Approved, Noted, Postponed, Rejected, Revised, Merged, TechEndorsed, Withdrawn, Reissued };
     /// <summary>
     /// Default implementation of the IChangeRequestStatusManager
     /// </summary>

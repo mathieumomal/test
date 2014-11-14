@@ -28,8 +28,6 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void Test_GetAllReleases()
         {
-            CacheManager.Clear(RELEASE_CACHE_KEY);
-
             // Setup the dependency manager, let's test both Service and business
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
             ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
@@ -41,15 +39,11 @@ namespace Etsi.Ultimate.Tests.Services
 
             Assert.AreEqual(4, releases.Key.Count);
             Assert.AreEqual(2, releases.Key.Where(t => t.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Frozen).ToList().Count);
-
-
         }
 
         [Test]
         public void Test_GetAllReleases_Rights()
         {
-            CacheManager.Clear(RELEASE_CACHE_KEY);
-
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
             ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
 
@@ -59,7 +53,6 @@ namespace Etsi.Ultimate.Tests.Services
 
             Assert.AreEqual(true, releases.Value.HasRight(Enum_UserRights.Release_Close));
             Assert.AreEqual(true, releases.Value.HasRight(Enum_UserRights.Release_Freeze));
-
         }
 
         private static Dictionary<string, int> StatusToRelease = new Dictionary<string, int> { 
@@ -72,8 +65,6 @@ namespace Etsi.Ultimate.Tests.Services
         [TestCase("Closed", false, false)]
         public void Test_GetRelease_Releases(string status, bool closeEnabled, bool freezeEnabled)
         {
-            CacheManager.Clear(RELEASE_CACHE_KEY);
-
             int releaseId = StatusToRelease[status];
 
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
@@ -94,8 +85,6 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void Test_GetRelease_ReturnsRemarksAndHistory()
         {
-            CacheManager.Clear(RELEASE_CACHE_KEY);
-
             int releaseId = StatusToRelease["Open"];
 
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
@@ -118,7 +107,6 @@ namespace Etsi.Ultimate.Tests.Services
         {
             // Clear the cache to ensure the test is not wrong.
             string fakeDescription = "A Fake description";
-            CacheManager.Clear(RELEASE_CACHE_KEY);
 
             // Setup the dependency manager, let's test both Service and business
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
@@ -149,8 +137,6 @@ namespace Etsi.Ultimate.Tests.Services
         [TestCase(4)]
         public void Test_GetReleaseById(int releaseId)
         {
-            CacheManager.Clear(RELEASE_CACHE_KEY);
-
             // Setup the dependency manager, let's test both Service and business
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
             ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
@@ -176,8 +162,6 @@ namespace Etsi.Ultimate.Tests.Services
         [TestCase(4)]
         public void Test_GetPreviousReleaseCode(int releaseId)
         {
-            CacheManager.Clear(RELEASE_CACHE_KEY);
-
             // Setup the dependency manager, let's test both Service and business
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());            
 
@@ -200,8 +184,6 @@ namespace Etsi.Ultimate.Tests.Services
         [TestCase(4)]
         public void Test_GetAllReleasesCodes(int releaseId)
         {
-            //CacheManager.Clear(RELEASE_CACHE_KEY);
-
             // Setup the dependency manager, let's test both Service and business
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
             ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());

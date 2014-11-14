@@ -60,7 +60,7 @@ namespace Etsi.Ultimate.Services
                 var result = specVersionAllocateAction.AllocateVersion(personId, version);
                 uoW.Save();
 
-                return result;
+                return result.Report;
             }
         }
 

@@ -14,6 +14,6 @@ Pk_ChangeRequest,CRNumber,Revision,Subject,Fk_TSGStatus,Fk_WGStatus,CreationDate
 13,0003,0,An approved CR for an open release with no version allocated,2,1,2014-01-01,TsgOrg,WgOrg,2,2,2,RP-CR0003,,,,1,136084,2882,,,1
 14,0004,0,An approved CR for an open release with one version allocated,2,1,2014-01-01,TsgOrg,WgOrg,2,2,2,RP-CR0004,,,,1,136084,2883,,,1
 15,0005,0,An approved CR for an open release with no spec release,2,1,2014-01-01,TsgOrg,WgOrg,2,2,2,RP-CR0005,,,,1,136084,2884,,,1
-16,0006,0,An approved CR already linked to a version,2,1,2014-01-01,TsgOrg,WgOrg,2,2,2,RP-CR0006,,,,1,136084,2883,,428933,1
+16,0006,0,An approved CR already linked to a version,2,1,2014-01-01,TsgOrg,WgOrg,2,2,2,RP-CR0006,,,,1,136084,2882,,428933,1
 17,0001,1,An approved CR for a withdrawn spec,2,1,2014-01-01,TsgOrg,WgOrg,2,2,2,RP-CR0007,,,,1,136081,2883,,,1
 18,0008,0,An approved CR for a draft spec,2,1,2014-01-01,TsgOrg,WgOrg,2,2,2,RP-CR0008,,,,1,136083,2883,,,1

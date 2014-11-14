@@ -53,10 +53,13 @@ namespace Etsi.Ultimate.Tests.Business
         public void PromoteMassivelySpecificationsTest()
         {
             //Specification
+            InitializeUserRightsMock();
             var specDBSet = GetSpecifications();
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specDBSet);            
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
+            
 
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
 

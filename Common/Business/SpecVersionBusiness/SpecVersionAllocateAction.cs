@@ -13,9 +13,9 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
     {
         public IUltimateUnitOfWork UoW;
 
-        public Report AllocateVersion(int personId, SpecVersion version)
+        public ServiceResponse<SpecVersion> AllocateVersion(int personId, SpecVersion version)
         {
-            var report = new Report();
+            var response = new ServiceResponse<SpecVersion>();
 
             try{
                 CheckVersion(personId, version);
@@ -37,13 +37,14 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                 var versionRepository = RepositoryFactory.Resolve<ISpecVersionsRepository>();
                 versionRepository.UoW = UoW;
                 versionRepository.InsertOrUpdate(newVersion);
+                response.Result = newVersion;
             } 
             catch( Exception ex)
             {
-                report.LogError(ex.Message);
+                response.Report.LogError(ex.Message);
             }
 
-            return report;
+            return response;
         }
 
         private void CheckVersion(int personId, SpecVersion version)
@@ -72,7 +73,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             }
 
             // The spec release must be defined as well
-            var specRelease = specificationManager.GetSpecReleaseBySpecIdAndReleaseId(version.Fk_SpecificationId.Value, version.Fk_ReleaseId.Value);
+            var specRelease = version.Specification.Specification_Release.Where(sr => sr.Fk_ReleaseId == version.Fk_ReleaseId.Value).FirstOrDefault();
             if (specRelease == null)
             {
                 throw new InvalidOperationException(Utils.Localization.Allocate_Error_SpecRelease_Does_Not_Exist);

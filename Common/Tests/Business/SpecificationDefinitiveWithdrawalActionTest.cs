@@ -28,6 +28,7 @@ namespace Etsi.Ultimate.Tests.Business
             var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
             mockRightsManager.Stub(x => x.GetRights(personId)).Return(userRights);
             ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+            RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
 
             //Specification
             var specDBSet = GetSpecifications();

@@ -127,19 +127,6 @@ namespace Etsi.Ultimate.WCF.Service
             return serviceHelper.ChangeSpecificationsStatusToUnderChangeControl(personId, specIdsForUcc);
         }
 
-        /// <summary>
-        /// Sets the CRS as final.
-        /// </summary>
-        /// <param name="personId">The person identifier.</param>
-        /// <param name="tdocNumbers">The tdoc numbers.</param>
-        /// <returns>Status report</returns>
-        public ServiceResponse<bool> SetCrsAsFinal(int personId, List<string> tdocNumbers)
-        {
-            LogManager.UltimateServiceLogger.Debug("[ServiceCall][SetCrsAsFinal] PersonId=" + personId + "; tdocNumbers=" + string.Join(", ", tdocNumbers));
-            var serviceHelper = new ServiceHelper();
-            return serviceHelper.SetCrsAsFinal(personId, tdocNumbers);        
-        }
-
         #endregion
 
         #region CRs services
@@ -241,6 +228,19 @@ namespace Etsi.Ultimate.WCF.Service
             LogManager.UltimateServiceLogger.Debug("[ServiceCall][UpdateChangeRequestPackRelatedCrs]");
             var svcHelper = new ServiceHelper();
             return svcHelper.UpdateChangeRequestPackRelatedCrs(crPackDecisionlist, tsgTdocNumber);
+        }
+
+        /// <summary>
+        /// Sets the CRS as final.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="tdocNumbers">The tdoc numbers.</param>
+        /// <returns>Status report</returns>
+        public ServiceResponse<bool> SetCrsAsFinal(int personId, List<string> tdocNumbers)
+        {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][SetCrsAsFinal] PersonId=" + personId + "; tdocNumbers=" + string.Join(", ", tdocNumbers));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.SetCrsAsFinal(personId, tdocNumbers);
         }
         #endregion
     }

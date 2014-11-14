@@ -105,6 +105,7 @@
     <Compile Include="CommunityManager.cs" />
     <Compile Include="ChangeRequestManager.cs" />
     <Compile Include="CrCategoriesManager.cs" />
+    <Compile Include="FinalizeCrsAction.cs" />
     <Compile Include="IChangeRequestStatusManager.cs" />
     <Compile Include="MeetingManager.cs" />
     <Compile Include="RemarkManager.cs" />

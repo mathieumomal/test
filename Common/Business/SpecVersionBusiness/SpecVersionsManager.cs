@@ -84,7 +84,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                     TechnicalVersion = 0,
                     MajorVersion = release.Version3g
 
-                });
+                }).Report;
 
                 reports.Add(r);
             }

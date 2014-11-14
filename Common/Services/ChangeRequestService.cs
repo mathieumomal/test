@@ -1,6 +1,7 @@
 ﻿using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
 using System;
 using System.Collections.Generic;
@@ -221,6 +222,38 @@ namespace Etsi.Ultimate.Services
             return response;
         }
 
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="tdocNumbers"></param>
+        /// <returns></returns>
+        public ServiceResponse<bool> SetCrsAsFinal(int personId, List<string> tdocNumbers)
+        {
+            var response = new ServiceResponse<bool> { Result = false };
+
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var finalizeAction = new FinalizeCrsAction() { UoW = uoW };
+                    response.Result = finalizeAction.FinalizeCrs(personId, tdocNumbers);
+
+                    if (response.Result)
+                    {
+                        uoW.Save();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Error(e.Message + e.StackTrace);
+                response.Result = false;
+                response.Report.LogError(Localization.GenericError);
+            }
+            return response;
+        }
+
     }
 
     /// <summary>
@@ -278,6 +311,14 @@ namespace Etsi.Ultimate.Services
         /// <param name="crPackDecisionlst">The cr pack decisionlst.</param>
         /// <param name="tsgTdocNumber"></param>
         ServiceResponse<bool> UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackDecisionlst, string tsgTdocNumber);
+
+        /// <summary>
+        /// Allocates versions for all the TSG approved CRs that are related to the provided TDoc Numbers
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="tdocNumbers"></param>
+        /// <returns></returns>
+        ServiceResponse<bool> SetCrsAsFinal(int personId, List<string> tdocNumbers);
     }
 }
 

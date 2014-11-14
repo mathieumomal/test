@@ -120,6 +120,7 @@ namespace Etsi.Ultimate.Tests.Services
             //Release manager
             relManager.Stub(s => s.GetReleaseById(1, 1)).Return(new KeyValuePair<Release, UserRightsContainer>(r1,null));
             relManager.Stub(s => s.GetReleaseById(1, 2)).Return(new KeyValuePair<Release, UserRightsContainer>(r2, null));
+            relManager.Stub(s => s.GetNextRelease(1)).Return(r2);
 
             ManagerFactory.Container.RegisterInstance(typeof(IReleaseManager), relManager);
 

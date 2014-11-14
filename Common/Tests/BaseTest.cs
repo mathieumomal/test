@@ -14,6 +14,7 @@ using Etsi.Ultimate.DomainClasses;
 using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Tests.FakeRepositories;
 using Etsi.Ultimate.Business.UserRightsService;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Tests
 {
@@ -32,6 +33,10 @@ namespace Etsi.Ultimate.Tests
             ServicesFactory.SetDefaultDependencies();
             RepositoryFactory.SetDefaultDependencies();
             UtilsFactory.SetDefaultDependencies();
+
+            CacheManager.Clear("ULT_BIZ_RELEASES_ALL");
+
+
         }
 
         /// <summary>
@@ -83,7 +88,7 @@ namespace Etsi.Ultimate.Tests
 
             var anonymous_Applicatin_Rights = new List<string>() { "Release_ViewLimitedDetails" };
             var eolAccountOwner_Application_Rights = new List<string>() { "Release_ViewLimitedDetails", "Release_ViewDetails" };
-            var superUser_Application_Rights = new List<string>() { "Release_ViewLimitedDetails", "Release_ViewDetails", "Release_ViewCompleteDetails" };
+            var superUser_Application_Rights = new List<string>() { "Release_ViewLimitedDetails", "Release_ViewDetails", "Release_ViewCompleteDetails", "Versions_Allocate" };
             var committeeOfficial_Application_Rights = new List<string>() { "Release_ViewLimitedDetails", "Release_ViewDetails", "Release_Close" };
             var committeeOfficial_Committee_Rights = new Dictionary<int, List<string>>();
             committeeOfficial_Committee_Rights.Add(UserRolesFakeRepository.TB_ID1, new List<string> { "Versions_Allocate" });
