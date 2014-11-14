@@ -135,7 +135,7 @@
                     <ItemTemplate>
                         <div class="text-center">                            
                             <asp:HyperLink ID="lnkFtpDownload" runat="server" Text='<%# DataBinder.Eval(Container.DataItem,"Version")%>' 
-                                Target="_blank" NavigateUrl='<%# DataBinder.Eval(Container.DataItem,"Location")%>'/>
+                                NavigateUrl='<%# DataBinder.Eval(Container.DataItem,"Location")%>'/>
                         </div>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
