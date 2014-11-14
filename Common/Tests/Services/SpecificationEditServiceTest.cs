@@ -437,10 +437,10 @@ namespace Etsi.Ultimate.Tests.Services
         private IDbSet<Specification> GetSpecs()
         {
             var list = new SpecificationFakeDBSet();
-            list.Add(new Specification() { Pk_SpecificationId = 1, Number = "01.01", IsActive = true, IsUnderChangeControl = true });
-            list.Add(new Specification() { Pk_SpecificationId = 2, Number = "12.123", IsActive = true, IsUnderChangeControl = false });
-            list.Add(new Specification() { Pk_SpecificationId = 3, Number = "12.189", IsActive = true });
-            list.Add(new Specification() { Pk_SpecificationId = 4, Number = "02.72", IsActive = true });
+            list.Add(new Specification() { Pk_SpecificationId = 1, Number = "01.01", Title="Spec 1", IsActive = true, IsUnderChangeControl = true });
+            list.Add(new Specification() { Pk_SpecificationId = 2, Number = "12.123", Title = "Spec 2", IsActive = true, IsUnderChangeControl = false });
+            list.Add(new Specification() { Pk_SpecificationId = 3, Number = "12.189", Title = "Spec 3", IsActive = true });
+            list.Add(new Specification() { Pk_SpecificationId = 4, Number = "02.72", Title = "Spec 4", IsActive = true });
             return list;
         }
         private IDbSet<View_Persons> Persons()
@@ -472,8 +472,8 @@ namespace Etsi.Ultimate.Tests.Services
             get
             {
                 yield return new object[] { NO_EDIT_RIGHT_USER, specIdList, false, "User not allowed to edit a specification" };
-                yield return new object[] { EDIT_RIGHT_USER, specIdList, true, "Following specifications changed to Under Change Control.\n\n\t12.123, 12.189" };
-                yield return new object[] { EDIT_LIMITED_RIGHT_USER, specIdList, true, "Following specifications changed to Under Change Control.\n\n\t12.123, 12.189" };
+                yield return new object[] { EDIT_RIGHT_USER, specIdList, true, "Following specifications changed to Under Change Control.\n\tSpec 2\n\tSpec 3" };
+                yield return new object[] { EDIT_LIMITED_RIGHT_USER, specIdList, true, "Following specifications changed to Under Change Control.\n\tSpec 2\n\tSpec 3" };
                 yield return new object[] { EDIT_RIGHT_USER, specIdsUcc, true, "None of the specifications changed to Under Change Control." };
             }
         }
