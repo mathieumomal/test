@@ -27,7 +27,7 @@ namespace Etsi.Ultimate.Tests.Business
             UserRightsContainer userRights = new UserRightsContainer();
             userRights.AddRight(Enum_UserRights.Specification_Create);
             userRights.AddRight(Enum_UserRights.Specification_EditLimitted);
-            userRights.AddRight(Enum_UserRights.Specification_InhibitPromote);
+            userRights.AddRight(Enum_UserRights.Specification_Promote);
             var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
             mockRightsManager.Stub(x => x.GetRights(personId)).Return(userRights);
             ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
@@ -94,7 +94,7 @@ namespace Etsi.Ultimate.Tests.Business
             UserRightsContainer userRights = new UserRightsContainer();
             userRights.AddRight(Enum_UserRights.Specification_Create);
             userRights.AddRight(Enum_UserRights.Specification_EditLimitted);
-            userRights.AddRight(Enum_UserRights.Specification_InhibitPromote);
+            userRights.AddRight(Enum_UserRights.Specification_Promote);
             var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
             mockRightsManager.Stub(x => x.GetRights(personId)).Return(userRights);
             ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);

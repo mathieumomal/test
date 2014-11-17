@@ -81,7 +81,8 @@ namespace Etsi.Ultimate.Module.Specifications
                     imgForceTransposition.Visible = userRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
                     imgUnforceTransposition.Visible = userRights.HasRight(Enum_UserRights.Specification_UnforceTransposition);
 
-                    imgInhibitPromote.Visible = imgPromoteSpec.Visible = userRights.HasRight(Enum_UserRights.Specification_InhibitPromote);
+                    imgInhibitPromote.Visible = userRights.HasRight(Enum_UserRights.Specification_InhibitPromote);
+                    imgPromoteSpec.Visible = userRights.HasRight(Enum_UserRights.Specification_Promote);
                     imgRemoveInhibitPromote.Visible = userRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote);
 
 

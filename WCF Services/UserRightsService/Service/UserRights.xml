@@ -121,6 +121,7 @@
         <Right value="Specification_EditFull"/>
         <Right value="Specification_ForceTransposition"/>
         <Right value="Specification_InhibitPromote"/>
+        <Right value="Specification_Promote"/>		
         <Right value="Specification_ManageITURecommendations"/>
         <Right value="Specification_RemoveInhibitPromote"/>
         <Right value="Specification_SyncHardLinksOnLatestFolder"/>
@@ -169,6 +170,7 @@
         <Right value="Specification_EditFull"/>
         <Right value="Specification_ForceTransposition"/>
         <Right value="Specification_InhibitPromote"/>
+        <Right value="Specification_Promote"/>
         <Right value="Specification_ManageITURecommendations"/>
         <Right value="Specification_RemoveInhibitPromote"/>
         <Right value="Specification_SyncHardLinksOnLatestFolder"/>

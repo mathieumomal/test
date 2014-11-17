@@ -392,22 +392,30 @@ namespace Etsi.Ultimate.Business
             //Get the latest release
             var latestRelease = releases.OrderByDescending(x => x.SortOrder ?? 0).FirstOrDefault();
 
-            //InhibitPromote button should display only on latest spec_release, But, it should not display if it is already promoted to latest release
+            //Promote button should display only on latest spec_release, But, it should not display if it is already promoted to latest release
+            if (userRights.HasRight(Enum_UserRights.Specification_Promote)
+                && (latestSpecRelease.Fk_ReleaseId == releaseId)
+                && (latestRelease.Pk_ReleaseId != releaseId)
+                && (!spec.promoteInhibited.GetValueOrDefault())
+                && (spec.IsActive))
+            {
+                rights.AddRight(Enum_UserRights.Specification_Promote);
+            }
+
+            //InhibitPromote button should display only on latest spec_release
             // Test the right of the user to InhibitPromote
             if (userRights.HasRight(Enum_UserRights.Specification_InhibitPromote)
                 && (latestSpecRelease.Fk_ReleaseId == releaseId)
-                && (latestRelease.Pk_ReleaseId != releaseId)
                 && (!spec.promoteInhibited.GetValueOrDefault())
                 && (spec.IsActive))
             {
                 rights.AddRight(Enum_UserRights.Specification_InhibitPromote);
             }
 
-            //RemoveInhibitPromote button should display only on latest spec_release, But, it should not display if it is already promoted to latest release
+            //RemoveInhibitPromote button should display only on latest spec_release
             // Test the right of the user to remove InhibitPromote
             if (userRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote)
                 && (latestSpecRelease.Fk_ReleaseId == releaseId)
-                && (latestRelease.Pk_ReleaseId != releaseId)
                 && (spec.promoteInhibited.GetValueOrDefault())
                 && (spec.IsActive))
             {

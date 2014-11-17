@@ -40,6 +40,7 @@ namespace Etsi.Ultimate.DomainClasses
         Specification_UnforceTransposition,
         Specification_WithdrawFromRelease,
         Specification_InhibitPromote,
+        Specification_Promote,
         Specification_RemoveInhibitPromote,
         Specification_BulkPromote,
 

@@ -43,7 +43,7 @@ namespace Etsi.Ultimate.Business
             // Get the rights for all the releases.
             var rights = specMgr.GetRightsForSpecReleases(personId, spec);
             var rightsForRelease = rights.OrderByDescending(x => x.Key.Release.SortOrder).FirstOrDefault();
-            if (!rightsForRelease.Value.HasRight(Enum_UserRights.Specification_InhibitPromote))
+            if (!rightsForRelease.Value.HasRight(Enum_UserRights.Specification_Promote))
             {
                 throw new InvalidOperationException("You don't have right to promote specification");
             }
