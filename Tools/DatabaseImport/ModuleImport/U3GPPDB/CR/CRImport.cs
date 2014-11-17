@@ -137,8 +137,8 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
                 newCr.TSGTDoc = Utils.CheckString(legacyCr.Doc_1st_Level, 50, RefImportForLog + " TSG Tdoc ", logId);
                 newCr.WGTDoc = Utils.CheckString(legacyCr.Doc_2nd_Level, 50, RefImportForLog + " WG Tdoc ", logId);
 
-                newCr.TSGSourceOrganizations = Utils.CheckString(legacyCr.Source_1st_Level, 100, RefImportForLog + " TSGSourceOrganization ", logId);
-                newCr.WGSourceOrganizations = Utils.CheckString(legacyCr.Source_2nd_Level, 100, RefImportForLog + " WGSourceOrganization ", logId);
+                newCr.TSGSourceOrganizations = Utils.CheckString(legacyCr.Source_1st_Level, 200, RefImportForLog + " TSGSourceOrganization ", logId);
+                newCr.WGSourceOrganizations = Utils.CheckString(legacyCr.Source_2nd_Level, 200, RefImportForLog + " WGSourceOrganization ", logId);
 
                 TsgwgTargetCase(newCr, legacyCr, logId);
 

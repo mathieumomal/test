@@ -279,12 +279,12 @@
           <Property Name="Pk_ChangeRequest" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
           <Property Name="CRNumber" Type="varchar" Nullable="false" MaxLength="10" />
           <Property Name="Revision" Type="int" />
-          <Property Name="Subject" Type="varchar" MaxLength="300" />
+          <Property Name="Subject" Type="varchar" MaxLength="1000" />
           <Property Name="Fk_TSGStatus" Type="int" />
           <Property Name="Fk_WGStatus" Type="int" />
           <Property Name="CreationDate" Type="datetime" />
-          <Property Name="TSGSourceOrganizations" Type="varchar" MaxLength="100" />
-          <Property Name="WGSourceOrganizations" Type="varchar" MaxLength="100" />
+          <Property Name="TSGSourceOrganizations" Type="varchar" MaxLength="200" />
+          <Property Name="WGSourceOrganizations" Type="varchar" MaxLength="200" />
           <Property Name="TSGMeeting" Type="int" />
           <Property Name="TSGTarget" Type="int" />
           <Property Name="WGSourceForTSG" Type="int" />
@@ -603,8 +603,8 @@
           <Property Name="CreationDate" Type="datetime" Nullable="false" />
           <Property Name="WorkPlanFilePath" Type="nvarchar" Nullable="false" MaxLength="255" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.ETSI_WorkItem » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.ETSI_WorkItem' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="ETSI_WorkItem">
           <Key>
@@ -613,8 +613,8 @@
           <Property Name="WKI_ID" Type="int" Nullable="false" />
           <Property Name="WKI_REFERENCE" Type="varchar" MaxLength="30" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.ResponsibleGroup_Secretary » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.ResponsibleGroup_Secretary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="ResponsibleGroup_Secretary">
           <Key>
@@ -625,8 +625,8 @@
           <Property Name="PersonId" Type="int" Nullable="false" />
           <Property Name="roleExpirationDate" Type="datetime" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_AdHoc_Roles » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.Users_AdHoc_Roles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="Users_AdHoc_Roles">
           <Key>
@@ -637,8 +637,8 @@
           <Property Name="PERSON_ID" Type="nvarchar" MaxLength="3750" />
           <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="50" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_Groups » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.Users_Groups' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="Users_Groups">
           <Key>
@@ -653,8 +653,8 @@
           <Property Name="INTERNET_ADD" Type="varchar" MaxLength="100" />
           <Property Name="END_DATE" Type="datetime" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Communities » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.View_Communities' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="View_Communities">
           <Key>
@@ -668,8 +668,8 @@
           <Property Name="ActiveCode" Type="varchar" MaxLength="12" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Meetings » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.View_Meetings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="View_Meetings">
           <Key>
@@ -706,8 +706,8 @@
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
           <Property Name="MtgShortRef" Type="varchar" MaxLength="50" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_ModulesPages » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.View_ModulesPages' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="View_ModulesPages">
           <Key>
@@ -721,8 +721,8 @@
           <Property Name="ModuleID" Type="int" Nullable="false" />
           <Property Name="TabID" Type="int" Nullable="false" />
         </EntityType>
-        <!--Erreurs détectées durant la génération :
-      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Persons » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+        <!--Errors Found During Generation:
+      warning 6002: The table/view 'U3GPPDB.dbo.View_Persons' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
       -->
         <EntityType Name="View_Persons">
           <Key>
@@ -2163,12 +2163,12 @@
           <Property Type="Int32" Name="Pk_ChangeRequest" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Type="String" Name="CRNumber" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="Revision" />
-          <Property Type="String" Name="Subject" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Subject" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="Fk_TSGStatus" />
           <Property Type="Int32" Name="Fk_WGStatus" />
           <Property Type="DateTime" Name="CreationDate" Precision="3" />
-          <Property Type="String" Name="TSGSourceOrganizations" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="WGSourceOrganizations" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="TSGSourceOrganizations" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="WGSourceOrganizations" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="TSGMeeting" />
           <Property Type="Int32" Name="TSGTarget" />
           <Property Type="Int32" Name="WGSourceForTSG" />

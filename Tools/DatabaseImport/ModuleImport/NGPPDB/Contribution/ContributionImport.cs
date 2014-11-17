@@ -109,7 +109,7 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
                     var newTDoc = new Etsi.Ngppdb.DomainClasses.Contribution
                     {
                         uid = Utils.CheckString(legacyTdoc.doc_tdoc, 200, RefImportForLog + " UID ", legacyTdoc.doc_tdoc),
-                        title = Utils.CheckString(legacyTdoc.doc_title, 200, RefImportForLog + " Title ", legacyTdoc.doc_tdoc),
+                        title = Utils.CheckString(legacyTdoc.doc_title, 1000, RefImportForLog + " Title ", legacyTdoc.doc_tdoc),
                         MainContact = "Import from MS Access",
                         fk_Owner = 0,
                         Denorm_Source = Utils.CheckString(legacyTdoc.doc_source, 500, RefImportForLog + " Source ", legacyTdoc.doc_tdoc),
