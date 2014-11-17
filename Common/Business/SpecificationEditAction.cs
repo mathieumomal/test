@@ -302,34 +302,6 @@ namespace Etsi.Ultimate.Business
             specRapporteursToUpdate.ToList().ForEach(x => currentSpec.SpecificationRapporteurs.ToList().Find(y => y.Fk_RapporteurId == x.Fk_RapporteurId).IsPrime = x.IsPrime);
             var specRapporteursToDelete = currentSpec.SpecificationRapporteurs.ToList().Where(x => newSpec.SpecificationRapporteurs.ToList().All(y => y.Fk_RapporteurId != x.Fk_RapporteurId));
             specRapporteursToDelete.ToList().ForEach(x => specRepo.MarkDeleted<SpecificationRapporteur>(x));
-
-            //Spec-Release Remarks (Insert / Update)
-            currentSpec.Specification_Release.ToList().ForEach(currentSpecRelease =>
-            {
-                var newSpecRelease = newSpec.Specification_Release.ToList().Where(specRelease => specRelease.Pk_Specification_ReleaseId == currentSpecRelease.Pk_Specification_ReleaseId).FirstOrDefault();
-                if (newSpecRelease != null)
-                {
-                    var specReleaseRemarksToInsert = newSpecRelease.Remarks.ToList().Where(x => currentSpecRelease.Remarks.ToList().All(y => y.Pk_RemarkId != x.Pk_RemarkId));
-                    specReleaseRemarksToInsert.ToList().ForEach(x => x.Fk_PersonId = personId);
-                    specReleaseRemarksToInsert.ToList().ForEach(x => currentSpecRelease.Remarks.Add(x));
-                    var specReleaseRemarksToUpdate = newSpecRelease.Remarks.ToList().Where(x => currentSpecRelease.Remarks.ToList().Any(y => y.Pk_RemarkId == x.Pk_RemarkId && y.IsPublic != x.IsPublic));
-                    specReleaseRemarksToUpdate.ToList().ForEach(x => currentSpecRelease.Remarks.ToList().Find(y => y.Pk_RemarkId == x.Pk_RemarkId).IsPublic = x.IsPublic);
-                }
-            });
-
-            //Spec Version Remarks (Insert / Update)
-            currentSpec.Versions.ToList().ForEach(currentSpecVersion =>
-            {
-                var newSpecVersion = newSpec.Versions.ToList().Where(specVersion => specVersion.Pk_VersionId == currentSpecVersion.Pk_VersionId).FirstOrDefault();
-                if (newSpecVersion != null)
-                {
-                    var specVersionRemarksToInsert = newSpecVersion.Remarks.ToList().Where(x => currentSpecVersion.Remarks.ToList().All(y => y.Pk_RemarkId != x.Pk_RemarkId));
-                    specVersionRemarksToInsert.ToList().ForEach(x => x.Fk_PersonId = personId);
-                    specVersionRemarksToInsert.ToList().ForEach(x => currentSpecVersion.Remarks.Add(x));
-                    var specVersionRemarksToUpdate = newSpecVersion.Remarks.ToList().Where(x => currentSpecVersion.Remarks.ToList().Any(y => y.Pk_RemarkId == x.Pk_RemarkId && y.IsPublic != x.IsPublic));
-                    specVersionRemarksToUpdate.ToList().ForEach(x => currentSpecVersion.Remarks.ToList().Find(y => y.Pk_RemarkId == x.Pk_RemarkId).IsPublic = x.IsPublic);
-                }
-            });
         }
 
         /// <summary>
