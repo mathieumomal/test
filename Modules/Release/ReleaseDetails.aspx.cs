@@ -8,6 +8,7 @@ using Telerik.Web.UI;
 using Domain = Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Controls;
+using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Module.Release
 {
@@ -313,14 +314,23 @@ namespace Etsi.Ultimate.Module.Release
                 var mtg = mtgControl.SelectedMeeting;
 
                 IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
-
+                
                 if ((mtg == null) || ((svc.GetReleaseById(UserId, ReleaseId.Value).Key.Stage3FreezeDate ?? default(DateTime)) <= mtg.END_DATE))
                 {
+                    ServiceResponse<bool> response;
                     if (mtg == null)
-                        svc.FreezeRelease(ReleaseId.Value, null, UserId, null, null);
+                        response = svc.FreezeRelease(ReleaseId.Value, null, UserId, null, null);
                     else
-                        svc.FreezeRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), UserId, mtg.MTG_ID, mtg.MtgShortRef);
-                    this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
+                        response = svc.FreezeRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), UserId, mtg.MTG_ID, mtg.MtgShortRef);
+
+                    if (response.Result)
+                    {
+                        this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
+                    }
+                    else if (response.Report.GetNumberOfErrors() > 0)
+                    {
+                        RadWindowManager1.RadAlert("Error occurred: " + response.Report.ErrorList.First(), 400, 150, "Error", "window.radopen(null, 'RadWindow_FreezeConfirmation')", "images/error.png");
+                    }
                 }
                 else
                     RadWindowManager1.RadAlert("End date must be greater than Freeze stage 3 date.", 400, 150, "Error", "window.radopen(null, 'RadWindow_FreezeConfirmation')", "images/error.png");
@@ -342,11 +352,20 @@ namespace Etsi.Ultimate.Module.Release
 
                 IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
 
+                ServiceResponse<bool> response;
                 if (mtg == null)
-                    svc.CloseRelease(ReleaseId.Value, null, null, null, UserId);
+                    response = svc.CloseRelease(ReleaseId.Value, null, null, null, UserId);
                 else
-                    svc.CloseRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), mtg.MtgShortRef, mtg.MTG_ID, UserId);
-                this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
+                    response = svc.CloseRelease(ReleaseId.Value, (mtg.END_DATE ?? default(DateTime)), mtg.MtgShortRef, mtg.MTG_ID, UserId);
+
+                if (response.Result)
+                {
+                    this.ClientScript.RegisterClientScriptBlock(this.GetType(), "Close", "window.close(); window.opener.location.reload(true);", true);
+                }
+                else if (response.Report.GetNumberOfErrors() > 0)
+                {
+                    RadWindowManager1.RadAlert("Error occurred: " + response.Report.ErrorList.First(), 400, 150, "Error", "window.radopen(null, 'RadWindow_FreezeConfirmation')", "images/error.png");
+                }
             }
         }
     }

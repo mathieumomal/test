@@ -33,7 +33,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="closureMtgRef">Closure Meeting Reference</param>
         /// <param name="closureMtgId">Closure Meeting ID</param>
         /// <param name="personID">Person ID</param>
-        void CloseRelease(int releaseId, DateTime? closureDate, string closureMtgRef, int? closureMtgId, int personID);
+        ServiceResponse<bool> CloseRelease(int releaseId, DateTime? closureDate, string closureMtgRef, int? closureMtgId, int personID);
 
         /// <summary>
         /// Creates the release
@@ -60,7 +60,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId">Person ID</param>
         /// <param name="FreezeMtgId">Freeze Meeting ID</param>
         /// <param name="FreezeMtgRef">Freeze Meeting Reference</param>
-        void FreezeRelease(int releaseId, DateTime? endDate, int personId, int? FreezeMtgId, string FreezeMtgRef);
+        ServiceResponse<bool> FreezeRelease(int releaseId, DateTime? endDate, int personId, int? FreezeMtgId, string FreezeMtgRef);
 
         /// <summary>
         /// Lists all the releases

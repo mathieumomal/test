@@ -85,12 +85,12 @@ namespace Etsi.Ultimate.Services
             throw new NotImplementedException();
         }
 
-        public void FreezeRelease(int releaseId, DateTime? endDate, int personId, int? FreezeMtgId, string FreezeMtgRef)
+        public ServiceResponse<bool> FreezeRelease(int releaseId, DateTime? endDate, int personId, int? FreezeMtgId, string FreezeMtgRef)
         {
             throw new NotImplementedException();
         }
 
-        public void CloseRelease(int releaseId, DateTime? closureDate, string closureMtgRef, int? closureMtgId, int personID)
+        public ServiceResponse<bool> CloseRelease(int releaseId, DateTime? closureDate, string closureMtgRef, int? closureMtgId, int personID)
         {
             throw new NotImplementedException();
         }

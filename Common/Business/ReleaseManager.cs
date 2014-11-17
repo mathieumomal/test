@@ -118,8 +118,21 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId">Person ID</param>
         /// <param name="FreezeMtgId">Freeze Meeting ID</param>
         /// <param name="FreezeMtgRef">Freeze Meeting Reference</param>
-        public void FreezeRelease(int releaseId, DateTime? endDate, int personId, int? FreezeMtgId, string FreezeMtgRef)
+        public ServiceResponse<bool> FreezeRelease(int releaseId, DateTime? endDate, int personId, int? FreezeMtgId, string FreezeMtgRef)
         {
+            var response = new ServiceResponse<bool> { Result = true };
+
+            // First check that user has right to Freeze the release
+            var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
+            var rights = rightsMgr.GetRights(personId);
+            if (!rights.HasRight(Enum_UserRights.Release_Freeze))
+            {
+                response.Result = false;
+                response.Report.LogError(Localization.RightError);
+                return response;
+            }
+
+
             releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
             releaseRepo.UoW = UoW;
 
@@ -182,6 +195,7 @@ namespace Etsi.Ultimate.Business
             //Transposition
 
             ClearCache();
+            return response;
         }
 
         /// <summary>
@@ -192,8 +206,20 @@ namespace Etsi.Ultimate.Business
         /// <param name="closureMtgRef">Closure Meeting Reference</param>
         /// <param name="closureMtgId">Closure Meeting Reference ID</param>
         /// <param name="personID">Person ID</param>
-        public void CloseRelease(int releaseId, DateTime? closureDate, string closureMtgRef, int? closureMtgId, int personID)
+        public ServiceResponse<bool> CloseRelease(int releaseId, DateTime? closureDate, string closureMtgRef, int? closureMtgId, int personID)
         {
+            var response = new ServiceResponse<bool> { Result = true };
+
+            // First check that user has right to close the release
+            var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
+            var rights = rightsMgr.GetRights(personID);
+            if (!rights.HasRight(Enum_UserRights.Release_Close))
+            {
+                response.Result = false;
+                response.Report.LogError(Localization.RightError);
+                return response;
+            }
+
             releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
             releaseRepo.UoW = UoW;
 
@@ -224,6 +250,8 @@ namespace Etsi.Ultimate.Business
             historyRepo.InsertOrUpdate(history);
 
             ClearCache();
+
+            return response;
         }
 
         /// <summary>

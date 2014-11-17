@@ -203,7 +203,14 @@ namespace Etsi.Ultimate.Tests.Services
             DateTime closureDate = DateTime.Now;
             string meetingRef = "S6-25";
             int meetingRefId = 21;
-            int personID = 12;
+            int personId = 12;
+
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            var rights = new UserRightsContainer();
+            rights.AddRight(Enum_UserRights.Release_Close);
+            mockRightsManager.Stub(x => x.GetRights(personId)).Return(rights);
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(new UserRightsContainer());
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
 
             ReleaseFakeRepository releaseFakeRepository = new ReleaseFakeRepository();
             var releaseStatus = new Enum_ReleaseStatusFakeDBSet();
@@ -218,17 +225,37 @@ namespace Etsi.Ultimate.Tests.Services
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
             var releaseService = new ReleaseService();
-            releaseService.CloseRelease(releaseIdToTest, closureDate, meetingRef, meetingRefId, personID);
+            releaseService.CloseRelease(releaseIdToTest, closureDate, meetingRef, meetingRefId, personId);
 
             mockDataContext.AssertWasCalled(x => x.SetModified(Arg<Release>.Matches(y => y.Fk_ReleaseStatus == 3 && y.Enum_ReleaseStatus == null
                                                                                                                 && y.ClosureDate == closureDate
                                                                                                                 && y.ClosureMtgRef == meetingRef
                                                                                                                 && y.ClosureMtgId == meetingRefId)));
-            mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<History>.Matches(y => y.Fk_ReleaseId == releaseIdToTest && y.Fk_PersonId == personID
+            mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<History>.Matches(y => y.Fk_ReleaseId == releaseIdToTest && y.Fk_PersonId == personId
                                                                                                     && y.HistoryText == String.Format("Release closed. Changes:<br />Closure date:  (None) => {0} (S6-25)", closureDate.ToString("yyyy-MM-dd")))));
             mockDataContext.AssertWasCalled(x => x.SaveChanges(), y => y.Repeat.Once());
 
             mockDataContext.VerifyAllExpectations();
+        }
+
+        [Test, Description("System throws error if user has no right to close release")]
+        public void CloseRelease_ThrowsErrorIfUserHasNoRight()
+        {
+            int releaseIdToTest = 1;
+            DateTime closureDate = DateTime.Now;
+            string meetingRef = "S6-25";
+            int meetingRefId = 21;
+
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(new UserRightsContainer());
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            var releaseService = new ReleaseService();
+            var response = releaseService.CloseRelease(releaseIdToTest, closureDate, meetingRef, meetingRefId, 0);
+
+            Assert.IsFalse(response.Result);
+            Assert.AreEqual(1, response.Report.GetNumberOfErrors());
+            Assert.AreEqual(Localization.RightError, response.Report.ErrorList.First());
         }
 
         [Test]
@@ -360,16 +387,21 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void Test_FreezeRelease()
         {
-            //User Right
-            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
-            mockRightsManager.Stub(x => x.GetRights(0)).Return(new UserRightsContainer());
-            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
-
             int releaseIdToTest = 1;
             DateTime FreezeDate = DateTime.Now;
             string FreezeRef = "S6-25";
             int FreezeRefId = 21;
-            int personID = 12;
+            int personId = 12;
+            
+            //User Right
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            var rights = new UserRightsContainer();
+            rights.AddRight(Enum_UserRights.Release_Freeze);
+            mockRightsManager.Stub(x => x.GetRights(personId)).Return( rights );
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(new UserRightsContainer());
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            
 
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)GetReleases());
@@ -382,17 +414,39 @@ namespace Etsi.Ultimate.Tests.Services
 
             //Freeze a release
             var releaseService = new ReleaseService();
-            releaseService.FreezeRelease(releaseIdToTest, FreezeDate, personID, FreezeRefId, FreezeRef);
+            releaseService.FreezeRelease(releaseIdToTest, FreezeDate, personId, FreezeRefId, FreezeRef);
 
             mockDataContext.AssertWasCalled(x => x.SetModified(Arg<Release>.Matches(y => y.Fk_ReleaseStatus == 2 && y.Enum_ReleaseStatus == null
                                                                                                                 && y.EndDate == FreezeDate)));
 
-            mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<History>.Matches(y => y.Fk_ReleaseId == releaseIdToTest && y.Fk_PersonId == personID
+            mockDataContext.AssertWasCalled(x => x.SetAdded(Arg<History>.Matches(y => y.Fk_ReleaseId == releaseIdToTest && y.Fk_PersonId == personId
                                                                                                     && y.HistoryText == String.Format("Release frozen. Changes:<br />End date:  (None) => {0} (S6-25)", FreezeDate.ToString("yyyy-MM-dd")))));
             mockDataContext.AssertWasCalled(x => x.SaveChanges(), y => y.Repeat.Once());
 
             mockDataContext.VerifyAllExpectations();
         }
+
+        [Test, Description("System returns error if user does not have right to freeze release")]
+        public void FreezeRelease_ReturnsErrorIfUserHasNoRight()
+        {
+            int releaseIdToTest = 1;
+            DateTime FreezeDate = DateTime.Now;
+            string FreezeRef = "S6-25";
+            int FreezeRefId = 21;
+            
+            // User has no right
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            var rights = new UserRightsContainer();
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(rights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            var releaseService = new ReleaseService();
+            var response = releaseService.FreezeRelease(releaseIdToTest, FreezeDate, 0, FreezeRefId, FreezeRef);
+            Assert.IsFalse(response.Result);
+            Assert.AreEqual(1, response.Report.GetNumberOfErrors());
+            Assert.AreEqual(Localization.RightError, response.Report.ErrorList.First());
+        }
+
 
         #region datas
         private IDbSet<Specification> GetSpecs()
