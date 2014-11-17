@@ -85,7 +85,7 @@ namespace Etsi.Ultimate.Business
                 {
                     if (!x.IsUnderChangeControl.GetValueOrDefault())
                     {
-                        specNumbers.Add(x.Title);
+                        specNumbers.Add(x.Number + ": " + x.Title);
                         x.IsUnderChangeControl = true;
                     }
                 });
@@ -98,7 +98,7 @@ namespace Etsi.Ultimate.Business
             else
             {
                 statusChangeReport.Result = false;
-                statusChangeReport.Report.LogError("User not allowed to edit a specification");
+                statusChangeReport.Report.LogError(Localization.GenericError);
             }
 
             return statusChangeReport;
@@ -111,7 +111,8 @@ namespace Etsi.Ultimate.Business
         public static void CheckNumber(Specification spec, UserRightsContainer userRights, IUltimateUnitOfWork UoW, ISpecificationRepository specRepo)
         {
             //Throw an error if the user don't have the right to modify the spec number
-            if(!userRights.HasRight(Enum_UserRights.Specification_EditFull)){
+            if (!userRights.HasRight(Enum_UserRights.Specification_EditFull))
+            {
                 throw new InvalidOperationException("You don't have the right to edit a specification number");
             }
             if (!String.IsNullOrEmpty(spec.Number))
@@ -135,7 +136,7 @@ namespace Etsi.Ultimate.Business
                 {
                     spec.Fk_SerieId = serie.Pk_Enum_SerieId;
                 }
-                
+
                 //Check the spec number and define if this number define the spec as inhibit to promote
                 specMgr.PutSpecAsInhibitedToPromote(spec);
             }
@@ -143,7 +144,7 @@ namespace Etsi.Ultimate.Business
             {
                 spec.Fk_SerieId = null;
             }
-            
+
         }
 
         /// <summary>

@@ -471,9 +471,9 @@ namespace Etsi.Ultimate.Tests.Services
         {
             get
             {
-                yield return new object[] { NO_EDIT_RIGHT_USER, specIdList, false, "User not allowed to edit a specification" };
-                yield return new object[] { EDIT_RIGHT_USER, specIdList, true, "Following specifications changed to Under Change Control.\n\tSpec 2\n\tSpec 3" };
-                yield return new object[] { EDIT_LIMITED_RIGHT_USER, specIdList, true, "Following specifications changed to Under Change Control.\n\tSpec 2\n\tSpec 3" };
+                yield return new object[] { NO_EDIT_RIGHT_USER, specIdList, false, Localization.GenericError };
+                yield return new object[] { EDIT_RIGHT_USER, specIdList, true, "Following specifications changed to Under Change Control.\n\t12.123: Spec 2\n\t12.189: Spec 3" };
+                yield return new object[] { EDIT_LIMITED_RIGHT_USER, specIdList, true, "Following specifications changed to Under Change Control.\n\t12.123: Spec 2\n\t12.189: Spec 3" };
                 yield return new object[] { EDIT_RIGHT_USER, specIdsUcc, true, "None of the specifications changed to Under Change Control." };
             }
         }
