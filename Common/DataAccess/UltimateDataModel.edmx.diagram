@@ -52,7 +52,7 @@
         </AssociationConnector>
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.SpecifcationsGenealogy" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.ETSI_WorkItem" Width="1.5" PointX="3.9823988843627269" PointY="25.159896296057802" />
-        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SpecVersion" Width="1.5" PointX="19.625" PointY="23.375" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.SpecVersion" Width="2" PointX="19.625" PointY="23.375" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.Version_FK_ReleaseID" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.FK_Remarks_Version" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.Version_FK_SpecificationID" />

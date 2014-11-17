@@ -105,6 +105,22 @@ namespace Etsi.Ultimate.Tests.Repositories
 
         }
 
+        [TestCase("A", 2, "Ar2\n")]
+        [TestCase("A", 0, "A\n")]
+        [TestCase("", 0, "")]
+        [TestCase(null, null, "")]
+        public void should_have_related_Cr_tooltip(string cRnumber, int revision, string expectedResult)
+        {
+            var uow = GetUnitOfWork();
+            uow.Context.SpecVersions.FirstOrDefault().FoundationsChangeRequests = new List<ChangeRequest>
+            {
+                new ChangeRequest{CRNumber = cRnumber, Revision = revision}
+            };
+            var repo = new SpecVersionsRepository(uow) {UoW = uow};
+
+            Assert.AreEqual(expectedResult, repo.GetVersionsForSpecRelease(1, 1)[0].RelatedCRsTooltip);
+        }
+
         /// <summary>
         /// Create Mocks to simulate DB with objects
         /// </summary>
@@ -117,7 +133,7 @@ namespace Etsi.Ultimate.Tests.Repositories
             rmkDbSet.Add(new Remark() { Pk_RemarkId = 2, RemarkText = "Remark 2", Fk_VersionId = 2 });
 
             var dbSet = new SpecVersionFakeDBSet();
-            dbSet.Add(new SpecVersion() 
+            dbSet.Add(new SpecVersion
             { 
                 Pk_VersionId = 1, 
                 Multifile = false, 
@@ -125,11 +141,11 @@ namespace Etsi.Ultimate.Tests.Repositories
                 Location = "Location1",
                 Fk_ReleaseId = 1, 
                 Fk_SpecificationId = 1, 
-                Remarks = new List<Remark>() { rmkDbSet.ToList()[0] }, 
+                Remarks = new List<Remark> { rmkDbSet.ToList()[0] }, 
                 Release = new Release(),
                 Specification = new Specification()
             });
-            dbSet.Add(new SpecVersion()
+            dbSet.Add(new SpecVersion
             {
                 Pk_VersionId = 2,
                 Multifile = false,
@@ -137,7 +153,7 @@ namespace Etsi.Ultimate.Tests.Repositories
                 Location = "Location2",
                 Fk_ReleaseId = 2,
                 Fk_SpecificationId = 1,
-                Remarks = new List<Remark>() { rmkDbSet.ToList()[1] },
+                Remarks = new List<Remark> { rmkDbSet.ToList()[1] },
                 Release = new Release(),
                 Specification = new Specification(),
             });

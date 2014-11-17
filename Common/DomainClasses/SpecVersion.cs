@@ -18,8 +18,8 @@ namespace Etsi.Ultimate.DomainClasses
         public SpecVersion()
         {
             this.Remarks = new HashSet<Remark>();
-            this.ChangeRequests = new HashSet<ChangeRequest>();
-            this.ChangeRequests1 = new HashSet<ChangeRequest>();
+            this.CurrentChangeRequests = new HashSet<ChangeRequest>();
+            this.FoundationsChangeRequests = new HashSet<ChangeRequest>();
             this.SyncInfoes = new HashSet<SyncInfo>();
         }
     
@@ -45,8 +45,8 @@ namespace Etsi.Ultimate.DomainClasses
         public virtual Release Release { get; set; }
         public virtual ICollection<Remark> Remarks { get; set; }
         public virtual Specification Specification { get; set; }
-        public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
-        public virtual ICollection<ChangeRequest> ChangeRequests1 { get; set; }
+        public virtual ICollection<ChangeRequest> CurrentChangeRequests { get; set; }
+        public virtual ICollection<ChangeRequest> FoundationsChangeRequests { get; set; }
         public virtual ICollection<SyncInfo> SyncInfoes { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }

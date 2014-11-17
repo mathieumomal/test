@@ -2089,8 +2089,8 @@
           <NavigationProperty Name="Release" Relationship="Etsi.Ultimate.DataAccess.Version_FK_ReleaseID" FromRole="Version" ToRole="Release" />
           <NavigationProperty Name="Remarks" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_Version" FromRole="Version" ToRole="Remark" />
           <NavigationProperty Name="Specification" Relationship="Etsi.Ultimate.DataAccess.Version_FK_SpecificationID" FromRole="Version" ToRole="Specification" />
-          <NavigationProperty Name="ChangeRequests" Relationship="Etsi.Ultimate.DataAccess.FK_CRCurrentVersion" FromRole="SpecVersion" ToRole="ChangeRequest" />
-          <NavigationProperty Name="ChangeRequests1" Relationship="Etsi.Ultimate.DataAccess.FK_CRNewVersion" FromRole="SpecVersion" ToRole="ChangeRequest" />
+          <NavigationProperty Name="CurrentChangeRequests" Relationship="Etsi.Ultimate.DataAccess.FK_CRCurrentVersion" FromRole="SpecVersion" ToRole="ChangeRequest" />
+          <NavigationProperty Name="FoundationsChangeRequests" Relationship="Etsi.Ultimate.DataAccess.FK_CRNewVersion" FromRole="SpecVersion" ToRole="ChangeRequest" />
           <NavigationProperty Name="SyncInfoes" Relationship="Etsi.Ultimate.DataAccess.FK_SyncInfo_Version" FromRole="SpecVersion" ToRole="SyncInfo" />
           </EntityType>
         <Association Name="Version_FK_ReleaseID">
