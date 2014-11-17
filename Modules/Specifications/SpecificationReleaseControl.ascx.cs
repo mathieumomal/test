@@ -71,20 +71,25 @@ namespace Etsi.Ultimate.Module.Specifications
             //Load this control only in EditMode & when it has atleast one spec-release mapping
             if ((Request.QueryString["action"] == null || Request.QueryString["action"] != "create") && (DataSource.SpecificationReleases != null && DataSource.SpecificationReleases.Count > 0))
             {
+                var specDecorator = new SpecDecorator();
                 if (!IsPostBack)
                 {
                     foreach (var release in DataSource.SpecificationReleases.OrderByDescending(sr => sr.SortOrder))
                     {
-                        RadPanelItem item = new RadPanelItem();
-                        item.Value = release.Pk_ReleaseId.ToString();
+                        var item = new RadPanelItem {Value = release.Pk_ReleaseId.ToString()};
                         rpbReleases.Items.Add(item);
                     }
 
                     // Get the rights of the user
-                    ISpecificationService specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                    var specSvc = ServicesFactory.Resolve<ISpecificationService>();
                     var userRightsPerSpecRelease = specSvc.GetRightsForSpecReleases(PersonId.GetValueOrDefault(), DataSource);
 
-                    SpecificationBasePage basePage = (SpecificationBasePage)this.Page;
+                    //Get spec decorator data :
+                        //Get versions foundations CRs data
+                    specDecorator.SpecVersionFoundationCrs =
+                        specSvc.GetSpecVersionsFundationCrs(PersonId.GetValueOrDefault(), DataSource.Pk_SpecificationId).Result;
+
+                    var basePage = (SpecificationBasePage)this.Page;
                     basePage.SpecReleaseRights.Clear();
                     userRightsPerSpecRelease.ForEach( x => basePage.SpecReleaseRights.Add(new KeyValuePair<int,UserRightsContainer>(x.Key.Pk_Specification_ReleaseId, x.Value)));
                 }
@@ -111,8 +116,8 @@ namespace Etsi.Ultimate.Module.Specifications
                         isSpecNumberAssigned = false;
 
                     var specRelease = DataSource.Specification_Release.Where(x => x.Fk_ReleaseId.ToString() == item.Value && x.Fk_SpecificationId == DataSource.Pk_SpecificationId).FirstOrDefault();
-                    CustomHeaderTemplate customHeaderTemplate = new CustomHeaderTemplate(specRelease, IsEditMode, this.Page);
-                    CustomContentTemplate customContentTemplate = new CustomContentTemplate(isSpecNumberAssigned, specRelease, versions, IsEditMode, PersonId.GetValueOrDefault(), this.Page, scrollHeight);
+                    var customHeaderTemplate = new CustomHeaderTemplate(specRelease, IsEditMode, this.Page);
+                    var customContentTemplate = new CustomContentTemplate(isSpecNumberAssigned, specRelease, versions, specDecorator, IsEditMode, PersonId.GetValueOrDefault(), this.Page, scrollHeight);
                     item.HeaderTemplate = customHeaderTemplate;
                     item.ApplyHeaderTemplate();
                     item.ContentTemplate = customContentTemplate;

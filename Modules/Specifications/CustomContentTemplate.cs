@@ -18,6 +18,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private List<SpecVersion> _versions;
         private Specification_Release _specRelease;
         private bool _isSpecNumberAssigned;
+        private SpecDecorator _specDecorator;
 
         #endregion
 
@@ -32,7 +33,7 @@ namespace Etsi.Ultimate.Module.Specifications
         /// <param name="personId">Person ID</param>
         /// <param name="page">Page</param>
         /// <param name="scrollHeight">Scroll Height</param>
-        public CustomContentTemplate(bool isSpecNumberAssigned, Specification_Release specRelease, List<SpecVersion> versions, bool isEditMode, int personId, Page page, double scrollHeight)
+        public CustomContentTemplate(bool isSpecNumberAssigned, Specification_Release specRelease, List<SpecVersion> versions, SpecDecorator specDecorator, bool isEditMode, int personId, Page page, double scrollHeight)
         {
             _specRelease = specRelease;
             _versions = versions;
@@ -41,6 +42,7 @@ namespace Etsi.Ultimate.Module.Specifications
             _isEditMode = isEditMode;
             _scrollHeight = scrollHeight;
             _isSpecNumberAssigned = isSpecNumberAssigned;
+            _specDecorator = specDecorator;
         }
 
         #endregion
@@ -64,6 +66,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 ctrl.IsEditMode = _isEditMode;
                 ctrl.ScrollHeight = _scrollHeight;
                 ctrl.IsSpecNumberAssigned = _isSpecNumberAssigned;
+                ctrl.SpecDecorator = _specDecorator;
             }
             container.Controls.Add(ctrl);
         }

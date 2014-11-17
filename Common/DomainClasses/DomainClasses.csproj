@@ -105,6 +105,7 @@
     <Compile Include="ETSI_WorkItem.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Facades\SpecVersionFoundationCrs.cs" />
     <Compile Include="History.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

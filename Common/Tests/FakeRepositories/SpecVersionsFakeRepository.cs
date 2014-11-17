@@ -22,6 +22,11 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             get { return GenerateList(); }
         }
 
+        public List<SpecVersion> GetVersionsWithFoundationsCrsBySpecId(int specId)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<SpecVersion> GetVersionsForSpecRelease(int SpecId, int releaseId)
         {
             throw new NotImplementedException();

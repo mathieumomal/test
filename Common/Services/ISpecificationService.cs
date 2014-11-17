@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.DomainClasses;
+﻿using Etsi.Ultimate.Business.Facades;
+using Etsi.Ultimate.DomainClasses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,14 @@ namespace Etsi.Ultimate.Services
 {
     public interface ISpecificationService
     {
+        /// <summary>
+        /// Get all versions of the spec associated to their foundation CRs
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="specId"></param>
+        /// <returns></returns>
+        ServiceResponse<List<SpecVersionFoundationCrs>> GetSpecVersionsFundationCrs(int personId, int specId);
+
         /// <summary>
         /// Returns A specification details including related remarks, history, Parent/Child specification, and releases
         /// </summary>

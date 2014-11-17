@@ -79,26 +79,5 @@ namespace Etsi.Ultimate.DomainClasses
         }
 
         public string WIReportPath{get;set;}
-
-        public string RelatedCRsTooltip
-        {
-            get
-            {
-                var tooltip = new StringBuilder();
-                if (FoundationsChangeRequests != null)
-                {
-                    foreach (var cr in FoundationsChangeRequests)
-                    {
-                        if (!string.IsNullOrEmpty(cr.CRNumber))
-                            tooltip.Append(cr.CRNumber);
-                        if (cr.Revision != null && cr.Revision != 0)
-                            tooltip.Append("r").Append(cr.Revision);
-                        if (tooltip.Length > 0)
-                            tooltip.Append("\n");
-                    }
-                }
-                return tooltip.ToString();
-            }
-        }
     }
 }

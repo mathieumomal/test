@@ -17,11 +17,6 @@
         padding-right: 3px;
     }
 
-
-    .grid_btn {
-        height: 16px;
-    }
-
     .remarks_btn
     {
         width: 16px;
@@ -35,12 +30,13 @@
     .notAvailable
     {
         opacity: 0.3;
-        cursor:not-allowed !important;
+        cursor:default !important;
     }
 
     .linkStyle
     {
         display:inline-block;
+        height: 16px;
     }
 
     a.disabled
@@ -120,7 +116,7 @@
         <ClientSettings>
             <Scrolling AllowScroll="True" UseStaticHeaders="true" />
         </ClientSettings>
-        <MasterTableView>
+        <MasterTableView DataKeyNames="Pk_VersionId">
             <Columns>
                 <telerik:GridTemplateColumn DataField="Meetings" HeaderText="Meetings" UniqueName="Meetings">
                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="60px" />
@@ -165,12 +161,12 @@
                             >
                             <img border="0" 
                                 src="images/spec_rel-tranSpec.png" 
-                                class='<%# DataBinder.Eval(Container.DataItem, "TranspositionReferenceAndDate") == "" ? "grid_btn notAvailable" : "grid_btn"%>'
+                                class='linkStyle <%# DataBinder.Eval(Container.DataItem, "TranspositionReferenceAndDate") == "" ? "notAvailable" : ""%>'
                                 title='<%# DataBinder.Eval(Container.DataItem,"TranspositionReferenceAndDate")%>' 
                                 />
                         </a>
-                        <asp:ImageButton ID="imgRelatedTDocs" CssClass="grid_btn" ImageUrl="images/spec_rel-TDocs.png" ToolTip="Related TDocs" runat="server" OnClientClick="return false;" />
-                        <asp:ImageButton ID="imgRelatedCRs" CssClass="grid_btn" ImageUrl="images/spec_rel-CRs.png" ToolTip='<%# DataBinder.Eval(Container.DataItem,"RelatedCRsTooltip")%>' runat="server" OnClientClick="return false;" />
+                        <asp:ImageButton ID="imgRelatedTDocs" CssClass="linkStyle" ImageUrl="images/spec_rel-TDocs.png" ToolTip="Related TDocs" runat="server" OnClientClick="return false;" />
+                        <asp:ImageButton ID="imgRelatedCRs" CssClass="linkStyle disabled notAvailable" ImageUrl="images/spec_rel-CRs.png" runat="server" OnClientClick="return false;" />
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
                 <telerik:GridBoundColumn DataField="Source" UniqueName="Source" Display="false"></telerik:GridBoundColumn>

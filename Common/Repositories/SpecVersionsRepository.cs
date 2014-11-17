@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.DataAccess;
-using Etsi.Ultimate.Utils;
-using System.Data.Entity.Core.Objects;
 using System.Data.Entity;
 
 namespace Etsi.Ultimate.Repositories
@@ -45,6 +41,16 @@ namespace Etsi.Ultimate.Repositories
         {
             return AllIncluding(v => v.Remarks, v=> v.Release, v => v.Specification).Where(v => v.Pk_VersionId == id).FirstOrDefault();
         }
+
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <returns></returns>
+        public List<SpecVersion> GetVersionsWithFoundationsCrsBySpecId(int specId)
+        {
+            return AllIncluding(x => x.FoundationsChangeRequests).Where(x => (x.Fk_SpecificationId != null) && x.Fk_SpecificationId.Value == specId).ToList();
+        } 
 
         public List<SpecVersion> GetVersionsForSpecRelease(int specId, int releaseId)
         {
@@ -110,6 +116,13 @@ namespace Etsi.Ultimate.Repositories
     }
     public interface ISpecVersionsRepository : IEntityRepository<SpecVersion>
     {
+        /// <summary>
+        /// Get versions with associated foundations CRs
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <returns></returns>
+        List<SpecVersion> GetVersionsWithFoundationsCrsBySpecId(int specId);
+
         /// <summary>
         /// Return a list of SpecVersion for a specification release
         /// </summary>

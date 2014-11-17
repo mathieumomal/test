@@ -105,22 +105,6 @@ namespace Etsi.Ultimate.Tests.Repositories
 
         }
 
-        [TestCase("A", 2, "Ar2\n")]
-        [TestCase("A", 0, "A\n")]
-        [TestCase("", 0, "")]
-        [TestCase(null, null, "")]
-        public void should_have_related_Cr_tooltip(string cRnumber, int revision, string expectedResult)
-        {
-            var uow = GetUnitOfWork();
-            uow.Context.SpecVersions.FirstOrDefault().FoundationsChangeRequests = new List<ChangeRequest>
-            {
-                new ChangeRequest{CRNumber = cRnumber, Revision = revision}
-            };
-            var repo = new SpecVersionsRepository(uow) {UoW = uow};
-
-            Assert.AreEqual(expectedResult, repo.GetVersionsForSpecRelease(1, 1)[0].RelatedCRsTooltip);
-        }
-
         /// <summary>
         /// Create Mocks to simulate DB with objects
         /// </summary>

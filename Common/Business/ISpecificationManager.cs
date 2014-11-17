@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.Business.Facades;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 
@@ -12,6 +13,14 @@ namespace Etsi.Ultimate.Business
     {
         IUltimateUnitOfWork UoW { get; set; }
 
+        /// <summary>
+        /// Get all versions of the spec associated to their foundation CRs
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="specId"></param>
+        /// <returns></returns>
+        ServiceResponse<List<SpecVersionFoundationCrs>> GetSpecVersionsFundationCrs(int personId, int specId); 
+            
         /// <summary>
         ///  Returns the specification from its ID, as well as the list of rights of the user.
         /// </summary>

@@ -11,7 +11,7 @@ namespace Etsi.Ultimate.Tests.Repositories
     public class CrRepositoryTest : BaseEffortTest
     {
         #region Constants
-        private const int TotalNoOfCrsInCsv = 18;
+        private const int TotalNoOfCrsInCsv = 19;
         private const int SpecificationId = 136080;
         #endregion
 

@@ -1,4 +1,5 @@
 ﻿using Etsi.Ultimate.Business;
+using Etsi.Ultimate.Business.Facades;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using System;
@@ -12,6 +13,21 @@ namespace Etsi.Ultimate.Services
     public class SpecificationService : ISpecificationService
     {
         #region ISpecificationService Members
+
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="specId"></param>
+        /// <returns></returns>
+        public ServiceResponse<List<SpecVersionFoundationCrs>> GetSpecVersionsFundationCrs(int personId, int specId)
+        {
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specificationManager = new SpecificationManager {UoW = uow};
+                return specificationManager.GetSpecVersionsFundationCrs(personId, specId);
+            }
+        }
 
         public string ExportSpecification(int personId, SpecificationSearch searchObj, string baseurl)
         {

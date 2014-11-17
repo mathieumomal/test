@@ -180,6 +180,7 @@
     <Compile Include="Services\SpecDefinitiveWithdrawalTest.cs" />
     <Compile Include="Services\SpecificationCreateServiceTest.cs" />
     <Compile Include="Services\SpecificationEditServiceTest.cs" />
+    <Compile Include="Services\SpecificationServiceIntegrationTest.cs" />
     <Compile Include="Services\SpecificationServiceTest.cs" />
     <Compile Include="Business\WorkItemCsvParserTest.cs" />
     <Compile Include="Business\WorkItemManagerTest.cs" />

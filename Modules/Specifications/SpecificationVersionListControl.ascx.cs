@@ -22,6 +22,8 @@ namespace Etsi.Ultimate.Module.Specifications
         private const string CONST_SELECTED_TAB = "SPEC_SELECTED_TAB";
         private const string CONST_WEBCONFIG_WI_REPORT_PATH = "WIReportPath";
 
+        private const string CrButtonDisplayCssClasses = "linkStyle";
+
         #endregion
 
         #region Public Properties
@@ -61,6 +63,7 @@ namespace Etsi.Ultimate.Module.Specifications
         }
         public double ScrollHeight { get; set; }
         public List<SpecVersion> Versions { get; set; }
+        public SpecDecorator SpecDecorator { get; set; } 
         public int SpecReleaseID { get; set; }
         public bool IsSpecNumberAssigned { get; set; }
         private static Dictionary<int, string> OperationFailureMsgs = new Dictionary<int, string>() { {1, "forced transposition failed"}};
@@ -75,7 +78,7 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 if (!IsEditMode)
                 {
-                    SpecificationBasePage basePage = (SpecificationBasePage)this.Page;
+                    var basePage = (SpecificationBasePage)this.Page;
                     var userRights = basePage.SpecReleaseRights.Where(x => x.Key == SpecReleaseID).FirstOrDefault().Value;
 
                     imgForceTransposition.Visible = userRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
@@ -136,26 +139,29 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if (e.Item is GridDataItem)
             {
-                GridDataItem item = (GridDataItem)e.Item;
+                var item = (GridDataItem)e.Item;
 
-                string remarkText = ((Label)item["LatestRemark"].FindControl("lblRemarkText")).Text;
+                var remarkText = ((Label)item["LatestRemark"].FindControl("lblRemarkText")).Text;
 
                 if (remarkText.Length > 30)
                     ((Label)item["LatestRemark"].FindControl("lblRemarkText")).Text = remarkText.Substring(0, 29) + "...";
 
-                SpecVersion specVersion = (SpecVersion)item.DataItem;
+                var specVersion = (SpecVersion)item.DataItem;
                 if (specVersion != null)
                 {
-                    ImageButton versionRemarks = (ImageButton)item["LatestRemark"].FindControl("imgVersionRemarks");
+                    var versionRemarks = (ImageButton)item["LatestRemark"].FindControl("imgVersionRemarks");
                     versionRemarks.OnClientClick = "openRemarksPopup('version','" + specVersion.Pk_VersionId + "','" + IsEditMode + "', 'Version Remarks'); return false;";                    
                 }
 
                 if (!String.IsNullOrEmpty(item["Source"].Text))
                 {
-                    HyperLink link = (HyperLink)item["Meetings"].FindControl("lnkMeetings");
+                    var link = (HyperLink)item["Meetings"].FindControl("lnkMeetings");
                     link.Text = item["MtgShortRef"].Text;
                     link.NavigateUrl = ConfigVariables.MeetingDetailsAddress + item["Source"].Text;
                 }
+
+                //Display informations contains in the SpecDecorator
+                AppliedSpecDecorator(item);
             }
         }
 
@@ -230,6 +236,38 @@ namespace Etsi.Ultimate.Module.Specifications
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Applied SpecDecorator informations
+        /// </summary>
+        /// <param name="item"></param>
+        private void AppliedSpecDecorator(GridDataItem item)
+        {
+            //Get current version
+            var id = (int)item.GetDataKeyValue("Pk_VersionId");
+
+            //Foundamental CRs tooltip associated to a version
+            var relatedCrsTooltip = (ImageButton)item["link"].FindControl("imgRelatedCRs");
+            foreach (var version in SpecDecorator.SpecVersionFoundationCrs)
+            {
+                if (version.VersionId == id && version.FoundationCrs.Count > 0)
+                {
+                    var tooltip = new StringBuilder();
+                    foreach (var cr in version.FoundationCrs)
+                    {
+                        if (!string.IsNullOrEmpty(cr.CRNumber))
+                            tooltip.Append("CR: ").Append(cr.CRNumber);
+                        if (cr.Revision != null && cr.Revision != 0)
+                            tooltip.Append(" - Rev: ").Append(cr.Revision);
+                        if (tooltip.Length > 0)
+                            tooltip.Append("\n");
+                    }
+                    relatedCrsTooltip.ToolTip = tooltip.ToString();
+                    relatedCrsTooltip.CssClass = CrButtonDisplayCssClasses;
+                }
+            }
+        }
+
 
         /// <summary>
         /// Redirect user. Removes previous "selectedTab" and "Rel" flags.

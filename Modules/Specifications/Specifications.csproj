@@ -101,6 +101,7 @@
     <Compile Include="RemarksPopup.aspx.designer.cs">
       <DependentUpon>RemarksPopup.aspx</DependentUpon>
     </Compile>
+    <Compile Include="SpecDecorator.cs" />
     <Compile Include="SpecificationBasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>

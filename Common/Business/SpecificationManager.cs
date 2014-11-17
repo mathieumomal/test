@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.Business.Facades;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
@@ -19,6 +20,29 @@ namespace Etsi.Ultimate.Business
         public IUltimateUnitOfWork UoW { get; set; }
 
         public SpecificationManager() { }
+
+        /// <summary>
+        /// Get all versions of the spec associated to their foundation CRs
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="specId"></param>
+        /// <returns></returns>
+        public ServiceResponse<List<SpecVersionFoundationCrs>> GetSpecVersionsFundationCrs(int personId, int specId)
+        {
+            var response = new ServiceResponse<List<SpecVersionFoundationCrs>>();
+            response.Result = new List<SpecVersionFoundationCrs>();
+            var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            specVersionRepo.UoW = UoW;
+
+            specVersionRepo.GetVersionsWithFoundationsCrsBySpecId(specId).ForEach(x => response.Result.Add(new SpecVersionFoundationCrs
+            {
+                VersionId = x.Pk_VersionId,
+                FoundationCrs = x.FoundationsChangeRequests.ToList()
+            }));
+            
+            return response;
+        }
+
 
         /// <summary>
         /// See interface
@@ -86,7 +110,6 @@ namespace Etsi.Ultimate.Business
                     v.Remarks = rem;
                 }
             }
-           
 
             return new KeyValuePair<Specification, UserRightsContainer>(specification, personRights);
         }
