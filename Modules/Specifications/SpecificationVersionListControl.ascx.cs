@@ -1,13 +1,10 @@
-﻿using Etsi.Ultimate.Controls;
-using Etsi.Ultimate.DomainClasses;
+﻿using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using System.Configuration;
@@ -35,9 +32,7 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 if (ViewState[CONST_SELECTED_TAB] == null)
                     return string.Empty;
-                else
-                    return ViewState[CONST_SELECTED_TAB].ToString();
-
+                return ViewState[CONST_SELECTED_TAB].ToString();
             }
             set
             {

@@ -108,6 +108,10 @@
     <Compile Include="FinalizeCrsAction.cs" />
     <Compile Include="IChangeRequestStatusManager.cs" />
     <Compile Include="ItuRecommendation\ItuRecommendationExportAction.cs" />
+    <Compile Include="ItuRecommendation\ItuRecommendationExporter.cs" />
+    <Compile Include="ItuRecommendation\ItuRecord.cs" />
+    <Compile Include="ItuRecommendation\SeedFileParser.cs" />
+    <Compile Include="ItuRecommendation\SpecToItuRecordConverter.cs" />
     <Compile Include="MeetingManager.cs" />
     <Compile Include="RemarkManager.cs" />
     <Compile Include="Service References\UserRightsService\Reference.cs">

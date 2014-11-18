@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.Business.Security;
+﻿using DocumentFormat.OpenXml.ExtendedProperties;
+using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
@@ -36,10 +37,32 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
                 return response;
             }
 
-            response.Result = "Dummy path for now";
-            return response; ;
-        }
+            // Else parse the document
+            var seedFileParser = ManagerFactory.Resolve<ISeedFileParser>();
+            var parserResponse = seedFileParser.ExtractSpecificationNumbersFromSeeFile(seedFilePath);
+            if (parserResponse.Report.GetNumberOfErrors() > 0)
+            {
+                response.Report.ErrorList = parserResponse.Report.ErrorList;
+                return response;
+            }
+            var specificationsToFillIn = parserResponse.Result;
+            
+            // Then convert the specification.
+            var converter = ManagerFactory.Resolve<ISpecToItuRecordConverter>();
+            var convertedSpecificationRecords = converter.BuildItuRecordsForSpec(specificationsToFillIn, startReleaseId, endReleaseId, saPlenaryMeetingId);
 
+            var fileName = ituRecommendationName + "_" + DateTime.UtcNow.ToString("yyyy-MM-dd_hh\\hmm") + ".xlsx";
+
+            // Still to fix: the path is to be computed against Application parameters.
+            var excelExporter = ManagerFactory.Resolve<IItuRecommendationExporter>();
+            if (excelExporter.CreateItuFile(ConfigVariables.DefaultPublicTmpPath + fileName,
+                convertedSpecificationRecords.Result))
+            {
+                response.Result = ConfigVariables.DefaultPublicTmpAddress + fileName;
+            }
+            return response; 
+        }
+    
         /// <summary>
         /// Checks whether user has right to manage itu recommendations.
         /// </summary>
