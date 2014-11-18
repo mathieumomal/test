@@ -1,0 +1,44 @@
+﻿/*ITU recomendations*/
+#ituRecommendationsContent {
+    font-family: Arial,verdana,Serif;
+    font-size: 12px;
+}
+
+#ituRecommendationsContent table{
+    width: 650px;
+    margin: auto;
+}
+
+#ituRecommendationsContent .btns{
+    margin-top: 20px;
+    margin-left: 15px;
+}
+
+#ituRecommendationsContent .TabLineleft{
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+}
+#ituRecommendationsContent .TabLineRight{
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+}
+#ituRecommendationsContent .formItuRec{
+    padding-top: 35px;
+}
+
+/*table alignement*/
+#ituRecommendationsContent .TabLineLeft {
+    width: 184.6px;
+    text-align: right;
+    padding-top: 4px !important;
+    padding-bottom: 3px !important;
+}
+
+#ituRecommendationsContent .TabLineRight {
+    width: auto;
+    text-align: left;
+}
+.PopupHeaderTitleRight {
+    left: auto;
+    right: 10px;
+}

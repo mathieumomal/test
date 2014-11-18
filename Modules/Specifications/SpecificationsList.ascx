@@ -29,7 +29,7 @@
                         <asp:LinkButton ID="btnNewSpecification" class="btn3GPP-success" runat="server" OnClientClick="var popUp=window.open('/desktopmodules/Specifications/EditSpecification.aspx?action=create', 'Specification-Create', 'height=690,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();return false;" Text="New Specification" />                    
                         <span style="float: right; padding-bottom: 2px; white-space: nowrap">
                             <asp:Button ID="imgBtnFTP" Text="FTP" runat="server" CssClass="btn3GPP-success customizePanelButtons" OnClientClick="openFTPConfiguration(); return false;" ToolTip="Manage specifications folders on FTP" />
-                            <asp:Button ID="lnkManageITURecommendations" Text="ITU" runat="server" CssClass="btn3GPP-success customizePanelButtons" ToolTip="Manage ITU recommendations" />
+                            <asp:Button ID="lnkManageITURecommendations" Text="ITU" runat="server" CssClass="btn3GPP-success customizePanelButtons" ToolTip="Manage ITU recommendations" OnClientClick="return openITURecommendationPopUp();" />
                             <asp:ImageButton ID="btnSpecExport" runat="server" CssClass="customizePanelButtons customizeButtonsImages" AlternateText="Export" ImageUrl="/DesktopModules/Specifications/images/excel_export.png" OnClick="btnSpecExport_Click" OnClientClick="removeBg" ToolTip="Download to Excel" />
                             <ult:fullviewcontrol ID="ultFullView" runat="server" />
                             <asp:HiddenField ID="hidSpecAddress" runat="server" Value="" />
@@ -289,6 +289,12 @@
             if (searchButton != null) {
                 searchButton.click();
             }
+        }
+
+        function openITURecommendationPopUp() {
+            var popUp = window.open('/desktopmodules/Specifications/ITURecommendations.aspx', 'ituRecPopup', 'height=340,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no');
+            popUp.focus();
+            return false;
         }
     </script>
 </asp:Panel>

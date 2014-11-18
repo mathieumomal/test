@@ -123,6 +123,9 @@
   <data name="Error_NumberNeeded_NotifySpecMgr_NoEmail" xml:space="preserve">
     <value>Specification has been created, but system failed to notify the Specification Manager(s). Please contact them directly to request them to set the number.</value>
   </data>
+  <data name="ITU_Error_NoFileToUpload" xml:space="preserve">
+    <value>A file should be provided.</value>
+  </data>
   <data name="Warning_NumberNeeded_NotifySpec_Mgr" xml:space="preserve">
     <value>Specification has been successfully created. An email has been sent to the Specification Manager(s) requesting the allocation of a specification number.</value>
   </data>

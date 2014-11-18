@@ -29,7 +29,6 @@
     onclientselectedindexchanged="OnClientSelectedIndexChanged"
     OnSelectedIndexChanged="rcbMeetings_SelectedIndexChanged"
     OnClientTextChange="OnClientTextChanged" 
-    
     OnDataBound="rcbMeetings_DataBound"
     MarkFirstMatch="True"
 >  

@@ -75,7 +75,7 @@ namespace Etsi.Ultimate.Controls
         {
             get
             {
-                IMeetingService svc = ServicesFactory.Resolve<IMeetingService>();
+                var svc = ServicesFactory.Resolve<IMeetingService>();
                 return svc.GetMeetingById(this.SelectedMeetingId);
             }
         }
@@ -93,6 +93,9 @@ namespace Etsi.Ultimate.Controls
             get { return this.rcbMeetings.ClientID; }
         }
 
+        public bool NewestFirst { get; set; }
+        public string TbRestriction { get; set; }
+
         #endregion
 
         #region Page/Control Methods
@@ -104,7 +107,7 @@ namespace Etsi.Ultimate.Controls
             {
                 if (DataSource == null)
                 {
-                    IMeetingService svc = ServicesFactory.Resolve<IMeetingService>();
+                    var svc = ServicesFactory.Resolve<IMeetingService>();
                     if (SelectedMeetingId != default(int))
                         DataSource = svc.GetLatestMeetings(SelectedMeetingId);
                     else
@@ -154,7 +157,7 @@ namespace Etsi.Ultimate.Controls
         #region Private
         private void BindDropDownData(List<DomainClasses.Meeting> meetingsList)
         {
-            rcbMeetings.DataSource = meetingsList;
+            rcbMeetings.DataSource = FilterByParameters(meetingsList);
             rcbMeetings.DataTextField = "MtgDdlText";
             rcbMeetings.DataValueField = "MtgDdlValue";
             rcbMeetings.DataBind();
@@ -163,6 +166,7 @@ namespace Etsi.Ultimate.Controls
                 && meetingsList.Where(m => m.MTG_ID == SelectedMeetingId).FirstOrDefault().END_DATE != null)
                 lblEndDate.Text = meetingsList.Where(m => m.MTG_ID == SelectedMeetingId).FirstOrDefault().END_DATE.Value.ToString("yyyy-MM-dd");
         }
+
         private void SetDropdownProperties()
         {
             if (MaxHeight > 0)
@@ -174,6 +178,21 @@ namespace Etsi.Ultimate.Controls
             pnlEndDate.Visible = DisplayLabel;
             pnlEndDate.CssClass = CssClass;
         }
+
+        private List<Meeting> FilterByParameters(List<Meeting> datasource)
+        {
+            //Control parameters (added for the occasion of ITU recommendations):
+            if (NewestFirst)
+            {
+                datasource = datasource.OrderByDescending(x => x.Creation_Date).ToList();
+            }
+            if (!string.IsNullOrEmpty(TbRestriction))
+            {
+                datasource = datasource.Where(x => x.ShortName.Trim().Equals(TbRestriction.Trim())).ToList();
+            }
+            return datasource;
+        } 
+        
         #endregion
     }
 }
