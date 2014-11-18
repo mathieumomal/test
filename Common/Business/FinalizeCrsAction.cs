@@ -55,17 +55,17 @@ namespace Etsi.Ultimate.Business
                 var specification = specManager.GetSpecificationById(personId, changeRequest.Fk_Specification.GetValueOrDefault()).Key;
                 if (specification == null)
                 {
-                    break;
+                    continue;
                 }
                 else if (!specification.IsActive)
                 {
                     response.Report.LogWarning(String.Format(Localization.FinalizeCrs_Warn_WithDrawnSpec, specification.Number));
-                    break;
+                    continue;
                 }
                 else if (!specification.IsUnderChangeControl.GetValueOrDefault())
                 {
                     response.Report.LogWarning(String.Format(Localization.FinalizeCrs_Warn_DraftSpec, specification.Number));
-                    break;
+                    continue;
                 }
 
                 var specRelease = specification.Specification_Release.Where(sr => sr.Fk_ReleaseId == changeRequest.Fk_Release.GetValueOrDefault()).FirstOrDefault();
@@ -73,7 +73,7 @@ namespace Etsi.Ultimate.Business
                 {
                     var releaseName = releases.Find(r => r.Pk_ReleaseId == changeRequest.Fk_Release.GetValueOrDefault()).Code;
                     response.Report.LogWarning(String.Format(Localization.FinalizeCrs_Warn_SpecReleaseNotExisting, specification.Number, releaseName ));
-                    break; 
+                    continue; 
                 }
 
                 var version = versionRepository.GetVersionsForSpecRelease(changeRequest.Fk_Specification.GetValueOrDefault(), changeRequest.Fk_Release.GetValueOrDefault())

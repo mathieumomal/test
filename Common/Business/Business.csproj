@@ -107,6 +107,7 @@
     <Compile Include="CrCategoriesManager.cs" />
     <Compile Include="FinalizeCrsAction.cs" />
     <Compile Include="IChangeRequestStatusManager.cs" />
+    <Compile Include="ItuRecommendation\ItuRecommendationExportAction.cs" />
     <Compile Include="MeetingManager.cs" />
     <Compile Include="RemarkManager.cs" />
     <Compile Include="Service References\UserRightsService\Reference.cs">

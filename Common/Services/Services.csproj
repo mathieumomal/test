@@ -69,6 +69,8 @@
     <Compile Include="CommunityService.cs" />
     <Compile Include="ChangeRequestService.cs" />
     <Compile Include="CrCategoriesService.cs" />
+    <Compile Include="IItuRecommendationService.cs" />
+    <Compile Include="ItuRecommendationService.cs" />
     <Compile Include="RemarkService.cs" />
     <Compile Include="IOfflineService.cs" />
     <Compile Include="SpecVersionService.cs" />

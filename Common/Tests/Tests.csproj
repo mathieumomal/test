@@ -174,6 +174,7 @@
     <Compile Include="Services\CrPackServiceTest.cs" />
     <Compile Include="Services\CrServiceTest.cs" />
     <Compile Include="Services\FinalizeCrsTests.cs" />
+    <Compile Include="Services\ItuRecommendation\ItuExportTests.cs" />
     <Compile Include="Services\RemarkServiceGetTests.cs" />
     <Compile Include="Services\RemarkServiceTest.cs" />
     <Compile Include="Services\RemarksServiceUpdateTests.cs" />

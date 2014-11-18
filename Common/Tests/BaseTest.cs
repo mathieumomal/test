@@ -88,7 +88,7 @@ namespace Etsi.Ultimate.Tests
 
             var anonymous_Applicatin_Rights = new List<string>() { "Release_ViewLimitedDetails" };
             var eolAccountOwner_Application_Rights = new List<string>() { "Release_ViewLimitedDetails", "Release_ViewDetails" };
-            var superUser_Application_Rights = new List<string>() { "Release_ViewLimitedDetails", "Release_ViewDetails", "Release_ViewCompleteDetails", "Versions_Allocate" };
+            var superUser_Application_Rights = new List<string>() { "Release_ViewLimitedDetails", "Release_ViewDetails", "Release_ViewCompleteDetails", "Versions_Allocate", "Specification_ManageITURecommendations" };
             var committeeOfficial_Application_Rights = new List<string>() { "Release_ViewLimitedDetails", "Release_ViewDetails", "Release_Close" };
             var committeeOfficial_Committee_Rights = new Dictionary<int, List<string>>();
             committeeOfficial_Committee_Rights.Add(UserRolesFakeRepository.TB_ID1, new List<string> { "Versions_Allocate" });
