@@ -248,23 +248,23 @@ namespace Etsi.Ultimate.Module.Specifications
 
             //Foundamental CRs tooltip associated to a version
             var relatedCrsTooltip = (ImageButton)item["link"].FindControl("imgRelatedCRs");
-            foreach (var version in SpecDecorator.SpecVersionFoundationCrs)
+            var currentVersion = SpecDecorator.SpecVersionFoundationCrs.FirstOrDefault(x => x.VersionId == id);
+            if (currentVersion != null)
             {
-                if (version.VersionId == id && version.FoundationCrs.Count > 0)
+                if (currentVersion.FoundationCrs.Count == 0)
+                    return;
+                var tooltip = new StringBuilder();
+                foreach (var cr in currentVersion.FoundationCrs)
                 {
-                    var tooltip = new StringBuilder();
-                    foreach (var cr in version.FoundationCrs)
-                    {
-                        if (!string.IsNullOrEmpty(cr.CRNumber))
-                            tooltip.Append("CR: ").Append(cr.CRNumber);
-                        if (cr.Revision != null && cr.Revision != 0)
-                            tooltip.Append(" - Rev: ").Append(cr.Revision);
-                        if (tooltip.Length > 0)
-                            tooltip.Append("\n");
-                    }
-                    relatedCrsTooltip.ToolTip = tooltip.ToString();
-                    relatedCrsTooltip.CssClass = CrButtonDisplayCssClasses;
+                    if (!string.IsNullOrEmpty(cr.CRNumber))
+                        tooltip.Append("CR: ").Append(cr.CRNumber);
+                    if (cr.Revision != null && cr.Revision != 0)
+                        tooltip.Append(" - Rev: ").Append(cr.Revision);
+                    if (tooltip.Length > 0)
+                        tooltip.Append("\n");
                 }
+                relatedCrsTooltip.ToolTip = tooltip.ToString();
+                relatedCrsTooltip.CssClass = CrButtonDisplayCssClasses;
             }
         }
 
