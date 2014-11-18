@@ -181,7 +181,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             Assert.IsTrue(File.Exists(createdFilePath));
             Assert.IsTrue(File.Exists("Ftp\\Specs\\latest-drafts\\22103-210.zip"));
-            //Assert.IsFalse(File.Exists("Ftp\\Specs\\latest-drafts\\22103-200.zip"));
+            Assert.IsFalse(File.Exists("Ftp\\Specs\\latest-drafts\\22103-200.zip"));
         }
 
         [Test]

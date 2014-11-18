@@ -439,11 +439,14 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                     Directory.CreateDirectory(draftPath);
 
                 // We remove any existing draft.
-                ClearLatestDraftFolder(ftpBasePath, version);
+                var isLatestDraftVersionUploaded = ClearLatestDraftFolder(ftpBasePath, version);
 
-
-                string hardLinkPath = Path.Combine(draftPath, zipFileName);
-                CreateHardLink(hardLinkPath, versionPathToSave, IntPtr.Zero);
+                //Create hard link in "latest-drafts" folder, only if latest version not present
+                if (!isLatestDraftVersionUploaded)
+                {
+                    string hardLinkPath = Path.Combine(draftPath, zipFileName);
+                    CreateHardLink(hardLinkPath, versionPathToSave, IntPtr.Zero);
+                }
             }
             else //Under Change Control
             {
@@ -486,8 +489,16 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             }
         }
 
-        private void ClearLatestDraftFolder(string ftpBasePath, SpecVersion version)
+        /// <summary>
+        /// Clears the latest draft folder & provide latest draft version uploaded or not.
+        /// </summary>
+        /// <param name="ftpBasePath">The FTP base path.</param>
+        /// <param name="version">The version.</param>
+        /// <returns>True - Latest version uploaded/False - Latest version not uploaded</returns>
+        private bool ClearLatestDraftFolder(string ftpBasePath, SpecVersion version)
         {
+            var isLatestDraftVersionUploaded = false;
+
             var versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
             versionMgr.UoW = UoW;
             var existingVersions = versionMgr.GetVersionsForASpecRelease(version.Fk_SpecificationId.Value, version.Fk_ReleaseId.Value);
@@ -512,6 +523,10 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                     }
                 }
             }
+            else
+                isLatestDraftVersionUploaded = true;
+
+            return isLatestDraftVersionUploaded;
         }
 
         /// <summary>
