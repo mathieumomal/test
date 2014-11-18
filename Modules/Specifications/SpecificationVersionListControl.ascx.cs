@@ -248,6 +248,8 @@ namespace Etsi.Ultimate.Module.Specifications
 
             //Foundamental CRs tooltip associated to a version
             var relatedCrsTooltip = (ImageButton)item["link"].FindControl("imgRelatedCRs");
+            if (SpecDecorator.SpecVersionFoundationCrs == null)
+                return;
             var currentVersion = SpecDecorator.SpecVersionFoundationCrs.FirstOrDefault(x => x.VersionId == id);
             if (currentVersion != null)
             {
