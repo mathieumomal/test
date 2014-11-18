@@ -10,7 +10,7 @@ namespace Etsi.Ultimate.Tests.Services
         public void GetSpecVersionsFundationCrs()
         {
             var specSvc = new SpecificationService();
-            var result = specSvc.GetSpecVersionsFundationCrs(0, 140000);
+            var result = specSvc.GetSpecVersionsFoundationCrs(0, 140000);
 
             Assert.AreEqual(1, result.Result.Count);
             Assert.AreEqual(400000, result.Result.FirstOrDefault().VersionId);

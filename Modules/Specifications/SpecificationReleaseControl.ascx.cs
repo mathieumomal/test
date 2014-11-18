@@ -71,7 +71,7 @@ namespace Etsi.Ultimate.Module.Specifications
             //Load this control only in EditMode & when it has atleast one spec-release mapping
             if ((Request.QueryString["action"] == null || Request.QueryString["action"] != "create") && (DataSource.SpecificationReleases != null && DataSource.SpecificationReleases.Count > 0))
             {
-                var specDecorator = new SpecDecorator();
+                var additionalVersionInfo = new AdditionalVersionInfo();
                 if (!IsPostBack)
                 {
                     foreach (var release in DataSource.SpecificationReleases.OrderByDescending(sr => sr.SortOrder))
@@ -86,8 +86,8 @@ namespace Etsi.Ultimate.Module.Specifications
 
                     //Get spec decorator data :
                         //Get versions foundations CRs data
-                    specDecorator.SpecVersionFoundationCrs =
-                        specSvc.GetSpecVersionsFundationCrs(PersonId.GetValueOrDefault(), DataSource.Pk_SpecificationId).Result;
+                    additionalVersionInfo.SpecVersionFoundationCrs =
+                        specSvc.GetSpecVersionsFoundationCrs(PersonId.GetValueOrDefault(), DataSource.Pk_SpecificationId).Result;
 
                     var basePage = (SpecificationBasePage)this.Page;
                     basePage.SpecReleaseRights.Clear();
@@ -117,7 +117,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
                     var specRelease = DataSource.Specification_Release.Where(x => x.Fk_ReleaseId.ToString() == item.Value && x.Fk_SpecificationId == DataSource.Pk_SpecificationId).FirstOrDefault();
                     var customHeaderTemplate = new CustomHeaderTemplate(specRelease, IsEditMode, this.Page);
-                    var customContentTemplate = new CustomContentTemplate(isSpecNumberAssigned, specRelease, versions, specDecorator, IsEditMode, PersonId.GetValueOrDefault(), this.Page, scrollHeight);
+                    var customContentTemplate = new CustomContentTemplate(isSpecNumberAssigned, specRelease, versions, additionalVersionInfo, IsEditMode, PersonId.GetValueOrDefault(), this.Page, scrollHeight);
                     item.HeaderTemplate = customHeaderTemplate;
                     item.ApplyHeaderTemplate();
                     item.ContentTemplate = customContentTemplate;

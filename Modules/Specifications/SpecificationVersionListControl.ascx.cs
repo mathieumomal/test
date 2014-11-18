@@ -63,7 +63,7 @@ namespace Etsi.Ultimate.Module.Specifications
         }
         public double ScrollHeight { get; set; }
         public List<SpecVersion> Versions { get; set; }
-        public SpecDecorator SpecDecorator { get; set; } 
+        public AdditionalVersionInfo AdditionalVersionInfo { get; set; } 
         public int SpecReleaseID { get; set; }
         public bool IsSpecNumberAssigned { get; set; }
         private static Dictionary<int, string> OperationFailureMsgs = new Dictionary<int, string>() { {1, "forced transposition failed"}};
@@ -161,7 +161,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 }
 
                 //Display informations contains in the SpecDecorator
-                AppliedSpecDecorator(item);
+                ApplyChangeRequestInformation(item);
             }
         }
 
@@ -241,16 +241,16 @@ namespace Etsi.Ultimate.Module.Specifications
         /// Applied SpecDecorator informations
         /// </summary>
         /// <param name="item"></param>
-        private void AppliedSpecDecorator(GridDataItem item)
+        private void ApplyChangeRequestInformation(GridDataItem item)
         {
             //Get current version
             var id = (int)item.GetDataKeyValue("Pk_VersionId");
 
             //Foundamental CRs tooltip associated to a version
             var relatedCrsTooltip = (ImageButton)item["link"].FindControl("imgRelatedCRs");
-            if (SpecDecorator.SpecVersionFoundationCrs == null)
+            if (AdditionalVersionInfo.SpecVersionFoundationCrs == null)
                 return;
-            var currentVersion = SpecDecorator.SpecVersionFoundationCrs.FirstOrDefault(x => x.VersionId == id);
+            var currentVersion = AdditionalVersionInfo.SpecVersionFoundationCrs.FirstOrDefault(x => x.VersionId == id);
             if (currentVersion != null)
             {
                 if (currentVersion.FoundationCrs.Count == 0)

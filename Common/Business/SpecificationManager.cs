@@ -27,7 +27,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId"></param>
         /// <param name="specId"></param>
         /// <returns></returns>
-        public ServiceResponse<List<SpecVersionFoundationCrs>> GetSpecVersionsFundationCrs(int personId, int specId)
+        public ServiceResponse<List<SpecVersionFoundationCrs>> GetSpecVersionsFoundationCrs(int personId, int specId)
         {
             var response = new ServiceResponse<List<SpecVersionFoundationCrs>>();
             response.Result = new List<SpecVersionFoundationCrs>();

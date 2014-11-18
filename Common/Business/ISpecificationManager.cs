@@ -19,7 +19,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId"></param>
         /// <param name="specId"></param>
         /// <returns></returns>
-        ServiceResponse<List<SpecVersionFoundationCrs>> GetSpecVersionsFundationCrs(int personId, int specId); 
+        ServiceResponse<List<SpecVersionFoundationCrs>> GetSpecVersionsFoundationCrs(int personId, int specId); 
             
         /// <summary>
         ///  Returns the specification from its ID, as well as the list of rights of the user.

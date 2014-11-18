@@ -16,7 +16,7 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId"></param>
         /// <param name="specId"></param>
         /// <returns></returns>
-        ServiceResponse<List<SpecVersionFoundationCrs>> GetSpecVersionsFundationCrs(int personId, int specId);
+        ServiceResponse<List<SpecVersionFoundationCrs>> GetSpecVersionsFoundationCrs(int personId, int specId);
 
         /// <summary>
         /// Returns A specification details including related remarks, history, Parent/Child specification, and releases

@@ -6,7 +6,7 @@ using Etsi.Ultimate.Business.Facades;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
-    public class SpecDecorator
+    public class AdditionalVersionInfo
     {
         public List<SpecVersionFoundationCrs> SpecVersionFoundationCrs { get; set; }
     }

@@ -20,12 +20,12 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId"></param>
         /// <param name="specId"></param>
         /// <returns></returns>
-        public ServiceResponse<List<SpecVersionFoundationCrs>> GetSpecVersionsFundationCrs(int personId, int specId)
+        public ServiceResponse<List<SpecVersionFoundationCrs>> GetSpecVersionsFoundationCrs(int personId, int specId)
         {
             using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var specificationManager = new SpecificationManager {UoW = uow};
-                return specificationManager.GetSpecVersionsFundationCrs(personId, specId);
+                return specificationManager.GetSpecVersionsFoundationCrs(personId, specId);
             }
         }
 
