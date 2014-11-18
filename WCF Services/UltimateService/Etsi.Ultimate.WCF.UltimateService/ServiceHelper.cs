@@ -287,7 +287,7 @@ namespace Etsi.Ultimate.WCF.Service
             {
                 LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateSetCrsAsFinal, ex.Message));
                 statusReport.Result = false;
-                statusReport.Report.ErrorList.Add("Specifications status change process failed");
+                statusReport.Report.ErrorList.Add("Finalizing CRs process failed");
             }
             return statusReport;
         }
