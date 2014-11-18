@@ -258,9 +258,9 @@ namespace Etsi.Ultimate.Module.Specifications
                 var tooltip = new StringBuilder();
                 foreach (var cr in currentVersion.FoundationCrs)
                 {
-                    if (!string.IsNullOrEmpty(cr.CRNumber))
-                        tooltip.Append("CR: ").Append(cr.CRNumber);
-                    if (cr.Revision != null && cr.Revision != 0)
+                    if (!string.IsNullOrEmpty(cr.CrNumber))
+                        tooltip.Append("CR: ").Append(cr.CrNumber);
+                    if (cr.Revision != 0)
                         tooltip.Append(" - Rev: ").Append(cr.Revision);
                     if (tooltip.Length > 0)
                         tooltip.Append("\n");

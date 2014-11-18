@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Etsi.Ultimate.Business.Facades;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
 
 namespace Etsi.Ultimate.Business

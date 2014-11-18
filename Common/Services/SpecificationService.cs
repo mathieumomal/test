@@ -1,6 +1,6 @@
 ﻿using Etsi.Ultimate.Business;
-using Etsi.Ultimate.Business.Facades;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
 using System;
 using System.Collections.Generic;

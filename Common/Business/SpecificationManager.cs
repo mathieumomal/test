@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Etsi.Ultimate.Business.Facades;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Business.Security;
@@ -37,7 +35,11 @@ namespace Etsi.Ultimate.Business
             specVersionRepo.GetVersionsWithFoundationsCrsBySpecId(specId).ForEach(x => response.Result.Add(new SpecVersionFoundationCrs
             {
                 VersionId = x.Pk_VersionId,
-                FoundationCrs = x.FoundationsChangeRequests.ToList()
+                FoundationCrs = x.FoundationsChangeRequests.Select(cr => new FoundationCrsInfo
+                {
+                    CrNumber = cr.CRNumber,
+                    Revision = cr.Revision.GetValueOrDefault()
+                }).ToList()
             }));
             
             return response;

@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Etsi.Ultimate.DomainClasses;
+﻿using System.Collections.Generic;
 
-namespace Etsi.Ultimate.Business.Facades
+namespace Etsi.Ultimate.DomainClasses.Facades
 {
     public class SpecVersionFoundationCrs
     {
         public int VersionId { get; set; }
-        public List<ChangeRequest> FoundationCrs { get; set; } 
+        public List<FoundationCrsInfo> FoundationCrs { get; set; } 
     }
 }

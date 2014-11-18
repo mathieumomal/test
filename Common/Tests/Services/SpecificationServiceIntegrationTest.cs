@@ -14,7 +14,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             Assert.AreEqual(1, result.Result.Count);
             Assert.AreEqual(400000, result.Result.FirstOrDefault().VersionId);
-            Assert.AreEqual("3568", result.Result.FirstOrDefault().FoundationCrs.FirstOrDefault().CRNumber);
+            Assert.AreEqual("3568", result.Result.FirstOrDefault().FoundationCrs.FirstOrDefault().CrNumber);
             Assert.AreEqual(16, result.Result.FirstOrDefault().FoundationCrs.FirstOrDefault().Revision);
         }
     }
