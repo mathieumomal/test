@@ -78,7 +78,7 @@
 	<add key="FtpBasePhysicalPath" value="D:\1FTPSites\ftp3GPP.13.etsidev.org\" />
 	<add key="FtpBaseAddress" value="http://ftp3gpp.13.etsidev.org/" />
 	<add key="VersionsLatestFTPFolder" value="2014-09" />
-	<add key="TranspositionFolderPath" value="D:\AppTrans\transposition\"/>
+	<add key="TranspositionFolderPath" value="D:\1FTPSites\ftp3GPP.13.etsidev.org\transposition\"/>
 	<add key="WIReportPath" value ="http://webapp.13.etsidev.org/workprogram/Report_WorkItem.asp?WKI_ID="/>
 	<add key="Global3GPPProjetId" value ="703"/>
 	<add key="UploadVersionTemporaryPath" value="D:\Apptrans\Version\"/>
