@@ -281,7 +281,9 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
         private string GetValidFileName(SpecVersion specVersion)
         {
             var specNumber = specVersion.Specification.Number;
-            string validFileName = String.Format(CONST_VALID_FILENAME, specNumber.Replace(".", ""), UtilsManager.EncodeVersionToBase36(specVersion.MajorVersion, specVersion.TechnicalVersion, specVersion.EditorialVersion));
+            var validFileName = String.Format(CONST_VALID_FILENAME, 
+                specNumber.Replace(".", ""), 
+                UtilsManager.EncodeVersionToBase36(specVersion.MajorVersion, specVersion.TechnicalVersion, specVersion.EditorialVersion));
             return validFileName;
         }
 
