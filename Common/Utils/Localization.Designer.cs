@@ -115,6 +115,33 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could create allocate for Specification {0}: specification is not under change control.
+        /// </summary>
+        public static string FinalizeCrs_Warn_DraftSpec {
+            get {
+                return ResourceManager.GetString("FinalizeCrs_Warn_DraftSpec", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not allocate version for Specification {0}: Release {1} is not defined for this specification..
+        /// </summary>
+        public static string FinalizeCrs_Warn_SpecReleaseNotExisting {
+            get {
+                return ResourceManager.GetString("FinalizeCrs_Warn_SpecReleaseNotExisting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not allocate version for Specification {0}: specification is withdrawn.
+        /// </summary>
+        public static string FinalizeCrs_Warn_WithDrawnSpec {
+            get {
+                return ResourceManager.GetString("FinalizeCrs_Warn_WithDrawnSpec", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error has occured. Please try again. If problem persists, please contact IT support..
         /// </summary>
         public static string GenericError {

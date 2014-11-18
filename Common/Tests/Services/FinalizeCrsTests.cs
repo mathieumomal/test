@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Tests.FakeRepositories;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -48,14 +49,15 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(0, newVersion.EditorialVersion.GetValueOrDefault());
         }
 
-        [Test, Description("System should create a new spec release if it does not exist yet.")]
-        public void FinalizeCr_CreatesNewSpecReleaseIfNecessary()
+        [Test, Description("System should log warning if spec release does not exist yet.")]
+        public void FinalizeCr_LogsWarningIfSpecReleaseDoesNotExist()
         {
             var specReleaseCount = UoW.Context.Specification_Release.Count();
             var response = crService.SetCrsAsFinal(UserRolesFakeRepository.SPECMGR_ID, new List<string> { "RP-CR0005" });
             Assert.IsTrue(response.Result);
-            Assert.AreEqual(specReleaseCount + 1, UoW.Context.Specification_Release.Count());
-            Assert.IsNotNull(UoW.Context.Specification_Release.Where(sr => sr.Fk_ReleaseId == 2884 && sr.Fk_SpecificationId == 136084).FirstOrDefault()); 
+            Assert.AreEqual(specReleaseCount, UoW.Context.Specification_Release.Count());   // No spec release created
+            Assert.AreEqual(1, response.Report.GetNumberOfWarnings());
+            Assert.AreEqual(String.Format(Localization.FinalizeCrs_Warn_SpecReleaseNotExisting, "22.105", "Rel-14"), response.Report.WarningList.First());
         }
 
         [Test, Description("System should not treat CRs that are not TSG approved.")]
@@ -83,26 +85,30 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(oldVersion, UoW.Context.ChangeRequests.Where(x => x.TSGTDoc == "RP-CR0001").FirstOrDefault().Fk_NewVersion.GetValueOrDefault());
         }
 
-        [Test, Description("System should ignore CRs that belong to specifications that are withdrawn")]
+        [Test, Description("System should ignore CRs that belong to specifications that are withdrawn and log a warning")]
         public void FinalizeCr_IgnoresCrTargetWithdrawnSpec()
         {
             var response = crService.SetCrsAsFinal(UserRolesFakeRepository.SPECMGR_ID, new List<string> { "RP-CR0007" });
             Assert.IsTrue(response.Result);
             Assert.IsFalse(UoW.Context.ChangeRequests.Where(x => x.TSGTDoc == "RP-CR0007").FirstOrDefault().Fk_NewVersion.HasValue);
+            Assert.AreEqual(1, response.Report.GetNumberOfWarnings());
+            Assert.AreEqual(String.Format(Localization.FinalizeCrs_Warn_WithDrawnSpec, "22.102"), response.Report.WarningList.First());
         }
 
-        [Test, Description("System should ignore CRs that belong to specifications not under change control")]
+        [Test, Description("System should ignore CRs that belong to specifications not under change control and log a warning")]
         public void FinalizeCr_IgnoresCrTargetSpecsNotUcc()
         {
             var response = crService.SetCrsAsFinal(UserRolesFakeRepository.SPECMGR_ID, new List<string> { "RP-CR0008" });
             Assert.IsTrue(response.Result);
             Assert.IsFalse(UoW.Context.ChangeRequests.Where(x => x.TSGTDoc == "RP-CR0008").FirstOrDefault().Fk_NewVersion.HasValue);
+            Assert.AreEqual(1, response.Report.GetNumberOfWarnings());
+            Assert.AreEqual(String.Format(Localization.FinalizeCrs_Warn_DraftSpec, "22.104"), response.Report.WarningList.First());
         }
 
         [Test]
         public void FinalizeCr_ReturnsFalseInCaseOfError()
         {
-            var response = crService.SetCrsAsFinal(UserRolesFakeRepository.ANONYMOUS_ID, new List<string> { "RP-CR0005" });
+            var response = crService.SetCrsAsFinal(UserRolesFakeRepository.ANONYMOUS_ID, new List<string> { "RP-CR0003" });
             Assert.IsFalse(response.Result);
         }
     }

@@ -237,7 +237,7 @@ namespace Etsi.Ultimate.Services
                 using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
                 {
                     var finalizeAction = new FinalizeCrsAction() { UoW = uoW };
-                    response.Result = finalizeAction.FinalizeCrs(personId, tdocNumbers);
+                    response = finalizeAction.FinalizeCrs(personId, tdocNumbers);
 
                     if (response.Result)
                     {

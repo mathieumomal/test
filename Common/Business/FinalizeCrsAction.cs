@@ -1,6 +1,7 @@
 ﻿using Etsi.Ultimate.Business.SpecVersionBusiness;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,9 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId"></param>
         /// <param name="tdocUids"></param>
         /// <returns></returns>
-        public bool FinalizeCrs(int personId, List<string> tdocUids)
+        public ServiceResponse<bool> FinalizeCrs(int personId, List<string> tdocUids)
         {
+            var response = new ServiceResponse<bool> { Result = true };
             // Find approved CR status
             var crStatusManager = new ChangeRequestStatusManager() { UoW = UoW};
             var crApprovedStatus = crStatusManager.GetAllChangeRequestStatuses().Where(cr => cr.Code == Enum_ChangeRequestStatuses.Approved.ToString()).SingleOrDefault();
@@ -51,14 +53,27 @@ namespace Etsi.Ultimate.Business
                     break;
 
                 var specification = specManager.GetSpecificationById(personId, changeRequest.Fk_Specification.GetValueOrDefault()).Key;
-                if (specification == null || !specification.IsActive || !specification.IsUnderChangeControl.GetValueOrDefault())
+                if (specification == null)
+                {
                     break;
+                }
+                else if (!specification.IsActive)
+                {
+                    response.Report.LogWarning(String.Format(Localization.FinalizeCrs_Warn_WithDrawnSpec, specification.Number));
+                    break;
+                }
+                else if (!specification.IsUnderChangeControl.GetValueOrDefault())
+                {
+                    response.Report.LogWarning(String.Format(Localization.FinalizeCrs_Warn_DraftSpec, specification.Number));
+                    break;
+                }
 
                 var specRelease = specification.Specification_Release.Where(sr => sr.Fk_ReleaseId == changeRequest.Fk_Release.GetValueOrDefault()).FirstOrDefault();
                 if (specRelease == null)
                 {
-                    var promoteAction = new SpecificationPromoteAction(UoW);
-                    promoteAction.PromoteSpecificationBypassingRightsChecks(changeRequest.Fk_Specification.Value, changeRequest.Fk_Release.Value);
+                    var releaseName = releases.Find(r => r.Pk_ReleaseId == changeRequest.Fk_Release.GetValueOrDefault()).Code;
+                    response.Report.LogWarning(String.Format(Localization.FinalizeCrs_Warn_SpecReleaseNotExisting, specification.Number, releaseName ));
+                    break; 
                 }
 
                 var version = versionRepository.GetVersionsForSpecRelease(changeRequest.Fk_Specification.GetValueOrDefault(), changeRequest.Fk_Release.GetValueOrDefault())
@@ -77,7 +92,7 @@ namespace Etsi.Ultimate.Business
                     changeRequest.Fk_NewVersion = version.Pk_VersionId;
                 }
             }
-            return true;
+            return response;
         }
 
         private SpecVersion AllocateNewVersion(int personId, int majorVersion, int technicalVersion, ChangeRequest changeRequest)
