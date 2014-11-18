@@ -1,22 +1,19 @@
-﻿using Etsi.Ultimate.Business.SpecVersionBusiness;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Etsi.Ultimate.Business.SpecVersionBusiness;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Etsi.Ultimate.Business
 {
     public class FinalizeCrsAction
     {
-
         public IUltimateUnitOfWork UoW { get; set; }
 
         /// <summary>
-        /// Associate any TSG approved CR corresponding to one of the TDoc Uids provided to a new version.
+        ///     Associate any TSG approved CR corresponding to one of the TDoc Uids provided to a new version.
         /// </summary>
         /// <param name="personId"></param>
         /// <param name="tdocUids"></param>
@@ -25,67 +22,83 @@ namespace Etsi.Ultimate.Business
         {
             var response = new ServiceResponse<bool> { Result = true };
             // Find approved CR status
-            var crStatusManager = new ChangeRequestStatusManager() { UoW = UoW};
-            var crApprovedStatus = crStatusManager.GetAllChangeRequestStatuses().Where(cr => cr.Code == Enum_ChangeRequestStatuses.Approved.ToString()).SingleOrDefault();
+            var crStatusManager = new ChangeRequestStatusManager { UoW = UoW };
+            Enum_ChangeRequestStatus crApprovedStatus =
+                crStatusManager.GetAllChangeRequestStatuses()
+                    .SingleOrDefault(cr => cr.Code == Enum_ChangeRequestStatuses.Approved.ToString());
 
 
             // Retrieve Crs by TdocUids
             var crRepo = RepositoryFactory.Resolve<IChangeRequestRepository>();
             crRepo.UoW = UoW;
-            var candidateChangeRequests = crRepo.GetChangeRequestListByContributionUidList(tdocUids).ToList()
-                .Where( cr => cr.Fk_TSGStatus.GetValueOrDefault() == crApprovedStatus.Pk_EnumChangeRequestStatus
-                && !cr.Fk_NewVersion.HasValue);
+            IEnumerable<ChangeRequest> candidateChangeRequests = crRepo.GetChangeRequestListByContributionUidList(
+                tdocUids).ToList()
+                .Where(cr => cr.Fk_TSGStatus.GetValueOrDefault() == crApprovedStatus.Pk_EnumChangeRequestStatus
+                             && !cr.Fk_NewVersion.HasValue);
 
-            var specManager = new SpecificationManager();
-            specManager.UoW = UoW;
+            var specManager = new SpecificationManager { UoW = UoW };
 
             var versionRepository = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             versionRepository.UoW = UoW;
 
-            var releasesManager = new ReleaseManager() { UoW = UoW };
-            var releases = releasesManager.GetAllReleases(personId).Key;
+            var releasesManager = new ReleaseManager { UoW = UoW };
+            List<Release> releases = releasesManager.GetAllReleases(personId).Key;
 
-            foreach (var changeRequest in candidateChangeRequests)
+            foreach (ChangeRequest changeRequest in candidateChangeRequests)
             {
+                var requestReleaseId = changeRequest.Fk_Release;
                 // If release if closed, ignore
-                var release = releases.Find(r => r.Pk_ReleaseId == changeRequest.Fk_Release);
+                Release release = releases.Find(r => r.Pk_ReleaseId == requestReleaseId);
                 if (release == null || release.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Closed)
-                    break;
+                    continue;
 
-                var specification = specManager.GetSpecificationById(personId, changeRequest.Fk_Specification.GetValueOrDefault()).Key;
+                var specification =
+                    specManager.GetSpecificationById(personId, changeRequest.Fk_Specification.GetValueOrDefault()).Key;
                 if (specification == null)
                 {
                     continue;
                 }
-                else if (!specification.IsActive)
+                if (!specification.IsActive)
                 {
-                    response.Report.LogWarning(String.Format(Localization.FinalizeCrs_Warn_WithDrawnSpec, specification.Number));
+                    response.Report.LogWarning(String.Format(Localization.FinalizeCrs_Warn_WithDrawnSpec,
+                        specification.Number));
                     continue;
                 }
-                else if (!specification.IsUnderChangeControl.GetValueOrDefault())
+                if (!specification.IsUnderChangeControl.GetValueOrDefault())
                 {
-                    response.Report.LogWarning(String.Format(Localization.FinalizeCrs_Warn_DraftSpec, specification.Number));
+                    response.Report.LogWarning(String.Format(Localization.FinalizeCrs_Warn_DraftSpec,
+                        specification.Number));
                     continue;
                 }
 
-                var specRelease = specification.Specification_Release.Where(sr => sr.Fk_ReleaseId == changeRequest.Fk_Release.GetValueOrDefault()).FirstOrDefault();
+                var specRelease =
+                    specification.Specification_Release.FirstOrDefault(
+                        sr => sr.Fk_ReleaseId == changeRequest.Fk_Release.GetValueOrDefault());
                 if (specRelease == null)
                 {
-                    var releaseName = releases.Find(r => r.Pk_ReleaseId == changeRequest.Fk_Release.GetValueOrDefault()).Code;
-                    response.Report.LogWarning(String.Format(Localization.FinalizeCrs_Warn_SpecReleaseNotExisting, specification.Number, releaseName ));
-                    continue; 
+                    string releaseName = releases.Find(r => r.Pk_ReleaseId == requestReleaseId.GetValueOrDefault()).Code;
+                    response.Report.LogWarning(String.Format(Localization.FinalizeCrs_Warn_SpecReleaseNotExisting,
+                        specification.Number, releaseName));
+                    continue;
                 }
 
-                var version = versionRepository.GetVersionsForSpecRelease(changeRequest.Fk_Specification.GetValueOrDefault(), changeRequest.Fk_Release.GetValueOrDefault())
-                    .OrderByDescending(v => v.MajorVersion).ThenByDescending(v => v.TechnicalVersion).ThenByDescending(v => v.EditorialVersion).FirstOrDefault();
+                var version =
+                    versionRepository.GetVersionsForSpecRelease(changeRequest.Fk_Specification.GetValueOrDefault(),
+                        changeRequest.Fk_Release.GetValueOrDefault())
+                        .OrderByDescending(v => v.MajorVersion)
+                        .ThenByDescending(v => v.TechnicalVersion)
+                        .ThenByDescending(v => v.EditorialVersion)
+                        .FirstOrDefault();
 
                 if (version == null)
                 {
-                    changeRequest.NewVersion = AllocateNewVersion(personId,release.Version3g.GetValueOrDefault(), 0, changeRequest);
+                    changeRequest.NewVersion = AllocateNewVersion(personId, release.Version3g.GetValueOrDefault(), 0,
+                        changeRequest);
                 }
                 else if (!string.IsNullOrEmpty(version.Location))
                 {
-                    changeRequest.NewVersion = AllocateNewVersion(personId, version.MajorVersion.Value, version.TechnicalVersion.Value + 1, changeRequest);
+                    changeRequest.NewVersion = AllocateNewVersion(personId, version.MajorVersion.GetValueOrDefault(),
+                        version.TechnicalVersion.GetValueOrDefault() + 1, changeRequest);
                 }
                 else
                 {
@@ -95,7 +108,8 @@ namespace Etsi.Ultimate.Business
             return response;
         }
 
-        private SpecVersion AllocateNewVersion(int personId, int majorVersion, int technicalVersion, ChangeRequest changeRequest)
+        private SpecVersion AllocateNewVersion(int personId, int majorVersion, int technicalVersion,
+            ChangeRequest changeRequest)
         {
             var newVersion = new SpecVersion
             {
@@ -108,16 +122,14 @@ namespace Etsi.Ultimate.Business
                 ProvidedBy = personId
             };
 
-            var allocateAction = new SpecVersionAllocateAction() { UoW = UoW };
+            var allocateAction = new SpecVersionAllocateAction { UoW = UoW };
             var response = allocateAction.AllocateVersion(personId, newVersion).Result;
-            
-            
+
+
             if (response == null)
-                throw new InvalidOperationException("Error occured while allocating version. User may not have right to perform such operation");
+                throw new InvalidOperationException(
+                    "Error occured while allocating version. User may not have right to perform such operation");
             return response;
-
-            
-
         }
     }
 }
