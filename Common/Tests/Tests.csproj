@@ -111,6 +111,7 @@
     <Compile Include="BaseEffortTest.cs" />
     <Compile Include="BaseTest.cs" />
     <Compile Include="Business\CommunityManagerTest.cs" />
+    <Compile Include="Business\UtilsManagerTest.cs" />
     <Compile Include="Business\CrCategoriesManagerTest.cs" />
     <Compile Include="Business\CrManagerTest.cs" />
     <Compile Include="Business\RemarkManagerTest.cs" />
@@ -234,7 +235,6 @@
     <Compile Include="Services\SpecVersionServiceTest\SpecVersionUploadTest.cs" />
     <Compile Include="Services\SpecWithdrawalTest.cs" />
     <Compile Include="Services\UrlServiceTest.cs" />
-    <Compile Include="Services\UtilsServiceTest.cs" />
     <Compile Include="Services\WorkItemServiceTest.cs" />
     <Compile Include="Business\ConfigVariableTest.cs" />
     <Compile Include="Services\WorkPlanFileServiceTest.cs" />
@@ -300,10 +300,10 @@
     <Content Include="TestData\LogManager\Test.log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="TestData\Versions\ToUpload\22101-0d0300.zip">
+    <None Include="TestData\Versions\ToUpload\22101-d30.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\Versions\ToUpload\22103-020000.zip">
+    <None Include="TestData\Versions\ToUpload\22103-200.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestData\WorkItems\BadHierarchy.csv" />

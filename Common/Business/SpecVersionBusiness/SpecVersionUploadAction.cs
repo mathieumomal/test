@@ -19,7 +19,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
         private const string CACHE_KEY = "VERSION_UPLOAD";
 
-        private const string CONST_VALID_FILENAME = "{0}-{1}{2}{3}";
+        private const string CONST_VALID_FILENAME = "{0}-{1}";
         private const string CONST_FTP_ARCHIVE_PATH = "{0}\\Specs\\archive\\{1}_series\\{2}\\";
         private const string CONST_FTP_LATEST_PATH = "{0}\\Specs\\latest\\{1}\\{2}_series\\";
         private const string CONST_FTP_LATEST_DRAFTS_PATH = "{0}\\Specs\\latest-drafts\\";
@@ -281,14 +281,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
         private string GetValidFileName(SpecVersion specVersion)
         {
             var specNumber = specVersion.Specification.Number;
-
-            var utilsMgr = new UtilsManager();
-
-            string majorVersionBase36 = utilsMgr.EncodeToBase36Digits2((long)specVersion.MajorVersion);
-            string technicalVersionBase36 = utilsMgr.EncodeToBase36Digits2((long)specVersion.TechnicalVersion);
-            string editorialVersionBase36 = utilsMgr.EncodeToBase36Digits2((long)specVersion.EditorialVersion);
-
-            string validFileName = String.Format(CONST_VALID_FILENAME, specNumber.Replace(".",""), majorVersionBase36, technicalVersionBase36, editorialVersionBase36);
+            string validFileName = String.Format(CONST_VALID_FILENAME, specNumber.Replace(".", ""), UtilsManager.EncodeVersionToBase36(specVersion.MajorVersion, specVersion.TechnicalVersion, specVersion.EditorialVersion));
             return validFileName;
         }
 

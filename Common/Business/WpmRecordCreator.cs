@@ -58,8 +58,7 @@ namespace Etsi.Ultimate.Business
                 isAlreadyTransposed = (versionRepo.GetVersionsForSpecRelease(version.Fk_SpecificationId.GetValueOrDefault(), version.Fk_ReleaseId.GetValueOrDefault()).FirstOrDefault(v => v.ETSI_WKI_ID != null) != null);
 
                 EtsiWorkItemImport importData = new EtsiWorkItemImport(version, spec, c, wgNumber, secretaryID, release.Name, isAlreadyTransposed);
-                UtilsManager utilsMgr = new UtilsManager();
-                importData.SetSerialNumber(utilsMgr.EncodeToBase36Digits2(version.MajorVersion.GetValueOrDefault()), utilsMgr.EncodeToBase36Digits2(version.TechnicalVersion.GetValueOrDefault()), utilsMgr.EncodeToBase36Digits2(version.EditorialVersion.GetValueOrDefault()));
+                importData.SetSerialNumber(UtilsManager.EncodeVersionToBase36(version.MajorVersion, version.TechnicalVersion, version.EditorialVersion));
                 IWorkProgramRepository wpRepo = RepositoryFactory.Resolve<IWorkProgramRepository>();
                 wpRepo.UoW = UoW;
                 //Import Work Item to WPMDB

@@ -95,7 +95,7 @@ namespace Etsi.Ultimate.Tests.Services
             // Let's try to upload version 13.3.0
             myVersion.TechnicalVersion = 3;
 
-            var fileToUpload = UPLOAD_PATH + "22101-0d0300.zip";
+            var fileToUpload = UPLOAD_PATH + "22101-d30.zip";
 
             var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
             Assert.AreEqual(0, result.Report.GetNumberOfErrors());
@@ -110,7 +110,7 @@ namespace Etsi.Ultimate.Tests.Services
         {
             myVersion.Fk_SpecificationId = EffortConstants.SPECIFICATION_DRAFT_WITH_EXISTING_DRAFTS_ID;
 
-            var fileToUpload = UPLOAD_PATH + "22101-0d0300.zip";
+            var fileToUpload = UPLOAD_PATH + "22101-d30.zip";
             var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
             Assert.AreEqual(1, result.Report.GetNumberOfErrors());
 
@@ -123,7 +123,7 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void CheckVersionForUpload_ShouldForbidToUploadExistingUploadedVersion()
         {
-            var fileToUpload = UPLOAD_PATH + "22101-0d0300.zip";
+            var fileToUpload = UPLOAD_PATH + "22101-d30.zip";
 
             var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
             Assert.AreEqual(1, result.Report.GetNumberOfErrors());
@@ -137,7 +137,7 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void UploadVersion_ShouldNotLogQualityChecksInRemarksIfVersionIsDraft()
         {
-            UploadDraft(CreateDraftVersion(), UPLOAD_PATH + "22103-020000.zip");
+            UploadDraft(CreateDraftVersion(), UPLOAD_PATH + "22103-200.zip");
 
             var dbVersion = Context.SpecVersions.Where(v => v.Fk_SpecificationId == myVersion.Fk_SpecificationId 
                 && v.MajorVersion == myVersion.MajorVersion && v.TechnicalVersion == myVersion.TechnicalVersion
@@ -159,7 +159,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             myVersion = CreateDraftVersion();
             myVersion.TechnicalVersion = 4;
-            var fileToUpload = UPLOAD_PATH + "22103-020000.zip";
+            var fileToUpload = UPLOAD_PATH + "22103-200.zip";
             UploadDraft(myVersion, fileToUpload);
 
             Assert.IsFalse(File.Exists(createdFilePath));
@@ -176,18 +176,19 @@ namespace Etsi.Ultimate.Tests.Services
             File.Create(createdFilePath);
 
             myVersion = CreateDraftVersion();
-            var fileToUpload = UPLOAD_PATH + "22103-020000.zip";
+            var fileToUpload = UPLOAD_PATH + "22103-200.zip";
             UploadDraft(myVersion, fileToUpload);
 
             Assert.IsTrue(File.Exists(createdFilePath));
-            Assert.IsFalse(File.Exists("Ftp\\Specs\\latest-drafts\\22103-200.zip"));
+            Assert.IsTrue(File.Exists("Ftp\\Specs\\latest-drafts\\22103-210.zip"));
+            //Assert.IsFalse(File.Exists("Ftp\\Specs\\latest-drafts\\22103-200.zip"));
         }
 
         [Test]
         public void CheckVersion_MustAllowToUploadAllocatedVersion()
         {
             myVersion.EditorialVersion = 1;
-            var fileToUpload = UPLOAD_PATH + "22103-020000.zip";
+            var fileToUpload = UPLOAD_PATH + "22103-200.zip";
 
             var checkResults = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
             Assert.AreEqual(0, checkResults.Report.GetNumberOfErrors());
@@ -201,7 +202,7 @@ namespace Etsi.Ultimate.Tests.Services
         {
             myVersion.TechnicalVersion = 0;
             myVersion.EditorialVersion = 2;
-            var fileToUpload = UPLOAD_PATH + "22103-020000.zip";
+            var fileToUpload = UPLOAD_PATH + "22103-200.zip";
 
             var checkResults = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
             Assert.AreEqual(1, checkResults.Report.GetNumberOfErrors());

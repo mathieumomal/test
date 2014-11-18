@@ -51,9 +51,9 @@ namespace Etsi.Ultimate.DomainClasses
 
         }
 
-        public void SetSerialNumber(string MajorVersion36, string TechnicalVersion36, string EditorialVersion)
+        public void SetSerialNumber(string version)
         {
-            SerialNumber = EtsiDocNumber + "v" + MajorVersion36 + TechnicalVersion36 + EditorialVersion;
+            SerialNumber = EtsiDocNumber + "v" + version;
             //Reference completed
             Reference += SerialNumber;
         }

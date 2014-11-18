@@ -90,7 +90,6 @@
     <Compile Include="ReleaseService.cs" />
     <Compile Include="SpecificationService.cs" />
     <Compile Include="UrlService.cs" />
-    <Compile Include="UtilsService.cs" />
     <Compile Include="WorkItemService.cs" />
     <Compile Include="WorkPlanFileService.cs" />
   </ItemGroup>
