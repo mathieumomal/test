@@ -39,7 +39,7 @@ namespace Etsi.Ultimate.Tests.Services.ItuRecommendation
             // Three mocks to set up to have test working
             var emptyResponse = new List<KeyValuePair<string, string>>();
             var seedFileParserMock = MockRepository.GenerateMock<ISeedFileParser>();
-            seedFileParserMock.Stub(s => s.ExtractSpecificationNumbersFromSeeFile("test.docx"))
+            seedFileParserMock.Stub(s => s.ExtractSpecificationNumbersFromSeedFile("test.docx"))
                 .Return(new ServiceResponse<List<KeyValuePair<string, string>>>{Result = emptyResponse});
             ManagerFactory.Container.RegisterInstance(typeof(ISeedFileParser),seedFileParserMock);
 

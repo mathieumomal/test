@@ -39,7 +39,7 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
 
             // Else parse the document
             var seedFileParser = ManagerFactory.Resolve<ISeedFileParser>();
-            var parserResponse = seedFileParser.ExtractSpecificationNumbersFromSeeFile(seedFilePath);
+            var parserResponse = seedFileParser.ExtractSpecificationNumbersFromSeedFile(seedFilePath);
             if (parserResponse.Report.GetNumberOfErrors() > 0)
             {
                 response.Report.ErrorList = parserResponse.Report.ErrorList;

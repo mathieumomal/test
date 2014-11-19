@@ -111,6 +111,7 @@
     <Compile Include="BaseEffortTest.cs" />
     <Compile Include="BaseTest.cs" />
     <Compile Include="Business\CommunityManagerTest.cs" />
+    <Compile Include="Business\ItuRecommendation\SeedFileParserTest.cs" />
     <Compile Include="Business\ItuRecommendation\SpecToItuRecordConverterTests.cs" />
     <Compile Include="Business\UtilsManagerTest.cs" />
     <Compile Include="Business\CrCategoriesManagerTest.cs" />
@@ -302,6 +303,24 @@
     <Content Include="TestData\LogManager\Test.log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="TestData\ItuRecommendation\InvalidSeedFile.doc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\ItuRecommendation\SeedFile-NoValidHeadings.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\ItuRecommendation\SeedFile-Tr.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\ItuRecommendation\SeedFile-TrAndTs.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\ItuRecommendation\SeedFile-Ts.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\ItuRecommendation\SeedFile.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Versions\ToUpload\22101-d30.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
