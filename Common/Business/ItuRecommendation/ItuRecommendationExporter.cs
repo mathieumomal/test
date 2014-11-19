@@ -1,22 +1,115 @@
-﻿using System;
+﻿using Etsi.Ultimate.Utils.Core;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Etsi.Ultimate.Business.ItuRecommendation
 {
-    public class ItuRecommendationExporter: IItuRecommendationExporter
+    public class ItuRecommendationExporter : IItuRecommendationExporter
     {
         /// <summary>
-        /// See interface.
+        /// Generates the .xlsx export of the records.
         /// </summary>
-        /// <param name="filePath"></param>
-        /// <param name="records"></param>
-        /// <returns></returns>
+        /// <param name="filePath">Path where the file should be stored</param>
+        /// <param name="records">Records to export</param>
+        /// <returns>
+        /// True if export was successful.
+        /// </returns>
         public bool CreateItuFile(string filePath, List<ItuRecord> records)
         {
-            throw new NotImplementedException();
+            if (String.IsNullOrEmpty(filePath))
+                return false;
+            if (records == null)
+                return false;
+            try
+            {
+                //Create Empty Work Book
+                if (File.Exists(filePath)) File.Delete(filePath);
+                FileInfo newFile = new FileInfo(filePath);
+
+                using (ExcelPackage pck = new ExcelPackage(newFile))
+                {
+                    // get the handle to the existing worksheet
+                    var wsData = pck.Workbook.Worksheets.Add(Path.GetFileNameWithoutExtension(filePath));
+
+                    /*------------*/
+                    /* Set Styles */
+                    /*------------*/
+                    int rowHeader = 1;
+                    int rowDataEnd = records.Count + 1;
+                    int columnStart = 1;
+                    int columnEnd = 10;
+
+                    //Set Font Style
+                    wsData.Cells.Style.Font.Size = 8;
+                    wsData.Cells.Style.Font.Name = "Arial";
+
+                    //Set Header Style
+                    wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                    wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
+
+                    //Set Cell Borders
+                    wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+                    wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+                    wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+                    wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+
+                    //Set Column Width
+                    wsData.DefaultColWidth = 5;
+                    wsData.Column(1).Width = wsData.Column(2).Width = wsData.Column(5).Width = wsData.Column(6).Width = wsData.Column(8).Width = wsData.Column(9).Width = 12;
+                    wsData.Column(3).Width = 40;
+                    wsData.Column(10).Width = 60;
+
+                    //Set Row Height
+                    wsData.DefaultRowHeight = 12;
+
+                    //Set Zoom to 100%
+                    wsData.View.ZoomScale = 100;
+
+                    //Get datas specs
+                    var datas = from s in records
+                                orderby s.ClauseNumber, s.PublicationDate
+                                select new
+                                {
+                                    Paragraph = s.ClauseNumber,
+                                    Specification = s.SpecificationNumber,
+                                    Title = s.Title,
+                                    Sdo = s.Sdo,
+                                    Sdoversion = s.SdoVersionReleaase,
+                                    Sdoref = s.SdoReference,
+                                    Rev = s.SpecVersionNumber,
+                                    Status = s.VersionPublicationStatus,
+                                    AppDate = s.PublicationDate,
+                                    Hyperlink = s.Hyperlink
+                                };
+
+                    //Upload Data to Excel
+                    var dataRange = wsData.Cells["A1"].LoadFromCollection(
+                                                  datas,
+                                                  true,
+                                                  OfficeOpenXml.Table.TableStyles.None);
+
+                    //Modify Headers for space between words
+                    wsData.Cells[rowHeader, 4].Value = "SDO";
+                    wsData.Cells[rowHeader, 5].Value = "SDOversion";
+                    wsData.Cells[rowHeader, 6].Value = "SDOref";
+                    wsData.Cells[rowHeader, 9].Value = "App date";
+                    wsData.Cells[rowHeader, 10].Value = "hyperlink";
+
+                    pck.Save();
+                }
+            }
+            catch (IOException ex)
+            {
+                LogManager.Error(ex.Message, ex);
+                return false;
+            }
+
+            return true;
         }
     }
 
