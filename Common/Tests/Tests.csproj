@@ -111,6 +111,7 @@
     <Compile Include="BaseEffortTest.cs" />
     <Compile Include="BaseTest.cs" />
     <Compile Include="Business\CommunityManagerTest.cs" />
+    <Compile Include="Business\ItuRecommendation\SpecToItuConverterTests.cs" />
     <Compile Include="Business\ItuRecommendation\SeedFileParserTest.cs" />
     <Compile Include="Business\ItuRecommendation\SpecToItuRecordConverterTests.cs" />
     <Compile Include="Business\UtilsManagerTest.cs" />

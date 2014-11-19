@@ -118,5 +118,11 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         }
 
         #endregion
+
+
+        public List<SpecVersion> GetVersionsBySpecIds(List<int> specIds, List<int> allowedMajorVersions)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

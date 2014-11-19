@@ -28,7 +28,7 @@ namespace Etsi.Ultimate.Tests.EffortTests
             mtgRepo.UoW = UoW;
 
             var result = mtgRepo.All.ToList();
-            Assert.AreEqual(10, result.Count);
+            Assert.AreEqual(11, result.Count);
         }
 
         [Test]

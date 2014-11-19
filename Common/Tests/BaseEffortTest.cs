@@ -34,9 +34,9 @@ namespace Etsi.Ultimate.Tests
         /// Initialization of the context by a set of csv files
         /// </summary>
         [SetUp]
-        public virtual void SetUp()
+        public override void SetUp()
         {
-            base.Setup();
+            base.SetUp();
 
             //CSV files are stored in a specific folder : Data_For_EffortUnitTests
             string dir = new StringBuilder()

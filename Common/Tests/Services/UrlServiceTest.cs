@@ -24,9 +24,9 @@ namespace Etsi.Ultimate.Tests.Services
         public const string tokenExample_dontexist = "azer8";
 
         [SetUp]
-        public override void Setup()
+        public override void SetUp()
         {
-            base.Setup();
+            base.SetUp();
 
             var mock = MockRepository.GenerateMock<IUrlRepository>();
             mock.Stub(m => m.GetTabIdAndPageNameForModuleId(1)).Return(new KeyValuePair<int, string>(12, "//WorkItem"));

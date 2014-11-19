@@ -214,6 +214,42 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to End release does not exist..
+        /// </summary>
+        public static string ItuConversion_Error_InvalidEndRelease {
+            get {
+                return ResourceManager.GetString("ItuConversion_Error_InvalidEndRelease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SA Plenary Meeting id is invalid..
+        /// </summary>
+        public static string ItuConversion_Error_InvalidMeetingId {
+            get {
+                return ResourceManager.GetString("ItuConversion_Error_InvalidMeetingId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start release is greater than End release..
+        /// </summary>
+        public static string ItuConversion_Error_InvalidReleaseOrder {
+            get {
+                return ResourceManager.GetString("ItuConversion_Error_InvalidReleaseOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start release does not exist..
+        /// </summary>
+        public static string ItuConversion_Error_InvalidStartRelease {
+            get {
+                return ResourceManager.GetString("ItuConversion_Error_InvalidStartRelease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You do not have right to perform this action.
         /// </summary>
         public static string RightError {

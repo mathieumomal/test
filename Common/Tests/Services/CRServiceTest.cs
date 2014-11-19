@@ -28,7 +28,7 @@ namespace Etsi.Ultimate.Tests.Services
         MemoryAppender _memoryAppender;
         #endregion
 
-        #region Logger Setup
+        #region Logger SetUp
 
         [TestFixtureSetUp]
         public void Init()
@@ -38,7 +38,7 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [SetUp]
-        public override void Setup()
+        public override void SetUp()
         {
             base.SetUp();
             _memoryAppender = ((LoggerWrapperImpl)(LogManager.Logger)).Logger.Repository.GetAppenders()[0] as MemoryAppender;
@@ -48,6 +48,7 @@ namespace Etsi.Ultimate.Tests.Services
         [TearDown]
         public override void TearDown()
         {
+            base.TearDown();
             _memoryAppender.Clear();
         }
 

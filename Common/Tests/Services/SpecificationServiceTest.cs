@@ -23,9 +23,9 @@ namespace Etsi.Ultimate.Tests.Services
         private const int EDIT_RIGHT_USER = 3;
         private const int EDIT_LIMITED_RIGHT_USER = 4;
 
-        public override void Setup()
+        public override void SetUp()
         {
-            base.Setup();
+            base.SetUp();
             _editSpecInstance = null;
         }
 

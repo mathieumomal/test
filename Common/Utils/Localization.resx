@@ -321,4 +321,16 @@
   <data name="FinalizeCrs_Warn_WithDrawnSpec" xml:space="preserve">
     <value>Could not allocate version for Specification {0}: specification is withdrawn</value>
   </data>
+  <data name="ItuConversion_Error_InvalidEndRelease" xml:space="preserve">
+    <value>End release does not exist.</value>
+  </data>
+  <data name="ItuConversion_Error_InvalidMeetingId" xml:space="preserve">
+    <value>SA Plenary Meeting id is invalid.</value>
+  </data>
+  <data name="ItuConversion_Error_InvalidReleaseOrder" xml:space="preserve">
+    <value>Start release is greater than End release.</value>
+  </data>
+  <data name="ItuConversion_Error_InvalidStartRelease" xml:space="preserve">
+    <value>Start release does not exist.</value>
+  </data>
 </root>

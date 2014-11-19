@@ -14,9 +14,9 @@ namespace Etsi.Ultimate.Tests.Business
     class WorkItemCsvParserTest: BaseTest
     {
         [SetUp]
-        public override void Setup()
+        public override void SetUp()
         {
-            base.Setup();
+            base.SetUp();
             RegisterRepositories();
         }
 

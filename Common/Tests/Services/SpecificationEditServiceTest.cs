@@ -31,9 +31,9 @@ namespace Etsi.Ultimate.Tests.Services
         private const int SPEC_ID_UCC_FLAG_NOT_SET = 3;
         private List<int> specIdList = new List<int> { SPEC_ID_UNDER_CHANGE_CONTROL, SPEC_ID_NOT_UNDER_CHANGE_CONTROL, SPEC_ID_UCC_FLAG_NOT_SET };
         private List<int> specIdsUcc = new List<int> { SPEC_ID_UNDER_CHANGE_CONTROL };
-        public override void Setup()
+        public override void SetUp()
         {
-            base.Setup();
+            base.SetUp();
             _editSpecInstance = null;
         }
 

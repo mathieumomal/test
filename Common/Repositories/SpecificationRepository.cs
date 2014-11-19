@@ -272,6 +272,16 @@ namespace Etsi.Ultimate.Repositories
         {
             return UoW.Context.Specifications.Where(x => ids.Contains(x.Pk_SpecificationId)).ToList();
         }
+
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="specNumbersList"></param>
+        /// <returns></returns>
+        public List<Specification> GetSpecificationListByNumber(List<string> specNumbersList)
+        {
+            return UoW.Context.Specifications.Where(x => specNumbersList.Contains(x.Number)).ToList();
+        }
     }
 
     public interface ISpecificationRepository : IEntityRepository<Specification>
@@ -325,5 +335,12 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="ids"></param>
         /// <returns></returns>
         List<Specification> GetSpecifications(List<int> ids);
+
+        /// <summary>
+        /// Returns all specification by their number
+        /// </summary>
+        /// <param name="specNumbersList"></param>
+        /// <returns></returns>
+        List<Specification> GetSpecificationListByNumber(List<string> specNumbersList);
     }
 }

@@ -24,9 +24,9 @@ namespace Etsi.Ultimate.Tests.Services.ItuRecommendation
         ItuRecommendationService _ituService;
 
         [SetUp]
-        public override void Setup()
+        public override void SetUp()
         {
-            base.Setup();
+            base.SetUp();
             _ituService = new ItuRecommendationService();
 
             InitializeUserRightsMock();

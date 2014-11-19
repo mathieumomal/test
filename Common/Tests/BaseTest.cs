@@ -27,7 +27,7 @@ namespace Etsi.Ultimate.Tests
         }
 
         [SetUp]
-        public virtual void Setup()
+        public virtual void SetUp()
         {
             ManagerFactory.SetDefaultDependencies();
             ServicesFactory.SetDefaultDependencies();

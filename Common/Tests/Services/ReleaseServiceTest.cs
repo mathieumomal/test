@@ -28,7 +28,7 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void Test_GetAllReleases()
         {
-            // Setup the dependency manager, let's test both Service and business
+            // SetUp the dependency manager, let's test both Service and business
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
             ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
 
@@ -108,7 +108,7 @@ namespace Etsi.Ultimate.Tests.Services
             // Clear the cache to ensure the test is not wrong.
             string fakeDescription = "A Fake description";
 
-            // Setup the dependency manager, let's test both Service and business
+            // SetUp the dependency manager, let's test both Service and business
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
             ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
 
@@ -137,7 +137,7 @@ namespace Etsi.Ultimate.Tests.Services
         [TestCase(4)]
         public void Test_GetReleaseById(int releaseId)
         {
-            // Setup the dependency manager, let's test both Service and business
+            // SetUp the dependency manager, let's test both Service and business
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
             ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
 
@@ -162,7 +162,7 @@ namespace Etsi.Ultimate.Tests.Services
         [TestCase(4)]
         public void Test_GetPreviousReleaseCode(int releaseId)
         {
-            // Setup the dependency manager, let's test both Service and business
+            // SetUp the dependency manager, let's test both Service and business
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());            
 
             // Call the code
@@ -184,7 +184,7 @@ namespace Etsi.Ultimate.Tests.Services
         [TestCase(4)]
         public void Test_GetAllReleasesCodes(int releaseId)
         {
-            // Setup the dependency manager, let's test both Service and business
+            // SetUp the dependency manager, let's test both Service and business
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
             ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
 

@@ -9,10 +9,10 @@ namespace Etsi.Ultimate.Repositories
 {
     public class SpecVersionsRepository : ISpecVersionsRepository
     {
-        private IUltimateContext context;
+        private IUltimateContext _context;
         public SpecVersionsRepository(IUltimateUnitOfWork iUoW)
         {
-            context = iUoW.Context;
+            _context = iUoW.Context;
         }
 
 
@@ -74,25 +74,35 @@ namespace Etsi.Ultimate.Repositories
 
         public void InsertOrUpdate(SpecVersion entity)
         {
-            //Remove generated proxies to avoid Referential Integrity Errors
-            //entity.Release = null;
-            //entity.Specification = null;
-            
             //[1] Add Existing Childs First
             entity.Remarks.ToList().ForEach(x =>
             {
                 if (x.Pk_RemarkId != default(int))
                     UoW.Context.SetModified(x);                
             });
-            /*if (entity.Release.Pk_ReleaseId != default(int))
-                UoW.Context.SetModified(entity.Release);
-            if (entity.Specification.Pk_SpecificationId != default(int))
-                UoW.Context.SetModified(entity.Specification); */
             
             //[2] Add the Entity (It will add the childs as well)
             UoW.Context.SetAdded(entity);
 
             
+        }
+
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="specIds"></param>
+        /// <param name="allowedMajorVersions"></param>
+        /// <returns></returns>
+        public List<SpecVersion> GetVersionsBySpecIds(List<int> specIds, List<int> allowedMajorVersions)
+        {
+            var specIdsOptional = new List<int?>();
+            specIds.ForEach(s => specIdsOptional.Add(s));
+
+            var versionsOptional = new List<int?>();
+            allowedMajorVersions.ForEach(s => versionsOptional.Add(s));
+
+            return UoW.Context.SpecVersions.Where(v => specIdsOptional.Contains(v.Fk_SpecificationId)
+                                                && versionsOptional.Contains(v.MajorVersion)).ToList();
         }
 
         public void Delete(int id)
@@ -150,5 +160,13 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="ReleaseMajorNumber"> The 3G decimal number of version, that is used to determine.</param>
         /// <returns></returns>
         int CountVersionsPendingUploadByReleaseId(int releaseMajorNumber);
+
+        /// <summary>
+        /// Returns all specifications given a specification Ids and a list of allowed major versions
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="allowedMajorVersions"></param>
+        /// <returns></returns>
+        List<SpecVersion> GetVersionsBySpecIds(List<int> specIds, List<int> allowedMajorVersions);
     }
 }

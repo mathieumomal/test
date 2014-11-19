@@ -53,7 +53,7 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
         /// <summary>
         /// Column: App date
         /// </summary>
-        public DateTime PublicationDate { get; set; }
+        public string PublicationDate { get; set; }
 
         /// <summary>
         /// Column: hyperlink
