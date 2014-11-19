@@ -133,6 +133,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Could not allocate version for Specification {0}: Release {1} is withdrawn for this specification..
+        /// </summary>
+        public static string FinalizeCrs_Warn_SpecReleaseWithdrawn {
+            get {
+                return ResourceManager.GetString("FinalizeCrs_Warn_SpecReleaseWithdrawn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Could not allocate version for Specification {0}: specification is withdrawn.
         /// </summary>
         public static string FinalizeCrs_Warn_WithDrawnSpec {

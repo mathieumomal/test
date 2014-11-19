@@ -127,7 +127,7 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
             var endRelease = _allReleases.Find(r => r.Pk_ReleaseId == endReleaseId);
             if (endRelease == null)
                 report.LogError(Localization.ItuConversion_Error_InvalidEndRelease);
-
+            
             if (report.GetNumberOfErrors() > 0)
                 return null;
 

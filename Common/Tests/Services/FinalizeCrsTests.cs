@@ -60,6 +60,15 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(String.Format(Localization.FinalizeCrs_Warn_SpecReleaseNotExisting, "22.105", "Rel-14"), response.Report.WarningList.First());
         }
 
+        [Test, Description("System should log warning if spec release is withdrawn")]
+        public void FinalizeCr_LogsWarningIfSpecReleaseIsWithdrawn()
+        {
+            var response = crService.SetCrsAsFinal(UserRolesFakeRepository.SPECMGR_ID, new List<string> { "RP-CR0009" });
+            Assert.IsTrue(response.Result);
+            Assert.AreEqual(1, response.Report.GetNumberOfWarnings());
+            Assert.AreEqual(String.Format(Localization.FinalizeCrs_Warn_SpecReleaseWithdrawn, "22.101", "Rel-14"), response.Report.WarningList.First());
+        }
+
         [Test, Description("System should not treat CRs that are not TSG approved.")]
         public void FinalizeCr_IgnoreNonTsgApprovedCrs()
         {
@@ -103,6 +112,15 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsFalse(UoW.Context.ChangeRequests.Where(x => x.TSGTDoc == "RP-CR0008").FirstOrDefault().Fk_NewVersion.HasValue);
             Assert.AreEqual(1, response.Report.GetNumberOfWarnings());
             Assert.AreEqual(String.Format(Localization.FinalizeCrs_Warn_DraftSpec, "22.104"), response.Report.WarningList.First());
+        }
+
+        [Test, Description("If two CRs are for same spec, system should allocate only one version.")]
+        public void FinalizeCr_CreatesOneSingleVersionPerSpec()
+        {
+            var versionCount = UoW.Context.SpecVersions.Count();
+            var response = crService.SetCrsAsFinal(UserRolesFakeRepository.SPECMGR_ID, new List<string> { "RP-CR0003", "RP-CR0010" });
+            Assert.IsTrue(response.Result);
+            Assert.AreEqual(versionCount + 1, UoW.Context.SpecVersions.Count());
         }
 
         [Test]

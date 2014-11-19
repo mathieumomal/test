@@ -73,6 +73,7 @@
     <Compile Include="ChangeRequestRepository.cs" />
     <Compile Include="Enum_CommunitiesShortNameRepository.cs" />
     <Compile Include="Enum_CrCategoryRepository.cs" />
+    <Compile Include="EtsiWorkItemRepository.cs" />
     <Compile Include="RemarkRepository.cs" />
     <Compile Include="SyncInfoRepository.cs" />
     <Compile Include="EnumTechnologiesRepository.cs" />

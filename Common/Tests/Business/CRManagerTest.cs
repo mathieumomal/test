@@ -115,7 +115,7 @@ namespace Etsi.Ultimate.Tests.Business
 
         [TestCase(87541, "0001", Description = "Numbering system returns 0001 when there is no CR")]
         [TestCase(OneAllocatedCrSpecId, "0002", Description = "Numbering system must return next available number (here 0002)")]
-        [TestCase(AlphaNumericalAllocatedSpecId, "0001", Description = "System should allocate CR#0001 even if there are already some alphanumeric allocated numbers")]
+        [TestCase(136085, "0001", Description = "System should allocate CR#0001 even if there are already some alphanumeric allocated numbers")]
         public void GenerateCrNumberReturns0001WhenNoExistingCr(int specId, string expectedCrNumber)
         {
             var crManager = new ChangeRequestManager { UoW = UoW };

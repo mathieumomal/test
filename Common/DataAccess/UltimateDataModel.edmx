@@ -34,7 +34,13 @@
           <EntitySet Name="ETSI_WorkItem" EntityType="Etsi.Ultimate.DataAccess.Store.ETSI_WorkItem" store:Type="Views" store:Schema="dbo" store:Name="ETSI_WorkItem">
             <DefiningQuery>SELECT 
       [ETSI_WorkItem].[WKI_ID] AS [WKI_ID], 
-      [ETSI_WorkItem].[WKI_REFERENCE] AS [WKI_REFERENCE]
+      [ETSI_WorkItem].[WKI_REFERENCE] AS [WKI_REFERENCE], 
+      [ETSI_WorkItem].[published] AS [published], 
+      [ETSI_WorkItem].[PublicationDate] AS [PublicationDate], 
+      [ETSI_WorkItem].[StandardType] AS [StandardType], 
+      [ETSI_WorkItem].[Number] AS [Number], 
+      [ETSI_WorkItem].[fileName] AS [fileName], 
+      [ETSI_WorkItem].[filePath] AS [filePath]
       FROM [dbo].[ETSI_WorkItem] AS [ETSI_WorkItem]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="ResponsibleGroup_Secretary" EntityType="Etsi.Ultimate.DataAccess.Store.ResponsibleGroup_Secretary" store:Type="Views" store:Schema="dbo" store:Name="ResponsibleGroup_Secretary">
@@ -612,6 +618,12 @@
           </Key>
           <Property Name="WKI_ID" Type="int" Nullable="false" />
           <Property Name="WKI_REFERENCE" Type="varchar" MaxLength="30" />
+          <Property Name="published" Type="int" Nullable="false" />
+          <Property Name="PublicationDate" Type="datetime" />
+          <Property Name="StandardType" Type="varchar" MaxLength="5" />
+          <Property Name="Number" Type="varchar" MaxLength="30" />
+          <Property Name="fileName" Type="varchar" MaxLength="68" />
+          <Property Name="filePath" Type="varchar" MaxLength="128" />
         </EntityType>
         <!--Errors Found During Generation:
       warning 6002: The table/view 'U3GPPDB.dbo.ResponsibleGroup_Secretary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
@@ -2063,6 +2075,12 @@
           </Key>
           <Property Type="Int32" Name="WKI_ID" Nullable="false" />
           <Property Type="String" Name="WKI_REFERENCE" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="published" Nullable="false" />
+          <Property Type="DateTime" Name="PublicationDate" Precision="3" />
+          <Property Type="String" Name="StandardType" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="Number" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="fileName" MaxLength="68" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="filePath" MaxLength="128" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SpecVersion">
           <Key>
@@ -2750,6 +2768,12 @@
           <EntitySetMapping Name="ETSI_WorkItem">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ETSI_WorkItem">
               <MappingFragment StoreEntitySet="ETSI_WorkItem">
+                <ScalarProperty Name="filePath" ColumnName="filePath" />
+                <ScalarProperty Name="fileName" ColumnName="fileName" />
+                <ScalarProperty Name="Number" ColumnName="Number" />
+                <ScalarProperty Name="StandardType" ColumnName="StandardType" />
+                <ScalarProperty Name="PublicationDate" ColumnName="PublicationDate" />
+                <ScalarProperty Name="published" ColumnName="published" />
                 <ScalarProperty Name="WKI_REFERENCE" ColumnName="WKI_REFERENCE" />
                 <ScalarProperty Name="WKI_ID" ColumnName="WKI_ID" />
               </MappingFragment>

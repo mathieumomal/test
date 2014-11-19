@@ -176,5 +176,18 @@ namespace Etsi.Ultimate.Tests
         }
 
         #endregion
+
+
+        public System.Data.Entity.IDbSet<ETSI_WorkItem> ETSI_WorkItem
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace Etsi.Ultimate.Tests
         public const int RELEASE_ID = 2882;
         public const int RELEASE_OPEN_ID = 2883;
         public const int RELEASE_NEWLY_OPEN_ID = 2884;
+        public const int RELEASE_WITH_NO_SPEC_RELEASE_ID = 2885;
 
 
         public const int SPECIFICATION_DRAFT_WITH_EXISTING_DRAFTS_ID = 136082;

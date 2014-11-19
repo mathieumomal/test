@@ -108,7 +108,7 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
         public void Allocation_FailsIfSpecReleaseDoesNotExist()
         {
             myVersion.Fk_SpecificationId = EffortConstants.SPECIFICATION_ACTIVE_ID;
-            myVersion.Fk_ReleaseId = EffortConstants.RELEASE_NEWLY_OPEN_ID;
+            myVersion.Fk_ReleaseId = EffortConstants.RELEASE_WITH_NO_SPEC_RELEASE_ID;
             var result = versionSvc.AllocateVersion(USER_HAS_RIGHT, myVersion);
             Assert.AreEqual(1, result.GetNumberOfErrors());
             Assert.AreEqual(Utils.Localization.Allocate_Error_SpecRelease_Does_Not_Exist, result.ErrorList.First());

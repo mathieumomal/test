@@ -11,7 +11,7 @@ namespace Etsi.Ultimate.Tests.Repositories
     public class CrRepositoryTest : BaseEffortTest
     {
         #region Constants
-        private const int TotalNoOfCrsInCsv = 19;
+        private const int TotalNoOfCrsInCsv = 22;
         private const int SpecificationId = 136080;
         #endregion
 
@@ -53,7 +53,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         {
             var repo = new ChangeRequestRepository { UoW = UoW };
             var repoResult = repo.FindCrNumberBySpecificationId(SpecificationId);
-            Assert.AreEqual(5, repoResult.Count);
+            Assert.AreEqual(6, repoResult.Count);
         }
 
         [Test]

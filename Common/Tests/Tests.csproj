@@ -276,6 +276,7 @@
     <None Include="Data_For_EffortUnitTests\Enum_Serie.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Data_For_EffortUnitTests\ETSI_WorkItem.csv" />
     <None Include="Data_For_EffortUnitTests\Releases.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

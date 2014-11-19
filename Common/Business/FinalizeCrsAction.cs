@@ -44,6 +44,7 @@ namespace Etsi.Ultimate.Business
             var releasesManager = new ReleaseManager { UoW = UoW };
             List<Release> releases = releasesManager.GetAllReleases(personId).Key;
 
+            var alreadyUploadedVersion = new List<SpecVersion>();
             foreach (ChangeRequest changeRequest in candidateChangeRequests)
             {
                 var requestReleaseId = changeRequest.Fk_Release;
@@ -81,6 +82,12 @@ namespace Etsi.Ultimate.Business
                         specification.Number, releaseName));
                     continue;
                 }
+                if (specRelease.isWithdrawn.GetValueOrDefault())
+                {
+                    string releaseName = releases.Find(r => r.Pk_ReleaseId == requestReleaseId.GetValueOrDefault()).Code;
+                    response.Report.LogWarning(String.Format(Localization.FinalizeCrs_Warn_SpecReleaseWithdrawn, specification.Number, releaseName));
+                    continue;
+                }
 
                 var version =
                     versionRepository.GetVersionsForSpecRelease(changeRequest.Fk_Specification.GetValueOrDefault(),
@@ -90,15 +97,31 @@ namespace Etsi.Ultimate.Business
                         .ThenByDescending(v => v.EditorialVersion)
                         .FirstOrDefault();
 
+               
                 if (version == null)
                 {
-                    changeRequest.NewVersion = AllocateNewVersion(personId, release.Version3g.GetValueOrDefault(), 0,
-                        changeRequest);
+                    
                 }
-                else if (!string.IsNullOrEmpty(version.Location))
+
+                if (version == null || !string.IsNullOrEmpty(version.Location) )
                 {
-                    changeRequest.NewVersion = AllocateNewVersion(personId, version.MajorVersion.GetValueOrDefault(),
-                        version.TechnicalVersion.GetValueOrDefault() + 1, changeRequest);
+                    int majorVersion = release.Version3g.GetValueOrDefault();
+                    int technicalVersion = (version == null) ? 0 : version.TechnicalVersion.GetValueOrDefault() + 1;
+
+                    // Because of EF 6 leakage, if we already allocated the object on a previous CR, it will not find
+                    // the version, so let's try to get it still.
+                    version =
+                        alreadyUploadedVersion.FirstOrDefault(
+                            v => v.Fk_SpecificationId == specification.Pk_SpecificationId
+                                 && v.Fk_ReleaseId == requestReleaseId);
+
+                    if (version == null)
+                    {
+                        var newVersion = AllocateNewVersion(personId, majorVersion, technicalVersion,
+                            changeRequest);
+                        changeRequest.NewVersion = newVersion;
+                        alreadyUploadedVersion.Add(newVersion);
+                    }
                 }
                 else
                 {

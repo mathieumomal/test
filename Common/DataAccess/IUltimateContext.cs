@@ -36,6 +36,7 @@ namespace Etsi.Ultimate.DataAccess
         IDbSet<SpecificationTechnology> SpecificationTechnologies { get; set; }
         IDbSet<SpecificationResponsibleGroup> SpecificationResponsibleGroups { get; set; }
         IDbSet<ResponsibleGroup_Secretary> ResponsibleGroupSecretaries { get; set; }
+        IDbSet<ETSI_WorkItem> ETSI_WorkItem { get; set; }
         IDbSet<SpecVersion> SpecVersions { get; set; }
         IDbSet<Enum_CRCategory> Enum_CRCategory { get; set; }
         IDbSet<Enum_CRImpact> Enum_CRImpact { get; set; }

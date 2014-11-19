@@ -17,6 +17,12 @@ namespace Etsi.Ultimate.DomainClasses
     {
         public int WKI_ID { get; set; }
         public string WKI_REFERENCE { get; set; }
+        public int published { get; set; }
+        public Nullable<System.DateTime> PublicationDate { get; set; }
+        public string StandardType { get; set; }
+        public string Number { get; set; }
+        public string fileName { get; set; }
+        public string filePath { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

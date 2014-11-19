@@ -170,15 +170,24 @@ namespace Etsi.Ultimate.Tests.Business.ItuRecommendation
             Assert.AreEqual("ETSI", response.First().Sdo);
         }
 
-        [Test, Description("For each candidate version, system should write 'Not found in WPMDB' in export ")]
+        [Test, Description("For each candidate version with no WI system should write 'Not found in WPMDB' in export ")]
         public void ConvertToItuRecords_SetsNotFoundOnWpmRelatedFieldsIfNoWkiIdInVersion()
         {
-            var response = GetGenericCase();
+            _clausesAndSpecs.Add(new KeyValuePair<string, string>("5.1.2", "22.101"));
+            var response = _converter.BuildItuRecordsForSpec(_clausesAndSpecs, Release13Id, Release13Id, LastMeetingId).Result;
             Assert.AreEqual("Not found in WPM DB", response.First().SdoReference);
             Assert.AreEqual("Not found in WPM DB", response.First().VersionPublicationStatus);
             Assert.AreEqual("Not found in WPM DB", response.First().Hyperlink);
             Assert.AreEqual("Not found in WPM DB", response.First().PublicationDate);
         }
+
+        /*[Test, Description("For each candidate version that has been allocated, system should fill Reference")]
+        public void ConvertToItuRecords_FillsReferenceForExistingWis()
+        {
+            var response = GetGenericCase();
+            Assert.AreEqual("ETSI TS 122 105", response.First().SdoReference);
+        }*/
+
 
         #endregion
 
