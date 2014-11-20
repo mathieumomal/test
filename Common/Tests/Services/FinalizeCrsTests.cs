@@ -121,6 +121,12 @@ namespace Etsi.Ultimate.Tests.Services
             var response = crService.SetCrsAsFinal(UserRolesFakeRepository.SPECMGR_ID, new List<string> { "RP-CR0003", "RP-CR0010" });
             Assert.IsTrue(response.Result);
             Assert.AreEqual(versionCount + 1, UoW.Context.SpecVersions.Count());
+            var versionId = UoW.Context.SpecVersions.ToList().Last().Pk_VersionId;
+
+            Assert.AreEqual(versionId, UoW.Context.ChangeRequests.First(cr => cr.TSGTDoc == "RP-CR0003").Fk_NewVersion);
+            Assert.AreEqual(versionId, UoW.Context.ChangeRequests.First(cr => cr.TSGTDoc == "RP-CR0010").Fk_NewVersion);
+
+
         }
 
         [Test]

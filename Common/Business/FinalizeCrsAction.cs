@@ -97,12 +97,6 @@ namespace Etsi.Ultimate.Business
                         .ThenByDescending(v => v.EditorialVersion)
                         .FirstOrDefault();
 
-               
-                if (version == null)
-                {
-                    
-                }
-
                 if (version == null || !string.IsNullOrEmpty(version.Location) )
                 {
                     int majorVersion = release.Version3g.GetValueOrDefault();
@@ -114,14 +108,15 @@ namespace Etsi.Ultimate.Business
                         alreadyUploadedVersion.FirstOrDefault(
                             v => v.Fk_SpecificationId == specification.Pk_SpecificationId
                                  && v.Fk_ReleaseId == requestReleaseId);
-
+                    
                     if (version == null)
                     {
-                        var newVersion = AllocateNewVersion(personId, majorVersion, technicalVersion,
+                        version = AllocateNewVersion(personId, majorVersion, technicalVersion,
                             changeRequest);
-                        changeRequest.NewVersion = newVersion;
-                        alreadyUploadedVersion.Add(newVersion);
                     }
+                    changeRequest.NewVersion = version;
+                    if (!alreadyUploadedVersion.Contains(version))
+                        alreadyUploadedVersion.Add(version);
                 }
                 else
                 {
