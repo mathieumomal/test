@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Etsi.Ultimate.Business.SpecVersionBusiness;
 using Etsi.Ultimate.Utils.Core;
+using Etsi.Ultimate.Business.SpecificationBusiness;
 
 namespace Etsi.Ultimate.Services
 {
@@ -593,11 +594,11 @@ namespace Etsi.Ultimate.Services
 
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var editAction = new SpecificationEditAction();
-                editAction.UoW = uoW;
+                var specChangeToUccAction = new SpecificationChangeToUnderChangeControlAction();
+                specChangeToUccAction.UoW = uoW;
                 try
                 {
-                    statusChangeReport = editAction.ChangeSpecificationsStatusToUnderChangeControl(personId, specIdsForUcc);
+                    statusChangeReport = specChangeToUccAction.ChangeSpecificationsStatusToUnderChangeControl(personId, specIdsForUcc);
                     if (statusChangeReport.Result)
                         uoW.Save();                        
                 }

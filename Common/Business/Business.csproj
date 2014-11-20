@@ -119,6 +119,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="SpecificationBusiness\SpecificationChangeToUnderChangeControlAction.cs" />
     <Compile Include="SpecVersionBusiness\GetNextReleaseAction.cs" />
     <Compile Include="SpecVersionBusiness\SpecVersionAllocateAction.cs" />
     <Compile Include="SpecVersionBusiness\SpecVersionUploadAction.cs" />

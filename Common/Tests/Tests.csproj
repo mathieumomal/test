@@ -115,7 +115,6 @@
     <Compile Include="Business\ItuRecommendation\SpecToItuConverterTests.cs" />
     <Compile Include="Business\ItuRecommendation\SeedFileParserTest.cs" />
     <Compile Include="Business\ItuRecommendation\SpecToItuRecordConverterTests.cs" />
-    <Compile Include="Business\SpecificationEditActionTest.cs" />
     <Compile Include="Business\UtilsManagerTest.cs" />
     <Compile Include="Business\CrCategoriesManagerTest.cs" />
     <Compile Include="Business\CrManagerTest.cs" />
@@ -232,6 +231,7 @@
     <Compile Include="Services\MeetingServiceTest.cs" />
     <Compile Include="Services\PersonServiceTest.cs" />
     <Compile Include="Services\ReleaseServiceTest.cs" />
+    <Compile Include="Services\SpecificationChangeToUnderChangeControlTest.cs" />
     <Compile Include="Services\SpecMassivePromoteTest.cs" />
     <Compile Include="Services\SpecReleaseRightsServiceTest.cs" />
     <Compile Include="Services\SpecTranspositionServiceTest.cs" />
