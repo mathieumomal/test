@@ -87,6 +87,13 @@ namespace Etsi.Ultimate.Business
                     {
                         specNumbers.Add(x.Number + ": " + x.Title);
                         x.IsUnderChangeControl = true;
+                        x.Histories.Add(new History()
+                        {
+                            Fk_SpecificationId = x.Pk_SpecificationId,
+                            CreationDate = DateTime.UtcNow,
+                            Fk_PersonId = personId,
+                            HistoryText = Utils.Localization.History_Specification_Status_Changed_UnderChangeControl
+                        });
                     }
                 });
                 statusChangeReport.Result = true;

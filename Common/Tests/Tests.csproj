@@ -115,6 +115,7 @@
     <Compile Include="Business\ItuRecommendation\SpecToItuConverterTests.cs" />
     <Compile Include="Business\ItuRecommendation\SeedFileParserTest.cs" />
     <Compile Include="Business\ItuRecommendation\SpecToItuRecordConverterTests.cs" />
+    <Compile Include="Business\SpecificationEditActionTest.cs" />
     <Compile Include="Business\UtilsManagerTest.cs" />
     <Compile Include="Business\CrCategoriesManagerTest.cs" />
     <Compile Include="Business\CrManagerTest.cs" />

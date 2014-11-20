@@ -336,4 +336,7 @@
   <data name="FinalizeCrs_Warn_SpecReleaseWithdrawn" xml:space="preserve">
     <value>Could not allocate version for Specification {0}: Release {1} is withdrawn for this specification.</value>
   </data>
+  <data name="History_Specification_Status_Changed_UnderChangeControl" xml:space="preserve">
+    <value>Specification has been made Under Change Control</value>
+  </data>
 </root>
