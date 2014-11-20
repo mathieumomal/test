@@ -41,7 +41,7 @@ namespace Etsi.Ultimate.Tests.Business.ItuRecommendation
         [Test]
         public void CreateItuFile_NominalCase()
         {
-            var fileToExport = EXPORT_PATH + "Test.xlsx";
+            var fileToExport = EXPORT_PATH + "ITU-R 2001_Test.xlsx";
             var ituRecords = new List<ItuRecord>();
             var ituRecord = new ItuRecord() {
                 ClauseNumber = "5.1.2.1.1",

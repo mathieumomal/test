@@ -33,7 +33,8 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
                 using (var pck = new ExcelPackage(newFile))
                 {
                     // get the handle to the existing worksheet
-                    var wsData = pck.Workbook.Worksheets.Add(Path.GetFileNameWithoutExtension(filePath));
+                    var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
+                    var wsData = pck.Workbook.Worksheets.Add(fileNameWithoutExtension);
 
                     /*------------*/
                     /* Set Styles */
@@ -93,6 +94,9 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
                                                   OfficeOpenXml.Table.TableStyles.None);
 
                     //Modify Headers for space between words
+                    var tmpParagraphName = fileNameWithoutExtension.Split('_')[0];
+                    var paragraphName = tmpParagraphName.Substring(Math.Max(0, tmpParagraphName.Length - 4));
+                    wsData.Cells[rowHeader, 1].Value = paragraphName+ " Paragraph";
                     wsData.Cells[rowHeader, 4].Value = "SDO";
                     wsData.Cells[rowHeader, 5].Value = "SDOversion";
                     wsData.Cells[rowHeader, 6].Value = "SDOref";
