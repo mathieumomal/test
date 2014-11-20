@@ -28,9 +28,9 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
             {
                 //Create Empty Work Book
                 if (File.Exists(filePath)) File.Delete(filePath);
-                FileInfo newFile = new FileInfo(filePath);
+                var newFile = new FileInfo(filePath);
 
-                using (ExcelPackage pck = new ExcelPackage(newFile))
+                using (var pck = new ExcelPackage(newFile))
                 {
                     // get the handle to the existing worksheet
                     var wsData = pck.Workbook.Worksheets.Add(Path.GetFileNameWithoutExtension(filePath));
@@ -38,10 +38,10 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
                     /*------------*/
                     /* Set Styles */
                     /*------------*/
-                    int rowHeader = 1;
+                    const int rowHeader = 1;
                     int rowDataEnd = records.Count + 1;
-                    int columnStart = 1;
-                    int columnEnd = 10;
+                    const int columnStart = 1;
+                    const int columnEnd = 10;
 
                     //Set Font Style
                     wsData.Cells.Style.Font.Size = 8;
@@ -72,23 +72,22 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
 
                     //Get datas specs
                     var datas = from s in records
-                                orderby s.ClauseNumber, s.PublicationDate
                                 select new
                                 {
                                     Paragraph = s.ClauseNumber,
                                     Specification = s.SpecificationNumber,
-                                    Title = s.Title,
-                                    Sdo = s.Sdo,
+                                    s.Title,
+                                    s.Sdo,
                                     Sdoversion = s.SdoVersionReleaase,
                                     Sdoref = s.SdoReference,
                                     Rev = s.SpecVersionNumber,
                                     Status = s.VersionPublicationStatus,
                                     AppDate = s.PublicationDate,
-                                    Hyperlink = s.Hyperlink
+                                    s.Hyperlink
                                 };
 
                     //Upload Data to Excel
-                    var dataRange = wsData.Cells["A1"].LoadFromCollection(
+                    wsData.Cells["A1"].LoadFromCollection(
                                                   datas,
                                                   true,
                                                   OfficeOpenXml.Table.TableStyles.None);

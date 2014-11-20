@@ -50,9 +50,8 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
             // Retrieve all specifications that are matching.
             var specificationRepository = RepositoryFactory.Resolve<ISpecificationRepository>();
             specificationRepository.UoW = UoW;
-            var specNumberToClause = clausesAndSpecNumbers.ToDictionary(x => x.Value, y => y.Key);
             var specifications =
-                specificationRepository.GetSpecificationListByNumber(clausesAndSpecNumbers.Select(x => x.Value).ToList());
+                specificationRepository.GetSpecificationListByNumber(clausesAndSpecNumbers.Select(x => x.Value).Distinct().ToList());
 
             // Retrieve all versions 
             var versionRepository = RepositoryFactory.Resolve<ISpecVersionsRepository>();
@@ -72,9 +71,13 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
 
             // Start the loop
             var ituList = new List<ItuRecord>();
-            foreach (var spec in specifications)
+            foreach (var clauseAndSpec in clausesAndSpecNumbers)
             {
                 bool versionFound = false;
+                var clause = clauseAndSpec.Key;
+                var spec = specifications.Find(s => s.Number == clauseAndSpec.Value);
+                if (spec == null)
+                    continue;
                 int specId = spec.Pk_SpecificationId;
                 var versions =
                     allVersions.Where(v => v.Fk_SpecificationId.GetValueOrDefault() == specId &&
@@ -90,19 +93,19 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
                     if (version != null)
                     {
                         versionFound = true;
-                        var newRecord = CreateNewItuRecord(specNumberToClause[spec.Number], version, spec, allWis);
+                        var newRecord = CreateNewItuRecord(clause, version, spec, allWis);
                         ituList.Add(newRecord);
                     }
                 }
 
                 if (!versionFound)
                 {
-                    var newRecord = CreateNewEmptyRecord(specNumberToClause[spec.Number], spec.Number);
+                    var newRecord = CreateNewEmptyRecord(clause, spec.Number);
                     ituList.Add(newRecord);
                 }
             }
 
-            response.Result = ituList.OrderBy(itu => itu.ClauseNumber).ToList();
+            response.Result = ituList;
 
 
             return response;
@@ -149,8 +152,14 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
 
             };
 
+            ETSI_WorkItem wi = null;
+            if (version.ETSI_WKI_ID.HasValue && version.ETSI_WKI_ID.Value != 0)
+            {
+                wi = workItems.Find(w => w.WKI_ID == version.ETSI_WKI_ID.Value);
+            }
+
             // Manage work item related information
-            if (!version.ETSI_WKI_ID.HasValue || version.ETSI_WKI_ID.Value == 0)
+            if (wi == null)
             {
                 ituRecord.SdoReference = MissingInformationInWpmdb;
                 ituRecord.Hyperlink = MissingInformationInWpmdb;
@@ -159,7 +168,6 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
             }
             else
             {
-                var wi = workItems.Find(w => w.WKI_ID == version.ETSI_WKI_ID.Value);
                 ituRecord.SdoReference = StaticSdo + " " + wi.StandardType.ToUpper() + " " + wi.Number;
 
                 if (wi.published == 1)

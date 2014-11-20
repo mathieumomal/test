@@ -20,9 +20,6 @@
             <asp:Label runat="server" ID="lblMsg"></asp:Label>
         </asp:Panel>
         <asp:Panel ID="pnlItuRecommendations" runat="server">                
-            <div class="PopupHeaderTitleRight">
-                <asp:Label ID="lblHeaderText" runat="server">ITU Recommendations</asp:Label>
-            </div>
             <div class="formItuRec">
                 <table>
                     <tr>
@@ -82,14 +79,16 @@
                                 inputSize="68"
                                 MaxFileInputsCount="1"
                                 PostbackTriggers="btnExport"
-                                OnClientvalidationFailed="OnClientValidationFailed"/>
+                                OnClientvalidationFailed="OnClientValidationFailed"
+                                OnClientFileUploaded="validateForm"
+								OnClientFileUploadRemoved="unvalidateForm"/>
                         </td>
                     </tr>
                 </table>
             </div>
             <div class="btns">
                 <asp:Button ID="btnPreliminary" Enabled="False" runat="server" CssClass="btn3GPP-default" Text="Preliminary Q.1741"/>
-                <asp:Button ID="btnExport" Enabled="False" OnClick="btnExport_OnClick" runat="server" CssClass="btn3GPP-default" Text="Export list"/>
+                <asp:Button ID="btnExport" OnClick="btnExport_OnClick" runat="server" CssClass="btn3GPP-default" Text="Export list"/>
             </div>
         </asp:Panel>
         <telerik:RadAjaxManager ID="rajxItuRec" runat="server">

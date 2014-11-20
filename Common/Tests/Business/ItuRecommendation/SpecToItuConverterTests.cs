@@ -67,19 +67,6 @@ namespace Etsi.Ultimate.Tests.Business.ItuRecommendation
             Assert.AreEqual("13.0.0", response.Last().SpecVersionNumber);
         }
 
-        [Test, Description("System returns specifications ordered by clause")]
-        public void ConvertToItuRecords_OrdersOutputByClause()
-        {
-            _clausesAndSpecs.Add(new KeyValuePair<string, string>("5.1.3", "22.101"));
-            _clausesAndSpecs.Add(new KeyValuePair<string, string>("5.1.2", UccSpecWithUploadedVersionForRel12));
-
-            var response =
-                _converter.BuildItuRecordsForSpec(_clausesAndSpecs, Release13Id, Release13Id, LastMeetingId).Result;
-            Assert.AreEqual(2, response.Count);
-            Assert.AreEqual("5.1.2", response.First().ClauseNumber);
-            Assert.AreEqual("5.1.3", response.Last().ClauseNumber);
-        }
-
 
         #endregion
 

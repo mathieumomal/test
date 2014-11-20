@@ -49,11 +49,16 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
             
             // Then convert the specification.
             var converter = ManagerFactory.Resolve<ISpecToItuRecordConverter>();
+            converter.UoW = UoW;
             var convertedSpecificationRecords = converter.BuildItuRecordsForSpec(specificationsToFillIn, startReleaseId, endReleaseId, saPlenaryMeetingId);
+            if (convertedSpecificationRecords.Report.GetNumberOfErrors() > 0)
+            {
+                response.Report.ErrorList = convertedSpecificationRecords.Report.ErrorList;
+                return response;
+            }
 
-            var fileName = ituRecommendationName + "_" + DateTime.UtcNow.ToString("yyyy-MM-dd_hh\\hmm") + ".xlsx";
+            var fileName = ituRecommendationName + "_" + DateTime.UtcNow.ToString("yyyy-MM-dd_HH\\hmm") + ".xlsx";
 
-            // Still to fix: the path is to be computed against Application parameters.
             var excelExporter = ManagerFactory.Resolve<IItuRecommendationExporter>();
             if (excelExporter.CreateItuFile(ConfigVariables.DefaultPublicTmpPath + fileName,
                 convertedSpecificationRecords.Result))

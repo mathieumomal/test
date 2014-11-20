@@ -112,7 +112,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release.Qa|AnyCPU' ">
-    <OutputPath>bin\$(Configuration)\</OutputPath>	
+    <OutputPath>bin\$(Configuration)\</OutputPath>
     <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <DebugType>pdbonly</DebugType>
@@ -179,7 +179,10 @@
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
     <Build Include="dbo\Tables\Version.sql" />
-    <Build Include="dbo\Views\ETSI_WorkItem.sql" />
+    <Build Include="dbo\Views\ETSI_WorkItem.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
     <Build Include="dbo\Functions\getETSI_WKI_Ref.sql" />
     <Build Include="dbo\Stored Procedures\Specifications_CleanAll.sql" />
     <Build Include="dbo\Stored Procedures\WorkItems_CleanAll.sql" />
