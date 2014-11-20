@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Etsi.Ultimate.Business.ItuRecommendation;
+using Etsi.Ultimate.DomainClasses;
 using NUnit.Framework;
 using Etsi.Ultimate.Utils;
 
@@ -181,21 +182,81 @@ namespace Etsi.Ultimate.Tests.Business.ItuRecommendation
             Assert.AreEqual("Not found in WPM DB", response.First().PublicationDate);
         }
 
-        /*[Test, Description("For each candidate version that has been allocated, system should fill Reference")]
+        [Test, Description("For each candidate version that has been allocated, system should fill Reference")]
         public void ConvertToItuRecords_FillsReferenceForExistingWis()
         {
             var response = GetGenericCase();
             Assert.AreEqual("ETSI TS 122 105", response.First().SdoReference);
-        }*/
+        }
+
+        [Test, Description("For each candidate version whose WI has been published, system fills in Export status")]
+        public void ConvertToItuRecords_FillsInExportStatusToPublished()
+        {
+            var response = GetGenericCase();
+            Assert.AreEqual("Published", response.First().VersionPublicationStatus);
+        }
+
+        [Test, Description("For each candidate version whose WI has been published, system fills in publication date")]
+        public void ConvertToItuRecords_FillsInPublicationDate()
+        {
+            var response = GetGenericCase();
+            Assert.AreEqual("2003-07-24", response.First().PublicationDate);
+        }
+
+        [Test, Description("For each candidate version whose WI has been published, system fills the export path")]
+        public void ConvertToItuRecords_FillsExportPath()
+        {
+            var response = GetGenericCase();
+            Assert.AreEqual(ConfigVariables.EtsiWorkitemsDeliveryFolder+"etsi_ts/122105_120000/122105/12.00.00_60/tr_122105vd00.pdf", response.First().Hyperlink);
+        }
+
+        [Test, Description("For each candidate version whose WI has not been published, system fills in Export status")]
+        public void ConvertToItuRecords_FillsInExportStatusToNotPublished()
+        {
+            var response = GetGenericCase(Release13Id);
+            Assert.AreEqual("To be published", response.First().VersionPublicationStatus);
+        }
+
+        [Test,
+         Description("For each candidate version whose WI has not been published, system fills '-' in Date and path")]
+        public void ConvertToItuRecords_FillsInDashesToDateAndPathWhenNotPublished()
+        {
+            var response = GetGenericCase(Release13Id);
+            Assert.AreEqual("-", response.First().PublicationDate);
+            Assert.AreEqual("-", response.First().Hyperlink);
+        }
+
+        [Test,
+         Description(
+             "If no version can be found, system will put 'Not found in 3GPPDB' in all fields but clause and spec#")]
+        public void ConvertToItuRecords_FillsInNotFoundIn3gppdb()
+        {
+            _clausesAndSpecs.Add(new KeyValuePair<string, string>("5.1.2", "22.106"));
+            var response =
+                _converter.BuildItuRecordsForSpec(_clausesAndSpecs, Release12Id, Release12Id, LastMeetingId).Result;
+
+            var firstItuRecord = response.First();
+
+            Assert.AreEqual("5.1.2", firstItuRecord.ClauseNumber);
+            Assert.AreEqual("22.106", firstItuRecord.SpecificationNumber);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.Hyperlink);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.PublicationDate);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.Sdo);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.SdoReference);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.SdoVersionReleaase);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.SpecVersionNumber);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.Title);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.VersionPublicationStatus);
+        }
 
 
         #endregion
 
-        private List<ItuRecord> GetGenericCase()
+        private List<ItuRecord> GetGenericCase(int releaseId = Release12Id)
         {
             _clausesAndSpecs.Add(new KeyValuePair<string, string>("5.1.2", UccSpecWithUploadedVersionForRel12));
             var response =
-                _converter.BuildItuRecordsForSpec(_clausesAndSpecs, Release12Id, Release12Id, LastMeetingId).Result;
+                _converter.BuildItuRecordsForSpec(_clausesAndSpecs, releaseId, releaseId, LastMeetingId).Result;
             return response;
         }
     }

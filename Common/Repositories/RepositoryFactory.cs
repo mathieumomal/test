@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Practices.Unity;
+﻿using Microsoft.Practices.Unity;
 using Etsi.Ultimate.DataAccess;
 
 namespace Etsi.Ultimate.Repositories
@@ -86,6 +81,7 @@ namespace Etsi.Ultimate.Repositories
             Container.RegisterType<IRemarkRepository, RemarkRepository>(new TransientLifetimeManager());
             Container.RegisterType<IEnum_CrCategoryRepository, Enum_CrCategoryRepository>(new TransientLifetimeManager());
             Container.RegisterType<IChangeRequestStatusRepository, ChangeRequestStatusRepository>(new TransientLifetimeManager());
+            Container.RegisterType<IEtsiWorkItemRepository, EtsiWorkItemRepository>(new TransientLifetimeManager());
 
             //Offline Repositories
             Container.RegisterType<IOfflineRepository, OfflineRepository>(new TransientLifetimeManager());

@@ -207,5 +207,15 @@ namespace Etsi.Ultimate.Utils
                 return "";
             }
         }
+
+        public static string EtsiWorkitemsDeliveryFolder
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["EtsiWorkitemsDeliveryFolder"] != null)
+                    return ConfigurationManager.AppSettings["EtsiWorkitemsDeliveryFolder"];
+                return "";
+            }
+        }
     }
 }

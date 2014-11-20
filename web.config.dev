@@ -95,6 +95,7 @@
   <add key="MeetingListAdvancedQueryLink" value="http://webapp.13.etsidev.org/MeetingCalendar/QueryForm.asp"/>
   <add key="ManageAgendaItemsUrl" value="http://webapp.13.etsidev.org/rmeetingDocuments/UpdateAllocations.asp?MTG_ID={0}"/>
   <add key="MeetingRegistration" value="http://webapp.13.etsidev.org/3GPPRegistration/fMain.asp?mid={0}"/>
+  <add key="EtsiWorkitemsDeliveryFolder" value="http://www.etsi.org/deliver/"/>
   </appSettings>
   <system.web.webPages.razor>
     <pages pageBaseType="DotNetNuke.Web.Razor.DotNetNukeWebPage">

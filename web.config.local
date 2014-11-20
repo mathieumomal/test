@@ -105,6 +105,7 @@
     <add key="UploadVersionTemporaryPath" value="D:\AppTrans\Version\"/>
 	
 		<add key="PortalName" value="Ultimate"/>
+		<add key="EtsiWorkitemsDeliveryFolder" value="http://www.etsi.org/deliver/"/>
     
 	<!--  End of 3GPP Parameters  -->
   </appSettings>

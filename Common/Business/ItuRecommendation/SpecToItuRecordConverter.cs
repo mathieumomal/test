@@ -17,6 +17,9 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
     {
         public const string StaticSdo = "ETSI";
         public const string MissingInformationInWpmdb = "Not found in WPM DB";
+        public const string VersionPublishedStatus = "Published";
+        public const string VersionNotPublishedStatus = "To be published";
+        public const string MissingInformationIn3Gppdb = "Not found in 3GPPDB";
 
         private List<Release> _allReleases;
 
@@ -58,10 +61,20 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
                 versionRepository.GetVersionsBySpecIds(specifications.Select(s => s.Pk_SpecificationId).ToList(),
                     allowedMajorVersions);
 
+            // Retrieve all workitems
+            var wiRepository = RepositoryFactory.Resolve<IEtsiWorkItemRepository>();
+            wiRepository.UoW = UoW;
+            var allWis =
+                wiRepository.GetWorkItemsByIds(
+                    allVersions.Where(v => v.ETSI_WKI_ID != null).Select(v => v.ETSI_WKI_ID)
+                        .ToList().Select(v => v.GetValueOrDefault()).ToList()
+                    );
+
             // Start the loop
             var ituList = new List<ItuRecord>();
             foreach (var spec in specifications)
             {
+                bool versionFound = false;
                 int specId = spec.Pk_SpecificationId;
                 var versions =
                     allVersions.Where(v => v.Fk_SpecificationId.GetValueOrDefault() == specId &&
@@ -76,9 +89,16 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
 
                     if (version != null)
                     {
-                        var newRecord = CreateNewItuRecord(specNumberToClause[spec.Number], version, spec);
+                        versionFound = true;
+                        var newRecord = CreateNewItuRecord(specNumberToClause[spec.Number], version, spec, allWis);
                         ituList.Add(newRecord);
                     }
+                }
+
+                if (!versionFound)
+                {
+                    var newRecord = CreateNewEmptyRecord(specNumberToClause[spec.Number], spec.Number);
+                    ituList.Add(newRecord);
                 }
             }
 
@@ -88,9 +108,35 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
             return response;
         }
 
-        private ItuRecord CreateNewItuRecord(string clause, SpecVersion version, Specification spec)
+        /// <summary>
+        /// Creates an empty ITU record
+        /// </summary>
+        /// <param name="clauseNumber"></param>
+        /// <param name="specNumber"></param>
+        /// <returns></returns>
+        private ItuRecord CreateNewEmptyRecord(string clauseNumber, string specNumber)
         {
-            return new ItuRecord
+            return new ItuRecord()
+            {
+                ClauseNumber = clauseNumber,
+                SpecificationNumber = specNumber,
+                Hyperlink = MissingInformationIn3Gppdb,
+                PublicationDate = MissingInformationIn3Gppdb,
+                Sdo = MissingInformationIn3Gppdb,
+                SdoReference = MissingInformationIn3Gppdb,
+                SdoVersionReleaase = MissingInformationIn3Gppdb,
+                SpecVersionNumber = MissingInformationIn3Gppdb,
+                Title = MissingInformationIn3Gppdb,
+                VersionPublicationStatus = MissingInformationIn3Gppdb
+            };
+        }
+
+        /// <summary>
+        /// Creates a new, complete ITU record.
+        /// </summary>
+        private ItuRecord CreateNewItuRecord(string clause, SpecVersion version, Specification spec, List<ETSI_WorkItem> workItems )
+        {
+            var ituRecord = new ItuRecord
             {
                 ClauseNumber = clause,
                 SpecificationNumber = spec.Number,
@@ -99,12 +145,39 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
                 Title = spec.Title,
                 Sdo = StaticSdo,
                 SdoVersionReleaase = _allReleases.Find(r => r.Pk_ReleaseId == version.Fk_ReleaseId).IturCode,
-                SdoReference = MissingInformationInWpmdb,
-                Hyperlink = MissingInformationInWpmdb,
-                PublicationDate = MissingInformationInWpmdb,
-                VersionPublicationStatus = MissingInformationInWpmdb
+                
 
             };
+
+            // Manage work item related information
+            if (!version.ETSI_WKI_ID.HasValue || version.ETSI_WKI_ID.Value == 0)
+            {
+                ituRecord.SdoReference = MissingInformationInWpmdb;
+                ituRecord.Hyperlink = MissingInformationInWpmdb;
+                ituRecord.PublicationDate = MissingInformationInWpmdb;
+                ituRecord.VersionPublicationStatus = MissingInformationInWpmdb;
+            }
+            else
+            {
+                var wi = workItems.Find(w => w.WKI_ID == version.ETSI_WKI_ID.Value);
+                ituRecord.SdoReference = StaticSdo + " " + wi.StandardType.ToUpper() + " " + wi.Number;
+
+                if (wi.published == 1)
+                {
+                    ituRecord.VersionPublicationStatus = VersionPublishedStatus;
+                    ituRecord.PublicationDate = wi.PublicationDate.GetValueOrDefault().ToString("yyyy-MM-dd");
+                    ituRecord.Hyperlink = ConfigVariables.EtsiWorkitemsDeliveryFolder + wi.filePath.Replace("\\", "/") + wi.fileName;
+                }
+                else
+                {
+                    ituRecord.VersionPublicationStatus = VersionNotPublishedStatus;
+                    ituRecord.PublicationDate = "-";
+                    ituRecord.Hyperlink = "-";
+                }
+            }
+
+            return ituRecord;
+
         }
 
         /// <summary>
@@ -112,6 +185,7 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
         /// </summary>
         /// <param name="startReleaseId"></param>
         /// <param name="endReleaseId"></param>
+        /// <param name="report"></param>
         /// <returns></returns>
         private List<int> RetrieveAllowedMajorVersions(int startReleaseId, int endReleaseId, Report report)
         {
