@@ -29,8 +29,11 @@ namespace Etsi.Ultimate.Tests.Services
         private const int SPEC_ID_UNDER_CHANGE_CONTROL = 1;
         private const int SPEC_ID_NOT_UNDER_CHANGE_CONTROL = 2;
         private const int SPEC_ID_UCC_FLAG_NOT_SET = 3;
+        private const int SPEC_ID_WITHDRAWN_BEFORE_CHANGE_CONTROL = 4;
         private List<int> specIdList = new List<int> { SPEC_ID_UNDER_CHANGE_CONTROL, SPEC_ID_NOT_UNDER_CHANGE_CONTROL, SPEC_ID_UCC_FLAG_NOT_SET };
         private List<int> specIdsUcc = new List<int> { SPEC_ID_UNDER_CHANGE_CONTROL };
+        private List<int> specIdsWithdrawnBeforeChangeControl = new List<int> { SPEC_ID_WITHDRAWN_BEFORE_CHANGE_CONTROL };
+
         public override void SetUp()
         {
             base.SetUp();
@@ -352,6 +355,7 @@ namespace Etsi.Ultimate.Tests.Services
             repo.Stub(r => r.All).Return(GetSpecs());
             repo.Stub(r => r.GetSpecifications(specIdList)).Return(GetSpecs().ToList().Where(x => specIdList.Contains(x.Pk_SpecificationId)).ToList());
             repo.Stub(r => r.GetSpecifications(specIdsUcc)).Return(GetSpecs().ToList().Where(x => specIdsUcc.Contains(x.Pk_SpecificationId)).ToList());
+            repo.Stub(r => r.GetSpecifications(specIdsWithdrawnBeforeChangeControl)).Return(GetSpecs().ToList().Where(x => specIdsWithdrawnBeforeChangeControl.Contains(x.Pk_SpecificationId)).ToList());
             RepositoryFactory.Container.RegisterInstance<ISpecificationRepository>(repo);
 
             var communityManager = MockRepository.GenerateMock<ICommunityManager>();
@@ -440,7 +444,7 @@ namespace Etsi.Ultimate.Tests.Services
             list.Add(new Specification() { Pk_SpecificationId = 1, Number = "01.01", Title="Spec 1", IsActive = true, IsUnderChangeControl = true });
             list.Add(new Specification() { Pk_SpecificationId = 2, Number = "12.123", Title = "Spec 2", IsActive = true, IsUnderChangeControl = false });
             list.Add(new Specification() { Pk_SpecificationId = 3, Number = "12.189", Title = "Spec 3", IsActive = true });
-            list.Add(new Specification() { Pk_SpecificationId = 4, Number = "02.72", Title = "Spec 4", IsActive = true });
+            list.Add(new Specification() { Pk_SpecificationId = 4, Number = "02.72", Title = "Spec 4", IsActive = false });
             return list;
         }
         private IDbSet<View_Persons> Persons()
@@ -475,6 +479,7 @@ namespace Etsi.Ultimate.Tests.Services
                 yield return new object[] { EDIT_RIGHT_USER, specIdList, true, "Following specifications changed to Under Change Control.\n\t12.123: Spec 2\n\t12.189: Spec 3" };
                 yield return new object[] { EDIT_LIMITED_RIGHT_USER, specIdList, true, "Following specifications changed to Under Change Control.\n\t12.123: Spec 2\n\t12.189: Spec 3" };
                 yield return new object[] { EDIT_RIGHT_USER, specIdsUcc, true, "None of the specifications changed to Under Change Control." };
+                yield return new object[] { EDIT_RIGHT_USER, specIdsWithdrawnBeforeChangeControl, true, "None of the specifications changed to Under Change Control." };
             }
         }
 

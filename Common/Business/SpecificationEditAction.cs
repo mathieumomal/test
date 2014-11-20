@@ -83,7 +83,7 @@ namespace Etsi.Ultimate.Business
                 List<string> specNumbers = new List<string>();
                 specsToUpdate.ForEach(x =>
                 {
-                    if (!x.IsUnderChangeControl.GetValueOrDefault())
+                    if (!x.IsUnderChangeControl.GetValueOrDefault() && x.IsActive)
                     {
                         specNumbers.Add(x.Number + ": " + x.Title);
                         x.IsUnderChangeControl = true;
