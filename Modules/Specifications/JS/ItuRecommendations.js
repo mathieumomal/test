@@ -11,7 +11,7 @@ var rcbMeeting = $('div[id$=rcbMeetings]');
 
 $(document).ready(function () {
     formValidator();
-
+    unvalidateForm();
 });
 
 function formValidator() {
