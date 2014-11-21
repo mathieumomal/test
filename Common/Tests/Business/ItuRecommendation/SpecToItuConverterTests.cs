@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.Business.ItuRecommendation;
-using Etsi.Ultimate.DomainClasses;
 using NUnit.Framework;
 using Etsi.Ultimate.Utils;
 
@@ -27,7 +23,7 @@ namespace Etsi.Ultimate.Tests.Business.ItuRecommendation
         {
             base.SetUp();
             InitializeUserRightsMock();
-            _converter = new SpecToItuRecordConverter() { UoW = UoW };
+            _converter = new SpecToItuRecordConverter { UoW = UoW };
             _clausesAndSpecs = new List<KeyValuePair<string, string>>();
         }
 
@@ -223,17 +219,7 @@ namespace Etsi.Ultimate.Tests.Business.ItuRecommendation
                 _converter.BuildItuRecordsForSpec(_clausesAndSpecs, Release12Id, Release12Id, LastMeetingId).Result;
 
             var firstItuRecord = response.First();
-
-            Assert.AreEqual("5.1.2", firstItuRecord.ClauseNumber);
-            Assert.AreEqual("22.106", firstItuRecord.SpecificationNumber);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.Hyperlink);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.PublicationDate);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.Sdo);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.SdoReference);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.SdoVersionReleaase);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.SpecVersionNumber);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.Title);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.VersionPublicationStatus);
+            CheckRecordIsEmpty(firstItuRecord, "5.1.2", "22.106");
         }
 
         [Test, Description("If no specification can be found, system will put 'Not found in 3GPPDB' in all fields but clause and spec#")]
@@ -243,17 +229,7 @@ namespace Etsi.Ultimate.Tests.Business.ItuRecommendation
             var response = _converter.BuildItuRecordsForSpec(_clausesAndSpecs, Release12Id, Release12Id, LastMeetingId).Result;
 
             var firstItuRecord = response.First();
-
-            Assert.AreEqual("5.1.2", firstItuRecord.ClauseNumber);
-            Assert.AreEqual("10.100", firstItuRecord.SpecificationNumber);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.Hyperlink);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.PublicationDate);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.Sdo);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.SdoReference);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.SdoVersionReleaase);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.SpecVersionNumber);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.Title);
-            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.VersionPublicationStatus);
+            CheckRecordIsEmpty(firstItuRecord, "5.1.2", "10.100");
         }
 
         #endregion
@@ -264,6 +240,20 @@ namespace Etsi.Ultimate.Tests.Business.ItuRecommendation
             var response =
                 _converter.BuildItuRecordsForSpec(_clausesAndSpecs, releaseId, releaseId, LastMeetingId).Result;
             return response;
+        }
+
+        private void CheckRecordIsEmpty(ItuRecord record, string clauseNumber, string specNumber)
+        {
+            Assert.AreEqual(clauseNumber, record.ClauseNumber);
+            Assert.AreEqual(specNumber, record.SpecificationNumber);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, record.Hyperlink);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, record.PublicationDate);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, record.Sdo);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, record.SdoReference);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, record.SdoVersionReleaase);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, record.SpecVersionNumber);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, record.Title);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, record.VersionPublicationStatus);
         }
     }
 }
