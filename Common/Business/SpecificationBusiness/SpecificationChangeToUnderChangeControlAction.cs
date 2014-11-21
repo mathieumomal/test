@@ -30,19 +30,19 @@ namespace Etsi.Ultimate.Business.SpecificationBusiness
                 var specRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
                 specRepo.UoW = UoW;
                 var specsToUpdate = specRepo.GetSpecifications(specIdsForUcc);
-                List<string> specNumbers = new List<string>();
+                var specNumbers = new List<string>();
                 specsToUpdate.ForEach(x =>
                 {
                     if (!x.IsUnderChangeControl.GetValueOrDefault() && x.IsActive)
                     {
                         specNumbers.Add(x.Number + ": " + x.Title);
                         x.IsUnderChangeControl = true;
-                        x.Histories.Add(new History()
+                        x.Histories.Add(new History
                         {
                             Fk_SpecificationId = x.Pk_SpecificationId,
                             CreationDate = DateTime.UtcNow,
                             Fk_PersonId = personId,
-                            HistoryText = Utils.Localization.History_Specification_Status_Changed_UnderChangeControl
+                            HistoryText = Localization.History_Specification_Status_Changed_UnderChangeControl
                         });
                     }
                 });
