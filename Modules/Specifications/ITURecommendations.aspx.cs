@@ -106,13 +106,12 @@ namespace Etsi.Ultimate.Module.Specifications
             var releaseSvc = ServicesFactory.Resolve<IReleaseService>();
             var releases = releaseSvc.GetAllReleases(PersonId);
             if (releases.Key == null || releases.Key.Count == 0) return;
-            var releasesDictionnary = releases.Key.ToDictionary(x => x.Pk_ReleaseId, x => x.ShortName);
-            var releasesReverseDictionnary = releasesDictionnary.Reverse();
+            var releasesDictionnary = releases.Key.OrderByDescending( r => r.SortOrder).ToDictionary(x => x.Pk_ReleaseId, x => x.ShortName);
 
             //Start release
                 rcbStartRelease.DataValueField = ConstKey;
                 rcbStartRelease.DataTextField = ConstValue;
-                rcbStartRelease.DataSource = releasesReverseDictionnary;
+                rcbStartRelease.DataSource = releasesDictionnary;
                 rcbStartRelease.DataBind();
 
                 //Set default value
@@ -122,7 +121,7 @@ namespace Etsi.Ultimate.Module.Specifications
             //End release
                 rcbEndRelease.DataValueField = ConstKey;
                 rcbEndRelease.DataTextField = ConstValue;
-                rcbEndRelease.DataSource = releasesReverseDictionnary;
+                rcbEndRelease.DataSource = releasesDictionnary;
                 rcbEndRelease.DataBind();
 
                 //Set default value
@@ -172,17 +171,6 @@ namespace Etsi.Ultimate.Module.Specifications
             pnlMsg.Visible = true;
             pnlMsg.CssClass = "messageBox error";
             lblMsg.Text = errorMessage;
-        }
-
-        /// <summary>
-        /// Display a success
-        /// </summary>
-        /// <param name="successMessage">Error Message</param>
-        private void ThrowASuccess(string successMessage)
-        {
-            pnlMsg.Visible = true;
-            pnlMsg.CssClass = "messageBox success";
-            lblMsg.Text = successMessage;
         }
 
         private void ResetPanelVisibility()

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DocumentFormat.OpenXml.Drawing.Diagrams;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
@@ -124,7 +120,7 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
         /// <returns></returns>
         private ItuRecord CreateNewEmptyRecord(string clauseNumber, string specNumber)
         {
-            return new ItuRecord()
+            return new ItuRecord
             {
                 ClauseNumber = clauseNumber,
                 SpecificationNumber = specNumber,
@@ -142,7 +138,7 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
         /// <summary>
         /// Creates a new, complete ITU record.
         /// </summary>
-        private ItuRecord CreateNewItuRecord(string clause, SpecVersion version, Specification spec, List<ETSI_WorkItem> workItems )
+        private ItuRecord CreateNewItuRecord(string clause, SpecVersion version, Specification spec, List<ETSI_WorkItem> workItems)
         {
             var ituRecord = new ItuRecord
             {
@@ -153,7 +149,7 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
                 Title = spec.Title,
                 Sdo = StaticSdo,
                 SdoVersionReleaase = _allReleases.Find(r => r.Pk_ReleaseId == version.Fk_ReleaseId).IturCode,
-                
+
 
             };
 
@@ -203,7 +199,7 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
         private List<int> RetrieveAllowedMajorVersions(int startReleaseId, int endReleaseId, Report report)
         {
             var releaseManager = new ReleaseManager { UoW = UoW };
-            _allReleases = releaseManager.GetAllReleases(0).Key;
+            _allReleases = releaseManager.GetAllReleases(0).Key.OrderBy(r => r.SortOrder).ToList();
 
             // retrieve initial release
             var initialRelease = _allReleases.Find(r => r.Pk_ReleaseId == startReleaseId);
@@ -214,7 +210,7 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
             var endRelease = _allReleases.Find(r => r.Pk_ReleaseId == endReleaseId);
             if (endRelease == null)
                 report.LogError(Localization.ItuConversion_Error_InvalidEndRelease);
-            
+
             if (report.GetNumberOfErrors() > 0)
                 return null;
 
@@ -238,6 +234,7 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
         /// It corresponds to meetings that ends after the provided meeting.
         /// </summary>
         /// <param name="lastMeetingId"></param>
+        /// <param name="report"></param>
         /// <returns></returns>
         private List<int> RetrieveForbiddenMeetingIds(int lastMeetingId, Report report)
         {
