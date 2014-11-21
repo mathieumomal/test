@@ -77,7 +77,12 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
                 var clause = clauseAndSpec.Key;
                 var spec = specifications.Find(s => s.Number == clauseAndSpec.Value);
                 if (spec == null)
+                {
+                    var newRecord = CreateNewEmptyRecord(clause, clauseAndSpec.Value);
+                    ituList.Add(newRecord);
                     continue;
+                }
+
                 int specId = spec.Pk_SpecificationId;
                 var versions =
                     allVersions.Where(v => v.Fk_SpecificationId.GetValueOrDefault() == specId &&

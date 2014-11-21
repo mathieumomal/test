@@ -236,6 +236,25 @@ namespace Etsi.Ultimate.Tests.Business.ItuRecommendation
             Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.VersionPublicationStatus);
         }
 
+        [Test, Description("If no specification can be found, system will put 'Not found in 3GPPDB' in all fields but clause and spec#")]
+        public void ConvertToItuRecords_FillsInNotFoundIn3gppdb_IfNoSpecFound()
+        {
+            _clausesAndSpecs.Add(new KeyValuePair<string, string>("5.1.2", "10.100"));
+            var response = _converter.BuildItuRecordsForSpec(_clausesAndSpecs, Release12Id, Release12Id, LastMeetingId).Result;
+
+            var firstItuRecord = response.First();
+
+            Assert.AreEqual("5.1.2", firstItuRecord.ClauseNumber);
+            Assert.AreEqual("10.100", firstItuRecord.SpecificationNumber);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.Hyperlink);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.PublicationDate);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.Sdo);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.SdoReference);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.SdoVersionReleaase);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.SpecVersionNumber);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.Title);
+            Assert.AreEqual(SpecToItuRecordConverter.MissingInformationIn3Gppdb, firstItuRecord.VersionPublicationStatus);
+        }
 
         #endregion
 
