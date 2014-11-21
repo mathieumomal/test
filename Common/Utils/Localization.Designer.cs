@@ -115,7 +115,7 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Could create allocate for Specification {0}: specification is not under change control.
+        ///   Looks up a localized string similar to Could not allocate version for Specification {0}: specification is not under change control.
         /// </summary>
         public static string FinalizeCrs_Warn_DraftSpec {
             get {

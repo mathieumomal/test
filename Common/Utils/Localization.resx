@@ -313,7 +313,7 @@
     <value>An error has occured. Please try again. If problem persists, please contact IT support.</value>
   </data>
   <data name="FinalizeCrs_Warn_DraftSpec" xml:space="preserve">
-    <value>Could create allocate for Specification {0}: specification is not under change control</value>
+    <value>Could not allocate version for Specification {0}: specification is not under change control</value>
   </data>
   <data name="FinalizeCrs_Warn_SpecReleaseNotExisting" xml:space="preserve">
     <value>Could not allocate version for Specification {0}: Release {1} is not defined for this specification.</value>
