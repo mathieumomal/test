@@ -81,7 +81,7 @@
                                 PostbackTriggers="btnExport"
                                 OnClientvalidationFailed="OnClientValidationFailed"
                                 OnClientFileUploaded="validateForm"
-								OnClientFileUploadRemoved="unvalidateForm"/>
+                                OnClientFileUploadRemoved="validateForm"/>
                         </td>
                     </tr>
                 </table>

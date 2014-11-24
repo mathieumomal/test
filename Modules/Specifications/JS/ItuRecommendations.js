@@ -52,18 +52,27 @@ function DisableITUPreliminary() {
 //// Validation and unvalidation function
 var validateForm = function () {
     var asyncUpload = $find('rdauUploadSeedFile');
-    if ($(rcbMeeting).val() != null && $(rcbMeeting).val().trim() != "" && $(rcbStartRelease).val() != ""
-	&& $(rcbStartRelease).val() != "-" && $(rcbEndRelease).val() != "" && $(rcbEndRelease).val() != "-"
-	&& asyncUpload.getUploadedFiles().length > 0) {
-        EnableITUBtnExport();
+    
+    /**Form invalid by default**/
+    unvalidateForm();
+
+    /**If all three fields are filled...**/
+    if ($(rcbMeeting).val() != null && 
+        $(rcbMeeting).val().trim() != "" && 
+        $(rcbStartRelease).val() != "" && 
+        $(rcbStartRelease).val() != "-" && 
+        $(rcbEndRelease).val() != "" && 
+        $(rcbEndRelease).val() != "-") {
+        /**and there is one seed file : button export enabled**/
+        if(asyncUpload.getUploadedFiles().length > 0){
+            EnableITUBtnExport();
+        }
+        /**and ITU-T Q.1741 selected : button preliminary enabled**/
         if (rcbItuRec.val() == "ITU-T Q.1741") {
             EnableITUPreliminary();
-        } else {
-            DisableITUPreliminary();
         }
         return true;
     }
-    DisableITUBtnExport();
     return false;
 }
 
