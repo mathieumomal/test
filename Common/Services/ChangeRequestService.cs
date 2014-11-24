@@ -201,7 +201,7 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public ServiceResponse<bool> UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackDecisionlst, string tsgTdocNumber)
         {
-            var response = new ServiceResponse<bool>{Result = false};
+            var response = new ServiceResponse<bool> { Result = false };
             try
             {
                 using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -252,6 +252,22 @@ namespace Etsi.Ultimate.Services
                 response.Report.LogError(Localization.GenericError);
             }
             return response;
+        }
+
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="searchObj"></param>
+        /// <returns></returns>
+        public ServiceResponse<List<ChangeRequest>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj)
+        {
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var crManager = ManagerFactory.Resolve<IChangeRequestManager>();
+                crManager.UoW = uow;
+                return crManager.GetChangeRequests(personId, searchObj);
+            }
         }
 
     }
@@ -319,6 +335,14 @@ namespace Etsi.Ultimate.Services
         /// <param name="tdocNumbers"></param>
         /// <returns></returns>
         ServiceResponse<bool> SetCrsAsFinal(int personId, List<string> tdocNumbers);
+
+        /// <summary>
+        /// Returns the list of change requests, given the specific criteria.
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="searchObj"></param>
+        /// <returns></returns>
+        ServiceResponse<List<ChangeRequest>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj);
     }
 }
 

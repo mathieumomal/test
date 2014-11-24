@@ -327,6 +327,14 @@ namespace Etsi.Ultimate.Business
         }
        
         #endregion
+
+        public ServiceResponse<List<ChangeRequest>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj)
+        {
+            var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
+            crRepository.UoW = UoW;
+
+            return new ServiceResponse<List<ChangeRequest>> {Result = crRepository.GetChangeRequests(searchObj)};
+        }
     }
 
     /// <summary>
@@ -385,5 +393,13 @@ namespace Etsi.Ultimate.Business
         /// <param name="tsgTdocNumber"></param>
         /// <returns></returns>
         ServiceResponse<bool> UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackTsgDecisions, string tsgTdocNumber);
+
+        /// <summary>
+        /// Returns a list of change requests given the specified criteria.
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="searchObj"></param>
+        /// <returns></returns>
+        ServiceResponse<List<ChangeRequest>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj);
     }
 }

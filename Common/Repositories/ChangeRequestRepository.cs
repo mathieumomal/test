@@ -127,6 +127,16 @@ namespace Etsi.Ultimate.Repositories
         {
             return UoW.Context.ChangeRequests.Where(wg => wg.WGTDoc == wgTDoc).SingleOrDefault();
         }
+
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="searchObj"></param>
+        /// <returns></returns>
+        public List<ChangeRequest> GetChangeRequests(ChangeRequestsSearch searchObj)
+        {
+            return UoW.Context.ChangeRequests.Skip(20).Take(100).ToList();
+        }
     }
 
     /// <summary>
@@ -177,5 +187,12 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="wgTDoc">The wgtdocument.</param>
         /// <returns></returns>
         ChangeRequest FindByWgTDoc(string wgTDoc);
+
+        /// <summary>
+        /// Returns a list of change request given the specified criteria.
+        /// </summary>
+        /// <param name="searchObj"></param>
+        /// <returns></returns>
+        List<ChangeRequest> GetChangeRequests(ChangeRequestsSearch searchObj);
     }
 }

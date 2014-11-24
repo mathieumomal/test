@@ -65,6 +65,7 @@
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="ChangeRequest.Extend.cs" />
+    <Compile Include="ChangeRequestsSearch.cs" />
     <Compile Include="Community.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
