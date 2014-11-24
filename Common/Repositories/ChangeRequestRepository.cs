@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.DomainClasses;
+﻿using System.Runtime.InteropServices;
+using Etsi.Ultimate.DomainClasses;
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
@@ -135,7 +136,11 @@ namespace Etsi.Ultimate.Repositories
         /// <returns></returns>
         public List<ChangeRequest> GetChangeRequests(ChangeRequestsSearch searchObj)
         {
-            return UoW.Context.ChangeRequests.Skip(20).Take(100).ToList();
+            var query = UoW.Context.ChangeRequests.Include( cr => cr.Specification ).OrderBy(cr => cr.Specification.Number)
+                .ThenByDescending(cr => cr.CRNumber).ThenByDescending(cr => cr.Revision).Skip(searchObj.SkipRecords);
+            if (searchObj.PageSize != 0)
+                query = query.Take(searchObj.PageSize);
+            return query.ToList();
         }
     }
 

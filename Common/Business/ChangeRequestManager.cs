@@ -334,8 +334,19 @@ namespace Etsi.Ultimate.Business
             var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
             crRepository.UoW = UoW;
 
-            //TODO : conversion -> crRepository.GetChangeRequests(searchObj) to List<ChangeRequestListFacade>
-            return new ServiceResponse<List<ChangeRequestListFacade>> { Result =  null};
+            var candidateCrs = crRepository.GetChangeRequests(searchObj);
+            var facadeCrs = new List<ChangeRequestListFacade>();
+
+            foreach (var cr in candidateCrs)
+            {
+                facadeCrs.Add(new ChangeRequestListFacade{ ChangeRequestNumber = cr.CRNumber});
+            }
+
+            return new ServiceResponse<List<ChangeRequestListFacade>>
+            {
+                Result =  facadeCrs
+            
+            };
         }
     }
 
