@@ -10,15 +10,15 @@
 namespace Etsi.Ultimate.Module.CRs {
     
     
-    public partial class View {
+    public partial class ChangeRequestList {
         
         /// <summary>
-        /// Contrôle crsTable.
+        /// Contrôle rgCrList.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadGrid crsTable;
+        protected global::Telerik.Web.UI.RadGrid rgCrList;
     }
 }

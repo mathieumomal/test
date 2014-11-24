@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="CRs" type="Module" version="00.00.02">
+    <package name="CRs" type="Module" version="00.00.04">
       <friendlyName>CRs</friendlyName>
       <description>CRs module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>
@@ -18,7 +18,6 @@
       
       <components>
         
-
         <component type="ResourceFile">
           <resourceFiles>
             <basePath>DesktopModules/CRs</basePath>
@@ -32,7 +31,6 @@
           <desktopModule>
             <moduleName>CRs</moduleName>
             <foldername>CRs</foldername>
-            <businessControllerClass>Etsi.Ultimate.Module.CRs.Components.FeatureController</businessControllerClass>
             <supportedFeatures />
             <moduleDefinitions>
               <moduleDefinition>
@@ -41,7 +39,7 @@
                 <moduleControls>
                   <moduleControl>
                     <controlKey />
-                    <controlSrc>DesktopModules/CRs/View.ascx</controlSrc>
+                    <controlSrc>DesktopModules/CRs/ChangeRequestList.ascx</controlSrc>
                     <supportsPartialRendering>False</supportsPartialRendering>
                     <controlTitle />
                     <controlType>View</controlType>
@@ -62,6 +60,10 @@
             </assembly>
             <assembly>
               <name>Etsi.Ultimate.DomainClasses.dll</name>
+              <path>bin</path>
+            </assembly>
+            <assembly>
+              <name>Etsi.Ultimate.Services.dll</name>
               <path>bin</path>
             </assembly>
           </assemblies>

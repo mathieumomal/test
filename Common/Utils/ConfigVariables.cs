@@ -227,5 +227,25 @@ namespace Etsi.Ultimate.Utils
                 return "";
             }
         }
+
+        public static string ReleaseDetailsUrl
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["ReleaseDetailsUrl"] != null)
+                    return ConfigurationManager.AppSettings["ReleaseDetailsUrl"];
+                return "";
+            }
+        }
+
+        public static string TdocDetailsUrl
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["TdocDetailsUrl"] != null)
+                    return ConfigurationManager.AppSettings["TdocDetailsUrl"];
+                return "";
+            }
+        }
     }
 }

@@ -74,25 +74,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FeatureController.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="View.ascx.cs">
-      <DependentUpon>View.ascx</DependentUpon>
+    <Compile Include="ChangeRequestList.ascx.cs">
+      <DependentUpon>ChangeRequestList.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="View.ascx.designer.cs">
-      <DependentUpon>View.ascx</DependentUpon>
+    <Compile Include="ChangeRequestList.ascx.designer.cs">
+      <DependentUpon>ChangeRequestList.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="images\Cr_ImplemError.png" />
-    <Content Include="images\CR_Revision.png" />
-    <Content Include="images\CR_TDoc.png" />
-    <Content Include="images\TDocLink.png" />
+    <Content Include="ChangeRequestList.ascx" />
     <Content Include="License.txt" />
     <Content Include="module.css" />
     <Content Include="ReleaseNotes.txt" />
-    <Content Include="View.ascx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="CRs.dnn" />
@@ -100,13 +95,6 @@
   <ItemGroup>
     <Content Include="BuildScripts\ModulePackage.targets" />
     <Content Include="BuildScripts\MSBuild.Community.Tasks.Targets" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\View.ascx.resx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="App_LocalResources\Edit.ascx.resx" />
-    <Content Include="App_LocalResources\Settings.ascx.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -125,6 +113,18 @@
       <Project>{d5bdede9-d397-411c-ae94-1646836406ba}</Project>
       <Name>DomainClasses</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Common\Services\Services.csproj">
+      <Project>{4BB8A434-1ED1-4D33-AE3D-32A000D19CA5}</Project>
+      <Name>Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Utils\Utils.csproj">
+      <Project>{AD1F6A1C-95B2-4274-A0C5-1F8CA9D9BB55}</Project>
+      <Name>Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_LocalResources\" />
+    <Folder Include="images\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

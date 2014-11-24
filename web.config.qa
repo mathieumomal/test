@@ -98,6 +98,8 @@
   <add key="MeetingRegistration" value="http://webapp.13.etsiqa.org/3GPPRegistration/fMain.asp?mid={0}"/>
   <add key="EtsiWorkitemsDeliveryFolder" value="http://www.etsi.org/deliver/"/>
   <add key="SpecificationDetailsUrl" value="http://dnn3gpp.13.etsiqa.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId={0}" />
+  <add key="ReleaseDetailsUrl" value="http://dnn3gpp.13.etsiqa.org/desktopmodules/Release/ReleaseDetails.aspx?releaseId={0}"/>
+  <add key="TdocDetailsUrl" value="http://dnn3gpp.13.etsiqa.org/ngppapp/CreateTdoc.aspx?mode=view&tdocUid={0}"/>
   
   </appSettings>
   <system.web.webPages.razor>
