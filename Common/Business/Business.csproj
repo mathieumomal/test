@@ -103,6 +103,10 @@
     <Compile Include="CrCategoriesManager.cs" />
     <Compile Include="FinalizeCrsAction.cs" />
     <Compile Include="IChangeRequestStatusManager.cs" />
+    <Compile Include="ItuRecommendation\ItuPreliminaryDataExtractor.cs" />
+    <Compile Include="ItuRecommendation\ItuPreliminaryRecord.cs" />
+    <Compile Include="ItuRecommendation\ItuPreliminaryExporter.cs" />
+    <Compile Include="ItuRecommendation\ItuPreliminaryExportAction.cs" />
     <Compile Include="ItuRecommendation\ItuRecommendationExportAction.cs" />
     <Compile Include="ItuRecommendation\ItuRecommendationExporter.cs" />
     <Compile Include="ItuRecommendation\ItuRecord.cs" />

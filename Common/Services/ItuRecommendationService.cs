@@ -44,5 +44,36 @@ namespace Etsi.Ultimate.Services
                 return errorResponse;
             }
         }
+
+
+        /// <summary>
+        /// Exports the itu preliminary report based on the given recommendation name, start and end release & SA plenary meeting
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="ituRecommendationName">Name of the itu recommendation.</param>
+        /// <param name="startReleaseId">The start release identifier.</param>
+        /// <param name="endReleaseId">The end release identifier.</param>
+        /// <param name="saPlenaryMeetingId">The sa plenary meeting identifier.</param>
+        /// <returns>If everything went well, string contains the URL where ITU preliminary can be fetched.
+        /// Else, Report should contain errors.</returns>
+        public ServiceResponse<string> ExportItuPreliminary(int personId, string ituRecommendationName, int startReleaseId, int endReleaseId, int saPlenaryMeetingId)
+        {
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var exportItuPreliminaryAction = new ItuPreliminaryExportAction() { UoW = uoW };
+                    return exportItuPreliminaryAction.ExportItuPreliminary(personId, ituRecommendationName, startReleaseId, endReleaseId, saPlenaryMeetingId);
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Error("Exception while exporting ITU Preliminary: " + e.Message);
+                LogManager.Error(e.StackTrace);
+                var errorResponse = new ServiceResponse<string> { Result = null };
+                errorResponse.Report.LogError(Localization.GenericError);
+                return errorResponse;
+            }
+        }
     }
 }

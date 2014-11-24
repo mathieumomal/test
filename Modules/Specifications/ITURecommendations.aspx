@@ -87,7 +87,7 @@
                 </table>
             </div>
             <div class="btns">
-                <asp:Button ID="btnPreliminary" Enabled="False" runat="server" CssClass="btn3GPP-default" Text="Preliminary Q.1741"/>
+                <asp:Button ID="btnPreliminary" Enabled="False" runat="server" CssClass="btn3GPP-default" Text="Preliminary Q.1741" OnClick="btnPreliminary_OnClick"/>
                 <asp:Button ID="btnExport" OnClick="btnExport_OnClick" runat="server" CssClass="btn3GPP-default" Text="Export list"/>
             </div>
         </asp:Panel>

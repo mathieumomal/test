@@ -75,6 +75,8 @@ namespace Etsi.Ultimate.Business
             Container.RegisterType<ISeedFileParser, SeedFileParser>(new TransientLifetimeManager());
             Container.RegisterType<IItuRecommendationExporter, ItuRecommendationExporter>(new TransientLifetimeManager());
             Container.RegisterType<ISpecToItuRecordConverter, SpecToItuRecordConverter>(new TransientLifetimeManager());
+            Container.RegisterType<IItuPreliminaryDataExtractor, ItuPreliminaryDataExtractor>(new TransientLifetimeManager());
+            Container.RegisterType<IItuPreliminaryExporter, ItuPreliminaryExporter>(new TransientLifetimeManager());
         }
     }
 }

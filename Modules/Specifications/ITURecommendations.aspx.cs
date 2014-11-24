@@ -80,6 +80,33 @@ namespace Etsi.Ultimate.Module.Specifications
                 ThrowAnError(errorMessage.ToString(), false);
             }
         }
+
+        /// <summary>
+        /// Handles the OnClick event of the btnPreliminary control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        protected void btnPreliminary_OnClick(object sender, EventArgs e)
+        {
+            var ituSvc = ServicesFactory.Resolve<IItuRecommendationService>();
+            var startReleaseId = ConvertStringToInt(rcbStartRelease.SelectedValue);
+            var endReleaseId = ConvertStringToInt(rcbEndRelease.SelectedValue);
+            var ituRecommendationName = rcbItuRec.SelectedValue;
+            var saPlenaryMeetingId = RcbSaMeeting.SelectedMeetingId;
+
+            var result = ituSvc.ExportItuPreliminary(PersonId, ituRecommendationName, startReleaseId, endReleaseId, saPlenaryMeetingId);
+            if (result.Report.GetNumberOfErrors() == 0)
+            {
+                Response.Redirect(result.Result);
+            }
+            else
+            {
+                var errorMessage = new StringBuilder();
+                result.Report.ErrorList.ForEach(x => errorMessage.Append(x).Append("\n\r"));
+                ThrowAnError(errorMessage.ToString(), false);
+            }
+        }
+
         #endregion
 
         #region private
