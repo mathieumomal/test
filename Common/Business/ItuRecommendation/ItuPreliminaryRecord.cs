@@ -7,6 +7,11 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
     public class ItuPreliminaryRecord
     {
         /// <summary>
+        /// Gets or sets the specification identifier.
+        /// </summary>
+        public int SpecificationId { get; set; }
+
+        /// <summary>
         /// Column: Type
         /// </summary>
         public string Type { get; set; }

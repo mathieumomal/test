@@ -34,7 +34,10 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
             // Retrieve all specifications that are matching the criteria.
             var specRepository = RepositoryFactory.Resolve<ISpecificationRepository>();
             specRepository.UoW = UoW;
-            var specList = specRepository.AllIncluding().Where(x => (x.IsActive && x.IsUnderChangeControl.GetValueOrDefault())).ToList();
+            var specList = specRepository.AllIncluding().Where(x => (x.IsActive && (x.IsUnderChangeControl ?? false))).ToList();
+
+            response.Result = specList.Select(x => new ItuPreliminaryRecord() { SpecificationId = x.Pk_SpecificationId, Type = x.SpecificationTypeShortName, SpecificationNumber = x.Number, Title = x.Title }).ToList();
+
             return response;
         } 
 
