@@ -1,5 +1,6 @@
 ﻿using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
@@ -260,7 +261,7 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId"></param>
         /// <param name="searchObj"></param>
         /// <returns></returns>
-        public ServiceResponse<List<ChangeRequest>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj)
+        public ServiceResponse<List<ChangeRequestListFacade>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj)
         {
             using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
@@ -342,7 +343,7 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId"></param>
         /// <param name="searchObj"></param>
         /// <returns></returns>
-        ServiceResponse<List<ChangeRequest>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj);
+        ServiceResponse<List<ChangeRequestListFacade>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj);
     }
 }
 

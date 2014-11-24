@@ -1,4 +1,5 @@
 ﻿using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
@@ -328,12 +329,13 @@ namespace Etsi.Ultimate.Business
        
         #endregion
 
-        public ServiceResponse<List<ChangeRequest>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj)
+        public ServiceResponse<List<ChangeRequestListFacade>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj)
         {
             var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
             crRepository.UoW = UoW;
 
-            return new ServiceResponse<List<ChangeRequest>> {Result = crRepository.GetChangeRequests(searchObj)};
+            //TODO : conversion -> crRepository.GetChangeRequests(searchObj) to List<ChangeRequestListFacade>
+            return new ServiceResponse<List<ChangeRequestListFacade>> { Result =  null};
         }
     }
 
@@ -400,6 +402,6 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId"></param>
         /// <param name="searchObj"></param>
         /// <returns></returns>
-        ServiceResponse<List<ChangeRequest>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj);
+        ServiceResponse<List<ChangeRequestListFacade>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj);
     }
 }
