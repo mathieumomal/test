@@ -1,8 +1,13 @@
-﻿using Etsi.Ultimate.Utils.Core;
+﻿using System.Drawing;
+using System.Linq;
+using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.Core;
 using OfficeOpenXml;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OfficeOpenXml.Style;
+using Path = System.IO.Path;
 
 namespace Etsi.Ultimate.Business.ItuRecommendation
 {
@@ -11,6 +16,11 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
     /// </summary>
     public class ItuPreliminaryExporter : IItuPreliminaryExporter
     {
+        #region variables
+        private int _rowDataEnd;
+        #endregion
+
+        #region exporter
         /// <summary>
         /// Generates the .xlsx export of the records.
         /// </summary>
@@ -21,7 +31,7 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
         {
             if (String.IsNullOrEmpty(filePath))
                 return false;
-            if (records == null)
+            if (records == null || records.Count == 0)
                 return false;
             try
             {
@@ -31,12 +41,20 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
 
                 using (var pck = new ExcelPackage(newFile))
                 {
-                    // get the handle to the existing worksheet
+                    //Create excel file
                     var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(filePath);
                     var wsData = pck.Workbook.Worksheets.Add(fileNameWithoutExtension);
 
-                    //TODO::
+                    //Preparation of the excel file (Style, columns, ...)
+                    InitExcelFile(wsData, records);
 
+                    //Filled excel file
+                    ExportItuPreliminaryRecords(wsData, records);
+
+                    //Set hyperlinks
+                    SetHyperLinks(wsData, records);
+
+                    //Save excel file
                     pck.Save();
                 }
             }
@@ -48,6 +66,100 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
 
             return true;
         }
+        #endregion
+
+        #region export private methods
+        /// <summary>
+        /// Filled excel file
+        /// </summary>
+        /// <param name="wsData"></param>
+        /// <param name="records"></param>
+        private void ExportItuPreliminaryRecords(ExcelWorksheet wsData, List<ItuPreliminaryRecord> records)
+        {
+            //TODO: hyperlink
+
+            //Format data
+            var formatedData = from s in records
+                orderby s.SpecificationNumber
+                select new
+                {
+                    Type = s.Type,
+                    SpecNumber = s.SpecificationNumber,
+                    Title = s.Title
+                };
+
+            //Filled excel
+            wsData.Cells["A2"].LoadFromCollection(formatedData, false, OfficeOpenXml.Table.TableStyles.None);
+        }
+
+        /// <summary>
+        /// Init excel file in term of style
+        /// </summary>
+        /// <param name="wsData"></param>
+        /// <param name="records"></param>
+        private void InitExcelFile(ExcelWorksheet wsData, List<ItuPreliminaryRecord> records)
+        {
+            //Set Zoom to 100%
+            wsData.View.ZoomScale = ItuPreliminaryRecordConfiguration.Scale;
+
+            //Set rowDataEnd
+            _rowDataEnd = records.Count + 1;
+
+            //Set Font Style
+            wsData.Cells.Style.Font.Size = ItuPreliminaryRecordConfiguration.FontSize;
+            wsData.Cells.Style.Font.Name = ItuPreliminaryRecordConfiguration.Font;
+
+            //Set Header Style
+            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader, ItuPreliminaryRecordConfiguration.ColumnStart, ItuPreliminaryRecordConfiguration.RowHeader, ItuPreliminaryRecordConfiguration.ColumnEnd].Style.Fill.PatternType = ExcelFillStyle.Solid;
+            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader, ItuPreliminaryRecordConfiguration.ColumnStart, ItuPreliminaryRecordConfiguration.RowHeader, ItuPreliminaryRecordConfiguration.ColumnEnd].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader, ItuPreliminaryRecordConfiguration.ColumnStart, ItuPreliminaryRecordConfiguration.RowHeader, ItuPreliminaryRecordConfiguration.ColumnEnd].Style.Fill.BackgroundColor.SetColor(Color.LightGray);
+
+            //Set Cell Borders
+            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader, ItuPreliminaryRecordConfiguration.ColumnStart, _rowDataEnd, ItuPreliminaryRecordConfiguration.ColumnEnd].Style.Border.Left.Style = ExcelBorderStyle.Thin;
+            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader, ItuPreliminaryRecordConfiguration.ColumnStart, _rowDataEnd, ItuPreliminaryRecordConfiguration.ColumnEnd].Style.Border.Right.Style = ExcelBorderStyle.Thin;
+            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader, ItuPreliminaryRecordConfiguration.ColumnStart, _rowDataEnd, ItuPreliminaryRecordConfiguration.ColumnEnd].Style.Border.Top.Style = ExcelBorderStyle.Thin;
+            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader, ItuPreliminaryRecordConfiguration.ColumnStart, _rowDataEnd, ItuPreliminaryRecordConfiguration.ColumnEnd].Style.Border.Bottom.Style = ExcelBorderStyle.Thin;
+
+            //Set Column Width
+            wsData.Column(ItuPreliminaryRecordConfiguration.Type.Index).Width = ItuPreliminaryRecordConfiguration.Type.Width;
+            wsData.Column(ItuPreliminaryRecordConfiguration.SpecNumber.Index).Width = ItuPreliminaryRecordConfiguration.SpecNumber.Width;
+            wsData.Column(ItuPreliminaryRecordConfiguration.Title.Index).Width = ItuPreliminaryRecordConfiguration.Title.Width;
+
+            //Set Row Height
+            wsData.DefaultRowHeight = ItuPreliminaryRecordConfiguration.DefaultColHeight;
+
+            //Set header column titles
+            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader, ItuPreliminaryRecordConfiguration.Type.Index].Value = ItuPreliminaryRecordConfiguration.Type.Name;
+            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader, ItuPreliminaryRecordConfiguration.SpecNumber.Index].Value = ItuPreliminaryRecordConfiguration.SpecNumber.Name;
+            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader, ItuPreliminaryRecordConfiguration.Title.Index].Value = ItuPreliminaryRecordConfiguration.Title.Name;
+
+            //Set hyperlink style
+            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader + 1, ItuPreliminaryRecordConfiguration.SpecNumber.Index, _rowDataEnd, ItuPreliminaryRecordConfiguration.SpecNumber.Index].Style.Font.Bold = true;
+            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader + 1, ItuPreliminaryRecordConfiguration.SpecNumber.Index, _rowDataEnd, ItuPreliminaryRecordConfiguration.SpecNumber.Index].Style.Font.UnderLine = true;
+            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader + 1, ItuPreliminaryRecordConfiguration.SpecNumber.Index, _rowDataEnd, ItuPreliminaryRecordConfiguration.SpecNumber.Index].Style.Font.Color.SetColor(Color.Blue);
+        }
+
+        /// <summary>
+        /// Manage hyperlinks
+        /// </summary>
+        /// <param name="wsData"></param>
+        /// <param name="records"></param>
+        private void SetHyperLinks(ExcelWorksheet wsData, List<ItuPreliminaryRecord> records)
+        {
+            var count = ItuPreliminaryRecordConfiguration.RowHeader + 1;
+
+            foreach (var record in records)
+            {
+                if (record.SpecificationId != 0)
+                {
+                    var specificationHyperlink = String.Format(ConfigVariables.SpecificationDetailsUrl, record.SpecificationId);
+                    wsData.Cells[count, ItuPreliminaryRecordConfiguration.SpecNumber.Index].Hyperlink = new Uri(specificationHyperlink, UriKind.RelativeOrAbsolute);
+                }
+
+                count++;
+            }
+        }
+        #endregion
     }
 
     /// <summary>

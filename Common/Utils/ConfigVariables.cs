@@ -217,5 +217,15 @@ namespace Etsi.Ultimate.Utils
                 return "";
             }
         }
+
+        public static string SpecificationDetailsUrl
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["SpecificationDetailsUrl"] != null)
+                    return ConfigurationManager.AppSettings["SpecificationDetailsUrl"];
+                return "";
+            }
+        }
     }
 }

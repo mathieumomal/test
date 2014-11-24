@@ -97,6 +97,8 @@
   <add key="ManageAgendaItemsUrl" value="http://webapp.13.etsiqa.org/rmeetingDocuments/UpdateAllocations.asp?MTG_ID={0}"/>
   <add key="MeetingRegistration" value="http://webapp.13.etsiqa.org/3GPPRegistration/fMain.asp?mid={0}"/>
   <add key="EtsiWorkitemsDeliveryFolder" value="http://www.etsi.org/deliver/"/>
+  <add key="SpecificationDetailsUrl" value="http://dnn3gpp.13.etsiqa.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId={0}" />
+  
   </appSettings>
   <system.web.webPages.razor>
     <pages pageBaseType="DotNetNuke.Web.Razor.DotNetNukeWebPage">
