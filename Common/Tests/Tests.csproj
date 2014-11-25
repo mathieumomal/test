@@ -178,9 +178,10 @@
     <Compile Include="Repositories\SpecVersionsRepositoryTest.cs" />
     <Compile Include="Repositories\SyncInfoRepositoryTest.cs" />
     <Compile Include="Repositories\WorkPlanFileRepositoryTest.cs" />
+    <Compile Include="Services\ChangeRequestTests\CrForModuleTests.cs" />
     <Compile Include="Services\CrCategoriesServiceTest.cs" />
     <Compile Include="Services\CrPackServiceTest.cs" />
-    <Compile Include="Services\CrServiceTest.cs" />
+    <Compile Include="Services\ChangeRequestTests\CrServiceTest.cs" />
     <Compile Include="Services\FinalizeCrsTests.cs" />
     <Compile Include="Services\ItuRecommendation\ItuExportTests.cs" />
     <Compile Include="Services\RemarkServiceGetTests.cs" />

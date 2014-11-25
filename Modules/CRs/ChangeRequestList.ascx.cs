@@ -80,6 +80,8 @@ namespace Etsi.Ultimate.Module.CRs
                     {
                         wgTdocLink.Text = currentCr.WgTdocNumber.ToString(CultureInfo.InvariantCulture);
                         wgTdocLink.NavigateUrl = String.Format(ConfigVariables.TdocDetailsUrl, currentCr.WgTdocNumber);
+                        if (currentCr.WgTdocNumber.Equals("-"))
+                            wgTdocLink.Enabled = false;
                     }
                     
                     var tsgTdocLink = (HyperLink)dataItem["TsgTdocNumber"].Controls[0];
@@ -87,6 +89,8 @@ namespace Etsi.Ultimate.Module.CRs
                     {
                         tsgTdocLink.Text = currentCr.TsgTdocNumber.ToString(CultureInfo.InvariantCulture);
                         tsgTdocLink.NavigateUrl = String.Format(ConfigVariables.TdocDetailsUrl, currentCr.TsgTdocNumber);
+                        if (currentCr.TsgTdocNumber.Equals("-"))
+                            tsgTdocLink.Enabled = false;
                     }
                     
                     var newVersionLink = (HyperLink)dataItem["NewVersion"].Controls[0];
