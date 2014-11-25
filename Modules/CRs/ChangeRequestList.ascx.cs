@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Web.UI.WebControls;
 using DotNetNuke.Entities.Modules;
+using DotNetNuke.Entities.Tabs;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Services;
@@ -17,6 +17,10 @@ namespace Etsi.Ultimate.Module.CRs
         private const string DsIdKey = "ETSI_DS_ID";
         #endregion
 
+        #region properties
+        protected Controls.FullView CrFullView;
+        #endregion
+
         #region events
         /// <summary>
         /// Page load method
@@ -25,7 +29,10 @@ namespace Etsi.Ultimate.Module.CRs
         /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (!IsPostBack)
+            {
+                rgCrList.PageSize = ConfigVariables.CRsListRecordsMaxSize;
+            }
         }
 
         /// <summary>
@@ -35,48 +42,7 @@ namespace Etsi.Ultimate.Module.CRs
         /// <param name="e"></param>
         protected void RgCrList_NeedDataSource(object o, GridNeedDataSourceEventArgs e)
         {
-            var searchObj = new ChangeRequestsSearch();
-            //TODO : searchObj
-
-            var crSvc = new ChangeRequestService();
-            //rgCrList.DataSource = crSvc.GetChangeRequests(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
-
-            //TEST
-            var crList = new List<ChangeRequestListFacade>
-            {
-                new ChangeRequestListFacade
-                {
-                    ChangeRequestId = 1,
-                    SpecNumber = "22.222",
-                    ChangeRequestNumber = "0003",
-                    Revision = 1,
-                    ImpactedVersion = "12.0.1",
-                    TargetRelease = "Rel-12",
-                    Title = "Mon titre",
-                    WgTdocNumber = "SP-1", 
-                    WgStatus = "Approved",
-                    TsgTdocNumber = "SA61", 
-                    TsgStatus = "Approved", 
-                    NewVersion  = "12.3.0"
-                },
-                new ChangeRequestListFacade
-                {
-                    ChangeRequestId = 1,
-                    SpecNumber = "22.222",
-                    ChangeRequestNumber = "0003",
-                    Revision = 1,
-                    ImpactedVersion = "12.0.1",
-                    TargetRelease = "Rel-12",
-                    Title = "Mon titre",
-                    WgTdocNumber = "SP-1", 
-                    WgStatus = "Approved",
-                    TsgTdocNumber = "SA61", 
-                    TsgStatus = "Approved", 
-                    NewVersion  = "12.3.0",
-                    SpecId = 2
-                }
-            };
-            rgCrList.DataSource = crList;
+            LoadData();
         }
 
         /// <summary>
@@ -127,6 +93,31 @@ namespace Etsi.Ultimate.Module.CRs
         }
         #endregion
 
+        #region Load data
+        /// <summary>
+        /// Load data in the RadGrid each time needed
+        /// </summary>
+        private void LoadData()
+        {
+            var searchObj = new ChangeRequestsSearch
+            {
+                SkipRecords = rgCrList.CurrentPageIndex*rgCrList.PageSize,
+                PageSize = rgCrList.PageSize
+            };
+
+            var crSvc = ServicesFactory.Resolve<IChangeRequestService>();
+            var response = crSvc.GetChangeRequests(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
+            if (response.Report.GetNumberOfErrors() != 0)
+                return;
+
+            rgCrList.DataSource = response.Result.Key;
+            rgCrList.VirtualItemCount = response.Result.Value;
+
+            //Init full view according to the filters
+            InitFullView();
+        }
+        #endregion
+
         #region utils
         /// <summary>
         /// Retrieve person If exists
@@ -144,6 +135,22 @@ namespace Etsi.Ultimate.Module.CRs
                     return personId;
             }
             return 0;
+        }
+
+        /// <summary>
+        /// Init full view
+        /// </summary>
+        private void InitFullView()
+        {
+            CrFullView.ModuleId = ModuleId;
+            CrFullView.TabId = TabController.CurrentPage.TabID;
+
+            var address = Request.IsSecureConnection ? "https://" : "http://";
+            address += Request["HTTP_HOST"];
+            CrFullView.BaseAddress = address;
+
+            //TODO : CrFullView.UrlParams (for filters)
+            CrFullView.Display();
         }
         #endregion
     }

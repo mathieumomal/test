@@ -32,9 +32,12 @@ namespace Etsi.Ultimate.Business
             address.Append(result.Value.Replace("//","/")+".aspx");
 
             // Add the UrlParams. Do not consider tabId param.
-            urlParams.Remove(DnnTabIdGetParam);
-            if (urlParams.Count > 0)
-                address.Append( "?"+ string.Join("&", urlParams.Select( x => x.Key + "=" + x.Value).ToArray()));
+            if (urlParams != null)
+            {
+                urlParams.Remove(DnnTabIdGetParam);
+                if (urlParams.Count > 0)
+                    address.Append("?" + string.Join("&", urlParams.Select(x => x.Key + "=" + x.Value).ToArray()));
+            }
 
             return new KeyValuePair<int,string>(result.Key, address.ToString());
         }

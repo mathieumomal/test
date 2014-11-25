@@ -247,5 +247,17 @@ namespace Etsi.Ultimate.Utils
                 return "";
             }
         }
+
+        public static int CRsListRecordsMaxSize
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["CRsListRecordsMaxSize"] == null)
+                    return 0;
+                var returnValue = 0;
+                var success = int.TryParse(ConfigurationManager.AppSettings["CRsListRecordsMaxSize"], out returnValue);
+                return success ? returnValue : 0;
+            }
+        }
     }
 }

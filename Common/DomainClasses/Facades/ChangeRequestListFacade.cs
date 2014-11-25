@@ -7,7 +7,7 @@
         //Data to display
         public string SpecNumber { get; set; }
         public string ChangeRequestNumber { get; set; }
-        public int Revision { get; set; }
+        public string Revision { get; set; }
         public string ImpactedVersion { get; set; }
         public string TargetRelease { get; set; }
         public string Title { get; set; }

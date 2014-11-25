@@ -12,6 +12,7 @@ namespace Etsi.Ultimate.Module.CRs {
     
     public partial class ChangeRequestList {
         
+        
         /// <summary>
         /// Contrôle rgCrList.
         /// </summary>

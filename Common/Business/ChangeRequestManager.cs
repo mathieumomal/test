@@ -329,23 +329,53 @@ namespace Etsi.Ultimate.Business
        
         #endregion
 
-        public ServiceResponse<List<ChangeRequestListFacade>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj)
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="searchObj"></param>
+        /// <returns></returns>
+        public ServiceResponse<KeyValuePair<List<ChangeRequestListFacade>, int>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj)
         {
             var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
             crRepository.UoW = UoW;
+            var repoResponse = crRepository.GetChangeRequests(searchObj);
 
-            var candidateCrs = crRepository.GetChangeRequests(searchObj);
-            var facadeCrs = new List<ChangeRequestListFacade>();
+            var crsListFacade = new List<ChangeRequestListFacade>();
+            repoResponse.Key.ForEach(x => crsListFacade.Add(ConvertChangeRequestToChangeRequestListFacades(x)));
 
-            foreach (var cr in candidateCrs)
+            return new ServiceResponse<KeyValuePair<List<ChangeRequestListFacade>, int>> { Result = new KeyValuePair<List<ChangeRequestListFacade>, int>(crsListFacade, repoResponse.Value) };
+        }
+
+        /// <summary>
+        /// Convert Change request to change request list facade
+        /// </summary>
+        /// <returns></returns>
+        private ChangeRequestListFacade ConvertChangeRequestToChangeRequestListFacades(ChangeRequest cr)
+        {
+            return new ChangeRequestListFacade
             {
-                facadeCrs.Add(new ChangeRequestListFacade{ ChangeRequestNumber = cr.CRNumber});
-            }
-
-            return new ServiceResponse<List<ChangeRequestListFacade>>
-            {
-                Result =  facadeCrs
-            
+                ChangeRequestId = cr.Pk_ChangeRequest,
+                SpecNumber = cr.Specification != null ? cr.Specification.Number : null,
+                ChangeRequestNumber = cr.CRNumber,
+                Revision = (cr.Revision == null ? "-" : cr.Revision.ToString()),
+                ImpactedVersion = cr.CurrentVersion != null ? string.Format("{0}.{1}.{2}", 
+                                                        cr.CurrentVersion.MajorVersion, 
+                                                        cr.CurrentVersion.TechnicalVersion,
+                                                        cr.CurrentVersion.EditorialVersion) : null,
+                TargetRelease = cr.Release != null ? cr.Release.ShortName : null,
+                Title = cr.Subject,
+                WgTdocNumber = cr.WGTDoc,
+                TsgTdocNumber = cr.TSGTDoc,
+                WgStatus = cr.WgStatus != null ? cr.WgStatus.Description : null,
+                TsgStatus = cr.TsgStatus != null ? cr.TsgStatus.Description : null,
+                NewVersion = cr.NewVersion != null ? string.Format("{0}.{1}.{2}", 
+                                                cr.NewVersion.MajorVersion, 
+                                                cr.NewVersion.TechnicalVersion,
+                                                cr.NewVersion.EditorialVersion) : null,
+                SpecId = cr.Fk_Specification ?? 0,
+                TargetReleaseId = cr.Release != null ? cr.Release.Pk_ReleaseId : 0,
+                NewVersionPath = cr.NewVersion != null ? cr.NewVersion.Location : null
             };
         }
     }
@@ -413,6 +443,6 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId"></param>
         /// <param name="searchObj"></param>
         /// <returns></returns>
-        ServiceResponse<List<ChangeRequestListFacade>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj);
+        ServiceResponse<KeyValuePair<List<ChangeRequestListFacade>, int>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj);
     }
 }

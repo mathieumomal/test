@@ -96,7 +96,43 @@ namespace Etsi.Ultimate.Tests.Repositories
                 Assert.AreEqual(result, respresult.Fk_TSGStatus);
             }
         }
+        #endregion
 
+        #region Get CR
+        [TestCase(0, 0, 22, Description = "No paging")]
+        [TestCase(0, 10, 10, Description = "Paging max 10 items")]
+        [TestCase(5, 10, 10, Description = "Paging max 10 items (start from item 6)")]
+        [TestCase(20, 10, 2, Description = "Paging start from item 20")]
+        public void GetChangeRequestsTest_Paging(int skipRecords, int pageSize, int expectedResult)
+        {
+            //Search object build
+            var searchObj = new ChangeRequestsSearch { PageSize = pageSize, SkipRecords = skipRecords };
+
+            //Call method
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetChangeRequests(searchObj);
+
+            //Test
+            Assert.AreEqual(expectedResult, result.Key.Count);
+        }
+        [Test]
+        public void GetChangeRequestsTest_OrderBy()
+        {
+            //Search object build
+            var searchObj = new ChangeRequestsSearch { PageSize = 0, SkipRecords = 0 };
+
+            //Call method
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetChangeRequests(searchObj);
+
+            //Test order by spec # (ASCENDING)
+            Assert.AreEqual("22.101",result.Key.FirstOrDefault().Specification.Number);//First spec
+            Assert.AreEqual("22.107", result.Key.LastOrDefault().Specification.Number);//Last spec
+            //Test order by CR # (DESCENDING) (Same spec between to first CR)
+            Assert.AreEqual(result.Key.ElementAt(0).Specification.Number, result.Key.ElementAt(1).Specification.Number);
+            Assert.AreEqual("AC014", result.Key.ElementAt(0).CRNumber);
+            Assert.AreEqual("AB013", result.Key.ElementAt(1).CRNumber);
+        }
         #endregion
     }
 }
