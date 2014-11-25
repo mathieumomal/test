@@ -57,38 +57,46 @@ namespace Etsi.Ultimate.Module.CRs
                 var dataItem = e.Item as GridDataItem;
                 var currentCr = (ChangeRequestListFacade)e.Item.DataItem;
 
-                //Set hyperlink text value
-                var specLink = (HyperLink)dataItem["SpecNumber"].Controls[0];
-                specLink.Text = currentCr.SpecId.ToString(CultureInfo.InvariantCulture);
-                specLink.NavigateUrl = String.Format(ConfigVariables.SpecificationDetailsUrl, currentCr.SpecId);
+                if (currentCr != null)
+                {
+                    var specLink = (HyperLink)dataItem["SpecNumber"].Controls[0];
+                    if (currentCr.SpecNumber != null)
+                        specLink.Text = currentCr.SpecNumber.ToString(CultureInfo.InvariantCulture);
+                    if (currentCr.SpecId != 0)
+                        specLink.NavigateUrl = String.Format(ConfigVariables.SpecificationDetailsUrl, currentCr.SpecId);
+                    else
+                        specLink.Enabled = false;
 
-                var releaseLink = (HyperLink)dataItem["TargetRelease"].Controls[0];
-                releaseLink.Text = currentCr.TargetRelease.ToString(CultureInfo.InvariantCulture);
-                releaseLink.NavigateUrl = String.Format(ConfigVariables.ReleaseDetailsUrl, currentCr.TargetReleaseId);
+                    var releaseLink = (HyperLink)dataItem["TargetRelease"].Controls[0];
+                    if (currentCr.TargetRelease != null)
+                        releaseLink.Text = currentCr.TargetRelease.ToString(CultureInfo.InvariantCulture);
+                    if (currentCr.TargetReleaseId != 0)
+                        releaseLink.NavigateUrl = String.Format(ConfigVariables.ReleaseDetailsUrl, currentCr.TargetReleaseId);
+                    else
+                        releaseLink.Enabled = false;
 
-                var wgTdocLink = (HyperLink)dataItem["WgTdocNumber"].Controls[0];
-                wgTdocLink.Text = currentCr.WgTdocNumber.ToString(CultureInfo.InvariantCulture);
-                wgTdocLink.NavigateUrl = String.Format(ConfigVariables.TdocDetailsUrl, currentCr.WgTdocNumber);
-
-                var tsgTdocLink = (HyperLink)dataItem["TsgTdocNumber"].Controls[0];
-                tsgTdocLink.Text = currentCr.TsgTdocNumber.ToString(CultureInfo.InvariantCulture);
-                tsgTdocLink.NavigateUrl = String.Format(ConfigVariables.TdocDetailsUrl, currentCr.TsgTdocNumber);
-
-                var newVersionLink = (HyperLink)dataItem["NewVersion"].Controls[0];
-                newVersionLink.Text = currentCr.NewVersion.ToString(CultureInfo.InvariantCulture);
-                newVersionLink.NavigateUrl = currentCr.NewVersionPath;
-
-                //Disabled necessary links
-                if (currentCr.SpecId == 0)
-                    specLink.Enabled = false;
-                if (currentCr.TargetReleaseId == 0)
-                    releaseLink.Enabled = false;
-                if (string.IsNullOrEmpty(currentCr.WgTdocNumber))
-                    wgTdocLink.Enabled = false;
-                if (string.IsNullOrEmpty(currentCr.TsgTdocNumber))
-                    tsgTdocLink.Enabled = false;
-                if (string.IsNullOrEmpty(currentCr.NewVersionPath))
-                    newVersionLink.Enabled = false;
+                    var wgTdocLink = (HyperLink)dataItem["WgTdocNumber"].Controls[0];
+                    if (currentCr.WgTdocNumber != null)
+                    {
+                        wgTdocLink.Text = currentCr.WgTdocNumber.ToString(CultureInfo.InvariantCulture);
+                        wgTdocLink.NavigateUrl = String.Format(ConfigVariables.TdocDetailsUrl, currentCr.WgTdocNumber);
+                    }
+                    
+                    var tsgTdocLink = (HyperLink)dataItem["TsgTdocNumber"].Controls[0];
+                    if (currentCr.TsgTdocNumber != null)
+                    {
+                        tsgTdocLink.Text = currentCr.TsgTdocNumber.ToString(CultureInfo.InvariantCulture);
+                        tsgTdocLink.NavigateUrl = String.Format(ConfigVariables.TdocDetailsUrl, currentCr.TsgTdocNumber);
+                    }
+                    
+                    var newVersionLink = (HyperLink)dataItem["NewVersion"].Controls[0];
+                    if(currentCr.NewVersion != null)
+                        newVersionLink.Text = currentCr.NewVersion.ToString(CultureInfo.InvariantCulture);
+                    if(currentCr.NewVersionPath != null)
+                        newVersionLink.NavigateUrl = currentCr.NewVersionPath;
+                    else
+                        newVersionLink.Enabled = false;
+                }   
             }
         }
         #endregion
