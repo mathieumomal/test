@@ -139,7 +139,7 @@ namespace Etsi.Ultimate.Repositories
 
             //Order by
             query = query.OrderBy(x => x.Specification.Number).ThenByDescending(x => x.CRNumber);
-
+            
             return searchObj.PageSize != 0 ? 
                 new KeyValuePair<List<ChangeRequest>, int>(query.Skip(searchObj.SkipRecords).Take(searchObj.PageSize).ToList(), query.Count()) : 
                 new KeyValuePair<List<ChangeRequest>, int>(query.ToList(), query.Count());
@@ -151,14 +151,7 @@ namespace Etsi.Ultimate.Repositories
     /// </summary>
     public interface IChangeRequestRepository : IEntityRepository<ChangeRequest>
     {
-        /// <summary>
-        /// Gets or sets the uo w.
-        /// </summary>
-        /// <value>
-        /// The uo w.
-        /// </value>
-        IUltimateUnitOfWork UoW { get; set; }
-
+        
         /// <summary>
         /// Finds the by specification identifier.
         /// </summary>

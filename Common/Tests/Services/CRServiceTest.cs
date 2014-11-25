@@ -1,6 +1,4 @@
-﻿
-using System.Security.Cryptography;
-using Etsi.Ultimate.Business;
+﻿using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
 using NUnit.Framework;

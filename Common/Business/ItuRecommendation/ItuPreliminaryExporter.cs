@@ -76,7 +76,6 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
         /// <param name="records"></param>
         private void ExportItuPreliminaryRecords(ExcelWorksheet wsData, List<ItuPreliminaryRecord> records)
         {
-            //TODO: hyperlink
 
             //Format data
             var formatedData = from s in records
@@ -146,17 +145,17 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
         /// <param name="records"></param>
         private void SetHyperLinks(ExcelWorksheet wsData, List<ItuPreliminaryRecord> records)
         {
-            var count = ItuPreliminaryRecordConfiguration.RowHeader + 1;
+            var excelRow = ItuPreliminaryRecordConfiguration.RowHeader + 1;
 
             foreach (var record in records)
             {
                 if (record.SpecificationId != 0)
                 {
                     var specificationHyperlink = String.Format(ConfigVariables.SpecificationDetailsUrl, record.SpecificationId);
-                    wsData.Cells[count, ItuPreliminaryRecordConfiguration.SpecNumber.Index].Hyperlink = new Uri(specificationHyperlink, UriKind.RelativeOrAbsolute);
+                    wsData.Cells[excelRow, ItuPreliminaryRecordConfiguration.SpecNumber.Index].Hyperlink = new Uri(specificationHyperlink, UriKind.RelativeOrAbsolute);
                 }
 
-                count++;
+                excelRow++;
             }
         }
         #endregion
