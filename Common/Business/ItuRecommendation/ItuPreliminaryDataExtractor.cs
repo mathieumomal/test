@@ -64,10 +64,10 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
            
             //[Filter 1] : Get UCC specs without prohibited titles + Filter valid spec-releases
             var prohibittedTitles = new List<string> { "test specification", "test data", "test sequence", "test method", "subjective test", "test suite", "conform" };
-            var specListLevel1Filter = specRepository.AllIncluding().Where(x => (x.IsActive && (x.IsUnderChangeControl ?? false)) &&
-                                                                                (!prohibittedTitles.Any(y => x.Title.ToLower().Contains(y))) &&
-                                                                                (!String.IsNullOrEmpty(x.Number)) &&
-                                                                                (x.Specification_Release.Any(z => validReleaseIds.Contains(z.Fk_ReleaseId)))).ToList();
+            var specListLevel1Filter = specRepository.AllIncluding().Where(x => ((x.IsActive && (x.IsUnderChangeControl ?? false)) &&
+                                                                                 (!prohibittedTitles.Any(y => x.Title.ToLower().Contains(y))) &&
+                                                                                 (!String.IsNullOrEmpty(x.Number)) &&
+                                                                                 (x.Specification_Release.Any(z => validReleaseIds.Contains(z.Fk_ReleaseId))))).ToList();
 
             //[Filter 2] : Filter specs based on the number format & prohibited series
             var regexProhibitedSeries = new Regex(@"^((25[.].*)|(34[.].*)|(36[.].*)|(37[.].*)|(\w+[.]8.*))$");
