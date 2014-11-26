@@ -115,6 +115,7 @@
     <Compile Include="BaseEffortTest.cs" />
     <Compile Include="BaseTest.cs" />
     <Compile Include="Business\CommunityManagerTest.cs" />
+    <Compile Include="Business\ItuRecommendation\ItuPreliminaryDataExtractorTest.cs" />
     <Compile Include="Business\ItuRecommendation\ItuPreliminaryExporterTest.cs" />
     <Compile Include="Business\ItuRecommendation\ItuRecommendationExporterTest.cs" />
     <Compile Include="Business\ItuRecommendation\SpecToItuConverterTests.cs" />

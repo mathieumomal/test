@@ -10,3 +10,7 @@ Pk_Specification_ReleaseId,isWithdrawn,CreationDate,UpdateDate,Fk_SpecificationI
 9,False,2014-07-20,2014-07-20,136084,2882,,False
 10,False,2014-07-20,2014-07-20,136084,2883,,False
 11,True,2014-07-20,2014-07-20,136080,2884,,False
+12,False,2014-07-20,2014-07-20,150000,2882,,False
+13,False,2014-07-20,2014-07-20,150000,2883,,False
+14,False,2014-07-20,2014-07-20,150000,2884,,False
+15,False,2014-07-20,2014-07-20,150000,2885,,False

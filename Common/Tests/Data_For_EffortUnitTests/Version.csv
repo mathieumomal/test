@@ -6,7 +6,14 @@ Pk_VersionId,MajorVersion,TechnicalVersion,EditorialVersion,AchievedDate,ExpertP
 428931,2,1,0,,,http://www.3gpp.org/ftp/Specs/archive/22_series/22.101/22101-d10.zip,False,False,,,False,29581,0,,136082,2883,
 428932,2,0,0,,,,False,False,,,False,29581,0,,136082,2883,
 428933,12,0,0,2013-12-20,2013-12-20,http://www.3gpp.org/ftp/Specs/archive/22_series/22.105/22105-c00.zip,False,False,2012-10-10,,False,22940,17240,,136084,2882,
-428934,13,0,0,,,,False,False,,,False,22940,18815,,136084,2883
+428934,13,0,0,,,,False,False,,,False,22940,18815,,136084,2883,
 428935,12,0,0,2013-12-20,2013-12-20,http://www.3gpp.org/ftp/Specs/archive/22_series/22.105/22105-c00.zip,False,False,,,False,22940,0,,136084,2874,
 400000,13,0,1,,,,False,False,,,False,29581,0,,140000,2883,
-
+400011,12,0,0,,,,False,False,,,False,29581,17240,,150000,2882,
+400012,12,0,1,,,,False,False,2014-10-10,,False,29581,17240,,150000,2882,
+400013,13,0,0,,,,False,False,,,False,29581,17240,,150000,2883,
+400014,13,0,1,,,,False,False,,,False,29581,17240,,150000,2883,
+400015,14,0,0,,,,False,False,,,False,29581,17240,,150000,2884,
+400016,14,0,1,,,,False,False,,,False,29581,17240,,150000,2884,
+400017,15,0,0,,,,False,False,2014-10-10,,False,29581,17240,,150000,2885,
+400018,15,0,1,,,,False,False,2014-10-10,,False,29581,17240,,150000,2885,

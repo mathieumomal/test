@@ -8,3 +8,4 @@ Pk_SpecificationId,IsTS,Number,IsActive,IsUnderChangeControl,promoteInhibited,Is
 140000,True,22.106,True,True,,True,An UCC specification for CR approval tests -- that has no version,True,True,False,,2008-01-30 12:12,,2008-01-30 12:12,http://www.3gpp.org/ftp/Specs/archive/22_series/22.105/,Test,3665
 140001,True,22.108,True,,,True,A specification without ucc flag,True,True,False,,2008-01-30 12:12,,2008-01-30 12:12,http://www.3gpp.org/ftp/Specs/archive/22_series/22.108/,Test,3665
 140002,True,22.109,False,,,True,A specification withdrawn before change control,True,True,False,,2008-01-30 12:12,,2008-01-30 12:12,http://www.3gpp.org/ftp/Specs/archive/22_series/22.109/,Test,3665
+150000,True,22.110,True,True,,True,Valid ITU Preliminary Export Spec,True,True,False,,2008-01-30 12:12,,2008-01-30 12:12,http://www.3gpp.org/ftp/Specs/archive/22_series/22.110/,Test,3665

@@ -127,7 +127,7 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
             var specVersionsRepository = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             specVersionsRepository.UoW = UoW;
 
-            var latestVersions = specVersionsRepository.AllIncluding().GroupBy(x => new { x.Fk_SpecificationId, x.Fk_ReleaseId })
+            var latestVersions = specVersionsRepository.AllIncluding().ToList().GroupBy(x => new { x.Fk_SpecificationId, x.Fk_ReleaseId })
                                                                       .Select(y => y.OrderByDescending(major => major.MajorVersion)
                                                                                     .ThenByDescending(technical => technical.TechnicalVersion)
                                                                                     .ThenByDescending(editorial => editorial.EditorialVersion).First())
