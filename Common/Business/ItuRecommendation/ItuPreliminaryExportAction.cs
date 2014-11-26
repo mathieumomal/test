@@ -54,10 +54,13 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
             var fileName = ituRecommendationName + "_Preliminary_" + DateTime.UtcNow.ToString("yyyy-MM-dd_HH\\hmm") + ".xlsx";
 
             var excelExporter = ManagerFactory.Resolve<IItuPreliminaryExporter>();
+
             if (excelExporter.CreateItuPreliminaryFile(ConfigVariables.DefaultPublicTmpPath + fileName, ituPreliminaryRecords.Result))
             {
                 response.Result = ConfigVariables.DefaultPublicTmpAddress + fileName;
             }
+            else
+                response.Report.LogError(Localization.GenericError);
 
             return response;
         } 

@@ -32,12 +32,13 @@ namespace Etsi.Ultimate.Tests.Business.ItuRecommendation
         #endregion
 
         #region unit tests
-        [Test]
+        [Test, Description("Eventhough there is no data, file should export with empty headers")]
         public void CreateItuPreliminaryFile_NoDatas()
         {
             var ituPreliminaryExporter = new ItuPreliminaryExporter();
             var result = ituPreliminaryExporter.CreateItuPreliminaryFile(ExportFilePath, new List<ItuPreliminaryRecord>());
-            Assert.IsFalse(result);
+            Assert.IsTrue(result);
+            Assert.IsTrue(File.Exists(ExportFilePath));
         }
 
         [Test]

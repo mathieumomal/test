@@ -31,7 +31,7 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
         {
             if (String.IsNullOrEmpty(filePath))
                 return false;
-            if (records == null || records.Count == 0)
+            if (records == null)
                 return false;
             try
             {
@@ -88,7 +88,8 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
                 };
 
             //Filled excel
-            wsData.Cells["A2"].LoadFromCollection(formatedData, false, OfficeOpenXml.Table.TableStyles.None);
+            if (formatedData.Count() > 0)
+                wsData.Cells["A2"].LoadFromCollection(formatedData, false, OfficeOpenXml.Table.TableStyles.None);
         }
 
         /// <summary>
@@ -132,10 +133,13 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
             wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader, ItuPreliminaryRecordConfiguration.SpecNumber.Index].Value = ItuPreliminaryRecordConfiguration.SpecNumber.Name;
             wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader, ItuPreliminaryRecordConfiguration.Title.Index].Value = ItuPreliminaryRecordConfiguration.Title.Name;
 
-            //Set hyperlink style
-            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader + 1, ItuPreliminaryRecordConfiguration.SpecNumber.Index, _rowDataEnd, ItuPreliminaryRecordConfiguration.SpecNumber.Index].Style.Font.Bold = true;
-            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader + 1, ItuPreliminaryRecordConfiguration.SpecNumber.Index, _rowDataEnd, ItuPreliminaryRecordConfiguration.SpecNumber.Index].Style.Font.UnderLine = true;
-            wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader + 1, ItuPreliminaryRecordConfiguration.SpecNumber.Index, _rowDataEnd, ItuPreliminaryRecordConfiguration.SpecNumber.Index].Style.Font.Color.SetColor(Color.Blue);
+            if (records.Count > 0)
+            {
+                //Set hyperlink style
+                wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader + 1, ItuPreliminaryRecordConfiguration.SpecNumber.Index, _rowDataEnd, ItuPreliminaryRecordConfiguration.SpecNumber.Index].Style.Font.Bold = true;
+                wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader + 1, ItuPreliminaryRecordConfiguration.SpecNumber.Index, _rowDataEnd, ItuPreliminaryRecordConfiguration.SpecNumber.Index].Style.Font.UnderLine = true;
+                wsData.Cells[ItuPreliminaryRecordConfiguration.RowHeader + 1, ItuPreliminaryRecordConfiguration.SpecNumber.Index, _rowDataEnd, ItuPreliminaryRecordConfiguration.SpecNumber.Index].Style.Font.Color.SetColor(Color.Blue);
+            }
         }
 
         /// <summary>

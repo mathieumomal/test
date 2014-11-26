@@ -11,7 +11,6 @@
     <link rel="stylesheet" type="text/css" href="/Portals/_default/Skins/3GPP/mainpage.css"/>
     <link rel="stylesheet" type="text/css" href="CSS/ItuRecommendations.css">
     <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon">
-    <script src="JS/jquery.min.js"></script>
 </head>
 <body id="ituRecommendationsContent">
     <form id="formItuRecommendation" runat="server">
@@ -91,21 +90,7 @@
                 <asp:Button ID="btnExport" OnClick="btnExport_OnClick" runat="server" CssClass="btn3GPP-default" Text="Export list"/>
             </div>
         </asp:Panel>
-        <telerik:RadAjaxManager ID="rajxItuRec" runat="server">
-            <AjaxSettings>
-                <telerik:AjaxSetting AjaxControlID="rcbSaMeeting">
-                    <UpdatedControls>
-                        <telerik:AjaxUpdatedControl ControlID="pnlItuRecommendations"/>
-                        <telerik:AjaxUpdatedControl ControlID="pnlMsg" />
-                    </UpdatedControls>
-                </telerik:AjaxSetting>
-                <telerik:AjaxSetting AjaxControlID="btnExport">
-                    <UpdatedControls>
-                        <telerik:AjaxUpdatedControl ControlID="pnlItuRecommendations"/>
-                        <telerik:AjaxUpdatedControl ControlID="pnlMsg" />
-                    </UpdatedControls>
-                </telerik:AjaxSetting>
-            </AjaxSettings>
+        <telerik:RadAjaxManager ID="rajxItuRec" runat="server" EnablePageHeadUpdate="false" UpdatePanelsRenderMode="Inline">
         </telerik:RadAjaxManager>
     </form>
     <!--scripts-->

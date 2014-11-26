@@ -38,6 +38,33 @@
     width: auto;
     text-align: left;
 }
+
+#ituRecommendationsContent .messageBox{
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	margin: 10px 0px;
+    padding: 15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+	word-wrap: break-word;
+}
+
+#ituRecommendationsContent .messageBox li { list-style-type: none; }
+
+#ituRecommendationsContent .messageBox.error{
+    border: rgba(155, 3, 3, 0.25) solid 1px;
+    color: #D8000C;
+    background-color: #FFBABA;
+    background-image: url('images/error.png');
+}
+
+#ituRecommendationsContent .mandatoryIndicator{
+	color:rgb(231, 0, 0);
+	font-weight:bold;
+	cursor:help;
+}
+
 .PopupHeaderTitleRight {
     left: auto;
     right: 10px;
