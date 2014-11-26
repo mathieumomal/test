@@ -69,8 +69,8 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
         /// <summary>
         /// Checks whether user has right to manage itu recommendations.
         /// </summary>
-        /// <param name="personId"></param>
-        /// <returns></returns>
+        /// <param name="personId">Person id</param>
+        /// <returns>True, if the user has right else false</returns>
         private bool HasRight(int personId)
         {
             var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
