@@ -63,7 +63,7 @@ namespace Etsi.Ultimate.Module.CRs
                     if (currentCr.SpecNumber != null)
                         specLink.Text = currentCr.SpecNumber.ToString(CultureInfo.InvariantCulture);
                     if (currentCr.SpecId != 0)
-                        specLink.NavigateUrl = String.Format(ConfigVariables.SpecificationDetailsUrl, currentCr.SpecId);
+                        specLink.NavigateUrl = "javascript:openSpecification('"+String.Format(ConfigVariables.SpecificationDetailsUrl, currentCr.SpecId)+"','"+currentCr.SpecId+"')";
                     else
                         specLink.Enabled = false;
 
@@ -71,7 +71,7 @@ namespace Etsi.Ultimate.Module.CRs
                     if (currentCr.TargetRelease != null)
                         releaseLink.Text = currentCr.TargetRelease.ToString(CultureInfo.InvariantCulture);
                     if (currentCr.TargetReleaseId != 0)
-                        releaseLink.NavigateUrl = String.Format(ConfigVariables.ReleaseDetailsUrl, currentCr.TargetReleaseId);
+                        releaseLink.NavigateUrl = "javascript:openRelease('" + String.Format(ConfigVariables.ReleaseDetailsUrl, currentCr.TargetReleaseId) + "','" + currentCr.TargetReleaseId+"')";
                     else
                         releaseLink.Enabled = false;
 
@@ -79,7 +79,7 @@ namespace Etsi.Ultimate.Module.CRs
                     if (currentCr.WgTdocNumber != null)
                     {
                         wgTdocLink.Text = currentCr.WgTdocNumber.ToString(CultureInfo.InvariantCulture);
-                        wgTdocLink.NavigateUrl = String.Format(ConfigVariables.TdocDetailsUrl, currentCr.WgTdocNumber);
+                        wgTdocLink.NavigateUrl = "javascript:openTdoc('"+String.Format(ConfigVariables.TdocDetailsUrl, currentCr.WgTdocNumber)+"','"+currentCr.WgTdocNumber+"')";
                         if (currentCr.WgTdocNumber.Equals("-"))
                             wgTdocLink.Enabled = false;
                     }
@@ -88,7 +88,7 @@ namespace Etsi.Ultimate.Module.CRs
                     if (currentCr.TsgTdocNumber != null)
                     {
                         tsgTdocLink.Text = currentCr.TsgTdocNumber.ToString(CultureInfo.InvariantCulture);
-                        tsgTdocLink.NavigateUrl = String.Format(ConfigVariables.TdocDetailsUrl, currentCr.TsgTdocNumber);
+                        tsgTdocLink.NavigateUrl = "javascript:openTdoc('" + String.Format(ConfigVariables.TdocDetailsUrl, currentCr.TsgTdocNumber) + "','" + currentCr.TsgTdocNumber + "')";
                         if (currentCr.TsgTdocNumber.Equals("-"))
                             tsgTdocLink.Enabled = false;
                     }

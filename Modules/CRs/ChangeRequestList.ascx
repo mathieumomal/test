@@ -26,10 +26,10 @@
                     <ClientSettings>
                         <Scrolling AllowScroll="True" UseStaticHeaders="True" SaveScrollPosition="true"></Scrolling>
                     </ClientSettings>
-                    <PagerStyle AlwaysVisible="true" Mode="NextPrevAndNumeric" PageButtonCount="10" Position="Top" />
+                    <PagerStyle AlwaysVisible="true" Mode="NextPrevAndNumeric" PageButtonCount="10" Position="Bottom" />
                     <MasterTableView ClientDataKeyNames="ChangeRequestId" Width="100%" AllowNaturalSort="false">
                         <Columns>
-                            <telerik:GridHyperLinkColumn HeaderStyle-Width="7%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderText="Spec #" UniqueName="SpecNumber" Target="_blank"></telerik:GridHyperLinkColumn>
+                            <telerik:GridHyperLinkColumn HeaderStyle-Width="7%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderText="Spec #" UniqueName="SpecNumber"></telerik:GridHyperLinkColumn>
                             <telerik:GridBoundColumn HeaderStyle-Width="7%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="ChangeRequestNumber" HeaderText="CR #" UniqueName="ChangeRequestNumber"></telerik:GridBoundColumn>
                             <telerik:GridBoundColumn HeaderStyle-Width="7%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="Revision" HeaderText="Revision #" UniqueName="Revision"></telerik:GridBoundColumn>
                             <telerik:GridBoundColumn HeaderStyle-Width="7%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="ImpactedVersion" HeaderText="Impacted Version" UniqueName="ImpactedVersion"></telerik:GridBoundColumn>
@@ -52,3 +52,22 @@
         </tr>
     </table>
 </div>
+
+<script type="text/javascript">
+    function openSpecification(address, specId) {
+        var popUp = window.open(address, 'Specification-' + specId, 'height=690,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no');
+        popUp.focus();
+    }
+
+    function openRelease(address, releaseId) {
+        var popUp = window.open(address,
+            'Release-'+releaseId, 'height=690,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no');
+        popUp.focus();
+    }
+
+    function openTdoc(address, TdocNumber) {
+        var popUp = window.open(address, 'TDoc-'+TdocNumber, 'height=720,width=616,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no');
+        popUp.focus();
+    }
+
+</script>

@@ -1,0 +1,1 @@
+﻿UPDATE ChangeRequest SET Revision=NULL WHERE Revision=0
