@@ -256,11 +256,11 @@ namespace Etsi.Ultimate.Services
         }
 
         /// <summary>
-        /// See interface
+        /// Returns the list of change requests, given the specific criteria.
         /// </summary>
-        /// <param name="personId"></param>
-        /// <param name="searchObj"></param>
-        /// <returns></returns>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="searchObj">The search object.</param>
+        /// <returns>List of change requests</returns>
         public ServiceResponse<KeyValuePair<List<ChangeRequestListFacade>, int>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj)
         {
             using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -340,9 +340,9 @@ namespace Etsi.Ultimate.Services
         /// <summary>
         /// Returns the list of change requests, given the specific criteria.
         /// </summary>
-        /// <param name="personId"></param>
-        /// <param name="searchObj"></param>
-        /// <returns></returns>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="searchObj">The search object.</param>
+        /// <returns>List of change requests</returns>
         ServiceResponse<KeyValuePair<List<ChangeRequestListFacade>, int>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj);
     }
 }

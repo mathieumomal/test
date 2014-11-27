@@ -160,6 +160,7 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             //Assert
             Assert.IsTrue(result.Key);
         }
+
         [Test, Description("Test if we try to get a CR which doesn't exist. We expect a true success flag and a null change request object.")]
         public void Service_UnitTest_GetChangeRequestById_Failure()
         {
@@ -509,6 +510,19 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             Assert.AreEqual("Agreed", agreedStatus.Code);
             Assert.AreEqual("Agreed", agreedStatus.Description);
         }
+
+        [Test, TestCaseSource("ChangeRequestsSearchData")]
+        public void Serivce_IntegrationTest_GetChangeRequests_Success(ChangeRequestsSearch changeRequestsSearch, int searchResultCount, int searchQueryCount, string crNumber, string revisionNumber)
+        {
+            var svcCr = new ChangeRequestService();
+            var result = svcCr.GetChangeRequests(PersonId, changeRequestsSearch);
+
+            Assert.AreEqual(searchResultCount, result.Result.Key.Count);
+            Assert.AreEqual(searchQueryCount, result.Result.Value);
+            Assert.AreEqual(crNumber, result.Result.Key.FirstOrDefault().ChangeRequestNumber);
+            Assert.AreEqual(revisionNumber, result.Result.Key.FirstOrDefault().Revision);
+        }
+
         #endregion
 
         #region DataObject
@@ -568,6 +582,20 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             };
             return changeRequest.Find(x => x.Pk_ChangeRequest == changeRequestById);
         }
+
+        /// <summary>
+        /// Gets the change requests search data.
+        /// </summary>
+        private IEnumerable<object[]> ChangeRequestsSearchData
+        {
+            get
+            {
+                yield return new object[] { new ChangeRequestsSearch() { PageSize = 2, SkipRecords = 0, SpecificationNumber = "22.101" }, 2, 6, "AC014", "1" };
+                yield return new object[] { new ChangeRequestsSearch() { PageSize = 5, SkipRecords = 10, SpecificationNumber = "22.10" }, 5, 22, "AZEE", "2" };
+                yield return new object[] { new ChangeRequestsSearch() { PageSize = 3, SkipRecords = 21, SpecificationNumber = "22.10" }, 1, 22, "BBBB", "4" };
+            }
+        }
+
         #endregion
     }
 }

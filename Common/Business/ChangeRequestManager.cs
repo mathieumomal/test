@@ -229,6 +229,25 @@ namespace Etsi.Ultimate.Business
                 response.Result = false;
             return response;
         }
+
+        /// <summary>
+        /// Returns a list of change requests given the specified criteria.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="searchObj">The search object.</param>
+        /// <returns>List of change requests</returns>
+        public ServiceResponse<KeyValuePair<List<ChangeRequestListFacade>, int>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj)
+        {
+            var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
+            crRepository.UoW = UoW;
+            var repoResponse = crRepository.GetChangeRequests(searchObj);
+
+            var crsListFacade = new List<ChangeRequestListFacade>();
+            repoResponse.Key.ForEach(x => crsListFacade.Add(ConvertChangeRequestToChangeRequestListFacades(x)));
+
+            return new ServiceResponse<KeyValuePair<List<ChangeRequestListFacade>, int>> { Result = new KeyValuePair<List<ChangeRequestListFacade>, int>(crsListFacade, repoResponse.Value) };
+        }
+
         #endregion
 
         #region Private Methods
@@ -327,30 +346,10 @@ namespace Etsi.Ultimate.Business
 
         }
        
-        #endregion
-
-        /// <summary>
-        /// See interface
-        /// </summary>
-        /// <param name="personId"></param>
-        /// <param name="searchObj"></param>
-        /// <returns></returns>
-        public ServiceResponse<KeyValuePair<List<ChangeRequestListFacade>, int>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj)
-        {
-            var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
-            crRepository.UoW = UoW;
-            var repoResponse = crRepository.GetChangeRequests(searchObj);
-
-            var crsListFacade = new List<ChangeRequestListFacade>();
-            repoResponse.Key.ForEach(x => crsListFacade.Add(ConvertChangeRequestToChangeRequestListFacades(x)));
-
-            return new ServiceResponse<KeyValuePair<List<ChangeRequestListFacade>, int>> { Result = new KeyValuePair<List<ChangeRequestListFacade>, int>(crsListFacade, repoResponse.Value) };
-        }
-
         /// <summary>
         /// Convert Change request to change request list facade
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Converted crs for search list</returns>
         private ChangeRequestListFacade ConvertChangeRequestToChangeRequestListFacades(ChangeRequest cr)
         {
             return new ChangeRequestListFacade
@@ -378,6 +377,8 @@ namespace Etsi.Ultimate.Business
                 NewVersionPath = cr.NewVersion != null ? cr.NewVersion.Location : null
             };
         }
+
+        #endregion
     }
 
     /// <summary>
@@ -440,9 +441,9 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Returns a list of change requests given the specified criteria.
         /// </summary>
-        /// <param name="personId"></param>
-        /// <param name="searchObj"></param>
-        /// <returns></returns>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="searchObj">The search object.</param>
+        /// <returns>List of change requests</returns>
         ServiceResponse<KeyValuePair<List<ChangeRequestListFacade>, int>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj);
     }
 }

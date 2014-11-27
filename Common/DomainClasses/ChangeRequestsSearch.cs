@@ -26,5 +26,10 @@ namespace Etsi.Ultimate.DomainClasses
         /// Number of records to get. If = 0, take all. 
         /// </summary>
         public int PageSize { get; set; }
+
+        /// <summary>
+        /// Gets or sets the specification number.
+        /// </summary>
+        public string SpecificationNumber { get; set; }
     }
 }

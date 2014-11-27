@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
+using System;
 
 namespace Etsi.Ultimate.Repositories
 {
@@ -129,16 +130,19 @@ namespace Etsi.Ultimate.Repositories
         }
 
         /// <summary>
-        /// See interface
+        /// Gets the change requests.
         /// </summary>
-        /// <param name="searchObj"></param>
-        /// <returns></returns>
+        /// <param name="searchObj">The search object.</param>
+        /// <returns>List of crs & count</returns>
         public KeyValuePair<List<ChangeRequest>, int> GetChangeRequests(ChangeRequestsSearch searchObj)
         {
             var query = AllIncluding(x => x.Specification, x => x.Release, x => x.NewVersion, x => x.CurrentVersion, x => x.TsgStatus, x => x.WgStatus);
 
+            //Filter crs based on search criteria
+            query = query.Where(x => ((String.IsNullOrEmpty(searchObj.SpecificationNumber)) || (x.Specification.Number.ToLower().StartsWith(searchObj.SpecificationNumber.ToLower()))));
+
             //Order by
-            query = query.OrderBy(x => x.Specification.Number).ThenByDescending(x => x.CRNumber);
+            query = query.OrderBy(x => x.Specification.Number).ThenByDescending(y => y.CRNumber).ThenByDescending(z => z.Revision);
             
             return searchObj.PageSize != 0 ? 
                 new KeyValuePair<List<ChangeRequest>, int>(query.Skip(searchObj.SkipRecords).Take(searchObj.PageSize).ToList(), query.Count()) : 
@@ -191,8 +195,8 @@ namespace Etsi.Ultimate.Repositories
         /// <summary>
         /// Returns a list of change request given the specified criteria.
         /// </summary>
-        /// <param name="searchObj"></param>
-        /// <returns></returns>
+        /// <param name="searchObj">Cr search object</param>
+        /// <returns>List of crs & count</returns>
         KeyValuePair<List<ChangeRequest>, int> GetChangeRequests(ChangeRequestsSearch searchObj);
     }
 }
