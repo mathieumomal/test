@@ -113,7 +113,7 @@ namespace Etsi.Ultimate.Tests.Business.ItuRecommendation
         {
             var dataExtractor = new ItuPreliminaryDataExtractor() { UoW = UoW };
             var specToTest = UoW.Context.Specifications.Find(validSpecIdForItuPreliminary);
-            specToTest.Versions.ToList().ForEach(x => x.DocumentUploaded = null);
+            specToTest.Versions.ToList().ForEach(x => x.Location = null);
             UoW.Context.SaveChanges();
             var ituPreliminaryData = dataExtractor.GetItuPreliminaryRecords(release12Id, release15Id, saPlenaryMeetingId);
             Assert.IsNotNull(ituPreliminaryData.Result);

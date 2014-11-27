@@ -134,7 +134,7 @@ namespace Etsi.Ultimate.Business.ItuRecommendation
                                                                       .Where(z => specIds.Contains(z.Fk_SpecificationId ?? 0) && 
                                                                                   validReleaseIds.Contains(z.Fk_ReleaseId ?? 0)).ToList();
 
-            var latestAvailableVersions = latestVersions.Where(x => ((x.DocumentUploaded != null) &&
+            var latestAvailableVersions = latestVersions.Where(x => ((x.Location != null) &&
                                                                x.Source.HasValue && 
                                                                !forbiddenMeetingIds.Contains(x.Source.Value))).ToList();
             return latestAvailableVersions;
