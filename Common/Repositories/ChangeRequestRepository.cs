@@ -139,7 +139,7 @@ namespace Etsi.Ultimate.Repositories
             var query = AllIncluding(x => x.Specification, x => x.Release, x => x.NewVersion, x => x.CurrentVersion, x => x.TsgStatus, x => x.WgStatus);
 
             //Filter crs based on search criteria
-            query = query.Where(x => ((String.IsNullOrEmpty(searchObj.SpecificationNumber)) || (x.Specification.Number.ToLower().StartsWith(searchObj.SpecificationNumber.ToLower()))));
+            query = query.Where(x => ((String.IsNullOrEmpty(searchObj.SpecificationNumber)) || (x.Specification.Number.ToLower().Contains(searchObj.SpecificationNumber.ToLower()))));
 
             //Order by
             query = query.OrderBy(x => x.Specification.Number).ThenByDescending(y => y.CRNumber).ThenByDescending(z => z.Revision);

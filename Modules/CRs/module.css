@@ -5,3 +5,18 @@
 	text-align: right;
 	height: 25px;
 }
+
+#crList .crSearchHeader {
+    background-position: 0% 0%;
+    color: white;
+    font-family: arial, verdana, sans-serif;
+    font-weight: bold;
+    text-decoration: none;
+    text-shadow: 1px 1px 1px #44760f !important;
+    background-image: -o-linear-gradient(bottom, #75B91A, #54AF13);
+    background-color: #75B91A;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    width: 100%;
+    vertical-align: middle;
+}

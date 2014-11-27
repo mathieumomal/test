@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ChangeRequestList.ascx" />
+    <Content Include="images\hourglass.png" />
     <Content Include="License.txt" />
     <Content Include="module.css" />
     <Content Include="ReleaseNotes.txt" />
@@ -128,7 +129,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_LocalResources\" />
-    <Folder Include="images\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -8,6 +8,9 @@ using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Utils;
 using Telerik.Web.UI;
+using Etsi.Ultimate.Controls;
+using System.Collections.Generic;
+using System.Web;
 
 namespace Etsi.Ultimate.Module.CRs
 {
@@ -18,10 +21,28 @@ namespace Etsi.Ultimate.Module.CRs
         #endregion
 
         #region properties
-        protected Controls.FullView CrFullView;
+
+        protected FullView CrFullView;
+        protected ShareUrlControl crShareUrl;
+        private bool isUrlSearch;
+
+        private const string VS_CR_SEARCH_OBJ = "VS_CR_SEARCH_OBJ";
+        private ChangeRequestsSearch searchObj
+        {
+            get
+            {
+                return (ChangeRequestsSearch)ViewState[VS_CR_SEARCH_OBJ];
+            }
+            set
+            {
+                ViewState[VS_CR_SEARCH_OBJ] = value;
+            }
+        }
+
         #endregion
 
         #region events
+
         /// <summary>
         /// Page load method
         /// </summary>
@@ -32,7 +53,21 @@ namespace Etsi.Ultimate.Module.CRs
             if (!IsPostBack)
             {
                 rgCrList.PageSize = ConfigVariables.CRsListRecordsMaxSize;
+                GetRequestParameters();
+                searchObj = new ChangeRequestsSearch();
             }
+        }
+
+        /// <summary>
+        /// Handles the Click event of the btnSearch control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            isUrlSearch = false;
+            searchObj.SpecificationNumber = txtSpecificationNumber.Text;
+            LoadData();
         }
 
         /// <summary>
@@ -103,19 +138,28 @@ namespace Etsi.Ultimate.Module.CRs
                 }   
             }
         }
+
         #endregion
 
         #region Load data
+
         /// <summary>
         /// Load data in the RadGrid each time needed
         /// </summary>
         private void LoadData()
         {
-            var searchObj = new ChangeRequestsSearch
+            if (isUrlSearch)
             {
-                SkipRecords = rgCrList.CurrentPageIndex*rgCrList.PageSize,
-                PageSize = rgCrList.PageSize
-            };
+                if (!String.IsNullOrEmpty(Request.QueryString["specnumber"]))
+                    txtSpecificationNumber.Text = searchObj.SpecificationNumber = Request.QueryString["specnumber"];
+                int pageIndex = 0;
+                if (!String.IsNullOrEmpty(Request.QueryString["pageindex"]) && (int.TryParse(Request.QueryString["pageindex"], out pageIndex)))
+                    searchObj.SkipRecords = pageIndex * rgCrList.PageSize;
+            }
+            else
+                searchObj.SkipRecords = rgCrList.CurrentPageIndex * rgCrList.PageSize;
+            
+            searchObj.PageSize = rgCrList.PageSize;
 
             var crSvc = ServicesFactory.Resolve<IChangeRequestService>();
             var response = crSvc.GetChangeRequests(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
@@ -125,12 +169,16 @@ namespace Etsi.Ultimate.Module.CRs
             rgCrList.DataSource = response.Result.Key;
             rgCrList.VirtualItemCount = response.Result.Value;
 
-            //Init full view according to the filters
-            InitFullView();
+            ManageShareUrl();
+            ManageFullView();
+
+            lblCrSearchHeader.Text = String.Format("Search form ({0})", String.IsNullOrEmpty(searchObj.SpecificationNumber) ? "All" : searchObj.SpecificationNumber.Trim());
         }
+
         #endregion
 
         #region utils
+
         /// <summary>
         /// Retrieve person If exists
         /// </summary>
@@ -150,9 +198,9 @@ namespace Etsi.Ultimate.Module.CRs
         }
 
         /// <summary>
-        /// Init full view
+        /// Construct FullUrl
         /// </summary>
-        private void InitFullView()
+        private void ManageFullView()
         {
             CrFullView.ModuleId = ModuleId;
             CrFullView.TabId = TabController.CurrentPage.TabID;
@@ -161,9 +209,49 @@ namespace Etsi.Ultimate.Module.CRs
             address += Request["HTTP_HOST"];
             CrFullView.BaseAddress = address;
 
-            //TODO : CrFullView.UrlParams (for filters)
+            CrFullView.UrlParams = ManageUrlParams();
             CrFullView.Display();
         }
+
+        /// <summary>
+        /// Construct ShortUrl
+        /// </summary>
+        private void ManageShareUrl()
+        {
+            crShareUrl.IsShortUrlChecked = false;
+            crShareUrl.ModuleId = ModuleId;
+            crShareUrl.TabId = TabController.CurrentPage.TabID;
+
+            var address = Request.IsSecureConnection ? "https://" : "http://";
+            address += Request["HTTP_HOST"];
+            crShareUrl.BaseAddress = address;
+
+            crShareUrl.UrlParams = ManageUrlParams();
+        }
+
+        /// <summary>
+        /// Generate Url parameters for Short/FullView Url
+        /// </summary>
+        /// <returns>Url parameters</returns>
+        private Dictionary<string, string> ManageUrlParams()
+        {
+            var urlParams = new Dictionary<string, string>();
+
+            urlParams.Add("q", "1");
+            urlParams.Add("specnumber", searchObj.SpecificationNumber);
+            urlParams.Add("pageindex", (searchObj.SkipRecords / searchObj.PageSize).ToString());
+
+            return urlParams;
+        }
+
+        /// <summary>
+        /// Extract query strings from Url
+        /// </summary>
+        private void GetRequestParameters()
+        {
+            isUrlSearch = (Request.QueryString["q"] != null);
+        }
+
         #endregion
     }
 }
