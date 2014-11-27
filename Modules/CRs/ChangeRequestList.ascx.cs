@@ -135,6 +135,15 @@ namespace Etsi.Ultimate.Module.CRs
                         newVersionLink.NavigateUrl = currentCr.NewVersionPath;
                     else
                         newVersionLink.Enabled = false;
+
+                    var impactedVersionLink = (HyperLink)dataItem["ImpactedVersion"].Controls[0];
+                    if (currentCr.ImpactedVersion != null)
+                        impactedVersionLink.Text = currentCr.ImpactedVersion.ToString(CultureInfo.InvariantCulture);
+                    if (currentCr.ImpactedVersionPath != null)
+                        impactedVersionLink.NavigateUrl = currentCr.ImpactedVersionPath;
+                    else
+                        impactedVersionLink.Enabled = false;
+
                 }   
             }
         }

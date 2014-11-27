@@ -374,6 +374,7 @@ namespace Etsi.Ultimate.Business
                                                 cr.NewVersion.EditorialVersion) : null,
                 SpecId = cr.Fk_Specification ?? 0,
                 TargetReleaseId = cr.Release != null ? cr.Release.Pk_ReleaseId : 0,
+                ImpactedVersionPath =  cr.CurrentVersion != null ? cr.CurrentVersion.Location : null,
                 NewVersionPath = cr.NewVersion != null ? cr.NewVersion.Location : null
             };
         }

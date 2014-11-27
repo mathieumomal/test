@@ -20,6 +20,7 @@
         //Additionnal infos
         public int SpecId { get; set; }
         public int TargetReleaseId { get; set; }
+        public string ImpactedVersionPath { get; set; }
         public string NewVersionPath { get; set; }
     }
 }
