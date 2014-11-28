@@ -13,6 +13,15 @@ namespace Etsi.Ultimate.Module.CRs {
     public partial class ChangeRequestList {
         
         /// <summary>
+        /// crList control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel crList;
+        
+        /// <summary>
         /// upCrSearch control.
         /// </summary>
         /// <remarks>
@@ -47,7 +56,7 @@ namespace Etsi.Ultimate.Module.CRs {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::Telerik.Web.UI.RadPanelItem rpiCrSearch;
-               
+        
         /// <summary>
         /// lblCrSearchHeader control.
         /// </summary>

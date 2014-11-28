@@ -50,11 +50,12 @@ namespace Etsi.Ultimate.Module.CRs
         /// <param name="e"></param>
         protected void Page_Load(object sender, EventArgs e)
         {
-            if (!IsPostBack)
+            if (!IsPostBack || !crList.Visible)
             {
-                rgCrList.PageSize = ConfigVariables.CRsListRecordsMaxSize;
+                crList.Visible = true; 
                 GetRequestParameters();
                 searchObj = new ChangeRequestsSearch();
+                searchObj.PageSize = rgCrList.PageSize = ConfigVariables.CRsListRecordsMaxSize;
             }
         }
 
@@ -67,7 +68,8 @@ namespace Etsi.Ultimate.Module.CRs
         {
             isUrlSearch = false;
             searchObj.SpecificationNumber = txtSpecificationNumber.Text;
-            LoadData();
+            rgCrList.CurrentPageIndex = 0;
+            rgCrList.Rebind();
         }
 
         /// <summary>
@@ -163,20 +165,19 @@ namespace Etsi.Ultimate.Module.CRs
                     txtSpecificationNumber.Text = searchObj.SpecificationNumber = Request.QueryString["specnumber"];
                 int pageIndex = 0;
                 if (!String.IsNullOrEmpty(Request.QueryString["pageindex"]) && (int.TryParse(Request.QueryString["pageindex"], out pageIndex)))
-                    searchObj.SkipRecords = pageIndex * rgCrList.PageSize;
+                    searchObj.SkipRecords = pageIndex * searchObj.PageSize;
             }
             else
-                searchObj.SkipRecords = rgCrList.CurrentPageIndex * rgCrList.PageSize;
-            
-            searchObj.PageSize = rgCrList.PageSize;
+                searchObj.SkipRecords = rgCrList.CurrentPageIndex * searchObj.PageSize;
 
             var crSvc = ServicesFactory.Resolve<IChangeRequestService>();
             var response = crSvc.GetChangeRequests(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
             if (response.Report.GetNumberOfErrors() != 0)
                 return;
 
-            rgCrList.DataSource = response.Result.Key;
             rgCrList.VirtualItemCount = response.Result.Value;
+            rgCrList.CurrentPageIndex = searchObj.SkipRecords / searchObj.PageSize;
+            rgCrList.DataSource = response.Result.Key;
 
             ManageShareUrl();
             ManageFullView();

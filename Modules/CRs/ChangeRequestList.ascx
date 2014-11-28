@@ -4,7 +4,7 @@
 <%@ Register TagPrefix="ult" TagName="ShareUrlControl" Src="../../controls/Ultimate/ShareUrlControl.ascx" %>
 <%@ Register TagPrefix="ult" TagName="FullViewControl" Src="../../controls/Ultimate/FullView.ascx" %>
 
-<div id="crList">
+<asp:Panel ID="crList" runat="server" Visible="false" ClientIDMode="Static">
     <asp:UpdateProgress ID="upCrSearch" runat="server" DisplayAfter="200">
         <ProgressTemplate>
             <div class="modalBackground">
@@ -74,7 +74,6 @@
                         <telerik:RadGrid ID="rgCrList" runat="server"
                             EnableEmbeddedSkins="false"
                             EnableEmbeddedBaseStylesheet="false"
-                            EnableViewState="false"
                             Skin="Ultimate"
                             AllowPaging="true"
                             AllowCustomPaging="true"
@@ -148,4 +147,4 @@
         }
     </script>
     <!--script-->
-</div>
+</asp:Panel>
