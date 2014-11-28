@@ -259,5 +259,18 @@ namespace Etsi.Ultimate.Utils
                 return success ? returnValue : 0;
             }
         }
+
+        /// <summary>
+        /// Gets the contribution view address.
+        /// </summary>
+        public static string ContributionViewAddress
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["ContributionViewAddress"] != null)
+                    return ConfigurationManager.AppSettings["ContributionViewAddress"].ToString();
+                return "";
+            }
+        }
     }
 }

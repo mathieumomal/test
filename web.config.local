@@ -91,6 +91,7 @@
     <add key="ContributionBulkBaseAddress" value="http://www.contribution.loc/ContributionImport.aspx?meetingId={0}&amp;mode=bulk"/>
     <add key="ContributionImportBaseAddress" value="http://www.contribution.loc/ContributionImport.aspx?meetingId={0}&amp;mode=import"/>
 	<add key="ContributionCommitFinalDecisionsUrl" value="http://www.contribution.loc/CommitFinalDecisions.aspx?meetingId={0}"/>	
+	<add key="ContributionViewAddress" value="http://www.contribution.loc/CreateTDoc.aspx?mode=view&amp;contributionUid={0}"/>
 	<add key="MeetingRegistration" value="http://webapp.13.etsidev.org/3GPPRegistration/fMain.asp?mid={0}"/>
 	
 		<!-- These parameters are independent of the environment -->

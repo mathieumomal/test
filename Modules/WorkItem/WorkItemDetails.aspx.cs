@@ -261,6 +261,13 @@ namespace Etsi.Ultimate.Module.WorkItem
             // Link to specifications
             lnkSpecifications.Target = "_blank";
             lnkSpecifications.NavigateUrl = "/Specifications.aspx?q=1&WiUid=" + workitem.Pk_WorkItemUid;
+
+            // Link to TDoc            
+            if(!String.IsNullOrEmpty(workitem.Wid))
+            {
+                lnkWiVersion.Text = workitem.Wid;
+                lnkWiVersion.NavigateUrl = String.Format(ConfigVariables.ContributionViewAddress, workitem.Wid);
+            }
         }
 
         /// <summary>

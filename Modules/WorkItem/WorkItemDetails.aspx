@@ -130,7 +130,7 @@
                             <tr>
                                 <td class="TabLineLeft">Latest WID version:</td>
                                 <td class="TabLineRight">
-                                    <asp:HyperLink ID="lnkWiVersion" runat="server" NavigateUrl="#">WID TDoc</asp:HyperLink></td>
+                                    <asp:HyperLink ID="lnkWiVersion" runat="server" target="_blank"> - </asp:HyperLink></td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">TSG Approval meeting:</td>
