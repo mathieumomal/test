@@ -25,7 +25,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <telerik:RadPanelBar runat="server" ID="rpbCrSearch" Width="100%" OnClientItemClicking="PreventCrSearchCollapse">
+                        <telerik:RadPanelBar runat="server" ID="rpbCrSearch" ClientIDMode="Static" Width="100%" OnClientItemClicking="PreventCrSearchCollapse">
                             <Items>
                                 <telerik:RadPanelItem runat="server" ID="rpiCrSearch">
                                     <HeaderTemplate>
@@ -113,6 +113,14 @@
     </asp:UpdatePanel>
     <telerik:RadAjaxManager ID="ramCrs" runat="server" EnablePageHeadUpdate="false">
     </telerik:RadAjaxManager>
-    
+    <script>
+        function collapseCrPanelItem() {
+            var panelBar = $find('<%= rpbCrSearch.ClientID %>');
+            var item = panelBar.get_items().getItem(0);
+            if (item) {
+                item.collapse();
+            }
+        }
+    </script>
     <script type="text/javascript" src="/DesktopModules/CRs/JS/crScript.js"></script>
 </asp:Panel>

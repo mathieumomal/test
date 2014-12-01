@@ -21,10 +21,3 @@ function PreventCrSearchCollapse(sender, eventArgs) {
     }
 }
 
-function collapseCrPanelItem() {
-    var panelBar = $find("<%= rpbCrSearch.ClientID %>");
-    var item = panelBar.get_items().getItem(0);
-    if (item) {
-        item.collapse();
-    }
-}
