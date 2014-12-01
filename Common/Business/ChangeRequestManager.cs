@@ -243,7 +243,7 @@ namespace Etsi.Ultimate.Business
             var repoResponse = crRepository.GetChangeRequests(searchObj);
 
             var crsListFacade = new List<ChangeRequestListFacade>();
-            repoResponse.Key.ForEach(x => crsListFacade.Add(ConvertChangeRequestToChangeRequestListFacades(x)));
+            repoResponse.Key.ForEach(x => crsListFacade.Add(ConvertChangeRequestToChangeRequestListFacade(x)));
 
             return new ServiceResponse<KeyValuePair<List<ChangeRequestListFacade>, int>> { Result = new KeyValuePair<List<ChangeRequestListFacade>, int>(crsListFacade, repoResponse.Value) };
         }
@@ -350,7 +350,7 @@ namespace Etsi.Ultimate.Business
         /// Convert Change request to change request list facade
         /// </summary>
         /// <returns>Converted crs for search list</returns>
-        private ChangeRequestListFacade ConvertChangeRequestToChangeRequestListFacades(ChangeRequest cr)
+        private ChangeRequestListFacade ConvertChangeRequestToChangeRequestListFacade(ChangeRequest cr)
         {
             return new ChangeRequestListFacade
             {

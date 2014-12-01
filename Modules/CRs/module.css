@@ -20,3 +20,27 @@
     width: 100%;
     vertical-align: middle;
 }
+
+#crList .modalBackground 
+{
+    background-color: Gray;
+    filter: alpha(opacity=60);
+    opacity: 0.60;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    position: fixed;
+    height: 100%;
+    z-index: 3000;
+}
+
+#crList .updateProgress 
+{
+    top: 45%;
+    position: fixed;
+    right: 45%;
+}
+
+#crList .rpExpandHandle {
+	background-color: white;
+}

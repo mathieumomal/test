@@ -86,6 +86,7 @@
   <ItemGroup>
     <Content Include="ChangeRequestList.ascx" />
     <Content Include="images\hourglass.png" />
+    <Content Include="JS\crScript.js" />
     <Content Include="License.txt" />
     <Content Include="module.css" />
     <Content Include="ReleaseNotes.txt" />

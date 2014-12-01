@@ -92,6 +92,7 @@ xcopy "%SPECSOURCES%*.ascx" "%SPECSOURCESDEST%" /b/v/y
 xcopy "%SPECSOURCES%*.aspx" "%SPECSOURCESDEST%" /b/v/y
 xcopy "%SPECSOURCES%*.css" "%SPECSOURCESDEST%" /b/v/y
 xcopy "%SPECSOURCES%images\*.*" "%SPECSOURCESDEST%images\" /b/v/y
+xcopy "%SPECSOURCES%JS\*.*" "%SPECSOURCESDEST%JS\" /b/v/y
 
 SET SPECSOURCES=%TRUNK_PATH%Modules\Meetings\
 SET SPECSOURCESDEST=%DNN_PATH%DesktopModules\Meetings\

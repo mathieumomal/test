@@ -15,7 +15,7 @@
         <ProgressTemplate>
             <div class="modalBackground">
             </div>
-            <div class="updateProgress fixed">
+            <div class="updateProgress">
                 <asp:Image ID="imgProgress" runat="server" Class="rotating" ImageUrl="~/DesktopModules/WorkItem/images/hourglass.png" Width="45" />
             </div>
         </ProgressTemplate>
