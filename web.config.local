@@ -91,8 +91,8 @@
     <add key="ContributionBulkBaseAddress" value="http://www.contribution.loc/ContributionImport.aspx?meetingId={0}&amp;mode=bulk"/>
     <add key="ContributionImportBaseAddress" value="http://www.contribution.loc/ContributionImport.aspx?meetingId={0}&amp;mode=import"/>
 	<add key="ContributionCommitFinalDecisionsUrl" value="http://www.contribution.loc/CommitFinalDecisions.aspx?meetingId={0}"/>	
-	<add key="ContributionViewAddress" value="http://www.contribution.loc/CreateTDoc.aspx?mode=view&amp;contributionUid={0}"/>
 	<add key="MeetingRegistration" value="http://webapp.13.etsidev.org/3GPPRegistration/fMain.asp?mid={0}"/>
+	<add key="TdocDetailsUrl" value="http://www.contribution.loc/CreateTdoc.aspx?mode=view&amp;contributionUid={0}" />
 	
 		<!-- These parameters are independent of the environment -->
 		<add key="FtpExportAddress" value="ftp://ftp.3gpp.org/Information/WORK_PLAN/"/>
@@ -107,9 +107,9 @@
 	
 		<add key="PortalName" value="Ultimate"/>
 		<add key="EtsiWorkitemsDeliveryFolder" value="http://www.etsi.org/deliver/"/>
-    <add key="SpecificationDetailsUrl" value="http://www.localdev.me/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId={0}" />
-    <add key="ReleaseDetailsUrl" value="http://www.localdev.me/desktopmodules/Release/ReleaseDetails.aspx?releaseId={0}"/>
-    <add key="TdocDetailsUrl" value="http://www.contribution.loc/CreateTdoc.aspx?mode=view&amp;contributionUid={0}" />
+    <add key="SpecificationDetailsUrl" value="http://www.dnn3gpp.loc/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId={0}" />
+    <add key="ReleaseDetailsUrl" value="http://www.dnn3gpp.loc/desktopmodules/Release/ReleaseDetails.aspx?releaseId={0}"/>
+    
 	<add key="CRsListRecordsMaxSize" value="100"/>
     
 	<!--  End of 3GPP Parameters  -->

@@ -178,6 +178,11 @@
                             document.title = "WI #" + workItem;
                         }, 200);
                     });
+
+                    function openTdoc(address, TdocNumber) {
+                        var popUp = window.open(address, 'TDoc-' + TdocNumber, 'height=720,width=616,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no');
+                        popUp.focus();
+                    }
                 </script>
             </asp:Panel>
             <telerik:RadAjaxManager ID="RadAjaxManager" runat="server" EnablePageHeadUpdate="false">

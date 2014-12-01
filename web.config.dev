@@ -91,7 +91,6 @@
   <add key="ContributionBulkBaseAddress" value="http://dnn3gpp.13.etsidev.org/ngppapp/ContributionImport.aspx?meetingId={0}&amp;mode=bulk"/>
   <add key="ContributionImportBaseAddress" value="http://dnn3gpp.13.etsidev.org/ngppapp/ContributionImport.aspx?meetingId={0}&amp;mode=import"/>
   <add key="ContributionCommitFinalDecisionsUrl" value="http://dnn3gpp.13.etsidev.org/ngppapp/CommitFinalDecisions.aspx?meetingId={0}"/>
-  <add key="ContributionViewAddress" value="http://dnn3gpp.13.etsidev.org/ngppapp/CreateTDoc.aspx?mode=view&amp;contributionUid={0}"/>
   <add key="DownloadDocumentListBaseAddress" value="http://dnn3gpp.13.etsidev.org/ngppapp/GenerateDocumentList.Aspx?meetingId={0}"/>
   <add key="MeetingListAdvancedQueryLink" value="http://webapp.13.etsidev.org/MeetingCalendar/QueryForm.asp"/>
   <add key="ManageAgendaItemsUrl" value="http://webapp.13.etsidev.org/rmeetingDocuments/UpdateAllocations.asp?MTG_ID={0}"/>

@@ -266,7 +266,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             if(!String.IsNullOrEmpty(workitem.Wid))
             {
                 lnkWiVersion.Text = workitem.Wid;
-                lnkWiVersion.NavigateUrl = String.Format(ConfigVariables.ContributionViewAddress, workitem.Wid);
+                lnkWiVersion.NavigateUrl = "javascript:openTdoc('"+String.Format(ConfigVariables.TdocDetailsUrl, workitem.Wid)+"','"+workitem.Wid+"')";
             }
         }
 
