@@ -249,12 +249,13 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="personId"></param>
         /// <param name="crNumber"></param>
         /// <param name="revision"></param>
+        /// <param name="specId"></param>
         /// <returns></returns>
-        public bool IsExistCrNumberRevisionCouple(int personId, string crNumber, int revision)
+        public bool IsExistCrNumberRevisionCouple(int personId, int specId, string crNumber, int revision)
         {
             LogManager.UltimateServiceLogger.Debug("[ServiceCall][IsExistCrNumberRevisionCouple] CrNumber=" + crNumber + "; revision=" + revision);
             var serviceHelper = new ServiceHelper();
-            return serviceHelper.IsExistCrNumberRevisionCouple(personId,crNumber, revision);
+            return serviceHelper.IsExistCrNumberRevisionCouple(personId, specId, crNumber, revision);
         }
         #endregion
     }

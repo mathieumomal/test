@@ -152,12 +152,13 @@ namespace Etsi.Ultimate.Repositories
         /// <summary>
         /// See interface
         /// </summary>
+        /// <param name="specId"></param>
         /// <param name="crNumber"></param>
         /// <param name="revision"></param>
         /// <returns></returns>
-        public bool IsExistCrNumberRevisionCouple(string crNumber, int revision)
+        public bool IsExistCrNumberRevisionCouple(int specId, string crNumber, int revision)
         {
-            return UoW.Context.ChangeRequests.Any(x => x.CRNumber == crNumber.Trim() && x.Revision == revision);
+            return UoW.Context.ChangeRequests.Any(x => x.CRNumber == crNumber.Trim() && x.Revision == revision && x.Fk_Specification == specId);
         }
     }
 
@@ -213,9 +214,10 @@ namespace Etsi.Ultimate.Repositories
         /// <summary>
         /// Test if CR # / revision couple already exist
         /// </summary>
+        /// <param name="specId"></param>
         /// <param name="crNumber"></param>
         /// <param name="revision"></param>
         /// <returns></returns>
-        bool IsExistCrNumberRevisionCouple(string crNumber, int revision);
+        bool IsExistCrNumberRevisionCouple(int specId, string crNumber, int revision);
     }
 }

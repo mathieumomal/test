@@ -490,15 +490,17 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Test if a couple Cr # / Revision already exist
         /// </summary>
+        /// <param name="specId"></param>
         /// <param name="crNumber"></param>
         /// <param name="revision"></param>
+        /// <param name="personId"></param>
         /// <returns></returns>
-        public bool IsExistCrNumberRevisionCouple(int personId, string crNumber, int revision)
+        public bool IsExistCrNumberRevisionCouple(int personId, int specId, string crNumber, int revision)
         {
             try
             {
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
-                var response = svc.IsExistCrNumberRevisionCouple(crNumber, revision);
+                var response = svc.IsExistCrNumberRevisionCouple(specId, crNumber, revision);
                 if (response.Report.GetNumberOfErrors() <= 0)
                     return response.Result;
                 foreach (var error in response.Report.ErrorList)

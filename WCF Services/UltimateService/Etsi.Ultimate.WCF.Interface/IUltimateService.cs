@@ -172,11 +172,12 @@ namespace Etsi.Ultimate.WCF.Interface
         /// Test if a couple Cr # / Revision already exist
         /// </summary>
         /// <param name="personId"></param>
+        /// <param name="specId"></param>
         /// <param name="crNumber"></param>
         /// <param name="revision"></param>
         /// <returns></returns>
         [OperationContract]
-        bool IsExistCrNumberRevisionCouple(int personId, string crNumber, int revision);
+        bool IsExistCrNumberRevisionCouple(int personId, int specId, string crNumber, int revision);
 
         #endregion
     }

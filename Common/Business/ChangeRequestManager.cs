@@ -251,14 +251,15 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// See interface
         /// </summary>
+        /// <param name="specId"></param>
         /// <param name="crNumber"></param>
         /// <param name="revision"></param>
         /// <returns></returns>
-        public bool IsExistCrNumberRevisionCouple(string crNumber, int revision)
+        public bool IsExistCrNumberRevisionCouple(int specId, string crNumber, int revision)
         {
             var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
             crRepository.UoW = UoW;
-            return crRepository.IsExistCrNumberRevisionCouple(crNumber, revision);
+            return crRepository.IsExistCrNumberRevisionCouple(specId, crNumber, revision);
         }
 
         #endregion
@@ -466,6 +467,6 @@ namespace Etsi.Ultimate.Business
         /// <param name="crNumber"></param>
         /// <param name="revision"></param>
         /// <returns></returns>
-        bool IsExistCrNumberRevisionCouple(string crNumber, int revision);
+        bool IsExistCrNumberRevisionCouple(int specId, string crNumber, int revision);
     }
 }

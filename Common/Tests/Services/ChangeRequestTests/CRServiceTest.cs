@@ -524,13 +524,13 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             Assert.AreEqual(revisionNumber, result.Result.Key.FirstOrDefault().Revision);
         }
 
-        [TestCase("AZEE", 2, true, Description = "should exist")]
-        [TestCase("AZEE", 22, false, Description = "should not exist")]
-        public void Service_IntegrationTest_IsExistCrNumberRevisionCouple(string crNumber, int revision, bool expectedResult)
+        [TestCase("AZEE", 2, 136083, true, Description = "should exist")]
+        [TestCase("AZEE", 22, 136083, false, Description = "should not exist")]
+        public void Service_IntegrationTest_IsExistCrNumberRevisionCouple(string crNumber, int revision, int specId, bool expectedResult)
         {
             //Act
             var crService = new ChangeRequestService();
-            var response = crService.IsExistCrNumberRevisionCouple(crNumber, revision);
+            var response = crService.IsExistCrNumberRevisionCouple(specId, crNumber, revision);
             //Assert
             Assert.AreEqual(expectedResult, response.Result);
         }

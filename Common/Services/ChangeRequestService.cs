@@ -274,10 +274,11 @@ namespace Etsi.Ultimate.Services
         /// <summary>
         /// See interface
         /// </summary>
+        /// <param name="specId"></param>
         /// <param name="crNumber"></param>
         /// <param name="revision"></param>
         /// <returns></returns>
-        public ServiceResponse<bool> IsExistCrNumberRevisionCouple(string crNumber, int revision)
+        public ServiceResponse<bool> IsExistCrNumberRevisionCouple(int specId, string crNumber, int revision)
         {
             using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
@@ -285,7 +286,7 @@ namespace Etsi.Ultimate.Services
                 crManager.UoW = uow;
                 return new ServiceResponse<bool>
                 {
-                    Result = crManager.IsExistCrNumberRevisionCouple(crNumber, revision)
+                    Result = crManager.IsExistCrNumberRevisionCouple(specId, crNumber, revision)
                 };
             }
         }
@@ -367,10 +368,11 @@ namespace Etsi.Ultimate.Services
         /// <summary>
         /// Test if Cr # / Revision couple already exist
         /// </summary>
+        /// <param name="specId"></param>
         /// <param name="crNumber"></param>
         /// <param name="revision"></param>
         /// <returns></returns>
-        ServiceResponse<bool> IsExistCrNumberRevisionCouple(string crNumber, int revision);
+        ServiceResponse<bool> IsExistCrNumberRevisionCouple(int specId, string crNumber, int revision);
     }
 }
 
