@@ -29,6 +29,7 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateGetChangeRequestByContribUid = "Ultimate Service Error [GetChangeRequestByContributionUID]: {0}";
         private const string ConstErrorTemplateChangeSpecificationsStatusToUnderChangeControl = "Ultimate Service Error [ChangeSpecificationsStatusToUnderChangeControl]: {0}";
         private const string ConstErrorTemplateSetCrsAsFinal = "Ultimate Service Error [SetCrsAsFinal]: {0}";
+        private const string ConstErrorIsExistCrNumberRevisionCouple = "Ultimate Service Error [IsExistCrNumberRevisionCouple]: {0}";
         #endregion
 
         #region Internal Methods
@@ -484,6 +485,32 @@ namespace Etsi.Ultimate.WCF.Service
                 return false;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Test if a couple Cr # / Revision already exist
+        /// </summary>
+        /// <param name="crNumber"></param>
+        /// <param name="revision"></param>
+        /// <returns></returns>
+        public bool IsExistCrNumberRevisionCouple(int personId, string crNumber, int revision)
+        {
+            try
+            {
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var response = svc.IsExistCrNumberRevisionCouple(crNumber, revision);
+                if (response.Report.GetNumberOfErrors() <= 0)
+                    return response.Result;
+                foreach (var error in response.Report.ErrorList)
+                {
+                    LogManager.UltimateServiceLogger.Error("IsExistCrNumberRevisionCouple failed cause by : " + error);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorIsExistCrNumberRevisionCouple, ex.Message));
+            }
+            return true;
         }
         #endregion
 

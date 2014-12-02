@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DataAccess;
 using Etsi.Ultimate.DomainClasses;
@@ -521,6 +522,17 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             Assert.AreEqual(searchQueryCount, result.Result.Value);
             Assert.AreEqual(crNumber, result.Result.Key.FirstOrDefault().ChangeRequestNumber);
             Assert.AreEqual(revisionNumber, result.Result.Key.FirstOrDefault().Revision);
+        }
+
+        [TestCase("AZEE", 2, true, Description = "should exist")]
+        [TestCase("AZEE", 22, false, Description = "should not exist")]
+        public void Service_IntegrationTest_IsExistCrNumberRevisionCouple(string crNumber, int revision, bool expectedResult)
+        {
+            //Act
+            var crService = new ChangeRequestService();
+            var response = crService.IsExistCrNumberRevisionCouple(crNumber, revision);
+            //Assert
+            Assert.AreEqual(expectedResult, response.Result);
         }
 
         #endregion

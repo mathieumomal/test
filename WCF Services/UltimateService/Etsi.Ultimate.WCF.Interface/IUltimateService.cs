@@ -14,6 +14,7 @@ namespace Etsi.Ultimate.WCF.Interface
     [ServiceKnownType(typeof(ChangeRequestCategory))]
     public interface IUltimateService
     {
+        #region release
         /// <summary>
         /// Gets the releases.
         /// </summary>
@@ -32,8 +33,9 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns></returns>
         [OperationContract]
         Release GetReleaseById(int personId, int releaseId);
+        #endregion
 
-
+        #region wi
         /// <summary>
         /// Gets the work items by ids.
         /// </summary>
@@ -51,7 +53,9 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>List of work items</returns>
         [OperationContract]
         List<WorkItem> GetWorkItemsByKeyWord(int personId, string keyword);
+        #endregion
 
+        #region specs
         /// <summary>
         /// Gets the specifications by key word.
         /// </summary>
@@ -87,7 +91,9 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>Status report</returns>
         [OperationContract]
         ServiceResponse<bool> ChangeSpecificationsStatusToUnderChangeControl(int personId, List<int> specIdsForUcc);
+        #endregion
 
+        #region crs
         /// <summary>
         /// Sets the CRS as final.
         /// </summary>
@@ -161,5 +167,17 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <param name="tsgTdocNumber"></param>
         [OperationContract]
         bool UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackDecisionlist, string tsgTdocNumber);
+
+        /// <summary>
+        /// Test if a couple Cr # / Revision already exist
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="crNumber"></param>
+        /// <param name="revision"></param>
+        /// <returns></returns>
+        [OperationContract]
+        bool IsExistCrNumberRevisionCouple(int personId, string crNumber, int revision);
+
+        #endregion
     }
 }

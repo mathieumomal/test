@@ -248,6 +248,19 @@ namespace Etsi.Ultimate.Business
             return new ServiceResponse<KeyValuePair<List<ChangeRequestListFacade>, int>> { Result = new KeyValuePair<List<ChangeRequestListFacade>, int>(crsListFacade, repoResponse.Value) };
         }
 
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="crNumber"></param>
+        /// <param name="revision"></param>
+        /// <returns></returns>
+        public bool IsExistCrNumberRevisionCouple(string crNumber, int revision)
+        {
+            var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
+            crRepository.UoW = UoW;
+            return crRepository.IsExistCrNumberRevisionCouple(crNumber, revision);
+        }
+
         #endregion
 
         #region Private Methods
@@ -446,5 +459,13 @@ namespace Etsi.Ultimate.Business
         /// <param name="searchObj">The search object.</param>
         /// <returns>List of change requests</returns>
         ServiceResponse<KeyValuePair<List<ChangeRequestListFacade>, int>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj);
+
+        /// <summary>
+        /// Test if CR # / revision couple already exist
+        /// </summary>
+        /// <param name="crNumber"></param>
+        /// <param name="revision"></param>
+        /// <returns></returns>
+        bool IsExistCrNumberRevisionCouple(string crNumber, int revision);
     }
 }

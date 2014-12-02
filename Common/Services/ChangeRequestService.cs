@@ -271,6 +271,25 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="crNumber"></param>
+        /// <param name="revision"></param>
+        /// <returns></returns>
+        public ServiceResponse<bool> IsExistCrNumberRevisionCouple(string crNumber, int revision)
+        {
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var crManager = ManagerFactory.Resolve<IChangeRequestManager>();
+                crManager.UoW = uow;
+                return new ServiceResponse<bool>
+                {
+                    Result = crManager.IsExistCrNumberRevisionCouple(crNumber, revision)
+                };
+            }
+        }
+
     }
 
     /// <summary>
@@ -344,6 +363,14 @@ namespace Etsi.Ultimate.Services
         /// <param name="searchObj">The search object.</param>
         /// <returns>List of change requests</returns>
         ServiceResponse<KeyValuePair<List<ChangeRequestListFacade>, int>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj);
+
+        /// <summary>
+        /// Test if Cr # / Revision couple already exist
+        /// </summary>
+        /// <param name="crNumber"></param>
+        /// <param name="revision"></param>
+        /// <returns></returns>
+        ServiceResponse<bool> IsExistCrNumberRevisionCouple(string crNumber, int revision);
     }
 }
 

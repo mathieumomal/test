@@ -148,6 +148,17 @@ namespace Etsi.Ultimate.Repositories
                 new KeyValuePair<List<ChangeRequest>, int>(query.Skip(searchObj.SkipRecords).Take(searchObj.PageSize).ToList(), query.Count()) : 
                 new KeyValuePair<List<ChangeRequest>, int>(query.ToList(), query.Count());
         }
+
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="crNumber"></param>
+        /// <param name="revision"></param>
+        /// <returns></returns>
+        public bool IsExistCrNumberRevisionCouple(string crNumber, int revision)
+        {
+            return UoW.Context.ChangeRequests.Any(x => x.CRNumber == crNumber.Trim() && x.Revision == revision);
+        }
     }
 
     /// <summary>
@@ -198,5 +209,13 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="searchObj">Cr search object</param>
         /// <returns>List of crs & count</returns>
         KeyValuePair<List<ChangeRequest>, int> GetChangeRequests(ChangeRequestsSearch searchObj);
+
+        /// <summary>
+        /// Test if CR # / revision couple already exist
+        /// </summary>
+        /// <param name="crNumber"></param>
+        /// <param name="revision"></param>
+        /// <returns></returns>
+        bool IsExistCrNumberRevisionCouple(string crNumber, int revision);
     }
 }

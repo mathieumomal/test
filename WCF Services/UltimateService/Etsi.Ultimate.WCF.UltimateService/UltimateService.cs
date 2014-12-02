@@ -242,6 +242,20 @@ namespace Etsi.Ultimate.WCF.Service
             var serviceHelper = new ServiceHelper();
             return serviceHelper.SetCrsAsFinal(personId, tdocNumbers);
         }
+
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="crNumber"></param>
+        /// <param name="revision"></param>
+        /// <returns></returns>
+        public bool IsExistCrNumberRevisionCouple(int personId, string crNumber, int revision)
+        {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][IsExistCrNumberRevisionCouple] CrNumber=" + crNumber + "; revision=" + revision);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.IsExistCrNumberRevisionCouple(personId,crNumber, revision);
+        }
         #endregion
     }
 }
