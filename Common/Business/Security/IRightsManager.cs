@@ -24,15 +24,15 @@ namespace Etsi.Ultimate.Business.Security
         /// <summary>
         /// Fetches the rights of the user, given his user ID.
         /// </summary>
-        /// <param name="personID"></param>
+        /// <param name="personId"></param>
         /// <returns></returns>
-        UserRightsContainer GetRights(int personID);
+        UserRightsContainer GetRights(int personId);
 
         /// <summary>
         /// Check whether the user is MCC member or not
         /// </summary>
-        /// <param name="personID">Person ID</param>
+        /// <param name="personId">Person ID</param>
         /// <returns>true/false</returns>
-        bool IsUserMCCMember(int personID);
+        bool IsUserMCCMember(int personId);
     }
 }

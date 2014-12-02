@@ -18,26 +18,26 @@ namespace Etsi.Ultimate.Business.Security
         /// <summary>
         /// ID of the "MCC" list of users in the DSDB database.
         /// </summary>
-        private readonly int MCC_LIST_ID = 5240;
-        private readonly string CACHE_BASE_STR = "ULTIMATE_BIZ_USER_RIGHTS_";
+        private const int MccListId = 5240;
+        private const string CacheBaseStr = "ULTIMATE_BIZ_USER_RIGHTS_";
 
         #region IRightsManager Membres
 
         /// <summary>
         /// Returns the rights of the user given his ID.
         /// </summary>
-        /// <param name="personID"></param>
+        /// <param name="personId"></param>
         /// <returns></returns>
-        public UserRightsContainer GetRights(int personID)
+        public UserRightsContainer GetRights(int personId)
         {
-            var cacheData = (UserRightsContainer)CacheManager.Get(CACHE_BASE_STR + personID.ToString());
+            var cacheData = (UserRightsContainer)CacheManager.Get(CacheBaseStr + personId);
             if (cacheData != null)
                 return cacheData.Copy();
 
             cacheData = new UserRightsContainer();
 
             var userRightsServiceClient = ManagerFactory.Resolve<IUserRightsService>();
-            var personRights = userRightsServiceClient.GetRights(personID, ConfigVariables.PortalName);
+            var personRights = userRightsServiceClient.GetRights(personId, ConfigVariables.PortalName);
 
             //Convert Generic Application rights
             if (personRights.ApplicationRights != null)
@@ -64,21 +64,21 @@ namespace Etsi.Ultimate.Business.Security
                 }
             }
 
-            CacheManager.InsertForLimitedTime(CACHE_BASE_STR + personID.ToString(), cacheData, 10);
+            CacheManager.InsertForLimitedTime(CacheBaseStr + personId, cacheData, 10);
             return cacheData.Copy();
         }
 
         /// <summary>
         /// Check whether the user is MCC member or not
         /// </summary>
-        /// <param name="personID">Person ID</param>
+        /// <param name="personId">Person ID</param>
         /// <returns>true/false</returns>
-        public bool IsUserMCCMember(int personID)
+        public bool IsUserMCCMember(int personId)
         {
             // Check whether the user is MCC
-            IUserRolesRepository repo = RepositoryFactory.Resolve<IUserRolesRepository>();
+            var repo = RepositoryFactory.Resolve<IUserRolesRepository>();
             repo.UoW = UoW;
-            var records = repo.GetAllEtsiBasedRoles().Where(p => p.PERSON_ID == personID && p.PLIST_ID == MCC_LIST_ID).FirstOrDefault();
+            var records = repo.GetAllEtsiBasedRoles().FirstOrDefault(p => p.PERSON_ID == personId && p.PLIST_ID == MccListId);
             return (records != null);
         }
 

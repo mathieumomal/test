@@ -17,7 +17,7 @@ namespace Etsi.Ultimate.Tests.FakeManagers
         public IUltimateUnitOfWork UoW { get; set; }
         
 
-        public UserRightsContainer GetRights(int personID)
+        public UserRightsContainer GetRights(int personId)
         {
             UserRightsContainer userRightsContainer = new UserRightsContainer();
             userRightsContainer.AddRight(Enum_UserRights.Release_Close);
@@ -28,7 +28,7 @@ namespace Etsi.Ultimate.Tests.FakeManagers
             return userRightsContainer;
         }
 
-        public bool IsUserMCCMember(int personID)
+        public bool IsUserMCCMember(int personId)
         {
             throw new NotImplementedException();
         }

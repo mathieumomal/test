@@ -143,8 +143,8 @@
     <Compile Include="PersonManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReleaseManager.cs" />
-    <Compile Include="IRightsManager.cs" />
-    <Compile Include="RightsManager.cs" />
+    <Compile Include="Security\IRightsManager.cs" />
+    <Compile Include="Security\RightsManager.cs" />
     <Compile Include="SpecificationCreateAction.cs" />
     <Compile Include="SpecificationEditAction.cs" />
     <Compile Include="SpecificationForceUnforceTranspositionAction.cs" />
