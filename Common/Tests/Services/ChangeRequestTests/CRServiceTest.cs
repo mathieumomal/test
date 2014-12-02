@@ -530,7 +530,7 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
         {
             //Act
             var crService = new ChangeRequestService();
-            var response = crService.IsExistCrNumberRevisionCouple(specId, crNumber, revision);
+            var response = crService.DoesCrNumberRevisionCoupleExist(specId, crNumber, revision);
             //Assert
             Assert.AreEqual(expectedResult, response.Result);
         }

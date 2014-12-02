@@ -177,7 +177,7 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <param name="revision"></param>
         /// <returns></returns>
         [OperationContract]
-        bool IsExistCrNumberRevisionCouple(int personId, int specId, string crNumber, int revision);
+        bool DoesCrNumberRevisionCoupleExist(int personId, int specId, string crNumber, int revision);
 
         #endregion
     }
