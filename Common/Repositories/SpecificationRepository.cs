@@ -270,7 +270,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns></returns>
         public List<Specification> GetSpecifications(List<int> ids)
         {
-            return UoW.Context.Specifications.Where(x => ids.Contains(x.Pk_SpecificationId)).ToList();
+            return AllIncluding(spec => spec.SpecificationResponsibleGroups).Where(x => ids.Contains(x.Pk_SpecificationId)).ToList();
         }
 
         /// <summary>
