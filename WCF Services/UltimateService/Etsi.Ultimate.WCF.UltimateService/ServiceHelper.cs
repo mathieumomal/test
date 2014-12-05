@@ -586,6 +586,8 @@ namespace Etsi.Ultimate.WCF.Service
                 serviceSpecification.Title = ultimateSpecification.Title;
                 serviceSpecification.Number = ultimateSpecification.Number;
                 serviceSpecification.SpecNumberAndTitle = ultimateSpecification.SpecNumberAndTitle;
+                if (ultimateSpecification.PrimeResponsibleGroup != null)
+                    serviceSpecification.PrimaryResponsibleGroup_CommunityId = ultimateSpecification.PrimeResponsibleGroup.Fk_commityId;
             }
             return serviceSpecification;
         }

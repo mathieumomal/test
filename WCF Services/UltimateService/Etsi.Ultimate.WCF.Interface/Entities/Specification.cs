@@ -43,5 +43,14 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public string SpecNumberAndTitle { get; set; }
+
+        /// <summary>
+        /// Gets or sets the community identifier of primary responsible group.
+        /// </summary>
+        /// <value>
+        /// The community identifier of primary responsible group.
+        /// </value>
+        [DataMember]
+        public int PrimaryResponsibleGroup_CommunityId { get; set; }
     }
 }
