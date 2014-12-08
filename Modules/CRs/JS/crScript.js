@@ -27,9 +27,9 @@ $("#content").on('contentHeight', function (event, hContent) {
     var gridDiv = crGrid.find(".rgDataDiv")[0];
     var securityValue;
     if ($('.livetabssouthstreet').length == 0) {
-        securityValue = 130;
+        securityValue = 155;
     } else {
-        securityValue = 215;
+        securityValue = 250;
     }
     gridDiv.style.height = (hContent - securityValue) + "px";
 });
