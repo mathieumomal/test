@@ -33,12 +33,15 @@ namespace Etsi.Ultimate.Business
                 repo.UoW = UoW;
                 if (string.IsNullOrEmpty(changeRequest.CRNumber) || (changeRequest.RevisionOf != null && !changeRequest.Revision.HasValue))
                 {
-                    if (changeRequest.RevisionOf != null)
-                        ManageChangeRequestRevision(changeRequest, repo);
-                    else
+                    if (!changeRequest.IsAutoNumberingOff) //Assign cr# & revision only when auto numbering is On
                     {
-                        changeRequest.CRNumber = GenerateCrNumberBySpecificationId(changeRequest.Fk_Specification);
-                        changeRequest.Revision = null;
+                        if (changeRequest.RevisionOf != null)
+                            ManageChangeRequestRevision(changeRequest, repo);
+                        else
+                        {
+                            changeRequest.CRNumber = GenerateCrNumberBySpecificationId(changeRequest.Fk_Specification);
+                            changeRequest.Revision = null;
+                        }
                     }
                 }
                 //Verify that values provided are correct

@@ -76,6 +76,30 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.IsTrue(response.Result);
         }
 
+        [TestCase(true, null, null, Description = "System should not assign cr number & revision by itself")]
+        [TestCase(false, "BBBB", 5, Description = "System should assign cr number & revision by itself")]
+        public void Business_CreateChangeRequest_WithAutoNumbering_Feature(bool isAutoNumberingOff, string crNumber, int? revision)
+        {
+            var cr22 = UoW.Context.ChangeRequests.Find(22);
+            //Arrange
+            var changeRequest = new ChangeRequest() { IsAutoNumberingOff = isAutoNumberingOff, RevisionOf = cr22.TSGTDoc};
+            var mockCrRepository = MockRepository.GenerateMock<IChangeRequestRepository>();
+            mockCrRepository.Stub(x => x.GetChangeRequestByContributionUID(cr22.TSGTDoc)).Return(cr22);
+            mockCrRepository.Stub(x => x.FindCrMaxRevisionBySpecificationIdAndCrNumber(cr22.Fk_Specification, cr22.CRNumber)).Return(4);
+            mockCrRepository.Expect(x => x.InsertOrUpdate(Arg<ChangeRequest>.Matches(y => y.IsAutoNumberingOff == isAutoNumberingOff
+                                                                                       && y.CRNumber == crNumber
+                                                                                       && y.Revision == revision)));
+            RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockCrRepository);
+
+            //Act
+            var crManager = new ChangeRequestManager() { UoW = UoW };
+            var response = crManager.CreateChangeRequest(PersonId, changeRequest);
+
+            //Assert
+            Assert.IsTrue(response.Result);
+            mockCrRepository.VerifyAllExpectations();
+        }
+
         [Test]
         public void Business_CreateChangeRequest_Failure()
         {

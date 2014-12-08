@@ -39,5 +39,7 @@ namespace Etsi.Ultimate.DomainClasses
         public string ImplementationStatus { get; set; } 
 
         public string RevisionOf { get; set; }
+
+        public bool IsAutoNumberingOff { get; set; }
     }
 }
