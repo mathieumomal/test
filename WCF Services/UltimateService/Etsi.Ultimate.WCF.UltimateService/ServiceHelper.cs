@@ -326,7 +326,6 @@ namespace Etsi.Ultimate.WCF.Service
         internal ServiceResponse<int> CreateChangeRequest(int personId, UltimateServiceEntities.ChangeRequest changeRequest)
         {
             var response = new ServiceResponse<int>();
-            var primaryKeyOfNewCr = 0;
             try
             {
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
@@ -626,6 +625,7 @@ namespace Etsi.Ultimate.WCF.Service
                 ultimateCr.TSGTDoc = serviceCr.TSGTDoc;
                 ultimateCr.WGTDoc = serviceCr.WGTDoc;
                 ultimateCr.RevisionOf = serviceCr.RevisionOf;
+                ultimateCr.IsAutoNumberingOff = serviceCr.IsAutoNumberingOff;
                 if ((serviceCr.Fk_WorkItemIds != null) && (serviceCr.Fk_WorkItemIds.Count > 0))
                     serviceCr.Fk_WorkItemIds.ForEach(x => ultimateCr.CR_WorkItems.Add(new UltimateEntities.CR_WorkItems { Fk_WIId = x }));
             }

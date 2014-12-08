@@ -284,6 +284,15 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// the uid of the parent tdoc
         /// </value>
         [DataMember]
-        public string RevisionOf { get; set; } 
+        public string RevisionOf { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is automatic numbering off.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is automatic numbering off; otherwise, <c>false</c>.
+        /// </value>
+        [DataMember]
+        public bool IsAutoNumberingOff { get; set; }
     }
 }
