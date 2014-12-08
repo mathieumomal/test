@@ -25,7 +25,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <telerik:RadPanelBar runat="server" ID="rpbCrSearch" ClientIDMode="Static" Width="100%" OnClientItemClicking="PreventCrSearchCollapse">
+                        <telerik:RadPanelBar runat="server" ID="rpbCrSearch" Width="100%" OnClientItemClicking="PreventCrSearchCollapse">
                             <Items>
                                 <telerik:RadPanelItem runat="server" ID="rpiCrSearch">
                                     <HeaderTemplate>
@@ -72,6 +72,7 @@
                 <tr>
                     <td>
                         <telerik:RadGrid ID="rgCrList" runat="server"
+                            ClientIDMode="Static"
                             EnableEmbeddedSkins="false"
                             EnableEmbeddedBaseStylesheet="false"
                             Skin="Ultimate"

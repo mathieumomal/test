@@ -21,3 +21,16 @@ function PreventCrSearchCollapse(sender, eventArgs) {
     }
 }
 
+//Adapt RagGrid height based on the "contentHeight" event (in the mainpage.ascx)
+$("#content").on('contentHeight', function (event, hContent) {
+    var crGrid = $('#rgCrList');
+    var gridDiv = crGrid.find(".rgDataDiv")[0];
+    var securityValue;
+    if ($('.livetabssouthstreet').length == 0) {
+        securityValue = 130;
+    } else {
+        securityValue = 215;
+    }
+    gridDiv.style.height = (hContent - securityValue) + "px";
+});
+
