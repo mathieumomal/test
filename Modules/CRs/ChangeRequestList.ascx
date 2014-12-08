@@ -102,7 +102,7 @@
                                 </Columns>
                                 <NoRecordsTemplate>
                                     <div style="text-align: center">
-                                        No Change Request
+                                        No Change Request found.
                                     </div>
                                 </NoRecordsTemplate>
                             </MasterTableView>
@@ -112,9 +112,9 @@
             </table>
         </ContentTemplate>
     </asp:UpdatePanel>
-    <telerik:RadAjaxManager ID="ramCrs" runat="server" EnablePageHeadUpdate="false">
-    </telerik:RadAjaxManager>
-    <script>
+    <telerik:RadAjaxManager ID="ramCrs" runat="server" EnablePageHeadUpdate="false"></telerik:RadAjaxManager>
+    <script type="text/javascript" src="/DesktopModules/CRs/JS/crScript.js"></script>
+    <script type="text/javascript" language="javascript">
         function collapseCrPanelItem() {
             var panelBar = $find('<%= rpbCrSearch.ClientID %>');
             var item = panelBar.get_items().getItem(0);
@@ -122,6 +122,7 @@
                 item.collapse();
             }
         }
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(adaptContentHeight);
     </script>
-    <script type="text/javascript" src="/DesktopModules/CRs/JS/crScript.js"></script>
+    
 </asp:Panel>
