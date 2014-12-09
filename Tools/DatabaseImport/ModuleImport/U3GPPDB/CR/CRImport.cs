@@ -30,7 +30,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
         public Etsi.Ngppdb.DataAccess.INGPPDBContext NgppdbContext { get; set; }
         public Etsi.Ultimate.Tools.TmpDbDataAccess.ITmpDb LegacyContext { get; set; }
         public MeetingHelper MtgHelper { get; set; }
-        
+
         public void CleanDatabase()
         {
             //NewContext.CR_CleanAll();
@@ -137,8 +137,8 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
                 newCr.TSGTDoc = Utils.CheckString(legacyCr.Doc_1st_Level, 50, RefImportForLog + " TSG Tdoc ", logId);
                 newCr.WGTDoc = Utils.CheckString(legacyCr.Doc_2nd_Level, 50, RefImportForLog + " WG Tdoc ", logId);
 
-                newCr.TSGSourceOrganizations = Utils.CheckString(legacyCr.Source_1st_Level, 200, RefImportForLog + " TSGSourceOrganization ", logId);
-                newCr.WGSourceOrganizations = Utils.CheckString(legacyCr.Source_2nd_Level, 200, RefImportForLog + " WGSourceOrganization ", logId);
+                newCr.TSGSourceOrganizations = Utils.CheckString(legacyCr.Source_1st_Level, 1000, RefImportForLog + " TSGSourceOrganization ", logId);
+                newCr.WGSourceOrganizations = Utils.CheckString(legacyCr.Source_2nd_Level, 1000, RefImportForLog + " WGSourceOrganization ", logId);
 
                 TsgwgTargetCase(newCr, legacyCr, logId);
 
@@ -235,6 +235,8 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
         /// <param name="logId"></param>
         private void CategoryCase(ChangeRequest newCr, Etsi.Ultimate.Tools.TmpDbDataAccess.List_of_GSM___3G_CRs legacyCr, string logId)
         {
+            if (legacyCr.Cat.Trim() == "-")
+                legacyCr.Cat = "F";
             var legacyCrCategory = Utils.CheckString(legacyCr.Cat, 5, RefImportForLog + " category ", logId);
 
             if (!String.IsNullOrEmpty(legacyCrCategory))
@@ -264,7 +266,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
         /// <param name="logId"></param>
         private void SpecReleaseAndVersionCase(ChangeRequest newCr, Etsi.Ultimate.Tools.TmpDbDataAccess.List_of_GSM___3G_CRs legacyCr, string logId)
         {
-            var legacyCrSpecNumber = Utils.CheckString(legacyCr.Spec, 10, RefImportForLog + " Spec Number ", logId);
+            var legacyCrSpecNumber = Utils.CheckString(legacyCr.Spec, 15, RefImportForLog + " Spec Number ", logId);
             var legacyCrReleaseCode = Utils.CheckString(legacyCr.Phase, 10, RefImportForLog + " Release Code ", logId);
             var specAssociated = _specs.FirstOrDefault(x => x.Number == legacyCrSpecNumber);
             var releaseAssociated = _releases.FirstOrDefault(x => x.Code == legacyCrReleaseCode);
@@ -324,9 +326,22 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
                             newCr.NewVersion = newVersionAssociated;
                             newCr.Fk_NewVersion = newVersionAssociated.Pk_VersionId;
                         }
-                        else
+                        else if (legacyCr.Status_1st_Level.ToLower().Contains("approved"))
                         {
-                            LogManager.LogWarning(RefImportForLog + "New version not found : " + legacyVersion + " with releaseId = " + releaseAssociated.Pk_ReleaseId + " and specId = " + specAssociated.Pk_SpecificationId + ", for CR : " + logId);
+                            var newVersionFallenback = _specVersions.FirstOrDefault(x => x.Fk_ReleaseId == releaseAssociated.Pk_ReleaseId
+                                                                                     && x.Fk_SpecificationId == specAssociated.Pk_SpecificationId
+                                                                                     && x.MajorVersion == mv);
+                            if (newVersionFallenback != null)
+                            {
+                                newCr.NewVersion = newVersionFallenback;
+                                newCr.Fk_NewVersion = newVersionFallenback.Pk_VersionId;
+
+                            }
+                            else
+                            {
+                                LogManager.LogWarning(RefImportForLog + "New version not found : " + legacyVersion + " with releaseId = " + releaseAssociated.Pk_ReleaseId + " and specId = " + specAssociated.Pk_SpecificationId + ", for CR : " + logId);
+                            }
+
                         }
                     }
                 }
@@ -357,10 +372,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
                             newCr.CurrentVersion = targetVersionAssociated;
                             newCr.Fk_CurrentVersion = targetVersionAssociated.Pk_VersionId;
                         }
-                        else
-                        {
-                            LogManager.LogWarning(RefImportForLog + "Target version not found : " + legacyCrTargetVersion + ", for CR : " + logId);
-                        }
+                        /* If no version is found, warning is disabled. Disable warning, as agreed with JMM.*/
                     }
                 }
             }
@@ -431,11 +443,11 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
         /// <param name="logId"></param>
         private void WiCase(ChangeRequest newCr, Etsi.Ultimate.Tools.TmpDbDataAccess.List_of_GSM___3G_CRs legacyCr, string logId)
         {
-            var wiField = Utils.CheckString(legacyCr.Workitem, 50, RefImportForLog + " WI ", logId);
+            var wiField = Utils.CheckString(legacyCr.Workitem, 500, RefImportForLog + " WI ", logId);
 
             if (!string.IsNullOrEmpty(wiField))
             {
-                var wiExploded = wiField.Split(new [] {',','/'});
+                var wiExploded = wiField.Split(new[] { ',', '/' });
 
                 foreach (var wilabel in wiExploded)
                 {

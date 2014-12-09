@@ -208,11 +208,11 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
         /// <param name="legacySpec"></param>
         private void RemarksCase(Etsi.Ultimate.DomainClasses.Specification newSpec, Etsi.Ultimate.Tools.TmpDbDataAccess.Specs_GSM_3G legacySpec)
         {
-            var remarksField = Utils.CheckString(legacySpec.general_remarks, 255, RefImportForLog + " remarks text", newSpec.Number);
+            var remarksField = Utils.CheckString(legacySpec.general_remarks, 1000, RefImportForLog + " remarks text", newSpec.Number);
             
             if (!String.IsNullOrEmpty(remarksField))
             {
-                var rmk = new Etsi.Ultimate.DomainClasses.Remark()
+                var rmk = new Remark()
                 {
                     CreationDate = DateTime.Now,
                     IsPublic = true,

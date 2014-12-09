@@ -289,8 +289,8 @@
           <Property Name="Fk_TSGStatus" Type="int" />
           <Property Name="Fk_WGStatus" Type="int" />
           <Property Name="CreationDate" Type="datetime" />
-          <Property Name="TSGSourceOrganizations" Type="varchar" MaxLength="200" />
-          <Property Name="WGSourceOrganizations" Type="varchar" MaxLength="200" />
+          <Property Name="TSGSourceOrganizations" Type="varchar" MaxLength="1000" />
+          <Property Name="WGSourceOrganizations" Type="varchar" MaxLength="1000" />
           <Property Name="TSGMeeting" Type="int" />
           <Property Name="TSGTarget" Type="int" />
           <Property Name="WGSourceForTSG" Type="int" />
@@ -432,7 +432,7 @@
           <Property Name="Fk_PersonId" Type="int" />
           <Property Name="IsPublic" Type="bit" />
           <Property Name="CreationDate" Type="datetime" />
-          <Property Name="RemarkText" Type="nvarchar" MaxLength="255" />
+          <Property Name="RemarkText" Type="nvarchar" MaxLength="1000" />
           <Property Name="PersonName" Type="varchar" MaxLength="50" StoreGeneratedPattern="Computed" />
           <Property Name="Fk_SpecificationId" Type="int" />
           <Property Name="Fk_SpecificationReleaseId" Type="int" />
@@ -615,6 +615,7 @@
         <EntityType Name="ETSI_WorkItem">
           <Key>
             <PropertyRef Name="WKI_ID" />
+            
           </Key>
           <Property Name="WKI_ID" Type="int" Nullable="false" />
           <Property Name="WKI_REFERENCE" Type="varchar" MaxLength="30" />
@@ -1539,7 +1540,7 @@
           <Property Type="Boolean" Name="IsPublic" />
           <Property Type="DateTime" Name="CreationDate" Precision="3" />
           <NavigationProperty Name="Release" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_Releases" FromRole="Remark" ToRole="Release" />
-          <Property Type="String" Name="RemarkText" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="RemarkText" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="Fk_WorkItemId" />
           <Property Type="String" Name="PersonName" MaxLength="50" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="WorkItem" Relationship="Etsi.Ultimate.DataAccess.FK_Remarks_WorkItems" FromRole="Remark" ToRole="WorkItem" />
@@ -2185,8 +2186,8 @@
           <Property Type="Int32" Name="Fk_TSGStatus" />
           <Property Type="Int32" Name="Fk_WGStatus" />
           <Property Type="DateTime" Name="CreationDate" Precision="3" />
-          <Property Type="String" Name="TSGSourceOrganizations" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Type="String" Name="WGSourceOrganizations" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="TSGSourceOrganizations" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="WGSourceOrganizations" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="TSGMeeting" />
           <Property Type="Int32" Name="TSGTarget" />
           <Property Type="Int32" Name="WGSourceForTSG" />
