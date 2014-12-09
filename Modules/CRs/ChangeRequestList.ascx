@@ -122,7 +122,10 @@
                 item.collapse();
             }
         }
-        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(adaptContentHeight);
+        function sendAdaptContentEvent() {
+            adaptContentHeight();
+        }
+        Sys.WebForms.PageRequestManager.getInstance().add_endRequest(sendAdaptContentEvent);
     </script>
     
 </asp:Panel>
