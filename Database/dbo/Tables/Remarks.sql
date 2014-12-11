@@ -5,7 +5,7 @@
     [Fk_PersonId]               INT            NULL,
     [IsPublic]                  BIT            CONSTRAINT [DF_Remarks_IsPublic] DEFAULT ((1)) NULL,
     [CreationDate]              DATETIME       NULL,
-    [RemarkText]                NVARCHAR (255) NULL,
+    [RemarkText]                NVARCHAR (1000) NULL,
     [PersonName]                AS             ([dbo].[getPersonName]([Fk_PersonId])),
     [Fk_SpecificationId]        INT            NULL,
     [Fk_SpecificationReleaseId] INT            NULL,

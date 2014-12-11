@@ -283,7 +283,7 @@
             <PropertyRef Name="Pk_ChangeRequest" />
           </Key>
           <Property Name="Pk_ChangeRequest" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
-          <Property Name="CRNumber" Type="varchar" Nullable="false" MaxLength="10" />
+          <Property Name="CRNumber" Type="varchar" MaxLength="10" />
           <Property Name="Revision" Type="int" />
           <Property Name="Subject" Type="varchar" MaxLength="1000" />
           <Property Name="Fk_TSGStatus" Type="int" />
@@ -2180,7 +2180,7 @@
             <PropertyRef Name="Pk_ChangeRequest" />
           </Key>
           <Property Type="Int32" Name="Pk_ChangeRequest" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Type="String" Name="CRNumber" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="CRNumber" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="Revision" />
           <Property Type="String" Name="Subject" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="Fk_TSGStatus" />
