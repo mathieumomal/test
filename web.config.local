@@ -109,6 +109,7 @@
 		<add key="EtsiWorkitemsDeliveryFolder" value="http://www.etsi.org/deliver/"/>
     <add key="SpecificationDetailsUrl" value="http://www.dnn3gpp.loc/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId={0}" />
     <add key="ReleaseDetailsUrl" value="http://www.dnn3gpp.loc/desktopmodules/Release/ReleaseDetails.aspx?releaseId={0}"/>
+	<add key="DownloadparticipantsListLink" value="http://localdev.me/desktopmodules/Meetings/DownloadParticipantsList.aspx?eventId={0}" />
     
 	<add key="CRsListRecordsMaxSize" value="100"/>
     
