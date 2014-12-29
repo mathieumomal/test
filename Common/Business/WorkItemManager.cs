@@ -11,6 +11,10 @@ namespace Etsi.Ultimate.Business
     {
         private IUltimateUnitOfWork _uoW;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WorkItemManager"/> class.
+        /// </summary>
+        /// <param name="UoW">The Unit of work</param>
         public WorkItemManager(IUltimateUnitOfWork UoW)
         {
             _uoW = UoW;
@@ -136,6 +140,12 @@ namespace Etsi.Ultimate.Business
             }
         }
 
+        /// <summary>
+        /// Gets the work items by search criteria.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="searchString">The search string.</param>
+        /// <returns>Work items</returns>
         public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, string searchString)
         {
             IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
@@ -172,7 +182,6 @@ namespace Etsi.Ultimate.Business
 
             return new KeyValuePair<WorkItem, UserRightsContainer>(workItem, GetRights(personId));
         }
-
 
         /// <summary>
         /// Gets the work item by ids.
@@ -240,12 +249,28 @@ namespace Etsi.Ultimate.Business
             return repo.GetAllAcronyms();
         }
 
+        /// <summary>
+        /// Gets the rights.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <returns>User rights container</returns>
         private UserRightsContainer GetRights(int personId)
         {
             //Computes the rights of the user. These are independant from the workitems.
             var rightManager = ManagerFactory.Resolve<IRightsManager>();
             rightManager.UoW = _uoW;
             return rightManager.GetRights(personId);
+        }
+
+        /// <summary>
+        /// Gets the work items for dropdown.
+        /// </summary>
+        /// <returns>Work items</returns>
+        public Dictionary<int, string> GetWorkItemsForDropdown()
+        {
+            IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
+            repo.UoW = _uoW;
+            return repo.GetWorkItemsForDropdown();
         }
     }
 }

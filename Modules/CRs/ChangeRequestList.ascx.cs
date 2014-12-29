@@ -1,16 +1,15 @@
-﻿using System;
-using System.Globalization;
-using System.Web.UI.WebControls;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
+using Etsi.Ultimate.Controls;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Utils;
-using Telerik.Web.UI;
-using Etsi.Ultimate.Controls;
+using System;
 using System.Collections.Generic;
-using System.Web;
+using System.Globalization;
+using System.Web.UI.WebControls;
+using Telerik.Web.UI;
 
 namespace Etsi.Ultimate.Module.CRs
 {
@@ -27,6 +26,9 @@ namespace Etsi.Ultimate.Module.CRs
         private bool isUrlSearch;
 
         private const string VS_CR_SEARCH_OBJ = "VS_CR_SEARCH_OBJ";
+        private const string VS_CR_SEARCH_MEETINGS = "VS_CR_SEARCH_MEETINGS";
+        private const string VS_CR_SEARCH_WORKITEMS = "VS_CR_SEARCH_WORKITEMS";
+
         private ChangeRequestsSearch searchObj
         {
             get
@@ -36,6 +38,42 @@ namespace Etsi.Ultimate.Module.CRs
             set
             {
                 ViewState[VS_CR_SEARCH_OBJ] = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the meetings.
+        /// </summary>
+        private Dictionary<int, string> Meetings
+        {
+            get
+            {
+                if (ViewState[VS_CR_SEARCH_MEETINGS] == null)
+                    ViewState[VS_CR_SEARCH_MEETINGS] = new Dictionary<int, string>();
+
+                return (Dictionary<int, string>)ViewState[VS_CR_SEARCH_MEETINGS];
+            }
+            set
+            {
+                ViewState[VS_CR_SEARCH_MEETINGS] = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the work items.
+        /// </summary>
+        private Dictionary<int, string> WorkItems
+        {
+            get
+            {
+                if (ViewState[VS_CR_SEARCH_WORKITEMS] == null)
+                    ViewState[VS_CR_SEARCH_WORKITEMS] = new Dictionary<int, string>();
+
+                return (Dictionary<int, string>)ViewState[VS_CR_SEARCH_WORKITEMS];
+            }
+            set
+            {
+                ViewState[VS_CR_SEARCH_WORKITEMS] = value;
             }
         }
 
@@ -52,11 +90,23 @@ namespace Etsi.Ultimate.Module.CRs
         {
             if (!IsPostBack || !crList.Visible)
             {
-                crList.Visible = true; 
+                crList.Visible = true;
                 GetRequestParameters();
                 searchObj = new ChangeRequestsSearch();
                 searchObj.PageSize = rgCrList.PageSize = ConfigVariables.CRsListRecordsMaxSize;
+
+                //Get meetings & load viewstate
+                var meetingSvc = ServicesFactory.Resolve<IMeetingService>();
+                Meetings = meetingSvc.GetMeetingsForDropdown();
+
+                //Get workitems & load viewstate
+                var workItemSvc = ServicesFactory.Resolve<IWorkItemService>();
+                WorkItems = workItemSvc.GetWorkItemsForDropdown();
             }
+
+            //Load dropdown data
+            LoadMeetings();
+            LoadWorkItems();
         }
 
         /// <summary>
@@ -68,6 +118,8 @@ namespace Etsi.Ultimate.Module.CRs
         {
             isUrlSearch = false;
             searchObj.SpecificationNumber = txtSpecificationNumber.Text;
+            searchObj.MeetingIds = GetSelectedMeetingIds();
+            searchObj.WorkItemIds = GetSelectedWorkItemIds();
             rgCrList.CurrentPageIndex = 0;
             rgCrList.Rebind();
         }
@@ -183,6 +235,62 @@ namespace Etsi.Ultimate.Module.CRs
             ManageFullView();
 
             lblCrSearchHeader.Text = String.Format("Search form ({0})", String.IsNullOrEmpty(searchObj.SpecificationNumber) ? "All" : searchObj.SpecificationNumber.Trim());
+        }
+
+        /// <summary>
+        /// Loads the meetings.
+        /// </summary>
+        private void LoadMeetings()
+        {
+            racMeeting.DataSource = Meetings;
+            racMeeting.DataTextField = "Value";
+            racMeeting.DataValueField = "Key";
+            racMeeting.DataBind();
+        }
+
+        /// <summary>
+        /// Loads the work items.
+        /// </summary>
+        private void LoadWorkItems()
+        {
+            racWorkItem.DataSource = WorkItems;
+            racWorkItem.DataTextField = "Value";
+            racWorkItem.DataValueField = "Key";
+            racWorkItem.DataBind();
+        }
+
+        /// <summary>
+        /// Gets the selected meeting ids.
+        /// </summary>
+        /// <returns>List of meeting ids</returns>
+        private List<int> GetSelectedMeetingIds()
+        {
+            var selectedMeetingIds = new List<int>();
+            foreach (AutoCompleteBoxEntry entry in racMeeting.Entries)
+            {
+                int meetingId = 0;
+                if (int.TryParse(entry.Value, out meetingId))
+                    selectedMeetingIds.Add(meetingId);
+            }
+
+            return selectedMeetingIds;
+        }
+
+        /// <summary>
+        /// Gets the selected work item ids.
+        /// </summary>
+        /// <returns>List of work item ids</returns>
+        private List<int> GetSelectedWorkItemIds()
+        {
+            var selectedWorkItemIds = new List<int>();
+            foreach (AutoCompleteBoxEntry entry in racWorkItem.Entries)
+            {
+                int workItemId = 0;
+                if (int.TryParse(entry.Value, out workItemId))
+                    selectedWorkItemIds.Add(workItemId);
+            }
+
+            return selectedWorkItemIds;
         }
 
         #endregion

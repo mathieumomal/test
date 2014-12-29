@@ -123,6 +123,27 @@ namespace Etsi.Ultimate.Tests.Services
             List<Meeting> resultSearch = service.GetMatchingMeetings(searchText);
             Assert.AreEqual(4, resultSearch.Count());
         }
+
+        [Test, TestCaseSource("GetMeetings")]
+        public void Test_GetMeetingsForDropdown(IDbSet<Meeting> meetings)
+        {
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Meetings).Return(meetings);
+
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var service = new MeetingService();
+            var meetingsResult = service.GetMeetingsForDropdown();
+
+            var firstMeeting = String.Format("S5-31 ({0} - Brussels(BE))", DateTime.Now.ToString("yyyy-MM-dd"));
+            var lastMeeting = String.Format("S3-48 ({0})", DateTime.Now.AddDays(50).ToString("yyyy-MM-dd"));
+            Assert.AreEqual(6, meetingsResult.Count);
+            Assert.AreEqual(1, meetingsResult.First().Key);
+            Assert.AreEqual(firstMeeting, meetingsResult.First().Value);
+            Assert.AreEqual(6, meetingsResult.Last().Key);
+            Assert.AreEqual(lastMeeting, meetingsResult.Last().Value);
+        }
+
         #endregion
 
         #region Data

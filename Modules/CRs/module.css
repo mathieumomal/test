@@ -44,3 +44,9 @@
 #crList .rpExpandHandle {
 	background-color: white;
 }
+
+#crList .RadAutoCompleteBox_Default .racToken {
+    overflow:hidden !important;
+    text-overflow: ellipsis;
+    max-width:240px;
+}

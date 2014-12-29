@@ -68,5 +68,16 @@ namespace Etsi.Ultimate.Business
 
             return repo.Find(meetingId);
         }
+
+        /// <summary>
+        /// Gets the meetings for dropdown.
+        /// </summary>
+        /// <returns>Meetings list</returns>
+        public Dictionary<int, string> GetMeetingsForDropdown()
+        {
+            IMeetingRepository repo = RepositoryFactory.Resolve<IMeetingRepository>();
+            repo.UoW = UoW;
+            return repo.GetMeetingsForDropdown();
+        }
     }
 }

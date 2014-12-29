@@ -122,7 +122,7 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
 
         #endregion
 
-        #region IWorkItemRepository
+        #region IWorkItemRepository Members
 
         public List<WorkItem> GetWorkItemsBySearchCriteria(List<int> releaseIds, int granularity, string wiAcronym, string wiName, List<int> tbIds)
         {
@@ -149,17 +149,12 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             throw new NotImplementedException();
         }
 
-        #endregion
-
-
-
-
-
-
-        #region IWorkItemRepository Members
-
-
         public List<WorkItem> GetAllWorkItemsForReleases(List<int> releaseIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Dictionary<int, string> GetWorkItemsForDropdown()
         {
             throw new NotImplementedException();
         }

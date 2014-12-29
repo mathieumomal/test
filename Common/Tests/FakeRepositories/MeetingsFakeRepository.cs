@@ -77,5 +77,10 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         }
 
         #endregion
+
+        public Dictionary<int, string> GetMeetingsForDropdown()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

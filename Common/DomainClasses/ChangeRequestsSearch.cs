@@ -32,5 +32,15 @@ namespace Etsi.Ultimate.DomainClasses
         /// Gets or sets the specification number.
         /// </summary>
         public string SpecificationNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the meeting ids.
+        /// </summary>
+        public List<int> MeetingIds { get; set; }
+
+        /// <summary>
+        /// Gets or sets the work item ids.
+        /// </summary>
+        public List<int> WorkItemIds { get; set; }
     }
 }

@@ -85,6 +85,42 @@ namespace Etsi.Ultimate.Module.CRs {
         protected global::System.Web.UI.WebControls.TextBox txtSpecificationNumber;
         
         /// <summary>
+        /// rcbRelease control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadComboBox rcbRelease;
+        
+        /// <summary>
+        /// rcbStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadComboBox rcbStatus;
+        
+        /// <summary>
+        /// racMeeting control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadAutoCompleteBox racMeeting;
+        
+        /// <summary>
+        /// racWorkItem control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadAutoCompleteBox racWorkItem;
+        
+        /// <summary>
         /// Contrôle btnSearch.
         /// </summary>
         /// <remarks>

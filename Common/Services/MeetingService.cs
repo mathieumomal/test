@@ -14,6 +14,12 @@ namespace Etsi.Ultimate.Services
     public class MeetingService : IMeetingService
     {
         #region IMeetingService Membres
+
+        /// <summary>
+        /// Get list of Meetings
+        /// </summary>
+        /// <param name="SearchText">search text</param>
+        /// <returns>List of matching meetings</returns>
         public List<Meeting> GetMatchingMeetings(string SearchText)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -25,11 +31,20 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Get list of latest Meetings
+        /// </summary>
+        /// <returns>List of meetings</returns>
         public List<Meeting> GetLatestMeetings()
         {
             return GetLatestMeetings(0);
         }
 
+        /// <summary>
+        /// Get list of latest Meetings including given MeetingId
+        /// </summary>
+        /// <param name="includeMeetingId">meeting id to include</param>
+        /// <returns>List of latest meetings</returns>
         public List<Meeting> GetLatestMeetings(int includeMeetingId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -41,6 +56,11 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Get meeting by passed MeetingId
+        /// </summary>
+        /// <param name="MeetingId">meeting id</param>
+        /// <returns>Matching details</returns>
         public Meeting GetMeetingById(int MeetingId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -49,6 +69,21 @@ namespace Etsi.Ultimate.Services
                 meetingManager.UoW = uoW;
                 
                 return meetingManager.GetMeetingById(MeetingId);
+            }
+        }
+
+        /// <summary>
+        /// Gets the meetings for dropdown.
+        /// </summary>
+        /// <returns>Meetings list</returns>
+        public Dictionary<int, string> GetMeetingsForDropdown()
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var meetingManager = new MeetingManager();
+                meetingManager.UoW = uoW;
+                //Get list of meetings
+                return meetingManager.GetMeetingsForDropdown();
             }
         }
 

@@ -44,7 +44,11 @@ namespace Etsi.Ultimate.Services
         /// <param name="searchString">Search String</param>
         KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, string searchString);
 
-
+        /// <summary>
+        /// Gets all work items.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <returns>Work items</returns>
         KeyValuePair<List<WorkItem>, UserRightsContainer> GetAllWorkItems(int personId);
 
         /// <summary>
@@ -88,5 +92,11 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <returns>List of Acronyms</returns>
         List<string> GetAllAcronyms();
+
+        /// <summary>
+        /// Gets the work items for dropdown.
+        /// </summary>
+        /// <returns>Workitems</returns>
+        Dictionary<int, string> GetWorkItemsForDropdown();
     }
 }

@@ -170,6 +170,15 @@ namespace Etsi.Ultimate.Repositories
             return AllIncluding(wi => wi.WorkItems_ResponsibleGroups).Where(x => workItems.Contains(x.Pk_WorkItemUid)).ToList();
         }
 
+        /// <summary>
+        /// Gets the work items for dropdown.
+        /// </summary>
+        /// <returns>Work items</returns>
+        public Dictionary<int, string> GetWorkItemsForDropdown()
+        {
+            return UoW.Context.WorkItems.Select(x => new { x.Pk_WorkItemUid, x.Name }).ToDictionary(y => y.Pk_WorkItemUid, y => y.Name);
+        }
+
         #endregion
 
         #region IDisposable Members
@@ -220,7 +229,6 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>Work Item Count</returns>
         int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName, List<int> tbIds);
 
-
         /// <summary>
         /// Get list of distinct Acronyms from various releases
         /// </summary>
@@ -233,5 +241,11 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="workitemIds">The workitem ids.</param>
         /// <returns></returns>
         List<WorkItem> GetWorkItemsByIds(List<int> workitemIds);
+
+        /// <summary>
+        /// Gets the work items for dropdown.
+        /// </summary>
+        /// <returns>Work items</returns>
+        Dictionary<int, string> GetWorkItemsForDropdown();
     }
 }

@@ -54,8 +54,36 @@
                                                             <tr>
                                                                 <td style="width: 125px;">Specification number</td>
                                                                 <td>
-                                                                    <asp:TextBox ID="txtSpecificationNumber" Width="196px" MaxLength="20" runat="server"></asp:TextBox></td>
-                                                                <td style="text-align: right; padding-right: 20px">
+                                                                    <asp:TextBox ID="txtSpecificationNumber" Width="296px" MaxLength="20" runat="server"></asp:TextBox></td>
+                                                                <td colspan="2" />
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Impacted Release</td>
+                                                                <td>
+                                                                   <telerik:RadComboBox ID="rcbRelease" runat="server" Width="300"></telerik:RadComboBox>
+                                                                </td>
+                                                                <td>Status</td>
+                                                                <td>
+                                                                    <telerik:RadComboBox ID="rcbStatus" runat="server" Width="300"></telerik:RadComboBox>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>Meeting</td>
+                                                                <td>
+                                                                   <telerik:RadAutoCompleteBox ID="racMeeting" runat="server" InputType="Token" Width="300" DropDownWidth="300" DropDownHeight="150" Filter="Contains">
+                                                                        <TextSettings SelectionMode="Multiple" />
+                                                                    </telerik:RadAutoCompleteBox>
+                                                                </td>
+                                                                <td>Work Item</td>
+                                                                <td>
+                                                                    <telerik:RadAutoCompleteBox ID="racWorkItem" runat="server" InputType="Token" Width="300" DropDownWidth="300" DropDownHeight="150" Filter="Contains">
+                                                                        <TextSettings SelectionMode="Multiple" />
+                                                                    </telerik:RadAutoCompleteBox>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td colspan="3" />
+                                                                <td style="text-align: right; padding-right: 0px">
                                                                     <asp:Button ID="btnSearch" runat="server" Text="Search" Width="150px" OnClick="btnSearch_Click" OnClientClick="collapseCrPanelItem()"></asp:Button></td>
                                                             </tr>
                                                         </table>
@@ -127,5 +155,5 @@
         }
         Sys.WebForms.PageRequestManager.getInstance().add_endRequest(sendAdaptContentEvent);
     </script>
-    
+
 </asp:Panel>

@@ -32,6 +32,12 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Import workitems uploaded on the server
+        /// </summary>
+        /// <param name="token">Token</param>
+        /// <param name="exportPath">Export Path</param>
+        /// <returns>Success/Failure</returns>
         public bool ImportWorkPlan(string token, string exportPath)
         {
             bool isImportSuccess = false;
@@ -94,6 +100,12 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Get the list of workitems based on searchString
+        /// </summary>
+        /// <param name="personId">Person Id</param>
+        /// <param name="searchString">Search String</param>
+        /// <returns>Work items</returns>
         public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, string searchString)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -147,7 +159,6 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-
         /// <summary>
         /// Get the workitem based on the id
         /// </summary>
@@ -195,10 +206,19 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Gets the work items for dropdown.
+        /// </summary>
+        /// <returns>Workitems</returns>
+        public Dictionary<int, string> GetWorkItemsForDropdown()
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var workItemManager = new WorkItemManager(uoW);
+                return workItemManager.GetWorkItemsForDropdown();
+            }
+        }
+
         #endregion
-
-
-
-
     }
 }
