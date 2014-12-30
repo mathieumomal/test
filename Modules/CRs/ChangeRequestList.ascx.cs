@@ -66,7 +66,7 @@ namespace Etsi.Ultimate.Module.CRs
                 releaseSearchControl.IsLoadingNeeded = !crList.Visible;
                 crList.Visible = true;
                 GetRequestParameters();
-                searchObj = new ChangeRequestsSearch() { ReleaseIds = new List<int>(), StatusIds = new List<int>(), MeetingIds = new List<int>(), WorkItemIds = new List<int>() };
+                searchObj = new ChangeRequestsSearch() { ReleaseIds = new List<int>(), WgStatusIds = new List<int>(), TsgStatusIds = new List<int>(), MeetingIds = new List<int>(), WorkItemIds = new List<int>() };
                 searchObj.PageSize = rgCrList.PageSize = ConfigVariables.CRsListRecordsMaxSize;
 
                 //Load CR Statuses
@@ -88,7 +88,8 @@ namespace Etsi.Ultimate.Module.CRs
             searchObj.MeetingIds = GetSelectedMeetingIds();
             searchObj.WorkItemIds = GetSelectedWorkItemIds();
             searchObj.ReleaseIds = releaseSearchControl.SelectedReleaseIds;
-            searchObj.StatusIds = GetSelectedStatusIds();
+            searchObj.WgStatusIds = GetSelectedWgStatusIds();
+            searchObj.TsgStatusIds = GetSelectedTsgStatusIds();
             rgCrList.CurrentPageIndex = 0;
             rgCrList.Rebind();
         }
@@ -233,22 +234,37 @@ namespace Etsi.Ultimate.Module.CRs
                 releaseSearchControl.SelectedReleaseIds = searchObj.ReleaseIds = releaseIds;
             }
 
-            //[3] Statuses
-            if (!String.IsNullOrEmpty(Request.QueryString["status"]))
+            //[3] WG Statuses
+            if (!String.IsNullOrEmpty(Request.QueryString["wgstatus"]))
             {
-                var statuses = Request.QueryString["status"].Split(',').ToList();
-                var statusIds = new List<int>();
-                statuses.ForEach(x =>
+                var wgStatuses = Request.QueryString["wgstatus"].Split(',').ToList();
+                var wgStatusIds = new List<int>();
+                wgStatuses.ForEach(x =>
                 {
-                    int statusId = 0;
-                    if (int.TryParse(x, out statusId))
-                        statusIds.Add(statusId);
+                    int wgStatusId = 0;
+                    if (int.TryParse(x, out wgStatusId))
+                        wgStatusIds.Add(wgStatusId);
                 });
-                searchObj.StatusIds = statusIds;
-                rcbStatus.Items.ToList().ForEach(x => { x.Checked = statusIds.Contains(Convert.ToInt32(x.Value)); });
+                searchObj.WgStatusIds = wgStatusIds;
+                rcbWgStatus.Items.ToList().ForEach(x => { x.Checked = wgStatusIds.Contains(Convert.ToInt32(x.Value)); });
             }
 
-            //[4] Meetings
+            //[4] TSG Statuses
+            if (!String.IsNullOrEmpty(Request.QueryString["tsgstatus"]))
+            {
+                var tsgStatuses = Request.QueryString["tsgstatus"].Split(',').ToList();
+                var tsgStatusIds = new List<int>();
+                tsgStatuses.ForEach(x =>
+                {
+                    int tsgStatusId = 0;
+                    if (int.TryParse(x, out tsgStatusId))
+                        tsgStatusIds.Add(tsgStatusId);
+                });
+                searchObj.TsgStatusIds = tsgStatusIds;
+                rcbTsgStatus.Items.ToList().ForEach(x => { x.Checked = tsgStatusIds.Contains(Convert.ToInt32(x.Value)); });
+            }
+
+            //[5] Meetings
             if (!String.IsNullOrEmpty(Request.QueryString["meeting"]))
             {
                 var meetings = Request.QueryString["meeting"].Split(',').ToList();
@@ -272,7 +288,7 @@ namespace Etsi.Ultimate.Module.CRs
                 });
             }
 
-            //[5] Work Items
+            //[6] Work Items
             if (!String.IsNullOrEmpty(Request.QueryString["workitem"]))
             {
                 var workitems = Request.QueryString["workitem"].Split(',').ToList();
@@ -296,7 +312,7 @@ namespace Etsi.Ultimate.Module.CRs
                 });
             }
 
-            //[6] Page Index
+            //[7] Page Index
             int pageIndex = 0;
             if (!String.IsNullOrEmpty(Request.QueryString["pageindex"]) && (int.TryParse(Request.QueryString["pageindex"], out pageIndex)))
                 searchObj.SkipRecords = pageIndex * searchObj.PageSize;
@@ -311,10 +327,16 @@ namespace Etsi.Ultimate.Module.CRs
             var svcResponse = svcChangeRequestService.GetChangeRequestStatuses();
 
             if (!svcResponse.Key) return;
-            rcbStatus.DataValueField = PK_ENUMCHANGEREQUESTSTATUS;
-            rcbStatus.DataTextField = DESCRIPTION;
-            rcbStatus.DataSource = svcResponse.Value.OrderBy(x => x.Description);
-            rcbStatus.DataBind();
+
+            rcbWgStatus.DataValueField = PK_ENUMCHANGEREQUESTSTATUS;
+            rcbWgStatus.DataTextField = DESCRIPTION;
+            rcbWgStatus.DataSource = svcResponse.Value.OrderBy(x => x.Description);
+            rcbWgStatus.DataBind();
+
+            rcbTsgStatus.DataValueField = PK_ENUMCHANGEREQUESTSTATUS;
+            rcbTsgStatus.DataTextField = DESCRIPTION;
+            rcbTsgStatus.DataSource = svcResponse.Value.OrderBy(x => x.Description);
+            rcbTsgStatus.DataBind();
         }
 
         /// <summary>
@@ -352,14 +374,32 @@ namespace Etsi.Ultimate.Module.CRs
         }
 
         /// <summary>
-        /// Gets the selected status ids.
+        /// Gets the selected wg status ids.
         /// </summary>
-        /// <returns>Selected status ids</returns>
-        private List<int> GetSelectedStatusIds()
+        /// <returns>Selected wg status ids</returns>
+        private List<int> GetSelectedWgStatusIds()
         {
             var selectedStatusIds = new List<int>();
 
-            rcbStatus.CheckedItems.ToList().ForEach(x => {
+            rcbWgStatus.CheckedItems.ToList().ForEach(x => {
+                int statusId = 0;
+                if (int.TryParse(x.Value, out statusId))
+                    selectedStatusIds.Add(statusId);
+            });
+
+            return selectedStatusIds;
+        }
+
+        /// <summary>
+        /// Gets the selected tsg status ids.
+        /// </summary>
+        /// <returns>Selected tsg status ids</returns>
+        private List<int> GetSelectedTsgStatusIds()
+        {
+            var selectedStatusIds = new List<int>();
+
+            rcbTsgStatus.CheckedItems.ToList().ForEach(x =>
+            {
                 int statusId = 0;
                 if (int.TryParse(x.Value, out statusId))
                     selectedStatusIds.Add(statusId);
@@ -432,7 +472,8 @@ namespace Etsi.Ultimate.Module.CRs
             urlParams.Add("q", "1");
             urlParams.Add("specnumber", searchObj.SpecificationNumber);
             urlParams.Add("release", String.Join(",", searchObj.ReleaseIds));
-            urlParams.Add("status", String.Join(",", searchObj.StatusIds));
+            urlParams.Add("wgstatus", String.Join(",", searchObj.WgStatusIds));
+            urlParams.Add("tsgstatus", String.Join(",", searchObj.TsgStatusIds));
             urlParams.Add("meeting", String.Join(",", searchObj.MeetingIds));
             urlParams.Add("workitem", String.Join(",", searchObj.WorkItemIds));
             urlParams.Add("pageindex", (searchObj.SkipRecords / searchObj.PageSize).ToString());
@@ -463,8 +504,10 @@ namespace Etsi.Ultimate.Module.CRs
                 string releaseText = releaseSearchControl.SearchString;
                 sb.Append(String.Format("{0}, ", String.IsNullOrEmpty(releaseText) ? "Open Releases" : releaseText));
 
-                if (searchObj.StatusIds != null && searchObj.StatusIds.Count > 0)
-                    sb.Append(String.Format("Status({0}), ", String.Join(", ", rcbStatus.CheckedItems.Select(x => x.Text).ToList())));
+                if (searchObj.WgStatusIds != null && searchObj.WgStatusIds.Count > 0)
+                    sb.Append(String.Format("WG Status({0}), ", String.Join(", ", rcbWgStatus.CheckedItems.Select(x => x.Text).ToList())));
+                if (searchObj.TsgStatusIds != null && searchObj.TsgStatusIds.Count > 0)
+                    sb.Append(String.Format("TSG Status({0}), ", String.Join(", ", rcbTsgStatus.CheckedItems.Select(x => x.Text).ToList())));
                 if (searchObj.MeetingIds != null && searchObj.MeetingIds.Count > 0)
                     sb.Append(String.Format("Meetings({0}), ", racMeeting.Text));
                 if (searchObj.WorkItemIds != null && searchObj.WorkItemIds.Count > 0)

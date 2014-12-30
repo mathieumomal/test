@@ -56,16 +56,19 @@
                                                                 <td style="width: 125px;">Specification number</td>
                                                                 <td>
                                                                     <asp:TextBox ID="txtSpecificationNumber" Width="296px" MaxLength="20" runat="server"></asp:TextBox></td>
-                                                                <td colspan="2" />
+                                                                <td>WG Status</td>
+                                                                <td>
+                                                                    <telerik:RadComboBox ID="rcbWgStatus" runat="server" Width="300" AutoPostBack="false" CheckBoxes="true"></telerik:RadComboBox>
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Impacted Release</td>
                                                                 <td>
                                                                     <ult:ReleaseSearchControl id="releaseSearchControl" runat="server" Width="300" DropDownWidth="300"/>
                                                                 </td>
-                                                                <td>Status</td>
+                                                                <td>TSG Status</td>
                                                                 <td>
-                                                                    <telerik:RadComboBox ID="rcbStatus" runat="server" Width="300" AutoPostBack="false" CheckBoxes="true"></telerik:RadComboBox>
+                                                                    <telerik:RadComboBox ID="rcbTsgStatus" runat="server" Width="300" AutoPostBack="false" CheckBoxes="true"></telerik:RadComboBox>
                                                                 </td>
                                                             </tr>
                                                             <tr>

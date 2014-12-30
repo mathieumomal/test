@@ -49,8 +49,13 @@ namespace Etsi.Ultimate.DomainClasses
         public List<int> ReleaseIds { get; set; }
 
         /// <summary>
-        /// Gets or sets the status ids.
+        /// Gets or sets the wg status ids.
         /// </summary>
-        public List<int> StatusIds { get; set; }
+        public List<int> WgStatusIds { get; set; }
+
+        /// <summary>
+        /// Gets or sets the TSG status ids.
+        /// </summary>
+        public List<int> TsgStatusIds { get; set; }
     }
 }

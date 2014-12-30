@@ -85,13 +85,22 @@ namespace Etsi.Ultimate.Module.CRs {
         protected global::System.Web.UI.WebControls.TextBox txtSpecificationNumber;
         
         /// <summary>
-        /// rcbStatus control.
+        /// rcbWgStatus control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadComboBox rcbStatus;
+        protected global::Telerik.Web.UI.RadComboBox rcbWgStatus;
+        
+        /// <summary>
+        /// rcbTsgStatus control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadComboBox rcbTsgStatus;
         
         /// <summary>
         /// racMeeting control.
