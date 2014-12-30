@@ -3,6 +3,7 @@
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 <%@ Register TagPrefix="ult" TagName="ShareUrlControl" Src="../../controls/Ultimate/ShareUrlControl.ascx" %>
 <%@ Register TagPrefix="ult" TagName="FullViewControl" Src="../../controls/Ultimate/FullView.ascx" %>
+<%@ Register TagPrefix="ult" TagName="ReleaseSearchControl" Src="../../controls/Ultimate/ReleaseSearchControl.ascx" %>
 
 <asp:Panel ID="crList" runat="server" Visible="false" ClientIDMode="Static">
     <asp:UpdateProgress ID="upCrSearch" runat="server" DisplayAfter="200">
@@ -60,11 +61,11 @@
                                                             <tr>
                                                                 <td>Impacted Release</td>
                                                                 <td>
-                                                                   <telerik:RadComboBox ID="rcbRelease" runat="server" Width="300"></telerik:RadComboBox>
+                                                                    <ult:ReleaseSearchControl id="releaseSearchControl" runat="server" Width="300" DropDownWidth="300"/>
                                                                 </td>
                                                                 <td>Status</td>
                                                                 <td>
-                                                                    <telerik:RadComboBox ID="rcbStatus" runat="server" Width="300"></telerik:RadComboBox>
+                                                                    <telerik:RadComboBox ID="rcbStatus" runat="server" Width="300" AutoPostBack="false" CheckBoxes="true"></telerik:RadComboBox>
                                                                 </td>
                                                             </tr>
                                                             <tr>

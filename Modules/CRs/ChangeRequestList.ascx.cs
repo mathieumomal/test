@@ -10,25 +10,33 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
+using System.Linq;
 
 namespace Etsi.Ultimate.Module.CRs
 {
     public partial class ChangeRequestList : PortalModuleBase
     {
         #region constants
+
         private const string DsIdKey = "ETSI_DS_ID";
+        private const string VS_CR_SEARCH_OBJ = "VS_CR_SEARCH_OBJ";
+        private const string VS_CR_SEARCH_MEETINGS = "VS_CR_SEARCH_MEETINGS";
+        private const string VS_CR_SEARCH_WORKITEMS = "VS_CR_SEARCH_WORKITEMS";
+        private const string PK_ENUMCHANGEREQUESTSTATUS = "Pk_EnumChangeRequestStatus";
+        private const string DESCRIPTION = "Description";
+
         #endregion
 
         #region properties
 
         protected FullView CrFullView;
         protected ShareUrlControl crShareUrl;
+        protected ReleaseSearchControl releaseSearchControl;
         private bool isUrlSearch;
 
-        private const string VS_CR_SEARCH_OBJ = "VS_CR_SEARCH_OBJ";
-        private const string VS_CR_SEARCH_MEETINGS = "VS_CR_SEARCH_MEETINGS";
-        private const string VS_CR_SEARCH_WORKITEMS = "VS_CR_SEARCH_WORKITEMS";
-
+        /// <summary>
+        /// Gets or sets the search object.
+        /// </summary>
         private ChangeRequestsSearch searchObj
         {
             get
@@ -90,6 +98,7 @@ namespace Etsi.Ultimate.Module.CRs
         {
             if (!IsPostBack || !crList.Visible)
             {
+                releaseSearchControl.IsLoadingNeeded = !crList.Visible;
                 crList.Visible = true;
                 GetRequestParameters();
                 searchObj = new ChangeRequestsSearch();
@@ -102,6 +111,9 @@ namespace Etsi.Ultimate.Module.CRs
                 //Get workitems & load viewstate
                 var workItemSvc = ServicesFactory.Resolve<IWorkItemService>();
                 WorkItems = workItemSvc.GetWorkItemsForDropdown();
+
+                //Load CR Statuses
+                LoadCrStatuses();
             }
 
             //Load dropdown data
@@ -120,6 +132,8 @@ namespace Etsi.Ultimate.Module.CRs
             searchObj.SpecificationNumber = txtSpecificationNumber.Text;
             searchObj.MeetingIds = GetSelectedMeetingIds();
             searchObj.WorkItemIds = GetSelectedWorkItemIds();
+            searchObj.ReleaseIds = releaseSearchControl.SelectedReleaseIds;
+            searchObj.StatusIds = GetSelectedStatusIds();
             rgCrList.CurrentPageIndex = 0;
             rgCrList.Rebind();
         }
@@ -260,6 +274,21 @@ namespace Etsi.Ultimate.Module.CRs
         }
 
         /// <summary>
+        /// Loads the cr statuses.
+        /// </summary>
+        private void LoadCrStatuses()
+        {
+            var svcChangeRequestService = ServicesFactory.Resolve<IChangeRequestService>();
+            var svcResponse = svcChangeRequestService.GetChangeRequestStatuses();
+
+            if (!svcResponse.Key) return;
+            rcbStatus.DataValueField = PK_ENUMCHANGEREQUESTSTATUS;
+            rcbStatus.DataTextField = DESCRIPTION;
+            rcbStatus.DataSource = svcResponse.Value.OrderBy(x => x.Description);
+            rcbStatus.DataBind();
+        }
+
+        /// <summary>
         /// Gets the selected meeting ids.
         /// </summary>
         /// <returns>List of meeting ids</returns>
@@ -291,6 +320,23 @@ namespace Etsi.Ultimate.Module.CRs
             }
 
             return selectedWorkItemIds;
+        }
+
+        /// <summary>
+        /// Gets the selected status ids.
+        /// </summary>
+        /// <returns>Selected status ids</returns>
+        private List<int> GetSelectedStatusIds()
+        {
+            var selectedStatusIds = new List<int>();
+
+            rcbStatus.CheckedItems.ToList().ForEach(x => {
+                int statusId = 0;
+                if (int.TryParse(x.Value, out statusId))
+                    selectedStatusIds.Add(statusId);
+            });
+
+            return selectedStatusIds;
         }
 
         #endregion
