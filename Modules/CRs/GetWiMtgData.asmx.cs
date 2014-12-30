@@ -19,12 +19,14 @@ namespace Etsi.Ultimate.Module.CRs
     [System.Web.Script.Services.ScriptService]
     public class GetWiMtgData : System.Web.Services.WebService
     {
+        private const int MaxResults = 50;
+
         [WebMethod]
         public AutoCompleteBoxData GetWorkItems(RadAutoCompleteContext context)
         {
             string searchString = ((Dictionary<string, object>)context)["Text"].ToString();
             var wiSvc = ServicesFactory.Resolve<IWorkItemService>();
-            var wis = wiSvc.GetWorkItemsBySearchCriteria(0, searchString).Key;
+            var wis = wiSvc.GetWorkItemsBySearchCriteria(0, searchString).Key.Take(MaxResults).ToList();
             
             var result = new List<AutoCompleteBoxItemData>();
 
@@ -51,13 +53,13 @@ namespace Etsi.Ultimate.Module.CRs
         {
             string searchString = ((Dictionary<string, object>)context)["Text"].ToString();
             var mtgSvc = ServicesFactory.Resolve<IMeetingService>();
-            var meetings = mtgSvc.GetMatchingMeetings(searchString);
+            var meetings = mtgSvc.GetMatchingMeetings(searchString).Take(MaxResults).ToList();
 
             var result = new List<AutoCompleteBoxItemData>();
 
             foreach (var meeting in meetings)
             {
-                var mtgText = meeting.MtgShortRef;
+                var mtgText = meeting.MtgDdlText;
                 AutoCompleteBoxItemData childNode = new AutoCompleteBoxItemData();
                 childNode.Text = mtgText;
                 childNode.Value = meeting.MTG_ID.ToString(CultureInfo.InvariantCulture);

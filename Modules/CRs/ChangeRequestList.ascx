@@ -71,14 +71,14 @@
                                                             <tr>
                                                                 <td>Meeting</td>
                                                                 <td>
-                                                                   <telerik:RadAutoCompleteBox ID="racMeeting" runat="server" InputType="Token" Width="300" DropDownWidth="300" DropDownHeight="150" Filter="Contains">
+                                                                   <telerik:RadAutoCompleteBox ID="racMeeting" runat="server" InputType="Token" Width="300" DropDownWidth="300" DropDownHeight="150" Filter="Contains" MinFilterLength="2">
                                                                         <TextSettings SelectionMode="Multiple" />
                                                                        <WebServiceSettings Method="GetMeetings" Path="~/DesktopModules/CRs/GetWiMtgData.asmx" />
                                                                     </telerik:RadAutoCompleteBox>
                                                                 </td>
                                                                 <td>Work Item</td>
                                                                 <td>
-                                                                    <telerik:RadAutoCompleteBox ID="racWorkItem" runat="server" InputType="Token" Width="300" DropDownWidth="300" DropDownHeight="150" Filter="Contains" TextSettings="">
+                                                                    <telerik:RadAutoCompleteBox ID="racWorkItem" runat="server" InputType="Token" Width="300" DropDownWidth="300" DropDownHeight="150" Filter="Contains" TextSettings="" MinFilterLength="2">
                                                                         <TextSettings SelectionMode="Multiple"  />
                                                                         <WebServiceSettings Method="GetWorkItems" Path="~/DesktopModules/CRs/GetWiMtgData.asmx" />
                                                                     </telerik:RadAutoCompleteBox>
