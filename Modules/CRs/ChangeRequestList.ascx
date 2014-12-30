@@ -73,12 +73,14 @@
                                                                 <td>
                                                                    <telerik:RadAutoCompleteBox ID="racMeeting" runat="server" InputType="Token" Width="300" DropDownWidth="300" DropDownHeight="150" Filter="Contains">
                                                                         <TextSettings SelectionMode="Multiple" />
+                                                                       <WebServiceSettings Method="GetMeetings" Path="~/DesktopModules/CRs/GetWiMtgData.asmx" />
                                                                     </telerik:RadAutoCompleteBox>
                                                                 </td>
                                                                 <td>Work Item</td>
                                                                 <td>
-                                                                    <telerik:RadAutoCompleteBox ID="racWorkItem" runat="server" InputType="Token" Width="300" DropDownWidth="300" DropDownHeight="150" Filter="Contains">
-                                                                        <TextSettings SelectionMode="Multiple" />
+                                                                    <telerik:RadAutoCompleteBox ID="racWorkItem" runat="server" InputType="Token" Width="300" DropDownWidth="300" DropDownHeight="150" Filter="Contains" TextSettings="">
+                                                                        <TextSettings SelectionMode="Multiple"  />
+                                                                        <WebServiceSettings Method="GetWorkItems" Path="~/DesktopModules/CRs/GetWiMtgData.asmx" />
                                                                     </telerik:RadAutoCompleteBox>
                                                                 </td>
                                                             </tr>

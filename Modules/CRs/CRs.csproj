@@ -81,10 +81,15 @@
     <Compile Include="ChangeRequestList.ascx.designer.cs">
       <DependentUpon>ChangeRequestList.ascx</DependentUpon>
     </Compile>
+    <Compile Include="GetWiMtgData.asmx.cs">
+      <DependentUpon>GetWiMtgData.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ChangeRequestList.ascx" />
+    <Content Include="GetWiMtgData.asmx" />
     <Content Include="images\hourglass.png" />
     <Content Include="JS\crScript.js" />
     <Content Include="License.txt" />
