@@ -261,16 +261,5 @@ namespace Etsi.Ultimate.Business
             rightManager.UoW = _uoW;
             return rightManager.GetRights(personId);
         }
-
-        /// <summary>
-        /// Gets the work items for dropdown.
-        /// </summary>
-        /// <returns>Work items</returns>
-        public Dictionary<int, string> GetWorkItemsForDropdown()
-        {
-            IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
-            repo.UoW = _uoW;
-            return repo.GetWorkItemsForDropdown();
-        }
     }
 }

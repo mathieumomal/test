@@ -154,11 +154,6 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             throw new NotImplementedException();
         }
 
-        public Dictionary<int, string> GetWorkItemsForDropdown()
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion
     }
 

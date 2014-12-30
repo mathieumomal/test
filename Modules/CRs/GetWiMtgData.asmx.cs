@@ -32,12 +32,8 @@ namespace Etsi.Ultimate.Module.CRs
 
             foreach (var wi in wis)
             {
-                var wiText = wi.Pk_WorkItemUid.ToString(CultureInfo.InvariantCulture);
-                if (!string.IsNullOrEmpty(wi.Acronym))
-                    wiText += " - " + wi.Acronym;
-                wiText += " - " + wi.Name;
                 AutoCompleteBoxItemData childNode = new AutoCompleteBoxItemData();
-                childNode.Text = wiText;
+                childNode.Text = wi.WorkItemDdlText;
                 childNode.Value = wi.Pk_WorkItemUid.ToString(CultureInfo.InvariantCulture);
                 result.Add(childNode);
             }

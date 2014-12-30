@@ -54,12 +54,13 @@ namespace Etsi.Ultimate.Repositories
         #region IMeetingRepository Membres
 
         /// <summary>
-        /// Gets the meetings for dropdown.
+        /// Gets the meetings by ids.
         /// </summary>
-        /// <returns>Meetings list</returns>
-        public Dictionary<int, string> GetMeetingsForDropdown()
+        /// <param name="meetingIds">The meeting ids.</param>
+        /// <returns>List of meetings</returns>
+        public List<Meeting> GetMeetingsByIds(List<int> meetingIds)
         {
-            return UoW.Context.Meetings.Select(x => new { x.MTG_ID, x.MtgShortRef, x.START_DATE, x.LOC_CITY, x.LOC_CTY_CODE }).ToDictionary(y => y.MTG_ID, y => GetFormattedMeeting(y.MtgShortRef, y.START_DATE, y.LOC_CITY, y.LOC_CTY_CODE));
+            return UoW.Context.Meetings.Where(x => meetingIds.Contains(x.MTG_ID)).ToList();
         }
 
         #endregion
@@ -72,42 +73,16 @@ namespace Etsi.Ultimate.Repositories
 
         #endregion
 
-        #region Private Members
-
-        /// <summary>
-        /// Gets the formatted meeting.
-        /// </summary>
-        /// <param name="mtgRef">The MTG reference.</param>
-        /// <param name="startDate">The start date.</param>
-        /// <param name="meetingLocation">The meeting location.</param>
-        /// <param name="meetingLocationCode">The meeting location code.</param>
-        /// <returns>Formatted meeting string</returns>
-        private string GetFormattedMeeting(string mtgRef, DateTime? startDate, string meetingLocation, string meetingLocationCode)
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(mtgRef);
-            if (startDate != null)
-                sb.Append(" (" + startDate.Value.ToString("yyyy-MM-dd"));
-            if (!String.IsNullOrEmpty(meetingLocation))
-                sb.Append(" - " + meetingLocation);
-            if (meetingLocationCode != null)
-                sb.Append("(" + meetingLocationCode + ")");
-            if (startDate != null)
-                sb.Append(")");
-            return sb.ToString();
-        } 
-
-        #endregion
-
         public IUltimateUnitOfWork UoW { get; set; }
     }
 
     public interface IMeetingRepository : IEntityRepository<Meeting>
     {
         /// <summary>
-        /// Gets the meetings for dropdown.
+        /// Gets the meetings by ids.
         /// </summary>
-        /// <returns>Meetings list</returns>
-        Dictionary<int, string> GetMeetingsForDropdown();
+        /// <param name="meetingIds">The meeting ids.</param>
+        /// <returns>List of meetings</returns>
+        List<Meeting> GetMeetingsByIds(List<int> meetingIds);
     }
 }

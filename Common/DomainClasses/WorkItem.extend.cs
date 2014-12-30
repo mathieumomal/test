@@ -44,5 +44,27 @@ namespace Etsi.Ultimate.DomainClasses
         //For RelatedWiControl
         public bool IsPrimary { get; set; }
         public bool IsUserAddedWi { get; set; }
+
+        public string WorkItemDdlText
+        {
+            get
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(this.UID);
+                if (!String.IsNullOrEmpty(this.Acronym))
+                {
+                    if (sb.ToString().Length > 0)
+                        sb.Append(" - ");
+                    sb.Append(this.Acronym);
+                }
+                if (!String.IsNullOrEmpty(this.Name))
+                {
+                    if (sb.ToString().Length > 0)
+                        sb.Append(" - ");
+                    sb.Append(this.Name);
+                }
+                return sb.ToString();
+            }
+        }
     }
 }

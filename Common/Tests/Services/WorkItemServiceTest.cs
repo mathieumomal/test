@@ -343,26 +343,6 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsFalse(wiService.ImportWorkPlan("az12", string.Empty));
         }
 
-        [Test, TestCaseSource("WorkItemData")]
-        public void GetWorkItemsForDropdown(WorkItemFakeDBSet workItemData)
-        {
-            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
-            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Once();
-
-            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
-
-            var wiService = new WorkItemService();
-
-            var workItems = wiService.GetWorkItemsForDropdown();
-            Assert.AreEqual(26, workItems.Count);
-            Assert.AreEqual(100, workItems.First().Key);
-            Assert.AreEqual("User Plane Congestion management", workItems.First().Value);
-            Assert.AreEqual(100000006, workItems.Last().Key);
-            Assert.AreEqual("Release 13 Features", workItems.Last().Value);
-
-            mockDataContext.VerifyAllExpectations();
-        }
-
         /// <summary>
         /// Get the WorkItem Data from csv
         /// </summary>

@@ -92,11 +92,5 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <returns>List of Acronyms</returns>
         List<string> GetAllAcronyms();
-
-        /// <summary>
-        /// Gets the work items for dropdown.
-        /// </summary>
-        /// <returns>Workitems</returns>
-        Dictionary<int, string> GetWorkItemsForDropdown();
     }
 }

@@ -61,6 +61,11 @@ namespace Etsi.Ultimate.Business
             return meetings;
         }
 
+        /// <summary>
+        /// Gets the meeting by identifier.
+        /// </summary>
+        /// <param name="meetingId">The meeting identifier.</param>
+        /// <returns>Meeting details</returns>
         public Meeting GetMeetingById(int meetingId)
         {
             IMeetingRepository repo = RepositoryFactory.Resolve<IMeetingRepository>();
@@ -70,14 +75,16 @@ namespace Etsi.Ultimate.Business
         }
 
         /// <summary>
-        /// Gets the meetings for dropdown.
+        /// Gets the meetings by ids.
         /// </summary>
-        /// <returns>Meetings list</returns>
-        public Dictionary<int, string> GetMeetingsForDropdown()
+        /// <param name="meetingIds">The meeting ids.</param>
+        /// <returns>List of meetings</returns>
+        public List<Meeting> GetMeetingsByIds(List<int> meetingIds)
         {
             IMeetingRepository repo = RepositoryFactory.Resolve<IMeetingRepository>();
             repo.UoW = UoW;
-            return repo.GetMeetingsForDropdown();
+
+            return repo.GetMeetingsByIds(meetingIds);
         }
     }
 }

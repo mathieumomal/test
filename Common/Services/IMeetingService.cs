@@ -38,9 +38,10 @@ namespace Etsi.Ultimate.Services
         Meeting GetMeetingById(int MeetingId);
 
         /// <summary>
-        /// Gets the meetings for dropdown.
+        /// Gets the meetings by ids.
         /// </summary>
-        /// <returns>Meetings list</returns>
-        Dictionary<int, string> GetMeetingsForDropdown();
+        /// <param name="meetingIds">The meeting ids.</param>
+        /// <returns>List of meetings</returns>
+        List<Meeting> GetMeetingsByIds(List<int> meetingIds);
     }
 }

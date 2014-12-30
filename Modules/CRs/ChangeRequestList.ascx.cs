@@ -13,6 +13,7 @@ using System.Globalization;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using System.Linq;
+using System.Text;
 
 namespace Etsi.Ultimate.Module.CRs
 {
@@ -22,8 +23,6 @@ namespace Etsi.Ultimate.Module.CRs
 
         private const string DsIdKey = "ETSI_DS_ID";
         private const string VS_CR_SEARCH_OBJ = "VS_CR_SEARCH_OBJ";
-        private const string VS_CR_SEARCH_MEETINGS = "VS_CR_SEARCH_MEETINGS";
-        private const string VS_CR_SEARCH_WORKITEMS = "VS_CR_SEARCH_WORKITEMS";
         private const string PK_ENUMCHANGEREQUESTSTATUS = "Pk_EnumChangeRequestStatus";
         private const string DESCRIPTION = "Description";
 
@@ -51,42 +50,6 @@ namespace Etsi.Ultimate.Module.CRs
             }
         }
 
-        /// <summary>
-        /// Gets or sets the meetings.
-        /// </summary>
-        private Dictionary<int, string> Meetings
-        {
-            get
-            {
-                if (ViewState[VS_CR_SEARCH_MEETINGS] == null)
-                    ViewState[VS_CR_SEARCH_MEETINGS] = new Dictionary<int, string>();
-
-                return (Dictionary<int, string>)ViewState[VS_CR_SEARCH_MEETINGS];
-            }
-            set
-            {
-                ViewState[VS_CR_SEARCH_MEETINGS] = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the work items.
-        /// </summary>
-        private Dictionary<int, string> WorkItems
-        {
-            get
-            {
-                if (ViewState[VS_CR_SEARCH_WORKITEMS] == null)
-                    ViewState[VS_CR_SEARCH_WORKITEMS] = new Dictionary<int, string>();
-
-                return (Dictionary<int, string>)ViewState[VS_CR_SEARCH_WORKITEMS];
-            }
-            set
-            {
-                ViewState[VS_CR_SEARCH_WORKITEMS] = value;
-            }
-        }
-
         #endregion
 
         #region events
@@ -103,24 +66,14 @@ namespace Etsi.Ultimate.Module.CRs
                 releaseSearchControl.IsLoadingNeeded = !crList.Visible;
                 crList.Visible = true;
                 GetRequestParameters();
-                searchObj = new ChangeRequestsSearch();
+                searchObj = new ChangeRequestsSearch() { ReleaseIds = new List<int>(), StatusIds = new List<int>(), MeetingIds = new List<int>(), WorkItemIds = new List<int>() };
                 searchObj.PageSize = rgCrList.PageSize = ConfigVariables.CRsListRecordsMaxSize;
-
-                //Get meetings & load viewstate
-                var meetingSvc = ServicesFactory.Resolve<IMeetingService>();
-                Meetings = meetingSvc.GetMeetingsForDropdown();
-
-                //Get workitems & load viewstate
-                var workItemSvc = ServicesFactory.Resolve<IWorkItemService>();
-                WorkItems = workItemSvc.GetWorkItemsForDropdown();
 
                 //Load CR Statuses
                 LoadCrStatuses();
-            }
 
-            //Load dropdown data
-            LoadMeetings();
-            LoadWorkItems();
+                releaseSearchControl.Load += releaseSearchControl_Load;
+            }
         }
 
         /// <summary>
@@ -218,6 +171,16 @@ namespace Etsi.Ultimate.Module.CRs
             }
         }
 
+        /// <summary>
+        /// Handles the Load event of the releaseSearchControl control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        protected void releaseSearchControl_Load(object sender, EventArgs e)
+        {
+            LoadData();
+        }
+
         #endregion
 
         #region Load data
@@ -228,13 +191,7 @@ namespace Etsi.Ultimate.Module.CRs
         private void LoadData()
         {
             if (isUrlSearch)
-            {
-                if (!String.IsNullOrEmpty(Request.QueryString["specnumber"]))
-                    txtSpecificationNumber.Text = searchObj.SpecificationNumber = Request.QueryString["specnumber"];
-                int pageIndex = 0;
-                if (!String.IsNullOrEmpty(Request.QueryString["pageindex"]) && (int.TryParse(Request.QueryString["pageindex"], out pageIndex)))
-                    searchObj.SkipRecords = pageIndex * searchObj.PageSize;
-            }
+                LoadUrlData();
             else
                 searchObj.SkipRecords = rgCrList.CurrentPageIndex * searchObj.PageSize;
 
@@ -250,29 +207,99 @@ namespace Etsi.Ultimate.Module.CRs
             ManageShareUrl();
             ManageFullView();
 
-            lblCrSearchHeader.Text = String.Format("Search form ({0})", String.IsNullOrEmpty(searchObj.SpecificationNumber) ? "All" : searchObj.SpecificationNumber.Trim());
+            SetSearchLabel();
         }
 
         /// <summary>
-        /// Loads the meetings.
+        /// Loads the URL data.
         /// </summary>
-        private void LoadMeetings()
+        private void LoadUrlData()
         {
-            racMeeting.DataSource = Meetings;
-            racMeeting.DataTextField = "Value";
-            racMeeting.DataValueField = "Key";
-            racMeeting.DataBind();
-        }
+            //[1] Specification Number
+            if (!String.IsNullOrEmpty(Request.QueryString["specnumber"]))
+                txtSpecificationNumber.Text = searchObj.SpecificationNumber = Request.QueryString["specnumber"];
 
-        /// <summary>
-        /// Loads the work items.
-        /// </summary>
-        private void LoadWorkItems()
-        {
-            racWorkItem.DataSource = WorkItems;
-            racWorkItem.DataTextField = "Value";
-            racWorkItem.DataValueField = "Key";
-            racWorkItem.DataBind();
+            //[2] Releases
+            if (!String.IsNullOrEmpty(Request.QueryString["release"]))
+            {
+                var releases = Request.QueryString["release"].Split(',').ToList();
+                var releaseIds = new List<int>();
+                releases.ForEach(x =>
+                {
+                    int releaseId = 0;
+                    if (int.TryParse(x, out releaseId))
+                        releaseIds.Add(releaseId);
+                });
+                releaseSearchControl.SelectedReleaseIds = searchObj.ReleaseIds = releaseIds;
+            }
+
+            //[3] Statuses
+            if (!String.IsNullOrEmpty(Request.QueryString["status"]))
+            {
+                var statuses = Request.QueryString["status"].Split(',').ToList();
+                var statusIds = new List<int>();
+                statuses.ForEach(x =>
+                {
+                    int statusId = 0;
+                    if (int.TryParse(x, out statusId))
+                        statusIds.Add(statusId);
+                });
+                searchObj.StatusIds = statusIds;
+                rcbStatus.Items.ToList().ForEach(x => { x.Checked = statusIds.Contains(Convert.ToInt32(x.Value)); });
+            }
+
+            //[4] Meetings
+            if (!String.IsNullOrEmpty(Request.QueryString["meeting"]))
+            {
+                var meetings = Request.QueryString["meeting"].Split(',').ToList();
+                var meetingIds = new List<int>();
+                meetings.ForEach(x =>
+                {
+                    int meetingId = 0;
+                    if (int.TryParse(x, out meetingId))
+                        meetingIds.Add(meetingId);
+                });
+                searchObj.MeetingIds = meetingIds;
+
+                var meetingSvc = ServicesFactory.Resolve<IMeetingService>();
+                var meetingsList = meetingSvc.GetMeetingsByIds(meetingIds);
+
+                meetingIds.ForEach(x =>
+                {
+                    var meeting = meetingsList.Find(m => m.MTG_ID == x);
+                    if (meeting != null)
+                        racMeeting.Entries.Add(new AutoCompleteBoxEntry(meeting.MtgDdlText, x.ToString()));
+                });
+            }
+
+            //[5] Work Items
+            if (!String.IsNullOrEmpty(Request.QueryString["workitem"]))
+            {
+                var workitems = Request.QueryString["workitem"].Split(',').ToList();
+                var workItemIds = new List<int>();
+                workitems.ForEach(x =>
+                {
+                    int workItemId = 0;
+                    if (int.TryParse(x, out workItemId))
+                        workItemIds.Add(workItemId);
+                });
+                searchObj.WorkItemIds = workItemIds;
+
+                var workItemSvc = ServicesFactory.Resolve<IWorkItemService>();
+                var workItemsList = workItemSvc.GetWorkItemByIds(0, workItemIds).Key;
+
+                workItemIds.ForEach(x =>
+                {
+                    var workItem = workItemsList.Find(wi => wi.Pk_WorkItemUid == x);
+                    if(workItem != null)
+                        racWorkItem.Entries.Add(new AutoCompleteBoxEntry(workItem.WorkItemDdlText, x.ToString()));
+                });
+            }
+
+            //[6] Page Index
+            int pageIndex = 0;
+            if (!String.IsNullOrEmpty(Request.QueryString["pageindex"]) && (int.TryParse(Request.QueryString["pageindex"], out pageIndex)))
+                searchObj.SkipRecords = pageIndex * searchObj.PageSize;
         }
 
         /// <summary>
@@ -402,9 +429,12 @@ namespace Etsi.Ultimate.Module.CRs
         private Dictionary<string, string> ManageUrlParams()
         {
             var urlParams = new Dictionary<string, string>();
-
             urlParams.Add("q", "1");
             urlParams.Add("specnumber", searchObj.SpecificationNumber);
+            urlParams.Add("release", String.Join(",", searchObj.ReleaseIds));
+            urlParams.Add("status", String.Join(",", searchObj.StatusIds));
+            urlParams.Add("meeting", String.Join(",", searchObj.MeetingIds));
+            urlParams.Add("workitem", String.Join(",", searchObj.WorkItemIds));
             urlParams.Add("pageindex", (searchObj.SkipRecords / searchObj.PageSize).ToString());
 
             return urlParams;
@@ -416,6 +446,32 @@ namespace Etsi.Ultimate.Module.CRs
         private void GetRequestParameters()
         {
             isUrlSearch = (Request.QueryString["q"] != null);
+        }
+
+        /// <summary>
+        /// Sets the search label.
+        /// </summary>
+        private void SetSearchLabel()
+        {
+            if (searchObj != null)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                if (!String.IsNullOrEmpty(searchObj.SpecificationNumber))
+                    sb.Append(String.Format("{0}, ", searchObj.SpecificationNumber));
+
+                string releaseText = releaseSearchControl.SearchString;
+                sb.Append(String.Format("{0}, ", String.IsNullOrEmpty(releaseText) ? "Open Releases" : releaseText));
+
+                if (searchObj.StatusIds != null && searchObj.StatusIds.Count > 0)
+                    sb.Append(String.Format("Status({0}), ", String.Join(", ", rcbStatus.CheckedItems.Select(x => x.Text).ToList())));
+                if (searchObj.MeetingIds != null && searchObj.MeetingIds.Count > 0)
+                    sb.Append(String.Format("Meetings({0}), ", racMeeting.Text));
+                if (searchObj.WorkItemIds != null && searchObj.WorkItemIds.Count > 0)
+                    sb.Append(String.Format("WorkItems({0}), ", racWorkItem.Text));
+
+                lblCrSearchHeader.Text = String.Format("Search form ({0})", (sb.Length > 100) ? sb.ToString().Trim().TrimEnd(',').Substring(0, 100) + "..." : sb.ToString().Trim().TrimEnd(','));
+            }
         }
 
         #endregion

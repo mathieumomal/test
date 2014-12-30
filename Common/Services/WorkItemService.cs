@@ -206,19 +206,6 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        /// <summary>
-        /// Gets the work items for dropdown.
-        /// </summary>
-        /// <returns>Workitems</returns>
-        public Dictionary<int, string> GetWorkItemsForDropdown()
-        {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
-            {
-                var workItemManager = new WorkItemManager(uoW);
-                return workItemManager.GetWorkItemsForDropdown();
-            }
-        }
-
         #endregion
     }
 }

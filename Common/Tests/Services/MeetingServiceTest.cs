@@ -125,24 +125,23 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [Test, TestCaseSource("GetMeetings")]
-        public void Test_GetMeetingsForDropdown(IDbSet<Meeting> meetings)
+        public void Test_GetMeetingsByIds(IDbSet<Meeting> meetings)
         {
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
             mockDataContext.Stub(x => x.Meetings).Return(meetings);
 
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
 
+            var meetingIds = new List<int>() { 1, 2, 6 };
             var service = new MeetingService();
-            var meetingsResult = service.GetMeetingsForDropdown();
+            var meetingsResult = service.GetMeetingsByIds(meetingIds);
 
-            var firstMeeting = String.Format("S5-31 ({0} - Brussels(BE))", DateTime.Now.ToString("yyyy-MM-dd"));
-            var lastMeeting = String.Format("S3-48 ({0})", DateTime.Now.AddDays(50).ToString("yyyy-MM-dd"));
-            Assert.AreEqual(6, meetingsResult.Count);
-            Assert.AreEqual(1, meetingsResult.First().Key);
-            Assert.AreEqual(firstMeeting, meetingsResult.First().Value);
-            Assert.AreEqual(6, meetingsResult.Last().Key);
-            Assert.AreEqual(lastMeeting, meetingsResult.Last().Value);
-        }
+            var meetingIdsResult = meetingsResult.Select(x => x.MTG_ID).ToList();
+            Assert.AreEqual(3, meetingsResult.Count);
+            Assert.IsTrue(meetingIds.All(x => meetingIdsResult.Contains(x)));
+            Assert.IsTrue(meetingIdsResult.All(x => meetingIds.Contains(x)));
+        }      
 
         #endregion
 

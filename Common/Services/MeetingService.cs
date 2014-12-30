@@ -73,17 +73,18 @@ namespace Etsi.Ultimate.Services
         }
 
         /// <summary>
-        /// Gets the meetings for dropdown.
+        /// Gets the meetings by ids.
         /// </summary>
-        /// <returns>Meetings list</returns>
-        public Dictionary<int, string> GetMeetingsForDropdown()
+        /// <param name="meetingIds">The meeting ids.</param>
+        /// <returns>List of meetings</returns>
+        public List<Meeting> GetMeetingsByIds(List<int> meetingIds)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var meetingManager = new MeetingManager();
                 meetingManager.UoW = uoW;
-                //Get list of meetings
-                return meetingManager.GetMeetingsForDropdown();
+
+                return meetingManager.GetMeetingsByIds(meetingIds);
             }
         }
 
