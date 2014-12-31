@@ -1,6 +1,4 @@
-﻿using System.Data;
-using System.Web.Services;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using Etsi.Ultimate.Controls;
 using Etsi.Ultimate.DomainClasses;
@@ -179,6 +177,8 @@ namespace Etsi.Ultimate.Module.CRs
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected void releaseSearchControl_Load(object sender, EventArgs e)
         {
+            if (searchObj.ReleaseIds.Count == 0)
+                searchObj.ReleaseIds = releaseSearchControl.SelectedReleaseIds;
             LoadData();
         }
 
@@ -195,6 +195,8 @@ namespace Etsi.Ultimate.Module.CRs
                 LoadUrlData();
             else
                 searchObj.SkipRecords = rgCrList.CurrentPageIndex * searchObj.PageSize;
+
+
 
             var crSvc = ServicesFactory.Resolve<IChangeRequestService>();
             var response = crSvc.GetChangeRequests(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
