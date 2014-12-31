@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Web;
 using System.Web.Services;
 using Etsi.Ultimate.Services;
 using Telerik.Web.UI;
@@ -17,14 +15,14 @@ namespace Etsi.Ultimate.Module.CRs
     [System.ComponentModel.ToolboxItem(false)]
     // To allow this Web Service to be called from script, using ASP.NET AJAX, uncomment the following line. 
     [System.Web.Script.Services.ScriptService]
-    public class GetWiMtgData : System.Web.Services.WebService
+    public class GetWiMtgData : WebService
     {
         private const int MaxResults = 50;
 
         [WebMethod]
         public AutoCompleteBoxData GetWorkItems(RadAutoCompleteContext context)
         {
-            string searchString = ((Dictionary<string, object>)context)["Text"].ToString();
+            var searchString = context["Text"].ToString();
             var wiSvc = ServicesFactory.Resolve<IWorkItemService>();
             var wis = wiSvc.GetWorkItemsBySearchCriteria(0, searchString).Key.Take(MaxResults).ToList();
             
@@ -32,14 +30,15 @@ namespace Etsi.Ultimate.Module.CRs
 
             foreach (var wi in wis)
             {
-                AutoCompleteBoxItemData childNode = new AutoCompleteBoxItemData();
-                childNode.Text = wi.WorkItemDdlText;
-                childNode.Value = wi.Pk_WorkItemUid.ToString(CultureInfo.InvariantCulture);
+                var childNode = new AutoCompleteBoxItemData
+                {
+                    Text = wi.WorkItemDdlText,
+                    Value = wi.Pk_WorkItemUid.ToString(CultureInfo.InvariantCulture)
+                };
                 result.Add(childNode);
             }
 
-            var res = new AutoCompleteBoxData();
-            res.Items = result.ToArray();
+            var res = new AutoCompleteBoxData {Items = result.ToArray()};
 
             return res;
         }
@@ -47,7 +46,7 @@ namespace Etsi.Ultimate.Module.CRs
         [WebMethod]
         public AutoCompleteBoxData GetMeetings(RadAutoCompleteContext context)
         {
-            string searchString = ((Dictionary<string, object>)context)["Text"].ToString();
+            var searchString = context["Text"].ToString();
             var mtgSvc = ServicesFactory.Resolve<IMeetingService>();
             var meetings = mtgSvc.GetMatchingMeetings(searchString).Take(MaxResults).ToList();
 
@@ -56,14 +55,15 @@ namespace Etsi.Ultimate.Module.CRs
             foreach (var meeting in meetings)
             {
                 var mtgText = meeting.MtgDdlText;
-                AutoCompleteBoxItemData childNode = new AutoCompleteBoxItemData();
-                childNode.Text = mtgText;
-                childNode.Value = meeting.MTG_ID.ToString(CultureInfo.InvariantCulture);
+                var childNode = new AutoCompleteBoxItemData
+                {
+                    Text = mtgText,
+                    Value = meeting.MTG_ID.ToString(CultureInfo.InvariantCulture)
+                };
                 result.Add(childNode);
             }
 
-            var res = new AutoCompleteBoxData();
-            res.Items = result.ToArray();
+            var res = new AutoCompleteBoxData {Items = result.ToArray()};
 
             return res;
         }

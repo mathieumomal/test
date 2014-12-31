@@ -55,7 +55,8 @@
                                                             <tr>
                                                                 <td style="width: 125px;">Specification number</td>
                                                                 <td>
-                                                                    <asp:TextBox ID="txtSpecificationNumber" Width="296px" MaxLength="20" runat="server"></asp:TextBox></td>
+                                                                    <asp:TextBox ID="txtSpecificationNumber" Width="296px" MaxLength="20" runat="server"></asp:TextBox>
+                                                                </td>
                                                                 <td>WG Status</td>
                                                                 <td>
                                                                     <telerik:RadComboBox ID="rcbWgStatus" runat="server" Width="300" AutoPostBack="false" CheckBoxes="true"></telerik:RadComboBox>
@@ -90,7 +91,8 @@
                                                             <tr>
                                                                 <td colspan="3" />
                                                                 <td style="text-align: right; padding-right: 0px">
-                                                                    <asp:Button ID="btnSearch" runat="server" Text="Search" Width="150px" OnClick="btnSearch_Click" OnClientClick="collapseCrPanelItem()"></asp:Button></td>
+                                                                    <asp:Button ID="btnSearch" runat="server" Text="Search" Width="150px" OnClick="btnSearch_Click" OnClientClick="collapseCrPanelItem()"></asp:Button>
+                                                                </td>
                                                             </tr>
                                                         </table>
                                                     </td>
