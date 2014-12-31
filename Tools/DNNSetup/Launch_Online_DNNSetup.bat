@@ -8,10 +8,20 @@ REM -----------------------------------------------------------
 REM ------------------------------------------------------------------------------
 REM ----------------  Provide Environment Parameters Below -----------------------
 REM ------------------------------------------------------------------------------
-SET PATH_ULTIMATE=D:\CG_projects\Solutions\ULTIMATE
-SET PATH_NGPP=D:\CG_projects\Solutions\UltimateContributionNew
-SET BASE_PATH_TARGET=C:\EtsiPortalServices
-SET SERVICE_LOGIN=CORP\lbabin
+REM --- TEST IF SETTINGS FILE EXIST
+ECHO Search for settings ...
+SET mypath=%~dp0
+SET settingsFile=%mypath%..\3GPP.sync.settings.bat
+IF NOT EXIST "%settingsFile%" (
+    ECHO "!!! WARNING !!! : Settings file doesn't exist.
+	ECHO "Please create and customize .\3GPP.sync.settings.bat 
+	ECHO "(You could find an example in Ultimate project > Tools > 3GPP.sync.settings.DEFAULT.bat)
+	PAUSE
+	EXIT
+)
+ECHO Settings found.
+REM --- GET SETTINGS
+CALL %settingsFile%
 
 REM ----------------------------------------------------------------------------------------
 REM -----------------------  DON'T CHANGE ANYTHING BELOW------------------------------------

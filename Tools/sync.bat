@@ -1,8 +1,18 @@
 @ECHO OFF
-REM ----- FILL IN THIS AREA -----
-SET TRUNK_PATH=D:\CG_projects\Ultimate\
-SET DNN_PATH=C:\websites\localdev.me\
-SET PHASE=local
+REM --- TEST IF SETTINGS FILE EXIST
+ECHO Search for settings ...
+SET mypath=%~dp0
+SET settingsFile=%mypath%3GPP.sync.settings.bat
+IF NOT EXIST "%settingsFile%" (
+    ECHO "!!! WARNING !!! : Settings file doesn't exist.
+	ECHO "Please create and customize .\3GPP.sync.settings.bat 
+	ECHO "(You could find an example in Ultimate project > Tools > 3GPP.sync.settings.DEFAULT.bat)
+	PAUSE
+	EXIT
+)
+ECHO Settings found.
+REM --- GET SETTINGS
+CALL %settingsFile%
 
 REM ----- DON'T MODIFY ANYTHING BELOW, unless you know what you're doing -----
 
