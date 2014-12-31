@@ -136,10 +136,22 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>List of crs & count</returns>
         public KeyValuePair<List<ChangeRequest>, int> GetChangeRequests(ChangeRequestsSearch searchObj)
         {
+            //Manage null values of search object
+            if (searchObj.ReleaseIds == null) searchObj.ReleaseIds = new List<int>();
+            if (searchObj.WgStatusIds == null) searchObj.WgStatusIds = new List<int>();
+            if (searchObj.TsgStatusIds == null) searchObj.TsgStatusIds = new List<int>();
+            if (searchObj.MeetingIds == null) searchObj.MeetingIds = new List<int>();
+            if (searchObj.WorkItemIds == null) searchObj.WorkItemIds = new List<int>();
+
             var query = AllIncluding(x => x.Specification, x => x.Release, x => x.NewVersion, x => x.CurrentVersion, x => x.TsgStatus, x => x.WgStatus);
 
             //Filter crs based on search criteria
-            query = query.Where(x => ((String.IsNullOrEmpty(searchObj.SpecificationNumber)) || (x.Specification.Number.ToLower().Contains(searchObj.SpecificationNumber.ToLower()))));
+            query = query.Where(x => (((String.IsNullOrEmpty(searchObj.SpecificationNumber)) || (x.Specification.Number.ToLower().Contains(searchObj.SpecificationNumber.ToLower())))
+                                   && ((searchObj.ReleaseIds.Count ==  0) || (searchObj.ReleaseIds.Contains(x.Fk_Release ?? 0)))
+                                   && ((searchObj.WgStatusIds.Count == 0) || (searchObj.WgStatusIds.Contains(x.Fk_WGStatus ?? 0)))
+                                   && ((searchObj.TsgStatusIds.Count == 0) || (searchObj.TsgStatusIds.Contains(x.Fk_TSGStatus ?? 0)))
+                                   && ((searchObj.MeetingIds.Count == 0) || (searchObj.MeetingIds.Contains(x.TSGMeeting ?? x.WGMeeting ?? 0)))
+                                   && ((searchObj.WorkItemIds.Count == 0) || (searchObj.WorkItemIds.Any(wiId => x.CR_WorkItems.Any(crWi => crWi.Fk_WIId == wiId))))));
 
             //Order by
             query = query.OrderBy(x => x.Specification.Number).ThenByDescending(y => y.CRNumber).ThenByDescending(z => z.Revision);

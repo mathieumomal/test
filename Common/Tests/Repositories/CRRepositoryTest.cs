@@ -96,9 +96,11 @@ namespace Etsi.Ultimate.Tests.Repositories
                 Assert.AreEqual(result, respresult.Fk_TSGStatus);
             }
         }
+
         #endregion
 
         #region Get CR
+
         [TestCase(0, 0, 22, Description = "No paging")]
         [TestCase(0, 10, 10, Description = "Paging max 10 items")]
         [TestCase(5, 10, 10, Description = "Paging max 10 items (start from item 6)")]
@@ -115,6 +117,7 @@ namespace Etsi.Ultimate.Tests.Repositories
             //Test
             Assert.AreEqual(expectedResult, result.Key.Count);
         }
+
         [Test]
         public void GetChangeRequestsTest_OrderBy()
         {
@@ -133,6 +136,124 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual("AC014", result.Key.ElementAt(0).CRNumber);
             Assert.AreEqual("AB013", result.Key.ElementAt(1).CRNumber);
         }
+
+        [TestCase("22.101", 6)]
+        [TestCase("22.", 22)]
+        public void GetChangeRequestsTest_SpecNumber(string specNumber, int expectedResult)
+        {
+            var searchObj = new ChangeRequestsSearch { SpecificationNumber = specNumber };
+
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetChangeRequests(searchObj);
+
+            Assert.AreEqual(expectedResult, result.Key.Count);
+        }
+
+        [TestCase(2874, 2883, 16)]
+        [TestCase(2882, 2884, 6)]
+        public void GetChangeRequestsTest_Release(int releaseId1, int releaseId2, int expectedResult)
+        {
+            var searchObj = new ChangeRequestsSearch { ReleaseIds = new List<int>() { releaseId1, releaseId2 } };
+
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetChangeRequests(searchObj);
+
+            Assert.AreEqual(expectedResult, result.Key.Count);
+        }
+
+        [TestCase(1, 1, 15)]
+        [TestCase(1, 2, 17)]
+        public void GetChangeRequestsTest_WgStatus(int wgStatusId1, int wgStatusId2, int expectedResult)
+        {
+            var searchObj = new ChangeRequestsSearch { WgStatusIds = new List<int>() { wgStatusId1, wgStatusId2 } };
+
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetChangeRequests(searchObj);
+
+            Assert.AreEqual(expectedResult, result.Key.Count);
+        }
+
+        [TestCase(1, 5, 7)]
+        [TestCase(2, 5, 13)]
+        public void GetChangeRequestsTest_TsgStatus(int tsgStatusId1, int tsgStatusId2, int expectedResult)
+        {
+            var searchObj = new ChangeRequestsSearch { TsgStatusIds = new List<int>() { tsgStatusId1, tsgStatusId2 } };
+
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetChangeRequests(searchObj);
+
+            Assert.AreEqual(expectedResult, result.Key.Count);
+        }
+
+        [TestCase(1, 1, 10)]
+        [TestCase(2, 2, 5)]
+        [TestCase(3, 3, 7)]
+        [TestCase(1, 2, 15)]
+        [TestCase(2, 3, 12)]
+        public void GetChangeRequestsTest_Meeting(int meetingId1, int meetingId2, int expectedResult)
+        {
+            var searchObj = new ChangeRequestsSearch { MeetingIds = new List<int>() { meetingId1, meetingId2 } };
+
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetChangeRequests(searchObj);
+
+            Assert.AreEqual(expectedResult, result.Key.Count);
+        }
+
+        [TestCase(1274, 1274, 1)]
+        [TestCase(2, 2, 4)]
+        [TestCase(3, 3, 2)]
+        [TestCase(2, 3, 4)]
+        [TestCase(2, 1274, 5)]
+        public void GetChangeRequestsTest_WorkItem(int workItemId1, int workItemId2, int expectedResult)
+        {
+            var searchObj = new ChangeRequestsSearch { WorkItemIds = new List<int>() { workItemId1, workItemId2 } };
+
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetChangeRequests(searchObj);
+
+            Assert.AreEqual(expectedResult, result.Key.Count);
+        }
+
+        [TestCase("22.101", 2874, 5)]
+        [TestCase("22.101", 2884, 1)]
+        public void GetChangeRequestsTest_SpecAndRelease(string specNumber, int releaseId, int expectedResult)
+        {
+            var searchObj = new ChangeRequestsSearch { SpecificationNumber = specNumber, ReleaseIds = new List<int>() { releaseId } };
+
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetChangeRequests(searchObj);
+
+            Assert.AreEqual(expectedResult, result.Key.Count);
+        }
+
+        [TestCase(1, 2, 3)]
+        [TestCase(2, 2, 1)]
+        [TestCase(1, 3, 2)]
+        [TestCase(2, 3, 0)]
+        public void GetChangeRequestsTest_WgStatusAndWorkItem(int wgStatusId, int workItemId, int expectedResult)
+        {
+            var searchObj = new ChangeRequestsSearch { WgStatusIds = new List<int>() { wgStatusId }, WorkItemIds = new List<int>() { workItemId } };
+
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetChangeRequests(searchObj);
+
+            Assert.AreEqual(expectedResult, result.Key.Count);
+        }
+
+        [TestCase(1, 2, 10)]
+        [TestCase(2, 1, 2)]
+        [TestCase(1, 5, 3)]
+        public void GetChangeRequestsTest_WgStatusAndTsgStatus(int wgStatusId, int tsgStatusId, int expectedResult)
+        {
+            var searchObj = new ChangeRequestsSearch { WgStatusIds = new List<int>() { wgStatusId }, TsgStatusIds = new List<int>() { tsgStatusId } };
+
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetChangeRequests(searchObj);
+
+            Assert.AreEqual(expectedResult, result.Key.Count);
+        }
+
         #endregion
     }
 }
