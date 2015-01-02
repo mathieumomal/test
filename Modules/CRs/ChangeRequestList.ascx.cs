@@ -222,7 +222,7 @@ namespace Etsi.Ultimate.Module.CRs
             if (!String.IsNullOrEmpty(Request.QueryString["specnumber"]))
                 txtSpecificationNumber.Text = searchObj.SpecificationNumber = Request.QueryString["specnumber"];
 
-            //[2] Releases
+            //[2] Releases (if release contains 0 then all releases will be selected)
             if (!String.IsNullOrEmpty(Request.QueryString["release"]))
             {
                 var releases = Request.QueryString["release"].Split(',').ToList();
