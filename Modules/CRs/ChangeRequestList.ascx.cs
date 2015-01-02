@@ -179,6 +179,8 @@ namespace Etsi.Ultimate.Module.CRs
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected void releaseSearchControl_Load(object sender, EventArgs e)
         {
+            if (searchObj.ReleaseIds.Count == 0)
+                searchObj.ReleaseIds = releaseSearchControl.SelectedReleaseIds;
             LoadData();
         }
 
