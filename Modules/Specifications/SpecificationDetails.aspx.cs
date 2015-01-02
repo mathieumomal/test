@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Etsi.Ultimate.Utils;
 using Telerik.Web.UI;
 using Domain = Etsi.Ultimate.DomainClasses;
 using System.Configuration;
@@ -220,7 +221,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 if (specification.IsUnderChangeControl ?? false)
                 {
                     lnkChangeRequest.Visible = true;
-                    lnkChangeRequest.NavigateUrl = "#";
+                    lnkChangeRequest.NavigateUrl = string.Format(ConfigVariables.RelativeUrlWiRelatedCrs, string.Empty, 0, specification.Number);
                 }
                 typeVal.Text = string.IsNullOrEmpty(specification.SpecificationTypeFullText) ? CONST_EMPTY_FIELD : specification.SpecificationTypeFullText;
                 initialPlannedReleaseVal.Text = string.IsNullOrEmpty(specification.SpecificationInitialRelease) ? CONST_EMPTY_FIELD : specification.SpecificationInitialRelease;

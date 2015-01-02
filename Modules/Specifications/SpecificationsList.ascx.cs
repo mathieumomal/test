@@ -199,18 +199,30 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if (e.Item is GridDataItem)
             {
-                GridDataItem dataItem = e.Item as GridDataItem;
-                Specification currentSpecification = (Specification)e.Item.DataItem;
-                Image img2G = (Image)dataItem.FindControl("img2G");
-                Image img3G = (Image)dataItem.FindControl("img3G");
-                Image imgLTE = (Image)dataItem.FindControl("imgLTE");
+                var dataItem = e.Item as GridDataItem;
+                var currentSpecification = (Specification)e.Item.DataItem;
+                var img2G = (Image)dataItem.FindControl("img2G");
+                var img3G = (Image)dataItem.FindControl("img3G");
+                var imgLte = (Image)dataItem.FindControl("imgLTE");
+                var lnkCr = (HyperLink) dataItem.FindControl("lnkCr");
+
 
                 if (img2G != null)
                     img2G.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "2g").FirstOrDefault() != null) ? "opacity:1" : "opacity:0.1");
                 if (img3G != null)
                     img3G.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "3g").FirstOrDefault() != null) ? "opacity:1" : "opacity:0.1");
-                if (imgLTE != null)
-                    imgLTE.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "lte").FirstOrDefault() != null) ? "opacity:1" : "opacity:0.1");
+                if (imgLte != null)
+                    imgLte.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "lte").FirstOrDefault() != null) ? "opacity:1" : "opacity:0.1");
+                if (lnkCr != null)
+                {
+                    var classes = new StringBuilder(lnkCr.CssClass);
+                    if (!(currentSpecification.IsUnderChangeControl ?? false))
+                    {
+                        lnkCr.Enabled = false;
+                        lnkCr.CssClass = classes.Append("disabled").ToString();
+                    }
+                    lnkCr.NavigateUrl = string.Format(ConfigVariables.RelativeUrlWiRelatedCrs, string.Empty, 0, currentSpecification.Number);
+                }
             }
         }
 

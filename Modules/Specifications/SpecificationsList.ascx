@@ -191,7 +191,7 @@
                                                         <asp:Image ID="imgLTE" runat="server" ToolTip="LTE" AlternateText="LTE" ImageUrl="/DesktopModules/Specifications/images/lte.png" />
                                                     </td>
                                                     <td>
-                                                        <img id="imgCR" title="All CRs for this specification" class="imgCR" alt="All CRs for this specification" src="/DesktopModules/Specifications/images/cr.png" style='opacity: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsUnderChangeControl")) ? "1" : "0.1" %>' />
+                                                        <asp:HyperLink runat="server" ID="lnkCr" Target="_blank" CssClass="img imgCR" ImageUrl="/DesktopModules/Specifications/images/cr.png" ToolTip="All CRs for this specification" NavigateUrl="#"></asp:HyperLink>
                                                     </td>
                                                 </tr>
                                             </table>
