@@ -179,15 +179,20 @@
                                                     <td>
                                                         <img id="imgLock" title="<%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsForPublication")) ? "For publication" : "Internal" %>" alt="Internal" src="/DesktopModules/Specifications/images/lock.png" style='opacity: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsForPublication")) ? "0.1" : "1" %>' /></td>
                                                     <td>
-                                                        <img id="imgIMS" title="Common IMS" alt="Common IMS" src="/DesktopModules/Specifications/images/ims.png" style='opacity: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"ComIMS")) ? "1" : "0.1" %>' /></td>
+                                                        <img id="imgIMS" title="Common IMS" alt="Common IMS" src="/DesktopModules/Specifications/images/ims.png" style='opacity: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"ComIMS")) ? "1" : "0.1" %>' />
+                                                    </td>
                                                     <td>
-                                                        <asp:Image ID="img2G" runat="server" ToolTip="2G" AlternateText="2G" ImageUrl="/DesktopModules/Specifications/images/2g.png" /></td>
+                                                        <asp:Image ID="img2G" runat="server" ToolTip="2G" AlternateText="2G" ImageUrl="/DesktopModules/Specifications/images/2g.png" />
+                                                    </td>
                                                     <td>
-                                                        <asp:Image ID="img3G" runat="server" ToolTip="3G" AlternateText="3G" ImageUrl="/DesktopModules/Specifications/images/3g.png" /></td>
+                                                        <asp:Image ID="img3G" runat="server" ToolTip="3G" AlternateText="3G" ImageUrl="/DesktopModules/Specifications/images/3g.png" />
+                                                    </td>
                                                     <td>
-                                                        <asp:Image ID="imgLTE" runat="server" ToolTip="LTE" AlternateText="LTE" ImageUrl="/DesktopModules/Specifications/images/lte.png" /></td>
+                                                        <asp:Image ID="imgLTE" runat="server" ToolTip="LTE" AlternateText="LTE" ImageUrl="/DesktopModules/Specifications/images/lte.png" />
+                                                    </td>
                                                     <td>
-                                                        <img id="imgCR" title="All CRs for this specification" class="imgCR" alt="All CRs for this specification" src="/DesktopModules/Specifications/images/cr.png" style='opacity: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsUnderChangeControl")) ? "1" : "0.1" %>' /></td>
+                                                        <img id="imgCR" title="All CRs for this specification" class="imgCR" alt="All CRs for this specification" src="/DesktopModules/Specifications/images/cr.png" style='opacity: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsUnderChangeControl")) ? "1" : "0.1" %>' />
+                                                    </td>
                                                 </tr>
                                             </table>
                                         </ItemTemplate>

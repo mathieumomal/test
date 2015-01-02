@@ -147,7 +147,7 @@ namespace Etsi.Ultimate.Repositories
 
             //Filter crs based on search criteria
             query = query.Where(x => (((String.IsNullOrEmpty(searchObj.SpecificationNumber)) || (x.Specification.Number.ToLower().Contains(searchObj.SpecificationNumber.ToLower())))
-                                   && ((searchObj.ReleaseIds.Count ==  0) || (searchObj.ReleaseIds.Contains(x.Fk_Release ?? 0)))
+                                   && ((searchObj.ReleaseIds.Count ==  0) || (searchObj.ReleaseIds.Contains(0)) || (searchObj.ReleaseIds.Contains(x.Fk_Release ?? 0)))
                                    && ((searchObj.WgStatusIds.Count == 0) || (searchObj.WgStatusIds.Contains(x.Fk_WGStatus ?? 0)))
                                    && ((searchObj.TsgStatusIds.Count == 0) || (searchObj.TsgStatusIds.Contains(x.Fk_TSGStatus ?? 0)))
                                    && ((searchObj.MeetingIds.Count == 0) || (searchObj.MeetingIds.Contains(x.TSGMeeting ?? x.WGMeeting ?? 0)))

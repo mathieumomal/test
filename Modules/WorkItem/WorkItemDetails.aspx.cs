@@ -262,16 +262,13 @@ namespace Etsi.Ultimate.Module.WorkItem
                 lblParentWorkItem.Text = "None";
             }
 
-            var svc = ServicesFactory.Resolve<IReleaseService>();
-            var releases = svc.GetAllReleases(0);
-
             // Link to specifications
             lnkSpecifications.Target = "_blank";
             lnkSpecifications.NavigateUrl = string.Format(ConfigVariables.RelativeUrlWiRelatedSpecs, workitem.Pk_WorkItemUid);
 
             //Link to related CRs
             lnkRelatedChanges.Target = "_blank";
-            lnkRelatedChanges.NavigateUrl = string.Format(ConfigVariables.RelativeUrlWiRelatedCrs, workitem.Pk_WorkItemUid, string.Join(",", releases.Key.Select(x => x.Pk_ReleaseId)));
+            lnkRelatedChanges.NavigateUrl = string.Format(ConfigVariables.RelativeUrlWiRelatedCrs, workitem.Pk_WorkItemUid, 0);
 
             // Link to TDoc            
             if(!String.IsNullOrEmpty(workitem.Wid))

@@ -498,12 +498,12 @@ namespace Etsi.Ultimate.Module.CRs
         {
             if (searchObj != null)
             {
-                StringBuilder sb = new StringBuilder();
+                var sb = new StringBuilder();
 
                 if (!String.IsNullOrEmpty(searchObj.SpecificationNumber))
                     sb.Append(String.Format("{0}, ", searchObj.SpecificationNumber));
 
-                string releaseText = releaseSearchControl.SearchString;
+                var releaseText = releaseSearchControl.SearchString;
                 sb.Append(String.Format("{0}, ", String.IsNullOrEmpty(releaseText) ? "Open Releases" : releaseText));
 
                 if (searchObj.WgStatusIds != null && searchObj.WgStatusIds.Count > 0)

@@ -63,7 +63,7 @@
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Impacted Release</td>
+                                                                <td>Target Release</td>
                                                                 <td>
                                                                     <ult:ReleaseSearchControl id="releaseSearchControl" runat="server" Width="300" DropDownWidth="300"/>
                                                                 </td>

@@ -49,7 +49,7 @@ namespace Etsi.Ultimate.Controls
                 rbAllReleases.Checked = rbOpenReleases.Checked = rbAllReleases.Checked = false;
 
                 var AllReleases = rbAllReleases.Attributes["Value"].Split(',').Select(int.Parse).ToList();
-                if (releaseIds.OrderBy(x => x).SequenceEqual(AllReleases.OrderBy(x => x)))
+                if (releaseIds.OrderBy(x => x).SequenceEqual(AllReleases.OrderBy(x => x)) || releaseIds.Contains(0))
                     rbAllReleases.Checked = true;
                 else
                 {
