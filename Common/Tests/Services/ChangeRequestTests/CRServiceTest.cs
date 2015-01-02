@@ -513,7 +513,7 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
         }
 
         [Test, TestCaseSource("ChangeRequestsSearchData")]
-        public void Serivce_IntegrationTest_GetChangeRequests_Success(ChangeRequestsSearch changeRequestsSearch, int searchResultCount, int searchQueryCount, string crNumber, string revisionNumber)
+        public void Service_IntegrationTest_GetChangeRequests_Success(ChangeRequestsSearch changeRequestsSearch, int searchResultCount, int searchQueryCount, string crNumber, string revisionNumber)
         {
             var svcCr = new ChangeRequestService();
             var result = svcCr.GetChangeRequests(PersonId, changeRequestsSearch);
@@ -605,6 +605,8 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
                 yield return new object[] { new ChangeRequestsSearch() { PageSize = 2, SkipRecords = 0, SpecificationNumber = "22.101" }, 2, 6, "AC014", "1" };
                 yield return new object[] { new ChangeRequestsSearch() { PageSize = 5, SkipRecords = 10, SpecificationNumber = "22.10" }, 5, 22, "AZEE", "2" };
                 yield return new object[] { new ChangeRequestsSearch() { PageSize = 3, SkipRecords = 21, SpecificationNumber = "22.10" }, 1, 22, "BBBB", "4" };
+                yield return new object[] { new ChangeRequestsSearch() { PageSize = 100, SkipRecords = 0, SpecificationNumber = "22.101", ReleaseIds = new List<int>{0}}, 6, 6, "AC014", "1" };
+                yield return new object[] { new ChangeRequestsSearch() { PageSize = 100, SkipRecords = 0, SpecificationNumber = "22.101", ReleaseIds = new List<int> { 0, 2884 } }, 6, 6, "AC014", "1" };
             }
         }
 
