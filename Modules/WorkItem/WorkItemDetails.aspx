@@ -154,11 +154,13 @@
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <asp:HyperLink ID="lnkSpecifications" runat="server" NavigateUrl="#">See Specifications specifically resulting from this Work Item</asp:HyperLink></td>
+                                    <asp:HyperLink ID="lnkSpecifications" runat="server" NavigateUrl="#">See Specifications specifically resulting from this Work Item</asp:HyperLink>
+                                </td>
                             </tr>
                             <tr>
                                 <td colspan="2">
-                                    <asp:HyperLink ID="lnkRelatedChanges" runat="server" NavigateUrl="#">See all related Change Requests related to this Work Item (all specifications)</asp:HyperLink></td>
+                                    <asp:HyperLink ID="lnkRelatedChanges" runat="server" NavigateUrl="#">See all related Change Requests related to this Work Item (all specifications)</asp:HyperLink>
+                                </td>
                             </tr>
                         </table>
                     </telerik:RadPageView>

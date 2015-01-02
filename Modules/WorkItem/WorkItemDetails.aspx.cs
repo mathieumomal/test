@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Telerik.Web.UI;
@@ -12,18 +11,18 @@ using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Module.WorkItem
 {
-    public partial class WorkItemDetails : System.Web.UI.Page
+    public partial class WorkItemDetails : Page
     {
         #region Fields
-        private const string CONST_GENERAL_TAB = "General";
-        private const string CONST_RELATED_TAB = "Related";
-        private const string CONST_EMPTY_FIELD = " - ";
-        private const string DATE_FORMAT_STRING = "yyyy-MM-dd";
-        private const string CONST_BASE_URL = "/desktopmodules/WorkItem/WorkItemDetails.aspx?workitemId=";
-        public const string DsId_Key = "ETSI_DS_ID";
+        private const string ConstGeneralTab = "General";
+        private const string ConstRelatedTab = "Related";
+        private const string ConstEmptyField = " - ";
+        private const string DateFormatString = "yyyy-MM-dd";
+        private const string ConstBaseUrl = "/desktopmodules/WorkItem/WorkItemDetails.aspx?workitemId=";
+        private const string DsIdKey = "ETSI_DS_ID";
 
-        private int UserId;
-        public Nullable<int> WorkItemId;
+        private int _userId;
+        private int? _workItemId;
         #endregion
 
         #region Events
@@ -38,18 +37,21 @@ namespace Etsi.Ultimate.Module.WorkItem
             }
         }
 
-        protected void ChildWiTable_ItemDataBound(object sender, Telerik.Web.UI.GridItemEventArgs e)
+        protected void ChildWiTable_ItemDataBound(object sender, GridItemEventArgs e)
         {
             if (e.Item is GridDataItem)
             {
                 //Get workitem row
-                DomainClasses.WorkItem currentWi = (DomainClasses.WorkItem)e.Item.DataItem;
+                var currentWi = (DomainClasses.WorkItem)e.Item.DataItem;
 
                 // Manage WI UID and link to description               
-                HyperLink lnkWiDescription = e.Item.FindControl("lnkWiDescription") as HyperLink;
-                lnkWiDescription.Text = currentWi.Pk_WorkItemUid.ToString();
-                lnkWiDescription.NavigateUrl = CONST_BASE_URL + currentWi.Pk_WorkItemUid;
-                lnkWiDescription.Visible = true;
+                var lnkWiDescription = e.Item.FindControl("lnkWiDescription") as HyperLink;
+                if (lnkWiDescription != null)
+                {
+                    lnkWiDescription.Text = currentWi.Pk_WorkItemUid.ToString(CultureInfo.InvariantCulture);
+                    lnkWiDescription.NavigateUrl = ConstBaseUrl + currentWi.Pk_WorkItemUid;
+                    lnkWiDescription.Visible = true;
+                }
             }
         }        
 
@@ -68,12 +70,12 @@ namespace Etsi.Ultimate.Module.WorkItem
 
         private void LoadWorkItemDetails()
         {
-            if (WorkItemId != null)
+            if (_workItemId != null)
             {
-                IWorkItemService svc = ServicesFactory.Resolve<IWorkItemService>();
-                KeyValuePair<DomainClasses.WorkItem, DomainClasses.UserRightsContainer> wiRightsObject = svc.GetWorkItemByIdExtend(UserId, WorkItemId.Value);
-                Domain.WorkItem workitem = wiRightsObject.Key;
-                DomainClasses.UserRightsContainer userRights = wiRightsObject.Value;
+                var svc = ServicesFactory.Resolve<IWorkItemService>();
+                var wiRightsObject = svc.GetWorkItemByIdExtend(_userId, _workItemId.Value);
+                var workitem = wiRightsObject.Key;
+                var userRights = wiRightsObject.Value;
 
                 if (workitem == null)
                 {
@@ -90,11 +92,13 @@ namespace Etsi.Ultimate.Module.WorkItem
 
 
                     //Set Remarks control
-                    RemarksControl rmk = wiRemarks as RemarksControl;
-                    rmk.IsEditMode = false;
-                    rmk.UserRights = userRights;
-                    rmk.DataSource = workitem.Remarks.ToList();
-
+                    var rmk = wiRemarks as RemarksControl;
+                    if (rmk != null)
+                    {
+                        rmk.IsEditMode = false;
+                        rmk.UserRights = userRights;
+                        rmk.DataSource = workitem.Remarks.ToList();
+                    }
                 }
             }
             else
@@ -107,23 +111,22 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// <summary>
         /// Set the tabs display
         /// </summary>
-        /// <param name="userRights"></param>
         private void BuildTabsDisplay()
         {
             wiDetailRadTabStrip.Tabs.Add(
-                new RadTab()
+                new RadTab
                 {
-                    PageViewID = "RadPage" + CONST_GENERAL_TAB,
-                    Text = CONST_GENERAL_TAB,
+                    PageViewID = "RadPage" + ConstGeneralTab,
+                    Text = ConstGeneralTab,
                     Selected = true
 
                 });
 
             wiDetailRadTabStrip.Tabs.Add(
-                new RadTab()
+                new RadTab
                 {
-                    PageViewID = "RadPage" + CONST_RELATED_TAB,
-                    Text = CONST_RELATED_TAB,
+                    PageViewID = "RadPage" + ConstRelatedTab,
+                    Text = ConstRelatedTab,
                     Selected = false
                 });
 
@@ -133,7 +136,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// Fill General Tab with retrieved data
         /// </summary>
         /// <param name="userRights"></param>
-        /// <param name="release"></param>
+        /// <param name="workitem"></param>
         private void FillGeneralTab(DomainClasses.UserRightsContainer userRights, Domain.WorkItem workitem)
         {
             lblName.Text = workitem.Name;
@@ -188,18 +191,19 @@ namespace Etsi.Ultimate.Module.WorkItem
                     lblWiLevel.Text = "5th level";
                     break;
                 default:
-                    lblWiLevel.Text = CONST_EMPTY_FIELD;
+                    lblWiLevel.Text = ConstEmptyField;
                     break;
             }
 
-            lblRelease.Text = (workitem.Release != null) ? workitem.Release.Code : CONST_EMPTY_FIELD;
-            lblStartDate.Text = (workitem.StartDate != null) ? workitem.StartDate.Value.ToString(DATE_FORMAT_STRING) : CONST_EMPTY_FIELD;
-            lblEndDate.Text = (workitem.EndDate != null) ? workitem.EndDate.Value.ToString(DATE_FORMAT_STRING) : CONST_EMPTY_FIELD;
+            lblRelease.Text = (workitem.Release != null) ? workitem.Release.Code : ConstEmptyField;
+            lblStartDate.Text = (workitem.StartDate != null) ? workitem.StartDate.Value.ToString(DateFormatString) : ConstEmptyField;
+            lblEndDate.Text = (workitem.EndDate != null) ? workitem.EndDate.Value.ToString(DateFormatString) : ConstEmptyField;
         }
 
         /// <summary>
         /// Fill Related Tab with retrieved data
         /// </summary>
+        /// <param name="userRights"></param>
         /// <param name="workitem"></param>
         private void FillRelatedTab(DomainClasses.UserRightsContainer userRights, Domain.WorkItem workitem)
         {
@@ -247,8 +251,8 @@ namespace Etsi.Ultimate.Module.WorkItem
 
             if (workitem.ParentWi != null && workitem.WiLevel > 1)
             {
-                lnkParentWi.Text = workitem.ParentWi.Pk_WorkItemUid.ToString();
-                lnkParentWi.NavigateUrl = CONST_BASE_URL + workitem.ParentWi.Pk_WorkItemUid;
+                lnkParentWi.Text = workitem.ParentWi.Pk_WorkItemUid.ToString(CultureInfo.InvariantCulture);
+                lnkParentWi.NavigateUrl = ConstBaseUrl + workitem.ParentWi.Pk_WorkItemUid;
                 lnkParentWi.Visible = true;
                 lblParentWorkItem.Text = String.Format(" - {0}", workitem.ParentWi.Name);
             }
@@ -260,7 +264,11 @@ namespace Etsi.Ultimate.Module.WorkItem
 
             // Link to specifications
             lnkSpecifications.Target = "_blank";
-            lnkSpecifications.NavigateUrl = "/Specifications.aspx?q=1&WiUid=" + workitem.Pk_WorkItemUid;
+            lnkSpecifications.NavigateUrl = string.Format(ConfigVariables.RelativeUrlWiRelatedSpecs, workitem.Pk_WorkItemUid);
+
+            //Link to related CRs
+            lnkRelatedChanges.Target = "_blank";
+            lnkRelatedChanges.NavigateUrl = string.Format(ConfigVariables.RelativeUrlWiRelatedCrs, workitem.Pk_WorkItemUid);
 
             // Link to TDoc            
             if(!String.IsNullOrEmpty(workitem.Wid))
@@ -274,15 +282,15 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// Set meeting link text
         /// </summary>
         /// <param name="link"></param>
-        /// <param name="MeetingRef"></param>
-        /// <param name="MeetingId"></param>
-        private void SetMeetingLink(HyperLink link, String MeetingRef, int? MeetingId)
+        /// <param name="meetingRef"></param>
+        /// <param name="meetingId"></param>
+        private void SetMeetingLink(HyperLink link, String meetingRef, int? meetingId)
         {
-            if (!String.IsNullOrEmpty(MeetingRef) || MeetingId != null)
+            if (!String.IsNullOrEmpty(meetingRef) || meetingId != null)
             {
-                link.Text = MeetingRef;
-                if (MeetingId != null)
-                    link.NavigateUrl = ConfigVariables.MeetingDetailsAddress + MeetingId;
+                link.Text = meetingRef;
+                if (meetingId != null)
+                    link.NavigateUrl = ConfigVariables.MeetingDetailsAddress + meetingId;
             }
         }
 
@@ -292,25 +300,22 @@ namespace Etsi.Ultimate.Module.WorkItem
         private void GetRequestParameters()
         {
             int output;
-            UserId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
-            WorkItemId = (Request.QueryString["workitemId"] != null) ? (int.TryParse(Request.QueryString["workitemId"], out output) ? new Nullable<int>(output) : null) : null;
+            _userId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
+            _workItemId = (Request.QueryString["workitemId"] != null) ? (int.TryParse(Request.QueryString["workitemId"], out output) ? new int?(output) : null) : null;
         }
 
         /// <summary>
         /// Retrieve person If
         /// </summary>
-        /// <param name="UserInfo"></param>
+        /// <param name="userInfo"></param>
         /// <returns></returns>
-        private int GetUserPersonId(DotNetNuke.Entities.Users.UserInfo UserInfo)
+        private int GetUserPersonId(DotNetNuke.Entities.Users.UserInfo userInfo)
         {
-            if (UserInfo.UserID < 0)
+            if (userInfo.UserID < 0)
                 return 0;
-            else
-            {
-                int personID;
-                if (Int32.TryParse(UserInfo.Profile.GetPropertyValue(DsId_Key), out personID))
-                    return personID;
-            }
+            int personId;
+            if (Int32.TryParse(userInfo.Profile.GetPropertyValue(DsIdKey), out personId))
+                return personId;
             return 0;
         }
 

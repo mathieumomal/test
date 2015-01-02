@@ -103,6 +103,9 @@
   <add key="DownloadparticipantsListLink" value="http://dnn3gpp.13.etsiqa.org/desktopmodules/Meetings/DownloadParticipantsList.aspx?eventId={0}" />
   <add key="CRsListRecordsMaxSize" value="100"/>
   
+  <add key="RelativeUrlWiRelatedSpecs" value="/Specifications.aspx?q=1&amp;WiUid={0}"/>
+  <add key="RelativeUrlWiRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;workitem={0}"/>
+	
   </appSettings>
   <system.web.webPages.razor>
     <pages pageBaseType="DotNetNuke.Web.Razor.DotNetNukeWebPage">

@@ -259,6 +259,26 @@ namespace Etsi.Ultimate.Utils
                 return success ? returnValue : 0;
             }
         }
+
+        public static string RelativeUrlWiRelatedSpecs
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["RelativeUrlWiRelatedSpecs"] != null)
+                    return ConfigurationManager.AppSettings["RelativeUrlWiRelatedSpecs"];
+                return "";
+            }
+        }
+
+        public static string RelativeUrlWiRelatedCrs
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["RelativeUrlWiRelatedCrs"] != null)
+                    return ConfigurationManager.AppSettings["RelativeUrlWiRelatedCrs"];
+                return "";
+            }
+        }
      
     }
 }
