@@ -105,6 +105,7 @@
   
   <add key="RelativeUrlWiRelatedSpecs" value="/Specifications.aspx?q=1&amp;WiUid={0}"/>
   <add key="RelativeUrlWiRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;workitem={0}&amp;release={1}&amp;specnumber={2}"/>
+  <add key="RelativeUrlVersionRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;versionId={0}&amp;release={1}"/>
 	
   </appSettings>
   <system.web.webPages.razor>

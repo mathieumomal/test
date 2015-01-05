@@ -39,6 +39,11 @@
         height: 16px;
     }
 
+    .linkStyle img
+    {
+        height: 16px;
+    }
+
     a.disabled
     {
         pointer-events: none;
@@ -166,7 +171,7 @@
                                 />
                         </a>
                         <asp:ImageButton ID="imgRelatedTDocs" CssClass="linkStyle" ImageUrl="images/spec_rel-TDocs.png" ToolTip="Related TDocs" runat="server" OnClientClick="return false;" />
-                        <asp:ImageButton ID="imgRelatedCRs" CssClass="linkStyle disabled notAvailable" ImageUrl="images/spec_rel-CRs.png" runat="server" OnClientClick="return false;" />
+                        <asp:HyperLink ID="imgRelatedCRs" runat="server" ImageUrl="images/spec_rel-CRs.png" Target="_blank"/>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
                 <telerik:GridBoundColumn DataField="Source" UniqueName="Source" Display="false"></telerik:GridBoundColumn>

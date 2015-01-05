@@ -20,6 +20,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private const string CONST_WEBCONFIG_WI_REPORT_PATH = "WIReportPath";
 
         private const string CrButtonDisplayCssClasses = "linkStyle";
+        private const string CrButtonDisabledCssClasses = "linkStyle disabled notAvailable";
 
         #endregion
 
@@ -141,13 +142,6 @@ namespace Etsi.Ultimate.Module.Specifications
                 if (remarkText.Length > 30)
                     ((Label)item["LatestRemark"].FindControl("lblRemarkText")).Text = remarkText.Substring(0, 29) + "...";
 
-                var specVersion = (SpecVersion)item.DataItem;
-                if (specVersion != null)
-                {
-                    var versionRemarks = (ImageButton)item["LatestRemark"].FindControl("imgVersionRemarks");
-                    versionRemarks.OnClientClick = "openRemarksPopup('version','" + specVersion.Pk_VersionId + "','" + IsEditMode + "', 'Version Remarks'); return false;";                    
-                }
-
                 if (!String.IsNullOrEmpty(item["Source"].Text))
                 {
                     var link = (HyperLink)item["Meetings"].FindControl("lnkMeetings");
@@ -155,8 +149,15 @@ namespace Etsi.Ultimate.Module.Specifications
                     link.NavigateUrl = ConfigVariables.MeetingDetailsAddress + item["Source"].Text;
                 }
 
-                //Display informations contains in the SpecDecorator
-                ApplyChangeRequestInformation(item);
+                var specVersion = (SpecVersion)item.DataItem;
+                if (specVersion != null)
+                {
+                    var versionRemarks = (ImageButton)item["LatestRemark"].FindControl("imgVersionRemarks");
+                    versionRemarks.OnClientClick = "openRemarksPopup('version','" + specVersion.Pk_VersionId + "','" + IsEditMode + "', 'Version Remarks'); return false;";
+
+                    //Display informations contains in the SpecDecorator
+                    ApplyChangeRequestInformation(item, specVersion);
+                }
             }
         }
 
@@ -235,21 +236,28 @@ namespace Etsi.Ultimate.Module.Specifications
         /// <summary>
         /// Applied SpecDecorator informations
         /// </summary>
-        /// <param name="item"></param>
-        private void ApplyChangeRequestInformation(GridDataItem item)
+        /// <param name="item">Grid data item</param>
+        /// <param name="specVersion">Version entity</param>
+        private void ApplyChangeRequestInformation(GridDataItem item, SpecVersion specVersion)
         {
             //Get current version
-            var id = (int)item.GetDataKeyValue("Pk_VersionId");
+            var id = specVersion.Pk_VersionId;
 
             //Foundamental CRs tooltip associated to a version
-            var relatedCrsTooltip = (ImageButton)item["link"].FindControl("imgRelatedCRs");
+            var relatedCrs = (HyperLink)item["link"].FindControl("imgRelatedCRs");
             if (AdditionalVersionInfo.SpecVersionFoundationCrs == null)
+            {
+                relatedCrs.CssClass = CrButtonDisabledCssClasses;
                 return;
+            }
             var currentVersion = AdditionalVersionInfo.SpecVersionFoundationCrs.FirstOrDefault(x => x.VersionId == id);
             if (currentVersion != null)
             {
                 if (currentVersion.FoundationCrs.Count == 0)
+                {
+                    relatedCrs.CssClass = CrButtonDisabledCssClasses;
                     return;
+                }
                 var tooltip = new StringBuilder();
                 foreach (var cr in currentVersion.FoundationCrs)
                 {
@@ -260,8 +268,9 @@ namespace Etsi.Ultimate.Module.Specifications
                     if (tooltip.Length > 0)
                         tooltip.Append("\n");
                 }
-                relatedCrsTooltip.ToolTip = tooltip.ToString();
-                relatedCrsTooltip.CssClass = CrButtonDisplayCssClasses;
+                relatedCrs.ToolTip = tooltip.ToString();
+                relatedCrs.CssClass = CrButtonDisplayCssClasses;
+                relatedCrs.NavigateUrl = String.Format(ConfigVariables.RelativeUrlVersionRelatedCrs, specVersion.Pk_VersionId, specVersion.Fk_ReleaseId);
             }
         }
 

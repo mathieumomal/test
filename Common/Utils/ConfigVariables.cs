@@ -279,6 +279,18 @@ namespace Etsi.Ultimate.Utils
                 return "";
             }
         }
-     
+
+        /// <summary>
+        /// Gets the relative URL version related CRS.
+        /// </summary>
+        public static string RelativeUrlVersionRelatedCrs
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["RelativeUrlVersionRelatedCrs"] != null)
+                    return ConfigurationManager.AppSettings["RelativeUrlVersionRelatedCrs"];
+                return "";
+            }
+        }     
     }
 }
