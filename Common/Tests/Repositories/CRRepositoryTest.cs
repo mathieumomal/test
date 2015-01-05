@@ -149,6 +149,18 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(expectedResult, result.Key.Count);
         }
 
+        [TestCase("22.107", 428927, 1)]
+        [TestCase("22.101", 428926, 0)]
+        public void GetChangeRequestsTest_SpecNumber(string specNumber, int specVersion, int expectedResult)
+        {
+            var searchObj = new ChangeRequestsSearch { SpecificationNumber = specNumber, VersionId = specVersion};
+
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetChangeRequests(searchObj);
+
+            Assert.AreEqual(expectedResult, result.Key.Count);
+        }
+
         [TestCase(2874, 2883, 16)]
         [TestCase(2882, 2884, 6)]
         public void GetChangeRequestsTest_Release(int releaseId1, int releaseId2, int expectedResult)

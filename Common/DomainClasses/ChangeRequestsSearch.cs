@@ -57,5 +57,10 @@ namespace Etsi.Ultimate.DomainClasses
         /// Gets or sets the TSG status ids.
         /// </summary>
         public List<int> TsgStatusIds { get; set; }
+
+        /// <summary>
+        /// Gets or sets Spec version id
+        /// </summary>
+        public int VersionId { get; set; }
     }
 }
