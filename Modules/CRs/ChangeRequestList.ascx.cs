@@ -32,6 +32,7 @@ namespace Etsi.Ultimate.Module.CRs
         protected ShareUrlControl crShareUrl;
         protected ReleaseSearchControl releaseSearchControl;
         private bool _isUrlSearch;
+        private VersionForCrListFacade _versionForCrListFacade;
 
         /// <summary>
         /// Gets or sets the search object.
@@ -88,6 +89,7 @@ namespace Etsi.Ultimate.Module.CRs
             SearchObj.ReleaseIds = releaseSearchControl.SelectedReleaseIds;
             SearchObj.WgStatusIds = GetSelectedWgStatusIds();
             SearchObj.TsgStatusIds = GetSelectedTsgStatusIds();
+            SearchObj.VersionId = 0;//By default because we don't have any UI filters for the version for the moment
             rgCrList.CurrentPageIndex = 0;
             rgCrList.Rebind();
         }
@@ -225,7 +227,15 @@ namespace Etsi.Ultimate.Module.CRs
             {
                 int versionId;
                 if (int.TryParse(Request.QueryString["versionId"], out versionId))
+                {
                     SearchObj.VersionId = versionId;
+                    var specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
+                    _versionForCrListFacade = specVersionSvc.GetVersionNumberWithSpecNumberByVersionId(
+                        GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()),
+                        versionId).Result;
+                    txtSpecificationNumber.Text = _versionForCrListFacade.SpecNumber;
+                }
+                    
             }
 
             //[2] Releases (if release contains 0 then all releases will be selected)
@@ -505,16 +515,7 @@ namespace Etsi.Ultimate.Module.CRs
                 var sb = new StringBuilder();
 
                 if (SearchObj.VersionId != 0)
-                {
-                    var specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
-                    var response = specVersionSvc.GetVersionNumberWithSpecNumberByVersionId(
-                        GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()),
-                        SearchObj.VersionId);
-                    if (response.Report.GetNumberOfErrors() == 0)
-                    {
-                        sb.Append(String.Format("{0}, Version({1}) ", response.Result.SpecNumber, response.Result.Version));
-                    }
-                }
+                    sb.Append(String.Format("{0}, Version({1}), ", _versionForCrListFacade.SpecNumber, _versionForCrListFacade.Version));
                 else
                 {
                     if (!String.IsNullOrEmpty(SearchObj.SpecificationNumber))
