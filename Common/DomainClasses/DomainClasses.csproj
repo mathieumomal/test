@@ -109,6 +109,7 @@
     <Compile Include="Facades\ChangeRequestListFacade.cs" />
     <Compile Include="Facades\FoundationCrsInfo.cs" />
     <Compile Include="Facades\SpecVersionFoundationCrs.cs" />
+    <Compile Include="Facades\VersionForCrListFacade.cs" />
     <Compile Include="History.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

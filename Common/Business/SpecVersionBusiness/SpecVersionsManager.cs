@@ -1,14 +1,11 @@
-﻿using Etsi.Ultimate.Business.Security;
+﻿using System.Linq;
+using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
-using Etsi.Ultimate.Utils;
-using Etsi.Ultimate.Utils.ModelMails;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Business.SpecVersionBusiness
 {
@@ -20,7 +17,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
         public List<SpecVersion> GetVersionsBySpecId(int specificationId)
         {
-            ISpecVersionsRepository specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             specVersionRepo.UoW = UoW;
 
             var specVersions = specVersionRepo.GetVersionsBySpecId(specificationId);
@@ -29,23 +26,18 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
         public List<SpecVersion> GetVersionsForASpecRelease(int specificationId, int releaseId)
         {
-            List<SpecVersion> result = new List<SpecVersion>();
-            ISpecVersionsRepository repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            var repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             repo.UoW = UoW;
-            result = repo.GetVersionsForSpecRelease(specificationId, releaseId);
+            var result = repo.GetVersionsForSpecRelease(specificationId, releaseId);
             return result;
         }
 
         public KeyValuePair<SpecVersion, UserRightsContainer> GetSpecVersionById(int versionId, int personId)
         {
-            ISpecVersionsRepository repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            var repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             repo.UoW = UoW;
 
-            ////New version
-            //if (versionId == -1)
-            //    return new KeyValuePair<SpecVersion, UserRightsContainer>(new SpecVersion { MajorVersion = -1, TechnicalVersion = -1, EditorialVersion = -1 }, null);
-
-            SpecVersion version = repo.Find(versionId);
+            var version = repo.Find(versionId);
             if (version == null)
                 return new KeyValuePair<SpecVersion, UserRightsContainer>(null, null);
 
@@ -59,22 +51,39 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             releaseMgr.UoW = UoW;
             var releases = releaseMgr.GetAllReleases(personId).Key;
 
-            var specificationManager = new SpecificationManager();
-            specificationManager.UoW = UoW;
+            var specificationManager = new SpecificationManager {UoW = UoW};
             //Get calculated rights
-            KeyValuePair<Specification_Release, UserRightsContainer> specRelease_Rights = specificationManager.GetRightsForSpecRelease(personRights, personId, version.Specification, version.Release.Pk_ReleaseId, releases);
+            var specReleaseRights = specificationManager.GetRightsForSpecRelease(personRights, personId, version.Specification, version.Release.Pk_ReleaseId, releases);
 
-            return new KeyValuePair<SpecVersion, UserRightsContainer>(version, specRelease_Rights.Value);
+            return new KeyValuePair<SpecVersion, UserRightsContainer>(version, specReleaseRights.Value);
+        }
+
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="versionId"></param>
+        /// <returns></returns>
+        public ServiceResponse<VersionForCrListFacade> GetVersionNumberWithSpecNumberByVersionId(int personId, int versionId)
+        {
+            var response = new ServiceResponse<VersionForCrListFacade>();
+            var repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            repo.UoW = UoW;
+            var version = repo.AllIncluding(x => x.Specification).FirstOrDefault(x => x.Pk_VersionId == versionId);
+            if (version == null)
+                response.Report.LogError(Localization.Version_Not_Found);
+            else
+                response.Result = new VersionForCrListFacade { Version = version.Version, SpecNumber = version.Specification.Number };
+            return response;
         }
 
         public List<Report> AllocateVersionFromMassivePromote(List<Specification> specifications, Release release, int personId)
         {
-            SpecVersionAllocateAction specVersionAllocateAction = new SpecVersionAllocateAction();
-            specVersionAllocateAction.UoW = UoW;
+            var specVersionAllocateAction = new SpecVersionAllocateAction {UoW = UoW};
 
-            List<Report> reports = new List<Report>();
+            var reports = new List<Report>();
             Report r;
-            foreach (Specification s in specifications)
+            foreach (var s in specifications)
             {
                 r = specVersionAllocateAction.AllocateVersion(personId,new SpecVersion()
                 {
@@ -100,7 +109,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             if (!releaseVersion.HasValue)
                 return 0;
 
-            ISpecVersionsRepository specVersionMgr = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            var specVersionMgr = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             specVersionMgr.UoW = UoW;
             return specVersionMgr.CountVersionsPendingUploadByReleaseId(releaseVersion.GetValueOrDefault());
         }
@@ -122,12 +131,10 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             {
                 if (entity != null)
                 {
-                    SyncInfo syncInfo = new SyncInfo();
-                    syncInfo.TerminalName = terminalName;
-                    syncInfo.Offline_PK_Id = entity.Pk_VersionId;
+                    var syncInfo = new SyncInfo {TerminalName = terminalName, Offline_PK_Id = entity.Pk_VersionId};
                     entity.SyncInfoes.Add(syncInfo);
 
-                    IOfflineRepository offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
+                    var offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
                     offlineRepo.UoW = UoW;
                     offlineRepo.InsertOfflineEntity(entity);
                 }
@@ -158,9 +165,9 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                 if (entity != null)
                 {
                     //[1] Get the DB Version Entity
-                    ISpecVersionsRepository specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+                    var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
                     specVersionRepo.UoW = UoW;
-                    SpecVersion dbEntity = specVersionRepo.Find(entity.Pk_VersionId);
+                    var dbEntity = specVersionRepo.Find(entity.Pk_VersionId);
 
                     //Record may be deleted in serverside, while changes happen at offline
                     //So, priority is serverside, hence no more changes will update
@@ -170,7 +177,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                         UpdateModifications(dbEntity, entity);
 
                         //[3] Update modified entity in Context
-                        IOfflineRepository offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
+                        var offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
                         offlineRepo.UoW = UoW;
                         offlineRepo.UpdateOfflineEntity(dbEntity);
                     }
@@ -195,21 +202,21 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
         /// <returns>Success/Failure</returns>
         public bool DeleteEntity(int primaryKey)
         {
-            bool isSuccess = true;
+            var isSuccess = true;
 
             try
             {
                 //[1] Get the DB Version Entity
-                ISpecVersionsRepository specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+                var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
                 specVersionRepo.UoW = UoW;
-                SpecVersion dbEntity = specVersionRepo.Find(primaryKey);
+                var dbEntity = specVersionRepo.Find(primaryKey);
 
                 //Record may be deleted in serverside, while changes happen at offline
                 //So, priority is serverside, hence no more changes will update
                 if (dbEntity != null)
                 {
                     //[2] Update modified entity in Context
-                    IOfflineRepository offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
+                    var offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
                     offlineRepo.UoW = UoW;
                     offlineRepo.DeleteOfflineEntity(dbEntity);
                 }

@@ -1,6 +1,4 @@
-﻿using System.Data;
-using System.Web.Services;
-using DotNetNuke.Entities.Modules;
+﻿using DotNetNuke.Entities.Modules;
 using DotNetNuke.Entities.Tabs;
 using Etsi.Ultimate.Controls;
 using Etsi.Ultimate.DomainClasses;
@@ -22,9 +20,9 @@ namespace Etsi.Ultimate.Module.CRs
         #region constants
 
         private const string DsIdKey = "ETSI_DS_ID";
-        private const string VS_CR_SEARCH_OBJ = "VS_CR_SEARCH_OBJ";
-        private const string PK_ENUMCHANGEREQUESTSTATUS = "Pk_EnumChangeRequestStatus";
-        private const string DESCRIPTION = "Description";
+        private const string VsCrSearchObj = "VS_CR_SEARCH_OBJ";
+        private const string PkEnumchangerequeststatus = "Pk_EnumChangeRequestStatus";
+        private const string Description = "Description";
 
         #endregion
 
@@ -33,20 +31,20 @@ namespace Etsi.Ultimate.Module.CRs
         protected FullView CrFullView;
         protected ShareUrlControl crShareUrl;
         protected ReleaseSearchControl releaseSearchControl;
-        private bool isUrlSearch;
+        private bool _isUrlSearch;
 
         /// <summary>
         /// Gets or sets the search object.
         /// </summary>
-        private ChangeRequestsSearch searchObj
+        private ChangeRequestsSearch SearchObj
         {
             get
             {
-                return (ChangeRequestsSearch)ViewState[VS_CR_SEARCH_OBJ];
+                return (ChangeRequestsSearch)ViewState[VsCrSearchObj];
             }
             set
             {
-                ViewState[VS_CR_SEARCH_OBJ] = value;
+                ViewState[VsCrSearchObj] = value;
             }
         }
 
@@ -66,8 +64,8 @@ namespace Etsi.Ultimate.Module.CRs
                 releaseSearchControl.IsLoadingNeeded = !crList.Visible;
                 crList.Visible = true;
                 GetRequestParameters();
-                searchObj = new ChangeRequestsSearch() { ReleaseIds = new List<int>(), WgStatusIds = new List<int>(), TsgStatusIds = new List<int>(), MeetingIds = new List<int>(), WorkItemIds = new List<int>() };
-                searchObj.PageSize = rgCrList.PageSize = ConfigVariables.CRsListRecordsMaxSize;
+                SearchObj = new ChangeRequestsSearch() { ReleaseIds = new List<int>(), WgStatusIds = new List<int>(), TsgStatusIds = new List<int>(), MeetingIds = new List<int>(), WorkItemIds = new List<int>() };
+                SearchObj.PageSize = rgCrList.PageSize = ConfigVariables.CRsListRecordsMaxSize;
 
                 //Load CR Statuses
                 LoadCrStatuses();
@@ -83,13 +81,13 @@ namespace Etsi.Ultimate.Module.CRs
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            isUrlSearch = false;
-            searchObj.SpecificationNumber = txtSpecificationNumber.Text;
-            searchObj.MeetingIds = GetSelectedMeetingIds();
-            searchObj.WorkItemIds = GetSelectedWorkItemIds();
-            searchObj.ReleaseIds = releaseSearchControl.SelectedReleaseIds;
-            searchObj.WgStatusIds = GetSelectedWgStatusIds();
-            searchObj.TsgStatusIds = GetSelectedTsgStatusIds();
+            _isUrlSearch = false;
+            SearchObj.SpecificationNumber = txtSpecificationNumber.Text;
+            SearchObj.MeetingIds = GetSelectedMeetingIds();
+            SearchObj.WorkItemIds = GetSelectedWorkItemIds();
+            SearchObj.ReleaseIds = releaseSearchControl.SelectedReleaseIds;
+            SearchObj.WgStatusIds = GetSelectedWgStatusIds();
+            SearchObj.TsgStatusIds = GetSelectedTsgStatusIds();
             rgCrList.CurrentPageIndex = 0;
             rgCrList.Rebind();
         }
@@ -179,8 +177,8 @@ namespace Etsi.Ultimate.Module.CRs
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected void releaseSearchControl_Load(object sender, EventArgs e)
         {
-            if (searchObj.ReleaseIds.Count == 0)
-                searchObj.ReleaseIds = releaseSearchControl.SelectedReleaseIds;
+            if (SearchObj.ReleaseIds.Count == 0)
+                SearchObj.ReleaseIds = releaseSearchControl.SelectedReleaseIds;
             LoadData();
         }
 
@@ -193,18 +191,18 @@ namespace Etsi.Ultimate.Module.CRs
         /// </summary>
         private void LoadData()
         {
-            if (isUrlSearch)
+            if (_isUrlSearch)
                 LoadUrlData();
             else
-                searchObj.SkipRecords = rgCrList.CurrentPageIndex * searchObj.PageSize;
+                SearchObj.SkipRecords = rgCrList.CurrentPageIndex * SearchObj.PageSize;
 
             var crSvc = ServicesFactory.Resolve<IChangeRequestService>();
-            var response = crSvc.GetChangeRequests(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
+            var response = crSvc.GetChangeRequests(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), SearchObj);
             if (response.Report.GetNumberOfErrors() != 0)
                 return;
 
             rgCrList.VirtualItemCount = response.Result.Value;
-            rgCrList.CurrentPageIndex = searchObj.SkipRecords / searchObj.PageSize;
+            rgCrList.CurrentPageIndex = SearchObj.SkipRecords / SearchObj.PageSize;
             rgCrList.DataSource = response.Result.Key;
 
             ManageShareUrl();
@@ -220,7 +218,15 @@ namespace Etsi.Ultimate.Module.CRs
         {
             //[1] Specification Number
             if (!String.IsNullOrEmpty(Request.QueryString["specnumber"]))
-                txtSpecificationNumber.Text = searchObj.SpecificationNumber = Request.QueryString["specnumber"];
+                txtSpecificationNumber.Text = SearchObj.SpecificationNumber = Request.QueryString["specnumber"];
+
+            //[1 bis] Spec version id
+            if (!String.IsNullOrEmpty(Request.QueryString["versionId"]))
+            {
+                int versionId;
+                if (int.TryParse(Request.QueryString["versionId"], out versionId))
+                    SearchObj.VersionId = versionId;
+            }
 
             //[2] Releases (if release contains 0 then all releases will be selected)
             if (!String.IsNullOrEmpty(Request.QueryString["release"]))
@@ -229,11 +235,11 @@ namespace Etsi.Ultimate.Module.CRs
                 var releaseIds = new List<int>();
                 releases.ForEach(x =>
                 {
-                    int releaseId = 0;
+                    int releaseId;
                     if (int.TryParse(x, out releaseId))
                         releaseIds.Add(releaseId);
                 });
-                releaseSearchControl.SelectedReleaseIds = searchObj.ReleaseIds = releaseIds;
+                releaseSearchControl.SelectedReleaseIds = SearchObj.ReleaseIds = releaseIds;
             }
 
             //[3] WG Statuses
@@ -243,11 +249,11 @@ namespace Etsi.Ultimate.Module.CRs
                 var wgStatusIds = new List<int>();
                 wgStatuses.ForEach(x =>
                 {
-                    int wgStatusId = 0;
+                    int wgStatusId;
                     if (int.TryParse(x, out wgStatusId))
                         wgStatusIds.Add(wgStatusId);
                 });
-                searchObj.WgStatusIds = wgStatusIds;
+                SearchObj.WgStatusIds = wgStatusIds;
                 rcbWgStatus.Items.ToList().ForEach(x => { x.Checked = wgStatusIds.Contains(Convert.ToInt32(x.Value)); });
             }
 
@@ -258,11 +264,11 @@ namespace Etsi.Ultimate.Module.CRs
                 var tsgStatusIds = new List<int>();
                 tsgStatuses.ForEach(x =>
                 {
-                    int tsgStatusId = 0;
+                    int tsgStatusId;
                     if (int.TryParse(x, out tsgStatusId))
                         tsgStatusIds.Add(tsgStatusId);
                 });
-                searchObj.TsgStatusIds = tsgStatusIds;
+                SearchObj.TsgStatusIds = tsgStatusIds;
                 rcbTsgStatus.Items.ToList().ForEach(x => { x.Checked = tsgStatusIds.Contains(Convert.ToInt32(x.Value)); });
             }
 
@@ -273,11 +279,11 @@ namespace Etsi.Ultimate.Module.CRs
                 var meetingIds = new List<int>();
                 meetings.ForEach(x =>
                 {
-                    int meetingId = 0;
+                    int meetingId;
                     if (int.TryParse(x, out meetingId))
                         meetingIds.Add(meetingId);
                 });
-                searchObj.MeetingIds = meetingIds;
+                SearchObj.MeetingIds = meetingIds;
 
                 var meetingSvc = ServicesFactory.Resolve<IMeetingService>();
                 var meetingsList = meetingSvc.GetMeetingsByIds(meetingIds);
@@ -286,7 +292,7 @@ namespace Etsi.Ultimate.Module.CRs
                 {
                     var meeting = meetingsList.Find(m => m.MTG_ID == x);
                     if (meeting != null)
-                        racMeeting.Entries.Add(new AutoCompleteBoxEntry(meeting.MtgDdlText, x.ToString()));
+                        racMeeting.Entries.Add(new AutoCompleteBoxEntry(meeting.MtgDdlText, x.ToString(CultureInfo.InvariantCulture)));
                 });
             }
 
@@ -297,11 +303,11 @@ namespace Etsi.Ultimate.Module.CRs
                 var workItemIds = new List<int>();
                 workitems.ForEach(x =>
                 {
-                    int workItemId = 0;
+                    int workItemId;
                     if (int.TryParse(x, out workItemId))
                         workItemIds.Add(workItemId);
                 });
-                searchObj.WorkItemIds = workItemIds;
+                SearchObj.WorkItemIds = workItemIds;
 
                 var workItemSvc = ServicesFactory.Resolve<IWorkItemService>();
                 var workItemsList = workItemSvc.GetWorkItemByIds(0, workItemIds).Key;
@@ -310,14 +316,14 @@ namespace Etsi.Ultimate.Module.CRs
                 {
                     var workItem = workItemsList.Find(wi => wi.Pk_WorkItemUid == x);
                     if(workItem != null)
-                        racWorkItem.Entries.Add(new AutoCompleteBoxEntry(workItem.WorkItemDdlText, x.ToString()));
+                        racWorkItem.Entries.Add(new AutoCompleteBoxEntry(workItem.WorkItemDdlText, x.ToString(CultureInfo.InvariantCulture)));
                 });
             }
 
             //[7] Page Index
-            int pageIndex = 0;
+            int pageIndex;
             if (!String.IsNullOrEmpty(Request.QueryString["pageindex"]) && (int.TryParse(Request.QueryString["pageindex"], out pageIndex)))
-                searchObj.SkipRecords = pageIndex * searchObj.PageSize;
+                SearchObj.SkipRecords = pageIndex * SearchObj.PageSize;
         }
 
         /// <summary>
@@ -330,13 +336,13 @@ namespace Etsi.Ultimate.Module.CRs
 
             if (!svcResponse.Key) return;
 
-            rcbWgStatus.DataValueField = PK_ENUMCHANGEREQUESTSTATUS;
-            rcbWgStatus.DataTextField = DESCRIPTION;
+            rcbWgStatus.DataValueField = PkEnumchangerequeststatus;
+            rcbWgStatus.DataTextField = Description;
             rcbWgStatus.DataSource = svcResponse.Value.OrderBy(x => x.Description);
             rcbWgStatus.DataBind();
 
-            rcbTsgStatus.DataValueField = PK_ENUMCHANGEREQUESTSTATUS;
-            rcbTsgStatus.DataTextField = DESCRIPTION;
+            rcbTsgStatus.DataValueField = PkEnumchangerequeststatus;
+            rcbTsgStatus.DataTextField = Description;
             rcbTsgStatus.DataSource = svcResponse.Value.OrderBy(x => x.Description);
             rcbTsgStatus.DataBind();
         }
@@ -350,7 +356,7 @@ namespace Etsi.Ultimate.Module.CRs
             var selectedMeetingIds = new List<int>();
             foreach (AutoCompleteBoxEntry entry in racMeeting.Entries)
             {
-                int meetingId = 0;
+                int meetingId;
                 if (int.TryParse(entry.Value, out meetingId))
                     selectedMeetingIds.Add(meetingId);
             }
@@ -367,7 +373,7 @@ namespace Etsi.Ultimate.Module.CRs
             var selectedWorkItemIds = new List<int>();
             foreach (AutoCompleteBoxEntry entry in racWorkItem.Entries)
             {
-                int workItemId = 0;
+                int workItemId;
                 if (int.TryParse(entry.Value, out workItemId))
                     selectedWorkItemIds.Add(workItemId);
             }
@@ -384,7 +390,7 @@ namespace Etsi.Ultimate.Module.CRs
             var selectedStatusIds = new List<int>();
 
             rcbWgStatus.CheckedItems.ToList().ForEach(x => {
-                int statusId = 0;
+                int statusId;
                 if (int.TryParse(x.Value, out statusId))
                     selectedStatusIds.Add(statusId);
             });
@@ -402,7 +408,7 @@ namespace Etsi.Ultimate.Module.CRs
 
             rcbTsgStatus.CheckedItems.ToList().ForEach(x =>
             {
-                int statusId = 0;
+                int statusId;
                 if (int.TryParse(x.Value, out statusId))
                     selectedStatusIds.Add(statusId);
             });
@@ -423,13 +429,9 @@ namespace Etsi.Ultimate.Module.CRs
         {
             if (userInfo.UserID < 0)
                 return 0;
-            else
-            {
-                int personId;
-                if (Int32.TryParse(userInfo.Profile.GetPropertyValue(DsIdKey), out personId))
-                    return personId;
-            }
-            return 0;
+
+            int personId;
+            return Int32.TryParse(userInfo.Profile.GetPropertyValue(DsIdKey), out personId) ? personId : 0;
         }
 
         /// <summary>
@@ -470,15 +472,17 @@ namespace Etsi.Ultimate.Module.CRs
         /// <returns>Url parameters</returns>
         private Dictionary<string, string> ManageUrlParams()
         {
-            var urlParams = new Dictionary<string, string>();
-            urlParams.Add("q", "1");
-            urlParams.Add("specnumber", searchObj.SpecificationNumber);
-            urlParams.Add("release", String.Join(",", searchObj.ReleaseIds));
-            urlParams.Add("wgstatus", String.Join(",", searchObj.WgStatusIds));
-            urlParams.Add("tsgstatus", String.Join(",", searchObj.TsgStatusIds));
-            urlParams.Add("meeting", String.Join(",", searchObj.MeetingIds));
-            urlParams.Add("workitem", String.Join(",", searchObj.WorkItemIds));
-            urlParams.Add("pageindex", (searchObj.SkipRecords / searchObj.PageSize).ToString());
+            var urlParams = new Dictionary<string, string>
+            {
+                {"q", "1"},
+                {"specnumber", SearchObj.SpecificationNumber},
+                {"release", String.Join(",", SearchObj.ReleaseIds)},
+                {"wgstatus", String.Join(",", SearchObj.WgStatusIds)},
+                {"tsgstatus", String.Join(",", SearchObj.TsgStatusIds)},
+                {"meeting", String.Join(",", SearchObj.MeetingIds)},
+                {"workitem", String.Join(",", SearchObj.WorkItemIds)},
+                {"pageindex", (SearchObj.SkipRecords/SearchObj.PageSize).ToString(CultureInfo.InvariantCulture)}
+            };
 
             return urlParams;
         }
@@ -488,7 +492,7 @@ namespace Etsi.Ultimate.Module.CRs
         /// </summary>
         private void GetRequestParameters()
         {
-            isUrlSearch = (Request.QueryString["q"] != null);
+            _isUrlSearch = (Request.QueryString["q"] != null);
         }
 
         /// <summary>
@@ -496,23 +500,37 @@ namespace Etsi.Ultimate.Module.CRs
         /// </summary>
         private void SetSearchLabel()
         {
-            if (searchObj != null)
+            if (SearchObj != null)
             {
                 var sb = new StringBuilder();
 
-                if (!String.IsNullOrEmpty(searchObj.SpecificationNumber))
-                    sb.Append(String.Format("{0}, ", searchObj.SpecificationNumber));
+                if (SearchObj.VersionId != 0)
+                {
+                    var specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
+                    var response = specVersionSvc.GetVersionNumberWithSpecNumberByVersionId(
+                        GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()),
+                        SearchObj.VersionId);
+                    if (response.Report.GetNumberOfErrors() == 0)
+                    {
+                        sb.Append(String.Format("{0}, Version({1})", response.Result.SpecNumber, response.Result.Version));
+                    }
+                }
+                else
+                {
+                    if (!String.IsNullOrEmpty(SearchObj.SpecificationNumber))
+                        sb.Append(String.Format("{0}, ", SearchObj.SpecificationNumber));
+                }
 
                 var releaseText = releaseSearchControl.SearchString;
                 sb.Append(String.Format("{0}, ", String.IsNullOrEmpty(releaseText) ? "Open Releases" : releaseText));
 
-                if (searchObj.WgStatusIds != null && searchObj.WgStatusIds.Count > 0)
+                if (SearchObj.WgStatusIds != null && SearchObj.WgStatusIds.Count > 0)
                     sb.Append(String.Format("WG Status({0}), ", String.Join(", ", rcbWgStatus.CheckedItems.Select(x => x.Text).ToList())));
-                if (searchObj.TsgStatusIds != null && searchObj.TsgStatusIds.Count > 0)
+                if (SearchObj.TsgStatusIds != null && SearchObj.TsgStatusIds.Count > 0)
                     sb.Append(String.Format("TSG Status({0}), ", String.Join(", ", rcbTsgStatus.CheckedItems.Select(x => x.Text).ToList())));
-                if (searchObj.MeetingIds != null && searchObj.MeetingIds.Count > 0)
+                if (SearchObj.MeetingIds != null && SearchObj.MeetingIds.Count > 0)
                     sb.Append(String.Format("Meetings({0}), ", racMeeting.Text));
-                if (searchObj.WorkItemIds != null && searchObj.WorkItemIds.Count > 0)
+                if (SearchObj.WorkItemIds != null && SearchObj.WorkItemIds.Count > 0)
                     sb.Append(String.Format("WorkItems({0}), ", racWorkItem.Text));
 
                 lblCrSearchHeader.Text = String.Format("Search form ({0})", (sb.Length > 100) ? sb.ToString().Trim().TrimEnd(',').Substring(0, 100) + "..." : sb.ToString().Trim().TrimEnd(','));

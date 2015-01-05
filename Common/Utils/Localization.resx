@@ -339,4 +339,7 @@
   <data name="History_Specification_Status_Changed_UnderChangeControl" xml:space="preserve">
     <value>Specification has been made Under Change Control</value>
   </data>
+  <data name="Version_Not_Found" xml:space="preserve">
+    <value>Version not found.</value>
+  </data>
 </root>

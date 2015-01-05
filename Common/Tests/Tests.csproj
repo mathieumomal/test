@@ -243,6 +243,7 @@
     <Compile Include="Services\SpecTranspositionServiceTest.cs" />
     <Compile Include="Services\SpecVersionServiceTest\NextVersionTest.cs" />
     <Compile Include="Services\SpecVersionServiceTest\SpecVersionAllocateTest.cs" />
+    <Compile Include="Services\SpecVersionServiceTest\SpecVersionSvcIntegrationTests.cs" />
     <Compile Include="Services\SpecVersionServiceTest\SpecVersionSvcTest.cs" />
     <Compile Include="Services\SpecVersionServiceTest\SpecVersionUploadTest.cs" />
     <Compile Include="Services\SpecWithdrawalTest.cs" />

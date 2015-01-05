@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
 
 namespace Etsi.Ultimate.Business
@@ -32,14 +28,22 @@ namespace Etsi.Ultimate.Business
         /// Return a SpecVersion and current user rights objects using identifiers
         /// </summary>
         /// <param name="versionId">The identifier of the requested version</param>
+        /// <param name="personId"></param>
         /// <returns>A couple (version,userrights)</returns>
         KeyValuePair<SpecVersion, UserRightsContainer> GetSpecVersionById(int versionId, int personId);
 
         /// <summary>
+        /// Get version 'number' and spec number related to a version by a versionId
+        /// </summary>
+        /// <returns></returns>
+        ServiceResponse<VersionForCrListFacade> GetVersionNumberWithSpecNumberByVersionId(int personId, int versionId);
+
+        /// <summary>
         /// Allocate version for a set of promoted specification for a release
         /// </summary>
-        /// <param name="specificationIds">Set of specification ids</param>
+        /// <param name="specifications"></param>
         /// <param name="release">Target release of promotion</param>
+        /// <param name="personId"></param>
         /// <returns></returns>
         List<Report> AllocateVersionFromMassivePromote(List<Specification> specifications, Release release, int personId);
 
@@ -68,7 +72,6 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Count the number of (latest) versions which pending upload
         /// </summary>
-        /// <param name="specId"></param>
         /// <returns></returns>
         int CountVersionsPendingUploadByReleaseId(int releaseId);
 

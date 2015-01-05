@@ -1,5 +1,6 @@
 ﻿using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
 using System;
 using System.Collections.Generic;
@@ -42,6 +43,21 @@ namespace Etsi.Ultimate.Services
                 var specVersionManager = new SpecVersionsManager();
                 specVersionManager.UoW = uoW;
                 return specVersionManager.GetSpecVersionById(VersionId, personId);
+            }
+        }
+
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="versionId"></param>
+        /// <returns></returns>
+        public ServiceResponse<VersionForCrListFacade> GetVersionNumberWithSpecNumberByVersionId(int personId, int versionId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specVersionManager = new SpecVersionsManager {UoW = uoW};
+                return specVersionManager.GetVersionNumberWithSpecNumberByVersionId(personId, versionId);
             }
         }
 
@@ -261,6 +277,12 @@ namespace Etsi.Ultimate.Services
         /// <param name="versionId">The identifier of the requested version</param>
         /// <returns>A couple (version,userrights)</returns>
         KeyValuePair<SpecVersion, UserRightsContainer> GetVersionsById(int VersionId, int personId);
+
+        /// <summary>
+        /// Get version 'number' and spec number related to a version by a versionId
+        /// </summary>
+        /// <returns></returns>
+        ServiceResponse<VersionForCrListFacade> GetVersionNumberWithSpecNumberByVersionId(int personId, int versionId);
 
         /// <summary>
         /// Returns the next version which is candidate for upload or allocation.
