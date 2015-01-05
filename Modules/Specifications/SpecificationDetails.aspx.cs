@@ -12,6 +12,7 @@ using Domain = Etsi.Ultimate.DomainClasses;
 using System.Configuration;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Module.Specifications.App_LocalResources;
+using System.Text;
 
 namespace Etsi.Ultimate.Module.Specifications
 {

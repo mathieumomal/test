@@ -219,9 +219,12 @@ namespace Etsi.Ultimate.Module.Specifications
                     if (!(currentSpecification.IsUnderChangeControl ?? false))
                     {
                         lnkCr.Enabled = false;
-                        lnkCr.CssClass = classes.Append("disabled").ToString();
+                        lnkCr.CssClass = classes.Append(" disabled").ToString();
                     }
-                    lnkCr.NavigateUrl = string.Format(ConfigVariables.RelativeUrlWiRelatedCrs, string.Empty, 0, currentSpecification.Number);
+                    else
+                    {
+                        lnkCr.NavigateUrl = string.Format(ConfigVariables.RelativeUrlWiRelatedCrs, string.Empty, 0, currentSpecification.Number);
+                    }
                 }
             }
         }

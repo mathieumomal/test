@@ -65,7 +65,7 @@
                                     <asp:Label ID="statusLbl" runat="server" Text="Status:"></asp:Label></td>
                                 <td class="TabLineRight">
                                     <asp:Label ID="statusVal" runat="server"></asp:Label>
-                                    <asp:HyperLink ID="lnkChangeRequest" runat="server" Target="_blank" Visible="false" NavigateUrl="#" ImageUrl="images/cr.png" ToolTip="All CRs for this specification"></asp:HyperLink>
+                                    <asp:HyperLink ID="lnkChangeRequest" runat="server" Target="_blank" Visible="false" CssClass="img" NavigateUrl="#" ImageUrl="images/cr.png" ToolTip="All CRs for this specification"></asp:HyperLink>
                                 </td>
                             </tr>
                             <tr>

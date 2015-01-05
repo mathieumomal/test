@@ -199,15 +199,16 @@ span.requiredField {
     width: 120px;
 }
 
-    #specAdditionalDetails td {
-        border: none !important;
-        width: 16px;
-    }
+#specAdditionalDetails td {
+    border: none !important;
+    width: 16px;
+}
 
-#componentSpecList .img.disabled {
+#componentSpecList .img.disabled, 
+#specificationDetailsForm .img.disabled {
 	-ms-opacity: 0.1;
 	opacity: 0.1;
-	cursor: none;
+	cursor: default;
 }
 #componentSpecList .img.cursor, .imgViewSpecifications {
 	cursor: pointer;
