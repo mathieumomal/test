@@ -512,7 +512,7 @@ namespace Etsi.Ultimate.Module.CRs
                         SearchObj.VersionId);
                     if (response.Report.GetNumberOfErrors() == 0)
                     {
-                        sb.Append(String.Format("{0}, Version({1})", response.Result.SpecNumber, response.Result.Version));
+                        sb.Append(String.Format("{0}, Version({1}) ", response.Result.SpecNumber, response.Result.Version));
                     }
                 }
                 else
