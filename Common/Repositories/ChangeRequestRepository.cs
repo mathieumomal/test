@@ -151,7 +151,7 @@ namespace Etsi.Ultimate.Repositories
                                    && ((searchObj.ReleaseIds.Count ==  0) || (searchObj.ReleaseIds.Contains(0)) || (searchObj.ReleaseIds.Contains(x.Fk_Release ?? 0)))
                                    && ((searchObj.WgStatusIds.Count == 0) || (searchObj.WgStatusIds.Contains(x.Fk_WGStatus ?? 0)))
                                    && ((searchObj.TsgStatusIds.Count == 0) || (searchObj.TsgStatusIds.Contains(x.Fk_TSGStatus ?? 0)))
-                                   && ((searchObj.MeetingIds.Count == 0) || (searchObj.MeetingIds.Contains(x.TSGMeeting ?? x.WGMeeting ?? 0)))
+                                   && ((searchObj.MeetingIds.Count == 0) || (searchObj.MeetingIds.Contains(x.TSGMeeting ?? 0)) || (searchObj.MeetingIds.Contains(x.WGMeeting ?? 0)))
                                    && ((searchObj.WorkItemIds.Count == 0) || (searchObj.WorkItemIds.Any(wiId => x.CR_WorkItems.Any(crWi => crWi.Fk_WIId == wiId))))));
 
             //Order by

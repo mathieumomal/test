@@ -200,7 +200,9 @@ namespace Etsi.Ultimate.Tests.Repositories
         [TestCase(1, 1, 10)]
         [TestCase(2, 2, 5)]
         [TestCase(3, 3, 7)]
+        [TestCase(4, 4, 2)]
         [TestCase(1, 2, 15)]
+        [TestCase(1, 4, 10)]
         [TestCase(2, 3, 12)]
         public void GetChangeRequestsTest_Meeting(int meetingId1, int meetingId2, int expectedResult)
         {
