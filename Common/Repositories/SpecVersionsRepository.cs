@@ -15,8 +15,6 @@ namespace Etsi.Ultimate.Repositories
             _context = iUoW.Context;
         }
 
-
-
         #region IEntityRepository<SpecVersionRepository> Membres
 
         public IQueryable<SpecVersion> All
@@ -110,6 +108,24 @@ namespace Etsi.Ultimate.Repositories
             throw new InvalidOperationException("Cannot delete Version entity");
         }
 
+        /// <summary>
+        /// Get Version info based on the given parameters
+        /// </summary>
+        /// <param name="specId">The specification identifier</param>
+        /// <param name="releaseId">The release identifier</param>
+        /// <param name="majorVersion">Major version</param>
+        /// <param name="technicalVersion">Technical version</param>
+        /// <param name="editorialVersion">Editorial version</param>
+        /// <returns>Version entity</returns>
+        public SpecVersion GetVersion(int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion)
+        {
+            return UoW.Context.SpecVersions.FirstOrDefault(x => x.Fk_SpecificationId == specId
+                                                             && x.Fk_ReleaseId == releaseId
+                                                             && x.MajorVersion == majorVersion
+                                                             && x.TechnicalVersion == technicalVersion
+                                                             && x.EditorialVersion == editorialVersion);
+        }
+
         #endregion
 
         #region IDisposable Membres
@@ -120,7 +136,6 @@ namespace Etsi.Ultimate.Repositories
         }
 
         #endregion
-
 
         public IUltimateUnitOfWork UoW { get; set; }
     }
@@ -147,6 +162,7 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="specificationId">Identifier og the specification</param>
         /// <returns>List of specVersions</returns>
         List<SpecVersion> GetVersionsBySpecId(int specificationId);
+
         /// <summary>
         /// Return a list of SpecVersion for a release
         /// </summary>
@@ -168,5 +184,16 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="allowedMajorVersions"></param>
         /// <returns></returns>
         List<SpecVersion> GetVersionsBySpecIds(List<int> specIds, List<int> allowedMajorVersions);
+
+        /// <summary>
+        /// Get Version info based on the given parameters
+        /// </summary>
+        /// <param name="specId">The specification identifier</param>
+        /// <param name="releaseId">The release identifier</param>
+        /// <param name="majorVersion">Major version</param>
+        /// <param name="technicalVersion">Technical version</param>
+        /// <param name="editorialVersion">Editorial version</param>
+        /// <returns>Version entity</returns>
+        SpecVersion GetVersion(int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion);
     }
 }

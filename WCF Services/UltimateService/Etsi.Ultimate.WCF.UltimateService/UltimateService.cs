@@ -274,6 +274,24 @@ namespace Etsi.Ultimate.WCF.Service
             return serviceHelper.GetVersionsForSpecRelease(specId, releaseId);
         }
 
+        /// <summary>
+        /// Link TDoc to Version
+        /// </summary>
+        /// <param name="specId">The specification identifier</param>
+        /// <param name="releaseId">The release identifier</param>
+        /// <param name="majorVersion">Major version</param>
+        /// <param name="technicalVersion">Technical version</param>
+        /// <param name="editorialVersion">Editorial version</param>
+        /// <param name="relatedTdoc">Related Tdoc</param>
+        /// <returns>Success/Failure status</returns>
+        public ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc)
+        {
+            LogManager.UltimateServiceLogger.Debug(string.Format("[ServiceCall][UpdateVersionRelatedTdoc] Spec Id={0}; Release Id={1}; Version={2}; Tdoc={3}",
+                                                                 specId, releaseId, majorVersion + "." + technicalVersion + "." + editorialVersion, relatedTdoc));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.UpdateVersionRelatedTdoc(specId, releaseId, majorVersion, technicalVersion, editorialVersion, relatedTdoc);
+        }
+
         #endregion
     }
 }

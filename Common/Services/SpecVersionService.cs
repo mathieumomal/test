@@ -240,7 +240,6 @@ namespace Etsi.Ultimate.Services
 
         #region ISpecVersionService Members
 
-
         public ServiceResponse<SpecVersionCurrentAndNew> GetNextVersionForSpec(int personId, int specId, int releaseId, bool forUpload)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -249,6 +248,40 @@ namespace Etsi.Ultimate.Services
                 versionMgr.UoW = uoW;
                 return versionMgr.GetNextVersionForSpec(personId, specId, releaseId, forUpload);
             }
+        }
+
+        /// <summary>
+        /// Link TDoc to Version
+        /// </summary>
+        /// <param name="specId">The specification identifier</param>
+        /// <param name="releaseId">The release identifier</param>
+        /// <param name="majorVersion">Major version</param>
+        /// <param name="technicalVersion">Technical version</param>
+        /// <param name="editorialVersion">Editorial version</param>
+        /// <param name="relatedTdoc">Related Tdoc</param>
+        /// <returns>Success/Failure status</returns>
+        public ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc)
+        {
+            var svcResponse = new ServiceResponse<bool>();
+
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specVersionManager = ManagerFactory.Resolve<ISpecVersionManager>();
+                    specVersionManager.UoW = uoW;
+                    svcResponse = specVersionManager.UpdateVersionRelatedTdoc(specId, releaseId, majorVersion, technicalVersion, editorialVersion, relatedTdoc);
+                    if (svcResponse.Result)
+                        uoW.Save();
+                }
+            }
+            catch (Exception ex)
+            {
+                svcResponse.Result = false;
+                svcResponse.Report.LogError(ex.Message);
+            }
+
+            return svcResponse;
         }
 
         #endregion
@@ -313,8 +346,35 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         int CountVersionsPendingUploadByReleaseId(int releaseId);
 
+        /// <summary>
+        /// Perform validation checks before upload a version 
+        /// </summary>
+        /// <param name="personId">The person identifier</param>
+        /// <param name="version">The version</param>
+        /// <param name="path">The upload path</param>
+        /// <returns>GUID of cached version information</returns>
         ServiceResponse<string> CheckVersionForUpload(int personId, SpecVersion version, string path);
+
+        /// <summary>
+        /// Upload version
+        /// </summary>
+        /// <param name="personId">The person identifier</param>
+        /// <param name="version">The version</param>
+        /// <param name="token">GUID of cached version information</param>
+        /// <returns>Upload status</returns>
         ServiceResponse<string> UploadVersion(int personId, SpecVersion version, string token);
+
+        /// <summary>
+        /// Link TDoc to Version
+        /// </summary>
+        /// <param name="specId">The specification identifier</param>
+        /// <param name="releaseId">The release identifier</param>
+        /// <param name="majorVersion">Major version</param>
+        /// <param name="technicalVersion">Technical version</param>
+        /// <param name="editorialVersion">Editorial version</param>
+        /// <param name="relatedTdoc">Related Tdoc</param>
+        /// <returns>Success/Failure status</returns>
+        ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc);
     }
 }
 

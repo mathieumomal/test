@@ -114,6 +114,36 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             return specVersionMgr.CountVersionsPendingUploadByReleaseId(releaseVersion.GetValueOrDefault());
         }
 
+        /// <summary>
+        /// Link TDoc to Version
+        /// </summary>
+        /// <param name="specId">The specification identifier</param>
+        /// <param name="releaseId">The release identifier</param>
+        /// <param name="majorVersion">Major version</param>
+        /// <param name="technicalVersion">Technical version</param>
+        /// <param name="editorialVersion">Editorial version</param>
+        /// <param name="relatedTdoc">Related Tdoc</param>
+        /// <returns>Success/Failure status</returns>
+        public ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc)
+        {
+            var svcResponse = new ServiceResponse<bool>();
+
+            var repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            repo.UoW = UoW;
+            var version = repo.GetVersion(specId, releaseId, majorVersion, technicalVersion, editorialVersion);
+            if (version == null)
+            {
+                svcResponse.Result = false;
+                svcResponse.Report.LogError(Localization.Version_Not_Found);
+            }
+            else
+            {
+                svcResponse.Result = true;
+                version.RelatedTDoc = relatedTdoc;
+            }
+
+            return svcResponse;
+        }
 
         #region Offline Sync Methods
 
