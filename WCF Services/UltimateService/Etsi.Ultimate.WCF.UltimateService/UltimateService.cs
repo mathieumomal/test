@@ -258,5 +258,22 @@ namespace Etsi.Ultimate.WCF.Service
             return serviceHelper.DoesCrNumberRevisionCoupleExist(personId, specId, crNumber, revision);
         }
         #endregion
+
+        #region Version services
+
+        /// <summary>
+        /// Get versions related to specification & release
+        /// </summary>
+        /// <param name="specId">Specification Identifier</param>
+        /// <param name="releaseId">Release Identifier</param>
+        /// <returns>List of versions</returns>
+        public List<SpecVersion> GetVersionsForSpecRelease(int specId, int releaseId)
+        {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][GetVersionsForSpecRelease] Spec Id=" + specId + "; Release Id=" + releaseId);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetVersionsForSpecRelease(specId, releaseId);
+        }
+
+        #endregion
     }
 }

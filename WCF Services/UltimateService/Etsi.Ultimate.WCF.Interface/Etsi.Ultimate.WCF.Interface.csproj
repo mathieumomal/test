@@ -65,6 +65,7 @@
     <Compile Include="Entities\ChangeRequestStatus.cs" />
     <Compile Include="Entities\Release.cs" />
     <Compile Include="Entities\Specification.cs" />
+    <Compile Include="Entities\SpecVersion.cs" />
     <Compile Include="Entities\WorkItem.cs" />
     <Compile Include="IUltimateService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

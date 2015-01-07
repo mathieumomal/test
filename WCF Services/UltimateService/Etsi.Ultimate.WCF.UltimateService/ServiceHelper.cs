@@ -30,6 +30,8 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateChangeSpecificationsStatusToUnderChangeControl = "Ultimate Service Error [ChangeSpecificationsStatusToUnderChangeControl]: {0}";
         private const string ConstErrorTemplateSetCrsAsFinal = "Ultimate Service Error [SetCrsAsFinal]: {0}";
         private const string ConstErrorIsExistCrNumberRevisionCouple = "Ultimate Service Error [IsExistCrNumberRevisionCouple]: {0}";
+        private const string ConstErrorTemplateGetVersionsForSpecRelease = "Ultimate Service Error [GetVersionsForSpecRelease]: {0}";
+
         #endregion
 
         #region Internal Methods
@@ -87,7 +89,6 @@ namespace Etsi.Ultimate.WCF.Service
 
             return release;
         }
-
 
         /// <summary>
         /// Gets the work items by ids.
@@ -513,6 +514,30 @@ namespace Etsi.Ultimate.WCF.Service
             }
             return true;
         }
+
+        /// <summary>
+        /// Get versions related to specification & release
+        /// </summary>
+        /// <param name="specId">Specification Identifier</param>
+        /// <param name="releaseId">Release Identifier</param>
+        /// <returns>List of versions</returns>
+        public List<UltimateServiceEntities.SpecVersion> GetVersionsForSpecRelease(int specId, int releaseId)
+        {
+            var specVersions = new List<UltimateServiceEntities.SpecVersion>();
+            try
+            {
+                var svc = ServicesFactory.Resolve<ISpecVersionService>();
+                var result = svc.GetVersionsForSpecRelease(specId, releaseId);
+                if (result != null)
+                    result.ForEach(e => specVersions.Add(ConvertToServiceSpecVersion(e)));
+            }
+            catch (Exception ex)
+            {
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetVersionsForSpecRelease, ex.Message));
+            }
+            return specVersions;
+        }
+
         #endregion
 
         #region Private Methods
@@ -728,6 +753,25 @@ namespace Etsi.Ultimate.WCF.Service
             }
 
             return wcfServiceResponse;
+        }
+
+        /// <summary>
+        /// Converts the ultimate spec version to WCF spec version.
+        /// </summary>
+        /// <param name="specVersion">The ultimate spec version</param>
+        /// <returns>The wcf compatiable spec version</returns>
+        private UltimateServiceEntities.SpecVersion ConvertToServiceSpecVersion(UltimateEntities.SpecVersion specVersion)
+        {
+            var serviceSpecVersion = new UltimateServiceEntities.SpecVersion();
+            if (specVersion != null)
+            {
+                serviceSpecVersion.Pk_VersionId = specVersion.Pk_VersionId;
+                serviceSpecVersion.MajorVersion = specVersion.MajorVersion;
+                serviceSpecVersion.TechnicalVersion = specVersion.TechnicalVersion;
+                serviceSpecVersion.EditorialVersion = specVersion.EditorialVersion;
+                serviceSpecVersion.RelatedTDoc = specVersion.RelatedTDoc;
+            }
+            return serviceSpecVersion;
         }
 
         #endregion

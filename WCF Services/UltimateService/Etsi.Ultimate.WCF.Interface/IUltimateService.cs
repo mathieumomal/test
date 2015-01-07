@@ -180,5 +180,18 @@ namespace Etsi.Ultimate.WCF.Interface
         bool DoesCrNumberRevisionCoupleExist(int personId, int specId, string crNumber, int revision);
 
         #endregion
+
+        #region Versions
+
+        /// <summary>
+        /// Get versions related to specification & release
+        /// </summary>
+        /// <param name="specId">Specification Identifier</param>
+        /// <param name="releaseId">Release Identifier</param>
+        /// <returns>List of versions</returns>
+        [OperationContract]
+        List<SpecVersion> GetVersionsForSpecRelease(int specId, int releaseId); 
+
+        #endregion
     }
 }
