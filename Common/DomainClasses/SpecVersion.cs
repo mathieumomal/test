@@ -41,6 +41,7 @@ namespace Etsi.Ultimate.DomainClasses
         public Nullable<int> Fk_SpecificationId { get; set; }
         public Nullable<int> Fk_ReleaseId { get; set; }
         public string ETSI_WKI_Ref { get; set; }
+        public string RelatedTDoc { get; set; }
     
         public virtual Release Release { get; set; }
         public virtual ICollection<Remark> Remarks { get; set; }
