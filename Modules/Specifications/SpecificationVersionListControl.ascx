@@ -170,7 +170,7 @@
                                 title='<%# DataBinder.Eval(Container.DataItem,"TranspositionReferenceAndDate")%>' 
                                 />
                         </a>
-                        <asp:ImageButton ID="imgRelatedTDocs" CssClass="linkStyle" ImageUrl="images/spec_rel-TDocs.png" ToolTip="Related TDocs" runat="server" OnClientClick="return false;" />
+                        <asp:HyperLink ID="imgRelatedTDocs" runat="server" ImageUrl="images/spec_rel-TDocs.png" Target="_blank"/>
                         <asp:HyperLink ID="imgRelatedCRs" runat="server" ImageUrl="images/spec_rel-CRs.png" Target="_blank"/>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>

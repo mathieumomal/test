@@ -204,6 +204,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 Fk_SpecificationId = x.Fk_SpecificationId,
                 Fk_ReleaseId = x.Fk_ReleaseId,
                 ETSI_WKI_Ref = x.ETSI_WKI_Ref,
+                RelatedTDoc = x.RelatedTDoc,
                 Remarks = GetActualRemarksFromProxy(x.Remarks.ToList())
             }));
 

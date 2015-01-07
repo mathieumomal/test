@@ -19,8 +19,8 @@ namespace Etsi.Ultimate.Module.Specifications
         private const string CONST_SELECTED_TAB = "SPEC_SELECTED_TAB";
         private const string CONST_WEBCONFIG_WI_REPORT_PATH = "WIReportPath";
 
-        private const string CrButtonDisplayCssClasses = "linkStyle";
-        private const string CrButtonDisabledCssClasses = "linkStyle disabled notAvailable";
+        private const string LinkDisplayCssClasses = "linkStyle";
+        private const string LinkDisabledCssClasses = "linkStyle disabled notAvailable";
 
         #endregion
 
@@ -157,6 +157,8 @@ namespace Etsi.Ultimate.Module.Specifications
 
                     //Display informations contains in the SpecDecorator
                     ApplyChangeRequestInformation(item, specVersion);
+
+                    ApplyTdocInformation(item, specVersion);
                 }
             }
         }
@@ -247,7 +249,7 @@ namespace Etsi.Ultimate.Module.Specifications
             var relatedCrs = (HyperLink)item["link"].FindControl("imgRelatedCRs");
             if (AdditionalVersionInfo.SpecVersionFoundationCrs == null)
             {
-                relatedCrs.CssClass = CrButtonDisabledCssClasses;
+                relatedCrs.CssClass = LinkDisabledCssClasses;
                 return;
             }
             var currentVersion = AdditionalVersionInfo.SpecVersionFoundationCrs.FirstOrDefault(x => x.VersionId == id);
@@ -255,7 +257,7 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 if (currentVersion.FoundationCrs.Count == 0)
                 {
-                    relatedCrs.CssClass = CrButtonDisabledCssClasses;
+                    relatedCrs.CssClass = LinkDisabledCssClasses;
                     return;
                 }
                 var tooltip = new StringBuilder();
@@ -269,11 +271,32 @@ namespace Etsi.Ultimate.Module.Specifications
                         tooltip.Append("\n");
                 }
                 relatedCrs.ToolTip = tooltip.ToString();
-                relatedCrs.CssClass = CrButtonDisplayCssClasses;
+                relatedCrs.CssClass = LinkDisplayCssClasses;
                 relatedCrs.NavigateUrl = String.Format(ConfigVariables.RelativeUrlVersionRelatedCrs, specVersion.Pk_VersionId, specVersion.Fk_ReleaseId);
             }
         }
 
+        /// <summary>
+        /// Apply Tdoc information (Tooltip, Css style, Navigation url etc.,)
+        /// </summary>
+        /// <param name="item">Grid data item</param>
+        /// <param name="specVersion">Version entity</param>
+        private void ApplyTdocInformation(GridDataItem item, SpecVersion specVersion)
+        {
+            var relatedTDocs = (HyperLink)item["link"].FindControl("imgRelatedTDocs");
+            if (relatedTDocs == null)
+                return;
+
+            if (String.IsNullOrEmpty(specVersion.RelatedTDoc))
+            {
+                relatedTDocs.CssClass = LinkDisabledCssClasses;
+                return;
+            }
+
+            relatedTDocs.CssClass = LinkDisplayCssClasses;
+            relatedTDocs.ToolTip = specVersion.RelatedTDoc;
+            relatedTDocs.NavigateUrl = String.Format(ConfigVariables.TdocDetailsUrl, specVersion.RelatedTDoc);
+        }
 
         /// <summary>
         /// Redirect user. Removes previous "selectedTab" and "Rel" flags.
