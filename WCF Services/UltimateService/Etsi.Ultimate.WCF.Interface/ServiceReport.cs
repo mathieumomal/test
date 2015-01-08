@@ -14,6 +14,14 @@ namespace Etsi.Ultimate.WCF.Interface
     [DataContract]
     public class ServiceReport
     {
+
+        public ServiceReport()
+        {
+            ErrorList = new List<string>();
+            WarningList = new List<string>();
+            InfoList = new List<string>();
+        }
+
         /// <summary>
         /// Errors
         /// </summary>
