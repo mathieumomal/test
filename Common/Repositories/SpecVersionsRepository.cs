@@ -112,15 +112,13 @@ namespace Etsi.Ultimate.Repositories
         /// Get Version info based on the given parameters
         /// </summary>
         /// <param name="specId">The specification identifier</param>
-        /// <param name="releaseId">The release identifier</param>
         /// <param name="majorVersion">Major version</param>
         /// <param name="technicalVersion">Technical version</param>
         /// <param name="editorialVersion">Editorial version</param>
         /// <returns>Version entity</returns>
-        public SpecVersion GetVersion(int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion)
+        public SpecVersion GetVersion(int specId, int majorVersion, int technicalVersion, int editorialVersion)
         {
             return UoW.Context.SpecVersions.FirstOrDefault(x => x.Fk_SpecificationId == specId
-                                                             && x.Fk_ReleaseId == releaseId
                                                              && x.MajorVersion == majorVersion
                                                              && x.TechnicalVersion == technicalVersion
                                                              && x.EditorialVersion == editorialVersion);
@@ -189,11 +187,10 @@ namespace Etsi.Ultimate.Repositories
         /// Get Version info based on the given parameters
         /// </summary>
         /// <param name="specId">The specification identifier</param>
-        /// <param name="releaseId">The release identifier</param>
         /// <param name="majorVersion">Major version</param>
         /// <param name="technicalVersion">Technical version</param>
         /// <param name="editorialVersion">Editorial version</param>
         /// <returns>Version entity</returns>
-        SpecVersion GetVersion(int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion);
+        SpecVersion GetVersion(int specId, int majorVersion, int technicalVersion, int editorialVersion);
     }
 }

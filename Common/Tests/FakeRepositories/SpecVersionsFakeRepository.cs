@@ -126,7 +126,7 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         }
 
 
-        public SpecVersion GetVersion(int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion)
+        public SpecVersion GetVersion(int specId, int majorVersion, int technicalVersion, int editorialVersion)
         {
             throw new NotImplementedException();
         }

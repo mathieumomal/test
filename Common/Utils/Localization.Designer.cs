@@ -376,6 +376,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Version does not exist. So, Tdoc cannot be linked..
+        /// </summary>
+        public static string Version_Tdoc_Link_Version_Not_Found {
+            get {
+                return ResourceManager.GetString("Version_Tdoc_Link_Version_Not_Found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à {0}, Uid {1}: Acronym {2} is more than 50 characters. It has been truncated..
         /// </summary>
         public static string WorkItem_Import_Acronym_Too_Long {

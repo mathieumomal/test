@@ -543,13 +543,12 @@ namespace Etsi.Ultimate.WCF.Service
         /// Link TDoc to Version
         /// </summary>
         /// <param name="specId">The specification identifier</param>
-        /// <param name="releaseId">The release identifier</param>
         /// <param name="majorVersion">Major version</param>
         /// <param name="technicalVersion">Technical version</param>
         /// <param name="editorialVersion">Editorial version</param>
         /// <param name="relatedTdoc">Related Tdoc</param>
         /// <returns>Success/Failure status</returns>
-        public ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc)
+        public ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc)
         {
             var serviceReport = new ServiceReport() { ErrorList = new List<string>(), InfoList = new List<string>(), WarningList = new List<string>() };
             var svcResponse = new ServiceResponse<bool>() { Report = serviceReport };
@@ -557,10 +556,12 @@ namespace Etsi.Ultimate.WCF.Service
             try
             {
                 var svc = ServicesFactory.Resolve<ISpecVersionService>();
-                var specVersionResponse = svc.UpdateVersionRelatedTdoc(specId, releaseId, majorVersion, technicalVersion, editorialVersion, relatedTdoc);
+                var specVersionResponse = svc.UpdateVersionRelatedTdoc(specId, majorVersion, technicalVersion, editorialVersion, relatedTdoc);
+
                 svcResponse.Result = specVersionResponse.Result;
-                if (!specVersionResponse.Result)
-                    svcResponse.Report.ErrorList.AddRange(specVersionResponse.Report.ErrorList);
+                svcResponse.Report.ErrorList.AddRange(specVersionResponse.Report.ErrorList);
+                svcResponse.Report.WarningList.AddRange(specVersionResponse.Report.WarningList);
+                svcResponse.Report.InfoList.AddRange(specVersionResponse.Report.InfoList);
             }
             catch (Exception ex)
             {

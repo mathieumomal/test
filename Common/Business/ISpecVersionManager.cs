@@ -79,12 +79,11 @@ namespace Etsi.Ultimate.Business
         /// Link TDoc to Version
         /// </summary>
         /// <param name="specId">The specification identifier</param>
-        /// <param name="releaseId">The release identifier</param>
         /// <param name="majorVersion">Major version</param>
         /// <param name="technicalVersion">Technical version</param>
         /// <param name="editorialVersion">Editorial version</param>
         /// <param name="relatedTdoc">Related Tdoc</param>
         /// <returns>Success/Failure status</returns>
-        ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc);
+        ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc);
     }
 }

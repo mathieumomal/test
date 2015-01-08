@@ -118,29 +118,23 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
         /// Link TDoc to Version
         /// </summary>
         /// <param name="specId">The specification identifier</param>
-        /// <param name="releaseId">The release identifier</param>
         /// <param name="majorVersion">Major version</param>
         /// <param name="technicalVersion">Technical version</param>
         /// <param name="editorialVersion">Editorial version</param>
         /// <param name="relatedTdoc">Related Tdoc</param>
         /// <returns>Success/Failure status</returns>
-        public ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc)
+        public ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int majorVersion, int technicalVersion,
+            int editorialVersion, string relatedTdoc)
         {
-            var svcResponse = new ServiceResponse<bool>();
+            var svcResponse = new ServiceResponse<bool>() {Result = true};
 
             var repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             repo.UoW = UoW;
-            var version = repo.GetVersion(specId, releaseId, majorVersion, technicalVersion, editorialVersion);
+            var version = repo.GetVersion(specId, majorVersion, technicalVersion, editorialVersion);
             if (version == null)
-            {
-                svcResponse.Result = false;
-                svcResponse.Report.LogError(Localization.Version_Not_Found);
-            }
+                svcResponse.Report.LogInfo(Localization.Version_Tdoc_Link_Version_Not_Found);
             else
-            {
-                svcResponse.Result = true;
                 version.RelatedTDoc = relatedTdoc;
-            }
 
             return svcResponse;
         }

@@ -342,4 +342,7 @@
   <data name="Version_Not_Found" xml:space="preserve">
     <value>Version not found.</value>
   </data>
+  <data name="Version_Tdoc_Link_Version_Not_Found" xml:space="preserve">
+    <value>Version does not exist. So, Tdoc cannot be linked.</value>
+  </data>
 </root>
