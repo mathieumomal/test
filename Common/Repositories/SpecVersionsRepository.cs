@@ -124,6 +124,11 @@ namespace Etsi.Ultimate.Repositories
                                                              && x.EditorialVersion == editorialVersion);
         }
 
+        public List<SpecVersion> GetVersionsByRelatedTDoc(string relatedTdoc)
+        {
+            return UoW.Context.SpecVersions.Where(x => x.RelatedTDoc == relatedTdoc).ToList();
+        }
+
         #endregion
 
         #region IDisposable Membres
@@ -192,5 +197,14 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="editorialVersion">Editorial version</param>
         /// <returns>Version entity</returns>
         SpecVersion GetVersion(int specId, int majorVersion, int technicalVersion, int editorialVersion);
+
+        /// <summary>
+        /// Returns versions matching related TDoc.
+        /// 
+        /// Note: there should be only one version, but because of legacy data, we defensively return a list.
+        /// </summary>
+        /// <param name="relatedTdoc"></param>
+        /// <returns></returns>
+        List<SpecVersion> GetVersionsByRelatedTDoc(string relatedTdoc);
     }
 }

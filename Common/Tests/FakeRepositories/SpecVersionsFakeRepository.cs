@@ -130,5 +130,10 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         {
             throw new NotImplementedException();
         }
+
+        public List<SpecVersion> GetVersionsByRelatedTDoc(string relatedTdoc)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -41,5 +41,25 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
             Assert.AreEqual(1, svcResponse.Report.GetNumberOfErrors());
             Assert.AreEqual(errorMessage, svcResponse.Report.ErrorList.First());
         }
+
+        [Test, Description("System should remove TDoc reference from old draft")]
+        public void UpdateVersionRelatedTDoc_RemovesDraft()
+        {
+            int versionId = 428931;
+            string relatedTdoc = "R4-869451";
+
+            var version = UoW.Context.SpecVersions.First(v => v.Pk_VersionId == versionId);
+            version.RelatedTDoc = relatedTdoc;
+            UoW.Save();
+
+            // Call the specVersion service
+            var specVersionSvc = new SpecVersionService();
+            specVersionSvc.UpdateVersionRelatedTdoc(136080, 13, 0, 1, relatedTdoc);
+
+            // Check that TDoc is no longer linked to previous version
+            var versionAgain = UoW.Context.SpecVersions.First(v => v.Pk_VersionId == versionId);
+            Assert.IsNullOrEmpty(versionAgain.RelatedTDoc);
+
+        }
     }
 }

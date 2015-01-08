@@ -130,6 +130,11 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
             var repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             repo.UoW = UoW;
+            
+            // First remove any existing version with this related TDoc
+            var previousVersions = repo.GetVersionsByRelatedTDoc(relatedTdoc);
+            previousVersions.ForEach(v => v.RelatedTDoc = null);
+
             var version = repo.GetVersion(specId, majorVersion, technicalVersion, editorialVersion);
             if (version == null)
                 svcResponse.Report.LogInfo(Localization.Version_Tdoc_Link_Version_Not_Found);
