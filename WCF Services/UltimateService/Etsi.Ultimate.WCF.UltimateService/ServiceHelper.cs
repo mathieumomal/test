@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Etsi.Ultimate.Services;
 using System.Collections.Generic;
 using UltimateEntities = Etsi.Ultimate.DomainClasses;
@@ -111,7 +112,8 @@ namespace Etsi.Ultimate.WCF.Service
                 }
                 else
                 {
-                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetWorkitemsByIds, "Unable to get workitem for work item id=" + workItemIds.FindAll(x=>string.IsNullOrEmpty(x.ToString()))));
+                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetWorkitemsByIds, 
+                        "Unable to get workitem for work item id=" + workItemIds.FindAll(x=>string.IsNullOrEmpty(x.ToString(CultureInfo.InvariantCulture)))));
                 }
             }
             catch (Exception ex)
@@ -260,7 +262,7 @@ namespace Etsi.Ultimate.WCF.Service
             {
                 var svc = ServicesFactory.Resolve<ISpecificationService>();
                 var ultimateStatusResponse = svc.ChangeSpecificationsStatusToUnderChangeControl(personId, specIdsForUcc);
-                statusChangeReport = ConvertUltimateServiceResponseToWcfServiceResponse<bool>(ultimateStatusResponse);
+                statusChangeReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
             }
             catch (Exception ex)
             {
@@ -284,7 +286,7 @@ namespace Etsi.Ultimate.WCF.Service
             {
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
                 var ultimateStatusResponse = svc.SetCrsAsFinal(personId, tdocNumbers);
-                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse<bool>(ultimateStatusResponse);
+                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
             }
             catch (Exception ex)
             {
@@ -550,8 +552,8 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>Success/Failure status</returns>
         public ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc)
         {
-            var serviceReport = new ServiceReport() { ErrorList = new List<string>(), InfoList = new List<string>(), WarningList = new List<string>() };
-            var svcResponse = new ServiceResponse<bool>() { Report = serviceReport };
+            var serviceReport = new ServiceReport();
+            var svcResponse = new ServiceResponse<bool> { Report = serviceReport };
 
             try
             {
@@ -749,7 +751,6 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Converts an ultimate status to a service status
         /// </summary>
-        /// <param name="e"></param>
         /// <returns></returns>
         private UltimateServiceEntities.ChangeRequestStatus ConvertToServiceCrStatus(UltimateEntities.Enum_ChangeRequestStatus ultimateCrStatus)
         {
@@ -763,11 +764,6 @@ namespace Etsi.Ultimate.WCF.Service
             return serviceCrStatus;
         }
 
-        private KeyValuePair<string, string> ConvertCrpackToService(KeyValuePair<string, string> crPackDecision)
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
         /// Converts the ultimate service response to WCF service response.
         /// </summary>
@@ -776,8 +772,8 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>The Wcf compatiable service response</returns>
         private ServiceResponse<T> ConvertUltimateServiceResponseToWcfServiceResponse<T>(UltimateEntities.ServiceResponse<T> ultimateServiceResponse)
         {
-            var serviceReport = new ServiceReport() { ErrorList = new List<string>(), InfoList = new List<string>(), WarningList = new List<string>() };
-            var wcfServiceResponse = new ServiceResponse<T>() { Report = serviceReport };
+            var serviceReport = new ServiceReport { ErrorList = new List<string>(), InfoList = new List<string>(), WarningList = new List<string>() };
+            var wcfServiceResponse = new ServiceResponse<T> { Report = serviceReport };
 
             if (ultimateServiceResponse != null)
             {

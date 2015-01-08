@@ -4,10 +4,7 @@ using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.Business.SpecVersionBusiness;
 using Etsi.Ultimate.Utils.Core;
 
@@ -36,13 +33,13 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        public KeyValuePair<SpecVersion, UserRightsContainer> GetVersionsById(int VersionId, int personId)
+        public KeyValuePair<SpecVersion, UserRightsContainer> GetVersionsById(int versionId, int personId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var specVersionManager = new SpecVersionsManager();
                 specVersionManager.UoW = uoW;
-                return specVersionManager.GetSpecVersionById(VersionId, personId);
+                return specVersionManager.GetSpecVersionById(versionId, personId);
             }
         }
 
@@ -85,6 +82,7 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="personId"></param>
         /// <param name="version"></param>
+        /// <param name="path"></param>
         /// <returns></returns>
         public ServiceResponse<string> CheckVersionForUpload(int personId, SpecVersion version, string path)
         {
@@ -101,6 +99,7 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="personId"></param>
         /// <param name="version"></param>
+        /// <param name="token"></param>
         /// <returns></returns>
         public ServiceResponse<string> UploadVersion(int personId, SpecVersion version, string token)
         {
@@ -134,7 +133,7 @@ namespace Etsi.Ultimate.Services
         /// <returns>Inserted Identity</returns>
         public int InsertEntity(SpecVersion entity, string terminalName)
         {
-            int primaryKeyID = 0;
+            int primaryKeyId = 0;
 
             if (entity != null)
             {
@@ -150,12 +149,12 @@ namespace Etsi.Ultimate.Services
                         var syncInfo = syncInfos.Where(x => x.Fk_VersionId != null).FirstOrDefault();
                         if (syncInfo != null)
                         {
-                            primaryKeyID = syncInfo.Fk_VersionId ?? 0;
+                            primaryKeyId = syncInfo.Fk_VersionId ?? 0;
                         }
                         else if (specVersionManager.InsertEntity(entity, terminalName))
                         {
                             uoW.Save();
-                            primaryKeyID = entity.Pk_VersionId;
+                            primaryKeyId = entity.Pk_VersionId;
                         }
                     }
                     catch (Exception ex)
@@ -167,7 +166,7 @@ namespace Etsi.Ultimate.Services
                 }
             }
 
-            return primaryKeyID;
+            return primaryKeyId;
         }
 
         /// <summary>
@@ -307,8 +306,9 @@ namespace Etsi.Ultimate.Services
         /// Return a SpecVersion and current user rights objects using identifiers
         /// </summary>
         /// <param name="versionId">The identifier of the requested version</param>
+        /// <param name="personId"></param>
         /// <returns>A couple (version,userrights)</returns>
-        KeyValuePair<SpecVersion, UserRightsContainer> GetVersionsById(int VersionId, int personId);
+        KeyValuePair<SpecVersion, UserRightsContainer> GetVersionsById(int versionId, int personId);
 
         /// <summary>
         /// Get version 'number' and spec number related to a version by a versionId
@@ -324,11 +324,11 @@ namespace Etsi.Ultimate.Services
         /// - in case of upload (upload = true), compute the next version that should be uploaded.
         /// </summary>
         /// <param name="personId">Person requesting the update.</param>
-        /// <param name="SpecId">The target specification ID</param>
-        /// <param name="ReleaseId">The target Release ID</param>
+        /// <param name="specId">The target specification ID</param>
+        /// <param name="releaseId">The target Release ID</param>
         /// <param name="forUpload">true if next version is to be uploaded, false if not.</param>
         /// <returns></returns>
-        ServiceResponse<SpecVersionCurrentAndNew> GetNextVersionForSpec(int personId, int SpecId, int ReleaseId, bool forUpload);
+        ServiceResponse<SpecVersionCurrentAndNew> GetNextVersionForSpec(int personId, int specId, int releaseId, bool forUpload);
 
         /// <summary>
         /// Enables user to allocate version.
@@ -341,7 +341,7 @@ namespace Etsi.Ultimate.Services
         /// <summary>
         /// Count the number of (latest) versions which pending upload
         /// </summary>
-        /// <param name="specId"></param>
+        /// <param name="releaseId"></param>
         /// <returns></returns>
         int CountVersionsPendingUploadByReleaseId(int releaseId);
 

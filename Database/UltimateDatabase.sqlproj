@@ -184,8 +184,14 @@
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
     <Build Include="dbo\Functions\getETSI_WKI_Ref.sql" />
-    <Build Include="dbo\Stored Procedures\Specifications_CleanAll.sql" />
-    <Build Include="dbo\Stored Procedures\WorkItems_CleanAll.sql" />
+    <Build Include="dbo\Stored Procedures\Specifications_CleanAll.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\WorkItems_CleanAll.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
     <Build Include="dbo\Stored Procedures\Versions_CleanAll.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
@@ -194,7 +200,10 @@
     <Build Include="dbo\Stored Procedures\WorkItems_CleanAll.sql" />
     <Build Include="dbo\Stored Procedures\Specifications_CleanAll.sql" />
     <Build Include="dbo\Tables\Enum_CRCategory.sql" />
-    <Build Include="dbo\Stored Procedures\CR_CleanAll.sql" />
+    <Build Include="dbo\Stored Procedures\CR_CleanAll.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
     <Build Include="dbo\Tables\Enum_CRImpact.sql" />
     <Build Include="dbo\Tables\ChangeRequest.sql" />
     <Build Include="dbo\Tables\CR_WorkItems.sql" />
@@ -217,6 +226,10 @@
     <Build Include="dbo\Stored Procedures\Transposition_CreateWiScheduleEntries.sql" />
     <Build Include="dbo\Tables\SyncInfo.sql" />
     <Build Include="dbo\Tables\Enum_ChangeRequestStatus.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="dbo\Stored Procedures\Database_Reset.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>

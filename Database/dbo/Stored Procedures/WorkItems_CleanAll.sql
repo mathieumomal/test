@@ -15,9 +15,11 @@ BEGIN
 
     -- Insert statements for procedure here
 	DELETE FROM WorkItems_ResponsibleGroups;
+	DBCC CHECKIDENT('WorkItems_ResponsibleGroups', RESEED, 0)
 	DELETE FROM Remarks WHERE Fk_WorkItemId IS NOT NULL;
 	DELETE FROM WorkItems;
 	DELETE FROM WorkPlanFiles;
+	DBCC CHECKIDENT('WorkPlanFiles', RESEED, 0)
 
 	Select @Error = @@error
 	Return @Error

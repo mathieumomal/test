@@ -8,13 +8,16 @@ AS
 BEGIN
 	Declare @Error int
 
-	-- Delete from CR
-	DELETE FROM SyncInfo;
-	DELETE FROM CR_WorkItems;
-	DELETE FROM Remarks;
+	-- TRUNCATE TABLE CR
+	TRUNCATE TABLE SyncInfo;
+	TRUNCATE TABLE CR_WorkItems;
+	DELETE FROM Remarks WHERE Fk_CRId IS NOT NULL;
 	DELETE FROM ChangeRequest;
+	DBCC CHECKIDENT('ChangeRequest', RESEED, 0)
 	DELETE FROM Enum_CRCategory;
+	DBCC CHECKIDENT('Enum_CRCategory', RESEED, 0)
 	DELETE FROM Enum_CRImpact;
+	DBCC CHECKIDENT('Enum_CRImpact', RESEED, 0)
 	
 	
 	Select @Error = @@error
