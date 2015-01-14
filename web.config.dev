@@ -508,16 +508,18 @@
       </fileProcessingProviders>
     </compositeFiles>
   </clientDependency>
-  <entityFramework>
-    <defaultConnectionFactory type="System.Data.Entity.Infrastructure.LocalDbConnectionFactory, EntityFramework">
-      <parameters>
-        <parameter value="v11.0" />
-      </parameters>
-    </defaultConnectionFactory>
-    <providers>
-      <provider invariantName="System.Data.SqlClient" type="System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer" />
-    </providers>
-  </entityFramework>
+  <location path="." inheritInChildApplications="false"> 
+	  <entityFramework>
+		<defaultConnectionFactory type="System.Data.Entity.Infrastructure.LocalDbConnectionFactory, EntityFramework">
+		  <parameters>
+			<parameter value="v11.0" />
+		  </parameters>
+		</defaultConnectionFactory>
+		<providers>
+		  <provider invariantName="System.Data.SqlClient" type="System.Data.Entity.SqlServer.SqlProviderServices, EntityFramework.SqlServer" />
+		</providers>
+	  </entityFramework>
+	</location>
   <system.serviceModel>
     <bindings>
       <wsHttpBinding>
