@@ -69,6 +69,7 @@
     <add key="InstallVersion" value="07.00.04" />
     <add key="DefaultDevicesDatabase" value="DesktopModules\DevicePreviewManagement\Resources\defaultDevices.xml" />
 	<add key="MeetingDetailsAddress" value="http://webapp.13.etsiqa.org/meetingCalendar/MeetingDetails.asp?mid=" />
+	<add key="MeetingRelatedTdocAddress" value="http://dnn3gpp.13.etsiqa.org/ngppapp/TdocList.aspx?meetingId=" />
 	 <add key="FtpContributionAddress" value="http://ftp3gpp.13.etsiqa.org/" />
 	<add key="MeetingiCalAddress" value="http://webapp.13.etsiqa.org/meetingCalendar/ical.asp?qMTG_ID=" />
     <add key="MeetingParticipantsListAddress" value="http://webapp.13.etsiqa.org/3GPPRegistration/fViewPart.asp?mid=" />

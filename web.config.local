@@ -77,6 +77,7 @@
 		<!-- These parameters depends on the environment -->
 		<add key="RapporteurDetailsAddress" value="http://webapp.13.etsidev.org/teldir/ListPersDetails.asp?PersId="/>
 		<add key="MeetingDetailsAddress" value="http://webapp.13.etsidev.org/meetingCalendar/MeetingDetails.asp?mid=" />
+		<add key="MeetingRelatedTdocAddress" value="http://www.contribution.loc/TdocList.aspx?meetingId=" />
 		<add key="MeetingiCalAddress" value="http://webapp.13.etsidev.org/meetingCalendar/ical.asp?qMTG_ID=" />
         <add key="MeetingParticipantsListAddress" value="http://webapp.13.etsidev.org/3GPPRegistration/fViewPart.asp?mid=" />		
 		<add key="RapporteurDetailsAddress" value="http://webapp.13.etsidev.org/teldir/ListPersDetails.asp?PersId="/>
