@@ -535,6 +535,16 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             Assert.AreEqual(expectedResult, response.Result);
         }
 
+        [Test, TestCaseSource("ChangeRequestTupleData")]
+        public void Service_IntegrationTest_GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples, int resultCount)
+        {
+            //Act
+            var crService = new ChangeRequestService();
+            var response = crService.GetMatchingCrsBySpecCrRevisionTuple(specCrRevisionTuples);
+            //Assert
+            Assert.AreEqual(resultCount, response.Result.Count);
+        }
+
         #endregion
 
         #region DataObject
@@ -607,6 +617,19 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
                 yield return new object[] { new ChangeRequestsSearch() { PageSize = 3, SkipRecords = 21, SpecificationNumber = "22.10" }, 1, 22, "BBBB", "4" };
                 yield return new object[] { new ChangeRequestsSearch() { PageSize = 100, SkipRecords = 0, SpecificationNumber = "22.101", ReleaseIds = new List<int>{0}}, 6, 6, "AC014", "1" };
                 yield return new object[] { new ChangeRequestsSearch() { PageSize = 100, SkipRecords = 0, SpecificationNumber = "22.101", ReleaseIds = new List<int> { 0, 2884 } }, 6, 6, "AC014", "1" };
+            }
+        }
+
+        /// <summary>
+        /// Gets the change request tuple data (combination of Spec#, CR #, Revision).
+        /// </summary>
+        private IEnumerable<object[]> ChangeRequestTupleData
+        {
+            get
+            {
+                yield return new object[] { new List<Tuple<int, string, int>> { new Tuple<int, string, int>(136081, "0001", 1), new Tuple<int, string, int>(136081, "0001", 3) }, 1 };
+                yield return new object[] { new List<Tuple<int, string, int>> { new Tuple<int, string, int>(136080, "AB013", 1), new Tuple<int, string, int>(136080, "AC014", 1)}, 2 };
+                yield return new object[] { new List<Tuple<int, string, int>> { new Tuple<int, string, int>(136081, "0001", 3), new Tuple<int, string, int>(136081, "0001", 4)}, 0 };
             }
         }
 

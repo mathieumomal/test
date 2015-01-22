@@ -33,6 +33,7 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorIsExistCrNumberRevisionCouple = "Ultimate Service Error [IsExistCrNumberRevisionCouple]: {0}";
         private const string ConstErrorTemplateGetVersionsForSpecRelease = "Ultimate Service Error [GetVersionsForSpecRelease]: {0}";
         private const string ConstErrorTemplateUpdateVersionRelatedTdoc = "Ultimate Service Error [UpdateVersionRelatedTdoc]: {0}";
+        private const string ConstErrorTemplateGetMatchingCrsBySpecCrRevisionTuple = "Ultimate Service Error [GetMatchingCrsBySpecCrRevisionTuple]: {0}";
 
         #endregion
 
@@ -488,6 +489,28 @@ namespace Etsi.Ultimate.WCF.Service
                 return false;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Gets the matching Crs by spec# / cr# / revision combination.
+        /// </summary>
+        /// <param name="specCrRevisionTuples">The spec# / cr# / revision combination list.</param>
+        /// <returns>Matching Crs for given tuple (spec# / cr# / revision) combination</returns>
+        internal List<UltimateServiceEntities.ChangeRequest> GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples)
+        {
+            var changeRequests = new List<UltimateServiceEntities.ChangeRequest>();
+            try
+            {
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var response = svc.GetMatchingCrsBySpecCrRevisionTuple(specCrRevisionTuples);
+                if (response.Result != null)
+                    response.Result.ForEach(e => changeRequests.Add(ConvertUltimateCRToServiceCR(e)));
+            }
+            catch (Exception ex)
+            {
+                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetMatchingCrsBySpecCrRevisionTuple, ex.Message));
+            }
+            return changeRequests;
         }
 
         /// <summary>

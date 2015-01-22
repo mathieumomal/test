@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.WCF.Interface;
+﻿using System;
+using Etsi.Ultimate.WCF.Interface;
 using Etsi.Ultimate.WCF.Interface.Entities;
 using Etsi.Ultimate.WCF.Service.Logger;
 using System.Collections.Generic;
@@ -257,6 +258,19 @@ namespace Etsi.Ultimate.WCF.Service
             var serviceHelper = new ServiceHelper();
             return serviceHelper.DoesCrNumberRevisionCoupleExist(personId, specId, crNumber, revision);
         }
+
+        /// <summary>
+        /// Gets the matching Crs by spec# / cr# / revision combination.
+        /// </summary>
+        /// <param name="specCrRevisionTuples">The spec# / cr# / revision combination list.</param>
+        /// <returns>Matching Crs for given tuple (spec# / cr# / revision) combination</returns>
+        public List<ChangeRequest> GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples)
+        {
+            LogManager.UltimateServiceLogger.Debug("[ServiceCall][GetMatchingCrsBySpecCrRevisionTuple]");
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetMatchingCrsBySpecCrRevisionTuple(specCrRevisionTuples);
+        }
+
         #endregion
 
         #region Version services

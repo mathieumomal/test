@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.WCF.Interface.Entities;
+﻿using System;
+using Etsi.Ultimate.WCF.Interface.Entities;
 using System.Collections.Generic;
 using System.ServiceModel;
 
@@ -178,6 +179,14 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns></returns>
         [OperationContract]
         bool DoesCrNumberRevisionCoupleExist(int personId, int specId, string crNumber, int revision);
+
+        /// <summary>
+        /// Gets the matching Crs by spec# / cr# / revision combination.
+        /// </summary>
+        /// <param name="specCrRevisionTuples">The spec# / cr# / revision combination list.</param>
+        /// <returns>Matching Crs for given tuple (spec# / cr# / revision) combination</returns>
+        [OperationContract]
+        List<ChangeRequest> GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples);
 
         #endregion
 

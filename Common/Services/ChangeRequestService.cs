@@ -291,6 +291,32 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Gets the matching Crs by spec# / cr# / revision combination.
+        /// </summary>
+        /// <param name="specCrRevisionTuples">The spec# / cr# / revision combination list.</param>
+        /// <returns>Matching Crs for given tuple (spec# / cr# / revision) combination</returns>
+        public ServiceResponse<List<ChangeRequest>> GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples)
+        {
+            var response = new ServiceResponse<List<ChangeRequest>>();
+
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var crManager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    crManager.UoW = uow;
+                    response.Result = crManager.GetMatchingCrsBySpecCrRevisionTuple(specCrRevisionTuples);
+                }
+                catch (Exception ex)
+                {
+                    response.Report.LogError("Failed to get matching Spec# / CR # / Revision");
+                    LogManager.Error(String.Format("[Service] Failed to get matching Spec# / CR # / Revision: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
+                }
+            }
+
+            return response;
+        }
     }
 
     /// <summary>
@@ -373,6 +399,13 @@ namespace Etsi.Ultimate.Services
         /// <param name="revision"></param>
         /// <returns></returns>
         ServiceResponse<bool> DoesCrNumberRevisionCoupleExist(int specId, string crNumber, int revision);
+
+        /// <summary>
+        /// Gets the matching Crs by spec# / cr# / revision combination.
+        /// </summary>
+        /// <param name="specCrRevisionTuples">The spec# / cr# / revision combination list.</param>
+        /// <returns>Matching Crs for given tuple (spec# / cr# / revision) combination</returns>
+        ServiceResponse<List<ChangeRequest>> GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples);
     }
 }
 

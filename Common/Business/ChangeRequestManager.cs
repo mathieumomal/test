@@ -265,6 +265,18 @@ namespace Etsi.Ultimate.Business
             return crRepository.DoesCrNumberRevisionCoupleExist(specId, crNumber, revision);
         }
 
+        /// <summary>
+        /// Gets the matching Crs by spec# / cr# / revision combination.
+        /// </summary>
+        /// <param name="specCrRevisionTuples">The spec# / cr# / revision combination list.</param>
+        /// <returns>Matching Crs for given tuple (spec# / cr# / revision) combination</returns>
+        public List<ChangeRequest> GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples)
+        {
+            var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
+            crRepository.UoW = UoW;
+            return crRepository.GetMatchingCrsBySpecCrRevisionTuple(specCrRevisionTuples);
+        }
+
         #endregion
 
         #region Private Methods
@@ -471,5 +483,12 @@ namespace Etsi.Ultimate.Business
         /// <param name="revision"></param>
         /// <returns></returns>
         bool DoesCrNumberRevisionCoupleExist(int specId, string crNumber, int revision);
+
+        /// <summary>
+        /// Gets the matching Crs by spec# / cr# / revision combination.
+        /// </summary>
+        /// <param name="specCrRevisionTuples">The spec# / cr# / revision combination list.</param>
+        /// <returns>Matching Crs for given tuple (spec# / cr# / revision) combination</returns>
+        List<ChangeRequest> GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples);
     }
 }

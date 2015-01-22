@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
 using System;
+using System.Web.UI.WebControls;
 
 namespace Etsi.Ultimate.Repositories
 {
@@ -173,6 +174,32 @@ namespace Etsi.Ultimate.Repositories
         {
             return UoW.Context.ChangeRequests.Any(x => x.CRNumber == crNumber.Trim() && x.Revision == revision && x.Fk_Specification == specId);
         }
+
+        /// <summary>
+        /// Gets the matching Crs by spec# / cr# / revision combination.
+        /// </summary>
+        /// <param name="specCrRevisionTuples">The spec# / cr# / revision combination list.</param>
+        /// <returns>Matching Crs for given tuple (spec# / cr# / revision) combination</returns>
+        public List<ChangeRequest> GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples)
+        {
+            var specIds = specCrRevisionTuples.Select(x => x.Item1).Distinct().ToList();
+            var crNumbers = specCrRevisionTuples.Select(x => x.Item2).Distinct().ToList();
+            var revisionNumbers = specCrRevisionTuples.Select(x => x.Item3).Distinct().ToList();
+
+            //Tuple keys (Item1, Item2, Item3) cannot be placed on query.
+            //So, to minimize performance first filter individual matches => get the data => go for combination filter
+            var matchingCombinations = AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.TsgStatus, t => t.WgStatus)
+                .Where(individualMatch => specIds.Contains(individualMatch.Fk_Specification ?? 0)
+                                          && crNumbers.Contains(individualMatch.CRNumber)
+                                          && revisionNumbers.Contains(individualMatch.Revision ?? 0))
+                .ToList()
+                .Where(combinationMatch => specCrRevisionTuples.Any(x => x.Item1 == combinationMatch.Fk_Specification
+                                                                    && x.Item2 == combinationMatch.CRNumber
+                                                                    && x.Item3 == combinationMatch.Revision))
+                .ToList();
+
+            return matchingCombinations;
+        }
     }
 
     /// <summary>
@@ -232,5 +259,12 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="revision"></param>
         /// <returns></returns>
         bool DoesCrNumberRevisionCoupleExist(int specId, string crNumber, int revision);
+
+        /// <summary>
+        /// Gets the matching Crs by spec# / cr# / revision combination.
+        /// </summary>
+        /// <param name="specCrRevisionTuples">The spec# / cr# / revision combination list.</param>
+        /// <returns>Matching Crs for given tuple (spec# / cr# / revision) combination</returns>
+        List<ChangeRequest> GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples);
     }
 }
