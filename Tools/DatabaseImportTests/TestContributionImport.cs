@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using DatabaseImport.ModuleImport.NGPPDB.Contribution;
 using DatabaseImportTests.FakeDBSets;
@@ -119,7 +118,7 @@ namespace DatabaseImportTests
                         {
                             new ContribAllocation
                             {
-                                fk_Meeting = 1,
+                                fk_Meeting = 30288,
                                 lastModificationAuthor = "Import from MS Access",
                                 lastModificationDate = DateTime.Now,
                                 ContribAllocation_Date = DateTime.Now,
@@ -192,7 +191,7 @@ namespace DatabaseImportTests
                         {
                             new ContribAllocation
                             {
-                                fk_Meeting = 3,
+                                fk_Meeting =30288,
                                 lastModificationAuthor = "Import from MS Access",
                                 lastModificationDate = DateTime.Now,
                                 ContribAllocation_Date = DateTime.Now,
@@ -263,7 +262,7 @@ namespace DatabaseImportTests
                         {
                             new ContribAllocation
                             {
-                                fk_Meeting = 1,
+                                fk_Meeting = 30290,
                                 lastModificationAuthor = "Import from MS Access",
                                 lastModificationDate = DateTime.Now,
                                 ContribAllocation_Date = DateTime.Now,

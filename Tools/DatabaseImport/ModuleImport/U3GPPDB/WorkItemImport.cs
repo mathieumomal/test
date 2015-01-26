@@ -36,12 +36,12 @@ namespace DatabaseImport.ModuleImport.U3GPPDB
             Console.WriteLine("Saving previous transactions .....");
             UltimateContext.SaveChanges();
 
-            if (File.Exists("../../referenceWorkPlan.csv"))
+            if (File.Exists("./referenceWorkPlan.csv"))
             {
                 Console.WriteLine("Importing workplan from reference file");
                 var csvParser = new WorkItemCsvParser();
                 csvParser.UoW = new UltimateUnitOfWork();
-                var result = csvParser.ParseCsv("../../referenceWorkPlan.csv");
+                var result = csvParser.ParseCsv("./referenceWorkPlan.csv");
                 var workItemList = result.Key;
 
                 UltimateContext.SetAutoDetectChanges(false);

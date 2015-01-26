@@ -209,32 +209,16 @@ namespace DatabaseImport.ModuleImport.NGPPDB.Contribution
         /// </summary>
         private void MeetingCase(Etsi.Ngppdb.DomainClasses.Contribution newTDoc, Etsi.Ultimate.Tools.TmpDbDataAccess.C2006_03_17_tdocs legacyTDoc)
         {
-            var meetingUid = Utils.CheckString(legacyTDoc.doc_mtg, 25, RefImportForLog + "Meeting string format : " + legacyTDoc.doc_mtg, legacyTDoc.doc_tdoc);
-
-            if (!String.IsNullOrEmpty(meetingUid) && !meetingUid.Equals("-"))
+            if (legacyTDoc.doc_mtgId.GetValueOrDefault() != 0)
             {
-                var mtgId = MtgHelper.FindMeetingId(meetingUid);
-
-                if (mtgId.HasValue)
+                newTDoc.ContribAllocation.Add(new ContribAllocation
                 {
-                    // Check in legacy meeting db.
-                    newTDoc.ContribAllocation.Add(new ContribAllocation
-                    {
-                        fk_Meeting = mtgId.Value,
-                        lastModificationAuthor = "Import from MS Access",
-                        lastModificationDate = DateTime.Now,
-                        ContribAllocation_Date = DateTime.Now,
-                        ContribAllocation_Number = 0
-                    });
-                }
-                else
-                {
-                    LogManager.LogWarning(RefImportForLog + "Meeting not found: " + meetingUid + " for contribution : " + legacyTDoc.doc_tdoc);
-                }
-            }
-            else
-            {
-                LogManager.LogWarning(RefImportForLog + "Meeting not found: " + meetingUid + " for contribution : " + legacyTDoc.doc_tdoc);
+                    fk_Meeting = legacyTDoc.doc_mtgId.GetValueOrDefault(),
+                    lastModificationAuthor = "Import from MS Access",
+                    lastModificationDate = DateTime.Now,
+                    ContribAllocation_Date = DateTime.Now,
+                    ContribAllocation_Number = 0
+                });
             }
         }
 

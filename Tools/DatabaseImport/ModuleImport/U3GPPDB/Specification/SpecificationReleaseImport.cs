@@ -60,6 +60,8 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
 
                     WithdrawnMeetingCase(new_specRelease, legacySpecInfo);
 
+                    RemarksCase(new_specRelease, legacySpecInfo, spec.Number+ " "+ release.Description);
+
                     UltimateContext.Specification_Release.Add(new_specRelease);
                 }
                 else
@@ -96,6 +98,30 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Specification
                 }
             }
         }
+
+        /// <summary>
+        /// Insert remark associated 
+        /// </summary>
+        /// <param name="newSpecRelease"></param>
+        /// <param name="legacySpecRelease"></param>
+        /// <param name="logId"></param>
+        private void RemarksCase(Specification_Release newSpecRelease, Etsi.Ultimate.Tools.TmpDbDataAccess.Specs_GSM_3G_release_info legacySpecRelease, string logId)
+        {
+            var remarksField = Utils.CheckString(legacySpecRelease.remarks, 1000, RefImportForLog + " Remarks ", logId);
+
+            if (string.IsNullOrEmpty(remarksField))
+                return;
+
+            var remark = new Remark
+            {
+                CreationDate = DateTime.Now,
+                IsPublic = true,
+                RemarkText = remarksField,
+                Specification_Release = newSpecRelease
+            };
+            newSpecRelease.Remarks.Add(remark);
+        }
+
         #endregion
     }
 }

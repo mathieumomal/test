@@ -103,6 +103,8 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Version
 
                 MeetingCase(newVersion, legacyVersion, idVersion);
 
+                RemarksCase(newVersion, legacyVersion, idVersion);
+
                 // NO DATAS TO IMPORT
                 //newVersion.ETSI_WKI_Ref = ;
                 //newVersion.ProvidedBy = ; 
@@ -189,6 +191,29 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.Version
                 MeetingsNotFound++;
                 //Report.LogError(RefImportForLog + " meeting not found (" + legacyVersion.spec + ")");
             }
+        }
+
+        /// <summary>
+        /// Insert remark associated 
+        /// </summary>
+        /// <param name="newVersion"></param>
+        /// <param name="legacyVersion"></param>
+        /// <param name="logId"></param>
+        private void RemarksCase(SpecVersion newVersion, Etsi.Ultimate.Tools.TmpDbDataAccess.C2001_04_25_schedule legacyVersion, string logId)
+        {
+            var remarksField = Utils.CheckString(legacyVersion.comment, 1000, RefImportForLog + " Remarks ", logId);
+
+            if (string.IsNullOrEmpty(remarksField))
+                return;
+
+            var remark = new Remark
+            {
+                CreationDate = DateTime.Now,
+                IsPublic = true,
+                RemarkText = remarksField,
+                Version = newVersion
+            };
+            newVersion.Remarks.Add(remark);
         }
 
         #endregion

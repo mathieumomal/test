@@ -27,6 +27,7 @@ namespace DatabaseImport
             Console.WriteLine("Enter 'A' for All next data (inside U3GPPDB & NGPPDB)");
             Console.WriteLine("Enter 'B' for Base U3GPPDB data (releases, specs, ...)");
             Console.WriteLine("Enter 'C' for CR data (CR,... inside U3GPPDB)");
+            Console.WriteLine("Enter '3' for all 3GU data (except Tdocs)");
             Console.WriteLine("Enter 'N' for Ngppdb data (Contribution inside NGPPDB)");
             var responsePartialData = Console.Read();
             switch (responsePartialData)
@@ -45,6 +46,12 @@ namespace DatabaseImport
                 case 'C':
                     Console.WriteLine("Import CR data (U3GPPDB)...");
                     operations = new ChangeRequestData().Operations;
+                    break;
+                case '3':
+                    Console.WriteLine("Import whole 3GU data...");
+                    operations = new List<IModuleImport>();
+                    operations.AddRange(new BaseU3GppdbData().Operations);
+                    operations.AddRange(new ChangeRequestData().Operations);
                     break;
                 case 'N':
                     Console.WriteLine("Import Contribution data (NGPPDB)...");

@@ -420,7 +420,7 @@ namespace DatabaseImport.ModuleImport.U3GPPDB.CR
         /// <param name="logId"></param>
         private void RemarksCase(ChangeRequest newCr, Etsi.Ultimate.Tools.TmpDbDataAccess.List_of_GSM___3G_CRs legacyCr, string logId)
         {
-            var remarksField = Utils.CheckString(legacyCr.Remarks, 255, RefImportForLog + " Remarks ", logId);
+            var remarksField = Utils.CheckString(legacyCr.Remarks, 1000, RefImportForLog + " Remarks ", logId);
 
             if (string.IsNullOrEmpty(remarksField))
                 return;
