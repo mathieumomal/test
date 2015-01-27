@@ -2,10 +2,10 @@
 using System.Globalization;
 using Etsi.Ultimate.Services;
 using System.Collections.Generic;
+using Etsi.Ultimate.Utils.Core;
 using UltimateEntities = Etsi.Ultimate.DomainClasses;
 using UltimateServiceEntities = Etsi.Ultimate.WCF.Interface.Entities;
 using Etsi.Ultimate.WCF.Interface;
-using Etsi.Ultimate.WCF.Service.Logger;
 
 namespace Etsi.Ultimate.WCF.Service
 {
@@ -55,11 +55,11 @@ namespace Etsi.Ultimate.WCF.Service
                 if (releaseRightsObjects.Key != null)
                     releaseRightsObjects.Key.ForEach(x => releases.Add(ConvertUltimateReleaseToServiceRelease(x)));
                 else
-                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetReleases, "Failed to get release details"));
+                    LogManager.Error(String.Format(ConstErrorTemplateGetReleases, "Failed to get release details"));
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetReleases, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateGetReleases, ex.Message));
             }
 
             return releases;
@@ -82,12 +82,12 @@ namespace Etsi.Ultimate.WCF.Service
                 if (releaseRightsObject.Key != null)
                     release = ConvertUltimateReleaseToServiceRelease(releaseRightsObject.Key);
                 else
-                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetReleases,
+                    LogManager.Error(String.Format(ConstErrorTemplateGetReleases,
                         "Failed to get release details"));
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetReleases, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateGetReleases, ex.Message));
             }
 
             return release;
@@ -113,13 +113,13 @@ namespace Etsi.Ultimate.WCF.Service
                 }
                 else
                 {
-                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetWorkitemsByIds, 
+                    LogManager.Error(String.Format(ConstErrorTemplateGetWorkitemsByIds, 
                         "Unable to get workitem for work item id=" + workItemIds.FindAll(x=>string.IsNullOrEmpty(x.ToString(CultureInfo.InvariantCulture)))));
                 }
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetWorkitemsByIds, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateGetWorkitemsByIds, ex.Message));
             }
 
             return workItems;
@@ -139,7 +139,7 @@ namespace Etsi.Ultimate.WCF.Service
 
             if (String.IsNullOrEmpty(keyword))
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetWorkitemsByKeyword, "Keyword should not empty"));
+                LogManager.Error(String.Format(ConstErrorTemplateGetWorkitemsByKeyword, "Keyword should not empty"));
             }
             else
             {
@@ -150,11 +150,11 @@ namespace Etsi.Ultimate.WCF.Service
                     if (workItemRightsObjects.Key != null)
                         workItemRightsObjects.Key.ForEach(x => workItems.Add(ConvertUltimateWorkItemToServiceWorkItem(x)));
                     else
-                        LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetWorkitemsByKeyword, "Failed to get workitem details"));
+                        LogManager.Error(String.Format(ConstErrorTemplateGetWorkitemsByKeyword, "Failed to get workitem details"));
                 }
                 catch (Exception ex)
                 {
-                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetWorkitemsByKeyword, ex.Message));
+                    LogManager.Error(String.Format(ConstErrorTemplateGetWorkitemsByKeyword, ex.Message));
                 }
             }
             return workItems;
@@ -174,7 +174,7 @@ namespace Etsi.Ultimate.WCF.Service
 
             if (String.IsNullOrEmpty(keyword))
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationsByKeyword, "Keyword should not empty"));
+                LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationsByKeyword, "Keyword should not empty"));
             }
             else
             {
@@ -185,11 +185,11 @@ namespace Etsi.Ultimate.WCF.Service
                     if (specificationsObjects != null)
                         specificationsObjects.ForEach(x => specifications.Add(ConvertUltimateSpecificationToServiceSpecification(x)));
                     else
-                        LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationsByKeyword, "Failed to get specification details"));
+                        LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationsByKeyword, "Failed to get specification details"));
                 }
                 catch (Exception ex)
                 {
-                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationsByKeyword, ex.Message));
+                    LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationsByKeyword, ex.Message));
                 }
             }
             return specifications;
@@ -213,11 +213,11 @@ namespace Etsi.Ultimate.WCF.Service
                 if (specificationRightsObjects.Key != null)
                     specification = ConvertUltimateSpecificationToServiceSpecification(specificationRightsObjects.Key);
                 else
-                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationById, "Failed to get specification details"));
+                    LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationById, "Failed to get specification details"));
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationById, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationById, ex.Message));
             }
             return specification;
         }
@@ -240,11 +240,11 @@ namespace Etsi.Ultimate.WCF.Service
                 if (specsFound != null)
                     specsFound.ForEach(spec => specifications.Add(ConvertUltimateSpecificationToServiceSpecification(spec)));
                 else
-                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationsByIds, "Failed to get specs"));
+                    LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationsByIds, "Failed to get specs"));
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetSpecificationsByIds, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationsByIds, ex.Message));
             }
 
             return specifications;
@@ -267,7 +267,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateChangeSpecificationsStatusToUnderChangeControl, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateChangeSpecificationsStatusToUnderChangeControl, ex.Message));
                 statusChangeReport.Result = false;
                 statusChangeReport.Report.ErrorList.Add("Specifications status change process failed");
             }
@@ -291,7 +291,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateSetCrsAsFinal, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateSetCrsAsFinal, ex.Message));
                 statusReport.Result = false;
                 statusReport.Report.ErrorList.Add("Finalizing CRs process failed");
             }
@@ -316,9 +316,9 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequestById, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateCreateChangeRequestById, ex.Message));
             }
-            LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequestById, changeRequest.Pk_ChangeRequest));
+            LogManager.Error(String.Format(ConstErrorTemplateCreateChangeRequestById, changeRequest.Pk_ChangeRequest));
             return changeRequest;
         }
 
@@ -340,12 +340,12 @@ namespace Etsi.Ultimate.WCF.Service
                 else
                 {
                     response.Report.ErrorList = createCrResponse.Report.ErrorList;
-                    LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequest, "Failed to get create CR record"));
+                    LogManager.Error(String.Format(ConstErrorTemplateCreateChangeRequest, "Failed to get create CR record"));
                 }
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequest, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateCreateChangeRequest, ex.Message));
             }
             return response;
         }
@@ -366,7 +366,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateEditChangeRequest, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateEditChangeRequest, ex.Message));
                 isSuccess = false;
             }
             return isSuccess;
@@ -388,7 +388,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateCreateChangeRequestCategories, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateCreateChangeRequestCategories, ex.Message));
             }
             return changeRequestCategories;
         }
@@ -410,7 +410,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message));
             }
             return cr;
         }
@@ -433,7 +433,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message));
             }
             return crList;
         }
@@ -456,7 +456,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message));
             }
             return crStatusesList;
 
@@ -479,13 +479,13 @@ namespace Etsi.Ultimate.WCF.Service
                         return true;
                     foreach (var error in response.Report.ErrorList)
                     {
-                        LogManager.UltimateServiceLogger.Error("UpdateChangeRequestPackRelatedCrs failed cause by : " + error);
+                        LogManager.Error("UpdateChangeRequestPackRelatedCrs failed cause by : " + error);
                     }
                 }
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateUpdateChangeRequestPackRelatedCrs, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateUpdateChangeRequestPackRelatedCrs, ex.Message));
                 return false;
             }
             return false;
@@ -508,7 +508,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetMatchingCrsBySpecCrRevisionTuple, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateGetMatchingCrsBySpecCrRevisionTuple, ex.Message));
             }
             return changeRequests;
         }
@@ -531,12 +531,12 @@ namespace Etsi.Ultimate.WCF.Service
                     return response.Result;
                 foreach (var error in response.Report.ErrorList)
                 {
-                    LogManager.UltimateServiceLogger.Error("IsExistCrNumberRevisionCouple failed cause by : " + error);
+                    LogManager.Error("IsExistCrNumberRevisionCouple failed cause by : " + error);
                 }
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorIsExistCrNumberRevisionCouple, ex.Message));
+                LogManager.Error(String.Format(ConstErrorIsExistCrNumberRevisionCouple, ex.Message));
             }
             return true;
         }
@@ -559,7 +559,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateGetVersionsForSpecRelease, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateGetVersionsForSpecRelease, ex.Message));
             }
             return specVersions;
         }
@@ -590,7 +590,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.UltimateServiceLogger.Error(String.Format(ConstErrorTemplateUpdateVersionRelatedTdoc, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateUpdateVersionRelatedTdoc, ex.Message));
                 svcResponse.Result = false;
                 svcResponse.Report.ErrorList.Add(ex.Message);
             }

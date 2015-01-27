@@ -253,25 +253,6 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             Assert.AreEqual(statusWgExpected, parentCr.Fk_WGStatus.GetValueOrDefault());
         }
 
-        [Test, Description("RevisionOfUid don't exist")]
-        public void Service_IntegrationTest_CreateChangeRequest_RevisionOf_Failure()
-        {
-            //Arrange
-            var changeRequest = new ChangeRequest
-            {
-                RevisionOf = "uidDontExist",
-                Fk_Specification = 136083
-            };
-
-            //Act
-            var crService = new ChangeRequestService();
-            var result = crService.CreateChangeRequest(PersonId, changeRequest);
-            var events = _memoryAppender.GetEvents();
-            Assert.AreEqual(1, events.Length);
-            Assert.IsTrue(events[0].MessageObject.ToString().Contains("uidDontExist not found"));
-            Assert.AreEqual(Level.Error, events[0].Level);
-        }
-
         [Test, Description("System sets CR WG and TSG decisions")]
         public void CreateChangeRequest_SetsDecisions()
         {

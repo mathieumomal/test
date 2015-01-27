@@ -93,16 +93,16 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Logger\LogManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceHelper.cs" />
     <Compile Include="UltimateService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Logger\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Logger\UltimateService.log4net.config">
+    <Content Include="Ultimate.log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="packages.config" />
@@ -125,6 +125,10 @@
     <ProjectReference Include="..\..\..\Common\Services\Services.csproj">
       <Project>{4bb8a434-1ed1-4d33-ae3d-32a000d19ca5}</Project>
       <Name>Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Common\Utils.Core\Utils.Core.csproj">
+      <Project>{4905e5a9-aa9b-4cc4-95e1-636b37fc27ba}</Project>
+      <Name>Utils.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Etsi.Ultimate.WCF.Interface\Etsi.Ultimate.WCF.Interface.csproj">
       <Project>{04e3e687-b60b-4499-bafd-f8ec996e111d}</Project>

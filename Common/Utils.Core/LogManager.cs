@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using DotNetNuke.Instrumentation;
 using log4net.Config;
 
@@ -37,8 +38,26 @@ namespace Etsi.Ultimate.Utils.Core
         /// </summary>
         private static void ConfigureLogger()
         {
-            XmlConfigurator.ConfigureAndWatch(new System.IO.FileInfo(String.IsNullOrEmpty(CONFIG_FILE_PATH) ? ServerTopology.GetServerRootPath() + "./" + "Meeting.log4net.config" : CONFIG_FILE_PATH));
-            _logger = LoggerSource.Instance.GetLogger(String.IsNullOrEmpty(LOGGER_NAME) ? "MeetingLogger" : LOGGER_NAME);
+            var rootPath = "";
+            if (String.IsNullOrEmpty(CONFIG_FILE_PATH))
+            {
+                if (String.IsNullOrEmpty(ServerTopology.GetServerRootPath()))
+                {
+                    rootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                        "Ultimate.log4net.config");
+                }
+                else
+                {
+                    rootPath = ServerTopology.GetServerRootPath() + "./" + "Ultimate.log4net.config";
+                }
+            }
+            else
+            {
+                rootPath = CONFIG_FILE_PATH;
+            }
+
+            XmlConfigurator.ConfigureAndWatch(new System.IO.FileInfo( rootPath ));
+            _logger = LoggerSource.Instance.GetLogger(String.IsNullOrEmpty(LOGGER_NAME) ? "UltimateLogger" : LOGGER_NAME);
         }
 
         #endregion
