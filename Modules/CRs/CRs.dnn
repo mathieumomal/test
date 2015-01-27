@@ -1,6 +1,6 @@
 <dotnetnuke type="Package" version="5.0">
   <packages>
-    <package name="CRs" type="Module" version="00.00.04">
+    <package name="CRs" type="Module" version="01.00.00">
       <friendlyName>CRs</friendlyName>
       <description>CRs module</description>
       <iconFile>Images/icon_extensions.gif</iconFile>

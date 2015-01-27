@@ -93,6 +93,12 @@
   <add key="ContributionCommitFinalDecisionsUrl" value="http://portal.3gpp.org/ngppapp/CommitFinalDecisions.aspx?meetingId={0}"/>
 	<add key="DownloadDocumentListBaseAddress" value="http://portal.3gpp.org/ngppapp/GenerateDocumentList.Aspx?meetingId={0}"/>
 	
+	<add key="SpecificationDetailsUrl" value="http://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId={0}" />
+  <add key="ReleaseDetailsUrl" value="http://portal.3gpp.org/desktopmodules/Release/ReleaseDetails.aspx?releaseId={0}"/>
+  <add key="TdocDetailsUrl" value="http://portal.3gpp.org/ngppapp/CreateTdoc.aspx?mode=view&amp;contributionUid={0}"/>
+  <add key="DownloadparticipantsListLink" value="http://portal.3gpp.org/desktopmodules/Meetings/DownloadParticipantsList.aspx?eventId={0}" />
+  <add key="CRsListRecordsMaxSize" value="100"/>
+	
 	
   <add key="MeetingListAdvancedQueryLink" value="http://webapp.etsi.org/MeetingCalendar/QueryForm.asp"/>
   <add key="ManageAgendaItemsUrl" value="http://webapp.etsi.org/rmeetingDocuments/UpdateAllocations.asp?MTG_ID={0}"/>
