@@ -160,6 +160,9 @@ namespace Etsi.Ultimate.Business
             catch (Exception ex)
             {
                 LogManager.Error("[Business] Failed to GetContributionCRByUid:" + ex.Message);
+                LogManager.Error(ex.StackTrace);
+                if (ex.InnerException != null)
+                    LogManager.Error("InnerException: " + ex.InnerException.Message);
                 return null;
             }
         }
