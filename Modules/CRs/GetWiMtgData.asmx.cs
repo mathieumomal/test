@@ -48,7 +48,7 @@ namespace Etsi.Ultimate.Module.CRs
         {
             var searchString = context["Text"].ToString();
             var mtgSvc = ServicesFactory.Resolve<IMeetingService>();
-            var meetings = mtgSvc.GetMatchingMeetings(searchString).Take(MaxResults).ToList();
+            var meetings = mtgSvc.GetMatchingMeetings(searchString).OrderByDescending(d => d.START_DATE).Take(MaxResults).ToList();
 
             var result = new List<AutoCompleteBoxItemData>();
 
