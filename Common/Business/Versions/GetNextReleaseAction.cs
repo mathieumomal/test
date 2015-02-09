@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.Business.Specifications.Interfaces;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 
-namespace Etsi.Ultimate.Business.SpecVersionBusiness
+namespace Etsi.Ultimate.Business.Versions
 {
     public class GetNextReleaseAction
     {
@@ -37,10 +36,10 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                 var spec = FetchSpecification(personId, specId);
                 resultVersionsCurrentAndNew.NewSpecVersion.Fk_SpecificationId = specId;
                 resultVersionsCurrentAndNew.NewSpecVersion.Specification = spec;
-                var isSpecUCC = spec.IsUnderChangeControl.GetValueOrDefault();
+                var isSpecUcc = spec.IsUnderChangeControl.GetValueOrDefault();
 
                 // We compute the version against a complex algorithm.
-                ComputeVersion(specId, releaseId, forUpload, resultVersionsCurrentAndNew, release, isSpecUCC);
+                ComputeVersion(specId, releaseId, forUpload, resultVersionsCurrentAndNew, release, isSpecUcc);
 
                 // We determine the user rights
                 var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
@@ -50,7 +49,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                 var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
                 specMgr.UoW = UoW;
 
-                response.Rights = specMgr.GetRightsForSpecRelease(userRights, personId, spec, releaseId, new List<Release>() { release }).Value;
+                response.Rights = specMgr.GetRightsForSpecRelease(userRights, personId, spec, releaseId, new List<Release> { release }).Value;
 
                 response.Result = resultVersionsCurrentAndNew;
             }
@@ -62,14 +61,13 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
         }
 
-        private void ComputeVersion(int specId, int releaseId, bool forUpload, SpecVersionCurrentAndNew resultVersions, Release release, bool isSpecUCC)
+        private void ComputeVersion(int specId, int releaseId, bool forUpload, SpecVersionCurrentAndNew resultVersions, Release release, bool isSpecUcc)
         {
             // Fetch the versions. In draft, we might need all versions, as a draft can be carried from
             // one release to another.
-            var versionMgr = new SpecVersionsManager();
-            versionMgr.UoW = UoW;
+            var versionMgr = new SpecVersionsManager {UoW = UoW};
             var existingVersions = versionMgr.GetVersionsBySpecId(specId);
-            if (isSpecUCC)
+            if (isSpecUcc)
             {
                 existingVersions = existingVersions.Where(v => v.Fk_ReleaseId == releaseId).ToList();
             }
@@ -83,7 +81,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             {
                 resultVersions.NewSpecVersion.TechnicalVersion = 0;
                 resultVersions.NewSpecVersion.MajorVersion = 0;
-                if (isSpecUCC)
+                if (isSpecUcc)
                 {
                     resultVersions.NewSpecVersion.MajorVersion = release.Version3g;
                 }
@@ -94,7 +92,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             // In this case, there already are versions, so we start by ordering them.
             var orderedVersions = existingVersions.OrderByDescending(v => v.MajorVersion).ThenByDescending(v => v.TechnicalVersion).ThenByDescending(v => v.EditorialVersion);
             resultVersions.CurrentSpecVersion = orderedVersions.FirstOrDefault();
-            SpecVersion eligibleVersion = FindEligibleVersion(releaseId, forUpload, orderedVersions);
+            var eligibleVersion = FindEligibleVersion(releaseId, forUpload, orderedVersions);
 
             // if an eligible version has been found, we use it.
             // else, we compute the next version from the current one.
@@ -107,15 +105,10 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             }
             else
             {
-                if (isSpecUCC)
-                {
-                    resultVersions.NewSpecVersion.MajorVersion = release.Version3g;
-                }
-                else
-                {
-                    resultVersions.NewSpecVersion.MajorVersion = orderedVersions.First().MajorVersion;
-                }
-                resultVersions.NewSpecVersion.TechnicalVersion = orderedVersions.First().TechnicalVersion.Value + 1;
+                resultVersions.NewSpecVersion.MajorVersion = isSpecUcc ? release.Version3g : orderedVersions.First().MajorVersion;
+                var technicalVersion = orderedVersions.First().TechnicalVersion;
+                if (technicalVersion != null)
+                    resultVersions.NewSpecVersion.TechnicalVersion = technicalVersion.Value + 1;
             }
         }
 
@@ -126,7 +119,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
         /// <param name="forUpload"></param>
         /// <param name="orderedVersions"></param>
         /// <returns></returns>
-        private SpecVersion FindEligibleVersion(int releaseId, bool forUpload, IOrderedEnumerable<SpecVersion> orderedVersions)
+        private SpecVersion FindEligibleVersion(int releaseId, bool forUpload, IEnumerable<SpecVersion> orderedVersions)
         {
             SpecVersion eligibleVersion = null;
             if (forUpload)

@@ -1,22 +1,17 @@
-﻿using Etsi.Ultimate.Repositories;
-using Etsi.Ultimate.DomainClasses;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.Business.Specifications.Interfaces;
+using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Specifications
 {
     public class SpecificationsMassivePromotionAction
     {
         #region Properties
         public IUltimateUnitOfWork UoW { get; set; }
-        #endregion
-
-        #region Constructor
-        public SpecificationsMassivePromotionAction() { }
         #endregion
 
         #region Methods
@@ -31,8 +26,8 @@ namespace Etsi.Ultimate.Business
             releaseManager.UoW = UoW;
 
             // Get source release Specifications 
-            var SourceSpecs = new  List<Specification>();
-            releaseManager.GetReleaseById(personId, initialReleaseId).Key.Specification_Release.ToList().ForEach(e => SourceSpecs.Add(e.Specification));
+            var sourceSpecs = new  List<Specification>();
+            releaseManager.GetReleaseById(personId, initialReleaseId).Key.Specification_Release.ToList().ForEach(e => sourceSpecs.Add(e.Specification));
             
             
             // Get target release Specifications 
@@ -40,19 +35,19 @@ namespace Etsi.Ultimate.Business
             releaseManager.GetReleaseById(personId, targetReleaseId).Key.Specification_Release.ToList().ForEach(e => targetReleaseSpecIds.Add(e.Fk_SpecificationId));
 
             //Remove element exisiting in target release
-            SourceSpecs.RemoveAll(s => targetReleaseSpecIds.Contains(s.Pk_SpecificationId));
-            SourceSpecs.RemoveAll(s => !s.IsActive);
+            sourceSpecs.RemoveAll(s => targetReleaseSpecIds.Contains(s.Pk_SpecificationId));
+            sourceSpecs.RemoveAll(s => !s.IsActive);
             //If specification is not a draft, not inhibited from promotion, and has a version in the initial relase => New version allocation is enabled
             //Get specification ids havig a version for the initial release 
-            ISpecVersionsRepository versionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            var versionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             versionRepo.UoW = UoW;
-            List<int> buffer = new List<int>();
+            var buffer = new List<int>();
             versionRepo.GetVersionsByReleaseId(initialReleaseId).ForEach(v => buffer.Add(v.Fk_SpecificationId.GetValueOrDefault()));
-            SourceSpecs.Where(s => (!s.promoteInhibited.GetValueOrDefault()) && !(s.IsActive && !s.IsUnderChangeControl.GetValueOrDefault()) && (buffer.Contains(s.Pk_SpecificationId))).ToList().ForEach(s => { s.IsNewVersionCreationEnabled = true; });
+            sourceSpecs.Where(s => (!s.promoteInhibited.GetValueOrDefault()) && !(s.IsActive && !s.IsUnderChangeControl.GetValueOrDefault()) && (buffer.Contains(s.Pk_SpecificationId))).ToList().ForEach(s => { s.IsNewVersionCreationEnabled = true; });
 
             var communityManager = ManagerFactory.Resolve<ICommunityManager>();
             communityManager.UoW = UoW;
-            foreach (Specification s in SourceSpecs)
+            foreach (Specification s in sourceSpecs)
             {
                 if (s.SpecificationResponsibleGroups != null && s.SpecificationResponsibleGroups.Count > 0 && s.PrimeResponsibleGroup != null)
                 {
@@ -61,7 +56,7 @@ namespace Etsi.Ultimate.Business
                 }
             }
 
-            return new KeyValuePair<List<Specification>, UserRightsContainer>(SourceSpecs, personRights); 
+            return new KeyValuePair<List<Specification>, UserRightsContainer>(sourceSpecs, personRights); 
         }
 
         public void PromoteMassivelySpecification(int personId, List<int> specificationIds, int targetReleaseId)
@@ -71,7 +66,7 @@ namespace Etsi.Ultimate.Business
             DateTime actionDate = DateTime.UtcNow;
             foreach (int id in specificationIds)
             {
-                specMgr.GetSpecificationById(personId, id).Key.Specification_Release.Add(new Specification_Release() { isWithdrawn = false, CreationDate = actionDate, UpdateDate = actionDate, Fk_ReleaseId = targetReleaseId });
+                specMgr.GetSpecificationById(personId, id).Key.Specification_Release.Add(new Specification_Release { isWithdrawn = false, CreationDate = actionDate, UpdateDate = actionDate, Fk_ReleaseId = targetReleaseId });
             }
         }
         #endregion

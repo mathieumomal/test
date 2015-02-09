@@ -1,13 +1,14 @@
 ﻿using Etsi.Ultimate.Business;
+using Etsi.Ultimate.Business.Specifications;
+using Etsi.Ultimate.Business.Specifications.Interfaces;
+using Etsi.Ultimate.Business.Versions;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Etsi.Ultimate.Business.SpecVersionBusiness;
 using Etsi.Ultimate.Utils.Core;
-using Etsi.Ultimate.Business.SpecificationBusiness;
 
 namespace Etsi.Ultimate.Services
 {
@@ -51,8 +52,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specificationManager = new SpecificationManager();
-                specificationManager.UoW = uoW;
+                var specificationManager = new SpecificationManager {UoW = uoW};
                 return specificationManager.GetSpecifications(personId, ids);
             }
         }
@@ -61,13 +61,12 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specificationManager = new SpecificationManager();
-                specificationManager.UoW = uoW;
+                var specificationManager = new SpecificationManager {UoW = uoW};
                 var communityManager = ManagerFactory.Resolve<ICommunityManager>();
                 communityManager.UoW = uoW;
 
                 KeyValuePair<Specification, UserRightsContainer> result = specificationManager.GetSpecificationById(personId, specificationId);
-                List<Community> communityList = new List<Community>();
+                var communityList = new List<Community>();
 
                 var spec = result.Key;
 
@@ -75,18 +74,18 @@ namespace Etsi.Ultimate.Services
                 {
                     if (spec.SpecificationResponsibleGroups != null && spec.SpecificationResponsibleGroups.Count > 0)
                     {
-                        if (spec.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList() != null && spec.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().Count > 0)
+                        if (spec.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().Count > 0)
                         {
                             spec.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().ForEach(g => communityList.Add(communityManager.GetCommmunityById(g.Fk_commityId)));
                             spec.SecondaryResponsibleGroupsFullNames = string.Join(",", communityList.Select(x=>x.TbName).ToArray());
                         }
 
-                        if (spec.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList() != null & spec.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().Count > 0)
+                        if (true & spec.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().Count > 0)
                         {
                             spec.PrimeResponsibleGroupFullName
-                                = communityManager.GetCommmunityById(spec.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().FirstOrDefault().Fk_commityId).TbName;
+                                = communityManager.GetCommmunityById(spec.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().First().Fk_commityId).TbName;
                             spec.PrimeResponsibleGroupShortName
-                                = communityManager.GetCommmunityById(spec.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().FirstOrDefault().Fk_commityId).ShortName;
+                                = communityManager.GetCommmunityById(spec.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().First().Fk_commityId).ShortName;
                         }
                     }
 
@@ -113,35 +112,32 @@ namespace Etsi.Ultimate.Services
                     }
 
                     // Getting list of current specification technologies
-                    var specTechnologiesManager = new SpecificationTechnologiesManager();
-                    specTechnologiesManager.UoW = uoW;
+                    var specTechnologiesManager = new SpecificationTechnologiesManager {UoW = uoW};
                     spec.SpecificationTechnologiesList = specTechnologiesManager.GetASpecificationTechnologiesBySpecId(spec.Pk_SpecificationId);
 
                     // Getting list of specification workItems including responsible groups
-                    List<WorkItem> workItemsList = new List<WorkItem>();
-                    WorkItem WIBuffer;
+                    var workItemsList = new List<WorkItem>();
                     var workItemsManager = new WorkItemManager(uoW);
                     foreach (Specification_WorkItem item in spec.Specification_WorkItem.ToList())
                     {
-                        WIBuffer = workItemsManager.GetWorkItemById(personId, item.Fk_WorkItemId).Key;
-                        if (WIBuffer != null)
+                        var wiBuffer = workItemsManager.GetWorkItemById(personId, item.Fk_WorkItemId).Key;
+                        if (wiBuffer != null)
                         {
-                            WIBuffer.IsPrimary = (item.isPrime != null) ? item.isPrime.Value : false;
-                            WIBuffer.IsUserAddedWi = (item.IsSetByUser != null) ? item.IsSetByUser.Value : false;
-                            workItemsList.Add(WIBuffer);
+                            wiBuffer.IsPrimary = (item.isPrime != null) && item.isPrime.Value;
+                            wiBuffer.IsUserAddedWi = (item.IsSetByUser != null) && item.IsSetByUser.Value;
+                            workItemsList.Add(wiBuffer);
                         }
                     }
                     spec.SpecificationWIsList = workItemsList;
 
 
                     // Getting list of specification releases
-                    List<Release> releases = new List<Release>();
-                    Release releaseObj;
+                    var releases = new List<Release>();
                     var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
                     releaseManager.UoW = uoW;
                     foreach (Specification_Release item in spec.Specification_Release.ToList())
                     {
-                        releaseObj = releaseManager.GetReleaseById(personId, item.Fk_ReleaseId).Key;
+                        var releaseObj = releaseManager.GetReleaseById(personId, item.Fk_ReleaseId).Key;
                         if (releaseObj != null)
                             releases.Add(releaseObj);
                     }
@@ -169,8 +165,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specificationManager = new SpecificationManager();
-                specificationManager.UoW = uoW;
+                var specificationManager = new SpecificationManager {UoW = uoW};
                 return specificationManager.GetSpecificationByNumberAndTitle(personId, searchString);
             }
         }
@@ -179,8 +174,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specificationManager = new SpecificationManager();
-                specificationManager.UoW = uoW;
+                var specificationManager = new SpecificationManager {UoW = uoW};
                 return specificationManager.GetSpecificationByNumberAndTitle(personId, searchString).Where(s => !toExclude.Contains(s.Number.Trim())).ToList();
             }
         }
@@ -189,8 +183,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specificationManager = new SpecificationManager();
-                specificationManager.UoW = uoW;
+                var specificationManager = new SpecificationManager {UoW = uoW};
                 return specificationManager.GetTechnologyList();
             }
         }
@@ -199,8 +192,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specificationManager = new SpecificationManager();
-                specificationManager.UoW = uoW;
+                var specificationManager = new SpecificationManager {UoW = uoW};
                 return specificationManager.GetSeries();
             }
         }
@@ -209,8 +201,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specTechnologiesManager = new SpecificationTechnologiesManager();
-                specTechnologiesManager.UoW = uoW;
+                var specTechnologiesManager = new SpecificationTechnologiesManager {UoW = uoW};
                 return specTechnologiesManager.GetAllSpecificationTechnologies();
             }
         }
@@ -219,8 +210,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specificationManager = new SpecificationManager();
-                specificationManager.UoW = uoW;
+                var specificationManager = new SpecificationManager {UoW = uoW};
                 return specificationManager.CheckFormatNumber(specNumber);
             }
         }
@@ -229,8 +219,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specificationManager = new SpecificationManager();
-                specificationManager.UoW = uoW;
+                var specificationManager = new SpecificationManager {UoW = uoW};
                 return specificationManager.LookForNumber(specNumber);
             }
         }
@@ -239,8 +228,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction();
-                specificationsMassivePromotionAction.UoW = uoW;
+                var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction {UoW = uoW};
                 var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
                 releaseManager.UoW = uoW;
                 int targetReleaseId = releaseManager.GetNextRelease(initialReleaseId).Pk_ReleaseId; 
@@ -254,8 +242,8 @@ namespace Etsi.Ultimate.Services
             {
                 try
                 {
-                    List<int> specificationIds = new List<int>(specifications.Count);
-                    List<Specification> specificationsForVersionAllocation = new List<Specification>();
+                    var specificationIds = new List<int>(specifications.Count);
+                    var specificationsForVersionAllocation = new List<Specification>();
                     specifications.ForEach(s =>
                     {
                         specificationIds.Add(s.Pk_SpecificationId);
@@ -264,15 +252,12 @@ namespace Etsi.Ultimate.Services
                             specificationsForVersionAllocation.Add(s);
                         }
                     });
-                    var releaseManager = new ReleaseManager();
-                    releaseManager.UoW = uoW;
-                    int targetReleaseId = releaseManager.GetNextRelease(initialReleaseId).Pk_ReleaseId;
-                    Release targetRelease = releaseManager.GetReleaseById(personId, targetReleaseId).Key;
+                    var releaseManager = new ReleaseManager {UoW = uoW};
+                    var targetReleaseId = releaseManager.GetNextRelease(initialReleaseId).Pk_ReleaseId;
+                    var targetRelease = releaseManager.GetReleaseById(personId, targetReleaseId).Key;
 
-                    var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction();
-                    specificationsMassivePromotionAction.UoW = uoW;
-                    var versionManager = new SpecVersionsManager();
-                    versionManager.UoW = uoW;
+                    var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction {UoW = uoW};
+                    var versionManager = new SpecVersionsManager {UoW = uoW};
 
                     specificationsMassivePromotionAction.PromoteMassivelySpecification(personId, specificationIds, targetReleaseId);
                     versionManager.AllocateVersionFromMassivePromote(specificationsForVersionAllocation, targetRelease, personId); 
@@ -295,13 +280,13 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="personId"></param>
         /// <param name="spec"></param>
+        /// <param name="baseurl"></param>
         /// <returns></returns>
         public KeyValuePair<int, Report> CreateSpecification(int personId, Specification spec, string baseurl)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var createAction = new SpecificationCreateAction();
-                createAction.UoW = uoW;
+                var createAction = new SpecificationCreateAction {UoW = uoW};
 
                 try
                 {
@@ -333,8 +318,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var editAction = new SpecificationEditAction();
-                editAction.UoW = uoW;
+                var editAction = new SpecificationEditAction {UoW = uoW};
                 try
                 {
                     var editSpec = editAction.EditSpecification(personId, spec);
@@ -362,7 +346,7 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="personId"></param>
         /// <param name="specificationId"></param>
-        /// <param name="WithdrawalMeetingId"></param>
+        /// <param name="withdrawalMeetingId"></param>
         /// <returns></returns>
         public bool DefinitivelyWithdrawSpecification(int personId, int specificationId, int withdrawalMeetingId)
         {
@@ -396,7 +380,7 @@ namespace Etsi.Ultimate.Services
             {
                 try
                 {
-                    var transpAction = new SpecificationForceUnforceTranspositionAction() { UoW = uow };
+                    var transpAction = new SpecificationForceUnforceTranspositionAction { UoW = uow };
                     if (transpAction.ForceTranspositionForRelease(personId, releaseId, specificationId))
                         uow.Save();
                     else
@@ -424,7 +408,7 @@ namespace Etsi.Ultimate.Services
             {
                 try
                 {
-                    var transpAction = new SpecificationForceUnforceTranspositionAction() { UoW = uow };
+                    var transpAction = new SpecificationForceUnforceTranspositionAction { UoW = uow };
                     transpAction.UnforceTranspositionForRelease(personId, releaseId, specificationId);
                     uow.Save();
                 }
@@ -449,7 +433,7 @@ namespace Etsi.Ultimate.Services
             {
                 try
                 {
-                    var inhibitPromoteAction = new SpecificationInhibitRemoveInhibitAction() { UoW = uow };
+                    var inhibitPromoteAction = new SpecificationInhibitRemoveInhibitAction { UoW = uow };
                     inhibitPromoteAction.SpecificationInhibitPromote(personId, specificationId);
                     uow.Save();
                 }
@@ -474,7 +458,7 @@ namespace Etsi.Ultimate.Services
             {
                 try
                 {
-                    var inhibitPromoteAction = new SpecificationInhibitRemoveInhibitAction() { UoW = uow };
+                    var inhibitPromoteAction = new SpecificationInhibitRemoveInhibitAction { UoW = uow };
                     inhibitPromoteAction.SpecificationRemoveInhibitPromote(personId, specificationId);
                     uow.Save();
                 }
@@ -516,8 +500,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specWithdrawAction = new SpecificationWithdrawAction();
-                specWithdrawAction.UoW = uow;
+                var specWithdrawAction = new SpecificationWithdrawAction {UoW = uow};
                 try
                 {
                     specWithdrawAction.WithdrawFromRelease(personId, releaseId, specificationId, withdrawalMtgId);
@@ -565,13 +548,12 @@ namespace Etsi.Ultimate.Services
         /// <returns>Specification Details</returns>
         public Specification GetSpecificationByNumber(string number)
         {
-            Specification spec = new Specification();
+            var spec = new Specification();
             using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 try
                 {
-                    var manager = new SpecificationManager();
-                    manager.UoW = uow;
+                    var manager = new SpecificationManager {UoW = uow};
                     spec = manager.GetSpecificationByNumber(number);
                 }
                 catch (Exception e)
@@ -594,8 +576,7 @@ namespace Etsi.Ultimate.Services
 
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specChangeToUccAction = new SpecificationChangeToUnderChangeControlAction();
-                specChangeToUccAction.UoW = uoW;
+                var specChangeToUccAction = new SpecificationChangeToUnderChangeControlAction {UoW = uoW};
                 try
                 {
                     statusChangeReport = specChangeToUccAction.ChangeSpecificationsStatusToUnderChangeControl(personId, specIdsForUcc);

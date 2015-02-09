@@ -1,19 +1,19 @@
-﻿using NetOffice.WordApi;
-using NetOffice.WordApi.Enums;
-using System;
+﻿using System;
 using System.IO;
-using System.Security.Principal;
+using System.Linq;
 using System.Text.RegularExpressions;
-using Word = NetOffice.WordApi;
+using Etsi.Ultimate.Business.Versions.Interfaces;
+using NetOffice.WordApi;
+using NetOffice.WordApi.Enums;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Versions.QualityChecks
 {
     class DocQualityChecks : IQualityChecks
     {
         #region Variables
 
-        private Word.Application wordApplication;
-        private Word.Document wordDocument;
+        private Application wordApplication;
+        private Document wordDocument;
         private string documentName = String.Empty;
 
         #endregion
@@ -32,12 +32,11 @@ namespace Etsi.Ultimate.Business
             documentName = Path.Combine(temporaryFolder, "tempword.doc");
             if (File.Exists(documentName))
                 File.Delete(documentName);
-            FileStream fs = new FileStream(documentName, FileMode.Create, FileAccess.Write);
-            fs.Write(bytes, 0, (int)bytes.Length);
+            var fs = new FileStream(documentName, FileMode.Create, FileAccess.Write);
+            fs.Write(bytes, 0, bytes.Length);
             fs.Close();
 
-            wordApplication = new Word.Application();
-            wordApplication.DisplayAlerts = WdAlertLevel.wdAlertsNone;
+            wordApplication = new Application {DisplayAlerts = WdAlertLevel.wdAlertsNone};
             wordDocument = wordApplication.Documents.Open(documentName, false, true);
         }
 
@@ -62,24 +61,13 @@ namespace Etsi.Ultimate.Business
                     hasTrackedRevisions = true;
                     break;
                 }
-                else
+                if (section.Headers.Any(header => header.Range.Revisions.Count > 0))
                 {
-                    foreach (var header in section.Headers)
-                    {
-                        if (header.Range.Revisions.Count > 0)
-                        {
-                            hasTrackedRevisions = true;
-                            break;
-                        }
-                    }
-                    foreach (var footer in section.Footers)
-                    {
-                        if (footer.Range.Revisions.Count > 0)
-                        {
-                            hasTrackedRevisions = true;
-                            break;
-                        }
-                    }
+                    hasTrackedRevisions = true;
+                }
+                if (section.Footers.Any(footer => footer.Range.Revisions.Count > 0))
+                {
+                    hasTrackedRevisions = true;
                 }
             }
 
@@ -175,8 +163,8 @@ namespace Etsi.Ultimate.Business
                 string sectionText = section.Range.Text.ToLower();
                 int titleIndex = sectionText.IndexOf(title);
 
-                string regularExpressionPattern = @"\((\d{4}-\d{2})\)";
-                Regex regex = new Regex(regularExpressionPattern);
+                const string regularExpressionPattern = @"\((\d{4}-\d{2})\)";
+                var regex = new Regex(regularExpressionPattern);
                 
                 foreach (Match match in regex.Matches(sectionText))
                 {
@@ -235,7 +223,6 @@ namespace Etsi.Ultimate.Business
                             if (copyRightText.Contains("© " + DateTime.UtcNow.Year))
                             {
                                 isCopyRightYearCorrect = true;
-                                break;
                             }
                         }
                         break;
@@ -305,10 +292,10 @@ namespace Etsi.Ultimate.Business
             if (section != null)
             {
                 string releaseText = "(" + release + ")";
-                int indexOf3GPPTitle = section.Range.Text.IndexOf("3rd generation partnership project;", StringComparison.InvariantCultureIgnoreCase);
+                int indexOf3GppTitle = section.Range.Text.IndexOf("3rd generation partnership project;", StringComparison.InvariantCultureIgnoreCase);
                 int indexOfRelease = section.Range.Text.IndexOf(releaseText, StringComparison.InvariantCultureIgnoreCase);
 
-                if (indexOf3GPPTitle < indexOfRelease)
+                if (indexOf3GppTitle < indexOfRelease)
                 {
                     Range releaseRange = wordDocument.Range(indexOfRelease + 1, release.Length + indexOfRelease + 1);
                     if ((releaseRange != null) && releaseRange.Text.Equals(release, StringComparison.InvariantCultureIgnoreCase))
@@ -334,10 +321,10 @@ namespace Etsi.Ultimate.Business
             if (section != null)
             {
                 string releaseText = "(" + release + ")";
-                int indexOf3GPPTitle = section.Range.Text.IndexOf("3rd generation partnership project;", StringComparison.InvariantCultureIgnoreCase);
+                int indexOf3GppTitle = section.Range.Text.IndexOf("3rd generation partnership project;", StringComparison.InvariantCultureIgnoreCase);
                 int indexOfRelease = section.Range.Text.IndexOf(releaseText, StringComparison.InvariantCultureIgnoreCase);
 
-                if (indexOf3GPPTitle < indexOfRelease)
+                if (indexOf3GppTitle < indexOfRelease)
                 {
                     Range releaseRange = wordDocument.Range(indexOfRelease + 1, release.Length + indexOfRelease + 1);
                     if ((releaseRange != null) && releaseRange.Text.Equals(release, StringComparison.InvariantCultureIgnoreCase))

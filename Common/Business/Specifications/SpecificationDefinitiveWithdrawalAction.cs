@@ -1,18 +1,16 @@
-﻿using Etsi.Ultimate.Repositories;
-using Etsi.Ultimate.DomainClasses;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Etsi.Ultimate.Business.Specifications.Interfaces;
+using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Specifications
 {
     public class SpecificationDefinitiveWithdrawalAction
     {
         #region Properties
 
-        public IUltimateUnitOfWork _uoW { get; set; }
+        public IUltimateUnitOfWork UoW { get; set; }
 
         #endregion
 
@@ -21,25 +19,26 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="UoW">Ultimate UnitOfWork</param>
-        public SpecificationDefinitiveWithdrawalAction(IUltimateUnitOfWork UoW)
+        /// <param name="uoW">Ultimate UnitOfWork</param>
+        public SpecificationDefinitiveWithdrawalAction(IUltimateUnitOfWork uoW)
         {
-            _uoW = UoW;
+            UoW = uoW;
         }
 
         #endregion
 
         #region Methods
+
         /// <summary>
         /// Definitively withdraw a specification
         /// </summary>
         /// <param name="personId">Person ID</param>
         /// <param name="specificationId">Specification ID</param>
-        /// <param name="currentReleaseId">Current Release ID</param>
+        /// <param name="withdrawalMeetingId"></param>
         public void WithdrawDefinivelySpecification(int personId, int specificationId, int withdrawalMeetingId)
         {
             var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
-            specMgr.UoW = _uoW;
+            specMgr.UoW = UoW;
             //Get specification by identifier
             var spec = specMgr.GetSpecificationById(personId, specificationId).Key;
             if (spec == null)
@@ -48,7 +47,7 @@ namespace Etsi.Ultimate.Business
             }
             
             var persMgr = ManagerFactory.Resolve<IPersonManager>();
-            persMgr.UoW = _uoW;
+            persMgr.UoW = UoW;
 
             DateTime actionDate = DateTime.Now;
             //Edit specification' release that are not withdrawn
@@ -59,9 +58,9 @@ namespace Etsi.Ultimate.Business
             //spec.MOD_BY = persMgr.GetPersonDisplayName(personId);
             spec.EntityStatus = Enum_EntityStatus.Modified;
             //Update history
-            IHistoryRepository historyRepo = RepositoryFactory.Resolve<IHistoryRepository>();
-            historyRepo.UoW = _uoW;
-            historyRepo.InsertOrUpdate(new History()
+            var historyRepo = RepositoryFactory.Resolve<IHistoryRepository>();
+            historyRepo.UoW = UoW;
+            historyRepo.InsertOrUpdate(new History
             {
                 Fk_PersonId = personId,
                 CreationDate = actionDate,

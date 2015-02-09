@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.Business.Specifications.Interfaces;
+using Etsi.Ultimate.Business.Versions.Interfaces;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Repositories;

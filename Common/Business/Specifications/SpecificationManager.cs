@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.Business.Specifications.Interfaces;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
-using Etsi.Ultimate.Business.Security;
-using System.Text.RegularExpressions;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Specifications
 {
     public class SpecificationManager : ISpecificationManager
     {
 
-        private ISpecificationRepository specificationRepo;
+        private ISpecificationRepository _specificationRepo;
 
         public IUltimateUnitOfWork UoW { get; set; }
-
-        public SpecificationManager() { }
 
         /// <summary>
         /// Get all versions of the spec associated to their foundation CRs
@@ -27,8 +26,10 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         public ServiceResponse<List<SpecVersionFoundationCrs>> GetSpecVersionsFoundationCrs(int personId, int specId)
         {
-            var response = new ServiceResponse<List<SpecVersionFoundationCrs>>();
-            response.Result = new List<SpecVersionFoundationCrs>();
+            var response = new ServiceResponse<List<SpecVersionFoundationCrs>>
+            {
+                Result = new List<SpecVersionFoundationCrs>()
+            };
             var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             specVersionRepo.UoW = UoW;
 
@@ -74,10 +75,10 @@ namespace Etsi.Ultimate.Business
             rightManager.UoW = UoW;
             var personRights = rightManager.GetRights(personId);
 
-            specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
-            specificationRepo.UoW = UoW;
+            _specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            _specificationRepo.UoW = UoW;
 
-            var specification = specificationRepo.Find(id);
+            var specification = _specificationRepo.Find(id);
 
             if (specification == null)
                 return new KeyValuePair<Specification, UserRightsContainer>(null, null);
@@ -97,7 +98,7 @@ namespace Etsi.Ultimate.Business
                 relMgr.UoW = UoW;
                 var allReleases = relMgr.GetAllReleases(personId).Key.OrderBy(r => r.SortOrder);
 
-                var initialRelease = allReleases.Where( x => specification.Specification_Release.Any( y => y.Fk_ReleaseId == x.Pk_ReleaseId)).FirstOrDefault();
+                var initialRelease = allReleases.FirstOrDefault(x => specification.Specification_Release.Any( y => y.Fk_ReleaseId == x.Pk_ReleaseId));
                 if (initialRelease != null)
                     specification.SpecificationInitialRelease = initialRelease.Name;
             }
@@ -118,10 +119,10 @@ namespace Etsi.Ultimate.Business
 
         public List<Specification> GetAllSpecifications(int personId)
         {
-            specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
-            specificationRepo.UoW = UoW;
+            _specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            _specificationRepo.UoW = UoW;
 
-            var specification = specificationRepo.All;
+            var specification = _specificationRepo.All;
 
             if (specification == null)
                 return new List<Specification>();
@@ -143,10 +144,10 @@ namespace Etsi.Ultimate.Business
             rightManager.UoW = UoW;
             var personRights = rightManager.GetRights(personId);
 
-            specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
-            specificationRepo.UoW = UoW;
+            _specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            _specificationRepo.UoW = UoW;
 
-            var specifications = specificationRepo.GetSpecificationBySearchCriteria(searchObj,includeRelations);
+            var specifications = _specificationRepo.GetSpecificationBySearchCriteria(searchObj,includeRelations);
 
             if (!personRights.HasRight(Enum_UserRights.Specification_View_UnAllocated_Number))
                 specifications.Key.RemoveAll(x => String.IsNullOrEmpty(x.Number));
@@ -168,10 +169,10 @@ namespace Etsi.Ultimate.Business
             rightManager.UoW = UoW;
             var personRights = rightManager.GetRights(personId);
 
-            specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
-            specificationRepo.UoW = UoW;
+            _specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            _specificationRepo.UoW = UoW;
 
-            var specifications = specificationRepo.GetSpecificationBySearchCriteria(searchString);
+            var specifications = _specificationRepo.GetSpecificationBySearchCriteria(searchString);
 
             if (!personRights.HasRight(Enum_UserRights.Specification_View_UnAllocated_Number))
                 specifications.RemoveAll(x => String.IsNullOrEmpty(x.Number));
@@ -185,9 +186,9 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         public List<Enum_Technology> GetTechnologyList()
         {
-            specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
-            specificationRepo.UoW = UoW;
-            return specificationRepo.GetTechnologyList();
+            _specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            _specificationRepo.UoW = UoW;
+            return _specificationRepo.GetTechnologyList();
         }
 
         /// <summary>
@@ -196,9 +197,9 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         public List<Enum_Serie> GetSeries()
         {
-            specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
-            specificationRepo.UoW = UoW;
-            return specificationRepo.GetSeries();
+            _specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            _specificationRepo.UoW = UoW;
+            return _specificationRepo.GetSeries();
         }
 
         #region ISpecificationManager Membres
@@ -226,7 +227,7 @@ namespace Etsi.Ultimate.Business
             }
             #endregion
 
-            if (errors.Count() > 0)
+            if (errors.Any())
                 state = false;
             return new KeyValuePair<bool, List<string>>(state, errors);
         }
@@ -237,7 +238,6 @@ namespace Etsi.Ultimate.Business
         /// if foredit = false -> we don't allow any spec founded
         /// </summary>
         /// <param name="specNumber">The spec number.</param>
-        /// <param name="forEdit"></param>
         /// <returns></returns>
         public KeyValuePair<bool, List<string>> LookForNumber(string specNumber)
         {
@@ -250,10 +250,10 @@ namespace Etsi.Ultimate.Business
                     .All
                     .Where(x => x.Number.Equals(specNumber))
                     .ToList();
-            if (result.Count() > 0)
-                errors.Add(String.Format(Localization.Specification_ERR003_Number_Already_Use,result.FirstOrDefault().Title));
+            if (result.Any())
+                errors.Add(String.Format(Localization.Specification_ERR003_Number_Already_Use,result.First().Title));
 
-            if (errors.Count() > 0)
+            if (errors.Any())
                 state = false;
             return new KeyValuePair<bool, List<string>>(state, errors);
         }
@@ -265,10 +265,12 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         public bool CheckInhibitedToPromote(string specNumber)
         {
-            var listInhibitPromotePatterns = new List<string>();
-            listInhibitPromotePatterns.Add(@"^30\.(\w|\-)*$");
-            listInhibitPromotePatterns.Add(@"^50\.(\w|\-)*$");
-            listInhibitPromotePatterns.Add(@"^[0-9]{2}\.8(\w|\-)*$");
+            var listInhibitPromotePatterns = new List<string>
+            {
+                @"^30\.(\w|\-)*$",
+                @"^50\.(\w|\-)*$",
+                @"^[0-9]{2}\.8(\w|\-)*$"
+            };
             foreach (var inihibitPromotePattern in listInhibitPromotePatterns)
             {
                 Match match = Regex.Match(specNumber, inihibitPromotePattern);
@@ -284,7 +286,7 @@ namespace Etsi.Ultimate.Business
         {
             if (spec != null && spec.Number != null)
             {
-                if (this.CheckInhibitedToPromote(spec.Number))
+                if (CheckInhibitedToPromote(spec.Number))
                 {
                     spec.IsForPublication = false;
                     spec.promoteInhibited = true;
@@ -304,6 +306,7 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// See interface
         /// </summary>
+        /// <param name="personId"></param>
         /// <param name="spec"></param>
         /// <returns></returns>
         public List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, Specification spec)
@@ -345,13 +348,13 @@ namespace Etsi.Ultimate.Business
         public KeyValuePair<Specification_Release, UserRightsContainer> GetRightsForSpecRelease(UserRightsContainer userRights, int personId, Specification spec, int releaseId, List<Release> releases)
         {
             var rights = new UserRightsContainer();
-            Specification_Release specRelease = spec.Specification_Release.Where(r => r.Fk_ReleaseId == releaseId && r.Fk_SpecificationId == spec.Pk_SpecificationId).FirstOrDefault();
+            Specification_Release specRelease = spec.Specification_Release.FirstOrDefault(r => r.Fk_ReleaseId == releaseId && r.Fk_SpecificationId == spec.Pk_SpecificationId);
             if (specRelease == null)
                 return new KeyValuePair<Specification_Release, UserRightsContainer>(null, null);
             // This right is common to any action.
             if (spec.IsActive && !specRelease.isWithdrawn.GetValueOrDefault())
             {
-                var rel = releases.Where(r => r.Pk_ReleaseId == specRelease.Fk_ReleaseId).FirstOrDefault();
+                var rel = releases.First(r => r.Pk_ReleaseId == specRelease.Fk_ReleaseId);
 
                 // Test the right of the user to force transposition.
                 if (userRights.HasRight(Enum_UserRights.Specification_ForceTransposition)
@@ -377,7 +380,7 @@ namespace Etsi.Ultimate.Business
 
                 // Test the right of the user to upload/Allocate a version
                 // User have the right => Check if we need to remove it
-                if (rel.Enum_ReleaseStatus.Code != Enum_ReleaseStatus.Closed)
+                if (rel != null && rel.Enum_ReleaseStatus.Code != Enum_ReleaseStatus.Closed)
                 {
 
                     if (userRights.HasRight(Enum_UserRights.Versions_Upload))
@@ -413,9 +416,9 @@ namespace Etsi.Ultimate.Business
             }
 
             //Get the latest spec_release
-            var latestSpecRelease = spec.Specification_Release.ToList().OrderByDescending(x => ((x.Release == null) ? 0 : (x.Release.SortOrder ?? 0))).FirstOrDefault();
+            var latestSpecRelease = spec.Specification_Release.ToList().OrderByDescending(x => ((x.Release == null) ? 0 : (x.Release.SortOrder ?? 0))).First();
             //Get the latest release
-            var latestRelease = releases.OrderByDescending(x => x.SortOrder ?? 0).FirstOrDefault();
+            var latestRelease = releases.OrderByDescending(x => x.SortOrder ?? 0).First();
 
             //Promote button should display only on latest spec_release, But, it should not display if it is already promoted to latest release
             if (userRights.HasRight(Enum_UserRights.Specification_Promote)

@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.DataAccess;
+﻿using Etsi.Ultimate.Business.Versions;
+using Etsi.Ultimate.DataAccess;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Tests.FakeSets;
@@ -14,7 +15,6 @@ using Etsi.Ultimate.Repositories;
 using System.Data.Entity;
 using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Business.Security;
-using Etsi.Ultimate.Business.SpecVersionBusiness;
 
 namespace Etsi.Ultimate.Tests.Business
 {

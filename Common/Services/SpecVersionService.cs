@@ -1,11 +1,12 @@
 ﻿using Etsi.Ultimate.Business;
+using Etsi.Ultimate.Business.Versions;
+using Etsi.Ultimate.Business.Versions.Interfaces;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Etsi.Ultimate.Business.SpecVersionBusiness;
 using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Services
@@ -68,8 +69,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specVersionAllocateAction = new SpecVersionAllocateAction();
-                specVersionAllocateAction.UoW = uoW;
+                var specVersionAllocateAction = new SpecVersionAllocateAction {UoW = uoW};
                 var result = specVersionAllocateAction.AllocateVersion(personId, version);
                 uoW.Save();
 

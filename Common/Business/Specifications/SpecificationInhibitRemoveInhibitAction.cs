@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.Business.Specifications.Interfaces;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Specifications
 {
     public class SpecificationInhibitRemoveInhibitAction
     {

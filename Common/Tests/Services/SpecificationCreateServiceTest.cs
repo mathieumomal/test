@@ -79,7 +79,7 @@ namespace Etsi.Ultimate.Tests.Services
         [TestCase(1, false, false, EDIT_LIMITED_RIGHT_USER, "", 0, 1)]//Same that the first one, but the user don't have the right to edit the number, so an error is thrown
         [TestCase(3, false, false, EDIT_RIGHT_USER, "", 0, 1)]//BAD FORMAT
         [TestCase(4, false, false, EDIT_RIGHT_USER, "", 0, 1)]//ALREADY EXIST
-        public void CreateSpecification_NominalCase(int spec, bool shouldMailBeSent, bool shouldMailSucceed, int person, String number, int ? serie, int error)
+        public void CreateSpecification_NominalCase(int spec, bool shouldMailBeSent, bool shouldMailSucceed, int person, String number, int? serie, int error)
         {
             var specification = GetSpecsToCreate(spec);
             // Set up the rights
@@ -122,6 +122,10 @@ namespace Etsi.Ultimate.Tests.Services
                 Assert.IsTrue(specification.IsTS.GetValueOrDefault());
                 Assert.AreEqual(serie, specification.Fk_SerieId);
                 Assert.AreEqual(number, specification.Number);
+
+                Assert.IsNotNull(specification.MOD_BY);
+                Assert.IsTrue((specification.MOD_TS.GetValueOrDefault() - DateTime.UtcNow).TotalMinutes < 1);
+                Assert.IsTrue((specification.CreationDate.GetValueOrDefault() - DateTime.UtcNow).TotalMinutes < 1);
             }
 
             if (shouldMailBeSent)
@@ -212,10 +216,10 @@ namespace Etsi.Ultimate.Tests.Services
             ManagerFactory.Container.RegisterInstance<ICommunityManager>(communityManager);
 
             var personManager = MockRepository.GenerateMock<IPersonManager>();
-            personManager.Stub(p => p.FindPerson(1)).Return(new View_Persons() { PERSON_ID = 1, FIRSTNAME = "User", LASTNAME = "1" });
-            personManager.Stub(p => p.FindPerson(3)).Return(new View_Persons() { PERSON_ID = 3, FIRSTNAME = "User", LASTNAME = "3" });
-            personManager.Stub(p => p.FindPerson(4)).Return(new View_Persons() { PERSON_ID = 4, FIRSTNAME = "User", LASTNAME = "4" });
-            personManager.Stub(p => p.FindPerson(EDIT_SPECMGR_RIGHT_USER)).Return(new View_Persons() { PERSON_ID = EDIT_SPECMGR_RIGHT_USER, FIRSTNAME = "SpecMgr", LASTNAME = "5" });
+            personManager.Stub(p => p.FindPerson(1)).Return(new View_Persons() { PERSON_ID = 1, FIRSTNAME = "User", LASTNAME = "1", Username = "User1"});
+            personManager.Stub(p => p.FindPerson(3)).Return(new View_Persons() { PERSON_ID = 3, FIRSTNAME = "User", LASTNAME = "3", Username = "User3"});
+            personManager.Stub(p => p.FindPerson(4)).Return(new View_Persons() { PERSON_ID = 4, FIRSTNAME = "User", LASTNAME = "4", Username = "User4"});
+            personManager.Stub(p => p.FindPerson(EDIT_SPECMGR_RIGHT_USER)).Return(new View_Persons() { PERSON_ID = EDIT_SPECMGR_RIGHT_USER, FIRSTNAME = "SpecMgr", LASTNAME = "5", Username = "MEREDITH"});
             ManagerFactory.Container.RegisterInstance<IPersonManager>(personManager);
 
             // Need a release repository
@@ -317,6 +321,6 @@ namespace Etsi.Ultimate.Tests.Services
 
         #endregion
 
-        
+
     }
 }

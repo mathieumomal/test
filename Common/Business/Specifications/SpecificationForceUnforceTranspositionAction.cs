@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.Business.Specifications.Interfaces;
+using Etsi.Ultimate.Business.Versions.Interfaces;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Specifications
 {
     public class SpecificationForceUnforceTranspositionAction
     {
@@ -35,7 +33,7 @@ namespace Etsi.Ultimate.Business
             
             // Get the rights for all the releases.
             var rights = specMgr.GetRightsForSpecReleases(personId, spec);
-            var rightsForRelease = rights.Where(r => r.Key.Fk_ReleaseId == relId).FirstOrDefault().Value;
+            var rightsForRelease = rights.FirstOrDefault(r => r.Key.Fk_ReleaseId == relId).Value;
 
             if (!rightsForRelease.HasRight(Enum_UserRights.Specification_ForceTransposition))
             {
@@ -43,7 +41,7 @@ namespace Etsi.Ultimate.Business
             }
            
             // Then update the spec release
-            var specRelease = spec.Specification_Release.Where(sr => sr.Fk_ReleaseId == relId).FirstOrDefault();
+            var specRelease = spec.Specification_Release.First(sr => sr.Fk_ReleaseId == relId);
             specRelease.isTranpositionForced = true;
 
             // Then, we check if there is something to send to transposition.
@@ -85,14 +83,14 @@ namespace Etsi.Ultimate.Business
 
             // Get the rights for all the releases.
             var rights = specMgr.GetRightsForSpecReleases(personId, spec);
-            var rightsForRelease = rights.Where(r => r.Key.Fk_ReleaseId == relId).FirstOrDefault().Value;
+            var rightsForRelease = rights.FirstOrDefault(r => r.Key.Fk_ReleaseId == relId).Value;
             if (!rightsForRelease.HasRight(Enum_UserRights.Specification_UnforceTransposition))
             {
                 throw new InvalidOperationException("User " + personId + " does not have right to unforce transposition");
             }
 
             // Then update the spec release
-            var specRelease = spec.Specification_Release.Where(sr => sr.Fk_ReleaseId == relId).FirstOrDefault();
+            var specRelease = spec.Specification_Release.First(sr => sr.Fk_ReleaseId == relId);
             specRelease.isTranpositionForced = false;
 
             return true;

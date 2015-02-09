@@ -1,5 +1,6 @@
 ﻿using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.Business.Specifications;
 using Etsi.Ultimate.DataAccess;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;

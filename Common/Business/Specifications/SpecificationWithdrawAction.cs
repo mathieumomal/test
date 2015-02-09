@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Business.Specifications.Interfaces;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Specifications
 {
     /// <summary>
     /// This class manages the withdrawal and the definitive withdrawal of a specification.
@@ -43,22 +41,22 @@ namespace Etsi.Ultimate.Business
 
             // Check rights
             var rights = specMgr.GetRightsForSpecReleases(personId, spec.Key);
-            var rightsForRelease = rights.Where(r => r.Key.Fk_ReleaseId == releaseId).FirstOrDefault();
-            if (rightsForRelease.Value == null || !rightsForRelease.Value.HasRight(DomainClasses.Enum_UserRights.Specification_WithdrawFromRelease))
+            var rightsForRelease = rights.FirstOrDefault(r => r.Key.Fk_ReleaseId == releaseId);
+            if (rightsForRelease.Value == null || !rightsForRelease.Value.HasRight(Enum_UserRights.Specification_WithdrawFromRelease))
             {
                 throw new InvalidOperationException("User has no right to withdraw spec " + specId + " for release " + releaseId);
             }
 
             // Update spec release
-            var specRel = spec.Key.Specification_Release.Where(sr => sr.Fk_ReleaseId == releaseId).FirstOrDefault();
+            var specRel = spec.Key.Specification_Release.First(sr => sr.Fk_ReleaseId == releaseId);
             specRel.isWithdrawn = true;
             specRel.WithdrawMeetingId = withdrawalMtgId;
 
             //Update history
-            IHistoryRepository historyRepo = RepositoryFactory.Resolve<IHistoryRepository>();
+            var historyRepo = RepositoryFactory.Resolve<IHistoryRepository>();
             historyRepo.UoW = UoW;
             string historyText = String.Format("Specification has been withdrawn for release '{0}'", (specRel.Release == null) ? String.Empty : specRel.Release.Name);
-            History history = new History() { Fk_SpecificationId = specId, Fk_PersonId = personId, CreationDate = DateTime.UtcNow, HistoryText = historyText };
+            var history = new History { Fk_SpecificationId = specId, Fk_PersonId = personId, CreationDate = DateTime.UtcNow, HistoryText = historyText };
             historyRepo.InsertOrUpdate(history);
 
             return true;

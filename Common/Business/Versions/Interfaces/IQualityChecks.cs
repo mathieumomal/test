@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Versions.Interfaces
 {
     interface IQualityChecks : IDisposable
     {

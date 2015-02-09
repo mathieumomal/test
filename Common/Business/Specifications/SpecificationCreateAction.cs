@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.ModelMails;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Specifications
 {
     /// <summary>
     /// This class is in charge of all the business logic concerning the creation of a specification.
@@ -31,6 +30,7 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="personId"></param>
         /// <param name="spec"></param>
+        /// <param name="baseurl"></param>
         /// <returns></returns>
         public KeyValuePair<Specification, Report> Create(int personId, Specification spec, string baseurl)
         {
@@ -69,9 +69,9 @@ namespace Etsi.Ultimate.Business
             var releaseShortName = releaseMgr.GetReleaseById(0, spec.Specification_Release.First().Fk_ReleaseId).Key.ShortName;
             spec.Histories.Clear();
             spec.Histories.Add(
-                new History()
+                new History
                 {
-                    HistoryText = String.Format(Utils.Localization.History_Specification_Created, releaseShortName),
+                    HistoryText = String.Format(Localization.History_Specification_Created, releaseShortName),
                     CreationDate = DateTime.UtcNow,
                     Fk_PersonId = personId
                 }
@@ -103,7 +103,7 @@ namespace Etsi.Ultimate.Business
         private void ReplaceDisconnectedObjects(Specification spec, ISpecificationRepository specRepo)
         {
             //Specification Parents
-            List<Specification> specParents = new List<Specification>();
+            var specParents = new List<Specification>();
             spec.SpecificationParents.ToList().ForEach(x =>
             {
                 var specParent = specRepo.Find(x.Pk_SpecificationId); //Here we have disconnected specification objects. So, load them from DB & then add. Otherwise, EF will try to insert new Specification
@@ -114,7 +114,7 @@ namespace Etsi.Ultimate.Business
             specParents.ForEach(x => spec.SpecificationParents.Add(x));
 
             //Specification Childs
-            List<Specification> specChilds = new List<Specification>();
+            var specChilds = new List<Specification>();
             spec.SpecificationChilds.ToList().ForEach(x =>
             {
                 var specChild = specRepo.Find(x.Pk_SpecificationId); //Here we have disconnected specification objects. So, load them from DB & then add. Otherwise, EF will try to insert new Specification
@@ -148,6 +148,14 @@ namespace Etsi.Ultimate.Business
                 remark.Fk_PersonId = personId;
                 remark.CreationDate = DateTime.UtcNow;
             }
+
+            // Set MOD fields
+            spec.CreationDate = DateTime.UtcNow;
+            spec.MOD_TS = DateTime.UtcNow;
+
+            var personMgr = ManagerFactory.Resolve<IPersonManager>();
+            personMgr.UoW = UoW;
+            spec.MOD_BY = personMgr.FindPerson(personId).Username;
         }
 
         /// <summary>
@@ -156,6 +164,8 @@ namespace Etsi.Ultimate.Business
         /// - Spec number is valid.
         /// </summary>
         /// <param name="spec"></param>
+        /// <param name="userRights"></param>
+        /// <param name="specRepo"></param>
         private void CheckSpecificationAndSerie(Specification spec, UserRightsContainer userRights,ISpecificationRepository specRepo)
         {
             // Specification should be linked to one release.
@@ -173,6 +183,8 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="spec"></param>
         /// <param name="report"></param>
+        /// <param name="baseurl"></param>
+        /// <param name="personId"></param>
         public void MailAlertSpecManager(Specification spec , Report report, string baseurl, int personId)
         {
             var userRights = GetUserRights(personId);
@@ -184,20 +196,19 @@ namespace Etsi.Ultimate.Business
 
             //get connected user name
             var connectedUsername = String.Empty;
-            var personManager = new PersonManager();
-            personManager.UoW = UoW;
+            var personManager = new PersonManager {UoW = UoW};
             var connectedUser = personManager.FindPerson(personId);
             if (connectedUser != null)
             {
                 connectedUsername = new StringBuilder()
-                    .Append((connectedUser.FIRSTNAME != null) ? connectedUser.FIRSTNAME : "")
+                    .Append(connectedUser.FIRSTNAME ?? "")
                     .Append(" ")
-                    .Append((connectedUser.LASTNAME != null) ? connectedUser.LASTNAME : "")
+                    .Append(connectedUser.LASTNAME ?? "")
                     .ToString();
             }
             
             //Subject
-            var specTitleSubject = String.Empty;
+            string specTitleSubject;
             if (spec.Title != null && spec.Title.Length > 60)
                 specTitleSubject = spec.Title.Substring(0, 60);
             else
@@ -209,8 +220,7 @@ namespace Etsi.Ultimate.Business
             var specLink = new StringBuilder().Append(baseurl).Append(specUrl).ToString();
             var body = new SpecAwaitingReferenceNumberMailTemplate(connectedUsername, (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), specLink);
 
-            var roleManager = new RolesManager();
-            roleManager.UoW = UoW;
+            var roleManager = new RolesManager {UoW = UoW};
             var to = roleManager.GetSpecMgrEmail();
 
             // Send mail, and log info if all went well.

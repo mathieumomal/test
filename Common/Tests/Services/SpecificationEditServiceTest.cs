@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DataAccess;
@@ -17,7 +15,6 @@ using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Tests.FakeRepositories;
 using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.ModelMails;
-using System.IO;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -77,6 +74,8 @@ namespace Etsi.Ultimate.Tests.Services
             var modifiedSpec = GetCorrectSpecificationForEdit(false);
             Assert.AreEqual(specToEdit.Title, modifiedSpec.Title);
 
+            Assert.IsNotNull(modifiedSpec.MOD_BY);
+            Assert.IsTrue((modifiedSpec.MOD_TS.GetValueOrDefault() - DateTime.UtcNow).TotalMinutes < 1);
         }
 
         [Test]
@@ -342,9 +341,9 @@ namespace Etsi.Ultimate.Tests.Services
             ManagerFactory.Container.RegisterInstance<ICommunityManager>(communityManager);
 
             var personManager = MockRepository.GenerateMock<IPersonManager>();
-            personManager.Stub(p => p.FindPerson(1)).Return(new View_Persons() { PERSON_ID = 1, FIRSTNAME = "User", LASTNAME = "1" });
-            personManager.Stub(p => p.FindPerson(3)).Return(new View_Persons() { PERSON_ID = 3, FIRSTNAME = "User", LASTNAME = "3" });
-            personManager.Stub(p => p.FindPerson(4)).Return(new View_Persons() { PERSON_ID = 4, FIRSTNAME = "User", LASTNAME = "4" });
+            personManager.Stub(p => p.FindPerson(1)).Return(new View_Persons() { PERSON_ID = 1, FIRSTNAME = "User", LASTNAME = "1", Username = "User1"});
+            personManager.Stub(p => p.FindPerson(3)).Return(new View_Persons() { PERSON_ID = 3, FIRSTNAME = "User", LASTNAME = "3", Username = "User3" });
+            personManager.Stub(p => p.FindPerson(4)).Return(new View_Persons() { PERSON_ID = 4, FIRSTNAME = "User", LASTNAME = "4", Username = "User4" });
             ManagerFactory.Container.RegisterInstance<IPersonManager>(personManager);
 
             // Need a release repository

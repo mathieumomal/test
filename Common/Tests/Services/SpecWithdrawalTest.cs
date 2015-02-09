@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Etsi.Ultimate.Business.Specifications.Interfaces;
 using NUnit.Framework;
 using Rhino.Mocks;
 using Microsoft.Practices.Unity;

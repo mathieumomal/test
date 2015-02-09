@@ -1,7 +1,10 @@
 ﻿using Etsi.Ultimate.Business.ItuRecommendation;
 using Etsi.Ultimate.Business.Security;
-using Etsi.Ultimate.Business.SpecVersionBusiness;
+using Etsi.Ultimate.Business.Specifications;
+using Etsi.Ultimate.Business.Specifications.Interfaces;
 using Etsi.Ultimate.Business.UserRightsService;
+using Etsi.Ultimate.Business.Versions;
+using Etsi.Ultimate.Business.Versions.Interfaces;
 using Microsoft.Practices.Unity;
 
 namespace Etsi.Ultimate.Business

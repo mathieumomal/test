@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Etsi.Ultimate.DomainClasses;
+﻿using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Versions.Interfaces
 {
     /// <summary>
     /// The ITranspositionManager is in charge of sending to ETSI a version of a specification for transposition.
@@ -27,7 +22,6 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Check if the transposition is allowed
         /// </summary>
-        /// <param name="version"></param>
         /// <returns></returns>
         bool TransposeAllowed(SpecVersion specVersion);
     }

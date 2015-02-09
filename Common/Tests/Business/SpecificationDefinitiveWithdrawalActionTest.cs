@@ -1,5 +1,6 @@
 ﻿using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.Business.Specifications;
 using Etsi.Ultimate.DataAccess;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
@@ -10,7 +11,6 @@ using NUnit.Framework;
 using Rhino.Mocks;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 
 namespace Etsi.Ultimate.Tests.Business
@@ -23,7 +23,7 @@ namespace Etsi.Ultimate.Tests.Business
         {
             //Arrange
             //User Rights
-            UserRightsContainer userRights = new UserRightsContainer();
+            var userRights = new UserRightsContainer();
             userRights.AddRight(Enum_UserRights.Specification_Withdraw);            
             var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
             mockRightsManager.Stub(x => x.GetRights(personId)).Return(userRights);
@@ -31,17 +31,17 @@ namespace Etsi.Ultimate.Tests.Business
             RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
 
             //Specification
-            var specDBSet = GetSpecifications();
+            var specDbSet = GetSpecifications();
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
-            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specDBSet);
+            mockDataContext.Stub(x => x.Specifications).Return(specDbSet);
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
 
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             var specificationDefinitiveWithdrawalAction = new SpecificationDefinitiveWithdrawalAction(uow);
 
             //Initial Assert
-            var spec = specDBSet.Find(specificationId);
-            DateTime lastMOD = spec.MOD_TS.GetValueOrDefault();
+            var spec = specDbSet.Find(specificationId);
+            DateTime lastMod = spec.MOD_TS.GetValueOrDefault();
             Assert.AreEqual(3, spec.Specification_Release.Count);
 
             //Act
@@ -59,7 +59,7 @@ namespace Etsi.Ultimate.Tests.Business
                     Assert.AreEqual(1, e.WithdrawMeetingId);
                 }
             }
-            Assert.GreaterOrEqual(spec.MOD_TS, lastMOD);
+            Assert.GreaterOrEqual(spec.MOD_TS, lastMod);
         }
         #endregion
 
@@ -72,14 +72,14 @@ namespace Etsi.Ultimate.Tests.Business
         private SpecificationFakeDBSet GetSpecifications()
         {
             var specDbSet = new SpecificationFakeDBSet();
-            ReleaseFakeRepository releaseFakeRepository = new ReleaseFakeRepository();
-            var specReleaseList = new List<Specification_Release>() 
+            var releaseFakeRepository = new ReleaseFakeRepository();
+            var specReleaseList = new List<Specification_Release>
             {
-                new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 1, isWithdrawn = false, Release = releaseFakeRepository.All.FirstOrDefault()},
-                new Specification_Release() { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 1, Fk_ReleaseId = 2, isWithdrawn = false},
-                new Specification_Release() { Pk_Specification_ReleaseId = 3, Fk_SpecificationId = 1, Fk_ReleaseId = 2, isWithdrawn = true}
+                new Specification_Release { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 1, isWithdrawn = false, Release = releaseFakeRepository.All.FirstOrDefault()},
+                new Specification_Release { Pk_Specification_ReleaseId = 2, Fk_SpecificationId = 1, Fk_ReleaseId = 2, isWithdrawn = false},
+                new Specification_Release { Pk_Specification_ReleaseId = 3, Fk_SpecificationId = 1, Fk_ReleaseId = 2, isWithdrawn = true}
             };
-            var specification = new Specification() { Pk_SpecificationId = 1, Number = "00.01U", Title = "First specification", IsActive = true, Specification_Release = specReleaseList, MOD_TS = DateTime.Today.AddDays(-15) };
+            var specification = new Specification { Pk_SpecificationId = 1, Number = "00.01U", Title = "First specification", IsActive = true, Specification_Release = specReleaseList, MOD_TS = DateTime.Today.AddDays(-15) };
             specDbSet.Add(specification);
             return specDbSet;
         }

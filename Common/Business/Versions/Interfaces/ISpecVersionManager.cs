@@ -3,10 +3,13 @@ using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Versions.Interfaces
 {
     public interface ISpecVersionManager
     {
+        /// <summary>
+        /// Unit of Work
+        /// </summary>
         IUltimateUnitOfWork UoW { get; set; }
 
         /// <summary>

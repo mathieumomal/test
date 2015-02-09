@@ -1,19 +1,14 @@
-﻿using Etsi.Ultimate.Repositories;
-using Etsi.Ultimate.Utils;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System;
+using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using Etsi.Ultimate.Business.Specifications.Interfaces;
+using Etsi.Ultimate.Business.Versions.Interfaces;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
-using System.IO;
+using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
 
-
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Versions
 {
     public class TranspositionManager : ITranspositionManager
     {
@@ -21,35 +16,27 @@ namespace Etsi.Ultimate.Business
 
         public IUltimateUnitOfWork UoW { get; set; }
 
-        public TranspositionManager()
+        public bool Transpose(Specification spec, SpecVersion version)
         {
-        }
+            var importResult = false;
 
-
-        public bool Transpose(DomainClasses.Specification spec, DomainClasses.SpecVersion version)
-        {
-            bool importResult = false;
-            bool transferResult = false; 
-
-            if (this.TransposeAllowed(version))
+            if (TransposeAllowed(version))
             {
                 if ((version != null) && (version.Location != null))
                 {
                     //Two steps to perform transposition
-                    string versionURL = version.Location;
+                    var versionUrl = version.Location;
                     //STEP1: Transfer of the version to a dedicated folder
-                    transferResult = transferVersionToDedicatedFolder(versionURL);
+                    var transferResult = transferVersionToDedicatedFolder(versionUrl);
                     if (transferResult)
                     {
                         //STEP2: Add record to WPMDB   
-                        WpmRecordCreator creator = new WpmRecordCreator(UoW);
+                        var creator = new WpmRecordCreator(UoW);
                         importResult = creator.AddWpmRecords(version);
                         version.DocumentPassedToPub = DateTime.Now;
                     }                    
                     return (transferResult && importResult);
                 }
-                else
-                    return false; 
             }
             return false;
         }
@@ -57,9 +44,9 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Transfert of version File to dedicated folder
         /// </summary>
-        /// <param name="versionURL"></param>
+        /// <param name="versionUrl"></param>
         /// <returns></returns>
-        private bool transferVersionToDedicatedFolder(string versionURL)
+        private bool transferVersionToDedicatedFolder(string versionUrl)
         {
             try
             {
@@ -68,15 +55,15 @@ namespace Etsi.Ultimate.Business
                 string transpositionFolder = ConfigVariables.TranspositionFolderPath;
                 string filePath;                
                 string fileName; 
-                if (versionURL.Trim().StartsWith(ConfigVariables.FtpBaseAddress))
+                if (versionUrl.Trim().StartsWith(ConfigVariables.FtpBaseAddress))
                 {
-                    filePath = versionURL.Replace(ConfigVariables.FtpBaseAddress, ConfigVariables.FtpBasePhysicalPath).Replace("/", "\\");
-                    fileName = versionURL.Split('/').LastOrDefault();
+                    filePath = versionUrl.Replace(ConfigVariables.FtpBaseAddress, ConfigVariables.FtpBasePhysicalPath).Replace("/", "\\");
+                    fileName = versionUrl.Split('/').LastOrDefault();
                 }
                 else
                 {
-                    filePath = versionURL;
-                    fileName = versionURL.Split('\\').LastOrDefault();
+                    filePath = versionUrl;
+                    fileName = versionUrl.Split('\\').LastOrDefault();
                 }
 
                 if (File.Exists(filePath) && Directory.Exists(transpositionFolder)) 
@@ -94,16 +81,15 @@ namespace Etsi.Ultimate.Business
 
         public bool TransposeAllowed(SpecVersion specVersion)
         {
-            ISpecificationManager specMgr = ManagerFactory.Resolve<ISpecificationManager>();
+            var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
             specMgr.UoW = UoW;
-            IReleaseManager releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
+            var releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
             releaseMgr.UoW = UoW;
-            IEnum_ReleaseStatusRepository relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
+            var relStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
             relStatusRepo.UoW = UoW;
 
-            Specification_Release specRelease = null;
-            Specification spec = null;
-            Release release = null;
+            Specification spec;
+            Release release;
 
             //Check that we have all informations to transpose the version
             if (specVersion == null)
@@ -129,10 +115,10 @@ namespace Etsi.Ultimate.Business
             else
                 release = specVersion.Release;
 
-            specRelease = specMgr.GetSpecReleaseBySpecIdAndReleaseId(spec.Pk_SpecificationId, release.Pk_ReleaseId);
+            Specification_Release specRelease = specMgr.GetSpecReleaseBySpecIdAndReleaseId(spec.Pk_SpecificationId, release.Pk_ReleaseId);
             if (specRelease == null)
                 return false;
-            var frozen = relStatusRepo.All.Where(x => x.Code == Enum_ReleaseStatus.Frozen).FirstOrDefault();
+            var frozen = relStatusRepo.All.FirstOrDefault(x => x.Code == Enum_ReleaseStatus.Frozen);
             if (frozen == null)
                 throw new InvalidOperationException("Error for get the frozen status.");
 
@@ -140,7 +126,7 @@ namespace Etsi.Ultimate.Business
             var specIsActive = spec.IsActive;//No withdrawn
             var specReleaseIsWithdrawn = specRelease.isWithdrawn.GetValueOrDefault();
             //Define others criterias
-            var UCC = spec.IsUnderChangeControl.GetValueOrDefault();
+            var ucc = spec.IsUnderChangeControl.GetValueOrDefault();
             var isFrozen = release.Fk_ReleaseStatus.Equals(frozen.Enum_ReleaseStatusId);
             var specReleaseTranspoForced = specRelease.isTranpositionForced.GetValueOrDefault();
             var specIsForPublication = spec.IsForPublication.GetValueOrDefault();
@@ -149,7 +135,7 @@ namespace Etsi.Ultimate.Business
             //- the spec isn't UCC
             //- the spec isn't active (withdrawn)
             //- the spec_release is withdrawn
-            if (!UCC || !specIsActive || specReleaseIsWithdrawn)
+            if (!ucc || !specIsActive || specReleaseIsWithdrawn)
                 return false;
             if (specReleaseTranspoForced)
                 return true;

@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.DomainClasses;
+﻿using Etsi.Ultimate.Business.Specifications.Interfaces;
+using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using System;
 using System.Collections.Generic;

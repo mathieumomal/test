@@ -1,30 +1,24 @@
-﻿using Etsi.Ultimate.Repositories;
-using Etsi.Ultimate.Utils;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils.Core;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
-using System;
-using System.Collections.Generic;
-using Drawing = System.Drawing;
-using System.IO;
-using System.Linq;
-using Domain = Etsi.Ultimate.DomainClasses;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Wordprocessing;
-using DocumentFormat.OpenXml.Packaging;
-using System.Text;
-using Etsi.Ultimate.DomainClasses;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Specifications
 {
     public class SpecificationExporter
     {
         #region Properties
 
         private IUltimateUnitOfWork UoW;
-        private string DOC_TITLE = "Specification_3gpp_" + DateTime.Now.ToString("yyMMdd");
-        private string ZIP_NAME = "Specification_3gpp_" + DateTime.Now.ToString("yyMMdd");
-
+        
         #endregion
 
         #region Constructor
@@ -32,7 +26,6 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Default Constructor
         /// </summary>
-        /// <param name="UoW">Unit Of Work</param>
         public SpecificationExporter(IUltimateUnitOfWork iUoW)
         {
             UoW = iUoW;
@@ -45,13 +38,11 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Export Specification
         /// </summary>
-        /// <param name="exportPath">Export Path</param>
         public string ExportSpecification(int personId, SpecificationSearch searchObj, string baseurl)
         {
             try
             {
-                var specManager = new SpecificationManager();
-                specManager.UoW = UoW;
+                var specManager = new SpecificationManager {UoW = UoW};
                 var communityManager = ManagerFactory.Resolve<ICommunityManager>();
                 communityManager.UoW = UoW;
                 var personManager = ManagerFactory.Resolve<IPersonManager>();
@@ -88,7 +79,7 @@ namespace Etsi.Ultimate.Business
                     if ((spec.Specification_Release != null) && spec.Specification_Release.Count != 0)
                     {
                         var specReleaseId = spec.Specification_Release.Select(sr => sr.Fk_ReleaseId);
-                        var firstRelease = allReleases.Where(r => specReleaseId.Contains(r.Pk_ReleaseId)).FirstOrDefault();
+                        var firstRelease = allReleases.FirstOrDefault(r => specReleaseId.Contains(r.Pk_ReleaseId));
                         if (firstRelease != null)
                         {
                             spec.SpecificationInitialRelease = firstRelease.Code;
@@ -96,7 +87,7 @@ namespace Etsi.Ultimate.Business
                     }
                 }
 
-                List<SpecificationForExport> specExportObjects = new List<SpecificationForExport>();
+                var specExportObjects = new List<SpecificationForExport>();
                 specExportObjects.AddRange(specs.Select(y => new SpecificationForExport(y)));
 
                 var filename= DateTime.Now.ToString("yyyy-MM-dd_HHmm")+"_SpecificationList_"+ Guid.NewGuid().ToString().Substring(0, 6)+".xlsx";
@@ -122,8 +113,9 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Export Specification to Excel
         /// </summary>
-        /// <param name="exportWorkPlan">Work Plan</param>
+        /// <param name="exportSpecification"></param>
         /// <param name="exportPath">Export Path</param>
+        /// <param name="baseurl"></param>
         private void ExportToExcel(List<SpecificationForExport> exportSpecification, string exportPath, string baseurl)
         {
             if (!String.IsNullOrEmpty(exportPath) && exportSpecification != null)
@@ -142,11 +134,11 @@ namespace Etsi.Ultimate.Business
                         /*------------*/
                         /* Set Styles */
                         /*------------*/
-                        int rowHeader = 1;
-                        int rowDataStart = 2;
+                        const int rowHeader = 1;
+                        const int rowDataStart = 2;
                         int rowDataEnd = exportSpecification.Count + 1;
-                        int columnStart = 1;
-                        int columnEnd = 10;
+                        const int columnStart = 1;
+                        const int columnEnd = 10;
 
                         #region hyperlink Style
                         wsData.Cells[rowDataStart, columnStart, rowDataEnd, columnStart].Style.Font.Bold = true;
@@ -160,7 +152,7 @@ namespace Etsi.Ultimate.Business
                         //Set Header Style
                         wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Font.Bold = true;
                         wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                        wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Fill.BackgroundColor.SetColor(Drawing.Color.LightGray);
+                        wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightGray);
 
                         //Set Cell Borders
                         wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Left.Style = ExcelBorderStyle.Thin;
@@ -186,10 +178,10 @@ namespace Etsi.Ultimate.Business
                                     orderby s.Number
                                     select new
                                     {
-                                        Spec_No = s.Number,
-                                        Type = s.Type,
-                                        Title = s.Title,
-                                        Status = s.Status,
+                                        Spec_No = s.Number, 
+                                        s.Type,
+                                        s.Title,
+                                        s.Status,
                                         Primary_Resp_Grp = s.PrimaryRespGrp,
                                         Primary_rapporteur = s.PrimaryRapporteur,
                                         Initial_planned_Release = s.InitialPlannedRelease,
@@ -202,14 +194,14 @@ namespace Etsi.Ultimate.Business
                                  orderby s.Number
                                  select new
                                  {
-                                     SpecId = s.SpecId
+                                     s.SpecId
                                  };
 
                         //Upload Data to Excel
-                        var dataRange = wsData.Cells["A1"].LoadFromCollection(
-                                                      datas,
-                                                      true, 
-                                                      OfficeOpenXml.Table.TableStyles.None);
+                        wsData.Cells["A1"].LoadFromCollection(
+                            datas,
+                            true, 
+                            OfficeOpenXml.Table.TableStyles.None);
 
                         #region add hyperlink
                         var count = 2;
@@ -242,14 +234,14 @@ namespace Etsi.Ultimate.Business
         /// <param name="tableRow">Table row </param>
         /// <param name="currentCell">Row's cell</param>
         /// <param name="cellContent">Cell's content</param>
-        /// <param name="colName">Content style</param>
-        private void SetCellContent(TableRow tableRow, TableCell currentCell, string cellContent, Domain.DocxStylePool.STYLES_KEY style)
+        /// <param name="style"></param>
+        private void SetCellContent(TableRow tableRow, TableCell currentCell, string cellContent, DomainClasses.DocxStylePool.STYLES_KEY style)
         {
-            Domain.DocxStyle docx = Domain.DocxStylePool.GetDocxStyle((int)style);
+            DocxStyle docx = DocxStylePool.GetDocxStyle((int)style);
             Paragraph cellParagraph = SetParagraphContent(docx, cellContent, "Arial", "16");
             currentCell.Append(cellParagraph);
-            TableCellProperties tcp = new TableCellProperties();
-            GridSpan griedSpan = new GridSpan();
+            var tcp = new TableCellProperties();
+            var griedSpan = new GridSpan();
             griedSpan.Val = 4;
             tcp.Append(new Shading() { Val = ShadingPatternValues.Clear, Color = docx.GetFontColorHex(), Fill = docx.GetBgColorHex() });
             tcp.Append(griedSpan);
@@ -265,12 +257,12 @@ namespace Etsi.Ultimate.Business
         /// <param name="fontStyle">Content font</param>
         /// <param name="fontSizeValue">Content font size</param>
         /// <returns>A paragraph object</returns>
-        private Paragraph SetParagraphContent(Domain.DocxStyle docx, string text, string fontStyle, string fontSizeValue)
+        private Paragraph SetParagraphContent(DomainClasses.DocxStyle docx, string text, string fontStyle, string fontSizeValue)
         {
-            Paragraph contentParagraph = new Paragraph();
-            Run contentParagraph_run = new Run();
-            Text contentParagraph_text = new Text(text) { Space = SpaceProcessingModeValues.Preserve };
-            ParagraphProperties contentParagraph__pPr = new ParagraphProperties(new SpacingBetweenLines() { After = "0" });
+            var contentParagraph = new Paragraph();
+            var contentParagraph_run = new Run();
+            var contentParagraph_text = new Text(text) { Space = SpaceProcessingModeValues.Preserve };
+            var contentParagraph__pPr = new ParagraphProperties(new SpacingBetweenLines() { After = "0" });
             RunProperties contentParagraph__runPro = SetParagraphStyle(docx, fontStyle, fontSizeValue);
             contentParagraph_run.Append(contentParagraph__runPro);
             contentParagraph.Append(contentParagraph__pPr);
@@ -286,64 +278,18 @@ namespace Etsi.Ultimate.Business
         /// <param name="fontStyle">Content font</param>
         /// <param name="fontSizeValue">Content font size</param>
         /// <returns>RunProperties object that contains all paragraph styling</returns>
-        private RunProperties SetParagraphStyle(Domain.DocxStyle docx, string fontStyle, string fontSizeValue)
+        private RunProperties SetParagraphStyle(DomainClasses.DocxStyle docx, string fontStyle, string fontSizeValue)
         {
-            RunProperties cellParagraph_runPro = new RunProperties();
-            RunFonts runFont = new RunFonts() { Ascii = fontStyle, ComplexScript = fontStyle };
-            DocumentFormat.OpenXml.Wordprocessing.Color color = new DocumentFormat.OpenXml.Wordprocessing.Color() { Val = docx.GetFontColorHex() };
-            FontSize fontSize = new FontSize() { Val = fontSizeValue };
+            var cellParagraph_runPro = new RunProperties();
+            var runFont = new RunFonts() { Ascii = fontStyle, ComplexScript = fontStyle };
+            var color = new Color() { Val = docx.GetFontColorHex() };
+            var fontSize = new FontSize() { Val = fontSizeValue };
             cellParagraph_runPro.Append(runFont);
             if (docx.IsBold)
                 cellParagraph_runPro.Append(new Bold());
             cellParagraph_runPro.Append(color);
             cellParagraph_runPro.Append(fontSize);
             return cellParagraph_runPro;
-        }
-
-        /// <summary>
-        /// Used to set general style of a table
-        /// </summary>
-        /// <param name="table">Edited table</param>
-        private void SetTableStyle(Table table)
-        {
-            TableProperties props = new TableProperties(
-                      new TableBorders(
-                        new TopBorder
-                        {
-                            Val = new EnumValue<BorderValues>(BorderValues.Single),
-                            Size = 8
-                        },
-                        new BottomBorder
-                        {
-                            Val = new EnumValue<BorderValues>(BorderValues.Single),
-                            Size = 8
-                        },
-                        new LeftBorder
-                        {
-                            Val = new EnumValue<BorderValues>(BorderValues.Single),
-                            Size = 8
-                        },
-                        new RightBorder
-                        {
-                            Val = new EnumValue<BorderValues>(BorderValues.Single),
-                            Size = 8
-                        },
-                        new InsideHorizontalBorder
-                        {
-                            Val = new EnumValue<BorderValues>(BorderValues.Single),
-                            Size = 8
-                        },
-                        new InsideVerticalBorder
-                        {
-                            Val = new EnumValue<BorderValues>(BorderValues.Single),
-                            Size = 8
-                        },
-                        new TableLayout
-                        {
-                            Type = TableLayoutValues.Autofit
-                        }
-                        ));
-            table.AppendChild<TableProperties>(props);
         }
 
         #endregion
@@ -379,8 +325,7 @@ namespace Etsi.Ultimate.Business
         ///   - Empty Records      :: '  -  '
         ///   - Date               :: yyyy-MM-dd
         /// </summary>
-        /// <param name="Specification">Specification</param>
-        public SpecificationForExport(Domain.Specification spec)
+        public SpecificationForExport(Specification spec)
         {
             //Display elements
             Number = String.IsNullOrEmpty(spec.Number) ? BLANK_CELL : spec.Number;
@@ -422,37 +367,7 @@ namespace Etsi.Ultimate.Business
         /// <returns>Index</returns>
         public int GetCellStyle(string colName)
         {
-            int index = 0;
-
-            //if (colName.Equals("Name"))
-            //{
-            //    switch (Level)
-            //    {
-            //        case 0:
-            //            index += 9;
-            //            break;
-            //        case 1:
-            //            index += 6;
-            //            break;
-            //        case 2:
-            //            index += 3;
-            //            break;
-            //        default:
-            //            break;
-            //    }
-            //}
-
-            //if (StoppedMeeting)
-            //{
-            //    index += 3;
-            //}
-            //else
-            //{
-            //    if (Completion.Value == 1)
-            //        index += 2;
-            //    else
-            //        index += 1;
-            //}
+            const int index = 0;
             return index;
         }
 
@@ -471,7 +386,7 @@ namespace Etsi.Ultimate.Business
         /// <returns>Empty string</returns>
         private string GetEmptyString(int level)
         {
-            StringBuilder space = new StringBuilder();
+            var space = new StringBuilder();
             if (level > 1)
             {
                 for (int i = 1; i <= (level * 3) - 3; i++)

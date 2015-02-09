@@ -4,38 +4,40 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.Business.Specifications.Interfaces;
+using Etsi.Ultimate.Business.Versions.Interfaces;
+using Etsi.Ultimate.Business.Versions.QualityChecks;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
 using Etsi.Ultimate.Utils.ModelMails;
 
-namespace Etsi.Ultimate.Business.SpecVersionBusiness
+namespace Etsi.Ultimate.Business.Versions
 {
     public class SpecVersionUploadAction
     {
 
-        private const string CACHE_KEY = "VERSION_UPLOAD";
+        private const string CacheKey = "VERSION_UPLOAD";
 
-        private const string CONST_VALID_FILENAME = "{0}-{1}";
-        private const string CONST_FTP_ARCHIVE_PATH = "{0}\\Specs\\archive\\{1}_series\\{2}\\";
-        private const string CONST_FTP_LATEST_PATH = "{0}\\Specs\\latest\\{1}\\{2}_series\\";
-        private const string CONST_FTP_LATEST_DRAFTS_PATH = "{0}\\Specs\\latest-drafts\\";
-        private const string CONST_FTP_VERSIONS_PATH = "{0}\\Specs\\{1}\\{2}\\{3}_series\\";
+        private const string ConstValidFilename = "{0}-{1}";
+        private const string ConstFtpArchivePath = "{0}\\Specs\\archive\\{1}_series\\{2}\\";
+        private const string ConstFtpLatestPath = "{0}\\Specs\\latest\\{1}\\{2}_series\\";
+        private const string ConstFtpLatestDraftsPath = "{0}\\Specs\\latest-drafts\\";
+        private const string ConstFtpVersionsPath = "{0}\\Specs\\{1}\\{2}\\{3}_series\\";
 
-        private const string CONST_QUALITY_CHECK_REVISIONMARK = "Some revision marks left unaccepted";
-        private const string CONST_QUALITY_CHECK_VERSION_HISTORY = "Invalid/missing version in history";
-        private const string CONST_QUALITY_CHECK_VERSION_COVERPAGE = "Invalid/missing version in cover page";
-        private const string CONST_QUALITY_CHECK_DATE_COVERPAGE = "Invalid/missing date in cover page";
-        private const string CONST_QUALITY_CHECK_YEAR_COPYRIGHT = "Year not valid/missing in copyright statement";
-        private const string CONST_QUALITY_CHECK_TITLE_COVERPAGE = "Incorrect/missing title in cover page";
-        private const string CONST_QUALITY_CHECK_RELEASE_STYLE = "Release style should be 'ZGSM' in cover page";
-        private const string CONST_QUALITY_CHECK_AUTO_NUMBERING = "Automatic numbering (of clauses, figures, tables, notes, examples etc…) should be disabled in the document";
-        private const string CONST_QUALITY_CHECK_FIRST_TWO_LINES_TITLE = "The first two lines of the title must be correct, according to the TSG responsible for the specification";
-        private const string CONST_QUALITY_CHECK_ANNEXURE_STYLE = "Annexes should be correctly styled as Heading 8(TS) or Heading 9(TR). In case of TS, (normative) or (informative) should appear immediately after annexure heading";
-        private const string CONST_QUALITY_CHECK_RELEASE = "Invalid/missing release in cover page";
+        private const string ConstQualityCheckRevisionmark = "Some revision marks left unaccepted";
+        private const string ConstQualityCheckVersionHistory = "Invalid/missing version in history";
+        private const string ConstQualityCheckVersionCoverpage = "Invalid/missing version in cover page";
+        private const string ConstQualityCheckDateCoverpage = "Invalid/missing date in cover page";
+        private const string ConstQualityCheckYearCopyright = "Year not valid/missing in copyright statement";
+        private const string ConstQualityCheckTitleCoverpage = "Incorrect/missing title in cover page";
+        private const string ConstQualityCheckReleaseStyle = "Release style should be 'ZGSM' in cover page";
+        private const string ConstQualityCheckAutoNumbering = "Automatic numbering (of clauses, figures, tables, notes, examples etc…) should be disabled in the document";
+        private const string ConstQualityCheckFirstTwoLinesTitle = "The first two lines of the title must be correct, according to the TSG responsible for the specification";
+        private const string ConstQualityCheckAnnexureStyle = "Annexes should be correctly styled as Heading 8(TS) or Heading 9(TR). In case of TS, (normative) or (informative) should appear immediately after annexure heading";
+        private const string ConstQualityCheckRelease = "Invalid/missing release in cover page";
 
         public IUltimateUnitOfWork UoW;
 
@@ -68,7 +70,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                     
 
                     //[1] Check the file name
-                    string validFileName = GetValidFileName(version);
+                    var validFileName = GetValidFileName(version);
                     if (!fileNameWithoutExtension.Equals(validFileName, StringComparison.InvariantCultureIgnoreCase))
                         validationReport.LogWarning(String.Format("Invalid file name. System will change this to '{0}'", validFileName));
 
@@ -77,7 +79,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                     if (Path.GetExtension(path).Equals(".zip", StringComparison.InvariantCultureIgnoreCase))
                     {
                         var zipContent = Zip.Extract(path, true);
-                        List<string> zipContentShortPath = new List<string>();
+                        var zipContentShortPath = new List<string>();
                         zipContent.ForEach(x => zipContentShortPath.Add(x.Split('\\').Last()));
 
 
@@ -128,30 +130,28 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                     //If we have valid file & spec is under change control, run quality checks
                     if (allowToRunQualityChecks && version.Specification.IsUnderChangeControl.GetValueOrDefault())
                     {
-                        string versionStr = String.Empty;
-                        DateTime meetingDate = DateTime.MinValue;
-                        string tsgTitle = String.Empty;
+                        var meetingDate = DateTime.MinValue;
+                        var tsgTitle = String.Empty;
 
-                        ICommunityManager communityMgr = ManagerFactory.Resolve<ICommunityManager>();
+                        var communityMgr = ManagerFactory.Resolve<ICommunityManager>();
                         if (version.Specification.PrimeResponsibleGroup != null)
                         {
                             var communities = communityMgr.GetCommunities();
-                            var community = communities.Where(x => x.TbId == version.Specification.PrimeResponsibleGroup.Fk_commityId).FirstOrDefault();
+                            var community = communities.FirstOrDefault(x => x.TbId == version.Specification.PrimeResponsibleGroup.Fk_commityId);
                             if (community != null)
                                 tsgTitle = GetParentTSG(community, communities).TbTitle.Replace("Technical Specification Group -", "Technical Specification Group");
                         }
-                        versionStr = String.Format("{0}.{1}.{2}", version.MajorVersion.Value, version.TechnicalVersion.Value, version.EditorialVersion.Value);
+                        string versionStr = String.Format("{0}.{1}.{2}", version.MajorVersion.Value, version.TechnicalVersion.Value, version.EditorialVersion.Value);
 
                         if (version.Source.HasValue)
                         {
-                            MeetingManager meetingMgr = new MeetingManager();
-                            meetingMgr.UoW = UoW;
+                            var meetingMgr = new MeetingManager {UoW = UoW};
 
                             meetingDate = meetingMgr.GetMeetingById(version.Source.Value).END_DATE.Value;
                         }
                         using (Stream fileStream = new FileStream(fileToAnalyzePath, FileMode.Open))
                         {
-                            using (MemoryStream memoryStream = new MemoryStream())
+                            using (var memoryStream = new MemoryStream())
                             {
                                 fileStream.CopyTo(memoryStream);
 
@@ -172,7 +172,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                         }
                     }
                     svcResponse.Result = Guid.NewGuid().ToString();
-                    CacheManager.InsertForLimitedTime(CACHE_KEY + svcResponse.Result, new CacheUploadStorage(version, path, validationReport), 10);
+                    CacheManager.InsertForLimitedTime(CacheKey + svcResponse.Result, new CacheUploadStorage(version, path, validationReport), 10);
                 }
                 catch (Exception exc)
                 {
@@ -200,7 +200,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                 CheckPersonRightToUploadVersion(version, personId);
                 if (svcResponse.Report.GetNumberOfErrors() == 0)
                 {
-                    var versionInfos = (CacheUploadStorage)CacheManager.Get(CACHE_KEY + token);
+                    var versionInfos = (CacheUploadStorage)CacheManager.Get(CacheKey + token);
                     if (versionInfos == null)
                         throw new InvalidOperationException("An error occured during file retrieval. Please try again.");
 
@@ -219,9 +219,9 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
         private void CheckPersonRightToUploadVersion(SpecVersion version, int personId)
         {
-            ISpecificationManager specMgr = ManagerFactory.Resolve<ISpecificationManager>();
+            var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
             specMgr.UoW = UoW;
-            IRightsManager rightMgr = ManagerFactory.Resolve<IRightsManager>();
+            var rightMgr = ManagerFactory.Resolve<IRightsManager>();
             rightMgr.UoW = UoW;
 
             var rights = rightMgr.GetRights(personId);
@@ -247,10 +247,10 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             versionMgr.UoW = UoW;
 
             var versionsForSpecRelease = versionMgr.GetVersionsForASpecRelease(version.Fk_SpecificationId.Value, version.Fk_ReleaseId.Value);
-            if (versionsForSpecRelease.Where(v => v.MajorVersion == version.MajorVersion 
-                && v.TechnicalVersion == version.TechnicalVersion 
-                && v.EditorialVersion == version.EditorialVersion
-                && !string.IsNullOrEmpty(v.Location)).Count() > 0)
+            if (versionsForSpecRelease.Any(v => v.MajorVersion == version.MajorVersion 
+                                                && v.TechnicalVersion == version.TechnicalVersion 
+                                                && v.EditorialVersion == version.EditorialVersion
+                                                && !string.IsNullOrEmpty(v.Location)))
             {
                 var versionStr = version.MajorVersion + "." + version.TechnicalVersion + "." + version.EditorialVersion;
                 throw new InvalidOperationException(String.Format(Utils.Localization.Upload_Version_Error_Version_Already_Exists, versionStr));
@@ -265,8 +265,8 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                 || version.MajorVersion == highestUploadedVersion.MajorVersion && version.TechnicalVersion == highestUploadedVersion.TechnicalVersion && version.EditorialVersion < highestUploadedVersion.EditorialVersion))
             {
                 // Check allocation
-                if (versionsForSpecRelease.Where(v => v.MajorVersion == version.MajorVersion && v.TechnicalVersion == version.TechnicalVersion && v.EditorialVersion == version.EditorialVersion).FirstOrDefault() == null)
-                    throw new InvalidOperationException(Utils.Localization.Upload_Version_Error_Previous_Version);
+                if (versionsForSpecRelease.FirstOrDefault(v => v.MajorVersion == version.MajorVersion && v.TechnicalVersion == version.TechnicalVersion && v.EditorialVersion == version.EditorialVersion) == null)
+                    throw new InvalidOperationException(Localization.Upload_Version_Error_Previous_Version);
 
             }
 
@@ -274,14 +274,14 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             // If version is a draft, then it's major number must not be higher than 2.
             if (!version.Specification.IsUnderChangeControl.GetValueOrDefault() && version.MajorVersion > 2)
             {
-                throw new InvalidOperationException(String.Format(Utils.Localization.Upload_Version_Error_Draft_Major_Too_High));
+                throw new InvalidOperationException(String.Format(Localization.Upload_Version_Error_Draft_Major_Too_High));
             }
         }
 
         private string GetValidFileName(SpecVersion specVersion)
         {
             var specNumber = specVersion.Specification.Number;
-            var validFileName = String.Format(CONST_VALID_FILENAME, 
+            var validFileName = String.Format(ConstValidFilename, 
                 specNumber.Replace(".", ""), 
                 UtilsManager.EncodeVersionToBase36(specVersion.MajorVersion, specVersion.TechnicalVersion, specVersion.EditorialVersion));
             return validFileName;
@@ -290,7 +290,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
         private void GetRelatedSpecAndRelease(int personId, SpecVersion specVersion)
         {
             //spec
-            ISpecificationManager specMgr = ManagerFactory.Resolve<ISpecificationManager>();
+            var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
             specMgr.UoW = UoW;
             if (!specVersion.Fk_SpecificationId.HasValue)
                 throw new InvalidOperationException("Specification id is not provided");
@@ -302,7 +302,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             specVersion.Specification = spec;
 
             //Release
-            IReleaseManager releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
+            var releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
             releaseMgr.UoW = UoW;
             if (!specVersion.Fk_ReleaseId.HasValue)
                 throw new InvalidOperationException("Release id is not provided");
@@ -320,7 +320,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                 return community;
             else
             {
-                var parentCommunity = communities.Where(x => x.TbId == community.ParentCommunityId).FirstOrDefault();
+                var parentCommunity = communities.FirstOrDefault(x => x.TbId == community.ParentCommunityId);
                 if (parentCommunity != null)
                     return GetParentTSG(parentCommunity, communities);
                 else
@@ -359,44 +359,44 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
         /// <param name="release">Release</param>
         /// <param name="meetingDate">Meeting Date</param>
         /// <param name="tsgTitle">Technical Specificaion Group Title</param>
-        /// <param name="isTS">True - Technical Specificaiton / False - Technical Report</param>
+        /// <param name="isTs">True - Technical Specificaiton / False - Technical Report</param>
         /// <returns>Validation Summary</returns>
-        private Report ValidateDocument(IQualityChecks qualityChecks, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTS)
+        private Report ValidateDocument(IQualityChecks qualityChecks, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTs)
         {
-            Report validationReport = new Report();
+            var validationReport = new Report();
 
             if (qualityChecks.HasTrackedRevisions())
-                validationReport.LogWarning(CONST_QUALITY_CHECK_REVISIONMARK);
+                validationReport.LogWarning(ConstQualityCheckRevisionmark);
 
             if (!qualityChecks.IsHistoryVersionCorrect(version))
-                validationReport.LogWarning(CONST_QUALITY_CHECK_VERSION_HISTORY);
+                validationReport.LogWarning(ConstQualityCheckVersionHistory);
 
             if (!qualityChecks.IsCoverPageVersionCorrect(version))
-                validationReport.LogWarning(CONST_QUALITY_CHECK_VERSION_COVERPAGE);
+                validationReport.LogWarning(ConstQualityCheckVersionCoverpage);
 
             if (!qualityChecks.IsCoverPageDateCorrect(meetingDate))
-                validationReport.LogWarning(CONST_QUALITY_CHECK_DATE_COVERPAGE);
+                validationReport.LogWarning(ConstQualityCheckDateCoverpage);
 
             if (!qualityChecks.IsCopyRightYearCorrect())
-                validationReport.LogWarning(CONST_QUALITY_CHECK_YEAR_COPYRIGHT);
+                validationReport.LogWarning(ConstQualityCheckYearCopyright);
 
             if (!qualityChecks.IsTitleCorrect(title))
-                validationReport.LogWarning(CONST_QUALITY_CHECK_TITLE_COVERPAGE);
+                validationReport.LogWarning(ConstQualityCheckTitleCoverpage);
 
             if (!qualityChecks.IsReleaseCorrect(release))
-                validationReport.LogWarning(CONST_QUALITY_CHECK_RELEASE);
+                validationReport.LogWarning(ConstQualityCheckRelease);
 
             if (!qualityChecks.IsReleaseStyleCorrect(release))
-                validationReport.LogWarning(CONST_QUALITY_CHECK_RELEASE_STYLE);
+                validationReport.LogWarning(ConstQualityCheckReleaseStyle);
 
             if (qualityChecks.IsAutomaticNumberingPresent())
-                validationReport.LogWarning(CONST_QUALITY_CHECK_AUTO_NUMBERING);
+                validationReport.LogWarning(ConstQualityCheckAutoNumbering);
 
             if (!qualityChecks.IsFirstTwoLinesOfTitleCorrect(tsgTitle))
-                validationReport.LogWarning(CONST_QUALITY_CHECK_FIRST_TWO_LINES_TITLE);
+                validationReport.LogWarning(ConstQualityCheckFirstTwoLinesTitle);
 
-            if (!qualityChecks.IsAnnexureStylesCorrect(isTS))
-                validationReport.LogWarning(CONST_QUALITY_CHECK_ANNEXURE_STYLE);
+            if (!qualityChecks.IsAnnexureStylesCorrect(isTs))
+                validationReport.LogWarning(ConstQualityCheckAnnexureStyle);
 
             return validationReport;
         }
@@ -409,7 +409,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                 throw new InvalidOperationException("FTP not yet configured");
 
             string specNumber = version.Specification.Number;
-            string targetFolder = String.Format(CONST_FTP_ARCHIVE_PATH, ftpBasePath, specNumber.Split('.')[0], specNumber);
+            string targetFolder = String.Format(ConstFtpArchivePath, ftpBasePath, specNumber.Split('.')[0], specNumber);
             string zipFilePath = path;
 
             string validFileName = GetValidFileName(version);
@@ -433,7 +433,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             var spec = version.Specification;
             if (spec.IsActive && !spec.IsUnderChangeControl.GetValueOrDefault()) //Draft
             {
-                string draftPath = String.Format(CONST_FTP_LATEST_DRAFTS_PATH, ftpBasePath);
+                string draftPath = String.Format(ConstFtpLatestDraftsPath, ftpBasePath);
                 bool isDraftPathExists = Directory.Exists(draftPath);
                 if (!isDraftPathExists)
                     Directory.CreateDirectory(draftPath);
@@ -453,7 +453,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                 if (!version.Source.HasValue)
                     throw new InvalidOperationException("Meeting must be provided");
 
-                MeetingManager meetingMgr = new MeetingManager();
+                var meetingMgr = new MeetingManager();
                 meetingMgr.UoW = UoW;
 
                 var uploadMeeting = meetingMgr.GetMeetingById(version.Source.Value);
@@ -462,12 +462,12 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
                 if ((uploadMeeting.START_DATE != null))
                 {
-                    string latestFolder = ConfigVariables.VersionsLatestFTPFolder;
+                    var latestFolder = ConfigVariables.VersionsLatestFTPFolder;
                     if (String.IsNullOrEmpty(latestFolder))
                         latestFolder = String.Format("{0:0000}-{1:00}", uploadMeeting.START_DATE.Value.Year, uploadMeeting.START_DATE.Value.Month);
-                    string underChangeControlPath = String.Format(CONST_FTP_VERSIONS_PATH, ftpBasePath, latestFolder, version.Release.Code, spec.Number.Split('.')[0]);
-                    bool isUCCPathExists = Directory.Exists(underChangeControlPath);
-                    if (!isUCCPathExists)
+                    var underChangeControlPath = String.Format(ConstFtpVersionsPath, ftpBasePath, latestFolder, version.Release.Code, spec.Number.Split('.')[0]);
+                    var isUccPathExists = Directory.Exists(underChangeControlPath);
+                    if (!isUccPathExists)
                         Directory.CreateDirectory(underChangeControlPath);
 
                     string fileName = Path.GetFileName(versionPathToSave);
@@ -479,7 +479,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
                     ClearLatestDraftFolder(ftpBasePath, version);
 
                     //Create hard link in 'Latest' folder
-                    string latestFolderPath = String.Format(CONST_FTP_LATEST_PATH, ftpBasePath, version.Release.Code, spec.Number.Split('.')[0]);
+                    string latestFolderPath = String.Format(ConstFtpLatestPath, ftpBasePath, version.Release.Code, spec.Number.Split('.')[0]);
                     bool isLatestFolderPathExists = Directory.Exists(latestFolderPath);
                     if (!isLatestFolderPathExists)
                         Directory.CreateDirectory(latestFolderPath);
@@ -504,12 +504,12 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             var existingVersions = versionMgr.GetVersionsForASpecRelease(version.Fk_SpecificationId.Value, version.Fk_ReleaseId.Value);
 
             // Only clear the Latest-drafts folder if the version that has just been uploaded is greater that current one.
-            if (existingVersions.Where(v => !string.IsNullOrEmpty(v.Location)
-                && (v.MajorVersion > version.MajorVersion
-                    || (v.MajorVersion == version.MajorVersion && v.TechnicalVersion > version.TechnicalVersion)
-                    || (v.MajorVersion == version.MajorVersion && v.TechnicalVersion == version.TechnicalVersion && v.EditorialVersion > version.EditorialVersion))).Count() == 0)
+            if (!existingVersions.Any(v => !string.IsNullOrEmpty(v.Location)
+                    && (v.MajorVersion > version.MajorVersion
+                        || (v.MajorVersion == version.MajorVersion && v.TechnicalVersion > version.TechnicalVersion)
+                        || (v.MajorVersion == version.MajorVersion && v.TechnicalVersion == version.TechnicalVersion && v.EditorialVersion > version.EditorialVersion))))
             {
-                string draftPath = String.Format(CONST_FTP_LATEST_DRAFTS_PATH, ftpBasePath);
+                string draftPath = String.Format(ConstFtpLatestDraftsPath, ftpBasePath);
                 string collapsedSpecNumber = version.Specification.Number.Replace(".", String.Empty);
 
                 if (Directory.Exists(draftPath))
@@ -538,30 +538,29 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
         private void UpdateDatabase(SpecVersion version, Report validationReport, int personId)
         {
             //Initialization
-            ISpecVersionsRepository repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            var repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             repo.UoW = UoW;
-            ITranspositionManager transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
+            var transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
             transposeMgr.UoW = UoW;
 
 
             var specVersions = repo.GetVersionsForSpecRelease(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
             var spec = version.Specification;
-            var release = version.Release;
-            var existingVersion = specVersions.Where(x => (x.MajorVersion == version.MajorVersion) &&
-                                                          (x.TechnicalVersion == version.TechnicalVersion) &&
-                                                          (x.EditorialVersion == version.EditorialVersion)).FirstOrDefault();
+            var existingVersion = specVersions.FirstOrDefault(x => (x.MajorVersion == version.MajorVersion) &&
+                                                                   (x.TechnicalVersion == version.TechnicalVersion) &&
+                                                                   (x.EditorialVersion == version.EditorialVersion));
 
 
             if (validationReport != null && validationReport.WarningList.Count > 0)
             {
-                String remarkText = "This version was uploaded with the following quality checks failures: " + string.Join(";", validationReport.WarningList);
+                var remarkText = "This version was uploaded with the following quality checks failures: " + string.Join(";", validationReport.WarningList);
                 if (remarkText.Length > 250)
                     remarkText = remarkText.Substring(0, 247) + "...";
 
                 var utcNow = DateTime.UtcNow;
 
                 //Create a new remark for generated warnings during document validation
-                Remark warningRemark = new Remark
+                var warningRemark = new Remark
                 {
                     CreationDate = utcNow,
                     Fk_PersonId = personId,
@@ -634,9 +633,9 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
             public CacheUploadStorage(SpecVersion version, string path, Report report)
             {
-                this.Version = version;
-                this.TmpUploadedFilePath = path;
-                this.ValidationReport = report;
+                Version = version;
+                TmpUploadedFilePath = path;
+                ValidationReport = report;
             }
         }
 
@@ -644,6 +643,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
         /// When quality checks fail, and the user confirms anyway the upload of a version, an email must be sent to the user and to the spec manager
         /// </summary>
         /// <param name="spec"></param>
+        /// <param name="version"></param>
         /// <param name="report"></param>
         /// <param name="personId"></param>
         public void MailVersionAuthor(Specification spec, SpecVersion version, Report report, int personId)
@@ -652,16 +652,15 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
             //get connected user name
             var connectedUsername = String.Empty;
-            var personManager = new PersonManager();
-            personManager.UoW = UoW;
+            var personManager = new PersonManager {UoW = UoW};
 
             var connectedUser = personManager.FindPerson(personId);
             if (connectedUser != null)
             {
                 connectedUsername = new StringBuilder()
-                    .Append((connectedUser.FIRSTNAME != null) ? connectedUser.FIRSTNAME : "")
+                    .Append(connectedUser.FIRSTNAME ?? "")
                     .Append(" ")
-                    .Append((connectedUser.LASTNAME != null) ? connectedUser.LASTNAME : "")
+                    .Append(connectedUser.LASTNAME ?? "")
                     .ToString();
 
                 to.Add(connectedUser.Email);
@@ -671,10 +670,9 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             var subject = String.Format("Spec {0}, version {1} has been uploaded despite some quality checks failure", spec.Pk_SpecificationId, version.Version);
 
             //Body
-            var body = new VersionUploadFailedQualityCheckMailTemplate(connectedUsername, spec.Number, version.Version.ToString(), report.WarningList);
+            var body = new VersionUploadFailedQualityCheckMailTemplate(connectedUsername, spec.Number, version.Version, report.WarningList);
 
-            var roleManager = new RolesManager();
-            roleManager.UoW = UoW;
+            var roleManager = new RolesManager {UoW = UoW};
             var cc = roleManager.GetSpecMgrEmail();
 
             // Send mail

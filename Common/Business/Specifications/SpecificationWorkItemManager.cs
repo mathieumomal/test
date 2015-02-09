@@ -1,26 +1,19 @@
-﻿using Etsi.Ultimate.DomainClasses;
-using Etsi.Ultimate.Repositories;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Specifications
 {
     public class SpecificationWorkItemManager
     {
         public IUltimateUnitOfWork UoW {get; set;}
 
-        public SpecificationWorkItemManager()
-        {
-        }
-
-
         public List<WorkItem> GetSpecificationWorkItemsBySpecId(int id)
         {
-            List<WorkItem> result = new List<WorkItem>();
-            ISpecificationWorkItemRepository repo = RepositoryFactory.Resolve<ISpecificationWorkItemRepository>();
+            var result = new List<WorkItem>();
+            var repo = RepositoryFactory.Resolve<ISpecificationWorkItemRepository>();
             repo.UoW = UoW;
             repo.All.ToList().Where(s => s.Fk_SpecificationId == id).ToList().ForEach(e => result.Add(e.WorkItem));
             return result;
@@ -33,16 +26,15 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         public List<string> GetSpecificationWorkItemsLabels(int specId)
         {
-            List<WorkItem> result = new List<WorkItem>();
-            ISpecificationWorkItemRepository repo = RepositoryFactory.Resolve<ISpecificationWorkItemRepository>();
+            var repo = RepositoryFactory.Resolve<ISpecificationWorkItemRepository>();
             repo.UoW = UoW;
-            result = repo.GetWorkItemsForSpec(specId);
+            List<WorkItem> result = repo.GetWorkItemsForSpec(specId);
             result = result.OrderByDescending(x => x.IsPrimary).ToList();
 
             var workItemLabels = new List<string>();
             foreach (var wi in result)
             {
-                var label = String.Empty;
+                string label;
                 if (wi.IsPrimary)
                 {
                     label = new StringBuilder()

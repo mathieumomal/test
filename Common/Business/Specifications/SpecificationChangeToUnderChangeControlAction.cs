@@ -1,11 +1,11 @@
-﻿using Etsi.Ultimate.Business.Security;
+﻿using System;
+using System.Collections.Generic;
+using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
-using System;
-using System.Collections.Generic;
 
-namespace Etsi.Ultimate.Business.SpecificationBusiness
+namespace Etsi.Ultimate.Business.Specifications
 {
     public class SpecificationChangeToUnderChangeControlAction
     {

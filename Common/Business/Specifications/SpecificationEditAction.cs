@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.ModelMails;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Specifications
 {
     /// <summary>
     /// This class is in charge of editing an existing specification, which encompasses:
@@ -58,14 +56,23 @@ namespace Etsi.Ultimate.Business
             // Compare the fields of the two specifications.
             CompareSpecs(spec, oldSpec, personId, specRepo);
 
-            return new KeyValuePair<Specification, Report>(spec, report); ;
+            // Set mod_ts and mod_by
+            oldSpec.MOD_TS = DateTime.UtcNow;
+            var personMgr = ManagerFactory.Resolve<IPersonManager>();
+            personMgr.UoW = UoW;
+            oldSpec.MOD_BY = personMgr.FindPerson(personId).Username;
+
+            return new KeyValuePair<Specification, Report>(spec, report);
         }
 
         /// <summary>
         /// Check the spec number format
         /// </summary>
         /// <param name="spec"></param>
-        public static void CheckNumber(Specification spec, UserRightsContainer userRights, IUltimateUnitOfWork UoW, ISpecificationRepository specRepo)
+        /// <param name="userRights"></param>
+        /// <param name="uoW"></param>
+        /// <param name="specRepo"></param>
+        public static void CheckNumber(Specification spec, UserRightsContainer userRights, IUltimateUnitOfWork uoW, ISpecificationRepository specRepo)
         {
             //Throw an error if the user don't have the right to modify the spec number
             if (!userRights.HasRight(Enum_UserRights.Specification_EditFull))
@@ -74,7 +81,7 @@ namespace Etsi.Ultimate.Business
             }
             if (!String.IsNullOrEmpty(spec.Number))
             {
-                var specMgr = new SpecificationManager() { UoW = UoW };
+                var specMgr = new SpecificationManager { UoW = uoW };
                 var check = specMgr.CheckFormatNumber(spec.Number);
                 if (!check.Key)
                 {
@@ -88,7 +95,7 @@ namespace Etsi.Ultimate.Business
 
                 // Link serie
                 var specSerie = spec.Number.Split('.')[0];
-                var serie = specRepo.GetSeries().Where(s => s.Code == "SER_" + specSerie).FirstOrDefault();
+                var serie = specRepo.GetSeries().FirstOrDefault(s => s.Code == "SER_" + specSerie);
                 if (serie != null)
                 {
                     spec.Fk_SerieId = serie.Pk_Enum_SerieId;
@@ -113,6 +120,9 @@ namespace Etsi.Ultimate.Business
         /// <param name="specRepo">Specification Repository</param>
         private void CompareSpecs(Specification newSpec, Specification currentSpec, int personId, ISpecificationRepository specRepo)
         {
+            if (currentSpec == null || newSpec == null)
+                return;
+
             // Starting by the title
             if (currentSpec.Title != newSpec.Title) currentSpec.Title = newSpec.Title;
             if (currentSpec.IsTS != newSpec.IsTS) currentSpec.IsTS = newSpec.IsTS;
@@ -133,10 +143,10 @@ namespace Etsi.Ultimate.Business
             var specTechnologiesToInsert = newSpec.SpecificationTechnologies.ToList().Where(x => currentSpec.SpecificationTechnologies.ToList().All(y => y.Fk_Enum_Technology != x.Fk_Enum_Technology));
             specTechnologiesToInsert.ToList().ForEach(x => currentSpec.SpecificationTechnologies.Add(x));
             var specTechnologiesToDelete = currentSpec.SpecificationTechnologies.ToList().Where(x => newSpec.SpecificationTechnologies.ToList().All(y => y.Fk_Enum_Technology != x.Fk_Enum_Technology));
-            specTechnologiesToDelete.ToList().ForEach(x => specRepo.MarkDeleted<SpecificationTechnology>(x));
+            specTechnologiesToDelete.ToList().ForEach(x => specRepo.MarkDeleted(x));
 
             //Remarks (Insert / Update)
-            var remarksToInsert = newSpec.Remarks.ToList().Where(x => currentSpec.Remarks.ToList().All(y => y.Pk_RemarkId != x.Pk_RemarkId));
+            var remarksToInsert = newSpec.Remarks.ToList().Where(x => currentSpec.Remarks.ToList().All(y => y.Pk_RemarkId != x.Pk_RemarkId)).ToList();
             remarksToInsert.ToList().ForEach(x => x.Fk_PersonId = personId);
             remarksToInsert.ToList().ForEach(x => currentSpec.Remarks.Add(x));
             var remarksToUpdate = newSpec.Remarks.ToList().Where(x => currentSpec.Remarks.ToList().Any(y => y.Pk_RemarkId == x.Pk_RemarkId && y.IsPublic != x.IsPublic));
@@ -148,7 +158,7 @@ namespace Etsi.Ultimate.Business
             var specWorkItemToUpdate = newSpec.Specification_WorkItem.ToList().Where(x => currentSpec.Specification_WorkItem.ToList().Any(y => y.Fk_WorkItemId == x.Fk_WorkItemId && y.isPrime != x.isPrime));
             specWorkItemToUpdate.ToList().ForEach(x => currentSpec.Specification_WorkItem.ToList().Find(y => y.Fk_WorkItemId == x.Fk_WorkItemId).isPrime = x.isPrime);
             var specWorkItemToDelete = currentSpec.Specification_WorkItem.ToList().Where(x => newSpec.Specification_WorkItem.ToList().All(y => y.Fk_WorkItemId != x.Fk_WorkItemId));
-            specWorkItemToDelete.ToList().ForEach(x => specRepo.MarkDeleted<Specification_WorkItem>(x));
+            specWorkItemToDelete.ToList().ForEach(specRepo.MarkDeleted);
 
             //Spec Parents (Insert / Delete)
             var specParentsToInsert = newSpec.SpecificationParents.ToList().Where(x => currentSpec.SpecificationParents.ToList().All(y => y.Pk_SpecificationId != x.Pk_SpecificationId));
@@ -174,48 +184,48 @@ namespace Etsi.Ultimate.Business
 
             //Responsible Groups (History / Insert / Update / Delete)
             // Log an history entry if prime responsible group differ.
-            var newPrimeRespGroup = newSpec.SpecificationResponsibleGroups.Where(g => g.IsPrime).FirstOrDefault().Fk_commityId;
-            var oldPrimeRespGroup = currentSpec.SpecificationResponsibleGroups.Where(g => g.IsPrime).FirstOrDefault().Fk_commityId;
+            var newPrimeRespGroup = newSpec.SpecificationResponsibleGroups.FirstOrDefault(g => g.IsPrime).Fk_commityId;
+            var oldPrimeRespGroup = currentSpec.SpecificationResponsibleGroups.FirstOrDefault(g => g.IsPrime).Fk_commityId;
             if (newPrimeRespGroup != oldPrimeRespGroup)
             {
                 var communityMgr = ManagerFactory.Resolve<ICommunityManager>();
                 communityMgr.UoW = UoW;
                 var communities = communityMgr.GetCommunities();
 
-                var newCom = communities.Where(c => c.TbId == newPrimeRespGroup).FirstOrDefault();
-                var oldCom = communities.Where(c => c.TbId == oldPrimeRespGroup).FirstOrDefault();
+                var newCom = communities.FirstOrDefault(c => c.TbId == newPrimeRespGroup);
+                var oldCom = communities.FirstOrDefault(c => c.TbId == oldPrimeRespGroup);
                 if (newCom != null && oldCom != null)
                 {
-                    currentSpec.Histories.Add(new History()
+                    currentSpec.Histories.Add(new History
                     {
                         Fk_SpecificationId = currentSpec.Pk_SpecificationId,
                         CreationDate = DateTime.UtcNow,
                         Fk_PersonId = personId,
-                        HistoryText = String.Format(Utils.Localization.History_Specification_Changed_Prime_Group, newCom.TbName, oldCom.TbName),
+                        HistoryText = String.Format(Localization.History_Specification_Changed_Prime_Group, newCom.TbName, oldCom.TbName),
 
                     });
                 }
             }
 
             //Primary Responsible Group
-            var oldPrimaryResponsibleGroup = currentSpec.SpecificationResponsibleGroups.ToList().Where(x => x.IsPrime).FirstOrDefault();
-            var newPrimaryResponsibleGroup = newSpec.SpecificationResponsibleGroups.ToList().Where(x => x.IsPrime).FirstOrDefault();
+            var oldPrimaryResponsibleGroup = currentSpec.SpecificationResponsibleGroups.ToList().FirstOrDefault(x => x.IsPrime);
+            var newPrimaryResponsibleGroup = newSpec.SpecificationResponsibleGroups.ToList().FirstOrDefault(x => x.IsPrime);
             if (oldPrimaryResponsibleGroup != null && newPrimaryResponsibleGroup != null && oldPrimaryResponsibleGroup.Fk_commityId != newPrimaryResponsibleGroup.Fk_commityId)
                 oldPrimaryResponsibleGroup.Fk_commityId = newPrimaryResponsibleGroup.Fk_commityId;
 
             //Secondary Responsible Groups
-            var oldSecondaryResponsibleGroups = currentSpec.SpecificationResponsibleGroups.ToList().Where(x => !x.IsPrime);
-            var newSecondaryResponsibleGroups = newSpec.SpecificationResponsibleGroups.ToList().Where(x => !x.IsPrime);
+            var oldSecondaryResponsibleGroups = currentSpec.SpecificationResponsibleGroups.ToList().Where(x => !x.IsPrime).ToList();
+            var newSecondaryResponsibleGroups = newSpec.SpecificationResponsibleGroups.ToList().Where(x => !x.IsPrime).ToList();
 
             var specResponsibleGroupsToInsert = newSecondaryResponsibleGroups.Where(x => oldSecondaryResponsibleGroups.All(y => y.Fk_commityId != x.Fk_commityId));
             specResponsibleGroupsToInsert.ToList().ForEach(x => currentSpec.SpecificationResponsibleGroups.Add(x));
             var specResponsibleGroupsToDelete = oldSecondaryResponsibleGroups.Where(x => newSecondaryResponsibleGroups.All(y => y.Fk_commityId != x.Fk_commityId));
-            specResponsibleGroupsToDelete.ToList().ForEach(x => specRepo.MarkDeleted<SpecificationResponsibleGroup>(x));
+            specResponsibleGroupsToDelete.ToList().ForEach(specRepo.MarkDeleted);
 
             //Rapporteurs (History / Insert / Update / Delete)
             // Log an history entry if prime rapporteur changed.
-            var newPrimeRapporteur = newSpec.SpecificationRapporteurs.Where(r => r.IsPrime).FirstOrDefault();
-            var oldPrimeRapporteur = currentSpec.SpecificationRapporteurs.Where(r => r.IsPrime).FirstOrDefault();
+            var newPrimeRapporteur = newSpec.SpecificationRapporteurs.FirstOrDefault(r => r.IsPrime);
+            var oldPrimeRapporteur = currentSpec.SpecificationRapporteurs.FirstOrDefault(r => r.IsPrime);
 
             int? newPrimeRapporteurId = null;
             int? oldPrimeRapporteurId = null;
@@ -233,21 +243,21 @@ namespace Etsi.Ultimate.Business
                 var newRapporteurName = "(None)";
                 var oldRapporteurName = "(None)";
 
-                if (newPrimeRapporteurId.GetValueOrDefault() != 0)
+                if (newPrimeRapporteurId.HasValue)
                 {
                     var newRappPerson = personManager.FindPerson(newPrimeRapporteurId.Value);
                     newRapporteurName = newRappPerson.FIRSTNAME + " " + newRappPerson.LASTNAME;
                 }
-                if (oldPrimeRapporteurId.GetValueOrDefault() != 0)
+                if (oldPrimeRapporteurId.HasValue)
                 {
                     var oldRappPerson = personManager.FindPerson(oldPrimeRapporteurId.Value);
                     oldRapporteurName = oldRappPerson.FIRSTNAME + " " + oldRappPerson.LASTNAME;
                 }
 
-                currentSpec.Histories.Add(new History()
+                currentSpec.Histories.Add(new History
                 {
                     Fk_PersonId = personId,
-                    HistoryText = String.Format(Utils.Localization.History_Specification_Changed_Prime_Rapporteur, newRapporteurName, oldRapporteurName),
+                    HistoryText = String.Format(Localization.History_Specification_Changed_Prime_Rapporteur, newRapporteurName, oldRapporteurName),
                     CreationDate = DateTime.UtcNow,
                     Fk_SpecificationId = currentSpec.Pk_SpecificationId
 
@@ -259,7 +269,7 @@ namespace Etsi.Ultimate.Business
             var specRapporteursToUpdate = newSpec.SpecificationRapporteurs.ToList().Where(x => currentSpec.SpecificationRapporteurs.ToList().Any(y => y.Fk_RapporteurId == x.Fk_RapporteurId && y.IsPrime != x.IsPrime));
             specRapporteursToUpdate.ToList().ForEach(x => currentSpec.SpecificationRapporteurs.ToList().Find(y => y.Fk_RapporteurId == x.Fk_RapporteurId).IsPrime = x.IsPrime);
             var specRapporteursToDelete = currentSpec.SpecificationRapporteurs.ToList().Where(x => newSpec.SpecificationRapporteurs.ToList().All(y => y.Fk_RapporteurId != x.Fk_RapporteurId));
-            specRapporteursToDelete.ToList().ForEach(x => specRepo.MarkDeleted<SpecificationRapporteur>(x));
+            specRapporteursToDelete.ToList().ForEach(specRepo.MarkDeleted);
         }
 
         /// <summary>
@@ -269,13 +279,12 @@ namespace Etsi.Ultimate.Business
         /// <param name="report"></param>
         private void MailAlertNumberEdited(Specification spec, Report report)
         {
-            var specWorkitemManager = new SpecificationWorkItemManager() { UoW = UoW };
-            var roleManager = new RolesManager() { UoW = UoW };
-            var personManager = new PersonManager() { UoW = UoW };
-
+            var specWorkitemManager = new SpecificationWorkItemManager { UoW = UoW };
+            var roleManager = new RolesManager { UoW = UoW };
+            var personManager = new PersonManager { UoW = UoW };
 
             var subject = String.Format(Localization.Specification_ReferenceNumberAssigned_Subject, spec.Number);
-            var listSpecWILabel = specWorkitemManager.GetSpecificationWorkItemsLabels(spec.Pk_SpecificationId);
+            var listSpecWiLabel = specWorkitemManager.GetSpecificationWorkItemsLabels(spec.Pk_SpecificationId);
 
             //Send to workplan manager
             var workplanMgrsEmail = roleManager.GetWpMgrEmail();
@@ -286,9 +295,8 @@ namespace Etsi.Ultimate.Business
             var listSecretariesEmail = personManager.GetEmailSecretariesFromAPrimeResponsibleGroupByCommityId(primeResponsibleGroupCommityId);
             to = to.Concat(listSecretariesEmail).ToList();
 
-            var workItemLabel = spec.Specification_WorkItem;
-            var body = new SpecReferenceNumberAssignedMailTemplate((String.IsNullOrEmpty(spec.Number) ? "" : spec.Number), (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), listSpecWILabel);
-            var mailInstance = Utils.UtilsFactory.Resolve<IMailManager>();
+            var body = new SpecReferenceNumberAssignedMailTemplate((String.IsNullOrEmpty(spec.Number) ? "" : spec.Number), (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), listSpecWiLabel);
+            var mailInstance = UtilsFactory.Resolve<IMailManager>();
             if (!mailInstance.SendEmail(null, to, null, null, subject, body.TransformText()))
             {
                 report.LogError(Localization.Specification_ERR101_FailedToSendEmailToSecretaryAndWorkplanManager);

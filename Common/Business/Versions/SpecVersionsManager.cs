@@ -1,19 +1,19 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Etsi.Ultimate.Business.Security;
+using Etsi.Ultimate.Business.Specifications;
+using Etsi.Ultimate.Business.Versions.Interfaces;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
-using System;
-using System.Collections.Generic;
 using Etsi.Ultimate.Utils;
 
-namespace Etsi.Ultimate.Business.SpecVersionBusiness
+namespace Etsi.Ultimate.Business.Versions
 {
     public class SpecVersionsManager : ISpecVersionManager
     {
         public IUltimateUnitOfWork UoW { get; set; }
-
-        public SpecVersionsManager(){ }
 
         public List<SpecVersion> GetVersionsBySpecId(int specificationId)
         {
@@ -51,7 +51,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             releaseMgr.UoW = UoW;
             var releases = releaseMgr.GetAllReleases(personId).Key;
 
-            var specificationManager = new SpecificationManager {UoW = UoW};
+            var specificationManager = new SpecificationManager { UoW = UoW };
             //Get calculated rights
             var specReleaseRights = specificationManager.GetRightsForSpecRelease(personRights, personId, version.Specification, version.Release.Pk_ReleaseId, releases);
 
@@ -79,13 +79,12 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
 
         public List<Report> AllocateVersionFromMassivePromote(List<Specification> specifications, Release release, int personId)
         {
-            var specVersionAllocateAction = new SpecVersionAllocateAction {UoW = UoW};
+            var specVersionAllocateAction = new SpecVersionAllocateAction { UoW = UoW };
 
             var reports = new List<Report>();
-            Report r;
             foreach (var s in specifications)
             {
-                r = specVersionAllocateAction.AllocateVersion(personId,new SpecVersion()
+                Report r = specVersionAllocateAction.AllocateVersion(personId, new SpecVersion
                 {
                     Fk_SpecificationId = s.Pk_SpecificationId,
                     Fk_ReleaseId = release.Pk_ReleaseId,
@@ -126,11 +125,11 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
         public ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int majorVersion, int technicalVersion,
             int editorialVersion, string relatedTdoc)
         {
-            var svcResponse = new ServiceResponse<bool>() {Result = true};
+            var svcResponse = new ServiceResponse<bool> { Result = true };
 
             var repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             repo.UoW = UoW;
-            
+
             // First remove any existing version with this related TDoc
             var previousVersions = repo.GetVersionsByRelatedTDoc(relatedTdoc);
             previousVersions.ForEach(v => v.RelatedTDoc = null);
@@ -160,7 +159,7 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
             {
                 if (entity != null)
                 {
-                    var syncInfo = new SyncInfo {TerminalName = terminalName, Offline_PK_Id = entity.Pk_VersionId};
+                    var syncInfo = new SyncInfo { TerminalName = terminalName, Offline_PK_Id = entity.Pk_VersionId };
                     entity.SyncInfoes.Add(syncInfo);
 
                     var offlineRepo = RepositoryFactory.Resolve<IOfflineRepository>();
@@ -269,40 +268,26 @@ namespace Etsi.Ultimate.Business.SpecVersionBusiness
         /// <param name="sourceSpecVersion">Source SpecVersion</param>
         private void UpdateModifications(SpecVersion targetSpecVersion, SpecVersion sourceSpecVersion)
         {
-            if (targetSpecVersion.MajorVersion != sourceSpecVersion.MajorVersion)
-                targetSpecVersion.MajorVersion = sourceSpecVersion.MajorVersion;
-            if (targetSpecVersion.TechnicalVersion != sourceSpecVersion.TechnicalVersion)
-                targetSpecVersion.TechnicalVersion = sourceSpecVersion.TechnicalVersion;
-            if (targetSpecVersion.EditorialVersion != sourceSpecVersion.EditorialVersion)
-                targetSpecVersion.EditorialVersion = sourceSpecVersion.EditorialVersion;
-            if (targetSpecVersion.AchievedDate != sourceSpecVersion.AchievedDate)
-                targetSpecVersion.AchievedDate = sourceSpecVersion.AchievedDate;
-            if (targetSpecVersion.ExpertProvided != sourceSpecVersion.ExpertProvided)
-                targetSpecVersion.ExpertProvided = sourceSpecVersion.ExpertProvided;
-            if (targetSpecVersion.Location != sourceSpecVersion.Location)
-                targetSpecVersion.Location = sourceSpecVersion.Location;
-            if (targetSpecVersion.SupressFromSDO_Pub != sourceSpecVersion.SupressFromSDO_Pub)
-                targetSpecVersion.SupressFromSDO_Pub = sourceSpecVersion.SupressFromSDO_Pub;
-            if (targetSpecVersion.ForcePublication != sourceSpecVersion.ForcePublication)
-                targetSpecVersion.ForcePublication = sourceSpecVersion.ForcePublication;
-            if (targetSpecVersion.DocumentUploaded != sourceSpecVersion.DocumentUploaded)
-                targetSpecVersion.DocumentUploaded = sourceSpecVersion.DocumentUploaded;
-            if (targetSpecVersion.DocumentPassedToPub != sourceSpecVersion.DocumentPassedToPub)
-                targetSpecVersion.DocumentPassedToPub = sourceSpecVersion.DocumentPassedToPub;
-            if (targetSpecVersion.Multifile != sourceSpecVersion.Multifile)
-                targetSpecVersion.Multifile = sourceSpecVersion.Multifile;
-            if (targetSpecVersion.Source != sourceSpecVersion.Source)
-                targetSpecVersion.Source = sourceSpecVersion.Source;
-            if (targetSpecVersion.ETSI_WKI_ID != sourceSpecVersion.ETSI_WKI_ID)
-                targetSpecVersion.ETSI_WKI_ID = sourceSpecVersion.ETSI_WKI_ID;
-            if (targetSpecVersion.ProvidedBy != sourceSpecVersion.ProvidedBy)
-                targetSpecVersion.ProvidedBy = sourceSpecVersion.ProvidedBy;
-            if (targetSpecVersion.Fk_SpecificationId != sourceSpecVersion.Fk_SpecificationId)
-                targetSpecVersion.Fk_SpecificationId = sourceSpecVersion.Fk_SpecificationId;
-            if (targetSpecVersion.Fk_ReleaseId != sourceSpecVersion.Fk_ReleaseId)
-                targetSpecVersion.Fk_ReleaseId = sourceSpecVersion.Fk_ReleaseId;
-            if (targetSpecVersion.ETSI_WKI_Ref != sourceSpecVersion.ETSI_WKI_Ref)
-                targetSpecVersion.ETSI_WKI_Ref = sourceSpecVersion.ETSI_WKI_Ref;
+            if (targetSpecVersion == null || sourceSpecVersion == null)
+                return;
+
+            targetSpecVersion.MajorVersion = sourceSpecVersion.MajorVersion;
+            targetSpecVersion.TechnicalVersion = sourceSpecVersion.TechnicalVersion;
+            targetSpecVersion.EditorialVersion = sourceSpecVersion.EditorialVersion;
+            targetSpecVersion.AchievedDate = sourceSpecVersion.AchievedDate;
+            targetSpecVersion.ExpertProvided = sourceSpecVersion.ExpertProvided;
+            targetSpecVersion.Location = sourceSpecVersion.Location;
+            targetSpecVersion.SupressFromSDO_Pub = sourceSpecVersion.SupressFromSDO_Pub;
+            targetSpecVersion.ForcePublication = sourceSpecVersion.ForcePublication;
+            targetSpecVersion.DocumentUploaded = sourceSpecVersion.DocumentUploaded;
+            targetSpecVersion.DocumentPassedToPub = sourceSpecVersion.DocumentPassedToPub;
+            targetSpecVersion.Multifile = sourceSpecVersion.Multifile;
+            targetSpecVersion.Source = sourceSpecVersion.Source;
+            targetSpecVersion.ETSI_WKI_ID = sourceSpecVersion.ETSI_WKI_ID;
+            targetSpecVersion.ProvidedBy = sourceSpecVersion.ProvidedBy;
+            targetSpecVersion.Fk_SpecificationId = sourceSpecVersion.Fk_SpecificationId;
+            targetSpecVersion.Fk_ReleaseId = sourceSpecVersion.Fk_ReleaseId;
+            targetSpecVersion.ETSI_WKI_Ref = sourceSpecVersion.ETSI_WKI_Ref;
         }
         #endregion
     }

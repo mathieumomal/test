@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Specifications.Interfaces
 {
     public interface ISpecificationManager
     {
@@ -27,7 +23,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        KeyValuePair<Specification, UserRightsContainer> GetSpecificationById(int personId, int id);
+        KeyValuePair<DomainClasses.Specification, UserRightsContainer> GetSpecificationById(int personId, int id);
 
         /// <summary>
         /// Returns the list of specifications matching given criteria. Includes or not the Spec release details depending on
@@ -35,9 +31,9 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="personId"></param>
         /// <param name="searchObj"></param>
-        /// <param name="includeSpecRel"></param>
+        /// <param name="includeRelations"></param>
         /// <returns></returns>
-        KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj, bool includeRelations);
+        KeyValuePair<KeyValuePair<List<DomainClasses.Specification>, int>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObj, bool includeRelations);
 
         /// <summary>
         /// Returns TRUE and nothing if the specification number is valid and FALSE and the list of the errors if the specification is not valid :
@@ -61,7 +57,7 @@ namespace Etsi.Ultimate.Business
         /// - IsForPublication = FALSE
         /// </summary>
         /// <param name="spec"></param>
-        Specification PutSpecAsInhibitedToPromote(Specification spec);
+        DomainClasses.Specification PutSpecAsInhibitedToPromote(DomainClasses.Specification spec);
 
         /// <summary>
         /// Test specifications already exists :
@@ -69,16 +65,16 @@ namespace Etsi.Ultimate.Business
         /// if foredit = false -> we don't allow any spec founded
         /// </summary>
         /// <param name="specNumber">The spec number.</param>
-        /// <param name="forEdit"></param>
         /// <returns></returns>
         KeyValuePair<bool, List<string>> LookForNumber(string specNumber);
 
         /// <summary>
         /// Returns the list of allowed actions regarding each specification-release of the provided specification.
         /// </summary>
+        /// <param name="personId"></param>
         /// <param name="spec"></param>
         /// <returns></returns>
-        List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, Specification spec);        
+        List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, DomainClasses.Specification spec);        
 
         /// <summary>
         /// Returns the list of allowed actions regarding a providied specification-release.
@@ -89,7 +85,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="releaseId"></param>
         /// <param name="releases">List of all releases</param>
         /// <returns></returns>
-        KeyValuePair<Specification_Release, UserRightsContainer> GetRightsForSpecRelease(UserRightsContainer userRights, int personId, Specification spec, int releaseId, List<Release> releases);
+        KeyValuePair<Specification_Release, UserRightsContainer> GetRightsForSpecRelease(UserRightsContainer userRights, int personId, DomainClasses.Specification spec, int releaseId, List<Release> releases);
 
         /// <summary>
         /// Get a specRelease by specId and ReleaseId
@@ -104,7 +100,7 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="releaseId"></param>
         /// <returns></returns>
-        List<Specification> GetSpecsRelatedToARelease(int releaseId);
+        List<DomainClasses.Specification> GetSpecsRelatedToARelease(int releaseId);
 
         /// <summary>
         /// Get specifications corresponding to a list of ids
@@ -112,6 +108,6 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId"></param>
         /// <param name="ids"></param>
         /// <returns></returns>
-        KeyValuePair<List<Specification>, UserRightsContainer> GetSpecifications(int personId, List<int> ids);
+        KeyValuePair<List<DomainClasses.Specification>, UserRightsContainer> GetSpecifications(int personId, List<int> ids);
     }
 }

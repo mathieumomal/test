@@ -1,15 +1,16 @@
-﻿using Etsi.Ultimate.DomainClasses;
-using Etsi.Ultimate.Repositories;
-using System;
+﻿using System;
 using System.Linq;
+using Etsi.Ultimate.Business.Specifications.Interfaces;
+using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Specifications
 {
     public class SpecificationPromoteAction
     {
         #region Properties
 
-        public IUltimateUnitOfWork _uoW { get; set; }
+        public IUltimateUnitOfWork UoW { get; set; }
 
         #endregion
 
@@ -18,10 +19,10 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Constructor
         /// </summary>
-        /// <param name="UoW">Ultimate UnitOfWork</param>
-        public SpecificationPromoteAction(IUltimateUnitOfWork UoW)
+        /// <param name="uoW">Ultimate UnitOfWork</param>
+        public SpecificationPromoteAction(IUltimateUnitOfWork uoW)
         {
-            _uoW = UoW;
+            UoW = uoW;
         }
 
         #endregion
@@ -37,7 +38,7 @@ namespace Etsi.Ultimate.Business
         public void PromoteSpecification(int personId, int specificationId, int currentReleaseId)
         {
             var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
-            specMgr.UoW = _uoW;
+            specMgr.UoW = UoW;
             var spec = specMgr.GetSpecificationById(personId, specificationId).Key;
 
             // Get the rights for all the releases.
@@ -56,7 +57,7 @@ namespace Etsi.Ultimate.Business
                 throw new InvalidOperationException("There is no next release found in the system. Hence, you cannot promote specification");
 
             //Add new Spec Release record to promote to next release
-            spec.Specification_Release.Add(new Specification_Release() { isWithdrawn = false, CreationDate = DateTime.UtcNow, UpdateDate = DateTime.UtcNow, Fk_ReleaseId = nextRelease.Pk_ReleaseId });            
+            spec.Specification_Release.Add(new Specification_Release { isWithdrawn = false, CreationDate = DateTime.UtcNow, UpdateDate = DateTime.UtcNow, Fk_ReleaseId = nextRelease.Pk_ReleaseId });            
         }
 
         #endregion

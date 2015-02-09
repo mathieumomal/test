@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Etsi.Ultimate.Business.SpecVersionBusiness;
+using Etsi.Ultimate.Business.Specifications;
+using Etsi.Ultimate.Business.Versions;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;

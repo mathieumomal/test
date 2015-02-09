@@ -1,15 +1,15 @@
-﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Wordprocessing;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
+using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Etsi.Ultimate.Business.Versions.Interfaces;
 
-namespace Etsi.Ultimate.Business
+namespace Etsi.Ultimate.Business.Versions.QualityChecks
 {
     /// <summary>
     /// Quality checks for .docX files
@@ -18,7 +18,8 @@ namespace Etsi.Ultimate.Business
     {
         #region Variables
 
-        private Type[] trackedRevisionsElements = new Type[] {
+        private readonly Type[] _trackedRevisionsElements =
+        {
             typeof(CellDeletion),
             typeof(CellInsertion),
             typeof(CellMerge),
@@ -51,10 +52,10 @@ namespace Etsi.Ultimate.Business
             typeof(TableGridChange),
             typeof(TablePropertiesChange),
             typeof(TablePropertyExceptionsChange),
-            typeof(TableRowPropertiesChange),
+            typeof(TableRowPropertiesChange)
         };
 
-        private WordprocessingDocument wordProcessingDocument;
+        private readonly WordprocessingDocument _wordProcessingDocument;
 
         #endregion
 
@@ -66,7 +67,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="memoryStream">Memory Stream</param>
         public DocXQualityChecks(MemoryStream memoryStream)
         {
-            wordProcessingDocument = WordprocessingDocument.Open(memoryStream, false);
+            _wordProcessingDocument = WordprocessingDocument.Open(memoryStream, false);
         }
 
         #endregion
@@ -81,19 +82,21 @@ namespace Etsi.Ultimate.Business
         {
             try
             {
-                if (PartHasTrackedRevisions(wordProcessingDocument.MainDocumentPart)) //Check document body for tracking revisions
+                if (PartHasTrackedRevisions(_wordProcessingDocument.MainDocumentPart)) //Check document body for tracking revisions
                     return true;
-                foreach (var part in wordProcessingDocument.MainDocumentPart.HeaderParts)
-                    if (PartHasTrackedRevisions(part))
+                if (_wordProcessingDocument.MainDocumentPart.HeaderParts.Any(PartHasTrackedRevisions))
+                {
+                    return true;
+                }
+                if (_wordProcessingDocument.MainDocumentPart.FooterParts.Any(PartHasTrackedRevisions))
+                {
+                    return true;
+                }
+                if (_wordProcessingDocument.MainDocumentPart.EndnotesPart != null)
+                    if (PartHasTrackedRevisions(_wordProcessingDocument.MainDocumentPart.EndnotesPart))
                         return true;
-                foreach (var part in wordProcessingDocument.MainDocumentPart.FooterParts)
-                    if (PartHasTrackedRevisions(part))
-                        return true;
-                if (wordProcessingDocument.MainDocumentPart.EndnotesPart != null)
-                    if (PartHasTrackedRevisions(wordProcessingDocument.MainDocumentPart.EndnotesPart))
-                        return true;
-                if (wordProcessingDocument.MainDocumentPart.FootnotesPart != null)
-                    if (PartHasTrackedRevisions(wordProcessingDocument.MainDocumentPart.FootnotesPart))
+                if (_wordProcessingDocument.MainDocumentPart.FootnotesPart != null)
+                    if (PartHasTrackedRevisions(_wordProcessingDocument.MainDocumentPart.FootnotesPart))
                         return true;
                 return false;
             }
@@ -111,7 +114,7 @@ namespace Etsi.Ultimate.Business
         public bool IsHistoryVersionCorrect(string versionToCheck)
         {
             bool isHistoryVersionCorrect = false;
-            IEnumerable<Table> tables = wordProcessingDocument.MainDocumentPart.Document.Body.OfType<Table>();
+            IEnumerable<Table> tables = _wordProcessingDocument.MainDocumentPart.Document.Body.OfType<Table>();
             foreach (var table in tables)
             {
                 var headerRow = table.OfType<TableRow>().FirstOrDefault();
@@ -168,9 +171,9 @@ namespace Etsi.Ultimate.Business
         { 
             bool isCoverPageVersionCorrect = false;
 
-            string title = "3rd generation partnership project;"; //Search version on cover page till we found fixed 3GPP title
+            const string title = "3rd generation partnership project;"; //Search version on cover page till we found fixed 3GPP title
 
-            var paragraphs = wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+            var paragraphs = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
             foreach (var paragraph in paragraphs)
             {
                 var paragraphText = GetPlainText(paragraph).Replace("\r\n", String.Empty).Trim().ToLower();
@@ -205,7 +208,7 @@ namespace Etsi.Ultimate.Business
 
             string title = "3rd generation partnership project;"; //Search meeting date on cover page till we found fixed 3GPP title
 
-            var paragraphs = wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+            var paragraphs = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
             foreach (var paragraph in paragraphs)
             {
                 var paragraphText = GetPlainText(paragraph).Replace("\r\n", String.Empty).Trim().ToLower();
@@ -217,8 +220,8 @@ namespace Etsi.Ultimate.Business
                 }
                 else
                 {
-                    string regularExpressionPattern = @"\((\d{4}-\d{2})\)";
-                    Regex regex = new Regex(regularExpressionPattern);
+                    const string regularExpressionPattern = @"\((\d{4}-\d{2})\)";
+                    var regex = new Regex(regularExpressionPattern);
 
                     foreach (Match match in regex.Matches(paragraphText))
                     {
@@ -248,7 +251,7 @@ namespace Etsi.Ultimate.Business
             bool isCopyRightYearCorrect = false;
 
             //Find the copyright year, based on the 'copyrightaddon' bookmark
-            var paragraphs = wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+            var paragraphs = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
             foreach (var paragraph in paragraphs)
             {
                 var bookMarks = paragraph.Descendants().OfType<BookmarkStart>();
@@ -298,7 +301,7 @@ namespace Etsi.Ultimate.Business
             bool isFirstTwoLinesOfTitleCorrect = false;
 
             //Search title on cover page based on bookmarks page1 & page2 (title should be on page1 bookmark range)
-            var paragraphs = wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+            var paragraphs = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
 
             bool page1BookmarkStart = false;
             bool page2BookmarkStart = false;
@@ -340,7 +343,7 @@ namespace Etsi.Ultimate.Business
             bool isTitleCorrect = false;
 
             //Search title on cover page based on bookmarks page1 & page2 (title should be on page1 bookmark range)
-            var paragraphs = wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+            var paragraphs = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
 
             bool page1BookmarkStart = false;
             bool page2BookmarkStart = false;
@@ -382,7 +385,7 @@ namespace Etsi.Ultimate.Business
             bool isReleaseCorrect = false;
 
             //Search title on cover page based on bookmarks page1 & page2 (title should be on page1 bookmark range)
-            var paragraphs = wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+            var paragraphs = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
 
             bool page1BookmarkStart = false;
             bool page2BookmarkStart = false;
@@ -432,11 +435,11 @@ namespace Etsi.Ultimate.Business
         public bool IsReleaseStyleCorrect(string release)
         {
             bool isReleaseStyleCorrect = false;
-            StyleDefinitionsPart styleDefinitionPart = wordProcessingDocument.MainDocumentPart.StyleDefinitionsPart;
+            StyleDefinitionsPart styleDefinitionPart = _wordProcessingDocument.MainDocumentPart.StyleDefinitionsPart;
             bool isReleaseStyleExist = styleDefinitionPart.RootElement.Elements<Style>().Any(x => x.StyleId.Value.Equals("ZGSM", StringComparison.InvariantCultureIgnoreCase));
             if (isReleaseStyleExist)
             {
-                var paragraphs = wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+                var paragraphs = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
                 StringBuilder zgsmText = new StringBuilder();
                 foreach (var paragraph in paragraphs)
                 {
@@ -458,7 +461,7 @@ namespace Etsi.Ultimate.Business
         /// <returns>True/False</returns>
         public bool IsAutomaticNumberingPresent()
         {
-            return wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<NumberingId>().Any(x => x.Val != "0");
+            return _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<NumberingId>().Any(x => x.Val != "0");
         }
 
         /// <summary>
@@ -485,9 +488,9 @@ namespace Etsi.Ultimate.Business
         public void Dispose()
         {
             // close word and dispose reference
-            if (wordProcessingDocument != null)
+            if (_wordProcessingDocument != null)
             {
-                wordProcessingDocument.Close();
+                _wordProcessingDocument.Close();
             }
         }
 
@@ -502,7 +505,7 @@ namespace Etsi.Ultimate.Business
         /// <returns>True/False</returns>
         private bool PartHasTrackedRevisions(OpenXmlPart part)
         {
-            return part.RootElement.Descendants().Any(e => trackedRevisionsElements.Contains(e.GetType()));
+            return part.RootElement.Descendants().Any(e => _trackedRevisionsElements.Contains(e.GetType()));
         }
 
         /// <summary> 
@@ -512,31 +515,31 @@ namespace Etsi.Ultimate.Business
         /// <returns>Plain Text in XmlElement</returns> 
         private string GetPlainText(OpenXmlElement element)
         {
-            StringBuilder PlainTextInWord = new StringBuilder();
+            var plainTextInWord = new StringBuilder();
             foreach (OpenXmlElement section in element.Elements())
             {
                 switch (section.LocalName)
                 {
                     case "t":                           // Text 
-                        PlainTextInWord.Append(section.InnerText);
+                        plainTextInWord.Append(section.InnerText);
                         break;
                     case "cr":                          // Carriage return 
                     case "br":                          // Page break 
-                        PlainTextInWord.Append(Environment.NewLine);
+                        plainTextInWord.Append(Environment.NewLine);
                         break;
                     case "tab":                         // Tab
-                        PlainTextInWord.Append("\t");
+                        plainTextInWord.Append("\t");
                         break;
                     case "p":                           // Paragraph   
-                        PlainTextInWord.Append(GetPlainText(section));
-                        PlainTextInWord.AppendLine(Environment.NewLine);
+                        plainTextInWord.Append(GetPlainText(section));
+                        plainTextInWord.AppendLine(Environment.NewLine);
                         break;
                     default:
-                        PlainTextInWord.Append(GetPlainText(section));
+                        plainTextInWord.Append(GetPlainText(section));
                         break;
                 }
             }
-            return PlainTextInWord.ToString();
+            return plainTextInWord.ToString();
         }
 
         #endregion
