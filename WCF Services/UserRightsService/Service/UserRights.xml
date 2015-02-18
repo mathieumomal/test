@@ -30,10 +30,14 @@
 
       <!-- Eol account owners are logged users. If they do not have additional role, they don't have more rights than anonymous -->
       <UserRole value="EolAccountOwner">
-        <Right value="Release_ViewPartialList"/>
-        <Right value="Release_ViewLimitedDetails"/>
+        <Right value="General_ViewPersonalData"/>
+        <Right value="Release_ViewCompleteList"/>
+        <Right value="Release_ViewDetails"/>
         <Right value="Specification_ViewDetails"/>
         <Right value="Meeting_ViewMeetingList"/>
+        <Right value="Contribute_Restricted"/>
+        <Right value="Contribution_Upload"/>
+        <Right value="Contribution_Withdraw_Restricted" />
       </UserRole>
 
       <!-- 3GPPMember = Delegate = Logged user whose company is a 3GPPMember -->
