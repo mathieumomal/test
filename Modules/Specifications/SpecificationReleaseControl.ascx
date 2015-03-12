@@ -3,6 +3,6 @@
 <%@ Register TagPrefix="spec" TagName="SpecificationVersionListControl" Src="SpecificationVersionListControl.ascx" %>
 
 <asp:Panel CssClass="TabContent" ID="ReleasesSpecificationsPanel" runat="server">
-    <telerik:RadPanelBar runat="server" ID="rpbReleases" Width="100%" Height="540" ExpandMode="FullExpandedItem">
+    <telerik:RadPanelBar runat="server" ID="rpbReleases" Width="100%" ExpandMode="SingleExpandedItem">
     </telerik:RadPanelBar>
 </asp:Panel>

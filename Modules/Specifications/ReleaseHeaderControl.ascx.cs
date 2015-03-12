@@ -1,6 +1,7 @@
 ﻿using Etsi.Ultimate.DomainClasses;
 using System;
 using System.Linq;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
@@ -63,12 +64,20 @@ namespace Etsi.Ultimate.Module.Specifications
                     if (userRights.HasRight(Enum_UserRights.Remarks_ViewPrivate))
                     {
                         latestRemark = SpecRelease.Remarks.OrderByDescending(x => x.CreationDate ?? DateTime.MinValue).FirstOrDefault();
-                        lblLatestRemark.Text = ((latestRemark.CreationDate != null) ? string.Format("({0})", latestRemark.CreationDate.Value.ToString("yyyy-MM-dd")) : String.Empty) + latestRemark.RemarkText;
+                        if (latestRemark != null)
+                        {
+                            lblLatestRemark.Text = string.Format("({0}) {1}", (latestRemark.CreationDate != null) ? latestRemark.CreationDate.Value.ToString("yyyy-MM-dd") : String.Empty, UtilsFactory.TruncString(latestRemark.RemarkText, 50));
+                            lblLatestRemark.ToolTip = latestRemark.RemarkText;
+                        }
                     }
-                    else if (SpecRelease.Remarks.Where(r => r.IsPublic.GetValueOrDefault()).ToList() != null && SpecRelease.Remarks.Where(r => r.IsPublic.GetValueOrDefault()).ToList().Count > 0)
+                    else if (SpecRelease.Remarks.Where(r => r.IsPublic.GetValueOrDefault()).ToList().Count > 0)
                     {
                         latestRemark = SpecRelease.Remarks.Where(r => r.IsPublic.GetValueOrDefault()).OrderByDescending(x => x.CreationDate ?? DateTime.MinValue).FirstOrDefault();
-                        lblLatestRemark.Text = ((latestRemark.CreationDate != null) ? string.Format("({0})", latestRemark.CreationDate.Value.ToString("yyyy-MM-dd")) : String.Empty) + latestRemark.RemarkText;
+                        if (latestRemark != null)
+                        {
+                            lblLatestRemark.Text = string.Format("({0}) {1}", (latestRemark.CreationDate != null) ? latestRemark.CreationDate.Value.ToString("yyyy-MM-dd") : String.Empty, UtilsFactory.TruncString(latestRemark.RemarkText, 50));
+                            lblLatestRemark.ToolTip = latestRemark.RemarkText;
+                        }
                     }
                 }
                 imgRemarks.OnClientClick = "openRemarksPopup('specrelease','" + SpecRelease.Pk_Specification_ReleaseId + "','" + IsEditMode + "', 'Specification Release Remarks'); return false;";                    

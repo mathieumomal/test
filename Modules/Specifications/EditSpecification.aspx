@@ -53,7 +53,7 @@
                         <telerik:RadTab runat="server" PageViewID="RadPageHistory" Text="History" Selected="false"></telerik:RadTab>
                     </Tabs>
                 </telerik:RadTabStrip>
-                <telerik:RadMultiPage ID="rmpSpecEdit" runat="server" Width="100%" Height="560" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px">
+                <telerik:RadMultiPage ID="rmpSpecEdit" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px">
                     <telerik:RadPageView ID="RadPageGeneral" runat="server" Selected="true">
                         <table style="width: 100%">
                             <tr>

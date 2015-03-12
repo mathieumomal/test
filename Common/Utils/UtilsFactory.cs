@@ -73,5 +73,20 @@ namespace Etsi.Ultimate.Utils
             }
             return (bool)boo;
         }
+
+        /// <summary>
+        /// Method which return the string with 'length' characters + '...'
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static string TruncString(string text, int length)
+        {
+            if (text.Length > length)
+            {
+                return text.Substring(0, length) + "...";
+            }
+            return text;
+        }
     }
 }

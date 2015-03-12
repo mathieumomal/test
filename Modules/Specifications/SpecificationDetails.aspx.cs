@@ -93,8 +93,6 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 GetRequestParameters();
 
-                SetViewLayout();
-
                 LoadReleaseDetails();
 
                 //Load parent page to reflect changes
@@ -412,15 +410,6 @@ namespace Etsi.Ultimate.Module.Specifications
                 WithdrawBtn.OnClientClick = "openDefinitiveWithdrawlRadWin(); return false;";
                 WithdrawRadWindow.NavigateUrl += "?SpecId=" + SpecificationId.GetValueOrDefault();
             }
-        }
-
-        /// <summary>
-        /// Set the view boxes layouts
-        /// </summary>
-        private void SetViewLayout()
-        {
-            fixContainer.Height = new System.Web.UI.WebControls.Unit(600, UnitType.Pixel);
-            SpecificationDetailsRadMultiPage.Height = new System.Web.UI.WebControls.Unit(560, UnitType.Pixel);
         }
 
         protected void EditSpecificationDetails_Click(object sender, EventArgs e)

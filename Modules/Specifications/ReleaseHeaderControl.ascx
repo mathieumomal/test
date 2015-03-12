@@ -12,13 +12,18 @@
         overflow: hidden;
         display: inline;
     }
+
+    .remark {
+        text-align: left;
+        line-height: 15px;
+    }
 </style>
 <table id="tblReleaseHeader" style="width: 100%; vertical-align: middle;">
     <tr>
         <td style="width: 50%; text-align: left">
             <asp:Label ID="lblReleaseName" Font-Bold="true" runat="server" /><asp:Label ID="lblStatus" runat="server" />
         </td>
-        <td style="text-align: left">
+        <td class="remark">
             <asp:Label ID="Label1" Font-Bold="true" runat="server" Text="Latest Remark:" />
             <asp:Panel CssClass="hideOverflow" ID="pnlCover" runat="server">
                 <asp:Label ID="lblLatestRemark" runat="server" />
