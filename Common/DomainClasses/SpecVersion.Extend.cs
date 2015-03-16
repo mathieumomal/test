@@ -70,7 +70,7 @@ namespace Etsi.Ultimate.DomainClasses
                     if (this.DocumentPassedToPub != null)
                     {
                         val
-                            .Append("\nTransposed on : ")
+                            .Append("\nSent for ETSI transposition on : ")
                             .Append(String.Format("{0:yyyy-MM-dd}", this.DocumentPassedToPub));
                     }
                 }
