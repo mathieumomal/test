@@ -76,6 +76,7 @@
 	<add key="RapporteurDetailsAddress" value="http://webapp.etsi.org/teldir/ListPersDetails.asp?PersId="/>
 	<add key="FtpExportAddress" value="http://ftp.3gpp.org/Information/WORK_PLAN/"/>
 	<add key="FtpBasePhysicalPath" value="\\3gppweb.etsi.org\3gppftp$\" />
+    <add key="FtpBaseBackupPhysicalPath" value="D:\AppTrans\TempHDrive\" />
 	<add key="FtpBaseAddress" value="http://ftp.3gpp.org/" />
 	<add key="VersionsLatestFTPFolder" value="2014-09" />
 	<add key="TranspositionFolderPath" value="D:\AppTrans\transposition\"/>

@@ -47,6 +47,9 @@ namespace Etsi.Ultimate.Tests.Services
             if (!Directory.Exists(latestDraftsDirectory))
                 Directory.CreateDirectory(latestDraftsDirectory);
 
+            var backupDirectory = "Ftp\\Backup\\Specs\\latest-drafts";
+            if (!Directory.Exists(backupDirectory))
+                Directory.CreateDirectory(backupDirectory);
 
             // Set up a mock for the possible email sent.
             var mailMock = MockRepository.GenerateMock<IMailManager>();
@@ -63,6 +66,12 @@ namespace Etsi.Ultimate.Tests.Services
 
             // Clear the FTP. 
             foreach (var folder in Directory.GetDirectories(Environment.CurrentDirectory+"\\Ftp\\Specs"))
+            {
+                Directory.Delete(folder, true);
+            }
+
+            // Clear the Backup. 
+            foreach (var folder in Directory.GetDirectories(Environment.CurrentDirectory + "\\Ftp\\Backup"))
             {
                 Directory.Delete(folder, true);
             }
@@ -157,12 +166,17 @@ namespace Etsi.Ultimate.Tests.Services
             string createdFilePath="Ftp\\Specs\\latest-drafts\\22103-210.zip";
             File.Create(createdFilePath);
 
+            // Create version 22103Version110 in the backup folder
+            string createdBackupFilePath = "Ftp\\Backup\\Specs\\latest-drafts\\22103-210.zip";
+            File.Create(createdBackupFilePath);
+
             myVersion = CreateDraftVersion();
             myVersion.TechnicalVersion = 4;
             var fileToUpload = UPLOAD_PATH + "22103-200.zip";
             UploadDraft(myVersion, fileToUpload);
 
             Assert.IsFalse(File.Exists(createdFilePath));
+            Assert.IsFalse(File.Exists(createdBackupFilePath));
         }
 
         /// <summary>
@@ -175,6 +189,10 @@ namespace Etsi.Ultimate.Tests.Services
             string createdFilePath = "Ftp\\Specs\\latest-drafts\\22103-210.zip";
             File.Create(createdFilePath);
 
+            // Create version 22103Version210 in the backup folder
+            string createdBackupFilePath = "Ftp\\Backup\\Specs\\latest-drafts\\22103-210.zip";
+            File.Create(createdBackupFilePath);
+
             myVersion = CreateDraftVersion();
             var fileToUpload = UPLOAD_PATH + "22103-200.zip";
             UploadDraft(myVersion, fileToUpload);
@@ -182,6 +200,10 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsTrue(File.Exists(createdFilePath));
             Assert.IsTrue(File.Exists("Ftp\\Specs\\latest-drafts\\22103-210.zip"));
             Assert.IsFalse(File.Exists("Ftp\\Specs\\latest-drafts\\22103-200.zip"));
+
+            Assert.IsTrue(File.Exists(createdBackupFilePath));
+            Assert.IsTrue(File.Exists("Ftp\\Backup\\Specs\\latest-drafts\\22103-210.zip"));
+            Assert.IsFalse(File.Exists("Ftp\\Backup\\Specs\\latest-drafts\\22103-200.zip"));
         }
 
         [Test]

@@ -401,54 +401,22 @@ namespace Etsi.Ultimate.Business.Versions
             return validationReport;
         }
 
+        /// <summary>
+        /// Transfers to FTP.
+        /// </summary>
+        /// <param name="version">The version.</param>
+        /// <param name="path">The path.</param>
         private void TransferToFtp(SpecVersion version, string path)
         {
             string ftpBasePath = ConfigVariables.FtpBasePhysicalPath;
 
+            //Check validations
             if (String.IsNullOrEmpty(ftpBasePath))
                 throw new InvalidOperationException("FTP not yet configured");
 
-            string specNumber = version.Specification.Number;
-            string targetFolder = String.Format(ConstFtpArchivePath, ftpBasePath, specNumber.Split('.')[0], specNumber);
-            string zipFilePath = path;
-
-            string validFileName = GetValidFileName(version);
-            string zipFileName = validFileName + ".zip";
-            var versionPathToSave = Path.Combine(targetFolder, zipFileName);
-
-            bool isTargetFolderExists = Directory.Exists(targetFolder);
-            if (!isTargetFolderExists)
-                Directory.CreateDirectory(targetFolder);
-
-            //If it is not in zip format, compress & upload the same
-            if (!Path.GetExtension(path).Equals(".zip", StringComparison.InvariantCultureIgnoreCase))
-            {
-                Zip.Compress(path, Path.GetDirectoryName(path));
-                zipFilePath = Path.GetDirectoryName(path) + "\\" + Path.GetFileNameWithoutExtension(path) + ".zip";
-            }
-
-            File.Copy(zipFilePath, versionPathToSave);
-            version.Location = versionPathToSave.Replace(ConfigVariables.FtpBasePhysicalPath, ConfigVariables.FtpBaseAddress).Replace("\\", "/");
-
             var spec = version.Specification;
-            if (spec.IsActive && !spec.IsUnderChangeControl.GetValueOrDefault()) //Draft
-            {
-                string draftPath = String.Format(ConstFtpLatestDraftsPath, ftpBasePath);
-                bool isDraftPathExists = Directory.Exists(draftPath);
-                if (!isDraftPathExists)
-                    Directory.CreateDirectory(draftPath);
-
-                // We remove any existing draft.
-                var isLatestDraftVersionUploaded = ClearLatestDraftFolder(ftpBasePath, version);
-
-                //Create hard link in "latest-drafts" folder, only if latest version not present
-                if (!isLatestDraftVersionUploaded)
-                {
-                    string hardLinkPath = Path.Combine(draftPath, zipFileName);
-                    CreateHardLink(hardLinkPath, versionPathToSave, IntPtr.Zero);
-                }
-            }
-            else //Under Change Control
+            Meeting uploadMeeting = null;
+            if (spec.IsActive && spec.IsUnderChangeControl.GetValueOrDefault())
             {
                 if (!version.Source.HasValue)
                     throw new InvalidOperationException("Meeting must be provided");
@@ -456,30 +424,96 @@ namespace Etsi.Ultimate.Business.Versions
                 var meetingMgr = new MeetingManager();
                 meetingMgr.UoW = UoW;
 
-                var uploadMeeting = meetingMgr.GetMeetingById(version.Source.Value);
-                if(uploadMeeting == null)
-                    throw new InvalidOperationException("Meeting not found");
+                uploadMeeting = meetingMgr.GetMeetingById(version.Source.Value);
+                if (uploadMeeting == null)
+                    throw new InvalidOperationException("Meeting not found");            
+            }
 
+            string zipFilePath = path;
+            //If it is not in zip format, compress & upload the same
+            if (!Path.GetExtension(path).Equals(".zip", StringComparison.InvariantCultureIgnoreCase))
+            {
+                Zip.Compress(path, Path.GetDirectoryName(path));
+                zipFilePath = Path.GetDirectoryName(path) + "\\" + Path.GetFileNameWithoutExtension(path) + ".zip";
+            }
+
+            string validFileName = GetValidFileName(version);
+            string zipFileName = validFileName + ".zip";
+
+            string specNumber = version.Specification.Number;
+            string targetFolder = String.Format(ConstFtpArchivePath, ftpBasePath, specNumber.Split('.')[0], specNumber);
+            var versionPathToSave = Path.Combine(targetFolder, zipFileName);
+            version.Location = versionPathToSave.Replace(ConfigVariables.FtpBasePhysicalPath, ConfigVariables.FtpBaseAddress).Replace("\\", "/");
+
+            //Transfer to Actual Ftp
+            TransferToFtp(zipFilePath, ftpBasePath, zipFileName, uploadMeeting, version);
+
+            //Transfer to Backup Ftp
+            string ftpBackupBasePath = ConfigVariables.FtpBaseBackupPhysicalPath;
+            if (!String.IsNullOrEmpty(ftpBackupBasePath) && Directory.Exists(ftpBackupBasePath))
+                TransferToFtp(zipFilePath, ftpBackupBasePath, zipFileName, uploadMeeting, version);
+        }
+
+        /// <summary>
+        /// Transfers to FTP.
+        /// </summary>
+        /// <param name="sourceFile">The source file.</param>
+        /// <param name="destinationBasePath">The destination base path.</param>
+        /// <param name="destinationFileName">Name of the destination file.</param>
+        /// <param name="uploadMeeting">The upload meeting.</param>
+        /// <param name="version">The version.</param>
+        private void TransferToFtp(string sourceFile, string destinationBasePath, string destinationFileName, Meeting uploadMeeting, SpecVersion version)
+        {
+            string specNumber = version.Specification.Number;
+            string destinationFolder = String.Format(ConstFtpArchivePath, destinationBasePath, specNumber.Split('.')[0], specNumber);
+            var destinationFile = Path.Combine(destinationFolder, destinationFileName);
+
+            bool isTargetFolderExists = Directory.Exists(destinationFolder);
+            if (!isTargetFolderExists)
+                Directory.CreateDirectory(destinationFolder);
+
+            File.Copy(sourceFile, destinationFile, true);
+
+            var spec = version.Specification;
+            if (spec.IsActive && !spec.IsUnderChangeControl.GetValueOrDefault()) //Draft
+            {
+                string draftPath = String.Format(ConstFtpLatestDraftsPath, destinationBasePath);
+                bool isDraftPathExists = Directory.Exists(draftPath);
+                if (!isDraftPathExists)
+                    Directory.CreateDirectory(draftPath);
+
+                // We remove any existing draft.
+                var isLatestDraftVersionUploaded = ClearLatestDraftFolder(destinationBasePath, version);
+
+                //Create hard link in "latest-drafts" folder, only if latest version not present
+                if (!isLatestDraftVersionUploaded)
+                {
+                    string hardLinkPath = Path.Combine(draftPath, destinationFileName);
+                    CreateHardLink(hardLinkPath, destinationFile, IntPtr.Zero);
+                }
+            }
+            else //Under Change Control
+            {
                 if ((uploadMeeting.START_DATE != null))
                 {
                     var latestFolder = ConfigVariables.VersionsLatestFTPFolder;
                     if (String.IsNullOrEmpty(latestFolder))
                         latestFolder = String.Format("{0:0000}-{1:00}", uploadMeeting.START_DATE.Value.Year, uploadMeeting.START_DATE.Value.Month);
-                    var underChangeControlPath = String.Format(ConstFtpVersionsPath, ftpBasePath, latestFolder, version.Release.Code, spec.Number.Split('.')[0]);
+                    var underChangeControlPath = String.Format(ConstFtpVersionsPath, destinationBasePath, latestFolder, version.Release.Code, spec.Number.Split('.')[0]);
                     var isUccPathExists = Directory.Exists(underChangeControlPath);
                     if (!isUccPathExists)
                         Directory.CreateDirectory(underChangeControlPath);
 
-                    string fileName = Path.GetFileName(versionPathToSave);
+                    string fileName = Path.GetFileName(destinationFile);
                     string hardLinkPath = Path.Combine(underChangeControlPath, fileName);
 
-                    CreateHardLink(hardLinkPath, versionPathToSave, IntPtr.Zero);
+                    CreateHardLink(hardLinkPath, destinationFile, IntPtr.Zero);
 
                     //Delete all drafts for this version
-                    ClearLatestDraftFolder(ftpBasePath, version);
+                    ClearLatestDraftFolder(destinationBasePath, version);
 
                     //Create hard link in 'Latest' folder
-                    string latestFolderPath = String.Format(ConstFtpLatestPath, ftpBasePath, version.Release.Code, spec.Number.Split('.')[0]);
+                    string latestFolderPath = String.Format(ConstFtpLatestPath, destinationBasePath, version.Release.Code, spec.Number.Split('.')[0]);
                     bool isLatestFolderPathExists = Directory.Exists(latestFolderPath);
                     if (!isLatestFolderPathExists)
                         Directory.CreateDirectory(latestFolderPath);

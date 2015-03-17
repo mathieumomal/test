@@ -63,6 +63,19 @@ namespace Etsi.Ultimate.Utils
         }
 
         /// <summary>
+        /// Gets the FTP base physical path for backup.
+        /// </summary>
+        public static string FtpBaseBackupPhysicalPath
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["FtpBaseBackupPhysicalPath"] != null)
+                    return ConfigurationManager.AppSettings["FtpBaseBackupPhysicalPath"].ToString();
+                return "";
+            }
+        }
+
+        /// <summary>
         /// FTP Folder name to store latest versions
         /// </summary>
         public static string VersionsLatestFTPFolder
