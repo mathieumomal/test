@@ -79,7 +79,7 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Version should be greater that latest uploaded version for the release..
+        ///   Recherche une chaîne localisée semblable à Version should not be already exist..
         /// </summary>
         public static string Allocate_Error_Version_Not_Allowed {
             get {
@@ -376,7 +376,7 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Version does not exist. So, Tdoc cannot be linked..
+        ///   Recherche une chaîne localisée semblable à Version does not exist. So, Tdoc cannot be linked..
         /// </summary>
         public static string Version_Tdoc_Link_Version_Not_Found {
             get {

@@ -267,9 +267,7 @@ namespace Etsi.Ultimate.Business.Versions
                 // Check allocation
                 if (versionsForSpecRelease.FirstOrDefault(v => v.MajorVersion == version.MajorVersion && v.TechnicalVersion == version.TechnicalVersion && v.EditorialVersion == version.EditorialVersion) == null)
                     throw new InvalidOperationException(Localization.Upload_Version_Error_Previous_Version);
-
             }
-
 
             // If version is a draft, then it's major number must not be higher than 2.
             if (!version.Specification.IsUnderChangeControl.GetValueOrDefault() && version.MajorVersion > 2)

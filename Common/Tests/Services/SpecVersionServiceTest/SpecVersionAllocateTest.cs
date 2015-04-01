@@ -114,13 +114,8 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
             Assert.AreEqual(Utils.Localization.Allocate_Error_SpecRelease_Does_Not_Exist, result.ErrorList.First());
         }
         
-        /**
-         * In database, version 13.1.0 already exists, therefor it should not be able to allocate 13.0.0
-         */
-        [TestCase(1,4,3)]
-        [TestCase(13,0,0)]
-        [TestCase(13,1,0)]
-        public void Allocation_FailsIfVersionIsSmallerThanExistingOneForTheRelease(int major, int technical, int editorial)
+        [TestCase(13, 0, 1, Description = "In database, version 13.0.1 already exists, therefor it should not be able to allocate 13.0.1")]
+        public void Allocation_FailsIfVersionAlreadyExist(int major, int technical, int editorial)
         {
             myVersion.Fk_SpecificationId = EffortConstants.SPECIFICATION_ACTIVE_ID;
             myVersion.Fk_ReleaseId = EffortConstants.RELEASE_OPEN_ID;
@@ -132,8 +127,6 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
             Assert.AreEqual(1, result.GetNumberOfErrors());
             Assert.AreEqual(Utils.Localization.Allocate_Error_Version_Not_Allowed, result.ErrorList.First());
         }
-
-        
 
         private SpecVersion CreateVersion()
         {

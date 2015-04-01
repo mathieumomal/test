@@ -101,17 +101,15 @@ namespace Etsi.Ultimate.Business.Versions
             var versions = versionManager.GetVersionsForASpecRelease(version.Fk_SpecificationId.Value, version.Fk_ReleaseId.Value);
             if (versions.Count > 0)
             {
-                var biggestVersion = versions.OrderByDescending(v => v.MajorVersion).ThenByDescending(v => v.TechnicalVersion).ThenByDescending(v => v.EditorialVersion).First();
-                if (biggestVersion.MajorVersion > version.MajorVersion
-                     || (biggestVersion.MajorVersion == version.MajorVersion && biggestVersion.TechnicalVersion > version.TechnicalVersion)
-                     || (biggestVersion.MajorVersion == version.MajorVersion && biggestVersion.TechnicalVersion == version.TechnicalVersion && biggestVersion.EditorialVersion >= version.EditorialVersion))
+                if (
+                    versions.Any(
+                        x =>x.MajorVersion == version.MajorVersion && 
+                            x.TechnicalVersion == version.TechnicalVersion &&
+                            x.EditorialVersion == version.EditorialVersion))
                 {
                     throw new InvalidOperationException(Utils.Localization.Allocate_Error_Version_Not_Allowed);
                 }
             }
-
-
-
         }
     }
 }
