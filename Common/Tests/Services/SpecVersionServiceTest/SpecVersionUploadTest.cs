@@ -217,18 +217,17 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         /// <summary>
-        /// Version 13.1.0 is already uploaded, so system should not allow version 13.0.2 to be uploaded.
+        /// Version 13.1.0 is already uploaded, so system should allow version 13.0.2 to be uploaded.
         /// </summary>
         [Test]
-        public void CheckVersion_MustNotAllowToUploadNonAllocatedPreviousVersion()
+        public void CheckVersion_MustAllowToUploadNonAllocatedPreviousVersion()
         {
             myVersion.TechnicalVersion = 0;
             myVersion.EditorialVersion = 2;
             var fileToUpload = UPLOAD_PATH + "22103-200.zip";
 
             var checkResults = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
-            Assert.AreEqual(1, checkResults.Report.GetNumberOfErrors());
-            Assert.IsTrue(checkResults.Report.ErrorList.First().Contains(Utils.Localization.Upload_Version_Error_Previous_Version));
+            Assert.AreEqual(0, checkResults.Report.GetNumberOfErrors());
         }
 
        

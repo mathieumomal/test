@@ -303,9 +303,6 @@
   <data name="Upload_Version_Error_Draft_Major_Too_High" xml:space="preserve">
     <value>Draft versions can not have Major number higher than 2.</value>
   </data>
-  <data name="Upload_Version_Error_Previous_Version" xml:space="preserve">
-    <value>You are not allowed to upload a lower version than an already uploaded one, except if it has been allocated.</value>
-  </data>
   <data name="ChangeRequest_Create_AlreadyExists" xml:space="preserve">
     <value>ChangeRequest {0}, revision {1} already exists for indicated specification.</value>
   </data>

@@ -88,8 +88,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specVersionUploadAction = new SpecVersionUploadAction();
-                specVersionUploadAction.UoW = uoW;
+                var specVersionUploadAction = new SpecVersionUploadAction {UoW = uoW};
                 return specVersionUploadAction.CheckVersionForUpload(personId, version, path);
             }
         }
@@ -105,8 +104,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specVersionUploadAction = new SpecVersionUploadAction();
-                specVersionUploadAction.UoW = uoW;
+                var specVersionUploadAction = new SpecVersionUploadAction {UoW = uoW};
                 var result = specVersionUploadAction.UploadVersion(personId, version, token);
                 uoW.Save();
                 return result;

@@ -63,10 +63,10 @@ namespace Etsi.Ultimate.Business.Versions
                     CheckPersonRightToUploadVersion(version, personId);
                     CheckUploadAllowed(version, path);
 
-                    Report validationReport = svcResponse.Report;
+                    var validationReport = svcResponse.Report;
                     var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path);
                     var fileExtension = String.Empty;
-                    string fileToAnalyzePath = String.Empty;
+                    var fileToAnalyzePath = String.Empty;
                     
 
                     //[1] Check the file name
@@ -74,7 +74,7 @@ namespace Etsi.Ultimate.Business.Versions
                     if (!fileNameWithoutExtension.Equals(validFileName, StringComparison.InvariantCultureIgnoreCase))
                         validationReport.LogWarning(String.Format("Invalid file name. System will change this to '{0}'", validFileName));
 
-                    bool allowToRunQualityChecks = false;
+                    var allowToRunQualityChecks = false;
                     //[2] If file is in .zip format, check that .zip file and internal word file must have same name.
                     if (Path.GetExtension(path).Equals(".zip", StringComparison.InvariantCultureIgnoreCase))
                     {
@@ -141,7 +141,7 @@ namespace Etsi.Ultimate.Business.Versions
                             if (community != null)
                                 tsgTitle = GetParentTSG(community, communities).TbTitle.Replace("Technical Specification Group -", "Technical Specification Group");
                         }
-                        string versionStr = String.Format("{0}.{1}.{2}", version.MajorVersion.Value, version.TechnicalVersion.Value, version.EditorialVersion.Value);
+                        var versionStr = String.Format("{0}.{1}.{2}", version.MajorVersion.Value, version.TechnicalVersion.Value, version.EditorialVersion.Value);
 
                         if (version.Source.HasValue)
                         {
@@ -229,14 +229,15 @@ namespace Etsi.Ultimate.Business.Versions
 
             if (!specReleaseRights.Value.HasRight(Enum_UserRights.Versions_Upload))
             {
-                throw new InvalidOperationException(Utils.Localization.RightError);
+                throw new InvalidOperationException(Localization.RightError);
             }
         }
 
         /// <summary>
         /// Checks that user has right to perform the upload, in so far as:
-        /// - Version does not already exist
+        /// - Version is not already uploaded
         /// - if version is a draft, it's major version is less or equal 2.
+        /// Notes : version could be lower or greater than existing ones, already allocated or not, but should not be already uploaded
         /// </summary>
         /// <param name="version"></param>
         /// <param name="path"></param>
@@ -246,6 +247,7 @@ namespace Etsi.Ultimate.Business.Versions
             var versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
             versionMgr.UoW = UoW;
 
+            //Check if version already uploaded
             var versionsForSpecRelease = versionMgr.GetVersionsForASpecRelease(version.Fk_SpecificationId.Value, version.Fk_ReleaseId.Value);
             if (versionsForSpecRelease.Any(v => v.MajorVersion == version.MajorVersion 
                                                 && v.TechnicalVersion == version.TechnicalVersion 
@@ -253,20 +255,7 @@ namespace Etsi.Ultimate.Business.Versions
                                                 && !string.IsNullOrEmpty(v.Location)))
             {
                 var versionStr = version.MajorVersion + "." + version.TechnicalVersion + "." + version.EditorialVersion;
-                throw new InvalidOperationException(String.Format(Utils.Localization.Upload_Version_Error_Version_Already_Exists, versionStr));
-            }
-
-            // Cannot upload a version lower than existing version, except if it's been allocated.
-            var highestUploadedVersion = versionsForSpecRelease.Where(v => !string.IsNullOrEmpty(v.Location))
-                .OrderByDescending(v => v.MajorVersion).ThenByDescending(v => v.TechnicalVersion).ThenByDescending(v => v.EditorialVersion)
-                .FirstOrDefault();
-            if (highestUploadedVersion != null && (version.MajorVersion < highestUploadedVersion.MajorVersion
-                || version.MajorVersion == highestUploadedVersion.MajorVersion && version.TechnicalVersion < highestUploadedVersion.TechnicalVersion
-                || version.MajorVersion == highestUploadedVersion.MajorVersion && version.TechnicalVersion == highestUploadedVersion.TechnicalVersion && version.EditorialVersion < highestUploadedVersion.EditorialVersion))
-            {
-                // Check allocation
-                if (versionsForSpecRelease.FirstOrDefault(v => v.MajorVersion == version.MajorVersion && v.TechnicalVersion == version.TechnicalVersion && v.EditorialVersion == version.EditorialVersion) == null)
-                    throw new InvalidOperationException(Localization.Upload_Version_Error_Previous_Version);
+                throw new InvalidOperationException(String.Format(Localization.Upload_Version_Error_Version_Already_Exists, versionStr));
             }
 
             // If version is a draft, then it's major number must not be higher than 2.
@@ -326,7 +315,7 @@ namespace Etsi.Ultimate.Business.Versions
             }
         }
 
-        public Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTS)
+        private Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTs)
         {
             Report validationReport;
 
@@ -334,14 +323,14 @@ namespace Etsi.Ultimate.Business.Versions
             {
                 using (IQualityChecks qualityChecks = new DocXQualityChecks(memoryStream))
                 {
-                    validationReport = ValidateDocument(qualityChecks, version, title, release, meetingDate, tsgTitle, isTS);
+                    validationReport = ValidateDocument(qualityChecks, version, title, release, meetingDate, tsgTitle, isTs);
                 }
             }
             else
             {
                 using (IQualityChecks qualityChecks = new DocQualityChecks(memoryStream, temporaryFolder))
                 {
-                    validationReport = ValidateDocument(qualityChecks, version, title, release, meetingDate, tsgTitle, isTS);
+                    validationReport = ValidateDocument(qualityChecks, version, title, release, meetingDate, tsgTitle, isTs);
                 }
             }
 
@@ -406,7 +395,7 @@ namespace Etsi.Ultimate.Business.Versions
         /// <param name="path">The path.</param>
         private void TransferToFtp(SpecVersion version, string path)
         {
-            string ftpBasePath = ConfigVariables.FtpBasePhysicalPath;
+            var ftpBasePath = ConfigVariables.FtpBasePhysicalPath;
 
             //Check validations
             if (String.IsNullOrEmpty(ftpBasePath))
@@ -419,15 +408,14 @@ namespace Etsi.Ultimate.Business.Versions
                 if (!version.Source.HasValue)
                     throw new InvalidOperationException("Meeting must be provided");
 
-                var meetingMgr = new MeetingManager();
-                meetingMgr.UoW = UoW;
+                var meetingMgr = new MeetingManager {UoW = UoW};
 
                 uploadMeeting = meetingMgr.GetMeetingById(version.Source.Value);
                 if (uploadMeeting == null)
                     throw new InvalidOperationException("Meeting not found");            
             }
 
-            string zipFilePath = path;
+            var zipFilePath = path;
             //If it is not in zip format, compress & upload the same
             if (!Path.GetExtension(path).Equals(".zip", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -435,11 +423,11 @@ namespace Etsi.Ultimate.Business.Versions
                 zipFilePath = Path.GetDirectoryName(path) + "\\" + Path.GetFileNameWithoutExtension(path) + ".zip";
             }
 
-            string validFileName = GetValidFileName(version);
-            string zipFileName = validFileName + ".zip";
+            var validFileName = GetValidFileName(version);
+            var zipFileName = validFileName + ".zip";
 
-            string specNumber = version.Specification.Number;
-            string targetFolder = String.Format(ConstFtpArchivePath, ftpBasePath, specNumber.Split('.')[0], specNumber);
+            var specNumber = version.Specification.Number;
+            var targetFolder = String.Format(ConstFtpArchivePath, ftpBasePath, specNumber.Split('.')[0], specNumber);
             var versionPathToSave = Path.Combine(targetFolder, zipFileName);
             version.Location = versionPathToSave.Replace(ConfigVariables.FtpBasePhysicalPath, ConfigVariables.FtpBaseAddress).Replace("\\", "/");
 
@@ -447,7 +435,7 @@ namespace Etsi.Ultimate.Business.Versions
             TransferToFtp(zipFilePath, ftpBasePath, zipFileName, uploadMeeting, version);
 
             //Transfer to Backup Ftp
-            string ftpBackupBasePath = ConfigVariables.FtpBaseBackupPhysicalPath;
+            var ftpBackupBasePath = ConfigVariables.FtpBaseBackupPhysicalPath;
             if (!String.IsNullOrEmpty(ftpBackupBasePath) && Directory.Exists(ftpBackupBasePath))
                 TransferToFtp(zipFilePath, ftpBackupBasePath, zipFileName, uploadMeeting, version);
         }
@@ -462,11 +450,11 @@ namespace Etsi.Ultimate.Business.Versions
         /// <param name="version">The version.</param>
         private void TransferToFtp(string sourceFile, string destinationBasePath, string destinationFileName, Meeting uploadMeeting, SpecVersion version)
         {
-            string specNumber = version.Specification.Number;
-            string destinationFolder = String.Format(ConstFtpArchivePath, destinationBasePath, specNumber.Split('.')[0], specNumber);
+            var specNumber = version.Specification.Number;
+            var destinationFolder = String.Format(ConstFtpArchivePath, destinationBasePath, specNumber.Split('.')[0], specNumber);
             var destinationFile = Path.Combine(destinationFolder, destinationFileName);
 
-            bool isTargetFolderExists = Directory.Exists(destinationFolder);
+            var isTargetFolderExists = Directory.Exists(destinationFolder);
             if (!isTargetFolderExists)
                 Directory.CreateDirectory(destinationFolder);
 
@@ -475,8 +463,8 @@ namespace Etsi.Ultimate.Business.Versions
             var spec = version.Specification;
             if (spec.IsActive && !spec.IsUnderChangeControl.GetValueOrDefault()) //Draft
             {
-                string draftPath = String.Format(ConstFtpLatestDraftsPath, destinationBasePath);
-                bool isDraftPathExists = Directory.Exists(draftPath);
+                var draftPath = String.Format(ConstFtpLatestDraftsPath, destinationBasePath);
+                var isDraftPathExists = Directory.Exists(draftPath);
                 if (!isDraftPathExists)
                     Directory.CreateDirectory(draftPath);
 
@@ -486,7 +474,7 @@ namespace Etsi.Ultimate.Business.Versions
                 //Create hard link in "latest-drafts" folder, only if latest version not present
                 if (!isLatestDraftVersionUploaded)
                 {
-                    string hardLinkPath = Path.Combine(draftPath, destinationFileName);
+                    var hardLinkPath = Path.Combine(draftPath, destinationFileName);
                     CreateHardLink(hardLinkPath, destinationFile, IntPtr.Zero);
                 }
             }
@@ -502,8 +490,8 @@ namespace Etsi.Ultimate.Business.Versions
                     if (!isUccPathExists)
                         Directory.CreateDirectory(underChangeControlPath);
 
-                    string fileName = Path.GetFileName(destinationFile);
-                    string hardLinkPath = Path.Combine(underChangeControlPath, fileName);
+                    var fileName = Path.GetFileName(destinationFile);
+                    var hardLinkPath = Path.Combine(underChangeControlPath, fileName);
 
                     CreateHardLink(hardLinkPath, destinationFile, IntPtr.Zero);
 
@@ -511,11 +499,11 @@ namespace Etsi.Ultimate.Business.Versions
                     ClearLatestDraftFolder(destinationBasePath, version);
 
                     //Create hard link in 'Latest' folder
-                    string latestFolderPath = String.Format(ConstFtpLatestPath, destinationBasePath, version.Release.Code, spec.Number.Split('.')[0]);
-                    bool isLatestFolderPathExists = Directory.Exists(latestFolderPath);
+                    var latestFolderPath = String.Format(ConstFtpLatestPath, destinationBasePath, version.Release.Code, spec.Number.Split('.')[0]);
+                    var isLatestFolderPathExists = Directory.Exists(latestFolderPath);
                     if (!isLatestFolderPathExists)
                         Directory.CreateDirectory(latestFolderPath);
-                    string hardLinkPathInLatestFolder = Path.Combine(latestFolderPath, fileName);
+                    var hardLinkPathInLatestFolder = Path.Combine(latestFolderPath, fileName);
                     CreateHardLink(hardLinkPathInLatestFolder, hardLinkPath, IntPtr.Zero);
                 }
             }
@@ -678,7 +666,7 @@ namespace Etsi.Ultimate.Business.Versions
         /// <param name="version"></param>
         /// <param name="report"></param>
         /// <param name="personId"></param>
-        public void MailVersionAuthor(Specification spec, SpecVersion version, Report report, int personId)
+        private void MailVersionAuthor(Specification spec, SpecVersion version, Report report, int personId)
         {
             var to = new List<string>();
 
