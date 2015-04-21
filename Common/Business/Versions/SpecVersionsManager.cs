@@ -116,13 +116,16 @@ namespace Etsi.Ultimate.Business.Versions
         /// <summary>
         /// Link TDoc to Version
         /// </summary>
+        /// <param name="personId"></param>
         /// <param name="specId">The specification identifier</param>
+        /// <param name="releaseId"></param>
+        /// <param name="meetingId"></param>
         /// <param name="majorVersion">Major version</param>
         /// <param name="technicalVersion">Technical version</param>
         /// <param name="editorialVersion">Editorial version</param>
         /// <param name="relatedTdoc">Related Tdoc</param>
         /// <returns>Success/Failure status</returns>
-        public ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int majorVersion, int technicalVersion,
+        public ServiceResponse<bool> AllocateOrAssociateDraftVersion(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion,
             int editorialVersion, string relatedTdoc)
         {
             var svcResponse = new ServiceResponse<bool> { Result = true };
@@ -136,9 +139,132 @@ namespace Etsi.Ultimate.Business.Versions
 
             var version = repo.GetVersion(specId, majorVersion, technicalVersion, editorialVersion);
             if (version == null)
-                svcResponse.Report.LogInfo(Localization.Version_Tdoc_Link_Version_Not_Found);
+            {
+                //Version don't exist -> ALLOCATION
+                var specVersionAllocateAction = new SpecVersionAllocateAction { UoW = UoW };
+                version = new SpecVersion
+                {
+                    Fk_ReleaseId = releaseId,
+                    Fk_SpecificationId = specId,
+                    MajorVersion = majorVersion,
+                    TechnicalVersion = technicalVersion,
+                    EditorialVersion = editorialVersion,
+                    Source = meetingId,
+                    ProvidedBy = personId,
+                    RelatedTDoc = relatedTdoc
+                };
+                var allocateVersionSvcResponse = specVersionAllocateAction.AllocateVersion(personId, version);
+                svcResponse.Report.ErrorList.AddRange(allocateVersionSvcResponse.Report.ErrorList);
+                svcResponse.Report.WarningList.AddRange(allocateVersionSvcResponse.Report.WarningList);
+                svcResponse.Report.InfoList.AddRange(allocateVersionSvcResponse.Report.InfoList);
+            }
             else
+            {
+                //Version exist -> ASSOCIATION
                 version.RelatedTDoc = relatedTdoc;
+            }
+
+            if (svcResponse.Report.GetNumberOfErrors() > 0)
+                svcResponse.Result = false;
+            return svcResponse;
+        }
+
+        /// <summary>
+        /// Checks the draft creation or association.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specId">The spec identifier.</param>
+        /// <param name="releaseId">The release identifier.</param>
+        /// <param name="majorVersion">The major version.</param>
+        /// <param name="technicalVersion">The technical version.</param>
+        /// <param name="editorialVersion">The editorial version.</param>
+        /// <returns>Draft creation or association status along with validation failures</returns>
+        public ServiceResponse<bool> CheckDraftCreationOrAssociation(int personId, int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion)
+        {
+            var svcResponse = new ServiceResponse<bool> { Result = true };
+
+            //[1] Spec should exist
+            var specRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            specRepo.UoW = UoW;
+            var spec = specRepo.Find(specId);
+            if (spec == null)
+            {
+                svcResponse.Report.LogError(Localization.Error_Spec_Does_Not_Exist);
+                svcResponse.Result = false;
+                return svcResponse;
+            }
+
+            //[2] Release should exists
+            var releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+            releaseRepo.UoW = UoW;
+            var release = releaseRepo.Find(releaseId);
+            if (release == null)
+            {
+                svcResponse.Report.LogError(Localization.Error_Release_Does_Not_Exist);
+                svcResponse.Result = false;
+                return svcResponse;
+            }
+
+            //[3] Spec should be in draft mode (Active & Not UCC => Draft)
+            if (!(spec.IsActive && !spec.IsUnderChangeControl.GetValueOrDefault()))
+            {
+                svcResponse.Report.LogError(Localization.Error_Spec_Draft_Status);
+                svcResponse.Result = false;
+                return svcResponse;
+            }
+
+            //[4] Spec-Release should exist
+            var specRelease = specRepo.GetSpecificationReleaseByReleaseIdAndSpecId(specId, releaseId, false);
+            if (specRelease == null)
+            {
+                svcResponse.Report.LogError(Localization.Allocate_Error_SpecRelease_Does_Not_Exist);
+                svcResponse.Result = false;
+                return svcResponse;
+            }
+
+            //[5] If version is already allocated or uploaded, system should stop here
+            var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            specVersionRepo.UoW = UoW;
+            var versions = specVersionRepo.GetVersionsBySpecId(specId);
+            if (versions.Exists(x => x.MajorVersion == majorVersion && x.TechnicalVersion == technicalVersion && x.EditorialVersion == editorialVersion))
+            {
+                svcResponse.Result = true;
+                return svcResponse;
+            }
+
+            //[6] Else, check version is latest to allocate
+            if (versions.Count > 0)
+            {
+                var latestVersion = versions.OrderByDescending(x => x.MajorVersion)
+                                            .ThenByDescending(y => y.TechnicalVersion)
+                                            .ThenByDescending(z => z.EditorialVersion)
+                                            .FirstOrDefault();
+                if ((latestVersion != null) &&
+                    ((latestVersion.MajorVersion > majorVersion) ||
+                     ((latestVersion.MajorVersion == majorVersion) && (latestVersion.TechnicalVersion > technicalVersion)) ||
+                     ((latestVersion.MajorVersion == majorVersion) && (latestVersion.TechnicalVersion == technicalVersion) && (latestVersion.EditorialVersion >= editorialVersion))))
+                {
+                    svcResponse.Report.LogError(String.Format(Localization.Error_Lower_Version, latestVersion.MajorVersion, latestVersion.TechnicalVersion, latestVersion.EditorialVersion));
+                    svcResponse.Result = false;
+                    return svcResponse;
+                }
+            }
+
+            //[7] Version is not allocated and we have necessary right to performed action (simulation)
+            // User should have the right to allocate for this release
+            var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
+            rightsMgr.UoW = UoW;
+
+            var userRights = rightsMgr.GetRights(personId);
+            if (!(spec.IsActive && (!specRelease.isWithdrawn.GetValueOrDefault())
+                  && (release.Enum_ReleaseStatus.Code != Enum_ReleaseStatus.Closed)
+                  && userRights.HasRight(Enum_UserRights.Versions_Allocate)))
+            {
+                svcResponse.Report.LogError(Localization.RightError);
+                svcResponse.Result = false;
+                return svcResponse;
+            }
+
 
             return svcResponse;
         }

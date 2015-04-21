@@ -3,6 +3,11 @@ using Etsi.Ultimate.Utils.Core;
 using Etsi.Ultimate.WCF.Interface;
 using Etsi.Ultimate.WCF.Interface.Entities;
 using System.Collections.Generic;
+using ChangeRequest = Etsi.Ultimate.WCF.Interface.Entities.ChangeRequest;
+using Release = Etsi.Ultimate.WCF.Interface.Entities.Release;
+using Specification = Etsi.Ultimate.WCF.Interface.Entities.Specification;
+using SpecVersion = Etsi.Ultimate.WCF.Interface.Entities.SpecVersion;
+using WorkItem = Etsi.Ultimate.WCF.Interface.Entities.WorkItem;
 
 namespace Etsi.Ultimate.WCF.Service
 {
@@ -121,7 +126,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="personId">The person identifier.</param>
         /// <param name="specIdsForUcc">The spec ids</param>
         /// <returns>Status report</returns>
-        public ServiceResponse<bool> ChangeSpecificationsStatusToUnderChangeControl(int personId, List<int> specIdsForUcc)
+        public Interface.ServiceResponse<bool> ChangeSpecificationsStatusToUnderChangeControl(int personId, List<int> specIdsForUcc)
         {
             LogManager.Debug("[ServiceCall][ChangeSpecificationsStatusToUnderChangeControl] specNumbersForUcc=" + string.Join(", ", specIdsForUcc));
             var serviceHelper = new ServiceHelper();
@@ -152,7 +157,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>
         /// Primary key of newly inserted change request
         /// </returns>
-        public ServiceResponse<int> CreateChangeRequest(int personId, ChangeRequest changeRequest)
+        public Interface.ServiceResponse<int> CreateChangeRequest(int personId, ChangeRequest changeRequest)
         {
             LogManager.Debug("[ServiceCall][CreateChangeRequest] PersonId=" + personId);
             var serviceHelper = new ServiceHelper();
@@ -222,13 +227,12 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// The aim of this method is to be able to update the CRs related to a CR Pack (TSG decision and TsgTdocNumber)
         /// </summary>
-        /// <param name="crPackDecisionlist"></param>
-        /// <param name="tsgTdocNumber"></param>
-        public bool UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackDecisionlist, string tsgTdocNumber)
+        /// <param name="crKeys"></param>
+        public bool UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<Interface.Entities.CrKeyFacade, string>> crKeys)
         {
             LogManager.Debug("[ServiceCall][UpdateChangeRequestPackRelatedCrs]");
             var svcHelper = new ServiceHelper();
-            return svcHelper.UpdateChangeRequestPackRelatedCrs(crPackDecisionlist, tsgTdocNumber);
+            return svcHelper.UpdateChangeRequestPackRelatedCrs(crKeys);
         }
 
         /// <summary>
@@ -237,7 +241,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="personId">The person identifier.</param>
         /// <param name="tdocNumbers">The tdoc numbers.</param>
         /// <returns>Status report</returns>
-        public ServiceResponse<bool> SetCrsAsFinal(int personId, List<string> tdocNumbers)
+        public Interface.ServiceResponse<bool> SetCrsAsFinal(int personId, List<string> tdocNumbers)
         {
             LogManager.Debug("[ServiceCall][SetCrsAsFinal] PersonId=" + personId + "; tdocNumbers=" + string.Join(", ", tdocNumbers));
             var serviceHelper = new ServiceHelper();
@@ -260,15 +264,55 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         /// <summary>
-        /// Gets the matching Crs by spec# / cr# / revision combination.
+        /// Get CRs by keys
         /// </summary>
-        /// <param name="specCrRevisionTuples">The spec# / cr# / revision combination list.</param>
-        /// <returns>Matching Crs for given tuple (spec# / cr# / revision) combination</returns>
-        public List<ChangeRequest> GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples)
+        /// <param name="crKeys">The spec# / cr# / revision / TsgTdocNumber combination list.</param>
+        /// <returns>Matching Crs for given key combination</returns>
+        public List<ChangeRequest> GetCrsByKeys(List<Interface.Entities.CrKeyFacade> crKeys)
         {
-            LogManager.Debug("[ServiceCall][GetMatchingCrsBySpecCrRevisionTuple]");
+            LogManager.Debug("[ServiceCall][GetCrsByKeys]");
             var serviceHelper = new ServiceHelper();
-            return serviceHelper.GetMatchingCrsBySpecCrRevisionTuple(specCrRevisionTuples);
+            return serviceHelper.GetCrsByKeys(crKeys);
+        }
+
+        /// <summary>
+        /// Gets the cr by key.
+        /// </summary>
+        /// <param name="crKey">The cr key.</param>
+        /// <returns>Change request</returns>
+        public ChangeRequest GetCrByKey(CrKeyFacade crKey)
+        {
+            LogManager.Debug(String.Format("[ServiceCall][GetCrByKey] crKey=[Spec# {0}, Cr# {1}, Revision# {2} ];", crKey.SpecNumber, crKey.CrNumber, crKey.Revision));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetCrByKey(crKey);
+        }
+
+        /// <summary>
+        /// Reissue the cr.
+        /// </summary>
+        /// <param name="crKey">The cr identifier.</param>
+        /// <param name="newTsgTdoc">The new TSG tdoc.</param>
+        /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <returns>Success/Failure</returns>
+        public Interface.ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId)
+        {
+            LogManager.Debug(String.Format("[ServiceCall][ReIssueCr] crKey=[Spec# {0}, Cr# {1}, Revision# {2} ]; newTsgTdoc={3}; newTsgMeetingId={4}", crKey.SpecNumber, crKey.CrNumber, crKey.Revision, newTsgTdoc, newTsgMeetingId));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.ReIssueCr(crKey, newTsgTdoc, newTsgMeetingId);
+        }
+
+        /// <summary>
+        /// Revise the cr.
+        /// </summary>
+        /// <param name="crKey">The cr identifier.</param>
+        /// <param name="newTsgTdoc">The new TSG tdoc.</param>
+        /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <returns>Success/Failure</returns>
+        public Interface.ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId)
+        {
+            LogManager.Debug(String.Format("[ServiceCall][ReviseCr] crKey=[Spec# {0}, Cr# {1}, Revision# {2} ]; newTsgTdoc={3}; newTsgMeetingId={4}", crKey.SpecNumber, crKey.CrNumber, crKey.Revision, newTsgTdoc, newTsgMeetingId));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.ReviseCr(crKey, newTsgTdoc, newTsgMeetingId);        
         }
 
         #endregion
@@ -289,20 +333,81 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         /// <summary>
-        /// Link TDoc to Version
+        /// Link TDoc to Version (by associate or allocate if needed)
         /// </summary>
+        /// <param name="personId"></param>
         /// <param name="specId">The specification identifier</param>
+        /// <param name="meetingId"></param>
         /// <param name="majorVersion">Major version</param>
         /// <param name="technicalVersion">Technical version</param>
         /// <param name="editorialVersion">Editorial version</param>
         /// <param name="relatedTdoc">Related Tdoc</param>
+        /// <param name="releaseId"></param>
         /// <returns>Success/Failure status</returns>
-        public ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc)
+        public Interface.ServiceResponse<bool> AllocateOrAssociateDraftVersion(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc)
         {
-            LogManager.Debug(string.Format("[ServiceCall][UpdateVersionRelatedTdoc] Spec Id={0}; Version={1}; Tdoc={2}",
+            LogManager.Debug(string.Format("[ServiceCall][AllocateOrAssociateDraftVersion] Spec Id={0}; Version={1}; Tdoc={2}",
                                                                  specId, majorVersion + "." + technicalVersion + "." + editorialVersion, relatedTdoc));
             var serviceHelper = new ServiceHelper();
-            return serviceHelper.UpdateVersionRelatedTdoc(specId, majorVersion, technicalVersion, editorialVersion, relatedTdoc);
+            return serviceHelper.AllocateOrAssociateDraftVersion(personId, specId, releaseId, meetingId, majorVersion, technicalVersion, editorialVersion, relatedTdoc);
+        }
+
+        /// <summary>
+        /// Checks the draft creation or association.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specId">The spec identifier.</param>
+        /// <param name="releaseId">The release identifier.</param>
+        /// <param name="majorVersion">The major version.</param>
+        /// <param name="technicalVersion">The technical version.</param>
+        /// <param name="editorialVersion">The editorial version.</param>
+        /// <returns>Draft creation or association status along with validation failures</returns>
+        public Interface.ServiceResponse<bool> CheckDraftCreationOrAssociation(int personId, int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion)
+        {
+            LogManager.Debug(
+                string.Format(
+                    "[ServiceCall][CheckDraftCreationOrAssociation]  Person Id = {0}; Spec Id={1}; Release Id={2}; Version={3};",
+                    personId, specId, releaseId, String.Format("{0}.{1}.{2}", majorVersion, technicalVersion, editorialVersion)));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.CheckDraftCreationOrAssociation(personId, specId, releaseId, majorVersion, technicalVersion, editorialVersion);
+        }
+
+        /// <summary>
+        /// Checks the version for upload.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specId">The spec identifier.</param>
+        /// <param name="releaseId">The release identifier.</param>
+        /// <param name="meetingId">The meeting identifier.</param>
+        /// <param name="majorVersion">The major version.</param>
+        /// <param name="technicalVersion">The technical version.</param>
+        /// <param name="editorialVersion">The editorial version.</param>
+        /// <param name="filePath">The file path.</param>
+        /// <returns>Return cached token for version upload</returns>
+        public Interface.ServiceResponse<string> CheckVersionForUpload(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion, int editorialVersion, string filePath)
+        {
+            LogManager.Debug(
+                string.Format(
+                    "[ServiceCall][CheckVersionForUpload]  Person Id = {0}; Spec Id = {1}; Release Id = {2}; Meeting Id = {3}; Version = {4}; File Name = {5};",
+                    personId, specId, releaseId, meetingId, String.Format("{0}.{1}.{2}", majorVersion, technicalVersion, editorialVersion), filePath));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.CheckVersionForUpload(personId, specId, releaseId, meetingId, majorVersion, technicalVersion, editorialVersion, filePath);        
+        }
+
+        /// <summary>
+        /// Uploads the version.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="token">The token.</param>
+        /// <returns>Success/Failure</returns>
+        public Interface.ServiceResponse<bool> UploadVersion(int personId, string token) 
+        {
+            LogManager.Debug(
+               string.Format(
+                   "[ServiceCall][UploadVersion]  Person Id = {0}; token = {1};",
+                   personId, token));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.UploadVersion(personId, token);
         }
 
         #endregion

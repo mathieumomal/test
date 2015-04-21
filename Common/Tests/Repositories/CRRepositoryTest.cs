@@ -11,7 +11,7 @@ namespace Etsi.Ultimate.Tests.Repositories
     public class CrRepositoryTest : BaseEffortTest
     {
         #region Constants
-        private const int TotalNoOfCrsInCsv = 22;
+        private const int TotalNoOfCrsInCsv = 23;
         private const int SpecificationId = 136080;
         #endregion
 
@@ -64,6 +64,7 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(1, repResult.Pk_ChangeRequest);
             Assert.AreEqual("0001", repResult.CRNumber);
             Assert.AreEqual(136081, repResult.Fk_Specification);
+            Assert.AreEqual(1, repResult.ChangeRequestTsgDatas.Count);
         }
 
         [Test]
@@ -85,15 +86,16 @@ namespace Etsi.Ultimate.Tests.Repositories
             var respresult = repo.FindByWgTDoc(wgTDoc);
 
 
-            if (respresult.Fk_TSGStatus == null)
+            if (respresult.ChangeRequestTsgDatas.First().Fk_TsgStatus == null)
             {
                 Assert.AreEqual(result, 0);
                 Assert.AreEqual(result, 0);
             }
             else
             {
-                Assert.AreEqual(result, respresult.Fk_TSGStatus);
-                Assert.AreEqual(result, respresult.Fk_TSGStatus);
+                Assert.AreEqual(result, respresult.ChangeRequestTsgDatas.First().Fk_TsgStatus);
+                Assert.AreEqual(result, respresult.ChangeRequestTsgDatas.First().Fk_TsgStatus);
+                Assert.AreEqual("Rejected", respresult.ChangeRequestTsgDatas.First().TsgStatus.Code);
             }
         }
 
@@ -101,10 +103,10 @@ namespace Etsi.Ultimate.Tests.Repositories
 
         #region Get CR
 
-        [TestCase(0, 0, 22, Description = "No paging")]
+        [TestCase(0, 0, 23, Description = "No paging")]
         [TestCase(0, 10, 10, Description = "Paging max 10 items")]
         [TestCase(5, 10, 10, Description = "Paging max 10 items (start from item 6)")]
-        [TestCase(20, 10, 2, Description = "Paging start from item 20")]
+        [TestCase(20, 10, 3, Description = "Paging start from item 20")]
         public void GetChangeRequestsTest_Paging(int skipRecords, int pageSize, int expectedResult)
         {
             //Search object build
@@ -130,7 +132,7 @@ namespace Etsi.Ultimate.Tests.Repositories
 
             //Test order by spec # (ASCENDING)
             Assert.AreEqual("22.101",result.Key.FirstOrDefault().Specification.Number);//First spec
-            Assert.AreEqual("22.107", result.Key.LastOrDefault().Specification.Number);//Last spec
+            Assert.AreEqual("22.108", result.Key.LastOrDefault().Specification.Number);//Last spec
             //Test order by CR # (DESCENDING) (Same spec between to first CR)
             Assert.AreEqual(result.Key.ElementAt(0).Specification.Number, result.Key.ElementAt(1).Specification.Number);
             Assert.AreEqual("AC014", result.Key.ElementAt(0).CRNumber);
@@ -138,7 +140,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         }
 
         [TestCase("22.101", 6)]
-        [TestCase("22.", 22)]
+        [TestCase("22.", 23)]
         public void GetChangeRequestsTest_SpecNumber(string specNumber, int expectedResult)
         {
             var searchObj = new ChangeRequestsSearch { SpecificationNumber = specNumber };
@@ -161,7 +163,7 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(expectedResult, result.Key.Count);
         }
 
-        [TestCase(2874, 2883, 16)]
+        [TestCase(2874, 2883, 17)]
         [TestCase(2882, 2884, 6)]
         public void GetChangeRequestsTest_Release(int releaseId1, int releaseId2, int expectedResult)
         {
@@ -185,8 +187,8 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(expectedResult, result.Key.Count);
         }
 
-        [TestCase(1, 5, 7)]
-        [TestCase(2, 5, 13)]
+        [TestCase(1, 5, 8)]
+        [TestCase(2, 5, 14)]
         public void GetChangeRequestsTest_TsgStatus(int tsgStatusId1, int tsgStatusId2, int expectedResult)
         {
             var searchObj = new ChangeRequestsSearch { TsgStatusIds = new List<int>() { tsgStatusId1, tsgStatusId2 } };
@@ -199,11 +201,11 @@ namespace Etsi.Ultimate.Tests.Repositories
 
         [TestCase(1, 1, 10)]
         [TestCase(2, 2, 5)]
-        [TestCase(3, 3, 7)]
+        [TestCase(3, 3, 8)]
         [TestCase(4, 4, 2)]
         [TestCase(1, 2, 15)]
         [TestCase(1, 4, 10)]
-        [TestCase(2, 3, 12)]
+        [TestCase(2, 3, 13)]
         public void GetChangeRequestsTest_Meeting(int meetingId1, int meetingId2, int expectedResult)
         {
             var searchObj = new ChangeRequestsSearch { MeetingIds = new List<int>() { meetingId1, meetingId2 } };

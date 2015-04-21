@@ -30,7 +30,7 @@ namespace Etsi.Ultimate.Tests.Services
         {
             var response = crService.SetCrsAsFinal(UserRolesFakeRepository.SPECMGR_ID, new List<string> { "RP-CR0004" });
             Assert.IsTrue(response.Result);
-            Assert.AreEqual(428934, UoW.Context.ChangeRequests.Where(x => x.TSGTDoc == "RP-CR0004").FirstOrDefault().Fk_NewVersion);
+            Assert.AreEqual(428934, UoW.Context.ChangeRequests.FirstOrDefault(x => x.ChangeRequestTsgDatas.Any(t => t.TSGTdoc == "RP-CR0004")).Fk_NewVersion);
         }
 
         [Test, Description("System should allocate a new version if there is no version pending upload.")]
@@ -41,7 +41,7 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsTrue(response.Result);
             Assert.AreEqual(versionCount+1, UoW.Context.SpecVersions.Count());
 
-            var newVersionId = UoW.Context.ChangeRequests.Where(x => x.TSGTDoc == "RP-CR0003").FirstOrDefault().Fk_NewVersion;
+            var newVersionId = UoW.Context.ChangeRequests.FirstOrDefault(x => x.ChangeRequestTsgDatas.Any(t => t.TSGTdoc == "RP-CR0003")).Fk_NewVersion;
             Assert.IsNotNull(newVersionId);
             var newVersion = UoW.Context.SpecVersions.Find(newVersionId.Value);
             Assert.AreEqual(12, newVersion.MajorVersion.GetValueOrDefault());
@@ -74,7 +74,7 @@ namespace Etsi.Ultimate.Tests.Services
         {
             var response = crService.SetCrsAsFinal(UserRolesFakeRepository.SPECMGR_ID, new List<string> { "RP-CR0001" });
             Assert.IsTrue(response.Result);
-            Assert.IsFalse(UoW.Context.ChangeRequests.Where(x => x.TSGTDoc == "RP-CR0001").FirstOrDefault().Fk_NewVersion.HasValue);
+            Assert.IsFalse(UoW.Context.ChangeRequests.FirstOrDefault(x => x.ChangeRequestTsgDatas.Any(t => t.TSGTdoc == "RP-CR0001")).Fk_NewVersion.HasValue);
         }
 
         [Test, Description("System should not treat CRs that are for closed releases")]
@@ -82,16 +82,16 @@ namespace Etsi.Ultimate.Tests.Services
         {
             var response = crService.SetCrsAsFinal(UserRolesFakeRepository.SPECMGR_ID, new List<string> { "RP-CR0002" });
             Assert.IsTrue(response.Result);
-            Assert.IsFalse(UoW.Context.ChangeRequests.Where(x => x.TSGTDoc == "RP-CR0002").FirstOrDefault().Fk_NewVersion.HasValue);
+            Assert.IsFalse(UoW.Context.ChangeRequests.FirstOrDefault(x => x.ChangeRequestTsgDatas.Any(t => t.TSGTdoc == "RP-CR0002")).Fk_NewVersion.HasValue);
         }
 
         [Test, Description("System should ignore CRs that are already treated")]
         public void FinalizeCr_IgnoresCrsWhichAlreadyHaveAVersion()
         {
-            var oldVersion = UoW.Context.ChangeRequests.Where(x => x.TSGTDoc == "RP-CR0001").FirstOrDefault().Fk_NewVersion.GetValueOrDefault();
+            var oldVersion = UoW.Context.ChangeRequests.FirstOrDefault(x => x.ChangeRequestTsgDatas.Any(t => t.TSGTdoc == "RP-CR0001")).Fk_NewVersion.GetValueOrDefault();
             var response = crService.SetCrsAsFinal(UserRolesFakeRepository.SPECMGR_ID, new List<string> { "RP-CR0006" });
             Assert.IsTrue(response.Result);
-            Assert.AreEqual(oldVersion, UoW.Context.ChangeRequests.Where(x => x.TSGTDoc == "RP-CR0001").FirstOrDefault().Fk_NewVersion.GetValueOrDefault());
+            Assert.AreEqual(oldVersion, UoW.Context.ChangeRequests.FirstOrDefault(x => x.ChangeRequestTsgDatas.Any(t => t.TSGTdoc == "RP-CR0001")).Fk_NewVersion.GetValueOrDefault());
         }
 
         [Test, Description("System should ignore CRs that belong to specifications that are withdrawn and log a warning")]
@@ -99,7 +99,7 @@ namespace Etsi.Ultimate.Tests.Services
         {
             var response = crService.SetCrsAsFinal(UserRolesFakeRepository.SPECMGR_ID, new List<string> { "RP-CR0007" });
             Assert.IsTrue(response.Result);
-            Assert.IsFalse(UoW.Context.ChangeRequests.Where(x => x.TSGTDoc == "RP-CR0007").FirstOrDefault().Fk_NewVersion.HasValue);
+            Assert.IsFalse(UoW.Context.ChangeRequests.FirstOrDefault(x => x.ChangeRequestTsgDatas.Any(t => t.TSGTdoc == "RP-CR0007")).Fk_NewVersion.HasValue);
             Assert.AreEqual(1, response.Report.GetNumberOfWarnings());
             Assert.AreEqual(String.Format(Localization.FinalizeCrs_Warn_WithDrawnSpec, "22.102"), response.Report.WarningList.First());
         }
@@ -109,7 +109,7 @@ namespace Etsi.Ultimate.Tests.Services
         {
             var response = crService.SetCrsAsFinal(UserRolesFakeRepository.SPECMGR_ID, new List<string> { "RP-CR0008" });
             Assert.IsTrue(response.Result);
-            Assert.IsFalse(UoW.Context.ChangeRequests.Where(x => x.TSGTDoc == "RP-CR0008").FirstOrDefault().Fk_NewVersion.HasValue);
+            Assert.IsFalse(UoW.Context.ChangeRequests.FirstOrDefault(x => x.ChangeRequestTsgDatas.Any(t => t.TSGTdoc == "RP-CR0008")).Fk_NewVersion.HasValue);
             Assert.AreEqual(1, response.Report.GetNumberOfWarnings());
             Assert.AreEqual(String.Format(Localization.FinalizeCrs_Warn_DraftSpec, "22.104"), response.Report.WarningList.First());
         }
@@ -123,8 +123,8 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(versionCount + 1, UoW.Context.SpecVersions.Count());
             var versionId = UoW.Context.SpecVersions.ToList().Last().Pk_VersionId;
 
-            Assert.AreEqual(versionId, UoW.Context.ChangeRequests.First(cr => cr.TSGTDoc == "RP-CR0003").Fk_NewVersion);
-            Assert.AreEqual(versionId, UoW.Context.ChangeRequests.First(cr => cr.TSGTDoc == "RP-CR0010").Fk_NewVersion);
+            Assert.AreEqual(versionId, UoW.Context.ChangeRequests.First(cr => cr.ChangeRequestTsgDatas.Any(t => t.TSGTdoc == "RP-CR0003")).Fk_NewVersion);
+            Assert.AreEqual(versionId, UoW.Context.ChangeRequests.First(cr => cr.ChangeRequestTsgDatas.Any(t => t.TSGTdoc == "RP-CR0010")).Fk_NewVersion);
 
 
         }

@@ -47,24 +47,6 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         public string Subject { get; set; }
 
         /// <summary>
-        /// Gets or sets the FK_ TSG status.
-        /// </summary>
-        /// <value>
-        /// The FK_ TSG status.
-        /// </value>
-        [DataMember]
-        public Nullable<int> Fk_TSGStatus { get; set; }
-
-        /// <summary>
-        /// Gets or sets the TSG status.
-        /// </summary>
-        /// <value>
-        /// The TSG status.
-        /// </value>
-        [DataMember]
-        public string TSGStatus { get; set; }
-
-        /// <summary>
         /// Gets or sets the FK_ wg status.
         /// </summary>
         /// <value>
@@ -92,15 +74,6 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         public Nullable<DateTime> CreationDate { get; set; }
 
         /// <summary>
-        /// Gets or sets the TSG source organizations.
-        /// </summary>
-        /// <value>
-        /// The TSG source organizations.
-        /// </value>
-        [DataMember]
-        public string TSGSourceOrganizations { get; set; }
-
-        /// <summary>
         /// Gets or sets the wg source organizations.
         /// </summary>
         /// <value>
@@ -108,24 +81,6 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public string WGSourceOrganizations { get; set; }
-
-        /// <summary>
-        /// Gets or sets the TSG meeting.
-        /// </summary>
-        /// <value>
-        /// The TSG meeting.
-        /// </value>
-        [DataMember]
-        public Nullable<int> TSGMeeting { get; set; }
-
-        /// <summary>
-        /// Gets or sets the TSG target.
-        /// </summary>
-        /// <value>
-        /// The TSG target.
-        /// </value>
-        [DataMember]
-        public Nullable<int> TSGTarget { get; set; }
 
         /// <summary>
         /// Gets or sets the wg source for TSG.
@@ -245,15 +200,6 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         public Nullable<int> Fk_Impact { get; set; }
 
         /// <summary>
-        /// Gets or sets the TSGT document.
-        /// </summary>
-        /// <value>
-        /// The TSGT document.
-        /// </value>
-        [DataMember]
-        public string TSGTDoc { get; set; }
-
-        /// <summary>
         /// Gets or sets the WGT document.
         /// </summary>
         /// <value>
@@ -294,5 +240,14 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public bool IsAutoNumberingOff { get; set; }
+
+        /// <summary>
+        /// Gets or sets the TSG datas
+        /// </summary>
+        /// <value>
+        /// The work item ids.
+        /// </value>
+        [DataMember]
+        public List<ChangeRequestTsgData> TsgData { get; set; }
     }
 }

@@ -165,9 +165,8 @@ namespace Etsi.Ultimate.WCF.Interface
         /// The aim of this method is to be able to update the CRs related to a CR Pack (TSG decision and TsgTdocNumber)
         /// </summary>
         /// <param name="crPackDecisionlist"></param>
-        /// <param name="tsgTdocNumber"></param>
         [OperationContract]
-        bool UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackDecisionlist, string tsgTdocNumber);
+        bool UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<CrKeyFacade, string>> crPackDecisionlist);
 
         /// <summary>
         /// Test if a couple Cr # / Revision already exist
@@ -181,12 +180,40 @@ namespace Etsi.Ultimate.WCF.Interface
         bool DoesCrNumberRevisionCoupleExist(int personId, int specId, string crNumber, int revision);
 
         /// <summary>
-        /// Gets the matching Crs by spec# / cr# / revision combination.
+        /// Get CRs by keys
         /// </summary>
-        /// <param name="specCrRevisionTuples">The spec# / cr# / revision combination list.</param>
-        /// <returns>Matching Crs for given tuple (spec# / cr# / revision) combination</returns>
+        /// <param name="crKeys">The spec# / cr# / revision / TsgTdocNumber combination list.</param>
+        /// <returns>Matching Crs for given key combination</returns>
         [OperationContract]
-        List<ChangeRequest> GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples);
+        List<ChangeRequest> GetCrsByKeys(List<CrKeyFacade> crKeys);
+
+        /// <summary>
+        /// Gets the cr by key.
+        /// </summary>
+        /// <param name="crKey">The cr key.</param>
+        /// <returns>Change request</returns>
+        [OperationContract]
+        ChangeRequest GetCrByKey(CrKeyFacade crKey);
+
+        /// <summary>
+        /// Reissue the cr.
+        /// </summary>
+        /// <param name="crKey">The cr identifier.</param>
+        /// <param name="newTsgTdoc">The new TSG tdoc.</param>
+        /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <returns>Success/Failure</returns>
+        [OperationContract]
+        ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId);
+
+        /// <summary>
+        /// Revise the cr.
+        /// </summary>
+        /// <param name="crKey">The cr identifier.</param>
+        /// <param name="newTsgTdoc">The new TSG tdoc.</param>
+        /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <returns>Success/Failure</returns>
+        [OperationContract]
+        ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId);
 
         #endregion
 
@@ -199,19 +226,59 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <param name="releaseId">Release Identifier</param>
         /// <returns>List of versions</returns>
         [OperationContract]
-        List<SpecVersion> GetVersionsForSpecRelease(int specId, int releaseId); 
+        List<SpecVersion> GetVersionsForSpecRelease(int specId, int releaseId);
 
         /// <summary>
-        /// Link TDoc to Version
+        /// Link TDoc to Version (by associate or allocate if needed)
         /// </summary>
+        /// <param name="personId"></param>
         /// <param name="specId">The specification identifier</param>
+        /// <param name="meetingId"></param>
         /// <param name="majorVersion">Major version</param>
         /// <param name="technicalVersion">Technical version</param>
         /// <param name="editorialVersion">Editorial version</param>
         /// <param name="relatedTdoc">Related Tdoc</param>
+        /// <param name="releaseId"></param>
         /// <returns>Success/Failure status</returns>
         [OperationContract]
-        ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc);
+        ServiceResponse<bool> AllocateOrAssociateDraftVersion(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc);
+
+        /// <summary>
+        /// Checks the draft creation or association.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specId">The spec identifier.</param>
+        /// <param name="releaseId">The release identifier.</param>
+        /// <param name="majorVersion">The major version.</param>
+        /// <param name="technicalVersion">The technical version.</param>
+        /// <param name="editorialVersion">The editorial version.</param>
+        /// <returns>Draft creation or association status along with validation failures</returns>
+        [OperationContract]
+        ServiceResponse<bool> CheckDraftCreationOrAssociation(int personId, int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion);
+
+        /// <summary>
+        /// Checks the version for upload.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specId">The spec identifier.</param>
+        /// <param name="releaseId">The release identifier.</param>
+        /// <param name="meetingId">The meeting identifier.</param>
+        /// <param name="majorVersion">The major version.</param>
+        /// <param name="technicalVersion">The technical version.</param>
+        /// <param name="editorialVersion">The editorial version.</param>
+        /// <param name="filePath">The file path.</param>
+        /// <returns>Return cached token for version upload</returns>
+        [OperationContract]
+        ServiceResponse<string> CheckVersionForUpload(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion, int editorialVersion, string filePath);
+
+        /// <summary>
+        /// Uploads the version.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="token">The token.</param>
+        /// <returns>Success/Failure</returns>
+        [OperationContract]
+        ServiceResponse<bool> UploadVersion(int personId, string token);
 
         #endregion
     }

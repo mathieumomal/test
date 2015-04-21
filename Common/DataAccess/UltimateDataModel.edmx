@@ -7,6 +7,7 @@
     <Schema Namespace="Etsi.Ultimate.DataAccess.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="EtsiUltimateDataAccessStoreContainer">
           <EntitySet Name="ChangeRequest" EntityType="Etsi.Ultimate.DataAccess.Store.ChangeRequest" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="ChangeRequestTsgData" EntityType="Etsi.Ultimate.DataAccess.Store.ChangeRequestTsgData" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="CR_WorkItems" EntityType="Etsi.Ultimate.DataAccess.Store.CR_WorkItems" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_ChangeRequestStatus" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_ChangeRequestStatus" store:Type="Tables" Schema="dbo" />
           <EntitySet Name="Enum_CommunitiesShortName" EntityType="Etsi.Ultimate.DataAccess.Store.Enum_CommunitiesShortName" store:Type="Tables" Schema="dbo" />
@@ -133,13 +134,17 @@
       [View_Persons].[DELETED_FLG] AS [DELETED_FLG]
       FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           </EntitySet>
-          <AssociationSet Name="FK_ChangeRequest_TsgStatus" Association="Etsi.Ultimate.DataAccess.Store.FK_ChangeRequest_TsgStatus">
-            <End Role="Enum_ChangeRequestStatus" EntitySet="Enum_ChangeRequestStatus" />
-            <End Role="ChangeRequest" EntitySet="ChangeRequest" />
-          </AssociationSet>
           <AssociationSet Name="FK_ChangeRequest_WgStatus" Association="Etsi.Ultimate.DataAccess.Store.FK_ChangeRequest_WgStatus">
             <End Role="Enum_ChangeRequestStatus" EntitySet="Enum_ChangeRequestStatus" />
             <End Role="ChangeRequest" EntitySet="ChangeRequest" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChangeRequestTsgData_ChangeRequest" Association="Etsi.Ultimate.DataAccess.Store.FK_ChangeRequestTsgData_ChangeRequest">
+            <End Role="ChangeRequest" EntitySet="ChangeRequest" />
+            <End Role="ChangeRequestTsgData" EntitySet="ChangeRequestTsgData" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChangeRequestTsgData_TsgStatus" Association="Etsi.Ultimate.DataAccess.Store.FK_ChangeRequestTsgData_TsgStatus">
+            <End Role="Enum_ChangeRequestStatus" EntitySet="Enum_ChangeRequestStatus" />
+            <End Role="ChangeRequestTsgData" EntitySet="ChangeRequestTsgData" />
           </AssociationSet>
           <AssociationSet Name="FK_CRCurrentVersion" Association="Etsi.Ultimate.DataAccess.Store.FK_CRCurrentVersion">
             <End Role="Version" EntitySet="Version" />
@@ -286,15 +291,10 @@
           <Property Name="CRNumber" Type="varchar" MaxLength="10" />
           <Property Name="Revision" Type="int" />
           <Property Name="Subject" Type="varchar" MaxLength="1000" />
-          <Property Name="Fk_TSGStatus" Type="int" />
           <Property Name="Fk_WGStatus" Type="int" />
           <Property Name="CreationDate" Type="datetime" />
-          <Property Name="TSGSourceOrganizations" Type="varchar" MaxLength="1000" />
           <Property Name="WGSourceOrganizations" Type="varchar" MaxLength="1000" />
-          <Property Name="TSGMeeting" Type="int" />
-          <Property Name="TSGTarget" Type="int" />
           <Property Name="WGSourceForTSG" Type="int" />
-          <Property Name="TSGTDoc" Type="varchar" MaxLength="200" />
           <Property Name="WGMeeting" Type="int" />
           <Property Name="WGTarget" Type="int" />
           <Property Name="WGTDoc" Type="varchar" MaxLength="200" />
@@ -304,6 +304,18 @@
           <Property Name="Fk_CurrentVersion" Type="int" />
           <Property Name="Fk_NewVersion" Type="int" />
           <Property Name="Fk_Impact" Type="int" />
+        </EntityType>
+        <EntityType Name="ChangeRequestTsgData">
+          <Key>
+            <PropertyRef Name="Pk_ChangeRequestTsgData" />
+          </Key>
+          <Property Name="Pk_ChangeRequestTsgData" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="TSGTdoc" Type="varchar" MaxLength="200" />
+          <Property Name="TSGTarget" Type="int" />
+          <Property Name="TSGMeeting" Type="int" />
+          <Property Name="TSGSourceOrganizations" Type="varchar" MaxLength="1000" />
+          <Property Name="Fk_ChangeRequest" Type="int" Nullable="false" />
+          <Property Name="Fk_TsgStatus" Type="int" />
         </EntityType>
         <EntityType Name="CR_WorkItems">
           <Key>
@@ -610,8 +622,8 @@
           <Property Name="CreationDate" Type="datetime" Nullable="false" />
           <Property Name="WorkPlanFilePath" Type="nvarchar" Nullable="false" MaxLength="255" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.ETSI_WorkItem' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.ETSI_WorkItem » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="ETSI_WorkItem">
           <Key>
@@ -627,8 +639,8 @@
           <Property Name="fileName" Type="varchar" MaxLength="68" />
           <Property Name="filePath" Type="varchar" MaxLength="128" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.ResponsibleGroup_Secretary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.ResponsibleGroup_Secretary » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="ResponsibleGroup_Secretary">
           <Key>
@@ -639,8 +651,8 @@
           <Property Name="PersonId" Type="int" Nullable="false" />
           <Property Name="roleExpirationDate" Type="datetime" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.Users_AdHoc_Roles' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_AdHoc_Roles » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="Users_AdHoc_Roles">
           <Key>
@@ -651,8 +663,8 @@
           <Property Name="PERSON_ID" Type="nvarchar" MaxLength="3750" />
           <Property Name="RoleName" Type="nvarchar" Nullable="false" MaxLength="50" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.Users_Groups' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.Users_Groups » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="Users_Groups">
           <Key>
@@ -667,8 +679,8 @@
           <Property Name="INTERNET_ADD" Type="varchar" MaxLength="100" />
           <Property Name="END_DATE" Type="datetime" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_Communities' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Communities » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_Communities">
           <Key>
@@ -682,8 +694,8 @@
           <Property Name="ActiveCode" Type="varchar" MaxLength="12" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_Meetings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Meetings » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_Meetings">
           <Key>
@@ -720,8 +732,8 @@
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
           <Property Name="MtgShortRef" Type="varchar" MaxLength="50" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_ModulesPages' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_ModulesPages » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_ModulesPages">
           <Key>
@@ -735,8 +747,8 @@
           <Property Name="ModuleID" Type="int" Nullable="false" />
           <Property Name="TabID" Type="int" Nullable="false" />
         </EntityType>
-        <!--Errors Found During Generation:
-      warning 6002: The table/view 'U3GPPDB.dbo.View_Persons' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Persons » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
       -->
         <EntityType Name="View_Persons">
           <Key>
@@ -755,18 +767,6 @@
           <Property Name="ORGA_SHORT" Type="varchar" MaxLength="30" />
           <Property Name="DELETED_FLG" Type="varchar" Nullable="false" MaxLength="1" />
         </EntityType>
-        <Association Name="FK_ChangeRequest_TsgStatus">
-          <End Role="Enum_ChangeRequestStatus" Type="Etsi.Ultimate.DataAccess.Store.Enum_ChangeRequestStatus" Multiplicity="0..1" />
-          <End Role="ChangeRequest" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Enum_ChangeRequestStatus">
-              <PropertyRef Name="Pk_EnumChangeRequestStatus" />
-            </Principal>
-            <Dependent Role="ChangeRequest">
-              <PropertyRef Name="Fk_TSGStatus" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ChangeRequest_WgStatus">
           <End Role="Enum_ChangeRequestStatus" Type="Etsi.Ultimate.DataAccess.Store.Enum_ChangeRequestStatus" Multiplicity="0..1" />
           <End Role="ChangeRequest" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequest" Multiplicity="*" />
@@ -776,6 +776,30 @@
             </Principal>
             <Dependent Role="ChangeRequest">
               <PropertyRef Name="Fk_WGStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChangeRequestTsgData_ChangeRequest">
+          <End Role="ChangeRequest" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequest" Multiplicity="1" />
+          <End Role="ChangeRequestTsgData" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequestTsgData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChangeRequest">
+              <PropertyRef Name="Pk_ChangeRequest" />
+            </Principal>
+            <Dependent Role="ChangeRequestTsgData">
+              <PropertyRef Name="Fk_ChangeRequest" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChangeRequestTsgData_TsgStatus">
+          <End Role="Enum_ChangeRequestStatus" Type="Etsi.Ultimate.DataAccess.Store.Enum_ChangeRequestStatus" Multiplicity="0..1" />
+          <End Role="ChangeRequestTsgData" Type="Etsi.Ultimate.DataAccess.Store.ChangeRequestTsgData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Enum_ChangeRequestStatus">
+              <PropertyRef Name="Pk_EnumChangeRequestStatus" />
+            </Principal>
+            <Dependent Role="ChangeRequestTsgData">
+              <PropertyRef Name="Fk_TsgStatus" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1458,13 +1482,18 @@
             <End Role="SyncInfo" EntitySet="SyncInfoes" />
           </AssociationSet>
           <EntitySet Name="Enum_ChangeRequestStatus" EntityType="Etsi.Ultimate.DataAccess.Enum_ChangeRequestStatus" />
-          <AssociationSet Name="FK_ChangeRequest_TsgStatus" Association="Etsi.Ultimate.DataAccess.FK_ChangeRequest_TsgStatus">
-            <End Role="Enum_ChangeRequestStatus" EntitySet="Enum_ChangeRequestStatus" />
-            <End Role="ChangeRequest" EntitySet="ChangeRequests" />
-          </AssociationSet>
           <AssociationSet Name="FK_ChangeRequest_WgStatus" Association="Etsi.Ultimate.DataAccess.FK_ChangeRequest_WgStatus">
             <End Role="Enum_ChangeRequestStatus" EntitySet="Enum_ChangeRequestStatus" />
             <End Role="ChangeRequest" EntitySet="ChangeRequests" />
+          </AssociationSet>
+          <EntitySet Name="ChangeRequestTsgDatas" EntityType="Etsi.Ultimate.DataAccess.ChangeRequestTsgData" />
+          <AssociationSet Name="FK_ChangeRequestTsgData_ChangeRequest" Association="Etsi.Ultimate.DataAccess.FK_ChangeRequestTsgData_ChangeRequest">
+            <End Role="ChangeRequest" EntitySet="ChangeRequests" />
+            <End Role="ChangeRequestTsgData" EntitySet="ChangeRequestTsgDatas" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ChangeRequestTsgData_TsgStatus" Association="Etsi.Ultimate.DataAccess.FK_ChangeRequestTsgData_TsgStatus">
+            <End Role="Enum_ChangeRequestStatus" EntitySet="Enum_ChangeRequestStatus" />
+            <End Role="ChangeRequestTsgData" EntitySet="ChangeRequestTsgDatas" />
           </AssociationSet>
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
@@ -2185,13 +2214,9 @@
           <Property Type="String" Name="CRNumber" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="Revision" />
           <Property Type="String" Name="Subject" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Type="Int32" Name="Fk_TSGStatus" />
           <Property Type="Int32" Name="Fk_WGStatus" />
           <Property Type="DateTime" Name="CreationDate" Precision="3" />
-          <Property Type="String" Name="TSGSourceOrganizations" MaxLength="1000" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="WGSourceOrganizations" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Type="Int32" Name="TSGMeeting" />
-          <Property Type="Int32" Name="TSGTarget" />
           <Property Type="Int32" Name="WGSourceForTSG" />
           <Property Type="Int32" Name="WGMeeting" />
           <Property Type="Int32" Name="WGTarget" />
@@ -2210,10 +2235,9 @@
           <Property Type="Int32" Name="Fk_Impact" />
           <NavigationProperty Name="Enum_CRImpact" Relationship="Etsi.Ultimate.DataAccess.FK_Enum_CRImpact" FromRole="ChangeRequest" ToRole="Enum_CRImpact" />
           <NavigationProperty Name="CR_WorkItems" Relationship="Etsi.Ultimate.DataAccess.FK_CRId" FromRole="ChangeRequest" ToRole="CR_WorkItems" />
-          <Property Type="String" Name="TSGTDoc" MaxLength="200" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="WGTDoc" MaxLength="200" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="TsgStatus" Relationship="Etsi.Ultimate.DataAccess.FK_ChangeRequest_TsgStatus" FromRole="ChangeRequest" ToRole="Enum_ChangeRequestStatus" />
           <NavigationProperty Name="WgStatus" Relationship="Etsi.Ultimate.DataAccess.FK_ChangeRequest_WgStatus" FromRole="ChangeRequest" ToRole="Enum_ChangeRequestStatus" />
+          <NavigationProperty Name="ChangeRequestTsgDatas" Relationship="Etsi.Ultimate.DataAccess.FK_ChangeRequestTsgData_ChangeRequest" FromRole="ChangeRequest" ToRole="ChangeRequestTsgData" />
         </EntityType>
         <Association Name="FK_CRCurrentVersion">
           <End Type="Etsi.Ultimate.DataAccess.SpecVersion" Role="SpecVersion" Multiplicity="0..1" />
@@ -2400,19 +2424,9 @@
           <Property Type="Int32" Name="Pk_EnumChangeRequestStatus" Nullable="false" />
           <Property Type="String" Name="Code" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="Description" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ChangeRequests" Relationship="Etsi.Ultimate.DataAccess.FK_ChangeRequest_WgStatus" FromRole="Enum_ChangeRequestStatus" ToRole="ChangeRequest" />
+          <NavigationProperty Name="ChangeRequestTsgDatas" Relationship="Etsi.Ultimate.DataAccess.FK_ChangeRequestTsgData_TsgStatus" FromRole="Enum_ChangeRequestStatus" ToRole="ChangeRequestTsgData" />
         </EntityType>
-        <Association Name="FK_ChangeRequest_TsgStatus">
-          <End Type="Etsi.Ultimate.DataAccess.Enum_ChangeRequestStatus" Role="Enum_ChangeRequestStatus" Multiplicity="0..1" />
-          <End Type="Etsi.Ultimate.DataAccess.ChangeRequest" Role="ChangeRequest" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Enum_ChangeRequestStatus">
-              <PropertyRef Name="Pk_EnumChangeRequestStatus" />
-            </Principal>
-            <Dependent Role="ChangeRequest">
-              <PropertyRef Name="Fk_TSGStatus" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ChangeRequest_WgStatus">
           <End Type="Etsi.Ultimate.DataAccess.Enum_ChangeRequestStatus" Role="Enum_ChangeRequestStatus" Multiplicity="0..1" />
           <End Type="Etsi.Ultimate.DataAccess.ChangeRequest" Role="ChangeRequest" Multiplicity="*" />
@@ -2422,6 +2436,44 @@
             </Principal>
             <Dependent Role="ChangeRequest">
               <PropertyRef Name="Fk_WGStatus" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ChangeRequestTsgData">
+          <Key>
+            <PropertyRef Name="Pk_ChangeRequestTsgData" />
+          </Key>
+          <Property Type="Int32" Name="Pk_ChangeRequestTsgData" Nullable="false" />
+          <Property Type="String" Name="TSGTdoc" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="TSGTarget" />
+          <Property Type="Int32" Name="TSGMeeting" />
+          <Property Type="String" Name="TSGSourceOrganizations" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="Fk_ChangeRequest" Nullable="false" />
+          <Property Type="Int32" Name="Fk_TsgStatus" />
+          <NavigationProperty Name="ChangeRequest" Relationship="Etsi.Ultimate.DataAccess.FK_ChangeRequestTsgData_ChangeRequest" FromRole="ChangeRequestTsgData" ToRole="ChangeRequest" />
+          <NavigationProperty Name="TsgStatus" Relationship="Etsi.Ultimate.DataAccess.FK_ChangeRequestTsgData_TsgStatus" FromRole="ChangeRequestTsgData" ToRole="Enum_ChangeRequestStatus" />
+        </EntityType>
+        <Association Name="FK_ChangeRequestTsgData_ChangeRequest">
+          <End Type="Etsi.Ultimate.DataAccess.ChangeRequest" Role="ChangeRequest" Multiplicity="1" />
+          <End Type="Etsi.Ultimate.DataAccess.ChangeRequestTsgData" Role="ChangeRequestTsgData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ChangeRequest">
+              <PropertyRef Name="Pk_ChangeRequest" />
+            </Principal>
+            <Dependent Role="ChangeRequestTsgData">
+              <PropertyRef Name="Fk_ChangeRequest" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ChangeRequestTsgData_TsgStatus">
+          <End Type="Etsi.Ultimate.DataAccess.Enum_ChangeRequestStatus" Role="Enum_ChangeRequestStatus" Multiplicity="0..1" />
+          <End Type="Etsi.Ultimate.DataAccess.ChangeRequestTsgData" Role="ChangeRequestTsgData" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Enum_ChangeRequestStatus">
+              <PropertyRef Name="Pk_EnumChangeRequestStatus" />
+            </Principal>
+            <Dependent Role="ChangeRequestTsgData">
+              <PropertyRef Name="Fk_TsgStatus" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2843,7 +2895,6 @@
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ChangeRequest">
               <MappingFragment StoreEntitySet="ChangeRequest">
                 <ScalarProperty Name="WGTDoc" ColumnName="WGTDoc" />
-                <ScalarProperty Name="TSGTDoc" ColumnName="TSGTDoc" />
                 <ScalarProperty Name="Fk_Impact" ColumnName="Fk_Impact" />
                 <ScalarProperty Name="Fk_NewVersion" ColumnName="Fk_NewVersion" />
                 <ScalarProperty Name="Fk_CurrentVersion" ColumnName="Fk_CurrentVersion" />
@@ -2853,13 +2904,9 @@
                 <ScalarProperty Name="WGTarget" ColumnName="WGTarget" />
                 <ScalarProperty Name="WGMeeting" ColumnName="WGMeeting" />
                 <ScalarProperty Name="WGSourceForTSG" ColumnName="WGSourceForTSG" />
-                <ScalarProperty Name="TSGTarget" ColumnName="TSGTarget" />
-                <ScalarProperty Name="TSGMeeting" ColumnName="TSGMeeting" />
                 <ScalarProperty Name="WGSourceOrganizations" ColumnName="WGSourceOrganizations" />
-                <ScalarProperty Name="TSGSourceOrganizations" ColumnName="TSGSourceOrganizations" />
                 <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
                 <ScalarProperty Name="Fk_WGStatus" ColumnName="Fk_WGStatus" />
-                <ScalarProperty Name="Fk_TSGStatus" ColumnName="Fk_TSGStatus" />
                 <ScalarProperty Name="Subject" ColumnName="Subject" />
                 <ScalarProperty Name="Revision" ColumnName="Revision" />
                 <ScalarProperty Name="CRNumber" ColumnName="CRNumber" />
@@ -2911,6 +2958,19 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="Pk_EnumChangeRequestStatus" ColumnName="Pk_EnumChangeRequestStatus" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ChangeRequestTsgDatas">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ChangeRequestTsgData">
+              <MappingFragment StoreEntitySet="ChangeRequestTsgData">
+                <ScalarProperty Name="Fk_TsgStatus" ColumnName="Fk_TsgStatus" />
+                <ScalarProperty Name="Fk_ChangeRequest" ColumnName="Fk_ChangeRequest" />
+                <ScalarProperty Name="TSGSourceOrganizations" ColumnName="TSGSourceOrganizations" />
+                <ScalarProperty Name="TSGMeeting" ColumnName="TSGMeeting" />
+                <ScalarProperty Name="TSGTarget" ColumnName="TSGTarget" />
+                <ScalarProperty Name="TSGTdoc" ColumnName="TSGTdoc" />
+                <ScalarProperty Name="Pk_ChangeRequestTsgData" ColumnName="Pk_ChangeRequestTsgData" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -32,7 +32,8 @@ namespace Etsi.Ultimate.Business.Versions
                     Remarks = version.Remarks,
                     Source = version.Source,
                     TechnicalVersion = version.TechnicalVersion,
-                    ProvidedBy = personId
+                    ProvidedBy = personId,
+                    RelatedTDoc = version.RelatedTDoc
                 };
 
                 var versionRepository = RepositoryFactory.Resolve<ISpecVersionsRepository>();

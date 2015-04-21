@@ -216,7 +216,7 @@ namespace Etsi.Ultimate.Module.Versions
             ISpecVersionService specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
             var version = GetEditedSpecVersionObject();
             if (version.Key)
-                svcResponse = specVersionSvc.UploadVersion(GetUserPersonId(), version.Value, VersionFileToken);
+                svcResponse = specVersionSvc.UploadVersion(GetUserPersonId(), VersionFileToken);
 
             if (svcResponse.Report.GetNumberOfErrors() == 0 && svcResponse.Report.GetNumberOfWarnings() == 0)
             {

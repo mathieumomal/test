@@ -82,9 +82,9 @@ namespace Etsi.Ultimate.Tests.Business
         {
             var cr22 = UoW.Context.ChangeRequests.Find(22);
             //Arrange
-            var changeRequest = new ChangeRequest() { IsAutoNumberingOff = isAutoNumberingOff, RevisionOf = cr22.TSGTDoc};
+            var changeRequest = new ChangeRequest() { IsAutoNumberingOff = isAutoNumberingOff, RevisionOf = cr22.ChangeRequestTsgDatas.First().TSGTdoc};
             var mockCrRepository = MockRepository.GenerateMock<IChangeRequestRepository>();
-            mockCrRepository.Stub(x => x.GetChangeRequestByContributionUID(cr22.TSGTDoc)).Return(cr22);
+            mockCrRepository.Stub(x => x.GetChangeRequestByContributionUID(cr22.ChangeRequestTsgDatas.First().TSGTdoc)).Return(cr22);
             mockCrRepository.Stub(x => x.FindCrMaxRevisionBySpecificationIdAndCrNumber(cr22.Fk_Specification, cr22.CRNumber)).Return(4);
             mockCrRepository.Expect(x => x.InsertOrUpdate(Arg<ChangeRequest>.Matches(y => y.IsAutoNumberingOff == isAutoNumberingOff
                                                                                        && y.CRNumber == crNumber
@@ -193,7 +193,7 @@ namespace Etsi.Ultimate.Tests.Business
             var cr = crManager.GetChangeRequestByContributionUid(uid);
 
             Assert.IsNotNull(cr);
-            Assert.AreEqual(cr.TSGTDoc, uid);
+            Assert.AreEqual(cr.ChangeRequestTsgDatas.First().TSGTdoc, uid);
         }
 
         [Test, Description("Retrieve CR using TDoc(Contribution Uid)")]
@@ -201,17 +201,17 @@ namespace Etsi.Ultimate.Tests.Business
         {
             var uids = new List<string>() { "TSG1", "Change request description6" };
             var crManager = new ChangeRequestManager { UoW = UoW };
-            var crList = crManager.GetChangeRequestListByContributionUIDList(uids);
+            var crList = crManager.GetChangeRequestListByContributionUidList(uids);
 
             Assert.IsNotNull(crList);
             if (crList != null)
             {
                 //First
                 Assert.IsNotNull(crList[0]);
-                Assert.AreEqual(crList[0].TSGTDoc, uids[0]);
+                Assert.AreEqual(crList[0].ChangeRequestTsgDatas.First().TSGTdoc, uids[0]);
                 //Second
                 Assert.IsNotNull(crList[1]);
-                Assert.AreEqual(crList[1].TSGTDoc, uids[1]);
+                Assert.AreEqual(crList[1].ChangeRequestTsgDatas.First().TSGTdoc, uids[1]);
             }
 
         }

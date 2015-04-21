@@ -38,7 +38,7 @@ namespace Etsi.Ultimate.Repositories
             IQueryable<ChangeRequest> query = UoW.Context.ChangeRequests;
             foreach (var includeProperty in includeProperties)
             {
-                query = query.Include(includeProperty);
+                query = query.Include(t => t.ChangeRequestTsgDatas).Include(t => t.ChangeRequestTsgDatas.Select(x => x.TsgStatus)).Include(includeProperty);
             }
             return query;
         }
@@ -71,7 +71,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>ChangeRequest entity</returns>
         public ChangeRequest GetChangeRequestByContributionUID(string contributionUid)
         {
-            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.TsgStatus, t => t.WgStatus).SingleOrDefault(c => c.TSGTDoc.Equals(contributionUid) || c.WGTDoc.Equals(contributionUid));
+            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus).SingleOrDefault(c => c.ChangeRequestTsgDatas.Any(x => x.TSGTdoc.Equals(contributionUid)) || c.WGTDoc.Equals(contributionUid));
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>List of CRs</returns>
         public List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUiDs)
         {
-            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.TsgStatus, t => t.WgStatus).Where(x => contributionUiDs.Contains(x.TSGTDoc) || contributionUiDs.Contains(x.WGTDoc)).ToList();
+            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus).Where(c => c.ChangeRequestTsgDatas.Any(x => contributionUiDs.Contains(x.TSGTdoc)) || contributionUiDs.Contains(c.WGTDoc)).ToList();
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>Change request entity</returns>
         public ChangeRequest Find(int changeRequestId)
         {
-            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.TsgStatus, t => t.WgStatus).SingleOrDefault(x => x.Pk_ChangeRequest == changeRequestId);
+            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus).SingleOrDefault(x => x.Pk_ChangeRequest == changeRequestId);
         }
 
         /// <summary>
@@ -101,6 +101,16 @@ namespace Etsi.Ultimate.Repositories
         public void InsertOrUpdate(ChangeRequest entity)
         {
             UoW.Context.SetAdded(entity);
+
+            // Add / edit CRtsgData
+            foreach (var crTsgData in entity.ChangeRequestTsgDatas)
+            {
+                crTsgData.ChangeRequest = entity;
+                if (crTsgData.Fk_ChangeRequest == default(int))
+                    UoW.Context.SetAdded(crTsgData);
+                else
+                    UoW.Context.SetModified(crTsgData);
+            }
         }
 
         /// <summary>
@@ -127,7 +137,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns></returns>
         public ChangeRequest FindByWgTDoc(string wgTDoc)
         {
-            return UoW.Context.ChangeRequests.Where(wg => wg.WGTDoc == wgTDoc).SingleOrDefault();
+            return UoW.Context.ChangeRequests.SingleOrDefault(wg => wg.WGTDoc == wgTDoc);
         }
 
         /// <summary>
@@ -144,15 +154,15 @@ namespace Etsi.Ultimate.Repositories
             if (searchObj.MeetingIds == null) searchObj.MeetingIds = new List<int>();
             if (searchObj.WorkItemIds == null) searchObj.WorkItemIds = new List<int>();
 
-            var query = AllIncluding(x => x.Specification, x => x.Release, x => x.NewVersion, x => x.CurrentVersion, x => x.TsgStatus, x => x.WgStatus);
+            var query = AllIncluding(x => x.Specification, x => x.Release, x => x.NewVersion, x => x.CurrentVersion, x => x.WgStatus);
 
             //Filter crs based on search criteria
             query = query.Where(x => (((String.IsNullOrEmpty(searchObj.SpecificationNumber)) || (x.Specification.Number.ToLower().Contains(searchObj.SpecificationNumber.ToLower())))
                                    && ((searchObj.VersionId == 0) || (x.Fk_NewVersion == searchObj.VersionId))
                                    && ((searchObj.ReleaseIds.Count ==  0) || (searchObj.ReleaseIds.Contains(0)) || (searchObj.ReleaseIds.Contains(x.Fk_Release ?? 0)))
                                    && ((searchObj.WgStatusIds.Count == 0) || (searchObj.WgStatusIds.Contains(x.Fk_WGStatus ?? 0)))
-                                   && ((searchObj.TsgStatusIds.Count == 0) || (searchObj.TsgStatusIds.Contains(x.Fk_TSGStatus ?? 0)))
-                                   && ((searchObj.MeetingIds.Count == 0) || (searchObj.MeetingIds.Contains(x.TSGMeeting ?? 0)) || (searchObj.MeetingIds.Contains(x.WGMeeting ?? 0)))
+                                   && ((searchObj.TsgStatusIds.Count == 0) || (x.ChangeRequestTsgDatas.Any(t => searchObj.TsgStatusIds.Contains(t.Fk_TsgStatus ?? 0))))
+                                   && ((searchObj.MeetingIds.Count == 0) || (x.ChangeRequestTsgDatas.Any(t => searchObj.MeetingIds.Contains(t.TSGMeeting ?? 0))) || (searchObj.MeetingIds.Contains(x.WGMeeting ?? 0)))
                                    && ((searchObj.WorkItemIds.Count == 0) || (searchObj.WorkItemIds.Any(wiId => x.CR_WorkItems.Any(crWi => crWi.Fk_WIId == wiId))))));
 
             //Order by
@@ -176,29 +186,62 @@ namespace Etsi.Ultimate.Repositories
         }
 
         /// <summary>
-        /// Gets the matching Crs by spec# / cr# / revision combination.
+        /// Get CRs by keys
         /// </summary>
-        /// <param name="specCrRevisionTuples">The spec# / cr# / revision combination list.</param>
-        /// <returns>Matching Crs for given tuple (spec# / cr# / revision) combination</returns>
-        public List<ChangeRequest> GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples)
+        /// <param name="crKeys">The spec# / cr# / revision / TsgTdocNumber combination list.</param>
+        /// <returns>Matching Crs for given key combination</returns>
+        public List<ChangeRequest> GetCrsByKeys(List<CrKeyFacade> crKeys)
         {
-            var specIds = specCrRevisionTuples.Select(x => x.Item1).Distinct().ToList();
-            var crNumbers = specCrRevisionTuples.Select(x => x.Item2).Distinct().ToList();
-            var revisionNumbers = specCrRevisionTuples.Select(x => x.Item3).Distinct().ToList();
+            var specIds = crKeys.Select(x => x.SpecId).Distinct().ToList();
+            var specNumbers = crKeys.Select(x => x.SpecNumber).Distinct().ToList();
+            var crNumbers = crKeys.Select(x => x.CrNumber).Distinct().ToList();
+            var revisionNumbers = crKeys.Select(x => x.Revision).Distinct().ToList();
 
-            //Tuple keys (Item1, Item2, Item3) cannot be placed on query.
-            //So, to minimize performance first filter individual matches => get the data => go for combination filter
-            var matchingCombinations = AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.TsgStatus, t => t.WgStatus)
-                .Where(individualMatch => specIds.Contains(individualMatch.Fk_Specification ?? 0)
+            //Search CR to process : 
+            //1) Search all CR which match with Keys values (Spec ID, CR number, Revision)
+            //2) Inside this list search which one match to the exact key value of each one
+            var matchingCombinations = AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus)
+                .Where(individualMatch => (specIds.Contains(individualMatch.Fk_Specification ?? 0) || specNumbers.Contains(individualMatch.Specification.Number))
                                           && crNumbers.Contains(individualMatch.CRNumber)
                                           && revisionNumbers.Contains(individualMatch.Revision ?? 0))
-                .ToList()
-                .Where(combinationMatch => specCrRevisionTuples.Any(x => x.Item1 == combinationMatch.Fk_Specification
-                                                                    && x.Item2 == combinationMatch.CRNumber
-                                                                    && x.Item3 == combinationMatch.Revision))
+                .ToList();
+            matchingCombinations = matchingCombinations
+                .Where(combinationMatch => crKeys.Any(x => (((x.SpecId == combinationMatch.Fk_Specification) || (x.SpecNumber == combinationMatch.Specification.Number))
+                                                                    && (x.CrNumber == combinationMatch.CRNumber)
+                                                                    && (x.Revision == (combinationMatch.Revision ?? 0)))))
+                //If TSG Tdoc number is not define we return all CRs which matching to to the tuple Spec id, CR number, revision
+                //Else ; if TSG TDOC number is define we return CR which matching exactly to the complete unique key
                 .ToList();
 
             return matchingCombinations;
+        }
+
+        /// <summary>
+        /// Gets the cr by key.
+        /// </summary>
+        /// <param name="crKey">The cr key.</param>
+        /// <returns>Change Request</returns>
+        public ChangeRequest GetCrByKey(CrKeyFacade crKey)
+        {
+            var query = AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus);
+            query = query.Where(x => (((x.Fk_Specification ?? 0) == crKey.SpecId) || (x.Specification.Number == crKey.SpecNumber))
+                                     && x.CRNumber == crKey.CrNumber
+                                     && ((x.Revision ?? 0) == crKey.Revision));
+            return query.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="crKey">The cr key.</param>
+        /// <returns>Change Request</returns>
+        public List<ChangeRequest> GetCrsBySpecAndCrNumberAndTsgTdoc(CrKeyFacade crKey)
+        {
+            var query = AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus);
+            query = query.Where(x => (((x.Fk_Specification ?? 0) == crKey.SpecId) || (x.Specification.Number == crKey.SpecNumber))
+                                     && x.CRNumber == crKey.CrNumber
+                                     && x.ChangeRequestTsgDatas.Any(y => y.TSGTdoc == crKey.TsgTdocNumber));
+            return query.ToList();
         }
     }
 
@@ -261,10 +304,24 @@ namespace Etsi.Ultimate.Repositories
         bool DoesCrNumberRevisionCoupleExist(int specId, string crNumber, int revision);
 
         /// <summary>
-        /// Gets the matching Crs by spec# / cr# / revision combination.
+        /// Get CRs by keys
         /// </summary>
-        /// <param name="specCrRevisionTuples">The spec# / cr# / revision combination list.</param>
-        /// <returns>Matching Crs for given tuple (spec# / cr# / revision) combination</returns>
-        List<ChangeRequest> GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples);
+        /// <param name="crKeys">The spec# / cr# / revision / TsgTdocNumber combination list.</param>
+        /// <returns>Matching Crs for given key combination</returns>
+        List<ChangeRequest> GetCrsByKeys(List<CrKeyFacade> crKeys);
+
+        /// <summary>
+        /// Gets the cr by key.
+        /// </summary>
+        /// <param name="crKey">The cr key.</param>
+        /// <returns>Change Request</returns>
+        ChangeRequest GetCrByKey(CrKeyFacade crKey);
+
+        /// <summary>
+        /// Gets the crs by Spec, Cr number and Tsg Tdoc number. To be able to find all revisions of a CR.
+        /// </summary>
+        /// <param name="crKey">The cr key.</param>
+        /// <returns>Change Request</returns>
+        List<ChangeRequest> GetCrsBySpecAndCrNumberAndTsgTdoc(CrKeyFacade crKey);
     }
 }

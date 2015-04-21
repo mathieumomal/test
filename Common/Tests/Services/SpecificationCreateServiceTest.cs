@@ -72,13 +72,13 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         //Success
-        [TestCase(1, false, false, EDIT_RIGHT_USER, "12.145", 1, 0)] //Right to edit number, so mail doesn't be send, no errors
-        [TestCase(2, true, true, EDIT_LIMITED_RIGHT_USER, "", null, 0)]//Limited right, an no errors, a mail is send
-        [TestCase(2, false, false, EDIT_SPECMGR_RIGHT_USER, "", null, 0)]         // User is spec Mgr, spec number is not assigned => No mail sent
+        [TestCase(1, false, false, EDIT_RIGHT_USER, "12.145", 1, 0, Description = "Right to edit number, so mail doesn't be send, no errors")]
+        [TestCase(2, true, true, EDIT_LIMITED_RIGHT_USER, "", null, 0, Description = "Limited right, an no errors, a mail is send")]
+        [TestCase(2, false, false, EDIT_SPECMGR_RIGHT_USER, "", null, 0, Description = "User is spec Mgr, spec number is not assigned => No mail sent")]
         //Errors
-        [TestCase(1, false, false, EDIT_LIMITED_RIGHT_USER, "", 0, 1)]//Same that the first one, but the user don't have the right to edit the number, so an error is thrown
-        [TestCase(3, false, false, EDIT_RIGHT_USER, "", 0, 1)]//BAD FORMAT
-        [TestCase(4, false, false, EDIT_RIGHT_USER, "", 0, 1)]//ALREADY EXIST
+        [TestCase(1, false, false, EDIT_LIMITED_RIGHT_USER, "", 0, 1, Description = "Same that the first one, but the user don't have the right to edit the number, so an error is thrown")]
+        [TestCase(3, false, false, EDIT_RIGHT_USER, "", 0, 1, Description = "BAD FORMAT")]
+        [TestCase(4, false, false, EDIT_RIGHT_USER, "", 0, 1, Description = "ALREADY EXIST")]
         public void CreateSpecification_NominalCase(int spec, bool shouldMailBeSent, bool shouldMailSucceed, int person, String number, int? serie, int error)
         {
             var specification = GetSpecsToCreate(spec);
@@ -137,6 +137,58 @@ namespace Etsi.Ultimate.Tests.Services
                 Assert.AreEqual(1, report.ErrorList.Count);
         }
 
+        //Rule : default prime rapporteur
+        [TestCase(5, EDIT_RIGHT_USER, "12.145", 1, 1, Description = "if no prime rapporteur manually define and only one rapporteur define : this one should be prime rapporteur by default")]
+        [TestCase(6, EDIT_RIGHT_USER, "12.145", 1, 0, Description = "if no prime rapporteur manually define and two rapporteurs are define : no one should be prime rapporteur")]
+        [TestCase(7, EDIT_RIGHT_USER, "12.145", 1, 2, Description = "if prime rapporteur manually define : system should keep this one as primary rapporteur")]
+        public void CreateSpecification_PrimeRapporteurByDefaultRule(int spec, int person, String number, int? serie, int primaryRapporteurId)
+        {
+            var specification = GetSpecsToCreate(spec);
+            // Set up the rights
+            RegisterAllMocks();
+
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var response = specSvc.CreateSpecification(person, specification, "#baseurl#");
+
+            Assert.AreEqual(0, response.Value.WarningList.Count);
+            Assert.AreEqual(0, response.Value.ErrorList.Count);
+            if (primaryRapporteurId != 0)
+            {
+                Assert.AreEqual(primaryRapporteurId,
+                    specification.SpecificationRapporteurs.First(x => x.IsPrime).Fk_RapporteurId);
+            }
+            else
+            {
+                Assert.IsNull(specification.SpecificationRapporteurs.FirstOrDefault(x => x.IsPrime));
+            }
+        }
+
+        //Rule : default prime WI
+        [TestCase(8, EDIT_RIGHT_USER, "12.145", 1, 1, Description = "if no prime WI manually define and only one WI define : this one should be prime WI by default")]
+        [TestCase(9, EDIT_RIGHT_USER, "12.145", 1, 0, Description = "if no prime WI manually define and two WI are define : no one should be prime WI")]
+        [TestCase(10, EDIT_RIGHT_USER, "12.145", 1, 2, Description = "if prime WI manually define : system should keep this one as primary WI")]
+        public void CreateSpecification_PrimeWIByDefaultRule(int spec, int person, String number, int? serie, int primarySpecWiId)
+        {
+            var specification = GetSpecsToCreate(spec);
+            // Set up the rights
+            RegisterAllMocks();
+
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var response = specSvc.CreateSpecification(person, specification, "#baseurl#");
+
+            Assert.AreEqual(0, response.Value.WarningList.Count);
+            Assert.AreEqual(0, response.Value.ErrorList.Count);
+            if (primarySpecWiId != 0)
+            {
+                Assert.AreEqual(primarySpecWiId,
+                    specification.Specification_WorkItem.First(x => x.isPrime ?? false).Fk_WorkItemId);
+            }
+            else
+            {
+                Assert.IsNull(specification.Specification_WorkItem.FirstOrDefault(x => x.isPrime ?? false));
+            }
+        }
+
         #region Arguments tests
         private Specification GetSpecsToCreate(int spec)
         {
@@ -173,6 +225,82 @@ namespace Etsi.Ultimate.Tests.Services
                         Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
                         Number = "12.123",
                         Title = "SpecTitle"
+                    };
+                case 5://ONE RAPPORTEUR
+                    return new Specification()
+                    {
+                        Pk_SpecificationId = 0,
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Number = "12.145",
+                        Title = "SpecTitle",
+                        SpecificationRapporteurs = new List<SpecificationRapporteur>
+                        {
+                            new SpecificationRapporteur{Fk_RapporteurId = 1, IsPrime = false}
+                        }
+                    };
+                case 6://TWO RAPPORTEURS
+                    return new Specification()
+                    {
+                        Pk_SpecificationId = 0,
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Number = "12.145",
+                        Title = "SpecTitle",
+                        SpecificationRapporteurs = new List<SpecificationRapporteur>
+                        {
+                            new SpecificationRapporteur{Fk_RapporteurId = 1, IsPrime = false},
+                            new SpecificationRapporteur{Fk_RapporteurId = 2, IsPrime = false}
+                        }
+                    };
+                case 7://TWO RAPPORTEURS AND ONE MANUALLY DEFINE AS PRIME RAPPORTEUR
+                    return new Specification()
+                    {
+                        Pk_SpecificationId = 0,
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Number = "12.145",
+                        Title = "SpecTitle",
+                        SpecificationRapporteurs = new List<SpecificationRapporteur>
+                        {
+                            new SpecificationRapporteur{Fk_RapporteurId = 1, IsPrime = false},
+                            new SpecificationRapporteur{Fk_RapporteurId = 2, IsPrime = true}
+                        }
+                    };
+                case 8://ONE WI
+                    return new Specification()
+                    {
+                        Pk_SpecificationId = 0,
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Number = "12.145",
+                        Title = "SpecTitle",
+                        Specification_WorkItem = new List<Specification_WorkItem>
+                        {
+                            new Specification_WorkItem{Fk_WorkItemId = 1, IsSetByUser = true, isPrime = false}
+                        }
+                    };
+                case 9://TWO WI
+                    return new Specification()
+                    {
+                        Pk_SpecificationId = 0,
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Number = "12.145",
+                        Title = "SpecTitle",
+                        Specification_WorkItem = new List<Specification_WorkItem>
+                        {
+                            new Specification_WorkItem{Fk_WorkItemId = 1, IsSetByUser = true, isPrime = false},
+                            new Specification_WorkItem{Fk_WorkItemId = 2, IsSetByUser = true, isPrime = false}
+                        }
+                    };
+                case 10://TWO WI AND ONE MANUALLY DEFINE AS PRIME WI
+                    return new Specification()
+                    {
+                        Pk_SpecificationId = 0,
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Number = "12.145",
+                        Title = "SpecTitle",
+                        Specification_WorkItem = new List<Specification_WorkItem>
+                        {
+                            new Specification_WorkItem{Fk_WorkItemId = 1, IsSetByUser = true, isPrime = false},
+                            new Specification_WorkItem{Fk_WorkItemId = 2, IsSetByUser = true, isPrime = true}
+                        }
                     };
                 default:
                     return null;

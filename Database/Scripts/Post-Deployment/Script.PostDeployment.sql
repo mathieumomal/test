@@ -10,5 +10,9 @@ Post-Deployment Script Template
 --------------------------------------------------------------------------------------
 */
 
+:r .\Enum_ChangeRequestStatus.data.sql
 :r .\Enum_CommunitiesShortNames.data.sql
 :r .\Enum_ReleaseStatus.data.sql
+:r .\Update_CR_Revisions_0_To_NULL.sql
+:r .\UpdateChangeRequestsData.sql
+:r .\UpdateReleaseMtgShortReferences.sql

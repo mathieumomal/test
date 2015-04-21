@@ -38,9 +38,9 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             Assert.AreEqual(crListFacade.TargetRelease, concernedCr.Release.ShortName);
             Assert.AreEqual(crListFacade.Title, concernedCr.Subject);
             Assert.AreEqual(crListFacade.WgTdocNumber, concernedCr.WGTDoc);
-            Assert.AreEqual(crListFacade.TsgTdocNumber, concernedCr.TSGTDoc);
+            Assert.AreEqual(crListFacade.TsgTdocNumber, concernedCr.ChangeRequestTsgDatas.First().TSGTdoc);
             Assert.AreEqual(crListFacade.WgStatus, concernedCr.WgStatus.Description);
-            Assert.AreEqual(crListFacade.TsgStatus, concernedCr.TsgStatus.Description);
+            Assert.AreEqual(crListFacade.TsgStatus, concernedCr.ChangeRequestTsgDatas.First().TsgStatus.Description);
             Assert.AreEqual(crListFacade.NewVersion, string.Format("{0}.{1}.{2}", concernedCr.NewVersion.MajorVersion, concernedCr.NewVersion.TechnicalVersion,
                         concernedCr.NewVersion.EditorialVersion));
             Assert.AreEqual(crListFacade.SpecId, concernedCr.Fk_Specification ?? 0);

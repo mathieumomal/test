@@ -307,7 +307,6 @@ namespace Etsi.Ultimate.Module.Specifications
             address.RemoveAll(s => s.Contains("selectedTab"));
             address.RemoveAll(s => s.Contains("Rel"));
             Response.Redirect(string.Join("&", address) + "&selectedTab=Releases&Rel=" + ReleaseId.Value);
-
         }
 
         private void RedirectWithErrorMsg(int errorIndex)

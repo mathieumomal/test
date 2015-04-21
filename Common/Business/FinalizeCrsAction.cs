@@ -32,9 +32,9 @@ namespace Etsi.Ultimate.Business
             // Retrieve Crs by TdocUids
             var crRepo = RepositoryFactory.Resolve<IChangeRequestRepository>();
             crRepo.UoW = UoW;
-            IEnumerable<ChangeRequest> candidateChangeRequests = crRepo.GetChangeRequestListByContributionUidList(
+            var candidateChangeRequests = crRepo.GetChangeRequestListByContributionUidList(
                 tdocUids).ToList()
-                .Where(cr => cr.Fk_TSGStatus.GetValueOrDefault() == crApprovedStatus.Pk_EnumChangeRequestStatus
+                .Where(cr => cr.ChangeRequestTsgDatas.Any(x => x.Fk_TsgStatus == crApprovedStatus.Pk_EnumChangeRequestStatus)
                              && !cr.Fk_NewVersion.HasValue);
 
             var specManager = new SpecificationManager { UoW = UoW };
@@ -137,7 +137,7 @@ namespace Etsi.Ultimate.Business
                 MajorVersion = majorVersion,
                 TechnicalVersion = technicalVersion,
                 EditorialVersion = 0,
-                Source = changeRequest.TSGMeeting,
+                Source = changeRequest.ChangeRequestTsgDatas != null ? (changeRequest.ChangeRequestTsgDatas.FirstOrDefault() != null ? changeRequest.ChangeRequestTsgDatas.First().TSGMeeting : 0) : 0,
                 ProvidedBy = personId
             };
 

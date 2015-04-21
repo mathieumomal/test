@@ -261,7 +261,6 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void Test_EditRelease()
         {
-            int releaseIdToTest = 2;
             int previousReleaseId = 3;
             string editedName = "Second release edited";
             int personID = 12;

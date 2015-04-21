@@ -113,9 +113,9 @@ namespace Etsi.Ultimate.Services
         /// <summary>
         /// See interface
         /// </summary>
-        /// <param name="ContributionUID">Contribution UID</param>
+        /// <param name="contributionUid">Contribution UID</param>
         /// <returns>ChangeRequest entity</returns>
-        public KeyValuePair<bool, ChangeRequest> GetContributionCrByUid(string ContributionUID)
+        public KeyValuePair<bool, ChangeRequest> GetContributionCrByUid(string contributionUid)
         {
             ChangeRequest cr = null;
             bool isSuccess = true;
@@ -125,7 +125,7 @@ namespace Etsi.Ultimate.Services
                 {
                     var manager = ManagerFactory.Resolve<IChangeRequestManager>();
                     manager.UoW = uoW;
-                    cr = manager.GetChangeRequestByContributionUid(ContributionUID);
+                    cr = manager.GetChangeRequestByContributionUid(contributionUid);
                     if (cr == null)
                         isSuccess = false;
                 }
@@ -153,7 +153,7 @@ namespace Etsi.Ultimate.Services
                 {
                     var manager = ManagerFactory.Resolve<IChangeRequestManager>();
                     manager.UoW = uoW;
-                    crList = manager.GetChangeRequestListByContributionUIDList(contributionUiDs);
+                    crList = manager.GetChangeRequestListByContributionUidList(contributionUiDs);
                     if (crList == null || crList.Count == 0)
                         isSuccess = false;
                 }
@@ -198,9 +198,8 @@ namespace Etsi.Ultimate.Services
         /// See interface
         /// </summary>
         /// <param name="crPackDecisionlst"></param>
-        /// <param name="tsgTdocNumber"></param>
         /// <returns></returns>
-        public ServiceResponse<bool> UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackDecisionlst, string tsgTdocNumber)
+        public ServiceResponse<bool> UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<CrKeyFacade, string>> crPackDecisionlst)
         {
             var response = new ServiceResponse<bool> { Result = false };
             try
@@ -210,7 +209,7 @@ namespace Etsi.Ultimate.Services
                     var manager = ManagerFactory.Resolve<IChangeRequestManager>();
                     manager.UoW = uoW;
 
-                    response = manager.UpdateChangeRequestPackRelatedCrs(crPackDecisionlst, tsgTdocNumber);
+                    response = manager.UpdateChangeRequestPackRelatedCrs(crPackDecisionlst);
                     if (response.Result)
                         uoW.Save();
                 }
@@ -292,11 +291,11 @@ namespace Etsi.Ultimate.Services
         }
 
         /// <summary>
-        /// Gets the matching Crs by spec# / cr# / revision combination.
+        /// Get CRs by keys
         /// </summary>
-        /// <param name="specCrRevisionTuples">The spec# / cr# / revision combination list.</param>
-        /// <returns>Matching Crs for given tuple (spec# / cr# / revision) combination</returns>
-        public ServiceResponse<List<ChangeRequest>> GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples)
+        /// <param name="crKeys">The spec# / cr# / revision / TsgTdocNumber combination list.</param>
+        /// <returns>Matching Crs for given key combination</returns>
+        public ServiceResponse<List<ChangeRequest>> GetCrsByKeys(List<CrKeyFacade> crKeys)
         {
             var response = new ServiceResponse<List<ChangeRequest>>();
 
@@ -306,7 +305,7 @@ namespace Etsi.Ultimate.Services
                 {
                     var crManager = ManagerFactory.Resolve<IChangeRequestManager>();
                     crManager.UoW = uow;
-                    response.Result = crManager.GetMatchingCrsBySpecCrRevisionTuple(specCrRevisionTuples);
+                    response.Result = crManager.GetCrsByKeys(crKeys);
                 }
                 catch (Exception ex)
                 {
@@ -316,6 +315,97 @@ namespace Etsi.Ultimate.Services
             }
 
             return response;
+        }
+
+        /// <summary>
+        /// Gets the cr by key.
+        /// </summary>
+        /// <param name="crKey">The cr key.</param>
+        /// <returns>Change request</returns>
+        public ServiceResponse<ChangeRequest> GetCrByKey(CrKeyFacade crKey)
+        {
+            var response = new ServiceResponse<ChangeRequest>();
+
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var crManager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    crManager.UoW = uow;
+                    response.Result = crManager.GetCrByKey(crKey);
+                }
+                catch (Exception ex)
+                {
+                    response.Report.LogError("Failed to get matching Spec# / CR # / Revision");
+                    LogManager.Error(String.Format("[Service] Failed to get matching Spec# / CR # / Revision: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
+                }
+            }
+
+            return response;        
+        }
+
+        /// <summary>
+        /// Res the issue cr.
+        /// </summary>
+        /// <param name="crKey">The cr identifier.</param>
+        /// <param name="newTsgTdoc">The new TSG tdoc.</param>
+        /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <returns>Success/Failure</returns>
+        public ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId)
+        {
+            var response = new ServiceResponse<bool> { Result = false };
+
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var manager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    manager.UoW = uoW;
+                    response = manager.ReIssueCr(crKey, newTsgTdoc, newTsgMeetingId);
+
+                    if (response.Result)
+                        uoW.Save();
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Error(e.Message + e.StackTrace);
+                response.Result = false;
+                response.Report.LogError(e.Message);
+            }
+            return response;        
+        }
+
+        /// <summary>
+        /// Revise the cr.
+        /// </summary>
+        /// <param name="crKey">The cr identifier.</param>
+        /// <param name="newTsgTdoc">The new TSG tdoc.</param>
+        /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <returns>Success/Failure</returns>
+        public ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId)
+        {
+            var response = new ServiceResponse<bool> { Result = false };
+
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var manager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    manager.UoW = uoW;
+                    response = manager.ReviseCr(crKey, newTsgTdoc, newTsgMeetingId);
+
+                    if (response.Result)
+                        uoW.Save();
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Error(e.Message + e.StackTrace);
+                response.Result = false;
+                response.Report.LogError(e.Message);
+            }
+            return response;        
         }
     }
 
@@ -351,9 +441,9 @@ namespace Etsi.Ultimate.Services
         /// <summary>
         /// Returns a contribution's CR data
         /// </summary>
-        /// <param name="ContributionUID">Contribution UID</param>
+        /// <param name="contributionUid">Contribution UID</param>
         /// <returns>ChangeRequest entity</returns>
-        KeyValuePair<bool, ChangeRequest> GetContributionCrByUid(string ContributionUID);
+        KeyValuePair<bool, ChangeRequest> GetContributionCrByUid(string contributionUid);
 
         /// <summary>
         /// Returns list of CRs using list of contribution UIDs. 
@@ -372,8 +462,7 @@ namespace Etsi.Ultimate.Services
         /// Updates the CRs related to a CR Pack (TSG decision and TsgTdocNumber)
         /// </summary>
         /// <param name="crPackDecisionlst">The cr pack decisionlst.</param>
-        /// <param name="tsgTdocNumber"></param>
-        ServiceResponse<bool> UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<string, string>> crPackDecisionlst, string tsgTdocNumber);
+        ServiceResponse<bool> UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<CrKeyFacade, string>> crPackDecisionlst);
 
         /// <summary>
         /// Allocates versions for all the TSG approved CRs that are related to the provided TDoc Numbers
@@ -401,11 +490,36 @@ namespace Etsi.Ultimate.Services
         ServiceResponse<bool> DoesCrNumberRevisionCoupleExist(int specId, string crNumber, int revision);
 
         /// <summary>
-        /// Gets the matching Crs by spec# / cr# / revision combination.
+        /// Get CRs by keys
         /// </summary>
-        /// <param name="specCrRevisionTuples">The spec# / cr# / revision combination list.</param>
-        /// <returns>Matching Crs for given tuple (spec# / cr# / revision) combination</returns>
-        ServiceResponse<List<ChangeRequest>> GetMatchingCrsBySpecCrRevisionTuple(List<Tuple<int, string, int>> specCrRevisionTuples);
+        /// <param name="crKeys">The spec# / cr# / revision / TsgTdocNumber combination list.</param>
+        /// <returns>Matching Crs for given key combination</returns>
+        ServiceResponse<List<ChangeRequest>> GetCrsByKeys(List<CrKeyFacade> crKeys);
+
+        /// <summary>
+        /// Gets the cr by key.
+        /// </summary>
+        /// <param name="crKey">The cr key.</param>
+        /// <returns>Change request</returns>
+        ServiceResponse<ChangeRequest> GetCrByKey(CrKeyFacade crKey);
+
+        /// <summary>
+        /// Reissue the cr.
+        /// </summary>
+        /// <param name="crKey">The cr identifier.</param>
+        /// <param name="newTsgTdoc">The new TSG tdoc.</param>
+        /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <returns>Success/Failure</returns>
+        ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId);
+
+        /// <summary>
+        /// Revise the cr.
+        /// </summary>
+        /// <param name="crKey">The cr identifier.</param>
+        /// <param name="newTsgTdoc">The new TSG tdoc.</param>
+        /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <returns>Success/Failure</returns>
+        ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId);
     }
 }
 

@@ -342,4 +342,22 @@
   <data name="Version_Tdoc_Link_Version_Not_Found" xml:space="preserve">
     <value>Version does not exist. So, Tdoc cannot be linked.</value>
   </data>
+  <data name="Error_Lower_Version" xml:space="preserve">
+    <value>Version should be greater than {0}.{1}.{2}</value>
+  </data>
+  <data name="Error_Spec_Draft_Status" xml:space="preserve">
+    <value>Specification should be in draft status</value>
+  </data>
+  <data name="Upload_Version_Error_Meeting_Id_Not_Provided" xml:space="preserve">
+    <value>Meeting Id not provided.</value>
+  </data>
+  <data name="CR_Cannot_Revise_For_Same_TsgTdocNumber" xml:space="preserve">
+    <value>Change request {0} already exist in the TSG Tdoc {1}. To revise this change request please revise in another TSG Tdoc.</value>
+  </data>
+  <data name="CR_Not_Found" xml:space="preserve">
+    <value>Change request not found: {0}</value>
+  </data>
+  <data name="CR_Status_Not_Found" xml:space="preserve">
+    <value>Status not found: {0}</value>
+  </data>
 </root>

@@ -97,6 +97,42 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Change request {0} already exist in the TSG Tdoc {1}. To revise this change request please revise in another TSG Tdoc..
+        /// </summary>
+        public static string CR_Cannot_Revise_For_Same_TsgTdocNumber {
+            get {
+                return ResourceManager.GetString("CR_Cannot_Revise_For_Same_TsgTdocNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Change request not found: {0}.
+        /// </summary>
+        public static string CR_Not_Found {
+            get {
+                return ResourceManager.GetString("CR_Not_Found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Status not found: {0}.
+        /// </summary>
+        public static string CR_Status_Not_Found {
+            get {
+                return ResourceManager.GetString("CR_Status_Not_Found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Version should be greater than {0}.{1}.{2}.
+        /// </summary>
+        public static string Error_Lower_Version {
+            get {
+                return ResourceManager.GetString("Error_Lower_Version", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Release does not exist.
         /// </summary>
         public static string Error_Release_Does_Not_Exist {
@@ -111,6 +147,15 @@ namespace Etsi.Ultimate.Utils {
         public static string Error_Spec_Does_Not_Exist {
             get {
                 return ResourceManager.GetString("Error_Spec_Does_Not_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Specification should be in draft status.
+        /// </summary>
+        public static string Error_Spec_Draft_Status {
+            get {
+                return ResourceManager.GetString("Error_Spec_Draft_Status", resourceCulture);
             }
         }
         
@@ -345,6 +390,15 @@ namespace Etsi.Ultimate.Utils {
         public static string Upload_Version_Error_Draft_Major_Too_High {
             get {
                 return ResourceManager.GetString("Upload_Version_Error_Draft_Major_Too_High", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Meeting Id not provided..
+        /// </summary>
+        public static string Upload_Version_Error_Meeting_Id_Not_Provided {
+            get {
+                return ResourceManager.GetString("Upload_Version_Error_Meeting_Id_Not_Provided", resourceCulture);
             }
         }
         

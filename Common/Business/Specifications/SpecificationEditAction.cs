@@ -53,6 +53,16 @@ namespace Etsi.Ultimate.Business.Specifications
                 MailAlertNumberEdited(spec, report);
             }
 
+            //Default primary rapporteur rule : 
+            //if only one rapporteur define -> should be Prime rapporteur by default
+            if (spec.SpecificationRapporteurs != null && spec.SpecificationRapporteurs.Count == 1)
+                spec.SpecificationRapporteurs.First().IsPrime = true;
+
+            //Default primary WI rule :
+            //if only one WI related to the spec -> should be Prime WI by default
+            if (spec.Specification_WorkItem != null && spec.Specification_WorkItem.Count == 1)
+                spec.Specification_WorkItem.First().isPrime = true;
+
             // Compare the fields of the two specifications.
             CompareSpecs(spec, oldSpec, personId, specRepo);
 

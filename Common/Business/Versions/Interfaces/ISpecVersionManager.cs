@@ -7,9 +7,6 @@ namespace Etsi.Ultimate.Business.Versions.Interfaces
 {
     public interface ISpecVersionManager
     {
-        /// <summary>
-        /// Unit of Work
-        /// </summary>
         IUltimateUnitOfWork UoW { get; set; }
 
         /// <summary>
@@ -64,7 +61,7 @@ namespace Etsi.Ultimate.Business.Versions.Interfaces
         /// <param name="entity">SpecVersion</param>
         /// <returns>Success/Failure</returns>
         bool UpdateEntity(SpecVersion entity);
-        
+
         /// <summary>
         /// Delete SpecVersion entity
         /// </summary>
@@ -81,12 +78,27 @@ namespace Etsi.Ultimate.Business.Versions.Interfaces
         /// <summary>
         /// Link TDoc to Version
         /// </summary>
+        /// <param name="personId"></param>
         /// <param name="specId">The specification identifier</param>
+        /// <param name="meetingId"></param>
         /// <param name="majorVersion">Major version</param>
         /// <param name="technicalVersion">Technical version</param>
         /// <param name="editorialVersion">Editorial version</param>
         /// <param name="relatedTdoc">Related Tdoc</param>
+        /// <param name="releaseId"></param>
         /// <returns>Success/Failure status</returns>
-        ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc);
+        ServiceResponse<bool> AllocateOrAssociateDraftVersion(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc);
+
+        /// <summary>
+        /// Checks the draft creation or association.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specId">The spec identifier.</param>
+        /// <param name="releaseId">The release identifier.</param>
+        /// <param name="majorVersion">The major version.</param>
+        /// <param name="technicalVersion">The technical version.</param>
+        /// <param name="editorialVersion">The editorial version.</param>
+        /// <returns>Draft creation or association status along with validation failures</returns>
+        ServiceResponse<bool> CheckDraftCreationOrAssociation(int personId, int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion);
     }
 }

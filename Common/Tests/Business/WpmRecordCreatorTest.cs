@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using Etsi.Ultimate.Business;
 
 namespace Etsi.Ultimate.Tests.Business
 {

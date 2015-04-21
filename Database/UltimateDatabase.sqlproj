@@ -236,6 +236,10 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
+    <Build Include="dbo\Tables\ChangeRequestTsgData.sql" />
+    <Build Include="Scripts\Post-Deployment\Update_CR_Revisions_0_To_NULL.sql" />
+    <Build Include="Scripts\Post-Deployment\UpdateChangeRequestsData.sql" />
+    <Build Include="Scripts\Post-Deployment\UpdateReleaseMtgShortReferences.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

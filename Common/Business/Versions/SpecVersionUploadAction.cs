@@ -187,32 +187,28 @@ namespace Etsi.Ultimate.Business.Versions
         /// Does perform the upload of the version, given the token that was passed by CheckVersionForUpload function.
         /// </summary>
         /// <param name="personId"></param>
-        /// <param name="version"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public ServiceResponse<string> UploadVersion(int personId, SpecVersion version, string token)
+        public ServiceResponse<string> UploadVersion(int personId, string token)
         {
             var svcResponse = new ServiceResponse<string>();
-            GetRelatedSpecAndRelease(personId, version);
-
             try
             {
-                CheckPersonRightToUploadVersion(version, personId);
-                if (svcResponse.Report.GetNumberOfErrors() == 0)
-                {
-                    var versionInfos = (CacheUploadStorage)CacheManager.Get(CacheKey + token);
-                    if (versionInfos == null)
-                        throw new InvalidOperationException("An error occured during file retrieval. Please try again.");
+                var versionInfos = (CacheUploadStorage)CacheManager.Get(CacheKey + token);
+                if (versionInfos == null)
+                    throw new InvalidOperationException("An error occured during file retrieval. Please try again.");
 
-                    TransferToFtp(versionInfos.Version, versionInfos.TmpUploadedFilePath);
+                GetRelatedSpecAndRelease(personId, versionInfos.Version);
+                CheckPersonRightToUploadVersion(versionInfos.Version, personId);
 
-                    UpdateDatabase(versionInfos.Version, versionInfos.ValidationReport, personId);
-                }
+                TransferToFtp(versionInfos.Version, versionInfos.TmpUploadedFilePath);
+
+                UpdateDatabase(versionInfos.Version, versionInfos.ValidationReport, personId);
             }
             catch (Exception e)
             {
                 LogManager.Error("An error occured while uploading: " + e.Message);
-                svcResponse.Report.LogError("An error occured while uploading: "+e.Message);
+                svcResponse.Report.LogError("An error occured while uploading: " + e.Message);
             }
             return svcResponse;
         }
@@ -246,6 +242,9 @@ namespace Etsi.Ultimate.Business.Versions
             // Version should not already exist
             var versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
             versionMgr.UoW = UoW;
+
+            if ((version.Specification.IsUnderChangeControl.GetValueOrDefault()) && (version.Source == null || version.Source <= 0))
+                throw new InvalidOperationException(Localization.Upload_Version_Error_Meeting_Id_Not_Provided);
 
             //Check if version already uploaded
             var versionsForSpecRelease = versionMgr.GetVersionsForASpecRelease(version.Fk_SpecificationId.Value, version.Fk_ReleaseId.Value);

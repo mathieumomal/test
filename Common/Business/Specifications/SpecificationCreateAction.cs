@@ -15,7 +15,6 @@ namespace Etsi.Ultimate.Business.Specifications
     /// 
     /// Note: Unit tests for this class are located in the SpecificationServiceTest file.
     /// 
-    /// TODO: implement the email that should be sent:
     /// --> If spec number is assigned (Specification reference number assigned)
     /// --> Or spec number is not assigned and pending assignment by Spec manager (New specification awaiting reference number)
     /// </summary>
@@ -77,7 +76,16 @@ namespace Etsi.Ultimate.Business.Specifications
                 }
             );
 
-            
+            //Default primary rapporteur rule : 
+            //if only one rapporteur define -> should be Prime rapporteur by default
+            if (spec.SpecificationRapporteurs != null && spec.SpecificationRapporteurs.Count == 1)
+                spec.SpecificationRapporteurs.First().IsPrime = true;
+
+            //Default primary WI rule :
+            //if only one WI related to the spec -> should be Prime WI by default
+            if (spec.Specification_WorkItem != null && spec.Specification_WorkItem.Count == 1)
+                spec.Specification_WorkItem.First().isPrime = true;
+
             repo.InsertOrUpdate(spec);
 
             return new KeyValuePair<Specification,Report>(spec, report);

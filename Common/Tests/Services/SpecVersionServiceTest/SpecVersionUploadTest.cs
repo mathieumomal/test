@@ -77,12 +77,11 @@ namespace Etsi.Ultimate.Tests.Services
             }
         }
         
-
         #region tests
         [Test]
         public void Upload_Fails_If_User_Has_No_Right()
         {
-            var result = versionSvc.UploadVersion(USER_HAS_NO_RIGHT, myVersion, "token");
+            var result = versionSvc.UploadVersion(USER_HAS_NO_RIGHT, "token");
             Assert.AreEqual(1, result.Report.GetNumberOfErrors());
         }
 
@@ -139,6 +138,29 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsTrue(result.Report.ErrorList.First().Contains(String.Format(Utils.Localization.Upload_Version_Error_Version_Already_Exists, "13.1.0")));
         }
 
+        [Test]
+        public void CheckVersionForUpload_UCC_ShouldNotAllowWhenMeetingNotProvided()
+        {
+            myVersion.Source = 0;
+
+            var fileToUpload = UPLOAD_PATH + "22101-d30.zip";
+
+            var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
+            Assert.AreEqual(1, result.Report.GetNumberOfErrors());
+            Assert.IsTrue(result.Report.ErrorList.First().Contains(Utils.Localization.Upload_Version_Error_Meeting_Id_Not_Provided));
+        }
+
+        [Test]
+        public void CheckVersionForUpload_Draft_ShouldAllowWhenMeetingNotProvided()
+        {
+            myVersion = CreateDraftVersion();
+            myVersion.Source = 0;
+
+            var fileToUpload = UPLOAD_PATH + "22103-200.zip";
+
+            var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
+            Assert.AreEqual(0, result.Report.GetNumberOfErrors());
+        }
 
         /// <summary>
         /// Remarks concerning non conformity of the version are logged, except in the case of draft
@@ -239,14 +261,13 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(0, result.Report.GetNumberOfErrors());
             Assert.IsNotNullOrEmpty(result.Result);
 
-            var uploadResult = versionSvc.UploadVersion(USER_HAS_RIGHT, version, result.Result);
+            var uploadResult = versionSvc.UploadVersion(USER_HAS_RIGHT, result.Result);
             Assert.AreEqual(0, uploadResult.Report.GetNumberOfErrors());
         }
 
         
         
         #endregion
-
 
         #region datas
         private SpecVersion CreateVersion()
@@ -256,6 +277,7 @@ namespace Etsi.Ultimate.Tests.Services
                 MajorVersion = 13,
                 TechnicalVersion = 1,
                 EditorialVersion = 0,
+                Source = 22888,
                 Fk_ReleaseId = EffortConstants.RELEASE_OPEN_ID,
                 Fk_SpecificationId = EffortConstants.SPECIFICATION_ACTIVE_ID
 
@@ -268,6 +290,7 @@ namespace Etsi.Ultimate.Tests.Services
                 MajorVersion = 2,
                 TechnicalVersion = 0,
                 EditorialVersion = 0,
+                Source = 22888,
                 Fk_ReleaseId = EffortConstants.RELEASE_OPEN_ID,
                 Fk_SpecificationId = EffortConstants.SPECIFICATION_DRAFT_WITH_EXISTING_DRAFTS_ID
 

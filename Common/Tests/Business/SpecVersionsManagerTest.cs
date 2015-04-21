@@ -12,7 +12,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Etsi.Ultimate.Repositories;
-using System.Data.Entity;
 using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Business.Security;
 

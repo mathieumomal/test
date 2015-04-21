@@ -97,15 +97,14 @@ namespace Etsi.Ultimate.Services
         /// Upload a version
         /// </summary>
         /// <param name="personId"></param>
-        /// <param name="version"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public ServiceResponse<string> UploadVersion(int personId, SpecVersion version, string token)
+        public ServiceResponse<string> UploadVersion(int personId, string token)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var specVersionUploadAction = new SpecVersionUploadAction {UoW = uoW};
-                var result = specVersionUploadAction.UploadVersion(personId, version, token);
+                var result = specVersionUploadAction.UploadVersion(personId, token);
                 uoW.Save();
                 return result;
             }
@@ -250,13 +249,16 @@ namespace Etsi.Ultimate.Services
         /// <summary>
         /// Link TDoc to Version
         /// </summary>
+        /// <param name="personId"></param>
         /// <param name="specId">The specification identifier</param>
+        /// <param name="meetingId"></param>
         /// <param name="majorVersion">Major version</param>
         /// <param name="technicalVersion">Technical version</param>
         /// <param name="editorialVersion">Editorial version</param>
         /// <param name="relatedTdoc">Related Tdoc</param>
+        /// <param name="releaseId"></param>
         /// <returns>Success/Failure status</returns>
-        public ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc)
+        public ServiceResponse<bool> AllocateOrAssociateDraftVersion(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc)
         {
             var svcResponse = new ServiceResponse<bool>();
 
@@ -266,9 +268,41 @@ namespace Etsi.Ultimate.Services
                 {
                     var specVersionManager = ManagerFactory.Resolve<ISpecVersionManager>();
                     specVersionManager.UoW = uoW;
-                    svcResponse = specVersionManager.UpdateVersionRelatedTdoc(specId, majorVersion, technicalVersion, editorialVersion, relatedTdoc);
+                    svcResponse = specVersionManager.AllocateOrAssociateDraftVersion(personId, specId, releaseId, meetingId, majorVersion, technicalVersion, editorialVersion, relatedTdoc);
                     if (svcResponse.Result)
                         uoW.Save();
+                }
+            }
+            catch (Exception ex)
+            {
+                svcResponse.Result = false;
+                svcResponse.Report.LogError(ex.Message);
+            }
+
+            return svcResponse;
+        }
+
+        /// <summary>
+        /// Checks the draft creation or association.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specId">The spec identifier.</param>
+        /// <param name="releaseId">The release identifier.</param>
+        /// <param name="majorVersion">The major version.</param>
+        /// <param name="technicalVersion">The technical version.</param>
+        /// <param name="editorialVersion">The editorial version.</param>
+        /// <returns>Draft creation or association status along with validation failures</returns>
+        public ServiceResponse<bool> CheckDraftCreationOrAssociation(int personId, int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion)
+        {
+            var svcResponse = new ServiceResponse<bool>();
+
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specVersionManager = ManagerFactory.Resolve<ISpecVersionManager>();
+                    specVersionManager.UoW = uoW;
+                    svcResponse = specVersionManager.CheckDraftCreationOrAssociation(personId, specId, releaseId, majorVersion, technicalVersion, editorialVersion);
                 }
             }
             catch (Exception ex)
@@ -356,21 +390,35 @@ namespace Etsi.Ultimate.Services
         /// Upload version
         /// </summary>
         /// <param name="personId">The person identifier</param>
-        /// <param name="version">The version</param>
         /// <param name="token">GUID of cached version information</param>
         /// <returns>Upload status</returns>
-        ServiceResponse<string> UploadVersion(int personId, SpecVersion version, string token);
+        ServiceResponse<string> UploadVersion(int personId, string token);
 
         /// <summary>
         /// Link TDoc to Version
         /// </summary>
+        /// <param name="personId"></param>
         /// <param name="specId">The specification identifier</param>
+        /// <param name="meetingId"></param>
         /// <param name="majorVersion">Major version</param>
         /// <param name="technicalVersion">Technical version</param>
         /// <param name="editorialVersion">Editorial version</param>
         /// <param name="relatedTdoc">Related Tdoc</param>
+        /// <param name="releaseId"></param>
         /// <returns>Success/Failure status</returns>
-        ServiceResponse<bool> UpdateVersionRelatedTdoc(int specId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc);
+        ServiceResponse<bool> AllocateOrAssociateDraftVersion(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc);
+
+        /// <summary>
+        /// Checks the draft creation or association.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specId">The spec identifier.</param>
+        /// <param name="releaseId">The release identifier.</param>
+        /// <param name="majorVersion">The major version.</param>
+        /// <param name="technicalVersion">The technical version.</param>
+        /// <param name="editorialVersion">The editorial version.</param>
+        /// <returns>Draft creation or association status along with validation failures</returns>
+        ServiceResponse<bool> CheckDraftCreationOrAssociation(int personId, int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion);
     }
 }
 

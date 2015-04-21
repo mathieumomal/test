@@ -262,43 +262,111 @@ namespace Etsi.Ultimate.Tests.Services
                 Assert.AreEqual(1, report.ErrorList.Count);
         }
 
-        #region datas
-        private Specification GetSpecsToCreate(int spec)
+        //Rule : default prime rapporteur
+        [TestCase(1, EDIT_RIGHT_USER, "12.123", 1, 1, 1, Description = "if no prime rapporteur manually define and only one rapporteur define : this one should be prime rapporteur by default")]
+        [TestCase(2, EDIT_RIGHT_USER, "12.123", 1, 0, 2, Description = "if no prime rapporteur manually define and two rapporteurs are define : no one should be prime rapporteur")]
+        [TestCase(3, EDIT_RIGHT_USER, "12.123", 1, 3, 2, Description = "if prime rapporteur manually define : system should keep this one as primary rapporteur")]
+        public void CreateSpecification_PrimeRapporteurByDefaultRule(int specRapporteur, int person, String number, int? serie, int primaryRapporteurId, int rapporteurCount)
         {
-            switch (spec)
+            var specToEdit = GetCorrectSpecificationForEdit(true);
+            specToEdit.SpecificationRapporteurs = GetSpecRapporteurs(specRapporteur);
+            // Set up the rights
+            RegisterAllMocks();
+
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var response = specSvc.EditSpecification(person, specToEdit);
+
+            Assert.AreEqual(0, response.Value.WarningList.Count);
+            Assert.AreEqual(0, response.Value.ErrorList.Count);
+
+            Assert.AreEqual(rapporteurCount, specToEdit.SpecificationRapporteurs.Count);
+            if (primaryRapporteurId != 0)
             {
-                case 1://WITH NUMBER
-                    return new Specification()
-                    {
-                        Pk_SpecificationId = 12,
-                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
-                        Number = "12.145",
-                        Title = "SpecTitle"
+                Assert.AreEqual(primaryRapporteurId,
+                    specToEdit.SpecificationRapporteurs.First(x => x.IsPrime).Fk_RapporteurId);
+            }
+            else
+            {
+                Assert.IsNull(specToEdit.SpecificationRapporteurs.FirstOrDefault(x => x.IsPrime));
+            }
+        }
+
+        //Rule : default prime WI
+        [TestCase(1, EDIT_RIGHT_USER, "12.123", 1, 1, 1, Description = "if no prime WI manually define and only one WI define : this one should be prime WI by default")]
+        [TestCase(2, EDIT_RIGHT_USER, "12.123", 1, 0, 2, Description = "if no prime WI manually define and two WI are define : no one should be prime WI")]
+        [TestCase(3, EDIT_RIGHT_USER, "12.123", 1, 3, 2, Description = "if prime WI manually define : system should keep this one as primary WI")]
+        public void CreateSpecification_PrimeWiByDefaultRule(int specWis, int person, String number, int? serie, int primaryWiId, int wiCount)
+        {
+            var specToEdit = GetCorrectSpecificationForEdit(true);
+            specToEdit.Specification_WorkItem = GetSpecWis(specWis);
+            // Set up the rights
+            RegisterAllMocks();
+
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            var response = specSvc.EditSpecification(person, specToEdit);
+
+            Assert.AreEqual(0, response.Value.WarningList.Count);
+            Assert.AreEqual(0, response.Value.ErrorList.Count);
+
+            Assert.AreEqual(wiCount, specToEdit.Specification_WorkItem.Count);
+            if (primaryWiId != 0)
+            {
+                Assert.AreEqual(primaryWiId,
+                    specToEdit.Specification_WorkItem.First(x => x.isPrime ?? false).Fk_WorkItemId);
+            }
+            else
+            {
+                Assert.IsNull(specToEdit.Specification_WorkItem.FirstOrDefault(x => x.isPrime ?? false));
+            }
+        }
+
+        #region datas
+        private List<Specification_WorkItem> GetSpecWis(int index)
+        {
+            switch (index)
+            {
+                case 1://ONE WI
+                    return new List<Specification_WorkItem>
+                        {
+                            new Specification_WorkItem{Fk_WorkItemId = 1, isPrime = false}
                     };
-                case 2://WITHOUTNUMBER
-                    return new Specification()
-                    {
-                        Pk_SpecificationId = 12,
-                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
-                        Number = "",
-                        Title = "SpecTitle"
+                case 2://TWO WIs
+                    return new List<Specification_WorkItem>
+                        {
+                            new Specification_WorkItem{Fk_WorkItemId = 1, isPrime = false},
+                            new Specification_WorkItem{Fk_WorkItemId = 2, isPrime = false}
                     };
-                case 3://BAD FORMAT NUMBER
-                    return new Specification()
+                case 3://TWO WIs AND ONE MANUALLY DEFINE AS PRIME WI
+                    return new List<Specification_WorkItem>
                     {
-                        Pk_SpecificationId = 12,
-                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
-                        Number = "vd-()=",
-                        Title = "SpecTitle"
+                        new Specification_WorkItem {Fk_WorkItemId = 1, isPrime = false},
+                        new Specification_WorkItem {Fk_WorkItemId = 3, isPrime = true}
                     };
-                case 4://ALREADY EXIST
-                    return new Specification()
+                default:
+                    return null;
+            }
+        }
+
+        private List<SpecificationRapporteur> GetSpecRapporteurs(int index)
+        {
+            switch (index)
+            {
+                case 1://ONE RAPPORTEUR
+                    return new List<SpecificationRapporteur>
+                        {
+                            new SpecificationRapporteur{Fk_RapporteurId = 1, IsPrime = false}
+                    };
+                case 2://TWO RAPPORTEURS
+                    return  new List<SpecificationRapporteur>
+                        {
+                            new SpecificationRapporteur{Fk_RapporteurId = 1, IsPrime = false},
+                            new SpecificationRapporteur{Fk_RapporteurId = 2, IsPrime = false}
+                    };
+                case 3://TWO RAPPORTEURS AND ONE MANUALLY DEFINE AS PRIME RAPPORTEUR
+                    return new List<SpecificationRapporteur>
                     {
-                        Pk_SpecificationId = 12,
-                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
-                        Number = "12.123",
-                        Title = "SpecTitle",
-                        Fk_SerieId = 1
+                        new SpecificationRapporteur {Fk_RapporteurId = 1, IsPrime = false},
+                        new SpecificationRapporteur {Fk_RapporteurId = 3, IsPrime = true}
                     };
                 default:
                     return null;
