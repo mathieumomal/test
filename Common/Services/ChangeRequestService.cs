@@ -310,7 +310,7 @@ namespace Etsi.Ultimate.Services
                 catch (Exception ex)
                 {
                     response.Report.LogError("Failed to get matching Spec# / CR # / Revision");
-                    LogManager.Error(String.Format("[Service] Failed to get matching Spec# / CR # / Revision: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
+                    LogManager.Error(String.Format("[Service] Failed to get matching Spec# / CR # / Revision: {0}{1}{2}{3}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty), ex.StackTrace, ex.Source));
                 }
             }
 
