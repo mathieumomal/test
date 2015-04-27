@@ -201,12 +201,12 @@ namespace Etsi.Ultimate.Repositories
             //1) Search all CR which match with Keys values (Spec ID, CR number, Revision)
             //2) Inside this list search which one match to the exact key value of each one
             var matchingCombinations = AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus)
-                .Where(individualMatch => (specIds.Contains(individualMatch.Fk_Specification ?? 0) || specNumbers.Contains(individualMatch.Specification == null ? String.Empty : individualMatch.Specification.Number))
+                .Where(individualMatch => (specIds.Contains(individualMatch.Fk_Specification ?? 0) || specNumbers.Contains(individualMatch.Specification.Number.Trim()))
                                           && crNumbers.Contains(individualMatch.CRNumber)
                                           && revisionNumbers.Contains(individualMatch.Revision ?? 0))
                 .ToList();
             matchingCombinations = matchingCombinations
-                .Where(combinationMatch => crKeys.Any(x => (((x.SpecId == combinationMatch.Fk_Specification) || (x.SpecNumber == (combinationMatch.Specification == null ? String.Empty : combinationMatch.Specification.Number)))
+                .Where(combinationMatch => crKeys.Any(x => (((x.SpecId == combinationMatch.Fk_Specification) || (x.SpecNumber == combinationMatch.Specification.Number.Trim()))
                                                                     && (x.CrNumber == combinationMatch.CRNumber)
                                                                     && (x.Revision == (combinationMatch.Revision ?? 0)))))
                 //If TSG Tdoc number is not define we return all CRs which matching to to the tuple Spec id, CR number, revision
