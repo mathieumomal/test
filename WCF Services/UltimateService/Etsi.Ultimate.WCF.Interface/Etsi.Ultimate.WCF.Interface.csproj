@@ -50,6 +50,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release.Prd|AnyCPU'">
     <OutputPath>bin\Release.Prd\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release.Ls|AnyCPU'">
+    <OutputPath>bin\Release.Ls\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />

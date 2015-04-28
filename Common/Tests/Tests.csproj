@@ -58,6 +58,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release.Prd|AnyCPU'">
     <OutputPath>bin\Release.Prd\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release.Ls|AnyCPU'">
+    <OutputPath>bin\Release.Ls\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="CsvHelper">
       <HintPath>..\..\packages\CsvHelper.2.4.1\lib\net40-client\CsvHelper.dll</HintPath>

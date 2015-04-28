@@ -51,6 +51,16 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release.Ls|AnyCPU'">
+    <OutputPath>bin\Release.Ls\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -127,7 +137,7 @@
   <Target Name="BeforeBuild">
     <CallTarget Targets="TransformAppConfig" />
   </Target>
-  <Target Name="TransformAppConfig" Condition="'$(Configuration)'=='Release.Dev' Or '$(Configuration)'=='Release.Qa'">
+  <Target Name="TransformAppConfig" Condition="'$(Configuration)'=='Release.Dev' Or '$(Configuration)'=='Release.Qa' Or '$(Configuration)'=='Release.Ls'">
     <Copy DestinationFiles="$(ProjectDir)DeployementConf\App.config" SourceFiles="$(ProjectDir)App.config" ContinueOnError="false" />
     <Copy SourceFiles="$(ProjectDir)DeployementConf\App.$(Configuration).config" DestinationFiles="$(ProjectDir)App.config" ContinueOnError="false" />
   </Target>

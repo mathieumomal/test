@@ -69,6 +69,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release.Prd|AnyCPU'">
     <OutputPath>bin\Release.Prd\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release.Ls|AnyCPU'">
+    <OutputPath>bin\Release.Ls\</OutputPath>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -122,8 +128,11 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="DeployementConf\App.config" />
+    <None Include="DeployementConf\App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="DeployementConf\App.Release.Dev.config" />
+    <None Include="DeployementConf\App.Release.Ls.config" />
     <None Include="DeployementConf\App.Release.Qa.config" />
     <None Include="InstallScripts\InstallService.bat" />
     <None Include="InstallScripts\UnInstallService.bat" />
@@ -173,7 +182,7 @@
   <Target Name="BeforeBuild">
     <CallTarget Targets="TransformAppConfig" />
   </Target>
-  <Target Name="TransformAppConfig" Condition="'$(Configuration)'=='Release.Dev' Or '$(Configuration)'=='Release.Qa'">
+  <Target Name="TransformAppConfig" Condition="'$(Configuration)'=='Release.Dev' Or '$(Configuration)'=='Release.Qa' Or '$(Configuration)'=='Release.Ls'">
     <Copy DestinationFiles="$(ProjectDir)DeployementConf\App.config" SourceFiles="$(ProjectDir)App.config" ContinueOnError="false" />
     <Copy SourceFiles="$(ProjectDir)DeployementConf\App.$(Configuration).config" DestinationFiles="$(ProjectDir)App.config" ContinueOnError="false" />
   </Target>
