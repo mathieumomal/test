@@ -192,8 +192,8 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>Matching Crs for given key combination</returns>
         public List<ChangeRequest> GetCrsByKeys(List<CrKeyFacade> crKeys)
         {
-            var specIds = crKeys.Select(x => x.SpecId).Distinct().ToList();
-            var specNumbers = crKeys.Select(x => x.SpecNumber).Distinct().ToList();
+            var specIds = crKeys.Where(x => x.SpecId > 0).Select(y => y.SpecId).Distinct().ToList();
+            var specNumbers = crKeys.Where(x => x.SpecNumber != null).Select(y => y.SpecNumber).Distinct().ToList();
             var crNumbers = crKeys.Select(x => x.CrNumber).Distinct().ToList();
             var revisionNumbers = crKeys.Select(x => x.Revision).Distinct().ToList();
 
