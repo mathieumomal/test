@@ -85,6 +85,7 @@
 		 <add key="FtpContributionAddress" value="http://www.3gpp.org/ftp/" />  
     	<add key="VersionsLatestFTPFolder" value="2014-09" />
     <add key="DownloadDocumentListBaseAddress" value="http://www.contribution.loc/GenerateDocumentList.aspx?meetingId={0}"/>
+	<add key="UploadTDocUrl" value="http://www.contribution.loc/UploadTdoc.aspx"/>
     <add key="MeetingListAdvancedQueryLink" value="http://webapp.13.etsidev.org/MeetingCalendar/QueryForm.asp"/>
     <add key="ManageAgendaItemsUrl" value="http://webapp.13.etsidev.org/rmeetingDocuments/UpdateAllocations.asp?MTG_ID={0}"/>
     <add key="MeetingCreationAddress" value="http://webapp.13.etsidev.org/meetingManagement/NewMeeting.asp?type=create"/>

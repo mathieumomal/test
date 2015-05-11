@@ -112,6 +112,30 @@ namespace Etsi.Ultimate.Tests.Services
         }
         #endregion
 
+        #region Remove Crs From Cr-Pack
+
+        [Test, TestCaseSource("RemoveCrsFromCrPackData")]
+        public void RemoveCrsFromCrPack(string crPackUid, List<int> crIds, int crsInsidePack, int crsInsidePackAfterRemoval, int totalTsgRecords, int totalTsgRecordsAfterRemoval)
+        {
+            var svc = new ChangeRequestService();           
+            int tsgCountBefore = UoW.Context.ChangeRequestTsgDatas.Count();
+            int crsInsidePackBefore = UoW.Context.ChangeRequestTsgDatas.Where(x => x.TSGTdoc == crPackUid).Count();
+            var response = svc.RemoveCrsFromCrPack(crPackUid, crIds);
+
+            int tsgCountAfter = UoW.Context.ChangeRequestTsgDatas.Count();
+            int crsInsidePackAfter = UoW.Context.ChangeRequestTsgDatas.Where(x => x.TSGTdoc == crPackUid).Count();
+
+            Assert.IsNotNull(response);
+            Assert.IsTrue(response.Result);
+            Assert.AreEqual(0, response.Report.GetNumberOfErrors());
+            Assert.AreEqual(crsInsidePack, crsInsidePackBefore);
+            Assert.AreEqual(crsInsidePackAfterRemoval, crsInsidePackAfter);
+            Assert.AreEqual(totalTsgRecords, tsgCountBefore);
+            Assert.AreEqual(totalTsgRecordsAfterRemoval, tsgCountAfter);
+        }
+
+        #endregion
+
         #region data
         /// <summary>
         /// TSGs TDoc for update decisions.
@@ -179,6 +203,20 @@ namespace Etsi.Ultimate.Tests.Services
                 new KeyValuePair<CrKeyFacade,string>(new CrKeyFacade{CrNumber = "AB013", SpecId = 136080, SpecNumber = "22.101", Revision = 1, TsgTdocNumber = "TSG_ABCC"}, "Agreed")
             };
             return tsgTDocDecisions;
+        }
+
+        /// <summary>
+        /// Gets the Tsg data
+        /// </summary>
+        private IEnumerable<object[]> RemoveCrsFromCrPackData
+        {
+            get
+            {
+                yield return new object[] {  "Change request description6", new List<int>{ 6, 7 }, 3, 1, 24, 22 };
+                yield return new object[] { "TSG_ABC", new List<int> { 4 }, 3, 2, 24, 23 };
+                yield return new object[] { "RP-CR0001", new List<int> { 11 }, 1, 0, 24, 23 };
+                yield return new object[] { "RP-CR0001", new List<int> { 2 }, 1, 1, 24, 24 };
+            }
         }
         #endregion
     }

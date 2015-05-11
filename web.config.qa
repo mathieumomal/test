@@ -93,7 +93,7 @@
   <add key="ContributionImportBaseAddress" value="http://dnn3gpp.13.etsiqa.org/ngppapp/ContributionImport.aspx?meetingId={0}&amp;mode=import"/>
   <add key="ContributionCommitFinalDecisionsUrl" value="http://dnn3gpp.13.etsiqa.org/ngppapp/CommitFinalDecisions.aspx?meetingId={0}"/>
 	<add key="DownloadDocumentListBaseAddress" value="http://dnn3gpp.13.etsiqa.org/ngppapp/GenerateDocumentList.Aspx?meetingId={0}"/>
-	
+	<add key="UploadTDocUrl" value="http://dnn3gpp.13.etsiqa.org/ngppapp/UploadTdoc.aspx"/>
 	
   <add key="MeetingListAdvancedQueryLink" value="http://webapp.13.etsiqa.org/MeetingCalendar/QueryForm.asp"/>
   <add key="ManageAgendaItemsUrl" value="http://webapp.13.etsiqa.org/rmeetingDocuments/UpdateAllocations.asp?MTG_ID={0}"/>

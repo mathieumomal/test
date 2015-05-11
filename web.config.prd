@@ -93,7 +93,7 @@
   <add key="ContributionImportBaseAddress" value="https://portal.3gpp.org/ngppapp/ContributionImport.aspx?meetingId={0}&amp;mode=import"/>
   <add key="ContributionCommitFinalDecisionsUrl" value="https://portal.3gpp.org/ngppapp/CommitFinalDecisions.aspx?meetingId={0}"/>
 	<add key="DownloadDocumentListBaseAddress" value="https://portal.3gpp.org/ngppapp/GenerateDocumentList.Aspx?meetingId={0}"/>
-	
+	<add key="UploadTDocUrl" value="https://portal.3gpp.org/ngppapp/UploadTdoc.aspx"/>
 	<add key="SpecificationDetailsUrl" value="https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId={0}" />
   <add key="ReleaseDetailsUrl" value="https://portal.3gpp.org/desktopmodules/Release/ReleaseDetails.aspx?releaseId={0}"/>
   <add key="TdocDetailsUrl" value="https://portal.3gpp.org/ngppapp/CreateTdoc.aspx?mode=view&amp;contributionUid={0}"/>

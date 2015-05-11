@@ -1,9 +1,9 @@
-﻿using System.Globalization;
-using Etsi.Dsdb.DataAccess;
+﻿using Etsi.Dsdb.DataAccess;
 using Etsi.UserRights.DNN3GPPDataAccess;
 using Etsi.UserRights.Interface;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Xml.Linq;
@@ -145,6 +145,7 @@ namespace Etsi.UserRights.Service
                     if (userMccRecord)
                         personRoles.Add(Enum_UserRoles.StaffMember);
 
+                    //[8] U3GPPMember - Check 'Organisation Status' in DSDB
                     var allowedOrganisationStatus = new[] { ConstOrgaStatus3GppmarkRep, 
                                                                    ConstOrgaStatus3Gppmember,
                                                                    ConstOrgaStatus3Gppobserv,
@@ -153,16 +154,45 @@ namespace Etsi.UserRights.Service
                                                                    ConstOrgaStatus3GppInvite };
                     var prohibitedOrganisationStatus = new string[] { ConstOrgaStatus3Gppexpelled, ConstOrgaStatus3Gppwithdraw };
 
-                    var organisationStatues = (from people in context.People
-                                               join organisation in context.Organisations on people.ORGA_ID equals organisation.ORGA_ID
-                                               join organisationStatus in context.OrganisationStatus on organisation.ORGA_ID equals organisationStatus.ORGA_ID
-                                               where people.PERSON_ID == personId
-                                               select organisationStatus.ORGS_CODE).ToList();
+                    //Current Organisation Details
+                    var currentOrganisationIds = (from people in context.People
+                                              where people.PERSON_ID == personId && people.ORGA_ID != null
+                                              select people.ORGA_ID).Distinct().ToList();
+                    var currentOrganisationStatues = (from organisation in context.Organisations
+                                                      join organisationStatus in context.OrganisationStatus on organisation.ORGA_ID equals organisationStatus.ORGA_ID
+                                                      where currentOrganisationIds.Contains(organisation.ORGA_ID)
+                                                      select organisationStatus.ORGS_CODE).ToList();
 
-                    if (!organisationStatues.Any(x => prohibitedOrganisationStatus.Contains(x))) //Organisation status should not be in prohibited list
+                    //Get represented organisation details with the following condition
+                    //  --Participated in a Meeting in the past 8 months
+                    //  --Registered to participate in a Meeting in the next 8 months
+                    var currentDate = DateTime.UtcNow.Date;
+                    var beginSpan = DateTime.UtcNow.AddMonths(-8).Date;
+                    var endSpan = DateTime.UtcNow.AddMonths(8).Date;
+                    var endSpanWithDayEnd = DateTime.UtcNow.AddMonths(8).Date.AddDays(1).AddMilliseconds(-1);
+
+                    var repOrganisationIds = (from people in context.People
+                                              join personInList in context.PersonInLists on people.PERSON_ID equals personInList.PERSON_ID
+                                              join personList in context.PersonLists on personInList.PLIST_ID equals personList.PLIST_ID
+                                              join meeting in context.Meetings on personList.MTG_ID equals meeting.MTG_ID
+                                              //Match Person Id
+                                              where ((people.PERSON_ID == personId) &&
+                                                     (personInList.REPRESENT_ORGA_ID != null) &&
+                                                  //Match represented meetings in the past 8 months
+                                                     ((personInList.REPRESENT_FLG == "Y" && beginSpan <= meeting.END_DATE && meeting.END_DATE < currentDate) ||
+                                                  //Match registered meetings in the next 8 months 
+                                                      (currentDate <= meeting.END_DATE && meeting.START_DATE <= endSpanWithDayEnd)))
+                                              select personInList.REPRESENT_ORGA_ID).Distinct().ToList();
+
+                    var repOrganisationStatues = (from organisation in context.Organisations
+                                                  join organisationStatus in context.OrganisationStatus on organisation.ORGA_ID equals organisationStatus.ORGA_ID
+                                                  where repOrganisationIds.Contains(organisation.ORGA_ID)
+                                                  select organisationStatus.ORGS_CODE).ToList();
+
+                    if (!prohibitedOrganisationStatus.Any(x => (currentOrganisationStatues.Count <= 0 || currentOrganisationStatues.Contains(x)) &&
+                                                               (repOrganisationStatues.Count <= 0 || repOrganisationStatues.Contains(x))))
                     {
-                        //[8] U3GPPMember - Check 'Organisation Status' in DSDB
-                        if (organisationStatues.Any(x => allowedOrganisationStatus.Contains(x)))
+                        if(allowedOrganisationStatus.Any(x => currentOrganisationStatues.Contains(x) || repOrganisationStatues.Contains(x)))
                             personRoles.Add(Enum_UserRoles.U3GPPMember);
                     }
                 }

@@ -41,7 +41,8 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateReIssueCr = "Ultimate Service Error [ReIssueCr]: {0}";
         private const string ConstErrorTemplateReviseCr = "Ultimate Service Error [ReviseCr]: {0}";
         private const string ConstErrorTemplateGetCrsByKeys = "Ultimate Service Error [GetCrsByKeys]: {0}";
-        private const string ConstErrorTemplateGetCrByKey = "Ultimate Service Error [GetCrByKey]: {0}";                
+        private const string ConstErrorTemplateGetCrByKey = "Ultimate Service Error [GetCrByKey]: {0}";
+        private const string ConstErrorTemplateRemoveCrsFromCrPack = "Ultimate Service Error [RemoveCrsFromCrPack]: {0}";
         #endregion
 
         #region Internal Methods
@@ -799,6 +800,30 @@ namespace Etsi.Ultimate.WCF.Service
                 LogManager.Error(String.Format(ConstErrorTemplateReviseCr, ex.Message));
                 statusReport.Result = false;
                 statusReport.Report.ErrorList.Add("Change request failed to revise");
+            }
+            return statusReport;
+        }
+
+        /// <summary>
+        /// Remove Crs from Cr-Pack
+        /// </summary>
+        /// <param name="crPack">Uid of Cr-Pack</param>
+        /// <param name="crIds">List of Cr Ids</param>
+        /// <returns>Success/Failure</returns>
+        public ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds)
+        {
+            var statusReport = new ServiceResponse<bool>();
+            try
+            {
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var ultimateStatusResponse = svc.RemoveCrsFromCrPack(crPack, crIds);
+                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format(ConstErrorTemplateRemoveCrsFromCrPack, ex.Message));
+                statusReport.Result = false;
+                statusReport.Report.ErrorList.Add("Cr Pack failed to remove Crs");
             }
             return statusReport;
         }

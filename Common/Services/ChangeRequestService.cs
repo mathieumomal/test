@@ -407,6 +407,37 @@ namespace Etsi.Ultimate.Services
             }
             return response;        
         }
+
+        /// <summary>
+        /// Remove Crs from Cr-Pack
+        /// </summary>
+        /// <param name="crPack">Uid of Cr-Pack</param>
+        /// <param name="crIds">List of Cr Ids</param>
+        /// <returns>Success/Failure</returns>
+        public ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds)
+        {
+            var response = new ServiceResponse<bool> { Result = false };
+
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var manager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    manager.UoW = uoW;
+                    response = manager.RemoveCrsFromCrPack(crPack, crIds);
+
+                    if (response.Result)
+                        uoW.Save();
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Error(e.Message + e.StackTrace);
+                response.Result = false;
+                response.Report.LogError(e.Message);
+            }
+            return response;  
+        }
     }
 
     /// <summary>
@@ -520,6 +551,14 @@ namespace Etsi.Ultimate.Services
         /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
         /// <returns>Success/Failure</returns>
         ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId);
+
+        /// <summary>
+        /// Remove Crs from Cr-Pack
+        /// </summary>
+        /// <param name="crPack">Uid of Cr-Pack</param>
+        /// <param name="crIds">List of Cr Ids</param>
+        /// <returns>Success/Failure</returns>
+        ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds);
     }
 }
 

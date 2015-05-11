@@ -315,6 +315,19 @@ namespace Etsi.Ultimate.WCF.Service
             return serviceHelper.ReviseCr(crKey, newTsgTdoc, newTsgMeetingId);        
         }
 
+        /// <summary>
+        /// Remove Crs from Cr-Pack
+        /// </summary>
+        /// <param name="crPack">Uid of Cr-Pack</param>
+        /// <param name="crIds">List of Cr Ids</param>
+        /// <returns>Success/Failure</returns>
+        public ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds)
+        {
+            LogManager.Debug(String.Format("[ServiceCall][RemoveCrsFromCrPack] crPack={0}; crIds={1}", crPack, String.Join(",", crIds)));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.RemoveCrsFromCrPack(crPack, crIds);            
+        }
+
         #endregion
 
         #region Version services

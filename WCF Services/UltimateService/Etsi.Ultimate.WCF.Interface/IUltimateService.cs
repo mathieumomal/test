@@ -215,6 +215,15 @@ namespace Etsi.Ultimate.WCF.Interface
         [OperationContract]
         ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId);
 
+        /// <summary>
+        /// Remove Crs from Cr-Pack
+        /// </summary>
+        /// <param name="crPack">Uid of Cr-Pack</param>
+        /// <param name="crIds">List of Cr Ids</param>
+        /// <returns>Success/Failure</returns>
+        [OperationContract]
+        ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds);
+
         #endregion
 
         #region Versions

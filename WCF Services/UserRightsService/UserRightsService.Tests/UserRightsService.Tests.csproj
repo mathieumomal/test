@@ -99,6 +99,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
@@ -119,6 +122,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BaseEffortTest.cs" />
+    <Compile Include="DelegateRoleFor3gppTests.cs" />
     <Compile Include="Dnn3gppEffortContext.cs" />
     <Compile Include="DsdbEffortContext.cs" />
     <Compile Include="RightsFor3gppTests.cs" />
@@ -154,7 +158,9 @@
     <None Include="Database\DSDB\PERSON_LIST.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Database\TestRights.xml">

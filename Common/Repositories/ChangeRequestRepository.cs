@@ -243,6 +243,17 @@ namespace Etsi.Ultimate.Repositories
                                      && x.ChangeRequestTsgDatas.Any(y => y.TSGTdoc == crKey.TsgTdocNumber));
             return query.ToList();
         }
+
+        /// <summary>
+        /// Get Tsg information for a given crPack
+        /// </summary>
+        /// <param name="crPack">Uid of Cr-Pack</param>
+        /// <returns>Tsg information</returns>
+        public List<ChangeRequestTsgData> GetTsgDataForCrPack(string crPack)
+        {
+            var query = UoW.Context.ChangeRequestTsgDatas.Where(x => x.TSGTdoc == crPack);
+            return query.ToList();
+        }
     }
 
     /// <summary>
@@ -323,5 +334,12 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="crKey">The cr key.</param>
         /// <returns>Change Request</returns>
         List<ChangeRequest> GetCrsBySpecAndCrNumberAndTsgTdoc(CrKeyFacade crKey);
+
+        /// <summary>
+        /// Get Tsg information for a given crPack
+        /// </summary>
+        /// <param name="crPack">Uid of Cr-Pack</param>
+        /// <returns>Tsg information</returns>
+        List<ChangeRequestTsgData> GetTsgDataForCrPack(string crPack);
     }
 }

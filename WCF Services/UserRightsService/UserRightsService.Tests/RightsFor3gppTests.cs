@@ -68,25 +68,27 @@ namespace UserRightsService.Tests
             get
             {
                 var anonymousRights = new List<string>() { "Release_ViewPartialList", "Release_ViewLimitedDetails", "Specification_ViewDetails", "Meeting_ViewMeetingList" };
-                var eolAccountOwnerRights = new List<string>() { "Release_ViewPartialList", "Release_ViewLimitedDetails", "Specification_ViewDetails", "Meeting_ViewMeetingList" };
-                var ultimate3gppMemberRights = new List<string>() { "General_ViewPersonalData", "Release_ViewCompleteList", "Release_ViewDetails", "Specification_ViewDetails", "Meeting_ViewMeetingList", "Contribute_Restricted", "Contribution_Upload", "Contribution_Withdraw_Restricted" };
+                var eolAccountOwnerRights = new List<string>() { "General_ViewPersonalData", "Release_ViewCompleteList", "Release_ViewDetails", "Specification_ViewDetails",
+                                                                 "Meeting_ViewMeetingList", "Contribute_Restricted", "Contribution_Upload", "Contribution_Withdraw_Restricted" };
+                var ultimate3gppMemberRights = new List<string>() { "General_ViewPersonalData", "Release_ViewCompleteList", "Release_ViewDetails", "Specification_ViewDetails", 
+                                                                    "Meeting_ViewMeetingList", "Contribute_Restricted", "Contribution_Upload", "Contribution_Withdraw_Restricted" };
                 var staffMemberRights = new List<string>() { "General_ViewPersonalData", "Release_ViewCompleteList", "Release_ViewDetails", "Remarks_ViewPrivate", "Remarks_AddPrivateByDefault", 
                                                              "Specification_Create", "Specification_EditLimitted", "Specification_View_UnAllocated_Number", "Specification_ViewDetails", 
                                                              "Versions_Allocate", "Versions_Upload", "Versions_Modify_MajorVersion", "Versions_AddRemark", "Meeting_ViewMeetingList", 
                                                              "Meeting_CreateMeeting", "Manage_AgendaItems", "Contribute_Anytime", "Contribution_Edit", "Contribution_Upload", "Contribution_Upload_Anytime", 
-                                                             "Contribution_Withdraw", "Contribution_Import", "Contribution_Edit_CR_Number" };
+                                                             "Contribution_Withdraw", "Contribution_Import", "Contribution_Edit_CR_Number", "Contribution_Commit_Decisions" };
                 var meetingManagerRights = new List<string>() { "Meeting_ViewMeetingList", "Meeting_CreateMeeting", "Meeting_CreateEvent", "Meeting_EditEvent", "Manage_AgendaItems" };
                 var workPlanManagerRights = new List<string>() { "Release_ViewCompleteDetails", "WorkItem_ImportWorkplan" };
                 var specificationManagerRights = new List<string>() { "General_ViewPersonalData", "Release_ViewCompleteList", "Release_ViewCompleteDetails", "Release_Create", "Release_Edit", 
                                                                       "Release_Freeze", "Release_Close", "Remarks_ViewPrivate", "Remarks_AddPrivateByDefault", "WorkItem_ImportWorkplan", "Specification_BulkPromote", 
-                                                                      "Specification_Create", "Specification_EditFull", "Specification_ForceTransposition", "Specification_InhibitPromote", "Specification_ManageITURecommendations", 
+                                                                      "Specification_Create", "Specification_EditFull", "Specification_ForceTransposition", "Specification_InhibitPromote","Specification_Promote", "Specification_ManageITURecommendations", 
                                                                       "Specification_RemoveInhibitPromote", "Specification_SyncHardLinksOnLatestFolder", "Specification_Withdraw", "Specification_WithdrawFromRelease", "Specification_UnforceTransposition", 
                                                                       "Specification_View_UnAllocated_Number", "Specification_ViewDetails", "Versions_Allocate", "Versions_Upload", "Versions_AddRemark", "Manage_AgendaItems", "Meeting_ViewMeetingList", 
                                                                       "Meeting_CreateMeeting", "Meeting_CreateEvent", "Meeting_EditEvent", "Contribute_Anytime", "Contribution_Edit", "Contribution_Upload", "Contribution_Upload_Anytime", "Contribution_Withdraw", 
                                                                       "Contribution_Import" , "Contribution_Edit_CR_Number" };
                 var adminRights = new List<string>() { "General_ViewPersonalData", "Release_ViewCompleteList", "Release_ViewCompleteDetails", "Release_Create", "Release_Edit", "Release_Freeze", "Release_Close", "Remarks_ViewPrivate", 
                                                        "Remarks_AddPrivateByDefault", "WorkItem_ImportWorkplan", "Specification_BulkPromote", "Specification_Create", "Specification_EditFull", "Specification_ForceTransposition", 
-                                                       "Specification_InhibitPromote", "Specification_ManageITURecommendations", "Specification_RemoveInhibitPromote", "Specification_SyncHardLinksOnLatestFolder", "Specification_Withdraw", 
+                                                       "Specification_InhibitPromote", "Specification_Promote", "Specification_ManageITURecommendations", "Specification_RemoveInhibitPromote", "Specification_SyncHardLinksOnLatestFolder", "Specification_Withdraw", 
                                                        "Specification_WithdrawFromRelease", "Specification_UnforceTransposition", "Specification_View_UnAllocated_Number", "Specification_ViewDetails", "Versions_Allocate", "Versions_Upload", 
                                                        "Versions_AddRemark", "Manage_AgendaItems", "Meeting_ViewMeetingList", "Meeting_CreateMeeting", "Meeting_CreateEvent", "Meeting_EditEvent", "Contribute_Anytime", "Contribution_Edit", 
                                                        "Contribution_Upload", "Contribution_Upload_Anytime", "Contribution_Withdraw" , "Contribution_Import" , "Contribution_Edit_CR_Number" };
