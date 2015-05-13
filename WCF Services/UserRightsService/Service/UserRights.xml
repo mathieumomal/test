@@ -35,9 +35,6 @@
         <Right value="Release_ViewDetails"/>
         <Right value="Specification_ViewDetails"/>
         <Right value="Meeting_ViewMeetingList"/>
-        <Right value="Contribute_Restricted"/>
-        <Right value="Contribution_Upload"/>
-        <Right value="Contribution_Withdraw_Restricted" />
       </UserRole>
 
       <!-- 3GPPMember = Delegate = Logged user whose company is a 3GPPMember -->

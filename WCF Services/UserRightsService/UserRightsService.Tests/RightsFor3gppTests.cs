@@ -68,8 +68,7 @@ namespace UserRightsService.Tests
             get
             {
                 var anonymousRights = new List<string>() { "Release_ViewPartialList", "Release_ViewLimitedDetails", "Specification_ViewDetails", "Meeting_ViewMeetingList" };
-                var eolAccountOwnerRights = new List<string>() { "General_ViewPersonalData", "Release_ViewCompleteList", "Release_ViewDetails", "Specification_ViewDetails",
-                                                                 "Meeting_ViewMeetingList", "Contribute_Restricted", "Contribution_Upload", "Contribution_Withdraw_Restricted" };
+                var eolAccountOwnerRights = new List<string>() { "General_ViewPersonalData", "Release_ViewCompleteList", "Release_ViewDetails", "Specification_ViewDetails", "Meeting_ViewMeetingList" };
                 var ultimate3gppMemberRights = new List<string>() { "General_ViewPersonalData", "Release_ViewCompleteList", "Release_ViewDetails", "Specification_ViewDetails", 
                                                                     "Meeting_ViewMeetingList", "Contribute_Restricted", "Contribution_Upload", "Contribution_Withdraw_Restricted" };
                 var staffMemberRights = new List<string>() { "General_ViewPersonalData", "Release_ViewCompleteList", "Release_ViewDetails", "Remarks_ViewPrivate", "Remarks_AddPrivateByDefault", 
