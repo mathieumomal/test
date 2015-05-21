@@ -224,6 +224,26 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [Test, TestCaseSource("WorkItemData")]
+        public void GetWorkItemsByKeywords(WorkItemFakeDBSet workItemData)
+        {
+            List<int> releaseIds = new List<int>();
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var wiService = new WorkItemService();
+            var wiKeyWords = new List<string>{"101", "UPCON"};
+            var workItems = wiService.GetWorkItemsByKeywords(0, wiKeyWords);
+            Assert.AreEqual(3, workItems.Count);
+            Assert.AreEqual(100, workItems[0].Pk_WorkItemUid);
+            Assert.AreEqual("UPCON", workItems[0].Acronym);
+            Assert.AreEqual(101, workItems[1].Pk_WorkItemUid);
+            Assert.AreEqual(570029, workItems[2].Pk_WorkItemUid);
+            Assert.AreEqual("UPCON", workItems[2].Acronym);
+        }
+
+        [Test, TestCaseSource("WorkItemData")]
         public void GetAllAcronyms(WorkItemFakeDBSet workItemData)
         {
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();

@@ -107,24 +107,19 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
 
         #endregion
 
-        public IUltimateUnitOfWork UoW { get; set; }
-
         #region ISpecVersionsRepository Membres
 
+        public IUltimateUnitOfWork UoW { get; set; }
 
         public int CountVersionsPendingUploadByReleaseId(int releaseId)
         {
             throw new NotImplementedException();
         }
 
-        #endregion
-
-
         public List<SpecVersion> GetVersionsBySpecIds(List<int> specIds, List<int> allowedMajorVersions)
         {
             throw new NotImplementedException();
         }
-
 
         public SpecVersion GetVersion(int specId, int majorVersion, int technicalVersion, int editorialVersion)
         {
@@ -135,5 +130,12 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         {
             throw new NotImplementedException();
         }
+
+        public List<SpecVersion> GetLatestVersionsBySpecIds(List<int> specIds)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }

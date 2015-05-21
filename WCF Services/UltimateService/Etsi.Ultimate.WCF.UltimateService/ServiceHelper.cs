@@ -8,6 +8,7 @@ using Microsoft.Practices.ObjectBuilder2;
 using UltimateEntities = Etsi.Ultimate.DomainClasses;
 using UltimateServiceEntities = Etsi.Ultimate.WCF.Interface.Entities;
 using Etsi.Ultimate.WCF.Interface.Entities;
+using System.Linq;
 
 namespace Etsi.Ultimate.WCF.Service
 {
@@ -21,9 +22,11 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateGetReleases = "Ultimate Service Error [GetReleases]: {0}";
         private const string ConstErrorTemplateGetWorkitemsByIds = "Ultimate Service Error [GetWorkItemsByIds]: {0}";
         private const string ConstErrorTemplateGetWorkitemsByKeyword = "Ultimate Service Error [GetWorkItemsByKeyWord]: {0}";
+        private const string ConstErrorTemplateGetWorkItemsByKeyWords = "Ultimate Service Error [GetWorkItemsByKeyWords]: {0}";
         private const string ConstErrorTemplateGetSpecificationsByKeyword = "Ultimate Service Error [GetSpecificationsByKeyWord]: {0}";
         private const string ConstErrorTemplateGetSpecificationById = "Ultimate Service Error [GetSpecificationById]: {0}";
         private const string ConstErrorTemplateGetSpecificationsByIds = "Ultimate Service Error [GetSpecificationsByIds]: {0}";
+        private const string ConstErrorTemplateGetSpecificationsBySpecNumbers = "Ultimate Service Error [GetSpecificationsBySpecNumbers]: {0}";
         private const string ConstErrorTemplateCreateChangeRequest = "Ultimate Service Error [CreateChangeRequest]: {0}";
         private const string ConstErrorTemplateEditChangeRequest = "Ultimate Service Error [EditChangeRequest]: {0}";
         private const string ConstErrorTemplateUpdateChangeRequestPackRelatedCrs = "Ultimate Service Error [UpdateChangeRequestPackRelatedCrs]: {0}";
@@ -43,6 +46,7 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateGetCrsByKeys = "Ultimate Service Error [GetCrsByKeys]: {0}";
         private const string ConstErrorTemplateGetCrByKey = "Ultimate Service Error [GetCrByKey]: {0}";
         private const string ConstErrorTemplateRemoveCrsFromCrPack = "Ultimate Service Error [RemoveCrsFromCrPack]: {0}";
+        private const string ConstErrorTemplateGetLatestVersionsBySpecIds = "Ultimate Service Error [GetLatestVersionsBySpecIds]: {0}";
         #endregion
 
         #region Internal Methods
@@ -169,6 +173,34 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         /// <summary>
+        /// Gets the work items by key words.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="keywords">The keywords to identify work items.</param>
+        /// <returns>List of work items</returns>
+        internal List<UltimateServiceEntities.WorkItem> GetWorkItemsByKeyWords(int personId, List<string> keywords)
+        {
+            var workItems = new List<UltimateServiceEntities.WorkItem>();
+
+            try
+            {
+                var svc = ServicesFactory.Resolve<IWorkItemService>();
+                var svcWorkItems = svc.GetWorkItemsByKeywords(personId, keywords);
+                if (svcWorkItems != null)
+                    svcWorkItems.ForEach(x => workItems.Add(ConvertUltimateWorkItemToServiceWorkItem(x)));
+                else
+                    LogManager.Error(String.Format(ConstErrorTemplateGetWorkItemsByKeyWords,
+                        "Unable to get workitems for keywords=" + keywords.FindAll(x => string.IsNullOrEmpty(x.ToString(CultureInfo.InvariantCulture)))));
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format(ConstErrorTemplateGetWorkItemsByKeyWords, ex.Message));
+            }
+
+            return workItems;
+        }
+
+        /// <summary>
         /// Gets the specifications by key word.
         /// </summary>
         /// <param name="personId">The person identifier.</param>
@@ -253,6 +285,32 @@ namespace Etsi.Ultimate.WCF.Service
             catch (Exception ex)
             {
                 LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationsByIds, ex.Message));
+            }
+
+            return specifications;
+        }
+
+        /// <summary>
+        /// Gets the specifications by numbers.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specNumbers">The specification numbers.</param>
+        /// <returns>List of specifications</returns>
+        internal List<UltimateServiceEntities.Specification> GetSpecificationsBySpecNumbers(int personId, List<string> specNumbers)
+        {
+            var specifications = new List<UltimateServiceEntities.Specification>();
+            try
+            {
+                var svc = ServicesFactory.Resolve<ISpecificationService>();
+                var specsFound = svc.GetSpecificationsByNumbers(personId, specNumbers);
+                if (specsFound != null)
+                    specsFound.ForEach(spec => specifications.Add(ConvertUltimateSpecificationToServiceSpecification(spec)));
+                else
+                    LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationsBySpecNumbers, "Failed to get specs"));
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationsBySpecNumbers, ex.Message));
             }
 
             return specifications;
@@ -704,6 +762,29 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         /// <summary>
+        /// Get latest version of each relaease for the given spec ids
+        /// </summary>
+        /// <param name="specIds">The specification identifiders</param>
+        /// <returns>List of Spec Versions</returns>
+        internal List<UltimateServiceEntities.SpecVersion> GetLatestVersionsBySpecIds(List<int> specIds)
+        {
+            var specVersions = new List<UltimateServiceEntities.SpecVersion>();
+            try
+            {
+                var svc = ServicesFactory.Resolve<ISpecVersionService>();
+                var result = svc.GetLatestVersionsBySpecIds(specIds);
+
+                if (result != null)
+                    result.ForEach(e => specVersions.Add(ConvertToServiceSpecVersion(e)));
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format(ConstErrorTemplateGetLatestVersionsBySpecIds, ex.Message));
+            }
+            return specVersions;
+        }
+
+        /// <summary>
         /// Get CRs by keys
         /// </summary>
         /// <param name="crKeys">The spec# / cr# / revision / TsgTdocNumber combination list.</param>
@@ -1073,6 +1154,8 @@ namespace Etsi.Ultimate.WCF.Service
                 serviceSpecVersion.TechnicalVersion = specVersion.TechnicalVersion;
                 serviceSpecVersion.EditorialVersion = specVersion.EditorialVersion;
                 serviceSpecVersion.RelatedTDoc = specVersion.RelatedTDoc;
+                serviceSpecVersion.Fk_SpecificationId = specVersion.Fk_SpecificationId ?? 0;
+                serviceSpecVersion.Fk_ReleaseId = specVersion.Fk_ReleaseId ?? 0;
             }
             return serviceSpecVersion;
         }

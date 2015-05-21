@@ -86,6 +86,23 @@ namespace Etsi.Ultimate.Repositories
         }
 
         /// <summary>
+        /// Get latest versions of each release for the given spec Ids
+        /// </summary>
+        /// <param name="specIds">The specification identifiers</param>
+        /// <returns>List of latest spec versions for each release</returns>
+        public List<SpecVersion> GetLatestVersionsBySpecIds(List<int> specIds)
+        {
+            var versions = UoW.Context.SpecVersions.Where(z => specIds.Contains(z.Fk_SpecificationId ?? 0)).ToList();
+
+            var latestVersions = versions.GroupBy(x => new { x.Fk_SpecificationId, x.Fk_ReleaseId })
+                                         .Select(y => y.OrderByDescending(major => major.MajorVersion)
+                                                       .ThenByDescending(technical => technical.TechnicalVersion)
+                                                       .ThenByDescending(editorial => editorial.EditorialVersion).First())
+                                         .ToList();
+            return latestVersions;
+        }
+
+        /// <summary>
         /// See interface
         /// </summary>
         /// <param name="specIds"></param>
@@ -179,6 +196,13 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="ReleaseMajorNumber"> The 3G decimal number of version, that is used to determine.</param>
         /// <returns></returns>
         int CountVersionsPendingUploadByReleaseId(int releaseMajorNumber);
+
+        /// <summary>
+        /// Get latest versions of each release for the given spec Ids
+        /// </summary>
+        /// <param name="specIds">The specification identifiers</param>
+        /// <returns>List of latest spec versions for each release</returns>
+        List<SpecVersion> GetLatestVersionsBySpecIds(List<int> specIds);
 
         /// <summary>
         /// Returns all specifications given a specification Ids and a list of allowed major versions

@@ -72,6 +72,20 @@ namespace Etsi.Ultimate.WCF.Service
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetWorkItemsByKeyWord(personId, keyword);
         }
+
+        /// <summary>
+        /// Gets the work items by key words.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="keywords">The keywords to identify work items.</param>
+        /// <returns>List of work items</returns>
+        public List<WorkItem> GetWorkItemsByKeyWords(int personId, List<string> keywords)
+        {
+            LogManager.Debug("[ServiceCall][GetWorkItemsByKeyWords] PersonId=" + personId + "; keywords=" + string.Join(", ", keywords));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetWorkItemsByKeyWords(personId, keywords);        
+        }
+
         #endregion
 
         #region Specifications services
@@ -131,6 +145,19 @@ namespace Etsi.Ultimate.WCF.Service
             LogManager.Debug("[ServiceCall][ChangeSpecificationsStatusToUnderChangeControl] specNumbersForUcc=" + string.Join(", ", specIdsForUcc));
             var serviceHelper = new ServiceHelper();
             return serviceHelper.ChangeSpecificationsStatusToUnderChangeControl(personId, specIdsForUcc);
+        }
+
+        /// <summary>
+        /// Gets the specifications by numbers.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specNumbers">The specification numbers.</param>
+        /// <returns>List of specifications</returns>
+        public List<Specification> GetSpecificationsBySpecNumbers(int personId, List<string> specNumbers)
+        {
+            LogManager.Debug("[ServiceCall][GetSpecificationsBySpecNumbers] PersonId=" + personId + "; specNumbers=" + string.Join(", ", specNumbers));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetSpecificationsBySpecNumbers(personId, specNumbers);
         }
 
         #endregion
@@ -421,6 +448,18 @@ namespace Etsi.Ultimate.WCF.Service
                    personId, token));
             var serviceHelper = new ServiceHelper();
             return serviceHelper.UploadVersion(personId, token);
+        }
+
+        /// <summary>
+        /// Get latest version of each relaease for the given spec ids
+        /// </summary>
+        /// <param name="specIds">The specification identifiders</param>
+        /// <returns>List of Spec Versions</returns>
+        public List<SpecVersion> GetLatestVersionsBySpecIds(List<int> specIds)
+        {
+            LogManager.Debug("[ServiceCall][GetLatestVersionsBySpecIds] specIds=" + string.Join(", ", specIds));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetLatestVersionsBySpecIds(specIds);        
         }
 
         #endregion

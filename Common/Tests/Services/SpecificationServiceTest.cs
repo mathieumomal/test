@@ -176,6 +176,30 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [Test]
+        public void GetSpecificationsByNumbers()
+        {
+            var specData = new SpecificationFakeDBSet();
+            specData.Add(new Specification { Pk_SpecificationId = 1, Number = "00.01", Title = "First specification" });
+            specData.Add(new Specification { Pk_SpecificationId = 2, Number = "00.02", Title = "Second specification" });
+            specData.Add(new Specification { Pk_SpecificationId = 3, Number = "00.03", Title = "Third specification" });
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specData);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var specService = new SpecificationService();
+            var specNumbers = new List<string> { "00.01", "00.03" };
+            var result = specService.GetSpecificationsByNumbers(0, specNumbers);
+            Assert.AreEqual(2, result.Count);
+            Assert.AreEqual(1, result[0].Pk_SpecificationId);
+            Assert.AreEqual("00.01", result[0].Number);
+            Assert.AreEqual("First specification", result[0].Title);
+            Assert.AreEqual(3, result[1].Pk_SpecificationId);
+            Assert.AreEqual("00.03", result[1].Number);
+            Assert.AreEqual("Third specification", result[1].Title);
+        }
+
+        [Test]
         public void SpecificationInhibitPromote_Nominal()
         {
             UserRightsContainer userRights = new UserRightsContainer();

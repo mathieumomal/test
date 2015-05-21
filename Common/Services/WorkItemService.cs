@@ -160,6 +160,21 @@ namespace Etsi.Ultimate.Services
         }
 
         /// <summary>
+        /// Get work items by keywords (acronyms, uids)
+        /// </summary>
+        /// <param name="personId">The person identifier</param>
+        /// <param name="keywords">keywords to identify workitems</param>
+        /// <returns>List of workitems</returns>
+        public List<WorkItem> GetWorkItemsByKeywords(int personId, List<string> keywords)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var workItemManager = new WorkItemManager(uoW);
+                return workItemManager.GetWorkItemsByKeywords(personId, keywords);
+            }        
+        }
+
+        /// <summary>
         /// Get the workitem based on the id
         /// </summary>
         /// <param name="personId">Person Id</param>

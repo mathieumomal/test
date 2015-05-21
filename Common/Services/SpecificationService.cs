@@ -57,6 +57,22 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Gets the specifications by numbers.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specNumbers">The specification numbers.</param>
+        /// <returns>List of specifications</returns>
+        public List<Specification> GetSpecificationsByNumbers(int personId, List<string> specNumbers)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specificationManager = ManagerFactory.Resolve<ISpecificationManager>();
+                specificationManager.UoW = uoW;
+                return specificationManager.GetSpecificationsByNumbers(personId, specNumbers);
+            }
+        }
+
         public KeyValuePair<Specification, UserRightsContainer> GetSpecificationDetailsById(int personId, int specificationId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())

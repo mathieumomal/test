@@ -54,6 +54,16 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>List of work items</returns>
         [OperationContract]
         List<WorkItem> GetWorkItemsByKeyWord(int personId, string keyword);
+        
+        /// <summary>
+        /// Gets the work items by key words.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="keywords">The keywords to identify work items.</param>
+        /// <returns>List of work items</returns>
+        [OperationContract]
+        List<WorkItem> GetWorkItemsByKeyWords(int personId, List<string> keywords);
+
         #endregion
 
         #region specs
@@ -92,6 +102,16 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>Status report</returns>
         [OperationContract]
         ServiceResponse<bool> ChangeSpecificationsStatusToUnderChangeControl(int personId, List<int> specIdsForUcc);
+
+        /// <summary>
+        /// Gets the specifications by numbers.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specNumbers">The specification numbers.</param>
+        /// <returns>List of specifications</returns>
+        [OperationContract]
+        List<Specification> GetSpecificationsBySpecNumbers(int personId, List<string> specNumbers);
+
         #endregion
 
         #region crs
@@ -288,6 +308,14 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>Success/Failure</returns>
         [OperationContract]
         ServiceResponse<bool> UploadVersion(int personId, string token);
+
+        /// <summary>
+        /// Get latest version of each relaease for the given spec ids
+        /// </summary>
+        /// <param name="specIds">The specification identifiders</param>
+        /// <returns>List of Spec Versions</returns>
+        [OperationContract]
+        List<SpecVersion> GetLatestVersionsBySpecIds(List<int> specIds);
 
         #endregion
     }

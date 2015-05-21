@@ -109,5 +109,13 @@ namespace Etsi.Ultimate.Business.Specifications.Interfaces
         /// <param name="ids"></param>
         /// <returns></returns>
         KeyValuePair<List<DomainClasses.Specification>, UserRightsContainer> GetSpecifications(int personId, List<int> ids);
+
+        /// <summary>
+        /// Gets the specifications by numbers.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specNumbers">The specification numbers.</param>
+        /// <returns>List of specifications</returns>
+        List<Specification> GetSpecificationsByNumbers(int personId, List<string> specNumbers);
     }
 }

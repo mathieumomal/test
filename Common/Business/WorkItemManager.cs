@@ -198,6 +198,20 @@ namespace Etsi.Ultimate.Business
         }
 
         /// <summary>
+        /// Get work items by keywords (acronyms, uids)
+        /// </summary>
+        /// <param name="personId">The person identifier</param>
+        /// <param name="keywords">keywords to identify workitems</param>
+        /// <returns>List of workitems</returns>
+        public List<WorkItem> GetWorkItemsByKeywords(int personId, List<string> keywords)
+        {
+            var repo = RepositoryFactory.Resolve<IWorkItemRepository>();
+            repo.UoW = _uoW;
+            var workItems = repo.GetWorkItemsByKeywords(keywords);
+            return workItems;
+        }
+
+        /// <summary>
         /// Gets the work item by identifier extend.
         /// </summary>
         /// <param name="personId">The person identifier.</param>

@@ -76,7 +76,7 @@
 	<add key="RapporteurDetailsAddress" value="http://webapp.13.etsiqa.org/teldir/ListPersDetails.asp?PersId="/>
 	<add key="FtpExportAddress" value="http://ftp3gpp.13.etsiqa.org/Information/WORK_PLAN/"/>
 	<add key="FtpBasePhysicalPath" value="D:\1FTPSites\ftp3GPP.13.etsiqa.org\" />
-    <add key="FtpBaseBackupPhysicalPath" value="D:\AppTrans\TempHDrive\" />
+    <add key="FtpBaseBackupPhysicalPath" value="\\3GPPFRONT\TempHDrive\" />
 	<add key="FtpBaseAddress" value="http://ftp3gpp.13.etsiqa.org/" />
 	<add key="VersionsLatestFTPFolder" value="2014-09" />
 	<add key="TranspositionFolderPath" value="D:\AppTrans\transposition\"/>

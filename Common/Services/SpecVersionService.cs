@@ -34,6 +34,21 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Get latest version of each relaease for the given spec ids
+        /// </summary>
+        /// <param name="specIds">The specification identifiders</param>
+        /// <returns>List of Spec Versions</returns>
+        public List<SpecVersion> GetLatestVersionsBySpecIds(List<int> specIds)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specVersionManager = ManagerFactory.Resolve<ISpecVersionManager>();
+                specVersionManager.UoW = uoW;
+                return specVersionManager.GetLatestVersionsBySpecIds(specIds);
+            }
+        }
+
         public KeyValuePair<SpecVersion, UserRightsContainer> GetVersionsById(int versionId, int personId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -333,6 +348,13 @@ namespace Etsi.Ultimate.Services
         /// <param name="releaseId">The identifier of the specification's release</param>
         /// <returns>List of versions objects</returns>
         List<SpecVersion> GetVersionsForSpecRelease(int specificationId, int releaseId);
+
+        /// <summary>
+        /// Get latest version of each relaease for the given spec ids
+        /// </summary>
+        /// <param name="specIds">The specification identifiders</param>
+        /// <returns>List of Spec Versions</returns>
+        List<SpecVersion> GetLatestVersionsBySpecIds(List<int> specIds);
 
         /// <summary>
         /// Return a SpecVersion and current user rights objects using identifiers

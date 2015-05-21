@@ -63,6 +63,20 @@ namespace Etsi.Ultimate.Business.Specifications
         }
 
         /// <summary>
+        /// Gets the specifications by numbers.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="specNumbers">The specification numbers.</param>
+        /// <returns>List of specifications</returns>
+        public List<Specification> GetSpecificationsByNumbers(int personId, List<string> specNumbers)
+        {
+            var repo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            repo.UoW = UoW;
+            var specifications = repo.GetSpecificationListByNumber(specNumbers);
+            return specifications;
+        }
+
+        /// <summary>
         /// Default implementation of the Interface. See interface
         /// </summary>
         /// <param name="personId"></param>

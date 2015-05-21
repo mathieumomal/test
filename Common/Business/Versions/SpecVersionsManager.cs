@@ -24,6 +24,19 @@ namespace Etsi.Ultimate.Business.Versions
             return new List<SpecVersion>(specVersions);
         }
 
+        /// <summary>
+        /// Get latest version of each relaease for the given spec ids
+        /// </summary>
+        /// <param name="specIds">The specification identifiders</param>
+        /// <returns>List of Spec Versions</returns>
+        public List<SpecVersion> GetLatestVersionsBySpecIds(List<int> specIds)
+        {
+            var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            specVersionRepo.UoW = UoW;
+
+            return specVersionRepo.GetLatestVersionsBySpecIds(specIds);
+        }
+
         public List<SpecVersion> GetVersionsForASpecRelease(int specificationId, int releaseId)
         {
             var repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();

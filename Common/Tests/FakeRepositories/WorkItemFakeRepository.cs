@@ -154,6 +154,11 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             throw new NotImplementedException();
         }
 
+        public List<WorkItem> GetWorkItemsByKeywords(List<string> keywords)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 

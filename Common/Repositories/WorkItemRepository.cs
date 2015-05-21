@@ -170,6 +170,18 @@ namespace Etsi.Ultimate.Repositories
             return AllIncluding(wi => wi.WorkItems_ResponsibleGroups).Where(x => workItems.Contains(x.Pk_WorkItemUid)).ToList();
         }
 
+        /// <summary>
+        /// Get work items by keywords (acronyms, uids)
+        /// </summary>
+        /// <param name="keywords">keywords to identify workitems</param>
+        /// <returns>List of workitems</returns>
+        public List<WorkItem> GetWorkItemsByKeywords(List<string> keywords)
+        {
+            var keywordsInLower = keywords.ConvertAll(x => x.ToLower());
+            return AllIncluding(wi => wi.WorkItems_ResponsibleGroups).Where(x => keywordsInLower.Contains(x.Acronym.ToLower())
+                || keywordsInLower.Contains(x.Pk_WorkItemUid.ToString().ToLower())).ToList();
+        }
+
         #endregion
 
         #region IDisposable Members
@@ -232,5 +244,12 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="workitemIds">The workitem ids.</param>
         /// <returns></returns>
         List<WorkItem> GetWorkItemsByIds(List<int> workitemIds);
+
+        /// <summary>
+        /// Get work items by keywords (acronyms, uids)
+        /// </summary>
+        /// <param name="keywords">keywords to identify workitems</param>
+        /// <returns>List of workitems</returns>
+        List<WorkItem> GetWorkItemsByKeywords(List<string> keywords);
     }
 }

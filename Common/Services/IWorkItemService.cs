@@ -68,6 +68,14 @@ namespace Etsi.Ultimate.Services
         KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemByIds(int personId, List<int> workItemId);
 
         /// <summary>
+        /// Get work items by keywords (acronyms, uids)
+        /// </summary>
+        /// <param name="personId">The person identifier</param>
+        /// <param name="keywords">keywords to identify workitems</param>
+        /// <returns>List of workitems</returns>
+        List<WorkItem> GetWorkItemsByKeywords(int personId, List<string> keywords);
+
+        /// <summary>
         /// Get the workitem based on the id
         /// </summary>
         /// <param name="personId">Person Id</param>

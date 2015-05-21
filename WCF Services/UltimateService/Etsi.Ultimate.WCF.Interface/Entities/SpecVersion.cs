@@ -37,5 +37,17 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </summary>
         [DataMember]
         public string RelatedTDoc { get; set; }
+
+        /// <summary>
+        /// Gets or sets the foreign key of spec identifier.
+        /// </summary>
+        [DataMember]
+        public int Fk_SpecificationId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the foreign key of release identifier.
+        /// </summary>
+        [DataMember]
+        public int Fk_ReleaseId { get; set; }
     }
 }

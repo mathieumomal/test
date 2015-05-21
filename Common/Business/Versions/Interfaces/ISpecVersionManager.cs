@@ -25,6 +25,13 @@ namespace Etsi.Ultimate.Business.Versions.Interfaces
         List<SpecVersion> GetVersionsForASpecRelease(int specificationId, int releaseId);
 
         /// <summary>
+        /// Get latest version of each relaease for the given spec ids
+        /// </summary>
+        /// <param name="specIds">The specification identifiders</param>
+        /// <returns>List of Spec Versions</returns>
+        List<SpecVersion> GetLatestVersionsBySpecIds(List<int> specIds);
+
+        /// <summary>
         /// Return a SpecVersion and current user rights objects using identifiers
         /// </summary>
         /// <param name="versionId">The identifier of the requested version</param>

@@ -68,6 +68,30 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [Test]
+        public void GetLatestVersionsBySpecIds()
+        {
+            var specVersionData = new SpecVersionFakeDBSet();
+            specVersionData.Add(new SpecVersion { Pk_VersionId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = 1, MajorVersion = 1, TechnicalVersion = 0, EditorialVersion = 0 });
+            specVersionData.Add(new SpecVersion { Pk_VersionId = 2, Fk_SpecificationId = 1, Fk_ReleaseId = 1, MajorVersion = 1, TechnicalVersion = 1, EditorialVersion = 0 });
+            specVersionData.Add(new SpecVersion { Pk_VersionId = 3, Fk_SpecificationId = 1, Fk_ReleaseId = 2, MajorVersion = 2, TechnicalVersion = 5, EditorialVersion = 0 });
+            specVersionData.Add(new SpecVersion { Pk_VersionId = 4, Fk_SpecificationId = 1, Fk_ReleaseId = 2, MajorVersion = 2, TechnicalVersion = 1, EditorialVersion = 0 });
+            specVersionData.Add(new SpecVersion { Pk_VersionId = 5, Fk_SpecificationId = 2, Fk_ReleaseId = 1, MajorVersion = 1, TechnicalVersion = 0, EditorialVersion = 0 });
+            specVersionData.Add(new SpecVersion { Pk_VersionId = 6, Fk_SpecificationId = 2, Fk_ReleaseId = 1, MajorVersion = 2, TechnicalVersion = 1, EditorialVersion = 0 });
+            specVersionData.Add(new SpecVersion { Pk_VersionId = 7, Fk_SpecificationId = 2, Fk_ReleaseId = 1, MajorVersion = 1, TechnicalVersion = 1, EditorialVersion = 0 });
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.SpecVersions).Return((IDbSet<SpecVersion>)specVersionData);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+            var versionsSvc = new SpecVersionService();
+            var specIds = new List<int> { 1, 2 };
+            var result = versionsSvc.GetLatestVersionsBySpecIds(specIds);
+            Assert.AreEqual(3, result.Count);
+            Assert.AreEqual(2, result[0].Pk_VersionId);
+            Assert.AreEqual(3, result[1].Pk_VersionId);
+            Assert.AreEqual(6, result[2].Pk_VersionId);
+        }
+
+        [Test]
         public void SpecVersionService_InsertEntity()
         {
             //Arrange
