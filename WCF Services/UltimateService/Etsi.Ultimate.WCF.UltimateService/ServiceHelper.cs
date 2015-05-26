@@ -324,7 +324,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>Status report</returns>
         internal ServiceResponse<bool> ChangeSpecificationsStatusToUnderChangeControl(int personId, List<int> specIdsForUcc)
         {
-            var statusChangeReport = new ServiceResponse<bool>();
+            var statusChangeReport = new ServiceResponse<bool> { Report = new ServiceReport() };
             try
             {
                 var svc = ServicesFactory.Resolve<ISpecificationService>();
@@ -348,7 +348,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>Status report</returns>
         internal ServiceResponse<bool> SetCrsAsFinal(int personId, List<string> tdocNumbers)
         {
-            var statusReport = new ServiceResponse<bool>();
+            var statusReport = new ServiceResponse<bool> { Report = new ServiceReport() };
             try
             {
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
@@ -396,7 +396,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>Primary key of newly inserted change request</returns>
         internal ServiceResponse<int> CreateChangeRequest(int personId, UltimateServiceEntities.ChangeRequest changeRequest)
         {
-            var response = new ServiceResponse<int>();
+            var response = new ServiceResponse<int> { Report = new ServiceReport() };
             try
             {
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
@@ -842,7 +842,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>Success/Failure</returns>
         internal ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId)
         {
-            var statusReport = new ServiceResponse<bool>();
+            var statusReport = new ServiceResponse<bool> { Report = new ServiceReport() };
             try
             {
                 var crKeyForUltimate = ConvertToUltimateCrKeyFacade(crKey);
@@ -868,7 +868,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>Success/Failure</returns>
         internal ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId)
         {
-            var statusReport = new ServiceResponse<bool>();
+            var statusReport = new ServiceResponse<bool> { Report = new ServiceReport() };
             try
             {
                 var crKeyForUltimate = ConvertToUltimateCrKeyFacade(crKey);
@@ -893,7 +893,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>Success/Failure</returns>
         public ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds)
         {
-            var statusReport = new ServiceResponse<bool>();
+            var statusReport = new ServiceResponse<bool> { Report = new ServiceReport() };
             try
             {
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
