@@ -349,7 +349,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error("Error while editing specification: " + e.Message);
+                    LogManager.Error("Error while editing specification: " + e.Message, e);
                     var report = new Report();
                     report.LogError(e.Message);
                     return new KeyValuePair<int, Report>(-1, report);
