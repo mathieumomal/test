@@ -904,7 +904,8 @@ namespace Etsi.Ultimate.Business
 
         private void TreatAcronym(WorkItemImportClass record, WorkItem wi)
         {
-            string acronym = record.Acronym;
+            var acronym = record.Acronym;
+            
             if (acronym == "-")
                 acronym = "";
 
@@ -920,8 +921,8 @@ namespace Etsi.Ultimate.Business
                 var wiWithSameAcronym = TreatedWorkItems.FirstOrDefault(w => w.Acronym == acronym);
                 if (wiWithSameAcronym != null)
                 {
-                    bool isParent = false;
-                    int level = wi.WiLevel.GetValueOrDefault();
+                    var isParent = false;
+                    var level = wi.WiLevel.GetValueOrDefault();
 
                     var parentWi = wi;
 
@@ -945,22 +946,24 @@ namespace Etsi.Ultimate.Business
                     if (isParent)
                     {
                         Report.LogWarning(
-                            String.Format(Utils.Localization.WorkItem_Import_DuplicateAcronymSubLevel,
+                            string.Format(Utils.Localization.WorkItem_Import_DuplicateAcronymSubLevel,
                             wi.WorkplanId, wi.Pk_WorkItemUid, acronym));
                         acronym = "";
                     }
                     else
                     {
                         Report.LogError(
-                            String.Format(Utils.Localization.WorkItem_Import_DuplicateAcronymSameLevel,
+                            string.Format(Utils.Localization.WorkItem_Import_DuplicateAcronymSameLevel,
                             wi.WorkplanId, wi.Pk_WorkItemUid, acronym, wiWithSameAcronym.Pk_WorkItemUid));
                     }
                 }
             }
 
-            if (wi.Acronym != acronym)
+            var effectiveAcronym = record.Acronym == "-" ? string.Empty : record.Acronym;
+            if (wi.Acronym != acronym || wi.Effective_Acronym != effectiveAcronym)
             {
                 wi.Acronym = acronym;
+                wi.Effective_Acronym = effectiveAcronym;
                 IsCurrentWiModified = true;
             }
         }

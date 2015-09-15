@@ -80,6 +80,16 @@
       [View_Communities].[ShortName] AS [ShortName]
       FROM [dbo].[View_Communities] AS [View_Communities]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="View_CrPacks" EntityType="Etsi.Ultimate.DataAccess.Store.View_CrPacks" store:Type="Views" store:Schema="dbo" store:Name="View_CrPacks">
+            <DefiningQuery>SELECT 
+      [View_CrPacks].[pk_Contribution] AS [pk_Contribution], 
+      [View_CrPacks].[title] AS [title], 
+      [View_CrPacks].[uid] AS [uid], 
+      [View_CrPacks].[fk_Meeting] AS [fk_Meeting], 
+      [View_CrPacks].[Denorm_Source] AS [Denorm_Source], 
+      [View_CrPacks].[TB_ID] AS [TB_ID]
+      FROM [dbo].[View_CrPacks] AS [View_CrPacks]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="View_Meetings" EntityType="Etsi.Ultimate.DataAccess.Store.View_Meetings" store:Type="Views" store:Schema="dbo" store:Name="View_Meetings">
             <DefiningQuery>SELECT 
       [View_Meetings].[MTG_ID] AS [MTG_ID], 
@@ -384,6 +394,7 @@
           <Property Name="Code" Type="varchar" Nullable="false" MaxLength="50" />
           <Property Name="Description" Type="varchar" MaxLength="150" />
           <Property Name="WpmProjectId" Type="int" />
+          <Property Name="SortOrder" Type="int" />
         </EntityType>
         <EntityType Name="History">
           <Key>
@@ -572,6 +583,7 @@
           <Property Name="Fk_ReleaseId" Type="int" />
           <Property Name="ETSI_WKI_Ref" Type="varchar" MaxLength="50" StoreGeneratedPattern="Computed" />
           <Property Name="RelatedTDoc" Type="varchar" MaxLength="200" />
+          <Property Name="SupressFromMissing_List" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="WorkItems">
           <Key>
@@ -603,6 +615,7 @@
           <Property Name="StatusReport" Type="varchar" MaxLength="50" />
           <Property Name="RapporteurCompany" Type="varchar" MaxLength="100" />
           <Property Name="TssAndTrs" Type="varchar" MaxLength="50" />
+          <Property Name="Effective_Acronym" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="WorkItems_ResponsibleGroups">
           <Key>
@@ -693,6 +706,23 @@
           <Property Name="ParentTbId" Type="int" />
           <Property Name="ActiveCode" Type="varchar" MaxLength="12" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
+        </EntityType>
+        <!--Erreurs détectées durant la génération :
+      Avertissement 6002: La table/vue « U3GPPDB.dbo.View_CrPacks » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
+      -->
+        <EntityType Name="View_CrPacks">
+          <Key>
+            <PropertyRef Name="pk_Contribution" />
+            <PropertyRef Name="title" />
+            <PropertyRef Name="fk_Meeting" />
+            <PropertyRef Name="TB_ID" />
+          </Key>
+          <Property Name="pk_Contribution" Type="int" Nullable="false" />
+          <Property Name="title" Type="varchar" Nullable="false" MaxLength="1023" />
+          <Property Name="uid" Type="varchar" MaxLength="200" />
+          <Property Name="fk_Meeting" Type="int" Nullable="false" />
+          <Property Name="Denorm_Source" Type="varchar" MaxLength="500" />
+          <Property Name="TB_ID" Type="int" Nullable="false" />
         </EntityType>
         <!--Erreurs détectées durant la génération :
       Avertissement 6002: La table/vue « U3GPPDB.dbo.View_Meetings » n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.
@@ -1216,9 +1246,6 @@
           <Parameter Name="ETSI_WKI_ID" Type="int" Mode="In" />
         </Function>
         <Function Name="getMeetingShortRef" ReturnType="varchar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="shortName" Type="varchar" Mode="In" />
-          <Parameter Name="meetingTitle" Type="varchar" Mode="In" />
-          <Parameter Name="SeqNumb" Type="varchar" Mode="In" />
           <Parameter Name="MtgFullRef" Type="varchar" Mode="In" />
         </Function>
         <Function Name="getPersonName" ReturnType="varchar" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -1495,6 +1522,7 @@
             <End Role="Enum_ChangeRequestStatus" EntitySet="Enum_ChangeRequestStatus" />
             <End Role="ChangeRequestTsgData" EntitySet="ChangeRequestTsgDatas" />
           </AssociationSet>
+          <EntitySet Name="View_CrPacks" EntityType="Etsi.Ultimate.DataAccess.View_CrPacks" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -1695,6 +1723,7 @@
           <NavigationProperty Name="WorkItems_ResponsibleGroups" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItems_ResponsibleGroups_WorkItems" FromRole="WorkItem" ToRole="WorkItems_ResponsibleGroups" />
           <NavigationProperty Name="Specification_WorkItem" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItemID" FromRole="WorkItem" ToRole="Specification_WorkItem" />
           <NavigationProperty Name="CR_WorkItems" Relationship="Etsi.Ultimate.DataAccess.FK_WIId" FromRole="WorkItem" ToRole="CR_WorkItems" />
+          <Property Type="String" Name="Effective_Acronym" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_WorkItems_Releases">
           <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="0..1" />
@@ -1849,6 +1878,7 @@
           <Property Type="String" Name="Description" MaxLength="150" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="SpecificationTechnologies" Relationship="Etsi.Ultimate.DataAccess.FK_Enum_Technology" FromRole="Enum_Technology" ToRole="SpecificationTechnology" />
           <Property Type="Int32" Name="WpmProjectId" />
+          <Property Type="Int32" Name="SortOrder" />
         </EntityType>
         <EntityType Name="Specification">
           <Key>
@@ -2142,6 +2172,7 @@
           <NavigationProperty Name="FoundationsChangeRequests" Relationship="Etsi.Ultimate.DataAccess.FK_CRNewVersion" FromRole="SpecVersion" ToRole="ChangeRequest" />
           <NavigationProperty Name="SyncInfoes" Relationship="Etsi.Ultimate.DataAccess.FK_SyncInfo_Version" FromRole="SpecVersion" ToRole="SyncInfo" />
           <Property Type="String" Name="RelatedTDoc" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="Boolean" Name="SupressFromMissing_List" Nullable="false" />
           </EntityType>
         <Association Name="Version_FK_ReleaseID">
           <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="0..1" />
@@ -2477,6 +2508,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="View_CrPacks">
+          <Key>
+            <PropertyRef Name="pk_Contribution" />
+            <PropertyRef Name="title" />
+            <PropertyRef Name="fk_Meeting" />
+            <PropertyRef Name="TB_ID" />
+          </Key>
+          <Property Type="Int32" Name="pk_Contribution" Nullable="false" />
+          <Property Type="String" Name="title" Nullable="false" MaxLength="1023" FixedLength="false" Unicode="false" />
+          <Property Type="String" Name="uid" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="fk_Meeting" Nullable="false" />
+          <Property Type="String" Name="Denorm_Source" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Type="Int32" Name="TB_ID" Nullable="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2600,6 +2645,7 @@
           <EntitySetMapping Name="WorkItems">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.WorkItem">
               <MappingFragment StoreEntitySet="WorkItems">
+                <ScalarProperty Name="Effective_Acronym" ColumnName="Effective_Acronym" />
                 <ScalarProperty Name="TssAndTrs" ColumnName="TssAndTrs" />
                 <ScalarProperty Name="RapporteurCompany" ColumnName="RapporteurCompany" />
                 <ScalarProperty Name="StatusReport" ColumnName="StatusReport" />
@@ -2717,6 +2763,7 @@
           <EntitySetMapping Name="Enum_Technology">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Enum_Technology">
               <MappingFragment StoreEntitySet="Enum_Technology">
+                <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
                 <ScalarProperty Name="WpmProjectId" ColumnName="WpmProjectId" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
@@ -2838,6 +2885,7 @@
           <EntitySetMapping Name="SpecVersions">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.SpecVersion">
               <MappingFragment StoreEntitySet="Version">
+                <ScalarProperty Name="SupressFromMissing_List" ColumnName="SupressFromMissing_List" />
                 <ScalarProperty Name="RelatedTDoc" ColumnName="RelatedTDoc" />
                 <ScalarProperty Name="ETSI_WKI_Ref" ColumnName="ETSI_WKI_Ref" />
                 <ScalarProperty Name="Fk_ReleaseId" ColumnName="Fk_ReleaseId" />
@@ -2971,6 +3019,18 @@
                 <ScalarProperty Name="TSGTarget" ColumnName="TSGTarget" />
                 <ScalarProperty Name="TSGTdoc" ColumnName="TSGTdoc" />
                 <ScalarProperty Name="Pk_ChangeRequestTsgData" ColumnName="Pk_ChangeRequestTsgData" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="View_CrPacks">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.View_CrPacks">
+              <MappingFragment StoreEntitySet="View_CrPacks">
+                <ScalarProperty Name="TB_ID" ColumnName="TB_ID" />
+                <ScalarProperty Name="Denorm_Source" ColumnName="Denorm_Source" />
+                <ScalarProperty Name="fk_Meeting" ColumnName="fk_Meeting" />
+                <ScalarProperty Name="uid" ColumnName="uid" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="pk_Contribution" ColumnName="pk_Contribution" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

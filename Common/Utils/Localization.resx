@@ -360,4 +360,16 @@
   <data name="CR_Status_Not_Found" xml:space="preserve">
     <value>Status not found: {0}</value>
   </data>
+  <data name="CR_Crs_Successfully_Moved_Inside_CrPack" xml:space="preserve">
+    <value>Selected CRs have been successfully sent to CR-Pack {0}.</value>
+  </data>
+  <data name="CR_Send_Crs_To_CrPack" xml:space="preserve">
+    <value>Send CRs to CR-pack</value>
+  </data>
+  <data name="CR_Cannot_Be_Send_To_CRPack" xml:space="preserve">
+    <value>TDoc cannot be sent to a CR-Pack</value>
+  </data>
+  <data name="CR_Crs_Or_CrPack_NotSelected" xml:space="preserve">
+    <value>Please select CRs to be sent to CR-Pack</value>
+  </data>
 </root>

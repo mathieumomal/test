@@ -73,6 +73,7 @@ namespace Etsi.Ultimate.Business
             Container.RegisterType<ICrCategoriesManager, CrCategoriesManager>(new TransientLifetimeManager());
             Container.RegisterType<IChangeRequestStatusManager, ChangeRequestStatusManager>(
                 new TransientLifetimeManager());
+            Container.RegisterType<IContributionManager, ContributionManager>(new TransientLifetimeManager());
 
             // For ITU recommendations
             Container.RegisterType<ISeedFileParser, SeedFileParser>(new TransientLifetimeManager());

@@ -176,6 +176,9 @@
     <Compile Include="Users_Groups.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="View_CrPacks.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="View_ModulesPages.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>

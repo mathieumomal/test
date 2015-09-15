@@ -125,6 +125,11 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="releaseId"></param>
+        /// <returns></returns>
         public int CountVersionsPendingUploadByReleaseId(int releaseId)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -132,6 +137,25 @@ namespace Etsi.Ultimate.Services
                 var specVersionManager = new SpecVersionsManager();
                 specVersionManager.UoW = uoW;
                 return specVersionManager.CountVersionsPendingUploadByReleaseId(releaseId);
+            }
+        }
+
+        /// <summary>
+        /// Update version
+        /// </summary>
+        /// <param name="version"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        public ServiceResponse<SpecVersion> UpdateVersion(SpecVersion version, int personId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specVersionManager = ManagerFactory.Resolve<ISpecVersionManager>();
+                specVersionManager.UoW = uoW;
+                var result = specVersionManager.UpdateVersion(version, personId);
+                if(result.Result != null && result.Report.GetNumberOfErrors() == 0)
+                    uoW.Save();
+                return result;
             }
         }
 
@@ -441,6 +465,14 @@ namespace Etsi.Ultimate.Services
         /// <param name="editorialVersion">The editorial version.</param>
         /// <returns>Draft creation or association status along with validation failures</returns>
         ServiceResponse<bool> CheckDraftCreationOrAssociation(int personId, int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion);
+
+        /// <summary>
+        /// See implementation
+        /// </summary>
+        /// <param name="version"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        ServiceResponse<SpecVersion> UpdateVersion(SpecVersion version, int personId);
     }
 }
 

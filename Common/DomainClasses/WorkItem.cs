@@ -50,6 +50,7 @@ namespace Etsi.Ultimate.DomainClasses
         public string StatusReport { get; set; }
         public string RapporteurCompany { get; set; }
         public string TssAndTrs { get; set; }
+        public string Effective_Acronym { get; set; }
     
         public virtual Release Release { get; set; }
         public virtual ICollection<Remark> Remarks { get; set; }

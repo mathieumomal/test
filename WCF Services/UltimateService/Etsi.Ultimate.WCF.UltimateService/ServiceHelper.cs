@@ -49,7 +49,7 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateGetLatestVersionsBySpecIds = "Ultimate Service Error [GetLatestVersionsBySpecIds]: {0}";
         #endregion
 
-        #region Internal Methods
+        #region Release
 
         /// <summary>
         /// Gets the releases.
@@ -104,6 +104,10 @@ namespace Etsi.Ultimate.WCF.Service
 
             return release;
         }
+
+        #endregion 
+
+        #region WIs
 
         /// <summary>
         /// Gets the work items by ids.
@@ -200,6 +204,9 @@ namespace Etsi.Ultimate.WCF.Service
             return workItems;
         }
 
+        #endregion
+
+        #region Specs
         /// <summary>
         /// Gets the specifications by key word.
         /// </summary>
@@ -339,6 +346,10 @@ namespace Etsi.Ultimate.WCF.Service
             }
             return statusChangeReport;
         }
+
+        #endregion
+
+        #region Crs
 
         /// <summary>
         /// Sets the CRS as final.
@@ -494,7 +505,7 @@ namespace Etsi.Ultimate.WCF.Service
                 var result = svc.GetChangeRequestListByContributionUidList(contributionUids);
                 if (result.Key)
                 {
-                    result.Value.ForEach(e => crList.Add(ConvertUltimateCRToServiceCR(e)));
+                    result.Value.ForEach(e => crList.Add(ConvertUltimateCRToServiceCR(e, true)));
                 }
             }
             catch (Exception ex)
@@ -586,6 +597,136 @@ namespace Etsi.Ultimate.WCF.Service
             }
             return true;
         }
+
+        /// <summary>
+        /// Get CRs by keys
+        /// </summary>
+        /// <param name="crKeys">The spec# / cr# / revision / TsgTdocNumber combination list.</param>
+        /// <returns>Matching Crs for given key combination</returns>
+        internal List<ChangeRequest> GetCrsByKeys(List<CrKeyFacade> crKeys)
+        {
+            var changeRequests = new List<ChangeRequest>();
+            try
+            {
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+
+                var crUltimateKeys = new List<UltimateEntities.CrKeyFacade>();
+                crKeys.ForEach(x => crUltimateKeys.Add(ConvertToUltimateCrKeyFacade(x)));
+
+                var response = svc.GetCrsByKeys(crUltimateKeys);
+                if (response.Result != null)
+                    response.Result.ForEach(e => changeRequests.Add(ConvertUltimateCRToServiceCR(e)));
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format(ConstErrorTemplateGetCrsByKeys, ex.Message));
+            }
+            return changeRequests;
+        }
+
+        /// <summary>
+        /// Gets the cr by key.
+        /// </summary>
+        /// <param name="crKey">The cr key.</param>
+        /// <returns>Change request</returns>
+        internal ChangeRequest GetCrByKey(CrKeyFacade crKey)
+        {
+            var changeRequest = new ChangeRequest();
+            try
+            {
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+
+                var response = svc.GetCrByKey(ConvertToUltimateCrKeyFacade(crKey));
+                if (response.Result != null)
+                    changeRequest = ConvertUltimateCRToServiceCR(response.Result);
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format(ConstErrorTemplateGetCrByKey, ex.Message));
+            }
+            return changeRequest;
+        }
+
+        /// <summary>
+        /// Reissue the cr.
+        /// </summary>
+        /// <param name="crKey">The cr identifier.</param>
+        /// <param name="newTsgTdoc">The new TSG tdoc.</param>
+        /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <param name="newTsgSource"></param>
+        /// <returns>Success/Failure</returns>
+        internal ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource)
+        {
+            var statusReport = new ServiceResponse<bool> { Report = new ServiceReport() };
+            try
+            {
+                var crKeyForUltimate = ConvertToUltimateCrKeyFacade(crKey);
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var ultimateStatusResponse = svc.ReIssueCr(crKeyForUltimate, newTsgTdoc, newTsgMeetingId, newTsgSource);
+                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format(ConstErrorTemplateReIssueCr, ex.Message));
+                statusReport.Result = false;
+                statusReport.Report.ErrorList.Add("Change request failed to reissue");
+            }
+            return statusReport;
+        }
+
+        /// <summary>
+        /// Revise the cr.
+        /// </summary>
+        /// <param name="crKey">The cr identifier.</param>
+        /// <param name="newTsgTdoc">The new TSG tdoc.</param>
+        /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <param name="newTsgSource"></param>
+        /// <returns>Success/Failure</returns>
+        internal ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource)
+        {
+            var statusReport = new ServiceResponse<bool> { Report = new ServiceReport() };
+            try
+            {
+                var crKeyForUltimate = ConvertToUltimateCrKeyFacade(crKey);
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var ultimateStatusResponse = svc.ReviseCr(crKeyForUltimate, newTsgTdoc, newTsgMeetingId, newTsgSource);
+                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format(ConstErrorTemplateReviseCr, ex.Message));
+                statusReport.Result = false;
+                statusReport.Report.ErrorList.Add("Change request failed to revise");
+            }
+            return statusReport;
+        }
+
+        /// <summary>
+        /// Remove Crs from Cr-Pack
+        /// </summary>
+        /// <param name="crPack">Uid of Cr-Pack</param>
+        /// <param name="crIds">List of Cr Ids</param>
+        /// <returns>Success/Failure</returns>
+        public ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds)
+        {
+            var statusReport = new ServiceResponse<bool> { Report = new ServiceReport() };
+            try
+            {
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var ultimateStatusResponse = svc.RemoveCrsFromCrPack(crPack, crIds);
+                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format(ConstErrorTemplateRemoveCrsFromCrPack, ex.Message));
+                statusReport.Result = false;
+                statusReport.Report.ErrorList.Add("Cr Pack failed to remove Crs");
+            }
+            return statusReport;
+        }
+        #endregion
+
+        #region versions and draft
 
         /// <summary>
         /// Get versions related to specification & release
@@ -787,27 +928,24 @@ namespace Etsi.Ultimate.WCF.Service
         /// <summary>
         /// Get CRs by keys
         /// </summary>
-        /// <param name="crKeys">The spec# / cr# / revision / TsgTdocNumber combination list.</param>
-        /// <returns>Matching Crs for given key combination</returns>
-        internal List<ChangeRequest> GetCrsByKeys(List<CrKeyFacade> crKeys)
+        /// <param name="specIds">The specification identifiders</param>
+        /// <returns>List of Spec Versions</returns>
+        internal List<UltimateServiceEntities.SpecVersion> GetLatestVersionsBySpecIds(List<int> specIds)
         {
-            var changeRequests = new List<ChangeRequest>();
+            var specVersions = new List<UltimateServiceEntities.SpecVersion>();
             try
             {
-                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var svc = ServicesFactory.Resolve<ISpecVersionService>();
+                var result = svc.GetLatestVersionsBySpecIds(specIds);
 
-                var crUltimateKeys = new List<UltimateEntities.CrKeyFacade>();
-                crKeys.ForEach(x => crUltimateKeys.Add(ConvertToUltimateCrKeyFacade(x)));
-
-                var response = svc.GetCrsByKeys(crUltimateKeys);
-                if (response.Result != null)
-                    response.Result.ForEach(e => changeRequests.Add(ConvertUltimateCRToServiceCR(e)));
+                if (result != null)
+                    result.ForEach(e => specVersions.Add(ConvertToServiceSpecVersion(e)));
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetCrsByKeys, ex.Message));
+                LogManager.Error(String.Format(ConstErrorTemplateGetLatestVersionsBySpecIds, ex.Message));
             }
-            return changeRequests;
+            return specVersions;
         }
 
         /// <summary>
@@ -1041,8 +1179,9 @@ namespace Etsi.Ultimate.WCF.Service
         /// Converts the ultimate cr to service CR.
         /// </summary>
         /// <param name="ultimateCr"></param>
+        /// <param name="withWis"></param>
         /// <returns>Ultimate Entities to Service Entities</returns>
-        private UltimateServiceEntities.ChangeRequest ConvertUltimateCRToServiceCR(UltimateEntities.ChangeRequest ultimateCr)
+        private UltimateServiceEntities.ChangeRequest ConvertUltimateCRToServiceCR(UltimateEntities.ChangeRequest ultimateCr, bool withWis = false)
         {
             var serviceCr = new UltimateServiceEntities.ChangeRequest();
             if (ultimateCr != null)
@@ -1070,6 +1209,10 @@ namespace Etsi.Ultimate.WCF.Service
                 serviceCr.NewVersion = (ultimateCr.NewVersion == null) ? String.Empty : ultimateCr.NewVersion.Version;
                 serviceCr.Fk_Impact = ultimateCr.Fk_Impact;
                 serviceCr.WGTDoc = ultimateCr.WGTDoc;
+                if (withWis)
+                {
+                    serviceCr.Fk_WorkItemIds = ultimateCr.CR_WorkItems.Select(x => x.Fk_WIId ?? 0).Distinct().ToList();
+                }
 
                 //Referenced objects
                 if (ultimateCr.Enum_CRCategory != null)
@@ -1173,7 +1316,8 @@ namespace Etsi.Ultimate.WCF.Service
                 SpecNumber = crKeyFacade.SpecNumber,
                 Revision = crKeyFacade.Revision,
                 TsgTdocNumber = crKeyFacade.TsgTdocNumber,
-                TsgMeetingId = crKeyFacade.TsgMeetingId
+                TsgMeetingId = crKeyFacade.TsgMeetingId,
+                TsgSourceOrganization = crKeyFacade.TsgSourceOrganization
             };
 
             return ultimateCrKeyFacade;

@@ -22,3 +22,4 @@ Pk_ChangeRequest,CRNumber,Revision,Subject,Fk_WGStatus,CreationDate,WGSourceOrga
 21,0010,0,Another CR for same spec as CR 0003 (ID=13),1,2014-01-01 18:44:01.803,WgOrg,2,3,,,1,136084,2882,,,1
 22,BBBB,4,Textual CR for Spec with no other CR,,2008-01-30 18:44:01.803,Ultimate,2,3,2,WGGG,1,136085,2874,428927,428927,1
 23,TOREVISE,0,Textual CR for Spec with no other CR,,2008-01-30 18:44:01.803,Ultimate,2,3,2,WGGG,1,140001,2874,428927,428927,1
+24,NOTSGDATA,0,A non TSG approved CR,1,2014-01-01 18:44:01.803,WgOrg,2,,,,1,140000,2885,,,1

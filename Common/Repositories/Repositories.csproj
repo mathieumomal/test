@@ -79,6 +79,7 @@
     <Compile Include="ChangeRequestStatusRepository.cs" />
     <Compile Include="CommunityRepository.cs" />
     <Compile Include="ChangeRequestRepository.cs" />
+    <Compile Include="CrPackRepository.cs" />
     <Compile Include="Enum_CommunitiesShortNameRepository.cs" />
     <Compile Include="Enum_CrCategoryRepository.cs" />
     <Compile Include="EtsiWorkItemRepository.cs" />

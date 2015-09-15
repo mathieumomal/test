@@ -1,5 +1,4 @@
 ﻿using Etsi.Ultimate.Repositories;
-using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -58,7 +57,7 @@ namespace Etsi.Ultimate.Business
                 ExportToWord(workItemExportObjects, exportPath);
                 if (!String.IsNullOrEmpty(exportPath) && workItems.Key.Count >= 1)
                 {
-                    List<string> filesToCompress = new List<string>() { exportPath + DOC_TITLE + ".xlsx", exportPath + DOC_TITLE + ".docx" };
+                    List<string> filesToCompress = new List<string> { exportPath + DOC_TITLE + ".xlsx", exportPath + DOC_TITLE + ".docx" };
                     Zip.CompressSetOfFiles(ZIP_NAME, filesToCompress, exportPath);
                 }
                 return true;
@@ -75,37 +74,59 @@ namespace Etsi.Ultimate.Business
         #region Private Methods
 
         /// <summary>
-        /// Export Work Plan to Excel
+        /// Export Work Plan to Excel. (This excel is fully created thanks to the above code and is not based on any template !!!)
         /// </summary>
         /// <param name="exportWorkPlan">Work Plan</param>
         /// <param name="exportPath">Export Path</param>
         private void ExportToExcel(List<WorkItemForExport> exportWorkPlan, string exportPath)
         {
-            if (!String.IsNullOrEmpty(exportPath) && exportWorkPlan.Count >= 1)
+            if (!string.IsNullOrEmpty(exportPath) && exportWorkPlan.Count >= 1)
             {
                 try
                 {
                     //Create Empty Work Book
-                    string file = exportPath + DOC_TITLE+".xlsx";
+                    var file = exportPath + DOC_TITLE+".xlsx";
                     if (File.Exists(file)) File.Delete(file);
-                    FileInfo newFile = new FileInfo(file);
+                    var newFile = new FileInfo(file);
 
                     using (ExcelPackage pck = new ExcelPackage(newFile))
                     {
                         // get the handle to the existing worksheet
                         var wsData = pck.Workbook.Worksheets.Add("Work Items");
 
+                        /*-----------*/
+                        /* Variables */
+                        /*----------*/
+                        var rowHeader = 1;
+                        var rowDataStart = 2;
+                        var rowDataEnd = exportWorkPlan.Count + 1;
+                        var columnStart = 1;
+                        var columnEnd = 17;
+
+                        /*----------------*/
+                        /* Column letters and numbers */
+                        /*----------------*/
+                        var idColumnPos = new KeyValuePair<int, string>(1, "A");
+                        var uniqueIdColumnPos = new KeyValuePair<int, string>(2, "B");
+                        var nameColumnPos = new KeyValuePair<int, string>(3, "C");
+                        var acronymColumnPos = new KeyValuePair<int, string>(4, "D");
+                        var effectiveAcronymColumnPos = new KeyValuePair<int, string>(5, "E");
+                        var outlineLevelColumnPos = new KeyValuePair<int, string>(6, "F");
+                        var releaseColumnPos = new KeyValuePair<int, string>(7, "G");
+                        var rsrcNamesColumnPos = new KeyValuePair<int, string>(8, "H");
+                        var startDateColumnPos = new KeyValuePair<int, string>(9, "I");
+                        var finishDateColumnPos = new KeyValuePair<int, string>(10, "J");
+                        var completionColumnPos = new KeyValuePair<int, string>(11, "K");
+                        var hyperlinkColumnPos = new KeyValuePair<int, string>(12, "L");
+                        var statusColumnPos = new KeyValuePair<int, string>(13, "M");
+                        var wiRapporteurNameColumnPos = new KeyValuePair<int, string>(14, "N");
+                        var wiRapporteurEmailColumnPos = new KeyValuePair<int, string>(15, "O");
+                        var notesColumnPos = new KeyValuePair<int, string>(16, "P");
+                        var impactedColumnPos = new KeyValuePair<int, string>(17, "Q");
+
                         /*------------*/
                         /* Set Styles */
                         /*------------*/
-                        int rowHeader = 1;
-                        int rowDataStart = 2;
-                        int rowDataEnd = exportWorkPlan.Count + 1;
-                        int columnStart = 1;
-                        int columnEnd = 16;
-                        int columnName = 3;
-                        int columnCompletion = 10;
-
                         //Set Font Style
                         wsData.Cells.Style.Font.Size = 8;
                         wsData.Cells.Style.Font.Name = "Arial";
@@ -114,9 +135,9 @@ namespace Etsi.Ultimate.Business
                         wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Fill.PatternType = ExcelFillStyle.Solid;
                         wsData.Cells[rowHeader, columnStart, rowHeader, columnEnd].Style.Fill.BackgroundColor.SetColor(Drawing.Color.LightGray);
                         //Set Name Column as Bold
-                        wsData.Cells[rowDataStart, columnName, rowDataEnd, columnName].Style.Font.Bold = true;
+                        wsData.Cells[rowDataStart, nameColumnPos.Key, rowDataEnd, nameColumnPos.Key].Style.Font.Bold = true;
                         //Set Complete column with Percentage Format
-                        wsData.Cells[rowDataStart, columnCompletion, rowDataEnd, columnCompletion].Style.Numberformat.Format = "0%";
+                        wsData.Cells[rowDataStart, completionColumnPos.Key, rowDataEnd, completionColumnPos.Key].Style.Numberformat.Format = "0%";
                         //Set Cell Borders
                         wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Left.Style = ExcelBorderStyle.Thin;
                         wsData.Cells[rowHeader, columnStart, rowDataEnd, columnEnd].Style.Border.Right.Style = ExcelBorderStyle.Thin;
@@ -127,8 +148,9 @@ namespace Etsi.Ultimate.Business
 
                         //Set Column Width
                         wsData.DefaultColWidth = 10;
-                        wsData.Column(1).Width = wsData.Column(5).Width = wsData.Column(10).Width = 5;
-                        wsData.Column(3).Width = wsData.Column(16).Width = 35;
+                        wsData.Column(effectiveAcronymColumnPos.Key).Width = 15;
+                        wsData.Column(idColumnPos.Key).Width = wsData.Column(outlineLevelColumnPos.Key).Width = wsData.Column(completionColumnPos.Key).Width = 5;
+                        wsData.Column(nameColumnPos.Key).Width = wsData.Column(impactedColumnPos.Key).Width = 35;
 
                         //Set Row Height
                         wsData.DefaultRowHeight = 12;
@@ -138,37 +160,37 @@ namespace Etsi.Ultimate.Business
                         /*--------------*/
                         /* Add Formulas */
                         /*--------------*/
-                        ExcelAddress nameAddress = new ExcelAddress(rowDataStart, columnName, rowDataEnd, columnName);
+                        ExcelAddress nameAddress = new ExcelAddress(rowDataStart, nameColumnPos.Key, rowDataEnd, nameColumnPos.Key);
                         //Name should be Red if Unique ID is 0
                         var ruleNoUniqueKey = wsData.ConditionalFormatting.AddExpression(nameAddress);
                         ruleNoUniqueKey.Style.Font.Color.Color = Drawing.Color.Red;
-                        ruleNoUniqueKey.Formula = "B2=0";
+                        ruleNoUniqueKey.Formula = uniqueIdColumnPos.Value + "2=0";
                         ruleNoUniqueKey.Priority = 1;
 
                         //Level 1 Name should be in Blue font
                         var ruleLevel1 = wsData.ConditionalFormatting.AddExpression(nameAddress);
                         ruleLevel1.Style.Font.Color.Color = Drawing.Color.Blue;
-                        ruleLevel1.Formula = "E2=1";
+                        ruleLevel1.Formula = outlineLevelColumnPos.Value + "2=1";
                         ruleLevel1.Priority = 2;
 
                         //Level 2 Name should be in Black font
                         var ruleLevel2 = wsData.ConditionalFormatting.AddExpression(nameAddress);
                         ruleLevel2.Style.Font.Color.Color = Drawing.Color.Black;
-                        ruleLevel2.Formula = "E2=2";
+                        ruleLevel2.Formula = outlineLevelColumnPos.Value + "2=2";
                         ruleLevel2.Priority = 3;
 
                         //Level 3 Name should be in Black font without Bold
                         var ruleLevel3 = wsData.ConditionalFormatting.AddExpression(nameAddress);
                         ruleLevel3.Style.Font.Color.Color = Drawing.Color.Black;
                         ruleLevel3.Style.Font.Bold = false;
-                        ruleLevel3.Formula = "E2=3";
+                        ruleLevel3.Formula = outlineLevelColumnPos.Value + "2=3";
                         ruleLevel3.Priority = 4;
 
                         //Level 4 Name should be in Black font without Bold
                         var ruleLevel4 = wsData.ConditionalFormatting.AddExpression(nameAddress);
                         ruleLevel4.Style.Font.Color.Color = Drawing.Color.Black;
                         ruleLevel4.Style.Font.Bold = false;
-                        ruleLevel4.Formula = "E2=4";
+                        ruleLevel4.Formula = outlineLevelColumnPos.Value + "2=4";
                         ruleLevel4.Priority = 5;
 
                         ExcelAddress completeTableAddress = new ExcelAddress(rowDataStart, columnStart, rowDataEnd, columnEnd);
@@ -177,13 +199,13 @@ namespace Etsi.Ultimate.Business
                         //Stopped WorkItems should have light brown background
                         var ruleDeleted = wsData.ConditionalFormatting.AddExpression(completeTableAddress);
                         ruleDeleted.Style.Fill.BackgroundColor.Color = Drawing.Color.FromArgb(227, 227, 227);
-                        ruleDeleted.Formula = "SEARCH(CONCATENATE(\"[\",$A2,\"]\"), \"[" + String.Join("]\"&\"[", stoppedMeetingIds) + "]\")>0";
+                        ruleDeleted.Formula = "SEARCH(CONCATENATE(\"[\",$" + idColumnPos.Value + "2,\"]\"), \"[" + String.Join("]\"&\"[", stoppedMeetingIds) + "]\")>0";
                         ruleDeleted.Priority = 6;
 
                         //100% completed workitems should have light green background
                         var ruleCompleted = wsData.ConditionalFormatting.AddExpression(completeTableAddress);
                         ruleCompleted.Style.Fill.BackgroundColor.Color = Drawing.Color.FromArgb(204, 255, 204);
-                        ruleCompleted.Formula = "$J2=100%";
+                        ruleCompleted.Formula = "$" + completionColumnPos.Value + "2=100%";
                         ruleCompleted.Priority = 7;
 
                         //Upload Data to Excel
@@ -195,6 +217,7 @@ namespace Etsi.Ultimate.Business
                                                           Unique_ID = s.UID,
                                                           Name = s.Name,
                                                           Acronym = s.Acronym,
+                                                          Effective_Acronym = s.EffectiveAcronym,
                                                           Outline_Level = s.Level,
                                                           Release = s.Release,
                                                           Resource_Names = s.ResponsibleGroups,
@@ -289,6 +312,7 @@ namespace Etsi.Ultimate.Business
                             SetCellContent(tr, new TableCell(), " Unique ID ", Domain.DocxStylePool.STYLES_KEY.BOLD_BLACK_GRAY);
                             SetCellContent(tr, new TableCell(), " Name ", Domain.DocxStylePool.STYLES_KEY.BOLD_BLACK_GRAY);
                             SetCellContent(tr, new TableCell(), " Acronym ", Domain.DocxStylePool.STYLES_KEY.BOLD_BLACK_GRAY);
+                            SetCellContent(tr, new TableCell(), " Effective Acronym ", Domain.DocxStylePool.STYLES_KEY.BOLD_BLACK_GRAY);
                             SetCellContent(tr, new TableCell(), " Level ", Domain.DocxStylePool.STYLES_KEY.BOLD_BLACK_GRAY);
                             SetCellContent(tr, new TableCell(), " Release ", Domain.DocxStylePool.STYLES_KEY.BOLD_BLACK_GRAY);
                             SetCellContent(tr, new TableCell(), " Resource Names ", Domain.DocxStylePool.STYLES_KEY.BOLD_BLACK_GRAY);
@@ -313,6 +337,7 @@ namespace Etsi.Ultimate.Business
                             SetCellContent(tr, new TableCell(), exportWorkPlan[i].UID.ToString(), "UID", exportWorkPlan[i]);
                             SetCellContent(tr, new TableCell(), exportWorkPlan[i].Name, "Name", exportWorkPlan[i]);
                             SetCellContent(tr, new TableCell(), exportWorkPlan[i].Acronym, "Acronym", exportWorkPlan[i]);
+                            SetCellContent(tr, new TableCell(), exportWorkPlan[i].Acronym, "Effective Acronym", exportWorkPlan[i]);
                             SetCellContent(tr, new TableCell(), exportWorkPlan[i].Level.ToString(), "Level", exportWorkPlan[i]);
                             SetCellContent(tr, new TableCell(), exportWorkPlan[i].Release, "Release", exportWorkPlan[i]);
                             SetCellContent(tr, new TableCell(), exportWorkPlan[i].ResponsibleGroups, "ResponsibleGroups", exportWorkPlan[i]);
@@ -492,6 +517,7 @@ namespace Etsi.Ultimate.Business
         public int UID { get; set; }
         public string Name { get; set; }
         public string Acronym { get; set; }
+        public string EffectiveAcronym { get; set; }
         public int Level { get; set; }
         public string Release { get; set; }
         public string ResponsibleGroups { get; set; }
@@ -525,6 +551,7 @@ namespace Etsi.Ultimate.Business
             UID = (workItem.Pk_WorkItemUid >= Math.Pow(10, 8)) ? 0 : workItem.Pk_WorkItemUid;
             Name = GetEmptyString(workItem.WiLevel ?? 0) + workItem.Name;
             Acronym = string.IsNullOrEmpty(workItem.Acronym) ? BLANK_CELL : workItem.Acronym;
+            EffectiveAcronym = string.IsNullOrEmpty(workItem.Effective_Acronym) ? BLANK_CELL : workItem.Effective_Acronym;
             Level = workItem.WiLevel ?? 0;
             Release = (workItem.Release != null) && !string.IsNullOrEmpty(workItem.Release.Code) ? workItem.Release.Code : BLANK_CELL;
             ResponsibleGroups = (workItem.WorkItems_ResponsibleGroups.Count > 0) ? string.Join(",", workItem.WorkItems_ResponsibleGroups.Select(r => r.ResponsibleGroup).ToArray()).Trim() : BLANK_CELL;

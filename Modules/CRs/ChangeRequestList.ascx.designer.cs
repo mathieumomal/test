@@ -13,6 +13,24 @@ namespace Etsi.Ultimate.Module.CRs {
     public partial class ChangeRequestList {
         
         /// <summary>
+        /// Contrôle RadWindowMgr.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadWindowManager RadWindowMgr;
+        
+        /// <summary>
+        /// Contrôle ramCrs.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadAjaxManager ramCrs;
+        
+        /// <summary>
         /// Contrôle crList.
         /// </summary>
         /// <remarks>
@@ -38,6 +56,24 @@ namespace Etsi.Ultimate.Module.CRs {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.UpdatePanel upCrSearchGrid;
+        
+        /// <summary>
+        /// Contrôle rdcbCrPack.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadComboBox rdcbCrPack;
+        
+        /// <summary>
+        /// Contrôle SendToCrPackBtn.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button SendToCrPackBtn;
         
         /// <summary>
         /// Contrôle rpbCrSearch.
@@ -137,14 +173,5 @@ namespace Etsi.Ultimate.Module.CRs {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::Telerik.Web.UI.RadGrid rgCrList;
-        
-        /// <summary>
-        /// Contrôle ramCrs.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadAjaxManager ramCrs;
     }
 }

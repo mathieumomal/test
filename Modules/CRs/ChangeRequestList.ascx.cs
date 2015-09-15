@@ -24,6 +24,13 @@ namespace Etsi.Ultimate.Module.CRs
         private const string PkEnumchangerequeststatus = "Pk_EnumChangeRequestStatus";
         private const string Description = "Description";
 
+        //Send CRs to CR-Pack const
+        private const string CrPackId = "pk_Contribution";
+        private const string CrPackValue = "uid";
+        private const string ErrorPicture = "/images/red-error.gif";
+        private const string SuccessPicture = "/images/green-ok.gif";
+        private KeyValuePair<int, int> _sendCrsToCrPackAlertDim = new KeyValuePair<int, int>(400, 100);
+
         #endregion
 
         #region properties
@@ -49,6 +56,25 @@ namespace Etsi.Ultimate.Module.CRs
             }
         }
 
+        private const string CR_TB_ID = "CR_TB_ID";
+
+        /// <summary>
+        /// Store tbId from URL
+        /// </summary>
+        private string tbId
+        {
+            get
+            {
+                if (ViewState[CR_TB_ID] == null)
+                    ViewState[CR_TB_ID] = "";
+                return (string)ViewState[CR_TB_ID];
+            }
+            set
+            {
+                ViewState[CR_TB_ID] = value;
+            }
+        }
+
         #endregion
 
         #region events
@@ -70,6 +96,9 @@ namespace Etsi.Ultimate.Module.CRs
 
                 //Load CR Statuses
                 LoadCrStatuses();
+
+                //Check rights
+                GetUserRightsAndAdaptUi();
 
                 releaseSearchControl.Load += releaseSearchControl_Load;
             }
@@ -168,6 +197,18 @@ namespace Etsi.Ultimate.Module.CRs
                     else
                         impactedVersionLink.Enabled = false;
 
+                    var crSelection = dataItem["CrSelection"].Controls[0];
+                    var checkbox = crSelection.FindControl("CrSelectionCheckBox") as CheckBox;
+                    if (currentCr.ShouldBeLinkToACrPack)
+                    {
+                        checkbox.Enabled = true;
+                    }
+                    else
+                    {
+                        checkbox.Enabled = false;
+                        checkbox.CssClass = "disabledTransparent";
+                        checkbox.ToolTip = Localization.CR_Cannot_Be_Send_To_CRPack;
+                    }
                 }   
             }
         }
@@ -183,6 +224,122 @@ namespace Etsi.Ultimate.Module.CRs
                 SearchObj.ReleaseIds = releaseSearchControl.SelectedReleaseIds;
             LoadData();
         }
+
+        #endregion
+
+        #region Send CRs to CR-Pack events and utils
+        /// <summary>
+        /// Send CRs to CR-Pack
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void SendToCrPackBtn_OnClick(object sender, EventArgs e)
+        {
+            if (!CheckIfSendCrsToCrPackIsPossible())
+            {
+                RadWindowMgr.RadAlert(Localization.CR_Crs_Or_CrPack_NotSelected, _sendCrsToCrPackAlertDim.Key, _sendCrsToCrPackAlertDim.Value, Localization.CR_Send_Crs_To_CrPack, "", ErrorPicture);
+                return;
+            }
+            //Get the list of selected CRs' ids
+            var crsIds = new List<int>();
+            foreach (GridDataItem item in rgCrList.MasterTableView.Items)
+            {
+                var checkbox = (CheckBox)item.FindControl("CrSelectionCheckBox");
+                if (checkbox.Checked)
+                {
+                    int id;
+                    int.TryParse(item.GetDataKeyValue("ChangeRequestId").ToString(), out id);
+                    crsIds.Add(id);
+                }
+            }
+
+            //Save Crs inside CR-pack
+            var crService = ServicesFactory.Resolve<IChangeRequestService>();
+            var response = crService.SendCrsToCrPack(
+                GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()),
+                crsIds,
+                GetSelectedCrPack().Key);
+
+            if (response.Result)
+            {
+                RadWindowMgr.RadAlert(String.Format(Localization.CR_Crs_Successfully_Moved_Inside_CrPack, GetSelectedCrPack().Value), _sendCrsToCrPackAlertDim.Key, _sendCrsToCrPackAlertDim.Value, Localization.CR_Send_Crs_To_CrPack, "", SuccessPicture);
+            }
+            else
+            {
+                RadWindowMgr.RadAlert(response.Report.ErrorList.FirstOrDefault(), _sendCrsToCrPackAlertDim.Key, _sendCrsToCrPackAlertDim.Value, Localization.CR_Send_Crs_To_CrPack, "", ErrorPicture);
+            }
+
+            //Reset selection and CR-pack field
+            rdcbCrPack.Text = String.Empty;
+            rdcbCrPack.ClearSelection();
+            foreach (GridDataItem item in rgCrList.MasterTableView.Items)
+            {
+                var checkbox = (CheckBox)item.FindControl("CrSelectionCheckBox");
+                if (checkbox.Checked)
+                    checkbox.Checked = false;
+            }
+
+            //Refresh list of CRs
+            LoadData();
+            rgCrList.Rebind();
+        }
+
+        /// <summary>
+        /// When searching for a CR-Pack
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="e"></param>
+        protected void RdcbCrPack_ItemsRequested(object o, RadComboBoxItemsRequestedEventArgs e)
+        {
+            if (e.Text.Length > 1)
+            {
+                int tbIdOutput = 0;
+                if (!String.IsNullOrEmpty(tbId))
+                    int.TryParse(tbId, out tbIdOutput);
+
+                var svc = ServicesFactory.Resolve<IContributionService>();
+                var crPacksFound = svc.GetCrPacksByTbIdAndKeywords(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), tbIdOutput, e.Text);
+
+                rdcbCrPack.DataSource = crPacksFound.Result;
+                rdcbCrPack.DataTextField = CrPackValue;
+                rdcbCrPack.DataValueField = CrPackId;
+                rdcbCrPack.DataBind();
+            }
+        }
+
+        /// <summary>
+        /// Check if Send Crs To CR-pack is possible cause by the fact that some CRs are selected and a CR-Pack as well
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckIfSendCrsToCrPackIsPossible()
+        {
+            //Test if CRs selected
+            var atLeastOneCrSelected = false;
+            foreach (GridDataItem item in rgCrList.MasterTableView.Items)
+            {
+                var checkbox = (CheckBox)item.FindControl("CrSelectionCheckBox");
+                if (checkbox.Checked)
+                {
+                    atLeastOneCrSelected = true;
+                }
+            }
+
+            //Enabled or disabled Send to CR Pack button
+            return GetSelectedCrPack().Key != 0 && atLeastOneCrSelected;
+        }
+
+        /// <summary>
+        /// Get selected CR-pack (Id and UID)
+        /// </summary>
+        /// <returns></returns>
+        private KeyValuePair<int, string> GetSelectedCrPack()
+        {
+            if (!String.IsNullOrEmpty(rdcbCrPack.SelectedValue))
+            {
+                return new KeyValuePair<int, string>(Convert.ToInt32(rdcbCrPack.SelectedValue), rdcbCrPack.Text);
+            }
+            return new KeyValuePair<int, string>(0, String.Empty);
+        } 
 
         #endregion
 
@@ -346,14 +503,19 @@ namespace Etsi.Ultimate.Module.CRs
 
             if (!svcResponse.Key) return;
 
+            var enumNoneStatus = new Enum_ChangeRequestStatus { Pk_EnumChangeRequestStatus = 0, Description = "None" };
+            var dataSource = new List<Enum_ChangeRequestStatus>();
+            dataSource.Add(enumNoneStatus);
+            dataSource.AddRange(svcResponse.Value.OrderBy(x => x.Description));
+
             rcbWgStatus.DataValueField = PkEnumchangerequeststatus;
             rcbWgStatus.DataTextField = Description;
-            rcbWgStatus.DataSource = svcResponse.Value.OrderBy(x => x.Description);
+            rcbWgStatus.DataSource = dataSource;
             rcbWgStatus.DataBind();
 
             rcbTsgStatus.DataValueField = PkEnumchangerequeststatus;
             rcbTsgStatus.DataTextField = Description;
-            rcbTsgStatus.DataSource = svcResponse.Value.OrderBy(x => x.Description);
+            rcbTsgStatus.DataSource = dataSource;
             rcbTsgStatus.DataBind();
         }
 
@@ -431,6 +593,36 @@ namespace Etsi.Ultimate.Module.CRs
         #region utils
 
         /// <summary>
+        /// Get User rights and adapt UI accordingly
+        /// </summary>
+        private void GetUserRightsAndAdaptUi()
+        {
+            var personService = ServicesFactory.Resolve<IPersonService>();
+            var userRights = personService.GetRights(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()));
+
+            //Check for Multiple TB selection
+            var isMultipleTbsSelected = true;
+            if (!String.IsNullOrEmpty(tbId))
+            {
+                int tbIdOutput = 0;
+                int.TryParse(tbId, out tbIdOutput);
+                if (tbIdOutput != 0)
+                    isMultipleTbsSelected = false;
+            }
+
+            //If user haven't 'Cr_Add_Crs_To_CrPack' right
+            //- Not Display checkboxes to be able to select CRs
+            //- Not Display "Send to CR-Pack" button
+            //- Not Display Autocomplete CRPack textbox
+            if (!userRights.HasRight(Enum_UserRights.Cr_Add_Crs_To_CrPack) || isMultipleTbsSelected)
+            {
+                rgCrList.MasterTableView.GetColumn("CrSelection").Display = false;
+                SendToCrPackBtn.Visible = false;
+                rdcbCrPack.Visible = false;
+            }
+        }
+
+        /// <summary>
         /// Retrieve person If exists
         /// </summary>
         /// <param name="userInfo">Current user information</param>
@@ -503,6 +695,7 @@ namespace Etsi.Ultimate.Module.CRs
         private void GetRequestParameters()
         {
             _isUrlSearch = (Request.QueryString["q"] != null);
+            tbId = Request.QueryString["tbid"];
         }
 
         /// <summary>

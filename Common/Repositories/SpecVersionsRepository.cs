@@ -141,9 +141,33 @@ namespace Etsi.Ultimate.Repositories
                                                              && x.EditorialVersion == editorialVersion);
         }
 
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="relatedTdoc"></param>
+        /// <returns></returns>
         public List<SpecVersion> GetVersionsByRelatedTDoc(string relatedTdoc)
         {
             return UoW.Context.SpecVersions.Where(x => x.RelatedTDoc == relatedTdoc).ToList();
+        }
+
+        /// <summary>
+        /// Update version
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        public void UpdateVersion(SpecVersion version)
+        {
+            version.Remarks.ToList().ForEach(x =>
+            {
+                if (x.Pk_RemarkId != default(int))
+                    UoW.Context.SetModified(x);
+            });
+
+            UoW.Context.SetAdded(version);
+
+            if (version.Pk_VersionId != default(int))
+                UoW.Context.SetModified(version);
         }
 
         #endregion
@@ -230,5 +254,12 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="relatedTdoc"></param>
         /// <returns></returns>
         List<SpecVersion> GetVersionsByRelatedTDoc(string relatedTdoc);
+
+        /// <summary>
+        /// See implementation
+        /// </summary>
+        /// <param name="version"></param>
+        /// <returns></returns>
+        void UpdateVersion(SpecVersion version);
     }
 }

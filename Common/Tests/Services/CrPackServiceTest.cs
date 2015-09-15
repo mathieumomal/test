@@ -136,6 +136,41 @@ namespace Etsi.Ultimate.Tests.Services
 
         #endregion
 
+        #region Send Crs To Cr-Pack
+
+        [TestCase(1, 24, 0,Description = "CR should be successfully added")]
+        [TestCase(1, 23, 1, Description = "CR could not be sent to CR-Pack")]
+        [TestCase(9999, 24, 1, Description = "CR-Pack doesn't exist")]
+        [TestCase(1, 9999, 1, Description = "CR doestn't exist")]
+        public void SendCrsToCrPack(int crPackId, int oneCrId, int errorsExpected)
+        {
+            var svc = new ChangeRequestService();
+            var response = svc.SendCrsToCrPack(1, new List<int> { oneCrId }, crPackId);
+
+            Assert.IsNotNull(response);
+            if (errorsExpected > 0)
+            {
+                Assert.IsFalse(response.Result);
+                Assert.AreEqual(errorsExpected, response.Report.GetNumberOfErrors());
+                Assert.AreEqual(Localization.GenericError, response.Report.ErrorList.First());
+            }
+            else
+            {
+                Assert.IsTrue(response.Result);
+                Assert.AreEqual(0, response.Report.GetNumberOfErrors());
+                var tsgDataCount = UoW.Context.ChangeRequestTsgDatas.Count(x => x.Fk_ChangeRequest == oneCrId);
+                Assert.AreEqual(1, tsgDataCount);
+                var tsgData = UoW.Context.ChangeRequestTsgDatas.FirstOrDefault(x => x.Fk_ChangeRequest == oneCrId);
+                var crPack = UoW.Context.View_CrPacks.FirstOrDefault(x => x.pk_Contribution == crPackId);
+                Assert.IsNotNull(tsgData);
+                Assert.AreEqual(crPack.uid, tsgData.TSGTdoc);
+                Assert.AreEqual(crPack.Denorm_Source, tsgData.TSGSourceOrganizations);
+                Assert.AreEqual(crPack.fk_Meeting, tsgData.TSGMeeting);
+            }
+        }
+
+        #endregion
+
         #region data
         /// <summary>
         /// TSGs TDoc for update decisions.
@@ -218,6 +253,7 @@ namespace Etsi.Ultimate.Tests.Services
                 yield return new object[] { "RP-CR0001", new List<int> { 2 }, 1, 1, 24, 24 };
             }
         }
+
         #endregion
     }
 }

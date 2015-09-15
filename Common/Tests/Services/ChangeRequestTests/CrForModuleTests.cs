@@ -47,5 +47,30 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             Assert.AreEqual(crListFacade.TargetReleaseId, concernedCr.Release.Pk_ReleaseId);
             Assert.AreEqual(crListFacade.NewVersionPath, concernedCr.NewVersion.Location);
         }
+
+        [Test]
+        public void GetChangeRequests_ShouldBeLinkToACrPack()
+        {
+            //Get db object
+            var crTotalCount = UoW.Context.ChangeRequests.Count();
+
+            //Search object build
+            var searchObj = new ChangeRequestsSearch { PageSize = 100, SkipRecords = 0 };
+
+            //Call method
+            var svc = new ChangeRequestService();
+            var response = svc.GetChangeRequests(PersonId, searchObj);
+
+            //Tests
+            var crListFacade = response.Result.Key[0];
+            Assert.AreEqual(0, response.Report.GetNumberOfErrors());
+            Assert.IsNotEmpty(response.Result.Key);
+            Assert.AreEqual(crTotalCount, response.Result.Value);
+
+            //CR not linked to TDoc of type CR Pack or in TSG level
+            Assert.IsTrue(response.Result.Key.FirstOrDefault(x => x.ChangeRequestId == 24).ShouldBeLinkToACrPack);
+            //CR linked to TDoc of type CR Pack or in TSG level <=> contains a TSG additionnal data entry
+            Assert.IsFalse(response.Result.Key.FirstOrDefault(x => x.ChangeRequestId == 5).ShouldBeLinkToACrPack);
+        }
     }
 }

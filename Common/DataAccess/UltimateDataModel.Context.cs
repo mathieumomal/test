@@ -63,6 +63,7 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<SyncInfo> SyncInfoes { get; set; }
         public IDbSet<Enum_ChangeRequestStatus> Enum_ChangeRequestStatus { get; set; }
         public IDbSet<ChangeRequestTsgData> ChangeRequestTsgDatas { get; set; }
+        public IDbSet<View_CrPacks> View_CrPacks { get; set; }
     	
     	/**
     	 * This code is intended to enable testability of the different layers,

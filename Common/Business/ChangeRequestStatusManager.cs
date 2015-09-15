@@ -30,7 +30,7 @@ namespace Etsi.Ultimate.Business
         public List<Enum_ChangeRequestStatus> GetAllChangeRequestStatuses()
         {
             var cachedData = (List<Enum_ChangeRequestStatus>)CacheManager.Get(CacheKey);
-            if (cachedData == null)
+            if(cachedData == null)
             {
                 var crStatusRepo = RepositoryFactory.Resolve<IChangeRequestStatusRepository>();
                 crStatusRepo.UoW = UoW;

@@ -55,6 +55,7 @@ namespace Etsi.Ultimate.Business
                         return response;
                     }
                 }
+                changeRequest.CreationDate = DateTime.Now;
                 repo.InsertOrUpdate(changeRequest);
             }
             catch (Exception ex)
@@ -260,7 +261,8 @@ namespace Etsi.Ultimate.Business
                             Fk_Impact = revisedCr.Fk_Impact,
                             ChangeRequestTsgDatas = new List<ChangeRequestTsgData> { new ChangeRequestTsgData { TSGTdoc = crPackDecision.Key.TsgTdocNumber, 
                                                                                                                 TSGMeeting = crPackDecision.Key.TsgMeetingId,
-                                                                                                                Fk_TsgStatus = statusId } }
+                                                                                                                Fk_TsgStatus = statusId,
+                                                                                                                TSGSourceOrganizations = crPackDecision.Key.TsgSourceOrganization } }
                         };
 
                         crRepository.InsertOrUpdate(revisionCr);
@@ -276,7 +278,8 @@ namespace Etsi.Ultimate.Business
                         {
                             TSGTdoc = crPackDecision.Key.TsgTdocNumber,
                             TSGMeeting = crPackDecision.Key.TsgMeetingId,
-                            Fk_TsgStatus = statusId
+                            Fk_TsgStatus = statusId,
+                            TSGSourceOrganizations = crPackDecision.Key.TsgSourceOrganization
                         };
 
                         changeRequest.ChangeRequestTsgDatas.Add(newTsgData);
@@ -366,8 +369,9 @@ namespace Etsi.Ultimate.Business
         /// <param name="crKey">The cr identifier.</param>
         /// <param name="newTsgTdoc">The new TSG tdoc.</param>
         /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
-        public ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId)
+        public ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource)
         {
             var response = new ServiceResponse<bool> { Result = false };
             try
@@ -387,7 +391,8 @@ namespace Etsi.Ultimate.Business
                 var newTsgData = new ChangeRequestTsgData
                 {
                     TSGTdoc = newTsgTdoc,
-                    TSGMeeting = newTsgMeetingId
+                    TSGMeeting = newTsgMeetingId,
+                    TSGSourceOrganizations = newTsgSource
                 };
 
                 dbChangeRequest.ChangeRequestTsgDatas.Add(newTsgData);
@@ -408,8 +413,9 @@ namespace Etsi.Ultimate.Business
         /// <param name="crKey">The cr identifier.</param>
         /// <param name="newTsgTdoc">The new TSG tdoc.</param>
         /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
-        public ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId)
+        public ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource)
         {
             var response = new ServiceResponse<bool> { Result = false };
             try
@@ -427,7 +433,7 @@ namespace Etsi.Ultimate.Business
                 //Create new Change Request (Without WgTdoc)
                 var revisionMaxFound = repo.FindCrMaxRevisionBySpecificationIdAndCrNumber(dbChangeRequest.Fk_Specification, dbChangeRequest.CRNumber);
 
-                var newTsgData = new ChangeRequestTsgData { TSGTdoc = newTsgTdoc, TSGMeeting = newTsgMeetingId };
+                var newTsgData = new ChangeRequestTsgData { TSGTdoc = newTsgTdoc, TSGMeeting = newTsgMeetingId, TSGSourceOrganizations = newTsgSource};
                 var newChangeRequest = new ChangeRequest()
                 {
                     CRNumber = dbChangeRequest.CRNumber,
@@ -490,6 +496,59 @@ namespace Etsi.Ultimate.Business
             return response;
         }
 
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="crsIds"></param>
+        /// <param name="crPackId"></param>
+        /// <returns></returns>
+        public ServiceResponse<bool> SendCrsToCrPack(int personId, List<int> crsIds, int crPackId)
+        {
+            var response = new ServiceResponse<bool> { Result = false };
+
+            var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
+            repo.UoW = UoW;
+            var crPackRepo = RepositoryFactory.Resolve<ICrPackRepository>();
+            crPackRepo.UoW = UoW;
+
+            //Get Crs
+            var crs = repo.FindCrsByIds(crsIds);
+            if (crs.Count != crsIds.Count)
+            {
+                response.Report.LogError(Localization.GenericError);
+            }
+
+            //Get CR-Pack UID
+            var crPack = crPackRepo.Find(crPackId);
+            if (crPack == null)
+            {
+                response.Report.LogError(Localization.GenericError);
+            }
+            else
+            {
+                //For each CRs : add TsgData
+                foreach (var cr in crs)
+                {
+                    if (cr.ChangeRequestTsgDatas.Count > 0)
+                    {
+                        response.Report.LogError(Localization.GenericError);
+                        break;
+                    }
+                    cr.ChangeRequestTsgDatas.Add(new ChangeRequestTsgData
+                    {
+                        TSGMeeting = crPack.fk_Meeting,
+                        TSGSourceOrganizations = crPack.Denorm_Source,
+                        TSGTdoc = crPack.uid
+                    });
+                }
+            }
+
+            if (response.Report.GetNumberOfErrors() == 0)
+                response.Result = true;
+            return response;
+        }
+
         #endregion
 
         #region Private Methods
@@ -545,8 +604,9 @@ namespace Etsi.Ultimate.Business
                 //Tsg Data (Insert / Update)
                 var tsgDataToInsert = uiChangeRequest.ChangeRequestTsgDatas.ToList().Where(x => dbChangeRequest.ChangeRequestTsgDatas.ToList().All(y => y.TSGTdoc != x.TSGTdoc));
                 tsgDataToInsert.ToList().ForEach(x => dbChangeRequest.ChangeRequestTsgDatas.Add(x));
-                var tsgDataToUpdate = uiChangeRequest.ChangeRequestTsgDatas.ToList().Where(x => dbChangeRequest.ChangeRequestTsgDatas.ToList().Any(y => y.TSGTdoc == x.TSGTdoc && y.Fk_TsgStatus != x.Fk_TsgStatus));
-                tsgDataToUpdate.ToList().ForEach(x => dbChangeRequest.ChangeRequestTsgDatas.ToList().Find(y => y.TSGTdoc == x.TSGTdoc).Fk_TsgStatus = x.Fk_TsgStatus);
+                var tsgDataToUpdate = uiChangeRequest.ChangeRequestTsgDatas.ToList().Where(x => dbChangeRequest.ChangeRequestTsgDatas.ToList().Any(y => y.TSGTdoc == x.TSGTdoc && y.Fk_TsgStatus != x.Fk_TsgStatus && y.TSGSourceOrganizations != x.TSGSourceOrganizations)).ToList();
+                tsgDataToUpdate.ForEach(x => dbChangeRequest.ChangeRequestTsgDatas.ToList().Find(y => y.TSGTdoc == x.TSGTdoc).Fk_TsgStatus = x.Fk_TsgStatus);
+                tsgDataToUpdate.ForEach(x => dbChangeRequest.ChangeRequestTsgDatas.ToList().Find(y => y.TSGTdoc == x.TSGTdoc).TSGSourceOrganizations = x.TSGSourceOrganizations);
             }
         }
 
@@ -615,7 +675,8 @@ namespace Etsi.Ultimate.Business
                 SpecId = cr.Fk_Specification ?? 0,
                 TargetReleaseId = cr.Release != null ? cr.Release.Pk_ReleaseId : 0,
                 ImpactedVersionPath =  cr.CurrentVersion != null ? cr.CurrentVersion.Location : null,
-                NewVersionPath = cr.NewVersion != null ? cr.NewVersion.Location : null
+                NewVersionPath = cr.NewVersion != null ? cr.NewVersion.Location : null,
+                ShouldBeLinkToACrPack = !cr.ChangeRequestTsgDatas.Any()
             };
         }
 
@@ -714,8 +775,9 @@ namespace Etsi.Ultimate.Business
         /// <param name="crKey">The cr identifier.</param>
         /// <param name="newTsgTdoc">The new TSG tdoc.</param>
         /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
-        ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId);
+        ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource);
 
         /// <summary>
         /// Revise the cr.
@@ -723,8 +785,9 @@ namespace Etsi.Ultimate.Business
         /// <param name="crKey">The cr identifier.</param>
         /// <param name="newTsgTdoc">The new TSG tdoc.</param>
         /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
-        ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId);
+        ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource);
 
         /// <summary>
         /// Remove Crs from Cr-Pack
@@ -733,5 +796,14 @@ namespace Etsi.Ultimate.Business
         /// <param name="crIds">List of Cr Ids</param>
         /// <returns>Success/Failure</returns>
         ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds);
+
+        /// <summary>
+        /// Send Crs to Cr-Pack
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="crsIds"></param>
+        /// <param name="crPackId"></param>
+        /// <returns></returns>
+        ServiceResponse<bool> SendCrsToCrPack(int personId, List<int> crsIds, int crPackId);
     }
 }

@@ -3,8 +3,11 @@
     [Code]                 VARCHAR (50)  NOT NULL,
     [Description]          VARCHAR (150) NULL,
     [WpmProjectId]         INT           NULL,
+    [SortOrder]            INT           NULL,
     CONSTRAINT [PK_Enum_Technology] PRIMARY KEY CLUSTERED ([Pk_Enum_TechnologyId] ASC)
 );
+
+
 
 
 

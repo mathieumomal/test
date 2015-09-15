@@ -55,7 +55,7 @@ installutil.exe "Etsi.Ngpp.HostService.Setup.exe"
 
 REM Configuring the service so that it starts automatically
 IF not exist %SERVICE_PASSWORD% (
-	ECHO @@@ Please enter your password (password is required for install this service): 
+	ECHO @@@ Please enter your password (password is required for install this service)
 	set /P SERVICE_PASSWORD=
 	CLS
 )

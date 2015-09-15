@@ -72,6 +72,7 @@ namespace Etsi.Ultimate.Services
             Container.RegisterType<ICrCategoriesService, CrCategoriesService>(new TransientLifetimeManager());
             Container.RegisterType<IItuRecommendationService, ItuRecommendationService>(new TransientLifetimeManager());
             Container.RegisterType<IRemarkService, RemarkService>(new TransientLifetimeManager());
+            Container.RegisterType<IContributionService, ContributionService>(new TransientLifetimeManager());
 
             //Offline Interfaces
             Container.RegisterType<IOfflineService<SpecVersion>, SpecVersionService>(new TransientLifetimeManager());

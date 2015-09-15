@@ -141,6 +141,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         {
             lblName.Text = workitem.Name;
             lblAcronym.Text = workitem.Acronym;
+            lblEffectiveAcronym.Text = string.IsNullOrEmpty(workitem.Effective_Acronym) ? string.Empty : workitem.Effective_Acronym;
             lblType.Text = "Work Item";
 
             //Bind WI status

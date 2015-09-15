@@ -107,5 +107,13 @@ namespace Etsi.Ultimate.Business.Versions.Interfaces
         /// <param name="editorialVersion">The editorial version.</param>
         /// <returns>Draft creation or association status along with validation failures</returns>
         ServiceResponse<bool> CheckDraftCreationOrAssociation(int personId, int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion);
+
+        /// <summary>
+        /// See implementation
+        /// </summary>
+        /// <param name="version"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        ServiceResponse<SpecVersion> UpdateVersion(SpecVersion version, int personId);
     }
 }

@@ -136,6 +136,10 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             throw new NotImplementedException();
         }
 
+        public void UpdateVersion(SpecVersion version)
+        {
+            throw new NotImplementedException();
+        }
         #endregion
     }
 }

@@ -32,6 +32,11 @@
         public string TsgTdocNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets the TSG source organization.
+        /// </summary>
+        public string TsgSourceOrganization { get; set; }
+
+        /// <summary>
         /// Gets or sets the TSG meeting identifier.
         /// </summary>
         public int TsgMeetingId { get; set; }

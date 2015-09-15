@@ -376,7 +376,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private void SetRadioTechnologiesItems(List<Domain.Enum_Technology> technologies)
         {
             cblRadioTechnology.Style.Add("border-spacing", "0");
-            foreach (Domain.Enum_Technology technology in technologies.OrderBy(t => t.Code))
+            foreach (Domain.Enum_Technology technology in technologies.OrderBy(t => t.SortOrder))
             {
                 cblRadioTechnology.Items.Add(new ListItem()
                 {

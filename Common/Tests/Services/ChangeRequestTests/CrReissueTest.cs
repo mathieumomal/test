@@ -18,7 +18,7 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             var tsgDataBefore = UoW.Context.ChangeRequestTsgDatas.Where(x => x.Fk_ChangeRequest == cr.Pk_ChangeRequest).Count();
             //Act
             var crService = new ChangeRequestService();
-            var response = crService.ReIssueCr(crKey, "XYZ", 1);
+            var response = crService.ReIssueCr(crKey, "XYZ", 1, "source");
 
             //Assert
             var tsgDataAfter = UoW.Context.ChangeRequestTsgDatas.Where(x => x.Fk_ChangeRequest == cr.Pk_ChangeRequest).ToList();
@@ -27,6 +27,7 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             Assert.AreEqual(tsgDataBefore + 1, tsgDataAfter.Count());
             Assert.AreEqual("XYZ", tsgDataAfter.Last().TSGTdoc);
             Assert.AreEqual(1, tsgDataAfter.Last().TSGMeeting);
+            Assert.AreEqual("source", tsgDataAfter.Last().TSGSourceOrganizations);
         }
 
         [Test]
@@ -35,7 +36,7 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             var incorrectCrKey = new CrKeyFacade { SpecNumber = "Test", Revision = 1, CrNumber = "Test", TsgTdocNumber = "TSG_ABC" };
             //Act
             var crService = new ChangeRequestService();
-            var response = crService.ReIssueCr(incorrectCrKey, "XYZ", 1);
+            var response = crService.ReIssueCr(incorrectCrKey, "XYZ", 1, "source");
 
             //Assert
             Assert.IsFalse(response.Result);

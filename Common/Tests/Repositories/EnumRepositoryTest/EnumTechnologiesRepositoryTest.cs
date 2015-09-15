@@ -1,15 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Etsi.Ultimate.DataAccess;
 using NUnit.Framework;
-using Etsi.Ultimate.DomainClasses;
-using Rhino.Mocks;
 using Etsi.Ultimate.Repositories;
-using Effort.DataLoaders;
-using System.Data.Entity.Core.EntityClient;
 
 
 namespace Etsi.Ultimate.Tests.Repositories.EnumRepositoryTest
@@ -22,9 +14,22 @@ namespace Etsi.Ultimate.Tests.Repositories.EnumRepositoryTest
             var techRepo = new EnumTechnologiesRepository();
             techRepo.UoW = UoW;
 
-            var result = techRepo.All.ToList();
-            Assert.AreEqual(3, result.Count);
+            var result = techRepo.All.OrderBy(x => x.SortOrder).ToList();
+            Assert.AreEqual(4, result.Count);
             Assert.AreEqual("2G", result.FirstOrDefault().Code);
+            Assert.AreEqual("5G", result.LastOrDefault().Code);
+        }
+
+        [Test]
+        public void EnumTechnologyRepository_GetAll_byReverseOrder_Test()
+        {
+            var techRepo = new EnumTechnologiesRepository();
+            techRepo.UoW = UoW;
+
+            var result = techRepo.All.OrderByDescending(x => x.SortOrder).ToList();
+            Assert.AreEqual(4, result.Count);
+            Assert.AreEqual("5G", result.FirstOrDefault().Code);
+            Assert.AreEqual("2G", result.LastOrDefault().Code);
         }
 
         [Test]

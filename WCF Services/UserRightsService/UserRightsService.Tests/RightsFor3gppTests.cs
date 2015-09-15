@@ -75,7 +75,7 @@ namespace UserRightsService.Tests
                                                              "Specification_Create", "Specification_EditLimitted", "Specification_View_UnAllocated_Number", "Specification_ViewDetails", 
                                                              "Versions_Allocate", "Versions_Upload", "Versions_Modify_MajorVersion", "Versions_AddRemark", "Meeting_ViewMeetingList", 
                                                              "Meeting_CreateMeeting", "Manage_AgendaItems", "Contribute_Anytime", "Contribution_Edit", "Contribution_Upload", "Contribution_Upload_Anytime", 
-                                                             "Contribution_Withdraw", "Contribution_Import", "Contribution_Edit_CR_Number", "Contribution_Commit_Decisions" };
+                                                             "Contribution_Withdraw", "Contribution_Import", "Contribution_Edit_CR_Number", "Contribution_Commit_Decisions", "Versions_Edit", "Cr_Add_Crs_To_CrPack" };
                 var meetingManagerRights = new List<string>() { "Meeting_ViewMeetingList", "Meeting_CreateMeeting", "Meeting_CreateEvent", "Meeting_EditEvent", "Manage_AgendaItems" };
                 var workPlanManagerRights = new List<string>() { "Release_ViewCompleteDetails", "WorkItem_ImportWorkplan" };
                 var specificationManagerRights = new List<string>() { "General_ViewPersonalData", "Release_ViewCompleteList", "Release_ViewCompleteDetails", "Release_Create", "Release_Edit", 
@@ -84,13 +84,13 @@ namespace UserRightsService.Tests
                                                                       "Specification_RemoveInhibitPromote", "Specification_SyncHardLinksOnLatestFolder", "Specification_Withdraw", "Specification_WithdrawFromRelease", "Specification_UnforceTransposition", 
                                                                       "Specification_View_UnAllocated_Number", "Specification_ViewDetails", "Versions_Allocate", "Versions_Upload", "Versions_AddRemark", "Manage_AgendaItems", "Meeting_ViewMeetingList", 
                                                                       "Meeting_CreateMeeting", "Meeting_CreateEvent", "Meeting_EditEvent", "Contribute_Anytime", "Contribution_Edit", "Contribution_Upload", "Contribution_Upload_Anytime", "Contribution_Withdraw", 
-                                                                      "Contribution_Import" , "Contribution_Edit_CR_Number" };
+                                                                      "Contribution_Import" , "Contribution_Edit_CR_Number", "Versions_Edit", "Cr_Add_Crs_To_CrPack" };
                 var adminRights = new List<string>() { "General_ViewPersonalData", "Release_ViewCompleteList", "Release_ViewCompleteDetails", "Release_Create", "Release_Edit", "Release_Freeze", "Release_Close", "Remarks_ViewPrivate", 
                                                        "Remarks_AddPrivateByDefault", "WorkItem_ImportWorkplan", "Specification_BulkPromote", "Specification_Create", "Specification_EditFull", "Specification_ForceTransposition", 
                                                        "Specification_InhibitPromote", "Specification_Promote", "Specification_ManageITURecommendations", "Specification_RemoveInhibitPromote", "Specification_SyncHardLinksOnLatestFolder", "Specification_Withdraw", 
                                                        "Specification_WithdrawFromRelease", "Specification_UnforceTransposition", "Specification_View_UnAllocated_Number", "Specification_ViewDetails", "Versions_Allocate", "Versions_Upload", 
                                                        "Versions_AddRemark", "Manage_AgendaItems", "Meeting_ViewMeetingList", "Meeting_CreateMeeting", "Meeting_CreateEvent", "Meeting_EditEvent", "Contribute_Anytime", "Contribution_Edit", 
-                                                       "Contribution_Upload", "Contribution_Upload_Anytime", "Contribution_Withdraw" , "Contribution_Import" , "Contribution_Edit_CR_Number" };
+                                                       "Contribution_Upload", "Contribution_Upload_Anytime", "Contribution_Withdraw" , "Contribution_Import" , "Contribution_Edit_CR_Number", "Versions_Edit", "Cr_Add_Crs_To_CrPack" };
 
                 ultimate3gppMemberRights.AddRange(eolAccountOwnerRights);
                 staffMemberRights.AddRange(eolAccountOwnerRights);

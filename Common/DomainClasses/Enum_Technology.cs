@@ -24,6 +24,7 @@ namespace Etsi.Ultimate.DomainClasses
         public string Code { get; set; }
         public string Description { get; set; }
         public Nullable<int> WpmProjectId { get; set; }
+        public Nullable<int> SortOrder { get; set; }
     
         public virtual ICollection<SpecificationTechnology> SpecificationTechnologies { get; set; }
     

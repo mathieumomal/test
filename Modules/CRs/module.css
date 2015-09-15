@@ -50,3 +50,16 @@
     text-overflow: ellipsis;
     max-width:240px;
 }
+
+#crList .sendCrsToCrPackTd {
+	float: left;
+}
+
+#crList .rdcbCrPackStyle {
+	margin-bottom: -3px;
+}
+
+#crList .disabledTransparent 
+{
+    opacity: 0.25;
+}

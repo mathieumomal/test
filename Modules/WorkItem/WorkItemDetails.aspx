@@ -48,6 +48,11 @@
                                     <asp:Label ID="lblAcronym" runat="server"></asp:Label></td>
                             </tr>
                             <tr>
+                                <td class="TabLineLeft">Effective Acronym:</td>
+                                <td class="TabLineRight">
+                                    <asp:Label ID="lblEffectiveAcronym" runat="server"></asp:Label></td>
+                            </tr>
+                            <tr>
                                 <td class="TabLineLeft">WI Level:</td>
                                 <td class="TabLineRight">
                                     <asp:Label ID="lblWiLevel" runat="server"></asp:Label></td>

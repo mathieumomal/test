@@ -46,6 +46,7 @@ namespace Etsi.Ultimate.DataAccess
         IDbSet<Enum_CommunitiesShortName> Enum_CommunitiesShortName { get; set; }
         IDbSet<Enum_ChangeRequestStatus> Enum_ChangeRequestStatus{ get; set; }
         IDbSet<ChangeRequestTsgData> ChangeRequestTsgDatas { get; set; }
+        IDbSet<View_CrPacks> View_CrPacks { get; }
 
         void SetModified(object entity);
         void SetAdded(object entity);

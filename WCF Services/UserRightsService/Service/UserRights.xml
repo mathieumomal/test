@@ -72,6 +72,7 @@
         <Right value="Versions_Upload"/>
         <Right value="Versions_Modify_MajorVersion"/>
         <Right value="Versions_AddRemark"/>
+		<Right value="Versions_Edit"/>
         
         <Right value="Meeting_ViewMeetingList"/>
         <Right value="Meeting_CreateMeeting"/>
@@ -85,6 +86,8 @@
         <Right value="Contribution_Import" />
         <Right value="Contribution_Edit_CR_Number"/>
         <Right value="Contribution_Commit_Decisions"/>
+        
+        <Right value="Cr_Add_Crs_To_CrPack"/>
       </UserRole>
       
       <!-- Meeting Manager is a special role that gives additional rights on meetings. -->
@@ -135,6 +138,7 @@
         <Right value="Versions_Allocate"/>
         <Right value="Versions_Upload"/>
         <Right value="Versions_AddRemark"/>
+		<Right value="Versions_Edit"/>
 
         <Right value="Manage_AgendaItems"/>
         <Right value="Meeting_ViewMeetingList"/>
@@ -149,6 +153,8 @@
         <Right value="Contribution_Withdraw" />
         <Right value="Contribution_Import" />
         <Right value="Contribution_Edit_CR_Number"/>
+
+        <Right value="Cr_Add_Crs_To_CrPack"/>
       </UserRole>
 
       <!-- Administrators are members of the ETSI IT service who should be able to do everything -->
@@ -184,6 +190,7 @@
         <Right value="Versions_Allocate"/>
         <Right value="Versions_Upload"/>
         <Right value="Versions_AddRemark"/>
+		<Right value="Versions_Edit"/>
 
         <Right value="Manage_AgendaItems"/>
         <Right value="Meeting_ViewMeetingList"/>
@@ -198,6 +205,8 @@
         <Right value="Contribution_Withdraw" />
         <Right value="Contribution_Import" />
         <Right value="Contribution_Edit_CR_Number"/>
+
+        <Right value="Cr_Add_Crs_To_CrPack"/>
       </UserRole>
     </UserRoles>
   </Portal>

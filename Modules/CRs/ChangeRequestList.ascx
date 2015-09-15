@@ -5,6 +5,10 @@
 <%@ Register TagPrefix="ult" TagName="FullViewControl" Src="../../controls/Ultimate/FullView.ascx" %>
 <%@ Register TagPrefix="ult" TagName="ReleaseSearchControl" Src="../../controls/Ultimate/ReleaseSearchControl.ascx" %>
 
+<telerik:RadWindowManager ID="RadWindowMgr" runat="server"></telerik:RadWindowManager>
+<telerik:RadAjaxManager ID="ramCrs" runat="server" EnablePageHeadUpdate="false"></telerik:RadAjaxManager>
+<script type="text/javascript" src="/DesktopModules/CRs/JS/crScript.js"></script>
+
 <asp:Panel ID="crList" runat="server" Visible="false" ClientIDMode="Static">
     <asp:UpdateProgress ID="upCrSearch" runat="server" DisplayAfter="200">
         <ProgressTemplate>
@@ -20,12 +24,26 @@
         <ContentTemplate>
             <table style="width: 100%;">
                 <tr>
+                    <td class="sendCrsToCrPackTd">
+                        <telerik:RadComboBox
+                            id="rdcbCrPack"
+                            CssClass="rdcbCrPackStyle"
+                            runat="server"
+                            AllowCustomText="False"
+                            OnItemsRequested="RdcbCrPack_ItemsRequested"
+                            EnableLoadOnDemand="True"
+                            Width="200"
+                            AutoPostBack="True"
+                            EmptyMessage="Search CR-Pack...">  
+                        </telerik:RadComboBox>
+                        <asp:Button ID="SendToCrPackBtn" runat="server" CssClass="btn3GPP-success" OnClick="SendToCrPackBtn_OnClick" Text="Send to CR-Pack" Enabled="True"/>
+                    </td>
                     <td class="moduleHeaderIcon">
                         <ult:fullviewcontrol id="CrFullView" runat="server" />
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td colspan="2">
                         <telerik:RadPanelBar runat="server" ID="rpbCrSearch" Width="100%" OnClientItemClicking="PreventCrSearchCollapse">
                             <Items>
                                 <telerik:RadPanelItem runat="server" ID="rpiCrSearch">
@@ -106,7 +124,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td colspan="2">
                         <telerik:RadGrid ID="rgCrList" runat="server"
                             ClientIDMode="Static"
                             EnableEmbeddedSkins="false"
@@ -116,6 +134,7 @@
                             AllowCustomPaging="true"
                             AllowFilteringByColumn="false"
                             AutoGenerateColumns="false"
+                            AllowMultiRowSelection="True"
                             OnNeedDataSource="RgCrList_NeedDataSource"
                             OnItemDataBound="RgCrList_ItemDataBound">
                             <ClientSettings>
@@ -124,6 +143,12 @@
                             <PagerStyle AlwaysVisible="true" Mode="NextPrevAndNumeric" PageButtonCount="10" Position="Bottom" />
                             <MasterTableView ClientDataKeyNames="ChangeRequestId" Width="100%" AllowNaturalSort="false">
                                 <Columns>
+                                    <telerik:GridTemplateColumn HeaderStyle-Width="3%" UniqueName="CrSelection">
+                                        <ItemTemplate>
+                                            <asp:CheckBox ID="CrSelectionCheckBox" runat="server"
+                                            AutoPostBack="False"/>
+                                        </ItemTemplate>
+                                    </telerik:GridTemplateColumn>
                                     <telerik:GridHyperLinkColumn HeaderStyle-Width="7%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderText="Spec #" UniqueName="SpecNumber"></telerik:GridHyperLinkColumn>
                                     <telerik:GridBoundColumn HeaderStyle-Width="7%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="ChangeRequestNumber" HeaderText="CR #" UniqueName="ChangeRequestNumber"></telerik:GridBoundColumn>
                                     <telerik:GridBoundColumn HeaderStyle-Width="7%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" DataField="Revision" HeaderText="Revision #" UniqueName="Revision"></telerik:GridBoundColumn>
@@ -148,9 +173,7 @@
             </table>
         </ContentTemplate>
     </asp:UpdatePanel>
-    <telerik:RadAjaxManager ID="ramCrs" runat="server" EnablePageHeadUpdate="false"></telerik:RadAjaxManager>
-    <script type="text/javascript" src="/DesktopModules/CRs/JS/crScript.js"></script>
-    <script type="text/javascript" language="javascript">
+    <script type="text/javascript">
         function collapseCrPanelItem() {
             var panelBar = $find('<%= rpbCrSearch.ClientID %>');
             var item = panelBar.get_items().getItem(0);

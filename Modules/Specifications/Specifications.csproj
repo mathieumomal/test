@@ -207,6 +207,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="CSS\ItuRecommendations.css" />
+    <Content Include="images\5g.png" />
     <Content Include="images\ftp.png" />
     <Content Include="images\loader.gif" />
     <Content Include="images\success.png" />

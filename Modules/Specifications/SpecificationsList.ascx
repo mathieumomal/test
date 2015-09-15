@@ -191,6 +191,9 @@
                                                         <asp:Image ID="imgLTE" runat="server" ToolTip="LTE" AlternateText="LTE" ImageUrl="/DesktopModules/Specifications/images/lte.png" />
                                                     </td>
                                                     <td>
+                                                        <asp:Image ID="img5G" runat="server" ToolTip="5G" AlternateText="5G" ImageUrl="/DesktopModules/Specifications/images/5g.png" />
+                                                    </td>
+                                                    <td>
                                                         <asp:HyperLink runat="server" ID="lnkCr" Target="_blank" CssClass="img imgCR" ImageUrl="/DesktopModules/Specifications/images/cr.png" ToolTip="All CRs for this specification" NavigateUrl="#"></asp:HyperLink>
                                                     </td>
                                                 </tr>

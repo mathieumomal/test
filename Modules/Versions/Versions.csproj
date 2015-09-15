@@ -86,6 +86,13 @@
     <Compile Include="UploadVersion.aspx.designer.cs">
       <DependentUpon>UploadVersion.aspx</DependentUpon>
     </Compile>
+    <Compile Include="VersionPopup.aspx.cs">
+      <DependentUpon>VersionPopup.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="VersionPopup.aspx.designer.cs">
+      <DependentUpon>VersionPopup.aspx</DependentUpon>
+    </Compile>
     <Compile Include="VersionsSettings.ascx.cs">
       <DependentUpon>VersionsSettings.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -105,12 +112,16 @@
     <Content Include="images\error.png" />
     <Content Include="images\favicon.ico" />
     <Content Include="images\hourglass.png" />
+    <Content Include="images\loader.gif" />
     <Content Include="images\warning.png" />
+    <Content Include="JS\jquery-validate.min.js" />
     <Content Include="JS\jquery.min.js" />
+    <Content Include="JS\VersionPopup.js" />
     <Content Include="License.txt" />
     <Content Include="module.css" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="UploadVersion.aspx" />
+    <Content Include="VersionPopup.aspx" />
     <Content Include="VersionsSettings.ascx" />
     <Content Include="VersionsList.ascx" />
   </ItemGroup>

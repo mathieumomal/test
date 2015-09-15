@@ -108,6 +108,7 @@
     <Compile Include="ChangeRequestStatusManager.cs" />
     <Compile Include="CommunityManager.cs" />
     <Compile Include="ChangeRequestManager.cs" />
+    <Compile Include="ContributionManager.cs" />
     <Compile Include="CrCategoriesManager.cs" />
     <Compile Include="FinalizeCrsAction.cs" />
     <Compile Include="IChangeRequestStatusManager.cs" />

@@ -40,6 +40,12 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         public string TsgTdocNumber { get; set; }
 
         /// <summary>
+        /// Gets or sets the TSG source organization.
+        /// </summary>
+        [DataMember]
+        public string TsgSourceOrganization { get; set; }
+
+        /// <summary>
         /// Gets or sets the TSG meeting identifier.
         /// </summary>
         [DataMember]

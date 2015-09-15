@@ -46,7 +46,7 @@ namespace Etsi.Ultimate.Services
             catch (Exception ex)
             {
                 response.Result = 0;
-                response.Report.LogError(Utils.Localization.GenericError);
+                response.Report.LogError(Localization.GenericError);
                 LogManager.Error(String.Format("[Service] Failed to create change request: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
             }
 
@@ -350,8 +350,9 @@ namespace Etsi.Ultimate.Services
         /// <param name="crKey">The cr identifier.</param>
         /// <param name="newTsgTdoc">The new TSG tdoc.</param>
         /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
-        public ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId)
+        public ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource)
         {
             var response = new ServiceResponse<bool> { Result = false };
 
@@ -361,7 +362,7 @@ namespace Etsi.Ultimate.Services
                 {
                     var manager = ManagerFactory.Resolve<IChangeRequestManager>();
                     manager.UoW = uoW;
-                    response = manager.ReIssueCr(crKey, newTsgTdoc, newTsgMeetingId);
+                    response = manager.ReIssueCr(crKey, newTsgTdoc, newTsgMeetingId, newTsgSource);
 
                     if (response.Result)
                         uoW.Save();
@@ -382,8 +383,9 @@ namespace Etsi.Ultimate.Services
         /// <param name="crKey">The cr identifier.</param>
         /// <param name="newTsgTdoc">The new TSG tdoc.</param>
         /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
-        public ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId)
+        public ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource)
         {
             var response = new ServiceResponse<bool> { Result = false };
 
@@ -393,7 +395,7 @@ namespace Etsi.Ultimate.Services
                 {
                     var manager = ManagerFactory.Resolve<IChangeRequestManager>();
                     manager.UoW = uoW;
-                    response = manager.ReviseCr(crKey, newTsgTdoc, newTsgMeetingId);
+                    response = manager.ReviseCr(crKey, newTsgTdoc, newTsgMeetingId, newTsgSource);
 
                     if (response.Result)
                         uoW.Save();
@@ -437,6 +439,38 @@ namespace Etsi.Ultimate.Services
                 response.Report.LogError(e.Message);
             }
             return response;  
+        }
+
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="crsIds"></param>
+        /// <param name="crPackId"></param>
+        /// <returns></returns>
+        public ServiceResponse<bool> SendCrsToCrPack(int personId, List<int> crsIds, int crPackId)
+        {
+            var response = new ServiceResponse<bool> { Result = false };
+
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var manager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    manager.UoW = uoW;
+                    response = manager.SendCrsToCrPack(personId, crsIds, crPackId);
+
+                    if (response.Result)
+                        uoW.Save();
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Error(e.Message + e.StackTrace);
+                response.Result = false;
+                response.Report.LogError(Localization.GenericError);
+            }
+            return response;
         }
     }
 
@@ -540,8 +574,9 @@ namespace Etsi.Ultimate.Services
         /// <param name="crKey">The cr identifier.</param>
         /// <param name="newTsgTdoc">The new TSG tdoc.</param>
         /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
-        ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId);
+        ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource);
 
         /// <summary>
         /// Revise the cr.
@@ -549,8 +584,9 @@ namespace Etsi.Ultimate.Services
         /// <param name="crKey">The cr identifier.</param>
         /// <param name="newTsgTdoc">The new TSG tdoc.</param>
         /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
-        ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId);
+        ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource);
 
         /// <summary>
         /// Remove Crs from Cr-Pack
@@ -559,6 +595,15 @@ namespace Etsi.Ultimate.Services
         /// <param name="crIds">List of Cr Ids</param>
         /// <returns>Success/Failure</returns>
         ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds);
+
+        /// <summary>
+        /// Send Crs to Cr-Pack
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="crsIds"></param>
+        /// <param name="crPackId"></param>
+        /// <returns></returns>
+        ServiceResponse<bool> SendCrsToCrPack(int personId, List<int> crsIds, int crPackId);
     }
 }
 

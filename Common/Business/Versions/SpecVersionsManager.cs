@@ -8,6 +8,7 @@ using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Business.Versions
 {
@@ -396,6 +397,65 @@ namespace Etsi.Ultimate.Business.Versions
             return isSuccess;
         }
 
+        /// <summary>
+        /// Update version (allowed fields and remarks)
+        /// </summary>
+        /// <param name="version"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        public ServiceResponse<SpecVersion> UpdateVersion(SpecVersion version, int personId)
+        {
+            var response = new ServiceResponse<SpecVersion>();
+
+            try
+            {
+                //Check user right
+                var rightMgr = ManagerFactory.Resolve<IRightsManager>();
+                var rights = rightMgr.GetRights(personId);
+                if (!rights.HasRight(Enum_UserRights.Versions_Edit))
+                {
+                    LogManager.Error("UpdateVersion - Right error. PersonId : " + personId + ", " + Localization.RightError);
+                    response.Report.ErrorList.Add(Localization.RightError);
+                    return response;
+                }
+
+                //Version validation
+                if (version.MajorVersion == null ||
+                    version.TechnicalVersion == null ||
+                    version.EditorialVersion == null ||
+                    version.Source == null)
+                {
+                    LogManager.Error("UpdateVersion - Invalid version object : " + version.Pk_VersionId + ", version numbers and source are mandatory");
+                    response.Report.ErrorList.Add(Localization.GenericError);
+                    return response;
+                }
+
+                //Get the DB Version Entity
+                var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+                specVersionRepo.UoW = UoW;
+                var dbVersion = specVersionRepo.Find(version.Pk_VersionId);
+
+                if (dbVersion == null)
+                {
+                    LogManager.Error("UpdateVersion - Version not found : " + version.Pk_VersionId);
+                    response.Report.ErrorList.Add(Localization.Version_Not_Found);
+                    return response;
+                }else{
+                    //Apply modification on dbEntity to be able to save it with only allowed modifications
+                    UpdateVersionComparator(dbVersion, version, personId);
+
+                    specVersionRepo.UpdateVersion(dbVersion);
+                    response.Result = dbVersion;
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Error("UpdateVersion - Error", e);
+                response.Report.ErrorList.Add(Localization.GenericError);
+            }
+            return response;
+        }
+
         #endregion
 
         #region Private Methods
@@ -427,6 +487,24 @@ namespace Etsi.Ultimate.Business.Versions
             targetSpecVersion.Fk_SpecificationId = sourceSpecVersion.Fk_SpecificationId;
             targetSpecVersion.Fk_ReleaseId = sourceSpecVersion.Fk_ReleaseId;
             targetSpecVersion.ETSI_WKI_Ref = sourceSpecVersion.ETSI_WKI_Ref;
+        }
+
+        /// <summary>
+        /// Update version comparator (only necessary fields will be modified)
+        /// </summary>
+        private void UpdateVersionComparator(SpecVersion dbVersion, SpecVersion versionUpdated, int personId)
+        {
+            dbVersion.SupressFromSDO_Pub = versionUpdated.SupressFromSDO_Pub;
+            dbVersion.SupressFromMissing_List = versionUpdated.SupressFromMissing_List;
+            dbVersion.Source = versionUpdated.Source;
+
+            //Insert remarks
+            var remarksToInsert = versionUpdated.Remarks.ToList().Where(x => dbVersion.Remarks.ToList().All(y => y.Pk_RemarkId != x.Pk_RemarkId)).ToList();
+            remarksToInsert.ToList().ForEach(x => x.Fk_PersonId = personId);//Apply personId to inserted remarks
+            remarksToInsert.ToList().ForEach(x => dbVersion.Remarks.Add(x));//Add remarks
+            //Update remarks
+            var remarksToUpdate = versionUpdated.Remarks.ToList().Where(x => dbVersion.Remarks.ToList().Any(y => y.Pk_RemarkId == x.Pk_RemarkId && y.IsPublic != x.IsPublic));
+            remarksToUpdate.ToList().ForEach(x => dbVersion.Remarks.ToList().Find(y => y.Pk_RemarkId == x.Pk_RemarkId).IsPublic = x.IsPublic);
         }
         #endregion
     }

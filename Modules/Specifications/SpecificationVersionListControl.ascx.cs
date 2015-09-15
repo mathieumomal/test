@@ -22,6 +22,8 @@ namespace Etsi.Ultimate.Module.Specifications
         private const string LinkDisplayCssClasses = "linkStyle";
         private const string LinkDisabledCssClasses = "linkStyle disabled notAvailable";
 
+        private const string VersionPopupPath =
+            "openVersionDetailsPopup({0},'{1}','Version details'); return false;";
         #endregion
 
         #region Public Properties
@@ -152,8 +154,8 @@ namespace Etsi.Ultimate.Module.Specifications
                 var specVersion = (SpecVersion)item.DataItem;
                 if (specVersion != null)
                 {
-                    var versionRemarks = (ImageButton)item["LatestRemark"].FindControl("imgVersionRemarks");
-                    versionRemarks.OnClientClick = "openRemarksPopup('version','" + specVersion.Pk_VersionId + "','" + IsEditMode + "', 'Version Remarks'); return false;";
+                    var versionDetails = (ImageButton)item["LatestRemark"].FindControl("imgVersionDetails");
+                    versionDetails.OnClientClick = string.Format(VersionPopupPath, specVersion.Pk_VersionId, IsEditMode);
 
                     //Display informations contains in the SpecDecorator
                     ApplyChangeRequestInformation(item, specVersion);

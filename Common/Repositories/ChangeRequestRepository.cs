@@ -81,7 +81,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>List of CRs</returns>
         public List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUiDs)
         {
-            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus).Where(c => c.ChangeRequestTsgDatas.Any(x => contributionUiDs.Contains(x.TSGTdoc)) || contributionUiDs.Contains(c.WGTDoc)).ToList();
+            return AllIncluding(t => t.Enum_CRCategory, t=> t.CR_WorkItems, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus).Where(c => c.ChangeRequestTsgDatas.Any(x => contributionUiDs.Contains(x.TSGTdoc)) || contributionUiDs.Contains(c.WGTDoc)).ToList();
         }
 
         /// <summary>
@@ -92,6 +92,16 @@ namespace Etsi.Ultimate.Repositories
         public ChangeRequest Find(int changeRequestId)
         {
             return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus).SingleOrDefault(x => x.Pk_ChangeRequest == changeRequestId);
+        }
+
+        /// <summary>
+        /// See interface
+        /// </summary>
+        /// <param name="crsIds"></param>
+        /// <returns></returns>
+        public List<ChangeRequest> FindCrsByIds(List<int> crsIds)
+        {
+            return AllIncluding(x => x.ChangeRequestTsgDatas).Where(x => crsIds.Contains(x.Pk_ChangeRequest)).ToList();
         }
 
         /// <summary>
@@ -161,7 +171,7 @@ namespace Etsi.Ultimate.Repositories
                                    && ((searchObj.VersionId == 0) || (x.Fk_NewVersion == searchObj.VersionId))
                                    && ((searchObj.ReleaseIds.Count ==  0) || (searchObj.ReleaseIds.Contains(0)) || (searchObj.ReleaseIds.Contains(x.Fk_Release ?? 0)))
                                    && ((searchObj.WgStatusIds.Count == 0) || (searchObj.WgStatusIds.Contains(x.Fk_WGStatus ?? 0)))
-                                   && ((searchObj.TsgStatusIds.Count == 0) || (x.ChangeRequestTsgDatas.Any(t => searchObj.TsgStatusIds.Contains(t.Fk_TsgStatus ?? 0))))
+                                   && ((searchObj.TsgStatusIds.Count == 0) || (searchObj.TsgStatusIds.Contains(0) && x.ChangeRequestTsgDatas.Count == 0) || (x.ChangeRequestTsgDatas.Any(t => searchObj.TsgStatusIds.Contains(t.Fk_TsgStatus ?? 0))))
                                    && ((searchObj.MeetingIds.Count == 0) || (x.ChangeRequestTsgDatas.Any(t => searchObj.MeetingIds.Contains(t.TSGMeeting ?? 0))) || (searchObj.MeetingIds.Contains(x.WGMeeting ?? 0)))
                                    && ((searchObj.WorkItemIds.Count == 0) || (searchObj.WorkItemIds.Any(wiId => x.CR_WorkItems.Any(crWi => crWi.Fk_WIId == wiId))))));
 
@@ -224,7 +234,7 @@ namespace Etsi.Ultimate.Repositories
         public ChangeRequest GetCrByKey(CrKeyFacade crKey)
         {
             var query = AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus);
-            query = query.Where(x => (((x.Fk_Specification ?? 0) == crKey.SpecId) || (x.Specification.Number == crKey.SpecNumber))
+            query = query.Where(x => (((crKey.SpecId != 0 && (x.Fk_Specification ?? 0) == crKey.SpecId)) || (x.Specification.Number == crKey.SpecNumber))
                                      && x.CRNumber == crKey.CrNumber
                                      && ((x.Revision ?? 0) == crKey.Revision));
             return query.FirstOrDefault();
@@ -238,7 +248,7 @@ namespace Etsi.Ultimate.Repositories
         public List<ChangeRequest> GetCrsBySpecAndCrNumberAndTsgTdoc(CrKeyFacade crKey)
         {
             var query = AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus);
-            query = query.Where(x => (((x.Fk_Specification ?? 0) == crKey.SpecId) || (x.Specification.Number == crKey.SpecNumber))
+            query = query.Where(x => (((crKey.SpecId != 0 && (x.Fk_Specification ?? 0) == crKey.SpecId)) || (x.Specification.Number == crKey.SpecNumber))
                                      && x.CRNumber == crKey.CrNumber
                                      && x.ChangeRequestTsgDatas.Any(y => y.TSGTdoc == crKey.TsgTdocNumber));
             return query.ToList();
@@ -341,5 +351,12 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="crPack">Uid of Cr-Pack</param>
         /// <returns>Tsg information</returns>
         List<ChangeRequestTsgData> GetTsgDataForCrPack(string crPack);
+
+        /// <summary>
+        /// Get CRs by Ids
+        /// </summary>
+        /// <param name="crsIds"></param>
+        /// <returns></returns>
+        List<ChangeRequest> FindCrsByIds(List<int> crsIds);
     }
 }

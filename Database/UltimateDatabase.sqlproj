@@ -242,6 +242,7 @@
     <None Include="Scripts\Post-Deployment\UpdateChangeRequestsData.sql" />
     <None Include="Scripts\Post-Deployment\UpdateReleaseMtgShortReferences.sql" />
     <None Include="Scripts\Post-Deployment\ContributionUid_TRIM.sql" />
+    <Build Include="dbo\Views\View_CrPacks.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />
@@ -254,8 +255,14 @@
     <None Include="Data feeds\Enum_CommunitiesShortNames.data.sql" />
     <None Include="Data feeds\Enum_ReleaseStatus.data.sql" />
     <None Include="Scripts\Post-Deployment\Enum_ChangeRequestStatus.data.sql" />
+    <None Include="Common\CONTRIB3GPPDB.dacpac" />
+    <None Include="Scripts\Post-Deployment\Enum_Technology_5G.sql" />
   </ItemGroup>
   <ItemGroup>
+    <SqlCmdVariable Include="CONTRIB3GPPDB">
+      <DefaultValue>CONTRIB3GPPDB</DefaultValue>
+      <Value>$(SqlCmdVar__5)</Value>
+    </SqlCmdVariable>
     <SqlCmdVariable Include="DNN3GPP">
       <DefaultValue>DNN3GPP</DefaultValue>
       <Value>$(SqlCmdVar__2)</Value>
@@ -284,6 +291,11 @@
       <HintPath>Common\WPMDB.dacpac</HintPath>
       <SuppressMissingDependenciesErrors>False</SuppressMissingDependenciesErrors>
       <DatabaseSqlCmdVariable>WPMDB</DatabaseSqlCmdVariable>
+    </ArtifactReference>
+    <ArtifactReference Include="Common\CONTRIB3GPPDB.dacpac">
+      <HintPath>Common\CONTRIB3GPPDB.dacpac</HintPath>
+      <SuppressMissingDependenciesErrors>True</SuppressMissingDependenciesErrors>
+      <DatabaseSqlCmdVariable>CONTRIB3GPPDB</DatabaseSqlCmdVariable>
     </ArtifactReference>
   </ItemGroup>
   <ItemGroup>

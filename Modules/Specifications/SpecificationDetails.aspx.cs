@@ -3,16 +3,12 @@ using Etsi.Ultimate.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using System.Web.UI;
 using System.Web.UI.WebControls;
 using Etsi.Ultimate.Utils;
-using Telerik.Web.UI;
 using Domain = Etsi.Ultimate.DomainClasses;
 using System.Configuration;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Module.Specifications.App_LocalResources;
-using System.Text;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
@@ -338,12 +334,12 @@ namespace Etsi.Ultimate.Module.Specifications
         private void SetRadioTechnologiesItems(List<Domain.Enum_Technology> technologies)
         {
             radioTechnologyVals.Style.Add("border-spacing", "0");
-            foreach (Domain.Enum_Technology technology in technologies.OrderBy(t => t.Code))
+            foreach (Domain.Enum_Technology technology in technologies.OrderBy(t => t.SortOrder))
             {
                 radioTechnologyVals.Items.Add(new ListItem()
                 {
                     Value = technology.Pk_Enum_TechnologyId.ToString(),
-                    Text = technology.Code
+                    Text = technology.Description
                 });
             }
         }

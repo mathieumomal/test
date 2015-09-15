@@ -426,7 +426,9 @@ namespace Etsi.Ultimate.Business.Specifications
                         rights.AddRight(Enum_UserRights.Versions_Modify_MajorVersion);
                 }
 
-               
+                //Version edition rights
+                if (userRights.HasRight(Enum_UserRights.Versions_Edit))
+                    rights.AddRight(Enum_UserRights.Versions_Edit);
             }
 
             //Get the latest spec_release

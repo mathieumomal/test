@@ -97,6 +97,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à TDoc cannot be sent to a CR-Pack.
+        /// </summary>
+        public static string CR_Cannot_Be_Send_To_CRPack {
+            get {
+                return ResourceManager.GetString("CR_Cannot_Be_Send_To_CRPack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Change request {0} already exist in the TSG Tdoc {1}. To revise this change request please revise in another TSG Tdoc..
         /// </summary>
         public static string CR_Cannot_Revise_For_Same_TsgTdocNumber {
@@ -106,11 +115,38 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Please select CRs to be sent to CR-Pack.
+        /// </summary>
+        public static string CR_Crs_Or_CrPack_NotSelected {
+            get {
+                return ResourceManager.GetString("CR_Crs_Or_CrPack_NotSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Selected CRs have been successfully sent to CR-Pack {0}..
+        /// </summary>
+        public static string CR_Crs_Successfully_Moved_Inside_CrPack {
+            get {
+                return ResourceManager.GetString("CR_Crs_Successfully_Moved_Inside_CrPack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Change request not found: {0}.
         /// </summary>
         public static string CR_Not_Found {
             get {
                 return ResourceManager.GetString("CR_Not_Found", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Send CRs to CR-pack.
+        /// </summary>
+        public static string CR_Send_Crs_To_CrPack {
+            get {
+                return ResourceManager.GetString("CR_Send_Crs_To_CrPack", resourceCulture);
             }
         }
         

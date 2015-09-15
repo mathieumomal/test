@@ -53,6 +53,7 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                         WorkplanId = 17,
                         Name = "Isolated E-UTRAN Operation for Public Safety",
                         Acronym = "IOPS",
+                        Effective_Acronym = "IOPS",
                         WiLevel = 0,
                         Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID,
                         WorkItems_ResponsibleGroups = responsibleGroups,

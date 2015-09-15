@@ -110,6 +110,7 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual(630000, wi.Pk_WorkItemUid);
             Assert.AreEqual("Isolated E-UTRAN Operation for Public Safety", wi.Name);
             Assert.AreEqual("IOPS", wi.Acronym);
+            Assert.AreEqual("IOPS", wi.Effective_Acronym);
             Assert.AreEqual(0, wi.WiLevel);
             Assert.AreEqual(ReleaseFakeRepository.OPENED_RELEASE_ID, wi.Fk_ReleaseId);
             Assert.AreEqual(new DateTime(2014, 3, 7), wi.StartDate);
@@ -242,7 +243,7 @@ namespace Etsi.Ultimate.Tests.Business
             RegisterRepositories();
             RepositoryFactory.Container.RegisterType<IWorkItemRepository, WorkItemOneLineFakeRepository>(new TransientLifetimeManager());
 
-            var wiImporter = new WorkItemCsvParser() { UoW = new UltimateUnitOfWork() };
+            var wiImporter = new WorkItemCsvParser { UoW = new UltimateUnitOfWork() };
 
             var result = wiImporter.ParseCsv("../../TestData/WorkItems/OneLine_Nominal.csv");
 

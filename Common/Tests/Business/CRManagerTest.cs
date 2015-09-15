@@ -88,7 +88,8 @@ namespace Etsi.Ultimate.Tests.Business
             mockCrRepository.Stub(x => x.FindCrMaxRevisionBySpecificationIdAndCrNumber(cr22.Fk_Specification, cr22.CRNumber)).Return(4);
             mockCrRepository.Expect(x => x.InsertOrUpdate(Arg<ChangeRequest>.Matches(y => y.IsAutoNumberingOff == isAutoNumberingOff
                                                                                        && y.CRNumber == crNumber
-                                                                                       && y.Revision == revision)));
+                                                                                       && y.Revision == revision
+                                                                                       && y.CreationDate != null)));
             RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockCrRepository);
 
             //Act
@@ -199,7 +200,7 @@ namespace Etsi.Ultimate.Tests.Business
         [Test, Description("Retrieve CR using TDoc(Contribution Uid)")]
         public void Business_GetChangeRequestListByContributionUidList()
         {
-            var uids = new List<string>() { "TSG1", "Change request description6" };
+            var uids = new List<string> { "TSG1", "Change request description6" };
             var crManager = new ChangeRequestManager { UoW = UoW };
             var crList = crManager.GetChangeRequestListByContributionUidList(uids);
 

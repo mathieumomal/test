@@ -45,6 +45,7 @@ namespace Etsi.Ultimate.Tests
         public System.Data.Entity.IDbSet<SyncInfo> SyncInfoes { get; set; }
         public System.Data.Entity.IDbSet<Enum_CommunitiesShortName> Enum_CommunitiesShortName { get; set; }
         public System.Data.Entity.IDbSet<ChangeRequestTsgData> ChangeRequestTsgDatas { get; set; }
+        public System.Data.Entity.IDbSet<View_CrPacks> View_CrPacks { get; set; }
 
         public void SetModified(object entity)
         {

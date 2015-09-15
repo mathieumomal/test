@@ -121,3 +121,23 @@ span.requiredField {
     color: red;
     padding-right: 0px;
 }
+
+/*VERSION POPUP*/
+#frmVersionPopup {
+    font-family: Arial,verdana,Serif;
+    font-size: 12px;
+}
+
+#frmVersionPopup .versionIdentifier {
+	padding-bottom: 10px;
+}
+#frmVersionPopup .versionIdentifier span {
+	font-weight: bold;
+	font-size: 15px;
+}
+
+#frmVersionPopup .footer {
+	position: relative; 
+	top: 10px; 
+	text-align:left;
+}

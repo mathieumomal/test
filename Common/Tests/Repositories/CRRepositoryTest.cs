@@ -11,7 +11,7 @@ namespace Etsi.Ultimate.Tests.Repositories
     public class CrRepositoryTest : BaseEffortTest
     {
         #region Constants
-        private const int TotalNoOfCrsInCsv = 23;
+        private const int TotalNoOfCrsInCsv = 24;
         private const int SpecificationId = 136080;
         #endregion
 
@@ -103,10 +103,10 @@ namespace Etsi.Ultimate.Tests.Repositories
 
         #region Get CR
 
-        [TestCase(0, 0, 23, Description = "No paging")]
+        [TestCase(0, 0, 24, Description = "No paging")]
         [TestCase(0, 10, 10, Description = "Paging max 10 items")]
         [TestCase(5, 10, 10, Description = "Paging max 10 items (start from item 6)")]
-        [TestCase(20, 10, 3, Description = "Paging start from item 20")]
+        [TestCase(20, 10, 4, Description = "Paging start from item 20")]
         public void GetChangeRequestsTest_Paging(int skipRecords, int pageSize, int expectedResult)
         {
             //Search object build
@@ -140,7 +140,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         }
 
         [TestCase("22.101", 6)]
-        [TestCase("22.", 23)]
+        [TestCase("22.", 24)]
         public void GetChangeRequestsTest_SpecNumber(string specNumber, int expectedResult)
         {
             var searchObj = new ChangeRequestsSearch { SpecificationNumber = specNumber };
@@ -175,8 +175,10 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(expectedResult, result.Key.Count);
         }
 
-        [TestCase(1, 1, 15)]
-        [TestCase(1, 2, 17)]
+        [TestCase(1, 1, 16)]
+        [TestCase(1, 2, 18)]
+        [TestCase(0, 0, 6)]
+        [TestCase(0, 2, 8)]
         public void GetChangeRequestsTest_WgStatus(int wgStatusId1, int wgStatusId2, int expectedResult)
         {
             var searchObj = new ChangeRequestsSearch { WgStatusIds = new List<int>() { wgStatusId1, wgStatusId2 } };
@@ -189,6 +191,8 @@ namespace Etsi.Ultimate.Tests.Repositories
 
         [TestCase(1, 5, 8)]
         [TestCase(2, 5, 14)]
+        [TestCase(0, 0, 6)]
+        [TestCase(0, 5, 10)]
         public void GetChangeRequestsTest_TsgStatus(int tsgStatusId1, int tsgStatusId2, int expectedResult)
         {
             var searchObj = new ChangeRequestsSearch { TsgStatusIds = new List<int>() { tsgStatusId1, tsgStatusId2 } };

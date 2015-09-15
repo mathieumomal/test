@@ -320,12 +320,13 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="crKey">The cr identifier.</param>
         /// <param name="newTsgTdoc">The new TSG tdoc.</param>
         /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
-        public Interface.ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId)
+        public Interface.ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource)
         {
             LogManager.Debug(String.Format("[ServiceCall][ReIssueCr] crKey=[Spec# {0}, Cr# {1}, Revision# {2} ]; newTsgTdoc={3}; newTsgMeetingId={4}", crKey.SpecNumber, crKey.CrNumber, crKey.Revision, newTsgTdoc, newTsgMeetingId));
             var serviceHelper = new ServiceHelper();
-            return serviceHelper.ReIssueCr(crKey, newTsgTdoc, newTsgMeetingId);
+            return serviceHelper.ReIssueCr(crKey, newTsgTdoc, newTsgMeetingId, newTsgSource);
         }
 
         /// <summary>
@@ -334,12 +335,13 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="crKey">The cr identifier.</param>
         /// <param name="newTsgTdoc">The new TSG tdoc.</param>
         /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
-        public Interface.ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId)
+        public Interface.ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource)
         {
             LogManager.Debug(String.Format("[ServiceCall][ReviseCr] crKey=[Spec# {0}, Cr# {1}, Revision# {2} ]; newTsgTdoc={3}; newTsgMeetingId={4}", crKey.SpecNumber, crKey.CrNumber, crKey.Revision, newTsgTdoc, newTsgMeetingId));
             var serviceHelper = new ServiceHelper();
-            return serviceHelper.ReviseCr(crKey, newTsgTdoc, newTsgMeetingId);        
+            return serviceHelper.ReviseCr(crKey, newTsgTdoc, newTsgMeetingId, newTsgSource);        
         }
 
         /// <summary>

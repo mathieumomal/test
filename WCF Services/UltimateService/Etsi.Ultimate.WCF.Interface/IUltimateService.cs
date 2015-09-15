@@ -221,9 +221,10 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <param name="crKey">The cr identifier.</param>
         /// <param name="newTsgTdoc">The new TSG tdoc.</param>
         /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
         [OperationContract]
-        ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId);
+        ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource);
 
         /// <summary>
         /// Revise the cr.
@@ -231,9 +232,10 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <param name="crKey">The cr identifier.</param>
         /// <param name="newTsgTdoc">The new TSG tdoc.</param>
         /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
+        /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
         [OperationContract]
-        ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId);
+        ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource);
 
         /// <summary>
         /// Remove Crs from Cr-Pack
@@ -243,7 +245,6 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>Success/Failure</returns>
         [OperationContract]
         ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds);
-
         #endregion
 
         #region Versions

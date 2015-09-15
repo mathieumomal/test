@@ -172,7 +172,7 @@ namespace Etsi.Ultimate.Module.Specifications
 
                     var specSvc = ServicesFactory.Resolve<ISpecificationService>();
                     searchObj = new SpecificationSearch();
-                    Technologies = specSvc.GetTechnologyList();
+                    Technologies = specSvc.GetTechnologyList().OrderBy(t => t.SortOrder).ToList();
                     Series = specSvc.GetSeries();
 
                     TbId = Request.QueryString["tbid"];
@@ -203,6 +203,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 var currentSpecification = (Specification)e.Item.DataItem;
                 var img2G = (Image)dataItem.FindControl("img2G");
                 var img3G = (Image)dataItem.FindControl("img3G");
+                var img5G = (Image)dataItem.FindControl("img5G");
                 var imgLte = (Image)dataItem.FindControl("imgLTE");
                 var lnkCr = (HyperLink) dataItem.FindControl("lnkCr");
 
@@ -211,6 +212,8 @@ namespace Etsi.Ultimate.Module.Specifications
                     img2G.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "2g").FirstOrDefault() != null) ? "opacity:1" : "opacity:0.1");
                 if (img3G != null)
                     img3G.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "3g").FirstOrDefault() != null) ? "opacity:1" : "opacity:0.1");
+                if (img5G != null)
+                    img5G.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "5g").FirstOrDefault() != null) ? "opacity:1" : "opacity:0.1");
                 if (imgLte != null)
                     imgLte.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "lte").FirstOrDefault() != null) ? "opacity:1" : "opacity:0.1");
                 if (lnkCr != null)
