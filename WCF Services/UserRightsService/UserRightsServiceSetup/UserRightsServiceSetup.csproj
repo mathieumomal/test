@@ -61,6 +61,16 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release.Prd|AnyCPU'">
+    <OutputPath>bin\Release.Prd\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -109,6 +119,11 @@
     <Content Include="UnInstallService.bat">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="DeployementConf\App.config" />
+    <None Include="DeployementConf\App.Release.Dev.config" />
+    <None Include="DeployementConf\App.Release.Ls.config" />
+    <None Include="DeployementConf\App.Release.Prd.config" />
+    <None Include="DeployementConf\App.Release.Qa.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -137,7 +152,7 @@
   <Target Name="BeforeBuild">
     <CallTarget Targets="TransformAppConfig" />
   </Target>
-  <Target Name="TransformAppConfig" Condition="'$(Configuration)'=='Release.Dev' Or '$(Configuration)'=='Release.Qa' Or '$(Configuration)'=='Release.Ls'">
+  <Target Name="TransformAppConfig" Condition="'$(Configuration)'=='Release.Dev' Or '$(Configuration)'=='Release.Qa' Or '$(Configuration)'=='Release.Ls' Or '$(Configuration)'=='Release.Prd'">
     <Copy DestinationFiles="$(ProjectDir)DeployementConf\App.config" SourceFiles="$(ProjectDir)App.config" ContinueOnError="false" />
     <Copy SourceFiles="$(ProjectDir)DeployementConf\App.$(Configuration).config" DestinationFiles="$(ProjectDir)App.config" ContinueOnError="false" />
   </Target>
