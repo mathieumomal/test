@@ -56,7 +56,7 @@
     <!-- Host Header to remove from URL so "www.mydomain.com/johndoe/Default.aspx" is treated as "www.mydomain.com/Default.aspx" -->
     <add key="RemoveAngleBrackets" value="false" />
     <!--optionally strip angle brackets on public login and registration screens-->
-    <add key="PersistentCookieTimeout" value="0" />
+    <add key="PersistentCookieTimeout" value="1280" />
     <!--use as persistent cookie expiration. Value is in minutes, and only active if a non-zero figure-->
     <!-- set UsePortNumber to true to preserve the port number if you're using a port number other than 80 (the standard)
         <add key="UsePortNumber" value="true" /> -->
@@ -68,22 +68,22 @@
     <add key="loginUrl" value="~/Login.aspx" />
     <add key="InstallVersion" value="07.00.04" />
     <add key="DefaultDevicesDatabase" value="DesktopModules\DevicePreviewManagement\Resources\defaultDevices.xml" />
-	<add key="MeetingDetailsAddress" value="http://webapp.etsi.org/meetingCalendar/MeetingDetails.asp?mid=" />
-	<add key="MeetingRelatedTdocAddress" value="http://portal.3gpp.org/ngppapp/TdocList.aspx?meetingId=" />
-	 <add key="FtpContributionAddress" value="http://ftp.3gpp.org/" />
-	<add key="MeetingiCalAddress" value="http://webapp.etsi.org/meetingCalendar/ical.asp?qMTG_ID=" />
+	  <add key="MeetingDetailsAddress" value="http://portal.3gpp.org/webapp/meetingCalendar/MeetingDetails.asp?m_id=" />
+    <add key="MeetingRelatedTdocAddress" value="https://portal.3gpp.org/ngppapp/TdocList.aspx?meetingId=" />
+    <add key="FtpContributionAddress" value="http://ftp.3gpp.org/" />
+    <add key="MeetingiCalAddress" value="http://portal.3gpp.org/webapp/meetingCalendar/ical.asp?qMTG_ID=" />
     <add key="MeetingParticipantsListAddress" value="http://webapp.etsi.org/3GPPRegistration/fViewPart.asp?mid=" />
-	<add key="RapporteurDetailsAddress" value="http://webapp.etsi.org/teldir/ListPersDetails.asp?PersId="/>
-	<add key="FtpExportAddress" value="http://ftp.3gpp.org/Information/WORK_PLAN/"/>
-	<add key="FtpBasePhysicalPath" value="\\3gppweb.etsi.org\3gppftp$\" />
+    <add key="RapporteurDetailsAddress" value="http://portal.etsi.org/webapp/teldir/ListPersDetails.asp?PersId="/>
+    <add key="FtpExportAddress" value="http://ftp.3gpp.org/Information/WORK_PLAN/"/>
+    <add key="FtpBasePhysicalPath" value="\\3GPPWEB\3gppftp$\" />
     <add key="FtpBaseBackupPhysicalPath" value="D:\AppTrans\TempHDrive\" />
-	<add key="FtpBaseAddress" value="http://ftp.3gpp.org/" />
-	<add key="VersionsLatestFTPFolder" value="2014-09" />
-	<add key="TranspositionFolderPath" value="D:\AppTrans\transposition\"/>
-	<add key="WIReportPath" value ="http://webapp.etsi.org/workprogram/Report_WorkItem.asp?WKI_ID="/>
-	<add key="Global3GPPProjetId" value ="703"/>
-	<add key="UploadVersionTemporaryPath" value="D:\AppTrans\Version\"/>
-<add key="MeetingCreationAddress" value="http://webapp.etsi.org/meetingManagement/NewMeeting.asp?type=create"/>
+    <add key="FtpBaseAddress" value="http://www.3gpp.org/ftp/" />
+    <add key="VersionsLatestFTPFolder" value="2015-09" />
+    <add key="TranspositionFolderPath" value="D:\AppTrans\transposition\"/>
+    <add key="WIReportPath" value ="http://portal.etsi.org/webapp/workprogram/Report_WorkItem.asp?WKI_ID="/>
+    <add key="Global3GPPProjetId" value ="703"/>
+    <add key="UploadVersionTemporaryPath" value="D:\AppTrans\Version\"/>
+    <add key="MeetingCreationAddress" value="http://portal.3gpp.org/webapp/meetingManagement/NewMeeting.asp?type=create"/>
 	
 	<add key="EmailDefaultFrom" value="3GPP Portal&lt;3gppapp@3gpp.org&gt;"/>
 	<add key="EmailDefaultBcc" value="3gppapp@3gpp.org"/>
@@ -101,8 +101,8 @@
   <add key="CRsListRecordsMaxSize" value="100"/>
 	
 	
-  <add key="MeetingListAdvancedQueryLink" value="http://webapp.etsi.org/MeetingCalendar/QueryForm.asp"/>
-  <add key="ManageAgendaItemsUrl" value="http://webapp.etsi.org/rmeetingDocuments/UpdateAllocations.asp?MTG_ID={0}"/>
+  <add key="MeetingListAdvancedQueryLink" value="http://portal.3gpp.org/webapp/MeetingCalendar/QueryForm.asp"/>
+  <add key="ManageAgendaItemsUrl" value="http://portal.3gpp.org/webapp/rmeetingDocuments/UpdateAllocations.asp?MTG_ID={0}"/>
   <add key="MeetingRegistration" value="http://webapp.etsi.org/3GPPRegistration/fMain.asp?mid={0}"/>
   <add key="EtsiWorkitemsDeliveryFolder" value="http://www.etsi.org/deliver/"/>
   
@@ -175,13 +175,12 @@
     </security>
     <rewrite>
       <rules>
-        <rule name="HTTP to HTTPS redirect" enabled="false" stopProcessing="true">
+        <rule name="HTTP to HTTPS redirect" enabled="true" stopProcessing="false">
           <match url="(.*)" />
           <conditions logicalGrouping="MatchAny">
                         <add input="{HTTPS}" pattern="off" />
-                        <add input="{HTTP_HOST}" pattern="^portal\.13\.etsiqa\.org$" negate="true" />
           </conditions>
-          <action type="Redirect" url="https://portal.13.etsiqa.org/{R:1}" redirectType="Found" />
+          <action type="Redirect" url="https://portal.3gpp.org/{R:1}" redirectType="Found" />
         </rule>
       </rules>
     </rewrite>
@@ -222,7 +221,7 @@
       <customErrors mode="RemoteOnly" />
       <!-- Forms or Windows authentication -->
       <authentication mode="Forms">
-        <forms name=".DOTNETNUKE" protection="All" timeout="60" cookieless="UseCookies" />
+        <forms name=".DOTNETNUKE" protection="All" timeout="1280" cookieless="UseCookies" />
       </authentication>
       <!--
     <identity impersonate="true"/>
