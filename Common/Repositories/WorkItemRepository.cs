@@ -2,11 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
-using Etsi.Ultimate.Utils;
-
 
 namespace Etsi.Ultimate.Repositories
 {
@@ -106,17 +102,19 @@ namespace Etsi.Ultimate.Repositories
         /// Get the list of workitems based on
         /// </summary>
         /// <param name="searchString"></param>
+        /// <param name="shouldHaveAcronym">WIs should have acronym</param>
         /// <returns>List of WorkItems</returns>
-        public List<WorkItem> GetWorkItemsBySearchCriteria(string searchString)
+        public List<WorkItem> GetWorkItemsBySearchCriteria(string searchString, bool shouldHaveAcronym = false)
         {
-            int WorkItemId = -1;
-            int.TryParse(searchString, out WorkItemId);
+            int workItemId;
+            int.TryParse(searchString, out workItemId);
 
             return AllIncluding(t => t.Release, t => t.Remarks, t => t.ChildWis, t => t.ParentWi, t => t.WorkItems_ResponsibleGroups)
                 .Where(x => (x.Name.ToLower().Contains(searchString.ToLower())
                     || x.Acronym.ToLower().Contains(searchString.ToLower())
-                    || x.Pk_WorkItemUid == WorkItemId)
-                    && x.WiLevel != 0).ToList();
+                    || x.Pk_WorkItemUid == workItemId)
+                    && x.WiLevel != 0
+                    && (!shouldHaveAcronym || !string.IsNullOrEmpty(x.Acronym.Trim()))).ToList();
         }
 
         /// <summary>
@@ -206,12 +204,13 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>List of workitems</returns>
         List<WorkItem> GetWorkItemsBySearchCriteria(List<int> releaseIds, int granularity, string wiAcronym, string wiName, List<int> tbIds);
 
-        /// <summary>
-        ///Get the list of workitems based on searchString
-        /// </summary>
-        /// <param name="searchString"></param>
+        ///  <summary>
+        /// Get the list of workitems based on searchString
+        ///  </summary>
+        ///  <param name="searchString"></param>
+        /// <param name="shouldHaveAcronym">WIs should have acronym</param>
         /// <returns>List of workitems</returns>
-        List<WorkItem> GetWorkItemsBySearchCriteria(string searchString);
+        List<WorkItem> GetWorkItemsBySearchCriteria(string searchString, bool shouldHaveAcronym = false);
 
         /// <summary>
         /// Gets the list of all workitems for a given list of release, regardless of any other criteria.

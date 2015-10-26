@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
-using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Services
@@ -40,10 +36,10 @@ namespace Etsi.Ultimate.Services
         /// <returns>Success/Failure</returns>
         public bool ImportWorkPlan(string token, string exportPath)
         {
-            bool isImportSuccess = false;
-            bool isExportSuccess = false;
+            var isExportSuccess = false;
             try
             {
+                bool isImportSuccess;
                 using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
                 {
                     var csvImport = new WorkItemImporter() { UoW = uoW };
@@ -105,13 +101,14 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="personId">Person Id</param>
         /// <param name="searchString">Search String</param>
+        /// <param name="shouldHaveAcronym">WIs should have acronym</param>
         /// <returns>Work items</returns>
-        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, string searchString)
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, string searchString, bool shouldHaveAcronym = false)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var workItemManager = new WorkItemManager(uoW);
-                return workItemManager.GetWorkItemsBySearchCriteria(personId, searchString);
+                return workItemManager.GetWorkItemsBySearchCriteria(personId, searchString, shouldHaveAcronym);
             }
         }
 

@@ -74,6 +74,21 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         /// <summary>
+        /// Gets the work items with acronym by keyword.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="keyword">The keyword.</param>
+        /// <returns>
+        /// List of work items
+        /// </returns>
+        public List<WorkItem> GetWorkItemsWithAcronymByKeyWord(int personId, string keyword)
+        {
+            LogManager.Debug("[ServiceCall][GetWorkItemsWithAcronymByKeyWord] PersonId=" + personId + "; keyword=" + keyword);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetWorkItemsByKeyWord(personId, keyword, true);
+        }
+
+        /// <summary>
         /// Gets the work items by key words.
         /// </summary>
         /// <param name="personId">The person identifier.</param>
@@ -140,7 +155,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="personId">The person identifier.</param>
         /// <param name="specIdsForUcc">The spec ids</param>
         /// <returns>Status report</returns>
-        public Interface.ServiceResponse<bool> ChangeSpecificationsStatusToUnderChangeControl(int personId, List<int> specIdsForUcc)
+        public ServiceResponse<bool> ChangeSpecificationsStatusToUnderChangeControl(int personId, List<int> specIdsForUcc)
         {
             LogManager.Debug("[ServiceCall][ChangeSpecificationsStatusToUnderChangeControl] specNumbersForUcc=" + string.Join(", ", specIdsForUcc));
             var serviceHelper = new ServiceHelper();
@@ -184,7 +199,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>
         /// Primary key of newly inserted change request
         /// </returns>
-        public Interface.ServiceResponse<int> CreateChangeRequest(int personId, ChangeRequest changeRequest)
+        public ServiceResponse<int> CreateChangeRequest(int personId, ChangeRequest changeRequest)
         {
             LogManager.Debug("[ServiceCall][CreateChangeRequest] PersonId=" + personId);
             var serviceHelper = new ServiceHelper();
@@ -255,7 +270,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// The aim of this method is to be able to update the CRs related to a CR Pack (TSG decision and TsgTdocNumber)
         /// </summary>
         /// <param name="crKeys"></param>
-        public bool UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<Interface.Entities.CrKeyFacade, string>> crKeys)
+        public bool UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<CrKeyFacade, string>> crKeys)
         {
             LogManager.Debug("[ServiceCall][UpdateChangeRequestPackRelatedCrs]");
             var svcHelper = new ServiceHelper();
@@ -268,7 +283,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="personId">The person identifier.</param>
         /// <param name="tdocNumbers">The tdoc numbers.</param>
         /// <returns>Status report</returns>
-        public Interface.ServiceResponse<bool> SetCrsAsFinal(int personId, List<string> tdocNumbers)
+        public ServiceResponse<bool> SetCrsAsFinal(int personId, List<string> tdocNumbers)
         {
             LogManager.Debug("[ServiceCall][SetCrsAsFinal] PersonId=" + personId + "; tdocNumbers=" + string.Join(", ", tdocNumbers));
             var serviceHelper = new ServiceHelper();
@@ -295,7 +310,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// </summary>
         /// <param name="crKeys">The spec# / cr# / revision / TsgTdocNumber combination list.</param>
         /// <returns>Matching Crs for given key combination</returns>
-        public List<ChangeRequest> GetCrsByKeys(List<Interface.Entities.CrKeyFacade> crKeys)
+        public List<ChangeRequest> GetCrsByKeys(List<CrKeyFacade> crKeys)
         {
             LogManager.Debug("[ServiceCall][GetCrsByKeys]");
             var serviceHelper = new ServiceHelper();
@@ -322,7 +337,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
         /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
-        public Interface.ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource)
+        public ServiceResponse<bool> ReIssueCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource)
         {
             LogManager.Debug(String.Format("[ServiceCall][ReIssueCr] crKey=[Spec# {0}, Cr# {1}, Revision# {2} ]; newTsgTdoc={3}; newTsgMeetingId={4}", crKey.SpecNumber, crKey.CrNumber, crKey.Revision, newTsgTdoc, newTsgMeetingId));
             var serviceHelper = new ServiceHelper();
@@ -337,7 +352,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="newTsgMeetingId">The new TSG meeting identifier.</param>
         /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
-        public Interface.ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource)
+        public ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource)
         {
             LogManager.Debug(String.Format("[ServiceCall][ReviseCr] crKey=[Spec# {0}, Cr# {1}, Revision# {2} ]; newTsgTdoc={3}; newTsgMeetingId={4}", crKey.SpecNumber, crKey.CrNumber, crKey.Revision, newTsgTdoc, newTsgMeetingId));
             var serviceHelper = new ServiceHelper();
@@ -386,7 +401,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="relatedTdoc">Related Tdoc</param>
         /// <param name="releaseId"></param>
         /// <returns>Success/Failure status</returns>
-        public Interface.ServiceResponse<bool> AllocateOrAssociateDraftVersion(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc)
+        public ServiceResponse<bool> AllocateOrAssociateDraftVersion(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc)
         {
             LogManager.Debug(string.Format("[ServiceCall][AllocateOrAssociateDraftVersion] Spec Id={0}; Version={1}; Tdoc={2}",
                                                                  specId, majorVersion + "." + technicalVersion + "." + editorialVersion, relatedTdoc));
@@ -404,7 +419,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="technicalVersion">The technical version.</param>
         /// <param name="editorialVersion">The editorial version.</param>
         /// <returns>Draft creation or association status along with validation failures</returns>
-        public Interface.ServiceResponse<bool> CheckDraftCreationOrAssociation(int personId, int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion)
+        public ServiceResponse<bool> CheckDraftCreationOrAssociation(int personId, int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion)
         {
             LogManager.Debug(
                 string.Format(
@@ -426,7 +441,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="editorialVersion">The editorial version.</param>
         /// <param name="filePath">The file path.</param>
         /// <returns>Return cached token for version upload</returns>
-        public Interface.ServiceResponse<string> CheckVersionForUpload(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion, int editorialVersion, string filePath)
+        public ServiceResponse<string> CheckVersionForUpload(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion, int editorialVersion, string filePath)
         {
             LogManager.Debug(
                 string.Format(
@@ -442,7 +457,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="personId">The person identifier.</param>
         /// <param name="token">The token.</param>
         /// <returns>Success/Failure</returns>
-        public Interface.ServiceResponse<bool> UploadVersion(int personId, string token) 
+        public ServiceResponse<bool> UploadVersion(int personId, string token) 
         {
             LogManager.Debug(
                string.Format(

@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Services
@@ -42,7 +39,8 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <param name="personId">Person Id</param>
         /// <param name="searchString">Search String</param>
-        KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, string searchString);
+        /// <param name="shouldHaveAcronym">WIs should have acronym</param>
+        KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, string searchString, bool shouldHaveAcronym = false);
 
         /// <summary>
         /// Gets all work items.

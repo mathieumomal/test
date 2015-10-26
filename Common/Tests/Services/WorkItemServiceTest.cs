@@ -13,8 +13,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
-using Etsi.Ultimate.Utils;
-using System.Linq.Expressions;
 using System;
 
 namespace Etsi.Ultimate.Tests.Services
@@ -30,10 +28,10 @@ namespace Etsi.Ultimate.Tests.Services
             userRights.AddRight(Enum_UserRights.WorkItem_ImportWorkplan);
 
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
-            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(9);
+            mockDataContext.Stub(x => x.WorkItems).Return((IDbSet<WorkItem>)workItemData).Repeat.Times(10);
 
             var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
-            mockRightsManager.Stub(x => x.GetRights(personID)).Return(userRights).Repeat.Times(9);
+            mockRightsManager.Stub(x => x.GetRights(personID)).Return(userRights).Repeat.Times(10);
 
             RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
             ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
@@ -86,7 +84,9 @@ namespace Etsi.Ultimate.Tests.Services
             //Search by WorkItem id
             workItems = wiService.GetWorkItemsBySearchCriteria(personID, "113");
             Assert.AreEqual(1, workItems.Key.Count);
-
+            //Search WIs with Acronym (WIS come from "\\TestData\\WorkItems\\WorkItem.csv". Here should return only WI : 100 and not the 100000005 because second one don't have acronym)
+            workItems = wiService.GetWorkItemsBySearchCriteria(personID, "ABCD", true);
+            Assert.AreEqual(1, workItems.Key.Count);
 
             mockDataContext.VerifyAllExpectations();
         }

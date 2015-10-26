@@ -140,7 +140,7 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             throw new NotImplementedException();
         }
 
-        public List<WorkItem> GetWorkItemsBySearchCriteria(string searchString)
+        public List<WorkItem> GetWorkItemsBySearchCriteria(string searchString, bool shouldHaveAcronym)
         {
             throw new NotImplementedException();
         }

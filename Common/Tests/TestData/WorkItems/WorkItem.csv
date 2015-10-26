@@ -1,5 +1,5 @@
 ﻿Pk_WorkItemUid,WorkplanId,Name,Acronym,WiLevel,StartDate,EndDate,Completion,LastModification,CreationDate,Fk_ParentWiId,Fk_ReleaseId,Wid,RapporteurId,RapporteurStr,TsgApprovalMtgId,TsgApprovalMtgRef,PcgApprovalMtgId,PcgApprovalMtgRef,TsgStoppedMtgId,TsgStoppedMtgRef,PcgStoppedMtgId,PcgStoppedMtgRef,StatusReport,RapporteurCompany,TssAndTrs
-100,7,User Plane Congestion management,UPCON,1,2012-02-02 00:00:00.000,2015-06-17 00:00:00.000,42,2014-03-04 00:00:00.000,2012-08-06 00:00:00.000,100000006,527,SP-140114,,John Visser (xjo-visser@kddi.com),28526,SP-57,29958,PCG-29,,,,,,KDDI,Stage 1/2
+100,7,ABCD User Plane Congestion management,UPCON,1,2012-02-02 00:00:00.000,2015-06-17 00:00:00.000,42,2014-03-04 00:00:00.000,2012-08-06 00:00:00.000,100000006,527,SP-140114,,John Visser (xjo-visser@kddi.com),28526,SP-57,29958,PCG-29,,,,,,KDDI,Stage 1/2
 101,8,Stage 1 for User Plane Congestion management,,2,2012-02-02 00:00:00.000,2013-03-06 00:00:00.000,100,2013-02-19 00:00:00.000,2012-08-06 00:00:00.000,100,527,SP-140114,,John Visser (xjo-visser@kddi.com),28526,SP-57,29958,PCG-29,,,,,,KDDI,22.101
 102,9,TR on Stage 2 for User Plane Congestion management,,2,2012-12-12 00:00:00.000,2015-03-18 00:00:00.000,60,2014-03-04 00:00:00.000,2012-11-13 00:00:00.000,100,527,SP-140114,42718,Alla Goldner (agoldner@allot.com),28527,SP-58,30949,PCG-30,,,,,,Allot Communications,new TR 23.705
 103,10,Deleted - Stage 2 for User Plane Congestion management,,2,2012-12-19 00:00:00.000,2013-12-11 00:00:00.000,100,2013-11-28 00:00:00.000,2012-11-13 00:00:00.000,100,526,SP-140114,56711,andreas.maeder@neclab.eu,28527,SP-58,30949,PCG-30,29581,SP-62,,PCG-32,,NEC,TBD
@@ -23,5 +23,5 @@
 100000002,2,Rel-12 Stage 1 frozen 03/2013,,0,2000-01-03 00:00:00.000,2000-01-03 00:00:00.000,0,2012-06-19 00:00:00.000,2012-06-19 00:00:00.000,,,,,,,,,,,,,,,,
 100000003,3,Rel-12 Stage 2 frozen 12/2013,,0,2000-01-03 00:00:00.000,2000-01-03 00:00:00.000,0,2012-06-19 00:00:00.000,2012-06-19 00:00:00.000,,,,,,,,,,,,,,,,
 100000004,4,Rel-12 Stage 3 freeze 06/2014,,0,2000-01-03 00:00:00.000,2000-01-03 00:00:00.000,0,2012-06-19 00:00:00.000,2012-06-19 00:00:00.000,,,,,,,,,,,,,,,,
-100000005,5,Gantt: dark blue=done; light blue=to be done; grey: previous values; black=summary,,0,2000-01-03 00:00:00.000,2000-01-03 00:00:00.000,0,2012-06-19 00:00:00.000,2007-11-21 00:00:00.000,,,,,,,,,,,,,,,,
+100000005,5,ABCD Gantt: dark blue=done; light blue=to be done; grey: previous values; black=summary,,0,2000-01-03 00:00:00.000,2000-01-03 00:00:00.000,0,2012-06-19 00:00:00.000,2007-11-21 00:00:00.000,,,,,,,,,,,,,,,,
 100000006,6,Release 13 Features,,0,2013-03-13 00:00:00.000,2015-12-25 00:00:00.000,0,2013-03-04 00:00:00.000,2013-03-04 00:00:00.000,,527,,,,,,,,,,,,,,

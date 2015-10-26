@@ -146,31 +146,32 @@ namespace Etsi.Ultimate.WCF.Service
         /// </summary>
         /// <param name="personId">The person identifier.</param>
         /// <param name="keyword">The keyword.</param>
+        /// <param name="shouldHaveAcronym">WIs should have acronym</param>
         /// <returns>
         /// List of work items
         /// </returns>
-        internal List<UltimateServiceEntities.WorkItem> GetWorkItemsByKeyWord(int personId, string keyword)
+        internal List<WorkItem> GetWorkItemsByKeyWord(int personId, string keyword, bool shouldHaveAcronym = false)
         {
-            var workItems = new List<UltimateServiceEntities.WorkItem>();
+            var workItems = new List<WorkItem>();
 
-            if (String.IsNullOrEmpty(keyword))
+            if (string.IsNullOrEmpty(keyword))
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetWorkitemsByKeyword, "Keyword should not empty"));
+                LogManager.Error(string.Format(ConstErrorTemplateGetWorkitemsByKeyword, "Keyword should not empty"));
             }
             else
             {
                 try
                 {
                     var svc = ServicesFactory.Resolve<IWorkItemService>();
-                    var workItemRightsObjects = svc.GetWorkItemsBySearchCriteria(personId, keyword);
+                    var workItemRightsObjects = svc.GetWorkItemsBySearchCriteria(personId, keyword, shouldHaveAcronym);
                     if (workItemRightsObjects.Key != null)
                         workItemRightsObjects.Key.ForEach(x => workItems.Add(ConvertUltimateWorkItemToServiceWorkItem(x)));
                     else
-                        LogManager.Error(String.Format(ConstErrorTemplateGetWorkitemsByKeyword, "Failed to get workitem details"));
+                        LogManager.Error(string.Format(ConstErrorTemplateGetWorkitemsByKeyword, "Failed to get workitem details"));
                 }
                 catch (Exception ex)
                 {
-                    LogManager.Error(String.Format(ConstErrorTemplateGetWorkitemsByKeyword, ex.Message));
+                    LogManager.Error(string.Format(ConstErrorTemplateGetWorkitemsByKeyword, ex.Message));
                 }
             }
             return workItems;

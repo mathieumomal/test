@@ -1,7 +1,6 @@
 ﻿using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -14,10 +13,10 @@ namespace Etsi.Ultimate.Business
         /// <summary>
         /// Initializes a new instance of the <see cref="WorkItemManager"/> class.
         /// </summary>
-        /// <param name="UoW">The Unit of work</param>
-        public WorkItemManager(IUltimateUnitOfWork UoW)
+        /// <param name="uoW">The Unit of work</param>
+        public WorkItemManager(IUltimateUnitOfWork uoW)
         {
-            _uoW = UoW;
+            _uoW = uoW;
         }
 
         /// <summary>
@@ -145,13 +144,14 @@ namespace Etsi.Ultimate.Business
         /// </summary>
         /// <param name="personId">The person identifier.</param>
         /// <param name="searchString">The search string.</param>
+        /// <param name="shouldHaveAcronym">WIs should have acronym</param>
         /// <returns>Work items</returns>
-        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, string searchString)
+        public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, string searchString, bool shouldHaveAcronym = false)
         {
-            IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
+            var repo = RepositoryFactory.Resolve<IWorkItemRepository>();
             repo.UoW = _uoW;
 
-            return new KeyValuePair<List<WorkItem>, UserRightsContainer>(repo.GetWorkItemsBySearchCriteria(searchString), GetRights(personId));
+            return new KeyValuePair<List<WorkItem>, UserRightsContainer>(repo.GetWorkItemsBySearchCriteria(searchString, shouldHaveAcronym), GetRights(personId));
         }
 
         /// <summary>

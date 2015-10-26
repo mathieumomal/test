@@ -1,5 +1,4 @@
-﻿using System;
-using Etsi.Ultimate.WCF.Interface.Entities;
+﻿using Etsi.Ultimate.WCF.Interface.Entities;
 using System.Collections.Generic;
 using System.ServiceModel;
 
@@ -54,6 +53,15 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>List of work items</returns>
         [OperationContract]
         List<WorkItem> GetWorkItemsByKeyWord(int personId, string keyword);
+
+        /// <summary>
+        /// Gets the work items with acronym by key word.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="keyword">The keyword.</param>
+        /// <returns>List of work items</returns>
+        [OperationContract]
+        List<WorkItem> GetWorkItemsWithAcronymByKeyWord(int personId, string keyword);
         
         /// <summary>
         /// Gets the work items by key words.
