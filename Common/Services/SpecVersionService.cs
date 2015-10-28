@@ -316,6 +316,7 @@ namespace Etsi.Ultimate.Services
             {
                 svcResponse.Result = false;
                 svcResponse.Report.LogError(ex.Message);
+                LogManager.Error("AllocateOrAssociateDraftVersion : an unexpected error occured", ex);
             }
 
             return svcResponse;
