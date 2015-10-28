@@ -84,6 +84,7 @@
     <Compile Include="Enum_CrCategoryRepository.cs" />
     <Compile Include="EtsiWorkItemRepository.cs" />
     <Compile Include="RemarkRepository.cs" />
+    <Compile Include="SpecificationRapporteurRepository.cs" />
     <Compile Include="SyncInfoRepository.cs" />
     <Compile Include="EnumTechnologiesRepository.cs" />
     <Compile Include="HistoryRepository.cs" />

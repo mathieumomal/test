@@ -178,6 +178,7 @@
     <Compile Include="Repositories\RemarkRepositoryTest.cs" />
     <Compile Include="Repositories\OfflineRepositoryTest.cs" />
     <Compile Include="Repositories\ResponsibleGroupSecretaryRepositoryTest.cs" />
+    <Compile Include="Repositories\SpecificationRapporteurTests.cs" />
     <Compile Include="Repositories\SpecificationRepositoryReleaseTest.cs" />
     <Compile Include="Repositories\SpecificationWorkItemRepositoryTest.cs" />
     <Compile Include="Repositories\SpecVersionsRepositoryTest.cs" />
@@ -273,6 +274,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Data_For_EffortUnitTests\ChangeRequestTsgData.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\SpecificationRapporteur.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Data_For_EffortUnitTests\View_CrPacks.csv">

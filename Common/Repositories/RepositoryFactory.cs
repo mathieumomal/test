@@ -83,6 +83,7 @@ namespace Etsi.Ultimate.Repositories
             Container.RegisterType<IChangeRequestStatusRepository, ChangeRequestStatusRepository>(new TransientLifetimeManager());
             Container.RegisterType<IEtsiWorkItemRepository, EtsiWorkItemRepository>(new TransientLifetimeManager());
             Container.RegisterType<ICrPackRepository, CrPackRepository>(new TransientLifetimeManager());
+            Container.RegisterType<ISpecificationRapporteurRepository, SpecificationRapporteurRepository>(new TransientLifetimeManager());
 
             //Offline Repositories
             Container.RegisterType<IOfflineRepository, OfflineRepository>(new TransientLifetimeManager());

@@ -18,6 +18,19 @@ namespace Etsi.Ultimate.Tests.Business
 {
     class SpecificationPromoteActionTest : BaseTest
     {
+        #region SetUp
+
+        [SetUp]
+        public void SetUp()
+        {
+            //Spec rapporteur repo mock
+            var rapporteurRepoMock = MockRepository.GenerateMock<ISpecificationRapporteurRepository>();
+            rapporteurRepoMock.Stub(x => x.FindBySpecId(Arg<int>.Is.Anything)).Return(new List<SpecificationRapporteur>());
+            RepositoryFactory.Container.RegisterInstance(typeof(ISpecificationRapporteurRepository), rapporteurRepoMock);
+        }
+
+        #endregion
+
         #region Tests
 
         [TestCase(1, 1, 1)]

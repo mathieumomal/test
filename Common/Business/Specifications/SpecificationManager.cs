@@ -362,9 +362,15 @@ namespace Etsi.Ultimate.Business.Specifications
         public KeyValuePair<Specification_Release, UserRightsContainer> GetRightsForSpecRelease(UserRightsContainer userRights, int personId, Specification spec, int releaseId, List<Release> releases)
         {
             var rights = new UserRightsContainer();
-            Specification_Release specRelease = spec.Specification_Release.FirstOrDefault(r => r.Fk_ReleaseId == releaseId && r.Fk_SpecificationId == spec.Pk_SpecificationId);
+            var specRelease = spec.Specification_Release.FirstOrDefault(r => r.Fk_ReleaseId == releaseId && r.Fk_SpecificationId == spec.Pk_SpecificationId);
             if (specRelease == null)
                 return new KeyValuePair<Specification_Release, UserRightsContainer>(null, null);
+
+            //Get spec rapporteur(s)
+            var specRapporteurRepo = RepositoryFactory.Resolve<ISpecificationRapporteurRepository>();
+            specRapporteurRepo.UoW = UoW;
+            var specRapporteurs = specRapporteurRepo.FindBySpecId(spec.Pk_SpecificationId) ?? new List<SpecificationRapporteur>();
+
             // This right is common to any action.
             if (spec.IsActive && !specRelease.isWithdrawn.GetValueOrDefault())
             {
@@ -414,7 +420,10 @@ namespace Etsi.Ultimate.Business.Specifications
                         }
                     }
 
-                    if (userRights.HasRight(Enum_UserRights.Versions_Allocate))
+                    //Person should have right to allocate new version if :
+                    //1) Have Versions_Allocate right
+                    //2) Or is prime rapporteur of the related spec
+                    if (userRights.HasRight(Enum_UserRights.Versions_Allocate) || specRapporteurs.Any(x => x.Fk_RapporteurId == personId && x.IsPrime))
                     {
                         rights.AddRight(Enum_UserRights.Versions_Allocate);
                     }

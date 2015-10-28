@@ -19,6 +19,7 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
     {
         const int USER_HAS_NO_RIGHT = 1;
         const int USER_HAS_RIGHT = 2;
+        const int PRIMERAPPORTEUR_HAS_NO_RIGHT = 3;
 
        
 
@@ -54,6 +55,21 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
             var newlyCreatedVersion = RepositoryFactory.Resolve<IUltimateUnitOfWork>().Context.SpecVersions
                 .Where(v => v.Fk_SpecificationId == EffortConstants.SPECIFICATION_ACTIVE_ID 
                     && v.Fk_ReleaseId == EffortConstants.RELEASE_OPEN_ID && v.MajorVersion == myVersion.MajorVersion 
+                    && v.TechnicalVersion == myVersion.TechnicalVersion && v.EditorialVersion == myVersion.EditorialVersion).FirstOrDefault();
+            Assert.IsNotNull(newlyCreatedVersion);
+        }
+
+        [Test]
+        public void Allocate_NominalCase_UserHasNoRight_ButIsPrimeRapporteurOfRelatedSpec()
+        {
+            var result = versionSvc.AllocateVersion(PRIMERAPPORTEUR_HAS_NO_RIGHT, myVersion);
+            Assert.AreEqual(0, result.GetNumberOfErrors());
+            Assert.AreEqual(0, result.GetNumberOfWarnings());
+
+            // Now let's try to fetch the version, check it's there
+            var newlyCreatedVersion = RepositoryFactory.Resolve<IUltimateUnitOfWork>().Context.SpecVersions
+                .Where(v => v.Fk_SpecificationId == EffortConstants.SPECIFICATION_ACTIVE_ID
+                    && v.Fk_ReleaseId == EffortConstants.RELEASE_OPEN_ID && v.MajorVersion == myVersion.MajorVersion
                     && v.TechnicalVersion == myVersion.TechnicalVersion && v.EditorialVersion == myVersion.EditorialVersion).FirstOrDefault();
             Assert.IsNotNull(newlyCreatedVersion);
         }
@@ -137,7 +153,6 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
                 EditorialVersion = 0,
                 Fk_ReleaseId = EffortConstants.RELEASE_OPEN_ID,
                 Fk_SpecificationId = EffortConstants.SPECIFICATION_ACTIVE_ID
-
             };
         }
 
@@ -149,6 +164,7 @@ namespace Etsi.Ultimate.Tests.SpecVersionServiceTest
 
             var rightsManager = MockRepository.GenerateMock<IRightsManager>();
             rightsManager.Stub(x => x.GetRights(USER_HAS_NO_RIGHT)).Return(noRights);
+            rightsManager.Stub(x => x.GetRights(PRIMERAPPORTEUR_HAS_NO_RIGHT)).Return(noRights);
             rightsManager.Stub(x => x.GetRights(USER_HAS_RIGHT)).Return(allocateRights);
 
             ManagerFactory.Container.RegisterInstance<IRightsManager>(rightsManager);

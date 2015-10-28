@@ -28,6 +28,11 @@ namespace Etsi.Ultimate.Tests.Services
         {
             base.SetUp();
             _editSpecInstance = null;
+
+            //Spec rapporteur repo mock
+            var rapporteurRepoMock = MockRepository.GenerateMock<ISpecificationRapporteurRepository>();
+            rapporteurRepoMock.Stub(x => x.FindBySpecId(Arg<int>.Is.Anything)).Return(new List<SpecificationRapporteur>());
+            RepositoryFactory.Container.RegisterInstance(typeof(ISpecificationRapporteurRepository), rapporteurRepoMock);
         }
 
         [Test, Description("Get specifications by their ids, one of spec requested don't exist (id : 40)")]

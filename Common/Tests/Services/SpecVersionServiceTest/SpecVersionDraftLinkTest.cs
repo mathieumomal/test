@@ -28,6 +28,7 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
         private const int EditorialVersion = 0;
         private const int UserHasNoRight = 1;
         private const int UserHasRight = 2;
+        private const int PrimeRapporteurHasNoRight = 3;
 
         #endregion
 
@@ -109,6 +110,14 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
         }
 
         [Test]
+        public void CheckDraftCreationOrAssociation_NoAllocateVersionRights_ButIsPrimeRapporteur_NoErrors()
+        {
+            var svcResponse = _versionSvc.CheckDraftCreationOrAssociation(PrimeRapporteurHasNoRight, SpecIdDraft22103, ReleaseIdRel13, MajorVersion, TechnicalVersion + 1, EditorialVersion);
+            Assert.IsTrue(svcResponse.Result);
+            Assert.AreEqual(0, svcResponse.Report.GetNumberOfErrors());
+        }
+
+        [Test]
         public void CheckDraftCreationOrAssociation_NoErrors()
         {
             var svcResponse = _versionSvc.CheckDraftCreationOrAssociation(UserHasRight, SpecIdDraft22103, ReleaseIdRel13, MajorVersion, TechnicalVersion + 1, EditorialVersion);
@@ -128,6 +137,7 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
 
             var rightsManager = MockRepository.GenerateMock<IRightsManager>();
             rightsManager.Stub(x => x.GetRights(UserHasNoRight)).Return(noRights);
+            rightsManager.Stub(x => x.GetRights(PrimeRapporteurHasNoRight)).Return(noRights);
             rightsManager.Stub(x => x.GetRights(UserHasRight)).Return(allocateRights);
 
             ManagerFactory.Container.RegisterInstance(rightsManager);

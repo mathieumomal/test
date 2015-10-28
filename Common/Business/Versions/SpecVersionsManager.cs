@@ -265,14 +265,18 @@ namespace Etsi.Ultimate.Business.Versions
             }
 
             //[7] Version is not allocated and we have necessary right to performed action (simulation)
-            // User should have the right to allocate for this release
+            // 1) Spec should be active
+            // 2) Spec-Release should not be withdrawn
+            // 3) Release should no be closed
+            // 4) User should have the right to allocate ---OR--- be prime rapporteur of this spec
             var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
             rightsMgr.UoW = UoW;
 
             var userRights = rightsMgr.GetRights(personId);
             if (!(spec.IsActive && (!specRelease.isWithdrawn.GetValueOrDefault())
                   && (release.Enum_ReleaseStatus.Code != Enum_ReleaseStatus.Closed)
-                  && userRights.HasRight(Enum_UserRights.Versions_Allocate)))
+                  && (userRights.HasRight(Enum_UserRights.Versions_Allocate) 
+                    || spec.SpecificationRapporteurs.Any(x => x.Fk_RapporteurId == personId && x.IsPrime))))
             {
                 svcResponse.Report.LogError(Localization.RightError);
                 svcResponse.Result = false;
