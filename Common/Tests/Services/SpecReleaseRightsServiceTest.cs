@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Services;
 using NUnit.Framework;
 using Rhino.Mocks;
@@ -134,8 +135,10 @@ namespace Etsi.Ultimate.Tests.Services
             releaseManager.Stub(r => r.GetAllReleases(Arg<int>.Is.Anything)).Return(new KeyValuePair<List<Release>,UserRightsContainer>(releaseList,new UserRightsContainer()));
             ManagerFactory.Container.RegisterInstance<IReleaseManager>(releaseManager);
 
+            //Spec rapporteur repo mock
+            var rapporteurRepoMock = MockRepository.GenerateMock<ISpecificationRapporteurRepository>();
+            rapporteurRepoMock.Stub(x => x.FindBySpecId(Arg<int>.Is.Anything)).Return(new List<SpecificationRapporteur>());
+            RepositoryFactory.Container.RegisterInstance(typeof(ISpecificationRapporteurRepository), rapporteurRepoMock);
         }
-
-
     }
 }
