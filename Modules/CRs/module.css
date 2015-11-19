@@ -63,3 +63,8 @@
 {
     opacity: 0.25;
 }
+
+#crList .searchBtn{
+    text-align: right; 
+    padding-right: 10px;
+}

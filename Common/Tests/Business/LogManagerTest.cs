@@ -105,17 +105,14 @@ namespace Etsi.Ultimate.Tests.Business
         public void LogManager_Fatal()
         {
             Exception testException = new Exception();
-            double value = 9164.32;
-            CultureInfo enCulture = new CultureInfo("en-GB");
 
             LogManager.Fatal("Fatal Log 1");
             LogManager.Fatal("Fatal Log 2", testException);
             LogManager.FatalFormat("Fatal Format {0} {1}", "Value 1", "Value 2");
-            LogManager.FatalFormat(enCulture, "{0:C}", value);
 
             LoggingEvent[] events = memoryAppender.GetEvents();
 
-            Assert.AreEqual(4, events.Length);
+            Assert.AreEqual(3, events.Length);
 
             Assert.AreEqual("Fatal Log 1", events[0].MessageObject.ToString());
             Assert.AreEqual(Level.Fatal, events[0].Level);
@@ -126,9 +123,6 @@ namespace Etsi.Ultimate.Tests.Business
 
             Assert.AreEqual("Fatal Format Value 1 Value 2", events[2].MessageObject.ToString());
             Assert.AreEqual(Level.Fatal, events[2].Level);
-
-            Assert.AreEqual("£9,164.32", events[3].MessageObject.ToString());
-            Assert.AreEqual(Level.Fatal, events[3].Level);
         }
 
         [Test]

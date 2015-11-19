@@ -179,6 +179,7 @@
     <EmbeddedResource Include="App_LocalResources\UploadVersion.aspx.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>UploadVersion.aspx.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

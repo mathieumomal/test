@@ -4,17 +4,11 @@ using Etsi.Ultimate.Tests.FakeSets;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Etsi.Ultimate.Tests.FakeRepositories
 {
     class SpecVersionsFakeRepository : ISpecVersionsRepository
     {
-        public SpecVersionsFakeRepository()
-        {
-        }
-
         #region IEntityRepository<SpecificationWIFakeRepository> Membres
 
         public IQueryable<SpecVersion> All
@@ -141,5 +135,28 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             throw new NotImplementedException();
         }
         #endregion
+
+
+        public void Delete(SpecVersion version)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public List<SpecVersion> AlreadyUploadedVersionsForSpec(int specId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<SpecVersion> VersionsLinkedToChangeRequestsForSpec(int specId)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public SpecVersion FindCrsLinkedToAVersion(int versionId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

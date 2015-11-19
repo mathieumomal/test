@@ -112,7 +112,7 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual("IOPS", wi.Acronym);
             Assert.AreEqual("IOPS", wi.Effective_Acronym);
             Assert.AreEqual(0, wi.WiLevel);
-            Assert.AreEqual(ReleaseFakeRepository.OPENED_RELEASE_ID, wi.Fk_ReleaseId);
+            Assert.AreEqual(ReleaseFakeRepository.OpenedReleaseId, wi.Fk_ReleaseId);
             Assert.AreEqual(new DateTime(2014, 3, 7), wi.StartDate);
             Assert.AreEqual(new DateTime(2014, 9, 17), wi.EndDate);
             Assert.AreEqual(0, wi.Completion);

@@ -63,6 +63,12 @@
         word-break: break-all !important;
     }
 </style>
+<script>
+    function openTdoc(address, TdocNumber) {
+        var popUp = window.open(address, 'TDoc-' + TdocNumber, 'height=720,width=616,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no');
+        popUp.focus();
+    }
+</script>
 <asp:Panel ID="moduleWI" runat="server" Visible="false" ClientIDMode="Static">
     <asp:UpdateProgress ID="updateProgressWorkItemsTree" runat="server" DisplayAfter="200">
         <ProgressTemplate>
@@ -108,7 +114,7 @@
                                     </HeaderTemplate>
                                     <ContentTemplate>
                                         <asp:Panel ID="pnlSearchContainer" runat="server" DefaultButton="btnSearch">
-                                            <table style="width: 100%; padding: 20px 50px 20px 50px">
+                                            <table style="width: 100%; padding: 5px 5px 5px 5px">
                                                 <tr>
                                                     <td>Release</td>
                                                     <td>
@@ -126,6 +132,10 @@
                                                             </Items>
                                                         </telerik:RadDropDownList>
                                                     </td>
+                                                    <td>Name / UID</td>
+                                                    <td>
+                                                        <telerik:RadTextBox ID="txtName" runat="server" Width="200"></telerik:RadTextBox>
+                                                    </td>
                                                 </tr>
                                                 <tr>
                                                     <td>Acronym</td>
@@ -136,22 +146,14 @@
                                                         <asp:HiddenField ID="hidAcronym" runat="server" />
                                                     </td>
                                                     <td>Hide Completed Items</td>
-                                                    <td>
+                                                    <td colspan="3">
                                                         <telerik:RadButton ID="chkHideCompletedItems" ToggleType="CheckBox" runat="server" ButtonType="ToggleButton" AutoPostBack="false" />
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td>Name / UID</td>
-                                                    <td>
-                                                        <telerik:RadTextBox ID="txtName" runat="server" Width="200"></telerik:RadTextBox>
-                                                    </td>
-                                                    <td />
-                                                    <td />
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="4" style="text-align: right; padding-right: 20px">
-                                                        <asp:Button ID="btnDefault" runat="server" Text="Default" Width="150px" OnClick="btnDefault_Click" OnClientClick="collapseItem()"></asp:Button>
-                                                        <asp:Button ID="btnSearch" runat="server" Text="Search" Width="150px" OnClick="btnSearch_Click" OnClientClick="collapseItem()"></asp:Button></td>
+                                                    <td colspan="6" style="text-align: right; padding-right: 20px">
+                                                        <asp:Button ID="btnDefault" runat="server" Text="Default" Width="150px" OnClick="btnDefault_Click"></asp:Button>
+                                                        <asp:Button ID="btnSearch" runat="server" Text="Search" Width="150px" OnClick="btnSearch_Click"></asp:Button></td>
                                                 </tr>
                                             </table>
                                         </asp:Panel>
@@ -210,6 +212,12 @@
                                 <telerik:TreeListBoundColumn DataField="ResponsibleGroups" UniqueName="ResponsibleGroups" HeaderText="Responsible groups" ItemStyle-CssClass="breakWord">
                                     <HeaderStyle Font-Bold="True" />
                                 </telerik:TreeListBoundColumn>
+                                <telerik:TreeListTemplateColumn UniqueName="WID" HeaderText="WID">
+                                    <HeaderStyle Font-Bold="True" />
+                                    <ItemTemplate>
+                                        <a href="<%# DataBinder.Eval(Container.DataItem,"TdocLink")%>"><%# DataBinder.Eval(Container.DataItem,"Wid")%></a>
+                                    </ItemTemplate>
+                                </telerik:TreeListTemplateColumn>
                                 <telerik:TreeListTemplateColumn UniqueName="LatestRemark" HeaderText="Latest remark" ItemStyle-CssClass="breakWord">
                                     <HeaderStyle Font-Bold="True" Width="16%" />
                                     <ItemTemplate>
@@ -471,14 +479,6 @@
         /*-- TELERIK EVENTS --*/
 
         /*--- EVENTS ---*/
-        function collapseItem() {
-            var panelBar = $find("<%= rpbSearch.ClientID %>");
-            var item = panelBar.get_items().getItem(0);
-            if (item) {
-                item.collapse();
-            }
-        }
-
         var timeout;
 
         function autoConfirmSearch() {

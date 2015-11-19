@@ -3,6 +3,7 @@ using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
 using System;
 using System.Collections.Generic;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
@@ -13,7 +14,6 @@ namespace Etsi.Ultimate.Module.Specifications
         private string remarksModule;
         private int remarksModulePrimaryKey;
         private bool isEditMode;
-        private const string DsId_Key = "ETSI_DS_ID";
         private const int ErrorFadeTimeout = 10000;
         protected RemarksControl remarksControl;
 
@@ -175,9 +175,9 @@ namespace Etsi.Ultimate.Module.Specifications
                 return 0;
             else
             {
-                int personID;
-                if (Int32.TryParse(userInfo.Profile.GetPropertyValue(DsId_Key), out personID))
-                    return personID;
+                int personId;
+                if (Int32.TryParse(userInfo.Profile.GetPropertyValue(Localization.DsIdKey), out personId))
+                    return personId;
             }
             return 0;
         } 

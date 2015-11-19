@@ -47,6 +47,7 @@
         <Right value="Contribute_Restricted"/>
         <Right value="Contribution_Upload"/>
         <Right value="Contribution_Withdraw_Restricted" />
+        <Right value="Contribution_Change_Type_Limited" />
       </UserRole>
 
       <!-- Chairman, Vice Chairman or Convenor of a given WG / TSG -->
@@ -58,11 +59,11 @@
         <Right value="General_ViewPersonalData"/>
         <Right value="Release_ViewCompleteList"/>
         <Right value="Release_ViewDetails"/>
-        
+
         <Right value="Remarks_ViewPrivate"/>
         <Right value="Remarks_AddPrivateByDefault"/>
 
-        
+
         <Right value="Specification_Create"/>
         <Right value="Specification_EditLimitted"/>
         <Right value="Specification_View_UnAllocated_Number"/>
@@ -70,14 +71,15 @@
 
         <Right value="Versions_Allocate"/>
         <Right value="Versions_Upload"/>
+        <Right value="Versions_AllocateUpload_For_ReleaseClosed_Allowed"/>
         <Right value="Versions_Modify_MajorVersion"/>
         <Right value="Versions_AddRemark"/>
-		<Right value="Versions_Edit"/>
-        
+		    <Right value="Versions_Edit"/>
+
         <Right value="Meeting_ViewMeetingList"/>
         <Right value="Meeting_CreateMeeting"/>
         <Right value="Manage_AgendaItems"/>
-        
+
         <Right value="Contribute_Anytime"/>
         <Right value="Contribution_Edit"/>
         <Right value="Contribution_Upload"/>
@@ -86,10 +88,12 @@
         <Right value="Contribution_Import" />
         <Right value="Contribution_Edit_CR_Number"/>
         <Right value="Contribution_Commit_Decisions"/>
-        
+        <Right value="Contribution_Create_Edit_SecretaryRemark"/>
+        <Right value="Contribution_Change_Type" />
+
         <Right value="Cr_Add_Crs_To_CrPack"/>
       </UserRole>
-      
+
       <!-- Meeting Manager is a special role that gives additional rights on meetings. -->
       <UserRole value="MeetingManager">
         <Right value="Meeting_ViewMeetingList"/>
@@ -98,7 +102,7 @@
         <Right value="Meeting_EditEvent"/>
         <Right value="Manage_AgendaItems"/>
       </UserRole>
-      
+
       <!-- Workplan manager is a special role that gives additional rights on work plan and releases -->
       <UserRole value="WorkPlanManager">
         <Right value="Release_ViewCompleteDetails"/>
@@ -114,10 +118,10 @@
         <Right value="Release_Edit"/>
         <Right value="Release_Freeze"/>
         <Right value="Release_Close"/>
-        
+
         <Right value="Remarks_ViewPrivate"/>
         <Right value="Remarks_AddPrivateByDefault"/>
-        
+
         <Right value="WorkItem_ImportWorkplan"/>
 
         <Right value="Specification_BulkPromote"/>
@@ -125,7 +129,8 @@
         <Right value="Specification_EditFull"/>
         <Right value="Specification_ForceTransposition"/>
         <Right value="Specification_InhibitPromote"/>
-        <Right value="Specification_Promote"/>		
+        <Right value="Specification_Promote"/>
+		    <Right value="Specification_Demote"/>
         <Right value="Specification_ManageITURecommendations"/>
         <Right value="Specification_RemoveInhibitPromote"/>
         <Right value="Specification_SyncHardLinksOnLatestFolder"/>
@@ -134,18 +139,24 @@
         <Right value="Specification_UnforceTransposition"/>
         <Right value="Specification_View_UnAllocated_Number"/>
         <Right value="Specification_ViewDetails"/>
-        
+		<Right value="Specification_Delete"/>
+
+        <Right value="SpecificationRelease_Remove"/>
+
         <Right value="Versions_Allocate"/>
         <Right value="Versions_Upload"/>
+        <Right value="Versions_AllocateUpload_For_ReleaseClosed_Allowed"/>
         <Right value="Versions_AddRemark"/>
-		<Right value="Versions_Edit"/>
+		<Right value="Versions_Modify_MajorVersion"/>
+		    <Right value="Version_Draft_Delete"/>
+		    <Right value="Versions_Edit"/>
 
         <Right value="Manage_AgendaItems"/>
         <Right value="Meeting_ViewMeetingList"/>
         <Right value="Meeting_CreateMeeting"/>
         <Right value="Meeting_CreateEvent"/>
         <Right value="Meeting_EditEvent"/>
-        
+
         <Right value="Contribute_Anytime"/>
         <Right value="Contribution_Edit"/>
         <Right value="Contribution_Upload"/>
@@ -153,6 +164,8 @@
         <Right value="Contribution_Withdraw" />
         <Right value="Contribution_Import" />
         <Right value="Contribution_Edit_CR_Number"/>
+        <Right value="Contribution_Create_Edit_SecretaryRemark"/>
+        <Right value="Contribution_Change_Type" />
 
         <Right value="Cr_Add_Crs_To_CrPack"/>
       </UserRole>
@@ -178,6 +191,7 @@
         <Right value="Specification_ForceTransposition"/>
         <Right value="Specification_InhibitPromote"/>
         <Right value="Specification_Promote"/>
+		    <Right value="Specification_Demote"/>
         <Right value="Specification_ManageITURecommendations"/>
         <Right value="Specification_RemoveInhibitPromote"/>
         <Right value="Specification_SyncHardLinksOnLatestFolder"/>
@@ -186,11 +200,17 @@
         <Right value="Specification_UnforceTransposition"/>
         <Right value="Specification_View_UnAllocated_Number"/>
         <Right value="Specification_ViewDetails"/>
+		<Right value="Specification_Delete"/>
+
+        <Right value="SpecificationRelease_Remove"/>
 
         <Right value="Versions_Allocate"/>
         <Right value="Versions_Upload"/>
+        <Right value="Versions_AllocateUpload_For_ReleaseClosed_Allowed"/>
         <Right value="Versions_AddRemark"/>
-		<Right value="Versions_Edit"/>
+		<Right value="Versions_Modify_MajorVersion"/>
+		    <Right value="Version_Draft_Delete"/>
+		    <Right value="Versions_Edit"/>
 
         <Right value="Manage_AgendaItems"/>
         <Right value="Meeting_ViewMeetingList"/>
@@ -205,6 +225,8 @@
         <Right value="Contribution_Withdraw" />
         <Right value="Contribution_Import" />
         <Right value="Contribution_Edit_CR_Number"/>
+        <Right value="Contribution_Create_Edit_SecretaryRemark"/>
+        <Right value="Contribution_Change_Type" />
 
         <Right value="Cr_Add_Crs_To_CrPack"/>
       </UserRole>

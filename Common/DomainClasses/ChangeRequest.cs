@@ -44,7 +44,6 @@ namespace Etsi.Ultimate.DomainClasses
         public virtual SpecVersion CurrentVersion { get; set; }
         public virtual SpecVersion NewVersion { get; set; }
         public virtual Release Release { get; set; }
-        public virtual Specification Specification { get; set; }
         public virtual Enum_CRCategory Enum_CRCategory { get; set; }
         public virtual ICollection<History> Histories { get; set; }
         public virtual ICollection<Remark> Remarks { get; set; }
@@ -52,6 +51,7 @@ namespace Etsi.Ultimate.DomainClasses
         public virtual ICollection<CR_WorkItems> CR_WorkItems { get; set; }
         public virtual Enum_ChangeRequestStatus WgStatus { get; set; }
         public virtual ICollection<ChangeRequestTsgData> ChangeRequestTsgDatas { get; set; }
+        public virtual Specification Specification { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

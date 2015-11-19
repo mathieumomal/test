@@ -24,7 +24,6 @@ namespace Etsi.Ultimate.Module.Specifications
 
         //const 
         private const string CONST_RELATED_TAB = "Related";
-
         private const string CONST_EMPTY_FIELD = " - ";
         private const int ErrorFadeTimeout = 10000;
         
@@ -37,12 +36,10 @@ namespace Etsi.Ultimate.Module.Specifications
         
         private const string SPEC_HEADER = "Specification #: ";
         private List<string> LIST_OF_TABS = new List<string>() { };
-        public const string DsId_Key = "ETSI_DS_ID";
-        private const String CONST_ERRORPANEL_CSS = "Spec_Edit_Error";
-        private const String CONST_ERRORTEXT_CSS = "ErrorTxt";
-
-        private const String CONST_INFOPANEL_CSS = "Spec_Edit_Info";
-        private const String CONST_INFOTEXT_CSS = "InfoTxt";
+        public const string DsIdKey = "ETSI_DS_ID";
+        private const string CONST_ERRORPANEL_CSS = "messageBox error";
+        private const string CONST_INFOPANEL_CSS = "messageBox info";
+        private const string BtnDefaultClass = "btn3GPP-default";
 
         //Properties
         private int UserId;
@@ -99,13 +96,11 @@ namespace Etsi.Ultimate.Module.Specifications
                 {
                     specMsg.Visible = true;
                     specMsg.CssClass = CONST_ERRORPANEL_CSS;
-                    specMsgTxt.CssClass = CONST_ERRORTEXT_CSS;
 
                     if (CreateError.Equals(CONST_WARNING_SENDMAIL_MCC))
                     {
                         specMsgTxt.Text = SpecificationDetails_aspx.Warning_NumberNeeded_NotifySpec_Mgr;
                         specMsg.CssClass = CONST_INFOPANEL_CSS;
-                        specMsgTxt.CssClass = CONST_INFOTEXT_CSS;
                     }
                     else if (CreateError.Equals(CONST_ERROR_SENDMAIL_SPEC_MGR))
                     {
@@ -360,7 +355,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private void GetRequestParameters()
         {
             int output;
-            UserId = GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo());
+            UserId = GetUserPersonId();
             SpecificationId = (Request.QueryString["specificationId"] != null) ? (int.TryParse(Request.QueryString["specificationId"], out output) ? new Nullable<int>(output) : null) : null;
             selectedTab = (Request.QueryString["selectedTab"] != null) ? Request.QueryString["selectedTab"] : string.Empty;
             fromEdit = (Request.QueryString["fromEdit"] != null);
@@ -370,20 +365,18 @@ namespace Etsi.Ultimate.Module.Specifications
         }
 
         /// <summary>
-        /// Retrieve person If exists
+        /// Retrieve person id
         /// </summary>
-        /// <param name="UserInfo">Current user information</param>
-        /// <returns></returns>
-        private int GetUserPersonId(DotNetNuke.Entities.Users.UserInfo UserInfo)
+        /// <returns>Person id</returns>
+        private int GetUserPersonId()
         {
-            if (UserInfo.UserID < 0)
+            var userInfo = DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo();
+            if (userInfo.UserID < 0)
                 return 0;
-            else
-            {
-                int personID;
-                if (Int32.TryParse(UserInfo.Profile.GetPropertyValue(DsId_Key), out personID))
-                    return personID;
-            }
+
+            int personId;
+            if (int.TryParse(userInfo.Profile.GetPropertyValue(DsIdKey), out personId))
+                return personId;
             return 0;
         }
 
@@ -391,12 +384,38 @@ namespace Etsi.Ultimate.Module.Specifications
         /// Manage buttons' display relying on user rights
         /// </summary>
         /// <param name="userRights">User Rights</param>
-        private void ManageButtonDisplay(Domain.UserRightsContainer userRights)
+        private void ManageButtonDisplay(UserRightsContainer userRights)
         {
-            if ((!userRights.HasRight(Domain.Enum_UserRights.Specification_EditFull)) && (!userRights.HasRight(Domain.Enum_UserRights.Specification_EditLimitted)))
+            //EDIT
+            if ((!userRights.HasRight(Enum_UserRights.Specification_EditFull)) && (!userRights.HasRight(Domain.Enum_UserRights.Specification_EditLimitted)))
                 EditBtn.Visible = false;
 
-            if (!userRights.HasRight(Domain.Enum_UserRights.Specification_Withdraw))
+            //DELETE
+            var specService = ServicesFactory.Resolve<ISpecificationService>();
+            var response = specService.CheckDeleteSpecificationAllowed(SpecificationId ?? 0, GetUserPersonId());
+            //Spec deletion allowed
+            if (response.Result && response.Report.GetNumberOfErrors() <= 0 && response.Report.GetNumberOfWarnings() <= 0)
+            {
+                DeleteBtn.Visible = true;
+            }
+            //Spec deletion not allowed cause by error(s) (right or existence issues): button not visible
+            else if (response.Report.GetNumberOfErrors() > 0)
+            {
+                DeleteBtn.Visible = false;
+            }
+            //Spec deletion not allowed cause by warning(s) : button visible but not enabled + explanation tooltip 
+            else if (response.Report.GetNumberOfWarnings() > 0)
+            {
+                DeleteBtn.Visible = true;
+                DeleteBtn.Enabled = false;
+                DeleteBtn.OnClientClick = null;
+                DeleteBtn.Attributes.Add("disabled", "disabled");
+                DeleteBtn.CssClass = BtnDefaultClass;
+                DeleteBtn.ToolTip = string.Join("\n", response.Report.WarningList);
+            }
+
+            //WITHDRAW
+            if (!userRights.HasRight(Enum_UserRights.Specification_Withdraw))
             {
                 WithdrawBtn.Visible = false;
             }
@@ -408,6 +427,11 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
+        /// <summary>
+        /// When click on edit
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         protected void EditSpecificationDetails_Click(object sender, EventArgs e)
         {
             if (SpecificationId != null)
@@ -417,6 +441,28 @@ namespace Etsi.Ultimate.Module.Specifications
                     : null;
                 Response.Redirect(string.Format("EditSpecification.aspx?specificationId={0}&action={1}&selectedTab={2}", SpecificationId, "edit", selectedTabTitle), true);
             }
+        }
+
+        /// <summary>
+        // When confirm for spec deletion
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnConfirmDelete_Click(object sender, EventArgs e)
+        {
+            var svc = ServicesFactory.Resolve<ISpecificationService>();
+            var response = svc.DeleteSpecification(SpecificationId ?? 0, GetUserPersonId());
+            if (!response.Result || response.Report.GetNumberOfErrors() > 0)
+            {
+                //Raise error
+                specMsg.Visible = true;
+                specMsg.CssClass = CONST_ERRORPANEL_CSS;
+                specMsgTxt.Text = string.Join(", ", response.Report.ErrorList);
+                ClientScript.RegisterClientScriptBlock(GetType(), "Close", "setTimeout(function(){ $('#" + specMsg.ClientID + "').hide('slow');} , " + ErrorFadeTimeout + ");", true);
+                return;
+            }
+            //Close popup
+            ClientScript.RegisterClientScriptBlock(GetType(), "CloseSpecPopup", "window.opener.refreshSpecList();close();", true);
         }
 
 
@@ -444,5 +490,6 @@ namespace Etsi.Ultimate.Module.Specifications
             }));
             return remarks;
         }
+
     }
 }

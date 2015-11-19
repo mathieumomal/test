@@ -1,3 +1,4 @@
 Pk_SpecificationRapporteurId,Fk_SpecificationId,Fk_RapporteurId,IsPrime
 1,136082,3,True
 2,136080,3,True
+3,200000,2261,True

@@ -171,7 +171,7 @@ namespace Etsi.Ultimate.Module.Versions
         protected void AllocateVersionBtn_Click(object sender, EventArgs e)
         {
             var report = new Report();
-            ISpecVersionService specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
+            var specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
             var version = GetEditedSpecVersionObject();
             if (version.Key)
                 report = specVersionSvc.AllocateVersion(GetUserPersonId(), version.Value);
@@ -187,7 +187,7 @@ namespace Etsi.Ultimate.Module.Versions
             }
             else
             {
-                ThrowAnError(UploadVersion_aspx.GenericErrorAllocation);
+                ThrowAnError(string.Join("\n", report.ErrorList));
             }
         }
         //Upload events

@@ -6,6 +6,7 @@ using Etsi.Ultimate.Business.Specifications.Interfaces;
 using Etsi.Ultimate.Business.Versions.Interfaces;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Business.Specifications;
 
 namespace Etsi.Ultimate.Business.Versions
 {
@@ -39,6 +40,20 @@ namespace Etsi.Ultimate.Business.Versions
                 var versionRepository = RepositoryFactory.Resolve<ISpecVersionsRepository>();
                 versionRepository.UoW = UoW;
                 versionRepository.InsertOrUpdate(newVersion);
+
+                //Change spec to UCC when a version is allocated with a major version number greater than 2
+                if (newVersion.MajorVersion > 2
+                    && (!newVersion.Specification.IsUnderChangeControl.HasValue || !newVersion.Specification.IsUnderChangeControl.Value))
+                {
+                    var specChangeToUccAction = new SpecificationChangeToUnderChangeControlAction { UoW = UoW };
+                    var responseUcc = specChangeToUccAction.ChangeSpecificationsStatusToUnderChangeControl(personId, new List<int> { newVersion.Fk_SpecificationId ?? 0 });
+
+                    if (!responseUcc.Result && responseUcc.Report.ErrorList.Count > 0)
+                    {
+                        throw new Exception(responseUcc.Report.ErrorList.First());
+                    }
+                }
+
                 response.Result = newVersion;
             }
             catch (Exception ex)
@@ -96,21 +111,13 @@ namespace Etsi.Ultimate.Business.Versions
                 throw new InvalidOperationException(Utils.Localization.RightError);
             }
 
-            // Fetch all versions for this release
-            var versionManager = ManagerFactory.Resolve<ISpecVersionManager>();
-            versionManager.UoW = UoW;
-            var versions = versionManager.GetVersionsForASpecRelease(version.Fk_SpecificationId.Value, version.Fk_ReleaseId.Value);
-            if (versions.Count > 0)
-            {
-                if (
-                    versions.Any(
-                        x =>x.MajorVersion == version.MajorVersion && 
-                            x.TechnicalVersion == version.TechnicalVersion &&
-                            x.EditorialVersion == version.EditorialVersion))
-                {
-                    throw new InvalidOperationException(Utils.Localization.Allocate_Error_Version_Not_Allowed);
-                }
-            }
+            //Validate version number
+            var specVersionNumberValidator = ManagerFactory.Resolve<ISpecVersionNumberValidator>();
+            specVersionNumberValidator.UoW = UoW;
+            var numberValidationResponse = specVersionNumberValidator.CheckSpecVersionNumber(null, version,
+                SpecNumberValidatorMode.Allocate, personId);
+            if(!numberValidationResponse.Result || numberValidationResponse.Report.ErrorList.Any())
+                throw new InvalidOperationException(string.Join(", ", numberValidationResponse.Report.ErrorList));
         }
     }
 }

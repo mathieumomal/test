@@ -181,6 +181,15 @@ namespace Etsi.Ultimate.Services
         bool PromoteSpecification(int personId, int specificationId, int currentReleaseId);
 
         /// <summary>
+        /// Demote Specification to previous release
+        /// </summary>
+        /// <param name="personId">Person ID</param>
+        /// <param name="specificationId">Specification ID</param>
+        /// <param name="currentReleaseId">Current Release ID</param>
+        /// <returns>True/False</returns>
+        bool DemoteSpecification(int personId, int specificationId, int currentReleaseId);
+
+        /// <summary>
         /// Withdraws a specification from a given release.
         /// </summary>
         /// <param name="personId">ID of the person requesting the withdrawal</param>
@@ -237,5 +246,30 @@ namespace Etsi.Ultimate.Services
         /// <param name="specIdsForUcc">The spec ids.</param>
         /// <returns>Status report</returns>
         ServiceResponse<bool> ChangeSpecificationsStatusToUnderChangeControl(int personId, List<int> specIdsForUcc);
+
+        /// <summary>
+        /// Delete spec release
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <param name="releaseId"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        ServiceResponse<bool> RemoveSpecRelease(int specId, int releaseId, int personId);
+
+        /// <summary>
+        /// Delete spec with all its related records
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        ServiceResponse<bool> DeleteSpecification(int specId, int personId);
+
+        /// <summary>
+        /// Check if spec deletion is allowed
+        /// </summary>
+        /// <param name="specId">Spec id</param>
+        /// <param name="personId">Person id</param>
+        /// <returns>True if it's allowed and false with the list of error for the other case</returns>
+        ServiceResponse<bool> CheckDeleteSpecificationAllowed(int specId, int personId);
     }
 }

@@ -25,8 +25,8 @@ namespace Etsi.Ultimate.DomainClasses
         public Nullable<int> Fk_CRId { get; set; }
     
         public virtual Release Release { get; set; }
-        public virtual Specification Specification { get; set; }
         public virtual ChangeRequest ChangeRequest { get; set; }
+        public virtual Specification Specification { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

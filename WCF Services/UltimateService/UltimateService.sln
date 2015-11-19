@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etsi.Ultimate.WCF.Service", "Etsi.Ultimate.WCF.UltimateService\Etsi.Ultimate.WCF.Service.csproj", "{F4AC3CAD-15CA-4815-B971-1CF0400CE9B4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Etsi.Ultimate.WCF.Interface", "Etsi.Ultimate.WCF.Interface\Etsi.Ultimate.WCF.Interface.csproj", "{04E3E687-B60B-4499-BAFD-F8EC996E111D}"
@@ -168,6 +170,7 @@ Global
 		{A03F686E-BF8D-45CB-9D5E-83D13FA98823}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A03F686E-BF8D-45CB-9D5E-83D13FA98823}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0AEA4F7A-10ED-4CF4-8606-ABBFE43C2D85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0AEA4F7A-10ED-4CF4-8606-ABBFE43C2D85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AEA4F7A-10ED-4CF4-8606-ABBFE43C2D85}.Release.Dev|Any CPU.ActiveCfg = Release.Dev|Any CPU
 		{0AEA4F7A-10ED-4CF4-8606-ABBFE43C2D85}.Release.Ls|Any CPU.ActiveCfg = Release.Ls|Any CPU
 		{0AEA4F7A-10ED-4CF4-8606-ABBFE43C2D85}.Release.Ls|Any CPU.Deploy.0 = Release.Ls|Any CPU

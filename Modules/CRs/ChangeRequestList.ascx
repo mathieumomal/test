@@ -7,7 +7,9 @@
 
 <telerik:RadWindowManager ID="RadWindowMgr" runat="server"></telerik:RadWindowManager>
 <telerik:RadAjaxManager ID="ramCrs" runat="server" EnablePageHeadUpdate="false"></telerik:RadAjaxManager>
-<script type="text/javascript" src="/DesktopModules/CRs/JS/crScript.js"></script>
+<telerik:RadCodeBlock ID="RadCodeBlockVersion" runat="server">
+    <script type="text/javascript" src="/DesktopModules/CRs/JS/crScript.js?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>"></script>
+</telerik:RadCodeBlock>
 
 <asp:Panel ID="crList" runat="server" Visible="false" ClientIDMode="Static">
     <asp:UpdateProgress ID="upCrSearch" runat="server" DisplayAfter="200">
@@ -46,7 +48,7 @@
                     <td colspan="2">
                         <telerik:RadPanelBar runat="server" ID="rpbCrSearch" Width="100%" OnClientItemClicking="PreventCrSearchCollapse">
                             <Items>
-                                <telerik:RadPanelItem runat="server" ID="rpiCrSearch">
+                                <telerik:RadPanelItem runat="server" ID="rpiCrSearch" Expanded="True">
                                     <HeaderTemplate>
                                         <table class="crSearchHeader">
                                             <tr>
@@ -55,6 +57,11 @@
                                                 </td>
                                                 <td style="text-align: center" class="openCloseRadPanelBar">
                                                     <asp:Label ID="lblCrSearchHeader" runat="server" CssClass="openCloseRadPanelBar" />
+                                                </td>
+                                                 <td style="width: 180px;">
+                                                    <span>Items per page</span>
+                                                    <telerik:RadComboBox ID="SelectPageSize" runat="server" Width="80" OnSelectedIndexChanged="SelectPageSize_OnSelectedIndexChanged" AutoPostBack="True">
+                                                    </telerik:RadComboBox>
                                                 </td>
                                                 <td style="width: 20px;">
                                                     <a class="rpExpandable">
@@ -66,50 +73,48 @@
                                     </HeaderTemplate>
                                     <ContentTemplate>
                                         <asp:Panel ID="pnlCrSearchContainer" runat="server" DefaultButton="btnSearch">
-                                            <table style="width: 100%; padding: 20px 50px 20px 50px;">
+                                            <table style="width: 100%; padding: 5px 5px 5px 5px;">
                                                 <tr>
                                                     <td style="width: 100%; vertical-align: top;">
                                                         <table style="width: 100%;">
                                                             <tr>
                                                                 <td style="width: 125px;">Specification number</td>
                                                                 <td>
-                                                                    <asp:TextBox ID="txtSpecificationNumber" Width="296px" MaxLength="20" runat="server"></asp:TextBox>
+                                                                    <asp:TextBox ID="txtSpecificationNumber" Width="250" MaxLength="20" runat="server"></asp:TextBox>
                                                                 </td>
                                                                 <td>WG Status</td>
                                                                 <td>
-                                                                    <telerik:RadComboBox ID="rcbWgStatus" runat="server" Width="300" AutoPostBack="false" CheckBoxes="true"></telerik:RadComboBox>
+                                                                    <telerik:RadComboBox ID="rcbWgStatus" runat="server" Width="250" AutoPostBack="false" CheckBoxes="true"></telerik:RadComboBox>
+                                                                </td>
+                                                                <td>Meeting</td>
+                                                                <td>
+                                                                   <telerik:RadAutoCompleteBox ID="racMeeting" runat="server" InputType="Token" Width="250" DropDownWidth="250" DropDownHeight="150" Filter="Contains">
+                                                                        <TextSettings SelectionMode="Multiple" />
+                                                                       <WebServiceSettings Method="GetMeetings" Path="~/DesktopModules/CRs/GetWiMtgData.asmx" />
+                                                                    </telerik:RadAutoCompleteBox>
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td>Target Release</td>
                                                                 <td>
-                                                                    <ult:ReleaseSearchControl id="releaseSearchControl" runat="server" Width="300" DropDownWidth="300"/>
+                                                                    <ult:ReleaseSearchControl id="releaseSearchControl" runat="server" Width="250" DropDownWidth="250"/>
                                                                 </td>
                                                                 <td>TSG Status</td>
                                                                 <td>
-                                                                    <telerik:RadComboBox ID="rcbTsgStatus" runat="server" Width="300" AutoPostBack="false" CheckBoxes="true"></telerik:RadComboBox>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>Meeting</td>
-                                                                <td>
-                                                                   <telerik:RadAutoCompleteBox ID="racMeeting" runat="server" InputType="Token" Width="300" DropDownWidth="300" DropDownHeight="150" Filter="Contains">
-                                                                        <TextSettings SelectionMode="Multiple" />
-                                                                       <WebServiceSettings Method="GetMeetings" Path="~/DesktopModules/CRs/GetWiMtgData.asmx" />
-                                                                    </telerik:RadAutoCompleteBox>
+                                                                    <telerik:RadComboBox ID="rcbTsgStatus" runat="server" Width="250" AutoPostBack="false" CheckBoxes="true"></telerik:RadComboBox>
                                                                 </td>
                                                                 <td>Work Item</td>
                                                                 <td>
-                                                                    <telerik:RadAutoCompleteBox ID="racWorkItem" runat="server" InputType="Token" Width="300" DropDownWidth="300" DropDownHeight="150" Filter="Contains">
+                                                                    <telerik:RadAutoCompleteBox ID="racWorkItem" runat="server" InputType="Token" Width="250" DropDownWidth="250" DropDownHeight="150" Filter="Contains">
                                                                         <TextSettings SelectionMode="Multiple"  />
                                                                         <WebServiceSettings Method="GetWorkItems" Path="~/DesktopModules/CRs/GetWiMtgData.asmx" />
                                                                     </telerik:RadAutoCompleteBox>
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td colspan="3" />
-                                                                <td style="text-align: right; padding-right: 0px">
-                                                                    <asp:Button ID="btnSearch" runat="server" Text="Search" Width="150px" OnClick="btnSearch_Click" OnClientClick="collapseCrPanelItem()"></asp:Button>
+                                                                <td colspan="5" />
+                                                                <td class="searchBtn">
+                                                                    <asp:Button ID="btnSearch" runat="server" Text="Search" Width="150px" OnClick="btnSearch_Click"></asp:Button>
                                                                 </td>
                                                             </tr>
                                                         </table>
@@ -140,7 +145,7 @@
                             <ClientSettings>
                                 <Scrolling AllowScroll="True" UseStaticHeaders="True" SaveScrollPosition="true"></Scrolling>
                             </ClientSettings>
-                            <PagerStyle AlwaysVisible="true" Mode="NextPrevAndNumeric" PageButtonCount="10" Position="Bottom" />
+                            <PagerStyle AlwaysVisible="true" Mode="NextPrevAndNumeric" PageButtonCount="10" Position="Top" />
                             <MasterTableView ClientDataKeyNames="ChangeRequestId" Width="100%" AllowNaturalSort="false">
                                 <Columns>
                                     <telerik:GridTemplateColumn HeaderStyle-Width="3%" UniqueName="CrSelection">
@@ -174,13 +179,6 @@
         </ContentTemplate>
     </asp:UpdatePanel>
     <script type="text/javascript">
-        function collapseCrPanelItem() {
-            var panelBar = $find('<%= rpbCrSearch.ClientID %>');
-            var item = panelBar.get_items().getItem(0);
-            if (item) {
-                item.collapse();
-            }
-        }
         function sendAdaptContentEvent() {
             adaptContentHeight();
         }

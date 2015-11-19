@@ -54,6 +54,7 @@ namespace Etsi.Ultimate.Tests.Services
         {
             UserRightsContainer userRights = new UserRightsContainer();
             userRights.AddRight(Enum_UserRights.Specification_Withdraw);
+            userRights.AddRight(Enum_UserRights.Specification_Delete);
 
             //Mock Rights Manager
             var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
@@ -95,10 +96,14 @@ namespace Etsi.Ultimate.Tests.Services
             ManagerFactory.Container.RegisterInstance(typeof(ICommunityManager), mockCommunitiesManager);
             ManagerFactory.Container.RegisterInstance(typeof(ISpecificationTechnologiesManager), mockTechnologiesManager);
 
-            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var mockReleaseService = MockRepository.GenerateMock<IReleaseManager>();
+            mockReleaseService.Stub(x => x.GetReleasesLinkedToASpec(Arg<int>.Is.Anything)).Return(new List<Release> ());
+            ManagerFactory.Container.RegisterInstance(typeof (IReleaseManager), mockReleaseService);
+
             var specSVC = new SpecificationService();
             KeyValuePair<Specification, UserRightsContainer> result = specSVC.GetSpecificationDetailsById(0, 1);
             Assert.IsFalse(result.Value.HasRight(Enum_UserRights.Specification_Withdraw));
+            Assert.IsFalse(result.Value.HasRight(Enum_UserRights.Specification_Delete));
             Assert.AreEqual("Withdrawn before change control", result.Key.Status);
             Assert.AreEqual("3GPP SA", result.Key.PrimeResponsibleGroupFullName);
             Assert.AreEqual("3GPP SA 1,3GPP SA 2", result.Key.SecondaryResponsibleGroupsFullNames);
@@ -419,6 +424,75 @@ namespace Etsi.Ultimate.Tests.Services
             mockDataContext.AssertWasNotCalled(x => x.SaveChanges());
         }
 
+        [TestCase(1, 1, 2)]
+        public void DemoteSpecification(int personId, int specificationId, int currentReleaseId)
+        {
+            //Arrange
+            //User Rights
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Specification_Create);
+            userRights.AddRight(Enum_UserRights.Specification_EditLimitted);
+            userRights.AddRight(Enum_UserRights.Specification_Demote);
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(personId)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            //Specification
+            var specDBSet = GetSpecifications2();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specDBSet);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)Releases());
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var specificationService = new SpecificationService();
+
+            //Initial Assert
+            var spec = specDBSet.Find(specificationId);
+            Assert.AreEqual(1, spec.Specification_Release.Count);
+
+            //Act
+            bool isSuccess = specificationService.DemoteSpecification(personId, specificationId, currentReleaseId);
+
+            //Assert
+            Assert.AreEqual(2, spec.Specification_Release.Count);
+            var newSpecRelease = spec.Specification_Release.ToList().Where(x => x.Pk_Specification_ReleaseId == default(int)).FirstOrDefault();
+            Assert.AreEqual(false, newSpecRelease.isWithdrawn);
+            Assert.AreEqual(1, newSpecRelease.Fk_ReleaseId);
+            Assert.IsNotNull(newSpecRelease.CreationDate);
+            Assert.IsNotNull(newSpecRelease.UpdateDate);
+            Assert.IsTrue(isSuccess);
+            mockDataContext.AssertWasCalled(x => x.SaveChanges());
+        }
+
+        [TestCase(1, 1, 1)]
+        public void DemoteSpecificationWithoutRights(int personId, int specificationId, int currentReleaseId)
+        {
+            //Arrange
+            //User Rights
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.Specification_Create);
+            userRights.AddRight(Enum_UserRights.Specification_EditLimitted);
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(personId)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            //Specification
+            var specDBSet = GetSpecifications2();
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Specifications).Return((IDbSet<Specification>)specDBSet);
+            mockDataContext.Stub(x => x.Releases).Return((IDbSet<Release>)Releases());
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var specificationService = new SpecificationService();
+
+            //Act
+            bool isSuccess = specificationService.DemoteSpecification(personId, specificationId, currentReleaseId);
+
+            //Assert
+            Assert.IsFalse(isSuccess);
+            mockDataContext.AssertWasNotCalled(x => x.SaveChanges());
+        }
+
         [Test]
         public void PerformMassivePromotion()
         {
@@ -722,7 +796,7 @@ namespace Etsi.Ultimate.Tests.Services
             var spec = new Specification()
                 {
                     Pk_SpecificationId = 12,
-                    Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                    Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OpenedReleaseId } },
                     Number = "12.123",
                     SpecificationTechnologies = new List<SpecificationTechnology>() { 
                         new SpecificationTechnology() { Pk_SpecificationTechnologyId = 11, Fk_Enum_Technology=1 }, // Let's say it's 2G
@@ -772,6 +846,22 @@ namespace Etsi.Ultimate.Tests.Services
             var specDbSet = new SpecificationFakeDBSet();
             var release = Releases().FirstOrDefault();
             var specRelease = new Specification_Release() { Pk_Specification_ReleaseId = 1, Fk_SpecificationId = 1, Fk_ReleaseId = release.Pk_ReleaseId, isWithdrawn = false, Release = release };
+            var specReleaseList = new List<Specification_Release>() { specRelease };
+            var specification = new Specification() { Pk_SpecificationId = 1, Number = "00.01U", Title = "First specification", IsActive = true, Specification_Release = specReleaseList };
+            specDbSet.Add(specification);
+            return specDbSet;
+        }
+
+        /// <summary>
+        /// Get Fake Specification Details
+        /// </summary>
+        /// <returns>Specification Fake DBSet</returns>
+        private SpecificationFakeDBSet GetSpecifications2()
+        {
+            var specDbSet = new SpecificationFakeDBSet();
+            var release = Releases().Last();
+            var specRelease = new Specification_Release() { Pk_Specification_ReleaseId = 2, 
+                Fk_SpecificationId = 1, Fk_ReleaseId = release.Pk_ReleaseId, isWithdrawn = false, Release = release };
             var specReleaseList = new List<Specification_Release>() { specRelease };
             var specification = new Specification() { Pk_SpecificationId = 1, Number = "00.01U", Title = "First specification", IsActive = true, Specification_Release = specReleaseList };
             specDbSet.Add(specification);

@@ -46,10 +46,10 @@ namespace Etsi.Ultimate.DomainClasses
     
         public virtual Release Release { get; set; }
         public virtual ICollection<Remark> Remarks { get; set; }
-        public virtual Specification Specification { get; set; }
         public virtual ICollection<ChangeRequest> CurrentChangeRequests { get; set; }
         public virtual ICollection<ChangeRequest> FoundationsChangeRequests { get; set; }
         public virtual ICollection<SyncInfo> SyncInfoes { get; set; }
+        public virtual Specification Specification { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

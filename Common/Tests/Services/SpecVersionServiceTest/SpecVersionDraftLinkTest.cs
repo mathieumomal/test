@@ -22,14 +22,15 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
         private const int SpecIdDraft22103 = 136082;
         private const int NonExistReleaseId = 2870;
         private const int ReleaseIdRel13 = 2883;
+        private const int ReleaseIdRel14 = 2884;
         private const int ReleaseIdRel15 = 2885;
         private const int MajorVersion = 2;
         private const int TechnicalVersion = 1;
         private const int EditorialVersion = 0;
         private const int UserHasNoRight = 1;
         private const int UserHasRight = 2;
-        private const int PrimeRapporteurHasNoRight = 3;
-
+		private const int PrimeRapporteurHasNoRight = 3;		private const int ReleaseIdWithdrawn = 666;
+        private const int SpecIdDraft160000 = 160000;
         #endregion
 
         #region Setups
@@ -82,6 +83,15 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
             Assert.AreEqual(Localization.Allocate_Error_SpecRelease_Does_Not_Exist, svcResponse.Report.ErrorList.First());
         }
 
+        [Test]
+        public void CheckDraftCreationOrAssociation_SpecReleaseIsWithdrawn()
+        {
+            var svcResponse = _versionSvc.CheckDraftCreationOrAssociation(UserHasRight, SpecIdDraft160000, ReleaseIdWithdrawn, MajorVersion, TechnicalVersion, EditorialVersion);
+            Assert.IsFalse(svcResponse.Result);
+            Assert.AreEqual(1, svcResponse.Report.GetNumberOfErrors());
+            Assert.AreEqual(Localization.Specification_reserve_withdrawn_error, svcResponse.Report.ErrorList.First());
+        }
+
         [Test, Description("System should allow association if version is already allocated")]
         public void CheckDraftCreationOrAssociation_AllowsAllocatedVersionsToBeLinked()
         {
@@ -123,6 +133,15 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
             var svcResponse = _versionSvc.CheckDraftCreationOrAssociation(UserHasRight, SpecIdDraft22103, ReleaseIdRel13, MajorVersion, TechnicalVersion + 1, EditorialVersion);
             Assert.IsTrue(svcResponse.Result);
             Assert.AreEqual(0, svcResponse.Report.GetNumberOfErrors());
+        }
+
+        [Test]
+        public void CheckDraftCreationOrAssociation_ExistingVersionButWrongRelease()
+        {
+            var svcResponse = _versionSvc.CheckDraftCreationOrAssociation(UserHasRight, SpecIdDraft22103, ReleaseIdRel14, MajorVersion, TechnicalVersion, EditorialVersion);
+            Assert.IsFalse(svcResponse.Result);
+            Assert.AreEqual(1, svcResponse.Report.GetNumberOfErrors());
+            Assert.AreEqual(Localization.Wrong_Release_Version, svcResponse.Report.ErrorList.First());
         }
 
         #endregion

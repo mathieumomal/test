@@ -52,5 +52,17 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public int PrimaryResponsibleGroup_CommunityId { get; set; }
+
+        /// <summary>
+        /// Spec is active (NOT ACTIVE -> WITHDRAW)
+        /// </summary>
+        [DataMember]
+        public bool IsActive { get; set; }
+
+        /// <summary>
+        /// Spec is Under Change Control
+        /// </summary>
+        [DataMember]
+        public bool? IsUcc { get; set; }
     }
 }

@@ -111,21 +111,6 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         /// <summary>
-        /// A draft always has &lt;= 2 major version.
-        /// </summary>
-        [Test]
-        public void CheckVersionForUpload_ShouldNotAllowDraftWithMajorVersionGreaterThat2()
-        {
-            myVersion.Fk_SpecificationId = EffortConstants.SPECIFICATION_DRAFT_WITH_EXISTING_DRAFTS_ID;
-
-            var fileToUpload = UPLOAD_PATH + "22101-d30.zip";
-            var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
-            Assert.AreEqual(1, result.Report.GetNumberOfErrors());
-
-            Assert.IsTrue(result.Report.ErrorList.First().Contains(Utils.Localization.Upload_Version_Error_Draft_Major_Too_High));
-        }
-
-        /// <summary>
         /// Version 13.1.0 is an already uploaded version.
         /// </summary>
         [Test]

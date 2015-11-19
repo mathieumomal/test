@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.DomainClasses;
-using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Business

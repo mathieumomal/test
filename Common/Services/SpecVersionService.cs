@@ -7,6 +7,7 @@ using Etsi.Ultimate.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Services
@@ -53,8 +54,7 @@ namespace Etsi.Ultimate.Services
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
-                var specVersionManager = new SpecVersionsManager();
-                specVersionManager.UoW = uoW;
+                var specVersionManager = new SpecVersionsManager {UoW = uoW};
                 return specVersionManager.GetSpecVersionById(versionId, personId);
             }
         }
@@ -86,7 +86,11 @@ namespace Etsi.Ultimate.Services
             {
                 var specVersionAllocateAction = new SpecVersionAllocateAction {UoW = uoW};
                 var result = specVersionAllocateAction.AllocateVersion(personId, version);
-                uoW.Save();
+
+                if (result != null && (result.Report.ErrorList == null || result.Report.ErrorList.Count() == 0))
+                {
+                    uoW.Save();
+                }
 
                 return result.Report;
             }
@@ -126,6 +130,34 @@ namespace Etsi.Ultimate.Services
         }
 
         /// <summary>
+        /// Delete a specification version
+        /// </summary>
+        /// <param name="personId">UserId to check rights</param>
+        /// <param name="versionId">Version Id</param>
+        /// <returns>serviceResponse</returns>
+        public ServiceResponse<bool> DeleteVersion(int personId, int versionId)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var response = new ServiceResponse<bool>();
+                try
+                {
+                    var specVersionManager = new SpecVersionsManager {UoW = uoW};
+                    response = specVersionManager.DeleteVersion(personId, versionId);
+                    if(response.Result)
+                        uoW.Save();
+                }
+                catch (Exception e)
+                {
+                    LogManager.Error("SpecVersionService - DeleteVersion : an unexpected error occured", e);
+                    response.Result = false;
+                    response.Report.LogError(Localization.GenericError);
+                }
+                return response;
+            }
+        } 
+
+        /// <summary>
         /// See interface
         /// </summary>
         /// <param name="releaseId"></param>
@@ -156,6 +188,30 @@ namespace Etsi.Ultimate.Services
                 if(result.Result != null && result.Report.GetNumberOfErrors() == 0)
                     uoW.Save();
                 return result;
+            }
+        }
+
+        /// <summary>
+        /// Check if user is allowed to edit version numbers
+        /// </summary>
+        /// <param name="version"></param>
+        /// <param name="personId"></param>
+        /// <returns>True for success case</returns>
+        public ServiceResponse<bool> CheckVersionNumbersEditAllowed(SpecVersion version, int personId)
+        {
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var manager = ManagerFactory.Resolve<ISpecVersionManager>();
+                    manager.UoW = uow;
+                    return manager.CheckVersionNumbersEditAllowed(version, personId);
+                }
+                catch (Exception e)
+                {
+                    LogManager.Error(string.Format("Error occured when trying to check if user have right to edit version number -> versionId:{0}", version.Pk_VersionId), e);
+                    return new ServiceResponse<bool> { Result = false, Report = new Report { ErrorList = new List<string> { Localization.GenericError } } };
+                }
             }
         }
 
@@ -354,6 +410,35 @@ namespace Etsi.Ultimate.Services
             return svcResponse;
         }
 
+        /// <summary>
+        /// Unlink tdoc from related version
+        /// </summary>
+        /// <param name="uid">Tdoc uid</param>
+        /// <param name="personId"></param>
+        /// <returns>True for success case</returns>
+        public ServiceResponse<bool> UnlinkTdocFromVersion(string uid, int personId)
+        {
+            var svcResponse = new ServiceResponse<bool>();
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specVersionManager = ManagerFactory.Resolve<ISpecVersionManager>();
+                    specVersionManager.UoW = uoW;
+                    svcResponse = specVersionManager.UnlinkTdocFromVersion(uid, personId);
+                    if(svcResponse.Result && svcResponse.Report.GetNumberOfErrors() <= 0)
+                        uoW.Save();
+                }
+            }
+            catch (Exception ex)
+            {
+                svcResponse.Result = false;
+                svcResponse.Report.LogError(ex.Message);
+                LogManager.Error("Unexpected error occured when system trying to unlink tdoc from version", ex);
+            }
+            return svcResponse;
+        }
+
         #endregion
     }
 
@@ -474,6 +559,22 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId"></param>
         /// <returns></returns>
         ServiceResponse<SpecVersion> UpdateVersion(SpecVersion version, int personId);
+
+        /// <summary>
+        /// Unlink tdoc from related version
+        /// </summary>
+        /// <param name="uid">Tdoc uid</param>
+        /// <param name="personId"></param>
+        /// <returns>True for success case</returns>
+        ServiceResponse<bool> UnlinkTdocFromVersion(string uid, int personId);
+
+        /// <summary>
+        /// Check if user is allowed to edit version numbers
+        /// </summary>
+        /// <param name="versionId"></param>
+        /// <param name="personId"></param>
+        /// <returns>True for success case</returns>
+        ServiceResponse<bool> CheckVersionNumbersEditAllowed(SpecVersion version, int personId);
     }
 }
 

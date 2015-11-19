@@ -217,6 +217,37 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(expectedResult, result);
         }
 
+        [TestCase("ABC", 1, true, Description = "User has right ; version should be unlinked")]
+        [TestCase("XXX", 1, true, Description = "User has right ; no one version linked to this UID, should not return error")]
+        [TestCase("ABC", 2, true, Description = "User has limited right ; version should be unlinked")]
+        [TestCase("ABC", 0, false, Description = "User don't have right ; version should not be unlinked")]
+        public void UnlinkTdocFromVersion_NominaCase(string uid, int personId, bool expectedResult)
+        {
+            //Mock user rights
+            var rightsContainerChangeType = new UserRightsContainer();
+            rightsContainerChangeType.AddRight(Enum_UserRights.Contribution_Change_Type);
+            var rightsContainerChangeTypeLimited = new UserRightsContainer();
+            rightsContainerChangeTypeLimited.AddRight(Enum_UserRights.Contribution_Change_Type_Limited);
+
+            var mockUserRightsMgr = MockRepository.GenerateMock<IRightsManager>();
+            mockUserRightsMgr.Stub(x => x.GetRights(Arg<int>.Is.Equal(0))).Return(new UserRightsContainer());
+            mockUserRightsMgr.Stub(x => x.GetRights(Arg<int>.Is.Equal(1))).Return(rightsContainerChangeType);
+            mockUserRightsMgr.Stub(x => x.GetRights(Arg<int>.Is.Equal(2))).Return(rightsContainerChangeTypeLimited);
+            ManagerFactory.Container.RegisterInstance(typeof (IRightsManager), mockUserRightsMgr);
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.SpecVersions).Return(GetSpecVersions());
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var versionsSvc = new SpecVersionService();
+            var response = versionsSvc.UnlinkTdocFromVersion(uid, personId);
+            Assert.AreEqual(expectedResult, response.Result);
+            if(expectedResult)
+                mockDataContext.AssertWasCalled(x => x.SaveChanges());
+            else
+                mockDataContext.AssertWasNotCalled(x => x.SaveChanges());
+        }
+
         #endregion
 
         #region TestData
@@ -297,6 +328,7 @@ namespace Etsi.Ultimate.Tests.Services
                 Remarks = new List<Remark>() { new Remark() { Pk_RemarkId = 2, Fk_VersionId = 2, RemarkText = "R22" } },
                 Fk_SpecificationId = 1,
                 Fk_ReleaseId = 1,
+                RelatedTDoc = "ABC"
             };
             var version3 = new SpecVersion()
             {

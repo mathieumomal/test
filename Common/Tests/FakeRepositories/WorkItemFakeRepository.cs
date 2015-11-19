@@ -55,7 +55,7 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                         Acronym = "IOPS",
                         Effective_Acronym = "IOPS",
                         WiLevel = 0,
-                        Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID,
+                        Fk_ReleaseId = ReleaseFakeRepository.OpenedReleaseId,
                         WorkItems_ResponsibleGroups = responsibleGroups,
                         StartDate = new DateTime(2014, 3, 7),
                         EndDate = new DateTime(2014, 9, 17),

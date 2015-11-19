@@ -15,13 +15,16 @@
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
+    <link rel="stylesheet" type="text/css" href="/Portals/_default/Skins/3GPP/mainpage.css"/>
     <link rel="stylesheet" type="text/css" href="module.css">
     <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon">
     <script src="JS/jquery.min.js"></script>
-    <script src="JS/CommonScript.js"></script>
+    <telerik:RadCodeBlock ID="RadCodeBlockVersion" runat="server">
+        <script src="JS/CommonScript.js?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>"></script>
+    </telerik:RadCodeBlock>
 </head>
 <body>
-    <form id="specificationDetailsForm" runat="server">
+    <form id="specificationDetailsForm" class="specDetailform" runat="server">
         <telerik:RadScriptManager runat="server" ID="RadScriptManager1" EnableHandlerDetection="false" />
         <asp:Panel runat="server" ID="fixContainer" CssClass="containerFix" Width="750px">
             <asp:Panel ID="specMsg" runat="server" Visible="false">
@@ -162,7 +165,8 @@
                 <div class="specificationDetailsAction">
                     <asp:LinkButton ID="EditBtn" runat="server" Text="Edit" CssClass="btn3GPP-success" OnClick="EditSpecificationDetails_Click" />
                     <asp:LinkButton ID="WithdrawBtn" runat="server" Text="Definitively withdraw" CssClass="btn3GPP-success"/>
-                    <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit" CssClass="btn3GPP-success" OnClientClick="  return closePopUpWindow()" />
+                    <asp:LinkButton ID="ExitBtn" runat="server" Text="Exit" CssClass="btn3GPP-success" OnClientClick="return closePopUpWindow()" />
+                    <asp:LinkButton ID="DeleteBtn" runat="server" Text="Delete" CssClass="btn3GPP-delete" OnClientClick="openConfirmDeleteRadWin();return false;" />
                 </div>
                 <script type="text/javascript">
 
@@ -175,7 +179,7 @@
                         setTimeout(function () {
                             var specificationNumber = "Specification ";
                             if ($("#referenceVal").html() != "undefined" && $("#referenceVal").html() != "" && $("#referenceVal").html() != "-") {
-                                specificationNumber += "# "+ $("#referenceVal").html();                                
+                                specificationNumber += "# " + $("#referenceVal").html();
                             }
                             document.title = specificationNumber;
                         }, 200);
@@ -189,13 +193,23 @@
         </asp:Panel>
         <script type="text/javascript">
             //<![CDATA[
+            // Open popup for confirm delete
+            function openConfirmDeleteRadWin() {
+                var win = $find("<%= ConfirmDeleteWindow.ClientID %>");
+                win.setSize(420, 140);
+                win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
+                win.set_modal(true);
+                win.set_visibleStatusbar(false);
+                win.show();
+                return false;
+            }
             // Open popup for definitve withdrawal
             function openDefinitiveWithdrawlRadWin() {
-                var win = $find("<%= WithdrawRadWindow.ClientID %>");                
+                var win = $find("<%= WithdrawRadWindow.ClientID %>");
                 win.setSize(450, 220);
                 win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
                 win.set_modal(true);
-                win.set_visibleStatusbar(false);                
+                win.set_visibleStatusbar(false);
                 win.show();
                 win.add_close(OnClientClose);
                 return false;
@@ -222,12 +236,12 @@
                         failureWin.set_modal(true);
                         failureWin.set_visibleStatusbar(false);
                         failureWin.show();
-                    }                    
+                    }
                 }
-            }            
+            }
             // Refresh window in case the operation succede
             function refreshWindow() {
-                cancel();               
+                cancel();
                 window.location.reload(true);
             }
 
@@ -235,6 +249,10 @@
             function closeAllModals() {
                 var manager = GetRadWindowManager();
                 manager.closeAll();
+            }
+
+            function cancelDeleteAction() {
+                $find("ConfirmDeleteWindow").close();
             }
 
             function cancel() {
@@ -267,7 +285,19 @@
                             <asp:Button id="btnCancelFailure" runat="server" Text ="OK" OnClientClicked="cancel"/>
                         </div>
                     </ContentTemplate>
-                </telerik:RadWindow>                      
+                </telerik:RadWindow>   
+                <telerik:RadWindow ID="ConfirmDeleteWindow" CssClass="confirmDeleteWindow" runat="server" Modal="true" Title="Confirm delete" 
+            VisibleStatusbar="false" Behaviors="Close">
+                    <ContentTemplate>
+                        <div class="header">
+                            Are you sure you want delete specification ?<br />
+                        </div>
+                        <div class="footer">                            
+                            <asp:Button CssClass="btn3GPP-success" id="btnConfirmDelete" runat="server" Text ="Confirm delete" OnClick="btnConfirmDelete_Click"/>
+                            <asp:Button id="btnCancelDelete" CssClass="btn3GPP-success" runat="server" Text ="Cancel" OnClientClick="cancelDeleteAction(); return false;"/>
+                        </div>
+                    </ContentTemplate>
+                </telerik:RadWindow>                   
             </windows>
         </telerik:RadWindowManager>
                

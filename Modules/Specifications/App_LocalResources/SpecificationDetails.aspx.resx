@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Button_Delete_SpecRelease_Tooltip_Allowed" xml:space="preserve">
+    <value>Delete Specification-Release</value>
+  </data>
+  <data name="Button_Delete_SpecRelease_Tooltip_NotAllowed" xml:space="preserve">
+    <value>Can not delete Specification-Release because it contains versions</value>
+  </data>
   <data name="Error_NumberAssigned_NotifyMCC_NoEmail" xml:space="preserve">
     <value>System failed to notify the Secretary and Workplan Manager. Please contact them directly to notify them of the reference assignment.</value>
   </data>

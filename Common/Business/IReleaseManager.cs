@@ -17,6 +17,15 @@ namespace Etsi.Ultimate.Business
         KeyValuePair<List<Release>, UserRightsContainer> GetAllReleases(int personID);
 
         /// <summary>
+        /// List all the releases filtered by status.
+        /// </summary>
+        /// <param name="personID">Person ID</param>
+        /// <param name="releaseStatus">Person ID</param>
+        /// <returns>List of Releases</returns>
+        KeyValuePair<List<Release>, UserRightsContainer> GetAllReleasesByStatus(int personID,
+            string releaseStatus);
+
+        /// <summary>
         /// Return release details based on the release ID. Also computes the rights of the user 
         /// concerning this release, against the personId.
         /// </summary>
@@ -87,5 +96,19 @@ namespace Etsi.Ultimate.Business
         /// <param name="releaseId">Relese ID</param>
         /// <returns>Next Release</returns>
         Release GetNextRelease(int releaseId);
+
+        /// <summary>
+        /// Get previous release details for the given current release id.
+        /// </summary>
+        /// <param name="releaseId">Relese ID</param>
+        /// <returns>Previous Release</returns>
+        Release GetPreviousRelease(int releaseId);
+
+        /// <summary>
+        /// Get releases linked to a spec
+        /// </summary>
+        /// <param name="specId">Specification id</param>
+        /// <returns>List of releases linked to spec provided</returns>
+        List<Release> GetReleasesLinkedToASpec(int specId);
     }
 }

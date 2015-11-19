@@ -94,6 +94,15 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.WebControls.ImageButton imgPromoteSpec;
         
         /// <summary>
+        /// Contrôle imgDemoteSpec.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton imgDemoteSpec;
+        
+        /// <summary>
         /// Contrôle imgWithdrawSpec.
         /// </summary>
         /// <remarks>
@@ -101,6 +110,15 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.ImageButton imgWithdrawSpec;
+        
+        /// <summary>
+        /// Contrôle imgDeleteSpecRelease.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.ImageButton imgDeleteSpecRelease;
         
         /// <summary>
         /// Contrôle specificationsVersionGrid.

@@ -101,6 +101,36 @@ namespace Etsi.Ultimate.Tests.Business
             mockCrRepository.VerifyAllExpectations();
         }
 
+        /**
+         * Here test on TSG CR but same simple logic for WG CRs
+         * */
+        [TestCase(false, Description = "Revised CR without status :     System should set revised CR status to Revised")]
+        [TestCase(true, Description = "Revised CR with status :         System should set revised CR status to Revised")]
+        public void Business_CreateChangeRequest_Revision(bool revisedCrShouldHaveStatus)
+        {
+            var cr22 = UoW.Context.ChangeRequests.Find(22);
+            if (revisedCrShouldHaveStatus)
+            {
+                cr22.ChangeRequestTsgDatas.First().Fk_TsgStatus = 1;
+                UoW.Save();
+            }
+
+            //Arrange
+            var changeRequest = new ChangeRequest { IsAutoNumberingOff = false, RevisionOf = cr22.ChangeRequestTsgDatas.First().TSGTdoc };
+            var mockCrRepository = MockRepository.GenerateMock<IChangeRequestRepository>();
+            mockCrRepository.Stub(x => x.GetChangeRequestByContributionUID(cr22.ChangeRequestTsgDatas.First().TSGTdoc)).Return(cr22);
+            mockCrRepository.Stub(x => x.FindCrMaxRevisionBySpecificationIdAndCrNumber(cr22.Fk_Specification, cr22.CRNumber)).Return(4);
+            RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockCrRepository);
+
+            //Act
+            var crManager = new ChangeRequestManager { UoW = UoW };
+            var response = crManager.CreateChangeRequest(PersonId, changeRequest);
+
+            //Assert
+            Assert.IsTrue(response.Result);
+            Assert.AreEqual(6, cr22.ChangeRequestTsgDatas.First().Fk_TsgStatus);//Revised status id : 6
+        }
+
         [Test]
         public void Business_CreateChangeRequest_Failure()
         {

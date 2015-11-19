@@ -45,7 +45,6 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<WorkPlanFile> WorkPlanFiles { get; set; }
         public IDbSet<Enum_Serie> Enum_Serie { get; set; }
         public IDbSet<Enum_Technology> Enum_Technology { get; set; }
-        public IDbSet<Specification> Specifications { get; set; }
         public IDbSet<Specification_Release> Specification_Release { get; set; }
         public IDbSet<Specification_WorkItem> Specification_WorkItem { get; set; }
         public IDbSet<SpecificationRapporteur> SpecificationRapporteurs { get; set; }
@@ -64,6 +63,8 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<Enum_ChangeRequestStatus> Enum_ChangeRequestStatus { get; set; }
         public IDbSet<ChangeRequestTsgData> ChangeRequestTsgDatas { get; set; }
         public IDbSet<View_CrPacks> View_CrPacks { get; set; }
+        public IDbSet<Specification> Specifications { get; set; }
+        public IDbSet<View_ContributionsWithAditionnalData> View_ContributionsWithAditionnalData { get; set; }
     	
     	/**
     	 * This code is intended to enable testability of the different layers,

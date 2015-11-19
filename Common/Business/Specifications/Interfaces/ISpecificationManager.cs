@@ -73,8 +73,9 @@ namespace Etsi.Ultimate.Business.Specifications.Interfaces
         /// </summary>
         /// <param name="personId"></param>
         /// <param name="spec"></param>
+        /// <param name="shouldProvideRemoveRight"></param>
         /// <returns></returns>
-        List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, DomainClasses.Specification spec);        
+        List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, Specification spec, bool shouldProvideRemoveRight = false);
 
         /// <summary>
         /// Returns the list of allowed actions regarding a providied specification-release.
@@ -84,8 +85,22 @@ namespace Etsi.Ultimate.Business.Specifications.Interfaces
         /// <param name="spec"></param>
         /// <param name="releaseId"></param>
         /// <param name="releases">List of all releases</param>
+        /// <param name="version"></param>
         /// <returns></returns>
-        KeyValuePair<Specification_Release, UserRightsContainer> GetRightsForSpecRelease(UserRightsContainer userRights, int personId, DomainClasses.Specification spec, int releaseId, List<Release> releases);
+        KeyValuePair<Specification_Release, UserRightsContainer> GetRightsForSpecRelease(UserRightsContainer userRights, int personId, Specification spec, int releaseId, List<Release> releases, SpecVersion version = null);
+
+        /// <summary>
+        /// Returns the list of allowed actions regarding a providied specification-release with potentially right to remove the spec release.
+        /// </summary>
+        /// <param name="userRights">Current user rights</param>
+        /// <param name="personId"></param>
+        /// <param name="spec"></param>
+        /// <param name="releaseId"></param>
+        /// <param name="releases">List of all releases</param>
+        /// <param name="releaseIdsRelatedToThisSpec">List of release ids linked to the current spec</param>
+        /// <param name="specVersionsOfSpec">List of versions which belongs to this spec</param>
+        /// <returns></returns>
+        KeyValuePair<Specification_Release, UserRightsContainer> GetRightsForSpecRelease(UserRightsContainer userRights, int personId, Specification spec, int releaseId, List<Release> releases, List<int> releaseIdsRelatedToThisSpec, List<SpecVersion> specVersionsOfSpec);
 
         /// <summary>
         /// Get a specRelease by specId and ReleaseId
@@ -117,5 +132,30 @@ namespace Etsi.Ultimate.Business.Specifications.Interfaces
         /// <param name="specNumbers">The specification numbers.</param>
         /// <returns>List of specifications</returns>
         List<Specification> GetSpecificationsByNumbers(int personId, List<string> specNumbers);
+
+        /// <summary>
+        /// See implementation
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <param name="releaseId"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        ServiceResponse<bool> RemoveSpecRelease(int specId, int releaseId, int personId);
+
+        /// <summary>
+        /// Delete spec
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        ServiceResponse<bool> DeleteSpecification(int specId, int personId);
+
+        /// <summary>
+        /// Check if spec deletion is allowed
+        /// </summary>
+        /// <param name="specId">Spec id</param>
+        /// <param name="personId">Person id</param>
+        /// <returns>True if it's allowed and false with the list of error for the other case</returns>
+        ServiceResponse<bool> CheckDeleteSpecificationAllowed(int specId, int personId);
     }
 }

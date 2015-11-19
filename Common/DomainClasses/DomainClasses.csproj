@@ -152,6 +152,10 @@
     <Compile Include="SpecificationResponsibleGroup.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="View_ContributionsWithAditionnalData.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WorkItemSearch.cs" />
     <Compile Include="SpecificationSearch.cs" />
     <Compile Include="SpecificationTechnology.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>

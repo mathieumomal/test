@@ -13,6 +13,7 @@ using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
 using Etsi.Ultimate.Utils.ModelMails;
+using Etsi.Ultimate.Business.Specifications;
 
 namespace Etsi.Ultimate.Business.Versions
 {
@@ -61,7 +62,7 @@ namespace Etsi.Ultimate.Business.Versions
                 try
                 {
                     CheckPersonRightToUploadVersion(version, personId);
-                    CheckUploadAllowed(version, path);
+                    CheckUploadAllowed(version, path, personId);
 
                     var validationReport = svcResponse.Report;
                     var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path);
@@ -237,7 +238,8 @@ namespace Etsi.Ultimate.Business.Versions
         /// </summary>
         /// <param name="version"></param>
         /// <param name="path"></param>
-        private void CheckUploadAllowed(SpecVersion version, string path)
+        /// <param name="personId"></param>
+        private void CheckUploadAllowed(SpecVersion version, string path, int personId)
         {
             // Version should not already exist
             var versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
@@ -257,11 +259,13 @@ namespace Etsi.Ultimate.Business.Versions
                 throw new InvalidOperationException(String.Format(Localization.Upload_Version_Error_Version_Already_Exists, versionStr));
             }
 
-            // If version is a draft, then it's major number must not be higher than 2.
-            if (!version.Specification.IsUnderChangeControl.GetValueOrDefault() && version.MajorVersion > 2)
-            {
-                throw new InvalidOperationException(String.Format(Localization.Upload_Version_Error_Draft_Major_Too_High));
-            }
+            //Validate version number
+            var specVersionNumberValidator = ManagerFactory.Resolve<ISpecVersionNumberValidator>();
+            specVersionNumberValidator.UoW = UoW;
+            var numberValidationResponse = specVersionNumberValidator.CheckSpecVersionNumber(null, version,
+                SpecNumberValidatorMode.Upload, personId);
+            if (!numberValidationResponse.Result || numberValidationResponse.Report.ErrorList.Any())
+                throw new InvalidOperationException(string.Join(", ", numberValidationResponse.Report.ErrorList));
         }
 
         private string GetValidFileName(SpecVersion specVersion)
@@ -623,6 +627,20 @@ namespace Etsi.Ultimate.Business.Versions
                 //Transposition of the existing version
                 transposeMgr.Transpose(spec, existingVersion);
             }
+
+            //Change spec to UCC when a version is uploaded with a major version number greater than 2
+            if (version.MajorVersion > 2
+                && (!version.Specification.IsUnderChangeControl.HasValue || !version.Specification.IsUnderChangeControl.Value))
+            {
+                var specChangeToUccAction = new SpecificationChangeToUnderChangeControlAction { UoW = UoW };
+                var responseUcc = specChangeToUccAction.ChangeSpecificationsStatusToUnderChangeControl(personId, new List<int> { version.Fk_SpecificationId ?? 0 });
+
+                if (!responseUcc.Result && responseUcc.Report.ErrorList.Count > 0)
+                {
+                    validationReport.ErrorList.AddRange(responseUcc.Report.ErrorList.ToArray());
+                }
+            }
+
 
             if (validationReport != null && validationReport.GetNumberOfWarnings() > 0)
             {

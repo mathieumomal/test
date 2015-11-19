@@ -438,7 +438,7 @@ namespace Etsi.Ultimate.Tests.Services
             var spec = new Specification()
             {
                 Pk_SpecificationId = 12,
-                Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OpenedReleaseId } },
                 Number = "12.123",
                 Fk_SerieId = 1,
                 SpecificationTechnologies = new List<SpecificationTechnology>() { 

@@ -9,3 +9,5 @@ Pk_SpecificationId,IsTS,Number,IsActive,IsUnderChangeControl,promoteInhibited,Is
 140001,True,22.108,True,,,True,A specification without ucc flag,True,True,False,,2008-01-30 12:12,,2008-01-30 12:12,http://www.3gpp.org/ftp/Specs/archive/22_series/22.108/,Test,3665
 140002,True,22.109,False,,,True,A specification withdrawn before change control,True,True,False,,2008-01-30 12:12,,2008-01-30 12:12,http://www.3gpp.org/ftp/Specs/archive/22_series/22.109/,Test,3665
 150000,True,22.110,True,True,,True,Valid ITU Preliminary Export Spec,True,True,False,,2008-01-30 12:12,,2008-01-30 12:12,http://www.3gpp.org/ftp/Specs/archive/22_series/22.110/,Test,3665
+160000,True,22.101,True,False,,True,Service aspects; Service principles,True,True,False,,2008-01-30 12:12,,2008-01-30 12:12,http://www.3gpp.org/ftp/Specs/archive/22_series/22.101/,This specification describes the service principles of the UMTS.,3665
+200000,True,30.000,True,False,,True,Spec to delete,True,True,False,,2008-01-30 12:12,,2008-01-30 12:12,http://www.3gpp.org/ftp/Specs/archive/22_series/22.101/,This specification describes the service principles of the UMTS.,3665

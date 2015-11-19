@@ -124,7 +124,7 @@ namespace Etsi.Ultimate.Tests.Services
                 new KeyValuePair<Specification_Release,UserRightsContainer>(sp4, rightsKO),
                 new KeyValuePair<Specification_Release,UserRightsContainer>(sp6, hasBasicRight? rightsWithdraw:rightsKO),
             };
-            specMgr.Stub(r => r.GetRightsForSpecReleases(Arg<int>.Is.Anything, Arg<Specification>.Is.Anything)).Return(rightsResult);
+            specMgr.Stub(r => r.GetRightsForSpecReleases(Arg<int>.Is.Anything, Arg<Specification>.Is.Anything, Arg<bool>.Is.Equal(false))).Return(rightsResult);
 
             var spec = new Specification()
             {

@@ -81,6 +81,9 @@ namespace Etsi.Ultimate.Repositories
         /// </returns>
         public KeyValuePair<int, string> GetTabIdAndPageNameForModuleId(int moduleId)
         {
+            if(moduleId == 0)
+                return new KeyValuePair<int, string>(0, null);
+
             // First check in cache if exists.
             var cachedData = (Dictionary<int,View_ModulesPages>) CacheManager.Get(CACHE_KEY);
             if (cachedData != null && cachedData.ContainsKey(moduleId))

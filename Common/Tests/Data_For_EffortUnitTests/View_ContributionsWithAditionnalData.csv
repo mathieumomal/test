@@ -1,0 +1,4 @@
+pk_Contribution,uid,fk_SpecificationId,Specification_MajorVersion,Specification_TechnicalVersion,Specification_EditorialVersion
+1,CP-142001,1,1,0,1
+2,CP-142002,1,1,0,1
+3,CP-142003,2,2,0,2

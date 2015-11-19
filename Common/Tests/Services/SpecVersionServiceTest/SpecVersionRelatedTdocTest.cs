@@ -9,6 +9,7 @@ using Etsi.Ultimate.Services;
 using NUnit.Framework;
 using System.Linq;
 using Etsi.Ultimate.Business;
+using Etsi.Ultimate.Business.Versions;
 using Rhino.Mocks;
 using Microsoft.Practices.Unity;
 
@@ -41,7 +42,7 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
             specMgr.Stub(
                 x =>
                     x.GetRightsForSpecRelease(Arg<UserRightsContainer>.Is.Anything, Arg<int>.Is.Anything,
-                        Arg<Specification>.Is.Anything, Arg<int>.Is.Anything, Arg<List<Release>>.Is.Anything)).Return(new KeyValuePair<Specification_Release, UserRightsContainer>(null, allocateRights));
+                        Arg<Specification>.Is.Anything, Arg<int>.Is.Anything, Arg<List<Release>>.Is.Anything, Arg<SpecVersion>.Is.Anything)).Return(new KeyValuePair<Specification_Release, UserRightsContainer>(null, allocateRights));
             specMgr.Stub(x => x.GetSpecificationById(UserHasRight, 136080))
                 .Return(new KeyValuePair<Specification, UserRightsContainer>(UoW.Context.Specifications.FirstOrDefault(x => x.Pk_SpecificationId == 136080), allocateRights));
             ManagerFactory.Container.RegisterInstance(rightsManager);
@@ -99,6 +100,15 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
         public void UpdateVersionRelatedTdoc_Test_VersionDoesntAlreadyExist(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion,
             int editorialVersion, string relatedTdoc, bool isSuccess, string infoMessage)
         {
+            //Mock version number validator
+            var mockISpecVersionNumberValidator = MockRepository.GenerateMock<ISpecVersionNumberValidator>();
+            mockISpecVersionNumberValidator.Stub(
+                x =>
+                    x.CheckSpecVersionNumber(Arg<SpecVersion>.Is.Anything, Arg<SpecVersion>.Is.Anything,
+                        Arg<SpecNumberValidatorMode>.Is.Anything, Arg<int>.Is.Anything)).Return(new ServiceResponse<bool> { Result = true });
+            ManagerFactory.Container.RegisterInstance(typeof(ISpecVersionNumberValidator),
+                mockISpecVersionNumberValidator);
+
             var repo = RepositoryFactory.Resolve<ISpecVersionsRepository>(); repo.UoW = UoW;
             var versionBefore = repo.GetVersion(specId, majorVersion, technicalVersion, editorialVersion);
             Assert.AreEqual(null, versionBefore);

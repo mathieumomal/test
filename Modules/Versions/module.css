@@ -18,7 +18,7 @@
     text-align:center;
 }
 
-.versionUploadBody {
+.versionUploadBody, .messageBox {
     font-family: Arial,verdana,Serif;
     font-size: 12px;
 }
@@ -125,19 +125,28 @@ span.requiredField {
 /*VERSION POPUP*/
 #frmVersionPopup {
     font-family: Arial,verdana,Serif;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 #frmVersionPopup .versionIdentifier {
-	padding-bottom: 10px;
+    padding-bottom: 10px;
 }
 #frmVersionPopup .versionIdentifier span {
-	font-weight: bold;
-	font-size: 15px;
+    font-weight: bold;
+    font-size: 15px;
 }
 
 #frmVersionPopup .footer {
-	position: relative; 
-	top: 10px; 
-	text-align:left;
+    position: relative; 
+    top: 10px; 
+    text-align:left;
 }
+
+#frmVersionPopup .confirmDeletePnl {
+    text-align: center;
+}
+#frmVersionPopup .confirmDeletePnl p{
+    margin:30px;
+}
+#frmVersionPopup .confirmDeletePnl .btns,
+#frmVersionPopup .finishPnl .btns{ text-align: left;}

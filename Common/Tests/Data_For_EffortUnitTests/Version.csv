@@ -17,3 +17,5 @@ Pk_VersionId,MajorVersion,TechnicalVersion,EditorialVersion,AchievedDate,ExpertP
 400016,14,0,1,,,,False,False,,,False,29581,17240,,150000,2884,,false
 400017,15,0,0,,,http://www.3gpp.org/ftp,False,False,2014-10-10,,False,29581,17240,,150000,2885,,false
 400018,15,0,1,,,http://www.3gpp.org/ftp,False,False,2014-10-10,,False,29581,17240,,150000,2885,,false
+466666,1,0,1,,,,False,False,,,False,,0,,136080,2883,,false
+466667,1,0,1,,,,False,False,,,False,,0,,200000,2883,,false

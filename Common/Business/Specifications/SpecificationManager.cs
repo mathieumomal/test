@@ -13,11 +13,13 @@ namespace Etsi.Ultimate.Business.Specifications
 {
     public class SpecificationManager : ISpecificationManager
     {
-
+        #region properties
         private ISpecificationRepository _specificationRepo;
 
         public IUltimateUnitOfWork UoW { get; set; }
+        #endregion
 
+        #region Get specifications
         /// <summary>
         /// Get all versions of the spec associated to their foundation CRs
         /// </summary>
@@ -128,6 +130,10 @@ namespace Etsi.Ultimate.Business.Specifications
                 }
             }
 
+            //Remove delete right which should be delivered thanks to another dedicated business part
+            if (personRights.HasRight(Enum_UserRights.Specification_Delete))
+                personRights.RemoveRight(Enum_UserRights.Specification_Delete, true);
+
             return new KeyValuePair<Specification, UserRightsContainer>(specification, personRights);
         }
 
@@ -195,6 +201,20 @@ namespace Etsi.Ultimate.Business.Specifications
         }
 
         /// <summary>
+        /// Get Specification details by using Number
+        /// </summary>
+        /// <param name="number">Specification Number</param>
+        /// <returns>Specification Details</returns>
+        public Specification GetSpecificationByNumber(string number)
+        {
+            var repo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            repo.UoW = UoW;
+            return repo.GetSpecificationByNumber(number);
+        }
+        #endregion
+
+        #region Related enums
+        /// <summary>
         /// Returns the list of all technologies.
         /// </summary>
         /// <returns></returns>
@@ -215,6 +235,7 @@ namespace Etsi.Ultimate.Business.Specifications
             _specificationRepo.UoW = UoW;
             return _specificationRepo.GetSeries();
         }
+        #endregion
 
         #region ISpecificationManager Membres
 
@@ -317,13 +338,16 @@ namespace Etsi.Ultimate.Business.Specifications
 
         #endregion
 
+        #region Spec Release rights
+
         /// <summary>
         /// See interface
         /// </summary>
         /// <param name="personId"></param>
         /// <param name="spec"></param>
+        /// <param name="shouldProvideRemoveRight">Should provide remove right (disable by default for performance reasons)</param>
         /// <returns></returns>
-        public List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, Specification spec)
+        public List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, Specification spec, bool shouldProvideRemoveRight = false)
         {
             var result = new List<KeyValuePair<Specification_Release, UserRightsContainer>>();
 
@@ -337,10 +361,23 @@ namespace Etsi.Ultimate.Business.Specifications
             releaseMgr.UoW = UoW;
             var releases = releaseMgr.GetAllReleases(personId).Key;
 
-            foreach (var sRel in spec.Specification_Release)
+            if (shouldProvideRemoveRight)
             {
-                result.Add(GetRightsForSpecRelease(userRights, personId, spec, sRel.Fk_ReleaseId, releases));
+                //Get list of release ids linked to this spec
+                var releaseIdsOfSpec = spec.Specification_Release.Select(x => x.Fk_ReleaseId).ToList();
+
+                //Get list of versions linked to this spec
+                var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+                specVersionRepo.UoW = UoW;
+                var versionsOfSpec = specVersionRepo.GetVersionsBySpecId(spec.Pk_SpecificationId);
+
+                result.AddRange(spec.Specification_Release.Select(sRel => GetRightsForSpecRelease(userRights, personId, spec, sRel.Fk_ReleaseId, releases, releaseIdsOfSpec, versionsOfSpec)));
             }
+            else
+            {
+                result.AddRange(spec.Specification_Release.Select(sRel => GetRightsForSpecRelease(userRights, personId, spec, sRel.Fk_ReleaseId, releases)));
+            }
+            
             return result;
         }
 
@@ -358,8 +395,9 @@ namespace Etsi.Ultimate.Business.Specifications
         /// <param name="spec">Specification</param>
         /// <param name="releaseId">Corresponding release</param>
         /// <param name="releases">List of all releases, in order to fetch some fields (such as status).</param>
+        /// <param name="version">Give version to give associated rights (default value : null)</param>
         /// <returns></returns>
-        public KeyValuePair<Specification_Release, UserRightsContainer> GetRightsForSpecRelease(UserRightsContainer userRights, int personId, Specification spec, int releaseId, List<Release> releases)
+        public KeyValuePair<Specification_Release, UserRightsContainer> GetRightsForSpecRelease(UserRightsContainer userRights, int personId, Specification spec, int releaseId, List<Release> releases, SpecVersion version = null)
         {
             var rights = new UserRightsContainer();
             var specRelease = spec.Specification_Release.FirstOrDefault(r => r.Fk_ReleaseId == releaseId && r.Fk_SpecificationId == spec.Pk_SpecificationId);
@@ -399,8 +437,12 @@ namespace Etsi.Ultimate.Business.Specifications
                 }
 
                 // Test the right of the user to upload/Allocate a version
-                // User have the right => Check if we need to remove it
-                if (rel != null && rel.Enum_ReleaseStatus.Code != Enum_ReleaseStatus.Closed)
+                // Conditions :
+                // - Release shoudl exists
+                // - Release should not be closed OR user should have the specific class : Versions_AllocateUpload_For_ReleaseClosed_Allowed
+                if (rel != null && 
+                    (rel.Enum_ReleaseStatus.Code != Enum_ReleaseStatus.Closed || 
+                    userRights.HasRight(Enum_UserRights.Versions_AllocateUpload_For_ReleaseClosed_Allowed)))
                 {
 
                     if (userRights.HasRight(Enum_UserRights.Versions_Upload))
@@ -434,17 +476,13 @@ namespace Etsi.Ultimate.Business.Specifications
                     if(userRights.HasRight(Enum_UserRights.Versions_Modify_MajorVersion))
                         rights.AddRight(Enum_UserRights.Versions_Modify_MajorVersion);
                 }
-
-                //Version edition rights
-                if (userRights.HasRight(Enum_UserRights.Versions_Edit))
-                    rights.AddRight(Enum_UserRights.Versions_Edit);
             }
 
             //Get the latest spec_release
             var latestSpecRelease = spec.Specification_Release.ToList().OrderByDescending(x => ((x.Release == null) ? 0 : (x.Release.SortOrder ?? 0))).First();
             //Get the latest release
             var latestRelease = releases.OrderByDescending(x => x.SortOrder ?? 0).First();
-
+            
             //Promote button should display only on latest spec_release, But, it should not display if it is already promoted to latest release
             if (userRights.HasRight(Enum_UserRights.Specification_Promote)
                 && (latestSpecRelease.Fk_ReleaseId == releaseId)
@@ -453,6 +491,22 @@ namespace Etsi.Ultimate.Business.Specifications
                 && (spec.IsActive))
             {
                 rights.AddRight(Enum_UserRights.Specification_Promote);
+            }
+
+            //Get the first spec_release
+            var firstSpecRelease = spec.Specification_Release.ToList().OrderBy(x => ((x.Release == null) ? 0 : (x.Release.SortOrder ?? 0))).First();
+            //Get the first release
+            var firstRelease = releases.OrderBy(x => x.SortOrder ?? 0).First();
+
+            /* Demote button should display only on first spec_release, 
+            But, it should not display if it is the initial release */
+            if (userRights.HasRight(Enum_UserRights.Specification_Demote)
+                && (firstSpecRelease.Fk_ReleaseId == releaseId)
+                && (firstRelease.Pk_ReleaseId != releaseId)
+                && (!spec.promoteInhibited.GetValueOrDefault())
+                && (spec.IsActive))
+            {
+                rights.AddRight(Enum_UserRights.Specification_Demote);
             }
 
             //InhibitPromote button should display only on latest spec_release
@@ -481,10 +535,72 @@ namespace Etsi.Ultimate.Business.Specifications
             if (userRights.HasRight(Enum_UserRights.Remarks_ViewPrivate))
                 rights.AddRight(Enum_UserRights.Remarks_ViewPrivate);
 
+            //Version edit right
+            if (userRights.HasRight(Enum_UserRights.Versions_Edit))
+                rights.AddRight(Enum_UserRights.Versions_Edit);
+
+            //If version provided 
+            //AND user have rights to delete draft version 
+            //AND version is draft (MajorVersion < 3) 
+            // -> give Version_Draft_Delete right
+            if(userRights.HasRight(Enum_UserRights.Version_Draft_Delete)
+                && version != null 
+                && version.MajorVersion != null 
+                && version.MajorVersion < 3)
+                rights.AddRight(Enum_UserRights.Version_Draft_Delete);
+
             return new KeyValuePair<Specification_Release, UserRightsContainer>(specRelease, rights);
         }
 
+        /// <summary>
+        /// Returns the list of user rights for a given release of a specification.
+        /// For each release, this method determines if user has right to:
+        /// - force transposition
+        /// - unforce transposition
+        /// - Withdraw from release
+        /// - Upload a version
+        /// - Allocate a version
+        /// - Remove the spec version
+        /// </summary>
+        /// <param name="userRights">Basic rights of the user</param>
+        /// <param name="personId">ID</param>
+        /// <param name="spec">Specification</param>
+        /// <param name="releaseId">Corresponding release</param>
+        /// <param name="releases">List of all releases, in order to fetch some fields (such as status).</param>
+        /// <param name="releaseIdsRelatedToThisSpec">List of release ids linked to the current spec</param>
+        /// <param name="specVersionsOfSpec">List of versions which belongs to this spec</param>
+        /// <returns></returns>
+        public KeyValuePair<Specification_Release, UserRightsContainer> GetRightsForSpecRelease(UserRightsContainer userRights, int personId, Specification spec, int releaseId, List<Release> releases, List<int> releaseIdsRelatedToThisSpec, List<SpecVersion> specVersionsOfSpec)
+        {
+            var globalRights = GetRightsForSpecRelease(userRights, personId, spec, releaseId, releases);
 
+            //Attribute remove right
+            var releaseOfSpecOrdered = releases.Where(x => releaseIdsRelatedToThisSpec.Contains(x.Pk_ReleaseId)).OrderByDescending(x => x.SortOrder).ToList();
+            var firstReleaseIdOfSpec = releaseOfSpecOrdered.First().Pk_ReleaseId;
+            var lastReleaseIdOfSpec = releaseOfSpecOrdered.Last().Pk_ReleaseId;
+
+            if (userRights.HasRight(Enum_UserRights.SpecificationRelease_Remove) &&
+                (releaseId == firstReleaseIdOfSpec || releaseId == lastReleaseIdOfSpec))
+            {
+                if (!specVersionsOfSpec.Any(
+                        x => x.Fk_ReleaseId == releaseId && x.Fk_SpecificationId == spec.Pk_SpecificationId))
+                    globalRights.Value.AddRight(Enum_UserRights.SpecificationRelease_Remove);
+                else
+                    globalRights.Value.AddRight(Enum_UserRights.SpecificationRelease_Remove_Disabled);
+            }
+
+            return new KeyValuePair<Specification_Release, UserRightsContainer>(globalRights.Key, globalRights.Value);
+        }
+
+        #endregion
+
+        #region Spec Release
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <param name="releaseId"></param>
+        /// <returns></returns>
         public Specification_Release GetSpecReleaseBySpecIdAndReleaseId(int specId, int releaseId)
         {
             var repo = RepositoryFactory.Resolve<ISpecificationRepository>();
@@ -493,6 +609,11 @@ namespace Etsi.Ultimate.Business.Specifications
             return specRelease;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="releaseId"></param>
+        /// <returns></returns>
         public List<Specification> GetSpecsRelatedToARelease(int releaseId)
         {
             var repo = RepositoryFactory.Resolve<ISpecificationRepository>();
@@ -502,16 +623,164 @@ namespace Etsi.Ultimate.Business.Specifications
         }
 
         /// <summary>
-        /// Get Specification details by using Number
+        /// Remove spec release
         /// </summary>
-        /// <param name="number">Specification Number</param>
-        /// <returns>Specification Details</returns>
-        public Specification GetSpecificationByNumber(string number)
+        /// <param name="specId"></param>
+        /// <param name="releaseId"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        public ServiceResponse<bool> RemoveSpecRelease(int specId, int releaseId, int personId)
         {
-            var repo = RepositoryFactory.Resolve<ISpecificationRepository>();
-            repo.UoW = UoW;
-            return repo.GetSpecificationByNumber(number);
+            var response = new ServiceResponse<bool>{Result = true};
+
+            //Get specification
+            _specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            _specificationRepo.UoW = UoW;
+            var specification = _specificationRepo.Find(specId);
+            if (specification == null)
+            {
+                response.Result = false;
+                response.Report.LogError(Localization.Error_Spec_Does_Not_Exist);
+                return response;
+            }
+
+            // Get releases
+            var releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
+            releaseMgr.UoW = UoW;
+            var releases = releaseMgr.GetAllReleases(personId).Key;
+
+            // Get user rights
+            var rightsManager = ManagerFactory.Resolve<IRightsManager>();
+            rightsManager.UoW = UoW;
+            var userRights = rightsManager.GetRights(personId);
+
+            //Get list of release ids linked to this spec
+            var releaseIdsOfSpec = specification.Specification_Release.Select(x => x.Fk_ReleaseId).ToList();
+            //Get list of versions linked to this spec
+            var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            specVersionRepo.UoW = UoW;
+            var versionsOfSpec = specVersionRepo.GetVersionsBySpecId(specification.Pk_SpecificationId);
+
+            //Get user rights for spec release
+            var specReleaseRights = GetRightsForSpecRelease(userRights, personId, specification, releaseId, releases, releaseIdsOfSpec, versionsOfSpec);
+
+            //Check right to remove
+            if (!specReleaseRights.Value.HasRight(Enum_UserRights.SpecificationRelease_Remove))
+            {
+                response.Result = false;
+                response.Report.LogError(Localization.RightError);
+            }
+
+            //Remove Spec-Release
+            if(response.Result)
+                _specificationRepo.DeleteSpecRelease(specId, releaseId);
+
+            return response;
         }
 
+        #endregion
+
+        #region Delete specifications
+
+        /// <summary>
+        /// Check if spec deletion is allowed
+        /// </summary>
+        /// <param name="specId">Spec id</param>
+        /// <param name="personId">Person id</param>
+        /// <returns>True if it's allowed and false with the list of info for the other case</returns>
+        public ServiceResponse<bool> CheckDeleteSpecificationAllowed(int specId, int personId)
+        {
+            var response = new ServiceResponse<bool>{Result = true};
+
+            //[0] User should have spec delete right
+            var rightsManager = ManagerFactory.Resolve<IRightsManager>();
+            rightsManager.UoW = UoW;
+            var userRights = rightsManager.GetRights(personId);
+            if (!userRights.HasRight(Enum_UserRights.Specification_Delete))
+            {
+                response.Result = false;
+                response.Report.LogError(Localization.RightError);
+                return response;
+            }
+
+            //[1] Spec should exist
+            var specRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            specRepo.UoW = UoW;
+            var uid = specRepo.SpecExists(specId);
+            if (uid == null)
+            {
+                response.Result = false;
+                response.Report.LogError(Localization.Error_Spec_Does_Not_Exist);
+                return response;
+            }
+
+            //(Required elements)
+            var warnings = new List<string>();
+            var specVersionsRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            specVersionsRepo.UoW = UoW;
+
+
+            //[2] Do not allowed deletion if related versions already uploaded
+            var versionsAlreadyUploaded = specVersionsRepo.AlreadyUploadedVersionsForSpec(specId);
+            if (versionsAlreadyUploaded.Count > 0)
+            {
+                warnings.Add(string.Format(Localization.Specification_Delete_Versions_Already_Uploaded, versionsAlreadyUploaded.Count));
+            }
+
+            //[3] Do not allowed deletion if related versions are linked to CR(s)
+            var versionsLinkedToCrs = specVersionsRepo.VersionsLinkedToChangeRequestsForSpec(specId);
+            if (versionsLinkedToCrs.Count > 0)
+            {
+                var crsCount = versionsLinkedToCrs.Sum(version => version.CurrentChangeRequests.Count);
+                warnings.Add(string.Format(Localization.Specification_Delete_Linked_Crs, crsCount));
+            }
+ 
+            //[4] Do not allowed deletion if related versions are linked to TDoc(s)
+            var viewContributionWithAddData =
+                RepositoryFactory.Resolve<IViewContributionsWithAditionnalDataRepository>();
+            viewContributionWithAddData.UoW = UoW;
+            var tdocsRelatedToSomeVersion = viewContributionWithAddData.FindContributionsRelatedToASpec(specId);
+            if (tdocsRelatedToSomeVersion.Count > 0)
+            {
+                warnings.Add(string.Format(Localization.Specification_Delete_Linked_Tdocs, tdocsRelatedToSomeVersion.Count));
+            }
+
+
+            //Check for warnings : if at least one warning detected -> do not allowed deletion and precise reason why
+            if (warnings.Count > 0)
+            {
+                response.Result = false;
+                response.Report.WarningList.Add(Localization.Specification_Delete_Warnings_Title);
+                warnings.ForEach(x => response.Report.WarningList.Add(x));
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Delete spec with all its related records
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        public ServiceResponse<bool> DeleteSpecification(int specId, int personId)
+        {
+            var response = new ServiceResponse<bool> { Result = true };
+
+            //Check right
+            var rightResponse = CheckDeleteSpecificationAllowed(specId, personId);
+            if (!rightResponse.Result)
+                return new ServiceResponse<bool>{Result = false, Report = new Report{ErrorList = new List<string>{Localization.RightError}}};
+            
+            //Delete spec
+            _specificationRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
+            _specificationRepo.UoW = UoW;
+            var deleteResult = _specificationRepo.DeleteSpecification(specId);
+            return !deleteResult ? 
+                new ServiceResponse<bool> { Result = false, Report = new Report { ErrorList = new List<string> { Localization.Error_Spec_Does_Not_Exist } } } : 
+                response;
+        } 
+
+        #endregion
     }
 }

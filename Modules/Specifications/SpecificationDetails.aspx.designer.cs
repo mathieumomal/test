@@ -13,6 +13,15 @@ namespace Etsi.Ultimate.Module.Specifications {
     public partial class SpecificationDetails {
         
         /// <summary>
+        /// Contrôle RadCodeBlockVersion.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadCodeBlock RadCodeBlockVersion;
+        
+        /// <summary>
         /// Contrôle specificationDetailsForm.
         /// </summary>
         /// <remarks>
@@ -427,6 +436,15 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.WebControls.LinkButton ExitBtn;
         
         /// <summary>
+        /// Contrôle DeleteBtn.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton DeleteBtn;
+        
+        /// <summary>
         /// Contrôle RadWindowManager1.
         /// </summary>
         /// <remarks>
@@ -479,5 +497,32 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnCancelFailure;
+        
+        /// <summary>
+        /// Contrôle ConfirmDeleteWindow.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadWindow ConfirmDeleteWindow;
+        
+        /// <summary>
+        /// Contrôle btnConfirmDelete.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnConfirmDelete;
+        
+        /// <summary>
+        /// Contrôle btnCancelDelete.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCancelDelete;
     }
 }

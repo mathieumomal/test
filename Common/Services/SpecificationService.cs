@@ -8,6 +8,7 @@ using Etsi.Ultimate.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Services
@@ -148,16 +149,9 @@ namespace Etsi.Ultimate.Services
 
 
                     // Getting list of specification releases
-                    var releases = new List<Release>();
                     var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
                     releaseManager.UoW = uoW;
-                    foreach (Specification_Release item in spec.Specification_Release.ToList())
-                    {
-                        var releaseObj = releaseManager.GetReleaseById(personId, item.Fk_ReleaseId).Key;
-                        if (releaseObj != null)
-                            releases.Add(releaseObj);
-                    }
-                    spec.SpecificationReleases = releases;
+                    spec.SpecificationReleases = releaseManager.GetReleasesLinkedToASpec(specificationId);
                 }
                 return result;
             }
@@ -340,12 +334,6 @@ namespace Etsi.Ultimate.Services
                     var editSpec = editAction.EditSpecification(personId, spec);
                     uoW.Save();
                     return new KeyValuePair<int, Report>(editSpec.Key.Pk_SpecificationId, editSpec.Value);
-
-                    /*var status = editAction.EditSpecification(personId, spec);
-                    if (!status)
-                        throw new Exception("Could not update specification");
-                    uoW.Save();
-                    return new KeyValuePair<bool, Report>(true, new Report());*/
                 }
                 catch (Exception e)
                 {
@@ -500,7 +488,7 @@ namespace Etsi.Ultimate.Services
             {
                 var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
                 specMgr.UoW = uow;
-                return specMgr.GetRightsForSpecReleases(personId, spec);
+                return specMgr.GetRightsForSpecReleases(personId, spec, true);
             }
         }
 
@@ -551,6 +539,32 @@ namespace Etsi.Ultimate.Services
                 catch (Exception e)
                 {
                     LogManager.Error("Promote Specification Error: " + e.Message);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Demote Specification to previous release
+        /// </summary>
+        /// <param name="personId">Person ID</param>
+        /// <param name="specificationId">Specification ID</param>
+        /// <param name="currentReleaseId">Current Release ID</param>
+        /// <returns>True/False</returns>
+        public bool DemoteSpecification(int personId, int specificationId, int currentReleaseId)
+        {
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var specDemoteAction = new SpecificationDemoteAction(uow);
+                    specDemoteAction.DemoteSpecification(personId, specificationId, currentReleaseId);
+                    uow.Save();
+                }
+                catch (Exception e)
+                {
+                    LogManager.Error("Demote Specification Error: " + e.Message);
                     return false;
                 }
             }
@@ -610,6 +624,94 @@ namespace Etsi.Ultimate.Services
 
             return statusChangeReport;
         }
+
+        /// <summary>
+        /// Delete spec release
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <param name="releaseId"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        public ServiceResponse<bool> RemoveSpecRelease(int specId, int releaseId, int personId)
+        {
+            var response = new ServiceResponse<bool>{Result = true};
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var manager = new SpecificationManager { UoW = uow };
+                    response = manager.RemoveSpecRelease(specId, releaseId, personId);
+                    uow.Save();
+                }
+                catch (Exception e)
+                {
+                    LogManager.Error(string.Format("Error occured when trying to delete spec release -> SpecId:{0}, ReleaseId:{1}, Error: {2}", specId, releaseId,e.Message));
+                    response.Report.LogError(Localization.GenericError);
+                    response.Result = false;
+                }
+            }
+            return response;
+        }
+
+        #region Delete specification
+        /// <summary>
+        /// Delete spec with all its related records
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <param name="personId"></param>
+        /// <returns></returns>
+        public ServiceResponse<bool> DeleteSpecification(int specId, int personId)
+        {
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    LogManager.InfoFormat("Trying to remove spec: {0} by user: {1}", specId, personId);
+                    var manager = new SpecificationManager { UoW = uow };
+                    var response = manager.DeleteSpecification(specId, personId);
+
+                    if (response.Result && response.Report.GetNumberOfErrors() <= 0)
+                        uow.Save();
+                    else
+                    {
+                        LogManager.ErrorFormat("System not able to delete spec: {0} for user: {1} because of next reason(s)", specId, personId);
+                        response.Report.ErrorList.ForEach(LogManager.Error);
+                    }
+                        
+                    return response;
+                }
+                catch (Exception e)
+                {
+                    LogManager.Error(string.Format("Error occured when trying to delete spec -> SpecId:{0}", specId), e);
+                    return new ServiceResponse<bool>{Result = false, Report = new Report{ErrorList = new List<string>{Localization.GenericError}}};
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check if spec deletion is allowed
+        /// </summary>
+        /// <param name="specId">Spec id</param>
+        /// <param name="personId">Person id</param>
+        /// <returns>True if it's allowed and false with the list of error for the other case</returns>
+        public ServiceResponse<bool> CheckDeleteSpecificationAllowed(int specId, int personId)
+        {
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                try
+                {
+                    var manager = new SpecificationManager { UoW = uow };
+                    return manager.CheckDeleteSpecificationAllowed(specId, personId);
+                }
+                catch (Exception e)
+                {
+                    LogManager.Error(string.Format("Error occured when trying to check if user have right to delete spec -> SpecId:{0}", specId), e);
+                    return new ServiceResponse<bool>{ Result = false, Report = new Report{ErrorList = new List<string>{Localization.GenericError}}};
+                }
+            }
+        }
+
+        #endregion
 
         #endregion
     }

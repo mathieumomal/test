@@ -9,8 +9,8 @@ REM The following directory is for .NET 4.0
 SET DOTNETFX4=%SystemRoot%\Microsoft.NET\Framework\v4.0.30319
 SET PATH=%PATH%;%DOTNETFX4%
 
-REM The following directory is for VS2012
-SET VS2012=C:\Program Files\Microsoft Visual Studio 11.0\Common7\IDE
+REM The following directory is for VS2013
+SET VS2012=C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE
 SET PATH=%PATH%;%VS2012%
 
 SET SOLUTION_PATH_USERRIGHTS="%BASE_PATH_USERRIGHTS%\UserRightsService.sln"

@@ -2,18 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Etsi.Ultimate.DomainClasses;
-using Etsi.Ultimate.DataAccess;
 using System.Data.Entity;
 
 namespace Etsi.Ultimate.Repositories
 {
     public class SpecVersionsRepository : ISpecVersionsRepository
     {
-        private IUltimateContext _context;
-        public SpecVersionsRepository(IUltimateUnitOfWork iUoW)
-        {
-            _context = iUoW.Context;
-        }
+        public IUltimateUnitOfWork UoW { get; set; }
 
         #region IEntityRepository<SpecVersionRepository> Membres
 
@@ -60,9 +55,9 @@ namespace Etsi.Ultimate.Repositories
             return All.Where(x => (x.Fk_SpecificationId != null) ? x.Fk_SpecificationId.Value == specificationId : false).ToList();
         }
 
-        public List<SpecVersion> GetVersionsByReleaseId(int ReleaseId)
+        public List<SpecVersion> GetVersionsByReleaseId(int releaseId)
         {
-            return AllIncluding().Where(x => (x.Fk_ReleaseId != null) ? x.Fk_ReleaseId.Value == ReleaseId : false).ToList();
+            return AllIncluding().Where(x => (x.Fk_ReleaseId != null) ? x.Fk_ReleaseId.Value == releaseId : false).ToList();
         }
 
         public int CountVersionsPendingUploadByReleaseId(int releaseMajorVersion)
@@ -120,9 +115,13 @@ namespace Etsi.Ultimate.Repositories
                                                 && versionsOptional.Contains(v.MajorVersion)).ToList();
         }
 
-        public void Delete(int id)
+        /// <summary>
+        /// Remove version
+        /// </summary>
+        /// <param name="version"></param>
+        public void Delete(SpecVersion version)
         {
-            throw new InvalidOperationException("Cannot delete Version entity");
+            UoW.Context.SpecVersions.Remove(version);
         }
 
         /// <summary>
@@ -181,7 +180,46 @@ namespace Etsi.Ultimate.Repositories
 
         #endregion
 
-        public IUltimateUnitOfWork UoW { get; set; }
+        public void Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Get already uploaded versions for a spec
+        /// </summary>
+        /// <returns>List of versions of this spec already uploaded</returns>
+        public List<SpecVersion> AlreadyUploadedVersionsForSpec(int specId)
+        {
+            return
+                UoW.Context.SpecVersions.Where(x => x.Fk_SpecificationId == specId && (!string.IsNullOrEmpty(x.Location) || x.DocumentUploaded != null))
+                    .ToList();
+        }
+
+        /// <summary>
+        /// Get versions of a spec linked to some CRs 
+        /// </summary>
+        /// <param name="specId">Spec id</param>
+        /// <returns>List of versions of this spec linked to CRs (with CRs objects)</returns>
+        public List<SpecVersion> VersionsLinkedToChangeRequestsForSpec(int specId)
+        {
+            return
+                UoW.Context.SpecVersions.Include(x => x.CurrentChangeRequests).Include(x => x.FoundationsChangeRequests)
+                    .Where(x => x.Fk_SpecificationId == specId && (x.CurrentChangeRequests.Count > 0 || x.FoundationsChangeRequests.Count > 0))
+                    .ToList();
+        }
+
+        /// <summary>
+        /// Find list of crs linked to a version
+        /// </summary>
+        /// <param name="versionId">version id</param>
+        /// <returns>List of versions</returns>
+        public SpecVersion FindCrsLinkedToAVersion(int versionId)
+        {
+            return
+                UoW.Context.SpecVersions.Include(x => x.CurrentChangeRequests).Include(x => x.FoundationsChangeRequests)
+                    .FirstOrDefault(x => x.Pk_VersionId == versionId);
+        }
     }
     public interface ISpecVersionsRepository : IEntityRepository<SpecVersion>
     {
@@ -210,14 +248,14 @@ namespace Etsi.Ultimate.Repositories
         /// <summary>
         /// Return a list of SpecVersion for a release
         /// </summary>
-        /// <param name="ReleaseId">Release identifier</param>
+        /// <param name="releaseId">Release identifier</param>
         /// <returns></returns>
-        List<SpecVersion> GetVersionsByReleaseId(int ReleaseId);
+        List<SpecVersion> GetVersionsByReleaseId(int releaseId);
 
         /// <summary>
         /// Count the number of version which pending upload for a release
         /// </summary>
-        /// <param name="ReleaseMajorNumber"> The 3G decimal number of version, that is used to determine.</param>
+        /// <param name="releaseMajorNumber"> The 3G decimal number of version, that is used to determine.</param>
         /// <returns></returns>
         int CountVersionsPendingUploadByReleaseId(int releaseMajorNumber);
 
@@ -231,7 +269,7 @@ namespace Etsi.Ultimate.Repositories
         /// <summary>
         /// Returns all specifications given a specification Ids and a list of allowed major versions
         /// </summary>
-        /// <param name="list"></param>
+        /// <param name="specIds"></param>
         /// <param name="allowedMajorVersions"></param>
         /// <returns></returns>
         List<SpecVersion> GetVersionsBySpecIds(List<int> specIds, List<int> allowedMajorVersions);
@@ -261,5 +299,31 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="version"></param>
         /// <returns></returns>
         void UpdateVersion(SpecVersion version);
+
+        /// <summary>
+        /// Remove version
+        /// </summary>
+        /// <param name="version"></param>
+        void Delete(SpecVersion version);
+
+        /// <summary>
+        /// Get uploaded versions for a spec
+        /// </summary>
+        /// <returns>List of versions of this spec already uploaded</returns>
+        List<SpecVersion> AlreadyUploadedVersionsForSpec(int specId);
+
+        /// <summary>
+        /// Get versions of a spec linked to some CRs 
+        /// </summary>
+        /// <param name="specId">Spec id</param>
+        /// <returns>List of versions of this spec linked to CRs</returns>
+        List<SpecVersion> VersionsLinkedToChangeRequestsForSpec(int specId);
+
+        /// <summary>
+        /// Find list of crs linked to a version
+        /// </summary>
+        /// <param name="versionId">version id</param>
+        /// <returns>List of versions</returns>
+        SpecVersion FindCrsLinkedToAVersion(int versionId);
     }
 }

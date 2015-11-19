@@ -66,5 +66,7 @@ namespace Etsi.Ultimate.DomainClasses
                 return sb.ToString();
             }
         }
+
+        public string TdocLink { get; set; }
     }
 }

@@ -14,10 +14,14 @@
     <script src="JS/jquery.min.js"></script>
     <script src="JS/jquery-validate.min.js"></script>
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-    <script src="JS/VersionPopup.js"></script>
+    <telerik:RadCodeBlock ID="RadCodeBlockVersion" runat="server">
+        <script src="JS/VersionPopup.js?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>"></script>
+    </telerik:RadCodeBlock>
 </head>
 <body>
     <form id="frmVersionPopup" runat="server">
+        <asp:HiddenField runat="server" ID="isDraftVersionhf"/>
+        <asp:HiddenField runat="server" ID="versionSavedhf"/>
         <telerik:RadScriptManager runat="server" ID="rsmVersionPopup" EnableHandlerDetection="false" EnablePartialRendering="False"/>
         <telerik:RadAjaxManager ID="ramVersionPopup" runat="server" EnablePageHeadUpdate="false" UpdatePanelsRenderMode="Inline">
         </telerik:RadAjaxManager>
@@ -34,7 +38,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Version <span class="mandatoryIndicator" title="my mandatory field">*</span>:</td>
+                        <td>Version <asp:Label runat="server" ID="VersionLblMandatory" CssClass="mandatoryIndicator" Text="*"></asp:Label>:</td>
                         <td>
                             <!-- EDIT MODE -->
                             <asp:Panel runat="server" ID="versionInEditMode">
@@ -63,12 +67,22 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Meeting <span class="mandatoryIndicator" title="my mandatory field">*</span>:</td>
+                        <td>Meeting <asp:Label runat="server" ID="MeetingLblMandatory" CssClass="mandatoryIndicator meetingMandatoryIndicator" Text="*"></asp:Label>:</td>
                         <td>
                             <!-- EDIT MODE -->
-                            <ult:meetingcontrol runat="server" ID="meetingCtrl" class="test" />
+                            <ult:meetingcontrol runat="server" ID="meetingCtrl"/>
                             <!-- VIEW MODE -->
                             <asp:Label runat="server" ID="lblMeeting"></asp:Label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Release <asp:Label runat="server" ID="ReleaseLblMandatory" CssClass="mandatoryIndicator" Text="*"></asp:Label>:</td>
+                        <td>
+                            <!-- EDIT MODE -->
+                            <telerik:RadComboBox ID="rcbRelease" runat="server">
+                            </telerik:RadComboBox>
+                            <!-- VIEW MODE -->
+                            <asp:Label runat="server" ID="lblRelease"></asp:Label>
                         </td>
                     </tr>
                 </table>
@@ -85,6 +99,19 @@
                 <!-- VIEW MODE -->
                 <asp:Button ID="btnEdit" runat="server" Text="Edit" CssClass="btn3GPP-success" OnClick="btnEdit_Click" />
                 <asp:Button ID="btnClose" runat="server" Text="Close" CssClass="btn3GPP-success" OnClientClick="return closeRadWindow()" />
+                <asp:Button ID="btnDelete" runat="server" Visible="False" Text="Delete" CssClass="btn3GPP-delete" OnClick="btnDelete_OnClick"/>
+            </div>
+        </asp:Panel>
+        <asp:Panel ID="ConfirmDeletePanel" CssClass="confirmDeletePnl" runat="server" Visible="False">
+            <p><asp:Label runat="server" ID="confirmMessage" CssClass="TextBloc"></asp:Label></p>
+            <div class="btns">
+                <asp:Button ID="btnConfirmDelete" runat="server" Text="Confirm delete" CssClass="btn3GPP-success" OnClick="btnConfirmDelete_OnClick"/>
+                <asp:Button ID="btnCancelDelete" runat="server" Text="Cancel" CssClass="btn3GPP-success" OnClick="btnCancelDelete_OnClick"/>
+            </div>
+        </asp:Panel>
+        <asp:Panel ID="FinishPanel" CssClass="finishPnl" runat="server" Visible="False">
+            <div class="btns">
+                <asp:Button ID="btnFinishClose" runat="server" Text="Close" CssClass="btn3GPP-success" OnClientClick="return closeAndRefresh()"/>
             </div>
         </asp:Panel>
     </form>

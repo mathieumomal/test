@@ -43,19 +43,19 @@ namespace Etsi.Ultimate.Controls
             {
                 var releaseIds = value;
 
-                RadButton rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
-                RadButton rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
-                RadButton rbCustomSelection = (RadButton)rcbReleases.Items[0].FindControl("rbCustomSelection");
-                rbAllReleases.Checked = rbOpenReleases.Checked = rbAllReleases.Checked = false;
+                var rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
+                var rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
+                var rbCustomSelection = (RadButton)rcbReleases.Items[0].FindControl("rbCustomSelection");
+                rbAllReleases.Checked = rbOpenReleases.Checked = rbCustomSelection.Checked = false;
 
-                var AllReleases = rbAllReleases.Attributes["Value"].Split(',').Select(int.Parse).ToList();
-                //if list of release ids is list of all releases OR release ids list contains 0 then all releases will be selected
-                if (releaseIds.OrderBy(x => x).SequenceEqual(AllReleases.OrderBy(x => x)) || releaseIds.Contains(0))
+                var allReleases = rbAllReleases.Attributes["Value"].Split(',').Select(int.Parse).ToList();
+                //if list of release ids is list of all releases OR release ids list is empty then all releases will be selected
+                if (releaseIds.OrderBy(x => x).SequenceEqual(allReleases.OrderBy(x => x)) || releaseIds.Count == 0)
                     rbAllReleases.Checked = true;
                 else
                 {
-                    var OpenReleases = rbOpenReleases.Attributes["Value"].Split(',').Select(int.Parse).ToList();
-                    if (releaseIds.OrderBy(x => x).SequenceEqual(OpenReleases.OrderBy(x => x)))
+                    var openReleases = rbOpenReleases.Attributes["Value"].Split(',').Select(int.Parse).ToList();
+                    if (releaseIds.OrderBy(x => x).SequenceEqual(openReleases.OrderBy(x => x)))
                         rbOpenReleases.Checked = true;
                     else
                     {
@@ -152,12 +152,11 @@ namespace Etsi.Ultimate.Controls
                 //Bind All Releases
                 RadButton rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
                 rbAllReleases.Attributes.Add("Value", String.Join(",", allReleaseIds));
+                rbAllReleases.Checked = true;
 
                 //Bind Open Releases
                 RadButton rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
                 rbOpenReleases.Attributes.Add("Value", String.Join(",", openReleaseIds));
-                rbOpenReleases.Checked = true;
-
 
 
                 //Assign javascript events - this.ClientId is added to make the js method unique to the calling control
@@ -183,9 +182,8 @@ namespace Etsi.Ultimate.Controls
         /// </summary>
         public void Reset()
         {
-            System.Web.UI.ScriptManager.RegisterStartupScript(this, this.GetType(), "Reset", "ResetToAllReleases();", true);
-            RadButton rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
-            this.SelectedReleaseIds = rbOpenReleases.Attributes["Value"].Split(',').Select(int.Parse).ToList();
+            System.Web.UI.ScriptManager.RegisterStartupScript(this, GetType(), "Reset", "ResetToAllReleases" + ClientID + "();", true);
+            SelectedReleaseIds = new List<int>();
         }
         #endregion
     }

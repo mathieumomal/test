@@ -35,12 +35,6 @@
     padding: 0 !important;
 }
 
-
-.specificationDetailsBody, .ErrorTxt, .InfoTxt {
-    font-family: Arial,verdana,Serif;
-    font-size: 12px;
-}
-
 .TabContent {
     margin: 10px;
     font: Arial 12px Black;
@@ -51,6 +45,37 @@
     width: 650px;
 }
 
+.specDetailform {
+    font-family: Arial,verdana,Serif;
+    font-size: 12px;
+}
+.specificationDetailsBody, .ErrorTxt, .InfoTxt {
+    font-family: Arial,verdana,Serif;
+    font-size: 12px;
+}
+.ErrorTxt, .InfoTxt {
+    margin: 0 0 0 7%;
+	display: block;
+}
+.Spec_Edit_Error {
+    border: 1px solid;
+    margin: 5px 0px;
+    padding: 5px 5px 5px 5px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    color: #D8000C;
+    background-color: #FFBABA;
+    background-image: url('images/error.png');
+}
+
+.Spec_Edit_Info {
+    border: 1px solid rgba(2, 139, 255, 0.2);
+    margin: 5px 0px;
+    padding: 5px 5px 5px 5px;
+    color: #444444;
+    background-color: rgba(2, 139, 255, 0.15);
+
+}
 
 #SpecificationDetailsRadMultiPage fieldset {
     margin: 2%;
@@ -89,11 +114,6 @@ legend {
     color: #D8000C;
     background-color: #FFBABA;
     background-image: url('images/error.png');
-}
-
-.ErrorTxt, .InfoTxt {
-    margin: 0 0 0 7%;
-	display: block;
 }
 
 .TabLineLeft {
@@ -138,25 +158,6 @@ legend {
     padding: 5px;
 }
 
-.Spec_Edit_Error {
-    border: 1px solid;
-    margin: 5px 0px;
-    padding: 5px 5px 5px 5px;
-    background-repeat: no-repeat;
-    background-position: 10px center;
-    color: #D8000C;
-    background-color: #FFBABA;
-    background-image: url('images/error.png');
-}
-
-.Spec_Edit_Info {
-    border: 1px solid rgba(2, 139, 255, 0.2);
-    margin: 5px 0px;
-    padding: 5px 5px 5px 5px;
-    color: #444444;
-    background-color: rgba(2, 139, 255, 0.15);
-
-}
 
 span.requiredField {
     color: red;
@@ -220,6 +221,15 @@ span.requiredField {
 
 .icon_display_size {
     height: 28px;
+}
+.icon_display_size_remove {
+    height: 23px;
+    padding: 2px;
+}
+.icon_display_size_remove:disabled {
+    -ms-opacity: 0.5;
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 .float-right {
@@ -286,4 +296,30 @@ span.requiredField {
 
 #RadPageGeneral, #RadPageResponsibility {padding-top: 20px;}
 
+#componentSpecList .rgInfoPart {
+    display: block !important;
+}
 
+
+
+/* ----- POPUPS ----- */
+/*Remove Spec-Release*/
+#frmRemoveSpecRelease {
+    font-family: Arial,verdana,Serif;
+}
+#frmRemoveSpecRelease.popup .footer {
+    position: relative; top: 10px; text-align:right;
+}
+#frmRemoveSpecRelease.popup .contentModal div.InfoTxt {
+    margin: 45px 0;
+    text-align: center;
+}
+
+/*Confirm deletion*/
+.confirmDeleteWindow .header{
+    padding: 20px 10px;
+}
+.confirmDeleteWindow .footer{
+    text-align: right;
+    padding: 10px 10px;
+}

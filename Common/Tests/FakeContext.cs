@@ -191,5 +191,18 @@ namespace Etsi.Ultimate.Tests
                 throw new NotImplementedException();
             }
         }
+
+
+        public System.Data.Entity.IDbSet<View_ContributionsWithAditionnalData> View_ContributionsWithAditionnalData
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

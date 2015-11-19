@@ -77,6 +77,36 @@ namespace Etsi.Ultimate.WCF.Service
             return releases;
         }
 
+
+        /// <summary>
+        /// Gets the releases filtered by status.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="releaseStatus">release status id</param>
+        /// <returns>List of releases</returns>
+        internal List<UltimateServiceEntities.Release> GetReleasesByStatus(int personId, ReleaseStatus releaseStatus)
+        {
+            var releases = new List<UltimateServiceEntities.Release>();
+
+            try
+            {
+                var svc = ServicesFactory.Resolve<IReleaseService>();
+                var releaseRightsObjects = svc.GetAllReleasesByStatus(personId,
+                    ConvertUltimateReleaseStatusEnumToDomainReleaseStatusEnum(releaseStatus));
+
+                if (releaseRightsObjects.Key != null)
+                    releaseRightsObjects.Key.ForEach(x => releases.Add(ConvertUltimateReleaseToServiceRelease(x)));
+                else
+                    LogManager.Error(String.Format(ConstErrorTemplateGetReleases, "Failed to get release details"));
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format(ConstErrorTemplateGetReleases, ex.Message));
+            }
+
+            return releases;
+        }
+
         /// <summary>
         /// Gets the release by identifier.
         /// </summary>
@@ -926,6 +956,34 @@ namespace Etsi.Ultimate.WCF.Service
             return specVersions;
         }
 
+        /// <summary>
+        /// Unlink tdoc from related version
+        /// </summary>
+        /// <param name="uid">Tdoc uid</param>
+        /// <param name="personId"></param>
+        /// <returns>True for success case</returns>
+        public ServiceResponse<bool> UnlinkTdocFromVersion(string uid, int personId)
+        {
+            var svcResponse = new ServiceResponse<bool> { Report = new ServiceReport() };
+            try
+            {
+                var specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
+                var response = specVersionSvc.UnlinkTdocFromVersion(uid, personId);
+
+                svcResponse.Result = (response.Report.ErrorList.Count <= 0);
+                svcResponse.Report.ErrorList.AddRange(response.Report.ErrorList);
+                svcResponse.Report.WarningList.AddRange(response.Report.WarningList);
+                svcResponse.Report.InfoList.AddRange(response.Report.InfoList);
+            }
+            catch (Exception ex)
+            {
+                svcResponse.Result = false;
+                svcResponse.Report.ErrorList.Add(ex.Message);
+                LogManager.Error("Unexpected error occured when system trying to unlink tdoc from version", ex);
+            }
+            return svcResponse;
+        }
+
         #endregion
 
         #region Private Methods
@@ -944,6 +1002,30 @@ namespace Etsi.Ultimate.WCF.Service
                 Description = ultimateCrCategory.Description
             };
             return svcCrCategory;
+        }
+
+        /// <summary>
+        /// Converts release status enum to domain release status.
+        /// </summary>
+        /// <param name="releaseStatus">the release status</param>
+        /// <returns>Service release entity</returns>
+        private string ConvertUltimateReleaseStatusEnumToDomainReleaseStatusEnum(ReleaseStatus releaseStatus)
+        {
+            string result = string.Empty;
+
+            switch (releaseStatus)
+            {
+                case ReleaseStatus.Closed:
+                    result = UltimateEntities.Enum_ReleaseStatus.Closed;
+                    break;
+                case ReleaseStatus.Frozen:
+                    result = UltimateEntities.Enum_ReleaseStatus.Frozen;
+                    break;
+                case ReleaseStatus.Open:
+                    result = UltimateEntities.Enum_ReleaseStatus.Open;
+                    break;
+            }
+            return result;
         }
 
         /// <summary>
@@ -1000,6 +1082,8 @@ namespace Etsi.Ultimate.WCF.Service
                 serviceSpecification.SpecNumberAndTitle = ultimateSpecification.SpecNumberAndTitle;
                 if (ultimateSpecification.PrimeResponsibleGroup != null)
                     serviceSpecification.PrimaryResponsibleGroup_CommunityId = ultimateSpecification.PrimeResponsibleGroup.Fk_commityId;
+                serviceSpecification.IsActive = ultimateSpecification.IsActive;
+                serviceSpecification.IsUcc = ultimateSpecification.IsUnderChangeControl;
             }
             return serviceSpecification;
         }

@@ -67,9 +67,54 @@ namespace Etsi.Ultimate.Business.Versions
 
             var specificationManager = new SpecificationManager { UoW = UoW };
             //Get calculated rights
-            var specReleaseRights = specificationManager.GetRightsForSpecRelease(personRights, personId, version.Specification, version.Release.Pk_ReleaseId, releases);
+            var specReleaseRights = specificationManager.GetRightsForSpecRelease(personRights, personId, version.Specification, version.Release.Pk_ReleaseId, releases, version);
 
             return new KeyValuePair<SpecVersion, UserRightsContainer>(version, specReleaseRights.Value);
+        }
+
+        /// <summary>
+        /// Delete a specification version
+        /// </summary>
+        /// <param name="personId">UserId to check rights</param>
+        /// <param name="versionId">Version Id</param>
+        /// <returns>serviceResponse</returns>
+        public ServiceResponse<bool> DeleteVersion(int personId, int versionId)
+        {
+            var result = new ServiceResponse<bool> { Result = false };
+            var repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            repo.UoW = UoW;
+
+            var version = repo.Find(versionId);
+            if (version == null) // Version not found
+            {
+                result.Result = false;
+                result.Report.ErrorList.Add(Localization.Version_Not_Found);
+                return result;
+            }
+
+            if (version.MajorVersion > 2) // version has not draft status
+            {
+                result.Result = false;
+                result.Report.ErrorList.Add(Localization.Version_not_Delete_ucc);
+                return result;
+            }
+            
+            // Computes the rights of the user. These are independant from the releases.
+            var rightManager = ManagerFactory.Resolve<IRightsManager>();
+            rightManager.UoW = UoW;
+            var personRights = rightManager.GetRights(personId);
+
+            if (!personRights.HasRight(Enum_UserRights.Version_Draft_Delete)) // Check if user is spec manager
+            {
+                result.Result = false;
+                result.Report.ErrorList.Add(Localization.Version_Delete_Not_Allowed);
+                return result;
+            }
+
+            repo.Delete(version);
+            result.Result = true;
+
+            return result;
         }
 
         /// <summary>
@@ -240,9 +285,23 @@ namespace Etsi.Ultimate.Business.Versions
             var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
             specVersionRepo.UoW = UoW;
             var versions = specVersionRepo.GetVersionsBySpecId(specId);
-            if (versions.Exists(x => x.MajorVersion == majorVersion && x.TechnicalVersion == technicalVersion && x.EditorialVersion == editorialVersion))
+            var dbversion = versions.FirstOrDefault(x => x.MajorVersion == majorVersion
+                    && x.TechnicalVersion == technicalVersion
+                        && x.EditorialVersion == editorialVersion);
+
+            if (dbversion != null)
             {
-                svcResponse.Result = true;
+                if (dbversion.Fk_ReleaseId == releaseId)
+                {
+                    svcResponse.Result = true;
+                }
+                else
+                {
+                    /* throw error when version exists but release doesn't correspond */
+                    svcResponse.Report.LogError(Localization.Wrong_Release_Version);
+                    svcResponse.Result = false;
+                }
+
                 return svcResponse;
             }
 
@@ -278,13 +337,124 @@ namespace Etsi.Ultimate.Business.Versions
                   && (userRights.HasRight(Enum_UserRights.Versions_Allocate) 
                     || spec.SpecificationRapporteurs.Any(x => x.Fk_RapporteurId == personId && x.IsPrime))))
             {
-                svcResponse.Report.LogError(Localization.RightError);
+                if (specRelease.isWithdrawn.GetValueOrDefault())
+                {
+                    svcResponse.Report.LogError(Localization.Specification_reserve_withdrawn_error);
+                }
+                else
+                {
+                    svcResponse.Report.LogError(Localization.RightError);
+                }
+
                 svcResponse.Result = false;
                 return svcResponse;
             }
 
 
             return svcResponse;
+        }
+
+        /// <summary>
+        /// Unlink tdoc from related version
+        /// </summary>
+        /// <param name="uid">Tdoc uid</param>
+        /// <param name="personId"></param>
+        /// <returns>True for success case</returns>
+        public ServiceResponse<bool> UnlinkTdocFromVersion(string uid, int personId)
+        {
+            var svcResponse = new ServiceResponse<bool> { Result = true };
+
+            //Check user rights
+            var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
+            rightsMgr.UoW = UoW;
+            var userRights = rightsMgr.GetRights(personId);
+                //-> Should at least have these rights (basic security control, no need complex rules here just to remove relatedTdoc data,
+                // moreover this method should be use only after more deep rights checks on contribution side)
+            if (!userRights.HasRight(Enum_UserRights.Contribution_Change_Type) &&
+                !userRights.HasRight(Enum_UserRights.Contribution_Change_Type_Limited))
+            {
+                svcResponse.Result = false;
+                svcResponse.Report.LogError(Localization.RightError);
+                return svcResponse;
+            }
+
+            //Unlink tdoc from version
+            var repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            repo.UoW = UoW;
+            var previousVersions = repo.GetVersionsByRelatedTDoc(uid);
+            previousVersions.ForEach(v => v.RelatedTDoc = null);
+
+            return svcResponse;
+        }
+
+        /// <summary>
+        /// Check if user is allowed to edit version numbers
+        /// </summary>
+        /// <param name="version"></param>
+        /// <param name="personId"></param>
+        /// <returns>True for success case</returns>
+        public ServiceResponse<bool> CheckVersionNumbersEditAllowed(SpecVersion version, int personId)
+        {
+            var response = new ServiceResponse<bool> { Result = true };
+
+            //[1] User should have version edit major number right
+            var rightsManager = ManagerFactory.Resolve<IRightsManager>();
+            rightsManager.UoW = UoW;
+            var userRights = rightsManager.GetRights(personId);
+            if (!userRights.HasRight(Enum_UserRights.Versions_Edit))
+            {
+                response.Result = false;
+                response.Report.LogError(Localization.RightError);
+                return response;
+            }
+
+            if (!version.Fk_SpecificationId.HasValue)
+            {
+                response.Result = false;
+                response.Report.LogError(Localization.GenericError);
+                return response;
+            }
+
+            var warnings = new List<string>();
+            var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+            specVersionRepo.UoW = UoW;
+            var viewContributionWithAddData =
+                RepositoryFactory.Resolve<IViewContributionsWithAditionnalDataRepository>();
+            viewContributionWithAddData.UoW = UoW;
+
+
+            //[2] Do not allowed deletion if version already uploaded
+            if (!string.IsNullOrEmpty(version.Location) || version.DocumentUploaded != null)
+            {
+                response.Result = false;
+                warnings.Add(Localization.Version_Already_Uploaded);
+            }
+
+            //[3] Do not allowed editing if version is linked to CR(s)
+            var versionWithCrs = specVersionRepo.FindCrsLinkedToAVersion(version.Pk_VersionId);
+            if (versionWithCrs.CurrentChangeRequests != null && (versionWithCrs.CurrentChangeRequests.Count > 0 || versionWithCrs.FoundationsChangeRequests.Count > 0))
+            {
+                response.Result = false;
+                warnings.Add(string.Format(Localization.Version_edit_linked_CR, versionWithCrs.CurrentChangeRequests.Count + versionWithCrs.FoundationsChangeRequests.Count));
+            }
+
+            //[4] Do not allowed editing if version is linked to Tdoc(s)
+            var tdocsRelatedToThisVersion = viewContributionWithAddData.FindContributionsRelatedToASpecAndVersionNumber(version.Fk_SpecificationId ?? 0, version.MajorVersion ?? 0, version.TechnicalVersion ?? 0, version.EditorialVersion ?? 0);
+            if (tdocsRelatedToThisVersion.Count > 0)
+            {
+                warnings.Add(string.Format(Localization.Version_edit_linked_TDoc, tdocsRelatedToThisVersion.Count));
+            }
+
+
+            //Check for warnings : if at least one warning detected -> do not allowed deletion and precise reason why
+            if (warnings.Count > 0)
+            {
+                response.Result = false;
+                response.Report.WarningList.Add(Localization.Version_edit_Warnings);
+                warnings.ForEach(x => response.Report.WarningList.Add(x));
+            }
+
+            return response;
         }
 
         #region Offline Sync Methods
@@ -404,10 +574,10 @@ namespace Etsi.Ultimate.Business.Versions
         /// <summary>
         /// Update version (allowed fields and remarks)
         /// </summary>
-        /// <param name="version"></param>
+        /// <param name="specVersion"></param>
         /// <param name="personId"></param>
         /// <returns></returns>
-        public ServiceResponse<SpecVersion> UpdateVersion(SpecVersion version, int personId)
+        public ServiceResponse<SpecVersion> UpdateVersion(SpecVersion specVersion, int personId)
         {
             var response = new ServiceResponse<SpecVersion>();
 
@@ -424,12 +594,12 @@ namespace Etsi.Ultimate.Business.Versions
                 }
 
                 //Version validation
-                if (version.MajorVersion == null ||
-                    version.TechnicalVersion == null ||
-                    version.EditorialVersion == null ||
-                    version.Source == null)
+                /* Source is mandatory only for no draft version (draft version = (majorVersion < 3)) */
+                if ((specVersion.MajorVersion == null || specVersion.TechnicalVersion == null || specVersion.EditorialVersion == null)
+                    || (specVersion.MajorVersion != null && specVersion.MajorVersion > 2 && specVersion.Source == null))
                 {
-                    LogManager.Error("UpdateVersion - Invalid version object : " + version.Pk_VersionId + ", version numbers and source are mandatory");
+                    LogManager.Error("UpdateVersion - Invalid version object : "
+                        + specVersion.Pk_VersionId + ", version numbers and source are mandatory");
                     response.Report.ErrorList.Add(Localization.GenericError);
                     return response;
                 }
@@ -437,20 +607,48 @@ namespace Etsi.Ultimate.Business.Versions
                 //Get the DB Version Entity
                 var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
                 specVersionRepo.UoW = UoW;
-                var dbVersion = specVersionRepo.Find(version.Pk_VersionId);
+                var dbVersion = specVersionRepo.Find(specVersion.Pk_VersionId);
 
                 if (dbVersion == null)
                 {
-                    LogManager.Error("UpdateVersion - Version not found : " + version.Pk_VersionId);
+                    LogManager.Error("UpdateVersion - Version not found : " + specVersion.Pk_VersionId);
                     response.Report.ErrorList.Add(Localization.Version_Not_Found);
                     return response;
-                }else{
-                    //Apply modification on dbEntity to be able to save it with only allowed modifications
-                    UpdateVersionComparator(dbVersion, version, personId);
+                }
+
+                //Apply modification on dbEntity
+                UpdateVersionComparator(dbVersion, specVersion, personId, response.Report);
+
+                //Check version number
+                var specVersionNumberValidator = ManagerFactory.Resolve<ISpecVersionNumberValidator>();
+                specVersionNumberValidator.UoW = UoW;
+                var numberValidationResponse = specVersionNumberValidator.CheckSpecVersionNumber(dbVersion, specVersion,
+                    SpecNumberValidatorMode.Edit, personId);
+                if (!numberValidationResponse.Result || numberValidationResponse.Report.ErrorList.Any())
+                {
+                    response.Report.ErrorList.AddRange(numberValidationResponse.Report.ErrorList);
+                    return response;
+                }
+
+                if (!response.Report.ErrorList.Any())
+                {
+                    //Change spec to UCC when a version is edited with a major version number greater than 2
+                    if (dbVersion.MajorVersion > 2
+                        && (!dbVersion.Specification.IsUnderChangeControl.HasValue || !dbVersion.Specification.IsUnderChangeControl.Value))
+                    {
+                        var specChangeToUccAction = new SpecificationChangeToUnderChangeControlAction { UoW = UoW };
+                        var responseUcc = specChangeToUccAction.ChangeSpecificationsStatusToUnderChangeControl(personId, new List<int> { dbVersion.Fk_SpecificationId ?? 0});
+
+                        if (!responseUcc.Result && responseUcc.Report.ErrorList.Count > 0)
+                        {
+                            throw new Exception(responseUcc.Report.ErrorList.First());
+                        }
+                    }
 
                     specVersionRepo.UpdateVersion(dbVersion);
                     response.Result = dbVersion;
                 }
+                else { return response; }
             }
             catch (Exception e)
             {
@@ -496,11 +694,41 @@ namespace Etsi.Ultimate.Business.Versions
         /// <summary>
         /// Update version comparator (only necessary fields will be modified)
         /// </summary>
-        private void UpdateVersionComparator(SpecVersion dbVersion, SpecVersion versionUpdated, int personId)
+        private void UpdateVersionComparator(SpecVersion dbVersion, SpecVersion versionUpdated, int personId, Report report)
         {
             dbVersion.SupressFromSDO_Pub = versionUpdated.SupressFromSDO_Pub;
             dbVersion.SupressFromMissing_List = versionUpdated.SupressFromMissing_List;
             dbVersion.Source = versionUpdated.Source;
+
+            //Release
+            if (versionUpdated.Fk_ReleaseId == null)//Raised an error if version not linked to a release
+            {
+                LogManager.Error("UpdateVersion - trying to linked a version to no release (not possible) - Pk_VersionId=" + versionUpdated.Pk_VersionId);
+                report.ErrorList.Add(Localization.GenericError);
+            }
+            else if (dbVersion.Fk_ReleaseId != versionUpdated.Fk_ReleaseId)//Release change
+            {
+                if (versionUpdated.MajorVersion > 2)//Raised an error if version change of release and is not draft
+                {
+                    LogManager.Error("UpdateVersion - release change is allowed only for draft version - Pk_VersionId=" + versionUpdated.Pk_VersionId);
+                    report.ErrorList.Add(Localization.GenericError);
+                }
+                else
+                {
+                    var releaseMgr = ManagerFactory.Resolve<IReleaseManager>();
+                    releaseMgr.UoW = UoW;
+                    var releases = releaseMgr.GetReleasesLinkedToASpec(dbVersion.Fk_SpecificationId ?? 0);
+
+                    //Could just change release by a release already linked to the spec
+                    if (releases.All(x => x.Pk_ReleaseId != versionUpdated.Fk_ReleaseId.Value))
+                    {
+                        LogManager.Error(string.Format("UpdateVersion - trying to change release of a version by a release not linked to a spec - Pk_VersionId={0}, New release id={1}", versionUpdated.Pk_VersionId, versionUpdated.Fk_ReleaseId.Value));
+                        report.ErrorList.Add(Localization.GenericError);
+                    }
+                        
+                    dbVersion.Fk_ReleaseId = versionUpdated.Fk_ReleaseId;
+                }
+            }
 
             //Insert remarks
             var remarksToInsert = versionUpdated.Remarks.ToList().Where(x => dbVersion.Remarks.ToList().All(y => y.Pk_RemarkId != x.Pk_RemarkId)).ToList();

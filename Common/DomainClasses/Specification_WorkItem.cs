@@ -21,8 +21,8 @@ namespace Etsi.Ultimate.DomainClasses
         public Nullable<bool> isPrime { get; set; }
         public Nullable<bool> IsSetByUser { get; set; }
     
-        public virtual Specification Specification { get; set; }
         public virtual WorkItem WorkItem { get; set; }
+        public virtual Specification Specification { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

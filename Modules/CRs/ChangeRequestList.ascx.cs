@@ -75,6 +75,11 @@ namespace Etsi.Ultimate.Module.CRs
             }
         }
 
+        /// <summary>
+        /// First page load flag
+        /// </summary>
+        private bool FirstLoad { get; set; }
+
         #endregion
 
         #region events
@@ -88,11 +93,16 @@ namespace Etsi.Ultimate.Module.CRs
         {
             if (!IsPostBack || !crList.Visible)
             {
+                FirstLoad = true;
                 releaseSearchControl.IsLoadingNeeded = !crList.Visible;
                 crList.Visible = true;
+
+                //Init page size component
+                InitPageSizeComponent();
+
                 GetRequestParameters();
-                SearchObj = new ChangeRequestsSearch() { ReleaseIds = new List<int>(), WgStatusIds = new List<int>(), TsgStatusIds = new List<int>(), MeetingIds = new List<int>(), WorkItemIds = new List<int>() };
-                SearchObj.PageSize = rgCrList.PageSize = ConfigVariables.CRsListRecordsMaxSize;
+                SearchObj = new ChangeRequestsSearch();
+                SearchObj.PageSize = rgCrList.PageSize = ConfigVariables.ItemsPerPageListDefaultValue;
 
                 //Load CR Statuses
                 LoadCrStatuses();
@@ -101,6 +111,17 @@ namespace Etsi.Ultimate.Module.CRs
                 GetUserRightsAndAdaptUi();
 
                 releaseSearchControl.Load += releaseSearchControl_Load;
+
+                var searchObjFromCookie = CookiesHelper.GetCookie<ChangeRequestsSearch>(Page.Request, ConfigVariables.CookieNameCrsList);
+                if (!_isUrlSearch && searchObjFromCookie != null && searchObjFromCookie.GetType() == typeof(ChangeRequestsSearch))
+                {
+                    SearchObj = searchObjFromCookie;
+                    LoadControlsFromSearchObj();
+                }
+            }
+            else
+            {
+                FirstLoad = false; 
             }
         }
 
@@ -119,8 +140,12 @@ namespace Etsi.Ultimate.Module.CRs
             SearchObj.WgStatusIds = GetSelectedWgStatusIds();
             SearchObj.TsgStatusIds = GetSelectedTsgStatusIds();
             SearchObj.VersionId = 0;//By default because we don't have any UI filters for the version for the moment
+            SearchObj.PageSize = Convert.ToInt32(SelectPageSize.SelectedValue);
             rgCrList.CurrentPageIndex = 0;
             rgCrList.Rebind();
+
+            // Save SearchObj into cookie
+            CookiesHelper.SetCookie(Page.Response, ConfigVariables.CookieNameCrsList, SearchObj);
         }
 
         /// <summary>
@@ -220,11 +245,31 @@ namespace Etsi.Ultimate.Module.CRs
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         protected void releaseSearchControl_Load(object sender, EventArgs e)
         {
-            if (SearchObj.ReleaseIds.Count == 0)
+            if (FirstLoad && SearchObj != null && SearchObj.ReleaseIds != null &&
+                    SearchObj.ReleaseIds.Count > 0)
+            {
+                releaseSearchControl.SelectedReleaseIds = SearchObj.ReleaseIds;
+            }
+            else if (SearchObj.ReleaseIds.Count == 0)
+            {
                 SearchObj.ReleaseIds = releaseSearchControl.SelectedReleaseIds;
+            }
+
             LoadData();
         }
 
+        /// <summary>
+        /// Page size change event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void SelectPageSize_OnSelectedIndexChanged(object sender, RadComboBoxSelectedIndexChangedEventArgs e)
+        {
+            SearchObj.PageSize = Convert.ToInt32(e.Value);
+            SearchObj.SkipRecords = 0;
+            rgCrList.CurrentPageIndex = 0;
+            rgCrList.Rebind();
+        }
         #endregion
 
         #region Send CRs to CR-Pack events and utils
@@ -281,7 +326,6 @@ namespace Etsi.Ultimate.Module.CRs
 
             //Refresh list of CRs
             LoadData();
-            rgCrList.Rebind();
         }
 
         /// <summary>
@@ -350,24 +394,44 @@ namespace Etsi.Ultimate.Module.CRs
         /// </summary>
         private void LoadData()
         {
-            if (_isUrlSearch)
-                LoadUrlData();
+            if (FirstLoad && !_isUrlSearch)
+            {
+                rgCrList.DataSource = new List<ChangeRequestListFacade>();
+            }
             else
-                SearchObj.SkipRecords = rgCrList.CurrentPageIndex * SearchObj.PageSize;
+            {
+                if (_isUrlSearch)
+                    LoadUrlData();
+                else
+                    SearchObj.SkipRecords = rgCrList.CurrentPageIndex*SearchObj.PageSize;
 
-            var crSvc = ServicesFactory.Resolve<IChangeRequestService>();
-            var response = crSvc.GetChangeRequests(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), SearchObj);
-            if (response.Report.GetNumberOfErrors() != 0)
-                return;
+                var crSvc = ServicesFactory.Resolve<IChangeRequestService>();
+                var response =
+                    crSvc.GetChangeRequests(
+                        GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), SearchObj);
+                if (response.Report.GetNumberOfErrors() != 0)
+                    return;
 
-            rgCrList.VirtualItemCount = response.Result.Value;
-            rgCrList.CurrentPageIndex = SearchObj.SkipRecords / SearchObj.PageSize;
-            rgCrList.DataSource = response.Result.Key;
 
-            ManageShareUrl();
-            ManageFullView();
+                rgCrList.VirtualItemCount = response.Result.Value;
 
-            SetSearchLabel();
+                if (SearchObj.PageSize > rgCrList.VirtualItemCount && rgCrList.VirtualItemCount > 0)
+                {
+                    rgCrList.PageSize = rgCrList.VirtualItemCount;
+                }
+                else
+                {
+                    rgCrList.PageSize = SearchObj.PageSize;
+                }
+                rgCrList.PageSize = SearchObj.PageSize;
+                rgCrList.CurrentPageIndex = SearchObj.SkipRecords / SearchObj.PageSize;
+                rgCrList.DataSource = response.Result.Key;
+
+                ManageShareUrl();
+                ManageFullView();
+
+                SetSearchLabel();
+            }
         }
 
         /// <summary>
@@ -586,6 +650,95 @@ namespace Etsi.Ultimate.Module.CRs
             });
 
             return selectedStatusIds;
+        }
+
+        /// <summary>
+        /// Init page size component:
+        /// - load default value 
+        /// - add default value from the web.config
+        /// - display data
+        /// </summary>
+        private void InitPageSizeComponent()
+        {
+            SelectPageSize.Items.AddRange(ConfigVariables.ItemsPerPageList.Select(
+                x => new RadComboBoxItem(x.Key, x.Value.ToString())));
+
+            var defaultItem =
+                SelectPageSize.Items.FindItemByValue(ConfigVariables.ItemsPerPageListDefaultValue.ToString());
+
+            if (defaultItem != null)
+            {
+                defaultItem.Selected = true;
+                defaultItem.Checked = true;
+            }
+        }
+
+        /// <summary>
+        /// Fills controls from the searchObj
+        /// </summary>
+        /// <returns></returns>
+        private void LoadControlsFromSearchObj()
+        {
+            txtSpecificationNumber.Text = SearchObj.SpecificationNumber;
+            SetSelectedMeetings(racMeeting, SearchObj.MeetingIds);
+            SetSelectedWorkItems(racWorkItem, SearchObj.WorkItemIds);
+            SetSelectedValue(rcbWgStatus, SearchObj.WgStatusIds);
+            SetSelectedValue(rcbTsgStatus, SearchObj.TsgStatusIds);
+            SetSelectedValue(SelectPageSize, SearchObj.PageSize.ToString());
+        }
+
+        private void SetSelectedValue(RadComboBox rcb, string value)
+        {
+            RadComboBoxItem item = rcb.FindItemByValue(value);
+            if (item != null)
+                item.Selected = true;
+        }
+
+        private void SetSelectedValue(RadComboBox rcb, List<int> values)
+        {
+            if (values != null)
+            {
+                foreach (int val in values)
+                {
+                    RadComboBoxItem item = rcb.FindItemByValue(val.ToString());
+                    if (item != null)
+                        item.Checked = true;
+                }
+            }
+        }
+
+        private void SetSelectedMeetings(RadAutoCompleteBox racb, List<int> meetingIds)
+        {
+            if (meetingIds != null && meetingIds.Count > 0)
+            {
+                var meetingSvc = ServicesFactory.Resolve<IMeetingService>();
+                var meetingsList = meetingSvc.GetMeetingsByIds(meetingIds);
+
+                meetingIds.ForEach(x =>
+                {
+                    var meeting = meetingsList.Find(m => m.MTG_ID == x);
+                    if (meeting != null)
+                        racMeeting.Entries.Add(new AutoCompleteBoxEntry(meeting.MtgDdlText,
+                            x.ToString(CultureInfo.InvariantCulture)));
+                });
+            }
+        }
+
+        private void SetSelectedWorkItems(RadAutoCompleteBox racb, List<int> workItemIds)
+        {
+            if (workItemIds != null && workItemIds.Count > 0)
+            {
+                var workItemSvc = ServicesFactory.Resolve<IWorkItemService>();
+                var workItemsList = workItemSvc.GetWorkItemByIds(0, workItemIds).Key;
+
+                workItemIds.ForEach(x =>
+                {
+                    var workItem = workItemsList.Find(wi => wi.Pk_WorkItemUid == x);
+                    if (workItem != null)
+                        racWorkItem.Entries.Add(new AutoCompleteBoxEntry(workItem.WorkItemDdlText,
+                            x.ToString(CultureInfo.InvariantCulture)));
+                });
+            }
         }
 
         #endregion

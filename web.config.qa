@@ -46,6 +46,7 @@
     <!-- Connection String for SQL Server 2008/2012 - kept for backwards compatability - legacy modules
     <add key="SiteSqlServer" value="Server=(local);Database=DotNetNuke;uid=;pwd=;"/>
     -->
+	<add key="AppVersion" value="1.01" />
     <add key="InstallTemplate" value="DotNetNuke.install.config" />
     <add key="AutoUpgrade" value="true" />
     <add key="UseInstallWizard" value="true" />
@@ -109,6 +110,16 @@
   <add key="RelativeUrlWiRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;workitem={0}&amp;release={1}&amp;specnumber={2}"/>
   <add key="RelativeUrlVersionRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;versionId={0}&amp;release={1}"/>
 	
+  <add key="Specification_WithdrawMeetingSelectPopUp_RelativeLink" value="WithdrawMeetingSelectPopUp.aspx?SpecId={0}&amp;RelId={1}" />
+  <add key="Specification_UploadVersion_RelativeLink" value="/desktopmodules/Versions/UploadVersion.aspx?releaseId={0}&amp;specId={1}&amp;action={2}" />
+  <add key="Specification_RemoveSpecReleasePopUp_RelativeLink" value="PopUps/RemoveSpecReleasePopUp.aspx?SpecId={0}&amp;RelId={1}" />
+
+  <!-- Cookies names (DONT MODIFY NAMES WITHOUT CHANGE THEM INSIDE CONTRIBUTION AS WELL : SECURITY REASONS) -->
+  <add key="CookieName_MeetingsList"  value="MeetingsList_Cookie" />
+  <add key="CookieName_CrsList"       value="CrsList_Cookie" />
+  <add key="CookieName_WisList"       value="WisList_Cookie" />
+  <add key="CookieName_SpecsList"     value="SpecsList_Cookie" />
+  
   </appSettings>
   <system.web.webPages.razor>
     <pages pageBaseType="DotNetNuke.Web.Razor.DotNetNukeWebPage">

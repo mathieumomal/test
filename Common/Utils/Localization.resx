@@ -309,6 +309,9 @@
   <data name="GenericError" xml:space="preserve">
     <value>An error has occured. Please try again. If problem persists, please contact IT support.</value>
   </data>
+  <data name="VersionSuccessfullyDeleted" xml:space="preserve">
+    <value>Version successfully deleted.</value>
+  </data>
   <data name="FinalizeCrs_Warn_DraftSpec" xml:space="preserve">
     <value>Could not allocate version for Specification {0}: specification is not under change control</value>
   </data>
@@ -338,6 +341,18 @@
   </data>
   <data name="Version_Not_Found" xml:space="preserve">
     <value>Version not found.</value>
+  </data>
+  <data name="Version_Delete_Not_Allowed" xml:space="preserve">
+    <value>You are not allowed to delete a version.</value>
+  </data>
+  <data name="Version_Confirm_Delete" xml:space="preserve">
+    <value>Are you sure you want to delete Specification version {0} ?</value>
+  </data>
+  <data name="Version_Already_Uploaded" xml:space="preserve">
+    <value>Version is already uploaded</value>
+  </data>
+  <data name="Version_not_Delete_ucc" xml:space="preserve">
+    <value>You can't delete this UCC version.</value>
   </data>
   <data name="Version_Tdoc_Link_Version_Not_Found" xml:space="preserve">
     <value>Version does not exist. So, Tdoc cannot be linked.</value>
@@ -371,5 +386,47 @@
   </data>
   <data name="CR_Crs_Or_CrPack_NotSelected" xml:space="preserve">
     <value>Please select CRs to be sent to CR-Pack</value>
+  </data>
+  <data name="DsIdKey" xml:space="preserve">
+    <value>ETSI_DS_ID</value>
+  </data>
+  <data name="Specification_reserve_withdrawn_error" xml:space="preserve">
+    <value>Cannot reserve draft for withdrawn release of specification.</value>
+  </data>
+  <data name="Version_Edit_Already_Exists" xml:space="preserve">
+    <value>Version {0} already exists.</value>
+  </data>
+  <data name="Wrong_Release_Version" xml:space="preserve">
+    <value>Given version already exists but does not correspond to correct release</value>
+  </data>
+  <data name="Specification_Delete_Linked_Crs" xml:space="preserve">
+    <value>- Linked to {0} CR(s)</value>
+  </data>
+  <data name="Specification_Delete_Linked_Tdocs" xml:space="preserve">
+    <value>- Linked to {0} TDoc(s)</value>
+  </data>
+  <data name="Specification_Delete_Versions_Already_Uploaded" xml:space="preserve">
+    <value>- {0} version(s) are already uploaded</value>
+  </data>
+  <data name="Specification_Delete_Warnings_Title" xml:space="preserve">
+    <value>Specification cannot be deleted because:</value>
+  </data>
+  <data name="Version_edit_linked_CR" xml:space="preserve">
+    <value>Version is linked to {0} CR(s)</value>
+  </data>
+  <data name="Version_edit_linked_TDoc" xml:space="preserve">
+    <value>Version is linked to {0} TDoc(s)</value>
+  </data>
+  <data name="Version_edit_Warnings" xml:space="preserve">
+    <value>Version cannot be edited because:</value>
+  </data>
+  <data name="Version_Edit_Draft_Allowed_Major_Numbers" xml:space="preserve">
+    <value>Allowed major numbers for this version are 0,1,2 and {0}.</value>
+  </data>
+  <data name="Version_Edit_Ucc_Major_Cannot_Be_Update" xml:space="preserve">
+    <value>Major version number modification is not allowed for UCC version</value>
+  </data>
+  <data name="Version_Major_Number_Allocate_Not_Valid" xml:space="preserve">
+    <value>Invalid major version number. If version is UCC, major version number should be the release number.</value>
   </data>
 </root>

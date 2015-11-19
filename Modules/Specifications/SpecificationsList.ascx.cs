@@ -27,7 +27,7 @@ using Telerik.Web.UI;
 using System.IO;
 using Etsi.Ultimate.Utils;
 using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
+using Microsoft.Practices.ObjectBuilder2;
 
 
 namespace Etsi.Ultimate.Module.Specifications
@@ -142,6 +142,11 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
+        /// <summary>
+        /// First page load flag
+        /// </summary>
+        private bool FirstLoad { get; set; }
+
         #endregion
 
         #region Events
@@ -153,10 +158,13 @@ namespace Etsi.Ultimate.Module.Specifications
                 GetRequestParameters();
                 if (!IsPostBack || !componentSpecList.Visible)
                 {
+                    FirstLoad = true;
                     ReleaseCtrl.IsLoadingNeeded = !componentSpecList.Visible;
                     //Set panel visibility to true
-                    componentSpecList.Visible = true; 
+                    componentSpecList.Visible = true;
 
+                    //Init page size component
+                    InitPageSizeComponent();
 
                     // Display or not NumberNotYetAllocated
                     var personService = ServicesFactory.Resolve<IPersonService>();
@@ -164,14 +172,19 @@ namespace Etsi.Ultimate.Module.Specifications
                     if (Settings.Contains(Enum_Settings.Spec_ExportPath.ToString()))
                         PathExportSpec = Settings[Enum_Settings.Spec_ExportPath.ToString()].ToString();
 
-                    var userRights = personService.GetRights(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()));
-                    trNumberNotYetAllocated.Visible = userRights.HasRight(Enum_UserRights.Specification_View_UnAllocated_Number);
-                    lnkManageITURecommendations.Visible = userRights.HasRight(Enum_UserRights.Specification_ManageITURecommendations);
+                    var userRights =
+                        personService.GetRights(
+                            GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()));
+                    trNumberNotYetAllocated.Visible =
+                        userRights.HasRight(Enum_UserRights.Specification_View_UnAllocated_Number);
+                    lnkManageITURecommendations.Visible =
+                        userRights.HasRight(Enum_UserRights.Specification_ManageITURecommendations);
                     btnNewSpecification.Visible = userRights.HasRight(Enum_UserRights.Specification_Create);
                     imgBtnFTP.Visible = userRights.HasRight(Enum_UserRights.Specification_SyncHardLinksOnLatestFolder);
 
                     var specSvc = ServicesFactory.Resolve<ISpecificationService>();
                     searchObj = new SpecificationSearch();
+
                     Technologies = specSvc.GetTechnologyList().OrderBy(t => t.SortOrder).ToList();
                     Series = specSvc.GetSeries();
 
@@ -182,6 +195,17 @@ namespace Etsi.Ultimate.Module.Specifications
                     ReleaseCtrl.Load += ReleaseCtrl_Load;
 
                     lblFolderPath.Text = ConfigVariables.VersionsLatestFTPFolder;
+
+                    var searchObjFromCookie = CookiesHelper.GetCookie<SpecificationSearch>(Page.Request, ConfigVariables.CookieNameSpecsList);
+                    if (searchObjFromCookie != null && searchObjFromCookie.GetType() == typeof(SpecificationSearch))
+                    {
+                        searchObj = searchObjFromCookie;
+                        LoadControlsFromSearchObj();
+                    }
+                }
+                else
+                {
+                    FirstLoad = false;
                 }
             }
             catch (Exception exc) //Module failed to load
@@ -307,7 +331,15 @@ namespace Etsi.Ultimate.Module.Specifications
             }
             else
             {
-                searchObj.SelectedReleaseIds = ReleaseCtrl.SelectedReleaseIds;
+                if (FirstLoad && searchObj != null && searchObj.SelectedReleaseIds != null &&
+                    searchObj.SelectedReleaseIds.Count > 0)
+                {
+                    ReleaseCtrl.SelectedReleaseIds = searchObj.SelectedReleaseIds;
+                }
+                else
+                {
+                    searchObj.SelectedReleaseIds = ReleaseCtrl.SelectedReleaseIds;
+                }
             }
 
             if (!String.IsNullOrEmpty(SubTBId))
@@ -318,6 +350,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 tbList.RemoveAll(x => x == -1);
                 searchObj.SelectedCommunityIds = tbList;
             }
+            else { searchObj.SelectedCommunityIds = new List<int>();}
 
             LoadGridData(true);
         }
@@ -350,9 +383,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private SpecificationSearch FillInSearchObj(bool shouldResetPageNumber)
         {
             searchObj = new SpecificationSearch();
-
-            if (!String.IsNullOrEmpty(txtTitle.Text))
-                searchObj.Title = txtTitle.Text;
+            searchObj.Title = txtTitle.Text;
 
             foreach (RadComboBoxItem item in rcbSeries.Items)
                 if (item.Checked)
@@ -376,6 +407,10 @@ namespace Etsi.Ultimate.Module.Specifications
                 tbList.RemoveAll(x => x == -1);
                 searchObj.SelectedCommunityIds = tbList;
             }
+            else
+            {
+                searchObj.SelectedCommunityIds = new List<int>();
+            }
 
             searchObj.SelectedReleaseIds = ReleaseCtrl.SelectedReleaseIds;
 
@@ -395,10 +430,11 @@ namespace Etsi.Ultimate.Module.Specifications
             if (cbForPublication.Checked != cbInternal.Checked)
                 searchObj.IsForPublication = (cbForPublication.Checked) ? true : ((cbInternal.Checked) ? (bool?)false : null);
 
+            searchObj.PageSize = Convert.ToInt32(SelectPageSize.SelectedValue);
+
             if (!shouldResetPageNumber)
             {
                 searchObj.SkipRecords = rgSpecificationList.CurrentPageIndex * rgSpecificationList.PageSize;
-                searchObj.PageSize = rgSpecificationList.PageSize;
             }
 
             // There might be a filter by WI Id.
@@ -408,42 +444,119 @@ namespace Etsi.Ultimate.Module.Specifications
         }
 
         /// <summary>
+        /// Fills controls from the searchObj
+        /// </summary>
+        /// <returns></returns>
+        private void LoadControlsFromSearchObj()
+        {
+            if (!String.IsNullOrEmpty(searchObj.Title))
+                txtTitle.Text = searchObj.Title;
+
+            SetSelectedValue(rcbSeries, searchObj.Series);
+            cbNumNotYetAllocated.Checked = searchObj.NumberNotYetAllocated;
+
+            if (searchObj.Type.HasValue)
+            {
+                cbTechnicalSpecification.Checked = searchObj.Type.Value;
+                cbTechnicalReport.Checked = !searchObj.Type.Value;
+            }
+
+            cbDraft.Checked = searchObj.IsDraft;
+            cbUnderCC.Checked = searchObj.IsUnderCC;
+            cbWithdrawnAfterCC.Checked = searchObj.IsWithACC;
+            cbWithdrawnBeforeCC.Checked = searchObj.IsWithBCC;
+            SetSelectedValue(cblTechnology, searchObj.Technologies);
+            cbInternal.Checked = !searchObj.IsForPublication == true;
+            cbForPublication.Checked = searchObj.IsForPublication == true;
+            SetSelectedValue(SelectPageSize, searchObj.PageSize.ToString());
+        }
+
+        private void SetSelectedValue(RadComboBox rcb, string value)
+        {
+            RadComboBoxItem item = rcb.FindItemByValue(value);
+            if (item != null)
+                item.Selected = true;
+        }
+
+        private void SetSelectedValue(RadComboBox rcb, List<int> values)
+        {
+            foreach (int val in values)
+            {
+                RadComboBoxItem item = rcb.FindItemByValue(val.ToString());
+                if (item != null)
+                    item.Checked = true;
+            }
+        }
+
+        private void SetSelectedValue(CheckBoxList cbl, List<int> values)
+        {
+            foreach (int val in values)
+            {
+                ListItem item = cbl.Items.FindByValue(val.ToString());
+                if (item != null)
+                    item.Selected = true;
+            }
+        }
+
+        /// <summary>
         /// Need DataSource event for Specification List
         /// </summary>
         /// <param name="sender">Source of Event</param>
         /// <param name="e">Event Args</param>
         protected void rgSpecificationList_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
-            searchObj.SkipRecords = rgSpecificationList.CurrentPageIndex * rgSpecificationList.PageSize;
-            searchObj.PageSize = rgSpecificationList.PageSize;
-
-            // Fetching the sort order:
-            if (rgSpecificationList.MasterTableView.SortExpressions.Count != 0)
+            if (FirstLoad)
             {
-                string name = rgSpecificationList.MasterTableView.SortExpressions[0].FieldName;
-                GridSortOrder order = rgSpecificationList.MasterTableView.SortExpressions[0].SortOrder;
-
-                if (name == "Number")
-                {
-                    if (order == GridSortOrder.Ascending)
-                        searchObj.Order = SpecificationSearch.SpecificationOrder.Number;
-                    else if (order == GridSortOrder.Descending)
-                        searchObj.Order = SpecificationSearch.SpecificationOrder.NumberDesc;
-                }
-                else if (name == "Title")
-                {
-                    if (order == GridSortOrder.Ascending)
-                        searchObj.Order = SpecificationSearch.SpecificationOrder.Title;
-                    else if (order == GridSortOrder.Descending)
-                        searchObj.Order = SpecificationSearch.SpecificationOrder.TitleDesc;
-                }
+                rgSpecificationList.DataSource = new List<Specification>();
             }
+            else
+            {
+                searchObj.SkipRecords = rgSpecificationList.CurrentPageIndex*rgSpecificationList.PageSize;
+                searchObj.PageSize = Convert.ToInt32(SelectPageSize.SelectedValue);
+
+                // Fetching the sort order:
+                if (rgSpecificationList.MasterTableView.SortExpressions.Count != 0)
+                {
+                    string name = rgSpecificationList.MasterTableView.SortExpressions[0].FieldName;
+                    GridSortOrder order = rgSpecificationList.MasterTableView.SortExpressions[0].SortOrder;
+
+                    if (name == "Number")
+                    {
+                        if (order == GridSortOrder.Ascending)
+                            searchObj.Order = SpecificationSearch.SpecificationOrder.Number;
+                        else if (order == GridSortOrder.Descending)
+                            searchObj.Order = SpecificationSearch.SpecificationOrder.NumberDesc;
+                    }
+                    else if (name == "Title")
+                    {
+                        if (order == GridSortOrder.Ascending)
+                            searchObj.Order = SpecificationSearch.SpecificationOrder.Title;
+                        else if (order == GridSortOrder.Descending)
+                            searchObj.Order = SpecificationSearch.SpecificationOrder.TitleDesc;
+                    }
+                }
 
 
-            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
-            var result = specSvc.GetSpecificationBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
-            rgSpecificationList.VirtualItemCount = result.Key.Value;
-            rgSpecificationList.DataSource = result.Key.Key;
+                var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                var result =
+                    specSvc.GetSpecificationBySearchCriteria(
+                        GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj);
+
+                rgSpecificationList.VirtualItemCount = result.Key.Value;
+
+                if (searchObj.PageSize > rgSpecificationList.VirtualItemCount &&
+                    rgSpecificationList.VirtualItemCount > 0)
+                {
+                    rgSpecificationList.PageSize = rgSpecificationList.VirtualItemCount;
+                }
+                else
+                {
+                    rgSpecificationList.PageSize = searchObj.PageSize;
+                }
+
+                rgSpecificationList.CurrentPageIndex = searchObj.SkipRecords / searchObj.PageSize;
+                rgSpecificationList.DataSource = result.Key.Key;
+            }
         }
 
         /// <summary>
@@ -504,6 +617,32 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
+        /// <summary>
+        /// Export spec list
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnSpecExport_Click(object sender, ImageClickEventArgs e)
+        {
+            ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
+            searchObj = FillInSearchObj(false);
+            var filepath = svc.ExportSpecification(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj, Request.Url.GetLeftPart(UriPartial.Authority));
+
+            hidSpecAddress.Value = filepath;
+            /*Response.Redirect(Server.UrlEncode(filepath));
+            Response.End();*/
+        }
+
+        /// <summary>
+        /// Page size change event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void SelectPageSize_OnSelectedIndexChanged(object sender, RadComboBoxSelectedIndexChangedEventArgs e)
+        {
+            rgSpecificationList.PageSize = Convert.ToInt32(e.Value);
+            LoadDataWithSearchParameters(true);
+        }
         #endregion
 
         #region Helper methods
@@ -532,7 +671,7 @@ namespace Etsi.Ultimate.Module.Specifications
             //flag used in ShortURL generation
             fromSearch = true;
             searchObj = FillInSearchObj(shouldResetPageNumber);
-
+            CookiesHelper.SetCookie(Page.Response, ConfigVariables.CookieNameSpecsList, searchObj);
             ultShareUrl.IsShortUrlChecked = false;
             LoadGridData(shouldResetPageNumber);
         }
@@ -738,6 +877,27 @@ namespace Etsi.Ultimate.Module.Specifications
         }
 
         /// <summary>
+        /// Init page size component:
+        /// - load default value 
+        /// - add default value from the web.config
+        /// - display data
+        /// </summary>
+        private void InitPageSizeComponent()
+        {
+            SelectPageSize.Items.AddRange(ConfigVariables.ItemsPerPageList.Select(
+                x => new RadComboBoxItem(x.Key, x.Value.ToString())));
+
+            var defaultItem =
+                SelectPageSize.Items.FindItemByValue(ConfigVariables.ItemsPerPageListDefaultValue.ToString());
+
+            if (defaultItem != null)
+            {
+                defaultItem.Selected = true;
+                defaultItem.Checked = true;
+            }
+        }
+
+        /// <summary>
         /// Create Hard links between files
         /// </summary>
         /// <param name="lpFileName">New File Name(Hard Link Path)</param>
@@ -752,16 +912,5 @@ namespace Etsi.Ultimate.Module.Specifications
         );
 
         #endregion
-
-        protected void btnSpecExport_Click(object sender, ImageClickEventArgs e)
-        {
-            ISpecificationService svc = ServicesFactory.Resolve<ISpecificationService>();
-            searchObj = FillInSearchObj(false);
-            var filepath = svc.ExportSpecification(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), searchObj, Request.Url.GetLeftPart(UriPartial.Authority));
-
-            hidSpecAddress.Value = filepath;
-            /*Response.Redirect(Server.UrlEncode(filepath));
-            Response.End();*/
-        }
     }
 }

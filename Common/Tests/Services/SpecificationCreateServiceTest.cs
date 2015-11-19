@@ -198,7 +198,7 @@ namespace Etsi.Ultimate.Tests.Services
                     return new Specification()
                     {
                         Pk_SpecificationId = 0,
-                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OpenedReleaseId } },
                         Number = "12.145",
                         Title = "SpecTitle"
                     };
@@ -206,7 +206,7 @@ namespace Etsi.Ultimate.Tests.Services
                     return new Specification()
                     {
                         Pk_SpecificationId = 0,
-                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OpenedReleaseId } },
                         Number = "",
                         Title = "SpecTitle"
                     };
@@ -214,7 +214,7 @@ namespace Etsi.Ultimate.Tests.Services
                     return new Specification()
                     {
                         Pk_SpecificationId = 0,
-                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OpenedReleaseId } },
                         Number = "vd-()=",
                         Title = "SpecTitle"
                     };
@@ -222,7 +222,7 @@ namespace Etsi.Ultimate.Tests.Services
                     return new Specification()
                     {
                         Pk_SpecificationId = 0,
-                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OpenedReleaseId } },
                         Number = "12.123",
                         Title = "SpecTitle"
                     };
@@ -230,7 +230,7 @@ namespace Etsi.Ultimate.Tests.Services
                     return new Specification()
                     {
                         Pk_SpecificationId = 0,
-                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OpenedReleaseId } },
                         Number = "12.145",
                         Title = "SpecTitle",
                         SpecificationRapporteurs = new List<SpecificationRapporteur>
@@ -242,7 +242,7 @@ namespace Etsi.Ultimate.Tests.Services
                     return new Specification()
                     {
                         Pk_SpecificationId = 0,
-                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OpenedReleaseId } },
                         Number = "12.145",
                         Title = "SpecTitle",
                         SpecificationRapporteurs = new List<SpecificationRapporteur>
@@ -255,7 +255,7 @@ namespace Etsi.Ultimate.Tests.Services
                     return new Specification()
                     {
                         Pk_SpecificationId = 0,
-                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OpenedReleaseId } },
                         Number = "12.145",
                         Title = "SpecTitle",
                         SpecificationRapporteurs = new List<SpecificationRapporteur>
@@ -268,7 +268,7 @@ namespace Etsi.Ultimate.Tests.Services
                     return new Specification()
                     {
                         Pk_SpecificationId = 0,
-                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OpenedReleaseId } },
                         Number = "12.145",
                         Title = "SpecTitle",
                         Specification_WorkItem = new List<Specification_WorkItem>
@@ -280,7 +280,7 @@ namespace Etsi.Ultimate.Tests.Services
                     return new Specification()
                     {
                         Pk_SpecificationId = 0,
-                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OpenedReleaseId } },
                         Number = "12.145",
                         Title = "SpecTitle",
                         Specification_WorkItem = new List<Specification_WorkItem>
@@ -293,7 +293,7 @@ namespace Etsi.Ultimate.Tests.Services
                     return new Specification()
                     {
                         Pk_SpecificationId = 0,
-                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                        Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OpenedReleaseId } },
                         Number = "12.145",
                         Title = "SpecTitle",
                         Specification_WorkItem = new List<Specification_WorkItem>
@@ -382,7 +382,7 @@ namespace Etsi.Ultimate.Tests.Services
             var spec = new Specification()
             {
                 Pk_SpecificationId = 12,
-                Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OpenedReleaseId } },
                 Number = "12.123",
                 SpecificationTechnologies = new List<SpecificationTechnology>() { 
                         new SpecificationTechnology() { Pk_SpecificationTechnologyId = 11, Fk_Enum_Technology=1 }, // Let's say it's 2G
@@ -428,7 +428,7 @@ namespace Etsi.Ultimate.Tests.Services
             return new Specification()
             {
                 Pk_SpecificationId = 0,
-                Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OPENED_RELEASE_ID } },
+                Specification_Release = new List<Specification_Release>() { new Specification_Release() { Fk_ReleaseId = ReleaseFakeRepository.OpenedReleaseId } },
                 Number = "",
                 Title = "SpecTitle"
             };

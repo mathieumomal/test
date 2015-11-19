@@ -3,6 +3,7 @@ using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using System.Collections.Generic;
 using System.Linq;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Business
 {
@@ -62,6 +63,14 @@ namespace Etsi.Ultimate.Business
                     }
                 }
 
+                // TDoc link init
+                wiList.ForEach(wi => {
+                    if (!string.IsNullOrWhiteSpace(wi.Wid))
+                    {
+                        wi.TdocLink = "javascript:openTdoc('" + string.Format(ConfigVariables.TdocDetailsUrl, wi.Wid) + "','" + wi.Wid + "')";
+                    }
+                });
+               
                 return new KeyValuePair<List<WorkItem>, UserRightsContainer>(wiList, GetRights(personId));
             }
 

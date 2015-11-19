@@ -62,9 +62,15 @@
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\DocumentFormat.OpenXml.dll</HintPath>
+      <Private>True</Private>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="EPPlus">
       <HintPath>..\..\Libs\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="Etsi.Ultimate.DataAccess, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\WCF Services\UltimateService\Etsi.Ultimate.WCF.UltimateService\bin\Etsi.Ultimate.DataAccess.dll</HintPath>
     </Reference>
     <Reference Include="Ionic.Zip, Version=1.9.2.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -129,8 +135,10 @@
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
     <Compile Include="Specifications\SpecificationChangeToUnderChangeControlAction.cs" />
+    <Compile Include="Specifications\SpecificationDemoteAction.cs" />
     <Compile Include="Versions\GetNextReleaseAction.cs" />
     <Compile Include="Versions\SpecVersionAllocateAction.cs" />
+    <Compile Include="Versions\SpecVersionNumberValidator.cs" />
     <Compile Include="Versions\SpecVersionUploadAction.cs" />
     <Compile Include="SyncInfoManager.cs" />
     <Compile Include="Versions\QualityChecks\DocQualityChecks.cs" />

@@ -9,8 +9,21 @@ function closeRadWindow() {
     GetRadWindow().close();
 }
 
+function closeAndRefresh() {
+    $('#versionSavedhf').val('True');
+    closeRadWindow();
+}
+
 $(document).ready(function () {
-    formValidator();
+    var $isDraft = $('#isDraftVersionhf');
+    if ($isDraft && $isDraft.val() === 'True') {
+        $('.mandatoryIndicator.meetingMandatoryIndicator').hide();
+    } else {
+        formValidator();
+    }
+
+    var versionSaved = location.search.split('versionSaved=')[1] ? location.search.split('versionSaved=')[1] : 'False';
+    $('#versionSavedhf').val(versionSaved)
 });
 
 function formValidator() {
@@ -29,21 +42,21 @@ function formValidator() {
 }
 
 function checkMandatoryFields() {
-    var rcbMeeting = $('input[name="meetingCtrl$rcbMeetings"]');
-
+    var $rcbMeeting = $('input[name="meetingCtrl$rcbMeetings"]');
+    var $btnSave = $('input[id$="btnSave"]');
     var fieldsValid = true;
-    if ($.trim($(rcbMeeting).val()) === "") {
+
+    if ($.trim($rcbMeeting.val()) === "") {
         fieldsValid = false;
     }
 
-    $('input[id$="btnSave"]').removeClass('btn3GPP-default');
-    $('input[id$="btnSave"]').removeClass('btn3GPP-success');
+    $btnSave.removeClass('btn3GPP-default').removeClass('btn3GPP-success');
 
     if (fieldsValid) {
-        $('input[id$="btnSave"]').addClass('btn3GPP-success');
-        $('input[id$="btnSave"]').attr("disabled", false);
+        $btnSave.addClass('btn3GPP-success');
+        $btnSave.attr("disabled", false);
     } else {
-        $('input[id$="btnSave"]').addClass('btn3GPP-default');
-        $('input[id$="btnSave"]').attr("disabled", true);
+        $btnSave.addClass('btn3GPP-default');
+        $btnSave.attr("disabled", true);
     }
 }

@@ -625,21 +625,20 @@ namespace Etsi.Ultimate.Business
             var revisionMaxFound = repo.FindCrMaxRevisionBySpecificationIdAndCrNumber(parentCr.Fk_Specification, parentCr.CRNumber);
             newCr.Revision = revisionMaxFound + 1;
 
-            //Put the parent CR contribution as Revised if not yet decided
+            //Put the parent CR contribution as Revised ANYTIME
             var crStatusMgr = ManagerFactory.Resolve<IChangeRequestStatusManager>();
             crStatusMgr.UoW = UoW;
             var allChangeRequestStatuses = crStatusMgr.GetAllChangeRequestStatuses();
             var revisedStatus = allChangeRequestStatuses.FirstOrDefault(x => x.Code == Enum_ChangeRequestStatuses.Revised.ToString());
             if (revisedStatus != null)
             {
-                if (newCr.RevisionOf.Equals(parentCr.WGTDoc) && parentCr.Fk_WGStatus.GetValueOrDefault() == 0)
+                if (newCr.RevisionOf.Equals(parentCr.WGTDoc))//WG level
                 {
                     parentCr.Fk_WGStatus = revisedStatus.Pk_EnumChangeRequestStatus;
                 }
                 else if (parentCr.ChangeRequestTsgDatas != null && 
                     parentCr.ChangeRequestTsgDatas.Any() && 
-                    newCr.RevisionOf.Equals(parentCr.ChangeRequestTsgDatas.First().TSGTdoc) && 
-                    parentCr.ChangeRequestTsgDatas.First().Fk_TsgStatus.GetValueOrDefault() == 0)
+                    newCr.RevisionOf.Equals(parentCr.ChangeRequestTsgDatas.First().TSGTdoc))//TSG level
                 {
                     parentCr.ChangeRequestTsgDatas.First().Fk_TsgStatus = revisedStatus.Pk_EnumChangeRequestStatus;
                 }

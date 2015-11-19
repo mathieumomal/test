@@ -13,6 +13,15 @@ namespace Etsi.Ultimate.Module.Versions {
     public partial class VersionPopup {
         
         /// <summary>
+        /// Contrôle RadCodeBlockVersion.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadCodeBlock RadCodeBlockVersion;
+        
+        /// <summary>
         /// Contrôle frmVersionPopup.
         /// </summary>
         /// <remarks>
@@ -20,6 +29,24 @@ namespace Etsi.Ultimate.Module.Versions {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlForm frmVersionPopup;
+        
+        /// <summary>
+        /// Contrôle isDraftVersionhf.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField isDraftVersionhf;
+        
+        /// <summary>
+        /// Contrôle versionSavedhf.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HiddenField versionSavedhf;
         
         /// <summary>
         /// Contrôle rsmVersionPopup.
@@ -74,6 +101,15 @@ namespace Etsi.Ultimate.Module.Versions {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label SpecAndTitle;
+        
+        /// <summary>
+        /// Contrôle VersionLblMandatory.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label VersionLblMandatory;
         
         /// <summary>
         /// Contrôle versionInEditMode.
@@ -148,6 +184,15 @@ namespace Etsi.Ultimate.Module.Versions {
         protected global::System.Web.UI.WebControls.CheckBox chckboxMissing;
         
         /// <summary>
+        /// Contrôle MeetingLblMandatory.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label MeetingLblMandatory;
+        
+        /// <summary>
         /// Contrôle lblMeeting.
         /// </summary>
         /// <remarks>
@@ -155,6 +200,33 @@ namespace Etsi.Ultimate.Module.Versions {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblMeeting;
+        
+        /// <summary>
+        /// Contrôle ReleaseLblMandatory.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label ReleaseLblMandatory;
+        
+        /// <summary>
+        /// Contrôle rcbRelease.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadComboBox rcbRelease;
+        
+        /// <summary>
+        /// Contrôle lblRelease.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblRelease;
         
         /// <summary>
         /// Contrôle upContentRemarks.
@@ -200,5 +272,68 @@ namespace Etsi.Ultimate.Module.Versions {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnClose;
+        
+        /// <summary>
+        /// Contrôle btnDelete.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnDelete;
+        
+        /// <summary>
+        /// Contrôle ConfirmDeletePanel.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel ConfirmDeletePanel;
+        
+        /// <summary>
+        /// Contrôle confirmMessage.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label confirmMessage;
+        
+        /// <summary>
+        /// Contrôle btnConfirmDelete.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnConfirmDelete;
+        
+        /// <summary>
+        /// Contrôle btnCancelDelete.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCancelDelete;
+        
+        /// <summary>
+        /// Contrôle FinishPanel.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel FinishPanel;
+        
+        /// <summary>
+        /// Contrôle btnFinishClose.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnFinishClose;
     }
 }

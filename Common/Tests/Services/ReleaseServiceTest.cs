@@ -56,9 +56,9 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         private static Dictionary<string, int> StatusToRelease = new Dictionary<string, int> { 
-            { "Open", ReleaseFakeRepository.OPENED_RELEASE_ID }, 
-            { "Frozen", ReleaseFakeRepository.FROZEN_RELEASE_ID }, 
-            { "Closed", ReleaseFakeRepository.CLOSED_RELEASE_ID } };
+            { "Open", ReleaseFakeRepository.OpenedReleaseId }, 
+            { "Frozen", ReleaseFakeRepository.FrozenReleaseId }, 
+            { "Closed", ReleaseFakeRepository.ClosedReleaseId } };
 
         [TestCase("Open", true, true)]
         [TestCase("Frozen", true, false)]
@@ -80,6 +80,23 @@ namespace Etsi.Ultimate.Tests.Services
             var rights = releaseAndRights.Value;
             Assert.AreEqual(closeEnabled, rights.HasRight(Enum_UserRights.Release_Close));
             Assert.AreEqual(freezeEnabled, rights.HasRight(Enum_UserRights.Release_Freeze));
+        }
+
+        [TestCase(Enum_ReleaseStatus.Open, 1)]
+        [TestCase(Enum_ReleaseStatus.Frozen, 2)]
+        [TestCase(Enum_ReleaseStatus.Closed, 1)]
+        public void Test_GetReleaseByStatus(string status, int expectedNumberOfReleases)
+        {
+            RepositoryFactory.Container.RegisterType<IReleaseRepository, ReleaseFakeRepository>(new TransientLifetimeManager());
+            // The fake right manager returns all rights, so we can check all the values.
+            ManagerFactory.Container.RegisterType<IRightsManager, RightsManagerFake>(new TransientLifetimeManager());
+
+            var releaseService = new ReleaseService();
+            var releaseAndRights = releaseService.GetAllReleasesByStatus(1, status);
+
+            Assert.IsNotNull(releaseAndRights.Key);
+            Assert.IsNotNull(releaseAndRights.Value);
+            Assert.AreEqual(expectedNumberOfReleases, releaseAndRights.Key.Count);
         }
 
         [Test]

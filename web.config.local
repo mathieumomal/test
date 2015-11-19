@@ -46,6 +46,7 @@
     <!-- Connection String for SQL Server 2008/2012 - kept for backwards compatability - legacy modules
     <add key="SiteSqlServer" value="Server=(local);Database=DotNetNuke;uid=;pwd=;"/>
     -->
+	<add key="AppVersion" value="1.01" />
     <add key="InstallTemplate" value="DotNetNuke.install.config" />
     <add key="AutoUpgrade" value="false" />
     <add key="UseInstallWizard" value="true" />
@@ -95,6 +96,10 @@
 	<add key="ContributionCommitFinalDecisionsUrl" value="http://www.contribution.loc/CommitFinalDecisions.aspx?meetingId={0}"/>	
 	<add key="MeetingRegistration" value="http://webapp.13.etsidev.org/3GPPRegistration/fMain.asp?mid={0}"/>
 	<add key="TdocDetailsUrl" value="http://www.contribution.loc/CreateTdoc.aspx?mode=view&amp;contributionUid={0}" />
+  
+  <add key="Specification_WithdrawMeetingSelectPopUp_RelativeLink" value="WithdrawMeetingSelectPopUp.aspx?SpecId={0}&amp;RelId={1}" />
+  <add key="Specification_UploadVersion_RelativeLink" value="/desktopmodules/Versions/UploadVersion.aspx?releaseId={0}&amp;specId={1}&amp;action={2}" />
+  <add key="Specification_RemoveSpecReleasePopUp_RelativeLink" value="PopUps/RemoveSpecReleasePopUp.aspx?SpecId={0}&amp;RelId={1}" />
 	
 		<!-- These parameters are independent of the environment -->
 		<add key="FtpExportAddress" value="ftp://ftp.3gpp.org/Information/WORK_PLAN/"/>
@@ -110,8 +115,8 @@
 	
 		<add key="PortalName" value="Ultimate"/>
 		<add key="EtsiWorkitemsDeliveryFolder" value="http://www.etsi.org/deliver/"/>
-    <add key="SpecificationDetailsUrl" value="http://www.dnn3gpp.loc/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId={0}" />
-    <add key="ReleaseDetailsUrl" value="http://www.dnn3gpp.loc/desktopmodules/Release/ReleaseDetails.aspx?releaseId={0}"/>
+    <add key="SpecificationDetailsUrl" value="http://www.localdev.me/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId={0}" />
+    <add key="ReleaseDetailsUrl" value="http://www.localdev.me/desktopmodules/Release/ReleaseDetails.aspx?releaseId={0}"/>
 	<add key="DownloadparticipantsListLink" value="http://localdev.me/desktopmodules/Meetings/DownloadParticipantsList.aspx?eventId={0}" />
     
 	<add key="CRsListRecordsMaxSize" value="100"/>
@@ -119,6 +124,12 @@
 	<add key="RelativeUrlWiRelatedSpecs" value="/Specifications.aspx?q=1&amp;WiUid={0}"/>
 	<add key="RelativeUrlWiRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;workitem={0}&amp;release={1}&amp;specnumber={2}"/>
     <add key="RelativeUrlVersionRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;versionId={0}&amp;release={1}"/>
+
+  <!-- Cookies names (DONT MODIFY NAMES WITHOUT CHANGE THEM INSIDE CONTRIBUTION AS WELL : SECURITY REASONS) -->
+  <add key="CookieName_MeetingsList"  value="MeetingsList_Cookie" />
+  <add key="CookieName_CrsList"       value="CrsList_Cookie" />
+  <add key="CookieName_WisList"       value="WisList_Cookie" />
+  <add key="CookieName_SpecsList"     value="SpecsList_Cookie" />
 
 	<!--  End of 3GPP Parameters  -->
   </appSettings>

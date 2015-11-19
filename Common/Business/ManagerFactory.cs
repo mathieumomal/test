@@ -81,6 +81,7 @@ namespace Etsi.Ultimate.Business
             Container.RegisterType<ISpecToItuRecordConverter, SpecToItuRecordConverter>(new TransientLifetimeManager());
             Container.RegisterType<IItuPreliminaryDataExtractor, ItuPreliminaryDataExtractor>(new TransientLifetimeManager());
             Container.RegisterType<IItuPreliminaryExporter, ItuPreliminaryExporter>(new TransientLifetimeManager());
+            Container.RegisterType<ISpecVersionNumberValidator, SpecVersionNumberValidator>(new TransientLifetimeManager());
         }
     }
 }

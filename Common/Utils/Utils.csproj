@@ -89,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigVariables.cs" />
+    <Compile Include="CookiesHelper.cs" />
     <Compile Include="MailManager.cs" />
     <Compile Include="Localization.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -166,6 +167,7 @@
     <EmbeddedResource Include="Localization.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Localization.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

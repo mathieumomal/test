@@ -112,6 +112,15 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.WebControls.Label lblSearchHeader;
         
         /// <summary>
+        /// Contrôle SelectPageSize.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadComboBox SelectPageSize;
+        
+        /// <summary>
         /// Contrôle pnlSearchContainer.
         /// </summary>
         /// <remarks>
@@ -193,6 +202,15 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.WebControls.CheckBox cbNumNotYetAllocated;
         
         /// <summary>
+        /// Contrôle cblTechnology.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBoxList cblTechnology;
+        
+        /// <summary>
         /// Contrôle cbDraft.
         /// </summary>
         /// <remarks>
@@ -227,24 +245,6 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox cbWithdrawnAfterCC;
-        
-        /// <summary>
-        /// Contrôle cblTechnology.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBoxList cblTechnology;
-        
-        /// <summary>
-        /// Contrôle btnDefault.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnDefault;
         
         /// <summary>
         /// Contrôle btnSearch.

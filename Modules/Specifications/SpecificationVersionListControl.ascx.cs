@@ -9,6 +9,7 @@ using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using System.Configuration;
 using System.Text;
+using Etsi.Ultimate.Module.Specifications.App_LocalResources;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
@@ -24,6 +25,10 @@ namespace Etsi.Ultimate.Module.Specifications
 
         private const string VersionPopupPath =
             "openVersionDetailsPopup({0},'{1}','Version details'); return false;";
+
+        //url, windowId, width, height, title, shouldCallMethodWhenClose
+        private const string OpenRadWin = "openRadWin('{0}', '{1}', {2}, {3}, '{4}', {5}); return false;";
+
         #endregion
 
         #region Public Properties
@@ -77,7 +82,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 if (!IsEditMode)
                 {
                     var basePage = (SpecificationBasePage)this.Page;
-                    var userRights = basePage.SpecReleaseRights.Where(x => x.Key == SpecReleaseID).FirstOrDefault().Value;
+                    var userRights = basePage.SpecReleaseRights.First(x => x.Key == SpecReleaseID).Value;
 
                     imgForceTransposition.Visible = userRights.HasRight(Enum_UserRights.Specification_ForceTransposition);
                     imgUnforceTransposition.Visible = userRights.HasRight(Enum_UserRights.Specification_UnforceTransposition);
@@ -85,16 +90,23 @@ namespace Etsi.Ultimate.Module.Specifications
                     imgInhibitPromote.Visible = userRights.HasRight(Enum_UserRights.Specification_InhibitPromote);
                     imgPromoteSpec.Visible = userRights.HasRight(Enum_UserRights.Specification_Promote);
                     imgRemoveInhibitPromote.Visible = userRights.HasRight(Enum_UserRights.Specification_RemoveInhibitPromote);
-
+                    imgDemoteSpec.Visible = userRights.HasRight(Enum_UserRights.Specification_Demote);
 
                     imgWithdrawSpec.Visible = userRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
-                    imgWithdrawSpec.OnClientClick = "openRadWin(" + SpecId.GetValueOrDefault() + "," + ReleaseId.GetValueOrDefault() + "); return false;";
+                    imgWithdrawSpec.OnClientClick = string.Format(OpenRadWin, string.Format(ConfigVariables.SpecificationWithdrawMeetingSelectPopUpRelativeLink, SpecId.GetValueOrDefault(), ReleaseId.GetValueOrDefault()), "Withdraw", 450, 220, "Withdraw specification", "false");
 
                     imgAllocateVersion.Visible = (userRights.HasRight(Enum_UserRights.Versions_Allocate) && IsSpecNumberAssigned);
-                    imgAllocateVersion.OnClientClick = "openRadWinVersion('" + ReleaseId.GetValueOrDefault() + "','" + SpecId.GetValueOrDefault() + "','allocate', 'Allocate version'); return false;";
+                    imgAllocateVersion.OnClientClick = string.Format(OpenRadWin, string.Format(ConfigVariables.SpecificationUploadVersionRelativeLink, ReleaseId.GetValueOrDefault(), SpecId.GetValueOrDefault(), "allocate"), "Version allocate", 440, 320, "Allocate version", "true");
 
                     imgUploadVersion.Visible = (userRights.HasRight(Enum_UserRights.Versions_Upload) && IsSpecNumberAssigned);
-                    imgUploadVersion.OnClientClick = "openRadWinVersion('" + ReleaseId.GetValueOrDefault() + "','" + SpecId.GetValueOrDefault() + "', 'upload', 'Upload version'); return false;";
+                    imgUploadVersion.OnClientClick = string.Format(OpenRadWin, string.Format(ConfigVariables.SpecificationUploadVersionRelativeLink, ReleaseId.GetValueOrDefault(), SpecId.GetValueOrDefault(), "upload"), "Version upload", 440, 320, "Upload version", "true");
+
+                    imgDeleteSpecRelease.Visible = (userRights.HasRight(Enum_UserRights.SpecificationRelease_Remove) || userRights.HasRight(Enum_UserRights.SpecificationRelease_Remove_Disabled));
+                    imgDeleteSpecRelease.Enabled = userRights.HasRight(Enum_UserRights.SpecificationRelease_Remove);
+                    imgDeleteSpecRelease.ToolTip = userRights.HasRight(Enum_UserRights.SpecificationRelease_Remove)
+                        ? SpecificationDetails_aspx.Button_Delete_SpecRelease_Tooltip_Allowed
+                        : SpecificationDetails_aspx.Button_Delete_SpecRelease_Tooltip_NotAllowed;
+                    imgDeleteSpecRelease.OnClientClick = string.Format(OpenRadWin, string.Format(ConfigVariables.SpecificationRemoveSpecReleasePopUpRelativeLink, SpecId.GetValueOrDefault(), ReleaseId.GetValueOrDefault()), "Remove Spec-Release", 450, 150, "Remove Specification-Release", "true");
                 }
                 else
                 {
@@ -233,6 +245,21 @@ namespace Etsi.Ultimate.Module.Specifications
             }
         }
 
+        /// <summary>
+        /// Click event for Demote Specification Image
+        /// </summary>
+        /// <param name="sender">Demote Specification Image</param>
+        /// <param name="e">Event Args</param>
+        protected void imgDemoteSpec_Click(object sender, System.Web.UI.ImageClickEventArgs e)
+        {
+            if (SpecId.HasValue && PersonId.HasValue && ReleaseId.HasValue)
+            {
+                var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                specSvc.DemoteSpecification(PersonId.Value, SpecId.Value, ReleaseId.Value);
+                Refresh();
+            }
+        }
+
         #endregion
 
         #region Private Methods
@@ -329,7 +356,10 @@ namespace Etsi.Ultimate.Module.Specifications
             address.RemoveAll(s => s.Contains("Rel"));
             Response.Redirect(string.Join("&", address) + "&selectedTab=Releases");
         }
+        
 
         #endregion
+
+
     }
 }

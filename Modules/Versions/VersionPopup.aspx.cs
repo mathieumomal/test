@@ -6,6 +6,7 @@ using Etsi.Ultimate.Controls;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Utils;
+using Telerik.Web.UI;
 
 namespace Etsi.Ultimate.Module.Versions
 {
@@ -15,9 +16,11 @@ namespace Etsi.Ultimate.Module.Versions
 
         private const string GetParamVersionId = "versionId";
         private const string GetParamIsEditMode = "isEditMode";
+        private const string GetParamVersionSaved = "versionSaved";
         private const string DsIdKey = "ETSI_DS_ID";
         private const string ViewStateVersion = "VIEWSTATE_VERSION_{0}";
         private const string SpecTitle = "{0} - {1}";
+        private const string CannotEditMajorVersionNumberForDraft = "Edition of major version number for UCC version is not allowed";
 
         protected RemarksControl remarksCtrl;
         protected MeetingControl meetingCtrl;
@@ -44,6 +47,29 @@ namespace Etsi.Ultimate.Module.Versions
                 return _isEditMode.GetValueOrDefault();
             }
             set { _isEditMode = value; }
+        }
+
+        /// <summary>
+        /// Get Current version status
+        /// </summary>
+        public bool isDraftVersion
+        {
+            get { return Version == null || Version.MajorVersion == null || Version.MajorVersion < 3; }
+        }
+
+        /// <summary>
+        /// Version save status
+        /// </summary>
+        public bool VersionSaved
+        {
+            get
+            {
+                return Convert.ToBoolean(versionSavedhf.Value);
+            }
+            set
+            {
+                versionSavedhf.Value = value.ToString();
+            }
         }
 
         /// <summary>
@@ -77,7 +103,7 @@ namespace Etsi.Ultimate.Module.Versions
             //Check necessary properties send as get parameters
             if (!GetRequestParameters())
             {
-                ThrowError(Localization.GenericError);
+                ThrowMessage(Localization.GenericError, "error");
                 return;
             }
 
@@ -93,10 +119,14 @@ namespace Etsi.Ultimate.Module.Versions
 
                 //Adapt UI according to the current mode and user's rights
                 ConfigureUi(remarksCtrl.UserRights);
-            }
 
+                VersionSaved = false;
+            }
             //Configure remarks control
             ConfigureRemarksControl(remarksCtrl.UserRights);
+
+            // init hiddenfield for js
+            isDraftVersionhf.Value = isDraftVersion.ToString();
         }
 
         /// <summary>
@@ -113,9 +143,13 @@ namespace Etsi.Ultimate.Module.Versions
             var response = versionSvc.UpdateVersion(Version, GetPersonId());
             if (response.Report.GetNumberOfErrors() > 0 || response.Result == null)
             {
-                ThrowError(response.Report.ErrorList.First());
+                ThrowMessage(response.Report.ErrorList.First(), "error", false);
             }
-            RedirectionBetweenModes(false);
+            else
+            {
+                VersionSaved = true;
+                RedirectionBetweenModes(false);
+            }
         }
 
         /// <summary>
@@ -136,6 +170,69 @@ namespace Etsi.Ultimate.Module.Versions
         protected void btnCancel_Click(object sender, EventArgs e)
         {
             RedirectionBetweenModes(false);
+        }
+
+        /// <summary>
+        /// Move to confirm delete view mode
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnDelete_OnClick(object sender, EventArgs e)
+        {
+            divVersionPopup.Visible = false;
+            ConfirmDeletePanel.Visible = true;
+            var ver = string.Format("{0}.{1}.{2}", Version.MajorVersion
+                , Version.TechnicalVersion,
+                Version.EditorialVersion);
+
+            if (Version.DocumentUploaded.HasValue || !string.IsNullOrWhiteSpace(Version.Location))
+            {
+                ThrowMessage(Localization.Version_Already_Uploaded, "warning");
+            }
+
+            confirmMessage.Text = string.Format(Localization.Version_Confirm_Delete, ver);
+        }
+
+        /// <summary>
+        /// Confirmed deleting, show result
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnConfirmDelete_OnClick(object sender, EventArgs e)
+        {
+            var versionSvc = new SpecVersionService();
+            try
+            {
+                var response = versionSvc.DeleteVersion(GetPersonId(), VersionId);
+
+                if (!response.Result || response.Report.GetNumberOfErrors() > 0)
+                {
+                    ThrowMessage(string.Join(",", response.Report.ErrorList.ToArray()), "error");
+                }
+                else
+                {
+                    ThrowMessage(Localization.VersionSuccessfullyDeleted, "success");
+                }
+            }
+            catch (Exception)
+            {
+                ThrowMessage(Localization.GenericError, "error");
+            }
+
+            ConfirmDeletePanel.Visible = false;
+            FinishPanel.Visible = true;
+        }
+
+        /// <summary>
+        /// Move to view mode
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void btnCancelDelete_OnClick(object sender, EventArgs e)
+        {
+            divVersionPopup.Visible = true;
+            ConfirmDeletePanel.Visible = false;
+            confirmMessage.Text = string.Empty;
         }
 
         #endregion
@@ -211,6 +308,7 @@ namespace Etsi.Ultimate.Module.Versions
             var absoluteUrl = Request.Url.AbsolutePath;
             var urlParams = HttpUtility.ParseQueryString(Request.QueryString.ToString());
             urlParams.Set(GetParamIsEditMode, toEditMode.ToString());
+            urlParams.Set(GetParamVersionSaved, VersionSaved.ToString());
             Response.Redirect(string.Format("{0}?{1}", absoluteUrl, urlParams));
         }
 
@@ -220,12 +318,14 @@ namespace Etsi.Ultimate.Module.Versions
         private void GetEditedVersion()
         {
             int output;
+
             if (!int.TryParse(NewVersionMajorVal.Text, out output) ||
                 !int.TryParse(NewVersionTechnicalVal.Text, out output) ||
-                !int.TryParse(NewVersionEditorialVal.Text, out output) || 
-                meetingCtrl.SelectedMeetingId == 0)
+                !int.TryParse(NewVersionEditorialVal.Text, out output) ||
+                !int.TryParse(rcbRelease.SelectedValue, out output) || 
+                (meetingCtrl.SelectedMeetingId == 0 && int.Parse(NewVersionMajorVal.Text) > 2))
             {
-                ThrowError(Localization.GenericError);
+                ThrowMessage(Localization.GenericError, "error");
                 return;
             }
 
@@ -235,6 +335,7 @@ namespace Etsi.Ultimate.Module.Versions
             Version.SupressFromSDO_Pub = chckboxSdo.Checked;
             Version.SupressFromMissing_List = chckboxMissing.Checked;
             Version.Source = meetingCtrl.SelectedMeetingId;
+            Version.Fk_ReleaseId = int.Parse(rcbRelease.SelectedValue);
 
             //Remarks
             Version.Remarks = remarksCtrl.DataSource;
@@ -251,7 +352,7 @@ namespace Etsi.Ultimate.Module.Versions
             //Version should exist
             if (response.Key == null)
             {
-                ThrowError(Localization.GenericError);
+                ThrowMessage(Localization.GenericError, "error");
                 return null;
             }
             Version = response.Key;
@@ -259,7 +360,7 @@ namespace Etsi.Ultimate.Module.Versions
             //In edit mode user should have right to edit version
             if (IsEditMode && !response.Value.HasRight(Enum_UserRights.Versions_Edit))
             {
-                ThrowError(Localization.RightError);
+                ThrowMessage(Localization.RightError, "error");
                 return null;
             }
             
@@ -284,6 +385,20 @@ namespace Etsi.Ultimate.Module.Versions
             if (mtg != null)
             {
                 lblMeeting.Text = mtg.MtgShortRef;
+            }
+
+            // Releases
+            var releaseSvc = ServicesFactory.Resolve<IReleaseService>();
+            var releases = releaseSvc.GetReleasesLinkedToASpec(Version.Fk_SpecificationId ?? 0, GetPersonId());
+            if(releases.Result == null || releases.Report.GetNumberOfErrors() > 0)
+                ThrowMessage(releases.Report.ErrorList.First(), "error");
+            //1) Filled dropdown
+            rcbRelease.Items.AddRange(releases.Result.Select(x => new RadComboBoxItem(x.Name, x.Pk_ReleaseId.ToString())).ToArray());
+            //2) Select current release
+            if (Version.Release != null)
+            {
+                lblRelease.Text = Version.Release.Name;
+                rcbRelease.SelectedValue = Version.Release.Pk_ReleaseId.ToString();
             }
 
             return response.Value;
@@ -326,6 +441,12 @@ namespace Etsi.Ultimate.Module.Versions
         /// <param name="rights"></param>
         private void ConfigureUi(UserRightsContainer rights)
         {
+            // Show / hide Mandatory labels
+            ReleaseLblMandatory.Visible = IsEditMode;
+            VersionLblMandatory.Visible = IsEditMode;
+            MeetingLblMandatory.Visible = IsEditMode;
+
+
             if (IsEditMode)//Edit mode
             {
                 //Buttons
@@ -333,18 +454,46 @@ namespace Etsi.Ultimate.Module.Versions
                 btnCancel.Visible = true;
                 btnEdit.Visible = false;
                 btnClose.Visible = false;
+
                 //Version
                 versionInEditMode.Visible = true;
                 versionInViewMode.Visible = false;
-                NewVersionMajorVal.Enabled = false;
-                NewVersionTechnicalVal.Enabled = false;
-                NewVersionEditorialVal.Enabled = false;
+                /* possibility to edit version numbers when spec is not yet uploaded, and is not linked to any CRs */
+                var specVersionService = ServicesFactory.Resolve<ISpecVersionService>();
+                var numbersEditAllowedResponse = specVersionService.CheckVersionNumbersEditAllowed(Version, GetPersonId());
+                if (numbersEditAllowedResponse.Result)
+                {
+                    NewVersionMajorVal.Enabled = isDraftVersion;
+                    if (!isDraftVersion)
+                        NewVersionMajorVal.ToolTip = CannotEditMajorVersionNumberForDraft;
+                    NewVersionTechnicalVal.Enabled = true;
+                    NewVersionEditorialVal.Enabled = true;
+                    
+                }
+                else if (numbersEditAllowedResponse.Report.GetNumberOfWarnings() > 0)
+                {
+                    NewVersionMajorVal.Enabled = false;
+                    NewVersionMajorVal.ToolTip = string.Join("\n", numbersEditAllowedResponse.Report.WarningList);
+                    NewVersionTechnicalVal.Enabled = false;
+                    NewVersionEditorialVal.Enabled = false;
+                }
+                else
+                {
+                    NewVersionMajorVal.Enabled = false;
+                    NewVersionTechnicalVal.Enabled = false;
+                    NewVersionEditorialVal.Enabled = false;
+                }
+
                 //Checkboxes
                 chckboxSdo.Enabled = true;
                 chckboxMissing.Enabled = true;
                 //Meeting
                 meetingCtrl.Visible = true;
                 lblMeeting.Visible = false;
+                // Releases
+                rcbRelease.Visible = true;
+                rcbRelease.Enabled = isDraftVersion;
+                lblRelease.Visible = false;
             }
             else//View mode
             {
@@ -365,7 +514,14 @@ namespace Etsi.Ultimate.Module.Versions
                 //Meeting
                 meetingCtrl.Visible = false;
                 lblMeeting.Visible = true;
+                // Releases
+                rcbRelease.Visible = false;
+                lblRelease.Visible = true;
             }
+
+            //User have right to delete draft version -> enable delete button
+            if (rights.HasRight(Enum_UserRights.Version_Draft_Delete))
+                btnDelete.Visible = true;
         }
 
         /// <summary>
@@ -388,14 +544,16 @@ namespace Etsi.Ultimate.Module.Versions
         /// Throw error : hide the form and display the error message
         /// </summary>
         /// <param name="message">Error message</param>
-        private void ThrowError(string message)
+        /// <param name="type">error, success, warning</param>
+        private void ThrowMessage(string message, string type, bool hideContentPopup = true)
         {
             pnlMessage.Visible = true;
-            divVersionPopup.Visible = false;
-            pnlMessage.CssClass = "messageBox error";
+            divVersionPopup.Visible = !hideContentPopup;
+            pnlMessage.CssClass = "messageBox " + type;
             lblMessage.Text = message;
         }
 
         #endregion
+
     }
 }

@@ -30,6 +30,19 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         /// <summary>
+        /// Gets the releases filtered by status.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="releaseStatus">release status id</param>
+        /// <returns>List of Releases</returns>
+        public List<Release> GetReleasesByStatus(int personId, ReleaseStatus releaseStatus)
+        {
+            LogManager.Debug("[ServiceCall][GetReleases] PersonId=" + personId + "; releaseStatus=" + releaseStatus);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetReleasesByStatus(personId, releaseStatus);
+        }
+
+        /// <summary>
         /// Get a release by its id
         /// </summary>
         /// <param name="personId"></param>
@@ -477,6 +490,19 @@ namespace Etsi.Ultimate.WCF.Service
             LogManager.Debug("[ServiceCall][GetLatestVersionsBySpecIds] specIds=" + string.Join(", ", specIds));
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetLatestVersionsBySpecIds(specIds);        
+        }
+
+        /// <summary>
+        /// Unlink tdoc from related version
+        /// </summary>
+        /// <param name="uid">Tdoc uid</param>
+        /// <param name="personId"></param>
+        /// <returns>True for success case</returns>
+        public ServiceResponse<bool> UnlinkTdocFromVersion(string uid, int personId)
+        {
+            LogManager.Debug(string.Format("[ServiceCall][UnlinkTdocFromVersion] uid={0}, personId={1}", uid, personId));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.UnlinkTdocFromVersion(uid, personId);
         }
 
         #endregion

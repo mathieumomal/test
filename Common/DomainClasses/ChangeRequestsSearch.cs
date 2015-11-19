@@ -9,6 +9,14 @@ namespace Etsi.Ultimate.DomainClasses
     [Serializable]
     public class ChangeRequestsSearch
     {
+        public ChangeRequestsSearch()
+        {
+            MeetingIds = new List<int>();
+            WorkItemIds = new List<int>();
+            ReleaseIds = new List<int>();
+            WgStatusIds = new List<int>();
+            TsgStatusIds = new List<int>();
+        }
 
         public enum ChangeRequestOrder {  };
 

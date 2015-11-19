@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Xml.Schema;
 using Etsi.Ultimate.DomainClasses;
 
 namespace Etsi.Ultimate.Repositories
@@ -41,6 +42,11 @@ namespace Etsi.Ultimate.Repositories
             return AllIncluding(t => t.Enum_Serie, t => t.Remarks, t => t.Histories,
                 t => t.SpecificationTechnologies, t => t.SpecificationResponsibleGroups, t => t.SpecificationRapporteurs, t => t.Versions.Select(x => x.Remarks),
                 t => t.Specification_Release.Select(x => x.Remarks)).Where(x => x.Pk_SpecificationId == id).FirstOrDefault();
+        }
+
+        public void Delete(int id)
+        {
+            throw new InvalidOperationException("Cannot delete Specification entity");
         }
 
         public void InsertOrUpdate(Specification specification)
@@ -115,11 +121,6 @@ namespace Etsi.Ultimate.Repositories
                     UoW.Context.SetDeleted(x);
             });
 
-        }
-
-        public void Delete(int id)
-        {
-            throw new InvalidOperationException("Cannot delete Specification entity");
         }
 
         /// <summary>
@@ -258,6 +259,23 @@ namespace Etsi.Ultimate.Repositories
             return query.FirstOrDefault();
         }
 
+        /// <summary>
+        /// Delete spec release
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <param name="releaseId"></param>
+        public void DeleteSpecRelease(int specId, int releaseId)
+        {
+            var specRelease = UoW.Context.Specification_Release.Include(x => x.Remarks).FirstOrDefault(sr => sr.Fk_SpecificationId == specId && sr.Fk_ReleaseId == releaseId);
+            if (specRelease != null)
+            {
+                //Delete related remarks
+                specRelease.Remarks.ToList().ForEach(x => UoW.Context.SetDeleted(x));
+                //Delete spec release
+                UoW.Context.SetDeleted(specRelease);
+            }
+        }
+
         public List<Specification> GetAllRelatedSpecificationsByReleaseId(int releaseId)
         {
             return UoW.Context.Specification_Release.Include(t => t.Specification).Where(x => x.Fk_ReleaseId == releaseId).Select(x => x.Specification).ToList();
@@ -282,6 +300,79 @@ namespace Etsi.Ultimate.Repositories
         {
             return AllIncluding(spec => spec.SpecificationResponsibleGroups).Where(x => specNumbersList.Contains(x.Number)).ToList();
         }
+
+        /// <summary>
+        /// Should return the uid of the spec if spec exists else should return null
+        /// </summary>
+        /// <param name="specId">Spec id</param>
+        /// <returns>True if spec exists</returns>
+        public string SpecExists(int specId)
+        {
+            var spec = UoW.Context.Specifications.FirstOrDefault(x => x.Pk_SpecificationId == specId);
+            if (spec == null)
+                return null;
+            return spec.Number;
+        }
+
+        #region Delete spec
+
+        /// <summary>
+        /// Deletion Initialization of a specification with all its related records
+        /// </summary>
+        /// <param name="specId">Spec id</param>
+        /// <returns>False if spec not found</returns>
+        public bool DeleteSpecification(int specId)
+        {
+            //Find spec and all its related objects
+            var spec = AllIncluding(x => 
+                x.Specification_Release, 
+                x => x.Remarks, 
+                x => x.Histories,
+                x => x.Versions,
+                x => x.Specification_WorkItem,
+                x => x.SpecificationRapporteurs,
+                x => x.SpecificationResponsibleGroups,
+                x => x.SpecificationChilds,
+                x => x.SpecificationParents,
+                x => x.SpecificationTechnologies).FirstOrDefault(s => s.Pk_SpecificationId == specId);
+
+            if (spec == null)//If spec not found should return false
+                return false;
+
+            //Remove Remarks
+            spec.Remarks.ToList().ForEach(x => { UoW.Context.SetDeleted(x); });
+
+            //Remove History
+            spec.Histories.ToList().ForEach(x => { UoW.Context.SetDeleted(x); });
+
+            //Remove Technologies
+            spec.SpecificationTechnologies.ToList().ForEach(x => { UoW.Context.SetDeleted(x); });
+
+            //Remove WIs
+            spec.Specification_WorkItem.ToList().ForEach(x => { UoW.Context.SetDeleted(x); });
+
+            //Remove Rapporteurs
+            spec.SpecificationRapporteurs.ToList().ForEach(x => { UoW.Context.SetDeleted(x); });
+
+            //Remove Responsible groups
+            spec.SpecificationResponsibleGroups.ToList().ForEach(x => { UoW.Context.SetDeleted(x); });
+
+            //Remove childs and parents (genealogy)
+            spec.SpecificationChilds.ToList().ForEach(x => { spec.SpecificationChilds.Remove(x); });
+            spec.SpecificationParents.ToList().ForEach(x => { spec.SpecificationParents.Remove(x); });
+            
+            //Remove Versions
+            spec.Versions.ToList().ForEach(x => { UoW.Context.SetDeleted(x); });
+
+            //Remove SpecReleases
+            spec.Specification_Release.ToList().ForEach(x => { UoW.Context.SetDeleted(x); });
+
+            //Remove Specification
+            UoW.Context.SetDeleted(spec);
+
+            return true;
+        }
+        #endregion
     }
 
     public interface ISpecificationRepository : IEntityRepository<Specification>
@@ -308,6 +399,13 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="includeRelease"></param>
         /// <returns></returns>
         Specification_Release GetSpecificationReleaseByReleaseIdAndSpecId(int specId, int releaseId, bool includeRelease);
+
+        /// <summary>
+        /// Delete spec release
+        /// </summary>
+        /// <param name="specId"></param>
+        /// <param name="releaseId"></param>
+        void DeleteSpecRelease(int specId, int releaseId);
 
         /// <summary>
         /// Get all specs by a release
@@ -342,5 +440,19 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="specNumbersList"></param>
         /// <returns></returns>
         List<Specification> GetSpecificationListByNumber(List<string> specNumbersList);
+
+        /// <summary>
+        /// Should return the uid of the spec if spec exists else should return null
+        /// </summary>
+        /// <param name="specId">Spec id</param>
+        /// <returns>True if spec exists</returns>
+        string SpecExists(int specId);
+
+        /// <summary>
+        /// Deletion Initialization of a specification with all its related records
+        /// </summary>
+        /// <param name="specId">Spec id</param>
+        /// <returns>False if spec not found</returns>
+        bool DeleteSpecification(int specId);
     }
 }

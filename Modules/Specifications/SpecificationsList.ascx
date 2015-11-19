@@ -38,9 +38,9 @@
                 </tr>
                 <tr>
                     <td>
-                        <telerik:RadPanelBar runat="server" ID="rpbSpecSearch" Width="100%" OnClientItemClicking="PreventCollapse">
+                        <telerik:RadPanelBar runat="server" ID="rpbSpecSearch" Width="100%" OnClientItemClicking="PreventCollapse" >
                             <Items>
-                                <telerik:RadPanelItem runat="server" ID="searchPanel">
+                                <telerik:RadPanelItem runat="server" ID="searchPanel" Expanded="True">
                                     <HeaderTemplate>
                                         <table style="width: 100%; vertical-align: middle" class="SpecificationSearchHeader">
                                             <tr>
@@ -49,6 +49,11 @@
                                                 </td>
                                                 <td style="text-align: center" class="openCloseRadPanelBar">
                                                     <asp:Label ID="lblSearchHeader" runat="server" CssClass="openCloseRadPanelBar"/>
+                                                </td>
+                                                <td style="width: 180px;">
+                                                    <span>Items per page</span>
+                                                    <telerik:RadComboBox ID="SelectPageSize" runat="server" Width="80" OnSelectedIndexChanged="SelectPageSize_OnSelectedIndexChanged" AutoPostBack="True">
+                                                    </telerik:RadComboBox>
                                                 </td>
                                                 <td style="width: 20px;">
                                                     <a class="rpExpandable">
@@ -60,9 +65,10 @@
                                     </HeaderTemplate>
                                     <ContentTemplate>
                                         <asp:Panel ID="pnlSearchContainer" runat="server" DefaultButton="btnSearch">
-                                            <table style="width: 100%; padding: 20px 50px 20px 50px;">
+                                            <table style="width: 100%; padding: 5px 5px 5px 5px;">
                                                 <tr>
-                                                    <td style="width: 50%; vertical-align: top;">
+                                                    <!-- Column 1 -->
+                                                    <td style="width: 33%; vertical-align: top;">
                                                         <table style="width: 100%;">
                                                             <tr>
                                                                 <td style="width: 40%;">Title/Specification number</td>
@@ -82,6 +88,17 @@
                                                                     <asp:CheckBox ID="cbTechnicalReport" runat="server" Text="Technical Report (TR)"></asp:CheckBox>
                                                                 </td>
                                                             </tr>
+                                                        </table>
+                                                    </td>
+                                                    <!-- Column 2 -->
+                                                    <td style="width: 33%; vertical-align: top;">
+                                                        <table style="width: 100%;">
+                                                            <tr>
+                                                                <td style="width: 40%;">Release</td>
+                                                                <td style="width: 60%;">
+                                                                    <ult:releasesearchcontrol id="ReleaseCtrl" runat="server" width="200" dropdownwidth="200" />
+                                                                </td>
+                                                            </tr>
                                                             <tr>
                                                                 <td>Publication</td>
                                                                 <td>
@@ -94,16 +111,17 @@
                                                                 <td>
                                                                     <asp:CheckBox ID="cbNumNotYetAllocated" runat="server"></asp:CheckBox></td>
                                                             </tr>
-                                                        </table>
-                                                    </td>
-                                                    <td style="width: 50%; vertical-align: top;">
-                                                        <table style="width: 100%;">
                                                             <tr>
-                                                                <td style="width: 40%;">Release</td>
-                                                                <td style="width: 60%;">
-                                                                    <ult:releasesearchcontrol id="ReleaseCtrl" runat="server" width="200" dropdownwidth="200" />
+                                                                <td>Technology</td>
+                                                                <td>
+                                                                    <asp:CheckBoxList ID="cblTechnology" runat="server" RepeatDirection="Horizontal"></asp:CheckBoxList>
                                                                 </td>
                                                             </tr>
+                                                        </table>
+                                                    </td>
+                                                    <!-- Column 3 -->
+                                                    <td style="width: 33%; vertical-align: top;">
+                                                        <table style="width: 100%;">
                                                             <tr>
                                                                 <td>Status</td>
                                                                 <td>
@@ -114,23 +132,16 @@
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td>Technology</td>
-                                                                <td>
-                                                                    <asp:CheckBoxList ID="cblTechnology" runat="server" RepeatDirection="Horizontal"></asp:CheckBoxList>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>&nbsp;</td>
                                                                 <td>&nbsp;</td>
                                                             </tr>
                                                             <tr>
                                                                 <td colspan="2" style="text-align: right; padding-right: 20px">
-                                                                    <asp:Button ID="btnDefault" Visible="false" runat="server" Text="Default" Width="150px" OnClientClick="collapseItem()"></asp:Button>
-                                                                    <asp:Button ID="btnSearch" runat="server" Text="Search" Width="150px" OnClick="btnSearch_Click" OnClientClick="collapseItem()"></asp:Button></td>
-                                                                    <asp:Button ID="btnRefresh" runat="server" Text="Refresh" Width="150px" OnClick="btnRefresh_Click" OnClientClick="collapseItem()" CssClass="btnHidden"></asp:Button></td>
+                                                                    <asp:Button ID="btnSearch" runat="server" Text="Search" Width="150px" OnClick="btnSearch_Click"></asp:Button></td>
+                                                                    <asp:Button ID="btnRefresh" runat="server" Text="Refresh" Width="150px" OnClick="btnRefresh_Click" CssClass="btnHidden"></asp:Button>
+                                                                </td>
                                                             </tr>
                                                         </table>
-                                                    </td>
+                    </td>
                                                 </tr>
                                             </table>
                                         </asp:Panel>
@@ -142,7 +153,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <telerik:RadGrid ID="rgSpecificationList" runat="server"
+                        <telerik:RadGrid ID="rgSpecificationList" runat="server" 
                             EnableEmbeddedSkins="false"
                             EnableEmbeddedBaseStylesheet="false"
                             Skin="Ultimate"
@@ -157,7 +168,7 @@
                             <ClientSettings>
                                 <Scrolling AllowScroll="True" UseStaticHeaders="True" SaveScrollPosition="true"></Scrolling>
                             </ClientSettings>
-                            <PagerStyle AlwaysVisible="true" Mode="NextPrevAndNumeric" PageButtonCount="10" />
+                             <PagerStyle AlwaysVisible="true" Mode="NextPrevAndNumeric" Position="Top" PageButtonCount="10" PagerTextFormat="{4} {5} specifications found, displaying {2} to {3}" />
                             <MasterTableView ClientDataKeyNames="Pk_SpecificationId" Width="100%" AllowNaturalSort="false">
                                 <SortExpressions>
                                     <telerik:GridSortExpression FieldName="Title" SortOrder="None" />
@@ -256,15 +267,6 @@
 		    }
 		    adaptContentHeight();
 		}
-
-
-		function collapseItem() {
-		    var panelBar = $find("<%= rpbSpecSearch.ClientID %>");
-            var item = panelBar.get_items().getItem(0);
-            if (item) {
-                item.collapse();
-            }
-        }
 
         //Adapt RagGrid height based on the "contentHeight" event (in the mainpage.ascx)
         $("#content").on('contentHeight', function (event, hContent) {

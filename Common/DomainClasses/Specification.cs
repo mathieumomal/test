@@ -17,20 +17,21 @@ namespace Etsi.Ultimate.DomainClasses
     {
         public Specification()
         {
+            this.ChangeRequests = new HashSet<ChangeRequest>();
             this.Histories = new HashSet<History>();
             this.Remarks = new HashSet<Remark>();
+            this.SpecificationTechnologies = new HashSet<SpecificationTechnology>();
             this.Specification_WorkItem = new HashSet<Specification_WorkItem>();
             this.SpecificationRapporteurs = new HashSet<SpecificationRapporteur>();
             this.Specification_Release = new HashSet<Specification_Release>();
-            this.SpecificationTechnologies = new HashSet<SpecificationTechnology>();
             this.SpecificationResponsibleGroups = new HashSet<SpecificationResponsibleGroup>();
+            this.Versions = new HashSet<SpecVersion>();
             this.SpecificationParents = new HashSet<Specification>();
             this.SpecificationChilds = new HashSet<Specification>();
-            this.Versions = new HashSet<SpecVersion>();
-            this.ChangeRequests = new HashSet<ChangeRequest>();
         }
     
         public int Pk_SpecificationId { get; set; }
+        public Nullable<bool> IsTS { get; set; }
         public string Number { get; set; }
         public bool IsActive { get; set; }
         public Nullable<bool> IsUnderChangeControl { get; set; }
@@ -41,26 +42,25 @@ namespace Etsi.Ultimate.DomainClasses
         public Nullable<bool> EPS { get; set; }
         public Nullable<bool> C_2gCommon { get; set; }
         public Nullable<System.DateTime> CreationDate { get; set; }
+        public Nullable<System.DateTime> MOD_TS { get; set; }
+        public string MOD_BY { get; set; }
         public Nullable<System.DateTime> TitleVerified { get; set; }
         public string URL { get; set; }
         public string ITU_Description { get; set; }
         public Nullable<int> Fk_SerieId { get; set; }
-        public Nullable<bool> IsTS { get; set; }
-        public Nullable<System.DateTime> MOD_TS { get; set; }
-        public string MOD_BY { get; set; }
     
+        public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
         public virtual Enum_Serie Enum_Serie { get; set; }
         public virtual ICollection<History> Histories { get; set; }
         public virtual ICollection<Remark> Remarks { get; set; }
+        public virtual ICollection<SpecificationTechnology> SpecificationTechnologies { get; set; }
         public virtual ICollection<Specification_WorkItem> Specification_WorkItem { get; set; }
         public virtual ICollection<SpecificationRapporteur> SpecificationRapporteurs { get; set; }
         public virtual ICollection<Specification_Release> Specification_Release { get; set; }
-        public virtual ICollection<SpecificationTechnology> SpecificationTechnologies { get; set; }
         public virtual ICollection<SpecificationResponsibleGroup> SpecificationResponsibleGroups { get; set; }
+        public virtual ICollection<SpecVersion> Versions { get; set; }
         public virtual ICollection<Specification> SpecificationParents { get; set; }
         public virtual ICollection<Specification> SpecificationChilds { get; set; }
-        public virtual ICollection<SpecVersion> Versions { get; set; }
-        public virtual ICollection<ChangeRequest> ChangeRequests { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

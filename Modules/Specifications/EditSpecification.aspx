@@ -21,7 +21,9 @@
     <script src="JS/jquery.min.js"></script>
     <script src="JS/jquery-validate.min.js"></script>
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
-    <script src="JS/CommonScript.js"></script>
+    <telerik:RadCodeBlock ID="RadCodeBlockVersion" runat="server">
+        <script src="JS/CommonScript.js?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>"></script>
+    </telerik:RadCodeBlock>
 </head>
 <body>
     <form id="specEditForm" runat="server">

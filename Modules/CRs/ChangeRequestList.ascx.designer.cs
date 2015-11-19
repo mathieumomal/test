@@ -31,6 +31,15 @@ namespace Etsi.Ultimate.Module.CRs {
         protected global::Telerik.Web.UI.RadAjaxManager ramCrs;
         
         /// <summary>
+        /// Contrôle RadCodeBlockVersion.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadCodeBlock RadCodeBlockVersion;
+        
+        /// <summary>
         /// Contrôle crList.
         /// </summary>
         /// <remarks>
@@ -103,6 +112,15 @@ namespace Etsi.Ultimate.Module.CRs {
         protected global::System.Web.UI.WebControls.Label lblCrSearchHeader;
         
         /// <summary>
+        /// Contrôle SelectPageSize.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadComboBox SelectPageSize;
+        
+        /// <summary>
         /// Contrôle pnlCrSearchContainer.
         /// </summary>
         /// <remarks>
@@ -130,15 +148,6 @@ namespace Etsi.Ultimate.Module.CRs {
         protected global::Telerik.Web.UI.RadComboBox rcbWgStatus;
         
         /// <summary>
-        /// Contrôle rcbTsgStatus.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadComboBox rcbTsgStatus;
-        
-        /// <summary>
         /// Contrôle racMeeting.
         /// </summary>
         /// <remarks>
@@ -146,6 +155,15 @@ namespace Etsi.Ultimate.Module.CRs {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::Telerik.Web.UI.RadAutoCompleteBox racMeeting;
+        
+        /// <summary>
+        /// Contrôle rcbTsgStatus.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::Telerik.Web.UI.RadComboBox rcbTsgStatus;
         
         /// <summary>
         /// Contrôle racWorkItem.

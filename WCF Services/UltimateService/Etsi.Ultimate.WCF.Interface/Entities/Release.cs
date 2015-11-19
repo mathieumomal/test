@@ -50,4 +50,17 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         [DataMember]
         public int? SortOrder { get; set; }
     }
+
+    [DataContract]
+    public enum ReleaseStatus
+    {
+        [EnumMember]
+        Open,
+
+        [EnumMember]
+        Frozen,
+
+        [EnumMember]
+        Closed
+    }
 }

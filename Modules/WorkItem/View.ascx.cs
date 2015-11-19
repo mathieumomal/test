@@ -132,6 +132,13 @@ namespace Etsi.Ultimate.Module.WorkItem
             }
         }
 
+        /// <summary>
+        /// First page load flag
+        /// </summary>
+        private bool FirstLoad { get; set; }
+
+        private WorkItemSearch SearchObj { get; set; }
+
         #endregion
 
         #region Events
@@ -148,8 +155,9 @@ namespace Etsi.Ultimate.Module.WorkItem
                 var wiService = ServicesFactory.Resolve<IWorkItemService>();
                 if (!IsPostBack || !moduleWI.Visible)
                 {
+                    FirstLoad = true;
                     releaseSearchControl.IsLoadingNeeded = !moduleWI.Visible;
-                    moduleWI.Visible = true; 
+                    moduleWI.Visible = true;
 
                     //Get settings
                     if (Settings.Contains(Enum_Settings.WorkItem_ExportPath.ToString()))
@@ -168,23 +176,42 @@ namespace Etsi.Ultimate.Module.WorkItem
 
                         if (IsFileOnFtp(ConfigVariables.FtpExportAddress + workPlanFile.WorkPlanFilePath))
                         {
-                            lnkFtpDownload.NavigateUrl = ConfigVariables.FtpExportAddress + workPlanFile.WorkPlanFilePath;
+                            lnkFtpDownload.NavigateUrl = ConfigVariables.FtpExportAddress +
+                                                         workPlanFile.WorkPlanFilePath;
                         }
                         else
                         {
                             lnkFtpDownload.NavigateUrl = ConfigVariables.FtpExportAddress;
                         }
+
+
                     }
 
                     Acronyms = wiService.GetAllAcronyms();
                     releaseSearchControl.Load += releaseSearchControl_Load;
 
                     tbId = Request.QueryString["tbid"];
-                    subTBId = Request.QueryString["SubTB"];
+                    subTBId = Request.QueryString["SubTB"];    
+                }
+                else
+                {
+                    FirstLoad = false;
                 }
 
                 racAcronym.DataSource = Acronyms;
                 racAcronym.DataBind();
+
+
+                if (FirstLoad)
+                {
+                    // must be place after racAcronym.DataBind();
+                    var searchObjFromCookie = CookiesHelper.GetCookie<WorkItemSearch>(Page.Request, ConfigVariables.CookieNameWisList);
+                    if (searchObjFromCookie != null && searchObjFromCookie.GetType() == typeof (WorkItemSearch))
+                    {
+                        SearchObj = searchObjFromCookie;
+                        LoadControlsFromSearchObj();
+                    }
+                }
 
                 // Display or not import WI
                 //List<int> releaseIDs = releaseSearchControl.SelectedReleaseIds;
@@ -344,6 +371,8 @@ namespace Etsi.Ultimate.Module.WorkItem
                 ultShareUrl.IsShortUrlChecked = false;
                 loadWorkItemData();
             }
+
+            FillSearchObj();
         }
 
         /// <summary>
@@ -363,14 +392,14 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// <param name="e">Event Arguments</param>
         protected void btnDefault_Click(object sender, EventArgs e)
         {
-            releaseSearchControl.Reset();
+            SearchObj = new WorkItemSearch();
             rddGranularity.SelectedValue = "1";
             chkHideCompletedItems.Checked = false;
             racAcronym.Entries.Clear();
             hidAcronym.Value = String.Empty;
             txtName.Text = String.Empty;
-
-            loadWorkItemData();
+            releaseSearchControl.Reset();
+            CookiesHelper.SetCookie(Page.Response, ConfigVariables.CookieNameWisList, SearchObj);
         }
 
         /// <summary>
@@ -380,17 +409,28 @@ namespace Etsi.Ultimate.Module.WorkItem
         /// <param name="e">Event Arguments</param>
         protected void rtlWorkItems_NeedDataSource(object sender, TreeListNeedDataSourceEventArgs e)
         {
-            var wiService = ServicesFactory.Resolve<IWorkItemService>();
-            List<int> tbList = new List<int>();
-            int value;
-            if (!String.IsNullOrEmpty(subTBId))
+            if (FirstLoad)
             {
-                tbList = subTBId.Split(',').Select(x => int.TryParse(x, out value) ? value : -1).ToList();
-                tbList.RemoveAll(x => x == -1);
+                rtlWorkItems.DataSource = new List<Domain.WorkItem>();
             }
+            else
+            {
+                var wiService = ServicesFactory.Resolve<IWorkItemService>();
+                List<int> tbList = new List<int>();
+                int value;
+                if (!String.IsNullOrEmpty(subTBId))
+                {
+                    tbList = subTBId.Split(',').Select(x => int.TryParse(x, out value) ? value : -1).ToList();
+                    tbList.RemoveAll(x => x == -1);
+                }
 
-            var wiData = wiService.GetWorkItemsBySearchCriteria(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, hidAcronym.Value.Trim().TrimEnd(';'), txtName.Text, tbList);
-            rtlWorkItems.DataSource = wiData.Key;
+                var wiData =
+                    wiService.GetWorkItemsBySearchCriteria(
+                        GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()),
+                        releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue),
+                        chkHideCompletedItems.Checked, hidAcronym.Value.Trim().TrimEnd(';'), txtName.Text, tbList);
+                rtlWorkItems.DataSource = wiData.Key;
+            }
         }
 
         /// <summary>
@@ -403,7 +443,8 @@ namespace Etsi.Ultimate.Module.WorkItem
             if (isUrlSearch)
             {
                 if (!String.IsNullOrEmpty(Request.QueryString["releaseId"]))
-                    releaseSearchControl.SelectedReleaseIds = Request.QueryString["releaseId"].Split(',').Select(n => int.Parse(n)).ToList();
+                    releaseSearchControl.SelectedReleaseIds =
+                        Request.QueryString["releaseId"].Split(',').Select(n => int.Parse(n)).ToList();
                 if (!String.IsNullOrEmpty(Request.QueryString["granularity"]))
                     rddGranularity.SelectedValue = Request.QueryString["granularity"].ToString();
                 if (!String.IsNullOrEmpty(Request.QueryString["hideCompleted"]))
@@ -415,8 +456,16 @@ namespace Etsi.Ultimate.Module.WorkItem
                 hidAcronym.Value = String.Empty;
                 if (!String.IsNullOrEmpty(Request.QueryString["acronym"]))
                 {
-                    racAcronym.Entries.Add(new AutoCompleteBoxEntry(Request.QueryString["acronym"].ToString(), String.Empty));
+                    racAcronym.Entries.Add(new AutoCompleteBoxEntry(Request.QueryString["acronym"].ToString(),
+                        String.Empty));
                     hidAcronym.Value = Request.QueryString["acronym"].ToString();
+                }
+            }
+            else
+            {
+                if (FirstLoad && SearchObj != null && SearchObj.SelectedReleaseIds != null && SearchObj.SelectedReleaseIds.Count > 0)
+                {
+                    releaseSearchControl.SelectedReleaseIds = SearchObj.SelectedReleaseIds;
                 }
             }
 
@@ -471,7 +520,10 @@ namespace Etsi.Ultimate.Module.WorkItem
             int granularity = Convert.ToInt32(rddGranularity.SelectedValue);
             bool hidePercentComplete = chkHideCompletedItems.Checked;
             string wiAcronym = hidAcronym.Value.Trim().TrimEnd(';');
-            racAcronym.Entries.Add(new AutoCompleteBoxEntry(wiAcronym, String.Empty));
+            if (!string.IsNullOrWhiteSpace(wiAcronym))
+            {
+                racAcronym.Entries.Add(new AutoCompleteBoxEntry(wiAcronym, String.Empty));
+            }
             string wiName = txtName.Text;
 
             StringBuilder searchString = new StringBuilder();
@@ -486,7 +538,6 @@ namespace Etsi.Ultimate.Module.WorkItem
                 searchString.Append(", hidden completed items");
 
             lblSearchHeader.Text = String.Format("Search form ({0})", searchString.ToString());
-            searchPanel.Expanded = false;
 
             //Set Short URL
             ManageShareUrl(releaseIds);
@@ -495,6 +546,56 @@ namespace Etsi.Ultimate.Module.WorkItem
             rtlWorkItems.Rebind();
             rtlWorkItems.CollapseAllItems();
             rtlWorkItems.ExpandToLevel(granularity);
+        }
+
+        private void LoadControlsFromSearchObj()
+        {
+            SetSelectedValue(rddGranularity, SearchObj.GranularityId);
+            chkHideCompletedItems.Checked = SearchObj.HideCompletedItems;
+            txtName.Text = SearchObj.NameUID;
+            if (!string.IsNullOrWhiteSpace(SearchObj.Acronym))
+            {
+                racAcronym.Entries.Add(new AutoCompleteBoxEntry(SearchObj.Acronym, string.Empty));
+                hidAcronym.Value = SearchObj.Acronym;
+            }
+        }
+
+        private void FillSearchObj()
+        {
+            // SearchObj Values
+            SearchObj = new WorkItemSearch();
+            SearchObj.NameUID = txtName.Text;
+            SearchObj.HideCompletedItems = chkHideCompletedItems.Checked;
+            SearchObj.GranularityId = rddGranularity.SelectedValue;
+            SearchObj.SelectedReleaseIds = releaseSearchControl.SelectedReleaseIds;
+
+            if (!string.IsNullOrWhiteSpace(racAcronym.Text))
+            {
+                var acro = racAcronym.Text.Split(';');
+                if (acro.Length > 0 && !string.IsNullOrWhiteSpace(acro[0]))
+                {
+                    SearchObj.Acronym = acro[0];
+                }
+                else
+                {
+                    SearchObj.Acronym = string.Empty;
+                }
+            }
+
+            // Save SearchObj into cookie
+            CookiesHelper.SetCookie(Page.Response, ConfigVariables.CookieNameWisList, SearchObj);
+        }
+
+        private void SetSelectedValue(RadDropDownList rddl, string value)
+        {
+            try
+            {
+                rddl.SelectedValue = value;
+            }
+            catch (Exception)
+            {
+                // Value doesn't exists
+            }
         }
 
         /// <summary>

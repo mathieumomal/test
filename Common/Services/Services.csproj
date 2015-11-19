@@ -93,7 +93,6 @@
     <Compile Include="MeetingService.cs" />
     <Compile Include="IWorkItemService.cs" />
     <Compile Include="PersonService.cs" />
-    <Compile Include="ReleaseServiceMock.cs" />
     <Compile Include="RightsService.cs" />
     <Compile Include="ServicesFactory.cs" />
     <Compile Include="IReleaseService.cs" />

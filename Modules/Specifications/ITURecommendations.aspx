@@ -96,7 +96,9 @@
     <!--scripts-->
         <script type="text/javascript" src="JS/jquery.min.js"></script>
         <script type="text/javascript" src="JS/jquery-validate.min.js"></script>
-        <script type="text/javascript" src="JS/ItuRecommendations.js"></script>
+        <telerik:RadCodeBlock ID="RadCodeBlockVersion" runat="server">
+            <script type="text/javascript" src="JS/ItuRecommendations.js?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>"></script>
+        </telerik:RadCodeBlock>
     <!--scripts-->
 </body>
 </html>

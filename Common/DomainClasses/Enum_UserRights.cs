@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Etsi.Ultimate.DomainClasses
+﻿namespace Etsi.Ultimate.DomainClasses
 {
     /// <summary>
     /// List all the rights that can be granted to a user.
@@ -41,15 +35,25 @@ namespace Etsi.Ultimate.DomainClasses
         Specification_WithdrawFromRelease,
         Specification_InhibitPromote,
         Specification_Promote,
+        Specification_Demote,
         Specification_RemoveInhibitPromote,
         Specification_BulkPromote,
+        Specification_Delete,
+
+        SpecificationRelease_Remove,
+        SpecificationRelease_Remove_Disabled,
 
         Versions_Allocate,
         Versions_Upload,
+        Versions_AllocateUpload_For_ReleaseClosed_Allowed,
         Versions_AddRemark,
         Versions_Modify_MajorVersion,
         Versions_Edit,
+        Version_Draft_Delete,
 
-        Cr_Add_Crs_To_CrPack
+        Cr_Add_Crs_To_CrPack,
+
+        Contribution_Change_Type,
+        Contribution_Change_Type_Limited
     }
 }

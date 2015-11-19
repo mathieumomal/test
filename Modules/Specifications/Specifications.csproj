@@ -109,6 +109,13 @@
     <Compile Include="ITURecommendations.aspx.designer.cs">
       <DependentUpon>ITURecommendations.aspx</DependentUpon>
     </Compile>
+    <Compile Include="PopUps\RemoveSpecReleasePopUp.aspx.cs">
+      <DependentUpon>RemoveSpecReleasePopUp.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="PopUps\RemoveSpecReleasePopUp.aspx.designer.cs">
+      <DependentUpon>RemoveSpecReleasePopUp.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="RemarksPopup.aspx.cs">
       <DependentUpon>RemarksPopup.aspx</DependentUpon>
@@ -121,9 +128,6 @@
     <Compile Include="SpecificationBasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Components\FeatureController.cs" />
-    <Compile Include="Components\ItemController.cs" />
-    <Compile Include="Components\Item.cs" />
     <Compile Include="MassivePromote.aspx.cs">
       <DependentUpon>MassivePromote.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -208,14 +212,19 @@
   <ItemGroup>
     <Content Include="CSS\ItuRecommendations.css" />
     <Content Include="images\5g.png" />
+    <Content Include="images\delete.png" />
     <Content Include="images\ftp.png" />
+    <Content Include="images\inhibited.png" />
+    <Content Include="images\itu.png" />
     <Content Include="images\loader.gif" />
+    <Content Include="images\spec_rel-d.png" />
     <Content Include="images\success.png" />
     <Content Include="ITURecommendations.aspx" />
     <Content Include="JS\CommonScript.js" />
     <Content Include="JS\ItuRecommendations.js" />
-    <Content Include="JS\RemarksPopup.js" />
+    <Content Include="JS\Popup.js" />
     <Content Include="MassivePromote.aspx" />
+    <Content Include="PopUps\RemoveSpecReleasePopUp.aspx" />
     <Content Include="RemarksPopup.aspx" />
     <Content Include="DefinitiveWithdrawlMeetingSelectPopUp.aspx" />
     <Content Include="images\busy.gif" />

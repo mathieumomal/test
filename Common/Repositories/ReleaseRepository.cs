@@ -2,13 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
-using Etsi.Ultimate.DataAccess;
-using System.Web;
-using Etsi.Ultimate.Utils;
-using System.Data.Entity.Core.Objects;
 using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Repositories
@@ -16,8 +10,7 @@ namespace Etsi.Ultimate.Repositories
     public class ReleaseRepository : IReleaseRepository
     {
         public IUltimateUnitOfWork UoW{ get; set; }
-        public ReleaseRepository(){}
-        private const string CACHE_ULT_RELEASES_ID = "ULT_RELEASES_ID_{0}";
+        private const string CacheUltReleasesId = "ULT_RELEASES_ID_{0}";
 
         #region IEntityRepository<Release> Membres
 
@@ -63,7 +56,7 @@ namespace Etsi.Ultimate.Repositories
             else
             {
                 UoW.Context.SetModified(entity);
-                CacheManager.Clear(String.Format(CACHE_ULT_RELEASES_ID, entity.Pk_ReleaseId));
+                CacheManager.Clear(String.Format(CacheUltReleasesId, entity.Pk_ReleaseId));
             }
 
             // Add / edit remarks
@@ -101,9 +94,27 @@ namespace Etsi.Ultimate.Repositories
         }
 
         #endregion
+
+        #region inherited methods
+        /// <summary>
+        /// Get releases linked to a spec
+        /// </summary>
+        /// <param name="specId">Specification id</param>
+        /// <returns>List of releases linked to spec provided</returns>
+        public List<Release> GetReleasesLinkedToASpec(int specId)
+        {
+            return UoW.Context.Specification_Release.Where(x => x.Fk_SpecificationId == specId).Select(x => x.Release).OrderByDescending(x => x.SortOrder).ToList();
+        }
+        #endregion
     }
 
     public interface IReleaseRepository : IEntityRepository<Release>
     {
+        /// <summary>
+        /// Get releases linked to a spec
+        /// </summary>
+        /// <param name="specId">Specification id</param>
+        /// <returns>List of releases linked to spec provided</returns>
+        List<Release> GetReleasesLinkedToASpec(int specId);
     }
 }

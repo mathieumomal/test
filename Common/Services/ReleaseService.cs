@@ -5,6 +5,8 @@ using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using System.Linq;
+using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Services
 {
@@ -30,6 +32,21 @@ namespace Etsi.Ultimate.Services
                 return releaseManager.GetAllReleases(personId);
             }
         }
+
+        /// <summary>
+        /// Get a pair of all releases and user's rights filtered by status
+        /// </summary>
+        /// <returns></returns>
+        public KeyValuePair<List<DomainClasses.Release>, UserRightsContainer> GetAllReleasesByStatus(int personId, string releaseStatus)
+        {
+            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
+                releaseManager.UoW = uoW;
+                //Get list of releases filtered by status
+                return releaseManager.GetAllReleasesByStatus(personId, releaseStatus);
+            }
+        } 
 
         public KeyValuePair<Release, UserRightsContainer> GetReleaseById(int personId, int releaseId)
         {
@@ -130,6 +147,33 @@ namespace Etsi.Ultimate.Services
                 var newRelease = releaseManager.CreateRelease(release, previousReleaseId, personId);
                 uoW.Save();
                 return newRelease.Pk_ReleaseId;
+            }
+        }
+
+        /// <summary>
+        /// Get releases linked to a spec
+        /// </summary>
+        /// <param name="specId">Specification id</param>
+        /// <param name="personId">Person id</param>
+        /// <returns>List of releases linked to spec provided</returns>
+        public ServiceResponse<List<Release>> GetReleasesLinkedToASpec(int specId, int personId)
+        {
+            try
+            {
+                using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
+                    releaseManager.UoW = uow;
+                    var response = releaseManager.GetReleasesLinkedToASpec(specId);
+                    if(response != null)
+                        return new ServiceResponse<List<Release>>{Result = response};
+                    throw new Exception("System not able to get releases linked to this specification: " + specId);
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Error("GetReleasesLinkedToASpec : an unexpected error occured", e);
+                return new ServiceResponse<List<Release>>{Result = null, Report = new Report{ErrorList = new List<string>{ Localization.GenericError }}};
             }
         }
 

@@ -115,5 +115,21 @@ namespace Etsi.Ultimate.Business.Versions.Interfaces
         /// <param name="personId"></param>
         /// <returns></returns>
         ServiceResponse<SpecVersion> UpdateVersion(SpecVersion version, int personId);
+
+        /// <summary>
+        /// Unlink tdoc from related version
+        /// </summary>
+        /// <param name="uid">Tdoc uid</param>
+        /// <param name="personId"></param>
+        /// <returns>True for success case</returns>
+        ServiceResponse<bool> UnlinkTdocFromVersion(string uid, int personId);
+
+        /// <summary>
+        /// Check if user is allowed to edit version numbers
+        /// </summary>
+        /// <param name="versionId"></param>
+        /// <param name="personId"></param>
+        /// <returns>True for success case</returns>
+        ServiceResponse<bool> CheckVersionNumbersEditAllowed(SpecVersion version, int personId);
     }
 }

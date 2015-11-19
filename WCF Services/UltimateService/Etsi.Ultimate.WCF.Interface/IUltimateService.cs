@@ -26,6 +26,17 @@ namespace Etsi.Ultimate.WCF.Interface
         List<Release> GetReleases(int personId);
 
         /// <summary>
+        /// Gets the releases filtered by status.
+        /// </summary>
+        /// <param name="personId">The person identifier.</param>
+        /// <param name="releaseStatus">release status id</param>
+        /// <returns>
+        /// List of Releases
+        /// </returns>
+        [OperationContract]
+        List<Release> GetReleasesByStatus(int personId, ReleaseStatus releaseStatus);
+
+        /// <summary>
         /// Gets release by identifier
         /// </summary>
         /// <param name="personId"></param>
@@ -325,6 +336,15 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>List of Spec Versions</returns>
         [OperationContract]
         List<SpecVersion> GetLatestVersionsBySpecIds(List<int> specIds);
+
+        /// <summary>
+        /// Unlink tdoc from related version
+        /// </summary>
+        /// <param name="uid">Tdoc uid</param>
+        /// <param name="personId"></param>
+        /// <returns>True for success case</returns>
+        [OperationContract]
+        ServiceResponse<bool> UnlinkTdocFromVersion(string uid, int personId);
 
         #endregion
     }

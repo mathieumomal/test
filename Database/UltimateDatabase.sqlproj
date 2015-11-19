@@ -179,9 +179,6 @@
     <Build Include="dbo\Tables\Enum_Technology.sql" />
     <Build Include="dbo\Tables\Enum_Serie.sql" />
     <Build Include="dbo\Functions\getMeetingShortRef.sql" />
-    <Build Include="dbo\Tables\SpecifcationsGenealogy.sql">
-      <QuotedIdentifier>On</QuotedIdentifier>
-    </Build>
     <Build Include="dbo\Tables\Version.sql" />
     <Build Include="dbo\Views\ETSI_WorkItem.sql">
       <AnsiNulls>Off</AnsiNulls>
@@ -243,6 +240,14 @@
     <None Include="Scripts\Post-Deployment\UpdateReleaseMtgShortReferences.sql" />
     <None Include="Scripts\Post-Deployment\ContributionUid_TRIM.sql" />
     <Build Include="dbo\Views\View_CrPacks.sql" />
+    <Build Include="dbo\Tables\SpecificationsGenealogy.sql">
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <None Include="Scripts\Post-Deployment\Rename_SpecificationGenealogy.sql" />
+    <Build Include="dbo\Views\View_ContributionsWithAditionnalData.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
   </ItemGroup>
   <ItemGroup>
     <None Include="UltimateSchemaCompare.scmp" />

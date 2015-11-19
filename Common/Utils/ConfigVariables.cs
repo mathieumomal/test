@@ -304,6 +304,139 @@ namespace Etsi.Ultimate.Utils
                     return ConfigurationManager.AppSettings["RelativeUrlVersionRelatedCrs"];
                 return "";
             }
-        }     
+        }
+
+        /// <summary>
+        /// Values list for dropdownlist "Items per page"
+        /// </summary>
+        public static List<KeyValuePair<string, int>> ItemsPerPageList
+        {
+            get
+            {
+                List<KeyValuePair<string, int>> result = new List<KeyValuePair<string, int>>();
+                string itemsPerPageList = ConfigurationManager.
+                    AppSettings["ItemsPerPageList"];
+
+                if (itemsPerPageList == null)
+                {
+                    result.Add(new KeyValuePair<string, int>("50", 50));
+                    result.Add(new KeyValuePair<string, int>("200", 200));
+                    result.Add(new KeyValuePair<string, int>("1000", 1000));
+                }
+                else
+                {
+                    string[] splitedItemsPerPageList = itemsPerPageList.Split('|');
+                    int intValue = 0;
+
+                    foreach (string val in splitedItemsPerPageList)
+                    {
+                        if (val == "ALL")
+                        {
+                            result.Add(new KeyValuePair<string, int>("ALL", int.MaxValue));
+                        }
+                        else if (int.TryParse(val, out intValue))
+                        {
+                            result.Add(new KeyValuePair<string, int>(val, intValue));
+                        }
+                    }
+                }
+
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Max records (tdocs) to display in the same TdocList page
+        /// </summary>
+        public static int ItemsPerPageListDefaultValue
+        {
+            get
+            {
+                int result;
+                int.TryParse(ConfigurationManager.AppSettings["ItemsPerPageListDefaultValue"], out result);
+                if (result == 0) { result = 50; /* Default value */ }
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Gets the relative URL for Spec WithdrawMeetingSelectPopUp.
+        /// </summary>
+        public static string SpecificationWithdrawMeetingSelectPopUpRelativeLink
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["Specification_WithdrawMeetingSelectPopUp_RelativeLink"] != null)
+                    return ConfigurationManager.AppSettings["Specification_WithdrawMeetingSelectPopUp_RelativeLink"];
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Gets the relative URL for Spec UploadVersion popup.
+        /// </summary>
+        public static string SpecificationUploadVersionRelativeLink
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["Specification_UploadVersion_RelativeLink"] != null)
+                    return ConfigurationManager.AppSettings["Specification_UploadVersion_RelativeLink"];
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Gets the relative URL for Spec RemoveSpecReleasePopUp.
+        /// </summary>
+        public static string SpecificationRemoveSpecReleasePopUpRelativeLink
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["Specification_RemoveSpecReleasePopUp_RelativeLink"] != null)
+                    return ConfigurationManager.AppSettings["Specification_RemoveSpecReleasePopUp_RelativeLink"];
+                return "";
+            }
+        }
+
+        #region Cookies to exclude from security checks
+        /// <summary>
+        /// Tdocs list cookie name
+        /// </summary>
+        public static string CookieNameCrsList
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["CookieName_CrsList"]))
+                    return ConfigurationManager.AppSettings["CookieName_CrsList"];
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Tdocs list cookie name
+        /// </summary>
+        public static string CookieNameWisList
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["CookieName_WisList"]))
+                    return ConfigurationManager.AppSettings["CookieName_WisList"];
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// Tdocs list cookie name
+        /// </summary>
+        public static string CookieNameSpecsList
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["CookieName_SpecsList"]))
+                    return ConfigurationManager.AppSettings["CookieName_SpecsList"];
+                return "";
+            }
+        }
+        #endregion
     }
 }

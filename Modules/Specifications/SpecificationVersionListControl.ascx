@@ -51,32 +51,27 @@
 </style>
 
 <script type="text/javascript">
+    /*
+        Default open popup launcher
+    */
+    function openRadWin(url, windowId, width, height, title, shouldCallMethodWhenClose) {
+        var win = radopen(url, windowId);
+        if (shouldCallMethodWhenClose)
+            win.add_close(radWinCloseCallBackForReload);
 
-    function openRadWin(specId, relId) {
-        var win = radopen("WithdrawMeetingSelectPopUp.aspx?SpecId=" + specId + "&RelId=" + relId, "Withdraw");
-        win.setSize(450, 220);
+        win.setSize(width, height);
         win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
         win.set_modal(true);
-        win.set_visibleStatusbar(false);
-        win.show();
-        return false;
-    }
-
-    function openRadWinVersion(releaseId, specId, action, title) {
-        var win = radopen("/desktopmodules/Versions/UploadVersion.aspx?releaseId=" + releaseId + "&specId=" + specId + "&action=" + action, "Version");
-        //var height = (action == 'upload') ? 320 : 280;
-        var height = 320;
-        win.setSize(440, height);
-        win.set_behaviors(Telerik.Web.UI.WindowBehaviors.Move + Telerik.Web.UI.WindowBehaviors.Close);
-        win.set_modal(true);
-        win.add_close(radWinVersionCloseCallBack);
         win.set_visibleStatusbar(false);
         win.set_title(title);
         win.show();
         return false;
     }
 
-    function radWinVersionCloseCallBack(sender, eventArgs)
+    /* 
+        Popup Closed : reload event 
+    */
+    function radWinCloseCallBackForReload(sender, eventArgs)
     {
         //Refresh page
         var url = window.location.href;
@@ -89,16 +84,15 @@
         var arg = eventArgs.get_argument();
         if (arg) {
             var status = arg.status;
-            if (status == "success") { }
+            if (status === "success") { }
         }
 
         //remove RadWindow close callback
         var oWnd = $find("Version");
         if (oWnd) {
-            oWnd.remove_close(radWinVersionCloseCallBack);
+            oWnd.remove_close(radWinCloseCallBackForReload);
         }
     }
-   
 </script>
 <asp:Panel runat="server" ID="pnlCover" CssClass="TabContent" Height="100%">    
     <asp:Panel runat="server" ID="pnlIconStrip">        
@@ -109,7 +103,9 @@
         <asp:ImageButton ID="imgForceTransposition" ToolTip="Force transposition" ImageUrl="images/spec_rel-f.png" CssClass="icon_display_size" runat="server" OnClick="imgForceTransposition_Click" />
         <asp:ImageButton ID="imgUnforceTransposition" ToolTip="Unforce transposition" ImageUrl="images/spec_rel-f-crossed.png" CssClass="icon_display_size" runat="server" OnClick="imgUnforceTransposition_Click" />
         <asp:ImageButton ID="imgPromoteSpec" ToolTip="Promote specification to next Release" ImageUrl="images/spec_rel-p.png" CssClass="icon_display_size" runat="server" OnClick="imgPromoteSpec_Click" />
+        <asp:ImageButton ID="imgDemoteSpec" ToolTip="Demote specification to previous Release" ImageUrl="images/spec_rel-d.png" CssClass="icon_display_size" runat="server" OnClick="imgDemoteSpec_Click"/>
         <asp:ImageButton ID="imgWithdrawSpec" ToolTip="Withdraw specification from Release" ImageUrl="images/spec_rel-w.png" CssClass="icon_display_size" runat="server" />
+        <asp:ImageButton ID="imgDeleteSpecRelease" ImageUrl="images/delete.png" CssClass="icon_display_size_remove" runat="server"/>
     </asp:Panel>
     <telerik:RadGrid runat="server" ID="specificationsVersionGrid"
         AllowPaging="false"

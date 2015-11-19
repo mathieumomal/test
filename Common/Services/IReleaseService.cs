@@ -18,6 +18,15 @@ namespace Etsi.Ultimate.Services
         KeyValuePair<List<DomainClasses.Release>, UserRightsContainer> GetAllReleases(int personID);
 
         /// <summary>
+        /// Abstract method to get a pair of all releases and user's rights filtered by status
+        /// </summary>
+        /// <param name="personID"></param>
+        /// <param name="releaseStatus"></param>
+        /// <returns></returns>
+        KeyValuePair<List<DomainClasses.Release>, UserRightsContainer> GetAllReleasesByStatus(int personId,
+            string releaseStatus);
+
+        /// <summary>
         /// Returns the details of a release, and the associated rights that user can perform on the release.
         /// </summary>
         /// <param name="id"></param>
@@ -57,5 +66,12 @@ namespace Etsi.Ultimate.Services
         /// <returns>The id of the release that has been created.</returns>
         int CreateRelease(Release release, int previousReleaseId, int personId);
 
+        /// <summary>
+        /// Get releases linked to a spec
+        /// </summary>
+        /// <param name="specId">Specification id</param>
+        /// <param name="personId">Person id</param>
+        /// <returns>List of releases linked to spec provided</returns>
+        ServiceResponse<List<Release>> GetReleasesLinkedToASpec(int specId, int personId);
     }
 }

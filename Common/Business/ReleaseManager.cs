@@ -11,7 +11,7 @@ using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Business
 {
-    public class ReleaseManager : Etsi.Ultimate.Business.IReleaseManager
+    public class ReleaseManager : IReleaseManager
     {
         #region Variables / Properties
 
@@ -54,6 +54,36 @@ namespace Etsi.Ultimate.Business
                 // Check that cache is still empty
                 if (CacheManager.Get(CACHE_KEY) == null)
                     CacheManager.InsertForLimitedTime(CACHE_KEY, cachedData, 10);
+            }
+            return new KeyValuePair<List<Release>, UserRightsContainer>(cachedData, personRights); ;
+        }
+
+        /// <summary>
+        /// Retrieves all the data for the releases filtered by status.
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="releaseStatus"></param>
+        /// <returns></returns>
+        public KeyValuePair<List<Release>, UserRightsContainer> GetAllReleasesByStatus(int personId, string releaseStatus)
+        {
+            var cacheKeyStatus = string.Format("{0}_{1}", CACHE_KEY, releaseStatus);
+            // Computes the rights of the user. These are independant from the releases.
+            var rightManager = ManagerFactory.Resolve<IRightsManager>();
+            rightManager.UoW = UoW;
+            var personRights = rightManager.GetRights(personId);
+
+            // Check in the cache
+            var cachedData = (List<Release>)CacheManager.Get(cacheKeyStatus);
+            if (cachedData == null)
+            {
+                // if nothing in the cache, ask the repository, then cache it
+                releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+                releaseRepo.UoW = UoW;
+                cachedData = releaseRepo.All.Where(x => x.Enum_ReleaseStatus.Code == releaseStatus).ToList();
+
+                // Check that cache is still empty
+                if (CacheManager.Get(cacheKeyStatus) == null)
+                    CacheManager.InsertForLimitedTime(cacheKeyStatus, cachedData, 10);
             }
             return new KeyValuePair<List<Release>, UserRightsContainer>(cachedData, personRights); ;
         }
@@ -407,6 +437,33 @@ namespace Etsi.Ultimate.Business
             int currentReleaseSortOrder = (currentRelease == null) ? 0 : (currentRelease.SortOrder ?? 0);
             var nextRelease = allReleases.Where(x => x.SortOrder > currentReleaseSortOrder).OrderBy(y => y.SortOrder).FirstOrDefault();
             return nextRelease;
+        }
+
+        /// <summary>
+        /// Get previous release details for the given current release id.
+        /// </summary>
+        /// <param name="releaseId">Release ID</param>
+        /// <returns>Previous Release</returns>
+        public Release GetPreviousRelease(int releaseId)
+        {
+            var allReleases = GetAllReleases();
+            var currentRelease = allReleases.Where(x => x.Pk_ReleaseId == releaseId).FirstOrDefault();
+            int currentReleaseSortOrder = (currentRelease == null) ? 0 : (currentRelease.SortOrder ?? 0);
+            var previousRelease = allReleases.Where(x => x.SortOrder < currentReleaseSortOrder)
+                .OrderByDescending(y => y.SortOrder).FirstOrDefault();
+            return previousRelease;
+        }
+
+        /// <summary>
+        /// Get releases linked to a spec
+        /// </summary>
+        /// <param name="specId">Specification id</param>
+        /// <returns>List of releases linked to spec provided</returns>
+        public List<Release> GetReleasesLinkedToASpec(int specId)
+        {
+            releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+            releaseRepo.UoW = UoW;
+            return releaseRepo.GetReleasesLinkedToASpec(specId);
         }
 
         #endregion

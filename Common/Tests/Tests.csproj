@@ -97,8 +97,24 @@
     <Reference Include="NMemory">
       <HintPath>..\..\packages\NMemory.1.0.0\lib\net45\NMemory.dll</HintPath>
     </Reference>
+    <Reference Include="nunit.core, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\..\WCF Services\UltimateService\packages\NUnitTestAdapter.2.0.0\lib\nunit.core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="nunit.core.interfaces, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\..\WCF Services\UltimateService\packages\NUnitTestAdapter.2.0.0\lib\nunit.core.interfaces.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\Libs\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.util, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\..\WCF Services\UltimateService\packages\NUnitTestAdapter.2.0.0\lib\nunit.util.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="NUnit.VisualStudio.TestAdapter, Version=2.0.0.0, Culture=neutral, PublicKeyToken=4cb40d35494691ac, processorArchitecture=MSIL">
+      <HintPath>..\..\WCF Services\UltimateService\packages\NUnitTestAdapter.2.0.0\lib\NUnit.VisualStudio.TestAdapter.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Rhino.Mocks">
       <HintPath>..\..\packages\RhinoMocks.3.6.1\lib\net\Rhino.Mocks.dll</HintPath>
@@ -124,6 +140,7 @@
     <Compile Include="Business\ItuRecommendation\ItuRecommendationExporterTest.cs" />
     <Compile Include="Business\ItuRecommendation\SpecToItuConverterTests.cs" />
     <Compile Include="Business\ItuRecommendation\SeedFileParserTest.cs" />
+    <Compile Include="Business\SpecVersionNumberValidatorTests.cs" />
     <Compile Include="Business\UtilsManagerTest.cs" />
     <Compile Include="Business\CrCategoriesManagerTest.cs" />
     <Compile Include="Business\CrManagerTest.cs" />
@@ -180,9 +197,11 @@
     <Compile Include="Repositories\ResponsibleGroupSecretaryRepositoryTest.cs" />
     <Compile Include="Repositories\SpecificationRapporteurTests.cs" />
     <Compile Include="Repositories\SpecificationRepositoryReleaseTest.cs" />
+    <Compile Include="Repositories\SpecificationRepositoryTest.cs" />
     <Compile Include="Repositories\SpecificationWorkItemRepositoryTest.cs" />
     <Compile Include="Repositories\SpecVersionsRepositoryTest.cs" />
     <Compile Include="Repositories\SyncInfoRepositoryTest.cs" />
+    <Compile Include="Repositories\ViewContributionsWithAditionnalDataRepositoryTests.cs" />
     <Compile Include="Repositories\WorkPlanFileRepositoryTest.cs" />
     <Compile Include="Services\ChangeRequestTests\CrRevisionTest.cs" />
     <Compile Include="Services\ChangeRequestTests\CrReissueTest.cs" />
@@ -193,6 +212,9 @@
     <Compile Include="Services\ChangeRequestTests\CrServiceTest.cs" />
     <Compile Include="Services\FinalizeCrsTests.cs" />
     <Compile Include="Services\ItuRecommendation\ItuExportTests.cs" />
+    <Compile Include="Services\ReleaseServiceEffortTest.cs" />
+    <Compile Include="Services\CheckVersionNumbersEditAllowedTests.cs" />
+    <Compile Include="Services\SpecificationServiceDeleteActionTests.cs" />
     <Compile Include="Services\RemarkServiceGetTests.cs" />
     <Compile Include="Services\RemarkServiceTest.cs" />
     <Compile Include="Services\RemarksServiceUpdateTests.cs" />
@@ -236,7 +258,7 @@
     <Compile Include="Repositories\MeetingRepositoryTest.cs" />
     <Compile Include="Repositories\PersonRepositoryTest.cs" />
     <Compile Include="Repositories\ShortUrlRepositoryTest.cs" />
-    <Compile Include="Repositories\SpecificationRepositoryTest.cs" />
+    <Compile Include="Repositories\SpecificationRepositoryEffortTests.cs" />
     <Compile Include="Repositories\WorkItemRepositoryTest.cs" />
     <Compile Include="Repositories\UserRolesRepositoryTest.cs" />
     <Compile Include="Repositories\TestEnum_ReleaseStatusRepository.cs" />
@@ -247,7 +269,7 @@
     <Compile Include="Services\ReleaseServiceTest.cs" />
     <Compile Include="Services\SpecificationChangeToUnderChangeControlTest.cs" />
     <Compile Include="Services\SpecMassivePromoteTest.cs" />
-    <Compile Include="Services\SpecReleaseRightsServiceTest.cs" />
+    <Compile Include="Services\SpecReleaseServiceTest.cs" />
     <Compile Include="Services\SpecTranspositionServiceTest.cs" />
     <Compile Include="Services\SpecVersionServiceTest\NextVersionTest.cs" />
     <Compile Include="Services\SpecVersionServiceTest\SpecVersionAllocateTest.cs" />
@@ -276,7 +298,22 @@
     <None Include="Data_For_EffortUnitTests\ChangeRequestTsgData.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Data_For_EffortUnitTests\History.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Data_For_EffortUnitTests\SpecificationRapporteur.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\SpecificationResponsibleGroup.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\SpecificationsGenealogy.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\SpecificationTechnologies.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Data_For_EffortUnitTests\View_ContributionsWithAditionnalData.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Data_For_EffortUnitTests\View_CrPacks.csv">
@@ -419,7 +456,9 @@
       <Name>Utils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

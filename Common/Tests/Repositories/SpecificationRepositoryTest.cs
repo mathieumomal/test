@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Etsi.Ultimate.DataAccess;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Tests.FakeSets;
-using Microsoft.Practices.Unity;
 using NUnit.Framework;
 using Rhino.Mocks;
 
@@ -141,6 +137,16 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual("00.01U", spec.Number);
             Assert.AreEqual(1, spec.SpecificationResponsibleGroups.ToList().Count);
         }
+
+        [TestCase(99999, null, Description = "Spec doesn't exist ; should return null")]
+        [TestCase(1, "00.01U", Description = "Spec exists ; should return the uid")]
+        public void SpecExists(int specId, string expectedResult)
+        {
+            var repo = new SpecificationRepository{ UoW = GetUnitOfWork() };
+            var uid = repo.SpecExists(specId);
+            Assert.AreEqual(expectedResult, uid);
+        }
+
 
         private IUltimateUnitOfWork GetSimplifiedUnitOfWork()
         {
