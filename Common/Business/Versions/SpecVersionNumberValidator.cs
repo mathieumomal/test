@@ -159,6 +159,13 @@ namespace Etsi.Ultimate.Business.Versions
                         dbVersion.EditorialVersion = uiVersion.EditorialVersion;
                     }
                 }
+
+                //Meeting is mandatory for UCC versions
+                if (uiVersion.MajorVersion > 2 && (uiVersion.Source == null || uiVersion.Source == 0))
+                {
+                    response.Result = false;
+                    response.Report.ErrorList.Add(Localization.Version_Ucc_Meeting_Mandatory);
+                }
             }
             catch (Exception e)
             {

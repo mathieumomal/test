@@ -464,8 +464,8 @@ namespace Etsi.Ultimate.Module.Versions
         {
             var spec = version.Specification;
             IsDraft = !(spec.IsUnderChangeControl.HasValue && spec.IsUnderChangeControl.Value && spec.IsActive);
-            hidIsRequired.Value = (!IsDraft && IsUploadMode) ? "True" : "False";
-            MeetingLbl.Text = (!IsDraft && IsUploadMode) ? "Meeting(<span class='requiredField'>*</span>):" : "Meeting:";
+            hidIsRequired.Value = (!IsDraft) ? "True" : "False";
+            MeetingLbl.Text = (!IsDraft) ? "Meeting(<span class='requiredField'>*</span>):" : "Meeting:";
             SpecNumberVal.Text = spec.Number;
 
             var release = version.Release;

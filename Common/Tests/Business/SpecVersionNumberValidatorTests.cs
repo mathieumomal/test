@@ -259,6 +259,30 @@ namespace Etsi.Ultimate.Tests.Business
 
         #endregion
 
+        #region Meeting mandatory for UCC versions
+        [Test]
+        public void CheckSpecVersionNumber_MeetingMandatoryForUCCVersions()
+        {
+            var version = GetVersion();
+            version.MajorVersion = 4;
+            version.Source = null;
+            var responseUpload = _specVersionNumberValidator.CheckSpecVersionNumber(null, version, SpecNumberValidatorMode.Upload, UserWithRight);
+            Assert.IsFalse(responseUpload.Result);
+            Assert.AreEqual(1, responseUpload.Report.GetNumberOfErrors());
+            Assert.AreEqual(Localization.Version_Ucc_Meeting_Mandatory, responseUpload.Report.ErrorList.First());
+
+            var responseAlloc = _specVersionNumberValidator.CheckSpecVersionNumber(null, version, SpecNumberValidatorMode.Allocate, UserWithRight);
+            Assert.IsFalse(responseAlloc.Result);
+            Assert.AreEqual(1, responseAlloc.Report.GetNumberOfErrors());
+            Assert.AreEqual(Localization.Version_Ucc_Meeting_Mandatory, responseAlloc.Report.ErrorList.First());
+
+            var responseEdit = _specVersionNumberValidator.CheckSpecVersionNumber(GetVersion(), version, SpecNumberValidatorMode.Edit, UserWithRight);
+            Assert.IsFalse(responseEdit.Result);
+            Assert.AreEqual(1, responseEdit.Report.GetNumberOfErrors());
+            Assert.AreEqual(Localization.Version_Ucc_Meeting_Mandatory, responseEdit.Report.ErrorList.First());
+        }
+        #endregion
+
         #region data
         /// <summary>
         /// Get fake version
@@ -273,7 +297,8 @@ namespace Etsi.Ultimate.Tests.Business
                 Release = new Release { Version3g = 4 },
                 MajorVersion = 1,
                 TechnicalVersion = 0,
-                EditorialVersion = 0
+                EditorialVersion = 0,
+                Source = 1
             };
         }
         #endregion

@@ -619,6 +619,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Meeting is mandatory for UCC versions.
+        /// </summary>
+        public static string Version_Ucc_Meeting_Mandatory {
+            get {
+                return ResourceManager.GetString("Version_Ucc_Meeting_Mandatory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Version successfully deleted..
         /// </summary>
         public static string VersionSuccessfullyDeleted {

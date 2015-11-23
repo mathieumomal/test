@@ -137,7 +137,11 @@ namespace Etsi.Ultimate.Module.Versions
         protected void btnSave_Click(object sender, EventArgs e)
         {
             //Apply modification on Version object
-            GetEditedVersion();
+            if (!GetEditedVersion())
+            {
+                ThrowMessage(Localization.GenericError, "error");
+                return;
+            }
 
             var versionSvc = new SpecVersionService();
             var response = versionSvc.UpdateVersion(Version, GetPersonId());
@@ -315,18 +319,16 @@ namespace Etsi.Ultimate.Module.Versions
         /// <summary>
         /// Get version with new values
         /// </summary>
-        private void GetEditedVersion()
+        private bool GetEditedVersion()
         {
             int output;
 
             if (!int.TryParse(NewVersionMajorVal.Text, out output) ||
                 !int.TryParse(NewVersionTechnicalVal.Text, out output) ||
                 !int.TryParse(NewVersionEditorialVal.Text, out output) ||
-                !int.TryParse(rcbRelease.SelectedValue, out output) || 
-                (meetingCtrl.SelectedMeetingId == 0 && int.Parse(NewVersionMajorVal.Text) > 2))
+                !int.TryParse(rcbRelease.SelectedValue, out output))
             {
-                ThrowMessage(Localization.GenericError, "error");
-                return;
+                return false;
             }
 
             Version.MajorVersion = int.Parse(NewVersionMajorVal.Text);
@@ -339,6 +341,7 @@ namespace Etsi.Ultimate.Module.Versions
 
             //Remarks
             Version.Remarks = remarksCtrl.DataSource;
+            return true;
         }
 
         /// <summary>

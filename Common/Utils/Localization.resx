@@ -429,4 +429,7 @@
   <data name="Version_Major_Number_Allocate_Not_Valid" xml:space="preserve">
     <value>Invalid major version number. If version is UCC, major version number should be the release number.</value>
   </data>
+  <data name="Version_Ucc_Meeting_Mandatory" xml:space="preserve">
+    <value>Meeting is mandatory for UCC versions</value>
+  </data>
 </root>
