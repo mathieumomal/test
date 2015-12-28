@@ -203,6 +203,7 @@
     <Compile Include="Repositories\SyncInfoRepositoryTest.cs" />
     <Compile Include="Repositories\ViewContributionsWithAditionnalDataRepositoryTests.cs" />
     <Compile Include="Repositories\WorkPlanFileRepositoryTest.cs" />
+    <Compile Include="Scratchpad.cs" />
     <Compile Include="Services\ChangeRequestTests\CrRevisionTest.cs" />
     <Compile Include="Services\ChangeRequestTests\CrReissueTest.cs" />
     <Compile Include="Services\ChangeRequestTests\CrForModuleTests.cs" />

@@ -110,6 +110,7 @@
     width: 400px;
     height: 260px;
 }
+#VersionUploadForm .contentModal .ErrorItem { color: red; }
 .scrollable {
     width: 100%;
     height: 165px;

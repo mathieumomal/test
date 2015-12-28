@@ -270,8 +270,8 @@ namespace Etsi.Ultimate.Module.Versions
             VersionFileToken = svcResponse.Result;
 
             //Confirmation popup
-            DisplayWarningAndErrorInConfirmationPopUp(svcResponse.Report);
             errorNumber = svcResponse.Report.GetNumberOfErrors();
+            DisplayWarningAndErrorInConfirmationPopUp(svcResponse.Report);
         }
         #endregion
 

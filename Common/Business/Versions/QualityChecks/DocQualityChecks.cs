@@ -29,7 +29,8 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         {
             //Save stream in temporary location
             byte[] bytes = memoryStream.ToArray();
-            documentName = Path.Combine(temporaryFolder, "tempword.doc");
+            var tempId = Guid.NewGuid().ToString().Substring(0,8);
+            documentName = Path.Combine(temporaryFolder, "tempword_" + tempId + ".doc");
             if (File.Exists(documentName))
                 File.Delete(documentName);
             var fs = new FileStream(documentName, FileMode.Create, FileAccess.Write);
