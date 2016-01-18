@@ -301,22 +301,49 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::Telerik.Web.UI.RadWindow rwFTPConfiguration;
         
         /// <summary>
-        /// Contrôle lblFolderPath.
+        /// Contrôle FtpStatusLabel.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblFolderPath;
+        protected global::System.Web.UI.WebControls.Label FtpStatusLabel;
         
         /// <summary>
-        /// Contrôle btnConfirm.
+        /// Contrôle currentFolderLabel.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnConfirm;
+        protected global::System.Web.UI.WebControls.Label currentFolderLabel;
+        
+        /// <summary>
+        /// Contrôle txtFTPFolderName.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtFTPFolderName;
+        
+        /// <summary>
+        /// Contrôle progressBarContent.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal progressBarContent;
+        
+        /// <summary>
+        /// Contrôle btnCreateFolder.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCreateFolder;
         
         /// <summary>
         /// Contrôle btnCancel.

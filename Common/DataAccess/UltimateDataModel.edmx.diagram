@@ -79,6 +79,7 @@
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.Version_FK_SpecificationID" />
         <AssociationConnector Association="Etsi.Ultimate.DataAccess.SpecificationsGenealogy" />
         <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.View_ContributionsWithAditionnalData" Width="1.5" PointX="2.375" PointY="0.625" FillColor="DarkSeaGreen" />
+        <EntityTypeShape EntityType="Etsi.Ultimate.DataAccess.LatestFolder" Width="1.5" PointX="4.125" PointY="4.875" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

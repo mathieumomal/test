@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CopyLatestFolderInProgress" xml:space="preserve">
+    <value>Latest meeting folder is being refreshed. Please try again few minutes later.</value>
+  </data>
   <data name="DocumentAlreadyUploaded" xml:space="preserve">
     <value>Document has already been uploaded to this version</value>
   </data>
@@ -136,6 +139,6 @@
     <value>No avaible data for the requested query</value>
   </data>
   <data name="SuccessMessage" xml:space="preserve">
-    <value>Version {0}.{1}.{2} {3} successfully</value>
+    <value>Version {0}.{1}.{2} {3} successfully.</value>
   </data>
 </root>

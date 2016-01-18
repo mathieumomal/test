@@ -121,6 +121,15 @@
           <Property Name="Fk_SpecificationId" Type="int" />
           <Property Name="Fk_CRId" Type="int" />
         </EntityType>
+        <EntityType Name="LatestFolder">
+          <Key>
+            <PropertyRef Name="Pk_LatestFolderId" />
+          </Key>
+          <Property Name="Pk_LatestFolderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FolderName" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CreationDate" Type="date" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
         <EntityType Name="Releases">
           <Key>
             <PropertyRef Name="Pk_ReleaseId" />
@@ -1042,6 +1051,7 @@ avertissement 6002: La table/vue 'U3GPPDB.dbo.View_Persons' n'a pas de clé prim
           <EntitySet Name="Enum_Serie" EntityType="Self.Enum_Serie" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Enum_Technology" EntityType="Self.Enum_Technology" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="History" EntityType="Self.History" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LatestFolder" EntityType="Self.LatestFolder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Releases" EntityType="Self.Releases" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Remarks" EntityType="Self.Remarks" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ShortUrl" EntityType="Self.ShortUrl" Schema="dbo" store:Type="Tables" />
@@ -1571,6 +1581,7 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
             <End Role="Specification1" EntitySet="Specifications" />
           </AssociationSet>
           <EntitySet Name="View_ContributionsWithAditionnalData" EntityType="Etsi.Ultimate.DataAccess.View_ContributionsWithAditionnalData" />
+          <EntitySet Name="LatestFolders" EntityType="Etsi.Ultimate.DataAccess.LatestFolder" />
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -2582,6 +2593,15 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <Property Name="Specification_TechnicalVersion" Type="Int32" />
           <Property Name="Specification_EditorialVersion" Type="Int32" />
         </EntityType>
+        <EntityType Name="LatestFolder">
+          <Key>
+            <PropertyRef Name="Pk_LatestFolderId" />
+          </Key>
+          <Property Name="Pk_LatestFolderId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FolderName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreationDate" Type="DateTime" Precision="0" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3103,6 +3123,16 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
                 <ScalarProperty Name="fk_SpecificationId" ColumnName="fk_SpecificationId" />
                 <ScalarProperty Name="uid" ColumnName="uid" />
                 <ScalarProperty Name="pk_Contribution" ColumnName="pk_Contribution" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LatestFolders">
+            <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.LatestFolder">
+              <MappingFragment StoreEntitySet="LatestFolder">
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
+                <ScalarProperty Name="FolderName" ColumnName="FolderName" />
+                <ScalarProperty Name="Pk_LatestFolderId" ColumnName="Pk_LatestFolderId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

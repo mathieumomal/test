@@ -191,6 +191,26 @@ namespace Etsi.Ultimate.WCF.Service
         #endregion
 
         #region CRs services
+
+        public ServiceResponse<bool> UpdateCrStatus(string uid, string status)
+        {
+            LogManager.Debug("[ServiceCall][UpdateCrStatus] Uid=" + uid + "; Status=" + status);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.UpdateCrStatus(uid, status);
+        }
+
+        /// <summary>
+        /// Update CRs status of CR Pack
+        /// </summary>
+        /// <param name="CrsOfCrPack"></param>
+        /// <returns></returns>
+        public ServiceResponse<bool> UpdateCrsStatusOfCrPack(List<CrOfCrPackFacade> CrsOfCrPack)
+        {
+            LogManager.Debug("[ServiceCall][UpdateCrsStatusOfCrPack]");
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.UpdateCrsStatusOfCrPack(CrsOfCrPack);
+        }
+
         /// <summary>
         /// Gets the change request by identifier.
         /// </summary>
@@ -266,6 +286,20 @@ namespace Etsi.Ultimate.WCF.Service
             LogManager.Debug("[ServiceCall][GetChangeRequestListByContributionUidList] contributionUids=" + string.Join(", ",contributionUids));
             var svcHelper = new ServiceHelper();
             return svcHelper.GetChangeRequestListByContributionUidList(contributionUids);
+        }
+
+        /// <summary>
+        /// Get light change request for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR UID</param>
+        /// <returns>Key value pair with bool (success status), and the change request</returns>
+        public ChangeRequest GetLightChangeRequestForMinuteMan(string uid)
+        {
+            LogManager.Debug("[ServiceCall][GetLightChangeRequestForMinuteMan] uid=" + uid);
+            var svcHelper = new ServiceHelper();
+            return svcHelper.GetLightChangeRequestForMinuteMan(uid);
         }
 
         /// <summary>
@@ -385,6 +419,23 @@ namespace Etsi.Ultimate.WCF.Service
             return serviceHelper.RemoveCrsFromCrPack(crPack, crIds);            
         }
 
+        #endregion
+
+        #region CR Packs services
+
+        /// <summary>
+        /// Get light change requests inside CR packs for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR pack UID</param>
+        /// <returns>List of Change requests</returns>
+        public List<ChangeRequest> GetLightChangeRequestsInsideCrPackForMinuteMan(string uid)
+        {
+            LogManager.Debug("[ServiceCall][GetLightChangeRequestsInsideCrPackForMinuteMan] cr pack uid=" + uid);
+            var svcHelper = new ServiceHelper();
+            return svcHelper.GetLightChangeRequestsInsideCrPackForMinuteMan(uid);
+        }
         #endregion
 
         #region Version services

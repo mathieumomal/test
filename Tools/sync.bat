@@ -17,6 +17,7 @@ CALL %settingsFile%
 REM ----- DON'T MODIFY ANYTHING BELOW, unless you know what you're doing -----
 
 REM Copying DLLs.
+echo %TRUNK_PATH%
 SET USERSOURCE=%TRUNK_PATH%bin\
 SET USERDEST=%DNN_PATH%bin\
 REM Copying Lib DLLs.

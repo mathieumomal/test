@@ -59,7 +59,14 @@
 
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_ChangeRequest]
     ON [dbo].[ChangeRequest]([Pk_ChangeRequest] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [WgTdocIndex]
+    ON [dbo].[ChangeRequest]([WGTDoc] ASC);
 

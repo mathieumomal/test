@@ -334,7 +334,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 radioTechnologyVals.Items.Add(new ListItem()
                 {
                     Value = technology.Pk_Enum_TechnologyId.ToString(),
-                    Text = technology.Description
+                    Text = technology.Code
                 });
             }
         }

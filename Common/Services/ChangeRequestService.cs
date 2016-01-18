@@ -167,6 +167,66 @@ namespace Etsi.Ultimate.Services
         }
 
         /// <summary>
+        /// Get light change request for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR UID</param>
+        /// <returns>Key value pair with bool (success status), and the change request</returns>
+        public KeyValuePair<bool, ChangeRequest> GetLightChangeRequestForMinuteMan(string uid)
+        {
+            var isSuccess = true;
+            ChangeRequest changeRequest = null;
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var manager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    manager.UoW = uoW;
+                    changeRequest = manager.GetLightChangeRequestForMinuteMan(uid);
+                    if (changeRequest == null)
+                        isSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error("[Service] Failed to GetLightChangeRequestForMinuteMan request: " + ex.Message);
+                isSuccess = false;
+            }
+            return new KeyValuePair<bool, ChangeRequest>(isSuccess, changeRequest);
+        }
+
+        /// <summary>
+        /// Get light change requests inside CR packs for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR pack UID</param>
+        /// <returns>List of Change requests</returns>
+        public KeyValuePair<bool, List<ChangeRequest>> GetLightChangeRequestsInsideCrPackForMinuteMan(string uid)
+        {
+            var isSuccess = true;
+            List<ChangeRequest> changeRequests = null;
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var manager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    manager.UoW = uoW;
+                    changeRequests = manager.GetLightChangeRequestsInsideCrPackForMinuteMan(uid);
+                    if (changeRequests == null)
+                        isSuccess = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error("[Service] Failed to GetLightChangeRequestsInsideCrPackForMinuteMan request: " + ex.Message);
+                isSuccess = false;
+            }
+            return new KeyValuePair<bool, List<ChangeRequest>>(isSuccess, changeRequests);
+        }
+
+        /// <summary>
         /// Fetches the list of change request statuses via the manager
         /// </summary>
         /// <returns></returns>
@@ -472,6 +532,60 @@ namespace Etsi.Ultimate.Services
             }
             return response;
         }
+
+
+        public ServiceResponse<bool> UpdateCrStatus(string uid, string status)
+        {
+            var response = new ServiceResponse<bool> { Result = false };
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var manager = ManagerFactory.Resolve<IChangeRequestStatusManager>();
+                    manager.UoW = uoW;
+                    response = manager.UpdateCrStatus(uid, status);
+
+                    if (response.Result)
+                        uoW.Save();
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Error(e.Message + e.StackTrace);
+                response.Result = false;
+                response.Report.LogError(Localization.GenericError);
+            }
+            return response;
+        }
+
+        /// <summary>
+        /// Update CRs status of CR Pack
+        /// </summary>
+        /// <param name="crsOfCrPack"></param>
+        /// <returns></returns>
+        public ServiceResponse<bool> UpdateCrsOfCrPackStatus(List<CrOfCrPackFacade> crsOfCrPack)
+        {
+            var response = new ServiceResponse<bool> { Result = false };
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var manager = ManagerFactory.Resolve<IChangeRequestStatusManager>();
+                    manager.UoW = uoW;
+                    response = manager.UpdateCrsStatusOfCrPack(crsOfCrPack);
+
+                    if (response.Result)
+                        uoW.Save();
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Error(e.Message + e.StackTrace);
+                response.Result = false;
+                response.Report.LogError(Localization.GenericError);
+            }
+            return response;
+        } 
     }
 
     /// <summary>
@@ -516,6 +630,24 @@ namespace Etsi.Ultimate.Services
         /// <param name="contributionUiDs"></param>
         /// <returns></returns>
         KeyValuePair<bool, List<ChangeRequest>> GetChangeRequestListByContributionUidList(List<string> contributionUiDs);
+
+        /// <summary>
+        /// Get light change request for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR UID</param>
+        /// <returns>Change request</returns>
+        KeyValuePair<bool, ChangeRequest> GetLightChangeRequestForMinuteMan(string uid);
+
+        /// <summary>
+        /// Get light change requests inside CR packs for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR pack UID</param>
+        /// <returns>List of Change requests</returns>
+        KeyValuePair<bool, List<ChangeRequest>> GetLightChangeRequestsInsideCrPackForMinuteMan(string uid);
 
         /// <summary>
         /// Returns the list of all change request statuses.
@@ -604,6 +736,15 @@ namespace Etsi.Ultimate.Services
         /// <param name="crPackId"></param>
         /// <returns></returns>
         ServiceResponse<bool> SendCrsToCrPack(int personId, List<int> crsIds, int crPackId);
+
+        ServiceResponse<bool> UpdateCrStatus(string uid, string status);
+
+        /// <summary>
+        /// Update CRs status of CR Pack
+        /// </summary>
+        /// <param name="crsOfCrPack"></param>
+        /// <returns></returns>
+        ServiceResponse<bool> UpdateCrsOfCrPackStatus(List<CrOfCrPackFacade> crsOfCrPack);
     }
 }
 

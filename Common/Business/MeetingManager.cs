@@ -12,8 +12,8 @@ namespace Etsi.Ultimate.Business
 {
     public class MeetingManager
     {
-        private const int MEETING_START_DATE = -30;
-        private const int NUMBER_OF_MEETINGS_TO_LOAD = 50;
+        private const int MEETING_FROM_DATE = -15;
+        private const int MEETING_TO_DATE = 3;
 
         public IUltimateUnitOfWork UoW { get; set; }
 
@@ -33,7 +33,7 @@ namespace Etsi.Ultimate.Business
                     .Where(x => (x.MtgShortRef != null && x.MtgShortRef.ToLower().Contains(SearchText.ToLower())) ||
                             (x.LOC_CITY != null && x.LOC_CITY.ToLower().Contains(SearchText.ToLower())) ||
                             (x.LOC_CTY_CODE != null && x.LOC_CTY_CODE.ToLower().Contains(SearchText.ToLower())))
-                    .OrderBy(d => d.START_DATE)
+                    .OrderByDescending(d => d.START_DATE)
                     .ToList();
         }
 
@@ -41,18 +41,23 @@ namespace Etsi.Ultimate.Business
         /// Retrieves latest meetings data
         /// </summary>
         /// <returns></returns>
-        public List<Meeting> GetLatestMeetings(int includeMeetingId)
+        public List<Meeting> GetLatestMeetings(int includeMeetingId, List<int> tbsIds = null)
         {
             IMeetingRepository repo = RepositoryFactory.Resolve<IMeetingRepository>();
             repo.UoW = UoW;
 
-            DateTime startDate = DateTime.UtcNow.AddDays(MEETING_START_DATE);
-            var meetings = repo
-                            .All
-                            .Where(x => x.START_DATE > startDate)
-                            .OrderBy(d => d.START_DATE)
-                            .Take(NUMBER_OF_MEETINGS_TO_LOAD)
-                            .ToList();
+            DateTime fromDate = DateTime.UtcNow.AddMonths(MEETING_FROM_DATE);
+            DateTime toDate = DateTime.UtcNow.AddMonths(MEETING_TO_DATE);
+
+            var query = repo.All
+                            .Where(m => m.START_DATE >= fromDate && m.START_DATE < toDate);
+
+            if (tbsIds != null && tbsIds.Count() > 0)
+            {
+                query = query.Where(m => m.TB_ID.HasValue && tbsIds.Contains((int)m.TB_ID.Value));
+            }
+
+            var meetings = query.OrderByDescending(m => m.START_DATE).ToList();
 
             var requestedMeeting = repo.All.Where(x => x.MTG_ID == includeMeetingId).FirstOrDefault();
             if (requestedMeeting != null && !meetings.Exists(x => x.MTG_ID == requestedMeeting.MTG_ID))

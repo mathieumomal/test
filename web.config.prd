@@ -103,7 +103,7 @@
 	
 	
   <add key="MeetingListAdvancedQueryLink" value="http://portal.3gpp.org/webapp/MeetingCalendar/QueryForm.asp"/>
-  <add key="ManageAgendaItemsUrl" value="http://portal.3gpp.org/webapp/rmeetingDocuments/UpdateAllocations.asp?MTG_ID={0}"/>
+  <add key="ManageAgendaItemsUrl" value="https://portal.3gpp.org/ngppapp/AgendaItems.aspx?meetingId={0}"/>
   <add key="MeetingRegistration" value="http://webapp.etsi.org/3GPPRegistration/fMain.asp?mid={0}"/>
   <add key="EtsiWorkitemsDeliveryFolder" value="http://www.etsi.org/deliver/"/>
   

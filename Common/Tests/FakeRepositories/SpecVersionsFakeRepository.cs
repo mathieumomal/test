@@ -158,5 +158,14 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Get the latest version of each spec release where Spec is UCC and Release is Open or Frozen
+        /// </summary>
+        /// <returns>list of specVersion</returns>
+        public List<SpecVersion> GetLatestVersionGroupedBySpecRelease()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

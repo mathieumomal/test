@@ -526,6 +526,29 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             Assert.AreEqual(crKey.Revision, response.Result.Revision);
         }
 
+        [TestCase("ABC", true)]
+        [TestCase("XYZ", false)]
+        public void Service_IntegrationTest_GetLightChangeRequestForMinuteMan(string uid, bool shouldSuccess)
+        {
+            var crService = new ChangeRequestService();
+            var response = crService.GetLightChangeRequestForMinuteMan(uid);
+
+            Assert.AreEqual(shouldSuccess, response.Key);
+            if(shouldSuccess)
+                Assert.IsNotNull(response.Value);
+            else
+                Assert.IsNull(response.Value);
+        }
+
+        [TestCase("TSG_ABC", 3)]
+        [TestCase("XYZ", 0)]
+        public void Service_IntegrationTest_GetLightChangeRequestsInsideCrPackForMinuteMan(string uid, int countOfCrs)
+        {
+            var crService = new ChangeRequestService();
+            var response = crService.GetLightChangeRequestsInsideCrPackForMinuteMan(uid);
+            Assert.AreEqual(countOfCrs, response.Value.Count);
+        }
+
         #endregion
 
         #region DataObject

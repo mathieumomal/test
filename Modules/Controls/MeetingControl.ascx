@@ -23,7 +23,7 @@
 <telerik:RadComboBox
     id="rcbMeetings"
     runat="server"
-    width="200px" AllowCustomText="true"
+    width="320px" AllowCustomText="true"
     EnableLoadOnDemand="True"
     OnItemsRequested="rcbMeetings_ItemsRequested"
     onclientselectedindexchanged="OnClientSelectedIndexChanged"

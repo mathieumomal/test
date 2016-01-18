@@ -151,3 +151,7 @@ span.requiredField {
 }
 #frmVersionPopup .confirmDeletePnl .btns,
 #frmVersionPopup .finishPnl .btns{ text-align: left;}
+
+#VersionUploadForm #UploadMeeting_rcbMeetings{
+    max-width:240px;
+}

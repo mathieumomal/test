@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
 using System;
-using System.Web.UI.WebControls;
 
 namespace Etsi.Ultimate.Repositories
 {
@@ -12,6 +11,11 @@ namespace Etsi.Ultimate.Repositories
     /// </summary>
     public class ChangeRequestRepository : IChangeRequestRepository
     {
+        /// <summary>
+        /// Limit of tdocs to get per requests
+        /// </summary>
+        public int LimitOfTdocsPerRequest = 100;
+
         /// <summary>
         /// Gets or sets the uoW.
         /// </summary>
@@ -76,12 +80,54 @@ namespace Etsi.Ultimate.Repositories
 
         /// <summary>
         /// Returns list of CRs using list of contribution UIDs. 
+        /// Performance improvment : to avoid any timeout, we split request in multiple requests each LimitOfTdocsPerRequest (integer) tdocs
         /// </summary>
         /// <param name="contributionUiDs">Contribution Uid list</param>
         /// <returns>List of CRs</returns>
         public List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUiDs)
         {
-            return AllIncluding(t => t.Enum_CRCategory, t=> t.CR_WorkItems, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus).Where(c => c.ChangeRequestTsgDatas.Any(x => contributionUiDs.Contains(x.TSGTdoc)) || contributionUiDs.Contains(c.WGTDoc)).ToList();
+            var crs = new List<ChangeRequest>();
+
+            //Total count of crs that we are looking for
+            var totalCount = contributionUiDs.Count;
+            //Get required number of iterations according to the LimitOfTdocsPerRequest variable
+            var iterations = Math.Ceiling((double)totalCount / LimitOfTdocsPerRequest);
+            //For each iterations : execute request to get crs in DB
+            for (var i = 0; i < iterations; i++)
+            {
+                //Define subUids list for current iteration
+                var subUids = contributionUiDs.Skip(i * LimitOfTdocsPerRequest).Take(LimitOfTdocsPerRequest).ToList();
+                //Execute request and add tdocs to the final list
+                crs.AddRange(AllIncluding(t => t.Enum_CRCategory, t => t.CR_WorkItems, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus).Where(c => c.ChangeRequestTsgDatas.Any(x => subUids.Contains(x.TSGTdoc)) || subUids.Contains(c.WGTDoc)).ToList());
+            }
+
+            return crs.Distinct().ToList();
+        }
+
+        /// <summary>
+        /// Get light change request for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR UID</param>
+        /// <returns>Change request</returns>
+        public ChangeRequest GetLightChangeRequestForMinuteMan(string uid)
+        {
+            return UoW.Context.ChangeRequests.Include(x => x.ChangeRequestTsgDatas)
+                .FirstOrDefault(c => c.ChangeRequestTsgDatas.Any(x => uid == x.TSGTdoc) || uid == c.WGTDoc);
+        }
+
+        /// <summary>
+        /// Get light change requests inside CR packs for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR pack UID</param>
+        /// <returns>List of Change requests</returns>
+        public List<ChangeRequest> GetLightChangeRequestsInsideCrPackForMinuteMan(string uid)
+        {
+            return UoW.Context.ChangeRequests.Include(x => x.ChangeRequestTsgDatas)
+                .Where(c => c.ChangeRequestTsgDatas.Any(x => uid == x.TSGTdoc)).ToList();
         }
 
         /// <summary>
@@ -264,6 +310,49 @@ namespace Etsi.Ultimate.Repositories
             var query = UoW.Context.ChangeRequestTsgDatas.Where(x => x.TSGTdoc == crPack);
             return query.ToList();
         }
+
+
+        public bool UpdateCrStatus(string uid, int? pkStatus)
+        {
+            var cr =
+                UoW.Context.ChangeRequests.Include(x => x.ChangeRequestTsgDatas)
+                    .FirstOrDefault(c => c.ChangeRequestTsgDatas.Any(x => uid == x.TSGTdoc) || uid == c.WGTDoc);
+            if (cr == null)
+                return false;
+            if (cr.WGTDoc == uid)
+                cr.Fk_WGStatus = pkStatus;
+            else
+                cr.ChangeRequestTsgDatas.First().Fk_TsgStatus = pkStatus;
+            return true;
+        }
+
+        /// <summary>
+        /// Update CRs status of CR Pack
+        /// </summary>
+        /// <param name="crsOfCrPack"></param>
+        /// <returns></returns>
+        public bool UpdateCrsStatusOfCrPack(List<CrOfCrPackFacade> crsOfCrPack)
+        {
+            foreach (var item in crsOfCrPack)
+            {
+                var cr = UoW.Context.ChangeRequests.FirstOrDefault(x => x.Specification.Pk_SpecificationId == item.SpecId
+                                && x.CRNumber.ToUpper() == item.CrNumber.ToUpper()
+                                    && (x.Revision ?? 0) == item.RevisionNumber);
+
+                if (cr == null)
+                    continue;
+
+                var tsgCr = UoW.Context.ChangeRequestTsgDatas.FirstOrDefault(x => x.Fk_ChangeRequest == cr.Pk_ChangeRequest
+                    && x.TSGTdoc.ToUpper() == item.TsgTdocNumber.ToUpper());
+
+                if (tsgCr != null)
+                {
+                    tsgCr.Fk_TsgStatus = item.PkEnumStatus;
+                }
+            }
+           
+            return true;
+        }
     }
 
     /// <summary>
@@ -292,6 +381,24 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="contributionUiDs"></param>
         /// <returns>List of CRs</returns>
         List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUiDs);
+
+        /// <summary>
+        /// Get light change request for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR UID</param>
+        /// <returns>Change request</returns>
+        ChangeRequest GetLightChangeRequestForMinuteMan(string uid);
+
+        /// <summary>
+        /// Get light change requests inside CR packs for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR pack UID</param>
+        /// <returns>List of Change requests</returns>
+        List<ChangeRequest> GetLightChangeRequestsInsideCrPackForMinuteMan(string uid);
 
         /// <summary>
         /// Find max CR revision by specId and CR number
@@ -358,5 +465,20 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="crsIds"></param>
         /// <returns></returns>
         List<ChangeRequest> FindCrsByIds(List<int> crsIds);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="pkStatus"></param>
+        /// <returns></returns>
+        bool UpdateCrStatus(string uid, int? pkStatus);
+
+        /// <summary>
+        /// Update CRs status of CR Pack
+        /// </summary>
+        /// <param name="crsOfCrPack"></param>
+        /// <returns></returns>
+        bool UpdateCrsStatusOfCrPack(List<CrOfCrPackFacade> crsOfCrPack);
     }
 }

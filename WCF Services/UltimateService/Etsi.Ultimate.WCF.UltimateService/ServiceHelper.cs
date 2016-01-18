@@ -33,6 +33,8 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateCreateChangeRequestCategories = "Ultimate Service Error [GetChangeRequestCategories]: {0}";
         private const string ConstErrorTemplateCreateChangeRequestById = "Ultimate Service Error [GetChangeRequestById]: {0}";
         private const string ConstErrorTemplateGetChangeRequestByContribUid = "Ultimate Service Error [GetChangeRequestByContributionUID]: {0}";
+        private const string ConstErrorTemplateGetLightChangeRequestForMinuteMan = "Ultimate Service Error [GetLightChangeRequestForMinuteMan]: {0}";
+        private const string ConstErrorTemplateGetLightChangeRequestsInsideCrPackForMinuteMan = "Ultimate Service Error [GetLightChangeRequestsInsideCrPackForMinuteMan]: {0}";
         private const string ConstErrorTemplateChangeSpecificationsStatusToUnderChangeControl = "Ultimate Service Error [ChangeSpecificationsStatusToUnderChangeControl]: {0}";
         private const string ConstErrorTemplateSetCrsAsFinal = "Ultimate Service Error [SetCrsAsFinal]: {0}";
         private const string ConstErrorIsExistCrNumberRevisionCouple = "Ultimate Service Error [IsExistCrNumberRevisionCouple]: {0}";
@@ -47,6 +49,8 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateGetCrByKey = "Ultimate Service Error [GetCrByKey]: {0}";
         private const string ConstErrorTemplateRemoveCrsFromCrPack = "Ultimate Service Error [RemoveCrsFromCrPack]: {0}";
         private const string ConstErrorTemplateGetLatestVersionsBySpecIds = "Ultimate Service Error [GetLatestVersionsBySpecIds]: {0}";
+        private const string ConstErrorTemplateUpdateCrStatus = "Ultimate Service Error [UpdateCrStatus]: {0}";
+        private const string ConstErrorTemplateUpdateCrsStatusOfCrPack = "Ultimate Service Error [UpdateCrsStatusOfCrPack]: {0}";
         #endregion
 
         #region Release
@@ -547,6 +551,58 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         /// <summary>
+        /// Get light change request for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR UID</param>
+        /// <returns>Key value pair with bool (success status), and the change request</returns>
+        public ChangeRequest GetLightChangeRequestForMinuteMan(string uid)
+        {
+            ChangeRequest cr = null;
+            try
+            {
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var result = svc.GetLightChangeRequestForMinuteMan(uid);
+                if (result.Key)
+                {
+                    cr = ConvertUltimateCRToLightServiceCR(result.Value, true);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(string.Format(ConstErrorTemplateGetLightChangeRequestForMinuteMan, ex.Message));
+            }
+            return cr;
+        }
+
+        /// <summary>
+        /// Get light change requests inside CR packs for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR pack UID</param>
+        /// <returns>List of Change requests</returns>
+        public List<ChangeRequest> GetLightChangeRequestsInsideCrPackForMinuteMan(string uid)
+        {
+            var crs = new List<ChangeRequest>();
+            try
+            {
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var result = svc.GetLightChangeRequestsInsideCrPackForMinuteMan(uid);
+                if (result.Key)
+                {
+                    result.Value.ForEach(x => crs.Add(ConvertUltimateCRToLightServiceCR(x, true)));
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(string.Format(ConstErrorTemplateGetLightChangeRequestsInsideCrPackForMinuteMan, ex.Message));
+            }
+            return crs;
+        }
+
+        /// <summary>
         /// Returns all the change requests statuses
         /// </summary>
         /// <returns></returns>
@@ -755,6 +811,43 @@ namespace Etsi.Ultimate.WCF.Service
             }
             return statusReport;
         }
+
+        public ServiceResponse<bool> UpdateCrStatus(string uid, string status)
+        {
+            var statusReport = new ServiceResponse<bool> { Report = new ServiceReport() };
+            try
+            {
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var ultimateStatusResponse = svc.UpdateCrStatus(uid, status);
+                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format(ConstErrorTemplateUpdateCrStatus, ex.Message));
+                statusReport.Result = false;
+                statusReport.Report.ErrorList.Add("Error occured when trying to update CR status");
+            }
+            return statusReport;
+        }
+
+        public ServiceResponse<bool> UpdateCrsStatusOfCrPack(List<CrOfCrPackFacade> CrsOfCrPack)
+        {
+            var statusReport = new ServiceResponse<bool> { Report = new ServiceReport() };
+            try
+            {
+                var CrsOfCrPackForUltimate = ConvertToUltimateCrsOfCrPackFacade(CrsOfCrPack);
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var ultimateStatusResponse = svc.UpdateCrsOfCrPackStatus(CrsOfCrPackForUltimate);
+                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format(ConstErrorTemplateUpdateCrsStatusOfCrPack, ex.Message));
+                statusReport.Result = false;
+                statusReport.Report.ErrorList.Add("Error occured when trying to update CRs status of CR Pack");
+            }
+            return statusReport;
+        } 
         #endregion
 
         #region versions and draft
@@ -1208,6 +1301,56 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         /// <summary>
+        /// Converts the ultimate cr to LIGHT service CR.
+        /// </summary>
+        /// <param name="ultimateCr"></param>
+        /// <param name="withWis"></param>
+        /// <returns>Ultimate Entities to Service Entities</returns>
+        private UltimateServiceEntities.ChangeRequest ConvertUltimateCRToLightServiceCR(UltimateEntities.ChangeRequest ultimateCr, bool withWis = false)
+        {
+            var serviceCr = new UltimateServiceEntities.ChangeRequest();
+            if (ultimateCr != null)
+            {
+                serviceCr.Pk_ChangeRequest = ultimateCr.Pk_ChangeRequest;
+                serviceCr.CRNumber = ultimateCr.CRNumber;
+                serviceCr.Revision = ultimateCr.Revision;
+                serviceCr.Subject = ultimateCr.Subject;
+                serviceCr.Fk_WGStatus = ultimateCr.Fk_WGStatus;
+                serviceCr.Subject = ultimateCr.Subject;
+                serviceCr.CreationDate = ultimateCr.CreationDate;
+                serviceCr.WGSourceOrganizations = ultimateCr.WGSourceOrganizations;
+                serviceCr.WGSourceForTSG = ultimateCr.WGSourceForTSG;
+                serviceCr.WGMeeting = ultimateCr.WGMeeting;
+                serviceCr.WGTarget = ultimateCr.WGTarget;
+                serviceCr.Fk_Enum_CRCategory = ultimateCr.Fk_Enum_CRCategory;
+                serviceCr.Fk_Specification = ultimateCr.Fk_Specification;
+                serviceCr.Fk_Release = ultimateCr.Fk_Release;
+                serviceCr.Fk_CurrentVersion = ultimateCr.Fk_CurrentVersion;
+                serviceCr.Fk_NewVersion = ultimateCr.Fk_NewVersion;
+                serviceCr.Fk_Impact = ultimateCr.Fk_Impact;
+                serviceCr.WGTDoc = ultimateCr.WGTDoc;
+
+                //Referenced objects
+                serviceCr.TsgData = new List<UltimateServiceEntities.ChangeRequestTsgData>();
+
+                if (ultimateCr.ChangeRequestTsgDatas != null)
+                {
+                    ultimateCr.ChangeRequestTsgDatas.ForEach(x => serviceCr.TsgData.Add(new UltimateServiceEntities.ChangeRequestTsgData
+                    {
+                        PkChangeRequestTsgData = x.Pk_ChangeRequestTsgData,
+                        TsgTdoc = x.TSGTdoc,
+                        TsgMeeting = x.TSGMeeting,
+                        TsgSourceOrganizations = x.TSGSourceOrganizations,
+                        TsgTarget = x.TSGTarget,
+                        FkTsgStatus = x.Fk_TsgStatus,
+                        FkChangeRequest = x.Fk_ChangeRequest
+                    }));
+                }
+            }
+            return serviceCr;
+        }
+
+        /// <summary>
         /// Converts an ultimate status to a service status
         /// </summary>
         /// <returns></returns>
@@ -1284,6 +1427,30 @@ namespace Etsi.Ultimate.WCF.Service
             };
 
             return ultimateCrKeyFacade;
+        }
+
+        /// <summary>
+        /// Converts an WCF CrKeyFacade to Ultimate CrKeyFacade
+        /// </summary>
+        /// <returns></returns>
+        private List<UltimateEntities.CrOfCrPackFacade> ConvertToUltimateCrsOfCrPackFacade(List<CrOfCrPackFacade> crsOfCrPack)
+        {
+            var result = new List<UltimateEntities.CrOfCrPackFacade>();
+
+            foreach (var item in crsOfCrPack)
+            {
+                result.Add(new UltimateEntities.CrOfCrPackFacade
+                {
+                    CrNumber = item.CrNumber,
+                    SpecId = item.SpecId,
+                    TsgTdocNumber = item.TsgTdocNumber,
+                    Status = item.Status,
+                    RevisionNumber = item.RevisionNumber
+                });
+
+            }
+
+            return result;
         }
 
         #endregion

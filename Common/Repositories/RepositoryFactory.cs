@@ -84,8 +84,7 @@ namespace Etsi.Ultimate.Repositories
             Container.RegisterType<IEtsiWorkItemRepository, EtsiWorkItemRepository>(new TransientLifetimeManager());
             Container.RegisterType<ICrPackRepository, CrPackRepository>(new TransientLifetimeManager());
 			Container.RegisterType<IViewContributionsWithAditionnalDataRepository, ViewContributionsWithAditionnalDataRepository>(new TransientLifetimeManager());			Container.RegisterType<ISpecificationRapporteurRepository, SpecificationRapporteurRepository>(new TransientLifetimeManager());
-            Container.RegisterType<ISpecificationRapporteurRepository, SpecificationRapporteurRepository>(new TransientLifetimeManager());
-            //Offline Repositories
+			Container.RegisterType<ILatestFolderRepository, LatestFolderRepository>(new TransientLifetimeManager());			Container.RegisterType<ISpecificationRapporteurRepository, SpecificationRapporteurRepository>(new TransientLifetimeManager());            //Offline Repositories
             Container.RegisterType<IOfflineRepository, OfflineRepository>(new TransientLifetimeManager());
             Container.RegisterType<ISyncInfoRepository, SyncInfoRepository>(new TransientLifetimeManager());
         }

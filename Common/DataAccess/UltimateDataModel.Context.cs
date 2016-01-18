@@ -65,6 +65,7 @@ namespace Etsi.Ultimate.DataAccess
         public IDbSet<View_CrPacks> View_CrPacks { get; set; }
         public IDbSet<Specification> Specifications { get; set; }
         public IDbSet<View_ContributionsWithAditionnalData> View_ContributionsWithAditionnalData { get; set; }
+        public IDbSet<LatestFolder> LatestFolders { get; set; }
     	
     	/**
     	 * This code is intended to enable testability of the different layers,

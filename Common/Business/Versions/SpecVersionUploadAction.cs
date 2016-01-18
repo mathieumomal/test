@@ -485,9 +485,13 @@ namespace Etsi.Ultimate.Business.Versions
             {
                 if ((uploadMeeting.START_DATE != null))
                 {
-                    var latestFolder = ConfigVariables.VersionsLatestFTPFolder;
+                    var ftpFoldersManager = ManagerFactory.Resolve<IFtpFoldersManager>();
+                    ftpFoldersManager.UoW = UoW;
+                    var latestFolder = ftpFoldersManager.GetFTPLatestFolderName();
+
                     if (String.IsNullOrEmpty(latestFolder))
                         latestFolder = String.Format("{0:0000}-{1:00}", uploadMeeting.START_DATE.Value.Year, uploadMeeting.START_DATE.Value.Month);
+                    
                     var underChangeControlPath = String.Format(ConstFtpVersionsPath, destinationBasePath, latestFolder, version.Release.Code, spec.Number.Split('.')[0]);
                     var isUccPathExists = Directory.Exists(underChangeControlPath);
                     if (!isUccPathExists)

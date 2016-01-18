@@ -178,7 +178,7 @@ namespace Etsi.Ultimate.Module.Versions
 
             if (report.GetNumberOfErrors() == 0 && report.GetNumberOfWarnings() == 0)
             {
-                lblSaveStatus.Text = String.Format(UploadVersion_aspx.SuccessMessage, version.Value.MajorVersion, version.Value.TechnicalVersion, version.Value.EditorialVersion, "allocated.");
+                lblSaveStatus.Text = String.Format(UploadVersion_aspx.SuccessMessage, version.Value.MajorVersion, version.Value.TechnicalVersion, version.Value.EditorialVersion, "allocated");
                 preVersionUploadScreen.Visible = false;
                 analysis.Visible = false;
                 confirmation.Visible = false;
@@ -214,13 +214,20 @@ namespace Etsi.Ultimate.Module.Versions
         {
             var svcResponse = new ServiceResponse<string>();
             ISpecVersionService specVersionSvc = ServicesFactory.Resolve<ISpecVersionService>();
+
+            if (specVersionSvc.IsCopyLatestFolderInProgress())
+            {
+                ThrowAnError(UploadVersion_aspx.CopyLatestFolderInProgress);
+                return;
+            }
+
             var version = GetEditedSpecVersionObject();
             if (version.Key)
                 svcResponse = specVersionSvc.UploadVersion(GetUserPersonId(), VersionFileToken);
 
             if (svcResponse.Report.GetNumberOfErrors() == 0 && svcResponse.Report.GetNumberOfWarnings() == 0)
             {
-                lblSaveStatus.Text = String.Format(UploadVersion_aspx.SuccessMessage, version.Value.MajorVersion, version.Value.TechnicalVersion, version.Value.EditorialVersion, "uploaded.");
+                lblSaveStatus.Text = String.Format(UploadVersion_aspx.SuccessMessage, version.Value.MajorVersion, version.Value.TechnicalVersion, version.Value.EditorialVersion, "uploaded");
                 preVersionUploadScreen.Visible = false;
                 analysis.Visible = false;
                 confirmation.Visible = false;

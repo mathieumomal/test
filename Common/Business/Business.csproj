@@ -139,6 +139,7 @@
     <Compile Include="Versions\GetNextReleaseAction.cs" />
     <Compile Include="Versions\SpecVersionAllocateAction.cs" />
     <Compile Include="Versions\SpecVersionNumberValidator.cs" />
+    <Compile Include="Versions\FtpFoldersManager.cs" />
     <Compile Include="Versions\SpecVersionUploadAction.cs" />
     <Compile Include="SyncInfoManager.cs" />
     <Compile Include="Versions\QualityChecks\DocQualityChecks.cs" />

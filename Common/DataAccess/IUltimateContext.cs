@@ -48,6 +48,7 @@ namespace Etsi.Ultimate.DataAccess
         IDbSet<ChangeRequestTsgData> ChangeRequestTsgDatas { get; set; }
         IDbSet<View_CrPacks> View_CrPacks { get; }
         IDbSet<View_ContributionsWithAditionnalData> View_ContributionsWithAditionnalData { get; set; }
+        IDbSet<LatestFolder> LatestFolders { get; set; }
 
         void SetModified(object entity);
         void SetAdded(object entity);

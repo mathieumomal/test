@@ -194,6 +194,52 @@ namespace Etsi.Ultimate.Business
         }
 
         /// <summary>
+        /// Get light change request for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM 
+        /// </summary>
+        /// <param name="uid">CR UID</param>
+        /// <returns>Change request</returns>
+        public ChangeRequest GetLightChangeRequestForMinuteMan(string uid)
+        {
+            try
+            {
+                var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
+                repo.UoW = UoW;
+                var result = repo.GetLightChangeRequestForMinuteMan(uid);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error("[Business] Failed to GetLightChangeRequestForMinuteMan:" + ex.Message);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Get light change requests inside CR packs for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR pack UID</param>
+        /// <returns>List of Change requests</returns>
+        public List<ChangeRequest> GetLightChangeRequestsInsideCrPackForMinuteMan(string uid)
+        {
+            try
+            {
+                var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
+                repo.UoW = UoW;
+                var result = repo.GetLightChangeRequestsInsideCrPackForMinuteMan(uid);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error("[Business] Failed to GetLightChangeRequestsInsideCrPackForMinuteMan:" + ex.Message);
+                return null;
+            }
+        }
+
+        /// <summary>
         /// See interface
         /// </summary>
         /// <param name="crPackTsgDecisions">The cr pack TSG decisions.</param>
@@ -548,7 +594,6 @@ namespace Etsi.Ultimate.Business
                 response.Result = true;
             return response;
         }
-
         #endregion
 
         #region Private Methods
@@ -731,6 +776,24 @@ namespace Etsi.Ultimate.Business
         List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUiDs);
 
         /// <summary>
+        /// Get light change request for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR UID</param>
+        /// <returns>Change request</returns>
+        ChangeRequest GetLightChangeRequestForMinuteMan(string uid);
+
+        /// <summary>
+        /// Get light change requests inside CR packs for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR pack UID</param>
+        /// <returns>List of Change requests</returns>
+        List<ChangeRequest> GetLightChangeRequestsInsideCrPackForMinuteMan(string uid);
+
+        /// <summary>
         /// Updates the CRs related to a CR Pack (TSG decision and TsgTdocNumber)
         /// </summary>
         /// <param name="crPackTsgDecisions">The cr pack TSG decisionlst.</param>
@@ -804,5 +867,6 @@ namespace Etsi.Ultimate.Business
         /// <param name="crPackId"></param>
         /// <returns></returns>
         ServiceResponse<bool> SendCrsToCrPack(int personId, List<int> crsIds, int crPackId);
+
     }
 }

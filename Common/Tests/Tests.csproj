@@ -121,10 +121,12 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -140,6 +142,7 @@
     <Compile Include="Business\ItuRecommendation\ItuRecommendationExporterTest.cs" />
     <Compile Include="Business\ItuRecommendation\SpecToItuConverterTests.cs" />
     <Compile Include="Business\ItuRecommendation\SeedFileParserTest.cs" />
+    <Compile Include="Business\FtpFoldersManagerTest.cs" />
     <Compile Include="Business\SpecVersionNumberValidatorTests.cs" />
     <Compile Include="Business\UtilsManagerTest.cs" />
     <Compile Include="Business\CrCategoriesManagerTest.cs" />
@@ -373,6 +376,12 @@
     <Content Include="TestData\LogManager\Test.log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="TestData\Ftp\Specs\archive\14_series\14.0.1\1401-321.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Ftp\Specs\archive\15_series\15.0.2\1502-452.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\ItuRecommendation\InvalidSeedFile.doc">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -460,6 +469,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

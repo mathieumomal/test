@@ -99,6 +99,25 @@ namespace Etsi.Ultimate.Tests.Repositories
             }
         }
 
+        [Test(Description = "System should get Crs according to list of UIDs")]
+        [TestCase(1, Description = "System should execute one request each 1 uid(s)")]
+        [TestCase(2, Description = "System should execute one request each 2 uid(s)")]
+        [TestCase(3, Description = "System should execute one request each 3 uid(s)")]
+        [TestCase(4, Description = "System should execute one request each 4 uid(s)")]
+        [TestCase(5, Description = "System should execute one request each 5 uid(s)")]
+        public void GetChangeRequestListByContributionUidList(int limit)
+        {
+            var repo = new ChangeRequestRepository { UoW = UoW, LimitOfTdocsPerRequest = limit};
+            var result = repo.GetChangeRequestListByContributionUidList(new List<string> { "ABC", "DEF", "GHI", "RP-CR0004", "RP-CR0005" });
+
+            Assert.AreEqual(5, result.Count);
+            Assert.IsTrue(result.Any(x => x.WGTDoc == "ABC"));
+            Assert.IsTrue(result.Any(x => x.WGTDoc == "DEF"));
+            Assert.IsTrue(result.Any(x => x.WGTDoc == "GHI"));
+            Assert.IsTrue(result.Any(x => x.ChangeRequestTsgDatas.Any(y => y.TSGTdoc == "RP-CR0004")));
+            Assert.IsTrue(result.Any(x => x.ChangeRequestTsgDatas.Any(y => y.TSGTdoc == "RP-CR0005")));
+        }
+
         #endregion
 
         #region Get CR
@@ -272,6 +291,22 @@ namespace Etsi.Ultimate.Tests.Repositories
             var result = repo.GetChangeRequests(searchObj);
 
             Assert.AreEqual(expectedResult, result.Key.Count);
+        }
+
+        #endregion
+
+        #region Get CR for MM
+
+        [Test]
+        public void GetLightChangeRequestForMinuteMan()
+        {
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetLightChangeRequestForMinuteMan("ABC");
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.CurrentVersion);
+            Assert.IsNotNull(result.NewVersion);
+            Assert.IsNotNull(result.ChangeRequestTsgDatas);
         }
 
         #endregion

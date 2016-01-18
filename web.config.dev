@@ -97,7 +97,7 @@
   <add key="DownloadDocumentListBaseAddress" value="http://dnn3gpp.13.etsidev.org/ngppapp/GenerateDocumentList.Aspx?meetingId={0}"/>
   <add key="UploadTDocUrl" value="http://dnn3gpp.13.etsidev.org/ngppapp/UploadTdoc.aspx"/>
   <add key="MeetingListAdvancedQueryLink" value="http://webapp.13.etsidev.org/MeetingCalendar/QueryForm.asp"/>
-  <add key="ManageAgendaItemsUrl" value="http://webapp.13.etsidev.org/rmeetingDocuments/UpdateAllocations.asp?MTG_ID={0}"/>
+  <add key="ManageAgendaItemsUrl" value="http://dnn3gpp.13.etsidev.org/ngppapp/AgendaItems.aspx?meetingId={0}"/>
   <add key="MeetingRegistration" value="http://webapp.13.etsidev.org/3GPPRegistration/fMain.asp?mid={0}"/>
   <add key="EtsiWorkitemsDeliveryFolder" value="http://www.etsi.org/deliver/"/>
   <add key="SpecificationDetailsUrl" value="http://dnn3gpp.13.etsidev.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId={0}" />

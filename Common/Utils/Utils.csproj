@@ -102,6 +102,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="SessionHelper.cs" />
     <Compile Include="UtilsFactory.cs" />
     <Compile Include="ModelMails\SpecAwaitingReferenceNumberMailTemplate.cs">
       <AutoGen>True</AutoGen>

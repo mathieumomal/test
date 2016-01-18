@@ -12,6 +12,7 @@ namespace Etsi.Ultimate.WCF.Interface
     [ServiceKnownType(typeof(WorkItem))]
     [ServiceKnownType(typeof(ChangeRequest))]
     [ServiceKnownType(typeof(ChangeRequestCategory))]
+    [ServiceKnownType(typeof(CrOfCrPackFacade))]
     public interface IUltimateService
     {
         #region release
@@ -134,6 +135,9 @@ namespace Etsi.Ultimate.WCF.Interface
         #endregion
 
         #region crs
+        [OperationContract]
+        ServiceResponse<bool> UpdateCrStatus(string uid, string status);
+
         /// <summary>
         /// Sets the CRS as final.
         /// </summary>
@@ -192,6 +196,16 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns></returns>
         [OperationContract]
         List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUids);
+
+        /// <summary>
+        /// Get light change request for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR UID</param>
+        /// <returns>Key value pair with bool (success status), and the change request</returns>
+        [OperationContract]
+        ChangeRequest GetLightChangeRequestForMinuteMan(string uid);
 
         /// <summary>
         /// Return the list of all change request categories, that can be used to fill the ChangeRequest.Fk_TSGStatus and ChangeRequest.Fk_WGStatus fields
@@ -264,6 +278,26 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>Success/Failure</returns>
         [OperationContract]
         ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds);
+        #endregion
+
+        #region cr pack
+        /// <summary>
+        /// Get light change requests inside CR packs for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// - will not change during a meeting
+        /// - and/or data will be loaded and cache by MM
+        /// </summary>
+        /// <param name="uid">CR pack UID</param>
+        /// <returns>List of Change requests</returns>
+        [OperationContract]
+        List<ChangeRequest> GetLightChangeRequestsInsideCrPackForMinuteMan(string uid);
+
+        /// <summary>
+        /// Update CRs status of CR Pack
+        /// </summary>
+        /// <param name="CrsOfCrPack"></param>
+        /// <returns></returns>
+        [OperationContract]
+        ServiceResponse<bool> UpdateCrsStatusOfCrPack(List<CrOfCrPackFacade> CrsOfCrPack);
         #endregion
 
         #region Versions

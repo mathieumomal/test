@@ -432,4 +432,19 @@
   <data name="Version_Ucc_Meeting_Mandatory" xml:space="preserve">
     <value>Meeting is mandatory for UCC versions</value>
   </data>
+  <data name="LatestFolder_AnotherTask_IsRunning" xml:space="preserve">
+    <value>Another latest folder task is running.</value>
+  </data>
+  <data name="LatestFolder_CopyFileError" xml:space="preserve">
+    <value>Error Copying File : {0}</value>
+  </data>
+  <data name="LatestFolder_FolderName_Already_Exist" xml:space="preserve">
+    <value>Folder name already exists.</value>
+  </data>
+  <data name="LatestFolder_FolderName_IsMandatory" xml:space="preserve">
+    <value>Folder name is mandatory.</value>
+  </data>
+  <data name="GenericErrorManageFolder" xml:space="preserve">
+    <value>An error occured while clear / create latest folder</value>
+  </data>
 </root>

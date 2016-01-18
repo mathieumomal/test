@@ -81,6 +81,7 @@
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Community.Extend.cs" />
+    <Compile Include="CrOfCrPackFacade.cs" />
     <Compile Include="CrKeyFacade.cs" />
     <Compile Include="CR_WorkItems.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
@@ -123,6 +124,9 @@
     <Compile Include="Facades\SpecVersionFoundationCrs.cs" />
     <Compile Include="Facades\VersionForCrListFacade.cs" />
     <Compile Include="History.cs">
+      <DependentUpon>UltimateModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="LatestFolder.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Meeting.cs">

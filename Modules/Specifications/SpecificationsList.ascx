@@ -28,7 +28,7 @@
                     <td style="line-height: 22px;">
                         <asp:LinkButton ID="btnNewSpecification" class="btn3GPP-success" runat="server" OnClientClick="var popUp=window.open('/desktopmodules/Specifications/EditSpecification.aspx?action=create', 'Specification-Create', 'height=690,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();return false;" Text="New Specification" />                    
                         <span style="float: right; padding-bottom: 2px; white-space: nowrap">
-                            <asp:Button ID="imgBtnFTP" Text="FTP" runat="server" CssClass="btn3GPP-success customizePanelButtons" OnClientClick="openFTPConfiguration(); return false;" ToolTip="Manage specifications folders on FTP" />
+                            <asp:Button ID="imgBtnFTP" Text="Manage meeting folder" runat="server" CssClass="btn3GPP-success customizePanelButtons" OnClientClick="openFTPConfiguration(); return false;" ToolTip="Manage specifications folders on FTP" />
                             <asp:Button ID="lnkManageITURecommendations" Text="ITU" runat="server" CssClass="btn3GPP-success customizePanelButtons" ToolTip="Manage ITU recommendations" OnClientClick="return openITURecommendationPopUp();" />
                             <asp:ImageButton ID="btnSpecExport" runat="server" CssClass="customizePanelButtons customizeButtonsImages" AlternateText="Export" ImageUrl="/DesktopModules/Specifications/images/excel_export.png" OnClick="btnSpecExport_Click" OnClientClick="removeBg" ToolTip="Download to Excel" />
                             <ult:fullviewcontrol ID="ultFullView" runat="server" />
@@ -219,24 +219,34 @@
             </table>
         </ContentTemplate>
     </asp:UpdatePanel>
-    <telerik:RadAjaxManager ID="ramVersions" runat="server" EnablePageHeadUpdate="false">
+    <telerik:RadAjaxManager ID="ramVersions" runat="server" EnablePageHeadUpdate="false" OnAjaxRequest="ramVersions_AjaxRequest">
+        <ajaxsettings>
+                <telerik:AjaxSetting AjaxControlID="ramVersions">
+                    <UpdatedControls>
+                        <telerik:AjaxUpdatedControl ControlID="FtpStatusLabel"></telerik:AjaxUpdatedControl>
+                        <telerik:AjaxUpdatedControl ControlID="progressBarContent"></telerik:AjaxUpdatedControl>
+                    </UpdatedControls>
+                </telerik:AjaxSetting>
+            </ajaxsettings>
     </telerik:RadAjaxManager>
     <telerik:RadWindowManager ID="rwmVersions" runat="server">
         <Windows>
-            <telerik:RadWindow ID="rwFTPConfiguration" runat="server" Modal="true" Behaviors="Close" Title="FTP Configuration" Height="225" Width="400" VisibleStatusbar="false" IconUrl="false">
+            <telerik:RadWindow ID="rwFTPConfiguration" runat="server" Modal="true" Behaviors="Close"
+                Title="Manage Latest Folder" Height="280" Width="510" VisibleStatusbar="false" IconUrl="false" ReloadOnShow="true" 
+                ShowContentDuringLoad="false" OnClientBeforeClose="OnClientBeforeClose">
                 <ContentTemplate>
-                    <div id="divFTPConfiguration" style="padding: 5px">
+                    <div id="divFTPConfiguration">
                         <div style="margin: 5px 5px 5px 5px">
-                            Do you want to create missing hardlinks from '\Specs\<asp:Label ID="lblFolderPath" runat="server"/>' to '\Specs\latest' ?
-                            <br />
-                            <br />
-                            <br />
-                            *This is required only when you map 'VersionsLatestFTPFolder' in web.config to an non-empty folder
+                            <asp:Label ID="FtpStatusLabel" runat="server" CssClass="hide"/>
+                            <br /><span class="legend">Current meeting folder: </span><asp:Label runat="server" ID="currentFolderLabel" CssClass="legend"></asp:Label>
+                            <br />In order to create new meeting folder, please provide its name: 
+                            <asp:TextBox runat="server"  ID="txtFTPFolderName"></asp:TextBox><span class="mandatory">*</span>
                         </div>
-                        <br />
+                        <!-- FTP Progress Bar -->
+                        <asp:Literal runat="server" ID="progressBarContent"></asp:Literal>
                         <div class="footer" style="text-align: right">
-                            <asp:Button ID="btnConfirm" runat="server" Text="Yes" OnClick="btnConfirm_Click"/>
-                            <asp:Button ID="btnCancel" runat="server" Text="No" OnClientClick="return closePopUpWindow();" />
+                            <asp:Button ID="btnCreateFolder" CssClass="btn3GPP-default" runat="server" Text="Create" OnClientClick="CreateLatestFolder();return false;"/>
+                            <asp:Button ID="btnCancel" CssClass="btn3GPP-success" runat="server" Text="Close" OnClientClick="return closePopUpWindow();" />
                         </div>
                     </div>
                 </ContentTemplate>
@@ -287,8 +297,16 @@
             radWindowFTPConfiguration.show();
         };
 
-        function closePopUpWindow() {
-            var radWindowFTPConfiguration = $find("<%= rwFTPConfiguration.ClientID %>");
+        function OnClientBeforeClose(sender, args)
+        {
+            $("#<%= txtFTPFolderName.ClientID %>").attr("disabled", false).val(''); /* clear text box */
+    		$("#<%= btnCreateFolder.ClientID %>").removeClass().addClass('btn3GPP-default').attr("disabled", true); /* init create button */
+    		$("#<%= FtpStatusLabel.ClientID %>").removeClass().addClass('hide');
+    		$("#<%= updateProgressSpecificationGrid.ClientID %>").removeClass('forceHidden'); /* show Grid update progress */
+        }
+
+    	function closePopUpWindow() {
+    		var radWindowFTPConfiguration = $find("<%= rwFTPConfiguration.ClientID %>");
             radWindowFTPConfiguration.close();
             return false;
         }
@@ -300,12 +318,43 @@
                 searchButton.click();
             }
         }
-
         function openITURecommendationPopUp() {
             var popUp = window.open('/desktopmodules/Specifications/ITURecommendations.aspx', 'ituRecPopup', 'height=340,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no');
             popUp.focus();
             return false;
         }
+
+        function CreateLatestFolder() {
+            $("#<%= updateProgressSpecificationGrid.ClientID %>").addClass('forceHidden'); /* hide Grid update progress */
+
+            $("#<%= FtpStatusLabel.ClientID %>").text('Please wait...');
+            $("#<%= btnCreateFolder.ClientID %>").attr('disabled', 'disabled').removeClass("btn3GPP-success").addClass("btn3GPP-default");
+            var txtFTPFolderName = $("#<%= txtFTPFolderName.ClientID %>");
+            txtFTPFolderName.attr('disabled', 'disabled');
+
+            var ajaxManager = $find("<%= ramVersions.ClientID %>");
+            ajaxManager.ajaxRequest("CreateLatestFolder");
+        }
+
+        function RefreshCreateLatestFolderStatus() {
+            var ajaxManager = $find("<%= ramVersions.ClientID %>");
+            ajaxManager.ajaxRequest("RefreshCreateLatestFolderStatus");
+        }
+
+        $(document).ready(function () {
+            $("#divFTPConfiguration input[type=text]").keyup(function () {
+                var textBox = $("#divFTPConfiguration input[type=text]");
+                var btnCreateFolder = $("#<%= btnCreateFolder.ClientID %>");
+                btnCreateFolder.removeClass('btn3GPP-default').removeClass('btn3GPP-success');
+
+                if (textBox.val() != '') {
+                    btnCreateFolder.addClass('btn3GPP-success').attr("disabled", false);
+                } else {
+                    btnCreateFolder.addClass('btn3GPP-default').attr("disabled", true);
+                }
+            });
+        });
+
     </script>
 </asp:Panel>
 

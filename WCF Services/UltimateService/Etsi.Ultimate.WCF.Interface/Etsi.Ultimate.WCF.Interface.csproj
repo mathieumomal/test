@@ -73,6 +73,7 @@
     <Compile Include="Entities\ChangeRequestStatus.cs" />
     <Compile Include="Entities\ChangeRequestTsgData.cs" />
     <Compile Include="Entities\CrKeyFacade.cs" />
+    <Compile Include="Entities\CrOfCrPackFacade.cs" />
     <Compile Include="Entities\Release.cs" />
     <Compile Include="Entities\Specification.cs" />
     <Compile Include="Entities\SpecVersion.cs" />

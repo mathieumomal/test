@@ -54,6 +54,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private const string CONST_TECH_DATASOURCE = "TechDataSource";
         private const string CONST_FTP_LATEST_VERSIONS_PATH = "{0}\\Specs\\latest";
         private const string CONST_FTP_VERSIONS_MAP_PATH = "{0}\\Specs\\{1}";
+        private const string CONST_PROGRESS_BAR_CONTENT = "<pre><code><div class=\"meter\"><span style=\"width: {0}%\"></span></div></code></pre>";
 
         private bool isUrlSearch;
         private bool fromSearch;
@@ -160,6 +161,8 @@ namespace Etsi.Ultimate.Module.Specifications
                 {
                     FirstLoad = true;
                     ReleaseCtrl.IsLoadingNeeded = !componentSpecList.Visible;
+                    updateProgressSpecificationGrid.Visible = true;
+
                     //Set panel visibility to true
                     componentSpecList.Visible = true;
 
@@ -194,14 +197,17 @@ namespace Etsi.Ultimate.Module.Specifications
                     BindControls();
                     ReleaseCtrl.Load += ReleaseCtrl_Load;
 
-                    lblFolderPath.Text = ConfigVariables.VersionsLatestFTPFolder;
-
                     var searchObjFromCookie = CookiesHelper.GetCookie<SpecificationSearch>(Page.Request, ConfigVariables.CookieNameSpecsList);
                     if (searchObjFromCookie != null && searchObjFromCookie.GetType() == typeof(SpecificationSearch))
                     {
                         searchObj = searchObjFromCookie;
                         LoadControlsFromSearchObj();
                     }
+
+                    /* Latest Folder PopUp */
+                    progressBarContent.Text = string.Format(CONST_PROGRESS_BAR_CONTENT, 0);
+                    var specVersionService = ServicesFactory.Resolve<ISpecVersionService>();
+                    currentFolderLabel.Text = specVersionService.GetFTPLatestFolderName();
                 }
                 else
                 {
@@ -560,64 +566,6 @@ namespace Etsi.Ultimate.Module.Specifications
         }
 
         /// <summary>
-        /// Create hardlinks in \Specs\Latest folder
-        /// </summary>
-        /// <param name="sender">Confirm button</param>
-        /// <param name="e">Event arguments</param>
-        protected void btnConfirm_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                string ftpBasePath = ConfigVariables.FtpBasePhysicalPath;
-                string versionsLatestFTPFolder = ConfigVariables.VersionsLatestFTPFolder;
-                if (!String.IsNullOrEmpty(ftpBasePath) && !String.IsNullOrEmpty(versionsLatestFTPFolder))
-                {
-                    var sourcePath = String.Format(CONST_FTP_VERSIONS_MAP_PATH, ftpBasePath, versionsLatestFTPFolder);
-                    var mapPath = String.Format(CONST_FTP_LATEST_VERSIONS_PATH, ftpBasePath);
-
-                    //Create source path, if not exists
-                    if (!Directory.Exists(sourcePath))
-                        Directory.CreateDirectory(sourcePath);
-
-                    //Delete old links
-                    if (Directory.Exists(mapPath))
-                    {
-                        string[] files = Directory.GetFiles(mapPath);
-                        string[] dirs = Directory.GetDirectories(mapPath);
-                        //Remove Files
-                        foreach (string file in files)
-                        {
-                            File.SetAttributes(file, FileAttributes.Normal);
-                            File.Delete(file);
-                        }
-                        //Remove directories
-                        foreach (string dir in dirs)
-                        {
-                            Directory.Delete(dir, true);
-                        }
-                    }
-
-                    string[] fileNames = Directory.GetFiles(sourcePath, "*", SearchOption.AllDirectories);
-
-                    //Create hard links for all files
-                    foreach (string fileName in fileNames)
-                    {
-                        string hardLinkPath = fileName.Replace(sourcePath, mapPath);
-                        string hardLinkDirectory = Path.GetDirectoryName(hardLinkPath);
-                        if (!Directory.Exists(hardLinkDirectory))
-                            Directory.CreateDirectory(hardLinkDirectory);
-
-                        CreateHardLink(hardLinkPath, fileName, IntPtr.Zero);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                LogManager.Error("Failed to create hardlinks in FTP. \nError: " + ex.Message);
-            }
-        }
-
-        /// <summary>
         /// Export spec list
         /// </summary>
         /// <param name="sender"></param>
@@ -715,7 +663,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private void BindControls()
         {
             cblTechnology.DataSource = Technologies;
-            cblTechnology.DataTextField = "Description";
+            cblTechnology.DataTextField = "Code";
             cblTechnology.DataValueField = "Pk_Enum_TechnologyId";
             cblTechnology.DataBind();
 
@@ -912,5 +860,76 @@ namespace Etsi.Ultimate.Module.Specifications
         );
 
         #endregion
+
+        public void ramVersions_AjaxRequest(object sender, AjaxRequestEventArgs e)
+        {
+            var specVersionService = ServicesFactory.Resolve<ISpecVersionService>();
+
+            if (e.Argument == "CreateLatestFolder")
+            {
+                /* Create command */
+                var folderName = txtFTPFolderName.Text;
+                var response = specVersionService.CreateAndFillVersionLatestFolder(folderName, 
+                    GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()));
+
+                if (response.Result)
+                {
+                    ramVersions.ResponseScripts.Add("RefreshCreateLatestFolderStatus();");
+                }
+                else
+                {
+                    FtpStatusLabel.Text = string.Join("<br/>", response.Report.ErrorList);
+                    FtpStatusLabel.CssClass = "block messageBox error";
+                }
+            }
+            else if (e.Argument == "RefreshCreateLatestFolderStatus")
+            {
+                /* copy in progress, get current status */
+                var ftpFoldersManagerStatus = specVersionService.GetFtpFoldersManagerStatus();
+
+                if (ftpFoldersManagerStatus != null)
+                {
+                    if (ftpFoldersManagerStatus.Finished)
+                    {
+                        if (ftpFoldersManagerStatus.ErrorMessages != null && ftpFoldersManagerStatus.ErrorMessages.Count > 0)
+                        {
+                            /* copy is finish with errors */
+                            FtpStatusLabel.Text = "Error(s) occured while create latest folder :<br />";
+                            FtpStatusLabel.Text += string.Join("<br />", ftpFoldersManagerStatus.ErrorMessages);
+                            FtpStatusLabel.CssClass = "block messageBox error";
+                            progressBarContent.Text = string.Empty;
+                            specVersionService.ClearFtpFoldersManagerStatus();
+                        }
+                        else
+                        {
+                            /* copy is finish */
+                            FtpStatusLabel.Text = "Finished.";
+                            FtpStatusLabel.CssClass = "block messageBox success";
+                            progressBarContent.Text = string.Empty;
+                            specVersionService.ClearFtpFoldersManagerStatus();
+                        }
+                        
+                    }
+                    else
+                    {
+                        /* recall refresh */
+                        if (ftpFoldersManagerStatus.TotalFiles > 0)
+                        {
+                            FtpStatusLabel.Text = string.Format("Copy in progress ({0}/{1} files)...", ftpFoldersManagerStatus.CurrentNumberFile, ftpFoldersManagerStatus.TotalFiles);
+                        }
+                        else
+                        {
+                            FtpStatusLabel.Text = "Please wait...";
+                        }
+
+                        FtpStatusLabel.CssClass = "block messageBox info";
+                        ramVersions.ResponseScripts.Add("setTimeout(function () { RefreshCreateLatestFolderStatus(); }, 1000);");
+                        
+                        /* Progress bar content */
+                        progressBarContent.Text = string.Format(CONST_PROGRESS_BAR_CONTENT, ftpFoldersManagerStatus.Percent.ToString());
+                    }
+                }
+            }
+        }
     }
 }

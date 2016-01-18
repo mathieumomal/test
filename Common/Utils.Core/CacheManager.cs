@@ -34,6 +34,24 @@ namespace Etsi.Ultimate.Utils.Core
         }
 
         /// <summary>
+        /// Retrieve item from Cache
+        /// </summary>
+        /// <typeparam name="T">Type of item</typeparam>
+        /// <param name="key">Name of item</param>
+        /// <returns>Cached item as type</returns>
+        public static T Get<T>(string key)
+        {
+            try
+            {
+                return (T)HttpRuntime.Cache.Get(key);
+            }
+            catch
+            {
+                return default(T);
+            }
+        }
+
+        /// <summary>
         /// Inserts data into the cache.
         /// </summary>
         /// <param name="key">Key</param>
@@ -51,7 +69,18 @@ namespace Etsi.Ultimate.Utils.Core
         /// <param name="minutes">Time span in minutes</param>
         public static void InsertForLimitedTime(string key, object value, int minutes)
         {
-            HttpRuntime.Cache.Insert(key, value, null, DateTime.Now.AddMinutes(10), Cache.NoSlidingExpiration);
+            HttpRuntime.Cache.Insert(key, value, null, DateTime.Now.AddMinutes(minutes), Cache.NoSlidingExpiration);
+        }
+
+        /// <summary>
+        /// Insert data into the cache for a limited number of time with Sliding Expiration.
+        /// </summary>
+        /// <param name="key">Key</param>
+        /// <param name="value">Value</param>
+        /// <param name="minutes">Time span in minutes</param>
+        public static void InsertForLimitedTimeWithSlidingExpiration(string key, object value, int minutes)
+        {
+            HttpRuntime.Cache.Insert(key, value, null, Cache.NoAbsoluteExpiration, TimeSpan.FromMinutes(minutes));
         }
 
         /// <summary>

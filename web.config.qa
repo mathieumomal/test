@@ -97,7 +97,7 @@
 	<add key="UploadTDocUrl" value="http://dnn3gpp.13.etsiqa.org/ngppapp/UploadTdoc.aspx"/>
 	
   <add key="MeetingListAdvancedQueryLink" value="http://webapp.13.etsiqa.org/MeetingCalendar/QueryForm.asp"/>
-  <add key="ManageAgendaItemsUrl" value="http://webapp.13.etsiqa.org/rmeetingDocuments/UpdateAllocations.asp?MTG_ID={0}"/>
+  <add key="ManageAgendaItemsUrl" value="http://dnn3gpp.13.etsiqa.org/ngppapp/AgendaItems.aspx?meetingId={0}"/>
   <add key="MeetingRegistration" value="http://webapp.13.etsiqa.org/3GPPRegistration/fMain.asp?mid={0}"/>
   <add key="EtsiWorkitemsDeliveryFolder" value="http://www.etsi.org/deliver/"/>
   <add key="SpecificationDetailsUrl" value="http://dnn3gpp.13.etsiqa.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId={0}" />

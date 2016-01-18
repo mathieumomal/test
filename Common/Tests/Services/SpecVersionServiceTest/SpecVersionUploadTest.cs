@@ -43,11 +43,11 @@ namespace Etsi.Ultimate.Tests.Services
             }
 
             // Create directory structure
-            var latestDraftsDirectory = "Ftp\\Specs\\latest-drafts";
+            var latestDraftsDirectory = "TestData\\Ftp\\Specs\\latest-drafts";
             if (!Directory.Exists(latestDraftsDirectory))
                 Directory.CreateDirectory(latestDraftsDirectory);
 
-            var backupDirectory = "Ftp\\Backup\\Specs\\latest-drafts";
+            var backupDirectory = "TestData\\Ftp\\Backup\\Specs\\latest-drafts";
             if (!Directory.Exists(backupDirectory))
                 Directory.CreateDirectory(backupDirectory);
 
@@ -65,13 +65,13 @@ namespace Etsi.Ultimate.Tests.Services
             base.TearDown();
 
             // Clear the FTP. 
-            foreach (var folder in Directory.GetDirectories(Environment.CurrentDirectory+"\\Ftp\\Specs"))
+            foreach (var folder in Directory.GetDirectories(Environment.CurrentDirectory+"\\TestData\\Ftp\\Specs"))
             {
                 Directory.Delete(folder, true);
             }
 
             // Clear the Backup. 
-            foreach (var folder in Directory.GetDirectories(Environment.CurrentDirectory + "\\Ftp\\Backup"))
+            foreach (var folder in Directory.GetDirectories(Environment.CurrentDirectory + "\\TestData\\Ftp\\Backup"))
             {
                 Directory.Delete(folder, true);
             }
@@ -167,14 +167,12 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void UploadVersion_ShouldClearOlderVersionInLatestDraftFolder()
         {
-            
-
             // Create version 22103Version110 in the folder
-            string createdFilePath="Ftp\\Specs\\latest-drafts\\22103-210.zip";
+            string createdFilePath="TestData\\Ftp\\Specs\\latest-drafts\\22103-210.zip";
             File.Create(createdFilePath);
 
             // Create version 22103Version110 in the backup folder
-            string createdBackupFilePath = "Ftp\\Backup\\Specs\\latest-drafts\\22103-210.zip";
+            string createdBackupFilePath = "TestData\\Ftp\\Backup\\Specs\\latest-drafts\\22103-210.zip";
             File.Create(createdBackupFilePath);
 
             myVersion = CreateDraftVersion();
@@ -193,11 +191,11 @@ namespace Etsi.Ultimate.Tests.Services
         public void UploadVersion_ShouldNotClearMoreRecentVersionsInLatestDraftFolder()
         {
             // Create version 22103Version210 in the folder
-            string createdFilePath = "Ftp\\Specs\\latest-drafts\\22103-210.zip";
+            string createdFilePath = "TestData\\Ftp\\Specs\\latest-drafts\\22103-210.zip";
             File.Create(createdFilePath);
 
             // Create version 22103Version210 in the backup folder
-            string createdBackupFilePath = "Ftp\\Backup\\Specs\\latest-drafts\\22103-210.zip";
+            string createdBackupFilePath = "TestData\\Ftp\\Backup\\Specs\\latest-drafts\\22103-210.zip";
             File.Create(createdBackupFilePath);
 
             myVersion = CreateDraftVersion();
@@ -205,12 +203,12 @@ namespace Etsi.Ultimate.Tests.Services
             UploadDraft(myVersion, fileToUpload);
 
             Assert.IsTrue(File.Exists(createdFilePath));
-            Assert.IsTrue(File.Exists("Ftp\\Specs\\latest-drafts\\22103-210.zip"));
-            Assert.IsFalse(File.Exists("Ftp\\Specs\\latest-drafts\\22103-200.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\latest-drafts\\22103-210.zip"));
+            Assert.IsFalse(File.Exists("TestData\\Ftp\\Specs\\latest-drafts\\22103-200.zip"));
 
             Assert.IsTrue(File.Exists(createdBackupFilePath));
-            Assert.IsTrue(File.Exists("Ftp\\Backup\\Specs\\latest-drafts\\22103-210.zip"));
-            Assert.IsFalse(File.Exists("Ftp\\Backup\\Specs\\latest-drafts\\22103-200.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Backup\\Specs\\latest-drafts\\22103-210.zip"));
+            Assert.IsFalse(File.Exists("TestData\\Ftp\\Backup\\Specs\\latest-drafts\\22103-200.zip"));
         }
 
         [Test]

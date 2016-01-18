@@ -44,7 +44,7 @@ namespace Etsi.Ultimate.DomainClasses
             specification.SpecificationTechnologies.ToList().ForEach(e => { titllePart_1 += e.Enum_Technology.Description + "; "; });
             titllePart_1 = titllePart_1.Trim();
             titllePart_2 = specification.Title;
-            titllePart_3 = "3GPP " + StandardType + " " + specification.Number + " version " + version.Version + " " + releaseName;
+            titllePart_3 = "(3GPP " + StandardType + " " + specification.Number + " version " + version.Version + " " + releaseName + ")";
             RapporteurId = specification.PrimeSpecificationRapporteurIds.FirstOrDefault();
             this.SecretaryId = SecretaryId;
             WorkingTitle = specification.Title;

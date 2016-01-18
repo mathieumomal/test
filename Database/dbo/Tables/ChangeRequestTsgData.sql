@@ -18,7 +18,14 @@
 
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [TsgTDocUid_index]
+    ON [dbo].[ChangeRequestTsgData]([TSGTdoc] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [TsgTdocIndex]
     ON [dbo].[ChangeRequestTsgData]([TSGTdoc] ASC);
 

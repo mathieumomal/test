@@ -220,6 +220,27 @@ namespace Etsi.Ultimate.Repositories
                 UoW.Context.SpecVersions.Include(x => x.CurrentChangeRequests).Include(x => x.FoundationsChangeRequests)
                     .FirstOrDefault(x => x.Pk_VersionId == versionId);
         }
+
+        /// <summary>
+        /// Get the latest version of each spec release where Spec is UCC and Release is Open or Frozen
+        /// </summary>
+        /// <returns>list of specVersion</returns>
+        public List<SpecVersion> GetLatestVersionGroupedBySpecRelease()
+        {
+            return UoW.Context.SpecVersions.Include(x => x.Release).Include(x => x.Specification)
+                        .Where(sv => (sv.Specification.IsActive && sv.Specification.IsUnderChangeControl.HasValue 
+                            && sv.Specification.IsUnderChangeControl.Value)
+                                && (sv.Release.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Open
+                                    || sv.Release.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Frozen))
+                                        .GroupBy(x => new { x.Fk_SpecificationId, x.Fk_ReleaseId })
+                                            .Select(group => new
+                                            {
+                                                key = group.Key,
+                                                lastVersion = group.OrderByDescending(major => major.MajorVersion)
+                                                    .ThenByDescending(technical => technical.TechnicalVersion)
+                                                        .ThenByDescending(editorial => editorial.EditorialVersion).FirstOrDefault()
+                                            }).Select(x => x.lastVersion).ToList();
+        }
     }
     public interface ISpecVersionsRepository : IEntityRepository<SpecVersion>
     {
@@ -325,5 +346,11 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="versionId">version id</param>
         /// <returns>List of versions</returns>
         SpecVersion FindCrsLinkedToAVersion(int versionId);
+
+        /// <summary>
+        /// Get the latest version of each spec release where Spec is UCC and Release is Open or Frozen
+        /// </summary>
+        /// <returns>list of specVersion</returns>
+        List<SpecVersion> GetLatestVersionGroupedBySpecRelease();
     }
 }

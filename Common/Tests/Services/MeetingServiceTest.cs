@@ -52,7 +52,7 @@ namespace Etsi.Ultimate.Tests.Services
             var service = new MeetingService();
             var results = service.GetLatestMeetings();
 
-            Assert.AreEqual(3, results.Count);
+            Assert.AreEqual(5, results.Count);
             Assert.AreEqual(1, results.Where(x => x.MTG_ID == 1).Count());
             Assert.AreEqual(0, results.Where(x => x.START_DATE == null).Count());
         }
@@ -97,10 +97,10 @@ namespace Etsi.Ultimate.Tests.Services
 
             var service = new MeetingService();
             List<Meeting> result = service.GetLatestMeetings();
-            Assert.AreEqual(3, result.Count());
-            Assert.AreEqual(3, result.ElementAt(0).MTG_ID);
-            Assert.AreEqual(1, result.ElementAt(1).MTG_ID);
-            Assert.AreEqual(6, result.ElementAt(2).MTG_ID);
+            Assert.AreEqual(5, result.Count());
+            Assert.AreEqual(2, result.ElementAt(0).MTG_ID);
+            Assert.AreEqual(5, result.ElementAt(1).MTG_ID);
+            Assert.AreEqual(3, result.ElementAt(2).MTG_ID);
 
             List<Meeting> resultSearch = service.GetMatchingMeetings("S");
             Assert.AreEqual(4, resultSearch.Count());
@@ -181,10 +181,10 @@ namespace Etsi.Ultimate.Tests.Services
             get
             {
                 var meetings = GetMeetingList();
-                yield return new object[] { (IDbSet<Meeting>)meetings, 1, 3 };
-                yield return new object[] { (IDbSet<Meeting>)meetings, 2, 4 };
-                yield return new object[] { (IDbSet<Meeting>)meetings, 3, 3 };
-                yield return new object[] { (IDbSet<Meeting>)meetings, 0, 3 };
+                yield return new object[] { (IDbSet<Meeting>)meetings, 1, 5 };
+                yield return new object[] { (IDbSet<Meeting>)meetings, 2, 5 };
+                yield return new object[] { (IDbSet<Meeting>)meetings, 3, 5 };
+                yield return new object[] { (IDbSet<Meeting>)meetings, 0, 5 };
             }
         }
 

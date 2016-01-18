@@ -187,6 +187,8 @@ namespace Etsi.Ultimate.Services
                 var result = specVersionManager.UpdateVersion(version, personId);
                 if(result.Result != null && result.Report.GetNumberOfErrors() == 0)
                     uoW.Save();
+                else
+                    LogManager.Error(Localization.GenericError + ": " + string.Join(", ", result.Report.ErrorList));
                 return result;
             }
         }
@@ -213,6 +215,91 @@ namespace Etsi.Ultimate.Services
                     return new ServiceResponse<bool> { Result = false, Report = new Report { ErrorList = new List<string> { Localization.GenericError } } };
                 }
             }
+        }
+
+        /// <summary>
+        /// Create & Fill version Lastest Folder
+        /// </summary>
+        /// <returns>Service response bool</returns>
+        public ServiceResponse<bool> CreateAndFillVersionLatestFolder(string folderName, int personId)
+        {
+            ServiceResponse<bool> response = new ServiceResponse<bool>() { Result = false };
+
+            try
+            {
+                var ftpFoldersManager = ManagerFactory.Resolve<IFtpFoldersManager>();
+
+                /* Checks */
+                using (var UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    ftpFoldersManager.UoW = UoW;
+                    response = ftpFoldersManager.CheckLatestFolder(folderName, personId);
+                }
+
+                if (response.Result)
+                {
+                    /* If checks OK, then create latest folder */
+                    ftpFoldersManager.CreateAndFillVersionLatestFolder(folderName, personId);
+                }
+            }
+            catch (Exception e)
+            {
+                response.Result = false;
+                response.Report.LogError(Localization.GenericError);
+                LogManager.Error("[Service] Failed to Create and fill version latest folder", e);
+            }
+            
+            return response;
+        }
+
+        /// <summary>
+        /// Get Ftp Folders Manager Status (from cache)
+        /// </summary>
+        /// <returns>Ftp Folders Manager Status</returns>
+        public FtpFoldersManagerStatus GetFtpFoldersManagerStatus()
+        {
+            var ftpFoldersManager = ManagerFactory.Resolve<IFtpFoldersManager>();
+            return ftpFoldersManager.GetStatus();
+        }
+
+        /// <summary>
+        /// Get the name of latest folder
+        /// </summary>
+        /// <returns>Ftp Folders Manager Status</returns>
+        public string GetFTPLatestFolderName()
+        {
+            try
+            {
+                using (var UoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var ftpFoldersManager = ManagerFactory.Resolve<IFtpFoldersManager>();
+                    ftpFoldersManager.UoW = UoW;
+                    return ftpFoldersManager.GetFTPLatestFolderName();
+                }
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Clear cache of Ftp Folders Manager Status
+        /// </summary>
+        public void ClearFtpFoldersManagerStatus()
+        {
+            var ftpFoldersManager = ManagerFactory.Resolve<IFtpFoldersManager>();
+            ftpFoldersManager.ClearStatus();
+        }
+
+        /// <summary>
+        /// return true if a copy is in progress
+        /// </summary>
+        /// <returns>True or False</returns>
+        public bool IsCopyLatestFolderInProgress()
+        {
+            var result = GetFtpFoldersManagerStatus();
+            return result != null && !result.Finished;
         }
 
         #region IOfflineService Members
@@ -575,6 +662,36 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId"></param>
         /// <returns>True for success case</returns>
         ServiceResponse<bool> CheckVersionNumbersEditAllowed(SpecVersion version, int personId);
+
+        /// <summary>
+        /// Create & Fill version Lastest Folder
+        /// </summary>
+        /// <returns>Service response bool</returns>
+        ServiceResponse<bool> CreateAndFillVersionLatestFolder(string folderName, int personId);
+
+        /// <summary>
+        /// Get Ftp Folders Manager Status (from cache)
+        /// </summary>
+        /// <returns>Ftp Folders Manager Status</returns>
+        FtpFoldersManagerStatus GetFtpFoldersManagerStatus();
+
+        /// <summary>
+        /// return true if a copy is in progress
+        /// </summary>
+        /// <returns>True or False</returns>
+        bool IsCopyLatestFolderInProgress();
+
+        /// <summary>
+        /// Clear cache of Ftp Folders Manager Status
+        /// </summary>
+        void ClearFtpFoldersManagerStatus();
+
+        
+        /// <summary>
+        /// Get the name of latest folder
+        /// </summary>
+        /// <returns>Ftp Folders Manager Status</returns>
+        string GetFTPLatestFolderName();
     }
 }
 

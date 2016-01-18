@@ -250,6 +250,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à An error occured while clear / create latest folder.
+        /// </summary>
+        public static string GenericErrorManageFolder {
+            get {
+                return ResourceManager.GetString("GenericErrorManageFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Release closed. {0}.
         /// </summary>
         public static string History_Release_Close {
@@ -354,6 +363,42 @@ namespace Etsi.Ultimate.Utils {
         public static string ItuConversion_Error_InvalidStartRelease {
             get {
                 return ResourceManager.GetString("ItuConversion_Error_InvalidStartRelease", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Another latest folder task is running..
+        /// </summary>
+        public static string LatestFolder_AnotherTask_IsRunning {
+            get {
+                return ResourceManager.GetString("LatestFolder_AnotherTask_IsRunning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Error Copying File : {0}.
+        /// </summary>
+        public static string LatestFolder_CopyFileError {
+            get {
+                return ResourceManager.GetString("LatestFolder_CopyFileError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Folder name already exists..
+        /// </summary>
+        public static string LatestFolder_FolderName_Already_Exist {
+            get {
+                return ResourceManager.GetString("LatestFolder_FolderName_Already_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Folder name is mandatory..
+        /// </summary>
+        public static string LatestFolder_FolderName_IsMandatory {
+            get {
+                return ResourceManager.GetString("LatestFolder_FolderName_IsMandatory", resourceCulture);
             }
         }
         

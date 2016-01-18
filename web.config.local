@@ -88,7 +88,7 @@
     <add key="DownloadDocumentListBaseAddress" value="http://www.contribution.loc/GenerateDocumentList.aspx?meetingId={0}"/>
 	<add key="UploadTDocUrl" value="http://www.contribution.loc/UploadTdoc.aspx"/>
     <add key="MeetingListAdvancedQueryLink" value="http://webapp.13.etsidev.org/MeetingCalendar/QueryForm.asp"/>
-    <add key="ManageAgendaItemsUrl" value="http://webapp.13.etsidev.org/rmeetingDocuments/UpdateAllocations.asp?MTG_ID={0}"/>
+    <add key="ManageAgendaItemsUrl" value="http://www.contribution.loc/AgendaItems.aspx?meetingId={0}"/>
     <add key="MeetingCreationAddress" value="http://webapp.13.etsidev.org/meetingManagement/NewMeeting.asp?type=create"/>
     <add key="ContributionAllocationBaseAddress" value="http://www.contribution.loc/CreateTdoc.Aspx?meetingId={0}&amp;mode=create"/>
     <add key="ContributionBulkBaseAddress" value="http://www.contribution.loc/ContributionImport.aspx?meetingId={0}&amp;mode=bulk"/>
