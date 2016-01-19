@@ -98,16 +98,16 @@ namespace Etsi.Ultimate.Tests.Services
             var service = new MeetingService();
             List<Meeting> result = service.GetLatestMeetings();
             Assert.AreEqual(5, result.Count());
-            Assert.AreEqual(2, result.ElementAt(0).MTG_ID);
-            Assert.AreEqual(5, result.ElementAt(1).MTG_ID);
+            Assert.AreEqual(6, result.ElementAt(0).MTG_ID);
+            Assert.AreEqual(1, result.ElementAt(1).MTG_ID);
             Assert.AreEqual(3, result.ElementAt(2).MTG_ID);
 
             List<Meeting> resultSearch = service.GetMatchingMeetings("S");
             Assert.AreEqual(4, resultSearch.Count());
-            Assert.AreEqual(4, resultSearch.ElementAt(0).MTG_ID);
-            Assert.AreEqual(3, resultSearch.ElementAt(1).MTG_ID);
-            Assert.AreEqual(1, resultSearch.ElementAt(2).MTG_ID);
-            Assert.AreEqual(6, resultSearch.ElementAt(3).MTG_ID);
+            Assert.AreEqual(6, resultSearch.ElementAt(0).MTG_ID);
+            Assert.AreEqual(1, resultSearch.ElementAt(1).MTG_ID);
+            Assert.AreEqual(3, resultSearch.ElementAt(2).MTG_ID);
+            Assert.AreEqual(4, resultSearch.ElementAt(3).MTG_ID);
         }
 
         [Test, TestCaseSource("GetMeetingsWithSearchStringCaseInsensitive")]
