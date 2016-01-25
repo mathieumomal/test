@@ -177,6 +177,7 @@ namespace Etsi.Ultimate.Business.Versions
                 }
                 catch (Exception exc)
                 {
+                    LogManager.Error("An unexpected error occured when system trying to CheckVersionForUpload", exc);
                     svcResponse.Report.LogError("An error occured: " + exc.Message);
                 }
             }
@@ -208,7 +209,7 @@ namespace Etsi.Ultimate.Business.Versions
             }
             catch (Exception e)
             {
-                LogManager.Error("An error occured while uploading: " + e.Message);
+                LogManager.Error("An error occured while uploading version", e);
                 svcResponse.Report.LogError("An error occured while uploading: " + e.Message);
             }
             return svcResponse;
