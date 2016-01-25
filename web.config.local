@@ -46,7 +46,7 @@
     <!-- Connection String for SQL Server 2008/2012 - kept for backwards compatability - legacy modules
     <add key="SiteSqlServer" value="Server=(local);Database=DotNetNuke;uid=;pwd=;"/>
     -->
-	<add key="AppVersion" value="1.01" />
+	<add key="AppVersion" value="1.02" />
     <add key="InstallTemplate" value="DotNetNuke.install.config" />
     <add key="AutoUpgrade" value="false" />
     <add key="UseInstallWizard" value="true" />
