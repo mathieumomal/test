@@ -23,7 +23,7 @@ namespace Etsi.Ultimate.Business
             using (var zip = new ZipFile())
             {
                 zip.AddFile(fileToCompress, String.Empty);
-                zip.Save(outputPath + Path.GetFileName(fileToCompress) + ".zip");
+                zip.Save(Path.Combine(outputPath, Path.GetFileNameWithoutExtension(fileToCompress) + ".zip"));
             }
         }
 
