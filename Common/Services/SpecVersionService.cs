@@ -102,13 +102,14 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId"></param>
         /// <param name="version"></param>
         /// <param name="path"></param>
+        /// <param name="shouldAvoidQualityChecks"></param>
         /// <returns></returns>
-        public ServiceResponse<string> CheckVersionForUpload(int personId, SpecVersion version, string path)
+        public ServiceResponse<string> CheckVersionForUpload(int personId, SpecVersion version, string path, bool shouldAvoidQualityChecks = false)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
             {
                 var specVersionUploadAction = new SpecVersionUploadAction {UoW = uoW};
-                return specVersionUploadAction.CheckVersionForUpload(personId, version, path);
+                return specVersionUploadAction.CheckVersionForUpload(personId, version, path, shouldAvoidQualityChecks);
             }
         }
 
@@ -602,8 +603,9 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId">The person identifier</param>
         /// <param name="version">The version</param>
         /// <param name="path">The upload path</param>
+        /// <param name="shouldAvoidQualityChecks">True : Avoid quality checks, False : run quality checks before upload version</param>
         /// <returns>GUID of cached version information</returns>
-        ServiceResponse<string> CheckVersionForUpload(int personId, SpecVersion version, string path);
+        ServiceResponse<string> CheckVersionForUpload(int personId, SpecVersion version, string path, bool shouldAvoidQualityChecks = false);
 
         /// <summary>
         /// Upload version

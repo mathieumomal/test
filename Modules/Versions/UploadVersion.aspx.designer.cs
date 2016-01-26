@@ -220,6 +220,24 @@ namespace Etsi.Ultimate.Module.Versions {
         protected global::System.Web.UI.WebControls.HiddenField hidIsRequired;
         
         /// <summary>
+        /// Contrôle QualityChecksLbl.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label QualityChecksLbl;
+        
+        /// <summary>
+        /// Contrôle AvoidQualityChecksChkBox.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox AvoidQualityChecksChkBox;
+        
+        /// <summary>
         /// Contrôle UploadBtn.
         /// </summary>
         /// <remarks>

@@ -151,6 +151,7 @@
 		    <Right value="Versions_Modify_MajorVersion"/>
 		    <Right value="Version_Draft_Delete"/>
 		    <Right value="Versions_Edit"/>
+        <Right value="Versions_Avoid_Quality_Checks"/>
 
         <Right value="Manage_AgendaItems"/>
         <Right value="Meeting_ViewMeetingList"/>
@@ -213,6 +214,7 @@
 		    <Right value="Versions_Modify_MajorVersion"/>
 		    <Right value="Version_Draft_Delete"/>
 		    <Right value="Versions_Edit"/>
+        <Right value="Versions_Avoid_Quality_Checks"/>
 
         <Right value="Manage_AgendaItems"/>
         <Right value="Meeting_ViewMeetingList"/>

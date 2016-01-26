@@ -539,6 +539,10 @@ namespace Etsi.Ultimate.Business.Specifications
             if (userRights.HasRight(Enum_UserRights.Versions_Edit))
                 rights.AddRight(Enum_UserRights.Versions_Edit);
 
+            //Version avoid quality checks
+            if (userRights.HasRight(Enum_UserRights.Versions_Avoid_Quality_Checks))
+                rights.AddRight(Enum_UserRights.Versions_Avoid_Quality_Checks);
+
             //If version provided 
             //AND user have rights to delete draft version 
             //AND version is draft (MajorVersion < 3) 

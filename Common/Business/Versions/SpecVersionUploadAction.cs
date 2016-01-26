@@ -50,8 +50,9 @@ namespace Etsi.Ultimate.Business.Versions
         /// <param name="personId"></param>
         /// <param name="version"></param>
         /// <param name="path"></param>
+        /// <param name="shouldAvoidQualityChecks"></param>
         /// <returns></returns>
-        public ServiceResponse<string> CheckVersionForUpload(int personId, SpecVersion version, string path)
+        public ServiceResponse<string> CheckVersionForUpload(int personId, SpecVersion version, string path, bool shouldAvoidQualityChecks)
         {
             var svcResponse = new ServiceResponse<string>();
 
@@ -127,6 +128,10 @@ namespace Etsi.Ultimate.Business.Versions
                         fileToAnalyzePath = path;
                         allowToRunQualityChecks = true;
                     }
+
+                    //Finally system should allow quality checks if shouldAvoidQualityChecks is false
+                    allowToRunQualityChecks = allowToRunQualityChecks && !shouldAvoidQualityChecks;
+
 
                     //If we have valid file & spec is under change control, run quality checks
                     if (allowToRunQualityChecks && version.Specification.IsUnderChangeControl.GetValueOrDefault())

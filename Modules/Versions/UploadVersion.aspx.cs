@@ -271,7 +271,7 @@ namespace Etsi.Ultimate.Module.Versions
 
             var version = GetEditedSpecVersionObject();
             if (version.Key)
-                svcResponse = specVersionSvc.CheckVersionForUpload(GetUserPersonId(), version.Value, path);
+                svcResponse = specVersionSvc.CheckVersionForUpload(GetUserPersonId(), version.Value, path, AvoidQualityChecksChkBox.Checked);
 
             //Get version file token to use it when user will press "confirm upload" button
             VersionFileToken = svcResponse.Result;
@@ -440,6 +440,15 @@ namespace Etsi.Ultimate.Module.Versions
 
                     //Set Major Version Status
                     NewVersionMajorVal.Enabled = svcResponseSpecVersion.Rights.HasRight(Enum_UserRights.Versions_Modify_MajorVersion);
+
+                    //Display quality checks option if
+                    //- user has right
+                    //- upload screen displayed
+                    //- version is not draft
+                    AvoidQualityChecksChkBox.Visible = QualityChecksLbl.Visible =
+                        svcResponseSpecVersion.Rights.HasRight(Enum_UserRights.Versions_Avoid_Quality_Checks)
+                        && IsUploadMode
+                        && !IsDraft;
 
                     string currentVersionNumber = "-";
                     if (svcResponseSpecVersion.Result.CurrentSpecVersion != null && svcResponseSpecVersion.Result.CurrentSpecVersion.MajorVersion != null && svcResponseSpecVersion.Result.CurrentSpecVersion.TechnicalVersion != null && svcResponseSpecVersion.Result.CurrentSpecVersion.EditorialVersion != null)

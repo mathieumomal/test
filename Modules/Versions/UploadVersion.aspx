@@ -129,6 +129,14 @@
                                 <asp:HiddenField ID="hidIsRequired" runat="server" />
                             </td>
                         </tr>
+                        <tr>
+                            <td class="TabLineLeft">
+                                <asp:Label runat="server" ID="QualityChecksLbl" Text="Avoid quality checks:" />
+                            </td>
+                            <td colspan="2" class="TabLineRight2Col">
+                                <asp:CheckBox runat="server" ID="AvoidQualityChecksChkBox" Checked="False" Visible="false"/>
+                            </td>
+                        </tr>
                     </table>
                     <div class="releaseDetailsAction">
                         <span id="meetingRequiredMsg" style="display:none" class='requiredField'>*Meeting is required</span>

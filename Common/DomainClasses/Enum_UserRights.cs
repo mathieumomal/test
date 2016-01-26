@@ -50,6 +50,7 @@
         Versions_Modify_MajorVersion,
         Versions_Edit,
         Version_Draft_Delete,
+        Versions_Avoid_Quality_Checks,
 
         Cr_Add_Crs_To_CrPack,
 
