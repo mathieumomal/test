@@ -41,12 +41,86 @@
   </connectionStrings>
   </location>
   <appSettings>
+    
+    <!-- App Version : used to avoid any cache issues concerning javascript files -->
+	  <add key="AppVersion" value="1.02" />
+    
+    <!-- Portal name where modules will run -->
+    <add key="PortalName" value="Ultimate"/>
+
+    <!--Folder where transposition process copy paste version transposed -->
+    <add key="TranspositionFolderPath" value="D:\AppTrans\transposition\"/>
+
+    <!--3GPP project id used by -->
+    <add key="Global3GPPProjetId" value ="703"/>
+    
+    <!-- Path of the temporary folder where versions are uploaded -->
+    <add key="UploadVersionTemporaryPath" value="D:\AppTrans\Version\"/>
+    
+    <!-- Default "From" Email data : mails will be send with this data as transmitter address (from)-->
+    <add key="EmailDefaultFrom" value="3GPP Portal&lt;3gppapp@3gpp.org&gt;"/>
+    
+    <!-- Blind Carbon copy address when emails were sending : each emails will be sent and a copy will be sent transparently to this address -->
+    <add key="EmailDefaultBcc" value="3gppapp@3gpp.org"/>
+    
+    <!-- Etsi Workitems Delivery folder : used to get ItuRecord hyperlink -->
+    <add key="EtsiWorkitemsDeliveryFolder" value="http://www.etsi.org/deliver/"/>
+    
+    <!-- @@@ WEBAPP : URLS @@@ -->
+	  <add key="MeetingDetailsAddress" value="http://portal.3gpp.org/webapp/meetingCalendar/MeetingDetails.asp?m_id=" />
+    <add key="MeetingiCalAddress" value="http://portal.3gpp.org/webapp/meetingCalendar/ical.asp?qMTG_ID=" />
+    <add key="MeetingParticipantsListAddress" value="http://webapp.etsi.org/3GPPRegistration/fViewPart.asp?mid=" />
+    <add key="RapporteurDetailsAddress" value="http://portal.etsi.org/webapp/teldir/ListPersDetails.asp?PersId="/>
+    <add key="WIReportPath" value ="http://portal.etsi.org/webapp/workprogram/Report_WorkItem.asp?WKI_ID="/>
+    <add key="MeetingCreationAddress" value="http://portal.3gpp.org/webapp/meetingManagement/NewMeeting.asp?type=create"/>
+    <add key="MeetingListAdvancedQueryLink" value="http://portal.3gpp.org/webapp/MeetingCalendar/QueryForm.asp"/>
+    <add key="MeetingRegistration" value="http://webapp.etsi.org/3GPPRegistration/fMain.asp?mid={0}"/>
+    
+    <!-- @@@ FTP @@@ -->
+    <!-- FTP web addresses -->
+	  <add key="FtpContributionAddress" value="http://ftp.3gpp.org/" />
+    <add key="FtpBaseAddress" value="http://www.3gpp.org/ftp/" />
+    <add key="FtpExportAddress" value="http://ftp.3gpp.org/Information/WORK_PLAN/"/>
+    <add key="FtpBasePhysicalPath" value="\\3GPPWEB\3gppftp$\" /><!-- FTP physical path on server -->
+    <add key="FtpBaseBackupPhysicalPath" value="D:\AppTrans\TempHDrive\" /><!-- BACKUP FTP physical path on server when upload version -->
+    
+    <!-- @@@ INTERNAL ADDRESSES @@@ : link for modules pages -->
+    <add key="SpecificationDetailsUrl" value="https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId={0}" />
+    <add key="ReleaseDetailsUrl" value="https://portal.3gpp.org/desktopmodules/Release/ReleaseDetails.aspx?releaseId={0}"/>
+    <add key="DownloadparticipantsListLink" value="https://portal.3gpp.org/desktopmodules/Meetings/DownloadParticipantsList.aspx?eventId={0}" />
+    <!-- Relatives URLs -->
+    <add key="RelativeUrlWiRelatedSpecs" value="/Specifications.aspx?q=1&amp;WiUid={0}"/>
+    <add key="RelativeUrlWiRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;workitem={0}&amp;release={1}&amp;specnumber={2}"/>
+    <add key="RelativeUrlVersionRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;versionId={0}&amp;release={1}"/>
+    <add key="Specification_WithdrawMeetingSelectPopUp_RelativeLink" value="WithdrawMeetingSelectPopUp.aspx?SpecId={0}&amp;RelId={1}" />
+    <add key="Specification_UploadVersion_RelativeLink" value="/desktopmodules/Versions/UploadVersion.aspx?releaseId={0}&amp;specId={1}&amp;action={2}" />
+    <add key="Specification_RemoveSpecReleasePopUp_RelativeLink" value="PopUps/RemoveSpecReleasePopUp.aspx?SpecId={0}&amp;RelId={1}" />
+
+    <!-- @@@ EXTERNAL ADDRESSES for Contribution app @@@ : link to contribution application -->
+    <add key="MeetingRelatedTdocAddress" value="https://portal.3gpp.org/ngppapp/TdocList.aspx?meetingId=" />
+    <add key="ContributionAllocationBaseAddress" value="https://portal.3gpp.org/ngppapp/CreateTdoc.Aspx?meetingId={0}&amp;mode=create"/>
+    <add key="ContributionBulkBaseAddress" value="https://portal.3gpp.org/ngppapp/ContributionImport.aspx?meetingId={0}&amp;mode=bulk"/>
+    <add key="ContributionImportBaseAddress" value="https://portal.3gpp.org/ngppapp/ContributionImport.aspx?meetingId={0}&amp;mode=import"/>
+    <add key="ContributionCommitFinalDecisionsUrl" value="https://portal.3gpp.org/ngppapp/CommitFinalDecisions.aspx?meetingId={0}"/>
+    <add key="DownloadDocumentListBaseAddress" value="https://portal.3gpp.org/ngppapp/GenerateDocumentList.Aspx?meetingId={0}"/>
+    <add key="UploadTDocUrl" value="https://portal.3gpp.org/ngppapp/UploadTdoc.aspx"/>
+    <add key="ManageAgendaItemsUrl" value="https://portal.3gpp.org/ngppapp/AgendaItems.aspx?meetingId={0}"/>
+    <add key="TdocDetailsUrl" value="https://portal.3gpp.org/ngppapp/CreateTdoc.aspx?mode=view&amp;contributionUid={0}"/>
+    
+    <!-- @@@ Cookies names @@@ (DONT MODIFY NAMES WITHOUT CHANGE THEM INSIDE CONTRIBUTION AS WELL : SECURITY REASONS) -->
+    <add key="CookieName_MeetingsList"  value="MeetingsList_Cookie" />
+    <add key="CookieName_CrsList"       value="CrsList_Cookie" />
+    <add key="CookieName_WisList"       value="WisList_Cookie" />
+    <add key="CookieName_SpecsList"     value="SpecsList_Cookie" />
+    
+    <!-- @@@ CONNEXION STRINGS @@@ -->
     <!-- Connection String for SQL Server 2008/2012 Express - kept for backwards compatability - legacy modules   -->
     <add key="SiteSqlServer" value="Data Source=ETSIBASE;Initial Catalog=DNN3GPP;User ID=DNNuser;Password=anu2groW." />
     <!-- Connection String for SQL Server 2008/2012 - kept for backwards compatability - legacy modules
     <add key="SiteSqlServer" value="Server=(local);Database=DotNetNuke;uid=;pwd=;"/>
     -->
-	<add key="AppVersion" value="1.02" />
+    
+    <!-- @@@ OTHERS @@@ : avoid modifications except if you know what you do -->
     <add key="InstallTemplate" value="DotNetNuke.install.config" />
     <add key="AutoUpgrade" value="true" />
     <add key="UseInstallWizard" value="true" />
@@ -69,58 +143,9 @@
     <add key="loginUrl" value="~/Login.aspx" />
     <add key="InstallVersion" value="07.00.04" />
     <add key="DefaultDevicesDatabase" value="DesktopModules\DevicePreviewManagement\Resources\defaultDevices.xml" />
-	  <add key="MeetingDetailsAddress" value="http://portal.3gpp.org/webapp/meetingCalendar/MeetingDetails.asp?m_id=" />
-    <add key="MeetingRelatedTdocAddress" value="https://portal.3gpp.org/ngppapp/TdocList.aspx?meetingId=" />
-    <add key="FtpContributionAddress" value="http://ftp.3gpp.org/" />
-    <add key="MeetingiCalAddress" value="http://portal.3gpp.org/webapp/meetingCalendar/ical.asp?qMTG_ID=" />
-    <add key="MeetingParticipantsListAddress" value="http://webapp.etsi.org/3GPPRegistration/fViewPart.asp?mid=" />
-    <add key="RapporteurDetailsAddress" value="http://portal.etsi.org/webapp/teldir/ListPersDetails.asp?PersId="/>
-    <add key="FtpExportAddress" value="http://ftp.3gpp.org/Information/WORK_PLAN/"/>
-    <add key="FtpBasePhysicalPath" value="\\3GPPWEB\3gppftp$\" />
-    <add key="FtpBaseBackupPhysicalPath" value="D:\AppTrans\TempHDrive\" />
-    <add key="FtpBaseAddress" value="http://www.3gpp.org/ftp/" />
     <add key="VersionsLatestFTPFolder" value="2015-09" />
-    <add key="TranspositionFolderPath" value="D:\AppTrans\transposition\"/>
-    <add key="WIReportPath" value ="http://portal.etsi.org/webapp/workprogram/Report_WorkItem.asp?WKI_ID="/>
-    <add key="Global3GPPProjetId" value ="703"/>
-    <add key="UploadVersionTemporaryPath" value="D:\AppTrans\Version\"/>
-    <add key="MeetingCreationAddress" value="http://portal.3gpp.org/webapp/meetingManagement/NewMeeting.asp?type=create"/>
-	
-	<add key="EmailDefaultFrom" value="3GPP Portal&lt;3gppapp@3gpp.org&gt;"/>
-	<add key="EmailDefaultBcc" value="3gppapp@3gpp.org"/>
-	<add key="PortalName" value="Ultimate"/>
-	<add key="ContributionAllocationBaseAddress" value="https://portal.3gpp.org/ngppapp/CreateTdoc.Aspx?meetingId={0}&amp;mode=create"/>
-  <add key="ContributionBulkBaseAddress" value="https://portal.3gpp.org/ngppapp/ContributionImport.aspx?meetingId={0}&amp;mode=bulk"/>
-  <add key="ContributionImportBaseAddress" value="https://portal.3gpp.org/ngppapp/ContributionImport.aspx?meetingId={0}&amp;mode=import"/>
-  <add key="ContributionCommitFinalDecisionsUrl" value="https://portal.3gpp.org/ngppapp/CommitFinalDecisions.aspx?meetingId={0}"/>
-	<add key="DownloadDocumentListBaseAddress" value="https://portal.3gpp.org/ngppapp/GenerateDocumentList.Aspx?meetingId={0}"/>
-	<add key="UploadTDocUrl" value="https://portal.3gpp.org/ngppapp/UploadTdoc.aspx"/>
-	<add key="SpecificationDetailsUrl" value="https://portal.3gpp.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId={0}" />
-  <add key="ReleaseDetailsUrl" value="https://portal.3gpp.org/desktopmodules/Release/ReleaseDetails.aspx?releaseId={0}"/>
-  <add key="TdocDetailsUrl" value="https://portal.3gpp.org/ngppapp/CreateTdoc.aspx?mode=view&amp;contributionUid={0}"/>
-  <add key="DownloadparticipantsListLink" value="https://portal.3gpp.org/desktopmodules/Meetings/DownloadParticipantsList.aspx?eventId={0}" />
-  <add key="CRsListRecordsMaxSize" value="100"/>
-	
-	
-  <add key="MeetingListAdvancedQueryLink" value="http://portal.3gpp.org/webapp/MeetingCalendar/QueryForm.asp"/>
-  <add key="ManageAgendaItemsUrl" value="https://portal.3gpp.org/ngppapp/AgendaItems.aspx?meetingId={0}"/>
-  <add key="MeetingRegistration" value="http://webapp.etsi.org/3GPPRegistration/fMain.asp?mid={0}"/>
-  <add key="EtsiWorkitemsDeliveryFolder" value="http://www.etsi.org/deliver/"/>
-  
-  <add key="RelativeUrlWiRelatedSpecs" value="/Specifications.aspx?q=1&amp;WiUid={0}"/>
-  <add key="RelativeUrlWiRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;workitem={0}&amp;release={1}&amp;specnumber={2}"/>
-  <add key="RelativeUrlVersionRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;versionId={0}&amp;release={1}"/>
-  
-  <add key="Specification_WithdrawMeetingSelectPopUp_RelativeLink" value="WithdrawMeetingSelectPopUp.aspx?SpecId={0}&amp;RelId={1}" />
-  <add key="Specification_UploadVersion_RelativeLink" value="/desktopmodules/Versions/UploadVersion.aspx?releaseId={0}&amp;specId={1}&amp;action={2}" />
-  <add key="Specification_RemoveSpecReleasePopUp_RelativeLink" value="PopUps/RemoveSpecReleasePopUp.aspx?SpecId={0}&amp;RelId={1}" />
+    <add key="CRsListRecordsMaxSize" value="100"/>
 
-  <!-- Cookies names (DONT MODIFY NAMES WITHOUT CHANGE THEM INSIDE CONTRIBUTION AS WELL : SECURITY REASONS) -->
-  <add key="CookieName_MeetingsList"  value="MeetingsList_Cookie" />
-  <add key="CookieName_CrsList"       value="CrsList_Cookie" />
-  <add key="CookieName_WisList"       value="WisList_Cookie" />
-  <add key="CookieName_SpecsList"     value="SpecsList_Cookie" />
-  
   </appSettings>
   <system.web.webPages.razor>
     <pages pageBaseType="DotNetNuke.Web.Razor.DotNetNukeWebPage">
