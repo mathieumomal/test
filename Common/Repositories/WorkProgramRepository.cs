@@ -54,6 +54,11 @@ namespace Etsi.Ultimate.Repositories
             UoW.Context.Transposition_CreateWiRemarkEntry(WKI_Id, SeqNo, remarkText);
         }
 
+        public void InsertWIMemo(int WKI_Id, string WKI_Scope)
+        {
+            UoW.Context.Transposition_CreateWiMemoEntry(WKI_Id, WKI_Scope);
+        }
+
         #endregion
     }
 
@@ -73,5 +78,7 @@ namespace Etsi.Ultimate.Repositories
         void InsertWIProject(int WKI_ID, int Project_ID);
 
         void InsertWIRemeark(int WKI_Id, int SeqNo, string remarkText);
+
+        void InsertWIMemo(int WKI_Id, string WKI_Scope);
     }
 }

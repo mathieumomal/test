@@ -49,6 +49,7 @@ namespace Etsi.Ultimate.Tests.Business
             WorkProgramRepoMock.Expect(wp => wp.InsertWIScheduleEntry(Arg<int>.Is.Equal(1), Arg<int>.Is.Equal(10), Arg<int>.Is.Equal(2), Arg<int>.Is.Equal(1)));
             WorkProgramRepoMock.Expect(wp => wp.InsertWIKeyword(Arg<int>.Is.Equal(1), Arg<string>.Is.Anything));
             WorkProgramRepoMock.Expect(wp => wp.InsertWIRemeark(Arg<int>.Is.Equal(1), Arg<int>.Is.Anything, Arg<string>.Is.Anything));
+            WorkProgramRepoMock.Expect(wp => wp.InsertWIMemo(Arg<int>.Is.Equal(1), Arg<string>.Is.Equal("MTGSHORTREF")));
             
             RepositoryFactory.Container.RegisterInstance<IWorkProgramRepository>(WorkProgramRepoMock);
 
@@ -59,6 +60,10 @@ namespace Etsi.Ultimate.Tests.Business
             mockCommunity.Stub(x => x.GetEnumCommunityShortNameByCommunityId(Arg<int>.Is.Anything)).Return(null);
             ManagerFactory.Container.RegisterInstance(typeof(ICommunityManager), mockCommunity);
 
+            //Mock mtg repo
+            var mockMtgRepo = MockRepository.GenerateMock<IMeetingRepository>();
+            mockMtgRepo.Stub(x => x.Find(Arg<int>.Is.Anything)).Return(new Meeting { MtgShortRef = "MTGSHORTREF" });
+            RepositoryFactory.Container.RegisterInstance(typeof(IMeetingRepository), mockMtgRepo);
 
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
             var manager = new WpmRecordCreator(uow);

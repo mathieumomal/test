@@ -53,6 +53,19 @@ namespace Etsi.Ultimate.Business
                 rgSecretaryRepo.UoW = UoW;
                 int secretaryID = rgSecretaryRepo.FindAllByCommiteeId(c.TbId).FirstOrDefault().PersonId;
 
+                //Get version meeting's short reference (version.Source <=> meeting id)
+                var mtgShortRef = string.Empty;
+                if ((version.Source ?? 0) != 0)
+                {
+                    var mtgRepo = RepositoryFactory.Resolve<IMeetingRepository>();
+                    mtgRepo.UoW = UoW;
+                    var mtg = mtgRepo.Find(version.Source ?? 0);
+                    if (mtg != null)
+                    {
+                        mtgShortRef = mtg.MtgShortRef;
+                    }
+                }
+
                 bool isAlreadyTransposed = false;
                 ISpecVersionsRepository versionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
                 versionRepo.UoW = UoW;
@@ -74,8 +87,13 @@ namespace Etsi.Ultimate.Business
                 //Import Keyword to WPMDB ==> TODO
                 wpRepo.InsertWIKeyword(WKI_ID, "LTE");
 
+                //Import memo to WPMDB
+                wpRepo.InsertWIMemo(WKI_ID, mtgShortRef);
+
                 //Import project to WPMDB
                 ImportProjectsToWPMDB(version, WKI_ID, wpRepo);
+
+                
                 
                 //Add ETSI_WKI_ID field in version TABLE IF(WKI_ID != -1)                    
                 version.ETSI_WKI_ID = WKI_ID;

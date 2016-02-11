@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="Etsi.Ultimate.DataAccess.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Etsi.Ultimate.DataAccess.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="ChangeRequest">
           <Key>
             <PropertyRef Name="Pk_ChangeRequest" />
@@ -1022,6 +1022,10 @@ avertissement 6002: La table/vue 'U3GPPDB.dbo.View_Persons' n'a pas de clé prim
           <Parameter Name="WKI_ID" Type="int" Mode="In" />
           <Parameter Name="KEYWORD_CODE" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="Transposition_CreateWiMemoEntry" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="WKI_ID" Type="int" Mode="In" />
+          <Parameter Name="WKI_SCOPE" Type="text" Mode="In" />
+        </Function>
         <Function Name="Transposition_CreateWiProjectEntry" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="WKI_ID" Type="int" Mode="In" />
           <Parameter Name="PROJECT_ID" Type="int" Mode="In" />
@@ -1582,6 +1586,10 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           </AssociationSet>
           <EntitySet Name="View_ContributionsWithAditionnalData" EntityType="Etsi.Ultimate.DataAccess.View_ContributionsWithAditionnalData" />
           <EntitySet Name="LatestFolders" EntityType="Etsi.Ultimate.DataAccess.LatestFolder" />
+          <FunctionImport Name="Transposition_CreateWiMemoEntry">
+            <Parameter Name="WKI_ID" Mode="In" Type="Int32" />
+            <Parameter Name="WKI_SCOPE" Mode="In" Type="String" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="Enum_ReleaseStatus">
           <Key>
@@ -3136,6 +3144,7 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="Transposition_CreateWiMemoEntry" FunctionName="Etsi.Ultimate.DataAccess.Store.Transposition_CreateWiMemoEntry" />
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

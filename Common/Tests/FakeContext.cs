@@ -173,6 +173,11 @@ namespace Etsi.Ultimate.Tests
             throw new NotImplementedException();
         }
 
+        public virtual int Transposition_CreateWiMemoEntry(Nullable<int> wKI_ID, string wKI_SCOPE)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<ObjectStateEntry> GetEntities<T>(System.Data.Entity.EntityState entityState)
         {
             throw new NotImplementedException();

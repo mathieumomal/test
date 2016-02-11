@@ -242,5 +242,18 @@ namespace Etsi.Ultimate.DataAccess
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Transposition_CreateWiScheduleEntries", wKI_IDParameter, mAJOR_VERSIONParameter, tECHNICAL_VERSIONParameter, eDITORIAL_VERSIONParameter);
         }
+    
+        public virtual int Transposition_CreateWiMemoEntry(Nullable<int> wKI_ID, string wKI_SCOPE)
+        {
+            var wKI_IDParameter = wKI_ID.HasValue ?
+                new ObjectParameter("WKI_ID", wKI_ID) :
+                new ObjectParameter("WKI_ID", typeof(int));
+    
+            var wKI_SCOPEParameter = wKI_SCOPE != null ?
+                new ObjectParameter("WKI_SCOPE", wKI_SCOPE) :
+                new ObjectParameter("WKI_SCOPE", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Transposition_CreateWiMemoEntry", wKI_IDParameter, wKI_SCOPEParameter);
+        }
     }
 }
