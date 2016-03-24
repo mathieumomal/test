@@ -63,12 +63,6 @@
         word-break: break-all !important;
     }
 </style>
-<script>
-    function openTdoc(address, TdocNumber) {
-        var popUp = window.open(address, 'TDoc-' + TdocNumber, 'height=720,width=616,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no');
-        popUp.focus();
-    }
-</script>
 <asp:Panel ID="moduleWI" runat="server" Visible="false" ClientIDMode="Static">
     <asp:UpdateProgress ID="updateProgressWorkItemsTree" runat="server" DisplayAfter="200">
         <ProgressTemplate>
@@ -265,6 +259,177 @@
 
 
 
+    
+
+    <script type="text/javascript">
+        //Documentation telerik -> JS method to modify radWindow : http://www.telerik.com/help/aspnet-ajax/window-programming-radwindow-methods.html
+
+        function openTdoc(address, TdocNumber) {
+            var popUp = window.open(address, 'TDoc-' + TdocNumber, 'height=720,width=616,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no');
+            popUp.focus();
+        }
+
+        /*--- MODALS ---*/
+
+        function open_RadWindow_workItemImport() {
+            var radWindowWiImport = $find("<%= RadWindow_workItemImport.ClientID %>");
+            radWindowWiImport.show();
+        };
+        function open_RadWindow_workItemAnalysis(sender, eventArgs) {
+            //Reset file to upload
+            closeAllModals();
+            var radWindowWiAnalysis = $find("<%= RadWindow_workItemAnalysis.ClientID %>");
+            radWindowWiAnalysis.show();
+        }
+        function open_RadWindow_workItemConfirmation(sender, eventArgs) {
+            closeAllModals();
+            var radWindowWiConfirmation = $find("<%= RadWindow_workItemConfirmation.ClientID %>");
+            radWindowWiConfirmation.show();
+        }
+        function open_RadWindow_workItemState(sender, eventArgs) {
+            closeAllModals();
+            var radWindowWiState = $find("<%= RadWindow_workItemState.ClientID %>");
+            radWindowWiState.show();
+        }
+
+        /*--- MODALS ---*/
+
+
+        /*--- EVENTS ---*/
+
+        function startImport() {
+            var upload = $find('<%= RdAsyncUpload.ClientID%>');
+            upload.startUpload();
+        }
+
+        function closeAllModals() {
+            var radWindowWiImport = $find("<%= RadWindow_workItemImport.ClientID %>");
+            if (!radWindowWiImport.isClosed()) {
+                radWindowWiImport.close();
+            }
+            var radWindowWiAnalysis = $find("<%= RadWindow_workItemAnalysis.ClientID %>");
+            if (!radWindowWiAnalysis.isClosed()) {
+                radWindowWiAnalysis.close();
+            }
+            var radWindowWiConfirmation = $find("<%= RadWindow_workItemConfirmation.ClientID %>");
+            if (!radWindowWiConfirmation.isClosed()) {
+                radWindowWiConfirmation.close();
+            }
+            var radWindowWiState = $find("<%= RadWindow_workItemState.ClientID %>");
+            if (!radWindowWiState.isClosed()) {
+                radWindowWiState.close();
+            }
+            var radWindowWiCount = $find("<%= RadWindow_workItemCount.ClientID %>");
+            if (!radWindowWiCount.isClosed()) {
+                radWindowWiCount.close();
+            }
+            
+            clearTimeout(timeout);
+        }
+        function clearFilesToUpload() {
+            var upload = $find("<%= RdAsyncUpload.ClientID %>");
+            upload.deleteAllFileInputs();
+        }
+        function cancel() {
+            closeAllModals();
+            var panelBar = $find("<%= rpbSearch.ClientID %>");
+            var item = panelBar.get_items().getItem(0);
+            if (item) {
+                item.expand();
+            }
+        }
+
+        /** open or close RadPanelBar only if element has openCloseRadPanelBar class **/
+        function PreventCollapse(sender, eventArgs) {
+            if (eventArgs.get_domEvent().target.className != "openCloseRadPanelBar") {
+                eventArgs.set_cancel(true);
+            }
+        }
+
+        /*-- TELERIK EVENTS --*/
+
+        function Start(sender, arguments) {
+            $(".modalBackground").hide();
+            $(".updateProgress").hide();
+            if (arguments.EventTarget == "<%= wiRadAjaxManager.UniqueID %>") {
+                clearFilesToUpload();
+                open_RadWindow_workItemAnalysis();
+            }
+            if (arguments.EventTarget == "<%= btnConfirmImport.UniqueID %>") {
+                $("#importProgressIcon").show();
+                $("#importProgressIcon").css("visibility", "visible");
+            }
+
+
+        }
+        function End(sender, arguments) {
+            $(".modalBackground").show();
+            $(".updateProgress").show();
+            if (arguments.EventTarget == "<%= wiRadAjaxManager.UniqueID %>") {
+                open_RadWindow_workItemConfirmation();
+            }
+            if (arguments.EventTarget == "<%= btnConfirmImport.UniqueID %>") {
+                open_RadWindow_workItemState();
+                $("#importProgressIcon").hide();
+                $("#importProgressIcon").css("visibility", "hidden");
+            }
+        }
+        function OnClientValidationFailed() {
+            alert('Only csv and zip formats are allowed.');
+        }
+
+        function EnabledButtonImport() {
+            var but = $find("<%=importButton.ClientID %>");
+            but.set_enabled(true);
+        }
+        function DisabledButtonImport() {
+            var but = $find("<%=importButton.ClientID %>");
+            but.set_enabled(false);
+        }
+
+        /*-- TELERIK EVENTS --*/
+
+        /*--- EVENTS ---*/
+        var timeout;
+
+        function autoConfirmSearch() {
+            timeout = window.setTimeout(function () { $('#<%=rbworkItemCountOk.ClientID %>').click(); }, 10000)
+        }
+
+        function racAcronym_TextChanged(sender, eventArgs) {
+            $('#<%=hidAcronym.ClientID %>').val(eventArgs.get_text());
+        }
+
+        //--- Adapt workItem's list height
+
+        function TreeListCreated(sender, eventArgs) {
+            adaptContentHeight();
+        }
+
+        //Catch the "contentHeight" event (in the mainpage.ascx)
+        $("#content").on('contentHeight', function (event, hContent) {
+            resizeTree(hContent);
+        });
+
+        function resizeTree(hContent) {
+            var tree = $('#<%= rtlWorkItems.ClientID %>');
+            /*console.log(tree);*/
+            var treeDiv = tree.find(".rtlDataDiv")[0];
+            /*console.log(treeDiv);*/
+            /*console.log(hContent);*/
+            if ($('.livetabssouthstreet ').length == 0) {
+                var securityValue = 120;
+            } else {
+                var securityValue = 205;
+            }
+
+            treeDiv.style.height = (hContent - securityValue) + "px";
+            /*console.log(hContent+"-"+treeDiv.style.height);*/
+        }
+
+        //--- Adapt workItem's list height
+    </script>
+    
     <telerik:RadWindowManager ID="RadWindowManager1" runat="server">
         <windows>
             <telerik:RadWindow ID="RadWindow_workItemImport" runat="server" Modal="true" Title="Work Plan Import" Height="195" Width="500" VisibleStatusbar="false" iconUrl="false" Behaviors="Close">
@@ -377,148 +542,6 @@
             </telerik:RadWindow>
         </windows>
     </telerik:RadWindowManager>
-
-    <script type="text/javascript">
-        //Documentation telerik -> JS method to modify radWindow : http://www.telerik.com/help/aspnet-ajax/window-programming-radwindow-methods.html
-
-        /*--- MODALS ---*/
-
-        function open_RadWindow_workItemImport(sender, eventArgs) {
-            window.radopen(null, "RadWindow_workItemImport");
-        }
-        function open_RadWindow_workItemAnalysis(sender, eventArgs) {
-            //Reset file to upload
-            closeAllModals();
-            window.radopen(null, "RadWindow_workItemAnalysis");
-        }
-        function open_RadWindow_workItemConfirmation(sender, eventArgs) {
-            closeAllModals();
-            window.radopen(null, "RadWindow_workItemConfirmation");
-        }
-        function open_RadWindow_workItemState(sender, eventArgs) {
-            closeAllModals();
-            window.radopen(null, "RadWindow_workItemState");
-        }
-
-        /*--- MODALS ---*/
-
-
-        /*--- EVENTS ---*/
-
-        function startImport() {
-            var upload = $find('<%= RdAsyncUpload.ClientID%>');
-            upload.startUpload();
-        }
-        function closeAllModals() {
-            var manager = GetRadWindowManager();
-            manager.closeAll();
-
-            clearTimeout(timeout);
-        }
-        function clearFilesToUpload() {
-            var upload = $find("<%= RdAsyncUpload.ClientID %>");
-            upload.deleteAllFileInputs();
-        }
-        function cancel() {
-            closeAllModals();
-            var panelBar = $find("<%= rpbSearch.ClientID %>");
-            var item = panelBar.get_items().getItem(0);
-            if (item) {
-                item.expand();
-            }
-        }
-
-        /** open or close RadPanelBar only if element has openCloseRadPanelBar class **/
-        function PreventCollapse(sender, eventArgs) {
-            if (eventArgs.get_domEvent().target.className != "openCloseRadPanelBar") {
-                eventArgs.set_cancel(true);
-            }
-        }
-
-        /*-- TELERIK EVENTS --*/
-
-        function Start(sender, arguments) {
-            $(".modalBackground").hide();
-            $(".updateProgress").hide();
-            if (arguments.EventTarget == "<%= wiRadAjaxManager.UniqueID %>") {
-                clearFilesToUpload();
-                open_RadWindow_workItemAnalysis();
-            }
-            if (arguments.EventTarget == "<%= btnConfirmImport.UniqueID %>") {
-                $("#importProgressIcon").show();
-                $("#importProgressIcon").css("visibility", "visible");
-            }
-
-
-        }
-        function End(sender, arguments) {
-            $(".modalBackground").show();
-            $(".updateProgress").show();
-            if (arguments.EventTarget == "<%= wiRadAjaxManager.UniqueID %>") {
-                open_RadWindow_workItemConfirmation();
-            }
-            if (arguments.EventTarget == "<%= btnConfirmImport.UniqueID %>") {
-                open_RadWindow_workItemState();
-                $("#importProgressIcon").hide();
-                $("#importProgressIcon").css("visibility", "hidden");
-            }
-        }
-        function OnClientValidationFailed() {
-            alert('Only csv and zip formats are allowed.');
-        }
-
-        function EnabledButtonImport() {
-            var but = $find("<%=importButton.ClientID %>");
-            but.set_enabled(true);
-        }
-        function DisabledButtonImport() {
-            var but = $find("<%=importButton.ClientID %>");
-            but.set_enabled(false);
-        }
-
-        /*-- TELERIK EVENTS --*/
-
-        /*--- EVENTS ---*/
-        var timeout;
-
-        function autoConfirmSearch() {
-            timeout = window.setTimeout(function () { $('#<%=rbworkItemCountOk.ClientID %>').click(); }, 10000)
-        }
-
-        function racAcronym_TextChanged(sender, eventArgs) {
-            $('#<%=hidAcronym.ClientID %>').val(eventArgs.get_text());
-        }
-
-        //--- Adapt workItem's list height
-
-        function TreeListCreated(sender, eventArgs) {
-            adaptContentHeight();
-        }
-
-        //Catch the "contentHeight" event (in the mainpage.ascx)
-        $("#content").on('contentHeight', function (event, hContent) {
-            resizeTree(hContent);
-        });
-
-        function resizeTree(hContent) {
-            var tree = $('#<%= rtlWorkItems.ClientID %>');
-            /*console.log(tree);*/
-            var treeDiv = tree.find(".rtlDataDiv")[0];
-            /*console.log(treeDiv);*/
-            /*console.log(hContent);*/
-            if ($('.livetabssouthstreet ').length == 0) {
-                var securityValue = 120;
-            } else {
-                var securityValue = 205;
-            }
-
-            treeDiv.style.height = (hContent - securityValue) + "px";
-            /*console.log(hContent+"-"+treeDiv.style.height);*/
-        }
-
-        //--- Adapt workItem's list height
-    </script>
-
 
     <telerik:RadScriptBlock runat="server">
         <script type="text/javascript">

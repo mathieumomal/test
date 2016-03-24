@@ -39,6 +39,7 @@
     top: 45%;
     position: fixed;
     right: 45%;
+    background: transparent;
 }
 
 #crList .rpExpandHandle {
@@ -67,4 +68,9 @@
 #crList .searchBtn{
     text-align: right; 
     padding-right: 10px;
+}
+
+#crList .hyperlinkStyle {
+    cursor: pointer;
+    text-decoration: underline;
 }

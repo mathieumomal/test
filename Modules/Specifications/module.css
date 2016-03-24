@@ -1,4 +1,11 @@
 @import url("/Portals/_default/Skins/3GPP/CommonCssComponent/buttons.css");
+
+html, .specDetailsBody {
+    height:670px;
+    overflow:auto;
+}
+
+
 /*TODO : put in the skin*/
 #componentSpecList .helpTooltip{
 	border-bottom: 1px rgba(255, 255, 255, 0.36) dashed;
@@ -78,11 +85,10 @@
 }
 
 #SpecificationDetailsRadMultiPage fieldset {
-    margin: 2%;
-    padding: 1% !important;
     border: 1px solid grey !important;
     -webkit-border-radius: 4px !important;
     -moz-border-radius: 4px !important;
+    -ms-border-radius: 4px !important;
     border-radius: 4px !important;
 }
 
@@ -137,8 +143,21 @@ legend {
     }
 
 .specificationDetailsAction {
-    margin: 15px 0 0 0 !important;
+    margin: 15px 0 !important;
     max-height: 30px;
+}
+
+/*REMARK CONTROL CUSTOM STYLE*/
+#remarkControlContent {
+    width: 640px;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+/*RAPPORTEUR CONTROL CUSTOM STYLE*/
+#divRapporteurControl {
+    margin: auto;
+    margin-bottom: 10px;
 }
 
 /*SPEC EDIT/CREATE*/

@@ -188,20 +188,22 @@ namespace Etsi.Ultimate.Module.CRs
                     else
                         releaseLink.Enabled = false;
 
-                    var wgTdocLink = (HyperLink)dataItem["WgTdocNumber"].Controls[0];
                     if (currentCr.WgTdocNumber != null)
                     {
+                        var wgTdocLink = (HyperLink)dataItem["WgTdocNumber"].Controls[0];
                         wgTdocLink.Text = currentCr.WgTdocNumber.ToString(CultureInfo.InvariantCulture);
-                        wgTdocLink.NavigateUrl = "javascript:openTdoc('"+String.Format(ConfigVariables.TdocDetailsUrl, currentCr.WgTdocNumber)+"','"+currentCr.WgTdocNumber+"')";
+                        wgTdocLink.CssClass = "hyperlinkStyle";
+                        wgTdocLink.Attributes.Add("onclick", "javascript:openTdoc('"+String.Format(ConfigVariables.TdocDetailsUrl, currentCr.WgTdocNumber)+"','"+currentCr.WgTdocNumber+"')");
                         if (currentCr.WgTdocNumber.Equals("-"))
                             wgTdocLink.Enabled = false;
                     }
                     
-                    var tsgTdocLink = (HyperLink)dataItem["TsgTdocNumber"].Controls[0];
                     if (currentCr.TsgTdocNumber != null)
                     {
+                        var tsgTdocLink = (HyperLink)dataItem["TsgTdocNumber"].Controls[0];
                         tsgTdocLink.Text = currentCr.TsgTdocNumber.ToString(CultureInfo.InvariantCulture);
-                        tsgTdocLink.NavigateUrl = "javascript:openTdoc('" + String.Format(ConfigVariables.TdocDetailsUrl, currentCr.TsgTdocNumber) + "','" + currentCr.TsgTdocNumber + "')";
+                        tsgTdocLink.CssClass = "hyperlinkStyle";
+                        tsgTdocLink.Attributes.Add("onclick","javascript:openTdoc('" + String.Format(ConfigVariables.TdocDetailsUrl, currentCr.TsgTdocNumber) + "','" + currentCr.TsgTdocNumber + "')");
                         if (currentCr.TsgTdocNumber.Equals("-"))
                             tsgTdocLink.Enabled = false;
                     }

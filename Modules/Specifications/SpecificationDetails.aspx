@@ -23,7 +23,7 @@
         <script src="JS/CommonScript.js?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>"></script>
     </telerik:RadCodeBlock>
 </head>
-<body>
+<body class="specDetailsBody">
     <form id="specificationDetailsForm" class="specDetailform" runat="server">
         <telerik:RadScriptManager runat="server" ID="RadScriptManager1" EnableHandlerDetection="false" />
         <asp:Panel runat="server" ID="fixContainer" CssClass="containerFix" Width="750px">
