@@ -71,8 +71,7 @@
     /* 
         Popup Closed : reload event 
     */
-    function radWinCloseCallBackForReload(sender, eventArgs)
-    {
+    function radWinCloseCallBackForReload(sender, eventArgs) {
         //Refresh page
         var url = window.location.href;
         if (url.indexOf('&selectedTab=Releases') > -1)
@@ -120,7 +119,7 @@
         <MasterTableView DataKeyNames="Pk_VersionId">
             <Columns>
                 <telerik:GridTemplateColumn DataField="Meetings" HeaderText="Meetings" UniqueName="Meetings">
-                    <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="60px" />
+                    <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="100px" />
                     <ItemTemplate>
                         <div class="text-center">
                             <asp:HyperLink runat="server" ID="lnkMeetings" Target="_blank" />
@@ -137,7 +136,7 @@
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
                 <telerik:GridTemplateColumn DataField="DocumentUploaded" HeaderText="Upload date" UniqueName="DocumentUploaded">
-                    <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="150px" />
+                    <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="110px" />
                     <ItemTemplate>
                         <%# DataBinder.Eval(Container.DataItem,"DocumentUploaded", "{0:yyyy-MM-dd}") %>
                     </ItemTemplate>
