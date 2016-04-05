@@ -24,7 +24,7 @@ namespace Etsi.Ultimate.Tests.Repositories
         {
             var repo = new PersonRepository();
             repo.UoW = GetUnitOfWork();
-            Assert.AreEqual(2, repo.All.ToList().Count);
+            Assert.AreEqual(3, repo.All.ToList().Count);
             
         }
 
@@ -43,6 +43,13 @@ namespace Etsi.Ultimate.Tests.Repositories
             var repo = new PersonRepository();
             repo.UoW = GetUnitOfWork();
             Assert.AreEqual("mangion", repo.Find(27904).Username);
+        }
+
+        [Test]
+        public void PersonRepository_FindDeletedOrNot()
+        {
+            var repo = new PersonRepository {UoW = GetUnitOfWork()};
+            Assert.AreEqual("johndoe", repo.FindDeletedOrNot(22).Username);
         }
 
         [Test]
@@ -71,9 +78,42 @@ namespace Etsi.Ultimate.Tests.Repositories
             var iUnitOfWork = MockRepository.GenerateMock<IUltimateUnitOfWork>();
             var iUltimateContext = MockRepository.GenerateMock<IUltimateContext>();
 
-            var dbSet = new PersonFakeDBSet();
-            dbSet.Add (new View_Persons() { PERSON_ID=27904, Email="mathieu.mangion@etsi.org", FIRSTNAME="Mathieu", LASTNAME="Mangion", ORGA_ID=10, ORGA_NAME="ETSI", Username="mangion"});
-            dbSet.Add (new View_Persons() { PERSON_ID=9568, Email="laurent.vreck@etsi.org", FIRSTNAME="Laurent", LASTNAME="Vreck", ORGA_ID=10, ORGA_NAME="ETSI", Username="vreck"});
+            var dbSet = new PersonFakeDBSet
+            {
+                new View_Persons()
+                {
+                    PERSON_ID = 27904,
+                    Email = "mathieu.mangion@etsi.org",
+                    FIRSTNAME = "Mathieu",
+                    LASTNAME = "Mangion",
+                    ORGA_ID = 10,
+                    ORGA_NAME = "ETSI",
+                    Username = "mangion",
+                    DELETED_FLG = "N"
+                },
+                new View_Persons()
+                {
+                    PERSON_ID = 9568,
+                    Email = "laurent.vreck@etsi.org",
+                    FIRSTNAME = "Laurent",
+                    LASTNAME = "Vreck",
+                    ORGA_ID = 10,
+                    ORGA_NAME = "ETSI",
+                    Username = "vreck",
+                    DELETED_FLG = "N"
+                },
+                new View_Persons()
+                {
+                    PERSON_ID = 22,
+                    Email = "john@etsi.org",
+                    FIRSTNAME = "doe",
+                    LASTNAME = "john",
+                    ORGA_ID = 10,
+                    ORGA_NAME = "ETSI",
+                    Username = "johndoe",
+                    DELETED_FLG = "Y"
+                }
+            };
 
             iUnitOfWork.Stub(uow => uow.Context).Return(iUltimateContext);
             iUltimateContext.Stub(ctx => ctx.View_Persons).Return(dbSet);

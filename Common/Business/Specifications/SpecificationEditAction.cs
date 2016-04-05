@@ -5,6 +5,7 @@ using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.Core;
 using Etsi.Ultimate.Utils.ModelMails;
 
 namespace Etsi.Ultimate.Business.Specifications
@@ -250,8 +251,8 @@ namespace Etsi.Ultimate.Business.Specifications
             {
                 var personManager = ManagerFactory.Resolve<IPersonManager>();
                 personManager.UoW = UoW;
-                var newRapporteurName = "(None)";
-                var oldRapporteurName = "(None)";
+                var newRapporteurName = Localization.Unknown_Person;
+                var oldRapporteurName = Localization.Unknown_Person;
 
                 if (newPrimeRapporteurId.HasValue)
                 {
@@ -260,8 +261,11 @@ namespace Etsi.Ultimate.Business.Specifications
                 }
                 if (oldPrimeRapporteurId.HasValue)
                 {
-                    var oldRappPerson = personManager.FindPerson(oldPrimeRapporteurId.Value);
-                    oldRapporteurName = oldRappPerson.FIRSTNAME + " " + oldRappPerson.LASTNAME;
+                    var oldRappPerson = personManager.FindPersonDeletedOrNot(oldPrimeRapporteurId.Value);
+                    if (oldRappPerson == null)
+                        LogManager.Error(string.Format("System not able to get old specification rapporteur with ID: {0}.", oldPrimeRapporteurId.Value));
+                    else
+                        oldRapporteurName = oldRappPerson.FIRSTNAME + " " + oldRappPerson.LASTNAME;
                 }
 
                 currentSpec.Histories.Add(new History
@@ -270,7 +274,6 @@ namespace Etsi.Ultimate.Business.Specifications
                     HistoryText = String.Format(Localization.History_Specification_Changed_Prime_Rapporteur, newRapporteurName, oldRapporteurName),
                     CreationDate = DateTime.UtcNow,
                     Fk_SpecificationId = currentSpec.Pk_SpecificationId
-
                 });
             }
 

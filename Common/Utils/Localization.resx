@@ -447,4 +447,7 @@
   <data name="GenericErrorManageFolder" xml:space="preserve">
     <value>An error occured while clear / create latest folder</value>
   </data>
+  <data name="Unknown_Person" xml:space="preserve">
+    <value>(none)</value>
+  </data>
 </root>

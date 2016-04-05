@@ -82,10 +82,16 @@ namespace Etsi.Ultimate.Business
 
         public View_Persons FindPerson(int id)
         {
-            IPersonRepository repo = RepositoryFactory.Resolve<IPersonRepository>();
+            var repo = RepositoryFactory.Resolve<IPersonRepository>();
             repo.UoW = UoW;
-            var person = repo.Find(id);
-            return person;
+            return repo.Find(id);
+        }
+
+        public View_Persons FindPersonDeletedOrNot(int id)
+        {
+            var repo = RepositoryFactory.Resolve<IPersonRepository>();
+            repo.UoW = UoW;
+            return repo.FindDeletedOrNot(id);
         }
 
         public int GetChairmanIdByCommityId(int primeResponsibleGroupId)

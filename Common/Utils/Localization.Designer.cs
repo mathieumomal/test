@@ -520,6 +520,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à (none).
+        /// </summary>
+        public static string Unknown_Person {
+            get {
+                return ResourceManager.GetString("Unknown_Person", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Draft versions can not have Major number higher than 2..
         /// </summary>
         public static string Upload_Version_Error_Draft_Major_Too_High {

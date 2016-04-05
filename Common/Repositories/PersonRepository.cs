@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
-using Etsi.Ultimate.DataAccess;
-using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Repositories
 {
@@ -15,9 +11,6 @@ namespace Etsi.Ultimate.Repositories
     public class PersonRepository : IPersonRepository
     {
         public IUltimateUnitOfWork UoW { get; set; }
-        public PersonRepository()
-        {
-        }
 
         #region IEntityRepository<PersonRepository> Membres
 
@@ -33,11 +26,6 @@ namespace Etsi.Ultimate.Repositories
             throw new NotImplementedException();
         }
 
-        public View_Persons Find(int id)
-        {
-            return UoW.Context.View_Persons.Find(id, "N");
-        }
-
         public void InsertOrUpdate(View_Persons entity)
         {
             throw new InvalidOperationException("Cannot add or update a person");
@@ -51,6 +39,26 @@ namespace Etsi.Ultimate.Repositories
         public List<View_Persons> FindByIds(List<int> personIds)
         {
             return UoW.Context.View_Persons.Where(p => personIds.Contains(p.PERSON_ID)).ToList();
+        }
+
+        /// <summary>
+        /// Return only not deleted persons
+        /// </summary>
+        /// <param name="id">Person ID</param>
+        /// <returns></returns>
+        public View_Persons Find(int id)
+        {
+            return UoW.Context.View_Persons.Find(id, "N");
+        }
+
+        /// <summary>
+        /// Return deleted or not person
+        /// </summary>
+        /// <param name="id">Person ID</param>
+        /// <returns></returns>
+        public View_Persons FindDeletedOrNot(int id)
+        {
+            return UoW.Context.View_Persons.FirstOrDefault(x => x.PERSON_ID == id);
         }
 
         #endregion
@@ -69,7 +77,7 @@ namespace Etsi.Ultimate.Repositories
 
     public interface IPersonRepository : IEntityRepository<View_Persons>
     {
-
         List<View_Persons> FindByIds(List<int> personIds);
+        View_Persons FindDeletedOrNot(int id);
     }
 }

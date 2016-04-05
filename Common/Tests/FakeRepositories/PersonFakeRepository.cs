@@ -79,6 +79,11 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             throw new NotImplementedException();
         }
 
+        public View_Persons FindDeletedOrNot(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

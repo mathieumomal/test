@@ -36,11 +36,18 @@ namespace Etsi.Ultimate.Business
         List<View_Persons> LookFor(string keywords);
 
         /// <summary>
-        /// Find one person by his own id
+        /// Find one person by his own id (only not deleted one)
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         View_Persons FindPerson(int id);
+
+        /// <summary>
+        /// Find one person deleted or not
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        View_Persons FindPersonDeletedOrNot(int id);
 
         /// <summary>
         /// Find the commity's chairman

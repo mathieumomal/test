@@ -155,27 +155,55 @@ namespace Etsi.Ultimate.Tests.Services
             var specToEdit = GetCorrectSpecificationForEdit(true);
 
             // Changes to rapporteur
-            // Remove rapporteur 2, change rapporteur 3 to be prime rapporteur
+            // Remove rapporteur 1, change rapporteur 3 to be prime rapporteur
             specToEdit.SpecificationRapporteurs.Remove(specToEdit.SpecificationRapporteurs.Last());
             specToEdit.SpecificationRapporteurs.First().IsPrime = false;
-            specToEdit.SpecificationRapporteurs.Add(new SpecificationRapporteur() { Pk_SpecificationRapporteurId = 3, Fk_RapporteurId = 3, IsPrime = true });
+            specToEdit.SpecificationRapporteurs.Add(new SpecificationRapporteur { Pk_SpecificationRapporteurId = 3, Fk_RapporteurId = 3, IsPrime = true });
 
             var specSvc = ServicesFactory.Resolve<ISpecificationService>();
             Assert.AreEqual(specToEdit.Pk_SpecificationId, specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
 
-            // From white box testing, we know that:
-            // - spec that will be modified is the one provided by the Repository
-            // - we can get it via GetCorrectSpecificationForEdit(true)
-            // Thus we will test on it.
             var modifiedSpec = GetCorrectSpecificationForEdit(false);
 
             // Check changes to rapporteur
             Assert.AreEqual(3, modifiedSpec.SpecificationRapporteurs.Count);
-            Assert.IsFalse(modifiedSpec.SpecificationRapporteurs.Where(r => r.Fk_RapporteurId == 1).FirstOrDefault().IsPrime);
+            Assert.IsFalse(modifiedSpec.SpecificationRapporteurs.First(r => r.Fk_RapporteurId == 1).IsPrime);
 
-            var createHistoryEntry = string.Format(Utils.Localization.History_Specification_Changed_Prime_Rapporteur, "User 3", "User 1");
-            Assert.AreEqual(1, modifiedSpec.Histories.Where(h => h.HistoryText == createHistoryEntry).Count());
+            var createHistoryEntry = string.Format(Localization.History_Specification_Changed_Prime_Rapporteur, "User 3", "User 1");
+            Assert.AreEqual(1, modifiedSpec.Histories.Count(h => h.HistoryText == createHistoryEntry));
+        }
 
+        [Test]
+        public void EditSpecification_TestRapporteurChange_OldPrimeRapporteurNoMoreExist()
+        {
+            RegisterAllMocks();
+            //Overide personManager mocks
+            var personManager = MockRepository.GenerateMock<IPersonManager>();
+            personManager.Stub(p => p.FindPerson(3)).Return(new View_Persons() { PERSON_ID = 3, FIRSTNAME = "User", LASTNAME = "3", Username = "User3" });
+            personManager.Stub(p => p.FindPerson(4)).Return(new View_Persons() { PERSON_ID = 4, FIRSTNAME = "User", LASTNAME = "4", Username = "User4" });
+            ManagerFactory.Container.RegisterInstance<IPersonManager>(personManager);
+
+
+            // Get a fresh copy of the spec.
+            var specToEdit = GetCorrectSpecificationForEdit(true);
+
+            // Changes to rapporteur
+            // Remove rapporteur 1, change rapporteur 3 to be prime rapporteur
+            specToEdit.SpecificationRapporteurs.Remove(specToEdit.SpecificationRapporteurs.Last());
+            specToEdit.SpecificationRapporteurs.First().IsPrime = false;
+            specToEdit.SpecificationRapporteurs.Add(new SpecificationRapporteur { Pk_SpecificationRapporteurId = 3, Fk_RapporteurId = 3, IsPrime = true });
+
+            var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+            Assert.AreEqual(specToEdit.Pk_SpecificationId, specSvc.EditSpecification(EDIT_RIGHT_USER, specToEdit).Key);
+
+            var modifiedSpec = GetCorrectSpecificationForEdit(false);
+
+            // Check changes to rapporteur
+            Assert.AreEqual(3, modifiedSpec.SpecificationRapporteurs.Count);
+            Assert.IsFalse(modifiedSpec.SpecificationRapporteurs.First(r => r.Fk_RapporteurId == 1).IsPrime);
+
+            var createHistoryEntry = string.Format(Localization.History_Specification_Changed_Prime_Rapporteur, "User 3", Localization.Unknown_Person);
+            Assert.AreEqual(1, modifiedSpec.Histories.Count(h => h.HistoryText == createHistoryEntry));
         }
 
         [Test]
@@ -410,6 +438,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             var personManager = MockRepository.GenerateMock<IPersonManager>();
             personManager.Stub(p => p.FindPerson(1)).Return(new View_Persons() { PERSON_ID = 1, FIRSTNAME = "User", LASTNAME = "1", Username = "User1"});
+            personManager.Stub(p => p.FindPersonDeletedOrNot(1)).Return(new View_Persons() { PERSON_ID = 1, FIRSTNAME = "User", LASTNAME = "1", Username = "User1" });
             personManager.Stub(p => p.FindPerson(3)).Return(new View_Persons() { PERSON_ID = 3, FIRSTNAME = "User", LASTNAME = "3", Username = "User3" });
             personManager.Stub(p => p.FindPerson(4)).Return(new View_Persons() { PERSON_ID = 4, FIRSTNAME = "User", LASTNAME = "4", Username = "User4" });
             ManagerFactory.Container.RegisterInstance<IPersonManager>(personManager);
