@@ -200,6 +200,26 @@ namespace Etsi.Ultimate.Utils
             }
         }
 
+        /// <summary>
+        /// Global 3GPP security group TBId (SA3, 386)
+        /// </summary>
+        public static int Global3GPPSecurityGroupTbId
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["Global3GPPSecurityGroupTbId"] != null)
+                {
+                    int returnValue = 0;
+                    bool success = int.TryParse(ConfigurationManager.AppSettings["Global3GPPSecurityGroupTbId"], out returnValue);
+                    if (success)
+                        return returnValue;
+                    else
+                        return 0;
+                }
+                return 0;
+            }
+        }
+
         public static string DefaultPublicTmpAddress
         {
             get

@@ -53,6 +53,9 @@
 
     <!--3GPP project id used by -->
     <add key="Global3GPPProjetId" value ="703"/>
+
+    <!--3GPP SA3 Security group (TbId <=> community) -->
+    <add key="Global3GPPSecurityGroupTbId" value ="386"/>
     
     <!-- Path of the temporary folder where versions are uploaded -->
     <add key="UploadVersionTemporaryPath" value="D:\AppTrans\Version\"/>

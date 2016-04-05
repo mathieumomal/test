@@ -107,6 +107,7 @@
           <Property Name="Description" Type="varchar" MaxLength="150" />
           <Property Name="WpmProjectId" Type="int" />
           <Property Name="SortOrder" Type="int" />
+          <Property Name="WpmKeywordId" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="History">
           <Key>
@@ -1946,6 +1947,7 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <NavigationProperty Name="SpecificationTechnologies" Relationship="Etsi.Ultimate.DataAccess.FK_Enum_Technology" FromRole="Enum_Technology" ToRole="SpecificationTechnology" />
           <Property Type="Int32" Name="WpmProjectId" />
           <Property Type="Int32" Name="SortOrder" />
+          <Property Name="WpmKeywordId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Specification_Release">
           <Key>
@@ -2851,6 +2853,7 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <EntitySetMapping Name="Enum_Technology">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Enum_Technology">
               <MappingFragment StoreEntitySet="Enum_Technology">
+                <ScalarProperty Name="WpmKeywordId" ColumnName="WpmKeywordId" />
                 <ScalarProperty Name="SortOrder" ColumnName="SortOrder" />
                 <ScalarProperty Name="WpmProjectId" ColumnName="WpmProjectId" />
                 <ScalarProperty Name="Description" ColumnName="Description" />

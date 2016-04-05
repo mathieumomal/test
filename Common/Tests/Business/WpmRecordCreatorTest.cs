@@ -21,7 +21,7 @@ namespace Etsi.Ultimate.Tests.Business
         public const int IMPORTPROJECT_WKI_ID = 18;
         public const int IMPORTPROJECT_SPEC_ID = 1;
 
-
+        #region AddWPMRecord nominal
         [Test]
         public void AddWPMRecord_Nominal()
         {            
@@ -47,7 +47,6 @@ namespace Etsi.Ultimate.Tests.Business
             //Set WKI_ID to 1
             WorkProgramRepoMock.Expect(wp => wp.InsertEtsiWorkITem(Arg<EtsiWorkItemImport>.Is.Anything)).Return(1);
             WorkProgramRepoMock.Expect(wp => wp.InsertWIScheduleEntry(Arg<int>.Is.Equal(1), Arg<int>.Is.Equal(10), Arg<int>.Is.Equal(2), Arg<int>.Is.Equal(1)));
-            WorkProgramRepoMock.Expect(wp => wp.InsertWIKeyword(Arg<int>.Is.Equal(1), Arg<string>.Is.Anything));
             WorkProgramRepoMock.Expect(wp => wp.InsertWIRemeark(Arg<int>.Is.Equal(1), Arg<int>.Is.Anything, Arg<string>.Is.Anything));
             WorkProgramRepoMock.Expect(wp => wp.InsertWIMemo(Arg<int>.Is.Equal(1), Arg<string>.Is.Equal("MTGSHORTREF")));
             
@@ -79,7 +78,9 @@ namespace Etsi.Ultimate.Tests.Business
                 && c.Reference.Equals("DTS/TSGS-0426124va21") && c.titllePart_1.Equals("2G description; LTE description;"))));
             WorkProgramRepoMock.VerifyAllExpectations();
         }
+        #endregion
 
+        #region ImportProjectstoWPMDB
         [Test]
         public void ImportProjectsToWPMDB_Test()
         {
@@ -97,7 +98,7 @@ namespace Etsi.Ultimate.Tests.Business
             var version = uow.Context.SpecVersions.Where(x => x.Pk_VersionId == IMPORTPROJECT_VERSION_ID).FirstOrDefault();
 
             //Start projects import
-            wpmRecordCreator.ImportProjectsToWPMDB(version, IMPORTPROJECT_WKI_ID, wprMock);
+            wpmRecordCreator.ImportProjectsToWpmdb(version, IMPORTPROJECT_WKI_ID, wprMock);
 
             //TESTS
             //Verif import project : global case, no testable because of Configvariables interaction with web.config
@@ -128,12 +129,50 @@ namespace Etsi.Ultimate.Tests.Business
             var version = uow.Context.SpecVersions.Where(x => x.Pk_VersionId == IMPORTPROJECT_VERSION_ID).FirstOrDefault();
 
             //Start projects import
-            wpmRecordCreator.ImportProjectsToWPMDB(version, IMPORTPROJECT_WKI_ID, wprMock);
+            wpmRecordCreator.ImportProjectsToWpmdb(version, IMPORTPROJECT_WKI_ID, wprMock);
 
             //Verif import project : tsg case when this tsg project Id is not define => we test its parent
             wprMock.AssertWasCalled(x => x.InsertWIProject(IMPORTPROJECT_WKI_ID, 25));
         }
+        #endregion
 
+        #region InsertWkiKeywords
+        [Test]
+        public void InsertWkiKeywords()
+        {
+            //Mocks
+            var specId = 1;
+            var primeResponsibleGroupCommunityTbId = 386;//SA3
+            var specTechnosMock = MockRepository.GenerateMock<ISpecificationTechnologiesManager>();
+            specTechnosMock.Stub(x => x.GetASpecificationTechnologiesBySpecId(specId))
+                .Return(new List<Enum_Technology>
+                {
+                    new Enum_Technology {WpmKeywordId = "GSM"},
+                    new Enum_Technology {WpmKeywordId = "UMTS"},
+                    new Enum_Technology {WpmKeywordId = "LTE"},
+                    new Enum_Technology {WpmKeywordId = ""}
+                });
+            ManagerFactory.Container.RegisterInstance<ISpecificationTechnologiesManager>(specTechnosMock);
+
+            var wprMock = MockRepository.GenerateMock<IWorkProgramRepository>();
+            RepositoryFactory.Container.RegisterInstance<IWorkProgramRepository>(wprMock);
+
+
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var wpmRecordCreator = new WpmRecordCreator(uow);
+            wpmRecordCreator.InsertWkiKeywords(IMPORTPROJECT_WKI_ID, specId, primeResponsibleGroupCommunityTbId);
+
+            //TESTS
+            wprMock.AssertWasCalled(x => x.InsertWIKeyword(IMPORTPROJECT_WKI_ID, "LTE"));
+            wprMock.AssertWasCalled(x => x.InsertWIKeyword(IMPORTPROJECT_WKI_ID, "GSM"));
+            wprMock.AssertWasCalled(x => x.InsertWIKeyword(IMPORTPROJECT_WKI_ID, "UMTS"));
+            wprMock.AssertWasCalled(x => x.InsertWIKeyword(IMPORTPROJECT_WKI_ID, "SECURITY"));
+            wprMock.AssertWasNotCalled(x => x.InsertWIKeyword(IMPORTPROJECT_WKI_ID, ""));
+        }
+
+        #endregion
+
+        #region other/data
         public void ImportProjectsToWPMDB_SetMocks(bool tsgParentTest)
         {
             
@@ -266,5 +305,6 @@ namespace Etsi.Ultimate.Tests.Business
             list.Add(new Release() { Pk_ReleaseId = 1, Name = "Release 1" });            
             return list;
         }
+        #endregion
     }
 }
