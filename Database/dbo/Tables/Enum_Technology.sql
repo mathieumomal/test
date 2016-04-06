@@ -4,8 +4,11 @@
     [Description]          VARCHAR (150) NULL,
     [WpmProjectId]         INT           NULL,
     [SortOrder]            INT           NULL,
+    [WpmKeywordId]         VARCHAR (50)  NULL,
     CONSTRAINT [PK_Enum_Technology] PRIMARY KEY CLUSTERED ([Pk_Enum_TechnologyId] ASC)
 );
+
+
 
 
 
