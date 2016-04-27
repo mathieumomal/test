@@ -189,7 +189,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     searchObj = new SpecificationSearch();
 
                     Technologies = specSvc.GetTechnologyList().OrderBy(t => t.SortOrder).ToList();
-                    Series = specSvc.GetSeries();
+                    Series = specSvc.GetSeries().OrderBy(x => x.Description).ToList();
 
                     TbId = Request.QueryString["tbid"];
                     SubTBId = Request.QueryString["SubTB"];
