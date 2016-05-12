@@ -22,12 +22,9 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using Etsi.Ultimate.Utils.Core;
 using Telerik.Web.UI;
-using System.IO;
 using Etsi.Ultimate.Utils;
 using System.Runtime.InteropServices;
-using Microsoft.Practices.ObjectBuilder2;
 
 
 namespace Etsi.Ultimate.Module.Specifications
@@ -56,7 +53,7 @@ namespace Etsi.Ultimate.Module.Specifications
         private const string CONST_FTP_VERSIONS_MAP_PATH = "{0}\\Specs\\{1}";
         private const string CONST_PROGRESS_BAR_CONTENT = "<pre><code><div class=\"meter\"><span style=\"width: {0}%\"></span></div></code></pre>";
 
-        private bool isUrlSearch;
+        private bool _isUrlSearch;
         private bool fromSearch;
 
         private const string VS_SEARCHOBJ = "VS_SEARCHOBJ";
@@ -197,11 +194,17 @@ namespace Etsi.Ultimate.Module.Specifications
                     BindControls();
                     ReleaseCtrl.Load += ReleaseCtrl_Load;
 
-                    var searchObjFromCookie = CookiesHelper.GetCookie<SpecificationSearch>(Page.Request, ConfigVariables.CookieNameSpecsList);
-                    if (searchObjFromCookie != null && searchObjFromCookie.GetType() == typeof(SpecificationSearch))
+                    //Searching for user cookie which save last filters used
+                    //!!! EXCEPT if this is a URL search request !!! (condition: !_isUrlSearch): 
+                    //in fact, URL GET parameters should contain all required filters and system should not ask for last user's filters stored inside a cookie
+                    if (!_isUrlSearch)
                     {
-                        searchObj = searchObjFromCookie;
-                        LoadControlsFromSearchObj();
+                        var searchObjFromCookie = CookiesHelper.GetCookie<SpecificationSearch>(Page.Request, ConfigVariables.CookieNameSpecsList);
+                        if (searchObjFromCookie != null && searchObjFromCookie.GetType() == typeof(SpecificationSearch))
+                        {
+                            searchObj = searchObjFromCookie;
+                            LoadControlsFromSearchObj();
+                        }
                     }
 
                     /* Latest Folder PopUp */
@@ -270,7 +273,7 @@ namespace Etsi.Ultimate.Module.Specifications
         protected void ReleaseCtrl_Load(object sender, EventArgs e)
         {
             //Load search control state if the request is from ShortURL
-            if (isUrlSearch)
+            if (_isUrlSearch)
             {
                 if (!String.IsNullOrEmpty(Request.QueryString["title"]))
                     txtTitle.Text = searchObj.Title = Request.QueryString["title"];
@@ -511,7 +514,7 @@ namespace Etsi.Ultimate.Module.Specifications
         /// <param name="e">Event Args</param>
         protected void rgSpecificationList_NeedDataSource(object sender, GridNeedDataSourceEventArgs e)
         {
-            if (FirstLoad)
+            if (FirstLoad && !_isUrlSearch)
             {
                 rgSpecificationList.DataSource = new List<Specification>();
             }
@@ -689,7 +692,7 @@ namespace Etsi.Ultimate.Module.Specifications
         }
 
         /// <summary>
-        /// Construct FullUrl
+        /// Construct FullView url
         /// </summary>
         private void ManageFullView()
         {
@@ -701,6 +704,7 @@ namespace Etsi.Ultimate.Module.Specifications
             ultFullView.BaseAddress = address;
 
             ultFullView.UrlParams = ManageUrlParams();
+
             ultFullView.Display();
         }
 
@@ -773,7 +777,8 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 fromSearch = false;
 
-                urlParams.Add("q", "1");
+                urlParams.Add("q", "1");//URL QUERY ON SPECIFICATIONS : data need to be loaded
+
                 if (!String.IsNullOrEmpty(searchObj.Title))
                     urlParams.Add("title", searchObj.Title.Trim());
 
@@ -821,7 +826,7 @@ namespace Etsi.Ultimate.Module.Specifications
         /// </summary>
         private void GetRequestParameters()
         {
-            isUrlSearch = (Request.QueryString["q"] != null);
+            _isUrlSearch = (Request.QueryString["q"] != null);
         }
 
         /// <summary>
