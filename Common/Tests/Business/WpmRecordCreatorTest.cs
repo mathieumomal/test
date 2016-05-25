@@ -22,8 +22,9 @@ namespace Etsi.Ultimate.Tests.Business
         public const int IMPORTPROJECT_SPEC_ID = 1;
 
         #region AddWPMRecord nominal
-        [Test]
-        public void AddWPMRecord_Nominal()
+        [TestCase(-2, 1, Description = "ResponsibleGroup Secretary expired, SecretaryId should be 1 (expirationDate = null)")]
+        [TestCase(2, 2, Description = "ResponsibleGroup Secretary not expired, SecretaryId should be 2")]
+        public void AddWPMRecord_Nominal(int secretaryDaysOfExpirationDate, int expectedSecretaryId)
         {            
             var communityMock = MockRepository.GenerateMock<ICommunityRepository>();
             //Set WG number to 4
@@ -33,7 +34,11 @@ namespace Etsi.Ultimate.Tests.Business
 
             var secretaryMock = MockRepository.GenerateMock<IResponsibleGroupSecretaryRepository>();
             //Set SecretaryId to to 2
-            secretaryMock.Stub(x => x.FindAllByCommiteeId(1)).Return(new List<ResponsibleGroup_Secretary>(){ new ResponsibleGroup_Secretary(){TbId=1, PersonId=2}}.AsQueryable());
+            secretaryMock.Stub(x => x.FindAllByCommiteeId(1)).Return(new List<ResponsibleGroup_Secretary>()
+            {
+                new ResponsibleGroup_Secretary{TbId=1, PersonId=2, roleExpirationDate = DateTime.Now.AddDays(secretaryDaysOfExpirationDate)},
+                new ResponsibleGroup_Secretary{TbId=1, PersonId=1, roleExpirationDate = null}
+            }.AsQueryable());
             RepositoryFactory.Container.RegisterInstance<IResponsibleGroupSecretaryRepository>(secretaryMock);
 
             var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
@@ -74,8 +79,8 @@ namespace Etsi.Ultimate.Tests.Business
             manager.AddWpmRecords(versionManager.GetVersionsForASpecRelease(1, 1).FirstOrDefault());
 
             WorkProgramRepoMock.AssertWasCalled(wp => wp.InsertEtsiWorkITem(Arg<EtsiWorkItemImport>.Matches(c => c.EtsiNumber.Equals("126 124") 
-                && c.EtsiDocNumber == 26124 && c.SerialNumber.Equals("26124va21")
-                && c.Reference.Equals("DTS/TSGS-0426124va21") && c.titllePart_1.Equals("2G description; LTE description;"))));
+                && c.EtsiDocNumber == 26124 && c.SerialNumber.Equals("26124va21") && c.SecretaryId.Equals(expectedSecretaryId)
+                && c.Reference.Equals("DTS/TSGS-0426124va21") && c.TitlePart1.Equals("2G description; LTE description;"))));
             WorkProgramRepoMock.VerifyAllExpectations();
         }
         #endregion

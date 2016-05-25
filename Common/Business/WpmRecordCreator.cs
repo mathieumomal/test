@@ -42,14 +42,27 @@ namespace Etsi.Ultimate.Business
                 int specId = version.Fk_SpecificationId.GetValueOrDefault();
                 Specification spec = specRepo.Find(specId);
 
-                ICommunityRepository communityRepo = RepositoryFactory.Resolve<ICommunityRepository>();
+                //Get prime responsible group of specification
+                var communityRepo = RepositoryFactory.Resolve<ICommunityRepository>();
                 communityRepo.UoW = UoW;
-                Community c = communityRepo.Find(spec.PrimeResponsibleGroup.Fk_commityId);
-                int wgNumber = communityRepo.GetWgNumber(c.TbId, c.ParentTbId.GetValueOrDefault());
+                var c = communityRepo.Find(spec.PrimeResponsibleGroup.Fk_commityId);
+                var wgNumber = communityRepo.GetWgNumber(c.TbId, c.ParentTbId.GetValueOrDefault());
 
-                IResponsibleGroupSecretaryRepository rgSecretaryRepo = RepositoryFactory.Resolve<IResponsibleGroupSecretaryRepository>();
+                //Get ResponsibleGroup_Secretary id (if there are only expired secretary : take the secretary with null expiration date)
+                var rgSecretaryRepo = RepositoryFactory.Resolve<IResponsibleGroupSecretaryRepository>();
                 rgSecretaryRepo.UoW = UoW;
-                int secretaryId = rgSecretaryRepo.FindAllByCommiteeId(c.TbId).First().PersonId;
+                var secretaryFounds = rgSecretaryRepo.FindAllByCommiteeId(c.TbId).Where(x => x.roleExpirationDate >= DateTime.Now || x.roleExpirationDate == null).ToList();
+                var secretaryId = 0;
+                if (secretaryFounds.Any(x => x.roleExpirationDate != null))
+                {
+                    var secretary = secretaryFounds.First(x => x.roleExpirationDate >= DateTime.Now);
+                    secretaryId = secretary.PersonId;
+                }
+                else
+                {
+                    //Will failed if no secretary found even with roleExpirationDate null (BUG on ETSI side if this is the case : 20/05/2016 Mathieu Mangion)
+                    secretaryId = secretaryFounds.First().PersonId;
+                }
 
                 //Get version meeting's short reference (version.Source <=> meeting id)
                 var mtgShortRef = string.Empty;

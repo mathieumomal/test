@@ -11,93 +11,167 @@ namespace Etsi.Ultimate.Controls
     {
         #region Properties
 
+        public const string All = "all";
+        public const string Open = "open";
+
+        //Width of the rad combo box
         public int Width { get; set; }
+
+        //Width of the content of the rad combo box
         public int DropDownWidth { get; set; }
+
+        //Force page load process
         public bool IsLoadingNeeded { get; set; }
-        public List<int> SelectedReleaseIds
+
+        #endregion
+
+        #region releases properties (get set)
+        /// <summary>
+        /// Get selected releases with keywords for URL purpose. Three cases:
+        /// - All releases : "all" keyword
+        /// - Open releases : "open" keyword
+        /// - Custom selection of releases : "1,2,3",... ; list of releases ids
+        /// </summary>
+        public string SelectedReleasesWithKeywords
         {
             get
             {
                 //Get All Releases
-                RadButton rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
+                var rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
                 if (rbAllReleases.Checked)
-                    return rbAllReleases.Attributes["Value"].Split(',').Select(int.Parse).ToList();
+                    return All;
 
                 //Get Open Releases
-                RadButton rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
+                var rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
                 if (rbOpenReleases.Checked)
-                    return rbOpenReleases.Attributes["Value"].Split(',').Select(int.Parse).ToList();
+                    return Open;
 
                 //Get Custom Releases
-                RadTreeView rtvReleases = (RadTreeView)rcbReleases.Items[0].FindControl("rtvReleases");
-                List<int> customReleaseIds = new List<int>();
-                foreach (RadTreeNode node in rtvReleases.Nodes)
-                {
-                    RadButton rbCustomReleases = (RadButton)node.FindControl("rbCustomReleases");
-                    if (rbCustomReleases.Checked)
-                        customReleaseIds.Add(Convert.ToInt32(node.Value));
-                }
-                return customReleaseIds;
+                var rtvReleases = (RadTreeView)rcbReleases.Items[0].FindControl("rtvReleases");
+                var customReleaseIds = (from RadTreeNode node in rtvReleases.Nodes
+                                        let rbCustomReleases = (RadButton)node.FindControl("rbCustomReleases")
+                                        where rbCustomReleases.Checked
+                                        select Convert.ToInt32(node.Value))
+                                              .ToList();
+                return string.Join(",", customReleaseIds);
             }
             set
             {
-                var releaseIds = value;
+                var releases = value;
 
                 var rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
                 var rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
                 var rbCustomSelection = (RadButton)rcbReleases.Items[0].FindControl("rbCustomSelection");
                 rbAllReleases.Checked = rbOpenReleases.Checked = rbCustomSelection.Checked = false;
 
-                var allReleases = rbAllReleases.Attributes["Value"].Split(',').Select(int.Parse).ToList();
-                //if list of release ids is list of all releases OR release ids list is empty then all releases will be selected
-                if (releaseIds.OrderBy(x => x).SequenceEqual(allReleases.OrderBy(x => x)) || releaseIds.Count == 0)
-                    rbAllReleases.Checked = true;
-                else
+                switch (releases)
                 {
-                    var openReleases = rbOpenReleases.Attributes["Value"].Split(',').Select(int.Parse).ToList();
-                    if (releaseIds.OrderBy(x => x).SequenceEqual(openReleases.OrderBy(x => x)))
+                    case All:
+                        rbAllReleases.Checked = true;
+                        break;
+                    case Open:
                         rbOpenReleases.Checked = true;
-                    else
-                    {
+                        break;
+                    default:
                         rbCustomSelection.Checked = true;
 
-                        RadTreeView rtvReleases = (RadTreeView)this.rcbReleases.Items[0].FindControl("rtvReleases");
+                        var releasesIds = releases.Split(',').Select(x => Convert.ToInt32(x ?? "0")).ToList();
+                        var rtvReleases = (RadTreeView)rcbReleases.Items[0].FindControl("rtvReleases");
                         foreach (RadTreeNode node in rtvReleases.Nodes)
                         {
-                            RadButton rbCustomReleases = (RadButton)node.FindControl("rbCustomReleases");
-                            rbCustomReleases.Checked = releaseIds.Exists(x => x == Convert.ToInt32((node.Value ?? "0")));
+                            var rbCustomReleases = (RadButton)node.FindControl("rbCustomReleases");
+                            rbCustomReleases.Checked = releasesIds.Exists(x => x == Convert.ToInt32((node.Value ?? "0")));
                         }
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Return list of ids of selected releases (all, open or custom)
+        /// </summary>
+        public List<int> SelectedReleasesIds
+        {
+            get
+            {
+                var svc = ServicesFactory.Resolve<IReleaseService>();
+                var releases = svc.GetAllReleases(0);
+
+                switch (SelectedReleasesWithKeywords)
+                {
+                    case All:
+                        return releases.Key.Select(x => x.Pk_ReleaseId).ToList();
+                    case Open:
+                        return releases.Key.Where(x => x.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Open).Select(x => x.Pk_ReleaseId).ToList();
+                    default:
+                        return SelectedReleasesWithKeywords.Split(',').Select(x => Convert.ToInt32(x ?? "0")).ToList();
+                }
+            }
+            set
+            {
+                var rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
+                var rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
+                var rbCustomSelection = (RadButton)rcbReleases.Items[0].FindControl("rbCustomSelection");
+                rbAllReleases.Checked = rbOpenReleases.Checked = rbCustomSelection.Checked = false;
+
+                var svc = ServicesFactory.Resolve<IReleaseService>();
+                var allReleasesIds = svc.GetAllReleases(0).Key.Select(x => x.Pk_ReleaseId).ToList();
+                var openReleasesIds = svc.GetAllReleases(0).Key.Where(x => x.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Open).Select(x => x.Pk_ReleaseId).ToList();
+
+                var selectedReleasesIds = value;
+
+                if (allReleasesIds.All(selectedReleasesIds.Contains) && selectedReleasesIds.All(allReleasesIds.Contains))
+                {
+                    rbAllReleases.Checked = true;
+                }
+                else if (openReleasesIds.All(selectedReleasesIds.Contains) &&
+                         selectedReleasesIds.All(openReleasesIds.Contains))
+                {
+                    rbOpenReleases.Checked = true;
+                }
+                else
+                {
+                    rbCustomSelection.Checked = true;
+
+                    var rtvReleases = (RadTreeView)rcbReleases.Items[0].FindControl("rtvReleases");
+                    foreach (RadTreeNode node in rtvReleases.Nodes)
+                    {
+                        var rbCustomReleases = (RadButton)node.FindControl("rbCustomReleases");
+                        rbCustomReleases.Checked = selectedReleasesIds.Exists(x => x == Convert.ToInt32((node.Value ?? "0")));
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Get search string acccording to selected releases
+        /// </summary>
         public string SearchString
         {
             get
             {
-                RadButton rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
+                var rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
                 if (rbAllReleases.Checked)
                 {
                     return rbAllReleases.Text;
                 }
                 else
                 {
-                    RadButton rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
+                    var rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
                     if (rbOpenReleases.Checked)
                     {
                         return rbOpenReleases.Text;
                     }
                     else
                     {
-                        RadButton rbCustomSelection = (RadButton)rcbReleases.Items[0].FindControl("rbCustomSelection");
+                        var rbCustomSelection = (RadButton)rcbReleases.Items[0].FindControl("rbCustomSelection");
                         if (rbCustomSelection.Checked)
                         {
                             var searchString = string.Empty;
-                            RadTreeView rtvReleases = (RadTreeView)this.rcbReleases.Items[0].FindControl("rtvReleases");
+                            var rtvReleases = (RadTreeView)rcbReleases.Items[0].FindControl("rtvReleases");
                             foreach (RadTreeNode node in rtvReleases.Nodes)
                             {
-                                RadButton rbCustomReleases = (RadButton)node.FindControl("rbCustomReleases");
+                                var rbCustomReleases = (RadButton)node.FindControl("rbCustomReleases");
                                 if (rbCustomReleases.Checked)
                                     searchString += rbCustomReleases.Text + ", ";
                             }
@@ -109,7 +183,6 @@ namespace Etsi.Ultimate.Controls
                 return rcbReleases.Text;
             }
         }
-
         #endregion
 
         #region Events
@@ -123,21 +196,26 @@ namespace Etsi.Ultimate.Controls
         {
             if (!IsPostBack || IsLoadingNeeded)
             {
+                //Set width of the rad combo box
                 rcbReleases.Width = Width;
                 rcbReleases.DropDownWidth = DropDownWidth;
-                IReleaseService svc = ServicesFactory.Resolve<IReleaseService>();
+
+                //Get all releases
+                var svc = ServicesFactory.Resolve<IReleaseService>();
                 var releaseObjects = svc.GetAllReleases(0);
 
                 //Bind Custom Releases
-                RadTreeView rtvReleases = (RadTreeView)this.rcbReleases.Items[0].FindControl("rtvReleases");
-                List<int> allReleaseIds = new List<int>();
-                List<int> openReleaseIds = new List<int>();
+                var rtvReleases = (RadTreeView)rcbReleases.Items[0].FindControl("rtvReleases");
+                var allReleaseIds = new List<int>();
+                var openReleaseIds = new List<int>();
                 foreach (var release in releaseObjects.Key.OrderByDescending(x => x.SortOrder))
                 {
-                    RadTreeNode newNode = new RadTreeNode();
-                    newNode.Text = release.ShortName;
-                    newNode.Value = release.Pk_ReleaseId.ToString();
-                    newNode.Checkable = false;
+                    var newNode = new RadTreeNode
+                    {
+                        Text = release.ShortName,
+                        Value = release.Pk_ReleaseId.ToString(),
+                        Checkable = false
+                    };
                     rtvReleases.Nodes.Add(newNode);
 
                     //Add to Open Release List
@@ -150,25 +228,25 @@ namespace Etsi.Ultimate.Controls
                 rtvReleases.DataBind();
 
                 //Bind All Releases
-                RadButton rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
+                var rbAllReleases = (RadButton)rcbReleases.Items[0].FindControl("rbAllReleases");
                 rbAllReleases.Attributes.Add("Value", String.Join(",", allReleaseIds));
                 rbAllReleases.Checked = true;
 
                 //Bind Open Releases
-                RadButton rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
+                var rbOpenReleases = (RadButton)rcbReleases.Items[0].FindControl("rbOpenReleases");
                 rbOpenReleases.Attributes.Add("Value", String.Join(",", openReleaseIds));
 
 
                 //Assign javascript events - this.ClientId is added to make the js method unique to the calling control
-                rcbReleases.OnClientDropDownClosed = "OnClientDropDownClosed" + this.ClientID;
-                rcbReleases.OnClientDropDownOpened = "OnClientDropDownOpened" + this.ClientID;
-                rcbReleases.OnClientLoad = "OnClientLoad" + this.ClientID;
-                rbAllReleases.OnClientClicked = "ResetCheckBoxes" + this.ClientID;
-                rbOpenReleases.OnClientClicked = "ResetCheckBoxes" + this.ClientID;
+                rcbReleases.OnClientDropDownClosed = "OnClientDropDownClosed" + ClientID;
+                rcbReleases.OnClientDropDownOpened = "OnClientDropDownOpened" + ClientID;
+                rcbReleases.OnClientLoad = "OnClientLoad" + ClientID;
+                rbAllReleases.OnClientClicked = "ResetCheckBoxes" + ClientID;
+                rbOpenReleases.OnClientClicked = "ResetCheckBoxes" + ClientID;
                 foreach (RadTreeNode item in rtvReleases.Nodes)
                 {
                     if (item.FindControl("rbCustomReleases") != null)
-                        ((RadButton)item.FindControl("rbCustomReleases")).OnClientClicked = "ResetRadioButtons" + this.ClientID;
+                        ((RadButton)item.FindControl("rbCustomReleases")).OnClientClicked = "ResetRadioButtons" + ClientID;
                 }
             }
         }
@@ -183,7 +261,7 @@ namespace Etsi.Ultimate.Controls
         public void Reset()
         {
             System.Web.UI.ScriptManager.RegisterStartupScript(this, GetType(), "Reset", "ResetToAllReleases" + ClientID + "();", true);
-            SelectedReleaseIds = new List<int>();
+            SelectedReleasesIds = new List<int>();
         }
         #endregion
     }

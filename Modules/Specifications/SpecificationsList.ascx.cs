@@ -297,9 +297,13 @@ namespace Etsi.Ultimate.Module.Specifications
                     else
                         cbTechnicalReport.Checked = true;
                 }
-                
+
                 if (!String.IsNullOrEmpty(Request.QueryString["releases"]))
-                    ReleaseCtrl.SelectedReleaseIds = searchObj.SelectedReleaseIds = Request.QueryString["releases"].Split(',').Select(n => int.Parse(n)).ToList();
+                {
+                    ReleaseCtrl.SelectedReleasesWithKeywords = Request.QueryString["releases"];
+                    searchObj.SelectedReleaseIds = ReleaseCtrl.SelectedReleasesIds;
+                }
+                    
 
                 if (!String.IsNullOrEmpty(Request.QueryString["draft"]))
                     cbDraft.Checked = searchObj.IsDraft = Convert.ToBoolean(Request.QueryString["draft"]);
@@ -343,11 +347,11 @@ namespace Etsi.Ultimate.Module.Specifications
                 if (FirstLoad && searchObj != null && searchObj.SelectedReleaseIds != null &&
                     searchObj.SelectedReleaseIds.Count > 0)
                 {
-                    ReleaseCtrl.SelectedReleaseIds = searchObj.SelectedReleaseIds;
+                    ReleaseCtrl.SelectedReleasesIds = searchObj.SelectedReleaseIds;
                 }
                 else
                 {
-                    searchObj.SelectedReleaseIds = ReleaseCtrl.SelectedReleaseIds;
+                    searchObj.SelectedReleaseIds = ReleaseCtrl.SelectedReleasesIds;
                 }
             }
 
@@ -421,7 +425,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 searchObj.SelectedCommunityIds = new List<int>();
             }
 
-            searchObj.SelectedReleaseIds = ReleaseCtrl.SelectedReleaseIds;
+            searchObj.SelectedReleaseIds = ReleaseCtrl.SelectedReleasesIds;
 
             searchObj.IsDraft = cbDraft.Checked;
             searchObj.IsUnderCC = cbUnderCC.Checked;
@@ -793,8 +797,8 @@ namespace Etsi.Ultimate.Module.Specifications
                 if (!String.IsNullOrEmpty(SubTBId))
                     urlParams.Add("SubTB", SubTBId);
 
-                if (searchObj.SelectedReleaseIds != null && searchObj.SelectedReleaseIds.Count > 0)
-                    urlParams.Add("releases", String.Join(",", searchObj.SelectedReleaseIds));
+                if (!string.IsNullOrEmpty(ReleaseCtrl.SelectedReleasesWithKeywords))
+                    urlParams.Add("releases", ReleaseCtrl.SelectedReleasesWithKeywords);
 
                 urlParams.Add("draft", searchObj.IsDraft.ToString());
                 urlParams.Add("underCC", searchObj.IsUnderCC.ToString());

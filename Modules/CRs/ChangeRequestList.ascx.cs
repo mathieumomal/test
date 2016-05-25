@@ -136,7 +136,7 @@ namespace Etsi.Ultimate.Module.CRs
             SearchObj.SpecificationNumber = txtSpecificationNumber.Text;
             SearchObj.MeetingIds = GetSelectedMeetingIds();
             SearchObj.WorkItemIds = GetSelectedWorkItemIds();
-            SearchObj.ReleaseIds = releaseSearchControl.SelectedReleaseIds;
+            SearchObj.ReleaseIds = releaseSearchControl.SelectedReleasesIds;
             SearchObj.WgStatusIds = GetSelectedWgStatusIds();
             SearchObj.TsgStatusIds = GetSelectedTsgStatusIds();
             SearchObj.VersionId = 0;//By default because we don't have any UI filters for the version for the moment
@@ -226,15 +226,18 @@ namespace Etsi.Ultimate.Module.CRs
 
                     var crSelection = dataItem["CrSelection"].Controls[0];
                     var checkbox = crSelection.FindControl("CrSelectionCheckBox") as CheckBox;
-                    if (currentCr.ShouldBeLinkToACrPack)
+                    if (checkbox != null)
                     {
-                        checkbox.Enabled = true;
-                    }
-                    else
-                    {
-                        checkbox.Enabled = false;
-                        checkbox.CssClass = "disabledTransparent";
-                        checkbox.ToolTip = Localization.CR_Cannot_Be_Send_To_CRPack;
+                        if (currentCr.ShouldBeLinkToACrPack)
+                        {
+                            checkbox.Enabled = true;
+                        }
+                        else
+                        {
+                            checkbox.Enabled = false;
+                            checkbox.CssClass = "disabledTransparent";
+                            checkbox.ToolTip = Localization.CR_Cannot_Be_Send_To_CRPack;
+                        }
                     }
                 }   
             }
@@ -250,11 +253,11 @@ namespace Etsi.Ultimate.Module.CRs
             if (FirstLoad && SearchObj != null && SearchObj.ReleaseIds != null &&
                     SearchObj.ReleaseIds.Count > 0)
             {
-                releaseSearchControl.SelectedReleaseIds = SearchObj.ReleaseIds;
+                releaseSearchControl.SelectedReleasesIds = SearchObj.ReleaseIds;
             }
-            else if (SearchObj.ReleaseIds.Count == 0)
+            else if (SearchObj != null && SearchObj.ReleaseIds != null && SearchObj.ReleaseIds.Count == 0)
             {
-                SearchObj.ReleaseIds = releaseSearchControl.SelectedReleaseIds;
+                SearchObj.ReleaseIds = releaseSearchControl.SelectedReleasesIds;
             }
 
             LoadData();
@@ -464,15 +467,8 @@ namespace Etsi.Ultimate.Module.CRs
             //[2] Releases (if release contains 0 then all releases will be selected)
             if (!String.IsNullOrEmpty(Request.QueryString["release"]))
             {
-                var releases = Request.QueryString["release"].Split(',').ToList();
-                var releaseIds = new List<int>();
-                releases.ForEach(x =>
-                {
-                    int releaseId;
-                    if (int.TryParse(x, out releaseId))
-                        releaseIds.Add(releaseId);
-                });
-                releaseSearchControl.SelectedReleaseIds = SearchObj.ReleaseIds = releaseIds;
+                releaseSearchControl.SelectedReleasesWithKeywords = Request.QueryString["release"];
+                SearchObj.ReleaseIds = releaseSearchControl.SelectedReleasesIds;
             }
 
             //[3] WG Statuses
@@ -682,8 +678,8 @@ namespace Etsi.Ultimate.Module.CRs
         private void LoadControlsFromSearchObj()
         {
             txtSpecificationNumber.Text = SearchObj.SpecificationNumber;
-            SetSelectedMeetings(racMeeting, SearchObj.MeetingIds);
-            SetSelectedWorkItems(racWorkItem, SearchObj.WorkItemIds);
+            SetSelectedMeetings(SearchObj.MeetingIds);
+            SetSelectedWorkItems(SearchObj.WorkItemIds);
             SetSelectedValue(rcbWgStatus, SearchObj.WgStatusIds);
             SetSelectedValue(rcbTsgStatus, SearchObj.TsgStatusIds);
             SetSelectedValue(SelectPageSize, SearchObj.PageSize.ToString());
@@ -709,7 +705,7 @@ namespace Etsi.Ultimate.Module.CRs
             }
         }
 
-        private void SetSelectedMeetings(RadAutoCompleteBox racb, List<int> meetingIds)
+        private void SetSelectedMeetings(List<int> meetingIds)
         {
             if (meetingIds != null && meetingIds.Count > 0)
             {
@@ -726,7 +722,7 @@ namespace Etsi.Ultimate.Module.CRs
             }
         }
 
-        private void SetSelectedWorkItems(RadAutoCompleteBox racb, List<int> workItemIds)
+        private void SetSelectedWorkItems(List<int> workItemIds)
         {
             if (workItemIds != null && workItemIds.Count > 0)
             {
@@ -759,7 +755,7 @@ namespace Etsi.Ultimate.Module.CRs
             var isMultipleTbsSelected = true;
             if (!String.IsNullOrEmpty(tbId))
             {
-                int tbIdOutput = 0;
+                int tbIdOutput;
                 int.TryParse(tbId, out tbIdOutput);
                 if (tbIdOutput != 0)
                     isMultipleTbsSelected = false;
@@ -833,7 +829,7 @@ namespace Etsi.Ultimate.Module.CRs
             {
                 {"q", "1"},
                 {"specnumber", SearchObj.SpecificationNumber},
-                {"release", String.Join(",", SearchObj.ReleaseIds)},
+                {"release", releaseSearchControl.SelectedReleasesWithKeywords},
                 {"wgstatus", String.Join(",", SearchObj.WgStatusIds)},
                 {"tsgstatus", String.Join(",", SearchObj.TsgStatusIds)},
                 {"meeting", String.Join(",", SearchObj.MeetingIds)},

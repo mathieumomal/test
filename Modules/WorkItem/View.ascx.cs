@@ -15,7 +15,6 @@ using DotNetNuke.Entities.Modules.Actions;
 using DotNetNuke.Entities.Tabs;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
-using DotNetNuke.Services.Localization;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Utils;
@@ -51,9 +50,9 @@ namespace Etsi.Ultimate.Module.WorkItem
     {
         #region Fields
 
-        protected Etsi.Ultimate.Controls.FullView ultFullView;
-        protected Etsi.Ultimate.Controls.ShareUrlControl ultShareUrl;
-        protected Etsi.Ultimate.Controls.ReleaseSearchControl releaseSearchControl;
+        protected Controls.FullView ultFullView;
+        protected Controls.ShareUrlControl ultShareUrl;
+        protected Controls.ReleaseSearchControl releaseSearchControl;
 
         private static string PathExportWorkPlan;
         private static string PathUploadWorkPlan;
@@ -64,6 +63,8 @@ namespace Etsi.Ultimate.Module.WorkItem
         private int errorNumber = 0;
         private string tokenWorkPlanAnalysed = "";
         private bool isUrlSearch;
+
+        private const string LatestUpdateText = "Latest Update: ";
 
         private const string VS_TB_ID = "WI_TB_ID";
         private const string VS_SUBTB_ID = "WI_SUBTB_ID";
@@ -170,7 +171,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                     if (workPlanFile != null)
                     {
                         lblLatestUpdated.Visible = true;
-                        lblLatestUpdated.Text = "Latest Update: " + workPlanFile.CreationDate.ToString("yyyy-MM-dd");
+                        lblLatestUpdated.Text = LatestUpdateText + workPlanFile.CreationDate.ToString("yyyy-MM-dd");
 
                         lnkFtpDownload.Visible = true;
 
@@ -218,7 +219,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 var personService = ServicesFactory.Resolve<IPersonService>();
 
                 var userRights = personService.GetRights(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()));
-                if (userRights.HasRight(Domain.Enum_UserRights.WorkItem_ImportWorkplan))
+                if (userRights.HasRight(Enum_UserRights.WorkItem_ImportWorkplan))
                 {
                     WorkPlanImport_Btn.CssClass = "btn3GPP-success";
                     WorkPlanImport_Btn.Visible = true;
@@ -352,10 +353,10 @@ namespace Etsi.Ultimate.Module.WorkItem
                 tbList.RemoveAll(x => x == -1);
             }
 
-            if (wiService.GetWorkItemsCountBySearchCriteria(releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, hidAcronym.Value.Trim().TrimEnd(';'), txtName.Text, tbList) > 200)
+            if (wiService.GetWorkItemsCountBySearchCriteria(releaseSearchControl.SelectedReleasesIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, hidAcronym.Value.Trim().TrimEnd(';'), txtName.Text, tbList) > 200)
             {
                 //
-                if (releaseSearchControl.SelectedReleaseIds.Count > 3)
+                if (releaseSearchControl.SelectedReleasesIds.Count > 3)
                 {
                     RadWindowManager1.RadAlert("Query will return many records. Please download the Excel workplan / select 3 or less Releases!", 400, 80, "WorkItem Search", String.Empty);
                 }
@@ -427,7 +428,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 var wiData =
                     wiService.GetWorkItemsBySearchCriteria(
                         GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()),
-                        releaseSearchControl.SelectedReleaseIds, Convert.ToInt32(rddGranularity.SelectedValue),
+                        releaseSearchControl.SelectedReleasesIds, Convert.ToInt32(rddGranularity.SelectedValue),
                         chkHideCompletedItems.Checked, hidAcronym.Value.Trim().TrimEnd(';'), txtName.Text, tbList);
                 rtlWorkItems.DataSource = wiData.Key;
             }
@@ -443,8 +444,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             if (isUrlSearch)
             {
                 if (!String.IsNullOrEmpty(Request.QueryString["releaseId"]))
-                    releaseSearchControl.SelectedReleaseIds =
-                        Request.QueryString["releaseId"].Split(',').Select(n => int.Parse(n)).ToList();
+                    releaseSearchControl.SelectedReleasesWithKeywords = Request.QueryString["releaseId"];
                 if (!String.IsNullOrEmpty(Request.QueryString["granularity"]))
                     rddGranularity.SelectedValue = Request.QueryString["granularity"].ToString();
                 if (!String.IsNullOrEmpty(Request.QueryString["hideCompleted"]))
@@ -465,7 +465,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             {
                 if (FirstLoad && SearchObj != null && SearchObj.SelectedReleaseIds != null && SearchObj.SelectedReleaseIds.Count > 0)
                 {
-                    releaseSearchControl.SelectedReleaseIds = SearchObj.SelectedReleaseIds;
+                    releaseSearchControl.SelectedReleasesIds = SearchObj.SelectedReleaseIds;
                 }
             }
 
@@ -516,7 +516,7 @@ namespace Etsi.Ultimate.Module.WorkItem
         private void loadWorkItemData()
         {
             //Set Search Label
-            string releaseIds = String.Join(",", releaseSearchControl.SelectedReleaseIds);
+            string releaseIds = releaseSearchControl.SelectedReleasesWithKeywords;
             int granularity = Convert.ToInt32(rddGranularity.SelectedValue);
             bool hidePercentComplete = chkHideCompletedItems.Checked;
             string wiAcronym = hidAcronym.Value.Trim().TrimEnd(';');
@@ -537,7 +537,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             if (hidePercentComplete)
                 searchString.Append(", hidden completed items");
 
-            lblSearchHeader.Text = String.Format("Search form ({0})", searchString.ToString());
+            lblSearchHeader.Text = String.Format("Search form ({0})", searchString);
 
             //Set Short URL
             ManageShareUrl(releaseIds);
@@ -567,7 +567,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             SearchObj.NameUID = txtName.Text;
             SearchObj.HideCompletedItems = chkHideCompletedItems.Checked;
             SearchObj.GranularityId = rddGranularity.SelectedValue;
-            SearchObj.SelectedReleaseIds = releaseSearchControl.SelectedReleaseIds;
+            SearchObj.SelectedReleaseIds = releaseSearchControl.SelectedReleasesIds;
 
             if (!string.IsNullOrWhiteSpace(racAcronym.Text))
             {

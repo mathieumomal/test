@@ -28,8 +28,8 @@ namespace Etsi.Ultimate.Repositories
             UoW.Context.Transposition_CreateEtsiWorkItem(outputparameter, 
                 entry.EtsiNumber, entry.StandardType, entry.EtsiDocNumber,
                 entry.Reference, entry.SerialNumber, entry.Version,
-                entry.CommunityId, entry.titllePart_1, entry.titllePart_2,
-                entry.titllePart_3, entry.RapporteurId, entry.SecretaryId, entry.WorkingTitle);
+                entry.CommunityId, entry.TitlePart1, entry.TitlePart2,
+                entry.TitlePart3, entry.RapporteurId, entry.SecretaryId, entry.WorkingTitle);
 
             return (int)outputparameter.Value;
         }

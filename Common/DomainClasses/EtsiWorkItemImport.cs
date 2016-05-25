@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Etsi.Ultimate.DomainClasses
 {
@@ -16,9 +13,9 @@ namespace Etsi.Ultimate.DomainClasses
         public string SerialNumber { get; set; }
         public string Version { get; set; }
         public int CommunityId { get; set; }
-        public string titllePart_1 { get; set; }
-        public string titllePart_2 { get; set; }
-        public string titllePart_3 { get; set; }
+        public string TitlePart1 { get; set; }
+        public string TitlePart2 { get; set; }
+        public string TitlePart3 { get; set; }
         public int RapporteurId { get; set; }
         public int SecretaryId { get; set; }
         public string WorkingTitle { get; set; }
@@ -40,11 +37,11 @@ namespace Etsi.Ultimate.DomainClasses
             Reference = (isAlreadyTransposed ? "R" : "D") + StandardType + "/TSG" + community.ShortName.Trim().ElementAt(0) + "-" + (community.TbType.Equals("TSG") ? "00" : ("0" + wgNumber));
             Version = version.Version;
             CommunityId = community.TbId;
-            titllePart_1 = "";
-            specification.SpecificationTechnologies.ToList().ForEach(e => { titllePart_1 += e.Enum_Technology.Description + "; "; });
-            titllePart_1 = titllePart_1.Trim();
-            titllePart_2 = specification.Title;
-            titllePart_3 = "(3GPP " + StandardType + " " + specification.Number + " version " + version.Version + " " + releaseName + ")";
+            TitlePart1 = "";
+            specification.SpecificationTechnologies.ToList().ForEach(e => { TitlePart1 += e.Enum_Technology.Description + "; "; });
+            TitlePart1 = TitlePart1.Trim();
+            TitlePart2 = specification.Title;
+            TitlePart3 = "(3GPP " + StandardType + " " + specification.Number + " version " + version.Version + " " + releaseName + ")";
             RapporteurId = specification.PrimeSpecificationRapporteurIds.FirstOrDefault();
             this.SecretaryId = SecretaryId;
             WorkingTitle = specification.Title;
