@@ -259,7 +259,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     }
                     else
                     {
-                        lnkCr.NavigateUrl = string.Format(ConfigVariables.RelativeUrlWiRelatedCrs, string.Empty, 0, currentSpecification.Number);
+                        lnkCr.NavigateUrl = string.Format(ConfigVariables.RelativeUrlWiRelatedCrs, string.Empty, string.Empty, currentSpecification.Number);
                     }
                 }
             }
