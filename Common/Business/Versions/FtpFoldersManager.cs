@@ -10,6 +10,7 @@ using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
 using System.IO;
+using System.Security.Principal;
 using System.Threading;
 using System.Web;
 
@@ -91,16 +92,34 @@ namespace Etsi.Ultimate.Business.Versions
         /// Create & Fill version Lastest Folder
         /// </summary>
         public void CreateAndFillVersionLatestFolder(string folderName, int personId)
+        {            
+            var thread = new Thread(CreateAndFillVersionLatestFolderThreadMethod);
+            thread.Start(new ThreadFacade { PersonId = personId, FolderName = folderName, Identity = WindowsIdentity.GetCurrent() });
+        }
+
+        private void CreateAndFillVersionLatestFolderThreadMethod(object threadFacade)
         {
+            var tf = threadFacade as ThreadFacade;
+            WindowsIdentity identity = tf.Identity;
+            WindowsImpersonationContext impersonateContext = null;
+            if (identity != null)
+                impersonateContext = identity.Impersonate();
+
+            try
+            {
                 HttpContext ctx = HttpContext.Current;
-                /* launch new thread */
-                Thread thread = new Thread(() =>
-                    {
-                        HttpContext.Current = ctx;
-                        CreateAndFillVersionLatestFolderThread(folderName, personId);
-                    }
-                );
-                thread.Start();
+                HttpContext.Current = ctx;
+                CreateAndFillVersionLatestFolderThread(tf.FolderName, tf.PersonId);
+            }
+            catch (Exception e)
+            {
+                LogManager.Error("Error occured inside CreateAndFillVersionLatestFolderThreadMethod", e);
+            }
+            finally
+            {
+                if (impersonateContext != null)
+                    impersonateContext.Undo();
+            }
         }
 
         /// <summary>
@@ -186,6 +205,12 @@ namespace Etsi.Ultimate.Business.Versions
                                 LogManager.Error(string.Format("An error occured while copy {0} to latest folder", versionPathToCopy), e);
                                 ftpFoldersManagerStatus.ErrorMessages.Add(
                                     string.Format(Localization.LatestFolder_CopyFileError, versionPathToCopy));
+                                ftpFoldersManagerStatus.ErrorMessages.Add("ERROR DURING COPY :: " + e.Message + " " + e.Data + " " + e.StackTrace + " " + e.Source);
+                                while (e.InnerException != null)
+                                {
+                                    e = e.InnerException;
+                                    ftpFoldersManagerStatus.ErrorMessages.Add(e.Message + " " + e.Data + " " + e.StackTrace + " " + e.Source);
+                                }
                             }
                         }
 
@@ -208,7 +233,14 @@ namespace Etsi.Ultimate.Business.Versions
                 catch (Exception e)
                 {
                     ftpFoldersManagerStatus.ErrorMessages.Add(Localization.GenericErrorManageFolder);
+
                     LogManager.Error("An error occured while create latest folder ", e);
+                    ftpFoldersManagerStatus.ErrorMessages.Add("ERROR DURING COPY :: " + e.Message + " " + e.Data + " " + e.StackTrace + " " + e.Source);
+                    while (e.InnerException != null)
+                    {
+                        e = e.InnerException;
+                        ftpFoldersManagerStatus.ErrorMessages.Add(e.Message + " " + e.Data + " " + e.StackTrace + " " + e.Source);
+                    }
                 }
                 finally
                 {
@@ -344,6 +376,14 @@ namespace Etsi.Ultimate.Business.Versions
         public int CurrentNumberFile { get; set; }
         public bool Finished { get; set; }
         public List<string> ErrorMessages { get; set; }
+    }
+
+    public class ThreadFacade
+    {
+        public string Guid { get; set; }
+        public WindowsIdentity Identity { get; set; }
+        public string FolderName { get; set; }
+        public int PersonId { get; set; }
     }
 
 }
