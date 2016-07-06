@@ -3,12 +3,13 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Etsi.Ultimate.Business.Versions.Interfaces;
+using Etsi.Ultimate.Utils.Core;
 using NetOffice.WordApi;
 using NetOffice.WordApi.Enums;
 
 namespace Etsi.Ultimate.Business.Versions.QualityChecks
 {
-    class DocQualityChecks : IQualityChecks
+    public class DocQualityChecks : IQualityChecks
     {
         #region Variables
 
@@ -349,7 +350,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         /// <returns>True/False</returns>
         public bool IsAutomaticNumberingPresent()
         {
-            return ( wordDocument.CountNumberedItems() > 0 );
+            return wordDocument.Paragraphs.Any(p => p.Range.ListFormat.ListType == WdListType.wdListSimpleNumbering);
         }
 
         /// <summary>

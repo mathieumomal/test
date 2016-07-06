@@ -14,7 +14,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
     /// <summary>
     /// Quality checks for .docX files
     /// </summary>
-    class DocXQualityChecks : IQualityChecks
+    public class DocXQualityChecks : IQualityChecks
     {
         #region Variables
 
@@ -456,12 +456,76 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         }
 
         /// <summary>
-        /// Check for Auto Numbering values present in the document
+        /// Check for Auto Numbering values present in the document (only Decimal, LowerLetter, LowerRoman lists)
+        /// Remark: a docx file could be unzip and contains multiple xml files. Two of them are document.xml and numbering.xml, used here. 
         /// </summary>
         /// <returns>True/False</returns>
         public bool IsAutomaticNumberingPresent()
         {
-            return _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<NumberingId>().Any(x => x.Val != "0");
+            //--- DOCUMENT.XML file
+
+            //Find all lists inside document and the related list style id : NUMBERING ID (ex: <w:numId w:val="3"/>)
+            var numberedIdsUsed = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<NumberingId>().Where(x => x.Val != "0").Select(x => x.Val.ToString()).Distinct().ToList();
+            if (numberedIdsUsed.Count == 0)
+                return false;
+
+
+            //--- NUMBERING.XML file
+
+            //Get access to the numbering.xml content
+            var numberingDefinitionsPart = _wordProcessingDocument.MainDocumentPart.GetPartsOfType<NumberingDefinitionsPart>().FirstOrDefault();
+            if (numberingDefinitionsPart == null)
+                return false;
+
+            //INFO : A list inside document.xml have a kind of id (NumberingId, ex: <w:numId w:val="3"/>) 
+            //and this id is related to another id inside numbering.xml file (AbstractNumId, ex: <w:abstractNumId w:val="0"/>).
+            //Relation is done inside a specific tag inside numbering.xml file (NumberingInstance, ex: <w:num w:numId="3">...</w:num>). 
+            //Please find an example of an numbering instance (num)
+            //<w:num w:numId="3">
+            //  <w:abstractNumId w:val="0"/>
+            //</w:num>
+            //Finally style is define inside a last tag : AbstractNum identified thanks to the AbstractNumberId.
+            //Please find an example of AbstractNum:
+            //<w:abstractNum w:abstractNumId="0">
+            //  <w:nsid w:val="52887D4E"/>
+            //  <w:multiLevelType w:val="hybridMultilevel"/>
+            //  <w:tmpl w:val="3522A828"/>
+            //  <w:lvl w:tplc="D1BCAD1A" w:ilvl="0">
+            //      <w:start w:val="1"/>
+            //      <w:numFmt w:val="bullet"/> --------------- HERE YOU CAN FIND THE TYPE OF LIST FOR LVL 1
+            //      <w:lvlText w:val="-"/>
+            //...
+            //At the end, if numFmt <=> NumberingFormat is not Decimal, LowerLetter or LowerRoman we can consider that this is not a numbered list but a bullet list 
+            //(be careful, this is most common numbered lis type, but other exist)
+
+            //Get Numbering instance (ex: <w:num w:numId="3">) related to numberedIds found before
+            var nums = numberingDefinitionsPart.RootElement.Descendants()
+                .OfType<NumberingInstance>()
+                .Where(x => numberedIdsUsed.Contains(x.NumberID.ToString()))
+                .ToList();
+
+            //Get AbstractNumId found inside Numbering Instance (ex: <w:abstractNumId w:val="0"/>)
+            var abstractNumIds = nums.Select(ani => ani.Descendants().OfType<AbstractNumId>().First().Val.ToString()).ToList();
+
+            //Check if abstract num define numbered list... return true if yes, else false
+            var abstractNums = numberingDefinitionsPart.Numbering.Descendants()
+                .OfType<AbstractNum>().Where(x => abstractNumIds.Contains(x.AbstractNumberId.ToString())).ToList();
+            foreach (var an in abstractNums)
+            {
+                var levels = an.ChildElements.OfType<Level>().ToList();
+                foreach (var level in levels)
+                {
+                    var numFmt = level.ChildElements.OfType<NumberingFormat>().FirstOrDefault();
+                    if(numFmt == null)
+                        continue;
+                    if (numFmt.Val == NumberFormatValues.Decimal || numFmt.Val == NumberFormatValues.LowerLetter ||
+                        numFmt.Val == NumberFormatValues.LowerRoman)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>

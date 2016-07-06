@@ -143,6 +143,7 @@
     <Compile Include="Business\ItuRecommendation\SpecToItuConverterTests.cs" />
     <Compile Include="Business\ItuRecommendation\SeedFileParserTest.cs" />
     <Compile Include="Business\FtpFoldersManagerTest.cs" />
+    <Compile Include="Business\QualityChecks\DocxQualityChecksTests.cs" />
     <Compile Include="Business\SpecVersionNumberValidatorTests.cs" />
     <Compile Include="Business\UtilsManagerTest.cs" />
     <Compile Include="Business\CrCategoriesManagerTest.cs" />
@@ -398,6 +399,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestData\ItuRecommendation\SeedFile.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCX_BOTH.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCX_BULLET.docx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Versions\ToUpload\22101-d30.zip">
