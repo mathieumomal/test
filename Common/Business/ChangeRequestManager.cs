@@ -649,7 +649,7 @@ namespace Etsi.Ultimate.Business
                 //Tsg Data (Insert / Update)
                 var tsgDataToInsert = uiChangeRequest.ChangeRequestTsgDatas.ToList().Where(x => dbChangeRequest.ChangeRequestTsgDatas.ToList().All(y => y.TSGTdoc != x.TSGTdoc));
                 tsgDataToInsert.ToList().ForEach(x => dbChangeRequest.ChangeRequestTsgDatas.Add(x));
-                var tsgDataToUpdate = uiChangeRequest.ChangeRequestTsgDatas.ToList().Where(x => dbChangeRequest.ChangeRequestTsgDatas.ToList().Any(y => y.TSGTdoc == x.TSGTdoc && y.Fk_TsgStatus != x.Fk_TsgStatus && y.TSGSourceOrganizations != x.TSGSourceOrganizations)).ToList();
+                var tsgDataToUpdate = uiChangeRequest.ChangeRequestTsgDatas.ToList().Where(x => dbChangeRequest.ChangeRequestTsgDatas.ToList().Any(y => y.TSGTdoc == x.TSGTdoc && (y.Fk_TsgStatus != x.Fk_TsgStatus || y.TSGSourceOrganizations != x.TSGSourceOrganizations))).ToList();
                 tsgDataToUpdate.ForEach(x => dbChangeRequest.ChangeRequestTsgDatas.ToList().Find(y => y.TSGTdoc == x.TSGTdoc).Fk_TsgStatus = x.Fk_TsgStatus);
                 tsgDataToUpdate.ForEach(x => dbChangeRequest.ChangeRequestTsgDatas.ToList().Find(y => y.TSGTdoc == x.TSGTdoc).TSGSourceOrganizations = x.TSGSourceOrganizations);
             }

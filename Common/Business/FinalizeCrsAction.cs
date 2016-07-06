@@ -6,6 +6,7 @@ using Etsi.Ultimate.Business.Versions;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Business
 {
@@ -32,10 +33,13 @@ namespace Etsi.Ultimate.Business
             // Retrieve Crs by TdocUids
             var crRepo = RepositoryFactory.Resolve<IChangeRequestRepository>();
             crRepo.UoW = UoW;
-            var candidateChangeRequests = crRepo.GetChangeRequestListByContributionUidList(
-                tdocUids).ToList()
+
+            var crs = crRepo.GetChangeRequestListByContributionUidList(
+                tdocUids).ToList();
+
+            var candidateChangeRequests = crs
                 .Where(cr => cr.ChangeRequestTsgDatas.Any(x => x.Fk_TsgStatus == crApprovedStatus.Pk_EnumChangeRequestStatus)
-                             && !cr.Fk_NewVersion.HasValue);
+                             && !cr.Fk_NewVersion.HasValue).ToList();
 
             var specManager = new SpecificationManager { UoW = UoW };
 
@@ -45,7 +49,7 @@ namespace Etsi.Ultimate.Business
             var releasesManager = new ReleaseManager { UoW = UoW };
             List<Release> releases = releasesManager.GetAllReleases(personId).Key;
 
-            var alreadyUploadedVersion = new List<SpecVersion>();
+            var alreadyAllocatedVersion = new List<SpecVersion>();
             foreach (ChangeRequest changeRequest in candidateChangeRequests)
             {
                 var requestReleaseId = changeRequest.Fk_Release;
@@ -98,29 +102,36 @@ namespace Etsi.Ultimate.Business
                         .ThenByDescending(v => v.EditorialVersion)
                         .FirstOrDefault();
 
-                if (version == null || !string.IsNullOrEmpty(version.Location) )
+                LogManager.Debug(string.Format("FinalizeCrs : CR: {0}", changeRequest.Pk_ChangeRequest));
+                LogManager.Debug(string.Format("CR, SPEC: {0}, RELEASE: {1}", changeRequest.Fk_Specification.GetValueOrDefault(), changeRequest.Fk_Release.GetValueOrDefault()));
+                LogManager.Debug(string.Format("Last related version found is {0}", (version == null ? "VERSION NOT FOUND" : version.Pk_VersionId.ToString())));
+                LogManager.Debug(string.Format("Location is {0}", (version == null ? "VERSION NOT FOUND" : version.Location)));
+                if (version == null || !string.IsNullOrEmpty(version.Location))
                 {
+                    LogManager.Debug("NEW VERSION WILL BE ALLOCATED");
                     int majorVersion = release.Version3g.GetValueOrDefault();
                     int technicalVersion = (version == null) ? 0 : version.TechnicalVersion.GetValueOrDefault() + 1;
 
                     // Because of EF 6 leakage, if we already allocated the object on a previous CR, it will not find
                     // the version, so let's try to get it still.
                     version =
-                        alreadyUploadedVersion.FirstOrDefault(
+                        alreadyAllocatedVersion.FirstOrDefault(
                             v => v.Fk_SpecificationId == specification.Pk_SpecificationId
                                  && v.Fk_ReleaseId == requestReleaseId);
-                    
+
+                    LogManager.Debug(string.Format("Version already allocated: Spec: {0}, Release: {1}", (version == null ? "VERSION NOT FOUND" : version.Fk_SpecificationId.ToString()), (version == null ? "VERSION NOT FOUND" : version.Fk_ReleaseId.ToString())));
                     if (version == null)
                     {
                         version = AllocateNewVersion(personId, majorVersion, technicalVersion,
                             changeRequest);
+                        LogManager.Debug(string.Format("NEW Version allocated: Spec: {0}, Release: {1}, major: {2}, minor: {3}", (version == null ? "VERSION NOT FOUND" : version.Fk_SpecificationId.ToString()), (version == null ? "VERSION NOT FOUND" : version.Fk_ReleaseId.ToString()), majorVersion, technicalVersion));
+                        alreadyAllocatedVersion.Add(version);
                     }
                     changeRequest.NewVersion = version;
-                    if (!alreadyUploadedVersion.Contains(version))
-                        alreadyUploadedVersion.Add(version);
                 }
                 else
                 {
+                    LogManager.Debug(string.Format("ALREADY EXISTING VERSION WILL BE USED, ID: {0}", version.Pk_VersionId));
                     changeRequest.Fk_NewVersion = version.Pk_VersionId;
                 }
             }
