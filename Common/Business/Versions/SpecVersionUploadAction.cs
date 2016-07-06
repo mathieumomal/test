@@ -198,7 +198,7 @@ namespace Etsi.Ultimate.Business.Versions
         /// <returns></returns>
         public ServiceResponse<string> UploadVersion(int personId, string token)
         {
-            LogManager.Debug("Upload Version start");
+            LogManager.Debug("Upload Version start ---");
             var svcResponse = new ServiceResponse<string>();
             try
             {
@@ -210,24 +210,14 @@ namespace Etsi.Ultimate.Business.Versions
                 CheckPersonRightToUploadVersion(versionInfos.Version, personId);
 
                 TransferToFtp(versionInfos.Version, versionInfos.TmpUploadedFilePath);
-                var temp = versionInfos == null ? "versioninfo is null" : "versioninfo is not null";
-
-                LogManager.Debug("Upload version parameters. VersionInfos status :" + temp);
 
                 UpdateDatabase(versionInfos.Version, versionInfos.ValidationReport, personId);
+                LogManager.Debug("Upload Version end ---");
             }
             catch (Exception e)
             {
-                LogManager.Error("An error occured while uploading version" + e.Message);
-                LogManager.Error(e.StackTrace);
-                while (e.InnerException != null)
-                {
-                    LogManager.Error("InnerException: " + e.InnerException.Message + "\n" + e.InnerException.StackTrace);
-                    e = e.InnerException;
-                }
+                LogManager.Error("An error occured while uploading version: ", e);
                 svcResponse.Report.LogError("An error occured while uploading: " + e.Message);
-
-               
             }
             return svcResponse;
         }
@@ -590,19 +580,14 @@ namespace Etsi.Ultimate.Business.Versions
                 var transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
                 transposeMgr.UoW = UoW;
 
-                LogManager.Debug("Get UoW ");
-
                 var specVersions = repo.GetVersionsForSpecRelease(version.Fk_SpecificationId ?? 0, version.Fk_ReleaseId ?? 0);
                 var spec = version.Specification;
                 var existingVersion = specVersions.FirstOrDefault(x => (x.MajorVersion == version.MajorVersion) &&
                                                                        (x.TechnicalVersion == version.TechnicalVersion) &&
                                                                        (x.EditorialVersion == version.EditorialVersion));
 
-                LogManager.Debug("Get existing version info");
                 if (validationReport != null && validationReport.WarningList.Count > 0)
                 {
-                    LogManager.Debug("If validationReport not null and  warning");
-
                     var remarkText = "This version was uploaded with the following quality checks failures: " + string.Join(";", validationReport.WarningList);
                     if (remarkText.Length > 250)
                         remarkText = remarkText.Substring(0, 247) + "...";
@@ -621,7 +606,6 @@ namespace Etsi.Ultimate.Business.Versions
                     var commentRemark = version.Remarks.FirstOrDefault();
                     if (commentRemark != null)
                         commentRemark.CreationDate = utcNow.AddMilliseconds(5d);
-                    LogManager.Debug("Add remarks ");
                     version.Remarks.Clear();
 
                     // Only add the warning if version is UCC.
@@ -633,13 +617,9 @@ namespace Etsi.Ultimate.Business.Versions
                         version.Remarks.Add(commentRemark);
                 }
 
-                LogManager.Debug("Initialize version information");
-
                 version.DocumentUploaded = DateTime.UtcNow;
                 version.ProvidedBy = personId;
 
-                version.Specification = null;
-                version.Release = null;
                 if (existingVersion == null)
                 {
                     //Transposition of the existing version
@@ -654,7 +634,6 @@ namespace Etsi.Ultimate.Business.Versions
                     existingVersion.DocumentUploaded = version.DocumentUploaded;
                     version.Remarks.ToList().ForEach(r => existingVersion.Remarks.Add(r));
                     //Transposition of the existing version
-                    LogManager.Debug("Transposition ");
                     transposeMgr.Transpose(spec, existingVersion);
                 }
 
@@ -662,40 +641,26 @@ namespace Etsi.Ultimate.Business.Versions
                 if (version.MajorVersion > 2
                     && (!version.Specification.IsUnderChangeControl.HasValue || !version.Specification.IsUnderChangeControl.Value))
                 {
+                    LogManager.Debug("Related spec of version transfored as UCC because major version greater than 2");
                     var specChangeToUccAction = new SpecificationChangeToUnderChangeControlAction { UoW = UoW };
-                    LogManager.Debug("ChangeSpecificationsStatusToUnderChangeControl ");
                     var responseUcc = specChangeToUccAction.ChangeSpecificationsStatusToUnderChangeControl(personId, new List<int> { version.Fk_SpecificationId ?? 0 });
 
-                    var temp = responseUcc == null ? "versioninfo is null" : "versioninfo is not null";
-
-                    LogManager.Debug("responseUcc:" + temp);
                     if (!responseUcc.Result && responseUcc.Report.ErrorList.Count > 0)
                     {
-                        var temp2 = validationReport == null ? "versioninfo is null" : "versioninfo is not null";
-
-                        LogManager.Debug("validationReport:" + temp2);
-
                         validationReport.ErrorList.AddRange(responseUcc.Report.ErrorList.ToArray());
+                        LogManager.Error("Error occured when system trying to ChangeSpecificationsStatusToUnderChangeControl: " + string.Join(", ",responseUcc.Report.ErrorList));
                     }
                 }
 
-                LogManager.Debug("before send mail");
                 if (validationReport != null && validationReport.GetNumberOfWarnings() > 0)
                 {
-                    LogManager.Debug("Send mmail to author");
                     MailVersionAuthor(spec, version, validationReport, personId);
                 }
-                LogManager.Debug("end function");
             }
             catch (Exception e)
             {
-                LogManager.Error("An error occured while updating database during uploading version" + e.Message);
-                LogManager.Error(e.StackTrace);
-                while (e.InnerException != null)
-                {
-                    LogManager.Error("InnerException: " + e.InnerException.Message + "\n" + e.InnerException.StackTrace);
-                    e = e.InnerException;
-                }
+                validationReport.ErrorList.Add("A error occured while updating data during version upload");
+                LogManager.Error("An error occured while updating database during uploading version", e);
             }
         }
 

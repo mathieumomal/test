@@ -205,12 +205,6 @@ namespace Etsi.Ultimate.Business.Versions
                                 LogManager.Error(string.Format("An error occured while copy {0} to latest folder", versionPathToCopy), e);
                                 ftpFoldersManagerStatus.ErrorMessages.Add(
                                     string.Format(Localization.LatestFolder_CopyFileError, versionPathToCopy));
-                                ftpFoldersManagerStatus.ErrorMessages.Add("ERROR DURING COPY :: " + e.Message + " " + e.Data + " " + e.StackTrace + " " + e.Source);
-                                while (e.InnerException != null)
-                                {
-                                    e = e.InnerException;
-                                    ftpFoldersManagerStatus.ErrorMessages.Add(e.Message + " " + e.Data + " " + e.StackTrace + " " + e.Source);
-                                }
                             }
                         }
 
@@ -232,15 +226,8 @@ namespace Etsi.Ultimate.Business.Versions
                 }
                 catch (Exception e)
                 {
-                    ftpFoldersManagerStatus.ErrorMessages.Add(Localization.GenericErrorManageFolder);
-
                     LogManager.Error("An error occured while create latest folder ", e);
-                    ftpFoldersManagerStatus.ErrorMessages.Add("ERROR DURING COPY :: " + e.Message + " " + e.Data + " " + e.StackTrace + " " + e.Source);
-                    while (e.InnerException != null)
-                    {
-                        e = e.InnerException;
-                        ftpFoldersManagerStatus.ErrorMessages.Add(e.Message + " " + e.Data + " " + e.StackTrace + " " + e.Source);
-                    }
+                    ftpFoldersManagerStatus.ErrorMessages.Add(Localization.GenericErrorManageFolder);
                 }
                 finally
                 {

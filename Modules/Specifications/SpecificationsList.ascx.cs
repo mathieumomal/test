@@ -259,7 +259,7 @@ namespace Etsi.Ultimate.Module.Specifications
                     }
                     else
                     {
-                        lnkCr.NavigateUrl = string.Format(ConfigVariables.RelativeUrlWiRelatedCrs, string.Empty, string.Empty, currentSpecification.Number);
+                        lnkCr.NavigateUrl = string.Format(ConfigVariables.RelativeUrlSpecRelatedCrs, currentSpecification.Number);
                     }
                 }
             }
@@ -904,8 +904,7 @@ namespace Etsi.Ultimate.Module.Specifications
                         {
                             /* copy is finish with errors */
                             FtpStatusLabel.Text = "Error(s) occured while create latest folder :<br />";
-                            FtpStatusLabel.Text += ftpFoldersManagerStatus.ErrorMessages.FirstOrDefault();
-                            FtpStatusLabel.ToolTip += string.Join("\n", ftpFoldersManagerStatus.ErrorMessages);
+                            FtpStatusLabel.Text += string.Join("<br />", ftpFoldersManagerStatus.ErrorMessages);
                             FtpStatusLabel.CssClass = "block messageBox error";
                             progressBarContent.Text = string.Empty;
                             specVersionService.ClearFtpFoldersManagerStatus();

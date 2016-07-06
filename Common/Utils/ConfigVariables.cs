@@ -313,6 +313,16 @@ namespace Etsi.Ultimate.Utils
             }
         }
 
+        public static string RelativeUrlSpecRelatedCrs
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["RelativeUrlSpecRelatedCrs"] != null)
+                    return ConfigurationManager.AppSettings["RelativeUrlSpecRelatedCrs"];
+                return "";
+            }
+        }
+
         /// <summary>
         /// Gets the relative URL version related CRS.
         /// </summary>

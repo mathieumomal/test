@@ -93,7 +93,8 @@
     <add key="DownloadparticipantsListLink" value="http://localdev.me/desktopmodules/Meetings/DownloadParticipantsList.aspx?eventId={0}" />
     <!-- Relatives URLs -->
     <add key="RelativeUrlWiRelatedSpecs" value="/Specifications.aspx?q=1&amp;WiUid={0}"/>
-    <add key="RelativeUrlWiRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;workitem={0}&amp;release={1}&amp;specnumber={2}"/>
+    <add key="RelativeUrlWiRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;workitem={0}"/>
+	<add key="RelativeUrlSpecRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;specnumber={0}"/>
     <add key="RelativeUrlVersionRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;versionId={0}&amp;release={1}"/>
     <add key="Specification_WithdrawMeetingSelectPopUp_RelativeLink" value="WithdrawMeetingSelectPopUp.aspx?SpecId={0}&amp;RelId={1}" />
     <add key="Specification_UploadVersion_RelativeLink" value="/desktopmodules/Versions/UploadVersion.aspx?releaseId={0}&amp;specId={1}&amp;action={2}" />

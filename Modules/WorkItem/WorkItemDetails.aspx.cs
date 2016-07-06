@@ -269,7 +269,7 @@ namespace Etsi.Ultimate.Module.WorkItem
 
             //Link to related CRs
             lnkRelatedChanges.Target = "_blank";
-            lnkRelatedChanges.NavigateUrl = string.Format(ConfigVariables.RelativeUrlWiRelatedCrs, workitem.Pk_WorkItemUid, 0, string.Empty);
+            lnkRelatedChanges.NavigateUrl = string.Format(ConfigVariables.RelativeUrlWiRelatedCrs, workitem.Pk_WorkItemUid);
 
             // Link to TDoc            
             if(!String.IsNullOrEmpty(workitem.Wid))

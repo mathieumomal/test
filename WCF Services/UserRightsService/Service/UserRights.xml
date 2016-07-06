@@ -171,6 +171,8 @@
         <Right value="Contribution_Change_Status" />
         
         <Right value="Cr_Add_Crs_To_CrPack"/>
+		
+		    <Right value="Release_Test_Page_Access"/>
       </UserRole>
 
       <!-- Administrators are members of the ETSI IT service who should be able to do everything -->
@@ -234,6 +236,8 @@
         <Right value="Contribution_Change_Status" />
 
         <Right value="Cr_Add_Crs_To_CrPack"/>
+		
+		    <Right value="Release_Test_Page_Access"/>
       </UserRole>
     </UserRoles>
   </Portal>

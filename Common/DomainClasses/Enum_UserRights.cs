@@ -55,6 +55,8 @@
         Cr_Add_Crs_To_CrPack,
 
         Contribution_Change_Type,
-        Contribution_Change_Type_Limited
+        Contribution_Change_Type_Limited,
+
+        Release_Test_Page_Access
     }
 }

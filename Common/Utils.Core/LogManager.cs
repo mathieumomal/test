@@ -12,9 +12,11 @@ namespace Etsi.Ultimate.Utils.Core
     {
         #region Properties
 
-        private static string CONFIG_FILE_PATH = String.Empty;
-        private static string LOGGER_NAME = String.Empty;
+        private static string _configFilePath = string.Empty;
+        private static string _loggerName = string.Empty;
         private static ILog _logger;
+        private static string LoggerConfigFilename = "Ultimate.log4net.config";
+        private static string LoggerDefaultInstanceName = "UltimateLogger";
 
         /// <summary>
         /// ILogger
@@ -38,26 +40,25 @@ namespace Etsi.Ultimate.Utils.Core
         /// </summary>
         private static void ConfigureLogger()
         {
-            var rootPath = "";
-            if (String.IsNullOrEmpty(CONFIG_FILE_PATH))
+            string rootPath;
+            if (string.IsNullOrEmpty(_configFilePath))
             {
-                if (String.IsNullOrEmpty(ServerTopology.GetServerRootPath()))
+                if (string.IsNullOrEmpty(ServerTopology.GetServerRootPath()))
                 {
-                    rootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                        "Ultimate.log4net.config");
+                    rootPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, LoggerConfigFilename);
                 }
                 else
                 {
-                    rootPath = ServerTopology.GetServerRootPath() + "./" + "Ultimate.log4net.config";
+                    rootPath = Path.Combine(ServerTopology.GetServerRootPath(), LoggerConfigFilename);
                 }
             }
             else
             {
-                rootPath = CONFIG_FILE_PATH;
+                rootPath = _configFilePath;
             }
 
-            XmlConfigurator.ConfigureAndWatch(new System.IO.FileInfo( rootPath ));
-            _logger = LoggerSource.Instance.GetLogger(String.IsNullOrEmpty(LOGGER_NAME) ? "UltimateLogger" : LOGGER_NAME);
+            XmlConfigurator.ConfigureAndWatch(new FileInfo( rootPath ));
+            _logger = LoggerSource.Instance.GetLogger(String.IsNullOrEmpty(_loggerName) ? LoggerDefaultInstanceName : _loggerName);
         }
 
         #endregion
@@ -71,8 +72,8 @@ namespace Etsi.Ultimate.Utils.Core
         /// <param name="loggerName">Logger name</param>
         public static void SetConfiguration(string filePath, string loggerName)
         {
-            CONFIG_FILE_PATH = filePath;
-            LOGGER_NAME = loggerName;
+            _configFilePath = filePath;
+            _loggerName = loggerName;
         }
 
         #endregion

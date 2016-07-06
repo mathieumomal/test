@@ -118,6 +118,13 @@
     <Compile Include="Settings.ascx.designer.cs">
       <DependentUpon>Settings.ascx</DependentUpon>
     </Compile>
+    <Compile Include="Test.aspx.cs">
+      <DependentUpon>Test.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Test.aspx.designer.cs">
+      <DependentUpon>Test.aspx</DependentUpon>
+    </Compile>
     <Compile Include="View.ascx.cs">
       <DependentUpon>View.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -140,6 +147,7 @@
     <Content Include="ReleaseEdition.aspx" />
     <Content Include="ReleaseNotes.txt" />
     <Content Include="Settings.ascx" />
+    <Content Include="Test.aspx" />
     <Content Include="View.ascx" />
   </ItemGroup>
   <ItemGroup>
@@ -186,6 +194,10 @@
     <ProjectReference Include="..\..\Common\Services\Services.csproj">
       <Project>{4bb8a434-1ed1-4d33-ae3d-32a000d19ca5}</Project>
       <Name>Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\Utils.Core\Utils.Core.csproj">
+      <Project>{4905E5A9-AA9B-4CC4-95E1-636B37FC27BA}</Project>
+      <Name>Utils.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Common\Utils\Utils.csproj">
       <Project>{ad1f6a1c-95b2-4274-a0c5-1f8ca9d9bb55}</Project>
