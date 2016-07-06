@@ -619,11 +619,11 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
         {
             get
             {
-                yield return new object[] { new ChangeRequestsSearch() { PageSize = 2, SkipRecords = 0, SpecificationNumber = "22.101" }, 2, 6, "AC014", "1" };
-                yield return new object[] { new ChangeRequestsSearch() { PageSize = 5, SkipRecords = 10, SpecificationNumber = "22.10" }, 5, 24, "AZEE", "2" };
-                yield return new object[] { new ChangeRequestsSearch() { PageSize = 3, SkipRecords = 21, SpecificationNumber = "22.10" }, 3, 24, "3568", "16" };
-                yield return new object[] { new ChangeRequestsSearch() { PageSize = 100, SkipRecords = 0, SpecificationNumber = "22.101", ReleaseIds = new List<int>{0}}, 6, 6, "AC014", "1" };
-                yield return new object[] { new ChangeRequestsSearch() { PageSize = 100, SkipRecords = 0, SpecificationNumber = "22.101", ReleaseIds = new List<int> { 0, 2884 } }, 6, 6, "AC014", "1" };
+                yield return new object[] { new ChangeRequestsSearch { PageSize = 2, SkipRecords = 0, SpecificationNumber = "22.101" }, 2, 6, "AC014", "1" };
+                yield return new object[] { new ChangeRequestsSearch { PageSize = 5, SkipRecords = 10, SpecificationNumber = "22.10" }, 6, 24, "AZEE", "3" };
+                yield return new object[] { new ChangeRequestsSearch { PageSize = 3, SkipRecords = 21, SpecificationNumber = "22.10" }, 3, 24, "3568", "16" };
+                yield return new object[] { new ChangeRequestsSearch { PageSize = 100, SkipRecords = 0, SpecificationNumber = "22.101", ReleaseIds = new List<int>{0}}, 6, 6, "AC014", "1" };
+                yield return new object[] { new ChangeRequestsSearch { PageSize = 100, SkipRecords = 0, SpecificationNumber = "22.101", ReleaseIds = new List<int> { 0, 2884 } }, 6, 6, "AC014", "1" };
             }
         }
 

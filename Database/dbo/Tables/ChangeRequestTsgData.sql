@@ -20,6 +20,8 @@
 
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [TsgTDocUid_index]
     ON [dbo].[ChangeRequestTsgData]([TSGTdoc] ASC);
@@ -28,4 +30,10 @@ CREATE NONCLUSTERED INDEX [TsgTDocUid_index]
 GO
 CREATE NONCLUSTERED INDEX [TsgTdocIndex]
     ON [dbo].[ChangeRequestTsgData]([TSGTdoc] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [CRTsgDataIndexWithIncludedColumns]
+    ON [dbo].[ChangeRequestTsgData]([Fk_ChangeRequest] ASC)
+    INCLUDE([Pk_ChangeRequestTsgData], [TSGTdoc], [TSGTarget], [TSGMeeting], [TSGSourceOrganizations], [Fk_TsgStatus]);
 

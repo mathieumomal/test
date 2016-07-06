@@ -295,7 +295,7 @@ namespace Etsi.Ultimate.Tests.Repositories
 
         #endregion
 
-        #region Get CR for MM
+        #region Get CR(s) for MM
 
         [Test]
         public void GetLightChangeRequestForMinuteMan()
@@ -309,6 +309,85 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.IsNotNull(result.ChangeRequestTsgDatas);
         }
 
+        [Test]
+        public void GetLightChangeRequestsForMinuteMan()
+        {
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetLightChangeRequestsForMinuteMan(new List<string>{"ABC"});
+
+            Assert.IsNotNull(result);
+            Assert.IsNotNull(result.First().CurrentVersion);
+            Assert.IsNotNull(result.First().NewVersion);
+            Assert.IsNotNull(result.First().ChangeRequestTsgDatas);
+        }
+
+        #endregion
+
+        #region Get WgTdoc number of parent CRs
+        [Test]
+        public void GetCrWgTdocNumberOfParent_SearchForNothing()
+        {
+            var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
+            crRepository.UoW = UoW;
+            var crKeys = new List<CrKeyFacade>();
+
+            var result = crRepository.GetCrWgTdocNumberOfParent(crKeys);
+
+            Assert.AreEqual(0, result.Count);
+        }
+
+        [Test]
+        public void GetCrWgTdocNumberOfParent_SearchForOneCr()
+        {
+            var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
+            crRepository.UoW = UoW;
+            var crKeys = new List<CrKeyFacade> { new CrKeyFacade { CrNumber = "0001", SpecNumber = "22.102" } };
+
+            var result = crRepository.GetCrWgTdocNumberOfParent(crKeys);
+
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual("MNO", result.First().Value);
+        }
+
+        [Test]
+        public void GetCrWgTdocNumberOfParent_SearchForOneCrWhichUnexist()
+        {
+            var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
+            crRepository.UoW = UoW;
+            var crKeys = new List<CrKeyFacade> { new CrKeyFacade { CrNumber = "0001", SpecNumber = "22.103" } };
+
+            var result = crRepository.GetCrWgTdocNumberOfParent(crKeys);
+
+            Assert.AreEqual(0, result.Count);
+        }
+        #endregion
+
+        #region Get CRs inside CRPack for MM
+        [Test]
+        public void GetLightChangeRequestsInsideCrPackForMinuteMan()
+        {
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetLightChangeRequestsInsideCrPackForMinuteMan("Change request description6");
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(3, result.Count);
+            Assert.IsNotNull(result.First().Specification.Number);
+            Assert.AreEqual("22.101", result.First().Specification.Number);
+            Assert.IsNotNull(result.First().ChangeRequestTsgDatas);
+        }
+
+        [Test]
+        public void GetLightChangeRequestsInsideCrPacksForMinuteMan()
+        {
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetLightChangeRequestsInsideCrPacksForMinuteMan(new List<string> { "Change request description6" });
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(3, result.Count);
+            Assert.IsNotNull(result.First().Specification.Number);
+            Assert.AreEqual("22.101", result.First().Specification.Number);
+            Assert.IsNotNull(result.First().ChangeRequestTsgDatas);
+        }
         #endregion
     }
 }

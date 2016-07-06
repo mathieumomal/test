@@ -9,3 +9,11 @@
 
 
 
+
+
+
+GO
+CREATE NONCLUSTERED INDEX [CrWorkitemIndexWithIncludedColumns]
+    ON [dbo].[CR_WorkItems]([Fk_CRId] ASC)
+    INCLUDE([Pk_CRWorkItems], [Fk_WIId]);
+

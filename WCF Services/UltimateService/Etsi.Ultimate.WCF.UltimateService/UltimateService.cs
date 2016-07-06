@@ -303,6 +303,18 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         /// <summary>
+        /// Same method than GetLightChangeRequestForMinuteMan but for multiple CRs
+        /// </summary>
+        /// <param name="uids">CRs UIDs</param>
+        /// <returns>List of Change requests</returns>
+        public List<ChangeRequest> GetLightChangeRequestsForMinuteMan(List<string> uids)
+        {
+            LogManager.Debug(string.Format("[ServiceCall][GetLightChangeRequestsForMinuteMan] uid={0}",string.Join(", ",uids)));
+            var svcHelper = new ServiceHelper();
+            return svcHelper.GetLightChangeRequestsForMinuteMan(uids);
+        }
+
+        /// <summary>
         /// Default implementation. Asks the service to return all the possible statuses for a CR
         /// </summary>
         /// <returns></returns>
@@ -419,6 +431,20 @@ namespace Etsi.Ultimate.WCF.Service
             return serviceHelper.RemoveCrsFromCrPack(crPack, crIds);            
         }
 
+        /// <summary>
+        /// Find WgTdoc number of Crs which have been revised 
+        /// Parent with revision 0 : WgTdoc = CP-1590204 -> have a WgTdoc number 
+        /// ..
+        /// Child with revision x : WgTdoc = ??? -> don't have WgTdoc number, we will find it thanks to its parent 
+        /// </summary>
+        /// <param name="crKeys">CrKeys with Specification number and CR number</param>
+        /// <returns>List of CRKeys and related WgTdoc number</returns>
+        public List<KeyValuePair<CrKeyFacade, string>> GetCrWgTdocNumberOfParent(List<CrKeyFacade> crKeys)
+        {
+            LogManager.Debug("[ServiceCall][GetCrWgTdocNumberOfParent]");
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetCrWgTdocNumberOfParent(crKeys); 
+        }
         #endregion
 
         #region CR Packs services
@@ -435,6 +461,18 @@ namespace Etsi.Ultimate.WCF.Service
             LogManager.Debug("[ServiceCall][GetLightChangeRequestsInsideCrPackForMinuteMan] cr pack uid=" + uid);
             var svcHelper = new ServiceHelper();
             return svcHelper.GetLightChangeRequestsInsideCrPackForMinuteMan(uid);
+        }
+
+        /// <summary>
+        /// Same method than for GetLightChangeRequestsInsideCrPackForMinuteMan but for multiple CR-Packs
+        /// </summary>
+        /// <param name="uids">List of CR-Pack uids</param>
+        /// <returns>List of CRs inside CR-Packs</returns>
+        public List<ChangeRequest> GetLightChangeRequestsInsideCrPacksForMinuteMan(List<string> uids)
+        {
+            LogManager.Debug(string.Format("[ServiceCall][GetLightChangeRequestsInsideCrPacksForMinuteMan] cr pack uids={0}",string.Join(",", uids)));
+            var svcHelper = new ServiceHelper();
+            return svcHelper.GetLightChangeRequestsInsideCrPacksForMinuteMan(uids);
         }
         #endregion
 

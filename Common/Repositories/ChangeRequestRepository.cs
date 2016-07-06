@@ -8,6 +8,9 @@ namespace Etsi.Ultimate.Repositories
 {
     /// <summary>
     /// CR Repository to interact database for CR related activities
+    /// PERFORMANCE IMPROVMENTS : to improve performance two requests are send potentially to find a CR at WG or TSG level.
+    /// Actually, if we are trying to manage LEFT join with where clause with OR statement the request and 20 time more long... 
+    /// For more information please see UpdateCrStatus method
     /// </summary>
     public class ChangeRequestRepository : IChangeRequestRepository
     {
@@ -37,7 +40,7 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <param name="includeProperties">The include properties.</param>
         /// <returns>Change request details query</returns>
-        public IQueryable<ChangeRequest> AllIncluding(params System.Linq.Expressions.Expression<System.Func<ChangeRequest, object>>[] includeProperties)
+        public IQueryable<ChangeRequest> AllIncluding(params System.Linq.Expressions.Expression<Func<ChangeRequest, object>>[] includeProperties)
         {
             IQueryable<ChangeRequest> query = UoW.Context.ChangeRequests;
             foreach (var includeProperty in includeProperties)
@@ -75,7 +78,40 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>ChangeRequest entity</returns>
         public ChangeRequest GetChangeRequestByContributionUID(string contributionUid)
         {
-            return AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus).SingleOrDefault(c => c.ChangeRequestTsgDatas.Any(x => x.TSGTdoc.Equals(contributionUid)) || c.WGTDoc.Equals(contributionUid));
+            //Search for WG CR
+            var wgCrFound = (from cr in UoW.Context.ChangeRequests
+                         where cr.WGTDoc == contributionUid
+                         select cr)
+                .Include(x => x.ChangeRequestTsgDatas)
+                .Include(x => x.Specification)
+                .Include(x => x.ChangeRequestTsgDatas)
+                .Include(x => x.Enum_CRCategory)
+                .Include(x => x.Release)
+                .Include(x => x.CurrentVersion)
+                .Include(x => x.NewVersion)
+                .Include(x => x.WgStatus)
+                .Include(t => t.ChangeRequestTsgDatas.Select(x => x.TsgStatus))
+                .Distinct().SingleOrDefault();
+
+            if (wgCrFound != null)
+                return wgCrFound;
+
+            //Search for TSG CR
+            var tsgCrFound = (from cr in UoW.Context.ChangeRequests
+                            join cre in UoW.Context.ChangeRequestTsgDatas on cr.Pk_ChangeRequest equals cre.Fk_ChangeRequest
+                            where cre.TSGTdoc == contributionUid
+                            select cr)
+            .Include(x => x.Specification)
+            .Include(x => x.ChangeRequestTsgDatas)
+            .Include(x => x.Enum_CRCategory)
+            .Include(x => x.Release)
+            .Include(x => x.CurrentVersion)
+            .Include(x => x.NewVersion)
+            .Include(x => x.WgStatus)
+            .Include(t => t.ChangeRequestTsgDatas.Select(x => x.TsgStatus))
+            .Distinct().SingleOrDefault();
+
+            return tsgCrFound;
         }
 
         /// <summary>
@@ -98,14 +134,45 @@ namespace Etsi.Ultimate.Repositories
                 //Define subUids list for current iteration
                 var subUids = contributionUiDs.Skip(i * LimitOfTdocsPerRequest).Take(LimitOfTdocsPerRequest).ToList();
                 //Execute request and add tdocs to the final list
-                crs.AddRange(AllIncluding(t => t.Enum_CRCategory, t => t.CR_WorkItems, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus).Where(c => c.ChangeRequestTsgDatas.Any(x => subUids.Contains(x.TSGTdoc)) || subUids.Contains(c.WGTDoc)).ToList());
+                //Search for WG CR
+                var queryWgCrFound = (from cr in UoW.Context.ChangeRequests
+                         where subUids.Contains(cr.WGTDoc)
+                         select cr)
+                    .Include(x => x.Specification)
+                    .Include(x => x.ChangeRequestTsgDatas)
+                    .Include(x => x.Enum_CRCategory)
+                    .Include(x => x.CR_WorkItems)
+                    .Include(x => x.Release)
+                    .Include(x => x.CurrentVersion)
+                    .Include(x => x.NewVersion)
+                    .Include(x => x.WgStatus)
+                    .Include(t => t.ChangeRequestTsgDatas.Select(x => x.TsgStatus));
+
+                crs.AddRange(queryWgCrFound.ToList());
+
+                //Search for TSG CR
+                var queryTsgCrFound = (from cr in UoW.Context.ChangeRequests
+                             join cre in UoW.Context.ChangeRequestTsgDatas on cr.Pk_ChangeRequest equals cre.Fk_ChangeRequest
+                    where subUids.Contains(cre.TSGTdoc)
+                    select cr)
+                    .Include(x => x.Specification)
+                    .Include(x => x.ChangeRequestTsgDatas)
+                    .Include(x => x.Enum_CRCategory)
+                    .Include(x => x.CR_WorkItems)
+                    .Include(x => x.Release)
+                    .Include(x => x.CurrentVersion)
+                    .Include(x => x.NewVersion)
+                    .Include(x => x.WgStatus)
+                    .Include(t => t.ChangeRequestTsgDatas.Select(x => x.TsgStatus));
+
+                crs.AddRange(queryTsgCrFound.ToList());
             }
 
             return crs.Distinct().ToList();
         }
 
         /// <summary>
-        /// Get light change request for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// Get light change request for MinuteMan. Actually, for performance reason, MM no need to have all related objects (except spec) because :
         /// - will not change during a meeting
         /// - and/or data will be loaded and cache by MM
         /// </summary>
@@ -113,12 +180,60 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>Change request</returns>
         public ChangeRequest GetLightChangeRequestForMinuteMan(string uid)
         {
-            return UoW.Context.ChangeRequests.Include(x => x.ChangeRequestTsgDatas)
-                .FirstOrDefault(c => c.ChangeRequestTsgDatas.Any(x => uid == x.TSGTdoc) || uid == c.WGTDoc);
+            //Search for CR at WG level
+            var crWgFound = (from cr in UoW.Context.ChangeRequests
+                             where cr.WGTDoc == uid
+                             select cr)
+                             .Include(x => x.Specification)
+                             .Include(x => x.ChangeRequestTsgDatas)
+                             .FirstOrDefault();
+
+            if (crWgFound != null)
+                return crWgFound;
+
+            //Search for CR at TSG level
+            var crTsgFound = (from cr in UoW.Context.ChangeRequests
+                              join crtsg in UoW.Context.ChangeRequestTsgDatas on cr.Pk_ChangeRequest equals crtsg.Fk_ChangeRequest
+                              where crtsg.TSGTdoc == uid
+                              select cr)
+                              .Include(x => x.Specification)
+                              .Include(x => x.ChangeRequestTsgDatas)
+                              .FirstOrDefault();
+            return crTsgFound;
         }
 
         /// <summary>
-        /// Get light change requests inside CR packs for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
+        /// Same method than GetLightChangeRequestForMinuteMan but for multiple CRs
+        /// </summary>
+        /// <param name="uids">CRs UIDs</param>
+        /// <returns>List of Change requests</returns>
+        public List<ChangeRequest> GetLightChangeRequestsForMinuteMan(List<string> uids)
+        {
+            var crs = new List<ChangeRequest>();
+            //Search for CR at WG level
+            var crWgFound = (from cr in UoW.Context.ChangeRequests
+                             where uids.Contains(cr.WGTDoc)
+                             select cr)
+                             .Include(x => x.Specification)
+                             .Include(x => x.ChangeRequestTsgDatas)
+                             .ToList();
+            crs.AddRange(crWgFound);
+
+            //Search for CR at TSG level
+            var crTsgFound = (from cr in UoW.Context.ChangeRequests
+                              join crtsg in UoW.Context.ChangeRequestTsgDatas on cr.Pk_ChangeRequest equals crtsg.Fk_ChangeRequest
+                              where uids.Contains(crtsg.TSGTdoc)
+                              select cr)
+                              .Include(x => x.Specification)
+                              .Include(x => x.ChangeRequestTsgDatas)
+                              .ToList();
+            crs.AddRange(crTsgFound);
+
+            return crs.Distinct().ToList();
+        }
+
+        /// <summary>
+        /// Get light change requests inside CR packs for MinuteMan. Actually, for performance reason, MM no need to have all related objects (except spec) because :
         /// - will not change during a meeting
         /// - and/or data will be loaded and cache by MM
         /// </summary>
@@ -126,8 +241,57 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>List of Change requests</returns>
         public List<ChangeRequest> GetLightChangeRequestsInsideCrPackForMinuteMan(string uid)
         {
-            return UoW.Context.ChangeRequests.Include(x => x.ChangeRequestTsgDatas)
+            //Get CRs with related TSG data
+            var crsFound = UoW.Context.ChangeRequests.Include(x => x.ChangeRequestTsgDatas)
                 .Where(c => c.ChangeRequestTsgDatas.Any(x => uid == x.TSGTdoc)).ToList();
+
+            //Get related specifications
+            var crsSpecIds = crsFound.Select(x => x.Fk_Specification).Distinct().ToList();
+            var specificationNumbers = UoW.Context.Specifications.Where(x => crsSpecIds.Contains(x.Pk_SpecificationId)).Select(
+                x =>
+                new
+                {
+                    x.Pk_SpecificationId,
+                    x.Number
+                }).ToList();
+            crsFound.ForEach(cr =>
+            {
+                var spec = specificationNumbers.FirstOrDefault(x => x.Pk_SpecificationId == cr.Fk_Specification);
+                cr.Specification = spec != null ? new Specification { Number = spec.Number } : new Specification();
+            });
+
+            return crsFound;
+        }
+
+        /// <summary>
+        /// Same method than GetLightChangeRequestsInsideCrPackForMinuteMan but for multiple CR-Packs
+        /// </summary>
+        /// <param name="uids">List of CR-Pack uids</param>
+        /// <returns>List of CRs inside CR-Packs</returns>
+        public List<ChangeRequest> GetLightChangeRequestsInsideCrPacksForMinuteMan(List<string> uids)
+        {
+            //Get CRs with related TSG data
+            var crsFound = (from cr in UoW.Context.ChangeRequests
+                join crtsg in UoW.Context.ChangeRequestTsgDatas on cr.Pk_ChangeRequest equals crtsg.Fk_ChangeRequest
+                where uids.Contains(crtsg.TSGTdoc)
+                select cr).Include(x => x.ChangeRequestTsgDatas).ToList();
+
+            //Get related specifications
+            var crsSpecIds = crsFound.Select(x => x.Fk_Specification).Distinct().ToList();
+            var specificationNumbers = UoW.Context.Specifications.Where(x => crsSpecIds.Contains(x.Pk_SpecificationId)).Select(
+                x =>
+                new
+                {
+                    x.Pk_SpecificationId,
+                    x.Number
+                }).ToList();
+            crsFound.ForEach(cr =>
+            {
+                var spec = specificationNumbers.FirstOrDefault(x => x.Pk_SpecificationId == cr.Fk_Specification);
+                cr.Specification = spec != null ? new Specification { Number = spec.Number } : new Specification();
+            });
+
+            return crsFound;
         }
 
         /// <summary>
@@ -175,7 +339,7 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="id">The identifier.</param>
         public void Delete(int id)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -183,7 +347,7 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         public void Dispose()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -287,6 +451,36 @@ namespace Etsi.Ultimate.Repositories
         }
 
         /// <summary>
+        /// Find WgTdoc number of Crs which have been revised 
+        /// Parent with revision 0 : WgTdoc = CP-1590204 -> have a WgTdoc number 
+        /// ..
+        /// Child with revision x : WgTdoc = ??? -> don't have WgTdoc number, we will find it thanks to its parent 
+        /// </summary>
+        /// <param name="crKeys">CrKeys with Specification number and CR number</param>
+        /// <returns>List of CRKeys and related WgTdoc number</returns>
+        public List<KeyValuePair<CrKeyFacade, string>> GetCrWgTdocNumberOfParent(List<CrKeyFacade> crKeys)
+        {
+            var specNumbers = crKeys.Select(x => x.SpecNumber).ToList();
+            var crNumbers = crKeys.Select(x => x.CrNumber).ToList();
+
+            var query = (from cr in UoW.Context.ChangeRequests
+                join spec in UoW.Context.Specifications on cr.Fk_Specification equals spec.Pk_SpecificationId
+                where (cr.Revision == 0 || cr.Revision == null) && specNumbers.Contains(spec.Number) && crNumbers.Contains(cr.CRNumber)
+                select cr);
+
+            var parentCrsFound = query.ToList();
+
+            return (from crKey in crKeys 
+                    let parentCrFound = parentCrsFound.FirstOrDefault(x => x.CRNumber == crKey.CrNumber && x.Specification.Number == crKey.SpecNumber) 
+                    where parentCrFound != null 
+                    select 
+                        new KeyValuePair<CrKeyFacade, string>(
+                            new CrKeyFacade {CrNumber = crKey.CrNumber, SpecNumber = crKey.SpecNumber, Revision = 0}, 
+                            parentCrFound.WGTDoc))
+                    .ToList();
+        }
+
+        /// <summary>
         /// See interface
         /// </summary>
         /// <param name="crKey">The cr key.</param>
@@ -311,18 +505,45 @@ namespace Etsi.Ultimate.Repositories
             return query.ToList();
         }
 
-
+        /// <summary>
+        /// Update CR status. 
+        /// Actually, this request seems strange. 
+        /// The fact is that a CR (NOT a CR link to a CR-Pack) could be at WG level or TSG level.
+        /// - CR at WG level : the uid is unique inside the ChangeRequest table
+        /// - CR at TSG level : the uid is unique inside the ChangeRequestTsgData table
+        /// Rule 1 : a CR UID cannot be found at WG level and at TSG level in the same time. 
+        /// Rule 2 : a CR UID cannot be present multiple time on ChangeRequest table (same for ChangeRequestTsgData table)
+        /// 
+        /// So, the request has been transform to improve performance by searching first of all inside ChangeRequest table 
+        /// and if the UID is not found as a WGTdoc number, the system will search inside ChangeRequestTsgData table (as a TSGTdoc number)
+        /// </summary>
+        /// <param name="uid"></param>
+        /// <param name="pkStatus"></param>
+        /// <returns></returns>
         public bool UpdateCrStatus(string uid, int? pkStatus)
         {
-            var cr =
-                UoW.Context.ChangeRequests.Include(x => x.ChangeRequestTsgDatas)
-                    .FirstOrDefault(c => c.ChangeRequestTsgDatas.Any(x => uid == x.TSGTdoc) || uid == c.WGTDoc);
-            if (cr == null)
-                return false;
-            if (cr.WGTDoc == uid)
-                cr.Fk_WGStatus = pkStatus;
+            //Search for CR at WG level
+            var crWgFound = (from cr in UoW.Context.ChangeRequests
+                where cr.WGTDoc == uid
+                select cr).FirstOrDefault();
+
+            if (crWgFound != null)
+            {
+                crWgFound.Fk_WGStatus = pkStatus;//Change status of WG CR
+            }
             else
-                cr.ChangeRequestTsgDatas.First().Fk_TsgStatus = pkStatus;
+            {
+                //Search for CR at TSG level
+                var crTsgFound = (from cr in UoW.Context.ChangeRequests
+                    join crtsg in UoW.Context.ChangeRequestTsgDatas on cr.Pk_ChangeRequest equals crtsg.Fk_ChangeRequest
+                    where crtsg.TSGTdoc == uid
+                    select cr).FirstOrDefault();
+
+                if (crTsgFound == null)//If CR not found at WG and TSG level return false
+                    return false;
+
+                crTsgFound.ChangeRequestTsgDatas.First().Fk_TsgStatus = pkStatus;//Change status of TSG CR
+            }
             return true;
         }
 
@@ -392,6 +613,13 @@ namespace Etsi.Ultimate.Repositories
         ChangeRequest GetLightChangeRequestForMinuteMan(string uid);
 
         /// <summary>
+        /// Same method than GetLightChangeRequestForMinuteMan but for multiple CRs
+        /// </summary>
+        /// <param name="uids">CRs UIDs</param>
+        /// <returns>List of Change requests</returns>
+        List<ChangeRequest> GetLightChangeRequestsForMinuteMan(List<string> uids);
+
+        /// <summary>
         /// Get light change requests inside CR packs for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
         /// - will not change during a meeting
         /// - and/or data will be loaded and cache by MM
@@ -399,6 +627,13 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="uid">CR pack UID</param>
         /// <returns>List of Change requests</returns>
         List<ChangeRequest> GetLightChangeRequestsInsideCrPackForMinuteMan(string uid);
+
+        /// <summary>
+        /// Same method than GetLightChangeRequestsInsideCrPackForMinuteMan but for multiple CR-Packs
+        /// </summary>
+        /// <param name="uids">List of CR-Pack uids</param>
+        /// <returns>List of CRs inside CR-Packs</returns>
+        List<ChangeRequest> GetLightChangeRequestsInsideCrPacksForMinuteMan(List<string> uids);
 
         /// <summary>
         /// Find max CR revision by specId and CR number
@@ -480,5 +715,15 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="crsOfCrPack"></param>
         /// <returns></returns>
         bool UpdateCrsStatusOfCrPack(List<CrOfCrPackFacade> crsOfCrPack);
+
+        /// <summary>
+        /// Find WgTdoc number of Crs which have been revised 
+        /// Parent with revision 0 : WgTdoc = CP-1590204 -> have a WgTdoc number 
+        /// ..
+        /// Child with revision x : WgTdoc = ??? -> don't have WgTdoc number, we will find it thanks to its parent 
+        /// </summary>
+        /// <param name="crKeys">CrKeys with Specification number and CR number</param>
+        /// <returns>List of CRKeys and related WgTdoc number</returns>
+        List<KeyValuePair<CrKeyFacade, string>> GetCrWgTdocNumberOfParent(List<CrKeyFacade> crKeys);
     }
 }

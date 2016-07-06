@@ -208,6 +208,14 @@ namespace Etsi.Ultimate.WCF.Interface
         ChangeRequest GetLightChangeRequestForMinuteMan(string uid);
 
         /// <summary>
+        /// Same method than GetLightChangeRequestForMinuteMan but for multiple CRs
+        /// </summary>
+        /// <param name="uids">CRs UIDs</param>
+        /// <returns>List of Change requests</returns>
+        [OperationContract]
+        List<ChangeRequest> GetLightChangeRequestsForMinuteMan(List<string> uids);
+
+        /// <summary>
         /// Return the list of all change request categories, that can be used to fill the ChangeRequest.Fk_TSGStatus and ChangeRequest.Fk_WGStatus fields
         /// </summary>
         /// <returns></returns>
@@ -278,6 +286,17 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>Success/Failure</returns>
         [OperationContract]
         ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds);
+
+        /// <summary>
+        /// Find WgTdoc number of Crs which have been revised 
+        /// Parent with revision 0 : WgTdoc = CP-1590204 -> have a WgTdoc number 
+        /// ..
+        /// Child with revision x : WgTdoc = ??? -> don't have WgTdoc number, we will find it thanks to its parent 
+        /// </summary>
+        /// <param name="crKeys">CrKeys with Specification number and CR number</param>
+        /// <returns>List of CRKeys and related WgTdoc number</returns>
+        [OperationContract]
+        List<KeyValuePair<CrKeyFacade, string>> GetCrWgTdocNumberOfParent(List<CrKeyFacade> crKeys);
         #endregion
 
         #region cr pack
@@ -290,6 +309,14 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>List of Change requests</returns>
         [OperationContract]
         List<ChangeRequest> GetLightChangeRequestsInsideCrPackForMinuteMan(string uid);
+
+        /// <summary>
+        /// Same method than for GetLightChangeRequestsInsideCrPackForMinuteMan but for multiple CR-Packs
+        /// </summary>
+        /// <param name="uids">List of CR-Pack uids</param>
+        /// <returns>List of CRs inside CR-Packs</returns>
+        [OperationContract]
+        List<ChangeRequest> GetLightChangeRequestsInsideCrPacksForMinuteMan(List<string> uids);
 
         /// <summary>
         /// Update CRs status of CR Pack

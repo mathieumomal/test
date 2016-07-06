@@ -34,7 +34,9 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateCreateChangeRequestById = "Ultimate Service Error [GetChangeRequestById]: {0}";
         private const string ConstErrorTemplateGetChangeRequestByContribUid = "Ultimate Service Error [GetChangeRequestByContributionUID]: {0}";
         private const string ConstErrorTemplateGetLightChangeRequestForMinuteMan = "Ultimate Service Error [GetLightChangeRequestForMinuteMan]: {0}";
+        private const string ConstErrorTemplateGetLightChangeRequestsForMinuteMan = "Ultimate Service Error [GetLightChangeRequestsForMinuteMan]: {0}";
         private const string ConstErrorTemplateGetLightChangeRequestsInsideCrPackForMinuteMan = "Ultimate Service Error [GetLightChangeRequestsInsideCrPackForMinuteMan]: {0}";
+        private const string ConstErrorTemplateGetLightChangeRequestsInsideCrPacksForMinuteMan = "Ultimate Service Error [GetLightChangeRequestsInsideCrPacksForMinuteMan]: {0}";
         private const string ConstErrorTemplateChangeSpecificationsStatusToUnderChangeControl = "Ultimate Service Error [ChangeSpecificationsStatusToUnderChangeControl]: {0}";
         private const string ConstErrorTemplateSetCrsAsFinal = "Ultimate Service Error [SetCrsAsFinal]: {0}";
         private const string ConstErrorIsExistCrNumberRevisionCouple = "Ultimate Service Error [IsExistCrNumberRevisionCouple]: {0}";
@@ -47,6 +49,7 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateReviseCr = "Ultimate Service Error [ReviseCr]: {0}";
         private const string ConstErrorTemplateGetCrsByKeys = "Ultimate Service Error [GetCrsByKeys]: {0}";
         private const string ConstErrorTemplateGetCrByKey = "Ultimate Service Error [GetCrByKey]: {0}";
+        private const string ConstErrorTemplateGetCrWgTdocNumberOfParent = "Ultimate Service Error [GetCrWgTdocNumberOfParent]: {0}";
         private const string ConstErrorTemplateRemoveCrsFromCrPack = "Ultimate Service Error [RemoveCrsFromCrPack]: {0}";
         private const string ConstErrorTemplateGetLatestVersionsBySpecIds = "Ultimate Service Error [GetLatestVersionsBySpecIds]: {0}";
         private const string ConstErrorTemplateUpdateCrStatus = "Ultimate Service Error [UpdateCrStatus]: {0}";
@@ -571,9 +574,33 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(string.Format(ConstErrorTemplateGetLightChangeRequestForMinuteMan, ex.Message));
+                LogManager.Error(string.Format(ConstErrorTemplateGetLightChangeRequestForMinuteMan, ex.Message), ex);
             }
             return cr;
+        }
+
+        /// <summary>
+        /// Same method than GetLightChangeRequestForMinuteMan but for multiple CRs
+        /// </summary>
+        /// <param name="uids">CRs UIDs</param>
+        /// <returns>List of Change requests</returns>
+        public List<ChangeRequest> GetLightChangeRequestsForMinuteMan(List<string> uids)
+        {
+            List<ChangeRequest> crs = new List<ChangeRequest>();
+            try
+            {
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var result = svc.GetLightChangeRequestsForMinuteMan(uids);
+                if (result.Key)
+                {
+                    result.Value.ForEach(x => crs.Add(ConvertUltimateCRToLightServiceCR(x, true)));
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(string.Format(ConstErrorTemplateGetLightChangeRequestsForMinuteMan, ex.Message), ex);
+            }
+            return crs;
         }
 
         /// <summary>
@@ -598,6 +625,30 @@ namespace Etsi.Ultimate.WCF.Service
             catch (Exception ex)
             {
                 LogManager.Error(string.Format(ConstErrorTemplateGetLightChangeRequestsInsideCrPackForMinuteMan, ex.Message));
+            }
+            return crs;
+        }
+
+        /// <summary>
+        /// Same method than for GetLightChangeRequestsInsideCrPackForMinuteMan but for multiple CR-Packs
+        /// </summary>
+        /// <param name="uids">List of CR-Pack uids</param>
+        /// <returns>List of CRs inside CR-Packs</returns>
+        public List<ChangeRequest> GetLightChangeRequestsInsideCrPacksForMinuteMan(List<string> uids)
+        {
+            var crs = new List<ChangeRequest>();
+            try
+            {
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var result = svc.GetLightChangeRequestsInsideCrPacksForMinuteMan(uids);
+                if (result.Key)
+                {
+                    result.Value.ForEach(x => crs.Add(ConvertUltimateCRToLightServiceCR(x, true)));
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(string.Format(ConstErrorTemplateGetLightChangeRequestsInsideCrPacksForMinuteMan, ex.Message));
             }
             return crs;
         }
@@ -732,6 +783,37 @@ namespace Etsi.Ultimate.WCF.Service
                 LogManager.Error(String.Format(ConstErrorTemplateGetCrByKey, ex.Message));
             }
             return changeRequest;
+        }
+
+        /// <summary>
+        /// Find WgTdoc number of Crs which have been revised 
+        /// Parent with revision 0 : WgTdoc = CP-1590204 -> have a WgTdoc number 
+        /// ..
+        /// Child with revision x : WgTdoc = ??? -> don't have WgTdoc number, we will find it thanks to its parent 
+        /// </summary>
+        /// <param name="crKeys">CrKeys with Specification number and CR number</param>
+        /// <returns>List of CRKeys and related WgTdoc number</returns>
+        internal List<KeyValuePair<CrKeyFacade, string>> GetCrWgTdocNumberOfParent(List<CrKeyFacade> crKeys)
+        {
+            var response = new List<KeyValuePair<CrKeyFacade, string>>();
+            try
+            {
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+
+                var crUltimateKeys = new List<UltimateEntities.CrKeyFacade>();
+                crKeys.ForEach(x => crUltimateKeys.Add(ConvertToUltimateCrKeyFacade(x)));
+
+                var result = svc.GetCrWgTdocNumberOfParent(crUltimateKeys);
+                if (result.Result != null && result.Report.GetNumberOfErrors() == 0)
+                    result.Result.ForEach(e => response.Add(new KeyValuePair<CrKeyFacade, string>(ConvertToWcfCrKeyFacade(e.Key),e.Value)));
+                else
+                    throw new Exception(string.Format("Error occured when system trying to GetCrWgTdocNumberOfParent: {0}", string.Join(",", result.Report.ErrorList)));
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(string.Format(ConstErrorTemplateGetCrWgTdocNumberOfParent, ex.Message));
+            }
+            return response;
         }
 
         /// <summary>
@@ -1196,7 +1278,6 @@ namespace Etsi.Ultimate.WCF.Service
                 ultimateCr.Revision = serviceCr.Revision;
                 ultimateCr.Subject = serviceCr.Subject;
                 ultimateCr.Fk_WGStatus = serviceCr.Fk_WGStatus;
-                ultimateCr.Subject = serviceCr.Subject;
                 ultimateCr.CreationDate = serviceCr.CreationDate;
                 ultimateCr.WGSourceOrganizations = serviceCr.WGSourceOrganizations;
                 ultimateCr.WGSourceForTSG = serviceCr.WGSourceForTSG;
@@ -1248,7 +1329,6 @@ namespace Etsi.Ultimate.WCF.Service
                 serviceCr.Subject = ultimateCr.Subject;
                 serviceCr.Fk_WGStatus = ultimateCr.Fk_WGStatus;
                 serviceCr.WGStatus = (ultimateCr.WgStatus == null) ? String.Empty : ultimateCr.WgStatus.Description;
-                serviceCr.Subject = ultimateCr.Subject;
                 serviceCr.CreationDate = ultimateCr.CreationDate;
                 serviceCr.WGSourceOrganizations = ultimateCr.WGSourceOrganizations;
                 serviceCr.WGSourceForTSG = ultimateCr.WGSourceForTSG;
@@ -1316,7 +1396,6 @@ namespace Etsi.Ultimate.WCF.Service
                 serviceCr.Revision = ultimateCr.Revision;
                 serviceCr.Subject = ultimateCr.Subject;
                 serviceCr.Fk_WGStatus = ultimateCr.Fk_WGStatus;
-                serviceCr.Subject = ultimateCr.Subject;
                 serviceCr.CreationDate = ultimateCr.CreationDate;
                 serviceCr.WGSourceOrganizations = ultimateCr.WGSourceOrganizations;
                 serviceCr.WGSourceForTSG = ultimateCr.WGSourceForTSG;
@@ -1332,6 +1411,10 @@ namespace Etsi.Ultimate.WCF.Service
 
                 //Referenced objects
                 serviceCr.TsgData = new List<UltimateServiceEntities.ChangeRequestTsgData>();
+                if (ultimateCr.Specification != null)
+                {
+                    serviceCr.SpecificationNumber = ultimateCr.Specification.Number;
+                }
 
                 if (ultimateCr.ChangeRequestTsgDatas != null)
                 {
@@ -1416,6 +1499,26 @@ namespace Etsi.Ultimate.WCF.Service
         private UltimateEntities.CrKeyFacade ConvertToUltimateCrKeyFacade(CrKeyFacade crKeyFacade)
         {
             var ultimateCrKeyFacade = new UltimateEntities.CrKeyFacade
+            {
+                CrNumber = crKeyFacade.CrNumber,
+                SpecId = crKeyFacade.SpecId,
+                SpecNumber = crKeyFacade.SpecNumber,
+                Revision = crKeyFacade.Revision,
+                TsgTdocNumber = crKeyFacade.TsgTdocNumber,
+                TsgMeetingId = crKeyFacade.TsgMeetingId,
+                TsgSourceOrganization = crKeyFacade.TsgSourceOrganization
+            };
+
+            return ultimateCrKeyFacade;
+        }
+
+        /// <summary>
+        /// Converts an Ultimate CrKeyFacade to WCF CrKeyFacade
+        /// </summary>
+        /// <returns></returns>
+        private CrKeyFacade ConvertToWcfCrKeyFacade(UltimateEntities.CrKeyFacade crKeyFacade)
+        {
+            var ultimateCrKeyFacade = new CrKeyFacade
             {
                 CrNumber = crKeyFacade.CrNumber,
                 SpecId = crKeyFacade.SpecId,

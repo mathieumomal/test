@@ -211,7 +211,28 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Business] Failed to GetLightChangeRequestForMinuteMan:" + ex.Message);
+                LogManager.Error("[Business] Failed to GetLightChangeRequestForMinuteMan:", ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Same method than GetLightChangeRequestForMinuteMan but for multiple CRs
+        /// </summary>
+        /// <param name="uids">CRs UIDs</param>
+        /// <returns>List of Change requests</returns>
+        public List<ChangeRequest> GetLightChangeRequestsForMinuteMan(List<string> uids)
+        {
+            try
+            {
+                var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
+                repo.UoW = UoW;
+                var result = repo.GetLightChangeRequestsForMinuteMan(uids);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error("[Business] Failed to GetLightChangeRequestsForMinuteMan:", ex);
                 return null;
             }
         }
@@ -234,7 +255,28 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Business] Failed to GetLightChangeRequestsInsideCrPackForMinuteMan:" + ex.Message);
+                LogManager.Error("[Business] Failed to GetLightChangeRequestsInsideCrPackForMinuteMan:", ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Same method than GetLightChangeRequestsInsideCrPackForMinuteMan but for multiple CR-Packs
+        /// </summary>
+        /// <param name="uids">List of CR-Pack uids</param>
+        /// <returns>List of CRs inside CR-Packs</returns>
+        public List<ChangeRequest> GetLightChangeRequestsInsideCrPacksForMinuteMan(List<string> uids)
+        {
+            try
+            {
+                var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
+                repo.UoW = UoW;
+                var result = repo.GetLightChangeRequestsInsideCrPacksForMinuteMan(uids);
+                return result;
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error("[Business] Failed to GetLightChangeRequestsInsideCrPacksForMinuteMan:", ex);
                 return null;
             }
         }
@@ -407,6 +449,21 @@ namespace Etsi.Ultimate.Business
             var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
             crRepository.UoW = UoW;
             return crRepository.GetCrByKey(crKey);
+        }
+
+        /// <summary>
+        /// Find WgTdoc number of Crs which have been revised 
+        /// Parent with revision 0 : WgTdoc = CP-1590204 -> have a WgTdoc number 
+        /// ..
+        /// Child with revision x : WgTdoc = ??? -> don't have WgTdoc number, we will find it thanks to its parent 
+        /// </summary>
+        /// <param name="crKeys">CrKeys with Specification number and CR number</param>
+        /// <returns>List of CRKeys and related WgTdoc number</returns>
+        public List<KeyValuePair<CrKeyFacade, string>> GetCrWgTdocNumberOfParent(List<CrKeyFacade> crKeys)
+        {
+            var crRepository = RepositoryFactory.Resolve<IChangeRequestRepository>();
+            crRepository.UoW = UoW;
+            return crRepository.GetCrWgTdocNumberOfParent(crKeys);
         }
 
         /// <summary>
@@ -785,6 +842,13 @@ namespace Etsi.Ultimate.Business
         ChangeRequest GetLightChangeRequestForMinuteMan(string uid);
 
         /// <summary>
+        /// Same method than GetLightChangeRequestForMinuteMan but for multiple CRs
+        /// </summary>
+        /// <param name="uids">CRs UIDs</param>
+        /// <returns>List of Change requests</returns>
+        List<ChangeRequest> GetLightChangeRequestsForMinuteMan(List<string> uids);
+
+        /// <summary>
         /// Get light change requests inside CR packs for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
         /// - will not change during a meeting
         /// - and/or data will be loaded and cache by MM
@@ -792,6 +856,13 @@ namespace Etsi.Ultimate.Business
         /// <param name="uid">CR pack UID</param>
         /// <returns>List of Change requests</returns>
         List<ChangeRequest> GetLightChangeRequestsInsideCrPackForMinuteMan(string uid);
+
+        /// <summary>
+        /// Same method than GetLightChangeRequestsInsideCrPackForMinuteMan but for multiple CR-Packs
+        /// </summary>
+        /// <param name="uids">List of CR-Pack uids</param>
+        /// <returns>List of CRs inside CR-Packs</returns>
+        List<ChangeRequest> GetLightChangeRequestsInsideCrPacksForMinuteMan(List<string> uids);
 
         /// <summary>
         /// Updates the CRs related to a CR Pack (TSG decision and TsgTdocNumber)
@@ -867,6 +938,16 @@ namespace Etsi.Ultimate.Business
         /// <param name="crPackId"></param>
         /// <returns></returns>
         ServiceResponse<bool> SendCrsToCrPack(int personId, List<int> crsIds, int crPackId);
+
+        /// <summary>
+        /// Find WgTdoc number of Crs which have been revised 
+        /// Parent with revision 0 : WgTdoc = CP-1590204 -> have a WgTdoc number 
+        /// ..
+        /// Child with revision x : WgTdoc = ??? -> don't have WgTdoc number, we will find it thanks to its parent 
+        /// </summary>
+        /// <param name="crKeys">CrKeys with Specification number and CR number</param>
+        /// <returns>List of CRKeys and related WgTdoc number</returns>
+        List<KeyValuePair<CrKeyFacade, string>> GetCrWgTdocNumberOfParent(List<CrKeyFacade> crKeys);
 
     }
 }

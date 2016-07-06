@@ -207,7 +207,9 @@
     </Build>
     <Build Include="dbo\Tables\Enum_CRImpact.sql" />
     <Build Include="dbo\Tables\ChangeRequest.sql" />
-    <Build Include="dbo\Tables\CR_WorkItems.sql" />
+    <Build Include="dbo\Tables\CR_WorkItems.sql">
+      <AnsiNulls>Off</AnsiNulls>
+    </Build>
     <Build Include="dbo\Stored Procedures\Transposition_CreateWiRemarkEntry.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
@@ -234,7 +236,9 @@
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Tables\ChangeRequestTsgData.sql" />
+    <Build Include="dbo\Tables\ChangeRequestTsgData.sql">
+      <AnsiNulls>Off</AnsiNulls>
+    </Build>
     <None Include="Scripts\Post-Deployment\Update_CR_Revisions_0_To_NULL.sql" />
     <None Include="Scripts\Post-Deployment\UpdateChangeRequestsData.sql" />
     <None Include="Scripts\Post-Deployment\UpdateReleaseMtgShortReferences.sql" />
