@@ -3,8 +3,11 @@
     [Fk_TbId]                      INT          NULL,
     [ShortName]                    VARCHAR (10) NULL,
     [WpmProjectId]                 INT          NULL,
+    [MapId_3SS]                    INT          NULL,
     CONSTRAINT [PK_Enum_CommunitiesShortName] PRIMARY KEY CLUSTERED ([Pk_EnumCommunitiesShortNames] ASC)
 );
+
+
 
 
 

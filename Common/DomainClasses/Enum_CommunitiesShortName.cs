@@ -19,6 +19,7 @@ namespace Etsi.Ultimate.DomainClasses
         public Nullable<int> Fk_TbId { get; set; }
         public string ShortName { get; set; }
         public Nullable<int> WpmProjectId { get; set; }
+        public Nullable<int> MapId_3SS { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

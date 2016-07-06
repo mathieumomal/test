@@ -63,6 +63,7 @@
           <Property Name="Fk_TbId" Type="int" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
           <Property Name="WpmProjectId" Type="int" />
+          <Property Name="MapId_3SS" Type="int" />
         </EntityType>
         <EntityType Name="Enum_CRCategory">
           <Key>
@@ -2031,6 +2032,7 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <Property Type="Int32" Name="Fk_TbId" />
           <Property Type="String" Name="ShortName" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="WpmProjectId" />
+          <Property Name="MapId_3SS" Type="Int32" />
         </EntityType>
         <EntityType Name="SpecificationResponsibleGroup">
           <Key>
@@ -2900,6 +2902,7 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <EntitySetMapping Name="Enum_CommunitiesShortName">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Enum_CommunitiesShortName">
               <MappingFragment StoreEntitySet="Enum_CommunitiesShortName">
+                <ScalarProperty Name="MapId_3SS" ColumnName="MapId_3SS" />
                 <ScalarProperty Name="WpmProjectId" ColumnName="WpmProjectId" />
                 <ScalarProperty Name="ShortName" ColumnName="ShortName" />
                 <ScalarProperty Name="Fk_TbId" ColumnName="Fk_TbId" />
