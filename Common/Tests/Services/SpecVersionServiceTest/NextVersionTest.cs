@@ -50,6 +50,26 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
             Assert.AreEqual(awaitedEditorial, response.Result.NewSpecVersion.EditorialVersion);
         }
 
+        [TestCase(EffortConstants.SPECIFICATION_DRAFT_WITH_EXISTING_DRAFTS_ID, EffortConstants.RELEASE_OPEN_ID, false, 13, 0, 0), Description("Spec is now UCC and last version was 2.1.0 -> system should compute new version number -> 13.0.0")]
+        public void GetNextVersion_GoUcc(int specId, int relId, bool forUpload, int awaitedMajor, int awaitedTechnical, int awaitedEditorial)
+        {
+            //Go UCC
+            var spec = UoW.Context.Specifications.First(
+                x => x.Pk_SpecificationId == specId);
+            spec.IsUnderChangeControl = true;
+            UoW.Save();
+
+            var response = versionSvc.GetNextVersionForSpec(1, specId, relId, forUpload);
+
+            Assert.IsNotNull(response);
+            var newVersion = response.Result;
+            Assert.IsNotNull(newVersion);
+
+            Assert.AreEqual(awaitedMajor, response.Result.NewSpecVersion.MajorVersion);
+            Assert.AreEqual(awaitedTechnical, response.Result.NewSpecVersion.TechnicalVersion);
+            Assert.AreEqual(awaitedEditorial, response.Result.NewSpecVersion.EditorialVersion);
+        }
+
         [TestCase(EffortConstants.SPECIFICATION_ACTIVE_ID, EffortConstants.RELEASE_OPEN_ID, false, 13, 2, 0)]
         public void GetNextVersion_CurrentVersionNumber(int specId, int relId, bool forUpload, int awaitedMajor, int awaitedTechnical, int awaitedEditorial)
         {

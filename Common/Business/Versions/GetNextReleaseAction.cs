@@ -105,10 +105,22 @@ namespace Etsi.Ultimate.Business.Versions
             }
             else
             {
+                //MAJOR VERSION NUMBER
                 resultVersions.NewSpecVersion.MajorVersion = isSpecUcc ? release.Version3g : orderedVersions.First().MajorVersion;
-                var technicalVersion = orderedVersions.First().TechnicalVersion;
-                if (technicalVersion != null)
-                    resultVersions.NewSpecVersion.TechnicalVersion = technicalVersion.Value + 1;
+
+                //TECHNICAL  VERSION NUMBER
+                //if spec UCC and major version number is under release.Version3g -> system should set technical version number to 0
+                //else -> system should take the last version technical number and increment by 1
+                var lastVersion = orderedVersions.First();
+                var lastTechnicalVersionNumber = lastVersion.TechnicalVersion ?? 0;
+                var lastMajorVersionNumber = lastVersion.MajorVersion ?? 0;
+
+                if (isSpecUcc && lastMajorVersionNumber < release.Version3g)
+                    resultVersions.NewSpecVersion.TechnicalVersion = 0;
+                else
+                    resultVersions.NewSpecVersion.TechnicalVersion = lastTechnicalVersionNumber + 1;
+
+                //EDITORIAL VERSION NUMBER -> 0 by default
             }
         }
 
