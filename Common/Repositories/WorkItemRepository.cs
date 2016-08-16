@@ -159,6 +159,16 @@ namespace Etsi.Ultimate.Repositories
         }
 
         /// <summary>
+        /// Look for acronyms which start with (keyword)
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns>List of acronyms found</returns>
+        public List<string> LookForAcronyms(string keyword)
+        {
+            return UoW.Context.WorkItems.Where(x => ((!String.IsNullOrEmpty(x.Acronym)) && (x.Fk_ReleaseId != null) && x.Acronym.ToLower().StartsWith(keyword.ToLower()))).Select(y => y.Acronym).Distinct().ToList();
+        }
+
+        /// <summary>
         /// Gets the work items.
         /// </summary>
         /// <param name="workItems">The work items.</param>
@@ -236,6 +246,13 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <returns>List of Acronyms</returns>
         List<string> GetAllAcronyms();
+
+        /// <summary>
+        /// Look for acronyms which start with (keyword)
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns>List of acronyms found</returns>
+        List<string> LookForAcronyms(string keyword);
 
         /// <summary>
         /// Gets the work items.

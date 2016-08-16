@@ -17,7 +17,7 @@ using System;
 
 namespace Etsi.Ultimate.Tests.Services
 {
-    class WorkItemServiceTest : BaseTest
+    class WorkItemServiceTest : BaseEffortTest
     {
         [Test, TestCaseSource("WorkItemData")]
         public void GetWorkItemsBySearchCriteria(WorkItemFakeDBSet workItemData)
@@ -259,6 +259,18 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.Contains("eWebRTCi", wiService.GetAllAcronyms());
             Assert.Contains("IOPS", wiService.GetAllAcronyms());
             Assert.Contains("UPCON-DOT", wiService.GetAllAcronyms());
+        }
+
+        [TestCase("IMS-CCR", 1)]
+        [TestCase("IMS", 1)]
+        [TestCase("CCR", 0)]
+        [TestCase("ETRAN", 1)]
+        public void LookForAcronyms(string keyword, int expectedCount)
+        {
+            var wiService = new WorkItemService();
+            var result = wiService.LookForAcronyms(keyword);
+
+            Assert.AreEqual(expectedCount, result.Count);
         }
 
         [Test]

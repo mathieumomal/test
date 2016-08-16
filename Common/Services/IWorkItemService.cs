@@ -98,5 +98,12 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <returns>List of Acronyms</returns>
         List<string> GetAllAcronyms();
+
+        /// <summary>
+        /// Look for acronyms which start with (keyword)
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns>List of acronyms found</returns>
+        List<string> LookForAcronyms(string keyword);
     }
 }

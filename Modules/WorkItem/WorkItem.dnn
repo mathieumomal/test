@@ -134,6 +134,10 @@
               <name>DocumentFormat.OpenXml.dll</name>
               <path>bin</path>
             </assembly>
+            <assembly>
+              <name>AjaxControlToolkit.dll</name>
+              <path>bin</path>
+            </assembly>
           </assemblies>
         </component>
       </components>

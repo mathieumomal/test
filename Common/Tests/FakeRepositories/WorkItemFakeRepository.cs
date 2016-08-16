@@ -140,6 +140,11 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             throw new NotImplementedException();
         }
 
+        public List<string> LookForAcronyms(string keyword)
+        {
+            throw new NotImplementedException();
+        }
+
         public List<WorkItem> GetWorkItemsBySearchCriteria(string searchString, bool shouldHaveAcronym)
         {
             throw new NotImplementedException();

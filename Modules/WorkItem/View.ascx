@@ -4,66 +4,12 @@
 <%@ Register TagPrefix="ult" TagName="ShareUrlControl" Src="../../controls/Ultimate/ShareUrlControl.ascx" %>
 <%@ Register TagPrefix="ult" TagName="FullViewControl" Src="../../controls/Ultimate/FullView.ascx" %>
 <%@ Register TagPrefix="ult" TagName="ReleaseSearchControl" Src="../../controls/Ultimate/ReleaseSearchControl.ascx" %>
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="asp" %>
 
-<style type="text/css">
-    div.RadPanelBar .rpRootGroup .rpText {
-        text-align: center;
-    }
+<dnn:DnnCssInclude runat="server" FilePath="~/DesktopModules/WorkItem/CSS/CustomAutoComplete.css" />
+<dnn:DnnCssInclude runat="server" FilePath="~/DesktopModules/WorkItem/CSS/OldStyle.css" />
 
-    .modalBackground {
-        background-color: Gray;
-        filter: alpha(opacity=60);
-        opacity: 0.60;
-        width: 100%;
-        top: 0px;
-        left: 0px;
-        position: fixed;
-        height: 100%;
-        z-index: 3000;
-    }
-
-    .updateProgress {
-        margin: auto;
-        font-family: Trebuchet MS;
-        filter: alpha(opacity=100);
-        opacity: 1;
-        font-size: small;
-        vertical-align: middle;
-        color: #275721;
-        text-align: center;
-        background-color: White;
-        padding: 10px;
-        -moz-border-radius: 15px;
-        z-index: 3001;
-        border-radius: 15px;
-    }
-
-        .updateProgress .Fixed {
-            top: 45%;
-            position: fixed;
-            right: 45%;
-        }
-
-    .workItem_0 {
-        color: red;
-        font-weight: bold;
-    }
-
-    .workItem_1 {
-        color: blue;
-        font-weight: bold;
-    }
-
-    .workItem_2 {
-        color: black;
-        font-weight: bold;
-    }
-
-    .breakWord {
-        word-break: break-all !important;
-    }
-</style>
-<asp:Panel ID="moduleWI" runat="server" Visible="false" ClientIDMode="Static">
+<asp:Panel ID="moduleWI" runat="server" Visible="false" ClientIDMode="Static" CssClass="WorkItemView">
     <asp:UpdateProgress ID="updateProgressWorkItemsTree" runat="server" DisplayAfter="200">
         <ProgressTemplate>
             <div class="modalBackground">
@@ -133,11 +79,23 @@
                                                 </tr>
                                                 <tr>
                                                     <td>Acronym</td>
-                                                    <td>
-                                                        <telerik:RadAutoCompleteBox ID="racAcronym" OnClientTextChanged="racAcronym_TextChanged" runat="server" InputType="Text" AllowCustomEntry="true" Width="200" DropDownWidth="200" DropDownHeight="150" Filter="StartsWith">
-                                                            <TextSettings SelectionMode="Single" />
-                                                        </telerik:RadAutoCompleteBox>
-                                                        <asp:HiddenField ID="hidAcronym" runat="server" />
+                                                    <td class="AcronymAutoCompleteStyle">
+                                                        <!-- CUSTOM AutoComplete field (not telerik) because of 3039 ticket  (artf1979165) 
+                                                            Due to a Telerik issue: http://www.telerik.com/forums/autocompletebox-copy-paste-issue -->
+                                                        <asp:TextBox runat="server" ID="racAcronym" AutoPostBack="False"></asp:TextBox>
+                                                        <asp:AutoCompleteExtender ID="AutoCompleteExtender1" runat="server" 
+                                                            CompletionListCssClass="completionList"
+															CompletionListHighlightedItemCssClass="itemHighlighted"
+															CompletionListItemCssClass="listItem"
+                                                            ServiceMethod="GetAcronyms" 
+                                                            ServicePath="DesktopModules/WorkItem/AutoComplete.asmx"
+                                                            MinimumPrefixLength="1"  
+                                                            CompletionInterval="10" 
+                                                            EnableCaching="false" 
+                                                            CompletionSetCount="1" 
+                                                            TargetControlID="racAcronym"  
+                                                            FirstRowSelected="false">  
+                                                          </asp:AutoCompleteExtender>
                                                     </td>
                                                     <td>Hide Completed Items</td>
                                                     <td colspan="3">
@@ -394,10 +352,6 @@
 
         function autoConfirmSearch() {
             timeout = window.setTimeout(function () { $('#<%=rbworkItemCountOk.ClientID %>').click(); }, 10000)
-        }
-
-        function racAcronym_TextChanged(sender, eventArgs) {
-            $('#<%=hidAcronym.ClientID %>').val(eventArgs.get_text());
         }
 
         //--- Adapt workItem's list height

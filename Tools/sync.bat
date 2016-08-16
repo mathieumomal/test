@@ -42,6 +42,7 @@ xcopy "%USERSOURCE%Etsi.Ultimate.Repositories.dll" "%USERDEST%" /b/v/y
 xcopy "%USERSOURCE%Etsi.Ultimate.Services.dll" "%USERDEST%" /b/v/y
 xcopy "%USERSOURCE%Etsi.Ultimate.Utils.dll" "%USERDEST%" /b/v/y
 xcopy "%USERSOURCE%Etsi.Ultimate.Utils.Core.dll" "%USERDEST%" /b/v/y
+xcopy "%USERSOURCE%AjaxControlToolkit.dll" "%USERDEST%" /b/v/y
 
 xcopy "%USERSOURCE%Etsi.Ultimate.Business.pdb" "%USERDEST%" /b/v/y
 xcopy "%USERSOURCE%Etsi.Ultimate.Controls.pdb" "%USERDEST%" /b/v/y
@@ -80,7 +81,9 @@ SET UIUSERSOURCE1=%TRUNK_PATH%Modules\WorkItem\
 SET UIUSERDEST1=%DNN_PATH%DesktopModules\WorkItem\
 xcopy "%UIUSERSOURCE1%*.ascx" "%UIUSERDEST1%" /b/v/y
 xcopy "%UIUSERSOURCE1%*.aspx" "%UIUSERDEST1%" /b/v/y
+xcopy "%UIUSERSOURCE1%*.asmx" "%UIUSERDEST1%" /b/v/y
 xcopy "%UIUSERSOURCE1%*.css" "%UIUSERDEST1%" /b/v/y
+xcopy "%UIUSERSOURCE1%CSS\*" "%UIUSERDEST1%CSS\" /b/v/y
 
 SET SPECSOURCES=%TRUNK_PATH%Modules\Specifications\
 SET SPECSOURCESDEST=%DNN_PATH%DesktopModules\Specifications\

@@ -218,6 +218,28 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        /// <summary>
+        /// Look for acronyms which start with (keyword)
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns>List of acronyms found</returns>
+        public List<string> LookForAcronyms(string keyword)
+        {
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var workItemManager = new WorkItemManager(uoW);
+                    return workItemManager.LookForAcronyms(keyword);
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Error("Unexpected error occured during LookForAcronyms: ", e);
+                return new List<string>();
+            }
+        }
+
         #endregion
     }
 }

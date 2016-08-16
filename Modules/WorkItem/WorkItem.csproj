@@ -41,6 +41,10 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AjaxControlToolkit, Version=16.1.0.0, Culture=neutral, PublicKeyToken=28f01b0e84b6d53e, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AjaxControlToolkit.16.1.0.0\lib\net40\AjaxControlToolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\DocumentFormat.OpenXml.dll</HintPath>
@@ -84,6 +88,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoComplete.asmx.cs">
+      <DependentUpon>AutoComplete.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="FeatureController.cs" />
     <Compile Include="WorkItemDetails.aspx.cs">
       <DependentUpon>WorkItemDetails.aspx</DependentUpon>
@@ -109,6 +117,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="AutoComplete.asmx" />
+    <Content Include="CSS\CustomAutoComplete.css" />
+    <Content Include="CSS\OldStyle.css" />
     <Content Include="images\details.png" />
     <Content Include="images\favicon.ico" />
     <Content Include="images\hourglass.png" />

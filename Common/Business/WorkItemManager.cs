@@ -273,6 +273,18 @@ namespace Etsi.Ultimate.Business
         }
 
         /// <summary>
+        /// Look for acronyms which start with (keyword)
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns>List of acronyms found</returns>
+        public List<string> LookForAcronyms(string keyword)
+        {
+            IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
+            repo.UoW = _uoW;
+            return repo.LookForAcronyms(keyword);
+        }
+
+        /// <summary>
         /// Gets the rights.
         /// </summary>
         /// <param name="personId">The person identifier.</param>

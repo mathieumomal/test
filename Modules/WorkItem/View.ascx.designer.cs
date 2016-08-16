@@ -127,16 +127,16 @@ namespace Etsi.Ultimate.Module.WorkItem {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadAutoCompleteBox racAcronym;
+        protected global::System.Web.UI.WebControls.TextBox racAcronym;
         
         /// <summary>
-        /// Contrôle hidAcronym.
+        /// Contrôle AutoCompleteExtender1.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.HiddenField hidAcronym;
+        protected global::AjaxControlToolkit.AutoCompleteExtender AutoCompleteExtender1;
         
         /// <summary>
         /// Contrôle chkHideCompletedItems.

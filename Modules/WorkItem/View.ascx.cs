@@ -99,24 +99,24 @@ namespace Etsi.Ultimate.Module.WorkItem
         //Style
         private const string CSS_CLASS_STOPPED_WI = "trStoppedWI";
 
-        #endregion
-
-        #region Properties
-
-        private List<string> Acronyms
+        /// <summary>
+        /// Acronym field
+        /// </summary>
+        private string SelectedAcronym
         {
             get
             {
-                if (ViewState[ClientID + CONST_ACRONYMS_DATASOURCE] == null)
-                    ViewState[ClientID + CONST_ACRONYMS_DATASOURCE] = new List<string>();
-
-                return (List<string>)ViewState[ClientID + CONST_ACRONYMS_DATASOURCE];
+                return racAcronym.Text;
             }
             set
             {
-                ViewState[ClientID + CONST_ACRONYMS_DATASOURCE] = value;
+                racAcronym.Text = value;
             }
         }
+
+        #endregion
+
+        #region Properties
 
         public ModuleActionCollection ModuleActions
         {
@@ -153,7 +153,6 @@ namespace Etsi.Ultimate.Module.WorkItem
                 // init the full view component.
                 ManageFullView("");
 
-                var wiService = ServicesFactory.Resolve<IWorkItemService>();
                 if (!IsPostBack || !moduleWI.Visible)
                 {
                     FirstLoad = true;
@@ -184,11 +183,8 @@ namespace Etsi.Ultimate.Module.WorkItem
                         {
                             lnkFtpDownload.NavigateUrl = ConfigVariables.FtpExportAddress;
                         }
-
-
                     }
 
-                    Acronyms = wiService.GetAllAcronyms();
                     releaseSearchControl.Load += releaseSearchControl_Load;
 
                     tbId = Request.QueryString["tbid"];
@@ -198,10 +194,6 @@ namespace Etsi.Ultimate.Module.WorkItem
                 {
                     FirstLoad = false;
                 }
-
-                racAcronym.DataSource = Acronyms;
-                racAcronym.DataBind();
-
 
                 if (FirstLoad)
                 {
@@ -353,7 +345,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                 tbList.RemoveAll(x => x == -1);
             }
 
-            if (wiService.GetWorkItemsCountBySearchCriteria(releaseSearchControl.SelectedReleasesIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, hidAcronym.Value.Trim().TrimEnd(';'), txtName.Text, tbList) > 200)
+            if (wiService.GetWorkItemsCountBySearchCriteria(releaseSearchControl.SelectedReleasesIds, Convert.ToInt32(rddGranularity.SelectedValue), chkHideCompletedItems.Checked, SelectedAcronym, txtName.Text, tbList) > 200)
             {
                 //
                 if (releaseSearchControl.SelectedReleasesIds.Count > 3)
@@ -396,8 +388,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             SearchObj = new WorkItemSearch();
             rddGranularity.SelectedValue = "1";
             chkHideCompletedItems.Checked = false;
-            racAcronym.Entries.Clear();
-            hidAcronym.Value = String.Empty;
+            SelectedAcronym = string.Empty;
             txtName.Text = String.Empty;
             releaseSearchControl.Reset();
             CookiesHelper.SetCookie(Page.Response, ConfigVariables.CookieNameWisList, SearchObj);
@@ -429,7 +420,7 @@ namespace Etsi.Ultimate.Module.WorkItem
                     wiService.GetWorkItemsBySearchCriteria(
                         GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()),
                         releaseSearchControl.SelectedReleasesIds, Convert.ToInt32(rddGranularity.SelectedValue),
-                        chkHideCompletedItems.Checked, hidAcronym.Value.Trim().TrimEnd(';'), txtName.Text, tbList);
+                        chkHideCompletedItems.Checked, SelectedAcronym, txtName.Text, tbList);
                 rtlWorkItems.DataSource = wiData.Key;
             }
         }
@@ -451,14 +442,10 @@ namespace Etsi.Ultimate.Module.WorkItem
                     chkHideCompletedItems.Checked = Convert.ToBoolean(Request.QueryString["hideCompleted"]);
                 if (!String.IsNullOrEmpty(Request.QueryString["name"]))
                     txtName.Text = Request.QueryString["name"].ToString();
-
-                racAcronym.Entries.Clear();
-                hidAcronym.Value = String.Empty;
+                SelectedAcronym = string.Empty;
                 if (!String.IsNullOrEmpty(Request.QueryString["acronym"]))
                 {
-                    racAcronym.Entries.Add(new AutoCompleteBoxEntry(Request.QueryString["acronym"].ToString(),
-                        String.Empty));
-                    hidAcronym.Value = Request.QueryString["acronym"].ToString();
+                    SelectedAcronym = Request.QueryString["acronym"];
                 }
             }
             else
@@ -519,19 +506,14 @@ namespace Etsi.Ultimate.Module.WorkItem
             string releaseIds = releaseSearchControl.SelectedReleasesWithKeywords;
             int granularity = Convert.ToInt32(rddGranularity.SelectedValue);
             bool hidePercentComplete = chkHideCompletedItems.Checked;
-            string wiAcronym = hidAcronym.Value.Trim().TrimEnd(';');
-            if (!string.IsNullOrWhiteSpace(wiAcronym))
-            {
-                racAcronym.Entries.Add(new AutoCompleteBoxEntry(wiAcronym, String.Empty));
-            }
             string wiName = txtName.Text;
 
             StringBuilder searchString = new StringBuilder();
             string releaseText = releaseSearchControl.SearchString;
             searchString.Append(String.IsNullOrEmpty(releaseText) ? "Open Releases" : releaseText);
             searchString.Append(", " + rddGranularity.SelectedText);
-            if (!String.IsNullOrEmpty(wiAcronym))
-                searchString.Append(", " + wiAcronym);
+            if (!String.IsNullOrEmpty(SelectedAcronym))
+                searchString.Append(", " + SelectedAcronym);
             if (!String.IsNullOrEmpty(wiName))
                 searchString.Append(", " + wiName);
             if (hidePercentComplete)
@@ -555,8 +537,7 @@ namespace Etsi.Ultimate.Module.WorkItem
             txtName.Text = SearchObj.NameUID;
             if (!string.IsNullOrWhiteSpace(SearchObj.Acronym))
             {
-                racAcronym.Entries.Add(new AutoCompleteBoxEntry(SearchObj.Acronym, string.Empty));
-                hidAcronym.Value = SearchObj.Acronym;
+                SelectedAcronym = SearchObj.Acronym;
             }
         }
 
@@ -569,17 +550,13 @@ namespace Etsi.Ultimate.Module.WorkItem
             SearchObj.GranularityId = rddGranularity.SelectedValue;
             SearchObj.SelectedReleaseIds = releaseSearchControl.SelectedReleasesIds;
 
-            if (!string.IsNullOrWhiteSpace(racAcronym.Text))
+            if (!string.IsNullOrWhiteSpace(SelectedAcronym))
             {
-                var acro = racAcronym.Text.Split(';');
-                if (acro.Length > 0 && !string.IsNullOrWhiteSpace(acro[0]))
-                {
-                    SearchObj.Acronym = acro[0];
-                }
-                else
-                {
-                    SearchObj.Acronym = string.Empty;
-                }
+                SearchObj.Acronym = SelectedAcronym;
+            }
+            else
+            {
+                SearchObj.Acronym = string.Empty;
             }
 
             // Save SearchObj into cookie
@@ -662,8 +639,8 @@ namespace Etsi.Ultimate.Module.WorkItem
                     urlParams.Add("releaseId", selectedReleases);
                 urlParams.Add("granularity", rddGranularity.SelectedValue);
                 urlParams.Add("hideCompleted", chkHideCompletedItems.Checked.ToString());
-                if (!String.IsNullOrEmpty(hidAcronym.Value.Trim().TrimEnd(';')))
-                    urlParams.Add("acronym", hidAcronym.Value.Trim().TrimEnd(';'));
+                if (!String.IsNullOrEmpty(SelectedAcronym))
+                    urlParams.Add("acronym", SelectedAcronym);
                 if (!String.IsNullOrEmpty(txtName.Text.Trim()))
                     urlParams.Add("name", txtName.Text);
             }
