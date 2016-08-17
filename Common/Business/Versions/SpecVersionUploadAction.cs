@@ -414,7 +414,7 @@ namespace Etsi.Ultimate.Business.Versions
 
             var spec = version.Specification;
             Meeting uploadMeeting = null;
-            if (spec.IsActive && spec.IsUnderChangeControl.GetValueOrDefault())
+            if (spec.IsActive && version.MajorVersion >= 3)
             {
                 if (!version.Source.HasValue)
                     throw new InvalidOperationException("Meeting must be provided");
@@ -461,6 +461,7 @@ namespace Etsi.Ultimate.Business.Versions
         /// <param name="version">The version.</param>
         private void TransferToFtp(string sourceFile, string destinationBasePath, string destinationFileName, Meeting uploadMeeting, SpecVersion version)
         {
+            LogManager.Debug(string.Format("START - Transfer to FTP of version (Spec: {0}, Rel: {1}, Number: {2}.{3}.{4}) begin...", version.Fk_SpecificationId, version.Fk_ReleaseId, version.MajorVersion, version.TechnicalVersion, version.EditorialVersion));
             var specNumber = version.Specification.Number;
             var destinationFolder = String.Format(ConstFtpArchivePath, destinationBasePath, specNumber.Split('.')[0], specNumber);
             var destinationFile = Path.Combine(destinationFolder, destinationFileName);
@@ -470,27 +471,33 @@ namespace Etsi.Ultimate.Business.Versions
                 Directory.CreateDirectory(destinationFolder);
 
             File.Copy(sourceFile, destinationFile, true);
+            LogManager.Debug("Version just copy/paste at: " + destinationFile);
 
             var spec = version.Specification;
-            if (spec.IsActive && !spec.IsUnderChangeControl.GetValueOrDefault()) //Draft
+            if (spec.IsActive && version.MajorVersion < 3) //Draft
             {
+                LogManager.Debug("Version considered as DRAFT");
                 var draftPath = String.Format(ConstFtpLatestDraftsPath, destinationBasePath);
                 var isDraftPathExists = Directory.Exists(draftPath);
                 if (!isDraftPathExists)
                     Directory.CreateDirectory(draftPath);
 
-                // We remove any existing draft.
-                var isLatestDraftVersionUploaded = ClearLatestDraftFolder(destinationBasePath, version);
-
-                //Create hard link in "latest-drafts" folder, only if latest version not present
-                if (!isLatestDraftVersionUploaded)
+                // Define if current version is the latest-draft one. If yes, system need to clean folder latest-drafts and add current version
+                var currentVersionIsLatestDraftVersionUploaded = ClearLatestDraftFolder(destinationBasePath, version);
+                if (currentVersionIsLatestDraftVersionUploaded)
                 {
                     var hardLinkPath = Path.Combine(draftPath, destinationFileName);
                     CreateHardLink(hardLinkPath, destinationFile, IntPtr.Zero);
+                    LogManager.Debug("Version just copy/paste at: " + hardLinkPath);
+                }
+                else
+                {
+                    LogManager.Debug("Version was not last draft version for this spec release. No copy/paste occured.");
                 }
             }
             else //Under Change Control
             {
+                LogManager.Debug("Version considered as UCC");
                 if ((uploadMeeting.START_DATE != null))
                 {
                     var ftpFoldersManager = ManagerFactory.Resolve<IFtpFoldersManager>();
@@ -498,7 +505,10 @@ namespace Etsi.Ultimate.Business.Versions
                     var latestFolder = ftpFoldersManager.GetFTPLatestFolderName();
 
                     if (String.IsNullOrEmpty(latestFolder))
+                    {
                         latestFolder = String.Format("{0:0000}-{1:00}", uploadMeeting.START_DATE.Value.Year, uploadMeeting.START_DATE.Value.Month);
+                        LogManager.Debug("Latest folder not found in db. New latest folder will be created: " + latestFolder);
+                    }
                     
                     var underChangeControlPath = String.Format(ConstFtpVersionsPath, destinationBasePath, latestFolder, version.Release.Code, spec.Number.Split('.')[0]);
                     var isUccPathExists = Directory.Exists(underChangeControlPath);
@@ -509,30 +519,42 @@ namespace Etsi.Ultimate.Business.Versions
                     var hardLinkPath = Path.Combine(underChangeControlPath, fileName);
 
                     CreateHardLink(hardLinkPath, destinationFile, IntPtr.Zero);
+                    LogManager.Debug("Version just copy/paste at: " + hardLinkPath);
 
-                    //Delete all drafts for this version
+                    //Delete all drafts for this version if current version is the latest version uploaded (with higher version number)
                     ClearLatestDraftFolder(destinationBasePath, version);
 
-                    //Create hard link in 'Latest' folder
+                    // Define if current version is the latest one. If yes, system need to clean folder latest and add current version
                     var latestFolderPath = String.Format(ConstFtpLatestPath, destinationBasePath, version.Release.Code, spec.Number.Split('.')[0]);
-                    var isLatestFolderPathExists = Directory.Exists(latestFolderPath);
-                    if (!isLatestFolderPathExists)
+                    var currentVersionIsTheLatestVersionUploaded = true;
+                    if (!Directory.Exists(latestFolderPath))
                         Directory.CreateDirectory(latestFolderPath);
-                    var hardLinkPathInLatestFolder = Path.Combine(latestFolderPath, fileName);
-                    CreateHardLink(hardLinkPathInLatestFolder, hardLinkPath, IntPtr.Zero);
+                    else
+                    {
+                        currentVersionIsTheLatestVersionUploaded = ClearLatestFolder(latestFolderPath, version);
+                    }
+
+                    if (currentVersionIsTheLatestVersionUploaded)
+                    {
+                        var hardLinkPathInLatestFolder = Path.Combine(latestFolderPath, fileName);
+                        CreateHardLink(hardLinkPathInLatestFolder, hardLinkPath, IntPtr.Zero);
+                        LogManager.Debug("Version just copy/paste at: " + hardLinkPathInLatestFolder);
+                    }
+                    
                 }
             }
+            LogManager.Debug(string.Format("END - Transfer to FTP of version (Spec: {0}, Rel: {1}, Number: {2}.{3}.{4}) is now done.", version.Fk_SpecificationId, version.Fk_ReleaseId, version.MajorVersion, version.TechnicalVersion, version.EditorialVersion));
         }
 
         /// <summary>
-        /// Clears the latest draft folder & provide latest draft version uploaded or not.
+        /// Clears the latest draft folder & detect if current version is the latest one
         /// </summary>
         /// <param name="ftpBasePath">The FTP base path.</param>
         /// <param name="version">The version.</param>
-        /// <returns>True - Latest version uploaded/False - Latest version not uploaded</returns>
+        /// <returns>TRUE - Latest version is the current one/ FALSE - latest version already uploaded</returns>
         private bool ClearLatestDraftFolder(string ftpBasePath, SpecVersion version)
         {
-            var isLatestDraftVersionUploaded = false;
+            var currentVersionIsLatestDraftVersionUploaded = false;
 
             var versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
             versionMgr.UoW = UoW;
@@ -557,11 +579,50 @@ namespace Etsi.Ultimate.Business.Versions
                             File.Delete(draftFile);
                     }
                 }
+                currentVersionIsLatestDraftVersionUploaded = true;
             }
-            else
-                isLatestDraftVersionUploaded = true;
 
-            return isLatestDraftVersionUploaded;
+            LogManager.Debug(currentVersionIsLatestDraftVersionUploaded ? "Latest-draft folder cleaned because current version is latest version" : "Current version is not the latest uploaded");
+            return currentVersionIsLatestDraftVersionUploaded;
+        }
+
+        /// <summary>
+        /// Clear the latest folder & detect if current version is the latest one
+        /// </summary>
+        /// <param name="versionLatestFolderPath">Latest folder path for current version. Ex: ftp.com\\Specs\\latest\\Rel12\\22_series\\</param>
+        /// <param name="version">The version.</param>
+        /// <returns>TRUE - Latest version is the current one/ FALSE - latest version already uploaded</returns>
+        private bool ClearLatestFolder(string versionLatestFolderPath, SpecVersion version)
+        {
+            var currentVersionIsLatestVersionUploaded = false;
+
+            var versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
+            versionMgr.UoW = UoW;
+            var existingVersions = versionMgr.GetVersionsForASpecRelease(version.Fk_SpecificationId.Value, version.Fk_ReleaseId.Value);
+
+            // Only clear the Latest folder if the version that has just been uploaded is greater that current one.
+            if (!existingVersions.Any(v => !string.IsNullOrEmpty(v.Location)
+                    && (v.MajorVersion > version.MajorVersion
+                        || (v.MajorVersion == version.MajorVersion && v.TechnicalVersion > version.TechnicalVersion)
+                        || (v.MajorVersion == version.MajorVersion && v.TechnicalVersion == version.TechnicalVersion && v.EditorialVersion > version.EditorialVersion))))
+            {
+                string collapsedSpecNumber = version.Specification.Number.Replace(".", String.Empty);
+
+                if (Directory.Exists(versionLatestFolderPath))
+                {
+                    DirectoryInfo di = new DirectoryInfo(versionLatestFolderPath);
+                    var versionFiles = di.GetFiles(collapsedSpecNumber + "-*").Select(x => x.FullName).ToList();
+                    foreach (string versionFile in versionFiles)
+                    {
+                        if (File.Exists(versionFile))
+                            File.Delete(versionFile);
+                    }
+                }
+                currentVersionIsLatestVersionUploaded = true;
+            }
+
+            LogManager.Debug(currentVersionIsLatestVersionUploaded ? "Latest folder cleaned because current version is latest version" : "Current version is not the latest uploaded");
+            return currentVersionIsLatestVersionUploaded;
         }
 
         /// <summary>

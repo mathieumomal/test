@@ -153,7 +153,7 @@ namespace Etsi.Ultimate.Tests.Services
         [Test]
         public void UploadVersion_ShouldNotLogQualityChecksInRemarksIfVersionIsDraft()
         {
-            UploadDraft(CreateDraftVersion(), UPLOAD_PATH + "22103-200.zip");
+            UploadVersionProcess(CreateDraftVersion(), UPLOAD_PATH + "22103-200.zip");
 
             var dbVersion = Context.SpecVersions.Where(v => v.Fk_SpecificationId == myVersion.Fk_SpecificationId 
                 && v.MajorVersion == myVersion.MajorVersion && v.TechnicalVersion == myVersion.TechnicalVersion
@@ -178,7 +178,7 @@ namespace Etsi.Ultimate.Tests.Services
             myVersion = CreateDraftVersion();
             myVersion.TechnicalVersion = 4;
             var fileToUpload = UPLOAD_PATH + "22103-200.zip";
-            UploadDraft(myVersion, fileToUpload);
+            UploadVersionProcess(myVersion, fileToUpload);
 
             Assert.IsFalse(File.Exists(createdFilePath));
             Assert.IsFalse(File.Exists(createdBackupFilePath));
@@ -200,7 +200,7 @@ namespace Etsi.Ultimate.Tests.Services
 
             myVersion = CreateDraftVersion();
             var fileToUpload = UPLOAD_PATH + "22103-200.zip";
-            UploadDraft(myVersion, fileToUpload);
+            UploadVersionProcess(myVersion, fileToUpload);
 
             Assert.IsTrue(File.Exists(createdFilePath));
             Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\latest-drafts\\22103-210.zip"));
@@ -235,9 +235,102 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(0, checkResults.Report.GetNumberOfErrors());
         }
 
-       
+        [Test(Description = "System should always add this kind of version (major version number < 3) inside archive and latest-drafts folder. latest folder should be cleaned if current version is the last one or else just keep like this and do not copy current version inside the latest-draft folder")]
+        public void UploadVersion_Draft()
+        {
+            //try to upload FIRST version 2.2.0
+            myVersion = CreateLatestDraftVersion();
+            var fileToUpload = UPLOAD_PATH + "22103-200.zip";//Wrong name actually but will be replaced by system to 22103-220.zip automaticaly (just to have single version inside physical real path to upload)
+            UploadVersionProcess(myVersion, fileToUpload);
 
-        private void UploadDraft(SpecVersion version, string fileToUpload)
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\archive\\22_series\\22.103\\22103-220.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\latest-drafts\\22103-220.zip"));
+
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Backup\\Specs\\archive\\22_series\\22.103\\22103-220.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Backup\\Specs\\latest-drafts\\22103-220.zip"));
+
+            //try to upload LATEST version 2.2.1
+            myVersion = CreateLatestDraftVersion();
+            myVersion.EditorialVersion = 1;
+            fileToUpload = UPLOAD_PATH + "22103-200.zip";
+            UploadVersionProcess(myVersion, fileToUpload);
+
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\archive\\22_series\\22.103\\22103-220.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\archive\\22_series\\22.103\\22103-221.zip"));
+
+            Assert.IsFalse(File.Exists("TestData\\Ftp\\Specs\\latest-drafts\\22103-220.zip"));
+
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\latest-drafts\\22103-221.zip"));
+
+            //try to upload OLDER version 2.1.0
+            myVersion = CreateLatestDraftVersion();
+            myVersion.MajorVersion = 1;
+            fileToUpload = UPLOAD_PATH + "22103-200.zip";
+            UploadVersionProcess(myVersion, fileToUpload);
+
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\archive\\22_series\\22.103\\22103-120.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\archive\\22_series\\22.103\\22103-220.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\archive\\22_series\\22.103\\22103-221.zip"));
+
+            Assert.IsFalse(File.Exists("TestData\\Ftp\\Specs\\latest-drafts\\22103-220.zip"));
+            Assert.IsFalse(File.Exists("TestData\\Ftp\\Specs\\latest-drafts\\22103-210.zip"));
+
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\latest-drafts\\22103-221.zip"));
+        }
+
+        [Test(Description = "System should always add this kind of version (major version number >= 3) inside archive and latest folder and latest folder found in db")]
+        public void UploadVersion_Ucc()
+        {
+            //try to upload FIRST version 13.0.0
+            myVersion = CreateLatestUccVersion();
+            var fileToUpload = UPLOAD_PATH + "22103-200.zip";//Wrong name actually but will be replaced by system to 22103-300.zip automaticaly just to have single version inside physical real path to upload)
+            UploadVersionProcess(myVersion, fileToUpload);
+
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\archive\\22_series\\22.103\\22103-d00.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\2002-11\\Rel-13\\22_series\\22103-d00.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\latest\\Rel-13\\22_series\\22103-d00.zip"));
+
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Backup\\Specs\\archive\\22_series\\22.103\\22103-d00.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\backup\\Specs\\2002-11\\Rel-13\\22_series\\22103-d00.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\backup\\Specs\\latest\\Rel-13\\22_series\\22103-d00.zip"));
+
+            //try to upload LATEST version 13.2.0
+            myVersion = CreateLatestUccVersion();
+            myVersion.TechnicalVersion = 2;
+            fileToUpload = UPLOAD_PATH + "22103-200.zip";
+            UploadVersionProcess(myVersion, fileToUpload);
+
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\archive\\22_series\\22.103\\22103-d00.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\archive\\22_series\\22.103\\22103-d20.zip"));
+
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\2002-11\\Rel-13\\22_series\\22103-d00.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\2002-11\\Rel-13\\22_series\\22103-d20.zip"));
+
+            Assert.IsFalse(File.Exists("TestData\\Ftp\\Specs\\latest\\Rel-13\\22_series\\22103-d00.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\latest\\Rel-13\\22_series\\22103-d20.zip"));
+
+            //try to upload LATEST version 13.1.0
+            myVersion = CreateLatestUccVersion();
+            myVersion.TechnicalVersion = 1;
+            fileToUpload = UPLOAD_PATH + "22103-200.zip";
+            UploadVersionProcess(myVersion, fileToUpload);
+
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\archive\\22_series\\22.103\\22103-d00.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\archive\\22_series\\22.103\\22103-d10.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\archive\\22_series\\22.103\\22103-d20.zip"));
+
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\2002-11\\Rel-13\\22_series\\22103-d00.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\2002-11\\Rel-13\\22_series\\22103-d10.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\2002-11\\Rel-13\\22_series\\22103-d20.zip"));
+
+            Assert.IsFalse(File.Exists("TestData\\Ftp\\Specs\\latest\\Rel-13\\22_series\\22103-d00.zip"));
+            Assert.IsFalse(File.Exists("TestData\\Ftp\\Specs\\latest\\Rel-13\\22_series\\22103-d10.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\latest\\Rel-13\\22_series\\22103-d20.zip"));
+        }
+
+
+
+        private void UploadVersionProcess(SpecVersion version, string fileToUpload)
         {
             
             var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, version, fileToUpload);
@@ -247,9 +340,6 @@ namespace Etsi.Ultimate.Tests.Services
             var uploadResult = versionSvc.UploadVersion(USER_HAS_RIGHT, result.Result);
             Assert.AreEqual(0, uploadResult.Report.GetNumberOfErrors());
         }
-
-        
-        
         #endregion
 
         #region datas
@@ -271,6 +361,34 @@ namespace Etsi.Ultimate.Tests.Services
             return new SpecVersion()
             {
                 MajorVersion = 2,
+                TechnicalVersion = 0,
+                EditorialVersion = 0,
+                Source = 22888,
+                Fk_ReleaseId = EffortConstants.RELEASE_OPEN_ID,
+                Fk_SpecificationId = EffortConstants.SPECIFICATION_DRAFT_WITH_EXISTING_DRAFTS_ID
+
+            };
+        }
+
+        private SpecVersion CreateLatestDraftVersion()
+        {
+            return new SpecVersion()
+            {
+                MajorVersion = 2,
+                TechnicalVersion = 2,
+                EditorialVersion = 0,
+                Source = 22888,
+                Fk_ReleaseId = EffortConstants.RELEASE_OPEN_ID,
+                Fk_SpecificationId = EffortConstants.SPECIFICATION_DRAFT_WITH_EXISTING_DRAFTS_ID
+
+            };
+        }
+
+        private SpecVersion CreateLatestUccVersion()
+        {
+            return new SpecVersion()
+            {
+                MajorVersion = 13,
                 TechnicalVersion = 0,
                 EditorialVersion = 0,
                 Source = 22888,
