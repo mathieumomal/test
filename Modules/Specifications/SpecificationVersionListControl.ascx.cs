@@ -289,17 +289,22 @@ namespace Etsi.Ultimate.Module.Specifications
                     relatedCrs.CssClass = LinkDisabledCssClasses;
                     return;
                 }
-                var tooltip = new StringBuilder();
+
+                var currentFoundationCr = string.Empty;
+                var foundationCrs = new List<string>();
                 foreach (var cr in currentVersion.FoundationCrs)
                 {
                     if (!string.IsNullOrEmpty(cr.CrNumber))
-                        tooltip.Append("CR: ").Append(cr.CrNumber);
+                        currentFoundationCr += "CR: " + cr.CrNumber;
                     if (cr.Revision != 0)
-                        tooltip.Append(" - Rev: ").Append(cr.Revision);
-                    if (tooltip.Length > 0)
-                        tooltip.Append("\n");
+                        currentFoundationCr += " - Rev: " + cr.Revision;
+                    if (currentFoundationCr.Length > 0)
+                        foundationCrs.Add(currentFoundationCr);
+                    currentFoundationCr = string.Empty;
                 }
-                relatedCrs.ToolTip = tooltip.ToString();
+                foundationCrs = foundationCrs.OrderBy(x => x).ToList();
+
+                relatedCrs.ToolTip = string.Join("\n", foundationCrs);
                 relatedCrs.CssClass = LinkDisplayCssClasses;
                 relatedCrs.NavigateUrl = String.Format(ConfigVariables.RelativeUrlVersionRelatedCrs, specVersion.Pk_VersionId, specVersion.Fk_ReleaseId);
             }
