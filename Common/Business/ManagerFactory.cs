@@ -75,6 +75,7 @@ namespace Etsi.Ultimate.Business
                 new TransientLifetimeManager());
             Container.RegisterType<IContributionManager, ContributionManager>(new TransientLifetimeManager());
             Container.RegisterType<IFtpFoldersManager, FtpFoldersManager>(new TransientLifetimeManager());
+            Container.RegisterType<IFinalizeApprovedDraftsManager, FinalizeApprovedDraftsManager>(new TransientLifetimeManager());
 
             // For ITU recommendations
             Container.RegisterType<ISeedFileParser, SeedFileParser>(new TransientLifetimeManager());
@@ -83,6 +84,10 @@ namespace Etsi.Ultimate.Business
             Container.RegisterType<IItuPreliminaryDataExtractor, ItuPreliminaryDataExtractor>(new TransientLifetimeManager());
             Container.RegisterType<IItuPreliminaryExporter, ItuPreliminaryExporter>(new TransientLifetimeManager());
             Container.RegisterType<ISpecVersionNumberValidator, SpecVersionNumberValidator>(new TransientLifetimeManager());
+
+            //Actions
+            Container.RegisterType<IGetNextReleaseAction, GetNextReleaseAction>(new TransientLifetimeManager());
+            Container.RegisterType<ISpecVersionAllocateAction, SpecVersionAllocateAction>(new TransientLifetimeManager());
         }
     }
 }

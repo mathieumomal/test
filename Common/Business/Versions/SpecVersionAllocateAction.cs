@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.Business.Specifications.Interfaces;
-using Etsi.Ultimate.Business.Versions.Interfaces;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Business.Specifications;
 
 namespace Etsi.Ultimate.Business.Versions
 {
-    public class SpecVersionAllocateAction
+    public class SpecVersionAllocateAction : ISpecVersionAllocateAction
     {
-        public IUltimateUnitOfWork UoW;
+        public IUltimateUnitOfWork UoW { get; set; }
 
         public ServiceResponse<SpecVersion> AllocateVersion(int personId, SpecVersion version)
         {
@@ -119,5 +118,12 @@ namespace Etsi.Ultimate.Business.Versions
             if(!numberValidationResponse.Result || numberValidationResponse.Report.ErrorList.Any())
                 throw new InvalidOperationException(string.Join(", ", numberValidationResponse.Report.ErrorList));
         }
+    }
+
+    public interface ISpecVersionAllocateAction
+    {
+        IUltimateUnitOfWork UoW { get; set; }
+
+        ServiceResponse<SpecVersion> AllocateVersion(int personId, SpecVersion version);
     }
 }

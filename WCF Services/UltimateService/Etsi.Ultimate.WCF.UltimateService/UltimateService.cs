@@ -595,5 +595,17 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         #endregion
+
+        #region finalize approved drafts
+
+        public ServiceResponse<bool> FinalizeApprovedDrafts(int personId, int mtgId,
+            List<Tuple<int, int, int>> approvedDrafts)
+        {
+            LogManager.Debug("[ServiceCall][FinalizeApprovedDrafts] Person id=" + personId + "; Mtg Id=" + mtgId);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.FinalizeApprovedDrafts(personId, mtgId, approvedDrafts);
+        }
+
+        #endregion
     }
 }

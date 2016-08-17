@@ -116,6 +116,7 @@
     <Compile Include="ChangeRequestManager.cs" />
     <Compile Include="ContributionManager.cs" />
     <Compile Include="CrCategoriesManager.cs" />
+    <Compile Include="FinalizeApprovedDraftsManager.cs" />
     <Compile Include="FinalizeCrsAction.cs" />
     <Compile Include="IChangeRequestStatusManager.cs" />
     <Compile Include="ItuRecommendation\ItuPreliminaryDataExtractor.cs" />

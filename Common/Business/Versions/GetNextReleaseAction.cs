@@ -8,7 +8,7 @@ using Etsi.Ultimate.Repositories;
 
 namespace Etsi.Ultimate.Business.Versions
 {
-    public class GetNextReleaseAction
+    public class GetNextReleaseAction : IGetNextReleaseAction
     {
         public IUltimateUnitOfWork UoW { get; set; }
 
@@ -19,8 +19,9 @@ namespace Etsi.Ultimate.Business.Versions
         /// <param name="specId"></param>
         /// <param name="releaseId"></param>
         /// <param name="forUpload"></param>
+        /// <param name="considerSpecAsUnderChangeControl">Consider the fact that specification is now underchange control even if it's not still the case in db, to enable system to give an appropriate version number</param>
         /// <returns>Return a Response service object with a report, a rights container and a result (the old version number with the version)</returns>
-        public ServiceResponse<SpecVersionCurrentAndNew> GetNextVersionForSpec(int personId, int specId, int releaseId, bool forUpload)
+        public ServiceResponse<SpecVersionCurrentAndNew> GetNextVersionForSpec(int personId, int specId, int releaseId, bool forUpload, bool considerSpecAsUnderChangeControl = false)
         {
             var response = new ServiceResponse<SpecVersionCurrentAndNew>();
             var resultVersionsCurrentAndNew = new SpecVersionCurrentAndNew();
@@ -36,7 +37,7 @@ namespace Etsi.Ultimate.Business.Versions
                 var spec = FetchSpecification(personId, specId);
                 resultVersionsCurrentAndNew.NewSpecVersion.Fk_SpecificationId = specId;
                 resultVersionsCurrentAndNew.NewSpecVersion.Specification = spec;
-                var isSpecUcc = spec.IsUnderChangeControl.GetValueOrDefault();
+                var isSpecUcc = considerSpecAsUnderChangeControl || spec.IsUnderChangeControl.GetValueOrDefault();
 
                 // We compute the version against a complex algorithm.
                 ComputeVersion(specId, releaseId, forUpload, resultVersionsCurrentAndNew, release, isSpecUcc);
@@ -58,7 +59,6 @@ namespace Etsi.Ultimate.Business.Versions
                 response.Report.LogError(ex.Message);
             }
             return response;
-
         }
 
         private void ComputeVersion(int specId, int releaseId, bool forUpload, SpecVersionCurrentAndNew resultVersions, Release release, bool isSpecUcc)
@@ -171,5 +171,13 @@ namespace Etsi.Ultimate.Business.Versions
             }
             return release;
         }
+    }
+
+    public interface IGetNextReleaseAction
+    {
+        IUltimateUnitOfWork UoW { get; set; }
+
+        ServiceResponse<SpecVersionCurrentAndNew> GetNextVersionForSpec(int personId, int specId, int releaseId,
+            bool forUpload, bool considerSpecAsUnderChangeControl = false);
     }
 }

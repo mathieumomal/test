@@ -54,6 +54,7 @@ namespace Etsi.Ultimate.WCF.Service
         private const string ConstErrorTemplateGetLatestVersionsBySpecIds = "Ultimate Service Error [GetLatestVersionsBySpecIds]: {0}";
         private const string ConstErrorTemplateUpdateCrStatus = "Ultimate Service Error [UpdateCrStatus]: {0}";
         private const string ConstErrorTemplateUpdateCrsStatusOfCrPack = "Ultimate Service Error [UpdateCrsStatusOfCrPack]: {0}";
+        private const string ConstErrorTemplateFinalizeApprovedDrafts = "Ultimate Service Error [FinalizeApprovedDrafts]: {0}";
         #endregion
 
         #region Release
@@ -1157,6 +1158,29 @@ namespace Etsi.Ultimate.WCF.Service
                 LogManager.Error("Unexpected error occured when system trying to unlink tdoc from version", ex);
             }
             return svcResponse;
+        }
+
+        #endregion
+
+        #region finalize approved drafts
+
+        public ServiceResponse<bool> FinalizeApprovedDrafts(int personId, int mtgId,
+            List<Tuple<int, int, int>> approvedDrafts)
+        {
+            var statusReport = new ServiceResponse<bool> { Report = new ServiceReport() };
+            try
+            {
+                var svc = ServicesFactory.Resolve<IFinalizeApprovedDraftsService>();
+                var ultimateStatusResponse = svc.FinalizeApprovedDrafts(personId, mtgId, approvedDrafts);
+                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
+            }
+            catch (Exception e)
+            {
+                LogManager.Error(String.Format(ConstErrorTemplateFinalizeApprovedDrafts, e));
+                statusReport.Result = false;
+                statusReport.Report.ErrorList.Add("Finalizing approved drafts process failed");
+            }
+            return statusReport;
         }
 
         #endregion

@@ -215,6 +215,7 @@
     <Compile Include="Services\CrCategoriesServiceTest.cs" />
     <Compile Include="Services\CrPackServiceTest.cs" />
     <Compile Include="Services\ChangeRequestTests\CrServiceTest.cs" />
+    <Compile Include="Services\FinalizeApprovedDraftsTests.cs" />
     <Compile Include="Services\FinalizeCrsTests.cs" />
     <Compile Include="Services\ItuRecommendation\ItuExportTests.cs" />
     <Compile Include="Services\ReleaseServiceEffortTest.cs" />

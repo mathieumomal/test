@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.WCF.Interface.Entities;
+﻿using System;
+using Etsi.Ultimate.WCF.Interface.Entities;
 using System.Collections.Generic;
 using System.ServiceModel;
 
@@ -406,6 +407,13 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>True for success case</returns>
         [OperationContract]
         ServiceResponse<bool> UnlinkTdocFromVersion(string uid, int personId);
+
+        #endregion
+
+        #region finalize approved drafts
+
+        [OperationContract]
+        ServiceResponse<bool> FinalizeApprovedDrafts(int personId, int mtgId, List<Tuple<int, int, int>> approvedDrafts);
 
         #endregion
     }
