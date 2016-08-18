@@ -28,6 +28,7 @@ namespace Etsi.Ultimate.Business
         /// <returns>ETSI work item identifier</returns>
         public bool AddWpmRecords(SpecVersion version) 
         {
+            LogManager.Debug("Start AddWpmRecords...");
             if (version == null)
                 return false; 
             try
@@ -85,21 +86,28 @@ namespace Etsi.Ultimate.Business
                 importData.SetSerialNumber(UtilsManager.EncodeVersionToBase36(version.MajorVersion, version.TechnicalVersion, version.EditorialVersion));
                 IWorkProgramRepository wpRepo = RepositoryFactory.Resolve<IWorkProgramRepository>();
                 wpRepo.UoW = UoW;
+
+                LogManager.Debug("-> InsertEtsiWorkITem");
                 //Import Work Item to WPMDB
                 int wkiId = wpRepo.InsertEtsiWorkITem(importData);
 
+                LogManager.Debug("-> InsertWIScheduleEntry");
                 //Import Schedule to WPMDB
                 wpRepo.InsertWIScheduleEntry(wkiId, version.MajorVersion.GetValueOrDefault(), version.TechnicalVersion.GetValueOrDefault(), version.EditorialVersion.GetValueOrDefault());
 
+                LogManager.Debug("-> InsertWIRemeark");
                 //Import Remark to WPMDB
                 wpRepo.InsertWIRemeark(wkiId, SeqNo, RemarkText);
 
+                LogManager.Debug("-> InsertWkiKeywords");
                 //Import Keywords to WPMDB
                 InsertWkiKeywords(wkiId, spec.Pk_SpecificationId, c.TbId);
 
+                LogManager.Debug("-> InsertWIMemo");
                 //Import memo to WPMDB
                 wpRepo.InsertWIMemo(wkiId, mtgShortRef);
 
+                LogManager.Debug("-> ImportProjectsToWpmdb");
                 //Import project to WPMDB
                 ImportProjectsToWpmdb(version, wkiId, wpRepo);
 
@@ -107,12 +115,13 @@ namespace Etsi.Ultimate.Business
                 
                 //Add ETSI_WKI_ID field in version TABLE IF(WKI_ID != -1)                    
                 version.ETSI_WKI_ID = wkiId;
-                
+
+                LogManager.Debug("End of AddWpmRecords.");
                 return true;
             }
             catch (Exception e)
             {
-                LogManager.Error("WPM record creation error: " + e.InnerException);
+                LogManager.Error("WPM record creation error",e);
                 return false;
             }
         }

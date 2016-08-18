@@ -26,7 +26,7 @@ namespace Etsi.Ultimate.Repositories
             var outputparameter = new ObjectParameter("NEW_WKI_ID", typeof(int));
 
             UoW.Context.Transposition_CreateEtsiWorkItem(outputparameter, 
-                entry.EtsiNumber, entry.StandardType, entry.EtsiDocNumber,
+                entry.EtsiNumber, entry.StandardType, entry.EtsiDocNumber, entry.EtsiPartNumber,
                 entry.Reference, entry.SerialNumber, entry.Version,
                 entry.CommunityId, entry.TitlePart1, entry.TitlePart2,
                 entry.TitlePart3, entry.RapporteurId, entry.SecretaryId, entry.WorkingTitle);

@@ -21,6 +21,23 @@ namespace Etsi.Ultimate.Tests.Business
         public const int IMPORTPROJECT_WKI_ID = 18;
         public const int IMPORTPROJECT_SPEC_ID = 1;
 
+        #region EtsiWorkItemImport object
+        [TestCase("36.512", "136 512", 36512, null, "D/TSGt-00", "36512va00")]
+        [TestCase("36.512-3", "136 512-3", 36512, 3, "D/TSGt-00", "36512-3va00")]
+        public void EtsiWorkItemImport_Object_Data(string specNumber, string expectedEtsiNumber, int expectedEtsiDocNumber, int? expectedEtsiPartNumber, string expectedReference, string expectedSerialNumber)
+        {
+            var etsiWiImportObject = new EtsiWorkItemImport(new SpecVersion(), new Specification{Number = specNumber}, new Community{ShortName = "test", TbType = "test"}, 0,0,"",false);
+            Assert.AreEqual(expectedEtsiNumber, etsiWiImportObject.EtsiNumber);
+            Assert.AreEqual(expectedEtsiDocNumber, etsiWiImportObject.EtsiDocNumber);
+            Assert.AreEqual(expectedEtsiPartNumber, etsiWiImportObject.EtsiPartNumber);
+            Assert.AreEqual(expectedReference, etsiWiImportObject.Reference);//Without serial number before call SetSerialNumber method
+            Assert.IsNull(etsiWiImportObject.SerialNumber);
+
+            etsiWiImportObject.SetSerialNumber(UtilsManager.EncodeVersionToBase36(10, 0, 0));//a signify 10  in base 36
+            Assert.AreEqual(expectedReference + expectedSerialNumber, etsiWiImportObject.Reference);
+        }
+        #endregion
+
         #region AddWPMRecord nominal
         [TestCase(-2, 1, Description = "ResponsibleGroup Secretary expired, SecretaryId should be 1 (expirationDate = null)")]
         [TestCase(2, 2, Description = "ResponsibleGroup Secretary not expired, SecretaryId should be 2")]

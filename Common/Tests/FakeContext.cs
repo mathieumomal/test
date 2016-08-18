@@ -210,5 +210,11 @@ namespace Etsi.Ultimate.Tests
                 throw new NotImplementedException();
             }
         }
+
+
+        public int Transposition_CreateEtsiWorkItem(ObjectParameter nEW_WKI_ID, string eTSI_NUMBER, string sTANDARD_TYPE, int? eTSI_DOC_NUMBER, int? eTSI_PART_NUMBER, string rEFERENCE, string sERIAL_NUMBER, string vERSION, int? cOMMUNITY_ID, string tITLE_PART1, string tITLE_PART2, string tITLE_PART3, int? rAPPORTEUR_ID, int? sECRETARY_ID, string wORKING_TITLE)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

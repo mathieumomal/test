@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 
 namespace Etsi.Ultimate.DomainClasses
 {
@@ -8,7 +9,13 @@ namespace Etsi.Ultimate.DomainClasses
         #region Properties
         public string EtsiNumber { get; set; }
         public string StandardType { get; set; }
+
+        //Example: spec number = 36.512-3
+        //- EtsiDocNumber = 36512
+        //- EtsiPartNumber = 3
         public int EtsiDocNumber { get; set; }
+        public int? EtsiPartNumber { get; set; }
+
         public string Reference { get; set; }
         public string SerialNumber { get; set; }
         public string Version { get; set; }
@@ -29,10 +36,20 @@ namespace Etsi.Ultimate.DomainClasses
 
         public EtsiWorkItemImport(SpecVersion version, Specification specification, Community community, int wgNumber, int SecretaryId, string releaseName, bool isAlreadyTransposed)
         {            
-
             EtsiNumber = "1" + specification.Number.Replace(".", " ");
             StandardType = specification.SpecificationType;
-            EtsiDocNumber = Int32.Parse(specification.Number.Replace(".", ""));
+
+            if (specification.Number.Contains("-"))//ex: 36.512-3
+            {
+                EtsiDocNumber = int.Parse(specification.Number.Split('-')[0].Replace(".", ""));
+                EtsiPartNumber = int.Parse(specification.Number.Split('-')[1]);
+            }
+            else//ex: 36.512
+            {
+                EtsiDocNumber = Int32.Parse(specification.Number.Replace(".", ""));
+                EtsiPartNumber = null;
+            }
+
             //Reference not yet completed
             Reference = (isAlreadyTransposed ? "R" : "D") + StandardType + "/TSG" + community.ShortName.Trim().ElementAt(0) + "-" + (community.TbType.Equals("TSG") ? "00" : ("0" + wgNumber));
             Version = version.Version;
@@ -50,7 +67,12 @@ namespace Etsi.Ultimate.DomainClasses
 
         public void SetSerialNumber(string version)
         {
-            SerialNumber = EtsiDocNumber + "v" + version;
+            var tempSerialNumber = new StringBuilder();
+            tempSerialNumber.Append(EtsiDocNumber);
+            tempSerialNumber.Append(EtsiPartNumber != null ? "-" + EtsiPartNumber : string.Empty);
+            tempSerialNumber.Append("v" + version);
+
+            SerialNumber = tempSerialNumber.ToString();
             //Reference completed
             Reference += SerialNumber;
         }

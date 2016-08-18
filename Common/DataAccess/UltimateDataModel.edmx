@@ -1009,6 +1009,7 @@ avertissement 6002: La table/vue 'U3GPPDB.dbo.View_Persons' n'a pas de clé prim
           <Parameter Name="ETSI_NUMBER" Type="varchar" Mode="In" />
           <Parameter Name="STANDARD_TYPE" Type="varchar" Mode="In" />
           <Parameter Name="ETSI_DOC_NUMBER" Type="int" Mode="In" />
+          <Parameter Name="ETSI_PART_NUMBER" Type="int" Mode="In" />
           <Parameter Name="REFERENCE" Type="varchar" Mode="In" />
           <Parameter Name="SERIAL_NUMBER" Type="varchar" Mode="In" />
           <Parameter Name="VERSION" Type="varchar" Mode="In" />
@@ -1487,6 +1488,7 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
             <Parameter Name="ETSI_NUMBER" Mode="In" Type="String" />
             <Parameter Name="STANDARD_TYPE" Mode="In" Type="String" />
             <Parameter Name="ETSI_DOC_NUMBER" Mode="In" Type="Int32" />
+            <Parameter Name="ETSI_PART_NUMBER" Mode="In" Type="Int32" />
             <Parameter Name="REFERENCE" Mode="In" Type="String" />
             <Parameter Name="SERIAL_NUMBER" Mode="In" Type="String" />
             <Parameter Name="VERSION" Mode="In" Type="String" />
