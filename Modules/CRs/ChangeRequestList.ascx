@@ -105,7 +105,7 @@
                                                                 </td>
                                                                 <td>Work Item</td>
                                                                 <td>
-                                                                    <telerik:RadAutoCompleteBox ID="racWorkItem" runat="server" InputType="Token" Width="250" DropDownWidth="250" DropDownHeight="150" Filter="Contains">
+                                                                    <telerik:RadAutoCompleteBox ID="racWorkItem" CssClass="racWi" runat="server" InputType="Token" Width="250" DropDownWidth="250" DropDownHeight="150" Filter="Contains">
                                                                         <TextSettings SelectionMode="Multiple"  />
                                                                         <WebServiceSettings Method="GetWorkItems" Path="~/DesktopModules/CRs/GetWiMtgData.asmx" />
                                                                     </telerik:RadAutoCompleteBox>
