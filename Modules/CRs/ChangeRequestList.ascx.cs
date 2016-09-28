@@ -31,13 +31,23 @@ namespace Etsi.Ultimate.Module.CRs
         private const string SuccessPicture = "/images/green-ok.gif";
         private KeyValuePair<int, int> _sendCrsToCrPackAlertDim = new KeyValuePair<int, int>(400, 100);
 
+        //Pagination variables
+        private const int DefaultItemsPerPage = 200;
+        private const int DefaultItemsPerPageWithSpecNumberAsFilter = 3000;
+        private readonly List<KeyValuePair<string, int>> _possibleNumberOfItemsPerPage = new List<KeyValuePair<string, int>>
+        {
+            new KeyValuePair<string, int>("200", 200),
+            new KeyValuePair<string, int>("1000", 1000),
+            new KeyValuePair<string, int>("3000", 3000)
+        };
+
         #endregion
 
         #region properties
 
         protected FullView CrFullView;
-        protected ShareUrlControl crShareUrl;
-        protected ReleaseSearchControl releaseSearchControl;
+        protected ShareUrlControl CrShareUrl;
+        protected ReleaseSearchControl ReleaseSearchControl;
         private bool _isUrlSearch;
         private VersionForCrListFacade _versionForCrListFacade;
 
@@ -56,22 +66,22 @@ namespace Etsi.Ultimate.Module.CRs
             }
         }
 
-        private const string CR_TB_ID = "CR_TB_ID";
+        private const string CrTbId = "CR_TB_ID";
 
         /// <summary>
         /// Store tbId from URL
         /// </summary>
-        private string tbId
+        private string TbId
         {
             get
             {
-                if (ViewState[CR_TB_ID] == null)
-                    ViewState[CR_TB_ID] = "";
-                return (string)ViewState[CR_TB_ID];
+                if (ViewState[CrTbId] == null)
+                    ViewState[CrTbId] = "";
+                return (string)ViewState[CrTbId];
             }
             set
             {
-                ViewState[CR_TB_ID] = value;
+                ViewState[CrTbId] = value;
             }
         }
 
@@ -79,6 +89,20 @@ namespace Etsi.Ultimate.Module.CRs
         /// First page load flag
         /// </summary>
         private bool FirstLoad { get; set; }
+
+        private int SelectedItemsPerPage
+        {
+            get
+            {
+                return Convert.ToInt32(SelectPageSize.SelectedValue);
+            }
+            set
+            {
+                var item = SelectPageSize.Items.FindItemByValue(value.ToString());
+                if (item != null)
+                    item.Selected = item.Checked = true;
+            }
+        }
 
         #endregion
 
@@ -94,7 +118,7 @@ namespace Etsi.Ultimate.Module.CRs
             if (!IsPostBack || !crList.Visible)
             {
                 FirstLoad = true;
-                releaseSearchControl.IsLoadingNeeded = !crList.Visible;
+                ReleaseSearchControl.IsLoadingNeeded = !crList.Visible;
                 crList.Visible = true;
 
                 //Init page size component
@@ -102,7 +126,7 @@ namespace Etsi.Ultimate.Module.CRs
 
                 GetRequestParameters();
                 SearchObj = new ChangeRequestsSearch();
-                SearchObj.PageSize = rgCrList.PageSize = ConfigVariables.ItemsPerPageListDefaultValue;
+                SearchObj.PageSize = rgCrList.PageSize = DefaultItemsPerPage;
 
                 //Load CR Statuses
                 LoadCrStatuses();
@@ -110,7 +134,7 @@ namespace Etsi.Ultimate.Module.CRs
                 //Check rights
                 GetUserRightsAndAdaptUi();
 
-                releaseSearchControl.Load += releaseSearchControl_Load;
+                ReleaseSearchControl.Load += releaseSearchControl_Load;
 
                 var searchObjFromCookie = CookiesHelper.GetCookie<ChangeRequestsSearch>(Page.Request, ConfigVariables.CookieNameCrsList);
                 if (!_isUrlSearch && searchObjFromCookie != null && searchObjFromCookie.GetType() == typeof(ChangeRequestsSearch))
@@ -136,11 +160,16 @@ namespace Etsi.Ultimate.Module.CRs
             SearchObj.SpecificationNumber = txtSpecificationNumber.Text;
             SearchObj.MeetingIds = GetSelectedMeetingIds();
             SearchObj.WorkItemIds = GetSelectedWorkItemIds();
-            SearchObj.ReleaseIds = releaseSearchControl.SelectedReleasesIds;
+            SearchObj.ReleaseIds = ReleaseSearchControl.SelectedReleasesIds;
             SearchObj.WgStatusIds = GetSelectedWgStatusIds();
             SearchObj.TsgStatusIds = GetSelectedTsgStatusIds();
             SearchObj.VersionId = 0;//By default because we don't have any UI filters for the version for the moment
-            SearchObj.PageSize = Convert.ToInt32(SelectPageSize.SelectedValue);
+
+            //If specNumber exists, system should automaticaly change item per page to a default value (max)
+            if (!string.IsNullOrEmpty(SearchObj.SpecificationNumber))
+                SelectedItemsPerPage = DefaultItemsPerPageWithSpecNumberAsFilter;
+            SearchObj.PageSize = SelectedItemsPerPage;
+
             rgCrList.CurrentPageIndex = 0;
             rgCrList.Rebind();
 
@@ -253,11 +282,11 @@ namespace Etsi.Ultimate.Module.CRs
             if (FirstLoad && SearchObj != null && SearchObj.ReleaseIds != null &&
                     SearchObj.ReleaseIds.Count > 0)
             {
-                releaseSearchControl.SelectedReleasesIds = SearchObj.ReleaseIds;
+                ReleaseSearchControl.SelectedReleasesIds = SearchObj.ReleaseIds;
             }
             else if (SearchObj != null && SearchObj.ReleaseIds != null && SearchObj.ReleaseIds.Count == 0)
             {
-                SearchObj.ReleaseIds = releaseSearchControl.SelectedReleasesIds;
+                SearchObj.ReleaseIds = ReleaseSearchControl.SelectedReleasesIds;
             }
 
             LoadData();
@@ -343,8 +372,8 @@ namespace Etsi.Ultimate.Module.CRs
             if (e.Text.Length > 1)
             {
                 int tbIdOutput = 0;
-                if (!String.IsNullOrEmpty(tbId))
-                    int.TryParse(tbId, out tbIdOutput);
+                if (!String.IsNullOrEmpty(TbId))
+                    int.TryParse(TbId, out tbIdOutput);
 
                 var svc = ServicesFactory.Resolve<IContributionService>();
                 var crPacksFound = svc.GetCrPacksByTbIdAndKeywords(GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), tbIdOutput, e.Text);
@@ -414,9 +443,9 @@ namespace Etsi.Ultimate.Module.CRs
                 var response =
                     crSvc.GetChangeRequests(
                         GetUserPersonId(DotNetNuke.Entities.Users.UserController.GetCurrentUserInfo()), SearchObj);
+
                 if (response.Report.GetNumberOfErrors() != 0)
                     return;
-
 
                 rgCrList.VirtualItemCount = response.Result.Value;
 
@@ -467,8 +496,8 @@ namespace Etsi.Ultimate.Module.CRs
             //[2] Releases (if release contains 0 then all releases will be selected)
             if (!String.IsNullOrEmpty(Request.QueryString["release"]))
             {
-                releaseSearchControl.SelectedReleasesWithKeywords = Request.QueryString["release"];
-                SearchObj.ReleaseIds = releaseSearchControl.SelectedReleasesIds;
+                ReleaseSearchControl.SelectedReleasesWithKeywords = Request.QueryString["release"];
+                SearchObj.ReleaseIds = ReleaseSearchControl.SelectedReleasesIds;
             }
 
             //[3] WG Statuses
@@ -658,17 +687,10 @@ namespace Etsi.Ultimate.Module.CRs
         /// </summary>
         private void InitPageSizeComponent()
         {
-            SelectPageSize.Items.AddRange(ConfigVariables.ItemsPerPageList.Select(
+            SelectPageSize.Items.AddRange(_possibleNumberOfItemsPerPage.Select(
                 x => new RadComboBoxItem(x.Key, x.Value.ToString())));
 
-            var defaultItem =
-                SelectPageSize.Items.FindItemByValue(ConfigVariables.ItemsPerPageListDefaultValue.ToString());
-
-            if (defaultItem != null)
-            {
-                defaultItem.Selected = true;
-                defaultItem.Checked = true;
-            }
+            SelectedItemsPerPage = DefaultItemsPerPage;
         }
 
         /// <summary>
@@ -682,14 +704,7 @@ namespace Etsi.Ultimate.Module.CRs
             SetSelectedWorkItems(SearchObj.WorkItemIds);
             SetSelectedValue(rcbWgStatus, SearchObj.WgStatusIds);
             SetSelectedValue(rcbTsgStatus, SearchObj.TsgStatusIds);
-            SetSelectedValue(SelectPageSize, SearchObj.PageSize.ToString());
-        }
-
-        private void SetSelectedValue(RadComboBox rcb, string value)
-        {
-            RadComboBoxItem item = rcb.FindItemByValue(value);
-            if (item != null)
-                item.Selected = true;
+            SelectedItemsPerPage = SearchObj.PageSize;
         }
 
         private void SetSelectedValue(RadComboBox rcb, List<int> values)
@@ -753,10 +768,10 @@ namespace Etsi.Ultimate.Module.CRs
 
             //Check for Multiple TB selection
             var isMultipleTbsSelected = true;
-            if (!String.IsNullOrEmpty(tbId))
+            if (!String.IsNullOrEmpty(TbId))
             {
                 int tbIdOutput;
-                int.TryParse(tbId, out tbIdOutput);
+                int.TryParse(TbId, out tbIdOutput);
                 if (tbIdOutput != 0)
                     isMultipleTbsSelected = false;
             }
@@ -808,15 +823,15 @@ namespace Etsi.Ultimate.Module.CRs
         /// </summary>
         private void ManageShareUrl()
         {
-            crShareUrl.IsShortUrlChecked = false;
-            crShareUrl.ModuleId = ModuleId;
-            crShareUrl.TabId = TabController.CurrentPage.TabID;
+            CrShareUrl.IsShortUrlChecked = false;
+            CrShareUrl.ModuleId = ModuleId;
+            CrShareUrl.TabId = TabController.CurrentPage.TabID;
 
             var address = Request.IsSecureConnection ? "https://" : "http://";
             address += Request["HTTP_HOST"];
-            crShareUrl.BaseAddress = address;
+            CrShareUrl.BaseAddress = address;
 
-            crShareUrl.UrlParams = ManageUrlParams();
+            CrShareUrl.UrlParams = ManageUrlParams();
         }
 
         /// <summary>
@@ -829,7 +844,7 @@ namespace Etsi.Ultimate.Module.CRs
             {
                 {"q", "1"},
                 {"specnumber", SearchObj.SpecificationNumber},
-                {"release", releaseSearchControl.SelectedReleasesWithKeywords},
+                {"release", ReleaseSearchControl.SelectedReleasesWithKeywords},
                 {"wgstatus", String.Join(",", SearchObj.WgStatusIds)},
                 {"tsgstatus", String.Join(",", SearchObj.TsgStatusIds)},
                 {"meeting", String.Join(",", SearchObj.MeetingIds)},
@@ -846,7 +861,7 @@ namespace Etsi.Ultimate.Module.CRs
         private void GetRequestParameters()
         {
             _isUrlSearch = (Request.QueryString["q"] != null);
-            tbId = Request.QueryString["tbid"];
+            TbId = Request.QueryString["tbid"];
         }
 
         /// <summary>
@@ -866,7 +881,7 @@ namespace Etsi.Ultimate.Module.CRs
                         sb.Append(String.Format("{0}, ", SearchObj.SpecificationNumber));
                 }
 
-                var releaseText = releaseSearchControl.SearchString;
+                var releaseText = ReleaseSearchControl.SearchString;
                 sb.Append(String.Format("{0}, ", String.IsNullOrEmpty(releaseText) ? "Open Releases" : releaseText));
 
                 if (SearchObj.WgStatusIds != null && SearchObj.WgStatusIds.Count > 0)

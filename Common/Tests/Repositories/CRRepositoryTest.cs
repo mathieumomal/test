@@ -138,6 +138,20 @@ namespace Etsi.Ultimate.Tests.Repositories
             //Test
             Assert.AreEqual(expectedResult, result.Key.Count);
         }
+        
+        [TestCase(0, int.MaxValue, 24, Description = "Displaying all items in a page")]
+        public void GetChangeRequestsTest_AllItemsinPage(int skipRecords, int pageSize, int expectedResult)
+        {
+            //Search object build
+            var searchObj = new ChangeRequestsSearch { PageSize = pageSize, SkipRecords = skipRecords };
+
+            //Call method
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetChangeRequests(searchObj);
+
+            //Test
+            Assert.AreEqual(expectedResult, result.Key.Count);
+        }
 
         [Test]
         public void GetChangeRequestsTest_OrderBy()

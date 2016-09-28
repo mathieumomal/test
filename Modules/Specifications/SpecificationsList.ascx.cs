@@ -53,6 +53,15 @@ namespace Etsi.Ultimate.Module.Specifications
         private const string CONST_FTP_VERSIONS_MAP_PATH = "{0}\\Specs\\{1}";
         private const string CONST_PROGRESS_BAR_CONTENT = "<pre><code><div class=\"meter\"><span style=\"width: {0}%\"></span></div></code></pre>";
 
+        //Pagination variables
+        private const int DefaultItemsPerPage = 50;
+        private readonly List<KeyValuePair<string, int>> _possibleNumberOfItemsPerPage = new List<KeyValuePair<string, int>>
+        {
+            new KeyValuePair<string, int>("50", 50),
+            new KeyValuePair<string, int>("200", 200),
+            new KeyValuePair<string, int>("1000", 1000)
+        };
+
         private bool _isUrlSearch;
         private bool fromSearch;
 
@@ -841,11 +850,11 @@ namespace Etsi.Ultimate.Module.Specifications
         /// </summary>
         private void InitPageSizeComponent()
         {
-            SelectPageSize.Items.AddRange(ConfigVariables.ItemsPerPageList.Select(
+            SelectPageSize.Items.AddRange(_possibleNumberOfItemsPerPage.Select(
                 x => new RadComboBoxItem(x.Key, x.Value.ToString())));
 
             var defaultItem =
-                SelectPageSize.Items.FindItemByValue(ConfigVariables.ItemsPerPageListDefaultValue.ToString());
+                SelectPageSize.Items.FindItemByValue(DefaultItemsPerPage.ToString());
 
             if (defaultItem != null)
             {

@@ -150,7 +150,7 @@
     <add key="DefaultDevicesDatabase" value="DesktopModules\DevicePreviewManagement\Resources\defaultDevices.xml" />
     <add key="VersionsLatestFTPFolder" value="2014-09" />
     <add key="CRsListRecordsMaxSize" value="100"/>
-
+	
   </appSettings>
   <system.web.webPages.razor>
     <pages pageBaseType="DotNetNuke.Web.Razor.DotNetNukeWebPage">

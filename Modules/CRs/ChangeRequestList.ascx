@@ -53,7 +53,7 @@
                                         <table class="crSearchHeader">
                                             <tr>
                                                 <td style="width: 20px;">
-                                                    <ult:shareurlcontrol id="crShareUrl" runat="server" />
+                                                    <ult:shareurlcontrol id="CrShareUrl" runat="server" />
                                                 </td>
                                                 <td style="text-align: center" class="openCloseRadPanelBar">
                                                     <asp:Label ID="lblCrSearchHeader" runat="server" CssClass="openCloseRadPanelBar" />
@@ -97,7 +97,7 @@
                                                             <tr>
                                                                 <td>Target Release</td>
                                                                 <td>
-                                                                    <ult:ReleaseSearchControl id="releaseSearchControl" runat="server" Width="250" DropDownWidth="250"/>
+                                                                    <ult:ReleaseSearchControl id="ReleaseSearchControl" runat="server" Width="250" DropDownWidth="250"/>
                                                                 </td>
                                                                 <td>TSG Status</td>
                                                                 <td>

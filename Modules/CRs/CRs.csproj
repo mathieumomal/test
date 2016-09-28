@@ -125,6 +125,10 @@
       <Project>{4BB8A434-1ED1-4D33-AE3D-32A000D19CA5}</Project>
       <Name>Services</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Common\Utils.Core\Utils.Core.csproj">
+      <Project>{4905E5A9-AA9B-4CC4-95E1-636B37FC27BA}</Project>
+      <Name>Utils.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Common\Utils\Utils.csproj">
       <Project>{AD1F6A1C-95B2-4274-A0C5-1F8CA9D9BB55}</Project>
       <Name>Utils</Name>

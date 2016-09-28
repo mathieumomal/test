@@ -337,59 +337,6 @@ namespace Etsi.Ultimate.Utils
         }
 
         /// <summary>
-        /// Values list for dropdownlist "Items per page"
-        /// </summary>
-        public static List<KeyValuePair<string, int>> ItemsPerPageList
-        {
-            get
-            {
-                List<KeyValuePair<string, int>> result = new List<KeyValuePair<string, int>>();
-                string itemsPerPageList = ConfigurationManager.
-                    AppSettings["ItemsPerPageList"];
-
-                if (itemsPerPageList == null)
-                {
-                    result.Add(new KeyValuePair<string, int>("50", 50));
-                    result.Add(new KeyValuePair<string, int>("200", 200));
-                    result.Add(new KeyValuePair<string, int>("1000", 1000));
-                }
-                else
-                {
-                    string[] splitedItemsPerPageList = itemsPerPageList.Split('|');
-                    int intValue = 0;
-
-                    foreach (string val in splitedItemsPerPageList)
-                    {
-                        if (val == "ALL")
-                        {
-                            result.Add(new KeyValuePair<string, int>("ALL", int.MaxValue));
-                        }
-                        else if (int.TryParse(val, out intValue))
-                        {
-                            result.Add(new KeyValuePair<string, int>(val, intValue));
-                        }
-                    }
-                }
-
-                return result;
-            }
-        }
-
-        /// <summary>
-        /// Max records (tdocs) to display in the same TdocList page
-        /// </summary>
-        public static int ItemsPerPageListDefaultValue
-        {
-            get
-            {
-                int result;
-                int.TryParse(ConfigurationManager.AppSettings["ItemsPerPageListDefaultValue"], out result);
-                if (result == 0) { result = 50; /* Default value */ }
-                return result;
-            }
-        }
-
-        /// <summary>
         /// Gets the relative URL for Spec WithdrawMeetingSelectPopUp.
         /// </summary>
         public static string SpecificationWithdrawMeetingSelectPopUpRelativeLink
