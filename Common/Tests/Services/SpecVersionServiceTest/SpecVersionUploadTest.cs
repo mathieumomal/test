@@ -328,11 +328,76 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\latest\\Rel-13\\22_series\\22103-d20.zip"));
         }
 
+        #endregion
 
+        #region ZIP without doc or docx : error messages
 
+        [Test]
+        public void UploadZipVersionWithTxt_Ucc()
+        {
+            var uccVersion = CreateVersion();
+            uccVersion.TechnicalVersion = 3;
+            var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, uccVersion, UPLOAD_PATH + "WithoutDocOrDocx.zip");
+
+            Assert.AreEqual(2, result.Report.WarningList.Count);//+Invalid filename
+            Assert.AreEqual("No matching files inside zip. Quality checks cannot be executed", result.Report.WarningList.Last());
+        }
+
+        [Test]
+        public void UploadZipVersionWithTxt_Draft_WeDontCareBecauseCheckUsefullForQualityChecksWhichWillNotBeExecutedForDraft()
+        {
+            var draftVersion = CreateDraftVersion();
+            draftVersion.MajorVersion = 1;
+            var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, draftVersion, UPLOAD_PATH + "WithoutDocOrDocx.zip");
+
+            Assert.AreEqual(1, result.Report.WarningList.Count);//Invalid filename
+        }
+
+        #endregion
+
+        #region Warnings mail content
+
+        [Test]
+        public void UploadVersion_MailContent_Draft()
+        {
+            var draftWarnings = string.Format("Spec {0}, version {1} has been uploaded despite some warnings", "22.103", "2.0.0");
+
+            var mailMock = MockRepository.GenerateMock<IMailManager>();
+            mailMock.Stub(s => s.SendEmail(Arg<string>.Is.Anything,
+                    Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything,
+                    Arg<string>.Is.Equal(draftWarnings),Arg<string>.Is.Anything)).Repeat.Once();
+            UtilsFactory.Container.RegisterInstance<IMailManager>(mailMock);
+
+            var draftVersion = CreateDraftVersion();
+            UploadVersionProcess(draftVersion, UPLOAD_PATH + "WithoutDocOrDocx.zip");
+
+            mailMock.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void UploadVersion_MailContent_Ucc()
+        {
+            var uccWarnings = string.Format("Spec {0}, version {1} has been uploaded despite some warnings", "22.101", "13.3.0");
+
+            var mailMock = MockRepository.GenerateMock<IMailManager>();
+            mailMock.Stub(s => s.SendEmail(Arg<string>.Is.Anything,
+                    Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything, Arg<List<string>>.Is.Anything,
+                    Arg<string>.Is.Equal(uccWarnings), Arg<string>.Is.Anything)).Repeat.Once();
+            UtilsFactory.Container.RegisterInstance<IMailManager>(mailMock);
+
+            var uccVersion = CreateVersion();
+            uccVersion.TechnicalVersion = 3;
+            UploadVersionProcess(uccVersion, UPLOAD_PATH + "WithoutDocOrDocx.zip");
+
+            mailMock.VerifyAllExpectations();
+        }
+
+        #endregion
+
+        #region datas
         private void UploadVersionProcess(SpecVersion version, string fileToUpload)
         {
-            
+
             var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, version, fileToUpload);
             Assert.AreEqual(0, result.Report.GetNumberOfErrors());
             Assert.IsNotNullOrEmpty(result.Result);
@@ -340,9 +405,7 @@ namespace Etsi.Ultimate.Tests.Services
             var uploadResult = versionSvc.UploadVersion(USER_HAS_RIGHT, result.Result);
             Assert.AreEqual(0, uploadResult.Report.GetNumberOfErrors());
         }
-        #endregion
 
-        #region datas
         private SpecVersion CreateVersion()
         {
             return new SpecVersion()

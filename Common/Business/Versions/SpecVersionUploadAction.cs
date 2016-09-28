@@ -35,7 +35,7 @@ namespace Etsi.Ultimate.Business.Versions
         private const string ConstQualityCheckYearCopyright = "Year not valid/missing in copyright statement";
         private const string ConstQualityCheckTitleCoverpage = "Incorrect/missing title in cover page";
         private const string ConstQualityCheckReleaseStyle = "Release style should be 'ZGSM' in cover page";
-        private const string ConstQualityCheckAutoNumbering = "Automatic numbering (of clauses, figures, tables, notes, examples etc…) should be disabled in the document";
+        private const string ConstQualityCheckAutoNumbering = "Automatic numbering (of clauses, figures, tables, notes, examples etcâ€¦) should be disabled in the document";
         private const string ConstQualityCheckFirstTwoLinesTitle = "The first two lines of the title must be correct, according to the TSG responsible for the specification";
         private const string ConstQualityCheckAnnexureStyle = "Annexes should be correctly styled as Heading 8(TS) or Heading 9(TR). In case of TS, (normative) or (informative) should appear immediately after annexure heading";
         private const string ConstQualityCheckRelease = "Invalid/missing release in cover page";
@@ -69,12 +69,13 @@ namespace Etsi.Ultimate.Business.Versions
                     var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path);
                     var fileExtension = String.Empty;
                     var fileToAnalyzePath = String.Empty;
+                    var isUcc = version.Specification.IsUnderChangeControl.GetValueOrDefault();
                     
 
                     //[1] Check the file name
                     var validFileName = GetValidFileName(version);
                     if (!fileNameWithoutExtension.Equals(validFileName, StringComparison.InvariantCultureIgnoreCase))
-                        validationReport.LogWarning(String.Format("Invalid file name. System will change this to '{0}'", validFileName));
+                        validationReport.LogWarning(String.Format(Localization.Version_Upload_InvalidFilename, validFileName));
 
                     var allowToRunQualityChecks = false;
                     //[2] If file is in .zip format, check that .zip file and internal word file must have same name.
@@ -105,18 +106,19 @@ namespace Etsi.Ultimate.Business.Versions
                                 allowToRunQualityChecks = true;
                                 fileExtension = ".doc";
                                 fileToAnalyzePath = zipContent.First();
-                                validationReport.LogWarning("Zip file and internal word file must have same name");
+                                validationReport.LogWarning(Localization.Version_Upload_ZipAndWordShouldHaveSameName);
                             }
                             else if (zipContent.Count == 1 && zipContent.First().ToLower().EndsWith(".docx"))
                             {
                                 allowToRunQualityChecks = true;
                                 fileExtension = ".docx";
                                 fileToAnalyzePath = zipContent.First();
-                                validationReport.LogWarning("Zip file and internal word file must have same name");
+                                validationReport.LogWarning(Localization.Version_Upload_ZipAndWordShouldHaveSameName);
                             }
                             else
                             {
-                                validationReport.LogWarning("No matching files inside zip. Quality checks cannot be executed");
+                                if (isUcc)
+                                    validationReport.LogWarning(Localization.Version_Upload_NoWordInsideZip_ForUcc);
                             }
                         }
                     }
@@ -132,9 +134,8 @@ namespace Etsi.Ultimate.Business.Versions
                     //Finally system should allow quality checks if shouldAvoidQualityChecks is false
                     allowToRunQualityChecks = allowToRunQualityChecks && !shouldAvoidQualityChecks;
 
-
                     //If we have valid file & spec is under change control, run quality checks
-                    if (allowToRunQualityChecks && version.Specification.IsUnderChangeControl.GetValueOrDefault())
+                    if (allowToRunQualityChecks && isUcc)
                     {
                         var meetingDate = DateTime.MinValue;
                         var tsgTitle = String.Empty;
@@ -741,9 +742,9 @@ namespace Etsi.Ultimate.Business.Versions
 
         private class CacheUploadStorage
         {
-            public SpecVersion Version {get; set;}
-            public string TmpUploadedFilePath {get; set;}
-            public Report ValidationReport {get; set;}
+            public SpecVersion Version { get; set; }
+            public string TmpUploadedFilePath { get; set; }
+            public Report ValidationReport { get; set; }
 
             public CacheUploadStorage(SpecVersion version, string path, Report report)
             {
@@ -781,7 +782,7 @@ namespace Etsi.Ultimate.Business.Versions
             }
 
             //Subject
-            var subject = String.Format("Spec {0}, version {1} has been uploaded despite some quality checks failure", spec.Pk_SpecificationId, version.Version);
+            var subject = String.Format(Localization.Version_Upload_Mail_Warnings, spec.Number, version.Version);
 
             //Body
             var body = new VersionUploadFailedQualityCheckMailTemplate(connectedUsername, spec.Number, version.Version, report.WarningList);

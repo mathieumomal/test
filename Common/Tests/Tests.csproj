@@ -411,6 +411,9 @@
     <None Include="TestData\Versions\ToUpload\22101-d30.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\Versions\ToUpload\WithoutDocOrDocx.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\Versions\ToUpload\22103-200.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

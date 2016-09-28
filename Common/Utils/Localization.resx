@@ -450,4 +450,16 @@
   <data name="Unknown_Person" xml:space="preserve">
     <value>(none)</value>
   </data>
+  <data name="Version_Upload_InvalidFilename" xml:space="preserve">
+    <value>Invalid file name. System will change this to '{0}'</value>
+  </data>
+  <data name="Version_Upload_Mail_Warnings" xml:space="preserve">
+    <value>Spec {0}, version {1} has been uploaded despite some warnings</value>
+  </data>
+  <data name="Version_Upload_NoWordInsideZip_ForUcc" xml:space="preserve">
+    <value>No matching files inside zip. Quality checks cannot be executed</value>
+  </data>
+  <data name="Version_Upload_ZipAndWordShouldHaveSameName" xml:space="preserve">
+    <value>Zip file and internal word file must have same name</value>
+  </data>
 </root>

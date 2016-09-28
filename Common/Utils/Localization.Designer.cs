@@ -682,6 +682,42 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Invalid file name. System will change this to &apos;{0}&apos;.
+        /// </summary>
+        public static string Version_Upload_InvalidFilename {
+            get {
+                return ResourceManager.GetString("Version_Upload_InvalidFilename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Spec {0}, version {1} has been uploaded despite some warnings.
+        /// </summary>
+        public static string Version_Upload_Mail_Warnings {
+            get {
+                return ResourceManager.GetString("Version_Upload_Mail_Warnings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à No matching files inside zip. Quality checks cannot be executed.
+        /// </summary>
+        public static string Version_Upload_NoWordInsideZip_ForUcc {
+            get {
+                return ResourceManager.GetString("Version_Upload_NoWordInsideZip_ForUcc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Zip file and internal word file must have same name.
+        /// </summary>
+        public static string Version_Upload_ZipAndWordShouldHaveSameName {
+            get {
+                return ResourceManager.GetString("Version_Upload_ZipAndWordShouldHaveSameName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Version successfully deleted..
         /// </summary>
         public static string VersionSuccessfullyDeleted {
