@@ -90,6 +90,7 @@
   <ItemGroup>
     <Compile Include="ConfigVariables.cs" />
     <Compile Include="CookiesHelper.cs" />
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="MailManager.cs" />
     <Compile Include="Localization.Designer.cs">
       <AutoGen>True</AutoGen>

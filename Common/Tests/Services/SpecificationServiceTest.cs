@@ -106,8 +106,7 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsFalse(result.Value.HasRight(Enum_UserRights.Specification_Delete));
             Assert.AreEqual("Withdrawn before change control", result.Key.Status);
             Assert.AreEqual("3GPP SA", result.Key.PrimeResponsibleGroupFullName);
-            Assert.AreEqual("3GPP SA 1,3GPP SA 2", result.Key.SecondaryResponsibleGroupsFullNames);
-            Assert.AreEqual("3GPP SA 1,3GPP SA 2", result.Key.SecondaryResponsibleGroupsFullNames);
+            Assert.AreEqual("3GPP SA 1, 3GPP SA 2", result.Key.SecondaryResponsibleGroupsFullNames);
             Assert.AreEqual(1, result.Key.SpecificationParents.Count);
             Assert.AreEqual(1, result.Key.SpecificationChilds.Count);
             Assert.AreEqual("Stage 1 for RAN Sharing Enhancements", result.Key.SpecificationWIsList.FirstOrDefault().Name);

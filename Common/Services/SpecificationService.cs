@@ -94,7 +94,7 @@ namespace Etsi.Ultimate.Services
                         if (spec.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().Count > 0)
                         {
                             spec.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().ForEach(g => communityList.Add(communityManager.GetCommmunityById(g.Fk_commityId)));
-                            spec.SecondaryResponsibleGroupsFullNames = string.Join(",", communityList.Select(x=>x.TbName).ToArray());
+                            spec.SecondaryResponsibleGroupsFullNames = string.Join(", ", communityList.Select(x => x.TbName).ToArray());
                         }
 
                         if (true & spec.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().Count > 0)

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Etsi.Ultimate.Utils;
 using Telerik.Web.UI;
 
 namespace Etsi.Ultimate.Controls
@@ -120,9 +121,10 @@ namespace Etsi.Ultimate.Controls
             {
                 ICommunityService svc = ServicesFactory.Resolve<ICommunityService>();
                 List<Community> communityList = svc.GetCommunities();
+                Remove3GppFromCommunitiesTbName(communityList);
 
                 List<Community> dataSource = new List<Community>(); //Create deep copy of list to avoid cache modifications
-                dataSource.AddRange(communityList.Select(x => new Community() { TbId = x.TbId, TbName = x.TbName, ParentTbId = x.ParentTbId, Order = x.Order, ActiveCode = x.ActiveCode }));
+                dataSource.AddRange(communityList.Select(x => new Community { TbId = x.TbId, TbName = x.TbName, ParentTbId = x.ParentTbId, Order = x.Order, ActiveCode = x.ActiveCode }));
 
                 if (IsSingleSelection) //Single Selection
                 {
@@ -250,6 +252,18 @@ namespace Etsi.Ultimate.Controls
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Rename all communities without 3GPP because not useful to display
+        /// </summary>
+        /// <param name="communityList"></param>
+        private void Remove3GppFromCommunitiesTbName(List<Community> communityList)
+        {
+            foreach (var com in communityList)
+            {
+                com.TbName = com.TbName.Remove3GppAtTheBeginningOfAString();
+            }
+        }
 
         /// <summary>
         /// Add Plenary TSG records

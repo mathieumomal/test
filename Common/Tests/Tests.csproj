@@ -166,6 +166,7 @@
     <Compile Include="EffortConstants.cs" />
     <Compile Include="EffortTests\EffortTestsExample.cs" />
     <Compile Include="EffortUnitOfWork.cs" />
+    <Compile Include="ExtensionMethodsTests.cs" />
     <Compile Include="FakeRepositories\Enum_TechnologiesFakeRepository.cs" />
     <Compile Include="FakeRepositories\SpecificationWIFakeRepository.cs" />
     <Compile Include="FakeRepositories\SpecVersionsFakeRepository.cs" />
