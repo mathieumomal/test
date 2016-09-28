@@ -160,6 +160,15 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à You do not have right to perform this action. Only the rapporteur of the selected specification can reserve a Draft TS or Draft TR..
+        /// </summary>
+        public static string Drafts_Rights_Error_Not_Reporteur {
+            get {
+                return ResourceManager.GetString("Drafts_Rights_Error_Not_Reporteur", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à ETSI_DS_ID.
         /// </summary>
         public static string DsIdKey {
@@ -201,6 +210,15 @@ namespace Etsi.Ultimate.Utils {
         public static string Error_Spec_Draft_Status {
             get {
                 return ResourceManager.GetString("Error_Spec_Draft_Status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Version major number should be draft (&lt;= 2).
+        /// </summary>
+        public static string Error_Version_Major_Number_Should_Be_Draft {
+            get {
+                return ResourceManager.GetString("Error_Version_Major_Number_Should_Be_Draft", resourceCulture);
             }
         }
         
@@ -475,7 +493,7 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Specification number already in use by “{0}”. .
+        ///   Recherche une chaîne localisée semblable à Specification number already in use by â€œ{0}â€. .
         /// </summary>
         public static string Specification_ERR003_Number_Already_Use {
             get {

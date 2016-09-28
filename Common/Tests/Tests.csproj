@@ -144,6 +144,7 @@
     <Compile Include="Business\ItuRecommendation\SeedFileParserTest.cs" />
     <Compile Include="Business\FtpFoldersManagerTest.cs" />
     <Compile Include="Business\QualityChecks\DocxQualityChecksTests.cs" />
+    <Compile Include="Business\SpecReleaseManagerTests.cs" />
     <Compile Include="Business\SpecVersionNumberValidatorTests.cs" />
     <Compile Include="Business\UtilsManagerTest.cs" />
     <Compile Include="Business\CrCategoriesManagerTest.cs" />
@@ -197,6 +198,7 @@
     <Compile Include="Repositories\CrRepositoryTest.cs" />
     <Compile Include="Repositories\EnumRepositoryTest\EnumCommunityShortnameRepositoryTest.cs" />
     <Compile Include="Repositories\EnumRepositoryTest\EnumTechnologiesRepositoryTest.cs" />
+    <Compile Include="Repositories\ReleaseRepositoryTests.cs" />
     <Compile Include="Repositories\RemarkRepositoryTest.cs" />
     <Compile Include="Repositories\OfflineRepositoryTest.cs" />
     <Compile Include="Repositories\ResponsibleGroupSecretaryRepositoryTest.cs" />

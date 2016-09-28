@@ -196,8 +196,13 @@ namespace Etsi.Ultimate.Business.Versions
             var previousVersions = repo.GetVersionsByRelatedTDoc(relatedTdoc);
             previousVersions.ForEach(v => v.RelatedTDoc = null);
 
+            //Create SpecRelease if necessary
+            var specReleaseMgr = ManagerFactory.Resolve<ISpecReleaseManager>();
+            specReleaseMgr.UoW = UoW;
+            specReleaseMgr.CreateSpecRelease(specId, releaseId);
+
             var version = repo.GetVersion(specId, majorVersion, technicalVersion, editorialVersion);
-            if (version == null)
+            if (version == null || version.Fk_ReleaseId != releaseId)
             {
                 //Version don't exist -> ALLOCATION
                 var specVersionAllocateAction = new SpecVersionAllocateAction { UoW = UoW };
@@ -241,6 +246,17 @@ namespace Etsi.Ultimate.Business.Versions
         public ServiceResponse<bool> CheckDraftCreationOrAssociation(int personId, int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion)
         {
             var svcResponse = new ServiceResponse<bool> { Result = true };
+            var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
+            rightsMgr.UoW = UoW;
+            var userRights = rightsMgr.GetRights(personId);
+
+            //[0] Version Major number should be draft
+            if (majorVersion > 2)
+            {
+                svcResponse.Report.LogError(Localization.Error_Version_Major_Number_Should_Be_Draft);
+                svcResponse.Result = false;
+                return svcResponse;
+            }
 
             //[1] Spec should exist
             var specRepo = RepositoryFactory.Resolve<ISpecificationRepository>();
@@ -272,84 +288,113 @@ namespace Etsi.Ultimate.Business.Versions
                 return svcResponse;
             }
 
-            //[4] Spec-Release should exist
-            var specRelease = specRepo.GetSpecificationReleaseByReleaseIdAndSpecId(specId, releaseId, false);
-            if (specRelease == null)
+            //If user is not MCC
+            if (!userRights.HasRight(Enum_UserRights.Contribution_DraftTsTrEnabledReleaseField))
             {
-                svcResponse.Report.LogError(Localization.Allocate_Error_SpecRelease_Does_Not_Exist);
-                svcResponse.Result = false;
-                return svcResponse;
-            }
-
-            //[5] If version is already allocated or uploaded, system should stop here
-            var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
-            specVersionRepo.UoW = UoW;
-            var versions = specVersionRepo.GetVersionsBySpecId(specId);
-            var dbversion = versions.FirstOrDefault(x => x.MajorVersion == majorVersion
-                    && x.TechnicalVersion == technicalVersion
-                        && x.EditorialVersion == editorialVersion);
-
-            if (dbversion != null)
-            {
-                if (dbversion.Fk_ReleaseId == releaseId)
+                //[4] Spec-Release should exist
+                var specRelease = specRepo.GetSpecificationReleaseByReleaseIdAndSpecId(specId, releaseId, false);
+                if (specRelease == null)
                 {
-                    svcResponse.Result = true;
-                }
-                else
-                {
-                    /* throw error when version exists but release doesn't correspond */
-                    svcResponse.Report.LogError(Localization.Wrong_Release_Version);
+                    svcResponse.Report.LogError(Localization.Allocate_Error_SpecRelease_Does_Not_Exist);
                     svcResponse.Result = false;
+                    return svcResponse;
                 }
 
-                return svcResponse;
-            }
-
-            //[6] Else, check version is latest to allocate
-            if (versions.Count > 0)
-            {
-                var latestVersion = versions.OrderByDescending(x => x.MajorVersion)
-                                            .ThenByDescending(y => y.TechnicalVersion)
-                                            .ThenByDescending(z => z.EditorialVersion)
-                                            .FirstOrDefault();
-                if ((latestVersion != null) &&
-                    ((latestVersion.MajorVersion > majorVersion) ||
-                     ((latestVersion.MajorVersion == majorVersion) && (latestVersion.TechnicalVersion > technicalVersion)) ||
-                     ((latestVersion.MajorVersion == majorVersion) && (latestVersion.TechnicalVersion == technicalVersion) && (latestVersion.EditorialVersion >= editorialVersion))))
+                //[5] If version is already allocated or uploaded, system should stop here
+                var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
+                specVersionRepo.UoW = UoW;
+                var versions = specVersionRepo.GetVersionsBySpecId(specId);
+                var dbversion = versions.FirstOrDefault(x => x.MajorVersion == majorVersion
+                                                             && x.TechnicalVersion == technicalVersion
+                                                             && x.EditorialVersion == editorialVersion);
+                if (dbversion != null)
                 {
-                    svcResponse.Report.LogError(String.Format(Localization.Error_Lower_Version, latestVersion.MajorVersion, latestVersion.TechnicalVersion, latestVersion.EditorialVersion));
+                    if (dbversion.Fk_ReleaseId == releaseId)
+                    {
+                        svcResponse.Result = true;
+                    }
+                    else
+                    {
+                        /* throw error when version exists but release doesn't correspond */
+                        svcResponse.Report.LogError(Localization.Wrong_Release_Version);
+                        svcResponse.Result = false;
+                    }
+
+                    return svcResponse;
+                }
+
+                //[6] Else, check version is latest to allocate
+                if (versions.Count > 0)
+                {
+                    var latestVersion = versions.OrderByDescending(x => x.MajorVersion)
+                        .ThenByDescending(y => y.TechnicalVersion)
+                        .ThenByDescending(z => z.EditorialVersion)
+                        .FirstOrDefault();
+                    if ((latestVersion != null) &&
+                        ((latestVersion.MajorVersion > majorVersion) ||
+                         ((latestVersion.MajorVersion == majorVersion) &&
+                          (latestVersion.TechnicalVersion > technicalVersion)) ||
+                         ((latestVersion.MajorVersion == majorVersion) &&
+                          (latestVersion.TechnicalVersion == technicalVersion) &&
+                          (latestVersion.EditorialVersion >= editorialVersion))))
+                    {
+                        svcResponse.Report.LogError(String.Format(Localization.Error_Lower_Version,
+                            latestVersion.MajorVersion, latestVersion.TechnicalVersion, latestVersion.EditorialVersion));
+                        svcResponse.Result = false;
+                        return svcResponse;
+                    }
+                }
+
+                //[7] Version is not allocated and we have necessary right to performed action (simulation)
+                // 1) Spec should be active
+                // 2) Spec-Release should not be withdrawn
+                // 3) Release should not be closed
+                // 4) User should have the right to allocate ---OR--- be prime rapporteur of this spec
+                if (!(spec.IsActive && (!specRelease.isWithdrawn.GetValueOrDefault())
+                      && (release.Enum_ReleaseStatus.Code != Enum_ReleaseStatus.Closed)
+                      && (userRights.HasRight(Enum_UserRights.Versions_Allocate)
+                          || spec.SpecificationRapporteurs.Any(x => x.Fk_RapporteurId == personId && x.IsPrime))))
+                {
+                    if (specRelease.isWithdrawn.GetValueOrDefault())
+                    {
+                        svcResponse.Report.LogError(Localization.Specification_reserve_withdrawn_error);
+                    }
+                    else
+                    {
+                        svcResponse.Report.LogError(Localization.RightError);
+                    }
+
                     svcResponse.Result = false;
                     return svcResponse;
                 }
             }
-
-            //[7] Version is not allocated and we have necessary right to performed action (simulation)
-            // 1) Spec should be active
-            // 2) Spec-Release should not be withdrawn
-            // 3) Release should no be closed
-            // 4) User should have the right to allocate ---OR--- be prime rapporteur of this spec
-            var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
-            rightsMgr.UoW = UoW;
-
-            var userRights = rightsMgr.GetRights(personId);
-            if (!(spec.IsActive && (!specRelease.isWithdrawn.GetValueOrDefault())
-                  && (release.Enum_ReleaseStatus.Code != Enum_ReleaseStatus.Closed)
-                  && (userRights.HasRight(Enum_UserRights.Versions_Allocate) 
-                    || spec.SpecificationRapporteurs.Any(x => x.Fk_RapporteurId == personId && x.IsPrime))))
+            else//If user is MCC
             {
-                if (specRelease.isWithdrawn.GetValueOrDefault())
+                //Release should not be closed
+                if (release.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Closed)
                 {
                     svcResponse.Report.LogError(Localization.Specification_reserve_withdrawn_error);
+                    svcResponse.Result = false;
+                    return svcResponse;
                 }
-                else
+
+                //Check if spec-release exists
+                var specRelease = specRepo.GetSpecificationReleaseByReleaseIdAndSpecId(specId, releaseId, false);
+                if (specRelease != null)
                 {
-                    svcResponse.Report.LogError(Localization.RightError);
+                    //[4] Check specRelease not withdrawn and check release non closed
+                    if (specRelease.isWithdrawn.GetValueOrDefault())
+                    {
+                        svcResponse.Report.LogError(Localization.Specification_reserve_withdrawn_error);
+                        svcResponse.Result = false;
+                        return svcResponse;
+                    }
+
+                    //Remark: version could exist or not, no matter => Creation or Association.
+                    //Moreover, no matter about the fact that the version is the latest of the spec release. 
                 }
-
-                svcResponse.Result = false;
-                return svcResponse;
+                //Else: -> spec-release and version will be created. No matter if version number already exists for another spec-release
             }
-
 
             return svcResponse;
         }

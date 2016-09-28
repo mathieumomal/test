@@ -1,6 +1,10 @@
 ﻿using System.Linq;
+using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Repositories;
 using NUnit.Framework;
 using Etsi.Ultimate.Services;
+using Rhino.Mocks;
+using Microsoft.Practices.Unity;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -20,6 +24,22 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(expectedResult, releases.Result.Count);
             if(expectedResult != 0)
                 Assert.AreEqual(expectedFirstReleaseId, releases.Result.First().Pk_ReleaseId);
+        }
+
+        [Test]
+        public void GetHighestNonClosedReleaseLinkedToASpec()
+        {
+            //GIVEN
+            var mockReleaseRepo = MockRepository.GenerateMock<IReleaseRepository>();
+            mockReleaseRepo.Stub(x => x.GetHighestNonClosedReleaseLinkedToASpec(Arg<int>.Is.Anything)).Return(new Release{Pk_ReleaseId = 1});
+            RepositoryFactory.Container.RegisterInstance(mockReleaseRepo);
+
+            //WHEN
+            var releaseService = ServicesFactory.Resolve<IReleaseService>();
+            var result = releaseService.GetHighestNonClosedReleaseLinkedToASpec(1);
+
+            //THEN
+            Assert.AreEqual(1, result.Pk_ReleaseId);
         }
     }
 }

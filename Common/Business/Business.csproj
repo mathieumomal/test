@@ -137,6 +137,7 @@
     </Compile>
     <Compile Include="Specifications\SpecificationChangeToUnderChangeControlAction.cs" />
     <Compile Include="Specifications\SpecificationDemoteAction.cs" />
+    <Compile Include="Specifications\SpecReleaseManager.cs" />
     <Compile Include="Versions\GetNextReleaseAction.cs" />
     <Compile Include="Versions\SpecVersionAllocateAction.cs" />
     <Compile Include="Versions\SpecVersionNumberValidator.cs" />

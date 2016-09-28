@@ -24,12 +24,15 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
         private const int ReleaseIdRel13 = 2883;
         private const int ReleaseIdRel14 = 2884;
         private const int ReleaseIdRel15 = 2885;
+        private const int ReleaseIdClosed = 2874;
         private const int MajorVersion = 2;
         private const int TechnicalVersion = 1;
         private const int EditorialVersion = 0;
         private const int UserHasNoRight = 1;
         private const int UserHasRight = 2;
-		private const int PrimeRapporteurHasNoRight = 3;		private const int ReleaseIdWithdrawn = 666;
+        private const int MccUser = 4;
+		private const int PrimeRapporteurHasNoRight = 3;		
+        private const int ReleaseIdWithdrawn = 666;
         private const int SpecIdDraft160000 = 160000;
         #endregion
 
@@ -46,6 +49,15 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
         #endregion
 
         #region Tests
+
+        [Test]
+        public void CheckDraftCreationOrAssociation_VersionShouldBeDraft_MajorInferiorFrom3()
+        {
+            var svcResponse = _versionSvc.CheckDraftCreationOrAssociation(UserHasRight, NonExistSpecId, ReleaseIdRel13, 13, TechnicalVersion, EditorialVersion);
+            Assert.IsFalse(svcResponse.Result);
+            Assert.AreEqual(1, svcResponse.Report.GetNumberOfErrors());
+            Assert.AreEqual(Localization.Error_Version_Major_Number_Should_Be_Draft, svcResponse.Report.ErrorList.First());
+        }
 
         [Test]
         public void CheckDraftCreationOrAssociation_SpecShouldExist()
@@ -146,6 +158,34 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
 
         #endregion
 
+        #region MCC tests
+        [Test]
+        public void CheckDraftCreationOrAssociation_MCC_SpecReleaseWithdrawn()
+        {
+            var svcResponse = _versionSvc.CheckDraftCreationOrAssociation(MccUser, SpecIdDraft160000, ReleaseIdWithdrawn, MajorVersion, TechnicalVersion, EditorialVersion);
+            Assert.IsFalse(svcResponse.Result);
+            Assert.AreEqual(1, svcResponse.Report.GetNumberOfErrors());
+            Assert.AreEqual(Localization.Specification_reserve_withdrawn_error, svcResponse.Report.ErrorList.First());
+        }
+
+        [Test]
+        public void CheckDraftCreationOrAssociation_MCC_ReleaseClosed()
+        {
+            var svcResponse = _versionSvc.CheckDraftCreationOrAssociation(MccUser, SpecIdDraft22103, ReleaseIdClosed, MajorVersion, TechnicalVersion, EditorialVersion);
+            Assert.IsFalse(svcResponse.Result);
+            Assert.AreEqual(1, svcResponse.Report.GetNumberOfErrors());
+            Assert.AreEqual(Localization.Specification_reserve_withdrawn_error, svcResponse.Report.ErrorList.First());
+        }
+
+        [Test]
+        public void CheckDraftCreationOrAssociation_MCC_SpecReleaseDoesntExist()
+        {
+            var svcResponse = _versionSvc.CheckDraftCreationOrAssociation(MccUser, SpecIdDraft160000, ReleaseIdRel13, MajorVersion, TechnicalVersion, EditorialVersion);
+            Assert.IsTrue(svcResponse.Result);
+            Assert.AreEqual(0, svcResponse.Report.GetNumberOfErrors());
+        }
+        #endregion
+
         #region Test Data
 
         private static void SetupMocks()
@@ -153,11 +193,15 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
             var noRights = new UserRightsContainer();
             var allocateRights = new UserRightsContainer();
             allocateRights.AddRight(Enum_UserRights.Versions_Allocate);
+            var mccRights = new UserRightsContainer();
+            mccRights.AddRight(Enum_UserRights.Versions_Allocate);
+            mccRights.AddRight(Enum_UserRights.Contribution_DraftTsTrEnabledReleaseField);
 
             var rightsManager = MockRepository.GenerateMock<IRightsManager>();
             rightsManager.Stub(x => x.GetRights(UserHasNoRight)).Return(noRights);
             rightsManager.Stub(x => x.GetRights(PrimeRapporteurHasNoRight)).Return(noRights);
             rightsManager.Stub(x => x.GetRights(UserHasRight)).Return(allocateRights);
+            rightsManager.Stub(x => x.GetRights(MccUser)).Return(mccRights);
 
             ManagerFactory.Container.RegisterInstance(rightsManager);
         } 

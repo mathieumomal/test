@@ -15,9 +15,6 @@ namespace Etsi.Ultimate.Services
     /// </summary>
     public class ReleaseService : IReleaseService
     {
-
-        #region IReleaseService Membres
-
         /// <summary>
         /// Get a pair of all releases and user's rights
         /// </summary>
@@ -177,6 +174,22 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        #endregion
+        public Release GetHighestNonClosedReleaseLinkedToASpec(int specId)
+        {
+            try
+            {
+                using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
+                    releaseManager.UoW = uow;
+                    return releaseManager.GetHighestNonClosedReleaseLinkedToASpec(specId);
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Error("GetHighestNonClosedReleaseLinkedToASpec : an unexpected error occured", e);
+                return null;
+            }
+        }
     }
 }

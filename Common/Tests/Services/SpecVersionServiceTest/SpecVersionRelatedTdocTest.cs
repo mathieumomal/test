@@ -9,6 +9,7 @@ using Etsi.Ultimate.Services;
 using NUnit.Framework;
 using System.Linq;
 using Etsi.Ultimate.Business;
+using Etsi.Ultimate.Business.Specifications;
 using Etsi.Ultimate.Business.Versions;
 using Rhino.Mocks;
 using Microsoft.Practices.Unity;
@@ -51,6 +52,22 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
         #endregion
 
         #region integration tests
+
+        [TestCase(0, 136080, 2883, 0, 13, 0, 1, "R2-001")]
+        public void AllocateOrAssociateDraftVersion_TryToCreateSpecRelease(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion,
+            int editorialVersion, string relatedTdoc)
+        {
+            var mock = MockRepository.GenerateMock<ISpecReleaseManager>();
+            mock.Stub(x => x.CreateSpecRelease(Arg<int>.Is.Anything, Arg<int>.Is.Anything)).Repeat.Once();
+            ManagerFactory.Container.RegisterInstance(mock);
+
+            var specVersionSvc = new SpecVersionService();
+            specVersionSvc.AllocateOrAssociateDraftVersion(personId, specId, releaseId, meetingId, majorVersion, technicalVersion,
+                editorialVersion, relatedTdoc);
+
+            mock.VerifyAllExpectations();
+        }
+
         /// <summary>
         /// Version already exist : ASSOCIATION
         /// Please note that to define that a version already exist just the specId and the versions data are necessary
@@ -65,7 +82,7 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
         /// <param name="relatedTdoc"></param>
         /// <param name="isSuccess"></param>
         /// <param name="infoMessage"></param>
-        [TestCase(0, 136080, 0, 0, 13, 0, 1, "R2-001", true, "")]
+        [TestCase(0, 136080, 2883, 0, 13, 0, 1, "R2-001", true, "")]
         public void UpdateVersionRelatedTdoc_Test_VersionAlreadyExist(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion,
             int editorialVersion, string relatedTdoc, bool isSuccess, string infoMessage)
         {

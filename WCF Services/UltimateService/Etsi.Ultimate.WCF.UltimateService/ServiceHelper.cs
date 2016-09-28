@@ -20,6 +20,7 @@ namespace Etsi.Ultimate.WCF.Service
         #region Constants
 
         private const string ConstErrorTemplateGetReleases = "Ultimate Service Error [GetReleases]: {0}";
+        private const string ConstErrorTemplateGetHighestNonClosedReleaseLinkedToASpec = "Ultimate Service Error [GetHighestNonClosedReleaseLinkedToASpec]: {0}";
         private const string ConstErrorTemplateGetWorkitemsByIds = "Ultimate Service Error [GetWorkItemsByIds]: {0}";
         private const string ConstErrorTemplateGetWorkitemsByKeyword = "Ultimate Service Error [GetWorkItemsByKeyWord]: {0}";
         private const string ConstErrorTemplateGetWorkItemsByKeyWords = "Ultimate Service Error [GetWorkItemsByKeyWords]: {0}";
@@ -143,6 +144,27 @@ namespace Etsi.Ultimate.WCF.Service
             return release;
         }
 
+        public Release GetHighestNonClosedReleaseLinkedToASpec(int specId)
+        {
+            var release = new Release();
+
+            try
+            {
+                var svc = ServicesFactory.Resolve<IReleaseService>();
+                var result = svc.GetHighestNonClosedReleaseLinkedToASpec(specId);
+                if (result != null)
+                    release = ConvertUltimateReleaseToServiceRelease(result);
+                else
+                    LogManager.Error(String.Format(ConstErrorTemplateGetHighestNonClosedReleaseLinkedToASpec,
+                        "Failed to get highest non closed release for the spec: " + specId));
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format(ConstErrorTemplateGetHighestNonClosedReleaseLinkedToASpec, ex.Message));
+            }
+
+            return release;
+        }
         #endregion 
 
         #region WIs

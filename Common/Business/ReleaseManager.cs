@@ -466,6 +466,13 @@ namespace Etsi.Ultimate.Business
             return releaseRepo.GetReleasesLinkedToASpec(specId);
         }
 
+        public Release GetHighestNonClosedReleaseLinkedToASpec(int specId)
+        {
+            releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
+            releaseRepo.UoW = UoW;
+            return releaseRepo.GetHighestNonClosedReleaseLinkedToASpec(specId);
+        }
+
         #endregion
 
         #region Private Methods

@@ -46,6 +46,10 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns></returns>
         [OperationContract]
         Release GetReleaseById(int personId, int releaseId);
+
+        [OperationContract]
+        Release GetHighestNonClosedReleaseLinkedToASpec(int specId);
+
         #endregion
 
         #region wi

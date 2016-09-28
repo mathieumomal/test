@@ -73,5 +73,7 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId">Person id</param>
         /// <returns>List of releases linked to spec provided</returns>
         ServiceResponse<List<Release>> GetReleasesLinkedToASpec(int specId, int personId);
+
+        Release GetHighestNonClosedReleaseLinkedToASpec(int specId);
     }
 }

@@ -105,6 +105,18 @@ namespace Etsi.Ultimate.Repositories
         {
             return UoW.Context.Specification_Release.Where(x => x.Fk_SpecificationId == specId).Select(x => x.Release).OrderByDescending(x => x.SortOrder).ToList();
         }
+
+        public Release GetHighestNonClosedReleaseLinkedToASpec(int specId)
+        {
+            return
+                UoW.Context.Specification_Release.Where(x => x.Fk_SpecificationId == specId)
+                    .Select(x => x.Release)
+                    .Include(x => x.Enum_ReleaseStatus)
+                    .Where(x => x.Enum_ReleaseStatus.Code != Enum_ReleaseStatus.Closed)
+                    .OrderByDescending(x => x.SortOrder)
+                    .FirstOrDefault();
+        }
+
         #endregion
     }
 
@@ -116,5 +128,7 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="specId">Specification id</param>
         /// <returns>List of releases linked to spec provided</returns>
         List<Release> GetReleasesLinkedToASpec(int specId);
+
+        Release GetHighestNonClosedReleaseLinkedToASpec(int specId);
     }
 }

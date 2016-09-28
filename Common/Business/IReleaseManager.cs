@@ -110,5 +110,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="specId">Specification id</param>
         /// <returns>List of releases linked to spec provided</returns>
         List<Release> GetReleasesLinkedToASpec(int specId);
+
+        Release GetHighestNonClosedReleaseLinkedToASpec(int specId);
     }
 }

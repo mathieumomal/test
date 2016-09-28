@@ -122,5 +122,11 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         {
             throw new NotImplementedException();
         }
+
+
+        public Release GetHighestNonClosedReleaseLinkedToASpec(int specId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

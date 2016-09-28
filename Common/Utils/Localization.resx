@@ -133,7 +133,7 @@
     <value>Invalid format for specification number. </value>
   </data>
   <data name="Specification_ERR003_Number_Already_Use" xml:space="preserve">
-    <value>Specification number already in use by “{0}”. </value>
+    <value>Specification number already in use by â€œ{0}â€. </value>
   </data>
   <data name="WorkItem_Import_Acronym_Too_Long" xml:space="preserve">
     <value>{0}, Uid {1}: Acronym {2} is more than 50 characters. It has been truncated.</value>
@@ -449,6 +449,12 @@
   </data>
   <data name="Unknown_Person" xml:space="preserve">
     <value>(none)</value>
+  </data>
+  <data name="Error_Version_Major_Number_Should_Be_Draft" xml:space="preserve">
+    <value>Version major number should be draft (&lt;= 2)</value>
+  </data>
+  <data name="Drafts_Rights_Error_Not_Reporteur" xml:space="preserve">
+    <value>You do not have right to perform this action. Only the rapporteur of the selected specification can reserve a Draft TS or Draft TR.</value>
   </data>
   <data name="Version_Upload_InvalidFilename" xml:space="preserve">
     <value>Invalid file name. System will change this to '{0}'</value>

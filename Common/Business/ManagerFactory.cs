@@ -76,6 +76,7 @@ namespace Etsi.Ultimate.Business
             Container.RegisterType<IContributionManager, ContributionManager>(new TransientLifetimeManager());
             Container.RegisterType<IFtpFoldersManager, FtpFoldersManager>(new TransientLifetimeManager());
             Container.RegisterType<IFinalizeApprovedDraftsManager, FinalizeApprovedDraftsManager>(new TransientLifetimeManager());
+            Container.RegisterType<ISpecReleaseManager, SpecReleaseManager>(new TransientLifetimeManager());
 
             // For ITU recommendations
             Container.RegisterType<ISeedFileParser, SeedFileParser>(new TransientLifetimeManager());

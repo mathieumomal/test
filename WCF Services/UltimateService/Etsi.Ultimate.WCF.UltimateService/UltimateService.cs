@@ -54,6 +54,13 @@ namespace Etsi.Ultimate.WCF.Service
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetReleaseById(personId, releaseId);
         }
+
+        public Release GetHighestNonClosedReleaseLinkedToASpec(int specId)
+        {
+            LogManager.Debug("[ServiceCall][GetHighestNonClosedReleaseLinkedToASpec] SpecId=" + specId);
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetHighestNonClosedReleaseLinkedToASpec(specId);
+        }
         #endregion
 
         #region WI services
