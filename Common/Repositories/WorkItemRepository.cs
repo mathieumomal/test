@@ -81,7 +81,7 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <param name="releaseIds">Release Ids</param>
         /// <param name="granularity">Granularity Level</param>
-        /// <param name="wiAcronym">Acronym</param>
+        /// <param name="wiAcronym">Acronym, we should correspond to the "Effective_Acronym" in database</param>
         /// <param name="wiName">Name</param>
         /// <param name="tbIds">List of Technical Bodies</param>
         /// <returns>List of workitems</returns>
@@ -93,7 +93,7 @@ namespace Etsi.Ultimate.Repositories
             return AllIncluding(t => t.Release, t => t.Remarks, t => t.ChildWis, t => t.ParentWi, t => t.WorkItems_ResponsibleGroups)
                 .Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)
                             && (x.Name.ToLower().Contains(wiName.Trim().ToLower()) || x.Pk_WorkItemUid == WorkItemId || String.IsNullOrEmpty(wiName.Trim()))
-                            && (x.Acronym.ToLower().Contains(wiAcronym.Trim().ToLower()) || (String.IsNullOrEmpty(wiAcronym.Trim())))
+                            && ((x.Effective_Acronym != null && x.Effective_Acronym.ToLower().Contains(wiAcronym.Trim().ToLower())) || (String.IsNullOrEmpty(wiAcronym.Trim())))
                             && (x.WiLevel != null && x.WiLevel <= granularity)
                             && (tbIds.Count == 0 || x.WorkItems_ResponsibleGroups.Any(y => tbIds.Contains(y.Fk_TbId.Value)))).ToList();
         }
@@ -135,7 +135,7 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="releaseIds">List of Release Ids</param>
         /// <param name="granularity">Granularity Level</param>
         /// <param name="hidePercentComplete">Percentage Complete</param>
-        /// <param name="wiAcronym">Acronym</param>
+        /// <param name="wiAcronym">Acronym, we should correspond to the "Effective_Acronym" in database</param>
         /// <param name="wiName">Name</param>
         /// <param name="tbIds">List of Technical Bodies</param>
         /// <returns>Work Item Count</returns>
@@ -143,7 +143,7 @@ namespace Etsi.Ultimate.Repositories
         {
             return UoW.Context.WorkItems.Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)
                             && (x.Name.ToLower().Contains(wiName.Trim().ToLower()) || String.IsNullOrEmpty(wiName.Trim()))
-                            && (x.Acronym.ToLower().Contains(wiAcronym.Trim().ToLower()) || (String.IsNullOrEmpty(wiAcronym.Trim())))
+                            && ((x.Effective_Acronym != null && x.Effective_Acronym.ToLower().Contains(wiAcronym.Trim().ToLower())) || (String.IsNullOrEmpty(wiAcronym.Trim())))
                             && (x.WiLevel != null && x.WiLevel <= granularity)
                             && (hidePercentComplete ? !(x.Completion >= 100 && x.WiLevel == 1) : true)
                             && (tbIds.Count == 0 || x.WorkItems_ResponsibleGroups.Any(y => tbIds.Contains(y.Fk_TbId.Value)))).Count();

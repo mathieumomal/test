@@ -15,7 +15,7 @@ using System.Linq;
 namespace Etsi.Ultimate.Tests.Repositories
 {
     [TestFixture]
-    class WorkItemRepositoryTest : BaseTest
+    class WorkItemRepositoryTest : BaseEffortTest
     {
         [Test]
         public void WorkItem_GetAll()
@@ -110,9 +110,19 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(12, workItems.Count);
             //Acronym search
             workItems = repo.GetWorkItemsBySearchCriteria(releaseIds, 5, "UPCON", String.Empty, new List<int>());
-            Assert.AreEqual(3, workItems.Count);
+            Assert.AreEqual(0, workItems.Count);//Because searching now by EffectiveAcronym
 
             mockDataContext.VerifyAllExpectations();
+        }
+
+        [Test(Description = "System should find only one WI with effective acronym EMC1 for release 2882")]
+        public void GetWorkItemsBySearchCriteria_SearchByEffectiveAcronym()
+        {
+            var wiRepository = new WorkItemRepository { UoW = UoW };
+            var result = wiRepository.GetWorkItemsBySearchCriteria(new List<int> { 2882 }, 1, "EMC1", string.Empty,
+                new List<int>());
+
+            Assert.AreEqual(1, result.Count);
         }
 
         [Test, TestCaseSource("WorkItemData")]
@@ -143,9 +153,19 @@ namespace Etsi.Ultimate.Tests.Repositories
             releaseIds.Add(526);
             Assert.AreEqual(20, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, String.Empty, new List<int>()));
             Assert.AreEqual(12, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, "Stage", new List<int>()));
-            Assert.AreEqual(3, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, "UPCON", String.Empty, new List<int>()));
+            Assert.AreEqual(0, wiRepository.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, "UPCON", String.Empty, new List<int>()));//Because searching now by EffectiveAcronym
 
             mockDataContext.VerifyAllExpectations();
+        }
+
+        [Test(Description = "System should find only one WI with effective acronym EMC1 for release 2882")]
+        public void GetWorkItemsCountBySearchCriteria_SearchByEffectiveAcronym()
+        {
+            var wiRepository = new WorkItemRepository { UoW = UoW };
+            var result = wiRepository.GetWorkItemsCountBySearchCriteria(new List<int> { 2882 }, 1, false, "EMC1", string.Empty,
+                new List<int>());
+
+            Assert.AreEqual(1, result);
         }
 
         [Test, TestCaseSource("WorkItemData")]

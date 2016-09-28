@@ -15,7 +15,7 @@ using System.IO;
 
 namespace Etsi.Ultimate.Tests.Business
 {
-    class WorkItemManagerTest : BaseTest
+    class WorkItemManagerTest : BaseEffortTest
     {
         int personID = 12;
         int releaseId = 1;
@@ -71,10 +71,26 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.IsTrue(workItems.Value.HasRight(Enum_UserRights.WorkItem_ImportWorkplan));
             //Acronym search
             workItems = wiManager.GetWorkItemsBySearchCriteria(personID, releaseIds, 5, false, "UPCON", String.Empty, new List<int>());
-            Assert.AreEqual(3, workItems.Key.Count);
+            Assert.AreEqual(0, workItems.Key.Count);//Because searching now by EffectiveAcronym
             Assert.IsTrue(workItems.Value.HasRight(Enum_UserRights.WorkItem_ImportWorkplan));
 
             mockDataContext.VerifyAllExpectations();
+        }
+
+        [Test(Description = "System should find only one WI with effective acronym EMC1 for release 2882")]
+        public void GetWorkItemsBySearchCriteria_SearchByEffectiveAcronym()
+        {
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.WorkItem_ImportWorkplan);
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(personID)).Return(userRights).Repeat.Times(6);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            var wiManager = new WorkItemManager(UoW);
+            var result = wiManager.GetWorkItemsBySearchCriteria(12, new List<int> { 2882 }, 1, false, "EMC1", string.Empty,
+                new List<int>());
+
+            Assert.AreEqual(1, result.Key.Count);
         }
 
         [Test, TestCaseSource("WorkItemData")]
@@ -180,9 +196,19 @@ namespace Etsi.Ultimate.Tests.Business
             //Name search
             Assert.AreEqual(12, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, String.Empty, "Stage", new List<int>()));
             //Acronym search
-            Assert.AreEqual(3, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, "UPCON", String.Empty, new List<int>()));
+            Assert.AreEqual(0, wiManager.GetWorkItemsCountBySearchCriteria(releaseIds, 5, false, "UPCON", String.Empty, new List<int>()));//Because searching now by EffectiveAcronym
 
             mockDataContext.VerifyAllExpectations();
+        }
+
+        [Test(Description = "System should find only one WI with effective acronym EMC1 for release 2882")]
+        public void GetWorkItemsCountBySearchCriteria_SearchByEffectiveAcronym()
+        {
+            var wiManager = new WorkItemManager(UoW);
+            var result = wiManager.GetWorkItemsCountBySearchCriteria(new List<int> { 2882 }, 1, false, "EMC1", string.Empty,
+                new List<int>());
+
+            Assert.AreEqual(1, result);
         }
 
         [Test]
