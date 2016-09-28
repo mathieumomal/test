@@ -64,7 +64,7 @@
     <add key="EmailDefaultFrom" value="3GPP Portal&lt;3gppapp@3gpp.org&gt;"/>
     
     <!-- Blind Carbon copy address when emails were sending : each emails will be sent and a copy will be sent transparently to this address -->
-    <add key="EmailDefaultBcc" value="3gppapp@3gpp.org"/>
+    <add key="EmailDefaultBcc" value="mathieu.mangion@etsi.org"/>
     
     <!-- Etsi Workitems Delivery folder : used to get ItuRecord hyperlink -->
     <add key="EtsiWorkitemsDeliveryFolder" value="http://www.etsi.org/deliver/"/>
