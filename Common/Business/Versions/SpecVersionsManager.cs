@@ -361,7 +361,7 @@ namespace Etsi.Ultimate.Business.Versions
                     }
                     else
                     {
-                        svcResponse.Report.LogError(Localization.RightError);
+                        svcResponse.Report.LogError(Localization.Drafts_Rights_Error_Not_Reporteur);
                     }
 
                     svcResponse.Result = false;

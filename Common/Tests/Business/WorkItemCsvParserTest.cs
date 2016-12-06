@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Etsi.Ultimate.Business;
+using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using NUnit.Framework;
 using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Tests.FakeRepositories;
+using Rhino.Mocks;
 
 namespace Etsi.Ultimate.Tests.Business
 {
@@ -92,9 +94,10 @@ namespace Etsi.Ultimate.Tests.Business
         }
 
         [Test]
-        public void ImportCsv_NominalCase()
+        public void ImportCsv_NominalCase_Create()
         {
             RegisterRepositories();
+            var now = DateTime.UtcNow;
 
             var wiImporter = new WorkItemCsvParser() { UoW = new UltimateUnitOfWork() };
 
@@ -144,6 +147,54 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.IsTrue(wi.WorkItems_ResponsibleGroups.ElementAt(0).IsPrimeResponsible.GetValueOrDefault());
 
             Assert.IsTrue(wi.IsNew);
+            Assert.GreaterOrEqual(wi.ImportCreationDate, now);
+            Assert.GreaterOrEqual(wi.ImportLastModificationDate, now);
+            Assert.IsFalse(wi.DeletedFlag);
+        }
+
+        [Test]
+        public void ImportCsv_NominalCase_Edit()
+        {
+            var now = DateTime.UtcNow;
+            var wiImporter = new WorkItemCsvParser { UoW = new UltimateUnitOfWork() };
+            RepositoryFactory.Container.RegisterType<IWorkItemRepository, WorkItemOneLineFakeRepository>(new TransientLifetimeManager());
+            var result = wiImporter.ParseCsv("../../TestData/WorkItems/OneLine_Nominal.csv");
+
+            Assert.IsNotNull(result.Key);
+            Assert.AreEqual(1, result.Key.Count);
+            Assert.AreEqual(0, result.Value.GetNumberOfIssues());
+
+            var wi = result.Key.First();
+
+            Assert.IsFalse(wi.IsNew);//WI is not new
+            Assert.AreEqual(wi.ImportCreationDate, new DateTime(2016,11,2,0,0,0));//Creation date did not change
+            Assert.GreaterOrEqual(wi.ImportLastModificationDate, now);//Updated !
+            Assert.IsFalse(wi.DeletedFlag);//Not deleted
+        }
+
+        [Test]
+        public void ImportCsv_NominalCase_Create_DeleteLogicallyOldRecords()
+        {
+            var now = DateTime.UtcNow;
+            var wiImporter = new WorkItemCsvParser { UoW = new UltimateUnitOfWork() };
+            RepositoryFactory.Container.RegisterType<IWorkItemRepository, WorkItemOneLineFakeRepository>(new TransientLifetimeManager());
+            var result = wiImporter.ParseCsv("../../TestData/WorkItems/OneLine_Nominal_CreateAndDelete.csv");
+
+            Assert.IsNotNull(result.Key);
+            Assert.AreEqual(2, result.Key.Count);//Even if csv file contains only one record -> the system will modifed two records because the one already present in database (not imported) should be automatically deleted
+            Assert.AreEqual(0, result.Value.GetNumberOfIssues());
+
+            var wiWhichShouldBeDeletedBecauseNotJustImported = result.Key.First(x => x.Pk_WorkItemUid == 630000);
+            Assert.IsFalse(wiWhichShouldBeDeletedBecauseNotJustImported.IsNew);//WI is not new
+            Assert.AreEqual(wiWhichShouldBeDeletedBecauseNotJustImported.ImportCreationDate, new DateTime(2016, 11, 2, 0, 0, 0));//Creation date did not change
+            Assert.GreaterOrEqual(wiWhichShouldBeDeletedBecauseNotJustImported.ImportLastModificationDate, now);//Updated !
+            Assert.IsTrue(wiWhichShouldBeDeletedBecauseNotJustImported.DeletedFlag);//Not deleted
+
+            var newWi = result.Key.First(x => x.Pk_WorkItemUid == 630001);
+            Assert.IsTrue(newWi.IsNew);
+            Assert.GreaterOrEqual(newWi.ImportCreationDate, now);
+            Assert.GreaterOrEqual(newWi.ImportLastModificationDate, now);
+            Assert.IsFalse(newWi.DeletedFlag);
         }
 
         [Test]
@@ -236,8 +287,7 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Invalid_Hierarchy, 24, 630000, 2, 0), report.ErrorList.First());
         }
 
-
-        [Test]
+        [Test(Description = "Workitem not modified EXCEPT is ImportLastModificationDate")]
         public void ImportCsv_WorkItemNotModified()
         {
             RegisterRepositories();
@@ -247,7 +297,7 @@ namespace Etsi.Ultimate.Tests.Business
 
             var result = wiImporter.ParseCsv("../../TestData/WorkItems/OneLine_Nominal.csv");
 
-            Assert.AreEqual(0, result.Key.Count);
+            Assert.AreEqual(1, result.Key.Count);
         }
 
         [Test]
@@ -394,18 +444,23 @@ namespace Etsi.Ultimate.Tests.Business
         public void ImportCsv_AddNewRemark()
         {
             RegisterRepositories();
+            var now = DateTime.UtcNow;
             var wiImporter = new WorkItemCsvParser() { UoW = new UltimateUnitOfWork() };
             RepositoryFactory.Container.RegisterType<IWorkItemRepository, WorkItemOneLineFakeRepository>(new TransientLifetimeManager());
             var result = wiImporter.ParseCsv("../../TestData/WorkItems/NewRemarks.csv");
 
             var wiList = result.Key;
-            var report = result.Value;
 
             Assert.AreEqual(1, wiList.Count);
 
             var wi = wiList.First();
             Assert.AreEqual(2, wi.Remarks.Count);
             Assert.AreEqual("New remark", wi.Remarks.ElementAt(1).RemarkText);
+
+            Assert.IsFalse(wi.IsNew);//WI is not new
+            Assert.AreEqual(wi.ImportCreationDate, new DateTime(2016, 11, 2, 0, 0, 0));//Creation date did not change
+            Assert.GreaterOrEqual(wi.ImportLastModificationDate, now);//Updated !
+            Assert.IsFalse(wi.DeletedFlag);//Not deleted
 
         }
 

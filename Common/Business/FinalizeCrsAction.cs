@@ -82,12 +82,13 @@ namespace Etsi.Ultimate.Business
                         sr => sr.Fk_ReleaseId == changeRequest.Fk_Release.GetValueOrDefault());
                 if (specRelease == null)
                 {
-                    string releaseName = releases.Find(r => r.Pk_ReleaseId == requestReleaseId.GetValueOrDefault()).Code;
-                    response.Report.LogWarning(String.Format(Localization.FinalizeCrs_Warn_SpecReleaseNotExisting,
-                        specification.Number, releaseName));
-                    continue;
+                    //Create SpecRelease
+                    var specReleaseMgr = ManagerFactory.Resolve<ISpecReleaseManager>();
+                    specReleaseMgr.UoW = UoW;
+                    specReleaseMgr.CreateSpecRelease(changeRequest.Fk_Specification.GetValueOrDefault(),
+                        changeRequest.Fk_Release.GetValueOrDefault());
                 }
-                if (specRelease.isWithdrawn.GetValueOrDefault())
+                else if (specRelease.isWithdrawn.GetValueOrDefault())
                 {
                     string releaseName = releases.Find(r => r.Pk_ReleaseId == requestReleaseId.GetValueOrDefault()).Code;
                     response.Report.LogWarning(String.Format(Localization.FinalizeCrs_Warn_SpecReleaseWithdrawn, specification.Number, releaseName));

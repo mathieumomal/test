@@ -282,10 +282,18 @@ namespace Etsi.Ultimate.Module.WorkItem
             }
             else
             {
-                lblExportPath.Text = new StringBuilder()
+                if (ConfigVariables.ActivateWorkPlanExportAfterImport)
+                {
+                    lblExportPath.Text = new StringBuilder()
                     .Append("The new work plan will be exported to: ")
                     .Append(PathExportWorkPlan)
                     .ToString();
+                }
+                else
+                {
+                    lblExportPath.Text = string.Empty;
+                }
+                
                 btnConfirmImport.Enabled = true;
             }
 
@@ -317,10 +325,18 @@ namespace Etsi.Ultimate.Module.WorkItem
                 wpSvc.AddWorkPlanFile(wpf);
 
                 //Update RadWindow_workItemState label with real files path  
-                lblSaveStatus.Text = "Work plan was successfully imported.<br/>Word and Excel version of the work plan are available at:";
-                lblExportedPath.Text = new StringBuilder()
+                lblSaveStatus.Text = "Work plan was successfully imported.<br/>";
+                if (ConfigVariables.ActivateWorkPlanExportAfterImport)
+                {
+                    lblExportedPath.Text = new StringBuilder()
+                    .Append("Word and Excel version of the work plan are available at:")
                     .Append(PathExportWorkPlan)
                     .ToString();
+                }
+                else
+                {
+                    lblExportedPath.Text = string.Empty;
+                }
             }
             else
             {

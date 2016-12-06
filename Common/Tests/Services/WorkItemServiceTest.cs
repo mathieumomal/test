@@ -14,6 +14,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System;
+using System.Configuration;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -368,28 +369,71 @@ namespace Etsi.Ultimate.Tests.Services
         }
 
         [Test]
-        public void ImportWorkPlan_Nominal()
+        public void ImportWorkPlan_Nominal_WithoutExport()
         {
-            var wiList = new List<WorkItem>() { new WorkItem() };
+            var wiList = new List<WorkItem> { new WorkItem() };
             UserRightsContainer userRights = new UserRightsContainer();
             userRights.AddRight(Enum_UserRights.WorkItem_ImportWorkplan);
 
             //Mock Rights Manager
             var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
             mockRightsManager.Stub(x => x.GetRights(0)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
 
             // Mock WIRepository
             var wiRepositoryMock = MockRepository.GenerateMock<IWorkItemRepository>();
             wiRepositoryMock.Expect(x => x.InsertOrUpdate(Arg<WorkItem>.Is.Anything));
             wiRepositoryMock.Stub(x => x.AllIncluding()).IgnoreArguments().Return(wiList.AsQueryable());
-
             RepositoryFactory.Container.RegisterInstance(typeof(IWorkItemRepository), wiRepositoryMock);
-            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            // Mock Workplan exporter
+            var wpExporterMock = MockRepository.GenerateMock<IWorkPlanExporter>();
+            wpExporterMock.Stub(x => x.ExportWorkPlan(Arg<string>.Is.Anything)).Repeat.Never();
+            ManagerFactory.Container.RegisterInstance(typeof(IWorkPlanExporter), wpExporterMock);
+
             // Place something in the cache
             CacheManager.Insert("WI_IMPORT_"+"az12", wiList);
 
             var wiService = new WorkItemService();
             Assert.IsTrue(wiService.ImportWorkPlan("az12", string.Empty));
+            wpExporterMock.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void ImportWorkPlan_Nominal_WithExport()
+        {
+            //Activate export inside web.config
+            ConfigurationManager.AppSettings["ActivateWorkPlanExportAfterImport"] = "true";
+
+            var wiList = new List<WorkItem> { new WorkItem() };
+            UserRightsContainer userRights = new UserRightsContainer();
+            userRights.AddRight(Enum_UserRights.WorkItem_ImportWorkplan);
+
+            //Mock Rights Manager
+            var mockRightsManager = MockRepository.GenerateMock<IRightsManager>();
+            mockRightsManager.Stub(x => x.GetRights(0)).Return(userRights);
+            ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
+
+            // Mock WIRepository
+            var wiRepositoryMock = MockRepository.GenerateMock<IWorkItemRepository>();
+            wiRepositoryMock.Expect(x => x.InsertOrUpdate(Arg<WorkItem>.Is.Anything));
+            wiRepositoryMock.Stub(x => x.AllIncluding()).IgnoreArguments().Return(wiList.AsQueryable());
+            RepositoryFactory.Container.RegisterInstance(typeof(IWorkItemRepository), wiRepositoryMock);
+
+            // Mock Workplan exporter
+            var wpExporterMock = MockRepository.GenerateMock<IWorkPlanExporter>();
+            wpExporterMock.Stub(x => x.ExportWorkPlan(Arg<string>.Is.Anything)).Repeat.Once().Return(true);
+            ManagerFactory.Container.RegisterInstance(typeof(IWorkPlanExporter), wpExporterMock);
+
+            // Place something in the cache
+            CacheManager.Insert("WI_IMPORT_" + "az12", wiList);
+
+            var wiService = new WorkItemService();
+            Assert.IsTrue(wiService.ImportWorkPlan("az12", string.Empty));
+            wpExporterMock.VerifyAllExpectations();
+
+            //RESET Desactivate export inside web.config
+            ConfigurationManager.AppSettings["ActivateWorkPlanExportAfterImport"] = "false";
         }
 
         [Test]

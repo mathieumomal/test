@@ -1,20 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
-using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
-using OfficeOpenXml;
-using System.IO;
-using System.Drawing;
-using OfficeOpenXml.Style;
 
 namespace Etsi.Ultimate.Business
 {
-    public class WorkItemImporter
+    public class WorkItemImporter : IWorkItemImporter
     {
         private readonly string CACHE_KEY = "WI_IMPORT_";
 
@@ -100,5 +93,14 @@ namespace Etsi.Ultimate.Business
             
             return true;
         }
+    }
+
+    public interface IWorkItemImporter
+    {
+        IUltimateUnitOfWork UoW { get; set; }
+
+        KeyValuePair<string, Report> TryImportCsv(string filePath);
+
+        bool ImportWorkPlan(string token);
     }
 }

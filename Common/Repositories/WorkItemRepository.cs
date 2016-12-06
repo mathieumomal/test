@@ -91,7 +91,8 @@ namespace Etsi.Ultimate.Repositories
             int.TryParse(wiName, out WorkItemId);
 
             return AllIncluding(t => t.Release, t => t.Remarks, t => t.ChildWis, t => t.ParentWi, t => t.WorkItems_ResponsibleGroups)
-                .Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)
+                .Where(x => !x.DeletedFlag
+                            && releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)
                             && (x.Name.ToLower().Contains(wiName.Trim().ToLower()) || x.Pk_WorkItemUid == WorkItemId || String.IsNullOrEmpty(wiName.Trim()))
                             && ((x.Effective_Acronym != null && x.Effective_Acronym.ToLower().Contains(wiAcronym.Trim().ToLower())) || (String.IsNullOrEmpty(wiAcronym.Trim())))
                             && (x.WiLevel != null && x.WiLevel <= granularity)
@@ -113,6 +114,7 @@ namespace Etsi.Ultimate.Repositories
                 .Where(x => (x.Name.ToLower().Contains(searchString.ToLower())
                     || x.Acronym.ToLower().Contains(searchString.ToLower())
                     || x.Pk_WorkItemUid == workItemId)
+                    && !x.DeletedFlag
                     && x.WiLevel != 0
                     && (!shouldHaveAcronym || !string.IsNullOrEmpty(x.Acronym.Trim()))).ToList();
         }
@@ -125,7 +127,8 @@ namespace Etsi.Ultimate.Repositories
         public List<WorkItem> GetAllWorkItemsForReleases(List<int> releaseIds)
         {
             return AllIncluding(t => t.Release, t => t.Remarks, t => t.WorkItems_ResponsibleGroups)
-                .Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value))
+                .Where(x => !x.DeletedFlag 
+                            && releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value))
                 .ToList();
         }
 
@@ -141,7 +144,9 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>Work Item Count</returns>
         public int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName, List<int> tbIds)
         {
-            return UoW.Context.WorkItems.Where(x => releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)
+            return UoW.Context.WorkItems.Where(x => 
+                            !x.DeletedFlag
+                            && releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value)
                             && (x.Name.ToLower().Contains(wiName.Trim().ToLower()) || String.IsNullOrEmpty(wiName.Trim()))
                             && ((x.Effective_Acronym != null && x.Effective_Acronym.ToLower().Contains(wiAcronym.Trim().ToLower())) || (String.IsNullOrEmpty(wiAcronym.Trim())))
                             && (x.WiLevel != null && x.WiLevel <= granularity)
@@ -186,8 +191,40 @@ namespace Etsi.Ultimate.Repositories
         public List<WorkItem> GetWorkItemsByKeywords(List<string> keywords)
         {
             var keywordsInLower = keywords.ConvertAll(x => x.ToLower());
-            return AllIncluding(wi => wi.WorkItems_ResponsibleGroups).Where(x => keywordsInLower.Contains(x.Acronym.ToLower())
-                || keywordsInLower.Contains(x.Pk_WorkItemUid.ToString().ToLower())).ToList();
+            return AllIncluding(wi => wi.WorkItems_ResponsibleGroups).Where(x => 
+                !x.DeletedFlag && 
+                (keywordsInLower.Contains(x.Acronym.ToLower())
+                || keywordsInLower.Contains(x.Pk_WorkItemUid.ToString().ToLower()))
+                ).ToList();
+        }
+
+        /// <summary>
+        /// Get primary work item by specification ID
+        /// </summary>
+        /// <param name="specificationID"> specification ID</param>
+        /// <returns>WorkItem if found, else null</returns>
+        public WorkItem GetPrimeWorkItemBySpecificationID(int specificationID)
+        {
+            var workItemBySpecID = UoW.Context.Specification_WorkItem.Include(wi => wi.WorkItem).Include(x => x.WorkItem.WorkItems_ResponsibleGroups)
+                .Where(x => 
+                    x.Fk_SpecificationId == specificationID 
+                    && x.isPrime == true 
+                    && !x.WorkItem.DeletedFlag).FirstOrDefault();
+            return workItemBySpecID != null ? workItemBySpecID.WorkItem : null;
+        }
+
+        /// <summary>
+        /// The aim of this method is to return the release of the first WI found with lower WiLevel among a list of WI 
+        /// </summary>
+        /// <param name="workitemsIds"></param>
+        /// <returns></returns>
+        public Release GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(List<int> workitemsIds)
+        {
+            var oneOfWiWithFirstLevel =  UoW.Context.WorkItems.Include(x => x.Release.Enum_ReleaseStatus)
+                .Where(x => workitemsIds.Contains(x.Pk_WorkItemUid) && !x.DeletedFlag).OrderBy(x => x.WiLevel).ThenByDescending(x => x.Pk_WorkItemUid).FirstOrDefault();
+            if (oneOfWiWithFirstLevel == null || oneOfWiWithFirstLevel.Release == null)
+                return null;
+            return oneOfWiWithFirstLevel.Release;
         }
 
         #endregion
@@ -267,5 +304,19 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="keywords">keywords to identify workitems</param>
         /// <returns>List of workitems</returns>
         List<WorkItem> GetWorkItemsByKeywords(List<string> keywords);
+
+        /// <summary>
+        /// Get primary work item by specification ID
+        /// </summary>
+        /// <param name="specificationID"> specification ID</param>
+        /// <returns>WorkItem if found, else null</returns>
+        WorkItem GetPrimeWorkItemBySpecificationID(int specificationID);
+
+        /// <summary>
+        /// The aim of this method is to return the release of the first WI found with lower WiLevel among a list of WI 
+        /// </summary>
+        /// <param name="workitemsIds"></param>
+        /// <returns></returns>
+        Release GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(List<int> workitemsIds);
     }
 }

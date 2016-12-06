@@ -339,6 +339,9 @@
           <Property Name="RapporteurCompany" Type="varchar" MaxLength="100" />
           <Property Name="TssAndTrs" Type="varchar" MaxLength="50" />
           <Property Name="Effective_Acronym" Type="varchar" MaxLength="50" />
+          <Property Name="ImportCreationDate" Type="datetime" Nullable="false" />
+          <Property Name="ImportLastModificationDate" Type="datetime" Nullable="false" />
+          <Property Name="DeletedFlag" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="WorkItems_ResponsibleGroups">
           <Key>
@@ -1795,6 +1798,9 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <NavigationProperty Name="Specification_WorkItem" Relationship="Etsi.Ultimate.DataAccess.FK_WorkItemID" FromRole="WorkItem" ToRole="Specification_WorkItem" />
           <NavigationProperty Name="CR_WorkItems" Relationship="Etsi.Ultimate.DataAccess.FK_WIId" FromRole="WorkItem" ToRole="CR_WorkItems" />
           <Property Type="String" Name="Effective_Acronym" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ImportCreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ImportLastModificationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DeletedFlag" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_WorkItems_Releases">
           <End Type="Etsi.Ultimate.DataAccess.Release" Role="Release" Multiplicity="0..1" />
@@ -2739,6 +2745,9 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <EntitySetMapping Name="WorkItems">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.WorkItem">
               <MappingFragment StoreEntitySet="WorkItems">
+                <ScalarProperty Name="DeletedFlag" ColumnName="DeletedFlag" />
+                <ScalarProperty Name="ImportLastModificationDate" ColumnName="ImportLastModificationDate" />
+                <ScalarProperty Name="ImportCreationDate" ColumnName="ImportCreationDate" />
                 <ScalarProperty Name="Effective_Acronym" ColumnName="Effective_Acronym" />
                 <ScalarProperty Name="TssAndTrs" ColumnName="TssAndTrs" />
                 <ScalarProperty Name="RapporteurCompany" ColumnName="RapporteurCompany" />

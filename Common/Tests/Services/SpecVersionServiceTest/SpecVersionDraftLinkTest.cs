@@ -128,7 +128,7 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
             var svcResponse = _versionSvc.CheckDraftCreationOrAssociation(UserHasNoRight, SpecIdDraft22103, ReleaseIdRel13, MajorVersion, TechnicalVersion + 1, EditorialVersion);
             Assert.IsFalse(svcResponse.Result);
             Assert.AreEqual(1, svcResponse.Report.GetNumberOfErrors());
-            Assert.AreEqual(Localization.RightError, svcResponse.Report.ErrorList.First());
+            Assert.AreEqual(Localization.Drafts_Rights_Error_Not_Reporteur, svcResponse.Report.ErrorList.First());
         }
 
         [Test]

@@ -33,7 +33,8 @@ namespace Etsi.Ultimate.Tests.Business
             ManagerFactory.Container.RegisterInstance(typeof(IRightsManager), mockRightsManager);
 
             var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
-            var wiExporter = new WorkPlanExporter(uow);
+            var wiExporter = ManagerFactory.Resolve<IWorkPlanExporter>();
+            wiExporter.UoW = uow;
 
             Assert.IsTrue( wiExporter.ExportWorkPlan(".") );
         }

@@ -149,6 +149,8 @@
     <add key="DefaultDevicesDatabase" value="DesktopModules\DevicePreviewManagement\Resources\defaultDevices.xml" />
     <add key="VersionsLatestFTPFolder" value="2015-09" />
     <add key="CRsListRecordsMaxSize" value="100"/>
+	<!-- ActivateWorkPlanExportAfterImport: False <=> do not export WorkPlan as excel or docx at the end of the import -->
+	<add key="ActivateWorkPlanExportAfterImport" value="false"/>
 
   </appSettings>
   <system.web.webPages.razor>

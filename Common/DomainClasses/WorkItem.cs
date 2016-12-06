@@ -51,6 +51,9 @@ namespace Etsi.Ultimate.DomainClasses
         public string RapporteurCompany { get; set; }
         public string TssAndTrs { get; set; }
         public string Effective_Acronym { get; set; }
+        public System.DateTime ImportCreationDate { get; set; }
+        public System.DateTime ImportLastModificationDate { get; set; }
+        public bool DeletedFlag { get; set; }
     
         public virtual Release Release { get; set; }
         public virtual ICollection<Remark> Remarks { get; set; }

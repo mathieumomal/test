@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Tests.FakeSets;
@@ -72,9 +70,10 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                         TsgStoppedMtgRef = "SP-64",
                         PcgStoppedMtgRef = "PCG-33",
                         CreationDate = new DateTime(2014, 2, 5),
-                        LastModification = new DateTime(2014, 2, 6)
-
-
+                        LastModification = new DateTime(2014, 2, 6),
+                        ImportLastModificationDate = new DateTime(2016, 11, 2),
+                        ImportCreationDate = new DateTime(2016, 11, 2),
+                        DeletedFlag = false
                     });
                     return list;
 
@@ -85,6 +84,9 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
                         Pk_WorkItemUid = 100000005,
                         WorkplanId = 6,
                         Name = "Release 13 Features",
+                        ImportLastModificationDate = new DateTime(2016, 11, 2),
+                        ImportCreationDate = new DateTime(2016, 11, 2),
+                        DeletedFlag = false
                     });
                     return level0List;
             }
@@ -166,6 +168,18 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         }
 
         #endregion
+
+
+
+        public WorkItem GetPrimeWorkItemBySpecificationID(int specificationID)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Release GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(List<int> workitemsIds)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class WorkItemOneLineLevel0FakeRepository : WorkItemFakeRepository

@@ -375,6 +375,20 @@ namespace Etsi.Ultimate.Utils
             }
         }
 
+        /// <summary>
+        /// System should export Workplan after import as Excel and Docx (or not)
+        /// </summary>
+        public static bool ActivateWorkPlanExportAfterImport
+        {
+            get
+            {
+                bool activateWorkPlanExportAfterImport;
+                bool.TryParse(ConfigurationManager.AppSettings["ActivateWorkPlanExportAfterImport"],
+                    out activateWorkPlanExportAfterImport);
+                return activateWorkPlanExportAfterImport;
+            }
+        }
+
         #region Cookies to exclude from security checks
         /// <summary>
         /// Tdocs list cookie name

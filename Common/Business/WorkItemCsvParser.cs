@@ -78,6 +78,8 @@ namespace Etsi.Ultimate.Business
         {
             try
             {
+                var now = DateTime.UtcNow;
+
                 if (UoW == null)
                     throw new InvalidOperationException("Cannot process with UoW defined");
                 // Initialize all fields
@@ -135,14 +137,18 @@ namespace Etsi.Ultimate.Business
                         TreatCreationDate(record, wi);
                         TreatLastModifiedDate(record, wi);
 
+                        TreatImportDates(wi, now);
+
                         if (IsCurrentWiModified)
                             ModifiedWorkItems.Add(wi);
-                        TreatedWorkItems.Add(wi);
+                        TreatedWorkItems.Add(wi);//Contains modification of Import dates
                     }
 
                 }
 
-                // Return the list of workitems that were modified, along with the report.
+                DeleteLogicallyOldWorkItemsNotJustImported(TreatedWorkItems.Select(x => x.Pk_WorkItemUid).ToList(), ModifiedWorkItems, now);
+
+                // Return the list of workitems that were modified (even if modification is only concerning import dates), along with the report.
                 return new KeyValuePair<List<WorkItem>, Report>(ModifiedWorkItems, Report);
             }
 
@@ -214,6 +220,59 @@ namespace Etsi.Ultimate.Business
         }
 
         #region Field Parsing
+
+        /// <summary>
+        /// Delete logically old work items not just imported
+        /// </summary>
+        /// <param name="wiUids">List of wi uids found inside CSV</param>
+        /// <param name="modifiedWorkItems">List of workitems to update where will be added the one to delete to enable the system to change their DeletedFlag to true</param>
+        /// <param name="now">Import date</param>
+        private void DeleteLogicallyOldWorkItemsNotJustImported(List<int> wiUids, List<WorkItem> modifiedWorkItems, DateTime now)
+        {
+            //Find all Wis not just imported (according to UIDs not found inside CSV file)
+            var allWisNotJustImported = AllWorkItems.Where(x => !wiUids.Contains(x.Pk_WorkItemUid)).ToList();
+            LogManager.Info(string.Format("Please find the list of WIs logically deleted after the current import: {0}", string.Join(", ", allWisNotJustImported.Select(x => x.Pk_WorkItemUid).ToList())));
+            
+            foreach (var wi in allWisNotJustImported)
+            {
+                wi.Release = null;
+                wi.ParentWi = null;
+                wi.ChildWis.Clear();
+                wi.WorkItems_ResponsibleGroups.ToList().ForEach(x => x.WorkItem = null);
+                wi.Remarks.ToList().ForEach(x => x.WorkItem = null);
+
+                wi.DeletedFlag = true;
+                wi.ImportLastModificationDate = now;
+                modifiedWorkItems.Add(wi);
+            }
+        }
+
+        /// <summary>
+        /// Manages import dates
+        /// If WI created : ImportCreationDate setted and ImportLastModificationDate setted
+        /// If WI updated : ImportLastModificationDate updated
+        /// </summary>
+        /// <param name="wi"></param>
+        /// <param name="now"></param>
+        private void TreatImportDates(WorkItem wi, DateTime now)
+        {
+            //NEW WI
+            if (wi.IsNew)
+            {
+                LogManager.Debug("WI created: " + wi.Pk_WorkItemUid);
+                wi.ImportCreationDate = now;
+                wi.ImportLastModificationDate = now;
+            }
+            else//WI UPDATED
+            {
+                LogManager.Debug("WI edited: " + wi.Pk_WorkItemUid);
+                wi.ImportLastModificationDate = now;
+            }
+
+            if (!IsCurrentWiModified)
+                LogManager.Debug("Current WI not modified except its ImportLastModificationDate: " + wi.Pk_WorkItemUid);
+            IsCurrentWiModified = true;//LAST MODIFICATION DATE FOR IMPORT UPDATED !
+        }
 
         /// <summary>
         /// Manages the resource. System parses the field against "," field, and looks for each group.

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Services
@@ -36,24 +37,27 @@ namespace Etsi.Ultimate.Services
         /// <returns>Success/Failure</returns>
         public bool ImportWorkPlan(string token, string exportPath)
         {
-            var isExportSuccess = false;
             try
             {
-                bool isImportSuccess;
                 using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
                 {
-                    var csvImport = new WorkItemImporter() { UoW = uoW };
-                    isImportSuccess = csvImport.ImportWorkPlan(token);
+                    var wiImporter = ManagerFactory.Resolve<IWorkItemImporter>();
+                    wiImporter.UoW = uoW;
+                    var workplanExporter = ManagerFactory.Resolve<IWorkPlanExporter>();
+                    workplanExporter.UoW = uoW;
+
+                    var isImportSuccess = wiImporter.ImportWorkPlan(token);
 
                     if (isImportSuccess)
                     {
                         uoW.Save();
-                        var csvExport = new WorkPlanExporter(uoW);
-                        isExportSuccess = csvExport.ExportWorkPlan(exportPath);
+                        if (ConfigVariables.ActivateWorkPlanExportAfterImport)
+                        {                        
+                            return workplanExporter.ExportWorkPlan(exportPath);
+                        }
                     }
-
+                    return isImportSuccess;
                 }
-                return (isImportSuccess && isExportSuccess);
             }
             catch (Exception e)
             {

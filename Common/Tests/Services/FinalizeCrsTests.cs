@@ -49,15 +49,14 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(0, newVersion.EditorialVersion.GetValueOrDefault());
         }
 
-        [Test, Description("System should log warning if spec release does not exist yet.")]
-        public void FinalizeCr_LogsWarningIfSpecReleaseDoesNotExist()
+        [Test, Description("System should create a new SpecRelease if spec release does not exist yet.")]
+        public void FinalizeCr_CreateSpecReleaseIfSpecReleaseDoesNotExist()
         {
             var specReleaseCount = UoW.Context.Specification_Release.Count();
             var response = crService.SetCrsAsFinal(UserRolesFakeRepository.SPECMGR_ID, new List<string> { "RP-CR0005" });
             Assert.IsTrue(response.Result);
-            Assert.AreEqual(specReleaseCount, UoW.Context.Specification_Release.Count());   // No spec release created
-            Assert.AreEqual(1, response.Report.GetNumberOfWarnings());
-            Assert.AreEqual(String.Format(Localization.FinalizeCrs_Warn_SpecReleaseNotExisting, "22.105", "Rel-14"), response.Report.WarningList.First());
+            Assert.AreEqual(specReleaseCount + 1, UoW.Context.Specification_Release.Count());   // New spec release
+            Assert.AreEqual(0, response.Report.GetNumberOfWarnings());
         }
 
         [Test, Description("System should log warning if spec release is withdrawn")]

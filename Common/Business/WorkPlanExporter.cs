@@ -14,27 +14,15 @@ using DocumentFormat.OpenXml.Packaging;
 using System.Text;
 
 namespace Etsi.Ultimate.Business
-{    
-    public class WorkPlanExporter
+{
+    public class WorkPlanExporter : IWorkPlanExporter
     {
+        public IUltimateUnitOfWork UoW { get; set; }
+
         #region Properties
 
-        private IUltimateUnitOfWork _uoW;
         private string DOC_TITLE = "Work_plan_3gpp_" + DateTime.Now.ToString("yyMMdd");
         private string ZIP_NAME = "Work_plan_3gpp_" + DateTime.Now.ToString("yyMMdd"); 
-
-        #endregion
-
-        #region Constructor
-
-        /// <summary>
-        /// Default Constructor
-        /// </summary>
-        /// <param name="UoW">Unit Of Work</param>
-        public WorkPlanExporter(IUltimateUnitOfWork UoW)
-        {
-            _uoW = UoW;
-        }
 
         #endregion
 
@@ -48,10 +36,10 @@ namespace Etsi.Ultimate.Business
         {
             try
             {
-                var workItemManager = new WorkItemManager(_uoW);
+                var workItemManager = new WorkItemManager(UoW);
                 var workItems = workItemManager.GetAllWorkItems(0);
                 List<WorkItemForExport> workItemExportObjects = new List<WorkItemForExport>();
-                workItemExportObjects.AddRange(workItems.Key.OrderBy(x => x.WorkplanId).ToList().Select(y => new WorkItemForExport(y)));
+                workItemExportObjects.AddRange(workItems.Key.Where(x => !x.DeletedFlag).OrderBy(x => x.WorkplanId).ToList().Select(y => new WorkItemForExport(y)));
 
                 ExportToExcel(workItemExportObjects, exportPath);
                 ExportToWord(workItemExportObjects, exportPath);
@@ -652,5 +640,12 @@ namespace Etsi.Ultimate.Business
         }
 
         #endregion
+    }
+
+    public interface IWorkPlanExporter
+    {
+        IUltimateUnitOfWork UoW { get; set; }
+
+        bool ExportWorkPlan(string exportPath);
     }
 }
