@@ -59,6 +59,23 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(0, response.Report.GetNumberOfWarnings());
         }
 
+        [Test, Description("System should raise an error if spec release does not exist yet and the inhibitPromote flag is set to true.")]
+        public void FinalizeCr_RaisedAnErrorIfSpecReleaseDoesNotExistAndInhibitPromoteTrue()
+        {
+            //Set promoteInhibited to true
+            var spec = UoW.Context.Specifications.First(x => x.Pk_SpecificationId == 136084);
+            spec.promoteInhibited = true;
+            UoW.Context.SaveChanges();
+
+            var specReleaseCount = UoW.Context.Specification_Release.Count();
+            var response = crService.SetCrsAsFinal(UserRolesFakeRepository.SPECMGR_ID, new List<string> { "RP-CR0005" });
+            Assert.IsFalse(response.Result);
+            Assert.AreEqual(specReleaseCount, UoW.Context.Specification_Release.Count());   // No new spec release
+            Assert.AreEqual(0, response.Report.GetNumberOfWarnings());
+            Assert.AreEqual(1, response.Report.GetNumberOfErrors());
+            Assert.AreEqual("Could not allocate version for Specification 22.105: Release Rel-14 is not defined and cannot be created for this specification because the specification has inhibit promote flag set to true.", response.Report.ErrorList.FirstOrDefault());
+        }
+
         [Test, Description("System should log warning if spec release is withdrawn")]
         public void FinalizeCr_LogsWarningIfSpecReleaseIsWithdrawn()
         {
@@ -124,8 +141,22 @@ namespace Etsi.Ultimate.Tests.Services
 
             Assert.AreEqual(versionId, UoW.Context.ChangeRequests.First(cr => cr.ChangeRequestTsgDatas.Any(t => t.TSGTdoc == "RP-CR0003")).Fk_NewVersion);
             Assert.AreEqual(versionId, UoW.Context.ChangeRequests.First(cr => cr.ChangeRequestTsgDatas.Any(t => t.TSGTdoc == "RP-CR0010")).Fk_NewVersion);
+        }
 
+        [Test, Description("System should not create a new SpecRelease if spec release already created.")]
+        public void FinalizeCr_DoNotCreateSpecReleaseIfSpecReleaseAlreadyExists()
+        {
+            //Remove spec release
+            var specRelToRemove = UoW.Context.Specification_Release.FirstOrDefault(
+                x => x.Fk_ReleaseId == 2882 && x.Fk_SpecificationId == 136084);
+            UoW.Context.Specification_Release.Remove(specRelToRemove);
+            UoW.Save();
+            var specReleaseCount = UoW.Context.Specification_Release.Count();
 
+            var response = crService.SetCrsAsFinal(UserRolesFakeRepository.SPECMGR_ID, new List<string> { "RP-CR0003", "RP-CR0010" });
+            Assert.IsTrue(response.Result);
+            Assert.AreEqual(specReleaseCount + 1, UoW.Context.Specification_Release.Count());   // Only one new spec release created
+            Assert.AreEqual(0, response.Report.GetNumberOfWarnings());
         }
 
         [Test]

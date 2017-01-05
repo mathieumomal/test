@@ -2,13 +2,19 @@
 
 namespace Etsi.Ultimate.Business.Versions.Interfaces
 {
-    interface IQualityChecks : IDisposable
+    public interface IQualityChecks : IDisposable
     {
         /// <summary>
         /// Check the document having any tracking revisions
         /// </summary>
         /// <returns>True/False</returns>
         bool HasTrackedRevisions();
+
+        /// <summary>
+        /// Check if the last table is the one which contains the change history records
+        /// </summary>
+        /// <returns></returns>
+        bool ChangeHistoryTableIsTheLastOne();
 
         /// <summary>
         /// Check the version in change history table
@@ -35,7 +41,7 @@ namespace Etsi.Ultimate.Business.Versions.Interfaces
         /// Check the year in copyright statement
         /// </summary>
         /// <returns>True/False</returns>
-        bool IsCopyRightYearCorrect();
+        bool IsCopyRightYearCorrect(DateTime now);
 
         /// <summary>
         /// Check for first two lines of fixed title as below

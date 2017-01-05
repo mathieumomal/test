@@ -178,7 +178,9 @@ namespace Etsi.Ultimate.Business.Versions
                                 diCust.Create();
 
                             /* Generate archive full path */
-                            var zipFile = GetValidFileName(version) + ".zip";
+                            var versionFilenameMgr = ManagerFactory.Resolve<IVersionFilenameManager>();
+                            var zipFile = versionFilenameMgr.GenerateValidFilename(version.Specification.Number,
+                                        version.MajorVersion, version.TechnicalVersion, version.EditorialVersion) + ".zip";
                             var versionPathToCopy = Path.Combine(ftpArchivePath, zipFile);
                             /* Generate custom full path destination */
                             var versionCustomPathToSave = Path.Combine(ftpTargetPathCustom, zipFile);
@@ -234,19 +236,6 @@ namespace Etsi.Ultimate.Business.Versions
                     ftpFoldersManagerStatus.Finished = true;
                 }
             }
-        }
-
-        /// <summary>
-        /// Get valide file name
-        /// </summary>
-        /// <returns>valid file name</returns>
-        private string GetValidFileName(SpecVersion specVersion)
-        {
-            var specNumber = specVersion.Specification.Number;
-            var validFileName = String.Format(ConstValidFilename,
-                specNumber.Replace(".", ""),
-                UtilsManager.EncodeVersionToBase36(specVersion.MajorVersion, specVersion.TechnicalVersion, specVersion.EditorialVersion));
-            return validFileName;
         }
 
         /// <summary>

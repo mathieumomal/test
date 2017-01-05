@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -8,54 +7,20 @@ using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Etsi.Ultimate.Business.Versions.Interfaces;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Business.Versions.QualityChecks
 {
     /// <summary>
-    /// Quality checks for .docX files
+    /// Quality checks for .docx files
+    /// Uses Interop for some checks  (minority => long but sometime usefull for specific cases)
+    /// And Document.OpenXML for the rest of checks (majority => fast and powerfull)
     /// </summary>
     public class DocXQualityChecks : IQualityChecks
     {
         #region Variables
 
-        private readonly Type[] _trackedRevisionsElements =
-        {
-            typeof(CellDeletion),
-            typeof(CellInsertion),
-            typeof(CellMerge),
-            typeof(CustomXmlDelRangeEnd),
-            typeof(CustomXmlDelRangeStart),
-            typeof(CustomXmlInsRangeEnd),
-            typeof(CustomXmlInsRangeStart),
-            typeof(Deleted),
-            typeof(DeletedFieldCode),
-            typeof(DeletedMathControl),
-            typeof(DeletedRun),
-            typeof(DeletedText),
-            typeof(Inserted),
-            typeof(InsertedMathControl),
-            typeof(InsertedMathControl),
-            typeof(InsertedRun),
-            typeof(MoveFrom),
-            typeof(MoveFromRangeEnd),
-            typeof(MoveFromRangeStart),
-            typeof(MoveTo),
-            typeof(MoveToRangeEnd),
-            typeof(MoveToRangeStart),
-            typeof(MoveToRun),
-            typeof(NumberingChange),
-            typeof(ParagraphMarkRunPropertiesChange),
-            typeof(ParagraphPropertiesChange),
-            typeof(RunPropertiesChange),
-            typeof(SectionPropertiesChange),
-            typeof(TableCellPropertiesChange),
-            typeof(TableGridChange),
-            typeof(TablePropertiesChange),
-            typeof(TablePropertyExceptionsChange),
-            typeof(TableRowPropertiesChange)
-        };
-
-        private readonly WordprocessingDocument _wordProcessingDocument;
+        private readonly DocDocumentManager _docDocumentManager;
 
         #endregion
 
@@ -64,10 +29,10 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         /// <summary>
         /// Constructor to create Word processing document by using given memory stream
         /// </summary>
-        /// <param name="memoryStream">Memory Stream</param>
-        public DocXQualityChecks(MemoryStream memoryStream)
+        /// <param name="myVar">Contains all necessary object to analyse doc/docx file</param>
+        public DocXQualityChecks(DocDocumentManager myVar)
         {
-            _wordProcessingDocument = WordprocessingDocument.Open(memoryStream, false);
+            _docDocumentManager = myVar;
         }
 
         #endregion
@@ -75,30 +40,108 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         #region IQualityChecks Members
 
         /// <summary>
-        /// Check the document having any tracking revisions
+        /// Check the document having any tracking revisions ('suivi des modifications' / 'révisions non validées' in french)
         /// </summary>
         /// <returns>True/False</returns>
         public bool HasTrackedRevisions()
         {
             try
             {
-                if (PartHasTrackedRevisions(_wordProcessingDocument.MainDocumentPart)) //Check document body for tracking revisions
+                return _docDocumentManager.Word.ActiveDocument.Revisions.Count > 0;
+
+                #region legacy implementation
+                /*
+                 * Old implementation kept for information purpose. 
+                 * Has been replaced by Interop analyse because of revisions found by Document.OpenXML api was incorrect:
+                 * The problem was (with Document.OpenXml):
+                 * When a revision occured on table inside docx document the grid inside the document should look like:
+                    <w:tblGrid>
+                        <w:gridCol w:w="1548" />
+                        <w:gridCol w:w="8028" />
+                        <w:tblGridChange w:id="1">
+                            <w:tblGrid>
+                                <w:gridCol w:w="4788" />
+                                <w:gridCol w:w="4788" />
+                            </w:tblGrid>
+                        </w:tblGridChange>
+                    </w:tblGrid>
+                 * So, with differences between root 'gridCol' and internal one. 
+                 * FYI: tblGridChange indicates a table style revision (modification)
+                 * But, infortunately some documents contained no differences with something like:
+                    <w:tblGrid>
+                        <w:gridCol w:w="4788" />
+                        <w:gridCol w:w="4788" />
+                        <w:tblGridChange w:id="1">
+                            <w:tblGrid>
+                                <w:gridCol w:w="4788" />
+                                <w:gridCol w:w="4788" />
+                            </w:tblGrid>
+                        </w:tblGridChange>
+                    </w:tblGrid>
+                 * For this kind of problem, if we open the document with word -> he is able to detect that there is no difference (no revision) but unfortunately the Document.OpenXML api is not able and raised the quality checks warning. 
+                 * For this reason this XML framework has been replaced by using Interop library (and revision count feature) 
+                if (PartHasTrackedRevisions(_docDocumentManager.WordProcessingDocument.MainDocumentPart)) //Check document body for tracking revisions
                     return true;
-                if (_wordProcessingDocument.MainDocumentPart.HeaderParts.Any(PartHasTrackedRevisions))
+                if (_docDocumentManager.WordProcessingDocument.MainDocumentPart.HeaderParts.Any(PartHasTrackedRevisions))
                 {
                     return true;
                 }
-                if (_wordProcessingDocument.MainDocumentPart.FooterParts.Any(PartHasTrackedRevisions))
+                if (_docDocumentManager.WordProcessingDocument.MainDocumentPart.FooterParts.Any(PartHasTrackedRevisions))
                 {
                     return true;
                 }
-                if (_wordProcessingDocument.MainDocumentPart.EndnotesPart != null)
-                    if (PartHasTrackedRevisions(_wordProcessingDocument.MainDocumentPart.EndnotesPart))
+                if (_docDocumentManager.WordProcessingDocument.MainDocumentPart.EndnotesPart != null)
+                    if (PartHasTrackedRevisions(_docDocumentManager.WordProcessingDocument.MainDocumentPart.EndnotesPart))
                         return true;
-                if (_wordProcessingDocument.MainDocumentPart.FootnotesPart != null)
-                    if (PartHasTrackedRevisions(_wordProcessingDocument.MainDocumentPart.FootnotesPart))
+                if (_docDocumentManager.WordProcessingDocument.MainDocumentPart.FootnotesPart != null)
+                    if (PartHasTrackedRevisions(_docDocumentManager.WordProcessingDocument.MainDocumentPart.FootnotesPart))
                         return true;
                 return false;
+                 * https://msdn.microsoft.com/en-us/library/office/ff629396(v=office.14).aspx
+                 * 
+                 * Rest of the legacy code:
+                 private bool PartHasTrackedRevisions(OpenXmlPart part)
+                 {
+                    return part.RootElement.Descendants().Any(e => _trackedRevisionsElements.Contains(e.GetType()));
+                 }
+                 private readonly Type[] _trackedRevisionsElements =
+                 {
+                    typeof(CellDeletion),
+                    typeof(CellInsertion),
+                    typeof(CellMerge),
+                    typeof(CustomXmlDelRangeEnd),
+                    typeof(CustomXmlDelRangeStart),
+                    typeof(CustomXmlInsRangeEnd),
+                    typeof(CustomXmlInsRangeStart),
+                    typeof(Deleted),
+                    typeof(DeletedFieldCode),
+                    typeof(DeletedMathControl),
+                    typeof(DeletedRun),
+                    typeof(DeletedText),
+                    typeof(Inserted),
+                    typeof(InsertedMathControl),
+                    typeof(InsertedMathControl),
+                    typeof(InsertedRun),
+                    typeof(MoveFrom),
+                    typeof(MoveFromRangeEnd),
+                    typeof(MoveFromRangeStart),
+                    typeof(MoveTo),
+                    typeof(MoveToRangeEnd),
+                    typeof(MoveToRangeStart),
+                    typeof(MoveToRun),
+                    typeof(NumberingChange),
+                    typeof(ParagraphMarkRunPropertiesChange),
+                    typeof(ParagraphPropertiesChange),
+                    typeof(RunPropertiesChange),
+                    typeof(SectionPropertiesChange),
+                    typeof(TableCellPropertiesChange),
+                    typeof(TableGridChange),
+                    typeof(TablePropertiesChange),
+                    typeof(TablePropertyExceptionsChange),
+                    typeof(TableRowPropertiesChange)
+                 };
+                 * */
+                #endregion
             }
             catch (Exception)
             {
@@ -107,52 +150,114 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         }
 
         /// <summary>
+        /// Check if the last table is the one which contains the change history records
+        /// </summary>
+        /// <returns></returns>
+        public bool ChangeHistoryTableIsTheLastOne()
+        {
+            //Find last table and take the innerText
+            var lastTable = _docDocumentManager.WordProcessingDocument.MainDocumentPart.Document.Body.OfType<Table>().LastOrDefault();
+            if (lastTable == null)
+            {
+                return false;
+            }
+            var lasttableText = lastTable.InnerText;
+
+            //Search inside all documents for the last paragraph with text which contains "changehistory"
+            var paragraphs = _docDocumentManager.WordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+            Paragraph changeHistoryP = null;
+            foreach (var paragraph in paragraphs)
+            {
+                if (GetPlainText(paragraph).Replace("\r\n", String.Empty).Replace(" ", String.Empty).ToLower().Contains("changehistory"))
+                {
+                    changeHistoryP = paragraph;
+                }
+            }
+            //If no paragraph has been found with the 'change history' text raised a warning
+            if (changeHistoryP == null)
+            {
+                return false;
+            }
+
+            //Check if the last 'change history' text has been found:
+            //- before the last table of the document
+            //- inside the last table of the document
+            // else raised a warning
+            //TECH: compare the text of the last table defined earlier to the table found here
+            var nextPs = changeHistoryP.ElementsAfter().OfType<Table>().ToList();
+            Table table;
+            if (nextPs.Any())
+            {
+                table = nextPs.ElementAt(0);
+            }
+            else
+            {
+                //If "Change history" is not contain inside a TableCell return the warning
+                if (changeHistoryP.Parent.GetType() != typeof(TableCell))
+                {
+                    LogManager.Debug("DocXQualityChecks - ChangeHistoryTableIsTheLastOne: last occurence of change history text is not inside a cell -> " + changeHistoryP.Parent.GetType());
+                    return false;
+                }
+                else if (changeHistoryP.Parent.Parent.Parent.GetType() != typeof (Table))
+                {
+                    LogManager.Debug("DocXQualityChecks - ChangeHistoryTableIsTheLastOne: last occurence of change history text is not inside a table -> " + changeHistoryP.Parent.Parent.Parent.GetType());
+                    return false;
+                }
+                table = changeHistoryP.Parent.Parent.Parent as Table;
+                if (table == null)
+                    return false;
+            }
+
+            var tableTextToCompare = table.InnerText;
+            if (tableTextToCompare.Equals(lasttableText, StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Check the version in change history table
+        /// System search for the last table, then take the last row of it
+        /// Then search for column "new" or "newversion" or which contains both keywords "new" or "version"
+        /// Then finally, checks that version inside this cell is the same than the one provided
         /// </summary>
         /// <param name="versionToCheck">version</param>
         /// <returns>True/False</returns>
         public bool IsHistoryVersionCorrect(string versionToCheck)
         {
             bool isHistoryVersionCorrect = false;
-            IEnumerable<Table> tables = _wordProcessingDocument.MainDocumentPart.Document.Body.OfType<Table>();
-            foreach (var table in tables)
+            var lastTable = _docDocumentManager.WordProcessingDocument.MainDocumentPart.Document.Body.OfType<Table>().LastOrDefault();
+            if (lastTable != null)
             {
-                var headerRow = table.OfType<TableRow>().FirstOrDefault();
+                var headerRow = lastTable.OfType<TableRow>().ToList()[0];
                 if (headerRow != null)
                 {
-                    var headerText = GetPlainText(headerRow).Replace("\r\n", String.Empty).Replace(" ", String.Empty);
-                    if (headerText.Equals("Changehistory", StringComparison.InvariantCultureIgnoreCase)) //Change History table found
+                    var secondRowColumns = headerRow.OfType<TableCell>().ToList();
+                    int indexOfNewColumn = -1;
+                    for (int i = 0; i < secondRowColumns.Count; i++)
                     {
-                        var secondRow = table.OfType<TableRow>().ToList()[1];
-                        if (secondRow != null)
+                        var columnText = GetPlainText(secondRowColumns[i]).Replace("\r\n", String.Empty).Replace(" ", String.Empty).ToLower();
+                        if (columnText.Equals("new", StringComparison.InvariantCultureIgnoreCase) || columnText.Equals("newversion", StringComparison.InvariantCultureIgnoreCase) || (columnText.Contains("new") && columnText.Contains("version")))
                         {
-                            var secondRowColumns = secondRow.OfType<TableCell>().ToList();
-                            int indexOfNewColumn = -1;
-                            for (int i = 0; i < secondRowColumns.Count; i++)
-                            {
-                                var columnText = GetPlainText(secondRowColumns[i]).Replace("\r\n", String.Empty).Replace(" ", String.Empty);
-                                if (columnText.Equals("New", StringComparison.InvariantCultureIgnoreCase) || columnText.Equals("NewVersion", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    indexOfNewColumn = i;
-                                    break;
-                                }
-                            }
+                            indexOfNewColumn = i;
+                            break;
+                        }
+                    }
 
-                            if (indexOfNewColumn >= 0)
+                    if (indexOfNewColumn >= 0)
+                    {
+                        var lastRow = lastTable.OfType<TableRow>().LastOrDefault();  //Last row found in change history table
+                        if (lastRow != null)
+                        {
+                            var newColumnCell = lastRow.OfType<TableCell>().ToList()[indexOfNewColumn];
+                            if (newColumnCell != null)
                             {
-                                var lastRow = table.OfType<TableRow>().LastOrDefault();  //Last row found in change history table
-                                if (lastRow != null)
+                                var historyVersionNumber = GetPlainText(newColumnCell).Replace("\r\n", String.Empty).Replace(" ", String.Empty);
+                                if (historyVersionNumber.Equals(versionToCheck, StringComparison.InvariantCultureIgnoreCase)) //Version matching on last row last cell of change history table
                                 {
-                                    var newColumnCell = lastRow.OfType<TableCell>().ToList()[indexOfNewColumn];
-                                    if (newColumnCell != null)
-                                    {
-                                        var historyVersionNumber = GetPlainText(newColumnCell).Replace("\r\n", String.Empty).Replace(" ", String.Empty);
-                                        if (historyVersionNumber.Equals(versionToCheck, StringComparison.InvariantCultureIgnoreCase)) //Version matching on last row last cell of change history table
-                                        {
-                                            isHistoryVersionCorrect = true;
-                                            break;
-                                        }
-                                    }
+                                    isHistoryVersionCorrect = true;
                                 }
                             }
                         }
@@ -164,6 +269,8 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
 
         /// <summary>
         /// Check the version in cover page
+        /// Confirm that version given as parameter is the one inside the first page (cover) of the document
+        /// (inside header between spec number and date)
         /// </summary>
         /// <param name="versionToCheck">version</param>
         /// <returns>True/False</returns>
@@ -173,7 +280,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
 
             const string title = "3rd generation partnership project;"; //Search version on cover page till we found fixed 3GPP title
 
-            var paragraphs = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+            var paragraphs = _docDocumentManager.WordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
             foreach (var paragraph in paragraphs)
             {
                 var paragraphText = GetPlainText(paragraph).Replace("\r\n", String.Empty).Trim().ToLower();
@@ -199,6 +306,8 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
 
         /// <summary>
         /// Check the date in cover page
+        /// Confirm that date given as parameter is the one inside the first page (cover) of the document
+        /// (Margin error +/- 2 months)
         /// </summary>
         /// <param name="meetingDate">Meeting Date</param>
         /// <returns>True/False</returns>
@@ -208,7 +317,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
 
             string title = "3rd generation partnership project;"; //Search meeting date on cover page till we found fixed 3GPP title
 
-            var paragraphs = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+            var paragraphs = _docDocumentManager.WordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
             foreach (var paragraph in paragraphs)
             {
                 var paragraphText = GetPlainText(paragraph).Replace("\r\n", String.Empty).Trim().ToLower();
@@ -244,14 +353,18 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
 
         /// <summary>
         /// Check the year in copyright statement
+        /// System should be able to find bookmark (signet): copyrightaddon
+        /// And inside system should find:
+        /// - '© [CURRENT YEAR - 1]' or '© [CURRENT YEAR]' if month is january
+        /// - otherwise '© [CURRENT YEAR]'
         /// </summary>
         /// <returns>True/False</returns>
-        public bool IsCopyRightYearCorrect()
+        public bool IsCopyRightYearCorrect(DateTime now)
         {
             bool isCopyRightYearCorrect = false;
 
             //Find the copyright year, based on the 'copyrightaddon' bookmark
-            var paragraphs = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+            var paragraphs = _docDocumentManager.WordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
             foreach (var paragraph in paragraphs)
             {
                 var bookMarks = paragraph.Descendants().OfType<BookmarkStart>();
@@ -268,16 +381,16 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
                 if (isCopyRightAddOnBookmarkFound)
                 {
                     var paragraphText = GetPlainText(paragraph).Replace("\r\n", String.Empty).Trim().ToLower();
-                    if (DateTime.UtcNow.Month == 1)
+                    if (now.Month == 1)
                     {
-                        if (paragraphText.Contains("© " + (DateTime.UtcNow.Year - 1)))
+                        if (paragraphText.Contains("© " + (now.Year - 1)))
                         {
                             isCopyRightYearCorrect = true;
                             break;
                         }
                     }
 
-                    if (paragraphText.Contains("© " + DateTime.UtcNow.Year))
+                    if (paragraphText.Contains("© " + now.Year))
                     {
                         isCopyRightYearCorrect = true;
                         break;
@@ -289,9 +402,9 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         }
 
         /// <summary>
-        /// Check for first two lines of fixed title as below
+        /// Check for first two lines (inside first page (cover)) of fixed title as below
         ///     3rd Generation Partnership Project;
-        ///     Technical Specification Group [TSG Title];
+        ///     [TSG Title];
         /// </summary>
         /// <param name="tsgTitle">Technical Specification Group Title</param>
         /// <returns>True/False</returns>
@@ -301,7 +414,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             bool isFirstTwoLinesOfTitleCorrect = false;
 
             //Search title on cover page based on bookmarks page1 & page2 (title should be on page1 bookmark range)
-            var paragraphs = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+            var paragraphs = _docDocumentManager.WordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
 
             bool page1BookmarkStart = false;
             bool page2BookmarkStart = false;
@@ -334,7 +447,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         }
 
         /// <summary>
-        /// Check the title & release correct in cover page
+        /// Check that the spec's title is present inside first page (cover)
         /// </summary>
         /// <param name="title">Title</param>
         /// <returns>True/False</returns>
@@ -343,7 +456,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             bool isTitleCorrect = false;
 
             //Search title on cover page based on bookmarks page1 & page2 (title should be on page1 bookmark range)
-            var paragraphs = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+            var paragraphs = _docDocumentManager.WordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
 
             bool page1BookmarkStart = false;
             bool page2BookmarkStart = false;
@@ -377,6 +490,8 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
 
         /// <summary>
         /// Check the release is correct in cover page
+        /// - if title is present, release name (which should be there) should be after
+        /// - otherwise, release name should be there
         /// </summary>
         /// <param name="release">Release</param>
         /// <returns>True/False</returns>
@@ -385,7 +500,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             bool isReleaseCorrect = false;
 
             //Search title on cover page based on bookmarks page1 & page2 (title should be on page1 bookmark range)
-            var paragraphs = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+            var paragraphs = _docDocumentManager.WordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
 
             bool page1BookmarkStart = false;
             bool page2BookmarkStart = false;
@@ -429,17 +544,19 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
 
         /// <summary>
         /// Check the release style for ZGSM
+        /// Style 'ZGSM' should be used at just one time inside the document and should contain Release name 
+        /// (even if not checked: release name seems to be on the first page (cover)) 
         /// </summary>
         /// <param name="release">Release</param>
         /// <returns>True/False</returns>
         public bool IsReleaseStyleCorrect(string release)
         {
             bool isReleaseStyleCorrect = false;
-            StyleDefinitionsPart styleDefinitionPart = _wordProcessingDocument.MainDocumentPart.StyleDefinitionsPart;
+            StyleDefinitionsPart styleDefinitionPart = _docDocumentManager.WordProcessingDocument.MainDocumentPart.StyleDefinitionsPart;
             bool isReleaseStyleExist = styleDefinitionPart.RootElement.Elements<Style>().Any(x => x.StyleId.Value.Equals("ZGSM", StringComparison.InvariantCultureIgnoreCase));
             if (isReleaseStyleExist)
             {
-                var paragraphs = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+                var paragraphs = _docDocumentManager.WordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
                 StringBuilder zgsmText = new StringBuilder();
                 foreach (var paragraph in paragraphs)
                 {
@@ -465,7 +582,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             //--- DOCUMENT.XML file
 
             //Find all lists inside document and the related list style id : NUMBERING ID (ex: <w:numId w:val="3"/>)
-            var numberedIdsUsed = _wordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<NumberingId>().Where(x => x.Val != "0").Select(x => x.Val.ToString()).Distinct().ToList();
+            var numberedIdsUsed = _docDocumentManager.WordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<NumberingId>().Where(x => x.Val != "0").Select(x => x.Val.ToString()).Distinct().ToList();
             if (numberedIdsUsed.Count == 0)
                 return false;
 
@@ -473,7 +590,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             //--- NUMBERING.XML file
 
             //Get access to the numbering.xml content
-            var numberingDefinitionsPart = _wordProcessingDocument.MainDocumentPart.GetPartsOfType<NumberingDefinitionsPart>().FirstOrDefault();
+            var numberingDefinitionsPart = _docDocumentManager.WordProcessingDocument.MainDocumentPart.GetPartsOfType<NumberingDefinitionsPart>().FirstOrDefault();
             if (numberingDefinitionsPart == null)
                 return false;
 
@@ -496,7 +613,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             //      <w:lvlText w:val="-"/>
             //...
             //At the end, if numFmt <=> NumberingFormat is not Decimal, LowerLetter or LowerRoman we can consider that this is not a numbered list but a bullet list 
-            //(be careful, this is most common numbered lis type, but other exist)
+            //(be careful, this is most common numbered list type, but other exist)
 
             //Get Numbering instance (ex: <w:num w:numId="3">) related to numberedIds found before
             var nums = numberingDefinitionsPart.RootElement.Descendants()
@@ -552,25 +669,15 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         public void Dispose()
         {
             // close word and dispose reference
-            if (_wordProcessingDocument != null)
+            if (_docDocumentManager.WordProcessingDocument != null)
             {
-                _wordProcessingDocument.Close();
+                _docDocumentManager.WordProcessingDocument.Close();
             }
         }
 
         #endregion
 
         #region Private Methods
-
-        /// <summary>
-        /// Check for tracked revisions
-        /// </summary>
-        /// <param name="part">XmlElement in document</param>
-        /// <returns>True/False</returns>
-        private bool PartHasTrackedRevisions(OpenXmlPart part)
-        {
-            return part.RootElement.Descendants().Any(e => _trackedRevisionsElements.Contains(e.GetType()));
-        }
 
         /// <summary> 
         /// Read Plain Text in all XmlElements of word document 

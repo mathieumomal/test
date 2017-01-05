@@ -3,6 +3,7 @@ using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using System;
 using System.Linq;
+using Etsi.Ultimate.Business.Versions;
 using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
 
@@ -83,7 +84,8 @@ namespace Etsi.Ultimate.Business
                 var isAlreadyTransposed = (versionRepo.GetVersionsForSpecRelease(version.Fk_SpecificationId.GetValueOrDefault(), version.Fk_ReleaseId.GetValueOrDefault()).FirstOrDefault(v => v.ETSI_WKI_ID != null) != null);
 
                 EtsiWorkItemImport importData = new EtsiWorkItemImport(version, spec, c, wgNumber, secretaryId, release.Name, isAlreadyTransposed);
-                importData.SetSerialNumber(UtilsManager.EncodeVersionToBase36(version.MajorVersion, version.TechnicalVersion, version.EditorialVersion));
+                var versionFilenameMgr = ManagerFactory.Resolve<IVersionFilenameManager>();
+                importData.SetSerialNumber(versionFilenameMgr.GenerateVersionString(version.MajorVersion, version.TechnicalVersion, version.EditorialVersion));
                 IWorkProgramRepository wpRepo = RepositoryFactory.Resolve<IWorkProgramRepository>();
                 wpRepo.UoW = UoW;
 

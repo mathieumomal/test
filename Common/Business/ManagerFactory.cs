@@ -1,10 +1,13 @@
-﻿using Etsi.Ultimate.Business.ItuRecommendation;
+﻿using System.IO;
+using Etsi.Ultimate.Business.ItuRecommendation;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.Business.Specifications;
 using Etsi.Ultimate.Business.Specifications.Interfaces;
 using Etsi.Ultimate.Business.UserRightsService;
 using Etsi.Ultimate.Business.Versions;
 using Etsi.Ultimate.Business.Versions.Interfaces;
+using Etsi.Ultimate.Business.Versions.QualityChecks;
+using Microsoft.Office.Interop.Word;
 using Microsoft.Practices.Unity;
 
 namespace Etsi.Ultimate.Business
@@ -38,6 +41,7 @@ namespace Etsi.Ultimate.Business
             private set { _container = value; }
         }
 
+        #region resolvers
         /// <summary>
         ///     Resolves the type parameter T to an instance of the appropriate type.
         /// </summary>
@@ -53,6 +57,37 @@ namespace Etsi.Ultimate.Business
 
             return ret;
         }
+
+        /// <summary>
+        /// Resolves the type parameter T to an instance of the appropriate type and give U parameter to the implementation of class constructor
+        /// </summary>
+        /// <typeparam name="T">Return type</typeparam>
+        /// <param name="myVar"></param>
+        /// <returns></returns>
+        public static T ResolveWithString<T>(string myVar)
+        {
+            T ret = default(T);
+
+            if (Container.IsRegistered(typeof(T)))
+            {
+                ret = Container.Resolve<T>(new ParameterOverride("myVar", myVar));
+            }
+
+            return ret;
+        }
+
+        public static T ResolveWithIDocDocumentManager<T>(IDocDocumentManager myVar)
+        {
+            T ret = default(T);
+
+            if (Container.IsRegistered(typeof(T)))
+            {
+                ret = Container.Resolve<T>(new ParameterOverride("myVar", myVar));
+            }
+
+            return ret;
+        }
+        #endregion
 
         public static void SetDefaultDependencies()
         {
@@ -79,6 +114,9 @@ namespace Etsi.Ultimate.Business
             Container.RegisterType<ISpecReleaseManager, SpecReleaseManager>(new TransientLifetimeManager());
             Container.RegisterType<IWorkItemImporter, WorkItemImporter>(new TransientLifetimeManager());
             Container.RegisterType<IWorkPlanExporter, WorkPlanExporter>(new TransientLifetimeManager());
+            Container.RegisterType<IVersionFilenameManager, VersionFilenameManager>(new TransientLifetimeManager());
+            Container.RegisterType<IQualityChecks, DocXQualityChecks>(new TransientLifetimeManager());
+            Container.RegisterType<IDocDocumentManager, DocDocumentManager>(new TransientLifetimeManager());
 
             // For ITU recommendations
             Container.RegisterType<ISeedFileParser, SeedFileParser>(new TransientLifetimeManager());
@@ -91,6 +129,7 @@ namespace Etsi.Ultimate.Business
             //Actions
             Container.RegisterType<IGetNextReleaseAction, GetNextReleaseAction>(new TransientLifetimeManager());
             Container.RegisterType<ISpecVersionAllocateAction, SpecVersionAllocateAction>(new TransientLifetimeManager());
+            
         }
     }
 }

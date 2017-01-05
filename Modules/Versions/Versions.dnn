@@ -109,20 +109,12 @@
               <name>EntityFramework.SqlServer.dll</name>
               <path>bin</path>
             </assembly>
-            <assembly>
-              <name>NetOffice.dll</name>
-              <path>bin</path>
-            </assembly>
-			<assembly>
-              <name>OfficeApi.dll</name>
-              <path>bin</path>
-            </assembly>
 			<assembly>
               <name>VBIDEApi.dll</name>
               <path>bin</path>
             </assembly>
 			<assembly>
-              <name>WordApi.dll</name>
+              <name>Microsoft.Office.Interop.Word.dll</name>
               <path>bin</path>
             </assembly>			
           </assemblies>

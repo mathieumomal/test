@@ -50,6 +50,7 @@ namespace Etsi.Ultimate.Business
             List<Release> releases = releasesManager.GetAllReleases(personId).Key;
 
             var alreadyAllocatedVersion = new List<SpecVersion>();
+            var alreadyCreatedSpecRelease = new List<Specification_Release>();
             foreach (ChangeRequest changeRequest in candidateChangeRequests)
             {
                 var requestReleaseId = changeRequest.Fk_Release;
@@ -76,17 +77,38 @@ namespace Etsi.Ultimate.Business
                         specification.Number));
                     continue;
                 }
-
-                var specRelease =
-                    specification.Specification_Release.FirstOrDefault(
+   
+                var specRelease = specification.Specification_Release.FirstOrDefault(
                         sr => sr.Fk_ReleaseId == changeRequest.Fk_Release.GetValueOrDefault());
-                if (specRelease == null)
+                if (specRelease == null)//Spec release does not exist. Create it only if inhibitpromote flag not set to true, else raised an error
                 {
-                    //Create SpecRelease
-                    var specReleaseMgr = ManagerFactory.Resolve<ISpecReleaseManager>();
-                    specReleaseMgr.UoW = UoW;
-                    specReleaseMgr.CreateSpecRelease(changeRequest.Fk_Specification.GetValueOrDefault(),
-                        changeRequest.Fk_Release.GetValueOrDefault());
+                    if (specification.promoteInhibited.GetValueOrDefault())
+                    {
+                        string releaseName = releases.Find(r => r.Pk_ReleaseId == requestReleaseId.GetValueOrDefault()).Code;
+                        response.Report.LogError(
+                            String.Format(Localization.FinalizeCrs_Warn_SpecReleaseNotExistingAndCannotBeCreated,
+                                specification.Number, releaseName));
+                        response.Result = false;
+                        continue;
+                    }
+
+                    //Create SpecRelease only if not already created during finalize process
+                    if (!alreadyCreatedSpecRelease.Any(
+                            x => x.Fk_SpecificationId == changeRequest.Fk_Specification.GetValueOrDefault()
+                                 && x.Fk_ReleaseId == changeRequest.Fk_Release.GetValueOrDefault()))
+                    {
+                        var specReleaseMgr = ManagerFactory.Resolve<ISpecReleaseManager>();
+                        specReleaseMgr.UoW = UoW;
+                        specReleaseMgr.CreateSpecRelease(changeRequest.Fk_Specification.GetValueOrDefault(),
+                            changeRequest.Fk_Release.GetValueOrDefault());
+
+                        //Save the information that this specRelease has already been created
+                        alreadyCreatedSpecRelease.Add(new Specification_Release
+                        {
+                            Fk_SpecificationId = changeRequest.Fk_Specification.GetValueOrDefault(),
+                            Fk_ReleaseId = changeRequest.Fk_Release.GetValueOrDefault()
+                        });
+                    }
                 }
                 else if (specRelease.isWithdrawn.GetValueOrDefault())
                 {

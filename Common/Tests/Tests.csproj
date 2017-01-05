@@ -67,7 +67,8 @@
     <Reference Include="CsvHelper">
       <HintPath>..\..\packages\CsvHelper.2.4.1\lib\net40-client\CsvHelper.dll</HintPath>
     </Reference>
-    <Reference Include="DocumentFormat.OpenXml">
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
     <Reference Include="DotNetNuke.Instrumentation">
@@ -89,6 +90,11 @@
     <Reference Include="EPPlus, Version=3.1.3.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\Libs\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Word, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\packages\Microsoft.Office.Interop.Word.15.0.4797.1003\lib\net20\Microsoft.Office.Interop.Word.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.Unity, Version=2.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -143,6 +149,7 @@
     <Compile Include="Business\ItuRecommendation\SpecToItuConverterTests.cs" />
     <Compile Include="Business\ItuRecommendation\SeedFileParserTest.cs" />
     <Compile Include="Business\FtpFoldersManagerTest.cs" />
+    <Compile Include="Business\QualityChecks\DocDocumentManagerTests.cs" />
     <Compile Include="Business\QualityChecks\DocxQualityChecksTests.cs" />
     <Compile Include="Business\SpecReleaseManagerTests.cs" />
     <Compile Include="Business\SpecVersionNumberValidatorTests.cs" />
@@ -162,6 +169,7 @@
     <Compile Include="Business\SpecificationsMassivePromotionActionTest.cs" />
     <Compile Include="Business\SpecificationWorkItemManagerTest.cs" />
     <Compile Include="Business\SpecVersionsManagerTest.cs" />
+    <Compile Include="Business\VersionFilenameManagerTests.cs" />
     <Compile Include="Business\WorkPlanFileManagerTest.cs" />
     <Compile Include="Business\WpmRecordCreatorTest.cs" />
     <Compile Include="EffortConstants.cs" />
@@ -405,13 +413,61 @@
     <None Include="TestData\ItuRecommendation\SeedFile.docx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\QualityChecks\DOCX_BOTH.docx">
+    <None Include="TestData\QualityChecks\DOCS\ChangeHistoryTableIsTheLastOne_SuccessCase_ChangeHistoryIntegratedInsideTable.docx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="TestData\QualityChecks\DOCX_BULLET.docx">
+    <None Include="TestData\QualityChecks\DOCS\HasTrackedRevisions_ErrorCase.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCS\IsAnnexureStylesCorrect_ErrorCase.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCS\IsAutomaticNumberingPresent_ErrorCase.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCS\IsAutomaticNumberingPresent_SuccessCase.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCS\IsCopyRightYearCorrect_ErrorCase.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCS\IsCoverPageDateCorrect_ErrorCase.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCS\IsCoverPageVersionCorrect_ErrorCase.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCS\IsFirstTwoLinesOfTitleCorrect_ErrorCase.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCS\IsHistoryVersionCorrect_ErrorCase.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCS\ChangeHistoryTableIsTheLastOne_ErrorCase.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCS\IsReleaseCorrect_ErrorCase.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCS\IsReleaseStyleCorrect_ErrorCase.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCS\IsTitleCorrect_ErrorCase.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCS\SuccessFile.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOC\XXX.doc">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\QualityChecks\DOCX\XXX.docx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Versions\ToUpload\22101-d30.zip">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestData\Versions\ToUpload\22103-200_DOC.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestData\Versions\ToUpload\WithoutDocOrDocx.zip">

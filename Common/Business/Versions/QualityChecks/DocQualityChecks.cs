@@ -1,14 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using Etsi.Ultimate.Business.Versions.Interfaces;
-using Etsi.Ultimate.Utils.Core;
-using NetOffice.WordApi;
-using NetOffice.WordApi.Enums;
-
-namespace Etsi.Ultimate.Business.Versions.QualityChecks
+﻿namespace Etsi.Ultimate.Business.Versions.QualityChecks
 {
+    /*
+     * /// <summary>
+    /// Doc Quality checks which used NetOffice library. 
+    /// Removed and replace by docX quality checks (convert doc to docx) for performance reasons
+    /// CODE just kept for information !
+    /// </summary>
     public class DocQualityChecks : IQualityChecks
     {
         #region Variables
@@ -447,4 +444,5 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
 
         #endregion
     }
+     * */
 }

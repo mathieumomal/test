@@ -232,11 +232,11 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à Could not allocate version for Specification {0}: Release {1} is not defined for this specification..
+        ///   Recherche une chaîne localisée semblable à Could not allocate version for Specification {0}: Release {1} is not defined and cannot be created for this specification because the specification has inhibit promote flag set to true..
         /// </summary>
-        public static string FinalizeCrs_Warn_SpecReleaseNotExisting {
+        public static string FinalizeCrs_Warn_SpecReleaseNotExistingAndCannotBeCreated {
             get {
-                return ResourceManager.GetString("FinalizeCrs_Warn_SpecReleaseNotExisting", resourceCulture);
+                return ResourceManager.GetString("FinalizeCrs_Warn_SpecReleaseNotExistingAndCannotBeCreated", resourceCulture);
             }
         }
         

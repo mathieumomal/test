@@ -315,8 +315,8 @@
   <data name="FinalizeCrs_Warn_DraftSpec" xml:space="preserve">
     <value>Could not allocate version for Specification {0}: specification is not under change control</value>
   </data>
-  <data name="FinalizeCrs_Warn_SpecReleaseNotExisting" xml:space="preserve">
-    <value>Could not allocate version for Specification {0}: Release {1} is not defined for this specification.</value>
+  <data name="FinalizeCrs_Warn_SpecReleaseNotExistingAndCannotBeCreated" xml:space="preserve">
+    <value>Could not allocate version for Specification {0}: Release {1} is not defined and cannot be created for this specification because the specification has inhibit promote flag set to true.</value>
   </data>
   <data name="FinalizeCrs_Warn_WithDrawnSpec" xml:space="preserve">
     <value>Could not allocate version for Specification {0}: specification is withdrawn</value>

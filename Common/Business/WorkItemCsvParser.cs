@@ -172,8 +172,7 @@ namespace Etsi.Ultimate.Business
             catch (Exception e)
             {
                 // Log the error
-                LogManager.Error("Error occured in WorkplanCsvParser:" + e.Message);
-                LogManager.Error("Stacktrace:" + e.StackTrace);
+                LogManager.Error("Error occured in WorkplanCsvParser:", e);
 
                 string lastSuccessfullyTreatedWi = "None";
                 if (_lastTreatedWi != null)
@@ -195,7 +194,7 @@ namespace Etsi.Ultimate.Business
             // Retrieve all the existing work items.
             var wiRepo = RepositoryFactory.Resolve<IWorkItemRepository>();
             wiRepo.UoW = UoW;
-            AllWorkItems = wiRepo.AllIncluding(w => w.WorkItems_ResponsibleGroups, w => w.Remarks).ToList();
+            AllWorkItems = wiRepo.AllIncluding(w => w.WorkItems_ResponsibleGroups, w => w.Remarks, w => w.ParentWi).ToList();
 
             // Retrieve all the persons.
             var personRepo = RepositoryFactory.Resolve<IPersonRepository>();
@@ -237,7 +236,7 @@ namespace Etsi.Ultimate.Business
             {
                 wi.Release = null;
                 wi.ParentWi = null;
-                wi.ChildWis.Clear();
+                wi.ChildWis = null;
                 wi.WorkItems_ResponsibleGroups.ToList().ForEach(x => x.WorkItem = null);
                 wi.Remarks.ToList().ForEach(x => x.WorkItem = null);
 
@@ -259,13 +258,11 @@ namespace Etsi.Ultimate.Business
             //NEW WI
             if (wi.IsNew)
             {
-                LogManager.Debug("WI created: " + wi.Pk_WorkItemUid);
                 wi.ImportCreationDate = now;
                 wi.ImportLastModificationDate = now;
             }
             else//WI UPDATED
             {
-                LogManager.Debug("WI edited: " + wi.Pk_WorkItemUid);
                 wi.ImportLastModificationDate = now;
             }
 
@@ -1148,7 +1145,7 @@ namespace Etsi.Ultimate.Business
                 //Remove Reference Objects to avoid Referential Integrity Errors
                 searchWi.Release = null;
                 searchWi.ParentWi = null;
-                searchWi.ChildWis.Clear();
+                searchWi.ChildWis = null;
                 searchWi.WorkItems_ResponsibleGroups.ToList().ForEach(x => x.WorkItem = null);
                 searchWi.Remarks.ToList().ForEach(x => x.WorkItem = null);
 

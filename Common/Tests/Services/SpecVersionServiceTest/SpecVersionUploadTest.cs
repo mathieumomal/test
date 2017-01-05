@@ -12,6 +12,8 @@ using Rhino.Mocks;
 using Microsoft.Practices.Unity;
 using System.IO;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Business.Versions.Interfaces;
+using Etsi.Ultimate.Business.Versions.QualityChecks;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -76,8 +78,25 @@ namespace Etsi.Ultimate.Tests.Services
                 Directory.Delete(folder, true);
             }
         }
-        
+
         #region tests
+        [Test]
+        public void CheckVersionForUpload_NominalCase()
+        {
+            var fileToUpload = UPLOAD_PATH + "22101-d30.zip";
+
+            var mock = MockQualityChecks_Success();
+
+            // Let's try to upload version 13.3.0
+            myVersion.TechnicalVersion = 3;
+
+            var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
+
+            Assert.AreEqual(0, result.Report.GetNumberOfErrors());
+            Assert.AreEqual(1, result.Report.GetNumberOfWarnings());
+            mock.VerifyAllExpectations();
+        }
+
         [Test]
         public void Upload_Fails_If_User_Has_No_Right()
         {
@@ -104,6 +123,7 @@ namespace Etsi.Ultimate.Tests.Services
             myVersion.TechnicalVersion = 3;
 
             var fileToUpload = UPLOAD_PATH + "22101-d30.zip";
+            MockQualityChecks_Success();
 
             var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
             Assert.AreEqual(0, result.Report.GetNumberOfErrors());
@@ -216,6 +236,7 @@ namespace Etsi.Ultimate.Tests.Services
         {
             myVersion.EditorialVersion = 1;
             var fileToUpload = UPLOAD_PATH + "22103-200.zip";
+            MockQualityChecks_Success();
 
             var checkResults = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
             Assert.AreEqual(0, checkResults.Report.GetNumberOfErrors());
@@ -230,6 +251,7 @@ namespace Etsi.Ultimate.Tests.Services
             myVersion.TechnicalVersion = 0;
             myVersion.EditorialVersion = 2;
             var fileToUpload = UPLOAD_PATH + "22103-200.zip";
+            MockQualityChecks_Success();
 
             var checkResults = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
             Assert.AreEqual(0, checkResults.Report.GetNumberOfErrors());
@@ -472,6 +494,31 @@ namespace Etsi.Ultimate.Tests.Services
             rightsManager.Stub(x => x.GetRights(USER_HAS_RIGHT)).Return(uploadRights);
 
             ManagerFactory.Container.RegisterInstance<IRightsManager>(rightsManager);
+        }
+        #endregion
+
+        #region mocks
+        private IQualityChecks MockQualityChecks_Success()
+        {
+            var docMgrMock = MockRepository.GenerateMock<IDocDocumentManager>();
+            ManagerFactory.Container.RegisterInstance(docMgrMock);
+
+            var mock = MockRepository.GenerateMock<IQualityChecks>();
+            mock.Stub(x => x.HasTrackedRevisions()).Repeat.Once().Return(false);
+            mock.Stub(x => x.ChangeHistoryTableIsTheLastOne()).Repeat.Once().Return(true);
+            mock.Stub(x => x.IsHistoryVersionCorrect(Arg<string>.Is.Anything)).Repeat.Once().Return(true);
+            mock.Stub(x => x.IsCoverPageDateCorrect(Arg<DateTime>.Is.Anything)).Repeat.Once().Return(true);
+            mock.Stub(x => x.IsCoverPageVersionCorrect(Arg<string>.Is.Anything)).Repeat.Once().Return(true);
+            mock.Stub(x => x.IsCopyRightYearCorrect(Arg<DateTime>.Is.Anything)).Repeat.Once().Return(true);
+            mock.Stub(x => x.IsTitleCorrect(Arg<string>.Is.Anything)).Repeat.Once().Return(true);
+            mock.Stub(x => x.IsReleaseCorrect(Arg<string>.Is.Anything)).Repeat.Once().Return(true);
+            mock.Stub(x => x.IsReleaseStyleCorrect(Arg<string>.Is.Anything)).Repeat.Once().Return(true);
+            mock.Stub(x => x.IsAutomaticNumberingPresent()).Repeat.Once().Return(false);
+            mock.Stub(x => x.IsFirstTwoLinesOfTitleCorrect(Arg<string>.Is.Anything)).Repeat.Once().Return(true);
+            mock.Stub(x => x.IsAnnexureStylesCorrect(Arg<bool>.Is.Anything)).Repeat.Once().Return(true);
+            ManagerFactory.Container.RegisterInstance(mock);
+
+            return mock;
         }
         #endregion
     }

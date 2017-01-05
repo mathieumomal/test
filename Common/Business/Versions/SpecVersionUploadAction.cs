@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -14,6 +15,7 @@ using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
 using Etsi.Ultimate.Utils.ModelMails;
 using Etsi.Ultimate.Business.Specifications;
+using Microsoft.Practices.Unity;
 
 namespace Etsi.Ultimate.Business.Versions
 {
@@ -30,6 +32,7 @@ namespace Etsi.Ultimate.Business.Versions
 
         private const string ConstQualityCheckRevisionmark = "Some revision marks left unaccepted";
         private const string ConstQualityCheckVersionHistory = "Invalid/missing version in history";
+        private const string ConstQualityCheckChangeHistoryIsNotTheLastTable = "Change history table is not at the end of the document";
         private const string ConstQualityCheckVersionCoverpage = "Invalid/missing version in cover page";
         private const string ConstQualityCheckDateCoverpage = "Invalid/missing date in cover page";
         private const string ConstQualityCheckYearCopyright = "Year not valid/missing in copyright statement";
@@ -73,7 +76,10 @@ namespace Etsi.Ultimate.Business.Versions
                     
 
                     //[1] Check the file name
-                    var validFileName = GetValidFileName(version);
+                    var versionFilenameMgr = ManagerFactory.Resolve<IVersionFilenameManager>();
+                    var validFileName = versionFilenameMgr.GenerateValidFilename(version.Specification.Number,
+                        version.MajorVersion, version.TechnicalVersion, version.EditorialVersion);
+
                     if (!fileNameWithoutExtension.Equals(validFileName, StringComparison.InvariantCultureIgnoreCase))
                         validationReport.LogWarning(String.Format(Localization.Version_Upload_InvalidFilename, validFileName));
 
@@ -124,8 +130,10 @@ namespace Etsi.Ultimate.Business.Versions
                     }
                     else //Copy to stream from .doc / .docx
                     {
-                        if (!Path.GetExtension(path).Equals(".doc", StringComparison.InvariantCultureIgnoreCase) &&
-                            !Path.GetExtension(path).Equals(".docx", StringComparison.InvariantCultureIgnoreCase))
+                        fileExtension = Path.GetExtension(path);
+                        if (fileExtension == null ||
+                            (!fileExtension.Equals(".doc", StringComparison.InvariantCultureIgnoreCase) &&
+                            !fileExtension.Equals(".docx", StringComparison.InvariantCultureIgnoreCase)))
                             throw new InvalidOperationException("Invalid file format provided");
                         fileToAnalyzePath = path;
                         allowToRunQualityChecks = true;
@@ -156,26 +164,16 @@ namespace Etsi.Ultimate.Business.Versions
 
                             meetingDate = meetingMgr.GetMeetingById(version.Source.Value).END_DATE.Value;
                         }
-                        using (Stream fileStream = new FileStream(fileToAnalyzePath, FileMode.Open))
+
+                        using (var docDocumentManager =
+                                ManagerFactory.ResolveWithString<IDocDocumentManager>(fileToAnalyzePath))
                         {
-                            using (var memoryStream = new MemoryStream())
-                            {
-                                fileStream.CopyTo(memoryStream);
+                            var qualityChecks =
+                                ManagerFactory.ResolveWithIDocDocumentManager<IQualityChecks>(docDocumentManager);
 
-                                var businessValidationReport = ValidateVersionDocument(fileExtension,
-                                                                                           memoryStream,
-                                                                                           Path.GetDirectoryName(path),
-                                                                                           versionStr,
-                                                                                           version.Specification.Title,
-                                                                                           version.Release.Name,
-                                                                                           meetingDate, tsgTitle,
-                                                                                           version.Specification.IsTS.GetValueOrDefault());
-
-                                validationReport.ErrorList.AddRange(businessValidationReport.ErrorList);
-                                validationReport.WarningList.AddRange(businessValidationReport.WarningList);
-
-                                fileStream.Close();
-                            }
+                            var businessValidationReport = ValidateDocument(qualityChecks, versionStr, version.Specification.Title, version.Release.Name, meetingDate, tsgTitle, version.Specification.IsTS.GetValueOrDefault());
+                            validationReport.ErrorList.AddRange(businessValidationReport.ErrorList);
+                            validationReport.WarningList.AddRange(businessValidationReport.WarningList);
                         }
                     }
                     svcResponse.Result = Guid.NewGuid().ToString();
@@ -277,15 +275,6 @@ namespace Etsi.Ultimate.Business.Versions
                 throw new InvalidOperationException(string.Join(", ", numberValidationResponse.Report.ErrorList));
         }
 
-        private string GetValidFileName(SpecVersion specVersion)
-        {
-            var specNumber = specVersion.Specification.Number;
-            var validFileName = String.Format(ConstValidFilename, 
-                specNumber.Replace(".", ""), 
-                UtilsManager.EncodeVersionToBase36(specVersion.MajorVersion, specVersion.TechnicalVersion, specVersion.EditorialVersion));
-            return validFileName;
-        }
-
         private void GetRelatedSpecAndRelease(int personId, SpecVersion specVersion)
         {
             //spec
@@ -327,28 +316,6 @@ namespace Etsi.Ultimate.Business.Versions
             }
         }
 
-        private Report ValidateVersionDocument(string fileExtension, MemoryStream memoryStream, string temporaryFolder, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTs)
-        {
-            Report validationReport;
-
-            if (fileExtension.Equals(".docx", StringComparison.InvariantCultureIgnoreCase))
-            {
-                using (IQualityChecks qualityChecks = new DocXQualityChecks(memoryStream))
-                {
-                    validationReport = ValidateDocument(qualityChecks, version, title, release, meetingDate, tsgTitle, isTs);
-                }
-            }
-            else
-            {
-                using (IQualityChecks qualityChecks = new DocQualityChecks(memoryStream, temporaryFolder))
-                {
-                    validationReport = ValidateDocument(qualityChecks, version, title, release, meetingDate, tsgTitle, isTs);
-                }
-            }
-
-            return validationReport;
-        }
-
         /// <summary>
         /// Validate Word Document
         /// </summary>
@@ -364,38 +331,86 @@ namespace Etsi.Ultimate.Business.Versions
         {
             var validationReport = new Report();
 
+            var watcher = new Stopwatch();
+
+            watcher.Start();
             if (qualityChecks.HasTrackedRevisions())
                 validationReport.LogWarning(ConstQualityCheckRevisionmark);
+            watcher.Stop();
+            LogManager.Debug("HasTrackedRevisions " + watcher.ElapsedMilliseconds + "ms");
 
-            if (!qualityChecks.IsHistoryVersionCorrect(version))
-                validationReport.LogWarning(ConstQualityCheckVersionHistory);
+            watcher.Restart();
+            var changeHistoryIsNotTheLastOne = !qualityChecks.ChangeHistoryTableIsTheLastOne();
+            watcher.Stop();
+            LogManager.Debug("ChangeHistoryTableIsTheLastOne " + watcher.ElapsedMilliseconds + "ms");
+            if (changeHistoryIsNotTheLastOne)
+            {
+                validationReport.LogWarning(ConstQualityCheckChangeHistoryIsNotTheLastTable);
+            }
+            else
+            {
+                watcher.Restart();
+                if (!qualityChecks.IsHistoryVersionCorrect(version))
+                    validationReport.LogWarning(ConstQualityCheckVersionHistory);
+                watcher.Stop();
+                LogManager.Debug("IsHistoryVersionCorrect " + watcher.ElapsedMilliseconds + "ms");
+            }
+            
+            
 
+            watcher.Restart();
             if (!qualityChecks.IsCoverPageVersionCorrect(version))
                 validationReport.LogWarning(ConstQualityCheckVersionCoverpage);
+            watcher.Stop();
+            LogManager.Debug("IsCoverPageVersionCorrect " + watcher.ElapsedMilliseconds + "ms");
 
+            watcher.Restart();
             if (!qualityChecks.IsCoverPageDateCorrect(meetingDate))
                 validationReport.LogWarning(ConstQualityCheckDateCoverpage);
+            watcher.Stop();
+            LogManager.Debug("IsCoverPageDateCorrect " + watcher.ElapsedMilliseconds + "ms");
 
-            if (!qualityChecks.IsCopyRightYearCorrect())
+            watcher.Restart();
+            if (!qualityChecks.IsCopyRightYearCorrect(DateTime.UtcNow))
                 validationReport.LogWarning(ConstQualityCheckYearCopyright);
+            watcher.Stop();
+            LogManager.Debug("IsCopyRightYearCorrect " + watcher.ElapsedMilliseconds + "ms");
 
+            watcher.Restart();
             if (!qualityChecks.IsTitleCorrect(title))
                 validationReport.LogWarning(ConstQualityCheckTitleCoverpage);
+            watcher.Stop();
+            LogManager.Debug("IsTitleCorrect " + watcher.ElapsedMilliseconds + "ms");
 
+            watcher.Restart();
             if (!qualityChecks.IsReleaseCorrect(release))
                 validationReport.LogWarning(ConstQualityCheckRelease);
+            watcher.Stop();
+            LogManager.Debug("IsReleaseCorrect " + watcher.ElapsedMilliseconds + "ms");
 
+            watcher.Restart();
             if (!qualityChecks.IsReleaseStyleCorrect(release))
                 validationReport.LogWarning(ConstQualityCheckReleaseStyle);
+            watcher.Stop();
+            LogManager.Debug("IsReleaseStyleCorrect " + watcher.ElapsedMilliseconds + "ms");
 
+            watcher.Restart();
             if (qualityChecks.IsAutomaticNumberingPresent())
                 validationReport.LogWarning(ConstQualityCheckAutoNumbering);
+            watcher.Stop();
+            LogManager.Debug("IsAutomaticNumberingPresent " + watcher.ElapsedMilliseconds + "ms");
 
+            watcher.Restart();
             if (!qualityChecks.IsFirstTwoLinesOfTitleCorrect(tsgTitle))
                 validationReport.LogWarning(ConstQualityCheckFirstTwoLinesTitle);
+            watcher.Stop();
+            LogManager.Debug("IsFirstTwoLinesOfTitleCorrect " + watcher.ElapsedMilliseconds + "ms");
 
+            watcher.Restart();
             if (!qualityChecks.IsAnnexureStylesCorrect(isTs))
                 validationReport.LogWarning(ConstQualityCheckAnnexureStyle);
+            watcher.Stop();
+            LogManager.Debug("IsAnnexureStylesCorrect " + watcher.ElapsedMilliseconds + "ms");
 
             return validationReport;
         }
@@ -435,7 +450,9 @@ namespace Etsi.Ultimate.Business.Versions
                 zipFilePath = Path.GetDirectoryName(path) + "\\" + Path.GetFileNameWithoutExtension(path) + ".zip";
             }
 
-            var validFileName = GetValidFileName(version);
+            var versionFilenameMgr = ManagerFactory.Resolve<IVersionFilenameManager>();
+            var validFileName = versionFilenameMgr.GenerateValidFilename(version.Specification.Number,
+                        version.MajorVersion, version.TechnicalVersion, version.EditorialVersion);
             var zipFileName = validFileName + ".zip";
 
             var specNumber = version.Specification.Number;
