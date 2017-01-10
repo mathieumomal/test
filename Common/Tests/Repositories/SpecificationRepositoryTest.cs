@@ -13,6 +13,16 @@ namespace Etsi.Ultimate.Tests.Repositories
     class SpecificationRepositoryTest : BaseTest
     {
         [Test]
+        public void GetSpecificationsWithSpecRelease()
+        {
+            var repo = new SpecificationRepository { UoW = GetUnitOfWork() };
+            var result = repo.GetSpecificationsWithSpecRelease(new List<int> {1});
+
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(1, result.First().Specification_Release.Count);
+        } 
+
+        [Test]
         public void Specifications_GetAll()
         {
             var repo = new SpecificationRepository() { UoW = GetUnitOfWork() };
@@ -198,6 +208,13 @@ namespace Etsi.Ultimate.Tests.Repositories
         /// </summary>
         private IUltimateUnitOfWork GetUnitOfWork()
         {
+            var specRelease1 = new Specification_Release()
+            {
+                Fk_ReleaseId = 1,
+                Fk_SpecificationId = 1,
+                isWithdrawn = false
+            };
+
             var iUnitOfWork = MockRepository.GenerateMock<IUltimateUnitOfWork>();
             var iUltimateContext = new FakeContext();
 
@@ -284,7 +301,8 @@ namespace Etsi.Ultimate.Tests.Repositories
                         PersonName = "Author 1",
                         HistoryText = "Text 2"
                     }
-                }
+                },
+                Specification_Release = new List<Specification_Release>{specRelease1}
             });
 
             iUltimateContext.Specifications = specDbSet;
@@ -293,7 +311,7 @@ namespace Etsi.Ultimate.Tests.Repositories
             // Generate spec release
 
             var specRel = new SpecificationReleaseFakeDBSet();
-            specRel.Add( new Specification_Release() { Fk_ReleaseId = 1, Fk_SpecificationId =1, isWithdrawn = false } );
+            specRel.Add(specRelease1);
             specRel.Add(new Specification_Release() { Fk_ReleaseId = 2, Fk_SpecificationId = 2, isWithdrawn = true});
             iUltimateContext.Specification_Release = specRel;
 

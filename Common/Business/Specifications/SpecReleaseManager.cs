@@ -23,13 +23,18 @@ namespace Etsi.Ultimate.Business.Specifications
             if (spec.Specification_Release.FirstOrDefault(x => x.Fk_ReleaseId == releaseId) != null)
                 return false;//SpecRelease already exists
 
+            return CreateSpecReleaseWithSpecEntityProvidedAndWithoutExistenceChecks(spec, releaseId);
+        }
+
+        public bool CreateSpecReleaseWithSpecEntityProvidedAndWithoutExistenceChecks(Specification spec, int releaseId)
+        {
             spec.Specification_Release.Add(new Specification_Release
             {
                 isWithdrawn = false,
                 CreationDate = DateTime.UtcNow,
                 UpdateDate = DateTime.UtcNow,
                 Fk_ReleaseId = releaseId,
-                Fk_SpecificationId = specId
+                Fk_SpecificationId = spec.Pk_SpecificationId
             });
             return true;
         }
@@ -40,5 +45,7 @@ namespace Etsi.Ultimate.Business.Specifications
         IUltimateUnitOfWork UoW { get; set; }
 
         bool CreateSpecRelease(int specId, int releaseId);
+
+        bool CreateSpecReleaseWithSpecEntityProvidedAndWithoutExistenceChecks(Specification spec, int releaseId);
     }
 }

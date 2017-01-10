@@ -294,6 +294,16 @@ namespace Etsi.Ultimate.Repositories
         /// <summary>
         /// See interface
         /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public List<Specification> GetSpecificationsWithSpecRelease(List<int> ids)
+        {
+            return AllIncluding(spec => spec.Specification_Release).Where(x => ids.Contains(x.Pk_SpecificationId)).ToList();
+        }
+
+        /// <summary>
+        /// See interface
+        /// </summary>
         /// <param name="specNumbersList"></param>
         /// <returns></returns>
         public List<Specification> GetSpecificationListByNumber(List<string> specNumbersList)
@@ -433,6 +443,13 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="ids"></param>
         /// <returns></returns>
         List<Specification> GetSpecifications(List<int> ids);
+
+        /// <summary>
+        /// Get specifications list with their related spec release 
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        List<Specification> GetSpecificationsWithSpecRelease(List<int> ids);
 
         /// <summary>
         /// Returns all specification by their number
