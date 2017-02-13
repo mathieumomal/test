@@ -445,6 +445,21 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsFalse(wiService.ImportWorkPlan("az12", string.Empty));
         }
 
+        [Test]
+        public void GetReleaseRelatedToOneOfWiWithTheLowerWiLevel()
+        {
+            var mockWiRepo = MockRepository.GenerateMock<IWorkItemRepository>();
+            mockWiRepo.Stub(x => x.GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(Arg<List<int>>.Is.Anything))
+                .Return(new Release{Pk_ReleaseId = 1}).Repeat.Once();
+            RepositoryFactory.Container.RegisterInstance(mockWiRepo);
+
+            var wiService = new WorkItemService();
+            var result = wiService.GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(0, new List<int> {1, 2});
+
+            Assert.AreEqual(1, result.Pk_ReleaseId);
+            mockWiRepo.VerifyAllExpectations();
+        }
+
         /// <summary>
         /// Get the WorkItem Data from csv
         /// </summary>
@@ -466,6 +481,28 @@ namespace Etsi.Ultimate.Tests.Services
             var csvImporterMock = MockRepository.GenerateMock<IWorkItemCsvParser>();
             csvImporterMock.Stub(x => x.ParseCsv(path)).Return(new KeyValuePair<List<WorkItem>, Report>(wiList, new Report()));
             ManagerFactory.Container.RegisterInstance(typeof(IWorkItemCsvParser), csvImporterMock);
+        }
+
+
+
+
+
+        [Test]
+        public void GetPrimeWorkItemBySpecificationID_ServiceAndBusiness()
+        {
+            WorkItem workItemBySpecID = new WorkItem();
+            var repo_mock = MockRepository.GenerateMock<IWorkItemRepository>();
+            repo_mock.Stub(x => x.GetPrimeWorkItemBySpecificationID(Arg<int>.Is.Anything)).Return(workItemBySpecID);
+            RepositoryFactory.Container.RegisterInstance(repo_mock);
+
+            var mgr = ServicesFactory.Resolve<IWorkItemService>();
+            WorkItem result = mgr.GetPrimeWorkItemBySpecificationID(160000);
+ 
+            result = mgr.GetPrimeWorkItemBySpecificationID(160000);
+            Assert.AreEqual(workItemBySpecID.Pk_WorkItemUid, result.Pk_WorkItemUid);
+
+            result = mgr.GetPrimeWorkItemBySpecificationID(888888);
+            Assert.AreEqual(0, result.Pk_WorkItemUid);
         }
     }
 }

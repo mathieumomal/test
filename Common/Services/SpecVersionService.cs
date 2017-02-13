@@ -527,6 +527,40 @@ namespace Etsi.Ultimate.Services
             return svcResponse;
         }
 
+        /// <summary>
+        /// Create version for pCR tdoc if necessary (if doesn't already exist)
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="specId"></param>
+        /// <param name="releaseId"></param>
+        /// <param name="meetingId"></param>
+        /// <param name="majorVersion"></param>
+        /// <param name="technicalVersion"></param>
+        /// <param name="editorialVersion"></param>
+        /// <returns></returns>
+        public ServiceResponse<bool> CreatepCrDraftVersionIfNecessary(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion, int editorialVersion)
+        {
+            var svcResponse = new ServiceResponse<bool>();
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specVersionManager = ManagerFactory.Resolve<ISpecVersionManager>();
+                    specVersionManager.UoW = uoW;
+                    svcResponse = specVersionManager.CreatepCrDraftVersionIfNecessary(personId, specId, releaseId, meetingId, majorVersion, technicalVersion, editorialVersion);
+                    if (svcResponse.Result && svcResponse.Report.GetNumberOfErrors() <= 0)
+                        uoW.Save();
+                }
+            }
+            catch (Exception ex)
+            {
+                svcResponse.Result = false;
+                svcResponse.Report.LogError(ex.Message);
+                LogManager.Error("Unexpected error occured when system trying to create a pCR draft version", ex);
+            }
+            return svcResponse;
+        }
+
         #endregion
     }
 
@@ -694,6 +728,20 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         /// <returns>Ftp Folders Manager Status</returns>
         string GetFTPLatestFolderName();
+
+        /// <summary>
+        /// Create version for pCR tdoc if necessary (if doesn't already exist)
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="specId"></param>
+        /// <param name="releaseId"></param>
+        /// <param name="meetingId"></param>
+        /// <param name="majorVersion"></param>
+        /// <param name="technicalVersion"></param>
+        /// <param name="editorialVersion"></param>
+        /// <returns></returns>
+        ServiceResponse<bool> CreatepCrDraftVersionIfNecessary(int personId, int specId, int releaseId,
+            int meetingId, int majorVersion, int technicalVersion, int editorialVersion);
     }
 }
 
