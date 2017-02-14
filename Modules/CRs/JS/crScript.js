@@ -1,9 +1,4 @@
-﻿function openSpecification(address, specId) {
-    var popUp = window.open(address, 'Specification-' + specId, 'height=690,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no');
-    popUp.focus();
-}
-
-function openRelease(address, releaseId) {
+﻿function openRelease(address, releaseId) {
     var popUp = window.open(address,
         'Release-' + releaseId, 'height=690,width=670,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no');
     popUp.focus();

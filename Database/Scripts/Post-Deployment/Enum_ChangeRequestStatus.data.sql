@@ -8,6 +8,7 @@ INSERT INTO dbo.Enum_ChangeRequestStatus(Pk_EnumChangeRequestStatus, Code, [Desc
 (5, 'Rejected','Rejected'),
 (6, 'Revised','Revised'),
 (7, 'Merged','Merged'),
-(8, 'TechEndorsed','Technically endorsed'),
+(8, 'TechEndorsed','endorsed'),
 (9, 'Withdrawn','Withdrawn'),
-(10, 'Reissued','Reissued')
+(10, 'Reissued','Reissued'),
+(11, 'NotTreated', 'not treated')

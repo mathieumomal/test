@@ -1,11 +1,5 @@
 @import url("/Portals/_default/Skins/3GPP/CommonCssComponent/buttons.css");
 
-html, .specDetailsBody {
-    height:670px;
-    overflow:auto;
-}
-
-
 /*TODO : put in the skin*/
 #componentSpecList .helpTooltip{
 	border-bottom: 1px rgba(255, 255, 255, 0.36) dashed;

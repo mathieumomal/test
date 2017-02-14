@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.Practices.Unity;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.Business;
+using Etsi.Ultimate.Business.Versions;
 using Etsi.Ultimate.Tests.FakeRepositories;
 
 namespace Etsi.Ultimate.Tests.Services
@@ -248,6 +249,77 @@ namespace Etsi.Ultimate.Tests.Services
                 mockDataContext.AssertWasNotCalled(x => x.SaveChanges());
         }
 
+        #endregion
+
+        #region CreatepCRDraftVersion if necessary
+        [Test]
+        public void CreatepCrDraftVersionIfNecessary_NominalCase_VersionCreate()
+        {
+            //Mocks
+            var repoMock = MockRepository.GenerateMock<ISpecVersionsRepository>();
+            repoMock.Stub(x => x.CheckIfVersionExists(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything,
+                        Arg<int>.Is.Anything, Arg<int>.Is.Anything)).Return(false);
+            RepositoryFactory.Container.RegisterInstance(repoMock);
+
+            var versionAllocateActionMock = MockRepository.GenerateMock<ISpecVersionAllocateAction>();
+            versionAllocateActionMock.Stub(x => x.AllocateVersion(Arg<int>.Is.Anything, Arg<SpecVersion>.Is.Anything))
+                .Return(new ServiceResponse<SpecVersion> { Result = new SpecVersion { Pk_VersionId = 1 } })
+                .Repeat.Once();
+            ManagerFactory.Container.RegisterInstance(versionAllocateActionMock);
+
+            var versionsSvc = new SpecVersionService();
+            var result = versionsSvc.CreatepCrDraftVersionIfNecessary(1, 1, 1, 1, 1, 1, 1);
+
+            Assert.AreEqual(0, result.Report.GetNumberOfErrors());
+            Assert.IsTrue(result.Result);
+            versionAllocateActionMock.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void CreatepCrDraftVersionIfNecessary_NominalCase_VersionAlreadyExists()
+        {
+            //Mocks
+            var repoMock = MockRepository.GenerateMock<ISpecVersionsRepository>();
+            repoMock.Stub(x => x.CheckIfVersionExists(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything,
+                        Arg<int>.Is.Anything, Arg<int>.Is.Anything)).Return(true);
+            RepositoryFactory.Container.RegisterInstance(repoMock);
+
+            var versionAllocateActionMock = MockRepository.GenerateMock<ISpecVersionAllocateAction>();
+            versionAllocateActionMock.Stub(x => x.AllocateVersion(Arg<int>.Is.Anything, Arg<SpecVersion>.Is.Anything))
+                .Return(new ServiceResponse<SpecVersion> { Result = new SpecVersion { Pk_VersionId = 1 } })
+                .Repeat.Never();
+            ManagerFactory.Container.RegisterInstance(versionAllocateActionMock);
+
+            var versionsSvc = new SpecVersionService();
+            var result = versionsSvc.CreatepCrDraftVersionIfNecessary(1, 1, 1, 1, 1, 1, 1);
+
+            Assert.AreEqual(0, result.Report.GetNumberOfErrors());
+            Assert.IsTrue(result.Result);
+            versionAllocateActionMock.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void CreatepCrDraftVersionIfNecessary_VersionCreatedButWithErrors()
+        {
+            //Mocks
+            var repoMock = MockRepository.GenerateMock<ISpecVersionsRepository>();
+            repoMock.Stub(x => x.CheckIfVersionExists(Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything,
+                        Arg<int>.Is.Anything, Arg<int>.Is.Anything)).Return(false);
+            RepositoryFactory.Container.RegisterInstance(repoMock);
+
+            var versionAllocateActionMock = MockRepository.GenerateMock<ISpecVersionAllocateAction>();
+            versionAllocateActionMock.Stub(x => x.AllocateVersion(Arg<int>.Is.Anything, Arg<SpecVersion>.Is.Anything))
+                .Return(new ServiceResponse<SpecVersion> { Result = null, Report = new Report{ErrorList = new List<string>{"Error 1", "Error 2"}}})
+                .Repeat.Once();
+            ManagerFactory.Container.RegisterInstance(versionAllocateActionMock);
+
+            var versionsSvc = new SpecVersionService();
+            var result = versionsSvc.CreatepCrDraftVersionIfNecessary(1, 1, 1, 1, 1, 1, 1);
+
+            Assert.AreEqual(2, result.Report.GetNumberOfErrors());
+            Assert.IsFalse(result.Result);
+            versionAllocateActionMock.VerifyAllExpectations();
+        }
         #endregion
 
         #region TestData

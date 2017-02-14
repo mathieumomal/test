@@ -607,7 +607,12 @@ namespace Etsi.Ultimate.Services
                     response = manager.SendCrsToCrPack(personId, crsIds, crPackId);
 
                     if (response.Result)
+                    {
                         uoW.Save();
+                        var contributionService = ServicesFactory.Resolve<IContributionService>();
+                        contributionService.GenerateTdocListsAfterSendingCrsToCrPack(personId, crPackId, crsIds);
+                    }
+                        
                 }
             }
             catch (Exception e)

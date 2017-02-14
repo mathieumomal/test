@@ -176,6 +176,28 @@ namespace Etsi.Ultimate.Services
         }
 
         /// <summary>
+        /// Get primary work item by specification ID
+        /// </summary>
+        /// <param name="specificationID"> specification ID</param>
+        /// <returns>WorkItem if found, else null</returns>
+        public WorkItem GetPrimeWorkItemBySpecificationID(int specificationID)
+        {
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var workItemManager = new WorkItemManager(uoW);
+                    return workItemManager.GetPrimeWorkItemBySpecificationID(specificationID);
+                }   
+            }
+            catch (Exception e)
+            {
+                LogManager.Error(Localization.GenericError, e);
+                return null;
+            }  
+        }
+
+        /// <summary>
         /// Get the workitem based on the id
         /// </summary>
         /// <param name="personId">Person Id</param>
@@ -206,6 +228,29 @@ namespace Etsi.Ultimate.Services
             {
                 var workItemManager = new WorkItemManager(uoW);
                 return workItemManager.GetWorkItemsCountBySearchCriteria(releaseIds, granularity, hidePercentComplete, wiAcronym, wiName, tbIds);
+            }
+        }
+
+        /// <summary>
+        /// The aim of this method is to return the release of the first WI found with lower WiLevel among a list of WI 
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="workitemsIds"></param>
+        /// <returns></returns>
+        public Release GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(int personId, List<int> workitemsIds)
+        {
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var workItemManager = new WorkItemManager(uoW);
+                    return workItemManager.GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(personId, workitemsIds);
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Error("An unexpected error occured inside WorkItemServcie.GetReleaseRelatedToOneOfWiWithTheLowerWiLevel", e);
+                return null;
             }
         }
 

@@ -9,6 +9,7 @@
 <telerik:RadAjaxManager ID="ramCrs" runat="server" EnablePageHeadUpdate="false"></telerik:RadAjaxManager>
 <telerik:RadCodeBlock ID="RadCodeBlockVersion" runat="server">
     <script type="text/javascript" src="/DesktopModules/CRs/JS/crScript.js?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>"></script>
+    <script type="text/javascript" src="desktopmodules/specifications/JS/CommonScript.js?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>"></script>
 </telerik:RadCodeBlock>
 
 <asp:Panel ID="crList" runat="server" Visible="false" ClientIDMode="Static">

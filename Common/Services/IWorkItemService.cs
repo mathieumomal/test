@@ -82,6 +82,13 @@ namespace Etsi.Ultimate.Services
         KeyValuePair<WorkItem, UserRightsContainer> GetWorkItemByIdExtend(int personId, int workItemId);
 
         /// <summary>
+        /// Get primary work item by specification ID
+        /// </summary>
+        /// <param name="specificationID"> specification ID</param>
+        /// <returns>WorkItem if found, else null</returns>
+        WorkItem GetPrimeWorkItemBySpecificationID(int specificationID);
+
+        /// <summary>
         /// Get count of WorkItems
         /// </summary>
         /// <param name="releaseIds">List of Release Ids</param>
@@ -92,6 +99,14 @@ namespace Etsi.Ultimate.Services
         /// <param name="tbIds">List of Technical Bodies</param>
         /// <returns>Work Item Count</returns>
         int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName, List<int> tbIds);
+
+        /// <summary>
+        /// The aim of this method is to return the release of the first WI found with lower WiLevel among a list of WI 
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="workitemsIds"></param>
+        /// <returns></returns>
+        Release GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(int personId, List<int> workitemsIds);
 
         /// <summary>
         /// Get list of distinct Acronyms from various releases

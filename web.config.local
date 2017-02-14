@@ -43,7 +43,7 @@
   <appSettings>
 
     <!-- App Version : used to avoid any cache issues concerning javascript files -->
-    <add key="AppVersion" value="1.02" />
+    <add key="AppVersion" value="1.03" />
 
     <!-- Portal name where modules will run -->
     <add key="PortalName" value="Ultimate"/>
@@ -99,6 +99,7 @@
     <add key="Specification_WithdrawMeetingSelectPopUp_RelativeLink" value="WithdrawMeetingSelectPopUp.aspx?SpecId={0}&amp;RelId={1}" />
     <add key="Specification_UploadVersion_RelativeLink" value="/desktopmodules/Versions/UploadVersion.aspx?releaseId={0}&amp;specId={1}&amp;action={2}" />
     <add key="Specification_RemoveSpecReleasePopUp_RelativeLink" value="PopUps/RemoveSpecReleasePopUp.aspx?SpecId={0}&amp;RelId={1}" />
+	<add key="RelativeFtpPathForVersionsToBeTransposed" value="{0}\Information\3GPP_ultimate_versions_to_be_transposed" />
     
     <!-- @@@ EXTERNAL ADDRESSES for Contribution app @@@ : link to contribution application -->
     <add key="MeetingRelatedTdocAddress" value="http://www.contribution.loc/TdocList.aspx?meetingId=" />
@@ -246,7 +247,7 @@
         </expressionBuilders>
       </compilation>
       <!-- permits errors to be displayed for remote clients -->
-      <customErrors mode="RemoteOnly" />
+      <customErrors mode="Off" />
       <!-- Forms or Windows authentication -->
       <authentication mode="Forms">
         <forms name=".DOTNETNUKE" protection="All" timeout="60" cookieless="UseCookies" />

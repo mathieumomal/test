@@ -9,6 +9,9 @@
 <%@ Register TagPrefix="ult" TagName="FullViewControl" Src="../../controls/Ultimate/FullView.ascx" %>
 <%@ Register TagPrefix="ult" TagName="ReleaseSearchControl" Src="../../controls/Ultimate/ReleaseSearchControl.ascx" %>
 <%@ Register TagPrefix="ult" TagName="CommunityControl" Src="../../controls/Ultimate/CommunityControl.ascx" %>
+<telerik:RadCodeBlock ID="RadCodeBlock" runat="server">
+    <script src="desktopmodules/specifications/JS/CommonScript.js?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>"></script>
+</telerik:RadCodeBlock>
 
 <asp:Panel ID="componentSpecList" runat="server" Visible="false" ClientIDMode="Static">
     <asp:UpdateProgress ID="updateProgressSpecificationGrid" runat="server" DisplayAfter="200">
@@ -26,7 +29,7 @@
             <table style="width: 100%;">
                 <tr>
                     <td style="line-height: 22px;">
-                        <asp:LinkButton ID="btnNewSpecification" class="btn3GPP-success" runat="server" OnClientClick="var popUp=window.open('/desktopmodules/Specifications/EditSpecification.aspx?action=create', 'Specification-Create', 'height=690,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();return false;" Text="New Specification" />                    
+                        <asp:LinkButton ID="btnNewSpecification" class="btn3GPP-success" runat="server" OnClientClick="OpenSpecDetailsPage('/desktopmodules/Specifications/EditSpecification.aspx?action=create', 'Specification-Create');return false;" Text="New Specification" />                    
                         <span style="float: right; padding-bottom: 2px; white-space: nowrap">
                             <asp:Button ID="imgBtnFTP" Text="Manage meeting folder" runat="server" CssClass="btn3GPP-success customizePanelButtons" OnClientClick="openFTPConfiguration(); return false;" ToolTip="Manage specifications folders on FTP" />
                             <asp:Button ID="lnkManageITURecommendations" Text="ITU" runat="server" CssClass="btn3GPP-success customizePanelButtons" ToolTip="Manage ITU recommendations" OnClientClick="return openITURecommendationPopUp();" />
@@ -186,7 +189,7 @@
                                                 <tr>
                                                     <td>
                                                         <img id="imgViewSpecifications" title="See details" class="imgViewSpecifications" alt="See details" src="/DesktopModules/Specifications/images/details.png"
-                                                            onclick="var popUp=window.open('/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>', 'Specification-<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>', 'height=690,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" /></td>
+                                                            onclick="OpenSpecDetailsPage('/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>', 'Specification-<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>');" /></td>
                                                     <td>
                                                         <img id="imgLock" title="<%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsForPublication")) ? "For publication" : "Internal" %>" alt="Internal" src="/DesktopModules/Specifications/images/lock.png" style='opacity: <%# Convert.ToBoolean(DataBinder.Eval(Container.DataItem,"IsForPublication")) ? "0.1" : "1" %>' /></td>
                                                     <td>

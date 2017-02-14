@@ -205,7 +205,7 @@ namespace Etsi.Ultimate.Module.CRs
                     if (currentCr.SpecNumber != null)
                         specLink.Text = currentCr.SpecNumber.ToString(CultureInfo.InvariantCulture);
                     if (currentCr.SpecId != 0)
-                        specLink.NavigateUrl = "javascript:openSpecification('"+String.Format(ConfigVariables.SpecificationDetailsUrl, currentCr.SpecId)+"','"+currentCr.SpecId+"')";
+                        specLink.NavigateUrl = "javascript:OpenSpecDetailsPage('" + String.Format(ConfigVariables.SpecificationDetailsUrl, currentCr.SpecId) + "','Specification-" + currentCr.SpecId + "')";
                     else
                         specLink.Enabled = false;
 

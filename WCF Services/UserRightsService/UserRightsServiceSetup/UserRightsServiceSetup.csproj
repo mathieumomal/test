@@ -125,7 +125,9 @@
     <None Include="DeployementConf\App.Release.Dev.config" />
     <None Include="DeployementConf\App.Release.Ls.config" />
     <None Include="DeployementConf\App.Release.Prd.config" />
-    <None Include="DeployementConf\App.Release.Qa.config" />
+    <None Include="DeployementConf\App.Release.Qa.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

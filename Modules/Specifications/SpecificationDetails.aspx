@@ -15,11 +15,11 @@
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title></title>
-    <link rel="stylesheet" type="text/css" href="/Portals/_default/Skins/3GPP/mainpage.css"/>
-    <link rel="stylesheet" type="text/css" href="module.css">
-    <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon">
+    <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon"/>
     <script src="JS/jquery.min.js"></script>
-    <telerik:RadCodeBlock ID="RadCodeBlockVersion" runat="server">
+    <telerik:RadCodeBlock ID="RadCodeBlock" runat="server">
+        <link rel="stylesheet" type="text/css" href="/Portals/_default/Skins/3GPP/mainpage.css?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>"/>
+        <link rel="stylesheet" type="text/css" href="module.css?v=<%= ConfigurationManager.AppSettings["AppVersion"] %>"/>
         <script src="JS/CommonScript.js?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>"></script>
     </telerik:RadCodeBlock>
 </head>

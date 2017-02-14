@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Services;
 using Etsi.Ultimate.Utils;
+using Microsoft.Practices.Unity;
 using NUnit.Framework;
+using Rhino.Mocks;
 
 namespace Etsi.Ultimate.Tests.Services
 {
@@ -138,12 +141,18 @@ namespace Etsi.Ultimate.Tests.Services
 
         #region Send Crs To Cr-Pack
 
-        [TestCase(1, 24, 0,Description = "CR should be successfully added")]
-        [TestCase(1, 23, 1, Description = "CR could not be sent to CR-Pack")]
-        [TestCase(9999, 24, 1, Description = "CR-Pack doesn't exist")]
-        [TestCase(1, 9999, 1, Description = "CR doestn't exist")]
-        public void SendCrsToCrPack(int crPackId, int oneCrId, int errorsExpected)
+        [TestCase(1, 24, 0,true,Description = "CR should be successfully added")]
+        [TestCase(1, 23, 1, false, Description = "CR could not be sent to CR-Pack")]
+        [TestCase(9999, 24, 1, false, Description = "CR-Pack doesn't exist")]
+        [TestCase(1, 9999, 1, false, Description = "CR doestn't exist")]
+        public void SendCrsToCrPack(int crPackId, int oneCrId, int errorsExpected, bool generatedExpected)
         {
+            var contribSvcMocked = MockRepository.GenerateMock<IContributionService>();
+            contribSvcMocked.Stub(
+                x =>
+                    x.GenerateTdocListsAfterSendingCrsToCrPack(Arg<int>.Is.Anything, Arg<int>.Is.Anything,
+                        Arg<List<int>>.Is.Anything)).Repeat.Once();
+            ServicesFactory.Container.RegisterInstance(typeof(IContributionService), contribSvcMocked);
             var svc = new ChangeRequestService();
             var response = svc.SendCrsToCrPack(1, new List<int> { oneCrId }, crPackId);
 
@@ -167,6 +176,12 @@ namespace Etsi.Ultimate.Tests.Services
                 Assert.AreEqual(crPack.Denorm_Source, tsgData.TSGSourceOrganizations);
                 Assert.AreEqual(crPack.fk_Meeting, tsgData.TSGMeeting);
             }
+            if (generatedExpected)
+            {
+                contribSvcMocked.VerifyAllExpectations();
+            }
+            
+
         }
 
         #endregion

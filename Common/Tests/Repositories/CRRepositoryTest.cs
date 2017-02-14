@@ -307,6 +307,22 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(expectedResult, result.Key.Count);
         }
 
+        private object[] _sourceFindCrsByIds = {
+            new object[] {new List<int>(),0},  //case 1
+            new object[] {new List<int> {0},0},  //case 2
+            new object[] {new List<int> {1},1},  //case 3
+            new object[] {new List<int> {1,2},2},  //case 4
+        };
+
+        [Test, TestCaseSource("_sourceFindCrsByIds")]
+        public void FindCrsByIds(List<int> crIds, int expectedCrCount)
+        {
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.FindCrsByIds(crIds);
+
+            Assert.AreEqual(expectedCrCount, result.Count);
+        }
+
         #endregion
 
         #region Get CR(s) for MM

@@ -96,9 +96,13 @@
       <HintPath>..\..\packages\Microsoft.Office.Interop.Word.15.0.4797.1003\lib\net20\Microsoft.Office.Interop.Word.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.Practices.Unity, Version=2.0.414.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Microsoft.Practices.Unity, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Unity.3.0.1304.1\lib\Net45\Microsoft.Practices.Unity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Unity.3.0.1304.1\lib\Net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NMemory">
       <HintPath>..\..\packages\NMemory.1.0.0\lib\net45\NMemory.dll</HintPath>
@@ -143,6 +147,7 @@
     <Compile Include="BaseEffortTest.cs" />
     <Compile Include="BaseTest.cs" />
     <Compile Include="Business\CommunityManagerTest.cs" />
+    <Compile Include="Business\ContributionManagerTest.cs" />
     <Compile Include="Business\ItuRecommendation\ItuPreliminaryDataExtractorTest.cs" />
     <Compile Include="Business\ItuRecommendation\ItuPreliminaryExporterTest.cs" />
     <Compile Include="Business\ItuRecommendation\ItuRecommendationExporterTest.cs" />
@@ -203,6 +208,7 @@
     <Compile Include="FakeSets\WorkPlanFileFakeDBSet.cs" />
     <Compile Include="Repositories\CrCategoriesRepository.cs" />
     <Compile Include="Repositories\CrCategoriesRepositoryTest.cs" />
+    <Compile Include="Repositories\CrPackRepositoryTest.cs" />
     <Compile Include="Repositories\CrRepositoryTest.cs" />
     <Compile Include="Repositories\EnumRepositoryTest\EnumCommunityShortnameRepositoryTest.cs" />
     <Compile Include="Repositories\EnumRepositoryTest\EnumTechnologiesRepositoryTest.cs" />
@@ -302,7 +308,9 @@
     <Compile Include="Services\WorkPlanFileServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.Config" />
+    <None Include="App.Config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="Data_For_EffortUnitTests\Enum_Technology.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -446,6 +454,9 @@
     <None Include="TestData\QualityChecks\DOCS\ChangeHistoryTableIsTheLastOne_ErrorCase.docx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestData\QualityChecks\DOCS\IsHistoryVersionCorrect_SuccessCase_ChangeHistoryIntegratedInsideTable.docx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestData\QualityChecks\DOCS\IsReleaseCorrect_ErrorCase.docx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -542,7 +553,9 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="TestData\Ftp\Information\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

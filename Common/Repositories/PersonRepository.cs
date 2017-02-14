@@ -61,6 +61,11 @@ namespace Etsi.Ultimate.Repositories
             return UoW.Context.View_Persons.FirstOrDefault(x => x.PERSON_ID == id);
         }
 
+        public List<string> GetPeopleEmails(List<int> personIds)
+        {
+            return UoW.Context.View_Persons.Where(p => personIds.Contains(p.PERSON_ID)).Select(x => x.Email).Distinct().ToList();
+        }
+
         #endregion
 
         #region IDisposable Membres
@@ -79,5 +84,6 @@ namespace Etsi.Ultimate.Repositories
     {
         List<View_Persons> FindByIds(List<int> personIds);
         View_Persons FindDeletedOrNot(int id);
+        List<string> GetPeopleEmails(List<int> personIds);
     }
 }

@@ -85,5 +85,11 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         }
 
         #endregion
+
+
+        public List<string> GetPeopleEmails(List<int> personIds)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

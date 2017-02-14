@@ -41,6 +41,46 @@ namespace Etsi.Ultimate.Services
             return response;
         }
 
+        /// <summary>
+        /// Get CRs and CR Pack uids and call Contribution External Service 
+        /// in order to generate Tdoc list asynchronously
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="crPackId"></param>
+        /// <param name="crsIds"></param>
+        public ServiceResponse<bool> GenerateTdocListsAfterSendingCrsToCrPack(int personId, int crPackId, List<int> crsIds)
+        {
+            var response = new ServiceResponse<bool> { Result = false };
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var contributionManager = ManagerFactory.Resolve<IContributionManager>();
+                    contributionManager.UoW = uoW;
+                    List<string> uidsToGenerateTdocList = contributionManager.GetUidsForCRs(crsIds).Result;
+                    uidsToGenerateTdocList.Add(contributionManager.GetUidForCrPack(crPackId).Result);
+                    var tmp =
+                        contributionManager.GenerateMeetingTdocListsAfterSendingCrsToCrPack(
+                            uidsToGenerateTdocList.ToArray(), personId);
+                    response.Result = tmp.Result;
+
+                    if (response.Result)
+                    {
+                        LogManager.Info("[Service] Tdoc list generated after sending CRs to CR pack");
+                    }
+                    return response;
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error("[Service] Failed to generate Tdoc List after sending CRs to CR pack", ex);
+                response.Report.LogError("Failed to generate Tdoc List after sending CRs to CR pack");
+                return response;
+            }
+
+
+        }
+
         #endregion
     }
 
@@ -54,5 +94,15 @@ namespace Etsi.Ultimate.Services
         /// <param name="keywords">Keywords</param>
         /// <returns>Reserved CrPacks for the given Technical body</returns>
         ServiceResponse<List<View_CrPacks>> GetCrPacksByTbIdAndKeywords(int personId, int tbId, string keywords);
+
+
+        /// <summary>
+        /// Get CRs and CR Pack uids and call Contribution External Service 
+        /// in order to generate Tdoc list asynchronously
+        /// </summary>
+        /// <param name="personId"></param>
+        /// <param name="crPackId"></param>
+        /// <param name="crsIds"></param>
+        ServiceResponse<bool> GenerateTdocListsAfterSendingCrsToCrPack(int personId, int crPackId, List<int> crsIds);
     }
 }

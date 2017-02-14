@@ -73,7 +73,7 @@ namespace Etsi.Ultimate.Business.Versions
                     var fileExtension = String.Empty;
                     var fileToAnalyzePath = String.Empty;
                     var isUcc = version.Specification.IsUnderChangeControl.GetValueOrDefault();
-                    
+
 
                     //[1] Check the file name
                     var versionFilenameMgr = ManagerFactory.Resolve<IVersionFilenameManager>();
@@ -81,7 +81,8 @@ namespace Etsi.Ultimate.Business.Versions
                         version.MajorVersion, version.TechnicalVersion, version.EditorialVersion);
 
                     if (!fileNameWithoutExtension.Equals(validFileName, StringComparison.InvariantCultureIgnoreCase))
-                        validationReport.LogWarning(String.Format(Localization.Version_Upload_InvalidFilename, validFileName));
+                        validationReport.LogWarning(String.Format(Localization.Version_Upload_InvalidFilename,
+                            validFileName));
 
                     var allowToRunQualityChecks = false;
                     //[2] If file is in .zip format, check that .zip file and internal word file must have same name.
@@ -93,17 +94,27 @@ namespace Etsi.Ultimate.Business.Versions
 
 
                         //1 - File match found
-                        if (zipContentShortPath.Find(x => x.Equals(fileNameWithoutExtension + ".doc", StringComparison.InvariantCultureIgnoreCase)) != null)
+                        if (
+                            zipContentShortPath.Find(
+                                x =>
+                                    x.Equals(fileNameWithoutExtension + ".doc",
+                                        StringComparison.InvariantCultureIgnoreCase)) != null)
                         {
                             allowToRunQualityChecks = true;
                             fileExtension = ".doc";
-                            fileToAnalyzePath = Path.GetDirectoryName(zipContent.First()) + "\\" + fileNameWithoutExtension + ".doc";
+                            fileToAnalyzePath = Path.GetDirectoryName(zipContent.First()) + "\\" +
+                                                fileNameWithoutExtension + ".doc";
                         }
-                        else if (zipContentShortPath.Find(x => x.Equals(fileNameWithoutExtension + ".docx", StringComparison.InvariantCultureIgnoreCase)) != null)
+                        else if (
+                            zipContentShortPath.Find(
+                                x =>
+                                    x.Equals(fileNameWithoutExtension + ".docx",
+                                        StringComparison.InvariantCultureIgnoreCase)) != null)
                         {
                             allowToRunQualityChecks = true;
                             fileExtension = ".docx";
-                            fileToAnalyzePath = Path.GetDirectoryName(zipContent.First()) + "\\" + fileNameWithoutExtension + ".docx";
+                            fileToAnalyzePath = Path.GetDirectoryName(zipContent.First()) + "\\" +
+                                                fileNameWithoutExtension + ".docx";
                         }
                         else
                         {
@@ -133,7 +144,7 @@ namespace Etsi.Ultimate.Business.Versions
                         fileExtension = Path.GetExtension(path);
                         if (fileExtension == null ||
                             (!fileExtension.Equals(".doc", StringComparison.InvariantCultureIgnoreCase) &&
-                            !fileExtension.Equals(".docx", StringComparison.InvariantCultureIgnoreCase)))
+                             !fileExtension.Equals(".docx", StringComparison.InvariantCultureIgnoreCase)))
                             throw new InvalidOperationException("Invalid file format provided");
                         fileToAnalyzePath = path;
                         allowToRunQualityChecks = true;
@@ -152,11 +163,17 @@ namespace Etsi.Ultimate.Business.Versions
                         if (version.Specification.PrimeResponsibleGroup != null)
                         {
                             var communities = communityMgr.GetCommunities();
-                            var community = communities.FirstOrDefault(x => x.TbId == version.Specification.PrimeResponsibleGroup.Fk_commityId);
+                            var community =
+                                communities.FirstOrDefault(
+                                    x => x.TbId == version.Specification.PrimeResponsibleGroup.Fk_commityId);
                             if (community != null)
-                                tsgTitle = GetParentTSG(community, communities).TbTitle.Replace("Technical Specification Group -", "Technical Specification Group");
+                                tsgTitle =
+                                    GetParentTSG(community, communities)
+                                        .TbTitle.Replace("Technical Specification Group -",
+                                            "Technical Specification Group");
                         }
-                        var versionStr = String.Format("{0}.{1}.{2}", version.MajorVersion.Value, version.TechnicalVersion.Value, version.EditorialVersion.Value);
+                        var versionStr = String.Format("{0}.{1}.{2}", version.MajorVersion.Value,
+                            version.TechnicalVersion.Value, version.EditorialVersion.Value);
 
                         if (version.Source.HasValue)
                         {
@@ -166,23 +183,31 @@ namespace Etsi.Ultimate.Business.Versions
                         }
 
                         using (var docDocumentManager =
-                                ManagerFactory.ResolveWithString<IDocDocumentManager>(fileToAnalyzePath))
+                            ManagerFactory.ResolveWithString<IDocDocumentManager>(fileToAnalyzePath))
                         {
                             var qualityChecks =
                                 ManagerFactory.ResolveWithIDocDocumentManager<IQualityChecks>(docDocumentManager);
 
-                            var businessValidationReport = ValidateDocument(qualityChecks, versionStr, version.Specification.Title, version.Release.Name, meetingDate, tsgTitle, version.Specification.IsTS.GetValueOrDefault());
+                            var businessValidationReport = ValidateDocument(qualityChecks, versionStr,
+                                version.Specification.Title, version.Release.Name, meetingDate, tsgTitle,
+                                version.Specification.IsTS.GetValueOrDefault());
                             validationReport.ErrorList.AddRange(businessValidationReport.ErrorList);
                             validationReport.WarningList.AddRange(businessValidationReport.WarningList);
                         }
                     }
                     svcResponse.Result = Guid.NewGuid().ToString();
-                    CacheManager.InsertForLimitedTime(CacheKey + svcResponse.Result, new CacheUploadStorage(version, path, validationReport), 10);
+                    CacheManager.InsertForLimitedTime(CacheKey + svcResponse.Result,
+                        new CacheUploadStorage(version, path, validationReport), 10);
                 }
-                catch (Exception exc)
+                catch (InvalidOperationException exc)
                 {
-                    LogManager.Error("An unexpected error occured when system trying to CheckVersionForUpload", exc);
+                    LogManager.Error("An InvalidOperationException error occured when system trying to CheckVersionForUpload", exc);
                     svcResponse.Report.LogError("An error occured: " + exc.Message);
+                }
+                catch (Exception e)
+                {
+                    LogManager.Error("An unexpected error occured when system trying to CheckVersionForUpload", e);
+                    svcResponse.Report.LogError(Localization.GenericError);
                 }
             }
             return svcResponse;
@@ -559,6 +584,31 @@ namespace Etsi.Ultimate.Business.Versions
                         LogManager.Debug("Version just copy/paste at: " + hardLinkPathInLatestFolder);
                     }
                     
+                    //Some versions need to be move inside a (configured <=> web.config setting) folder in order to be transposed
+                    var isInternalTr = !(spec.IsForPublication ?? false) && !(spec.IsTS ?? false);
+                    var releaseStatusRepo = RepositoryFactory.Resolve<IEnum_ReleaseStatusRepository>();
+                    releaseStatusRepo.UoW = UoW;
+                    var releaseStatus = releaseStatusRepo.Find(version.Release.Fk_ReleaseStatus ?? 0);
+                    var isInsideStage3Frozen = (releaseStatus.Code == Enum_ReleaseStatus.Frozen) 
+                        && version.Release.Stage3FreezeDate < DateTime.Now;
+
+                    if (spec.IsActive 
+                        && (spec.IsUnderChangeControl ?? false) //SPEC UCC
+                        && !isInternalTr //SPEC IS NOT INTERNAL TR
+                        && isInsideStage3Frozen) // Release belongs to Stage 3 frozen
+                    {
+                        var versionsToBeTransposedFolder = string.Format(ConfigVariables.RelativeFtpPathForVersionsToBeTransposed,
+                            destinationBasePath);
+                        if (!Directory.Exists(versionsToBeTransposedFolder))
+                            Directory.CreateDirectory(versionsToBeTransposedFolder);
+
+                        var versionToBeTransposedCopyPath = Path.Combine(versionsToBeTransposedFolder, fileName);
+                        if (!File.Exists(versionToBeTransposedCopyPath))
+                        {
+                            File.Copy(hardLinkPath, versionToBeTransposedCopyPath);
+                        }
+                        LogManager.Debug("Version 'to be transposed' just copy/paste at: " + versionToBeTransposedCopyPath);
+                    }
                 }
             }
             LogManager.Debug(string.Format("END - Transfer to FTP of version (Spec: {0}, Rel: {1}, Number: {2}.{3}.{4}) is now done.", version.Fk_SpecificationId, version.Fk_ReleaseId, version.MajorVersion, version.TechnicalVersion, version.EditorialVersion));

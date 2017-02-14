@@ -70,6 +70,17 @@ namespace Etsi.Ultimate.Tests.Repositories
             repo.Delete(2);
         }
 
+        [Test]
+        public void GetPeopleEmails()
+        {
+            var repo = new PersonRepository {UoW = GetUnitOfWork()};
+            var emails = repo.GetPeopleEmails(new List<int> {27904, 9568, 22});
+
+            Assert.Contains("mathieu.mangion@etsi.org", emails);
+            Assert.Contains("laurent.vreck@etsi.org", emails);
+            Assert.Contains("john@etsi.org", emails);
+        }
+
         /// <summary>
         /// Create Mocks to simulate DB with objects
         /// </summary>

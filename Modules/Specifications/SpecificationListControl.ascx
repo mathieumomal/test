@@ -1,6 +1,10 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="SpecificationListControl.ascx.cs" Inherits="Etsi.Ultimate.Module.Specifications.SpecificationListControl" %>
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 
+<telerik:RadCodeBlock ID="RadCodeBlock" runat="server">
+    <script src="/desktopmodules/specifications/JS/CommonScript.js?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>"></script>
+</telerik:RadCodeBlock>
+
 <style type="text/css">
     .RadGrid_Default th.rgHeader {
         background-color: grey;
@@ -75,7 +79,7 @@
                             <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="50px" />
                             <ItemTemplate>
                                 <img id="imgViewSpecifications" title="See details" class="imgViewSpecifications" alt="See details" src="/DesktopModules/Specifications/images/details.png"
-                                                        onclick="var popUp=window.open('/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>', 'Specification-<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>', 'height=690,width=674,toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=no,resizable=no'); popUp.focus();" />
+                                                        onclick="OpenSpecDetailsPage('/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId=<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>', 'Specification-<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId").ToString() %>');" />
                                 <asp:ImageButton Visible="false" CssClass="display_inline" ID="btnRemoveSpec" CommandArgument='<%# DataBinder.Eval(Container.DataItem,"Pk_SpecificationId") %>' ImageUrl="/controls/Ultimate/images/delete.png" runat="server" OnClientClick="setDeleteProgress(this)" OnClick="btnRemoveSpec_Click" />
                             </ItemTemplate>
                         </telerik:GridTemplateColumn>

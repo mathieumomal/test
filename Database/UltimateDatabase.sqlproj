@@ -276,6 +276,7 @@
     <None Include="Scripts\Post-Deployment\Enum_Technology_5G.sql" />
     <None Include="Scripts\Post-Deployment\Enum_Technology_WpmKeywordId.sql" />
     <None Include="Scripts\Post-Deployment\Enum_CommunitiesShortNames_GERAN_RAN_WpmProjectId.data.sql" />
+    <None Include="Scripts\Post-Deployment\Enum_ChangeRequestStatus_Change_Description_TechEndorsed.data.sql" />
   </ItemGroup>
   <ItemGroup>
     <SqlCmdVariable Include="CONTRIB3GPPDB">

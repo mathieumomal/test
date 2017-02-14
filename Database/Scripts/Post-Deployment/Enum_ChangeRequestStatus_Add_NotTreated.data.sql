@@ -1,0 +1,1 @@
+﻿INSERT INTO dbo.Enum_ChangeRequestStatus(Code, [Description]) VALUES('NotTreated', 'not treated')

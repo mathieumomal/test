@@ -251,8 +251,6 @@ namespace Etsi.Ultimate.Tests.Services
             RegisterAllMocks();
             //---MAIL
             //Specific mock for the email, because we want to check the call made to it.
-            var primeResponsibleGroupCommityId = specToEdit.PrimeResponsibleGroup.Fk_commityId;
-
             var subject = String.Format(Localization.Specification_ReferenceNumberAssigned_Subject, specToEdit.Number);
             var body = new SpecReferenceNumberAssignedMailTemplate((String.IsNullOrEmpty(specToEdit.Number) ? "" : specToEdit.Number), (String.IsNullOrEmpty(specToEdit.Title) ? "" : specToEdit.Title), new List<string>() { });
             var bodyContent = body.TransformText();
@@ -261,7 +259,7 @@ namespace Etsi.Ultimate.Tests.Services
             mailMock.Stub(r => r.SendEmail(
                 Arg<string>.Is.Null,
                 Arg<List<string>>.Matches(to => to.Count==5),
-                Arg<List<string>>.Is.Null,
+                Arg<List<string>>.Matches(x => x.Count == 2),
                 Arg<List<string>>.Is.Null,
                 Arg<string>.Is.Equal(subject),
                 Arg<string>.Is.Anything

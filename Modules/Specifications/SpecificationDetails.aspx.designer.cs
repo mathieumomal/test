@@ -13,13 +13,13 @@ namespace Etsi.Ultimate.Module.Specifications {
     public partial class SpecificationDetails {
         
         /// <summary>
-        /// Contrôle RadCodeBlockVersion.
+        /// Contrôle RadCodeBlock.
         /// </summary>
         /// <remarks>
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadCodeBlock RadCodeBlockVersion;
+        protected global::Telerik.Web.UI.RadCodeBlock RadCodeBlock;
         
         /// <summary>
         /// Contrôle specificationDetailsForm.

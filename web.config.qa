@@ -32,9 +32,9 @@
   <location path="." inheritInChildApplications="false"> 
   <connectionStrings>
     <!-- Connection String for SQL Server 2008/2012 Express -->
-    <add name="SiteSqlServer" connectionString="Data Source=ETSIBASE;Initial Catalog=DNN3GPP;User ID=DNNuser;Password=anu2groW." providerName="System.Data.SqlClient" />
-	<add name="UltimateContext" connectionString="metadata=res://*/UltimateDataModel.csdl|res://*/UltimateDataModel.ssdl|res://*/UltimateDataModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=ETSIBASE;initial catalog=U3GPPDB;User ID=ngppqa;Password=ngppqa;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
-	<add name="DSDBContext" connectionString="metadata=res://*/DSDBDataModel.csdl|res://*/DSDBDataModel.ssdl|res://*/DSDBDataModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=ETSIBASE;initial catalog=DSDB;User ID=ngppqa;Password=ngppqa;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+    <add name="SiteSqlServer" connectionString="Data Source=ETSIBASE;Initial Catalog=DNN3GPP;User ID=sa;Password=cap4tpmaccess" providerName="System.Data.SqlClient" />
+	<add name="UltimateContext" connectionString="metadata=res://*/UltimateDataModel.csdl|res://*/UltimateDataModel.ssdl|res://*/UltimateDataModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=ETSIBASE;initial catalog=U3GPPDB;User ID=sa;Password=cap4tpmaccess;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+	<add name="DSDBContext" connectionString="metadata=res://*/DSDBDataModel.csdl|res://*/DSDBDataModel.ssdl|res://*/DSDBDataModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=ETSIBASE;initial catalog=DSDB;User ID=sa;Password=cap4tpmaccess;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
     <!-- Connection String for SQL Server 2008/2012
     <add name="SiteSqlServer" connectionString="Server=(local);Database=DotNetNuke;uid=;pwd=;" providerName="System.Data.SqlClient" /> 
     -->
@@ -43,7 +43,7 @@
   <appSettings>
     
     <!-- App Version : used to avoid any cache issues concerning javascript files -->
-	  <add key="AppVersion" value="1.02" />
+	  <add key="AppVersion" value="1.03" />
     
     <!-- Portal name where modules will run -->
     <add key="PortalName" value="Ultimate"/>
@@ -70,27 +70,27 @@
     <add key="EtsiWorkitemsDeliveryFolder" value="http://www.etsi.org/deliver/"/>
     
     <!-- @@@ WEBAPP : URLS @@@ -->
-	  <add key="MeetingDetailsAddress" value="http://webapp.13.etsiqa.org/meetingCalendar/MeetingDetails.asp?mid=" />
-    <add key="MeetingiCalAddress" value="http://webapp.13.etsiqa.org/meetingCalendar/ical.asp?qMTG_ID=" />
-    <add key="MeetingParticipantsListAddress" value="http://webapp.13.etsiqa.org/3GPPRegistration/fViewPart.asp?mid=" />
-    <add key="RapporteurDetailsAddress" value="http://webapp.13.etsiqa.org/teldir/ListPersDetails.asp?PersId="/>
-    <add key="WIReportPath" value ="http://webapp.13.etsiqa.org/workprogram/Report_WorkItem.asp?WKI_ID="/>
-    <add key="MeetingCreationAddress" value="http://webapp.13.etsiqa.org/meetingManagement/NewMeeting.asp?type=create"/>
-    <add key="MeetingListAdvancedQueryLink" value="http://webapp.13.etsiqa.org/MeetingCalendar/QueryForm.asp"/>
-    <add key="MeetingRegistration" value="http://webapp.13.etsiqa.org/3GPPRegistration/fMain.asp?mid={0}"/>
+	<add key="MeetingDetailsAddress" value="http://webapp.etsiqa.org/meetingCalendar/MeetingDetails.asp?mid=" />
+    <add key="MeetingiCalAddress" value="http://webapp.etsiqa.org/meetingCalendar/ical.asp?qMTG_ID=" />
+    <add key="MeetingParticipantsListAddress" value="http://webapp.etsiqa.org/3GPPRegistration/fViewPart.asp?mid=" />
+    <add key="RapporteurDetailsAddress" value="http://webapp.etsiqa.org/teldir/ListPersDetails.asp?PersId="/>
+    <add key="WIReportPath" value ="http://webapp.etsiqa.org/workprogram/Report_WorkItem.asp?WKI_ID="/>
+    <add key="MeetingCreationAddress" value="http://webapp.etsiqa.org/meetingManagement/NewMeeting.asp?type=create"/>
+    <add key="MeetingListAdvancedQueryLink" value="http://webapp.etsiqa.org/MeetingCalendar/QueryForm.asp"/>
+    <add key="MeetingRegistration" value="http://webapp.etsiqa.org/3GPPRegistration/fMain.asp?mid={0}"/>
     
     <!-- @@@ FTP @@@ -->
     <!-- FTP web addresses -->
-	  <add key="FtpContributionAddress" value="http://ftp3gpp.13.etsiqa.org/" />
-    <add key="FtpBaseAddress" value="http://ftp3gpp.13.etsiqa.org/" />
-    <add key="FtpExportAddress" value="http://ftp3gpp.13.etsiqa.org/Information/WORK_PLAN/"/>
-    <add key="FtpBasePhysicalPath" value="D:\1FTPSites\ftp3GPP.13.etsiqa.org\" /><!-- FTP physical path on server -->
+	  <add key="FtpContributionAddress" value="http://www.3gppqa.org/ftp/" />
+    <add key="FtpBaseAddress" value="http://www.3gppqa.org/ftp/" />
+    <add key="FtpExportAddress" value="http://www.3gppqa.org/ftp/Information/WORK_PLAN/"/>
+    <add key="FtpBasePhysicalPath" value="\\3gppweb.etsiqa.org\3gppftp$\" /><!-- FTP physical path on server -->
     <add key="FtpBaseBackupPhysicalPath" value="\\3GPPFRONT\TempHDrive\" /><!-- BACKUP FTP physical path on server when upload version -->
     
     <!-- @@@ INTERNAL ADDRESSES @@@ : link for modules pages -->
-    <add key="SpecificationDetailsUrl" value="http://dnn3gpp.13.etsiqa.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId={0}" />
-    <add key="ReleaseDetailsUrl" value="http://dnn3gpp.13.etsiqa.org/desktopmodules/Release/ReleaseDetails.aspx?releaseId={0}"/>
-    <add key="DownloadparticipantsListLink" value="http://dnn3gpp.13.etsiqa.org/desktopmodules/Meetings/DownloadParticipantsList.aspx?eventId={0}" />
+    <add key="SpecificationDetailsUrl" value="http://portal.3gppqa.org/desktopmodules/Specifications/SpecificationDetails.aspx?specificationId={0}" />
+    <add key="ReleaseDetailsUrl" value="http://portal.3gppqa.org/desktopmodules/Release/ReleaseDetails.aspx?releaseId={0}"/>
+    <add key="DownloadparticipantsListLink" value="http://portal.3gppqa.org/desktopmodules/Meetings/DownloadParticipantsList.aspx?eventId={0}" />
     <!-- Relatives URLs -->
     <add key="RelativeUrlWiRelatedSpecs" value="/Specifications.aspx?q=1&amp;WiUid={0}"/>
     <add key="RelativeUrlWiRelatedCrs" value="/ChangeRequests.aspx?q=1&amp;workitem={0}"/>
@@ -99,17 +99,18 @@
     <add key="Specification_WithdrawMeetingSelectPopUp_RelativeLink" value="WithdrawMeetingSelectPopUp.aspx?SpecId={0}&amp;RelId={1}" />
     <add key="Specification_UploadVersion_RelativeLink" value="/desktopmodules/Versions/UploadVersion.aspx?releaseId={0}&amp;specId={1}&amp;action={2}" />
     <add key="Specification_RemoveSpecReleasePopUp_RelativeLink" value="PopUps/RemoveSpecReleasePopUp.aspx?SpecId={0}&amp;RelId={1}" />
+	<add key="RelativeFtpPathForVersionsToBeTransposed" value="{0}\Information\3GPP_ultimate_versions_to_be_transposed" />
    
     <!-- @@@ EXTERNAL ADDRESSES for Contribution app @@@ : link to contribution application -->
-    <add key="MeetingRelatedTdocAddress" value="http://dnn3gpp.13.etsiqa.org/ngppapp/TdocList.aspx?meetingId=" />
-    <add key="ContributionAllocationBaseAddress" value="http://dnn3gpp.13.etsiqa.org/ngppapp/CreateTdoc.Aspx?meetingId={0}&amp;mode=create"/>
-    <add key="ContributionBulkBaseAddress" value="http://dnn3gpp.13.etsiqa.org/ngppapp/ContributionImport.aspx?meetingId={0}&amp;mode=bulk"/>
-    <add key="ContributionImportBaseAddress" value="http://dnn3gpp.13.etsiqa.org/ngppapp/ContributionImport.aspx?meetingId={0}&amp;mode=import"/>
-    <add key="ContributionCommitFinalDecisionsUrl" value="http://dnn3gpp.13.etsiqa.org/ngppapp/CommitFinalDecisions.aspx?meetingId={0}"/>
-    <add key="DownloadDocumentListBaseAddress" value="http://dnn3gpp.13.etsiqa.org/ngppapp/GenerateDocumentList.Aspx?meetingId={0}"/>
-    <add key="UploadTDocUrl" value="http://dnn3gpp.13.etsiqa.org/ngppapp/UploadTdoc.aspx"/>
-    <add key="ManageAgendaItemsUrl" value="http://dnn3gpp.13.etsiqa.org/ngppapp/AgendaItems.aspx?meetingId={0}"/>
-    <add key="TdocDetailsUrl" value="http://dnn3gpp.13.etsiqa.org/ngppapp/CreateTdoc.aspx?mode=view&amp;contributionUid={0}"/>
+    <add key="MeetingRelatedTdocAddress" value="http://portal.3gppqa.org/ngppapp/TdocList.aspx?meetingId=" />
+    <add key="ContributionAllocationBaseAddress" value="http://portal.3gppqa.org/ngppapp/CreateTdoc.Aspx?meetingId={0}&amp;mode=create"/>
+    <add key="ContributionBulkBaseAddress" value="http://portal.3gppqa.org/ngppapp/ContributionImport.aspx?meetingId={0}&amp;mode=bulk"/>
+    <add key="ContributionImportBaseAddress" value="http://portal.3gppqa.org/ngppapp/ContributionImport.aspx?meetingId={0}&amp;mode=import"/>
+    <add key="ContributionCommitFinalDecisionsUrl" value="http://portal.3gppqa.org/ngppapp/CommitFinalDecisions.aspx?meetingId={0}"/>
+    <add key="DownloadDocumentListBaseAddress" value="http://portal.3gppqa.org/ngppapp/GenerateDocumentList.Aspx?meetingId={0}"/>
+    <add key="UploadTDocUrl" value="http://portal.3gppqa.org/ngppapp/UploadTdoc.aspx"/>
+    <add key="ManageAgendaItemsUrl" value="http://portal.3gppqa.org/ngppapp/AgendaItems.aspx?meetingId={0}"/>
+    <add key="TdocDetailsUrl" value="http://portal.3gppqa.org/ngppapp/CreateTdoc.aspx?mode=view&amp;contributionUid={0}"/>
     
     <!-- @@@ Cookies names @@@ (DONT MODIFY NAMES WITHOUT CHANGE THEM INSIDE CONTRIBUTION AS WELL : SECURITY REASONS) -->
     <add key="CookieName_MeetingsList"  value="MeetingsList_Cookie" />
@@ -119,7 +120,7 @@
 
     <!-- @@@ CONNEXION STRINGS @@@ -->
     <!-- Connection String for SQL Server 2008/2012 Express - kept for backwards compatability - legacy modules   -->
-    <add key="SiteSqlServer" value="Data Source=ETSIBASE;Initial Catalog=DNN3GPP;User ID=DNNuser;Password=anu2groW." />
+    <add key="SiteSqlServer" value="Data Source=ETSIBASE;Initial Catalog=DNN3GPP;User ID=sa;Password=cap4tpmaccess" />
     <!-- Connection String for SQL Server 2008/2012 - kept for backwards compatability - legacy modules
     <add key="SiteSqlServer" value="Server=(local);Database=DotNetNuke;uid=;pwd=;"/>
     -->
@@ -242,7 +243,8 @@
   </system.webServer>
     <system.web>
       <machineKey validationKey="0A714BE6D7F9F3A8DFD475145156A0ECDB555BE5" decryptionKey="51EE1EFC27E4DD321DF5B6CC4B9962E3ABBD819A84A14A19" decryption="3DES" validation="SHA1" />
-      <!-- set code access security trust level - this is generally set in the machine.config
+      <identity impersonate="true" userName="etsi_online\beaadmin" password="beaadmin"/>
+	  <!-- set code access security trust level - this is generally set in the machine.config
     <trust level="Medium" originUrl=".*" />
     -->
       <!-- set debugmode to false for running application -->
@@ -260,7 +262,7 @@
         </expressionBuilders>
       </compilation>
       <!-- permits errors to be displayed for remote clients -->
-      <customErrors mode="RemoteOnly" />
+      <customErrors mode="Off" />
       <!-- Forms or Windows authentication -->
       <authentication mode="Forms">
         <forms name=".DOTNETNUKE" protection="All" timeout="60" cookieless="UseCookies" />
@@ -576,7 +578,8 @@
             <message clientCredentialType="Windows" negotiateServiceCredential="true" algorithmSuite="Default" establishSecurityContext="true" />
           </security>
         </binding>
-        <binding name="UserRightsHttpEndpoint" />        
+        <binding name="UserRightsHttpEndpoint" />    
+		<binding name="ExternalContributionServiceHttpEndpoint" />		
       </wsHttpBinding>
     </bindings>
     <client>
@@ -584,6 +587,12 @@
       </endpoint>
       <endpoint address="http://localhost:81/UserRightsService/" binding="wsHttpBinding"  bindingConfiguration="UserRightsHttpEndpoint" contract="UserRightsService.IUserRightsService" name="UserRightsHttpEndpoint">
       </endpoint>
+	  <endpoint address="http://localhost:81/ContributionService" binding="wsHttpBinding" bindingConfiguration="ExternalContributionServiceHttpEndpoint" contract="ExternalContributionService.IExtContributionService" name="ExternalContributionServiceHttpEndpoint">
+			<identity>
+				<dns value="localhost" />
+				<userPrincipalName value="beaadmin@etsi_online" />
+			</identity>
+		</endpoint>
     </client>
   </system.serviceModel>
 </configuration>

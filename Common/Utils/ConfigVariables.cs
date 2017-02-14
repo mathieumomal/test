@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Web;
 using System.Configuration;
 
 namespace Etsi.Ultimate.Utils
@@ -14,6 +9,19 @@ namespace Etsi.Ultimate.Utils
     /// </summary>
     public static class ConfigVariables
     {
+        /// <summary>
+        /// Relative ftp path for versions to be transposed
+        /// </summary>
+        public static string RelativeFtpPathForVersionsToBeTransposed
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["RelativeFtpPathForVersionsToBeTransposed"] != null)
+                    return ConfigurationManager.AppSettings["RelativeFtpPathForVersionsToBeTransposed"].ToString();
+                return "";
+            }
+        }
+
         /// <summary>
         /// Gets the Meeting Details URL
         /// </summary>

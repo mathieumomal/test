@@ -1,0 +1,1 @@
+﻿UPDATE [U3GPPDB].[dbo].Enum_ChangeRequestStatus SET Description = 'endorsed' WHERE Code = 'TechEndorsed'

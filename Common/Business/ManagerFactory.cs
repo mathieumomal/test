@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Etsi.Ultimate.Business.ExternalContributionService;
 using Etsi.Ultimate.Business.ItuRecommendation;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.Business.Specifications;
@@ -94,6 +95,7 @@ namespace Etsi.Ultimate.Business
             //Map of relation between Interfaces and classes
             Container.RegisterType<IUserRightsService, UserRightsServiceClient>(new TransientLifetimeManager(),
                 new InjectionConstructor("UserRightsHttpEndpoint"));
+            Container.RegisterType<IExtContributionService, ExtContributionServiceClient>(new TransientLifetimeManager(), new InjectionConstructor("ExternalContributionServiceHttpEndpoint"));
             Container.RegisterType<IRightsManager, RightsManager>(new TransientLifetimeManager());
             Container.RegisterType<IPersonManager, PersonManager>(new TransientLifetimeManager());
             Container.RegisterType<IWorkItemCsvParser, WorkItemCsvParser>(new TransientLifetimeManager());

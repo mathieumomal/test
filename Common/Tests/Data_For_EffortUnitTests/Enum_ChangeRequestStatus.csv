@@ -6,6 +6,6 @@ Pk_EnumChangeRequestStatus,Code,Description
 5,Rejected,Rejected
 6,Revised,Revised
 7,Merged,Merged
-8,TechEndorsed,Technically endorsed
+8,TechEndorsed,endorsed
 9,Withdrawn,Withdrawn
 10,Reissued,Reissued

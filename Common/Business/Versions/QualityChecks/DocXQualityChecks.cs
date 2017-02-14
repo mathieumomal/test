@@ -232,13 +232,29 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             if (lastTable != null)
             {
                 var headerRow = lastTable.OfType<TableRow>().ToList()[0];
-                if (headerRow != null)
+                if (headerRow.Any() && headerRow != null)
                 {
-                    var secondRowColumns = headerRow.OfType<TableCell>().ToList();
-                    int indexOfNewColumn = -1;
-                    for (int i = 0; i < secondRowColumns.Count; i++)
+                    var headerRowColumns = headerRow.OfType<TableCell>().ToList();
+                    if (headerRowColumns.Count == 1)
                     {
-                        var columnText = GetPlainText(secondRowColumns[i]).Replace("\r\n", String.Empty).Replace(" ", String.Empty).ToLower();
+                        //If first row of table contains only one cell => this is not the really the header which contains columns name. 
+                        //This is just a global header for all the table which could contains for exemple "Change history" text (according to our examples for the moment)
+                        //In that case consider the second row as the real headerRow
+                        if (lastTable.OfType<TableRow>().Count() > 1)
+                        {
+                            headerRow = lastTable.OfType<TableRow>().ToList()[1];
+                            headerRowColumns = headerRow.OfType<TableCell>().ToList();
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+
+                    var indexOfNewColumn = -1;
+                    for (var i = 0; i < headerRowColumns.Count; i++)
+                    {
+                        var columnText = GetPlainText(headerRowColumns[i]).Replace("\r\n", String.Empty).Replace(" ", String.Empty).ToLower();
                         if (columnText.Equals("new", StringComparison.InvariantCultureIgnoreCase) || columnText.Equals("newversion", StringComparison.InvariantCultureIgnoreCase) || (columnText.Contains("new") && columnText.Contains("version")))
                         {
                             indexOfNewColumn = i;

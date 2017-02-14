@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Business.Security;
-using Etsi.Ultimate.DomainClasses;
-using Etsi.Ultimate.Services;
-using NUnit.Framework;
-using Rhino.Mocks;
-using Microsoft.Practices.Unity;
-using System.IO;
-using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Business.Versions.Interfaces;
 using Etsi.Ultimate.Business.Versions.QualityChecks;
+using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Services;
+using Etsi.Ultimate.Utils;
+using Microsoft.Practices.Unity;
+using NUnit.Framework;
+using Rhino.Mocks;
 
-namespace Etsi.Ultimate.Tests.Services
+namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
 {
     [Category("Version_Upload")]
     public class SpecVersionUploadTest : BaseEffortTest
@@ -74,6 +72,12 @@ namespace Etsi.Ultimate.Tests.Services
 
             // Clear the Backup. 
             foreach (var folder in Directory.GetDirectories(Environment.CurrentDirectory + "\\TestData\\Ftp\\Backup"))
+            {
+                Directory.Delete(folder, true);
+            }
+
+            // Clear the FTP information folder. 
+            foreach (var folder in Directory.GetDirectories(Environment.CurrentDirectory + "\\TestData\\Ftp\\Information"))
             {
                 Directory.Delete(folder, true);
             }
@@ -348,6 +352,30 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.IsFalse(File.Exists("TestData\\Ftp\\Specs\\latest\\Rel-13\\22_series\\22103-d00.zip"));
             Assert.IsFalse(File.Exists("TestData\\Ftp\\Specs\\latest\\Rel-13\\22_series\\22103-d10.zip"));
             Assert.IsTrue(File.Exists("TestData\\Ftp\\Specs\\latest\\Rel-13\\22_series\\22103-d20.zip"));
+        }
+
+        [Test(Description = "System should consider this version as 'ato be transposed' and move it inside dedicated folder")]
+        public void UploadVersion_Ucc_VersionToBeTransposed()
+        {
+            //PREPARE: Change spec and release configs to suit to the test case
+            //1) Set spec as UCC
+            var spec = UoW.Context.Specifications.First(x => x.Pk_SpecificationId == 136082);
+            spec.IsUnderChangeControl = true;
+            //2) Set release as frozen stage 3
+            var rel = UoW.Context.Releases.First(x => x.Pk_ReleaseId == 2883);
+            rel.Enum_ReleaseStatus = null;
+            rel.Fk_ReleaseStatus = 2;
+            rel.Stage3FreezeDate = DateTime.Now.AddDays(-1);
+            UoW.Context.SaveChanges();
+
+            //EXECUTE
+            myVersion = CreateLatestUccVersion();
+            var fileToUpload = UPLOAD_PATH + "22103-200.zip";//Wrong name actually but will be replaced by system to 22103-300.zip automaticaly just to have single version inside physical real path to upload)
+            UploadVersionProcess(myVersion, fileToUpload);
+
+            //CHECK
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Backup\\Information\\3GPP_ultimate_versions_to_be_transposed\\22103-d00.zip"));
+            Assert.IsTrue(File.Exists("TestData\\Ftp\\Backup\\Information\\3GPP_ultimate_versions_to_be_transposed\\22103-d00.zip"));
         }
 
         #endregion

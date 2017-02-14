@@ -45,6 +45,15 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         public string Status { get; set; }
 
         /// <summary>
+        /// Gets or sets the status code.
+        /// </summary>
+        /// <value>
+        /// The status.
+        /// </value>
+        [DataMember]
+        public string StatusCode { get; set; }
+
+        /// <summary>
         /// Gets or sets the sort order
         /// </summary>
         [DataMember]

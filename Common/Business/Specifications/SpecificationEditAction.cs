@@ -308,9 +308,15 @@ namespace Etsi.Ultimate.Business.Specifications
             var listSecretariesEmail = personManager.GetEmailSecretariesFromAPrimeResponsibleGroupByCommityId(primeResponsibleGroupCommityId);
             to = to.Concat(listSecretariesEmail).ToList();
 
+            //Send to all rapporteurs
+            var rapporteurIds = spec.SpecificationRapporteurs.Select(x => x.Fk_RapporteurId).ToList();
+            var personRepo = RepositoryFactory.Resolve<IPersonRepository>();
+            personRepo.UoW = UoW;
+            var cc = personRepo.GetPeopleEmails(rapporteurIds);
+
             var body = new SpecReferenceNumberAssignedMailTemplate((String.IsNullOrEmpty(spec.Number) ? "" : spec.Number), (String.IsNullOrEmpty(spec.Title) ? "" : spec.Title), listSpecWiLabel);
             var mailInstance = UtilsFactory.Resolve<IMailManager>();
-            if (!mailInstance.SendEmail(null, to, null, null, subject, body.TransformText()))
+            if (!mailInstance.SendEmail(null, to, cc, null, subject, body.TransformText()))
             {
                 report.LogError(Localization.Specification_ERR101_FailedToSendEmailToSecretaryAndWorkplanManager);
             }

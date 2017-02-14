@@ -112,6 +112,17 @@ namespace Etsi.Ultimate.Tests.Business.QualityChecks
         }
 
         [Test]
+        public void IsHistoryVersionCorrect_SuccessCase_EvenIfChangeHistoryTitleIntegratedToTheTable()
+        {
+            var docDocumentMgr = ManagerFactory.ResolveWithString<IDocDocumentManager>(_uploadPath + "IsHistoryVersionCorrect_SuccessCase_ChangeHistoryIntegratedInsideTable.docx");
+            var biz = ManagerFactory.ResolveWithIDocDocumentManager<IQualityChecks>(docDocumentMgr);
+            var result = biz.IsHistoryVersionCorrect("8.36.0");
+            docDocumentMgr.Dispose();
+
+            Assert.IsTrue(result);
+        }
+
+        [Test]
         public void IsCoverPageVersionCorrect()
         {
             var docDocumentMgr = ManagerFactory.ResolveWithString<IDocDocumentManager>(_uploadPath + "IsCoverPageVersionCorrect_ErrorCase.docx");

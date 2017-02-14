@@ -123,6 +123,11 @@
     <Compile Include="ItuRecommendation\SpecToItuRecordConverter.cs" />
     <Compile Include="MeetingManager.cs" />
     <Compile Include="RemarkManager.cs" />
+    <Compile Include="Service References\ExternalContributionService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="Service References\UserRightsService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -199,8 +204,26 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
+    <None Include="Service References\ExternalContributionService\Etsi.Ultimate.Business.ExternalContributionService.ServiceResponseOfboolean.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\ExternalContributionService\ExtContributionService.wsdl" />
+    <None Include="Service References\ExternalContributionService\mex.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ExternalContributionService\mex1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ExternalContributionService\mex2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\ExternalContributionService\mex3.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Service References\UserRightsService\Arrays.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -222,6 +245,7 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <WCFMetadataStorage Include="Service References\ExternalContributionService\" />
     <WCFMetadataStorage Include="Service References\UserRightsService\" />
   </ItemGroup>
   <ItemGroup>
@@ -246,6 +270,21 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ExternalContributionService\mex.disco" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ExternalContributionService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ExternalContributionService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\ExternalContributionService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
