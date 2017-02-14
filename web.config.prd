@@ -577,7 +577,8 @@
             <message clientCredentialType="Windows" negotiateServiceCredential="true" algorithmSuite="Default" establishSecurityContext="true" />
           </security>
         </binding>
-        <binding name="UserRightsHttpEndpoint" />        
+        <binding name="UserRightsHttpEndpoint" />     
+		<binding name="ExternalContributionServiceHttpEndpoint" />		
       </wsHttpBinding>
     </bindings>
     <client>
@@ -585,6 +586,12 @@
       </endpoint>
       <endpoint address="http://localhost:81/UserRightsService/" binding="wsHttpBinding"  bindingConfiguration="UserRightsHttpEndpoint" contract="UserRightsService.IUserRightsService" name="UserRightsHttpEndpoint">
       </endpoint>
+	  <endpoint address="http://localhost:81/ContributionService" binding="wsHttpBinding" bindingConfiguration="ExternalContributionServiceHttpEndpoint" contract="ExternalContributionService.IExtContributionService" name="ExternalContributionServiceHttpEndpoint">
+			<identity>
+				<dns value="localhost" />
+				<userPrincipalName value="Capgemini_VFS@etsi_online" />
+			</identity>
+		</endpoint>
     </client>
   </system.serviceModel>
 </configuration>
