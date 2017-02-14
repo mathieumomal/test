@@ -121,30 +121,6 @@ namespace Etsi.Ultimate.WCF.Service
             return serviceHelper.GetWorkItemsByKeyWords(personId, keywords);        
         }
 
-        /// <summary>
-        /// Get primary work item by specification ID
-        /// </summary>
-        /// <param name="specificationID"> specification ID</param>
-        /// <returns>WorkItem if found, else null</returns>
-        public WorkItem GetPrimeWorkItemBySpecificationID(int specificationID)
-        {
-            LogManager.Debug("[ServiceCall][GetPrimeWorkItemBySpecificationID] specificationID = " + specificationID.ToString());
-            var serviceHelper = new ServiceHelper();
-            return serviceHelper.GetPrimeWorkItemBySpecificationID(specificationID);
-        }
-
-        /// <summary>
-        /// The aim of this method is to return the release of the first WI found with lower WiLevel among a list of WI 
-        /// </summary>
-        /// <param name="personId"></param>
-        /// <param name="workitemsIds"></param>
-        /// <returns></returns>
-        public Release GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(int personId, List<int> workitemsIds)
-        {
-            LogManager.Debug("[ServiceCall][GetReleaseRelatedToOneOfWiWithTheLowerWiLevel] PersonId=" + personId + "; workitemsIds=" + string.Join(", ", workitemsIds));
-            var serviceHelper = new ServiceHelper();
-            return serviceHelper.GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(personId, workitemsIds); 
-        }
         #endregion
 
         #region Specifications services
@@ -509,13 +485,6 @@ namespace Etsi.Ultimate.WCF.Service
 
         #region Version services
 
-        public List<SpecVersion> GetVersionsBySpecId(int specificationId)
-        {
-            LogManager.Debug("[ServiceCall][GetVersionsBySpecId] Spec Id=" + specificationId);
-            var serviceHelper = new ServiceHelper();
-            return serviceHelper.GetVersionsBySpecId(specificationId);
-        }
-
         /// <summary>
         /// Get versions related to specification & release
         /// </summary>
@@ -630,25 +599,6 @@ namespace Etsi.Ultimate.WCF.Service
             LogManager.Debug(string.Format("[ServiceCall][UnlinkTdocFromVersion] uid={0}, personId={1}", uid, personId));
             var serviceHelper = new ServiceHelper();
             return serviceHelper.UnlinkTdocFromVersion(uid, personId);
-        }
-
-        /// <summary>
-        /// Create version for pCR tdoc if necessary (if doesn't already exist)
-        /// </summary>
-        /// <param name="personId"></param>
-        /// <param name="specId"></param>
-        /// <param name="releaseId"></param>
-        /// <param name="meetingId"></param>
-        /// <param name="majorVersion"></param>
-        /// <param name="technicalVersion"></param>
-        /// <param name="editorialVersion"></param>
-        /// <returns></returns>
-        public ServiceResponse<bool> CreatepCrDraftVersionIfNecessary(int personId, int specId, int releaseId,
-            int meetingId, int majorVersion, int technicalVersion, int editorialVersion)
-        {
-            LogManager.Debug(string.Format("[ServiceCall][CreatepCrDraftVersionIfNecessary] personId={0}, specId={1}, relid={2}, major={3}, tech={4}, edi={5}", personId, specId, releaseId, majorVersion, technicalVersion, editorialVersion));
-            var serviceHelper = new ServiceHelper();
-            return serviceHelper.CreatepCrDraftVersionIfNecessary(personId, specId, releaseId, meetingId, majorVersion, technicalVersion, editorialVersion);
         }
 
         #endregion

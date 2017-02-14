@@ -167,11 +167,5 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
         {
             throw new NotImplementedException();
         }
-
-
-        public bool CheckIfVersionExists(int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

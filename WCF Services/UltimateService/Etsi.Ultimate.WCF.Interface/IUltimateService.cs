@@ -79,7 +79,7 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>List of work items</returns>
         [OperationContract]
         List<WorkItem> GetWorkItemsWithAcronymByKeyWord(int personId, string keyword);
-
+        
         /// <summary>
         /// Gets the work items by key words.
         /// </summary>
@@ -89,22 +89,6 @@ namespace Etsi.Ultimate.WCF.Interface
         [OperationContract]
         List<WorkItem> GetWorkItemsByKeyWords(int personId, List<string> keywords);
 
-        /// <summary>
-        /// Get primary work item by specification ID
-        /// </summary>
-        /// <param name="specificationID"> specification ID</param>
-        /// <returns>WorkItem if found, else null</returns>
-        [OperationContract]
-        WorkItem GetPrimeWorkItemBySpecificationID(int specificationID);
-
-        /// <summary>
-        /// The aim of this method is to return the release of the first WI found with lower WiLevel among a list of WI 
-        /// </summary>
-        /// <param name="personId"></param>
-        /// <param name="workitemsIds"></param>
-        /// <returns></returns>
-        [OperationContract]
-        Release GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(int personId, List<int> workitemsIds);
         #endregion
 
         #region specs
@@ -350,9 +334,6 @@ namespace Etsi.Ultimate.WCF.Interface
 
         #region Versions
 
-        [OperationContract]
-        List<SpecVersion> GetVersionsBySpecId(int specificationId);
-
         /// <summary>
         /// Get versions related to specification & release
         /// </summary>
@@ -430,21 +411,6 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns>True for success case</returns>
         [OperationContract]
         ServiceResponse<bool> UnlinkTdocFromVersion(string uid, int personId);
-
-        /// <summary>
-        /// Create version for pCR tdoc if necessary (if doesn't already exist)
-        /// </summary>
-        /// <param name="personId"></param>
-        /// <param name="specId"></param>
-        /// <param name="releaseId"></param>
-        /// <param name="meetingId"></param>
-        /// <param name="majorVersion"></param>
-        /// <param name="technicalVersion"></param>
-        /// <param name="editorialVersion"></param>
-        /// <returns></returns>
-        [OperationContract]
-        ServiceResponse<bool> CreatepCrDraftVersionIfNecessary(int personId, int specId, int releaseId,
-            int meetingId, int majorVersion, int technicalVersion, int editorialVersion);
 
         #endregion
 

@@ -92,8 +92,6 @@
         <Right value="Contribution_Change_Type" />
         <Right value="Contribution_Change_Status" />
         <Right value="Contribution_DraftTsTrEnabledReleaseField" />
-        <Right value="Contribution_CrPack_CreationAndEdition" />
-        <Right value="Contribution_LsIn_CreationAndEdition" />
         
         <Right value="Cr_Add_Crs_To_CrPack"/>  
       </UserRole>
@@ -173,8 +171,6 @@
         <Right value="Contribution_Change_Type" />
         <Right value="Contribution_Change_Status" />
         <Right value="Contribution_DraftTsTrEnabledReleaseField" />
-		<Right value="Contribution_CrPack_CreationAndEdition" />
-        <Right value="Contribution_LsIn_CreationAndEdition" />
         
         <Right value="Cr_Add_Crs_To_CrPack"/>
 		
@@ -241,8 +237,6 @@
         <Right value="Contribution_Change_Type" />
         <Right value="Contribution_Change_Status" />
         <Right value="Contribution_DraftTsTrEnabledReleaseField" />
-		<Right value="Contribution_CrPack_CreationAndEdition" />
-        <Right value="Contribution_LsIn_CreationAndEdition" />
 
         <Right value="Cr_Add_Crs_To_CrPack"/>
 		

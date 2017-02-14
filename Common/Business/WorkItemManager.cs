@@ -221,19 +221,6 @@ namespace Etsi.Ultimate.Business
         }
 
         /// <summary>
-        /// Get primary work item by specification ID
-        /// </summary>
-        /// <param name="specificationID"> specification ID</param>
-        /// <returns>WorkItem if found, else null</returns>
-        public WorkItem GetPrimeWorkItemBySpecificationID(int specificationID)
-        {
-            var repo = RepositoryFactory.Resolve<IWorkItemRepository>();
-            repo.UoW = _uoW;
-            var workItemBySpecID = repo.GetPrimeWorkItemBySpecificationID(specificationID);
-            return workItemBySpecID;
-        }
-
-        /// <summary>
         /// Gets the work item by identifier extend.
         /// </summary>
         /// <param name="personId">The person identifier.</param>
@@ -272,19 +259,6 @@ namespace Etsi.Ultimate.Business
             IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
             repo.UoW = _uoW;
             return repo.GetWorkItemsCountBySearchCriteria(releaseIds, granularity, hidePercentComplete, wiAcronym, wiName, tbIds);
-        }
-
-        /// <summary>
-        /// The aim of this method is to return the release of the first WI found with lower WiLevel among a list of WI 
-        /// </summary>
-        /// <param name="personId"></param>
-        /// <param name="workitemsIds"></param>
-        /// <returns></returns>
-        public Release GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(int personId, List<int> workitemsIds)
-        {
-            var repo = RepositoryFactory.Resolve<IWorkItemRepository>();
-            repo.UoW = _uoW;
-            return repo.GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(workitemsIds);
         }
 
         /// <summary>

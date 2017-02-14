@@ -355,9 +355,7 @@ namespace Etsi.Ultimate.Business.Versions
                       && (userRights.HasRight(Enum_UserRights.Versions_Allocate)
                           || spec.SpecificationRapporteurs.Any(x => x.Fk_RapporteurId == personId && x.IsPrime))))
                 {
-                    if (specRelease.isWithdrawn.GetValueOrDefault() || 
-                        !spec.IsActive || 
-                        release.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Closed)
+                    if (specRelease.isWithdrawn.GetValueOrDefault())
                     {
                         svcResponse.Report.LogError(Localization.Specification_reserve_withdrawn_error);
                     }
@@ -370,7 +368,7 @@ namespace Etsi.Ultimate.Business.Versions
                     return svcResponse;
                 }
             }
-            else////If user is MCC
+            else//If user is MCC
             {
                 //Release should not be closed
                 if (release.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Closed)
@@ -431,51 +429,6 @@ namespace Etsi.Ultimate.Business.Versions
             var previousVersions = repo.GetVersionsByRelatedTDoc(uid);
             previousVersions.ForEach(v => v.RelatedTDoc = null);
 
-            return svcResponse;
-        }
-
-        /// <summary>
-        /// Create version for pCR tdoc if necessary (if doesn't already exist)
-        /// </summary>
-        /// <param name="personId"></param>
-        /// <param name="specId"></param>
-        /// <param name="releaseId"></param>
-        /// <param name="meetingId"></param>
-        /// <param name="majorVersion"></param>
-        /// <param name="technicalVersion"></param>
-        /// <param name="editorialVersion"></param>
-        /// <returns></returns>
-        public ServiceResponse<bool> CreatepCrDraftVersionIfNecessary(int personId, int specId, int releaseId,
-            int meetingId, int majorVersion, int technicalVersion, int editorialVersion)
-        {
-            var svcResponse = new ServiceResponse<bool> { Result = true };
-
-            var repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
-            repo.UoW = UoW;
-
-            var versionExists = repo.CheckIfVersionExists(specId, releaseId, majorVersion, technicalVersion, editorialVersion);
-            if (!versionExists)
-            {
-                var specVersionAllocateAction = ManagerFactory.Resolve<ISpecVersionAllocateAction>();
-                specVersionAllocateAction.UoW = UoW;
-                var version = new SpecVersion
-                {
-                    Fk_ReleaseId = releaseId,
-                    Fk_SpecificationId = specId,
-                    MajorVersion = majorVersion,
-                    TechnicalVersion = technicalVersion,
-                    EditorialVersion = editorialVersion,
-                    Source = meetingId,
-                    ProvidedBy = personId
-                };
-                var allocateVersionSvcResponse = specVersionAllocateAction.AllocateVersion(personId, version);
-                svcResponse.Report.ErrorList.AddRange(allocateVersionSvcResponse.Report.ErrorList);
-                svcResponse.Report.WarningList.AddRange(allocateVersionSvcResponse.Report.WarningList);
-                svcResponse.Report.InfoList.AddRange(allocateVersionSvcResponse.Report.InfoList);
-            }
-
-            if (svcResponse.Report.GetNumberOfErrors() > 0)
-                svcResponse.Result = false;
             return svcResponse;
         }
 

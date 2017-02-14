@@ -167,19 +167,19 @@ namespace Etsi.Ultimate.Tests.FakeRepositories
             throw new NotImplementedException();
         }
 
+        #endregion
+
+
+
         public WorkItem GetPrimeWorkItemBySpecificationID(int specificationID)
         {
             throw new NotImplementedException();
         }
 
-        #endregion
-
-
         public Release GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(List<int> workitemsIds)
         {
             throw new NotImplementedException();
         }
-
     }
 
     public class WorkItemOneLineLevel0FakeRepository : WorkItemFakeRepository

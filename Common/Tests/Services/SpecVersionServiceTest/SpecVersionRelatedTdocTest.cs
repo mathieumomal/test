@@ -176,21 +176,6 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
             Assert.IsNullOrEmpty(versionAgain.RelatedTDoc);
 
         }
-
-        [TestCase(136080, 2883,13,0,1,true)]
-        [TestCase(136080, 2883, 13, 0, 2, false)]
-        [TestCase(150000, 2883, 14, 0, 0, false)]
-        public void CheckIfVersionExists(int specId, int releaseId, int majorVersion, int technicalVersion,
-            int editorialVersion, bool expectedResult)
-        {
-            var specVersionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
-            specVersionRepo.UoW = UoW;
-
-            var result = specVersionRepo.CheckIfVersionExists(specId, releaseId, majorVersion, technicalVersion,
-                editorialVersion);
-
-            Assert.AreEqual(expectedResult, result);
-        }
         #endregion
     }
 }

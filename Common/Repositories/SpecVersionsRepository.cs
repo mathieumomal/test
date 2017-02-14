@@ -141,28 +141,6 @@ namespace Etsi.Ultimate.Repositories
         }
 
         /// <summary>
-        /// Check if version exist (draft version, do not consider other release !)
-        /// Business rules -> 
-        /// - A version UCC has his MAJOR number equal to the release, so version number will be not duplicated between release of a specification
-        /// - A version DRAFT has his MAJOR number inferior to 3, so version could be duplicated between release of the same spec
-        /// </summary>
-        /// <param name="specId"></param>
-        /// <param name="releaseId"></param>
-        /// <param name="majorVersion"></param>
-        /// <param name="technicalVersion"></param>
-        /// <param name="editorialVersion"></param>
-        /// <returns></returns>
-        public bool CheckIfVersionExists(int specId, int releaseId, int majorVersion, int technicalVersion,
-            int editorialVersion)
-        {
-            return UoW.Context.SpecVersions.Any(x => x.Fk_SpecificationId == specId
-                                                     && x.Fk_ReleaseId == releaseId
-                                                     && x.MajorVersion == majorVersion
-                                                     && x.TechnicalVersion == technicalVersion
-                                                     && x.EditorialVersion == editorialVersion);
-        }
-
-        /// <summary>
         /// See interface
         /// </summary>
         /// <param name="relatedTdoc"></param>
@@ -374,20 +352,5 @@ namespace Etsi.Ultimate.Repositories
         /// </summary>
         /// <returns>list of specVersion</returns>
         List<SpecVersion> GetLatestVersionGroupedBySpecRelease();
-
-        /// <summary>
-        /// Check if version exist (draft version, do not consider other release !)
-        /// Business rules -> 
-        /// - A version UCC has his MAJOR number equal to the release, so version number will be not duplicated between release of a specification
-        /// - A version DRAFT has his MAJOR number inferior to 3, so version could be duplicated between release of the same spec
-        /// </summary>
-        /// <param name="specId"></param>
-        /// <param name="releaseId"></param>
-        /// <param name="majorVersion"></param>
-        /// <param name="technicalVersion"></param>
-        /// <param name="editorialVersion"></param>
-        /// <returns></returns>
-        bool CheckIfVersionExists(int specId, int releaseId, int majorVersion, int technicalVersion,
-            int editorialVersion);
     }
 }

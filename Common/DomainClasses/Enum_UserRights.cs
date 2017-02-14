@@ -57,7 +57,6 @@
         Contribution_Change_Type,
         Contribution_Change_Type_Limited,
         Contribution_DraftTsTrEnabledReleaseField,
-        Contribution_DraftTsTr_CreationAndEdition,
 
         Release_Test_Page_Access
     }

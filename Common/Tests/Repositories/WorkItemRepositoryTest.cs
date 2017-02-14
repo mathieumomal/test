@@ -200,26 +200,6 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(18, wiRepository.GetAllWorkItemsForReleases(new List<int>() { 527 }).Count);
         }
 
-        [TestCase(2, 1274, 2882, Description = "The WI with lower WiLevel is the 2 with level 1. The related Release should be 2882")]
-        [TestCase(2, 3, 2882, Description = "The WI with lower WiLevel are both WI but 2 has the lower Pk_WIUid. The related Release should be 2882")]
-        [TestCase(1274, 0, 2883, Description = "The WI with lower WiLevel could only be 1274 because the other doesn't exist. The related Release should be 2883")]
-        public void GetReleaseRelatedToTheFirstLevelWorkplans(int wi1, int wi2, int expectedReleaseId)
-        {
-            var wiRepository = new WorkItemRepository { UoW = UoW };
-            var releaseFound = wiRepository.GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(new List<int> {wi1, wi2});
-            
-            Assert.AreEqual(expectedReleaseId, releaseFound.Pk_ReleaseId);
-        }
-
-        [Test]
-        public void GetReleaseRelatedToTheFirstLevelWorkplans_NoWiFound()
-        {
-            var wiRepository = new WorkItemRepository { UoW = UoW };
-            var releaseFound = wiRepository.GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(new List<int> { 0 });
-
-            Assert.IsNull(releaseFound);
-        }
-
         /// <summary>
         /// Create Mocks to simulate DB with objects
         /// </summary>
@@ -262,24 +242,6 @@ namespace Etsi.Ultimate.Tests.Repositories
                 workItemList.ForEach(x => workItemFakeDBSet.Add(x));
 
                 yield return workItemFakeDBSet;
-            }
-        }
-
-        [TestCase(160000, 1274)]
-        [TestCase(999999, 0)]
-        public void GetPrimeWorkItemBySpecificationID_Test(int specificationID, int expectedWiId)
-        {
-            var repo = RepositoryFactory.Resolve<IWorkItemRepository>();
-            repo.UoW = UoW;
-
-            var workItemBySpecID = repo.GetPrimeWorkItemBySpecificationID(specificationID);
-            if (expectedWiId != 0)
-            {
-                Assert.AreEqual(expectedWiId, workItemBySpecID.Pk_WorkItemUid);
-            }
-            else
-            {
-                Assert.IsNull(workItemBySpecID);
             }
         }
     }

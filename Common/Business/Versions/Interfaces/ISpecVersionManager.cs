@@ -131,19 +131,5 @@ namespace Etsi.Ultimate.Business.Versions.Interfaces
         /// <param name="personId"></param>
         /// <returns>True for success case</returns>
         ServiceResponse<bool> CheckVersionNumbersEditAllowed(SpecVersion version, int personId);
-
-        /// <summary>
-        /// Create version for pCR tdoc if necessary (if doesn't already exist)
-        /// </summary>
-        /// <param name="personId"></param>
-        /// <param name="specId"></param>
-        /// <param name="releaseId"></param>
-        /// <param name="meetingId"></param>
-        /// <param name="majorVersion"></param>
-        /// <param name="technicalVersion"></param>
-        /// <param name="editorialVersion"></param>
-        /// <returns></returns>
-        ServiceResponse<bool> CreatepCrDraftVersionIfNecessary(int personId, int specId, int releaseId,
-            int meetingId, int majorVersion, int technicalVersion, int editorialVersion);
     }
 }

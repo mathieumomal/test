@@ -80,7 +80,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetReleases, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetReleases, ex.Message));
             }
 
             return releases;
@@ -110,7 +110,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetReleases, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetReleases, ex.Message));
             }
 
             return releases;
@@ -138,7 +138,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetReleases, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetReleases, ex.Message));
             }
 
             return release;
@@ -160,7 +160,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetHighestNonClosedReleaseLinkedToASpec, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetHighestNonClosedReleaseLinkedToASpec, ex.Message));
             }
 
             return release;
@@ -195,7 +195,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetWorkitemsByIds, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetWorkitemsByIds, ex.Message));
             }
 
             return workItems;
@@ -231,7 +231,7 @@ namespace Etsi.Ultimate.WCF.Service
                 }
                 catch (Exception ex)
                 {
-                    LogManager.Error(string.Format(ConstErrorTemplateGetWorkitemsByKeyword, ex.Message), ex);
+                    LogManager.Error(string.Format(ConstErrorTemplateGetWorkitemsByKeyword, ex.Message));
                 }
             }
             return workItems;
@@ -243,7 +243,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="personId">The person identifier.</param>
         /// <param name="keywords">The keywords to identify work items.</param>
         /// <returns>List of work items</returns>
-        internal List<WorkItem> GetWorkItemsByKeyWords(int personId, List<string> keywords)
+        internal List<UltimateServiceEntities.WorkItem> GetWorkItemsByKeyWords(int personId, List<string> keywords)
         {
             var workItems = new List<UltimateServiceEntities.WorkItem>();
 
@@ -259,57 +259,10 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetWorkItemsByKeyWords, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetWorkItemsByKeyWords, ex.Message));
             }
 
             return workItems;
-        }
-
-        /// <summary>
-        /// Get primary work item by specification ID
-        /// </summary>
-        /// <param name="specificationID"> specification ID</param>
-        /// <returns>WorkItem if found, else null</returns>
-        internal WorkItem GetPrimeWorkItemBySpecificationID(int specificationID)
-        {
-            UltimateServiceEntities.WorkItem workItemBySpecID_converted = new UltimateServiceEntities.WorkItem();
-            try
-            {
-                var svc = ServicesFactory.Resolve<IWorkItemService>();
-                var svcWorkItem = svc.GetPrimeWorkItemBySpecificationID(specificationID);
-                if (svcWorkItem != null)
-                {
-                    workItemBySpecID_converted = ConvertUltimateWorkItemToServiceWorkItem(svcWorkItem);
-                }
-                else
-                {
-                    LogManager.Error(String.Format("Ultimate Service Error [GetPrimeWorkItemBySpecificationID]: Unable to get prime workitem for specificationID = {0}",
-                        specificationID));
-                }
-            }
-            catch (Exception ex)
-            {
-                LogManager.Error(String.Format("Ultimate Service Error [GetPrimeWorkItemBySpecificationID]: {0}", ex.Message), ex);
-            }
-
-            return workItemBySpecID_converted;
-        }
-
-
-
-        /// <summary>
-        /// The aim of this method is to return the release of the first WI found with lower WiLevel among a list of WI 
-        /// </summary>
-        /// <param name="personId"></param>
-        /// <param name="workitemsIds"></param>
-        /// <returns></returns>
-        public Release GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(int personId, List<int> workitemsIds)
-        {
-            var svc = ServicesFactory.Resolve<IWorkItemService>();
-            var result = svc.GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(personId, workitemsIds);
-            if (result == null)
-                return null;
-            return ConvertUltimateReleaseToServiceRelease(result);
         }
 
         #endregion
@@ -344,7 +297,7 @@ namespace Etsi.Ultimate.WCF.Service
                 }
                 catch (Exception ex)
                 {
-                    LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationsByKeyword, ex.Message), ex);
+                    LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationsByKeyword, ex.Message));
                 }
             }
             return specifications;
@@ -372,7 +325,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationById, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationById, ex.Message));
             }
             return specification;
         }
@@ -399,7 +352,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationsByIds, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationsByIds, ex.Message));
             }
 
             return specifications;
@@ -425,7 +378,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationsBySpecNumbers, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetSpecificationsBySpecNumbers, ex.Message));
             }
 
             return specifications;
@@ -448,7 +401,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateChangeSpecificationsStatusToUnderChangeControl, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateChangeSpecificationsStatusToUnderChangeControl, ex.Message));
                 statusChangeReport.Result = false;
                 statusChangeReport.Report.ErrorList.Add("Specifications status change process failed");
             }
@@ -476,7 +429,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateSetCrsAsFinal, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateSetCrsAsFinal, ex.Message));
                 statusReport.Result = false;
                 statusReport.Report.ErrorList.Add("Finalizing CRs process failed");
             }
@@ -501,9 +454,9 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateCreateChangeRequestById, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateCreateChangeRequestById, ex.Message));
             }
-            LogManager.Debug(String.Format(ConstErrorTemplateCreateChangeRequestById, changeRequest.Pk_ChangeRequest));
+            LogManager.Error(String.Format(ConstErrorTemplateCreateChangeRequestById, changeRequest.Pk_ChangeRequest));
             return changeRequest;
         }
 
@@ -530,7 +483,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateCreateChangeRequest, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateCreateChangeRequest, ex.Message));
             }
             return response;
         }
@@ -551,7 +504,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateEditChangeRequest, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateEditChangeRequest, ex.Message));
                 isSuccess = false;
             }
             return isSuccess;
@@ -573,7 +526,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateCreateChangeRequestCategories, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateCreateChangeRequestCategories, ex.Message));
             }
             return changeRequestCategories;
         }
@@ -595,7 +548,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message));
             }
             return cr;
         }
@@ -618,7 +571,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message));
             }
             return crList;
         }
@@ -694,7 +647,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(string.Format(ConstErrorTemplateGetLightChangeRequestsInsideCrPackForMinuteMan, ex.Message), ex);
+                LogManager.Error(string.Format(ConstErrorTemplateGetLightChangeRequestsInsideCrPackForMinuteMan, ex.Message));
             }
             return crs;
         }
@@ -718,7 +671,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(string.Format(ConstErrorTemplateGetLightChangeRequestsInsideCrPacksForMinuteMan, ex.Message), ex);
+                LogManager.Error(string.Format(ConstErrorTemplateGetLightChangeRequestsInsideCrPacksForMinuteMan, ex.Message));
             }
             return crs;
         }
@@ -741,7 +694,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message));
             }
             return crStatusesList;
 
@@ -772,7 +725,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateUpdateChangeRequestPackRelatedCrs, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateUpdateChangeRequestPackRelatedCrs, ex.Message));
                 return false;
             }
             return false;
@@ -801,7 +754,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorIsExistCrNumberRevisionCouple, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorIsExistCrNumberRevisionCouple, ex.Message));
             }
             return true;
         }
@@ -827,7 +780,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetCrsByKeys, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetCrsByKeys, ex.Message));
             }
             return changeRequests;
         }
@@ -850,7 +803,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetCrByKey, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetCrByKey, ex.Message));
             }
             return changeRequest;
         }
@@ -881,7 +834,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(string.Format(ConstErrorTemplateGetCrWgTdocNumberOfParent, ex.Message), ex);
+                LogManager.Error(string.Format(ConstErrorTemplateGetCrWgTdocNumberOfParent, ex.Message));
             }
             return response;
         }
@@ -906,7 +859,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateReIssueCr, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateReIssueCr, ex.Message));
                 statusReport.Result = false;
                 statusReport.Report.ErrorList.Add("Change request failed to reissue");
             }
@@ -933,7 +886,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateReviseCr, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateReviseCr, ex.Message));
                 statusReport.Result = false;
                 statusReport.Report.ErrorList.Add("Change request failed to revise");
             }
@@ -957,7 +910,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateRemoveCrsFromCrPack, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateRemoveCrsFromCrPack, ex.Message));
                 statusReport.Result = false;
                 statusReport.Report.ErrorList.Add("Cr Pack failed to remove Crs");
             }
@@ -975,7 +928,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateUpdateCrStatus, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateUpdateCrStatus, ex.Message));
                 statusReport.Result = false;
                 statusReport.Report.ErrorList.Add("Error occured when trying to update CR status");
             }
@@ -994,7 +947,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateUpdateCrsStatusOfCrPack, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateUpdateCrsStatusOfCrPack, ex.Message));
                 statusReport.Result = false;
                 statusReport.Report.ErrorList.Add("Error occured when trying to update CRs status of CR Pack");
             }
@@ -1003,23 +956,6 @@ namespace Etsi.Ultimate.WCF.Service
         #endregion
 
         #region versions and draft
-
-        public List<SpecVersion> GetVersionsBySpecId(int specificationId)
-        {
-            var specVersions = new List<SpecVersion>();
-            try
-            {
-                var svc = ServicesFactory.Resolve<ISpecVersionService>();
-                var result = svc.GetVersionsBySpecId(specificationId);
-                if (result != null)
-                    result.ForEach(e => specVersions.Add(ConvertToServiceSpecVersion(e)));
-            }
-            catch (Exception ex)
-            {
-                LogManager.Error("Ultimate Service Error [GetVersionsBySpecId]", ex);
-            }
-            return specVersions;
-        }
 
         /// <summary>
         /// Get versions related to specification & release
@@ -1039,7 +975,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetVersionsForSpecRelease, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetVersionsForSpecRelease, ex.Message));
             }
             return specVersions;
         }
@@ -1073,7 +1009,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateUpdateVersionRelatedTdoc, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateUpdateVersionRelatedTdoc, ex.Message));
                 svcResponse.Result = false;
                 svcResponse.Report.ErrorList.Add(ex.Message);
             }
@@ -1107,7 +1043,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateCheckDraftCreationOrAssociation, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateCheckDraftCreationOrAssociation, ex.Message));
                 svcResponse.Result = false;
                 svcResponse.Report.ErrorList.Add(ex.Message);
             }
@@ -1157,7 +1093,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateCheckVersionForUpload, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateCheckVersionForUpload, ex.Message));
                 svcResponse.Report.ErrorList.Add(ex.Message);
             }
 
@@ -1187,7 +1123,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateUploadVersion, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateUploadVersion, ex.Message));
                 svcResponse.Result = false;
                 svcResponse.Report.ErrorList.Add(ex.Message);
             }
@@ -1213,7 +1149,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateGetLatestVersionsBySpecIds, ex.Message), ex);
+                LogManager.Error(String.Format(ConstErrorTemplateGetLatestVersionsBySpecIds, ex.Message));
             }
             return specVersions;
         }
@@ -1246,31 +1182,6 @@ namespace Etsi.Ultimate.WCF.Service
             return svcResponse;
         }
 
-        public ServiceResponse<bool> CreatepCrDraftVersionIfNecessary(int personId, int specId, int releaseId,
-            int meetingId, int majorVersion, int technicalVersion, int editorialVersion)
-        {
-            var svcResponse = new ServiceResponse<bool> { Report = new ServiceReport() };
-
-            try
-            {
-                var svc = ServicesFactory.Resolve<ISpecVersionService>();
-                var specVersionResponse = svc.CreatepCrDraftVersionIfNecessary(personId, specId, releaseId, meetingId, majorVersion, technicalVersion, editorialVersion);
-
-                svcResponse.Result = specVersionResponse.Result;
-                svcResponse.Report.ErrorList.AddRange(specVersionResponse.Report.ErrorList);
-                svcResponse.Report.WarningList.AddRange(specVersionResponse.Report.WarningList);
-                svcResponse.Report.InfoList.AddRange(specVersionResponse.Report.InfoList);
-            }
-            catch (Exception ex)
-            {
-                LogManager.Error(string.Format("Ultimate Service Error [CreatepCrDraftVersionIfNecessary]: {0}", ex.Message), ex);
-                svcResponse.Result = false;
-                svcResponse.Report.ErrorList.Add(ex.Message);
-            }
-
-            return svcResponse;
-        }
-
         #endregion
 
         #region finalize approved drafts
@@ -1287,7 +1198,7 @@ namespace Etsi.Ultimate.WCF.Service
             }
             catch (Exception e)
             {
-                LogManager.Error(String.Format(ConstErrorTemplateFinalizeApprovedDrafts, e), e);
+                LogManager.Error(String.Format(ConstErrorTemplateFinalizeApprovedDrafts, e));
                 statusReport.Result = false;
                 statusReport.Report.ErrorList.Add("Finalizing approved drafts process failed");
             }
@@ -1352,7 +1263,6 @@ namespace Etsi.Ultimate.WCF.Service
                 serviceRelease.Name = ultimateRelease.Name;
                 serviceRelease.ShortName = ultimateRelease.ShortName;
                 serviceRelease.Status = ultimateRelease.Enum_ReleaseStatus.Description;
-                serviceRelease.StatusCode = ultimateRelease.Enum_ReleaseStatus.Code;
                 serviceRelease.SortOrder = ultimateRelease.SortOrder;
             }
             return serviceRelease;
