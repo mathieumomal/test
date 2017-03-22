@@ -275,7 +275,7 @@
     </authentication>
     -->
       <!-- allow large file uploads -->
-      <httpRuntime shutdownTimeout="120" executionTimeout="900" useFullyQualifiedRedirectUrl="true" maxRequestLength="12288" requestLengthDiskThreshold="12288" requestValidationMode="2.0" requestPathInvalidCharacters="&lt;,>,*,%,:,\,?" />
+      <httpRuntime shutdownTimeout="120" executionTimeout="9000" useFullyQualifiedRedirectUrl="true" maxRequestLength="12288" requestLengthDiskThreshold="12288" requestValidationMode="2.0" requestPathInvalidCharacters="&lt;,>,*,%,:,\,?" />
       <httpCookies httpOnlyCookies="true" requireSSL="false" domain="" />
       <!--  GLOBALIZATION
     This section sets the globalization settings of the application. 
