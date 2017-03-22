@@ -119,7 +119,10 @@
     <Compile Include="ETSI_WorkItem.cs">
       <DependentUpon>UltimateModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Facades\ChangeRequestInsideCrPackFacade.cs" />
     <Compile Include="Facades\ChangeRequestListFacade.cs" />
+    <Compile Include="Facades\ChangeRequestPackFacade.cs" />
+    <Compile Include="Facades\CommunityFacade.cs" />
     <Compile Include="Facades\FoundationCrsInfo.cs" />
     <Compile Include="Facades\SpecVersionFoundationCrs.cs" />
     <Compile Include="Facades\VersionForCrListFacade.cs" />
@@ -223,6 +226,12 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Utils\Utils.csproj">
+      <Project>{AD1F6A1C-95B2-4274-A0C5-1F8CA9D9BB55}</Project>
+      <Name>Utils</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

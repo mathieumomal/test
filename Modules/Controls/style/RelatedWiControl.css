@@ -1,0 +1,5 @@
+﻿#RelatedWisControl .basicCellWrapped {
+    -moz-word-break: break-all;
+    -o-word-break: break-all;
+    word-break: break-all;
+}

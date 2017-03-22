@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.UI.WebControls;
+using Etsi.Ultimate.Controls;
 using Telerik.Web.UI;
 
 namespace Etsi.Ultimate.Module.Specifications
@@ -147,8 +148,14 @@ namespace Etsi.Ultimate.Module.Specifications
             if (e.Item is GridDataItem)
             {
                 GridDataItem item = (GridDataItem)e.Item;
+                var currentSpecification = (Specification)item.DataItem;
+
                 if (IsEditMode && item["SpecificationActions"].FindControl("btnRemoveSpec") != null)
                     ((ImageButton)item["SpecificationActions"].FindControl("btnRemoveSpec")).Visible = true;
+
+                //Set prime community hyperlink control
+                CommunityHyperlinkControl myControl = (CommunityHyperlinkControl)item.FindControl("primaryResponsibleGroup");
+                myControl.RefreshControl(currentSpecification.PrimeResponsibleGroupId, EnumCommunityNameType.SHORT.ToString());
             }
         }
 
@@ -231,6 +238,7 @@ namespace Etsi.Ultimate.Module.Specifications
                 Number = proxySpecification.Number,
                 Title = proxySpecification.Title,
                 PrimeResponsibleGroupShortName = proxySpecification.PrimeResponsibleGroupShortName,
+                SpecificationResponsibleGroups = proxySpecification.SpecificationResponsibleGroups,
                 IsTS = proxySpecification.IsTS,
                 IsActive = proxySpecification.IsActive,
                 IsUnderChangeControl = proxySpecification.IsUnderChangeControl

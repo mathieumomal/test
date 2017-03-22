@@ -1,5 +1,8 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="SpecificationListControl.ascx.cs" Inherits="Etsi.Ultimate.Module.Specifications.SpecificationListControl" %>
+<%@ Import Namespace="Etsi.Ultimate.DomainClasses" %>
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
+
+<%@ Register TagPrefix="ult" TagName="CommunityHyperlinkControl" Src="../../controls/Ultimate/CommunityHyperlinkControl.ascx" %>
 
 <telerik:RadCodeBlock ID="RadCodeBlock" runat="server">
     <script src="/desktopmodules/specifications/JS/CommonScript.js?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>"></script>
@@ -72,7 +75,9 @@
                         <telerik:GridTemplateColumn DataField="PrimeResponsibleGroupShortName" HeaderText="Prime grp" UniqueName="PrimeResponsibleGroupShortName">
                             <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="70px" />
                             <ItemTemplate>
-                                <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"PrimeResponsibleGroupShortName") %></div>
+                                <div class="text-left">
+                                    <ult:CommunityHyperlinkControl runat="server" ID="primaryResponsibleGroup"></ult:CommunityHyperlinkControl>
+                                </div>
                             </ItemTemplate>
                         </telerik:GridTemplateColumn>
                         <telerik:GridTemplateColumn UniqueName="SpecificationActions">

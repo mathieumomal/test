@@ -74,6 +74,7 @@ namespace Etsi.Ultimate.Services
             Container.RegisterType<IRemarkService, RemarkService>(new TransientLifetimeManager());
             Container.RegisterType<IContributionService, ContributionService>(new TransientLifetimeManager());
             Container.RegisterType<IFinalizeApprovedDraftsService, FinalizeApprovedDraftsService>(new TransientLifetimeManager());
+            Container.RegisterType<ICrPackService, CrPackService>(new TransientLifetimeManager());
 
             //Offline Interfaces
             Container.RegisterType<IOfflineService<SpecVersion>, SpecVersionService>(new TransientLifetimeManager());

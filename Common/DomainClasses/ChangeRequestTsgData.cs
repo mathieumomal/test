@@ -22,6 +22,9 @@ namespace Etsi.Ultimate.DomainClasses
         public string TSGSourceOrganizations { get; set; }
         public int Fk_ChangeRequest { get; set; }
         public Nullable<int> Fk_TsgStatus { get; set; }
+        public Nullable<System.DateTime> CreationDate { get; set; }
+        public string MOD_BY { get; set; }
+        public Nullable<System.DateTime> MOD_TS { get; set; }
     
         public virtual ChangeRequest ChangeRequest { get; set; }
         public virtual Enum_ChangeRequestStatus TsgStatus { get; set; }

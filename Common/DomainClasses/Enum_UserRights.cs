@@ -52,7 +52,7 @@
         Version_Draft_Delete,
         Versions_Avoid_Quality_Checks,
 
-        Cr_Add_Crs_To_CrPack,
+        Cr_Add_Crs_To_CrPacks,
 
         Contribution_Change_Type,
         Contribution_Change_Type_Limited,

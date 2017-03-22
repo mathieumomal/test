@@ -3,6 +3,8 @@ using Etsi.Ultimate.Utils.Core;
 using Etsi.Ultimate.WCF.Interface;
 using Etsi.Ultimate.WCF.Interface.Entities;
 using System.Collections.Generic;
+using System.Linq;
+using Etsi.Ultimate.Utils;
 using ChangeRequest = Etsi.Ultimate.WCF.Interface.Entities.ChangeRequest;
 using Release = Etsi.Ultimate.WCF.Interface.Entities.Release;
 using Specification = Etsi.Ultimate.WCF.Interface.Entities.Specification;
@@ -73,7 +75,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns></returns>
         public List<WorkItem> GetWorkItemsByIds(int personId, List<int> workItemIds)
         {
-            LogManager.Debug("[ServiceCall][GetWorkItemsByIds] PersonId=" + personId + "; WorkitemIds=" + string.Join(", ",workItemIds));
+            LogManager.Debug("[ServiceCall][GetWorkItemsByIds] PersonId=" + personId + "; WorkitemIds(" + workItemIds.Count + ")=" + string.Join(", ", workItemIds));
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetWorkItemsByIds(personId, workItemIds);
         }
@@ -188,7 +190,8 @@ namespace Etsi.Ultimate.WCF.Service
         /// </returns>
         public List<Specification> GetSpecificationsByIds(int personId, List<int> specificationIds)
         {
-            LogManager.Debug("[ServiceCall][GetSpecificationsByIds] PersonId=" + personId + "; specificationIds=" + string.Join(", ",specificationIds));
+            specificationIds = specificationIds.Where(x => x != 0).ToList();
+            LogManager.Debug("[ServiceCall][GetSpecificationsByIds] PersonId=" + personId + "; specificationIds(" + specificationIds.Count + ")=" + string.Join(", ", specificationIds));
             var serviceHelper = new ServiceHelper();
             return serviceHelper.GetSpecificationsByIds(personId, specificationIds);
         }
@@ -314,9 +317,17 @@ namespace Etsi.Ultimate.WCF.Service
         public List<ChangeRequest> GetChangeRequestListByContributionUidList(
             List<string> contributionUids)
         {
-            LogManager.Debug("[ServiceCall][GetChangeRequestListByContributionUidList] contributionUids=" + string.Join(", ",contributionUids));
+            LogManager.Debug("[ServiceCall][GetChangeRequestListByContributionUidList] contributionUids(" + contributionUids.Count + ")=" +
+                string.Join(", ", contributionUids));
             var svcHelper = new ServiceHelper();
             return svcHelper.GetChangeRequestListByContributionUidList(contributionUids);
+        }
+
+        public List<ChangeRequest> GetWgCrsByWgTdocList(List<string> contribUids)
+        {
+            LogManager.Debug("[ServiceCall][GetWgCrsByWgTdocList] contributionUids=" + string.Join(", ", contribUids));
+            var svcHelper = new ServiceHelper();
+            return svcHelper.GetWgCrsByWgTdocList(contribUids);
         }
 
         /// <summary>
@@ -450,19 +461,6 @@ namespace Etsi.Ultimate.WCF.Service
         }
 
         /// <summary>
-        /// Remove Crs from Cr-Pack
-        /// </summary>
-        /// <param name="crPack">Uid of Cr-Pack</param>
-        /// <param name="crIds">List of Cr Ids</param>
-        /// <returns>Success/Failure</returns>
-        public ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds)
-        {
-            LogManager.Debug(String.Format("[ServiceCall][RemoveCrsFromCrPack] crPack={0}; crIds={1}", crPack, String.Join(",", crIds)));
-            var serviceHelper = new ServiceHelper();
-            return serviceHelper.RemoveCrsFromCrPack(crPack, crIds);            
-        }
-
-        /// <summary>
         /// Find WgTdoc number of Crs which have been revised 
         /// Parent with revision 0 : WgTdoc = CP-1590204 -> have a WgTdoc number 
         /// ..
@@ -504,6 +502,14 @@ namespace Etsi.Ultimate.WCF.Service
             LogManager.Debug(string.Format("[ServiceCall][GetLightChangeRequestsInsideCrPacksForMinuteMan] cr pack uids={0}",string.Join(",", uids)));
             var svcHelper = new ServiceHelper();
             return svcHelper.GetLightChangeRequestsInsideCrPacksForMinuteMan(uids);
+        }
+
+        public ServiceResponse<bool> UpdateCrsInsideCrPack(ChangeRequestPackFacade crPack,
+            List<ChangeRequestInsideCrPackFacade> crs, int personId)
+        {
+            LogManager.Debug(string.Format("[ServiceCall][UpdateCrsInsideCrPack] cr pack = {0}, crs = {1}, personId = {2}", crPack, string.Join("||", crs.Select(x => x.ToString()).ToList()), personId));
+            var svcHelper = new ServiceHelper();
+            return svcHelper.UpdateCrsInsideCrPack(crPack, crs, personId);
         }
         #endregion
 
@@ -663,6 +669,15 @@ namespace Etsi.Ultimate.WCF.Service
             return serviceHelper.FinalizeApprovedDrafts(personId, mtgId, approvedDrafts);
         }
 
+        #endregion
+
+        #region communities
+        public List<Community> GetCommunitiesByIds(List<int> ids)
+        {
+            LogManager.Debug("[ServiceCall][GetCommunitiesByIds] Community ids=" + string.Join(", ", ids));
+            var serviceHelper = new ServiceHelper();
+            return serviceHelper.GetCommunitiesByIds(ids);
+        }
         #endregion
     }
 }

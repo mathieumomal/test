@@ -22,6 +22,7 @@ namespace Etsi.Ultimate.DomainClasses
         public Nullable<int> ParentTbId { get; set; }
         public string ActiveCode { get; set; }
         public string ShortName { get; set; }
+        public string DetailsURL { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

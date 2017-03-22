@@ -262,12 +262,38 @@ namespace Etsi.Ultimate.Controls
         {
             if (e.Item is GridDataItem)
             {
-                //Select the row if the WI is a primary WorkItem
                 GridDataItem item = (GridDataItem)e.Item;
+                var currentWi = (WorkItem)item.DataItem;
+
+                //Select the row if the WI is a primary WorkItem
                 if (item["IsPrimary"].Text != null && item["IsPrimary"].Text.ToLower() == "true")
                 {
                     item.Selected = true;
                 }
+
+                //Set community hyperlink control
+                CommunityHyperlinkControl myControl = (CommunityHyperlinkControl)item.FindControl("responsibleGroups");
+                var responsiblesGroupIds = currentWi.WorkItems_ResponsibleGroups.Where(x => x.Fk_TbId != null && x.Fk_TbId != 0).Select(x => x.Fk_TbId ?? 0).ToList();
+                myControl.RefreshControl(responsiblesGroupIds, EnumCommunityNameType.SHORT.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Set the IsPrimary row to selected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        protected void relatedWiGrid_Search_ItemDataBound(object sender, GridItemEventArgs e)
+        {
+            if (e.Item is GridDataItem)
+            {
+                GridDataItem item = (GridDataItem)e.Item;
+                var currentWi = (WorkItem)item.DataItem;
+
+                //Set community hyperlink control
+                CommunityHyperlinkControl myControl = (CommunityHyperlinkControl)item.FindControl("responsibleGroupsSearch");
+                var responsiblesGroupIds = currentWi.WorkItems_ResponsibleGroups.Where(x => x.Fk_TbId != null && x.Fk_TbId != 0).Select(x => x.Fk_TbId ?? 0).ToList();
+                myControl.RefreshControl(responsiblesGroupIds, EnumCommunityNameType.SHORT.ToString());
             }
         }
 
@@ -280,8 +306,10 @@ namespace Etsi.Ultimate.Controls
         {
             if (e.Item is GridDataItem)
             {
-                //Select the row if the WI is a primary WorkItem
                 GridDataItem item = (GridDataItem)e.Item;
+                var currentWi = (WorkItem)item.DataItem;
+
+                //Select the row if the WI is a primary WorkItem
                 if (item["IsPrimary"].Text != null && item["IsPrimary"].Text.ToLower() == "true")
                 {
                     item.Selected = true;
@@ -298,6 +326,11 @@ namespace Etsi.Ultimate.Controls
                     ImageButton btn = (ImageButton)item["Delete"].FindControl("btnRemoveWis");
                     btn.Visible = false;
                 }
+
+                //Set community hyperlink control
+                CommunityHyperlinkControl myControl = (CommunityHyperlinkControl)item.FindControl("responsibleGroupsEdit");
+                var responsiblesGroupIds = currentWi.WorkItems_ResponsibleGroups.Where(x => x.Fk_TbId != null && x.Fk_TbId != 0).Select(x => x.Fk_TbId ?? 0).ToList();
+                myControl.RefreshControl(responsiblesGroupIds, EnumCommunityNameType.SHORT.ToString());
             }
         }
 
@@ -326,7 +359,7 @@ namespace Etsi.Ultimate.Controls
 
         private void SetHidPrimaryWi(List<WorkItem> list)
         {
-            hidPrimaryWi.Value = (list.FirstOrDefault(x => x.IsPrimary == true) != null) ? list.FirstOrDefault(x => x.IsPrimary == true).Pk_WorkItemUid.ToString() : "-1";
+            hidPrimaryWi.Value = (list.FirstOrDefault(x => x.IsPrimary) != null) ? list.FirstOrDefault(x => x.IsPrimary).Pk_WorkItemUid.ToString() : "-1";
         }
 
         private void BindGrid(RadGrid radGrid, Object obj)
@@ -363,10 +396,11 @@ namespace Etsi.Ultimate.Controls
                 Acronym = proxyWorkItem.Acronym,
                 Name = proxyWorkItem.Name,
                 IsPrimary = proxyWorkItem.IsPrimary,
-                IsUserAddedWi = proxyWorkItem.IsUserAddedWi
+                IsUserAddedWi = proxyWorkItem.IsUserAddedWi,
+                WorkItems_ResponsibleGroups = proxyWorkItem.WorkItems_ResponsibleGroups
             };
 
-            proxyWorkItem.WorkItems_ResponsibleGroups.ToList().ForEach(x => workItem.WorkItems_ResponsibleGroups.Add(new WorkItems_ResponsibleGroups() { Pk_WorkItemResponsibleGroups = x.Pk_WorkItemResponsibleGroups, ResponsibleGroup = x.ResponsibleGroup } ));
+            proxyWorkItem.WorkItems_ResponsibleGroups.ToList().ForEach(x => workItem.WorkItems_ResponsibleGroups.Add(new WorkItems_ResponsibleGroups { Pk_WorkItemResponsibleGroups = x.Pk_WorkItemResponsibleGroups, ResponsibleGroup = x.ResponsibleGroup } ));
 
             return workItem;
         }

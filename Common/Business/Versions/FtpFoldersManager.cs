@@ -18,11 +18,6 @@ namespace Etsi.Ultimate.Business.Versions
 {
     public class FtpFoldersManager : IFtpFoldersManager
     {
-        private const string ConstFtpArchivePath = "{0}\\Specs\\archive\\{1}_series\\{2}\\";
-        private const string ConstFtpCustomPath = "{0}\\Specs\\{1}\\{2}\\{3}_series\\";
-        private const string ConstFtpLatestPath = "{0}\\Specs\\latest\\{1}\\{2}_series\\";
-        private const string ConstFtpLatestPathBase = "{0}\\Specs\\latest";
-        private const string ConstValidFilename = "{0}-{1}";
         private const string ConstFtpFoldersManagerStatus = "FtpFoldersManagerStatus";
 
         private FtpFoldersManagerStatus ftpFoldersManagerStatus
@@ -131,6 +126,8 @@ namespace Etsi.Ultimate.Business.Versions
             {
                 try
                 {
+                    var specVersionPatgMgr = UtilsFactory.Resolve<ISpecVersionPathHelper>();
+
                     /* Init ftp Folders Manager Status */
                     ftpFoldersManagerStatus = new FtpFoldersManagerStatus();
 
@@ -149,7 +146,7 @@ namespace Etsi.Ultimate.Business.Versions
                         var ftpBasePath = ConfigVariables.FtpBasePhysicalPath;
 
                         /* Clear current latest folder */
-                        var ftpLatestFolder = string.Format(ConstFtpLatestPathBase, ftpBasePath);
+                        var ftpLatestFolder = string.Format(specVersionPatgMgr.GetFtpLatestPathBase, ftpBasePath);
                         clearFolder(ftpLatestFolder);
 
                         /* init total files into cache */
@@ -161,11 +158,11 @@ namespace Etsi.Ultimate.Business.Versions
                             ftpFoldersManagerStatus.CurrentNumberFile = i;
                             var splittedSpecNumber = version.Specification.Number.Split('.')[0];
                             /* Ftp "Archive" folder path */
-                            var ftpArchivePath = string.Format(ConstFtpArchivePath, ftpBasePath, splittedSpecNumber, version.Specification.Number);
+                            var ftpArchivePath = string.Format(specVersionPatgMgr.GetFtpArchivePath, ftpBasePath, splittedSpecNumber, version.Specification.Number);
                             /* Ftp "Latest" folder path */
-                            var ftpTargetPathLatest = string.Format(ConstFtpLatestPath, ftpBasePath, version.Release.Code, splittedSpecNumber);
+                            var ftpTargetPathLatest = string.Format(specVersionPatgMgr.GetFtpLatestPath, ftpBasePath, version.Release.Code, splittedSpecNumber);
                             /* Ftp <xxxx> custom folder path */
-                            var ftpTargetPathCustom = string.Format(ConstFtpCustomPath, ftpBasePath, folderName, version.Release.Code, splittedSpecNumber);
+                            var ftpTargetPathCustom = string.Format(specVersionPatgMgr.GetFtpCustomPath, ftpBasePath, folderName, version.Release.Code, splittedSpecNumber);
                             
                             /* Create latest target folder if not exists */
                             DirectoryInfo di = new DirectoryInfo(ftpTargetPathLatest);

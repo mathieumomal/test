@@ -786,5 +786,101 @@ namespace Etsi.Ultimate.Business.Specifications
         } 
 
         #endregion
+
+        #region Prime and Secondary Responsible groups
+
+        public Specification SetPrimeAndSecondaryResponsibleGroupsData(Specification spec)
+        {
+            if (spec == null || spec.SpecificationResponsibleGroups == null || spec.SpecificationResponsibleGroups.Count == 0)
+                return spec;
+
+            //Get community data
+            var communityManager = ManagerFactory.Resolve<ICommunityManager>();
+            communityManager.UoW = UoW;
+            var communityIds = spec.SpecificationResponsibleGroups.Select(x => x.Fk_commityId).ToList();
+            var communities = communityManager.GetCommmunityByIds(communityIds);
+            if (communities == null)
+                return spec;
+
+            //Filled specification's "extend properties" accordingly
+            //1) Prime responsible
+            var primeResponsibleGroup =
+                spec.SpecificationResponsibleGroups.FirstOrDefault(x => x.IsPrime);
+            if (primeResponsibleGroup != null)
+            {
+                var primeResponsibleGroupId = primeResponsibleGroup.Fk_commityId;
+                var primeResponsibleGroupCommunity =
+                    communities.FirstOrDefault(x => x.TbId == primeResponsibleGroupId);
+                if (primeResponsibleGroupCommunity != null)
+                {
+                    spec.PrimeResponsibleGroupFullName = primeResponsibleGroupCommunity.TbName;
+                    spec.PrimeResponsibleGroupShortName = primeResponsibleGroupCommunity.ShortName;
+                }
+            }
+
+            //2) Secondary responsible groups
+            var secondaryResponsibleGroups =
+                spec.SpecificationResponsibleGroups.Where(x => !x.IsPrime).ToList();
+            if (secondaryResponsibleGroups.Count > 0)
+            {
+                var secondaryResponsibleGroupsIds =
+                    secondaryResponsibleGroups.Select(x => x.Fk_commityId).Distinct().ToList();
+                spec.SecondaryResponsibleGroupsFullNames = string.Join(", ",
+                    communities.Where(x => secondaryResponsibleGroupsIds.Contains(x.TbId))
+                        .Select(y => y.TbName));
+            }
+            return spec;
+        }
+
+        public Specification SetParentAndChildrenPrimeResponsibleGroupsData(Specification spec)
+        {
+            if (spec == null)
+                return null;
+
+            var communityManager = ManagerFactory.Resolve<ICommunityManager>();
+            communityManager.UoW = UoW;
+
+            if (spec.SpecificationParents != null && spec.SpecificationParents.Count > 0)
+            {
+                var communityIds = spec.SpecificationParents.Where(s => s.SpecificationResponsibleGroups != null && s.SpecificationResponsibleGroups.Count > 0 && s.PrimeResponsibleGroup != null).Select(x => x.PrimeResponsibleGroup.Fk_commityId).ToList();
+                var communities = communityManager.GetCommmunityByIds(communityIds);
+                if (communities == null)
+                    return spec;
+
+                foreach (Specification s in spec.SpecificationParents)
+                {
+                    if (s.SpecificationResponsibleGroups != null && s.SpecificationResponsibleGroups.Count > 0 && s.PrimeResponsibleGroup != null)
+                    {
+                        var currentCommunity =
+                            communities.FirstOrDefault(x => x.TbId == s.PrimeResponsibleGroup.Fk_commityId);
+                        if (currentCommunity != null)
+                        {
+                            s.PrimeResponsibleGroupShortName = currentCommunity.ShortName;
+                        }
+                    }
+                }
+            }
+
+            if (spec.SpecificationChilds != null && spec.SpecificationChilds.Count > 0)
+            {
+                var communityIds = spec.SpecificationChilds.Where(s => s.SpecificationResponsibleGroups != null && s.SpecificationResponsibleGroups.Count > 0 && s.PrimeResponsibleGroup != null).Select(x => x.PrimeResponsibleGroup.Fk_commityId).ToList();
+                var communities = communityManager.GetCommmunityByIds(communityIds);
+
+                foreach (Specification s in spec.SpecificationChilds)
+                {
+                    if (s.SpecificationResponsibleGroups != null && s.SpecificationResponsibleGroups.Count > 0 && s.PrimeResponsibleGroup != null)
+                    {
+                        var currentCommunity =
+                            communities.FirstOrDefault(x => x.TbId == s.PrimeResponsibleGroup.Fk_commityId);
+                        if (currentCommunity != null)
+                        {
+                            s.PrimeResponsibleGroupShortName = currentCommunity.ShortName;
+                        }
+                    }
+                }
+            }
+            return spec;
+        }
+        #endregion
     }
 }

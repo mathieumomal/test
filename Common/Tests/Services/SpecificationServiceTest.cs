@@ -68,9 +68,7 @@ namespace Etsi.Ultimate.Tests.Services
             List<Community> communitiesSet = new List<Community>() { c, c1, c2 };
             //Mock Comminities
             var mockCommunitiesManager = MockRepository.GenerateMock<ICommunityManager>();
-            mockCommunitiesManager.Stub(x => x.GetCommmunityById(1)).Return(c);
-            mockCommunitiesManager.Stub(x => x.GetCommmunityById(2)).Return(c1);
-            mockCommunitiesManager.Stub(x => x.GetCommmunityById(3)).Return(c2);
+            mockCommunitiesManager.Stub(x => x.GetCommmunityByIds(Arg<List<int>>.Is.Anything)).Return(new List<Community>{c, c1, c2});
             mockCommunitiesManager.Stub(x => x.GetCommunities()).Return(communitiesSet);
 
             Enum_Technology e = new Enum_Technology() { Pk_Enum_TechnologyId = 1, Code = "2G", Description = "2G" };

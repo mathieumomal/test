@@ -9,6 +9,8 @@
 <%@ Register TagPrefix="ult" TagName="FullViewControl" Src="../../controls/Ultimate/FullView.ascx" %>
 <%@ Register TagPrefix="ult" TagName="ReleaseSearchControl" Src="../../controls/Ultimate/ReleaseSearchControl.ascx" %>
 <%@ Register TagPrefix="ult" TagName="CommunityControl" Src="../../controls/Ultimate/CommunityControl.ascx" %>
+<%@ Register TagPrefix="ult" TagName="CommunityHyperlinkControl" Src="../../controls/Ultimate/CommunityHyperlinkControl.ascx" %>
+
 <telerik:RadCodeBlock ID="RadCodeBlock" runat="server">
     <script src="desktopmodules/specifications/JS/CommonScript.js?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>"></script>
 </telerik:RadCodeBlock>
@@ -182,7 +184,11 @@
                                     <telerik:GridBoundColumn HeaderStyle-Width="5%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="SpecificationTypeShortName" HeaderText="Type" UniqueName="Type"></telerik:GridBoundColumn>
                                     <telerik:GridBoundColumn HeaderStyle-Width="50%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Left" ShowSortIcon="false" DataField="Title" HeaderText="Title" UniqueName="Title"></telerik:GridBoundColumn>
                                     <telerik:GridBoundColumn HeaderStyle-Width="10%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="Status" HeaderText="Status" UniqueName="Status"></telerik:GridBoundColumn>
-                                    <telerik:GridBoundColumn HeaderStyle-Width="10%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" AllowSorting="false" DataField="PrimeResponsibleGroupShortName" HeaderText="<span title='TSG or WG which has primary responsibility for the specification' class='helpTooltip'>Primary Responsible Group</span>" UniqueName="PrimeResponsibleGroupShortName"></telerik:GridBoundColumn>
+                                    <telerik:GridTemplateColumn HeaderStyle-Width="10%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Center" HeaderText="<span title='TSG or WG which has primary responsibility for the specification' class='helpTooltip'>Primary Responsible Group</span>" UniqueName="PrimeResponsibleGroupShortName">
+                                        <ItemTemplate>
+                                            <ult:CommunityHyperlinkControl runat="server" ID="primaryResponsibleGroup"></ult:CommunityHyperlinkControl>
+                                        </ItemTemplate>
+                                    </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn HeaderStyle-Width="17%" HeaderStyle-HorizontalAlign="Center" ItemStyle-HorizontalAlign="Left" UniqueName="SpecificationAdditionalDetails">
                                         <ItemTemplate>
                                             <table id="specAdditionalDetails">

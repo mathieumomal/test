@@ -468,4 +468,10 @@
   <data name="Version_Upload_ZipAndWordShouldHaveSameName" xml:space="preserve">
     <value>Zip file and internal word file must have same name</value>
   </data>
+  <data name="UpdateCrsInsideCrPack_Invalid_Arguments" xml:space="preserve">
+    <value>Invalid arguments: CR-Pack or CRs provided are incorrect</value>
+  </data>
+  <data name="UpdateCrsInsideCrPack_Warning_CrPack_Source_Meeting_Not_Provided" xml:space="preserve">
+    <value>CrPack source and/or meeting not provided and will not be insert as CrTsgData</value>
+  </data>
 </root>

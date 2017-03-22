@@ -23,6 +23,8 @@ namespace Etsi.Ultimate.Module.WorkItem
 
         private int _userId;
         private int? _workItemId;
+
+        protected CommunityHyperlinkControl responsibleGroups;
         #endregion
 
         #region Events
@@ -242,8 +244,8 @@ namespace Etsi.Ultimate.Module.WorkItem
             }
            
             // Responsible groups
-            if (!string.IsNullOrEmpty(workitem.ResponsibleGroups))
-                lblResponsibleGroups.Text = workitem.ResponsibleGroups;
+            if (workitem.WorkItems_ResponsibleGroups != null)
+                responsibleGroups.CommunityIds = workitem.WorkItems_ResponsibleGroups.Where(x => x.Fk_TbId != null && x.Fk_TbId != 0).Select(x => x.Fk_TbId ?? 0).ToList();
 
             SetMeetingLink(lnkTsgMtg, workitem.TsgApprovalMtgRef, workitem.TsgApprovalMtgId);
             SetMeetingLink(lnkPcgMtg, workitem.PcgApprovalMtgRef, workitem.PcgApprovalMtgId);

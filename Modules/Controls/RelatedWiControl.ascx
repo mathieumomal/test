@@ -1,5 +1,7 @@
 ﻿<%@ Control Language="C#" AutoEventWireup="true" CodeBehind="RelatedWiControl.ascx.cs" Inherits="Etsi.Ultimate.Controls.RelatedWiControl" %>
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
+<link rel="stylesheet" type="text/css" href="\controls\Ultimate\style\RelatedWiControl.css?v=<%= ConfigurationManager.AppSettings["AppVersion"] %>" />
+<%@ Register TagPrefix="ult" TagName="CommunityHyperlinkControl" Src="../../controls/Ultimate/CommunityHyperlinkControl.ascx" %>
 
 <style type="text/css">
     .RadGrid_Default th.rgHeader {
@@ -33,6 +35,11 @@
     #<%=relatedWiGrid.ClientID %>.RadGrid_Default .rgSelectedRow td,
     #<%=relatedWiGrid_Edit.ClientID %>.RadGrid_Default .rgSelectedRow td {
         border-bottom-color: transparent;
+    }
+
+    #<%=relatedWiGrid.ClientID %>.RadGrid_Default .rgSelectedRow a,
+    #<%=relatedWiGrid_Edit.ClientID %>.RadGrid_Default .rgSelectedRow a {
+        color: black;
     }
 
 </style>
@@ -152,6 +159,7 @@
     </AjaxSettings>
 </telerik:RadAjaxManagerProxy>
 
+<div id="RelatedWisControl">
 <asp:UpdatePanel ID="upRelatedWis" runat="server">
     <ContentTemplate>
         <fieldset style="padding: 5px;">
@@ -179,30 +187,37 @@
                                         <ItemTemplate>
                                             <span><%# DataBinder.Eval(Container.DataItem,"UID") %></span>
                                         </ItemTemplate>
+										
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn DataField="UID" HeaderText="UID" UniqueName="UID">
                                         <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="10%" />
                                         <ItemTemplate>
                                             <span><%# DataBinder.Eval(Container.DataItem,"UID") %></span>
                                         </ItemTemplate>
+										<ItemStyle CssClass="basicCellWrapped" Wrap="True"></ItemStyle>
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn DataField="Acronym" HeaderText="Acronym" UniqueName="Acronym">
                                         <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="15%" />
                                         <ItemTemplate>
                                             <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Acronym") %></div>
                                         </ItemTemplate>
+										<ItemStyle CssClass="basicCellWrapped" Wrap="True"></ItemStyle>
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn DataField="Name" HeaderText="Title" UniqueName="Name">
                                         <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="45%" />
                                         <ItemTemplate>
                                             <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"Name") %></div>
                                         </ItemTemplate>
+										<ItemStyle CssClass="basicCellWrapped" Wrap="True"></ItemStyle>
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn DataField="ResponsibleGroups" HeaderText="Resp. grp(s)" UniqueName="ResponsibleGroups">
                                         <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="30%" />
                                         <ItemTemplate>
-                                            <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"ResponsibleGroups").ToString().Replace(",",", ") %></div>
+                                            <div class="text-left">
+                                                <ult:CommunityHyperlinkControl runat="server" ID="responsibleGroups"></ult:CommunityHyperlinkControl> 
+                                            </div>
                                         </ItemTemplate>
+										<ItemStyle CssClass="basicCellWrapped" Wrap="True"></ItemStyle>
                                     </telerik:GridTemplateColumn>
                                     <telerik:GridTemplateColumn UniqueName="ViewWorkItem">
                                         <HeaderStyle Width="30px" />
@@ -236,6 +251,7 @@
         </fieldset>
     </ContentTemplate>
 </asp:UpdatePanel>
+</div>
 <telerik:RadWindowManager ID="relatedWi_RadWindowManager" runat="server">
     <Windows>
         <telerik:RadWindow ID="RadWindow_wiEdit" runat="server" Modal="true" Title="Related Work Items" Width="550" Height="530" VisibleStatusbar="false" Behaviors="Close">
@@ -282,7 +298,9 @@
                                                 <telerik:GridTemplateColumn DataField="ResponsibleGroups" HeaderText="Responsible" UniqueName="ResponsibleGroups">
                                                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="80px" />
                                                     <ItemTemplate>
-                                                        <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"ResponsibleGroups") %></div>
+                                                        <div class="text-left">
+                                                            <ult:CommunityHyperlinkControl runat="server" ID="responsibleGroupsEdit"></ult:CommunityHyperlinkControl>
+                                                        </div>
                                                     </ItemTemplate>
                                                 </telerik:GridTemplateColumn>
                                                 <telerik:GridTemplateColumn HeaderText="Remove" UniqueName="Delete">
@@ -325,6 +343,7 @@
                                         AllowFilteringByColumn="false"
                                         AutoGenerateColumns="false"
                                         AllowMultiRowSelection="True"
+                                        OnItemDataBound="relatedWiGrid_Search_ItemDataBound"
                                         Style="min-width: 400px">
                                         <ClientSettings>
                                             <ClientEvents OnDataBound="setSearchProgress(false)" />
@@ -354,7 +373,9 @@
                                                 <telerik:GridTemplateColumn DataField="ResponsibleGroups" HeaderText="Responsible" UniqueName="ResponsibleGroups">
                                                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" />
                                                     <ItemTemplate>
-                                                        <div class="text-left"><%# DataBinder.Eval(Container.DataItem,"ResponsibleGroups") %></div>
+                                                        <div class="text-left">
+                                                            <ult:CommunityHyperlinkControl runat="server" ID="responsibleGroupsSearch"></ult:CommunityHyperlinkControl>
+                                                        </div>
                                                     </ItemTemplate>
                                                 </telerik:GridTemplateColumn>
                                             </Columns>

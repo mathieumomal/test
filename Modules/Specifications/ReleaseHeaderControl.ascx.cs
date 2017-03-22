@@ -80,7 +80,7 @@ namespace Etsi.Ultimate.Module.Specifications
                         }
                     }
                 }
-                imgRemarks.OnClientClick = "openRemarksPopup('specrelease','" + SpecRelease.Pk_Specification_ReleaseId + "','" + IsEditMode + "', 'Specification Release Remarks'); return false;";                    
+                imgRemarks.OnClientClick = "openRemarksPopup('specrelease','" + SpecRelease.Pk_Specification_ReleaseId + "','" + IsEditMode + "', 'Specification Release Remarks'); this.stopPropagation(); return false;";                    
             }                
         }
 

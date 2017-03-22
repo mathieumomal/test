@@ -63,6 +63,7 @@ namespace Etsi.Ultimate.Utils
             Container.RegisterType<IMailManager, MailManager>(new TransientLifetimeManager());
             Container.RegisterType<ISendMail, WcfMailService.SendMailClient>(new TransientLifetimeManager());
             Container.RegisterType<WcfMailService.SendMailClient>(new InjectionConstructor());
+            Container.RegisterType<ISpecVersionPathHelper, SpecVersionPathHelper>(new TransientLifetimeManager());
         }
 
         public static bool NullBooleanCheck(bool? boo, bool defaultValue)

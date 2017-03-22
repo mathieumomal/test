@@ -83,50 +83,14 @@ namespace Etsi.Ultimate.Services
                 communityManager.UoW = uoW;
 
                 KeyValuePair<Specification, UserRightsContainer> result = specificationManager.GetSpecificationById(personId, specificationId);
-                var communityList = new List<Community>();
 
                 var spec = result.Key;
-
+                
                 if (spec != null)
                 {
-                    if (spec.SpecificationResponsibleGroups != null && spec.SpecificationResponsibleGroups.Count > 0)
-                    {
-                        if (spec.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().Count > 0)
-                        {
-                            spec.SpecificationResponsibleGroups.Where(g => !g.IsPrime).ToList().ForEach(g => communityList.Add(communityManager.GetCommmunityById(g.Fk_commityId)));
-                            spec.SecondaryResponsibleGroupsFullNames = string.Join(", ", communityList.Select(x => x.TbName).ToArray());
-                        }
-
-                        if (true & spec.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().Count > 0)
-                        {
-                            spec.PrimeResponsibleGroupFullName
-                                = communityManager.GetCommmunityById(spec.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().First().Fk_commityId).TbName;
-                            spec.PrimeResponsibleGroupShortName
-                                = communityManager.GetCommmunityById(spec.SpecificationResponsibleGroups.Where(g => g.IsPrime).ToList().First().Fk_commityId).ShortName;
-                        }
-                    }
-
-                    if (spec.SpecificationParents != null && spec.SpecificationParents.Count > 0)
-                    {
-                        foreach (Specification s in spec.SpecificationParents)
-                        {
-                            if (s.SpecificationResponsibleGroups != null && s.SpecificationResponsibleGroups.Count > 0 && s.PrimeResponsibleGroup != null)
-                            {
-                                s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId);
-                            }
-                        }
-                    }
-
-                    if (spec.SpecificationChilds != null && spec.SpecificationChilds.Count > 0)
-                    {
-                        foreach (Specification s in spec.SpecificationChilds)
-                        {
-                            if (s.SpecificationResponsibleGroups != null && s.SpecificationResponsibleGroups.Count > 0 && s.PrimeResponsibleGroup != null)
-                            {
-                                s.PrimeResponsibleGroupShortName = communityManager.GetCommmunityshortNameById(s.PrimeResponsibleGroup.Fk_commityId);
-                            }
-                        }
-                    }
+                    //Set prime and secondary responsible groups
+                    specificationManager.SetPrimeAndSecondaryResponsibleGroupsData(spec);
+                    specificationManager.SetParentAndChildrenPrimeResponsibleGroupsData(spec);
 
                     // Getting list of current specification technologies
                     var specTechnologiesManager = new SpecificationTechnologiesManager {UoW = uoW};

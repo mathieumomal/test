@@ -32,9 +32,9 @@
   <location path="." inheritInChildApplications="false"> 
   <connectionStrings>
     <!-- Connection String for SQL Server 2008/2012 Express -->
-    <add name="SiteSqlServer" connectionString="Data Source=localhost;Initial Catalog=DNN3GPP;Integrated Security=True" providerName="System.Data.SqlClient" />
-	<add name="UltimateContext" connectionString="metadata=res://*/UltimateDataModel.csdl|res://*/UltimateDataModel.ssdl|res://*/UltimateDataModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=localhost;initial catalog=U3GPPDB;Integrated Security=True;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
-    <add name="DSDBContext" connectionString="metadata=res://*/DSDBDataModel.csdl|res://*/DSDBDataModel.ssdl|res://*/DSDBDataModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=.;initial catalog=DSDB;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+    <add name="SiteSqlServer" connectionString="Data Source=.;Initial Catalog=DNN3GPP;Integrated security=True" providerName="System.Data.SqlClient" />
+	<add name="UltimateContext" connectionString="metadata=res://*/UltimateDataModel.csdl|res://*/UltimateDataModel.ssdl|res://*/UltimateDataModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=swintmaetsi01;initial catalog=U3GPPDB;User ID=sa;Password=Sopra123!*;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
+    <add name="DSDBContext" connectionString="metadata=res://*/DSDBDataModel.csdl|res://*/DSDBDataModel.ssdl|res://*/DSDBDataModel.msl;provider=System.Data.SqlClient;provider connection string=&quot;data source=swintmaetsi01;initial catalog=DSDB;User ID=sa;Password=Sopra123!*;MultipleActiveResultSets=True;App=EntityFramework&quot;" providerName="System.Data.EntityClient" />
     <!-- Connection String for SQL Server 2008/2012
     <add name="SiteSqlServer" connectionString="Server=(local);Database=DotNetNuke;uid=;pwd=;" providerName="System.Data.SqlClient" /> 
     -->
@@ -43,10 +43,13 @@
   <appSettings>
 
     <!-- App Version : used to avoid any cache issues concerning javascript files -->
-    <add key="AppVersion" value="1.03" />
+    <add key="AppVersion" value="1.05" />
 
     <!-- Portal name where modules will run -->
     <add key="PortalName" value="Ultimate"/>
+	
+	<!-- Portal URL -->
+	<add key="PortalUrl" value="http://www.localdev.me"/>
 
     <!--Folder where transposition process copy paste version transposed -->
     <add key="TranspositionFolderPath" value="D:\AppTrans\transposition\"/>
@@ -148,7 +151,6 @@
     <add key="loginUrl" value="~/Login.aspx" />
     <add key="InstallVersion" value="07.00.04" />
     <add key="DefaultDevicesDatabase" value="DesktopModules\DevicePreviewManagement\Resources\defaultDevices.xml" />
-    <add key="VersionsLatestFTPFolder" value="2014-09" />
     <add key="CRsListRecordsMaxSize" value="100"/>
 	<!-- ActivateWorkPlanExportAfterImport: False <=> do not export WorkPlan as excel or docx at the end of the import -->
 	<add key="ActivateWorkPlanExportAfterImport" value="false"/>

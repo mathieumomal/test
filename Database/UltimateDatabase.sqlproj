@@ -160,6 +160,7 @@
     <Build Include="dbo\Views\View_Communities.sql">
       <AnsiNulls>Off</AnsiNulls>
       <QuotedIdentifier>Off</QuotedIdentifier>
+      <ApplicationScope>False</ApplicationScope>
     </Build>
     <Build Include="dbo\Functions\getPersonName.sql" />
     <Build Include="dbo\Tables\ShortUrl.sql" />
@@ -184,7 +185,10 @@
       <AnsiNulls>Off</AnsiNulls>
       <QuotedIdentifier>Off</QuotedIdentifier>
     </Build>
-    <Build Include="dbo\Functions\getETSI_WKI_Ref.sql" />
+    <Build Include="dbo\Functions\getETSI_WKI_Ref.sql">
+      <AnsiNulls>Off</AnsiNulls>
+      <QuotedIdentifier>Off</QuotedIdentifier>
+    </Build>
     <Build Include="dbo\Stored Procedures\Specifications_CleanAll.sql">
       <AnsiNulls>Off</AnsiNulls>
       <QuotedIdentifier>Off</QuotedIdentifier>

@@ -69,9 +69,12 @@
   <ItemGroup>
     <Compile Include="Entities\ChangeRequest.cs" />
     <Compile Include="Entities\ChangeRequestCategory.cs" />
+    <Compile Include="Entities\ChangeRequestInsideCrPackFacade.cs" />
+    <Compile Include="Entities\ChangeRequestPackFacade.cs" />
     <Compile Include="Entities\ChangeRequestPackInfo.cs" />
     <Compile Include="Entities\ChangeRequestStatus.cs" />
     <Compile Include="Entities\ChangeRequestTsgData.cs" />
+    <Compile Include="Entities\Community.cs" />
     <Compile Include="Entities\CrKeyFacade.cs" />
     <Compile Include="Entities\CrOfCrPackFacade.cs" />
     <Compile Include="Entities\Release.cs" />

@@ -156,13 +156,6 @@ namespace Etsi.Ultimate.Module.Specifications
                 if (remarkText.Length > 30)
                     ((Label)item["LatestRemark"].FindControl("lblRemarkText")).Text = remarkText.Substring(0, 29) + "...";
 
-                if (!String.IsNullOrEmpty(item["Source"].Text))
-                {
-                    var link = (HyperLink)item["Meetings"].FindControl("lnkMeetings");
-                    link.Text = item["MtgShortRef"].Text;
-                    link.NavigateUrl = ConfigVariables.MeetingDetailsAddress + item["Source"].Text;
-                }
-
                 var specVersion = (SpecVersion)item.DataItem;
                 if (specVersion != null)
                 {

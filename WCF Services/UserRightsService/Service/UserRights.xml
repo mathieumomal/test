@@ -74,11 +74,13 @@
         <Right value="Versions_AllocateUpload_For_ReleaseClosed_Allowed"/>
         <Right value="Versions_Modify_MajorVersion"/>
         <Right value="Versions_AddRemark"/>
-		    <Right value="Versions_Edit"/>
+        <Right value="Versions_Edit"/>
+        <Right value="Versions_Avoid_Quality_Checks"/>
 
         <Right value="Meeting_ViewMeetingList"/>
         <Right value="Meeting_CreateMeeting"/>
         <Right value="Manage_AgendaItems"/>
+        <Right value="Meeting_GenerateTdocList"/>
 
         <Right value="Contribute_Anytime"/>
         <Right value="Contribution_Edit"/>
@@ -95,7 +97,8 @@
         <Right value="Contribution_CrPack_CreationAndEdition" />
         <Right value="Contribution_LsIn_CreationAndEdition" />
         
-        <Right value="Cr_Add_Crs_To_CrPack"/>  
+        <Right value="Cr_Add_Crs_To_CrPacks"/>  
+        <Right value="Contribution_Add_Crs_To_CrPack"/> 
       </UserRole>
 
       <!-- Meeting Manager is a special role that gives additional rights on meetings. -->
@@ -134,7 +137,7 @@
         <Right value="Specification_ForceTransposition"/>
         <Right value="Specification_InhibitPromote"/>
         <Right value="Specification_Promote"/>
-		    <Right value="Specification_Demote"/>
+		<Right value="Specification_Demote"/>
         <Right value="Specification_ManageITURecommendations"/>
         <Right value="Specification_RemoveInhibitPromote"/>
         <Right value="Specification_SyncHardLinksOnLatestFolder"/>
@@ -143,7 +146,7 @@
         <Right value="Specification_UnforceTransposition"/>
         <Right value="Specification_View_UnAllocated_Number"/>
         <Right value="Specification_ViewDetails"/>
-		    <Right value="Specification_Delete"/>
+		<Right value="Specification_Delete"/>
 
         <Right value="SpecificationRelease_Remove"/>
 
@@ -151,9 +154,9 @@
         <Right value="Versions_Upload"/>
         <Right value="Versions_AllocateUpload_For_ReleaseClosed_Allowed"/>
         <Right value="Versions_AddRemark"/>
-		    <Right value="Versions_Modify_MajorVersion"/>
-		    <Right value="Version_Draft_Delete"/>
-		    <Right value="Versions_Edit"/>
+		<Right value="Versions_Modify_MajorVersion"/>
+		<Right value="Version_Draft_Delete"/>
+		<Right value="Versions_Edit"/>
         <Right value="Versions_Avoid_Quality_Checks"/>
 
         <Right value="Manage_AgendaItems"/>
@@ -161,6 +164,7 @@
         <Right value="Meeting_CreateMeeting"/>
         <Right value="Meeting_CreateEvent"/>
         <Right value="Meeting_EditEvent"/>
+		<Right value="Meeting_GenerateTdocList"/>
 
         <Right value="Contribute_Anytime"/>
         <Right value="Contribution_Edit"/>
@@ -176,9 +180,11 @@
 		<Right value="Contribution_CrPack_CreationAndEdition" />
         <Right value="Contribution_LsIn_CreationAndEdition" />
         
-        <Right value="Cr_Add_Crs_To_CrPack"/>
+        <Right value="Cr_Add_Crs_To_CrPacks"/>  
+        <Right value="Contribution_Add_Crs_To_CrPack"/> 
 		
-		    <Right value="Release_Test_Page_Access"/>
+		
+		<Right value="Release_Test_Page_Access"/>
       </UserRole>
 
       <!-- Administrators are members of the ETSI IT service who should be able to do everything -->
@@ -202,7 +208,7 @@
         <Right value="Specification_ForceTransposition"/>
         <Right value="Specification_InhibitPromote"/>
         <Right value="Specification_Promote"/>
-		    <Right value="Specification_Demote"/>
+		<Right value="Specification_Demote"/>
         <Right value="Specification_ManageITURecommendations"/>
         <Right value="Specification_RemoveInhibitPromote"/>
         <Right value="Specification_SyncHardLinksOnLatestFolder"/>
@@ -211,7 +217,7 @@
         <Right value="Specification_UnforceTransposition"/>
         <Right value="Specification_View_UnAllocated_Number"/>
         <Right value="Specification_ViewDetails"/>
-		    <Right value="Specification_Delete"/>
+		<Right value="Specification_Delete"/>
 
         <Right value="SpecificationRelease_Remove"/>
 
@@ -219,9 +225,9 @@
         <Right value="Versions_Upload"/>
         <Right value="Versions_AllocateUpload_For_ReleaseClosed_Allowed"/>
         <Right value="Versions_AddRemark"/>
-		    <Right value="Versions_Modify_MajorVersion"/>
-		    <Right value="Version_Draft_Delete"/>
-		    <Right value="Versions_Edit"/>
+		<Right value="Versions_Modify_MajorVersion"/>
+		<Right value="Version_Draft_Delete"/>
+		<Right value="Versions_Edit"/>
         <Right value="Versions_Avoid_Quality_Checks"/>
 
         <Right value="Manage_AgendaItems"/>
@@ -229,6 +235,7 @@
         <Right value="Meeting_CreateMeeting"/>
         <Right value="Meeting_CreateEvent"/>
         <Right value="Meeting_EditEvent"/>
+		<Right value="Meeting_GenerateTdocList"/>
 
         <Right value="Contribute_Anytime"/>
         <Right value="Contribution_Edit"/>
@@ -244,9 +251,10 @@
 		<Right value="Contribution_CrPack_CreationAndEdition" />
         <Right value="Contribution_LsIn_CreationAndEdition" />
 
-        <Right value="Cr_Add_Crs_To_CrPack"/>
+        <Right value="Cr_Add_Crs_To_CrPacks"/>  
+        <Right value="Contribution_Add_Crs_To_CrPack"/> 
 		
-		    <Right value="Release_Test_Page_Access"/>
+		<Right value="Release_Test_Page_Access"/>
       </UserRole>
     </UserRoles>
   </Portal>

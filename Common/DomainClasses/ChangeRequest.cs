@@ -40,6 +40,8 @@ namespace Etsi.Ultimate.DomainClasses
         public Nullable<int> Fk_NewVersion { get; set; }
         public Nullable<int> Fk_Impact { get; set; }
         public string WGTDoc { get; set; }
+        public string MOD_BY { get; set; }
+        public Nullable<System.DateTime> MOD_TS { get; set; }
     
         public virtual SpecVersion CurrentVersion { get; set; }
         public virtual SpecVersion NewVersion { get; set; }

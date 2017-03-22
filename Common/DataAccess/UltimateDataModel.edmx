@@ -26,6 +26,8 @@
           <Property Name="Fk_CurrentVersion" Type="int" />
           <Property Name="Fk_NewVersion" Type="int" />
           <Property Name="Fk_Impact" Type="int" />
+          <Property Name="MOD_BY" Type="varchar" MaxLength="100" />
+          <Property Name="MOD_TS" Type="datetime" />
         </EntityType>
         <EntityType Name="ChangeRequestTsgData">
           <Key>
@@ -38,6 +40,9 @@
           <Property Name="TSGSourceOrganizations" Type="varchar" MaxLength="1000" />
           <Property Name="Fk_ChangeRequest" Type="int" Nullable="false" />
           <Property Name="Fk_TsgStatus" Type="int" />
+          <Property Name="CreationDate" Type="datetime" />
+          <Property Name="MOD_BY" Type="varchar" MaxLength="100" />
+          <Property Name="MOD_TS" Type="datetime" />
         </EntityType>
         <EntityType Name="CR_WorkItems">
           <Key>
@@ -51,7 +56,7 @@
           <Key>
             <PropertyRef Name="Pk_EnumChangeRequestStatus" />
           </Key>
-          <Property Name="Pk_EnumChangeRequestStatus" Type="int" Nullable="false" />
+          <Property Name="Pk_EnumChangeRequestStatus" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Code" Type="varchar" MaxLength="15" />
           <Property Name="Description" Type="varchar" MaxLength="50" />
         </EntityType>
@@ -64,6 +69,7 @@
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
           <Property Name="WpmProjectId" Type="int" />
           <Property Name="MapId_3SS" Type="int" />
+          <Property Name="DetailsURL" Type="varchar" MaxLength="800" />
         </EntityType>
         <EntityType Name="Enum_CRCategory">
           <Key>
@@ -304,9 +310,9 @@
           <Property Name="ProvidedBy" Type="int" />
           <Property Name="Fk_SpecificationId" Type="int" />
           <Property Name="Fk_ReleaseId" Type="int" />
-          <Property Name="ETSI_WKI_Ref" Type="varchar" MaxLength="50" StoreGeneratedPattern="Computed" />
           <Property Name="RelatedTDoc" Type="varchar" MaxLength="200" />
           <Property Name="SupressFromMissing_List" Type="bit" Nullable="false" />
+          <Property Name="ETSI_WKI_Ref" Type="varchar" MaxLength="50" StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="WorkItems">
           <Key>
@@ -376,6 +382,7 @@ avertissement 6002: La table/vue 'U3GPPDB.dbo.ETSI_WorkItem' n'a pas de clé pri
           <Property Name="Number" Type="varchar" MaxLength="30" />
           <Property Name="fileName" Type="varchar" MaxLength="68" />
           <Property Name="filePath" Type="varchar" MaxLength="128" />
+          <Property Name="WKI_ETSI_NUMBER" Type="varchar" MaxLength="55" />
         </EntityType>
         <!--Erreurs détectées durant la génération :
 avertissement 6002: La table/vue 'U3GPPDB.dbo.ResponsibleGroup_Secretary' n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.-->
@@ -427,6 +434,7 @@ avertissement 6002: La table/vue 'U3GPPDB.dbo.View_Communities' n'a pas de clé 
           <Property Name="ParentTbId" Type="int" />
           <Property Name="ActiveCode" Type="varchar" MaxLength="12" />
           <Property Name="ShortName" Type="varchar" MaxLength="10" />
+          <Property Name="DetailsURL" Type="varchar" MaxLength="800" />
         </EntityType>
         <!--Erreurs détectées durant la génération :
 avertissement 6002: La table/vue 'U3GPPDB.dbo.View_ContributionsWithAditionnalData' n'a pas de clé primaire définie. La clé a été déduite et la définition a été créée en tant que table/vue en lecture seule.-->
@@ -1086,7 +1094,8 @@ avertissement 6002: La table/vue 'U3GPPDB.dbo.View_Persons' n'a pas de clé prim
 [ETSI_WorkItem].[StandardType] AS [StandardType], 
 [ETSI_WorkItem].[Number] AS [Number], 
 [ETSI_WorkItem].[fileName] AS [fileName], 
-[ETSI_WorkItem].[filePath] AS [filePath]
+[ETSI_WorkItem].[filePath] AS [filePath], 
+[ETSI_WorkItem].[WKI_ETSI_NUMBER] AS [WKI_ETSI_NUMBER]
 FROM [dbo].[ETSI_WorkItem] AS [ETSI_WorkItem]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="ResponsibleGroup_Secretary" EntityType="Self.ResponsibleGroup_Secretary" store:Type="Views" store:Schema="dbo">
@@ -1122,7 +1131,8 @@ FROM [dbo].[Users_Groups] AS [Users_Groups]</DefiningQuery>
 [View_Communities].[TbTitle] AS [TbTitle], 
 [View_Communities].[ParentTbId] AS [ParentTbId], 
 [View_Communities].[ActiveCode] AS [ActiveCode], 
-[View_Communities].[ShortName] AS [ShortName]
+[View_Communities].[ShortName] AS [ShortName], 
+[View_Communities].[DetailsURL] AS [DetailsURL]
 FROM [dbo].[View_Communities] AS [View_Communities]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="View_ContributionsWithAditionnalData" EntityType="Self.View_ContributionsWithAditionnalData" store:Type="Views" store:Schema="dbo">
@@ -2041,6 +2051,7 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <Property Type="String" Name="ShortName" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Type="Int32" Name="WpmProjectId" />
           <Property Name="MapId_3SS" Type="Int32" />
+          <Property Name="DetailsURL" Type="String" MaxLength="800" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SpecificationResponsibleGroup">
           <Key>
@@ -2086,6 +2097,7 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <Property Type="String" Name="Number" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="fileName" MaxLength="68" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="filePath" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="WKI_ETSI_NUMBER" Type="String" MaxLength="55" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SpecVersion">
           <Key>
@@ -2201,6 +2213,8 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <NavigationProperty Name="WgStatus" Relationship="Etsi.Ultimate.DataAccess.FK_ChangeRequest_WgStatus" FromRole="ChangeRequest" ToRole="Enum_ChangeRequestStatus" />
           <NavigationProperty Name="ChangeRequestTsgDatas" Relationship="Etsi.Ultimate.DataAccess.FK_ChangeRequestTsgData_ChangeRequest" FromRole="ChangeRequest" ToRole="ChangeRequestTsgData" />
           <NavigationProperty Name="Specification" Relationship="Etsi.Ultimate.DataAccess.FK_CRSpecification" FromRole="ChangeRequest" ToRole="Specification" />
+          <Property Name="MOD_BY" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MOD_TS" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_CRCurrentVersion">
           <End Type="Etsi.Ultimate.DataAccess.SpecVersion" Role="SpecVersion" Multiplicity="0..1" />
@@ -2331,6 +2345,7 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <Property Type="Int32" Name="ParentTbId" />
           <Property Type="String" Name="ActiveCode" MaxLength="12" FixedLength="false" Unicode="false" />
           <Property Type="String" Name="ShortName" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="DetailsURL" Type="String" MaxLength="800" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="SyncInfo">
           <Key>
@@ -2403,6 +2418,9 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <Property Type="Int32" Name="Fk_TsgStatus" />
           <NavigationProperty Name="ChangeRequest" Relationship="Etsi.Ultimate.DataAccess.FK_ChangeRequestTsgData_ChangeRequest" FromRole="ChangeRequestTsgData" ToRole="ChangeRequest" />
           <NavigationProperty Name="TsgStatus" Relationship="Etsi.Ultimate.DataAccess.FK_ChangeRequestTsgData_TsgStatus" FromRole="ChangeRequestTsgData" ToRole="Enum_ChangeRequestStatus" />
+          <Property Name="CreationDate" Type="DateTime" Precision="3" />
+          <Property Name="MOD_BY" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MOD_TS" Type="DateTime" Precision="3" />
         </EntityType>
         <Association Name="FK_ChangeRequestTsgData_ChangeRequest">
           <End Type="Etsi.Ultimate.DataAccess.ChangeRequest" Role="ChangeRequest" Multiplicity="1" />
@@ -2913,6 +2931,7 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <EntitySetMapping Name="Enum_CommunitiesShortName">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Enum_CommunitiesShortName">
               <MappingFragment StoreEntitySet="Enum_CommunitiesShortName">
+                <ScalarProperty Name="DetailsURL" ColumnName="DetailsURL" />
                 <ScalarProperty Name="MapId_3SS" ColumnName="MapId_3SS" />
                 <ScalarProperty Name="WpmProjectId" ColumnName="WpmProjectId" />
                 <ScalarProperty Name="ShortName" ColumnName="ShortName" />
@@ -2943,6 +2962,7 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <EntitySetMapping Name="ETSI_WorkItem">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ETSI_WorkItem">
               <MappingFragment StoreEntitySet="ETSI_WorkItem">
+                <ScalarProperty Name="WKI_ETSI_NUMBER" ColumnName="WKI_ETSI_NUMBER" />
                 <ScalarProperty Name="filePath" ColumnName="filePath" />
                 <ScalarProperty Name="fileName" ColumnName="fileName" />
                 <ScalarProperty Name="Number" ColumnName="Number" />
@@ -3015,6 +3035,8 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <EntitySetMapping Name="ChangeRequests">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ChangeRequest">
               <MappingFragment StoreEntitySet="ChangeRequest">
+                <ScalarProperty Name="MOD_TS" ColumnName="MOD_TS" />
+                <ScalarProperty Name="MOD_BY" ColumnName="MOD_BY" />
                 <ScalarProperty Name="WGTDoc" ColumnName="WGTDoc" />
                 <ScalarProperty Name="Fk_Impact" ColumnName="Fk_Impact" />
                 <ScalarProperty Name="Fk_NewVersion" ColumnName="Fk_NewVersion" />
@@ -3047,6 +3069,7 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <EntitySetMapping Name="Communities">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.Community">
               <MappingFragment StoreEntitySet="View_Communities">
+                <ScalarProperty Name="DetailsURL" ColumnName="DetailsURL" />
                 <ScalarProperty Name="ShortName" ColumnName="ShortName" />
                 <ScalarProperty Name="ActiveCode" ColumnName="ActiveCode" />
                 <ScalarProperty Name="ParentTbId" ColumnName="ParentTbId" />
@@ -3085,6 +3108,9 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <EntitySetMapping Name="ChangeRequestTsgDatas">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ChangeRequestTsgData">
               <MappingFragment StoreEntitySet="ChangeRequestTsgData">
+                <ScalarProperty Name="MOD_TS" ColumnName="MOD_TS" />
+                <ScalarProperty Name="MOD_BY" ColumnName="MOD_BY" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
                 <ScalarProperty Name="Fk_TsgStatus" ColumnName="Fk_TsgStatus" />
                 <ScalarProperty Name="Fk_ChangeRequest" ColumnName="Fk_ChangeRequest" />
                 <ScalarProperty Name="TSGSourceOrganizations" ColumnName="TSGSourceOrganizations" />

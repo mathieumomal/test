@@ -1,6 +1,5 @@
 ﻿using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
-using Etsi.Ultimate.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -81,10 +80,12 @@ namespace Etsi.Ultimate.Business
         /// <returns>community</returns>
         public Community GetCommmunityById(int id)
         {
-            ICommunityRepository repo = RepositoryFactory.Resolve<ICommunityRepository>();
-            repo.UoW = UoW;
-
             return GetCommunities().Where(c => c.TbId == id).FirstOrDefault();
+        }
+
+        public List<Community> GetCommmunityByIds(List<int> ids)
+        {
+            return GetCommunities().Where(c => ids.Contains(c.TbId)).ToList();
         }
 
         public Enum_CommunitiesShortName GetEnumCommunityShortNameByCommunityId(int id)

@@ -20,6 +20,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TargetFrameworkProfile />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -70,6 +71,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommunityHyperlinkControl.ascx.cs">
+      <DependentUpon>CommunityHyperlinkControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CommunityHyperlinkControl.ascx.designer.cs">
+      <DependentUpon>CommunityHyperlinkControl.ascx</DependentUpon>
+    </Compile>
     <Compile Include="RelatedWiControl.ascx.cs">
       <DependentUpon>RelatedWiControl.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -136,6 +144,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="CommunityHyperlinkControl.ascx" />
     <Content Include="images\addChairman.png" />
     <Content Include="images\busy.gif" />
     <Content Include="images\delete.png" />
@@ -156,6 +165,7 @@
     <Content Include="ReleaseSearchControl.ascx" />
     <Content Include="RemarksControl.ascx" />
     <Content Include="ShareUrlControl.ascx" />
+    <Content Include="style\RelatedWiControl.css" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Controls.dnn">

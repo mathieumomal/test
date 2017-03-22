@@ -1,18 +1,14 @@
-﻿using Etsi.Ultimate.Business;
+﻿using System;
+using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using System.Collections.Generic;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Services
 {
     public class CommunityService : ICommunityService
     {
-        #region Public Methods
-
-        /// <summary>
-        /// Get All Communities
-        /// </summary>
-        /// <returns>List of Communities</returns>
         public List<Community> GetCommunities()
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -23,11 +19,6 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        /// <summary>
-        /// Return short name of a community by id
-        /// </summary>
-        /// <param name="id">Identifier of the community</param>
-        /// <returns>Short name of the community</returns>
         public string GetCommmunityshortNameById(int id)
         {
             using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
@@ -38,6 +29,31 @@ namespace Etsi.Ultimate.Services
             }
         }
 
-        #endregion
+        public List<Community> GetCommunitiesByIds(List<int> ids)
+        {
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var communityManager = ManagerFactory.Resolve<ICommunityManager>();
+                    communityManager.UoW = uoW;
+                    return communityManager.GetCommmunityByIds(ids);
+                }
+            }
+            catch (Exception e)
+            {
+                LogManager.Error("CommunityService - GetCommunitiesByIds - IDs: " + string.Join(", ", ids), e);
+                return null;
+            }
+        }
+    }
+
+    public interface ICommunityService
+    {
+        List<Community> GetCommunities();
+
+        List<Community> GetCommunitiesByIds(List<int> ids); 
+
+        string GetCommmunityshortNameById(int id);
     }
 }

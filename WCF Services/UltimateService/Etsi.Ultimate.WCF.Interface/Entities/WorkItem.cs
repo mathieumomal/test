@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Etsi.Ultimate.WCF.Interface.Entities
 {
@@ -52,5 +53,8 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public string ResponsibleGroups { get; set; }
+
+        [DataMember]
+        public List<int> ResponsibleGroupIds { get; set; } 
     }
 }

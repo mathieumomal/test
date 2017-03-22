@@ -6,6 +6,7 @@
 <%@ Register TagPrefix="ult" TagName="HistoryControl" Src="../../controls/Ultimate/HistoryControl.ascx" %>
 <%@ Register TagPrefix="ult" TagName="RapporteurControl " Src="../../controls/Ultimate/RapporteurControl.ascx" %>
 <%@ Register TagPrefix="ult" TagName="RelatedWiControl" Src="../../controls/Ultimate/RelatedWiControl.ascx" %>
+<%@ Register TagPrefix="ult" TagName="CommunityHyperlinkControl" Src="../../controls/Ultimate/CommunityHyperlinkControl.ascx" %>
 <%@ Register TagPrefix="spec" TagName="SpecificationListControl" Src="SpecificationListControl.ascx" %>
 <%@ Register TagPrefix="spec" TagName="SpecificationReleaseControl" Src="SpecificationReleaseControl.ascx" %>
 
@@ -34,6 +35,12 @@
             <asp:Panel ID="specificationMessages" runat="server" Visible="false">
                 <asp:Label runat="server" ID="specificationMessagesTxt"></asp:Label>
             </asp:Panel>
+
+            <!-- Logo header -->
+            <div class="logoHeader">
+                <asp:HyperLink runat="server" ID="logoHeaderHpk" NavigateUrl="<%$ AppSettings:PortalUrl %>" Target="_blank" ImageUrl="/Portals/0/BANNER06.jpg" />
+            </div>
+
             <asp:Panel ID="specificationDetailsBody" runat="server" CssClass="specificationDetailsBody" ViewStateMode="Disabled">                
                 <div class="HeaderText">
                     <asp:Label ID="lblHeaderText" runat="server"></asp:Label>
@@ -42,10 +49,9 @@
                     AutoPostBack="false">
                     <Tabs>
                         <telerik:RadTab runat="server" PageViewID="RadPageGeneral" Text="General" Selected="true"></telerik:RadTab>
+                        <telerik:RadTab runat="server" PageViewID="RadPageReleases" Text="Versions" Selected="false"></telerik:RadTab>
                         <telerik:RadTab runat="server" PageViewID="RadPageResponsibility" Text="Responsibility" Selected="false"></telerik:RadTab>
                         <telerik:RadTab runat="server" PageViewID="RadPageRelated" Text="Related" Selected="false"></telerik:RadTab>
-                        <telerik:RadTab runat="server" PageViewID="RadPageReleases" Text="Releases" Selected="false"></telerik:RadTab>
-                        <telerik:RadTab runat="server" PageViewID="RadPageHistory" Text="History" Selected="false"></telerik:RadTab>
                     </Tabs>
                 </telerik:RadTabStrip>
                 <telerik:RadMultiPage ID="SpecificationDetailsRadMultiPage" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px" >
@@ -101,9 +107,25 @@
                                 <td class="TabLineRight">
                                     <asp:CheckBoxList ID="radioTechnologyVals" runat="server" RepeatDirection="Horizontal"></asp:CheckBoxList></td>
                             </tr>
+                            <tr>
+                                <td></td>
+                                <td class="TabLineRight moreSpace">
+                                    <asp:HyperLink ID="versionFolderHpl" runat="server" target="_blank" Visible="False">Click to see all versions of this specification</asp:HyperLink>
+                                </td>
+                            </tr>
                             <tr style="max-height: 150px; overflow-y: scroll; margin-top: 10px">
                                 <td colspan="2" class="specificationRemarks">
-                                    <ult:remarkscontrol runat="server" id="specificationRemarks" />
+                                    <ult:remarkscontrol runat="server" id="specificationRemarks" ScrollHeight="80"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <fieldset class="fsHistory">
+                                        <legend>
+                                            <asp:Label runat="server">History</asp:Label>
+                                        </legend>
+                                        <ult:historycontrol runat="server" id="specificationHistory" ScrollHeight="80"/>
+                                    </fieldset>
                                 </td>
                             </tr>
                         </table>
@@ -114,13 +136,15 @@
                                 <td class="TabLineLeft">
                                     <asp:Label ID="PrimaryResponsibleGroupLbl" runat="server" Text="Primary responsible group:"></asp:Label></td>
                                 <td class="TabLineRight">
-                                    <asp:Label ID="PrimaryResponsibleGroupVal" runat="server"></asp:Label></td>
+                                    <ult:CommunityHyperlinkControl runat="server" ID="primaryResponsibleGroup" CommunityNameType="FULL_WITHOUT_3GPP"></ult:CommunityHyperlinkControl>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">
                                     <asp:Label ID="SecondaryResponsibleGroupsLbl" runat="server" Text="Secondary responsible groups:"></asp:Label></td>
                                 <td class="TabLineRight">
-                                    <asp:Label ID="SecondaryResponsibleGroupsVal" runat="server"></asp:Label></td>
+                                    <ult:CommunityHyperlinkControl runat="server" ID="secondaryResponsibleGroups" CommunityNameType="FULL_WITHOUT_3GPP"></ult:CommunityHyperlinkControl>
+                                </td>
                             </tr>
                             <tr style="max-height: 150px; overflow-y: scroll; margin-top: 10px">
                                 <td colspan="2" class="specificationRapporteurs">
@@ -155,11 +179,6 @@
                             <asp:Label runat="server" ID="notifMsgTxt"></asp:Label>
                         </asp:Panel>
                         <spec:SpecificationReleaseControl runat="server" ID="SpecificationReleaseControl1" />
-                    </telerik:RadPageView>
-                    <telerik:RadPageView ID="RadPageHistory" runat="server">
-                        <div class="TabContent" style="overflow-y: auto; overflow-x: auto">
-                            <ult:historycontrol runat="server" id="specificationHistory" />
-                        </div>
                     </telerik:RadPageView>
                 </telerik:RadMultiPage>
                 <div class="specificationDetailsAction">

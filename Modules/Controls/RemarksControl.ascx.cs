@@ -20,7 +20,7 @@ namespace Etsi.Ultimate.Controls
         private const string CONST_CREATIONDATE = "CreationDate";
         private const string CONST_PK_REMARKID = "Pk_RemarkId";
         private const string CONST_ISPUBLIC = "IsPublic";
-        private const int CONST_MIN_SCROLL_HEIGHT = 100;
+        private const int CONST_MIN_SCROLL_HEIGHT = 80;
 
         #endregion
 
@@ -91,7 +91,7 @@ namespace Etsi.Ultimate.Controls
                     btnAddRemark.Visible = false;
                 }
             }
-            remarksGrid.ClientSettings.Scrolling.ScrollHeight = (ScrollHeight < CONST_MIN_SCROLL_HEIGHT) ? Unit.Pixel(CONST_MIN_SCROLL_HEIGHT) : Unit.Pixel(ScrollHeight);
+            remarksGrid.ClientSettings.Scrolling.ScrollHeight = (ScrollHeight <= CONST_MIN_SCROLL_HEIGHT) ? Unit.Pixel(CONST_MIN_SCROLL_HEIGHT) : Unit.Pixel(ScrollHeight);
             txtAddRemark.Attributes.Add("onkeyup", String.Format("SetAddRemarkState{0}(); return false;", ClientID));
 
             btnAddRemark.Attributes.Add("onclick", "javascript:setAddingProgress" + this.ClientID + "(true);");

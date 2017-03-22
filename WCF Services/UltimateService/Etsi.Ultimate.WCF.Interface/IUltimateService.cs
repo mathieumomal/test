@@ -218,6 +218,9 @@ namespace Etsi.Ultimate.WCF.Interface
         [OperationContract]
         List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUids);
 
+        [OperationContract]
+        List<ChangeRequest> GetWgCrsByWgTdocList(List<string> contribUids);
+
         /// <summary>
         /// Get light change request for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
         /// - will not change during a meeting
@@ -300,15 +303,6 @@ namespace Etsi.Ultimate.WCF.Interface
         ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource);
 
         /// <summary>
-        /// Remove Crs from Cr-Pack
-        /// </summary>
-        /// <param name="crPack">Uid of Cr-Pack</param>
-        /// <param name="crIds">List of Cr Ids</param>
-        /// <returns>Success/Failure</returns>
-        [OperationContract]
-        ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds);
-
-        /// <summary>
         /// Find WgTdoc number of Crs which have been revised 
         /// Parent with revision 0 : WgTdoc = CP-1590204 -> have a WgTdoc number 
         /// ..
@@ -346,6 +340,10 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <returns></returns>
         [OperationContract]
         ServiceResponse<bool> UpdateCrsStatusOfCrPack(List<CrOfCrPackFacade> CrsOfCrPack);
+
+        [OperationContract]
+        ServiceResponse<bool> UpdateCrsInsideCrPack(ChangeRequestPackFacade crPack,
+            List<ChangeRequestInsideCrPackFacade> crs, int personId);
         #endregion
 
         #region Versions
@@ -452,6 +450,13 @@ namespace Etsi.Ultimate.WCF.Interface
 
         [OperationContract]
         ServiceResponse<bool> FinalizeApprovedDrafts(int personId, int mtgId, List<Tuple<int, int, int>> approvedDrafts);
+
+        #endregion
+
+        #region communities
+
+        [OperationContract]
+        List<Community> GetCommunitiesByIds(List<int> ids);
 
         #endregion
     }

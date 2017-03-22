@@ -9,6 +9,7 @@ using UltimateEntities = Etsi.Ultimate.DomainClasses;
 using UltimateServiceEntities = Etsi.Ultimate.WCF.Interface.Entities;
 using Etsi.Ultimate.WCF.Interface.Entities;
 using System.Linq;
+using Etsi.Ultimate.WCF.Service.Converters;
 
 namespace Etsi.Ultimate.WCF.Service
 {
@@ -444,7 +445,7 @@ namespace Etsi.Ultimate.WCF.Service
             {
                 var svc = ServicesFactory.Resolve<ISpecificationService>();
                 var ultimateStatusResponse = svc.ChangeSpecificationsStatusToUnderChangeControl(personId, specIdsForUcc);
-                statusChangeReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
+                statusChangeReport = ServiceResponseConverter.ConvertUltimateObjectToServiceObject(ultimateStatusResponse);
             }
             catch (Exception ex)
             {
@@ -472,7 +473,7 @@ namespace Etsi.Ultimate.WCF.Service
             {
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
                 var ultimateStatusResponse = svc.SetCrsAsFinal(personId, tdocNumbers);
-                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
+                statusReport = ServiceResponseConverter.ConvertUltimateObjectToServiceObject(ultimateStatusResponse);
             }
             catch (Exception ex)
             {
@@ -619,6 +620,22 @@ namespace Etsi.Ultimate.WCF.Service
             catch (Exception ex)
             {
                 LogManager.Error(String.Format(ConstErrorTemplateGetChangeRequestByContribUid, ex.Message), ex);
+            }
+            return crList;
+        }
+
+        internal List<ChangeRequest> GetWgCrsByWgTdocList(List<string> contribUids)
+        {
+            var crList = new List<ChangeRequest>();
+            try
+            {
+                var svc = ServicesFactory.Resolve<IChangeRequestService>();
+                var result = svc.GetWgCrsByWgTdocList(contribUids);
+                result.ForEach(e => crList.Add(ConvertUltimateCRToServiceCR(e, true)));
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error(String.Format("Ultimate Service Error [GetWgCrsByWgTdocList]: {0}", ex.Message), ex);
             }
             return crList;
         }
@@ -902,7 +919,7 @@ namespace Etsi.Ultimate.WCF.Service
                 var crKeyForUltimate = ConvertToUltimateCrKeyFacade(crKey);
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
                 var ultimateStatusResponse = svc.ReIssueCr(crKeyForUltimate, newTsgTdoc, newTsgMeetingId, newTsgSource);
-                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
+                statusReport = ServiceResponseConverter.ConvertUltimateObjectToServiceObject(ultimateStatusResponse);
             }
             catch (Exception ex)
             {
@@ -929,37 +946,13 @@ namespace Etsi.Ultimate.WCF.Service
                 var crKeyForUltimate = ConvertToUltimateCrKeyFacade(crKey);
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
                 var ultimateStatusResponse = svc.ReviseCr(crKeyForUltimate, newTsgTdoc, newTsgMeetingId, newTsgSource);
-                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
+                statusReport = ServiceResponseConverter.ConvertUltimateObjectToServiceObject(ultimateStatusResponse);
             }
             catch (Exception ex)
             {
                 LogManager.Error(String.Format(ConstErrorTemplateReviseCr, ex.Message), ex);
                 statusReport.Result = false;
                 statusReport.Report.ErrorList.Add("Change request failed to revise");
-            }
-            return statusReport;
-        }
-
-        /// <summary>
-        /// Remove Crs from Cr-Pack
-        /// </summary>
-        /// <param name="crPack">Uid of Cr-Pack</param>
-        /// <param name="crIds">List of Cr Ids</param>
-        /// <returns>Success/Failure</returns>
-        public ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds)
-        {
-            var statusReport = new ServiceResponse<bool> { Report = new ServiceReport() };
-            try
-            {
-                var svc = ServicesFactory.Resolve<IChangeRequestService>();
-                var ultimateStatusResponse = svc.RemoveCrsFromCrPack(crPack, crIds);
-                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
-            }
-            catch (Exception ex)
-            {
-                LogManager.Error(String.Format(ConstErrorTemplateRemoveCrsFromCrPack, ex.Message), ex);
-                statusReport.Result = false;
-                statusReport.Report.ErrorList.Add("Cr Pack failed to remove Crs");
             }
             return statusReport;
         }
@@ -971,7 +964,7 @@ namespace Etsi.Ultimate.WCF.Service
             {
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
                 var ultimateStatusResponse = svc.UpdateCrStatus(uid, status);
-                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
+                statusReport = ServiceResponseConverter.ConvertUltimateObjectToServiceObject(ultimateStatusResponse);
             }
             catch (Exception ex)
             {
@@ -990,7 +983,7 @@ namespace Etsi.Ultimate.WCF.Service
                 var CrsOfCrPackForUltimate = ConvertToUltimateCrsOfCrPackFacade(CrsOfCrPack);
                 var svc = ServicesFactory.Resolve<IChangeRequestService>();
                 var ultimateStatusResponse = svc.UpdateCrsOfCrPackStatus(CrsOfCrPackForUltimate);
-                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
+                statusReport = ServiceResponseConverter.ConvertUltimateObjectToServiceObject(ultimateStatusResponse);
             }
             catch (Exception ex)
             {
@@ -1000,6 +993,36 @@ namespace Etsi.Ultimate.WCF.Service
             }
             return statusReport;
         } 
+        #endregion
+
+        #region CRPack
+        public ServiceResponse<bool> UpdateCrsInsideCrPack(ChangeRequestPackFacade crPack,
+            List<ChangeRequestInsideCrPackFacade> crs, int personId)
+        {
+            try
+            {
+                var crPackSvc = ServicesFactory.Resolve<ICrPackService>();
+                var result =
+                crPackSvc.UpdateCrsInsideCrPack(
+                    ChangeRequestPackFacadeConverter.ConvertServiceObjectToUltimateObject(crPack),
+                    crs.Select(ChangeRequestInsideCrPackFacadeConverter.ConvertServiceObjectToUltimateObject).ToList(),
+                    personId);
+                return ServiceResponseConverter.ConvertUltimateObjectToServiceObject(result);
+            }
+            catch(Exception e)
+            {
+                LogManager.Error("Ultimate Service Error [UpdateCrsInsideCrPack]: ", e);
+                return new ServiceResponse<bool>
+                {
+                    Result = false,
+                    Report =
+                        new ServiceReport
+                        {
+                            ErrorList = new List<string> {"System not able to convert required entities"}
+                        }
+                };
+            }
+        }
         #endregion
 
         #region versions and draft
@@ -1283,7 +1306,7 @@ namespace Etsi.Ultimate.WCF.Service
             {
                 var svc = ServicesFactory.Resolve<IFinalizeApprovedDraftsService>();
                 var ultimateStatusResponse = svc.FinalizeApprovedDrafts(personId, mtgId, approvedDrafts);
-                statusReport = ConvertUltimateServiceResponseToWcfServiceResponse(ultimateStatusResponse);
+                statusReport = ServiceResponseConverter.ConvertUltimateObjectToServiceObject(ultimateStatusResponse);
             }
             catch (Exception e)
             {
@@ -1296,7 +1319,42 @@ namespace Etsi.Ultimate.WCF.Service
 
         #endregion
 
+        #region communities
+        public List<Community> GetCommunitiesByIds(List<int> ids)
+        {
+            try
+            {
+                var svc = ServicesFactory.Resolve<ICommunityService>();
+                var ultimateResponse = svc.GetCommunitiesByIds(ids);
+                var result = new List<Community>();
+                ultimateResponse.ForEach(x => result.Add(ConvertUltimateCommunityToServiceCommunity(x)));
+                return result;
+            }
+            catch (Exception e)
+            {
+                LogManager.Error(String.Format("Ultimate Service Error [GetCommunitiesByIds]: {0}", e), e);
+            }
+            return new List<Community>();
+        }
+        #endregion
+
         #region Private Methods
+
+        private Community ConvertUltimateCommunityToServiceCommunity(UltimateEntities.Community ultimateCommunity)
+        {
+            var svcCrCategory = new Community
+            {
+                TbId = ultimateCommunity.TbId,
+                ActiveCode = ultimateCommunity.ActiveCode,
+                DetailsURL = ultimateCommunity.DetailsURL,
+                ParentTbId = ultimateCommunity.ParentTbId,
+                ShortName = ultimateCommunity.ShortName,
+                TbName = ultimateCommunity.TbName,
+                TbTitle = ultimateCommunity.TbTitle,
+                TbType = ultimateCommunity.TbType
+            };
+            return svcCrCategory;
+        }
 
         /// <summary>
         /// Converts the ultimate cr category to service cr category.
@@ -1363,9 +1421,9 @@ namespace Etsi.Ultimate.WCF.Service
         /// </summary>
         /// <param name="ultimateWorkItem">The ultimate work item.</param>
         /// <returns>Service work item entity</returns>
-        private UltimateServiceEntities.WorkItem ConvertUltimateWorkItemToServiceWorkItem(UltimateEntities.WorkItem ultimateWorkItem)
+        private WorkItem ConvertUltimateWorkItemToServiceWorkItem(UltimateEntities.WorkItem ultimateWorkItem)
         {
-            var serviceWorkItem = new UltimateServiceEntities.WorkItem();
+            var serviceWorkItem = new WorkItem();
             if (ultimateWorkItem != null)
             {
                 serviceWorkItem.Pk_WorkItemUid = ultimateWorkItem.Pk_WorkItemUid;
@@ -1373,6 +1431,8 @@ namespace Etsi.Ultimate.WCF.Service
                 serviceWorkItem.Acronym = ultimateWorkItem.Acronym;
                 serviceWorkItem.Name = ultimateWorkItem.Name;
                 serviceWorkItem.ResponsibleGroups = ultimateWorkItem.ResponsibleGroups;
+                serviceWorkItem.ResponsibleGroupIds =
+                    ultimateWorkItem.WorkItems_ResponsibleGroups.Where(x => x.Fk_TbId != null).Select(x => x.Fk_TbId ?? 0).ToList();
             }
             return serviceWorkItem;
         }
@@ -1591,21 +1651,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <typeparam name="T">Type</typeparam>
         /// <param name="ultimateServiceResponse">The ultimate service response.</param>
         /// <returns>The Wcf compatiable service response</returns>
-        private ServiceResponse<T> ConvertUltimateServiceResponseToWcfServiceResponse<T>(UltimateEntities.ServiceResponse<T> ultimateServiceResponse)
-        {
-            var serviceReport = new ServiceReport { ErrorList = new List<string>(), InfoList = new List<string>(), WarningList = new List<string>() };
-            var wcfServiceResponse = new ServiceResponse<T> { Report = serviceReport };
-
-            if (ultimateServiceResponse != null)
-            {
-                wcfServiceResponse.Result = ultimateServiceResponse.Result;
-                wcfServiceResponse.Report.ErrorList = ultimateServiceResponse.Report.ErrorList;
-                wcfServiceResponse.Report.WarningList = ultimateServiceResponse.Report.WarningList;
-                wcfServiceResponse.Report.InfoList = ultimateServiceResponse.Report.InfoList;
-            }
-
-            return wcfServiceResponse;
-        }
+        
 
         /// <summary>
         /// Converts the ultimate spec version to WCF spec version.

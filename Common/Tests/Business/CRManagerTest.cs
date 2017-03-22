@@ -89,7 +89,7 @@ namespace Etsi.Ultimate.Tests.Business
             mockCrRepository.Expect(x => x.InsertOrUpdate(Arg<ChangeRequest>.Matches(y => y.IsAutoNumberingOff == isAutoNumberingOff
                                                                                        && y.CRNumber == crNumber
                                                                                        && y.Revision == revision
-                                                                                       && y.CreationDate != null)));
+                                                                                       && y.CreationDate == null)));//Creation date will be automaticaly setted by DB trigger
             RepositoryFactory.Container.RegisterInstance(typeof(IChangeRequestRepository), mockCrRepository);
 
             //Act

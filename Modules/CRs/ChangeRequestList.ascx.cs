@@ -776,11 +776,11 @@ namespace Etsi.Ultimate.Module.CRs
                     isMultipleTbsSelected = false;
             }
 
-            //If user haven't 'Cr_Add_Crs_To_CrPack' right
+            //If user haven't 'Cr_Add_Crs_To_CrPack' right or if multiple TB are selected: ==> do not allowed to add CRs to CR-Packs
             //- Not Display checkboxes to be able to select CRs
             //- Not Display "Send to CR-Pack" button
             //- Not Display Autocomplete CRPack textbox
-            if (!userRights.HasRight(Enum_UserRights.Cr_Add_Crs_To_CrPack) || isMultipleTbsSelected)
+            if (!userRights.HasRight(Enum_UserRights.Cr_Add_Crs_To_CrPacks) || isMultipleTbsSelected)
             {
                 rgCrList.MasterTableView.GetColumn("CrSelection").Display = false;
                 SendToCrPackBtn.Visible = false;

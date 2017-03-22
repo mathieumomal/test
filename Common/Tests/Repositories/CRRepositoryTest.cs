@@ -323,6 +323,20 @@ namespace Etsi.Ultimate.Tests.Repositories
             Assert.AreEqual(expectedCrCount, result.Count);
         }
 
+        [Test(Description = "Should return only CRs at WG level")]
+        public void GetWgCrsByWgTdocList()
+        {
+            var repo = new ChangeRequestRepository { UoW = UoW };
+            var result = repo.GetWgCrsByWgTdocList(new List<string> { "ABC", "DEF", "GHI", "RP-CR0004", "RP-CR0005" });
+
+            Assert.AreEqual(3, result.Count);
+            Assert.IsTrue(result.Any(x => x.WGTDoc == "ABC"));
+            Assert.IsTrue(result.Any(x => x.WGTDoc == "DEF"));
+            Assert.IsTrue(result.Any(x => x.WGTDoc == "GHI"));
+            Assert.IsFalse(result.Any(x => x.ChangeRequestTsgDatas.Any(y => y.TSGTdoc == "RP-CR0004")));
+            Assert.IsFalse(result.Any(x => x.ChangeRequestTsgDatas.Any(y => y.TSGTdoc == "RP-CR0005")));
+        }
+
         #endregion
 
         #region Get CR(s) for MM

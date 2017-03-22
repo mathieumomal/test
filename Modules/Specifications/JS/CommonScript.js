@@ -59,7 +59,7 @@ function removeParam(key, sourceURL) {
 
 function OpenSpecDetailsPage(url, title) {
     var width = 690;
-    var height = 674;
+    var height = 720;
     var popUp = window.open(url, title, 'height=' + height + ',width= ' + width + ',toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=yes,resizable=no');
     popUp.focus();
 }

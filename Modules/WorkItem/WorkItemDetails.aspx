@@ -3,6 +3,7 @@
 <%@ Register Assembly="Telerik.Web.UI" Namespace="Telerik.Web.UI" TagPrefix="telerik" %>
 <%@ Register TagPrefix="dnn" Namespace="DotNetNuke.Web.Client.ClientResourceManagement" Assembly="DotNetNuke.Web.Client" %>
 <%@ Register TagPrefix="ult" TagName="RemarksControl" Src="../../controls/Ultimate/RemarksControl.ascx" %>
+<%@ Register TagPrefix="ult" TagName="CommunityHyperlinkControl" Src="../../controls/Ultimate/CommunityHyperlinkControl.ascx" %>
 
 <!DOCTYPE html>
 
@@ -124,7 +125,8 @@
                             <tr>
                                 <td class="TabLineLeft">Responsible group(s):</td>
                                 <td class="TabLineRight">
-                                    <asp:Label ID="lblResponsibleGroups" runat="server"> - </asp:Label></td>
+                                    <ult:CommunityHyperlinkControl runat="server" ID="responsibleGroups" CommunityNameType="SHORT"></ult:CommunityHyperlinkControl>
+                                </td>
                             </tr>
                             <tr>
                                 <td class="TabLineLeft">Rapporteur(s):</td>

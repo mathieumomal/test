@@ -1,4 +1,6 @@
-﻿using System.Data.Entity;
+﻿using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Business.Specifications;
 using Etsi.Ultimate.Business.Specifications.Interfaces;
@@ -81,6 +83,77 @@ namespace Etsi.Ultimate.Tests.Business
             Assert.AreEqual("23.001", result.Number);
             
             mockDataContext.VerifyAllExpectations();
+        }
+
+        #endregion
+
+        #region Set prime and secondary responsible groups
+
+        [Test]
+        public void SetPrimeAndSecondaryResponsibleGroupsData()
+        {
+            var mock = MockRepository.GenerateMock<ICommunityManager>();
+            mock.Stub(x => x.GetCommmunityByIds(Arg<List<int>>.Is.Anything)).Return(new List<Community>
+            {
+                new Community{TbId = 1, TbName = "3GPP AA", ShortName = "A", DetailsURL = "http://A.com"},
+                new Community{TbId = 2, TbName = "3GPP BB", ShortName = "B", DetailsURL = "http://B.com"},
+                new Community{TbId = 3, TbName = "3GPP CC", ShortName = "C", DetailsURL = "http://C.com"},
+            });
+            ManagerFactory.Container.RegisterInstance(mock);
+
+            var mgr = new SpecificationManager();
+            var result = mgr.SetPrimeAndSecondaryResponsibleGroupsData(new Specification{SpecificationResponsibleGroups = new List<SpecificationResponsibleGroup>
+            {
+                new SpecificationResponsibleGroup{Fk_commityId = 1, IsPrime = true},
+                new SpecificationResponsibleGroup{Fk_commityId = 2, IsPrime = false},
+                new SpecificationResponsibleGroup{Fk_commityId = 3, IsPrime = false}
+            }});
+
+            Assert.IsNotNull(result.PrimeResponsibleGroupFullName);
+            Assert.AreEqual("3GPP AA", result.PrimeResponsibleGroupFullName);
+            Assert.AreEqual("A", result.PrimeResponsibleGroupShortName);
+
+            Assert.IsNotNull(result.SecondaryResponsibleGroupsFullNames);
+            Assert.AreEqual("3GPP BB, 3GPP CC", result.SecondaryResponsibleGroupsFullNames);
+        }
+
+        [Test]
+        public void SetParentAndChildrenPrimeResponsibleGroupsData()
+        {
+            var mock = MockRepository.GenerateMock<ICommunityManager>();
+            mock.Stub(x => x.GetCommmunityByIds(Arg<List<int>>.Is.Anything)).Return(new List<Community>
+            {
+                new Community{TbId = 1, TbName = "3GPP AA", ShortName = "A", DetailsURL = "http://A.com"},
+                new Community{TbId = 2, TbName = "3GPP BB", ShortName = "B", DetailsURL = "http://B.com"}
+            });
+            ManagerFactory.Container.RegisterInstance(mock);
+
+            var mgr = new SpecificationManager();
+            var result = mgr.SetParentAndChildrenPrimeResponsibleGroupsData(new Specification
+            {
+                SpecificationParents = new List<Specification>
+                {
+                    new Specification{SpecificationResponsibleGroups = new List<SpecificationResponsibleGroup>
+                    {
+                        new SpecificationResponsibleGroup{Fk_commityId = 1, IsPrime = true}
+                    }}
+                },
+                SpecificationChilds = new List<Specification>
+                {
+                    new Specification{SpecificationResponsibleGroups = new List<SpecificationResponsibleGroup>
+                    {
+                        new SpecificationResponsibleGroup{Fk_commityId = 2, IsPrime = true}
+                    }}
+                }
+            });
+
+            Assert.IsNotNull(result.SpecificationParents);
+            Assert.AreEqual(1, result.SpecificationParents.Count);
+            Assert.AreEqual("A", result.SpecificationParents.First().PrimeResponsibleGroupShortName);
+
+            Assert.IsNotNull(result.SpecificationChilds);
+            Assert.AreEqual(1, result.SpecificationChilds.Count);
+            Assert.AreEqual("B", result.SpecificationChilds.First().PrimeResponsibleGroupShortName);
         }
 
         #endregion

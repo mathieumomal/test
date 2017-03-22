@@ -547,6 +547,24 @@ namespace Etsi.Ultimate.Utils {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à Invalid arguments: CR-Pack or CRs provided are incorrect.
+        /// </summary>
+        public static string UpdateCrsInsideCrPack_Invalid_Arguments {
+            get {
+                return ResourceManager.GetString("UpdateCrsInsideCrPack_Invalid_Arguments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à CrPack source and/or meeting not provided and will not be insert as CrTsgData.
+        /// </summary>
+        public static string UpdateCrsInsideCrPack_Warning_CrPack_Source_Meeting_Not_Provided {
+            get {
+                return ResourceManager.GetString("UpdateCrsInsideCrPack_Warning_CrPack_Source_Meeting_Not_Provided", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à Draft versions can not have Major number higher than 2..
         /// </summary>
         public static string Upload_Version_Error_Draft_Major_Too_High {

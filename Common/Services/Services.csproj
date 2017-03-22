@@ -78,13 +78,13 @@
     <Compile Include="ChangeRequestService.cs" />
     <Compile Include="ContributionService.cs" />
     <Compile Include="CrCategoriesService.cs" />
+    <Compile Include="CrPackService.cs" />
     <Compile Include="FinalizeApprovedDraftsService.cs" />
     <Compile Include="IItuRecommendationService.cs" />
     <Compile Include="ItuRecommendationService.cs" />
     <Compile Include="RemarkService.cs" />
     <Compile Include="IOfflineService.cs" />
     <Compile Include="SpecVersionService.cs" />
-    <Compile Include="ICommunityService.cs" />
     <Compile Include="IMeetingService.cs" />
     <Compile Include="IPersonService.cs" />
     <Compile Include="IRightsService.cs" />

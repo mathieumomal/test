@@ -25,6 +25,7 @@ using System.Web.UI.WebControls;
 using Telerik.Web.UI;
 using Etsi.Ultimate.Utils;
 using System.Runtime.InteropServices;
+using Etsi.Ultimate.Controls;
 
 
 namespace Etsi.Ultimate.Module.Specifications
@@ -251,13 +252,13 @@ namespace Etsi.Ultimate.Module.Specifications
 
 
                 if (img2G != null)
-                    img2G.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "2g").FirstOrDefault() != null) ? "opacity:1" : "opacity:0.1");
+                    img2G.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().FirstOrDefault(x => x.Enum_Technology.Code.ToLower() == "2g") != null) ? "opacity:1" : "opacity:0.1");
                 if (img3G != null)
-                    img3G.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "3g").FirstOrDefault() != null) ? "opacity:1" : "opacity:0.1");
+                    img3G.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().FirstOrDefault(x => x.Enum_Technology.Code.ToLower() == "3g") != null) ? "opacity:1" : "opacity:0.1");
                 if (img5G != null)
-                    img5G.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "5g").FirstOrDefault() != null) ? "opacity:1" : "opacity:0.1");
+                    img5G.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().FirstOrDefault(x => x.Enum_Technology.Code.ToLower() == "5g") != null) ? "opacity:1" : "opacity:0.1");
                 if (imgLte != null)
-                    imgLte.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().Where(x => x.Enum_Technology.Code.ToLower() == "lte").FirstOrDefault() != null) ? "opacity:1" : "opacity:0.1");
+                    imgLte.Attributes.Add("style", (currentSpecification.SpecificationTechnologies.ToList().FirstOrDefault(x => x.Enum_Technology.Code.ToLower() == "lte") != null) ? "opacity:1" : "opacity:0.1");
                 if (lnkCr != null)
                 {
                     var classes = new StringBuilder(lnkCr.CssClass);
@@ -271,6 +272,10 @@ namespace Etsi.Ultimate.Module.Specifications
                         lnkCr.NavigateUrl = string.Format(ConfigVariables.RelativeUrlSpecRelatedCrs, currentSpecification.Number);
                     }
                 }
+
+                //Set prime community hyperlink control
+                CommunityHyperlinkControl myControl = (CommunityHyperlinkControl)dataItem.FindControl("primaryResponsibleGroup");
+                myControl.RefreshControl(currentSpecification.PrimeResponsibleGroupId, EnumCommunityNameType.SHORT.ToString());
             }
         }
 

@@ -541,7 +541,6 @@ namespace Etsi.Ultimate.Module.Specifications
             if (specification != null)
             {
                 specificationHistory.DataSource = specification.Histories.ToList();
-                specificationHistory.ScrollHeight = (int)rmpSpecEdit.Height.Value - 50;
             }
             else
             {

@@ -58,7 +58,10 @@ namespace Etsi.Ultimate.Services
                     var contributionManager = ManagerFactory.Resolve<IContributionManager>();
                     contributionManager.UoW = uoW;
                     List<string> uidsToGenerateTdocList = contributionManager.GetUidsForCRs(crsIds).Result;
-                    uidsToGenerateTdocList.Add(contributionManager.GetUidForCrPack(crPackId).Result);
+                    if (crPackId != 0)
+                    {
+                        uidsToGenerateTdocList.Add(contributionManager.GetUidForCrPack(crPackId).Result);
+                    }
                     var tmp =
                         contributionManager.GenerateMeetingTdocListsAfterSendingCrsToCrPack(
                             uidsToGenerateTdocList.ToArray(), personId);

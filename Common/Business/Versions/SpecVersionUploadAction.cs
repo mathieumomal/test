@@ -24,12 +24,6 @@ namespace Etsi.Ultimate.Business.Versions
 
         private const string CacheKey = "VERSION_UPLOAD";
 
-        private const string ConstValidFilename = "{0}-{1}";
-        private const string ConstFtpArchivePath = "{0}\\Specs\\archive\\{1}_series\\{2}\\";
-        private const string ConstFtpLatestPath = "{0}\\Specs\\latest\\{1}\\{2}_series\\";
-        private const string ConstFtpLatestDraftsPath = "{0}\\Specs\\latest-drafts\\";
-        private const string ConstFtpVersionsPath = "{0}\\Specs\\{1}\\{2}\\{3}_series\\";
-
         private const string ConstQualityCheckRevisionmark = "Some revision marks left unaccepted";
         private const string ConstQualityCheckVersionHistory = "Invalid/missing version in history";
         private const string ConstQualityCheckChangeHistoryIsNotTheLastTable = "Change history table is not at the end of the document";
@@ -447,6 +441,7 @@ namespace Etsi.Ultimate.Business.Versions
         /// <param name="path">The path.</param>
         private void TransferToFtp(SpecVersion version, string path)
         {
+            var specVersionPathMgr = UtilsFactory.Resolve<ISpecVersionPathHelper>();
             var ftpBasePath = ConfigVariables.FtpBasePhysicalPath;
 
             //Check validations
@@ -481,7 +476,7 @@ namespace Etsi.Ultimate.Business.Versions
             var zipFileName = validFileName + ".zip";
 
             var specNumber = version.Specification.Number;
-            var targetFolder = String.Format(ConstFtpArchivePath, ftpBasePath, specNumber.Split('.')[0], specNumber);
+            var targetFolder = String.Format(specVersionPathMgr.GetFtpArchivePath, ftpBasePath, specNumber.Split('.')[0], specNumber);
             var versionPathToSave = Path.Combine(targetFolder, zipFileName);
             version.Location = versionPathToSave.Replace(ConfigVariables.FtpBasePhysicalPath, ConfigVariables.FtpBaseAddress).Replace("\\", "/");
 
@@ -504,9 +499,11 @@ namespace Etsi.Ultimate.Business.Versions
         /// <param name="version">The version.</param>
         private void TransferToFtp(string sourceFile, string destinationBasePath, string destinationFileName, Meeting uploadMeeting, SpecVersion version)
         {
+            var specVersionPathMgr = UtilsFactory.Resolve<ISpecVersionPathHelper>();
+
             LogManager.Debug(string.Format("START - Transfer to FTP of version (Spec: {0}, Rel: {1}, Number: {2}.{3}.{4}) begin...", version.Fk_SpecificationId, version.Fk_ReleaseId, version.MajorVersion, version.TechnicalVersion, version.EditorialVersion));
             var specNumber = version.Specification.Number;
-            var destinationFolder = String.Format(ConstFtpArchivePath, destinationBasePath, specNumber.Split('.')[0], specNumber);
+            var destinationFolder = String.Format(specVersionPathMgr.GetFtpArchivePath, destinationBasePath, specNumber.Split('.')[0], specNumber);
             var destinationFile = Path.Combine(destinationFolder, destinationFileName);
 
             var isTargetFolderExists = Directory.Exists(destinationFolder);
@@ -520,7 +517,7 @@ namespace Etsi.Ultimate.Business.Versions
             if (spec.IsActive && version.MajorVersion < 3) //Draft
             {
                 LogManager.Debug("Version considered as DRAFT");
-                var draftPath = String.Format(ConstFtpLatestDraftsPath, destinationBasePath);
+                var draftPath = String.Format(specVersionPathMgr.GetFtpLatestDraftsPath, destinationBasePath);
                 var isDraftPathExists = Directory.Exists(draftPath);
                 if (!isDraftPathExists)
                     Directory.CreateDirectory(draftPath);
@@ -552,8 +549,8 @@ namespace Etsi.Ultimate.Business.Versions
                         latestFolder = String.Format("{0:0000}-{1:00}", uploadMeeting.START_DATE.Value.Year, uploadMeeting.START_DATE.Value.Month);
                         LogManager.Debug("Latest folder not found in db. New latest folder will be created: " + latestFolder);
                     }
-                    
-                    var underChangeControlPath = String.Format(ConstFtpVersionsPath, destinationBasePath, latestFolder, version.Release.Code, spec.Number.Split('.')[0]);
+
+                    var underChangeControlPath = String.Format(specVersionPathMgr.GetFtpCustomPath, destinationBasePath, latestFolder, version.Release.Code, spec.Number.Split('.')[0]);
                     var isUccPathExists = Directory.Exists(underChangeControlPath);
                     if (!isUccPathExists)
                         Directory.CreateDirectory(underChangeControlPath);
@@ -568,7 +565,7 @@ namespace Etsi.Ultimate.Business.Versions
                     ClearLatestDraftFolder(destinationBasePath, version);
 
                     // Define if current version is the latest one. If yes, system need to clean folder latest and add current version
-                    var latestFolderPath = String.Format(ConstFtpLatestPath, destinationBasePath, version.Release.Code, spec.Number.Split('.')[0]);
+                    var latestFolderPath = String.Format(specVersionPathMgr.GetFtpLatestPath, destinationBasePath, version.Release.Code, spec.Number.Split('.')[0]);
                     var currentVersionIsTheLatestVersionUploaded = true;
                     if (!Directory.Exists(latestFolderPath))
                         Directory.CreateDirectory(latestFolderPath);
@@ -624,6 +621,7 @@ namespace Etsi.Ultimate.Business.Versions
         {
             var currentVersionIsLatestDraftVersionUploaded = false;
 
+            var specVersionPathMgr = UtilsFactory.Resolve<ISpecVersionPathHelper>();
             var versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
             versionMgr.UoW = UoW;
             var existingVersions = versionMgr.GetVersionsForASpecRelease(version.Fk_SpecificationId.Value, version.Fk_ReleaseId.Value);
@@ -634,7 +632,7 @@ namespace Etsi.Ultimate.Business.Versions
                         || (v.MajorVersion == version.MajorVersion && v.TechnicalVersion > version.TechnicalVersion)
                         || (v.MajorVersion == version.MajorVersion && v.TechnicalVersion == version.TechnicalVersion && v.EditorialVersion > version.EditorialVersion))))
             {
-                string draftPath = String.Format(ConstFtpLatestDraftsPath, ftpBasePath);
+                string draftPath = String.Format(specVersionPathMgr.GetFtpLatestDraftsPath, ftpBasePath);
                 string collapsedSpecNumber = version.Specification.Number.Replace(".", String.Empty);
 
                 if (Directory.Exists(draftPath))

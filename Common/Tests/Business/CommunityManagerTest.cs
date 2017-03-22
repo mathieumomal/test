@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.Business;
+﻿using System.Collections.Generic;
+using Etsi.Ultimate.Business;
 using Etsi.Ultimate.DataAccess;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
@@ -119,6 +120,45 @@ namespace Etsi.Ultimate.Tests.Business
             var comParentFound = manager.GetParentCommunityByCommunityId(CHILDTBID);
 
             Assert.AreEqual(PARENTTBID, comParentFound.TbId);
+        }
+
+        private object[] _communityIds = {
+            new object[] {new List<int> {1}, 1},
+            new object[] {new List<int> {1, 2}, 2},
+            new object[] {new List<int> {1, 3}, 1},
+            new object[] {new List<int> (), 0}
+        };
+
+        [Test, TestCaseSource("_communityIds")]
+        public void GetCommmunityByIds(List<int> _communityIds, int expectedCount)
+        {
+            //Mock
+            CommunityFakeDBSet comfkDbSet = new CommunityFakeDBSet();
+            comfkDbSet.Add(new Community()
+            {
+                TbName = "SA1",
+                ShortName = "S1",
+                TbId = 1,
+                ParentTbId = PARENTTBID
+            });
+            comfkDbSet.Add(new Community()
+            {
+                TbName = "SSP",
+                ShortName = "SP",
+                TbId = 2,
+                ParentTbId = null
+            });
+
+            var mockDataContext = MockRepository.GenerateMock<IUltimateContext>();
+            mockDataContext.Stub(x => x.Communities).Return((IDbSet<Community>)comfkDbSet);
+            RepositoryFactory.Container.RegisterInstance(typeof(IUltimateContext), mockDataContext);
+
+            var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>();
+            var manager = new CommunityManager {UoW = uow};
+
+            var result = manager.GetCommmunityByIds(_communityIds);
+
+            Assert.AreEqual(expectedCount, result.Count);
         }
     }
 }

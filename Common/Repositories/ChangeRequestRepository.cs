@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
 using System;
+using Etsi.Ultimate.Utils;
 
 namespace Etsi.Ultimate.Repositories
 {
@@ -14,10 +15,17 @@ namespace Etsi.Ultimate.Repositories
     /// </summary>
     public class ChangeRequestRepository : IChangeRequestRepository
     {
-        /// <summary>
-        /// Limit of tdocs to get per requests
-        /// </summary>
-        public int LimitOfTdocsPerRequest = 100;
+        private int _limitOfTdocsPerRequest;
+        public int LimitOfTdocsPerRequest
+        {
+            get
+            {
+                if (_limitOfTdocsPerRequest == 0)
+                    return ConfigVariables.LimitOfTdocsToSearchPerRequest;
+                return _limitOfTdocsPerRequest;
+            }
+            set { _limitOfTdocsPerRequest = value; }
+        }
 
         /// <summary>
         /// Gets or sets the uoW.
@@ -166,6 +174,40 @@ namespace Etsi.Ultimate.Repositories
                     .Include(t => t.ChangeRequestTsgDatas.Select(x => x.TsgStatus));
 
                 crs.AddRange(queryTsgCrFound.ToList());
+            }
+
+            return crs.Distinct().ToList();
+        }
+
+        public List<ChangeRequest> GetWgCrsByWgTdocList(List<string> contribUids)
+        {
+            var crs = new List<ChangeRequest>();
+
+            //Total count of crs that we are looking for
+            var totalCount = contribUids.Count;
+            //Get required number of iterations according to the LimitOfTdocsPerRequest variable
+            var iterations = Math.Ceiling((double)totalCount / LimitOfTdocsPerRequest);
+            //For each iterations : execute request to get crs in DB
+            for (var i = 0; i < iterations; i++)
+            {
+                //Define subUids list for current iteration
+                var subUids = contribUids.Skip(i * LimitOfTdocsPerRequest).Take(LimitOfTdocsPerRequest).ToList();
+                //Execute request and add tdocs to the final list
+                //Search for WG CR
+                var queryWgCrFound = (from cr in UoW.Context.ChangeRequests
+                                      where subUids.Contains(cr.WGTDoc)
+                                      select cr)
+                    .Include(x => x.Specification)
+                    .Include(x => x.ChangeRequestTsgDatas)
+                    .Include(x => x.Enum_CRCategory)
+                    .Include(x => x.CR_WorkItems)
+                    .Include(x => x.Release)
+                    .Include(x => x.CurrentVersion)
+                    .Include(x => x.NewVersion)
+                    .Include(x => x.WgStatus)
+                    .Include(t => t.ChangeRequestTsgDatas.Select(x => x.TsgStatus));
+
+                crs.AddRange(queryWgCrFound.ToList());
             }
 
             return crs.Distinct().ToList();
@@ -501,8 +543,7 @@ namespace Etsi.Ultimate.Repositories
         /// <returns>Tsg information</returns>
         public List<ChangeRequestTsgData> GetTsgDataForCrPack(string crPack)
         {
-            var query = UoW.Context.ChangeRequestTsgDatas.Where(x => x.TSGTdoc == crPack);
-            return query.ToList();
+            return UoW.Context.ChangeRequestTsgDatas.Where(x => x.TSGTdoc == crPack).ToList();
         }
 
         /// <summary>
@@ -602,6 +643,8 @@ namespace Etsi.Ultimate.Repositories
         /// <param name="contributionUiDs"></param>
         /// <returns>List of CRs</returns>
         List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUiDs);
+
+        List<ChangeRequest> GetWgCrsByWgTdocList(List<string> contribUids);
 
         /// <summary>
         /// Get light change request for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :

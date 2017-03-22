@@ -220,15 +220,6 @@ namespace Etsi.Ultimate.Module.WorkItem {
         protected global::Telerik.Web.UI.RadGrid ChildWiTable;
         
         /// <summary>
-        /// Contrôle lblResponsibleGroups.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblResponsibleGroups;
-        
-        /// <summary>
         /// Contrôle lnkRapporteur.
         /// </summary>
         /// <remarks>

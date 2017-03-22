@@ -33,6 +33,8 @@ namespace Etsi.Ultimate.Business
         /// <returns>community</returns>
         Community GetCommmunityById(int id);
 
+        List<Community> GetCommmunityByIds(List<int> ids);
+
         /// <summary>
         /// Get a communityShortname object by community id (TbId)
         /// </summary>

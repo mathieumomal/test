@@ -1,24 +1,6 @@
 ﻿<%@ Control Language="C#" ClassName="ReleaseHeaderControl" AutoEventWireup="true" CodeBehind="ReleaseHeaderControl.ascx.cs" Inherits="Etsi.Ultimate.Module.Specifications.ReleaseHeaderControl" %>
 
-<style>
-    .button_position {
-        height: 16px;
-        width: 16px;
-        vertical-align: bottom;
-    }
-
-    .hideOverflow {
-        height: 25px;
-        overflow: hidden;
-        display: inline;
-    }
-
-    .remark {
-        text-align: left;
-        line-height: 15px;
-    }
-</style>
-<table id="tblReleaseHeader" style="width: 100%; vertical-align: middle;">
+<table class="tblReleaseHeader" style="width: 100%; vertical-align: middle;">
     <tr>
         <td style="width: 50%; text-align: left">
             <asp:Label ID="lblReleaseName" Font-Bold="true" runat="server" /><asp:Label ID="lblStatus" runat="server" />

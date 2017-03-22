@@ -44,10 +44,13 @@
   <appSettings>
 
     <!-- App Version : used to avoid any cache issues concerning javascript files -->
-    <add key="AppVersion" value="1.03" />
+    <add key="AppVersion" value="1.04" />
 
     <!-- Portal name where modules will run -->
     <add key="PortalName" value="Ultimate"/>
+	
+	<!-- Portal URL -->
+	<add key="PortalUrl" value="http://dnn3gpp.13.etsidev.org"/>
 
     <!--Folder where transposition process copy paste version transposed -->
     <add key="TranspositionFolderPath" value="D:\1FTPSites\ftp3GPP.13.etsidev.org\transposition\"/>
@@ -149,7 +152,6 @@
     <add key="loginUrl" value="~/Login.aspx" />
     <add key="InstallVersion" value="07.00.04" />
     <add key="DefaultDevicesDatabase" value="DesktopModules\DevicePreviewManagement\Resources\defaultDevices.xml" />
-    <add key="VersionsLatestFTPFolder" value="2014-09" />
     <add key="CRsListRecordsMaxSize" value="100"/>
 	<!-- ActivateWorkPlanExportAfterImport: False <=> do not export WorkPlan as excel or docx at the end of the import -->
 	<add key="ActivateWorkPlanExportAfterImport" value="false"/>

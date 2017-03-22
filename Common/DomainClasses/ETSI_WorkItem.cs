@@ -23,6 +23,7 @@ namespace Etsi.Ultimate.DomainClasses
         public string Number { get; set; }
         public string fileName { get; set; }
         public string filePath { get; set; }
+        public string WKI_ETSI_NUMBER { get; set; }
     
         public Enum_EntityStatus EntityStatus { get; set; }
     }

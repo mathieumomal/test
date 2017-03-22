@@ -16,12 +16,12 @@
 <head runat="server">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Specification</title>
-    <link rel="stylesheet" type="text/css" href="module.css">
     <link rel="SHORTCUT ICON" href="images/favicon.ico" type="image/x-icon">
     <script src="JS/jquery.min.js"></script>
     <script src="JS/jquery-validate.min.js"></script>
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <telerik:RadCodeBlock ID="RadCodeBlockVersion" runat="server">
+        <link rel="stylesheet" type="text/css" href="module.css?v=<%= ConfigurationManager.AppSettings["AppVersion"] %>">
         <script src="JS/CommonScript.js?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>"></script>
     </telerik:RadCodeBlock>
 </head>
@@ -31,6 +31,12 @@
             <asp:Panel ID="specMsg" runat="server" Visible="false">
                 <asp:Label runat="server" ID="specMsgTxt"></asp:Label>
             </asp:Panel>
+
+            <!-- Logo header -->
+            <div class="logoHeader">
+                <asp:HyperLink runat="server" ID="logoHeaderHpk" NavigateUrl="<%$ AppSettings:PortalUrl %>" Target="_blank" ImageUrl="/Portals/0/BANNER06.jpg" />
+            </div>
+
             <asp:Panel ID="specBody" runat="server" CssClass="specificationDetailsBody">
                 <telerik:RadScriptManager runat="server" ID="rsmSpecificationEdit" EnableHandlerDetection="false" />
                 <telerik:RadAjaxManager ID="wiRadAjaxManager" runat="server" EnablePageHeadUpdate="false" UpdatePanelsRenderMode="Inline">
@@ -49,10 +55,9 @@
                     AutoPostBack="false">
                     <Tabs>
                         <telerik:RadTab runat="server" PageViewID="RadPageGeneral" Text="General" Selected="true"></telerik:RadTab>
+                        <telerik:RadTab runat="server" PageViewID="RadPageReleases" Text="Versions" Selected="false"></telerik:RadTab>
                         <telerik:RadTab runat="server" PageViewID="RadPageResponsibility" Text="Responsibility" Selected="false"></telerik:RadTab>
                         <telerik:RadTab runat="server" PageViewID="RadPageRelated" Text="Related" Selected="false"></telerik:RadTab>
-                        <telerik:RadTab runat="server" PageViewID="RadPageReleases" Text="Releases" Selected="false"></telerik:RadTab>
-                        <telerik:RadTab runat="server" PageViewID="RadPageHistory" Text="History" Selected="false"></telerik:RadTab>
                     </Tabs>
                 </telerik:RadTabStrip>
                 <telerik:RadMultiPage ID="rmpSpecEdit" runat="server" Width="100%" BorderColor="DarkGray" BorderStyle="Solid" BorderWidth="1px">
@@ -111,9 +116,19 @@
                                 <td colspan="2" class="specificationRemarks">
                                     <asp:UpdatePanel ID="upSpecRemarks" runat="server">
                                         <ContentTemplate>
-                                            <ult:remarkscontrol runat="server" id="specificationRemarks" />
+                                            <ult:remarkscontrol runat="server" id="specificationRemarks" ScrollHeight="80" />
                                         </ContentTemplate>
                                     </asp:UpdatePanel>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <fieldset class="fsHistory">
+                                        <legend>
+                                            <asp:Label runat="server">History</asp:Label>
+                                        </legend>
+                                        <ult:historycontrol runat="server" id="specificationHistory" ScrollHeight="80"/>
+                                    </fieldset>
                                 </td>
                             </tr>
                         </table>
@@ -173,11 +188,6 @@
                     </telerik:RadPageView>
                     <telerik:RadPageView ID="RadPageReleases" runat="server">
                         <spec:SpecificationReleaseControl runat="server" ID="ctrlSpecificationReleases" />
-                    </telerik:RadPageView>
-                    <telerik:RadPageView ID="RadPageHistory" runat="server">
-                        <div class="TabContent" style="overflow-y: auto; overflow-x: auto">
-                            <ult:historycontrol runat="server" id="specificationHistory" />
-                        </div>
                     </telerik:RadPageView>
                 </telerik:RadMultiPage>
                 <div class="specificationDetailsAction">

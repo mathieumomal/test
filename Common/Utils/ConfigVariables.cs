@@ -12,6 +12,32 @@ namespace Etsi.Ultimate.Utils
         /// <summary>
         /// Relative ftp path for versions to be transposed
         /// </summary>
+        public static string PortalUrl
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["PortalUrl"] != null)
+                    return ConfigurationManager.AppSettings["PortalUrl"].ToString();
+                return "";
+            }
+        }
+
+        public static int LimitOfTdocsToSearchPerRequest
+        {
+            get
+            {
+                var defaultValue = 100;
+                if (ConfigurationManager.AppSettings["LimitOfTdocsToSearchPerRequest"] == null)
+                    return defaultValue;
+                int returnValue;
+                var success = int.TryParse(ConfigurationManager.AppSettings["LimitOfTdocsToSearchPerRequest"], out returnValue);
+                return success ? returnValue : defaultValue;
+            }
+        }
+
+        /// <summary>
+        /// Relative ftp path for versions to be transposed
+        /// </summary>
         public static string RelativeFtpPathForVersionsToBeTransposed
         {
             get
@@ -83,18 +109,6 @@ namespace Etsi.Ultimate.Utils
             }
         }
 
-        /// <summary>
-        /// FTP Folder name to store latest versions
-        /// </summary>
-        public static string VersionsLatestFTPFolder
-        {
-            get
-            {
-                if (ConfigurationManager.AppSettings["VersionsLatestFTPFolder"] != null)
-                    return ConfigurationManager.AppSettings["VersionsLatestFTPFolder"].ToString();
-                return "";
-            }
-        }
 
         /// <summary>
         /// Gets FTP path for downloading export zips

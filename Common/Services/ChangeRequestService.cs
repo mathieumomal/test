@@ -160,10 +160,28 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Service] Failed to GetContributionCrByUid request: " + ex.Message);
+                LogManager.Error("[Service] Failed to GetChangeRequestListByContributionUidList request: " + ex.Message, ex);
                 isSuccess = false;
             }
             return new KeyValuePair<bool, List<ChangeRequest>>(isSuccess, crList);
+        }
+
+        public List<ChangeRequest> GetWgCrsByWgTdocList(List<string> contribUids)
+        {
+            try
+            {
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var manager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    manager.UoW = uoW;
+                    return manager.GetWgCrsByWgTdocList(contribUids);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogManager.Error("[Service] Failed to GetWgCrsByWgTdocList request: " + ex.Message, ex);
+            }
+            return new List<ChangeRequest>();
         }
 
         /// <summary>
@@ -557,37 +575,6 @@ namespace Etsi.Ultimate.Services
         }
 
         /// <summary>
-        /// Remove Crs from Cr-Pack
-        /// </summary>
-        /// <param name="crPack">Uid of Cr-Pack</param>
-        /// <param name="crIds">List of Cr Ids</param>
-        /// <returns>Success/Failure</returns>
-        public ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds)
-        {
-            var response = new ServiceResponse<bool> { Result = false };
-
-            try
-            {
-                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
-                {
-                    var manager = ManagerFactory.Resolve<IChangeRequestManager>();
-                    manager.UoW = uoW;
-                    response = manager.RemoveCrsFromCrPack(crPack, crIds);
-
-                    if (response.Result)
-                        uoW.Save();
-                }
-            }
-            catch (Exception e)
-            {
-                LogManager.Error(e.Message + e.StackTrace);
-                response.Result = false;
-                response.Report.LogError(e.Message);
-            }
-            return response;  
-        }
-
-        /// <summary>
         /// See interface
         /// </summary>
         /// <param name="personId"></param>
@@ -623,7 +610,6 @@ namespace Etsi.Ultimate.Services
             }
             return response;
         }
-
 
         public ServiceResponse<bool> UpdateCrStatus(string uid, string status)
         {
@@ -721,6 +707,8 @@ namespace Etsi.Ultimate.Services
         /// <param name="contributionUiDs"></param>
         /// <returns></returns>
         KeyValuePair<bool, List<ChangeRequest>> GetChangeRequestListByContributionUidList(List<string> contributionUiDs);
+
+        List<ChangeRequest> GetWgCrsByWgTdocList(List<string> contribUids);
 
         /// <summary>
         /// Get light change request for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
@@ -824,14 +812,6 @@ namespace Etsi.Ultimate.Services
         /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
         ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource);
-
-        /// <summary>
-        /// Remove Crs from Cr-Pack
-        /// </summary>
-        /// <param name="crPack">Uid of Cr-Pack</param>
-        /// <param name="crIds">List of Cr Ids</param>
-        /// <returns>Success/Failure</returns>
-        ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds);
 
         /// <summary>
         /// Send Crs to Cr-Pack

@@ -55,7 +55,6 @@ namespace Etsi.Ultimate.Business
                         return response;
                     }
                 }
-                changeRequest.CreationDate = DateTime.Now;
                 repo.InsertOrUpdate(changeRequest);
             }
             catch (Exception ex)
@@ -188,9 +187,16 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Business] Failed to GetChangeRequestListByContributionUIDList:" + ex.Message);
+                LogManager.Error("[Business] Failed to GetChangeRequestListByContributionUIDList:" + ex.Message, ex);
                 return null;
             }
+        }
+
+        public List<ChangeRequest> GetWgCrsByWgTdocList(List<string> contribUids)
+        {
+            var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
+            repo.UoW = UoW;
+            return repo.GetWgCrsByWgTdocList(contribUids);
         }
 
         /// <summary>
@@ -335,7 +341,6 @@ namespace Etsi.Ultimate.Business
                             Revision = crPackDecision.Key.Revision,
                             Subject = revisedCr.Subject,
                             Fk_WGStatus = null,
-                            CreationDate = DateTime.UtcNow,
                             WGSourceOrganizations = revisedCr.WGSourceOrganizations,
                             WGSourceForTSG = revisedCr.WGSourceForTSG,
                             WGMeeting = revisedCr.WGMeeting,
@@ -543,7 +548,6 @@ namespace Etsi.Ultimate.Business
                     Revision = revisionMaxFound + 1,
                     Subject = dbChangeRequest.Subject,
                     Fk_WGStatus = null,
-                    CreationDate = DateTime.UtcNow,
                     WGSourceOrganizations = dbChangeRequest.WGSourceOrganizations,
                     WGSourceForTSG = dbChangeRequest.WGSourceForTSG,
                     WGMeeting = dbChangeRequest.WGMeeting,
@@ -560,34 +564,6 @@ namespace Etsi.Ultimate.Business
 
                 repo.InsertOrUpdate(newChangeRequest);
 
-                response.Result = true;
-            }
-            catch (Exception e)
-            {
-                LogManager.Error(e.Message + e.StackTrace);
-                response.Result = false;
-                response.Report.LogError(e.Message);
-            }
-            return response;
-        }
-
-        /// <summary>
-        /// Remove Crs from Cr-Pack
-        /// </summary>
-        /// <param name="crPack">Uid of Cr-Pack</param>
-        /// <param name="crIds">List of Cr Ids</param>
-        /// <returns>Success/Failure</returns>
-        public ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds)
-        {
-            var response = new ServiceResponse<bool> { Result = false };
-            try
-            {
-                var repo = RepositoryFactory.Resolve<IChangeRequestRepository>();
-                repo.UoW = UoW;
-                //Get Crs data for a given Cr-Pack
-                var tsgData = repo.GetTsgDataForCrPack(crPack);
-                //Remove provided crs from a Cr-Pack
-                tsgData.Where(x => crIds.Contains(x.Fk_ChangeRequest)).ToList().ForEach(y => UoW.MarkDeleted(y));
                 response.Result = true;
             }
             catch (Exception e)
@@ -651,6 +627,7 @@ namespace Etsi.Ultimate.Business
                 response.Result = true;
             return response;
         }
+
         #endregion
 
         #region Private Methods
@@ -672,8 +649,6 @@ namespace Etsi.Ultimate.Business
                     dbChangeRequest.Subject = uiChangeRequest.Subject;
                 if (dbChangeRequest.Fk_WGStatus != uiChangeRequest.Fk_WGStatus)
                     dbChangeRequest.Fk_WGStatus = uiChangeRequest.Fk_WGStatus;
-                if (dbChangeRequest.CreationDate != uiChangeRequest.CreationDate)
-                    dbChangeRequest.CreationDate = uiChangeRequest.CreationDate;
                 if (dbChangeRequest.WGSourceOrganizations != uiChangeRequest.WGSourceOrganizations)
                     dbChangeRequest.WGSourceOrganizations = uiChangeRequest.WGSourceOrganizations;
                 if (dbChangeRequest.WGSourceForTSG != uiChangeRequest.WGSourceForTSG)
@@ -832,6 +807,8 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         List<ChangeRequest> GetChangeRequestListByContributionUidList(List<string> contributionUiDs);
 
+        List<ChangeRequest> GetWgCrsByWgTdocList(List<string> contribUids);
+
         /// <summary>
         /// Get light change request for MinuteMan. Actually, for performance reason, MM no need to have all related objects because :
         /// - will not change during a meeting
@@ -921,14 +898,6 @@ namespace Etsi.Ultimate.Business
         /// <param name="newTsgSource"></param>
         /// <returns>Success/Failure</returns>
         ServiceResponse<bool> ReviseCr(CrKeyFacade crKey, string newTsgTdoc, int newTsgMeetingId, string newTsgSource);
-
-        /// <summary>
-        /// Remove Crs from Cr-Pack
-        /// </summary>
-        /// <param name="crPack">Uid of Cr-Pack</param>
-        /// <param name="crIds">List of Cr Ids</param>
-        /// <returns>Success/Failure</returns>
-        ServiceResponse<bool> RemoveCrsFromCrPack(string crPack, List<int> crIds);
 
         /// <summary>
         /// Send Crs to Cr-Pack

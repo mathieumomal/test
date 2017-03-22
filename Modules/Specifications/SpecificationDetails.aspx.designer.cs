@@ -85,6 +85,15 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.WebControls.Label specificationMessagesTxt;
         
         /// <summary>
+        /// Contrôle logoHeaderHpk.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink logoHeaderHpk;
+        
+        /// <summary>
         /// Contrôle specificationDetailsBody.
         /// </summary>
         /// <remarks>
@@ -283,6 +292,15 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.WebControls.CheckBoxList radioTechnologyVals;
         
         /// <summary>
+        /// Contrôle versionFolderHpl.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink versionFolderHpl;
+        
+        /// <summary>
         /// Contrôle RadPageResponsibility.
         /// </summary>
         /// <remarks>
@@ -301,15 +319,6 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.WebControls.Label PrimaryResponsibleGroupLbl;
         
         /// <summary>
-        /// Contrôle PrimaryResponsibleGroupVal.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label PrimaryResponsibleGroupVal;
-        
-        /// <summary>
         /// Contrôle SecondaryResponsibleGroupsLbl.
         /// </summary>
         /// <remarks>
@@ -317,15 +326,6 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label SecondaryResponsibleGroupsLbl;
-        
-        /// <summary>
-        /// Contrôle SecondaryResponsibleGroupsVal.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label SecondaryResponsibleGroupsVal;
         
         /// <summary>
         /// Contrôle RadPageRelated.
@@ -398,15 +398,6 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::Etsi.Ultimate.Module.Specifications.SpecificationReleaseControl SpecificationReleaseControl1;
-        
-        /// <summary>
-        /// Contrôle RadPageHistory.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadPageView RadPageHistory;
         
         /// <summary>
         /// Contrôle EditBtn.

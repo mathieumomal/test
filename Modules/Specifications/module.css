@@ -1,6 +1,63 @@
 @import url("/Portals/_default/Skins/3GPP/CommonCssComponent/buttons.css");
 
-/*TODO : put in the skin*/
+/* Generic to multiple spec popups (CREATE/EDIT/DETAILS) */
+.logoHeader {
+    height: 55px;
+}
+.logoHeader img {
+    height: 50px;
+}
+
+.TabContent {
+    margin: 10px;
+    font: Arial 12px Black;
+}
+
+#specEditForm .fsHistory, #specificationDetailsForm .fsHistory {
+    margin-bottom: 5px;
+}
+#specEditForm .fsHistory legend, #specificationDetailsForm .fsHistory legend {
+    font-family: "Segoe UI",Arial,Helvetica,sans-serif;
+    font-size: 14px;
+    color: rgb(97, 97, 97);
+}
+
+/* Generic to multiple spec popups (CREATE/EDIT/DETAILS) */
+
+/* SpecificationReleaseControl.ascx */
+.pnlReleases {
+    max-height: 550px;
+	overflow-y:scroll;
+}
+/* SpecificationReleaseControl.ascx */
+
+/* ReleaseHeaderControl.ascx */
+.tblReleaseHeader {
+   cursor: pointer;
+}
+
+.tblReleaseHeader .button_position {
+    height: 16px;
+    width: 16px;
+    vertical-align: middle;
+}
+
+.tblReleaseHeader .hideOverflow {
+    height: 25px;
+    overflow: hidden;
+    display: inline;
+}
+
+.tblReleaseHeader .remark {
+    text-align: left;
+    line-height: 15px;
+}
+/* ReleaseHeaderControl.ascx */
+
+
+
+
+
 #componentSpecList .helpTooltip{
 	border-bottom: 1px rgba(255, 255, 255, 0.36) dashed;
 	cursor: help;
@@ -36,11 +93,6 @@
     padding: 0 !important;
 }
 
-.TabContent {
-    margin: 10px;
-    font: Arial 12px Black;
-}
-
 .specificationRemarks {
     bottom: 20px;
     width: 650px;
@@ -50,6 +102,7 @@
     font-family: Arial,verdana,Serif;
     font-size: 12px;
 }
+
 .specificationDetailsBody, .ErrorTxt, .InfoTxt {
     font-family: Arial,verdana,Serif;
     font-size: 12px;
@@ -131,10 +184,13 @@ legend {
     width: auto;
     text-align: left;
 }
+.specDetailform .TabLineRight.moreSpace {
+    padding: 10px 0;
+}
 
-    .TabLineRight img {
-        vertical-align: top;
-    }
+.TabLineRight img {
+    vertical-align: top;
+}
 
 .specificationDetailsAction {
     margin: 15px 0 !important;
@@ -143,9 +199,7 @@ legend {
 
 /*REMARK CONTROL CUSTOM STYLE*/
 #remarkControlContent {
-    width: 640px;
     margin: auto;
-    margin-bottom: 10px;
 }
 
 /*RAPPORTEUR CONTROL CUSTOM STYLE*/
@@ -168,7 +222,6 @@ legend {
 .RightColumn {
     width: 184.6px;
     text-align: left;
-    padding: 5px;
 }
 
 
@@ -183,6 +236,10 @@ span.requiredField {
 }
 
 /* SPECIFICATION SEARCH */
+.SpecificationSearchHeader .RadComboBox_Default td.rcbArrowCellRight a {
+    width: 18px !important;
+}
+
 .SpecificationSearchHeader {
     background-position: 0% 0%;
     color: white;

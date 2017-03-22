@@ -76,7 +76,10 @@ namespace Etsi.Ultimate.Module.Specifications
                 {
                     foreach (var release in DataSource.SpecificationReleases.OrderByDescending(sr => sr.SortOrder))
                     {
-                        var item = new RadPanelItem {Value = release.Pk_ReleaseId.ToString()};
+                        var item = new RadPanelItem
+                        {
+                            Value = release.Pk_ReleaseId.ToString()
+                        };
                         rpbReleases.Items.Add(item);
                     }
 
@@ -122,22 +125,9 @@ namespace Etsi.Ultimate.Module.Specifications
                     item.ApplyHeaderTemplate();
                     item.ContentTemplate = customContentTemplate;
                     customContentTemplate.InstantiateIn(item);
+                    item.Expanded = true;
                     item.DataBind();
                     item.ChildGroupHeight = 0;
-                }
-
-                if (Request.QueryString["Rel"] != null)
-                {
-                    var item = rpbReleases.Items.FindItemByValue(Request.QueryString["Rel"]);
-                    if (item != null)
-                    {
-                        item.Expanded = true;
-                    }
-                }
-                else
-                {
-                    if (rpbReleases.Items.Count > 0)
-                        rpbReleases.Items[0].Expanded = true;
                 }
             }
         }

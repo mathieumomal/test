@@ -1,4 +1,5 @@
 ﻿<%@ Control Language="C#" ClassName="SpecificationVersionListControl" AutoEventWireup="true" CodeBehind="SpecificationVersionListControl.ascx.cs" Inherits="Etsi.Ultimate.Module.Specifications.SpecificationVersionListControl" %>
+<%@ Import Namespace="Etsi.Ultimate.Utils" %>
 <%@ Register TagPrefix="telerik" Namespace="Telerik.Web.UI" Assembly="Telerik.Web.UI" %>
 
 <style type="text/css">
@@ -122,7 +123,11 @@
                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="100px" />
                     <ItemTemplate>
                         <div class="text-center">
-                            <asp:HyperLink runat="server" ID="lnkMeetings" Target="_blank" />
+                            <asp:HyperLink runat="server" ID="lnkMeetings" 
+                                Target="_blank" 
+                                Text='<%# string.IsNullOrEmpty((string)DataBinder.Eval(Container.DataItem,"MtgShortRef")) ? "-" : DataBinder.Eval(Container.DataItem,"MtgShortRef")%>' 
+                                NavigateUrl='<%# (DataBinder.Eval(Container.DataItem,"Source") == null || int.Parse(DataBinder.Eval(Container.DataItem,"Source").ToString()) == 0) ? "" : ConfigVariables.MeetingDetailsAddress + DataBinder.Eval(Container.DataItem,"Source")%>'
+                                ToolTip='<%# (DataBinder.Eval(Container.DataItem,"Source") == null || int.Parse(DataBinder.Eval(Container.DataItem,"Source").ToString()) == 0) ? "" : "Click to show meeting details"%> '/>
                         </div>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
@@ -130,8 +135,10 @@
                     <HeaderStyle HorizontalAlign="Center" Font-Bold="True" Width="60px" />
                     <ItemTemplate>
                         <div class="text-center">                            
-                            <asp:HyperLink ID="lnkFtpDownload" runat="server" Text='<%# DataBinder.Eval(Container.DataItem,"Version")%>' 
-                                NavigateUrl='<%# DataBinder.Eval(Container.DataItem,"Location")%>'/>
+                            <asp:HyperLink ID="lnkFtpDownload" runat="server" 
+                                Text='<%# DataBinder.Eval(Container.DataItem,"Version")%>' 
+                                NavigateUrl='<%# DataBinder.Eval(Container.DataItem,"Location")%>' 
+                                ToolTip='<%# string.IsNullOrEmpty((string)DataBinder.Eval(Container.DataItem,"Location")) ? "" : "Click to download this version" %>'/>
                         </div>
                     </ItemTemplate>
                 </telerik:GridTemplateColumn>
@@ -160,7 +167,7 @@
                             <%# DataBinder.Eval(Container.DataItem, "TranspositionReferenceAndDate") == "" ? "disabled='disabled'" : "" %> 
                             >
                             <img border="0" 
-                                src="images/spec_rel-tranSpec.png" 
+                                src="images/spec_rel-tranSpec.png?v=<%=ConfigurationManager.AppSettings["AppVersion"] %>" 
                                 class='linkStyle <%# DataBinder.Eval(Container.DataItem, "TranspositionReferenceAndDate") == "" ? "notAvailable" : ""%>'
                                 title='<%# DataBinder.Eval(Container.DataItem,"TranspositionReferenceAndDate")%>' 
                                 />

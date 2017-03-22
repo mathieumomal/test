@@ -8,6 +8,7 @@ using Etsi.Ultimate.Utils;
 using Domain = Etsi.Ultimate.DomainClasses;
 using System.Configuration;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.DomainClasses.Facades;
 using Etsi.Ultimate.Module.Specifications.App_LocalResources;
 
 namespace Etsi.Ultimate.Module.Specifications
@@ -21,6 +22,8 @@ namespace Etsi.Ultimate.Module.Specifications
         protected RelatedWiControl SpecificationRelatedWorkItems;
         protected SpecificationListControl parentSpecifications;
         protected SpecificationListControl childSpecifications;
+        protected CommunityHyperlinkControl primaryResponsibleGroup;
+        protected CommunityHyperlinkControl secondaryResponsibleGroups;
 
         //const 
         private const string CONST_RELATED_TAB = "Related";
@@ -205,7 +208,10 @@ namespace Etsi.Ultimate.Module.Specifications
         {
             if (specification != null && userRights != null)
             {
-                referenceVal.Text = string.IsNullOrEmpty(specification.Number) ? CONST_EMPTY_FIELD.Trim() : specification.Number;
+                var specNumber = string.IsNullOrEmpty(specification.Number)
+                    ? CONST_EMPTY_FIELD.Trim()
+                    : specification.Number;
+                referenceVal.Text = specNumber;
                 titleVal.Text = string.IsNullOrEmpty(specification.Title) ? CONST_EMPTY_FIELD : specification.Title;
                 statusVal.Text = string.IsNullOrEmpty(specification.Status) ? CONST_EMPTY_FIELD : specification.Status;
                 if (specification.IsUnderChangeControl ?? false)
@@ -233,6 +239,14 @@ namespace Etsi.Ultimate.Module.Specifications
                 specificationRemarks.IsEditMode = false;
                 specificationRemarks.UserRights = userRights;
                 specificationRemarks.DataSource = specification.Remarks.ToList();
+
+                //Version folder link
+                if (!string.IsNullOrEmpty(specNumber) && specNumber.Trim() != CONST_EMPTY_FIELD.Trim())
+                {
+                    var specVersionPathHelper = UtilsFactory.Resolve<ISpecVersionPathHelper>();
+                    versionFolderHpl.Visible = true;
+                    versionFolderHpl.NavigateUrl = string.Format(specVersionPathHelper.GetFtpArchivePath, ConfigVariables.FtpBaseAddress, specNumber.Split('.')[0], specNumber);
+                }
             }
 
         }
@@ -286,8 +300,6 @@ namespace Etsi.Ultimate.Module.Specifications
             if (specification != null)
             {
                 specificationHistory.DataSource = specification.Histories.ToList();
-                specificationHistory.ScrollHeight = (int)SpecificationDetailsRadMultiPage.Height.Value - 50;
-                //specificationHistory.ScrollHeight = 640;
             }
             else
             {
@@ -306,17 +318,15 @@ namespace Etsi.Ultimate.Module.Specifications
             specificationRapporteurs.PersonLinkBaseAddress = ConfigurationManager.AppSettings["RapporteurDetailsAddress"];
             if (specification != null)
             {
-                PrimaryResponsibleGroupVal.Text = (string.IsNullOrEmpty(specification.PrimeResponsibleGroupFullName)) ? CONST_EMPTY_FIELD : specification.PrimeResponsibleGroupFullName.Remove3GppAtTheBeginningOfAString();
-                SecondaryResponsibleGroupsVal.Text = (string.IsNullOrEmpty(specification.SecondaryResponsibleGroupsFullNames)) ? CONST_EMPTY_FIELD : specification.SecondaryResponsibleGroupsFullNames.Remove3GppInsideListOfElementsComaSeparated();
+                //Prime responsible group
+                primaryResponsibleGroup.CommunityIds = specification.SpecificationResponsibleGroups.Where(x => x.IsPrime).Select(x => x.Fk_commityId).ToList();
 
-                specificationRapporteurs.ListIdPersonSelect = specification.PrimeSpecificationRapporteurIds;
-                specificationRapporteurs.ListIdPersonsSelected_multimode = specification.FullSpecificationRapporteurs;
-            }
-            else
-            {
-                PrimaryResponsibleGroupVal.Text = CONST_EMPTY_FIELD;
-                SecondaryResponsibleGroupsVal.Text = CONST_EMPTY_FIELD;
-
+                //Secondary responsible group
+                secondaryResponsibleGroups.CommunityIds =
+                    specification.SpecificationResponsibleGroups.Where(x => !x.IsPrime)
+                        .Select(x => x.Fk_commityId)
+                        .ToList();
+               
                 specificationRapporteurs.ListIdPersonSelect = specification.PrimeSpecificationRapporteurIds;
                 specificationRapporteurs.ListIdPersonsSelected_multimode = specification.FullSpecificationRapporteurs;
             }

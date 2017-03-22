@@ -58,6 +58,15 @@ namespace Etsi.Ultimate.Module.Specifications {
         protected global::System.Web.UI.WebControls.Label specMsgTxt;
         
         /// <summary>
+        /// Contrôle logoHeaderHpk.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink logoHeaderHpk;
+        
+        /// <summary>
         /// Contrôle specBody.
         /// </summary>
         /// <remarks>
@@ -290,15 +299,6 @@ namespace Etsi.Ultimate.Module.Specifications {
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
         protected global::Etsi.Ultimate.Module.Specifications.SpecificationReleaseControl ctrlSpecificationReleases;
-        
-        /// <summary>
-        /// Contrôle RadPageHistory.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadPageView RadPageHistory;
         
         /// <summary>
         /// Contrôle btnSave.

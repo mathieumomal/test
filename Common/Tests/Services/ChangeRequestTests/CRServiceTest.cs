@@ -181,6 +181,21 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             Assert.IsNull(result.Value);
         }
 
+        [Test]
+        public void GetWgCrsByWgTdocList()
+        {
+            var repoMock = MockRepository.GenerateMock<IChangeRequestRepository>();
+            repoMock.Stub(x => x.GetWgCrsByWgTdocList(Arg<List<string>>.Is.Anything))
+                .Return(new List<ChangeRequest> {new ChangeRequest {Pk_ChangeRequest = 1}});
+            RepositoryFactory.Container.RegisterInstance(repoMock);
+
+            var crSvc = new ChangeRequestService();
+            var result = crSvc.GetWgCrsByWgTdocList(new List<string>{"A"});
+
+            Assert.AreEqual(1, result.Count);
+            Assert.AreEqual(1, result.First().Pk_ChangeRequest);
+        }
+
         #endregion
 
         #region Integration Tests
@@ -337,7 +352,6 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             Assert.AreEqual(initialCr.Revision, modifiedCr.Revision);
             Assert.AreEqual("Subject Changed modified", modifiedCr.Subject);
             Assert.AreEqual(initialCr.Fk_WGStatus, modifiedCr.Fk_WGStatus);
-            Assert.AreEqual(initialCr.CreationDate, modifiedCr.CreationDate);
             Assert.AreEqual(initialCr.WGSourceOrganizations, modifiedCr.WGSourceOrganizations);
             Assert.AreEqual(initialCr.WGSourceForTSG, modifiedCr.WGSourceForTSG);
             Assert.AreEqual(initialCr.WGMeeting, modifiedCr.WGMeeting);
@@ -565,7 +579,6 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
                 Revision = 1,
                 Subject = "Description",
                 Fk_WGStatus = 1,
-                CreationDate = DateTime.UtcNow,
                 WGSourceOrganizations = "Ultimate",
                 WGSourceForTSG = 2,
                 WGMeeting = 2,
@@ -599,12 +612,12 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             var changeRequest = new List<ChangeRequest>
             {
 
-            new ChangeRequest{ Pk_ChangeRequest=1, CRNumber = "A001",Revision = 1,Subject = "Description",Fk_WGStatus = 1,CreationDate = DateTime.UtcNow,
+            new ChangeRequest{ Pk_ChangeRequest=1, CRNumber = "A001",Revision = 1,Subject = "Description",Fk_WGStatus = 1,
                 WGSourceOrganizations = "Ultimate", ChangeRequestTsgDatas = new List<ChangeRequestTsgData>{new ChangeRequestTsgData{Fk_TsgStatus = 1,TSGTdoc = "Change request",TSGSourceOrganizations = "Change request", TSGTarget = 2, TSGMeeting = 2}},WGSourceForTSG = 2,
                 WGMeeting = 2,WGTarget = 2,WGTDoc = "Work item",Fk_Enum_CRCategory = 1,Fk_Specification = 136080,
                 Fk_Release = 2874,Fk_CurrentVersion = 428927,Fk_NewVersion = 428927,Fk_Impact = 1},
-            new ChangeRequest{ Pk_ChangeRequest=2, CRNumber = "A002",Revision = 1,Subject = "Description",Fk_WGStatus = 1,CreationDate = DateTime.UtcNow
-                ,WGSourceOrganizations = "Ultimate Desc", ChangeRequestTsgDatas = new List<ChangeRequestTsgData>{new ChangeRequestTsgData{Fk_TsgStatus = 1, TSGTdoc = "Change request", TSGSourceOrganizations = "Change request Desc", TSGTarget = 2, TSGMeeting = 2}}, WGSourceForTSG = 2,
+            new ChangeRequest{ Pk_ChangeRequest=2, CRNumber = "A002",Revision = 1,Subject = "Description",Fk_WGStatus = 1,
+                WGSourceOrganizations = "Ultimate Desc", ChangeRequestTsgDatas = new List<ChangeRequestTsgData>{new ChangeRequestTsgData{Fk_TsgStatus = 1, TSGTdoc = "Change request", TSGSourceOrganizations = "Change request Desc", TSGTarget = 2, TSGMeeting = 2}}, WGSourceForTSG = 2,
                 WGMeeting = 2,WGTarget = 2,WGTDoc = "Work item",Fk_Enum_CRCategory = 1,Fk_Specification = 136080,
                 Fk_Release = 2874,Fk_CurrentVersion = 428927,Fk_NewVersion = 428927,Fk_Impact = 1},
 
