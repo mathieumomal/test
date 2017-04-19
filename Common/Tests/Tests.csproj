@@ -300,6 +300,7 @@
     <Compile Include="Services\SpecVersionServiceTest\SpecVersionRelatedTdocTest.cs" />
     <Compile Include="Services\SpecVersionServiceTest\SpecVersionSvcIntegrationTests.cs" />
     <Compile Include="Services\SpecVersionServiceTest\SpecVersionSvcTest.cs" />
+    <Compile Include="Services\SpecVersionServiceTest\SpecVersionUploadManagerTest.cs" />
     <Compile Include="Services\SpecVersionServiceTest\SpecVersionUploadTest.cs" />
     <Compile Include="Services\SpecWithdrawalTest.cs" />
     <Compile Include="Services\UrlServiceTest.cs" />

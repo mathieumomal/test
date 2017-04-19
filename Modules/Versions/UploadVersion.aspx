@@ -52,6 +52,16 @@
     </style>
     <form id="VersionUploadForm" runat="server">
         <telerik:RadScriptManager runat="server" ID="RadScriptManager1" EnableHandlerDetection="false" />
+
+        <!-- LOADER -->
+        <div id="loader" style="width:100%; height:100%;display:none;">
+            <div class="loadingBackground">
+            </div>
+            <div class="loadingIcon">
+                <asp:Image ID="loadingIcon" runat="server" Class="rotating" ImageUrl="~/DesktopModules/Versions/images/hourglass.png" />
+            </div>
+        </div>
+
         <asp:Panel runat="server" ID="fixContainer" CssClass="containerFix" Width="500px">
             <asp:Panel ID="versionUploadMessages" runat="server" Visible="false">
                 <asp:Label runat="server" ID="specificationMessagesTxt"></asp:Label>
@@ -141,20 +151,9 @@
                     <div class="releaseDetailsAction">
                         <span id="meetingRequiredMsg" style="display:none" class='requiredField'>*Meeting is required</span>
                         <asp:LinkButton ID="UploadBtn" runat="server" Text="Upload" CssClass="btn3GPP-success" OnClientClick="return PerformValidations();" OnClick="UploadVersionBtn_Click"/>
-                        <asp:LinkButton ID="AllocateBtn" runat="server" Text="Allocate" CssClass="btn3GPP-success" Visible="false" OnClick="AllocateVersionBtn_Click" />
+                        <asp:LinkButton ID="AllocateBtn" runat="server" Text="Allocate" CssClass="btn3GPP-success" Visible="false" OnClientClick="$('#loader').show();" OnClick="AllocateVersionBtn_Click" />
                         <asp:LinkButton ID="UploadBtnDisabled" runat="server" Text="Upload" CssClass="btn3GPP-default" disabled="disabled" OnClientClick="return false;" />
                         <asp:LinkButton ID="ExitBtn" runat="server" Text="Cancel" CssClass="btn3GPP-success" OnClientClick="  return closePopUpWindow()" />
-                    </div>
-                </asp:Panel>
-                <asp:Panel runat="server" CssClass="contentModal" ID="analysis">
-                    <div class="wiHeader">
-                        Version analysis is in progress.
-                    </div>
-                    <div class="wiCenter">
-                        <asp:Image ID="imgWait" runat="server" Class="rotating" ImageUrl="~/DesktopModules/Versions/images/hourglass.png" Width="45" />
-                    </div>
-                    <div class="wiFooter">
-                        <telerik:RadButton ID="analysis_cancel" runat="server" Text="Cancel" OnClick="Cancel_Click"></telerik:RadButton>
                     </div>
                 </asp:Panel>
                 <asp:Panel runat="server" CssClass="contentModal" ID="confirmation">
@@ -172,10 +171,10 @@
                     </div>
                     <div class="wiFooter" style="float: right; margin-top:10px">
                         <span>
-                            <telerik:RadButton ID="btnConfirmUpload" runat="server" Text="Confirm upload" AutoPostBack="true" OnClick="Confirmation_Upload_OnClick" CssClass="WiInline"></telerik:RadButton>
+                            <asp:Button ID="btnConfirmUpload" runat="server" CssClass="btn3GPP-success" Text="Confirm upload" AutoPostBack="true" OnClick="Confirmation_Upload_OnClick" OnClientClick="$('#loader').show();"/>
                         </span>
                         <span>
-                            <telerik:RadButton ID="Confirmation_cancel" runat="server" Text="Cancel" OnClick="Cancel_Click"></telerik:RadButton>
+                            <asp:Button ID="Confirmation_cancel" runat="server" CssClass="btn3GPP-success" Text="Cancel" OnClick="Cancel_Click"/>
                         </span>
                     </div>
                 </asp:Panel>
@@ -184,7 +183,7 @@
                         <asp:Label runat="server" ID="lblSaveStatus" Text="label" />
                     </div><br /><br />
                     <div class="VersionCentered">
-                        <telerik:RadButton ID="state_confirmation" runat="server" Text="Close" OnClick="Cancel_Click"></telerik:RadButton>
+                        <asp:Button ID="state_confirmation" runat="server" CssClass="btn3GPP-success" Text="Close" OnClick="Cancel_Click" OnClientClick="closeRadWindow()" />
                     </div>
                 </asp:Panel>
 
@@ -241,6 +240,7 @@
 
                     /* Validations */
                     function PerformValidations() {
+                        $('#loader').show();
                         var isValid = true;
                         var hidIsRequiredValue = $('#hidIsRequired').val() == "True";
                         if (hidIsRequiredValue) {

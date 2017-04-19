@@ -180,15 +180,14 @@ namespace Etsi.Ultimate.Module.Versions
             {
                 lblSaveStatus.Text = String.Format(UploadVersion_aspx.SuccessMessage, version.Value.MajorVersion, version.Value.TechnicalVersion, version.Value.EditorialVersion, "allocated");
                 preVersionUploadScreen.Visible = false;
-                analysis.Visible = false;
                 confirmation.Visible = false;
                 state.Visible = true;
-                state_confirmation.OnClientClicked = "closeRadWindow";
             }
             else
             {
                 ThrowAnError(string.Join("\n", report.ErrorList));
             }
+            HideLoader();
         }
         //Upload events
         /// <summary>
@@ -203,6 +202,7 @@ namespace Etsi.Ultimate.Module.Versions
             {
                 preVersionUploadScreen.Visible = false;
                 confirmation.Visible = true;
+                HideLoader();
             }
         }
         /// <summary>
@@ -218,6 +218,7 @@ namespace Etsi.Ultimate.Module.Versions
             if (specVersionSvc.IsCopyLatestFolderInProgress())
             {
                 ThrowAnError(UploadVersion_aspx.CopyLatestFolderInProgress);
+                HideLoader();
                 return;
             }
 
@@ -229,15 +230,14 @@ namespace Etsi.Ultimate.Module.Versions
             {
                 lblSaveStatus.Text = String.Format(UploadVersion_aspx.SuccessMessage, version.Value.MajorVersion, version.Value.TechnicalVersion, version.Value.EditorialVersion, "uploaded");
                 preVersionUploadScreen.Visible = false;
-                analysis.Visible = false;
                 confirmation.Visible = false;
                 state.Visible = true;
-                state_confirmation.OnClientClicked = "closeRadWindow";
             }
             else
             {
                 ThrowAnError(UploadVersion_aspx.GenericErrorUpload);
             }
+            HideLoader();
         }
         /// <summary>
         /// Method call by ajax when workplan is uploaded => WorkPlan Analyse
@@ -256,17 +256,14 @@ namespace Etsi.Ultimate.Module.Versions
 
             //Get the version file
             UploadedFile versionUploaded = e.File;
-            var path = new StringBuilder()
-                    .Append(uploadVersionTemporaryPath)
-                    .Append(versionUploaded.FileName)
-                    .ToString();
+            var path = Path.Combine(uploadVersionTemporaryPath, versionUploaded.FileName);
             try
             {
                 versionUploaded.SaveAs(path);
             }
             catch (Exception exc)
             {
-                LogManager.Error("Could not save work plan file: " + exc.Message);
+                LogManager.Error("Could not save work plan file: " + exc.Message, exc);
             }
 
             var version = GetEditedSpecVersionObject();
@@ -290,7 +287,7 @@ namespace Etsi.Ultimate.Module.Versions
         {
             //UI elements
             preVersionUploadScreen.Visible = true;
-            analysis.Visible = false;
+            UploadBtnDisabled.Visible = true;
             confirmation.Visible = false;
             state.Visible = false;
             if (!IsUploadMode)
@@ -396,7 +393,6 @@ namespace Etsi.Ultimate.Module.Versions
         private void DisplayWarningAndErrorInConfirmationPopUp(Report report)
         {
             preVersionUploadScreen.Visible = false;
-            analysis.Visible = false;
             confirmation.Visible = true;
             state.Visible = false;
 
@@ -486,6 +482,11 @@ namespace Etsi.Ultimate.Module.Versions
 
             var release = version.Release;
             ReleaseVal.Text = release.Code;
+        }
+
+        private void HideLoader()
+        {
+            ClientScript.RegisterClientScriptBlock(this.GetType(), "CounterScript", "$('#loader').hide();", true);
         }
         #endregion
     }

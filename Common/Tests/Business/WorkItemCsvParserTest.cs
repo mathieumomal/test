@@ -361,8 +361,9 @@ namespace Etsi.Ultimate.Tests.Business
             var result = wiImporter.ParseCsv("../../TestData/WorkItems/IncorrectReleases.csv");
 
             var report = result.Value;
-            Assert.AreEqual(1, report.GetNumberOfWarnings());
-            Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Invalid_Release, "24", "630000", "Rel-21231"), report.WarningList.First());
+            Assert.AreEqual(0, report.GetNumberOfWarnings());
+            Assert.AreEqual(1, report.GetNumberOfErrors());
+            Assert.AreEqual(String.Format(Utils.Localization.WorkItem_Import_Invalid_Release, "24", "630000", "Rel-21231"), report.ErrorList.First());
 
             var wiList = result.Key;
             Assert.AreEqual(2, wiList.Count);

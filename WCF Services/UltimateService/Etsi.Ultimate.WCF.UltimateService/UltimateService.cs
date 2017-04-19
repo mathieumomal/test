@@ -10,6 +10,7 @@ using Release = Etsi.Ultimate.WCF.Interface.Entities.Release;
 using Specification = Etsi.Ultimate.WCF.Interface.Entities.Specification;
 using SpecVersion = Etsi.Ultimate.WCF.Interface.Entities.SpecVersion;
 using WorkItem = Etsi.Ultimate.WCF.Interface.Entities.WorkItem;
+using System.ServiceModel;
 
 namespace Etsi.Ultimate.WCF.Service
 {
@@ -225,7 +226,7 @@ namespace Etsi.Ultimate.WCF.Service
         #endregion
 
         #region CRs services
-
+        [OperationBehavior(TransactionScopeRequired = true, TransactionAutoComplete = true)]
         public ServiceResponse<bool> UpdateCrStatus(string uid, string status)
         {
             LogManager.Debug("[ServiceCall][UpdateCrStatus] Uid=" + uid + "; Status=" + status);
@@ -266,6 +267,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <returns>
         /// Primary key of newly inserted change request
         /// </returns>
+        [OperationBehavior(TransactionScopeRequired = true, TransactionAutoComplete = true)]
         public ServiceResponse<int> CreateChangeRequest(int personId, ChangeRequest changeRequest)
         {
             LogManager.Debug("[ServiceCall][CreateChangeRequest] PersonId=" + personId);
@@ -279,6 +281,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="personId">The person identifier.</param>
         /// <param name="changeRequest">The change request.</param>
         /// <returns>Success/Failure</returns>
+        [OperationBehavior(TransactionScopeRequired = true, TransactionAutoComplete = true)]
         public bool EditChangeRequest(int personId, ChangeRequest changeRequest)
         {
             LogManager.Debug("[ServiceCall][EditChangeRequest] PersonId=" + personId);
@@ -371,6 +374,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// The aim of this method is to be able to update the CRs related to a CR Pack (TSG decision and TsgTdocNumber)
         /// </summary>
         /// <param name="crKeys"></param>
+        [OperationBehavior(TransactionScopeRequired = true, TransactionAutoComplete = true)]
         public bool UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<CrKeyFacade, string>> crKeys)
         {
             LogManager.Debug("[ServiceCall][UpdateChangeRequestPackRelatedCrs]");
@@ -504,6 +508,7 @@ namespace Etsi.Ultimate.WCF.Service
             return svcHelper.GetLightChangeRequestsInsideCrPacksForMinuteMan(uids);
         }
 
+        [OperationBehavior(TransactionScopeRequired = true, TransactionAutoComplete = true)]
         public ServiceResponse<bool> UpdateCrsInsideCrPack(ChangeRequestPackFacade crPack,
             List<ChangeRequestInsideCrPackFacade> crs, int personId)
         {
@@ -547,6 +552,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="relatedTdoc">Related Tdoc</param>
         /// <param name="releaseId"></param>
         /// <returns>Success/Failure status</returns>
+        [OperationBehavior(TransactionScopeRequired = true, TransactionAutoComplete = true)]
         public ServiceResponse<bool> AllocateOrAssociateDraftVersion(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc)
         {
             LogManager.Debug(string.Format("[ServiceCall][AllocateOrAssociateDraftVersion] Spec Id={0}; Version={1}; Tdoc={2}",
@@ -631,6 +637,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="uid">Tdoc uid</param>
         /// <param name="personId"></param>
         /// <returns>True for success case</returns>
+        [OperationBehavior(TransactionScopeRequired = true, TransactionAutoComplete = true)]
         public ServiceResponse<bool> UnlinkTdocFromVersion(string uid, int personId)
         {
             LogManager.Debug(string.Format("[ServiceCall][UnlinkTdocFromVersion] uid={0}, personId={1}", uid, personId));
@@ -649,6 +656,7 @@ namespace Etsi.Ultimate.WCF.Service
         /// <param name="technicalVersion"></param>
         /// <param name="editorialVersion"></param>
         /// <returns></returns>
+        [OperationBehavior(TransactionScopeRequired = true, TransactionAutoComplete = true)]
         public ServiceResponse<bool> CreatepCrDraftVersionIfNecessary(int personId, int specId, int releaseId,
             int meetingId, int majorVersion, int technicalVersion, int editorialVersion)
         {

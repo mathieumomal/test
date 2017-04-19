@@ -96,7 +96,7 @@ namespace Etsi.Ultimate.Repositories
                             && (x.Name.ToLower().Contains(wiName.Trim().ToLower()) || x.Pk_WorkItemUid == WorkItemId || String.IsNullOrEmpty(wiName.Trim()))
                             && ((x.Effective_Acronym != null && x.Effective_Acronym.ToLower().Contains(wiAcronym.Trim().ToLower())) || (String.IsNullOrEmpty(wiAcronym.Trim())))
                             && (x.WiLevel != null && x.WiLevel <= granularity)
-                            && (tbIds.Count == 0 || x.WorkItems_ResponsibleGroups.Any(y => tbIds.Contains(y.Fk_TbId.Value)))).ToList();
+                            && (tbIds.Count == 0 || x.WorkItems_ResponsibleGroups.Any(y => tbIds.Contains(y.Fk_TbId.Value)))).OrderBy(x=>x.WorkplanId).ToList();
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Etsi.Ultimate.Repositories
                     || x.Pk_WorkItemUid == workItemId)
                     && !x.DeletedFlag
                     && x.WiLevel != 0
-                    && (!shouldHaveAcronym || !string.IsNullOrEmpty(x.Acronym.Trim()))).ToList();
+                    && (!shouldHaveAcronym || !string.IsNullOrEmpty(x.Acronym.Trim()))).OrderBy(x=>x.WorkplanId).ToList();
         }
 
         /// <summary>
@@ -127,9 +127,9 @@ namespace Etsi.Ultimate.Repositories
         public List<WorkItem> GetAllWorkItemsForReleases(List<int> releaseIds)
         {
             return AllIncluding(t => t.Release, t => t.Remarks, t => t.WorkItems_ResponsibleGroups)
-                .Where(x => !x.DeletedFlag 
+                .Where(x => !x.DeletedFlag
                             && releaseIds.Contains(x.Fk_ReleaseId == null ? -1 : x.Fk_ReleaseId.Value))
-                .ToList();
+                .OrderBy(x =>x.WorkplanId).ToList();
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace Etsi.Ultimate.Repositories
                 !x.DeletedFlag && 
                 (keywordsInLower.Contains(x.Acronym.ToLower())
                 || keywordsInLower.Contains(x.Pk_WorkItemUid.ToString().ToLower()))
-                ).ToList();
+                ).OrderBy(x=>x.WorkplanId).ToList();
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace Etsi.Ultimate.Repositories
         public Release GetReleaseRelatedToOneOfWiWithTheLowerWiLevel(List<int> workitemsIds)
         {
             var oneOfWiWithFirstLevel =  UoW.Context.WorkItems.Include(x => x.Release.Enum_ReleaseStatus)
-                .Where(x => workitemsIds.Contains(x.Pk_WorkItemUid) && !x.DeletedFlag).OrderBy(x => x.WiLevel).ThenByDescending(x => x.Pk_WorkItemUid).FirstOrDefault();
+                .Where(x => workitemsIds.Contains(x.Pk_WorkItemUid) && !x.DeletedFlag).OrderBy(x => x.WiLevel).ThenByDescending(x => x.WorkplanId).FirstOrDefault();
             if (oneOfWiWithFirstLevel == null || oneOfWiWithFirstLevel.Release == null)
                 return null;
             return oneOfWiWithFirstLevel.Release;

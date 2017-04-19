@@ -75,7 +75,8 @@ namespace Etsi.Ultimate.Tests
         [TearDown]
         public virtual void TearDown()
         {
-            Context.Dispose();
+            if(Context != null)
+                Context.Dispose();
         }
     }
 }

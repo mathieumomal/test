@@ -265,9 +265,9 @@ namespace Etsi.Ultimate.Tests.Services
             Assert.AreEqual(3, workItems.Count);
             Assert.AreEqual(100, workItems[0].Pk_WorkItemUid);
             Assert.AreEqual("UPCON", workItems[0].Acronym);
-            Assert.AreEqual(101, workItems[1].Pk_WorkItemUid);
-            Assert.AreEqual(570029, workItems[2].Pk_WorkItemUid);
-            Assert.AreEqual("UPCON", workItems[2].Acronym);
+            Assert.AreEqual(570029, workItems[1].Pk_WorkItemUid);
+            Assert.AreEqual("UPCON", workItems[1].Acronym);
+            Assert.AreEqual(101, workItems[2].Pk_WorkItemUid);            
         }
 
         [Test, TestCaseSource("WorkItemData")]

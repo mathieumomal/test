@@ -12,6 +12,7 @@ using Etsi.Ultimate.Utils;
 using Microsoft.Practices.Unity;
 using NUnit.Framework;
 using Rhino.Mocks;
+using Etsi.Ultimate.Business.Versions;
 
 namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
 {
@@ -25,9 +26,12 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
         static string UPLOAD_PATH;
         #endregion
 
+        #region properties
         SpecVersionService versionSvc;
         SpecVersion myVersion;
+        #endregion
 
+        #region Init methods
         [SetUp]
         public override void SetUp()
         {
@@ -36,6 +40,8 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
             versionSvc = new SpecVersionService();
             myVersion = CreateVersion();
             SetupMocks();
+
+            MockTempPathOfVersions();
 
             if (String.IsNullOrEmpty(UPLOAD_PATH))
             {
@@ -76,14 +82,19 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
                 Directory.Delete(folder, true);
             }
 
-            // Clear the FTP information folder. 
-            foreach (var folder in Directory.GetDirectories(Environment.CurrentDirectory + "\\TestData\\Ftp\\Information"))
+            // Clear the FTP information folder.
+            var ftpInfoFolderPath = Environment.CurrentDirectory + "\\TestData\\Ftp\\Information";
+            if (Directory.Exists(ftpInfoFolderPath))
             {
-                Directory.Delete(folder, true);
+                foreach (var folder in Directory.GetDirectories(ftpInfoFolderPath))
+                {
+                    Directory.Delete(folder, true);
+                }
             }
         }
+        #endregion
 
-        #region tests
+        #region SpecVersionUpload ACTION
         [Test]
         public void CheckVersionForUpload_NominalCase()
         {
@@ -444,10 +455,94 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
 
         #endregion
 
+        #region Temporary path && Archive
+        [Test]
+        public void NominalCase_UploadedVersionShouldBeRenamed_And_Archived()
+        {
+            var fileToUpload = UPLOAD_PATH + "22101-d30.zip";
+            var mock = MockQualityChecks_Success();
+            //Overwrite global mock of SpecUploadManager
+            var specVersionMgrMock = MockRepository.GenerateMock<ISpecVersionUploadManager>();
+            specVersionMgrMock.Stub(x => x.GetUniquePath(Arg<string>.Is.Anything)).Return(null).WhenCalled(x =>
+            {
+                var arg = (string)x.Arguments[0];
+                x.ReturnValue = arg;
+            }).Repeat.Once();
+            specVersionMgrMock.Stub(x => x.ArchiveUploadedVersion(Arg<string>.Is.Anything, Arg<string>.Is.Anything)).Return(null).WhenCalled(x =>
+            {
+                var arg = (string)x.Arguments[0];
+                x.ReturnValue = arg;
+            }).Repeat.Once();
+            ManagerFactory.Container.RegisterInstance(specVersionMgrMock);
+
+            // Let's try to upload version 13.3.0
+            myVersion.TechnicalVersion = 3;
+
+            var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, myVersion, fileToUpload);
+
+            Assert.AreEqual(0, result.Report.GetNumberOfErrors());
+            mock.VerifyAllExpectations();
+            specVersionMgrMock.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void WarningCase_UploadedVersionShouldBeRenamed_And_Archived()
+        {
+            //Overwrite global mock of SpecUploadManager
+            var specVersionMgrMock = MockRepository.GenerateMock<ISpecVersionUploadManager>();
+            specVersionMgrMock.Stub(x => x.GetUniquePath(Arg<string>.Is.Anything)).Return(null).WhenCalled(x =>
+            {
+                var arg = (string)x.Arguments[0];
+                x.ReturnValue = arg;
+            }).Repeat.Once();
+            specVersionMgrMock.Stub(x => x.ArchiveUploadedVersion(Arg<string>.Is.Anything, Arg<string>.Is.Anything)).Return(null).WhenCalled(x =>
+            {
+                var arg = (string)x.Arguments[0];
+                x.ReturnValue = arg;
+            }).Repeat.Once();
+            ManagerFactory.Container.RegisterInstance(specVersionMgrMock);
+
+            var uccVersion = CreateVersion();
+            uccVersion.TechnicalVersion = 3;
+            var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, uccVersion, UPLOAD_PATH + "WithoutDocOrDocx.zip");
+
+            Assert.AreEqual(2, result.Report.WarningList.Count);//+Invalid filename
+            specVersionMgrMock.VerifyAllExpectations();
+        }
+
+        [Test]
+        public void ExceptionCase_UploadedVersionShouldBeRenamed_AndNot_Archived()
+        {
+            //Overwrite global mock of SpecUploadManager
+            var specVersionMgrMock = MockRepository.GenerateMock<ISpecVersionUploadManager>();
+            specVersionMgrMock.Stub(x => x.GetUniquePath(Arg<string>.Is.Anything)).Return(null).WhenCalled(x =>
+            {
+                var arg = (string)x.Arguments[0];
+                x.ReturnValue = arg;
+            }).Repeat.Once();
+            specVersionMgrMock.Stub(x => x.ArchiveUploadedVersion(Arg<string>.Is.Anything, Arg<string>.Is.Anything)).Return(null).WhenCalled(x =>
+            {
+                var arg = (string)x.Arguments[0];
+                x.ReturnValue = arg;
+            }).Repeat.Never();
+            ManagerFactory.Container.RegisterInstance(specVersionMgrMock);
+
+            var versionFilenameManagerMock = MockRepository.GenerateMock<IVersionFilenameManager>();
+            versionFilenameManagerMock.Stub(x => x.GenerateValidFilename(Arg<string>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything, Arg<int>.Is.Anything)).Throw(new Exception("ERROR"));
+            ManagerFactory.Container.RegisterInstance(versionFilenameManagerMock);
+
+            var uccVersion = CreateVersion();
+            uccVersion.TechnicalVersion = 3;
+            var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, uccVersion, UPLOAD_PATH + "WithoutDocOrDocx.zip");
+
+            Assert.AreEqual(1, result.Report.ErrorList.Count);
+            specVersionMgrMock.VerifyAllExpectations();
+        }
+        #endregion
+
         #region datas
         private void UploadVersionProcess(SpecVersion version, string fileToUpload)
         {
-
             var result = versionSvc.CheckVersionForUpload(USER_HAS_RIGHT, version, fileToUpload);
             Assert.AreEqual(0, result.Report.GetNumberOfErrors());
             Assert.IsNotNullOrEmpty(result.Result);
@@ -547,6 +642,23 @@ namespace Etsi.Ultimate.Tests.Services.SpecVersionServiceTest
             ManagerFactory.Container.RegisterInstance(mock);
 
             return mock;
+        }
+
+        private void MockTempPathOfVersions()
+        {
+            var specVersionMgrMock = MockRepository.GenerateMock<ISpecVersionUploadManager>();
+            specVersionMgrMock.Stub(x => x.GetUniquePath(Arg<string>.Is.Anything)).Return(null).WhenCalled(x =>
+            {
+                var arg = (string)x.Arguments[0];
+                x.ReturnValue = arg;
+            });
+            specVersionMgrMock.Stub(x => x.ArchiveUploadedVersion(Arg<string>.Is.Anything, Arg<string>.Is.Anything)).Return(null).WhenCalled(x =>
+            {
+                var arg = (string)x.Arguments[0];
+                x.ReturnValue = arg;
+            });
+            
+            ManagerFactory.Container.RegisterInstance(specVersionMgrMock);
         }
         #endregion
     }

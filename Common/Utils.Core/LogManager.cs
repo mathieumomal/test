@@ -74,6 +74,7 @@ namespace Etsi.Ultimate.Utils.Core
         {
             _configFilePath = filePath;
             _loggerName = loggerName;
+            ConfigureLogger();
         }
 
         #endregion

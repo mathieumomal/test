@@ -333,7 +333,7 @@ namespace Etsi.Ultimate.Module.Specifications
             var address = HttpContext.Current.Request.Url.AbsoluteUri.Split('&').ToList();
             address.RemoveAll(s => s.Contains("selectedTab"));
             address.RemoveAll(s => s.Contains("Rel"));
-            Response.Redirect(string.Join("&", address) + "&selectedTab=Releases&Rel=" + ReleaseId.Value);
+            Response.Redirect(string.Join("&", address) + "&selectedTab=Versions&Rel=" + ReleaseId.Value);
         }
 
         private void RedirectWithErrorMsg(int errorIndex)
@@ -341,7 +341,7 @@ namespace Etsi.Ultimate.Module.Specifications
             var address = HttpContext.Current.Request.Url.AbsoluteUri.Split('&').ToList();
             address.RemoveAll(s => s.Contains("selectedTab"));
             address.RemoveAll(s => s.Contains("Rel"));
-            Response.Redirect(string.Join("&", address) + "&selectedTab=Releases&Rel=" + ReleaseId.Value + "&FailedOperationIndex=" + errorIndex);
+            Response.Redirect(string.Join("&", address) + "&selectedTab=Versions&Rel=" + ReleaseId.Value + "&FailedOperationIndex=" + errorIndex);
         }
 
         /// <summary>
@@ -352,7 +352,7 @@ namespace Etsi.Ultimate.Module.Specifications
             var address = HttpContext.Current.Request.Url.AbsoluteUri.Split('&').ToList();
             address.RemoveAll(s => s.Contains("selectedTab"));
             address.RemoveAll(s => s.Contains("Rel"));
-            Response.Redirect(string.Join("&", address) + "&selectedTab=Releases");
+            Response.Redirect(string.Join("&", address) + "&selectedTab=Versions");
         }
         
 

@@ -120,6 +120,7 @@ namespace Etsi.Ultimate.Business
             Container.RegisterType<IQualityChecks, DocXQualityChecks>(new TransientLifetimeManager());
             Container.RegisterType<IDocDocumentManager, DocDocumentManager>(new TransientLifetimeManager());
             Container.RegisterType<ICrPackManager, CrPackManager>(new TransientLifetimeManager());
+            Container.RegisterType<ISpecVersionUploadManager, SpecVersionUploadManager>(new TransientLifetimeManager());
 
             // For ITU recommendations
             Container.RegisterType<ISeedFileParser, SeedFileParser>(new TransientLifetimeManager());

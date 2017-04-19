@@ -99,6 +99,7 @@
         
         <Right value="Cr_Add_Crs_To_CrPacks"/>  
         <Right value="Contribution_Add_Crs_To_CrPack"/> 
+		<Right value="Contribution_Build_CrPack"/> 
       </UserRole>
 
       <!-- Meeting Manager is a special role that gives additional rights on meetings. -->
@@ -182,7 +183,7 @@
         
         <Right value="Cr_Add_Crs_To_CrPacks"/>  
         <Right value="Contribution_Add_Crs_To_CrPack"/> 
-		
+		<Right value="Contribution_Build_CrPack"/> 
 		
 		<Right value="Release_Test_Page_Access"/>
       </UserRole>
@@ -253,6 +254,7 @@
 
         <Right value="Cr_Add_Crs_To_CrPacks"/>  
         <Right value="Contribution_Add_Crs_To_CrPack"/> 
+		<Right value="Contribution_Build_CrPack"/> 
 		
 		<Right value="Release_Test_Page_Access"/>
       </UserRole>

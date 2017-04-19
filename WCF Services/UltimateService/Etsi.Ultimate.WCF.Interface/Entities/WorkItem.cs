@@ -37,6 +37,15 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         public string Acronym { get; set; }
 
         /// <summary>
+        /// Gets or sets the acronym.
+        /// </summary>
+        /// <value>
+        /// The acronym.
+        /// </value>
+        [DataMember]
+        public string EffectiveAcronym { get; set; }
+
+        /// <summary>
         /// Gets or sets the name.
         /// </summary>
         /// <value>

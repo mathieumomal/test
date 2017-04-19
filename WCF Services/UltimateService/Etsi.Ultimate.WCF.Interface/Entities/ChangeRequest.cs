@@ -249,5 +249,18 @@ namespace Etsi.Ultimate.WCF.Interface.Entities
         /// </value>
         [DataMember]
         public List<ChangeRequestTsgData> TsgData { get; set; }
+
+        [DataMember]
+        public string ClausesAffected { get; set; }
+
+        [DataMember]
+        public string OtherCoreSpecifications { get; set; }
+
+        [DataMember]
+        public string TestSpecifications { get; set; }
+
+        [DataMember]
+        public string OMSpecifications { get; set; }
+
     }
 }

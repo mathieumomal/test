@@ -31,6 +31,15 @@ namespace Etsi.Ultimate.Module.Versions {
         protected global::Telerik.Web.UI.RadScriptManager RadScriptManager1;
         
         /// <summary>
+        /// Contrôle loadingIcon.
+        /// </summary>
+        /// <remarks>
+        /// Champ généré automatiquement.
+        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Image loadingIcon;
+        
+        /// <summary>
         /// Contrôle fixContainer.
         /// </summary>
         /// <remarks>
@@ -274,33 +283,6 @@ namespace Etsi.Ultimate.Module.Versions {
         protected global::System.Web.UI.WebControls.LinkButton ExitBtn;
         
         /// <summary>
-        /// Contrôle analysis.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Panel analysis;
-        
-        /// <summary>
-        /// Contrôle imgWait.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Image imgWait;
-        
-        /// <summary>
-        /// Contrôle analysis_cancel.
-        /// </summary>
-        /// <remarks>
-        /// Champ généré automatiquement.
-        /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
-        /// </remarks>
-        protected global::Telerik.Web.UI.RadButton analysis_cancel;
-        
-        /// <summary>
         /// Contrôle confirmation.
         /// </summary>
         /// <remarks>
@@ -334,7 +316,7 @@ namespace Etsi.Ultimate.Module.Versions {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadButton btnConfirmUpload;
+        protected global::System.Web.UI.WebControls.Button btnConfirmUpload;
         
         /// <summary>
         /// Contrôle Confirmation_cancel.
@@ -343,7 +325,7 @@ namespace Etsi.Ultimate.Module.Versions {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadButton Confirmation_cancel;
+        protected global::System.Web.UI.WebControls.Button Confirmation_cancel;
         
         /// <summary>
         /// Contrôle state.
@@ -370,6 +352,6 @@ namespace Etsi.Ultimate.Module.Versions {
         /// Champ généré automatiquement.
         /// Pour modifier, déplacez la déclaration de champ du fichier de concepteur dans le fichier code-behind.
         /// </remarks>
-        protected global::Telerik.Web.UI.RadButton state_confirmation;
+        protected global::System.Web.UI.WebControls.Button state_confirmation;
     }
 }

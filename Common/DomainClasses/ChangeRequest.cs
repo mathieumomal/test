@@ -42,6 +42,10 @@ namespace Etsi.Ultimate.DomainClasses
         public string WGTDoc { get; set; }
         public string MOD_BY { get; set; }
         public Nullable<System.DateTime> MOD_TS { get; set; }
+        public string ClausesAffected { get; set; }
+        public string OtherCoreSpecifications { get; set; }
+        public string TestSpecifications { get; set; }
+        public string OMSpecifications { get; set; }
     
         public virtual SpecVersion CurrentVersion { get; set; }
         public virtual SpecVersion NewVersion { get; set; }

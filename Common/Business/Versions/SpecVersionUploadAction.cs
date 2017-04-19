@@ -64,10 +64,13 @@ namespace Etsi.Ultimate.Business.Versions
 
                     var validationReport = svcResponse.Report;
                     var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path);
+                    var uploadedFileExtension = Path.GetExtension(path);
                     var fileExtension = String.Empty;
                     var fileToAnalyzePath = String.Empty;
                     var isUcc = version.Specification.IsUnderChangeControl.GetValueOrDefault();
 
+                    var specVersionUploadMgr = ManagerFactory.Resolve<ISpecVersionUploadManager>();
+                    var uniquePath = specVersionUploadMgr.GetUniquePath(path);
 
                     //[1] Check the file name
                     var versionFilenameMgr = ManagerFactory.Resolve<IVersionFilenameManager>();
@@ -80,9 +83,9 @@ namespace Etsi.Ultimate.Business.Versions
 
                     var allowToRunQualityChecks = false;
                     //[2] If file is in .zip format, check that .zip file and internal word file must have same name.
-                    if (Path.GetExtension(path).Equals(".zip", StringComparison.InvariantCultureIgnoreCase))
+                    if (uploadedFileExtension.Equals(".zip", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        var zipContent = Zip.Extract(path, true);
+                        var zipContent = Zip.Extract(uniquePath, true);
                         var zipContentShortPath = new List<string>();
                         zipContent.ForEach(x => zipContentShortPath.Add(x.Split('\\').Last()));
 
@@ -135,12 +138,12 @@ namespace Etsi.Ultimate.Business.Versions
                     }
                     else //Copy to stream from .doc / .docx
                     {
-                        fileExtension = Path.GetExtension(path);
+                        fileExtension = uploadedFileExtension;
                         if (fileExtension == null ||
                             (!fileExtension.Equals(".doc", StringComparison.InvariantCultureIgnoreCase) &&
                              !fileExtension.Equals(".docx", StringComparison.InvariantCultureIgnoreCase)))
                             throw new InvalidOperationException("Invalid file format provided");
-                        fileToAnalyzePath = path;
+                        fileToAnalyzePath = uniquePath;
                         allowToRunQualityChecks = true;
                     }
 
@@ -189,9 +192,12 @@ namespace Etsi.Ultimate.Business.Versions
                             validationReport.WarningList.AddRange(businessValidationReport.WarningList);
                         }
                     }
+
+                    var archiveFilePath = specVersionUploadMgr.ArchiveUploadedVersion(path, uniquePath);
+
                     svcResponse.Result = Guid.NewGuid().ToString();
                     CacheManager.InsertForLimitedTime(CacheKey + svcResponse.Result,
-                        new CacheUploadStorage(version, path, validationReport), 10);
+                        new CacheUploadStorage(version, archiveFilePath, validationReport), 10);
                 }
                 catch (InvalidOperationException exc)
                 {
@@ -207,7 +213,6 @@ namespace Etsi.Ultimate.Business.Versions
             return svcResponse;
         }
 
-        
         /// <summary>
         /// Does perform the upload of the version, given the token that was passed by CheckVersionForUpload function.
         /// </summary>

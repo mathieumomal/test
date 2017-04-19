@@ -157,6 +157,7 @@ namespace Etsi.Ultimate.WCF.Interface
 
         #region crs
         [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
         ServiceResponse<bool> UpdateCrStatus(string uid, string status);
 
         /// <summary>
@@ -184,6 +185,7 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <param name="changeRequest">The change request.</param>
         /// <returns>Primary key of newly inserted change request</returns>
         [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
         ServiceResponse<int> CreateChangeRequest(int personId, ChangeRequest changeRequest);
 
         /// <summary>
@@ -193,6 +195,7 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <param name="changeRequest">The change request.</param>
         /// <returns>Success/Failure</returns>
         [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
         bool EditChangeRequest(int personId, ChangeRequest changeRequest);
 
         /// <summary>
@@ -251,6 +254,7 @@ namespace Etsi.Ultimate.WCF.Interface
         /// </summary>
         /// <param name="crPackDecisionlist"></param>
         [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
         bool UpdateChangeRequestPackRelatedCrs(List<KeyValuePair<CrKeyFacade, string>> crPackDecisionlist);
 
         /// <summary>
@@ -342,6 +346,7 @@ namespace Etsi.Ultimate.WCF.Interface
         ServiceResponse<bool> UpdateCrsStatusOfCrPack(List<CrOfCrPackFacade> CrsOfCrPack);
 
         [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
         ServiceResponse<bool> UpdateCrsInsideCrPack(ChangeRequestPackFacade crPack,
             List<ChangeRequestInsideCrPackFacade> crs, int personId);
         #endregion
@@ -373,6 +378,7 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <param name="releaseId"></param>
         /// <returns>Success/Failure status</returns>
         [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
         ServiceResponse<bool> AllocateOrAssociateDraftVersion(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion, int editorialVersion, string relatedTdoc);
 
         /// <summary>
@@ -427,6 +433,7 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <param name="personId"></param>
         /// <returns>True for success case</returns>
         [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
         ServiceResponse<bool> UnlinkTdocFromVersion(string uid, int personId);
 
         /// <summary>
@@ -441,6 +448,7 @@ namespace Etsi.Ultimate.WCF.Interface
         /// <param name="editorialVersion"></param>
         /// <returns></returns>
         [OperationContract]
+        [TransactionFlow(TransactionFlowOption.Allowed)]
         ServiceResponse<bool> CreatepCrDraftVersionIfNecessary(int personId, int specId, int releaseId,
             int meetingId, int majorVersion, int technicalVersion, int editorialVersion);
 

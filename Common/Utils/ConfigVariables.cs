@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Configuration;
+using System.IO;
 
 namespace Etsi.Ultimate.Utils
 {
@@ -189,9 +190,6 @@ namespace Etsi.Ultimate.Utils
             }
         }
 
-        /// <summary>
-        /// temporary upload version path
-        /// </summary>
         public static string UploadVersionTemporaryPath
         {
             get
@@ -199,6 +197,26 @@ namespace Etsi.Ultimate.Utils
                 if (ConfigurationManager.AppSettings["UploadVersionTemporaryPath"] != null)
                     return ConfigurationManager.AppSettings["UploadVersionTemporaryPath"].ToString();
                 return "";
+            }
+        }
+
+        public static string UploadVersionArchiveFolder
+        {
+            get
+            {
+                if (ConfigurationManager.AppSettings["UploadVersionArchiveFolder"] != null)
+                    return ConfigurationManager.AppSettings["UploadVersionArchiveFolder"].ToString();
+                return "";
+            }
+        }
+
+        public static bool UploadVersionSystemShouldKeepUnZipFolder
+        {
+            get
+            {
+                bool val = true;
+                bool.TryParse(ConfigurationManager.AppSettings["UploadVersionSystemShouldKeepUnZipFolder"], out val);
+                return val;
             }
         }
 

@@ -1,5 +1,28 @@
 @import url("/Portals/_default/Skins/3GPP/CommonCssComponent/buttons.css");
 
+/*LOADER*/
+#VersionUploadForm .loadingBackground{
+    background-color: Gray;
+    filter: alpha(opacity=60);
+    opacity: 0.60;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+    position: fixed;
+    height: 100%;
+    z-index: 3000;
+}
+#VersionUploadForm .loadingIcon{
+    top: 40%;
+    position: fixed;
+    right: 48%;
+    z-index: 2000;
+}
+#VersionUploadForm .loadingIcon img{
+    width: 45px;
+}
+/*LOADER*/
+
 .containerFix {
     width: 400px !important;
     position: relative;

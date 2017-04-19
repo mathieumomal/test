@@ -28,6 +28,10 @@
           <Property Name="Fk_Impact" Type="int" />
           <Property Name="MOD_BY" Type="varchar" MaxLength="100" />
           <Property Name="MOD_TS" Type="datetime" />
+          <Property Name="ClausesAffected" Type="varchar" MaxLength="200" />
+          <Property Name="OtherCoreSpecifications" Type="varchar" MaxLength="200" />
+          <Property Name="TestSpecifications" Type="varchar" MaxLength="200" />
+          <Property Name="OMSpecifications" Type="varchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="ChangeRequestTsgData">
           <Key>
@@ -1087,127 +1091,127 @@ avertissement 6002: La table/vue 'U3GPPDB.dbo.View_Persons' n'a pas de clé prim
           <EntitySet Name="WorkPlanFiles" EntityType="Self.WorkPlanFiles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ETSI_WorkItem" EntityType="Self.ETSI_WorkItem" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[ETSI_WorkItem].[WKI_ID] AS [WKI_ID], 
-[ETSI_WorkItem].[WKI_REFERENCE] AS [WKI_REFERENCE], 
-[ETSI_WorkItem].[published] AS [published], 
-[ETSI_WorkItem].[PublicationDate] AS [PublicationDate], 
-[ETSI_WorkItem].[StandardType] AS [StandardType], 
-[ETSI_WorkItem].[Number] AS [Number], 
-[ETSI_WorkItem].[fileName] AS [fileName], 
-[ETSI_WorkItem].[filePath] AS [filePath], 
-[ETSI_WorkItem].[WKI_ETSI_NUMBER] AS [WKI_ETSI_NUMBER]
-FROM [dbo].[ETSI_WorkItem] AS [ETSI_WorkItem]</DefiningQuery>
+    [ETSI_WorkItem].[WKI_ID] AS [WKI_ID], 
+    [ETSI_WorkItem].[WKI_REFERENCE] AS [WKI_REFERENCE], 
+    [ETSI_WorkItem].[published] AS [published], 
+    [ETSI_WorkItem].[PublicationDate] AS [PublicationDate], 
+    [ETSI_WorkItem].[StandardType] AS [StandardType], 
+    [ETSI_WorkItem].[Number] AS [Number], 
+    [ETSI_WorkItem].[fileName] AS [fileName], 
+    [ETSI_WorkItem].[filePath] AS [filePath], 
+    [ETSI_WorkItem].[WKI_ETSI_NUMBER] AS [WKI_ETSI_NUMBER]
+    FROM [dbo].[ETSI_WorkItem] AS [ETSI_WorkItem]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="ResponsibleGroup_Secretary" EntityType="Self.ResponsibleGroup_Secretary" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[ResponsibleGroup_Secretary].[TbId] AS [TbId], 
-[ResponsibleGroup_Secretary].[Email] AS [Email], 
-[ResponsibleGroup_Secretary].[PersonId] AS [PersonId], 
-[ResponsibleGroup_Secretary].[roleExpirationDate] AS [roleExpirationDate]
-FROM [dbo].[ResponsibleGroup_Secretary] AS [ResponsibleGroup_Secretary]</DefiningQuery>
+    [ResponsibleGroup_Secretary].[TbId] AS [TbId], 
+    [ResponsibleGroup_Secretary].[Email] AS [Email], 
+    [ResponsibleGroup_Secretary].[PersonId] AS [PersonId], 
+    [ResponsibleGroup_Secretary].[roleExpirationDate] AS [roleExpirationDate]
+    FROM [dbo].[ResponsibleGroup_Secretary] AS [ResponsibleGroup_Secretary]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Users_AdHoc_Roles" EntityType="Self.Users_AdHoc_Roles" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[Users_AdHoc_Roles].[UserID] AS [UserID], 
-[Users_AdHoc_Roles].[PERSON_ID] AS [PERSON_ID], 
-[Users_AdHoc_Roles].[RoleName] AS [RoleName]
-FROM [dbo].[Users_AdHoc_Roles] AS [Users_AdHoc_Roles]</DefiningQuery>
+    [Users_AdHoc_Roles].[UserID] AS [UserID], 
+    [Users_AdHoc_Roles].[PERSON_ID] AS [PERSON_ID], 
+    [Users_AdHoc_Roles].[RoleName] AS [RoleName]
+    FROM [dbo].[Users_AdHoc_Roles] AS [Users_AdHoc_Roles]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Users_Groups" EntityType="Self.Users_Groups" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[Users_Groups].[PERSON_ID] AS [PERSON_ID], 
-[Users_Groups].[PLIST_ID] AS [PLIST_ID], 
-[Users_Groups].[TB_ID] AS [TB_ID], 
-[Users_Groups].[PERS_ROLE_CODE] AS [PERS_ROLE_CODE], 
-[Users_Groups].[INTERNET_ADD] AS [INTERNET_ADD], 
-[Users_Groups].[END_DATE] AS [END_DATE]
-FROM [dbo].[Users_Groups] AS [Users_Groups]</DefiningQuery>
+    [Users_Groups].[PERSON_ID] AS [PERSON_ID], 
+    [Users_Groups].[PLIST_ID] AS [PLIST_ID], 
+    [Users_Groups].[TB_ID] AS [TB_ID], 
+    [Users_Groups].[PERS_ROLE_CODE] AS [PERS_ROLE_CODE], 
+    [Users_Groups].[INTERNET_ADD] AS [INTERNET_ADD], 
+    [Users_Groups].[END_DATE] AS [END_DATE]
+    FROM [dbo].[Users_Groups] AS [Users_Groups]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="View_Communities" EntityType="Self.View_Communities" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[View_Communities].[TbId] AS [TbId], 
-[View_Communities].[TbName] AS [TbName], 
-[View_Communities].[TbType] AS [TbType], 
-[View_Communities].[TbTitle] AS [TbTitle], 
-[View_Communities].[ParentTbId] AS [ParentTbId], 
-[View_Communities].[ActiveCode] AS [ActiveCode], 
-[View_Communities].[ShortName] AS [ShortName], 
-[View_Communities].[DetailsURL] AS [DetailsURL]
-FROM [dbo].[View_Communities] AS [View_Communities]</DefiningQuery>
+    [View_Communities].[TbId] AS [TbId], 
+    [View_Communities].[TbName] AS [TbName], 
+    [View_Communities].[TbType] AS [TbType], 
+    [View_Communities].[TbTitle] AS [TbTitle], 
+    [View_Communities].[ParentTbId] AS [ParentTbId], 
+    [View_Communities].[ActiveCode] AS [ActiveCode], 
+    [View_Communities].[ShortName] AS [ShortName], 
+    [View_Communities].[DetailsURL] AS [DetailsURL]
+    FROM [dbo].[View_Communities] AS [View_Communities]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="View_ContributionsWithAditionnalData" EntityType="Self.View_ContributionsWithAditionnalData" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[View_ContributionsWithAditionnalData].[pk_Contribution] AS [pk_Contribution], 
-[View_ContributionsWithAditionnalData].[uid] AS [uid], 
-[View_ContributionsWithAditionnalData].[fk_SpecificationId] AS [fk_SpecificationId], 
-[View_ContributionsWithAditionnalData].[Specification_MajorVersion] AS [Specification_MajorVersion], 
-[View_ContributionsWithAditionnalData].[Specification_TechnicalVersion] AS [Specification_TechnicalVersion], 
-[View_ContributionsWithAditionnalData].[Specification_EditorialVersion] AS [Specification_EditorialVersion]
-FROM [dbo].[View_ContributionsWithAditionnalData] AS [View_ContributionsWithAditionnalData]</DefiningQuery>
+    [View_ContributionsWithAditionnalData].[pk_Contribution] AS [pk_Contribution], 
+    [View_ContributionsWithAditionnalData].[uid] AS [uid], 
+    [View_ContributionsWithAditionnalData].[fk_SpecificationId] AS [fk_SpecificationId], 
+    [View_ContributionsWithAditionnalData].[Specification_MajorVersion] AS [Specification_MajorVersion], 
+    [View_ContributionsWithAditionnalData].[Specification_TechnicalVersion] AS [Specification_TechnicalVersion], 
+    [View_ContributionsWithAditionnalData].[Specification_EditorialVersion] AS [Specification_EditorialVersion]
+    FROM [dbo].[View_ContributionsWithAditionnalData] AS [View_ContributionsWithAditionnalData]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="View_CrPacks" EntityType="Self.View_CrPacks" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[View_CrPacks].[pk_Contribution] AS [pk_Contribution], 
-[View_CrPacks].[title] AS [title], 
-[View_CrPacks].[uid] AS [uid], 
-[View_CrPacks].[fk_Meeting] AS [fk_Meeting], 
-[View_CrPacks].[Denorm_Source] AS [Denorm_Source], 
-[View_CrPacks].[TB_ID] AS [TB_ID]
-FROM [dbo].[View_CrPacks] AS [View_CrPacks]</DefiningQuery>
+    [View_CrPacks].[pk_Contribution] AS [pk_Contribution], 
+    [View_CrPacks].[title] AS [title], 
+    [View_CrPacks].[uid] AS [uid], 
+    [View_CrPacks].[fk_Meeting] AS [fk_Meeting], 
+    [View_CrPacks].[Denorm_Source] AS [Denorm_Source], 
+    [View_CrPacks].[TB_ID] AS [TB_ID]
+    FROM [dbo].[View_CrPacks] AS [View_CrPacks]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="View_Meetings" EntityType="Self.View_Meetings" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[View_Meetings].[MTG_ID] AS [MTG_ID], 
-[View_Meetings].[MTG_CATEG_CODE] AS [MTG_CATEG_CODE], 
-[View_Meetings].[MTG_TYPE_CODE] AS [MTG_TYPE_CODE], 
-[View_Meetings].[MTGS_CODE] AS [MTGS_CODE], 
-[View_Meetings].[MTG_REF] AS [MTG_REF], 
-[View_Meetings].[START_DATE] AS [START_DATE], 
-[View_Meetings].[END_DATE] AS [END_DATE], 
-[View_Meetings].[MTG_YEAR] AS [MTG_YEAR], 
-[View_Meetings].[MTG_SEQNO] AS [MTG_SEQNO], 
-[View_Meetings].[MTG_TITLE] AS [MTG_TITLE], 
-[View_Meetings].[OWNERSHIP_LEVEL] AS [OWNERSHIP_LEVEL], 
-[View_Meetings].[INVITATION_DATE] AS [INVITATION_DATE], 
-[View_Meetings].[DEADLINE_DATE] AS [DEADLINE_DATE], 
-[View_Meetings].[DURATION] AS [DURATION], 
-[View_Meetings].[INVITED_NUMB] AS [INVITED_NUMB], 
-[View_Meetings].[ATTENDANT_NUMB] AS [ATTENDANT_NUMB], 
-[View_Meetings].[LOCAL_FLG] AS [LOCAL_FLG], 
-[View_Meetings].[ORGA_ID] AS [ORGA_ID], 
-[View_Meetings].[LOC_ADDRESS] AS [LOC_ADDRESS], 
-[View_Meetings].[LOC_ZIP] AS [LOC_ZIP], 
-[View_Meetings].[LOC_CITY] AS [LOC_CITY], 
-[View_Meetings].[LOC_CTY_CODE] AS [LOC_CTY_CODE], 
-[View_Meetings].[MTGREF_MASK] AS [MTGREF_MASK], 
-[View_Meetings].[START_REGISTRATION_DATE] AS [START_REGISTRATION_DATE], 
-[View_Meetings].[LOCATION_DETAILS_URL] AS [LOCATION_DETAILS_URL], 
-[View_Meetings].[TB_ID] AS [TB_ID], 
-[View_Meetings].[Creation_Date] AS [Creation_Date], 
-[View_Meetings].[ShortName] AS [ShortName], 
-[View_Meetings].[MtgShortRef] AS [MtgShortRef]
-FROM [dbo].[View_Meetings] AS [View_Meetings]</DefiningQuery>
+    [View_Meetings].[MTG_ID] AS [MTG_ID], 
+    [View_Meetings].[MTG_CATEG_CODE] AS [MTG_CATEG_CODE], 
+    [View_Meetings].[MTG_TYPE_CODE] AS [MTG_TYPE_CODE], 
+    [View_Meetings].[MTGS_CODE] AS [MTGS_CODE], 
+    [View_Meetings].[MTG_REF] AS [MTG_REF], 
+    [View_Meetings].[START_DATE] AS [START_DATE], 
+    [View_Meetings].[END_DATE] AS [END_DATE], 
+    [View_Meetings].[MTG_YEAR] AS [MTG_YEAR], 
+    [View_Meetings].[MTG_SEQNO] AS [MTG_SEQNO], 
+    [View_Meetings].[MTG_TITLE] AS [MTG_TITLE], 
+    [View_Meetings].[OWNERSHIP_LEVEL] AS [OWNERSHIP_LEVEL], 
+    [View_Meetings].[INVITATION_DATE] AS [INVITATION_DATE], 
+    [View_Meetings].[DEADLINE_DATE] AS [DEADLINE_DATE], 
+    [View_Meetings].[DURATION] AS [DURATION], 
+    [View_Meetings].[INVITED_NUMB] AS [INVITED_NUMB], 
+    [View_Meetings].[ATTENDANT_NUMB] AS [ATTENDANT_NUMB], 
+    [View_Meetings].[LOCAL_FLG] AS [LOCAL_FLG], 
+    [View_Meetings].[ORGA_ID] AS [ORGA_ID], 
+    [View_Meetings].[LOC_ADDRESS] AS [LOC_ADDRESS], 
+    [View_Meetings].[LOC_ZIP] AS [LOC_ZIP], 
+    [View_Meetings].[LOC_CITY] AS [LOC_CITY], 
+    [View_Meetings].[LOC_CTY_CODE] AS [LOC_CTY_CODE], 
+    [View_Meetings].[MTGREF_MASK] AS [MTGREF_MASK], 
+    [View_Meetings].[START_REGISTRATION_DATE] AS [START_REGISTRATION_DATE], 
+    [View_Meetings].[LOCATION_DETAILS_URL] AS [LOCATION_DETAILS_URL], 
+    [View_Meetings].[TB_ID] AS [TB_ID], 
+    [View_Meetings].[Creation_Date] AS [Creation_Date], 
+    [View_Meetings].[ShortName] AS [ShortName], 
+    [View_Meetings].[MtgShortRef] AS [MtgShortRef]
+    FROM [dbo].[View_Meetings] AS [View_Meetings]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="View_ModulesPages" EntityType="Self.View_ModulesPages" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[View_ModulesPages].[TabName] AS [TabName], 
-[View_ModulesPages].[TabPath] AS [TabPath], 
-[View_ModulesPages].[ModuleID] AS [ModuleID], 
-[View_ModulesPages].[TabID] AS [TabID]
-FROM [dbo].[View_ModulesPages] AS [View_ModulesPages]</DefiningQuery>
+    [View_ModulesPages].[TabName] AS [TabName], 
+    [View_ModulesPages].[TabPath] AS [TabPath], 
+    [View_ModulesPages].[ModuleID] AS [ModuleID], 
+    [View_ModulesPages].[TabID] AS [TabID]
+    FROM [dbo].[View_ModulesPages] AS [View_ModulesPages]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="View_Persons" EntityType="Self.View_Persons" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
-[View_Persons].[PERSON_ID] AS [PERSON_ID], 
-[View_Persons].[Username] AS [Username], 
-[View_Persons].[Email] AS [Email], 
-[View_Persons].[LASTNAME] AS [LASTNAME], 
-[View_Persons].[FIRSTNAME] AS [FIRSTNAME], 
-[View_Persons].[ORGA_ID] AS [ORGA_ID], 
-[View_Persons].[ORGA_NAME] AS [ORGA_NAME], 
-[View_Persons].[ORGA_SHORT] AS [ORGA_SHORT], 
-[View_Persons].[DELETED_FLG] AS [DELETED_FLG]
-FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
+    [View_Persons].[PERSON_ID] AS [PERSON_ID], 
+    [View_Persons].[Username] AS [Username], 
+    [View_Persons].[Email] AS [Email], 
+    [View_Persons].[LASTNAME] AS [LASTNAME], 
+    [View_Persons].[FIRSTNAME] AS [FIRSTNAME], 
+    [View_Persons].[ORGA_ID] AS [ORGA_ID], 
+    [View_Persons].[ORGA_NAME] AS [ORGA_NAME], 
+    [View_Persons].[ORGA_SHORT] AS [ORGA_SHORT], 
+    [View_Persons].[DELETED_FLG] AS [DELETED_FLG]
+    FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           </EntitySet>
           <AssociationSet Name="FK_ChangeRequest_WgStatus" Association="Self.FK_ChangeRequest_WgStatus">
             <End Role="Enum_ChangeRequestStatus" EntitySet="Enum_ChangeRequestStatus" />
@@ -2215,6 +2219,10 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <NavigationProperty Name="Specification" Relationship="Etsi.Ultimate.DataAccess.FK_CRSpecification" FromRole="ChangeRequest" ToRole="Specification" />
           <Property Name="MOD_BY" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="MOD_TS" Type="DateTime" Precision="3" />
+          <Property Name="ClausesAffected" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="OtherCoreSpecifications" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TestSpecifications" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="OMSpecifications" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_CRCurrentVersion">
           <End Type="Etsi.Ultimate.DataAccess.SpecVersion" Role="SpecVersion" Multiplicity="0..1" />
@@ -3035,6 +3043,10 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
           <EntitySetMapping Name="ChangeRequests">
             <EntityTypeMapping TypeName="Etsi.Ultimate.DataAccess.ChangeRequest">
               <MappingFragment StoreEntitySet="ChangeRequest">
+                <ScalarProperty Name="OMSpecifications" ColumnName="OMSpecifications" />
+                <ScalarProperty Name="TestSpecifications" ColumnName="TestSpecifications" />
+                <ScalarProperty Name="OtherCoreSpecifications" ColumnName="OtherCoreSpecifications" />
+                <ScalarProperty Name="ClausesAffected" ColumnName="ClausesAffected" />
                 <ScalarProperty Name="MOD_TS" ColumnName="MOD_TS" />
                 <ScalarProperty Name="MOD_BY" ColumnName="MOD_BY" />
                 <ScalarProperty Name="WGTDoc" ColumnName="WGTDoc" />
@@ -3204,8 +3216,8 @@ FROM [dbo].[View_Persons] AS [View_Persons]</DefiningQuery>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
         <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
-        <DesignerProperty Name="UseLegacyProvider" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->

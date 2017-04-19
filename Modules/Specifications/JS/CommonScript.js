@@ -63,3 +63,9 @@ function OpenSpecDetailsPage(url, title) {
     var popUp = window.open(url, title, 'height=' + height + ',width= ' + width + ',toolbar=no,location=no, directories=no,status=no,menubar=no,scrollbars=yes,resizable=no');
     popUp.focus();
 }
+
+function StopEvent(e)
+{
+    if(!e) var e = window.event;
+    e.stopPropagation();
+}

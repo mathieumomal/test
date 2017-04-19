@@ -935,7 +935,7 @@ namespace Etsi.Ultimate.Business
             }
             else
             {
-                Report.LogWarning(String.Format(Utils.Localization.WorkItem_Import_Invalid_Release, wi.WorkplanId, wi.Pk_WorkItemUid, record.Release));
+                Report.LogError(String.Format(Utils.Localization.WorkItem_Import_Invalid_Release, wi.WorkplanId, wi.Pk_WorkItemUid, record.Release));
             }
 
             if (wi.Fk_ReleaseId != releaseFk)

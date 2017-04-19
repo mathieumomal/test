@@ -779,11 +779,12 @@ namespace Etsi.Ultimate.WCF.Service
                     crPackDecision.ForEach(x => crUltimateKeys.Add(new KeyValuePair<UltimateEntities.CrKeyFacade, string>(ConvertToUltimateCrKeyFacade(x.Key), x.Value)));
 
                     var response = svc.UpdateChangeRequestPackRelatedCrs(crUltimateKeys);
-                    if (response.Report.GetNumberOfErrors() <= 0)
+                    if (response.Result && response.Report.GetNumberOfErrors() <= 0)
                         return true;
+                    LogManager.Error("UpdateChangeRequestPackRelatedCrs failed");
                     foreach (var error in response.Report.ErrorList)
                     {
-                        LogManager.Error("UpdateChangeRequestPackRelatedCrs failed cause by : " + error);
+                        LogManager.Error("Caused by following errors: " + error);
                     }
                 }
             }
@@ -1429,6 +1430,7 @@ namespace Etsi.Ultimate.WCF.Service
                 serviceWorkItem.Pk_WorkItemUid = ultimateWorkItem.Pk_WorkItemUid;
                 serviceWorkItem.UID = ultimateWorkItem.UID;
                 serviceWorkItem.Acronym = ultimateWorkItem.Acronym;
+                serviceWorkItem.EffectiveAcronym = ultimateWorkItem.Effective_Acronym;
                 serviceWorkItem.Name = ultimateWorkItem.Name;
                 serviceWorkItem.ResponsibleGroups = ultimateWorkItem.ResponsibleGroups;
                 serviceWorkItem.ResponsibleGroupIds =
@@ -1545,6 +1547,10 @@ namespace Etsi.Ultimate.WCF.Service
                 {
                     serviceCr.Fk_WorkItemIds = ultimateCr.CR_WorkItems.Select(x => x.Fk_WIId ?? 0).Distinct().ToList();
                 }
+                serviceCr.ClausesAffected = ultimateCr.ClausesAffected ?? string.Empty;
+                serviceCr.OtherCoreSpecifications = ultimateCr.OtherCoreSpecifications ?? string.Empty;
+                serviceCr.TestSpecifications = ultimateCr.TestSpecifications ?? string.Empty;
+                serviceCr.OMSpecifications = ultimateCr.OMSpecifications ?? string.Empty;
 
                 //Referenced objects
                 if (ultimateCr.Enum_CRCategory != null)

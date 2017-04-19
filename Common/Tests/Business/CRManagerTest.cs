@@ -28,17 +28,12 @@ namespace Etsi.Ultimate.Tests.Business
 
         #region Logger SetUp
 
-        [TestFixtureSetUp]
-        public void Init()
-        {
-            var configFileName = Directory.GetCurrentDirectory() + "\\TestData\\LogManager\\Test.log4net.config";
-            LogManager.SetConfiguration(configFileName, "TestLogger");
-        }
-
         [SetUp]
         public override void SetUp()
         {
             base.SetUp();
+            var configFileName = Directory.GetCurrentDirectory() + "\\TestData\\LogManager\\Test.log4net.config";
+            LogManager.SetConfiguration(configFileName, "TestLogger");
             _memoryAppender = ((LoggerWrapperImpl)(LogManager.Logger)).Logger.Repository.GetAppenders()[0] as MemoryAppender;
         }
 
@@ -46,7 +41,8 @@ namespace Etsi.Ultimate.Tests.Business
         public override void TearDown()
         {
             base.TearDown();
-            _memoryAppender.Clear();
+            if(_memoryAppender != null)
+                _memoryAppender.Clear();
         }
 
         [TestFixtureTearDown]
