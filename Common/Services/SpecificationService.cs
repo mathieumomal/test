@@ -25,22 +25,38 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public ServiceResponse<List<SpecVersionFoundationCrs>> GetSpecVersionsFoundationCrs(int personId, int specId)
         {
-            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specificationManager = new SpecificationManager {UoW = uow};
-                return specificationManager.GetSpecVersionsFoundationCrs(personId, specId);
+                using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specificationManager = new SpecificationManager { UoW = uow };
+                    return specificationManager.GetSpecVersionsFoundationCrs(personId, specId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, specId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public string ExportSpecification(int personId, SpecificationSearch searchObj, string baseurl)
         {
-            string exportPath;
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var csvExport = new SpecificationExporter(uoW);
-                exportPath = csvExport.ExportSpecification(personId, searchObj, baseurl);
+                string exportPath;
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var csvExport = new SpecificationExporter(uoW);
+                    exportPath = csvExport.ExportSpecification(personId, searchObj, baseurl);
+                }
+                return exportPath;
             }
-            return exportPath;
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, searchObj, baseurl }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
+            }
         }
 
         /// <summary>
@@ -51,10 +67,18 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecifications(int personId, List<int> ids)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specificationManager = new SpecificationManager {UoW = uoW};
-                return specificationManager.GetSpecifications(personId, ids);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specificationManager = new SpecificationManager { UoW = uoW };
+                    return specificationManager.GetSpecifications(personId, ids);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, ids }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -66,147 +90,235 @@ namespace Etsi.Ultimate.Services
         /// <returns>List of specifications</returns>
         public List<Specification> GetSpecificationsByNumbers(int personId, List<string> specNumbers)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specificationManager = ManagerFactory.Resolve<ISpecificationManager>();
-                specificationManager.UoW = uoW;
-                return specificationManager.GetSpecificationsByNumbers(personId, specNumbers);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specificationManager = ManagerFactory.Resolve<ISpecificationManager>();
+                    specificationManager.UoW = uoW;
+                    return specificationManager.GetSpecificationsByNumbers(personId, specNumbers);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, specNumbers }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public KeyValuePair<Specification, UserRightsContainer> GetSpecificationDetailsById(int personId, int specificationId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specificationManager = new SpecificationManager {UoW = uoW};
-                var communityManager = ManagerFactory.Resolve<ICommunityManager>();
-                communityManager.UoW = uoW;
-
-                KeyValuePair<Specification, UserRightsContainer> result = specificationManager.GetSpecificationById(personId, specificationId);
-
-                var spec = result.Key;
-                
-                if (spec != null)
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
                 {
-                    //Set prime and secondary responsible groups
-                    specificationManager.SetPrimeAndSecondaryResponsibleGroupsData(spec);
-                    specificationManager.SetParentAndChildrenPrimeResponsibleGroupsData(spec);
+                    var specificationManager = new SpecificationManager { UoW = uoW };
+                    var communityManager = ManagerFactory.Resolve<ICommunityManager>();
+                    communityManager.UoW = uoW;
 
-                    // Getting list of current specification technologies
-                    var specTechnologiesManager = new SpecificationTechnologiesManager {UoW = uoW};
-                    spec.SpecificationTechnologiesList = specTechnologiesManager.GetASpecificationTechnologiesBySpecId(spec.Pk_SpecificationId);
+                    KeyValuePair<Specification, UserRightsContainer> result = specificationManager.GetSpecificationById(personId, specificationId);
 
-                    // Getting list of specification workItems including responsible groups
-                    var workItemsList = new List<WorkItem>();
-                    var workItemsManager = new WorkItemManager(uoW);
-                    foreach (Specification_WorkItem item in spec.Specification_WorkItem.ToList())
+                    var spec = result.Key;
+
+                    if (spec != null)
                     {
-                        var wiBuffer = workItemsManager.GetWorkItemById(personId, item.Fk_WorkItemId).Key;
-                        if (wiBuffer != null)
+                        //Set prime and secondary responsible groups
+                        specificationManager.SetPrimeAndSecondaryResponsibleGroupsData(spec);
+                        specificationManager.SetParentAndChildrenPrimeResponsibleGroupsData(spec);
+
+                        // Getting list of current specification technologies
+                        var specTechnologiesManager = new SpecificationTechnologiesManager { UoW = uoW };
+                        spec.SpecificationTechnologiesList = specTechnologiesManager.GetASpecificationTechnologiesBySpecId(spec.Pk_SpecificationId);
+
+                        // Getting list of specification workItems including responsible groups
+                        var workItemsList = new List<WorkItem>();
+                        var workItemsManager = new WorkItemManager(uoW);
+                        foreach (Specification_WorkItem item in spec.Specification_WorkItem.ToList())
                         {
-                            wiBuffer.IsPrimary = (item.isPrime != null) && item.isPrime.Value;
-                            wiBuffer.IsUserAddedWi = (item.IsSetByUser != null) && item.IsSetByUser.Value;
-                            workItemsList.Add(wiBuffer);
+                            var wiBuffer = workItemsManager.GetWorkItemById(personId, item.Fk_WorkItemId).Key;
+                            if (wiBuffer != null)
+                            {
+                                wiBuffer.IsPrimary = (item.isPrime != null) && item.isPrime.Value;
+                                wiBuffer.IsUserAddedWi = (item.IsSetByUser != null) && item.IsSetByUser.Value;
+                                workItemsList.Add(wiBuffer);
+                            }
                         }
+                        spec.SpecificationWIsList = workItemsList;
+
+
+                        // Getting list of specification releases
+                        var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
+                        releaseManager.UoW = uoW;
+                        spec.SpecificationReleases = releaseManager.GetReleasesLinkedToASpec(specificationId);
                     }
-                    spec.SpecificationWIsList = workItemsList;
-
-
-                    // Getting list of specification releases
-                    var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
-                    releaseManager.UoW = uoW;
-                    spec.SpecificationReleases = releaseManager.GetReleasesLinkedToASpec(specificationId);
+                    return result;
                 }
-                return result;
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, specificationId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> GetSpecificationBySearchCriteria(int personId, SpecificationSearch searchObject)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specificationManager = ManagerFactory.Resolve<ISpecificationManager>();
-                specificationManager.UoW = uoW;
-                var communityManager = ManagerFactory.Resolve<ICommunityManager>();
-                communityManager.UoW = uoW;
-                KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> result = specificationManager.GetSpecificationBySearchCriteria(personId, searchObject, false);
-                result.Key.Key.ForEach(x => x.PrimeResponsibleGroupShortName = (x.PrimeResponsibleGroup == null) ? String.Empty : communityManager.GetCommmunityshortNameById(x.PrimeResponsibleGroup.Fk_commityId));
-                return result;
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specificationManager = ManagerFactory.Resolve<ISpecificationManager>();
+                    specificationManager.UoW = uoW;
+                    var communityManager = ManagerFactory.Resolve<ICommunityManager>();
+                    communityManager.UoW = uoW;
+                    KeyValuePair<KeyValuePair<List<Specification>, int>, UserRightsContainer> result = specificationManager.GetSpecificationBySearchCriteria(personId, searchObject, false);
+                    result.Key.Key.ForEach(x => x.PrimeResponsibleGroupShortName = (x.PrimeResponsibleGroup == null) ? String.Empty : communityManager.GetCommmunityshortNameById(x.PrimeResponsibleGroup.Fk_commityId));
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, searchObject }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public List<Specification> GetSpecificationBySearchCriteria(int personId, String searchString)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specificationManager = new SpecificationManager {UoW = uoW};
-                return specificationManager.GetSpecificationByNumberAndTitle(personId, searchString);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specificationManager = new SpecificationManager { UoW = uoW };
+                    return specificationManager.GetSpecificationByNumberAndTitle(personId, searchString);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, searchString }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public List<Specification> GetSpecificationBySearchCriteriaWithExclusion(int personId, String searchString, List<string> toExclude)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specificationManager = new SpecificationManager {UoW = uoW};
-                return specificationManager.GetSpecificationByNumberAndTitle(personId, searchString).Where(s => !toExclude.Contains(s.Number.Trim())).ToList();
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specificationManager = new SpecificationManager { UoW = uoW };
+                    return specificationManager.GetSpecificationByNumberAndTitle(personId, searchString).Where(s => !toExclude.Contains(s.Number.Trim())).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, searchString, toExclude }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public List<Enum_Technology> GetTechnologyList()
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specificationManager = new SpecificationManager {UoW = uoW};
-                return specificationManager.GetTechnologyList();
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specificationManager = new SpecificationManager { UoW = uoW };
+                    return specificationManager.GetTechnologyList();
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object>(), this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public List<Enum_Serie> GetSeries()
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specificationManager = new SpecificationManager {UoW = uoW};
-                return specificationManager.GetSeries();
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specificationManager = new SpecificationManager { UoW = uoW };
+                    return specificationManager.GetSeries();
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object>(), this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public List<Enum_Technology> GetAllSpecificationTechnologies()
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specTechnologiesManager = new SpecificationTechnologiesManager {UoW = uoW};
-                return specTechnologiesManager.GetAllSpecificationTechnologies();
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specTechnologiesManager = new SpecificationTechnologiesManager { UoW = uoW };
+                    return specTechnologiesManager.GetAllSpecificationTechnologies();
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object>(), this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public KeyValuePair<bool, List<string>> CheckFormatNumber(string specNumber)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specificationManager = new SpecificationManager {UoW = uoW};
-                return specificationManager.CheckFormatNumber(specNumber);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specificationManager = new SpecificationManager { UoW = uoW };
+                    return specificationManager.CheckFormatNumber(specNumber);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { specNumber }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public KeyValuePair<bool, List<string>> LookForNumber(string specNumber)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specificationManager = new SpecificationManager {UoW = uoW};
-                return specificationManager.LookForNumber(specNumber);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specificationManager = new SpecificationManager { UoW = uoW };
+                    return specificationManager.LookForNumber(specNumber);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { specNumber }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public KeyValuePair<List<Specification>, UserRightsContainer> GetSpecificationForMassivePromotion(int personId, int initialReleaseId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction {UoW = uoW};
-                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
-                releaseManager.UoW = uoW;
-                int targetReleaseId = releaseManager.GetNextRelease(initialReleaseId).Pk_ReleaseId; 
-                return specificationsMassivePromotionAction.GetSpecificationForMassivePromotion(personId, initialReleaseId, targetReleaseId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specificationsMassivePromotionAction = new SpecificationsMassivePromotionAction { UoW = uoW };
+                    var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
+                    releaseManager.UoW = uoW;
+                    int targetReleaseId = releaseManager.GetNextRelease(initialReleaseId).Pk_ReleaseId;
+                    return specificationsMassivePromotionAction.GetSpecificationForMassivePromotion(personId, initialReleaseId, targetReleaseId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, initialReleaseId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -241,7 +353,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error("Error while massively promoting a set of specification: " + e.Message);
+                    ExtensionLogger.Exception(e, new List<object> { personId, specifications, initialReleaseId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     var report = new Report();
                     report.LogError(e.Message);
                     return false; 
@@ -273,7 +385,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error("Error while creating specification: " + e.Message);
+                    ExtensionLogger.Exception(e, new List<object> { personId, spec, baseurl }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     var report = new Report();
                     report.LogError(e.Message);
                     return new KeyValuePair<int, Report>(-1, report);
@@ -301,7 +413,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error("Error while editing specification: " + e.Message, e);
+                    ExtensionLogger.Exception(e, new List<object> { personId, spec }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     var report = new Report();
                     report.LogError(e.Message);
                     return new KeyValuePair<int, Report>(-1, report);
@@ -329,7 +441,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error("Error during definitive withdrawal of the specification: " + e.Message);
+                    ExtensionLogger.Exception(e, new List<object> { personId, specificationId, withdrawalMeetingId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     return false;
                 }
             }
@@ -356,7 +468,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error("ForceTransposition error: " + e.Message);
+                    ExtensionLogger.Exception(e, new List<object> { personId, releaseId, specificationId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     return false;
                 }
             }
@@ -382,7 +494,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error("UnforceTransposition error: " + e.Message);
+                    ExtensionLogger.Exception(e, new List<object> { personId, releaseId, specificationId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     return false;
                 }
             }
@@ -407,7 +519,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error("InhibitPromote error: " + e.Message);
+                    ExtensionLogger.Exception(e, new List<object> { personId, specificationId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     return false;
                 }
             }
@@ -432,7 +544,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error("UnforceTransposition error: " + e.Message);
+                    ExtensionLogger.Exception(e, new List<object> { personId, specificationId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     return false;
                 }
             }
@@ -448,11 +560,19 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public List<KeyValuePair<Specification_Release, UserRightsContainer>> GetRightsForSpecReleases(int personId, Specification spec)
         {
-            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
-                specMgr.UoW = uow;
-                return specMgr.GetRightsForSpecReleases(personId, spec, true);
+                using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
+                    specMgr.UoW = uow;
+                    return specMgr.GetRightsForSpecReleases(personId, spec, true);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, spec }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -477,7 +597,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error("Error when Withdrawing from release: " + e.Message);
+                    ExtensionLogger.Exception(e, new List<object> { personId, releaseId, specificationId, withdrawalMtgId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     return false;
                 }
             }
@@ -502,7 +622,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error("Promote Specification Error: " + e.Message);
+                    ExtensionLogger.Exception(e, new List<object> { personId, specificationId, currentReleaseId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     return false;
                 }
             }
@@ -528,7 +648,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error("Demote Specification Error: " + e.Message);
+                    ExtensionLogger.Exception(e, new List<object> { personId, specificationId, currentReleaseId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     return false;
                 }
             }
@@ -552,7 +672,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error("Specification search error: " + e.Message);
+                    ExtensionLogger.Exception(e, new List<object> { number }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 }
             }
             return spec;
@@ -579,7 +699,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception ex)
                 {
-                    LogManager.Error(String.Format("Error while changing specifications status to under change control: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
+                    ExtensionLogger.Exception(ex, new List<object> { personId, specIdsForUcc }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     statusChangeReport.Report.InfoList.Clear();
                     statusChangeReport.Result = false;
                     statusChangeReport.Report.LogError("Failed to change specifications status to under change control");
@@ -609,7 +729,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error(string.Format("Error occured when trying to delete spec release -> SpecId:{0}, ReleaseId:{1}, Error: {2}", specId, releaseId,e.Message));
+                    ExtensionLogger.Exception(e, new List<object> { specId, releaseId, personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     response.Report.LogError(Localization.GenericError);
                     response.Result = false;
                 }
@@ -646,8 +766,8 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error(string.Format("Error occured when trying to delete spec -> SpecId:{0}", specId), e);
-                    return new ServiceResponse<bool>{Result = false, Report = new Report{ErrorList = new List<string>{Localization.GenericError}}};
+                    ExtensionLogger.Exception(e, new List<object> { specId, personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                    return new ServiceResponse<bool> { Result = false, Report = new Report { ErrorList = new List<string> { Localization.GenericError } } };
                 }
             }
         }
@@ -669,8 +789,8 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error(string.Format("Error occured when trying to check if user have right to delete spec -> SpecId:{0}", specId), e);
-                    return new ServiceResponse<bool>{ Result = false, Report = new Report{ErrorList = new List<string>{Localization.GenericError}}};
+                    ExtensionLogger.Exception(e, new List<object> { specId, personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                    return new ServiceResponse<bool> { Result = false, Report = new Report { ErrorList = new List<string> { Localization.GenericError } } };
                 }
             }
         }

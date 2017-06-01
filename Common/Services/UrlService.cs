@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Services
 {
@@ -15,23 +16,39 @@ namespace Etsi.Ultimate.Services
 
         public KeyValuePair<int, string> GetPageIdAndFullAddressForModule(int moduleId, string baseAddress, Dictionary<string, string> getParams)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var urlManager = new UrlManager();
-                urlManager.UoW = uoW;
-                return urlManager.GetPageIdAndFullAddressForModule(moduleId, baseAddress, getParams);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var urlManager = new UrlManager();
+                    urlManager.UoW = uoW;
+                    return urlManager.GetPageIdAndFullAddressForModule(moduleId, baseAddress, getParams);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { moduleId, baseAddress, getParams }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public string CreateShortUrl(int moduleId, string baseAddress, Dictionary<string, string> getParams)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var urlManager = new UrlManager();
-                urlManager.UoW = uoW;
-                String shortUrl = urlManager.CreateShortUrl(moduleId, baseAddress, getParams);
-                uoW.Save();
-                return shortUrl;
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var urlManager = new UrlManager();
+                    urlManager.UoW = uoW;
+                    String shortUrl = urlManager.CreateShortUrl(moduleId, baseAddress, getParams);
+                    uoW.Save();
+                    return shortUrl;
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { moduleId, baseAddress, getParams }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -45,8 +62,9 @@ namespace Etsi.Ultimate.Services
                 {
                     return urlManager.GetFullUrlForToken(token);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    ExtensionLogger.Exception(e, new List<object> { token }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     return null;
                 }
             }

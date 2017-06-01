@@ -15,17 +15,20 @@ namespace Etsi.Ultimate.Business
 
         public KeyValuePair<string, Report> TryImportCsv(string filePath)
         {
+            LogManager.Info("WORKITEM IMPORT: System is importing WorkItems thanks to the file: " + filePath + "...");
             try
             {
                 var path = filePath;
                 // Treat the file
                 if (path.EndsWith("zip"))
                 {
+                    LogManager.Info("WORKITEM IMPORT:   Extraction of the content of the ZIP...");
                     path = ExtractZipGetCsv(filePath);
                     if (String.IsNullOrEmpty(path))
                     {
                         var report = new Report();
                         report.LogError(Utils.Localization.WorkItem_Import_Bad_Zip_File);
+                        LogManager.Error("WORKITEM IMPORT:  ERROR -> No CSV file found inside.");
                         return new KeyValuePair<string, Report>("", report);
                     }
 
@@ -45,7 +48,7 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception e)
             {
-                LogManager.Error("Error while analysing workplan: " + e.Message);
+                ExtensionLogger.Exception(e, new List<object> { filePath }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 var report = new Report();
                 report.LogError(Utils.Localization.WorkItem_Import_Error_Analysis);
                 return new KeyValuePair<string, Report>("", report);

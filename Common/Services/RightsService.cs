@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Etsi.Ultimate.Business;
 using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Services
 {
@@ -23,11 +24,19 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public DomainClasses.UserRightsContainer GetGenericRightsForUser(int personId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var rightsManager = ManagerFactory.Resolve<IRightsManager>();
-                rightsManager.UoW = uoW;
-                return rightsManager.GetRights(personId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var rightsManager = ManagerFactory.Resolve<IRightsManager>();
+                    rightsManager.UoW = uoW;
+                    return rightsManager.GetRights(personId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 

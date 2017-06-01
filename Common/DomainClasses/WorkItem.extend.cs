@@ -68,5 +68,10 @@ namespace Etsi.Ultimate.DomainClasses
         }
 
         public string TdocLink { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("ID: {0}, WorkplanId: {1}, Acronym: {2}", Pk_WorkItemUid, WorkplanId, Acronym);
+        }
     }
 }

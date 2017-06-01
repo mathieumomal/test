@@ -148,6 +148,7 @@
     <Compile Include="BaseTest.cs" />
     <Compile Include="Business\CommunityManagerTest.cs" />
     <Compile Include="Business\ContributionManagerTest.cs" />
+    <Compile Include="Business\ExtensionLoggerTest.cs" />
     <Compile Include="Business\ItuRecommendation\ItuPreliminaryDataExtractorTest.cs" />
     <Compile Include="Business\ItuRecommendation\ItuPreliminaryExporterTest.cs" />
     <Compile Include="Business\ItuRecommendation\ItuRecommendationExporterTest.cs" />

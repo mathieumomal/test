@@ -18,7 +18,6 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Linq;
 using DotNetNuke.Services.Installer.Dependencies;
-using Etsi.Ultimate.Module.Release.Components;
 using DotNetNuke.Security;
 using DotNetNuke.Services.Exceptions;
 using DotNetNuke.Entities.Modules;

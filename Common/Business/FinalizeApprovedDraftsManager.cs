@@ -30,6 +30,12 @@ namespace Etsi.Ultimate.Business
         /// <returns>bool (true if success)</returns>
         public ServiceResponse<bool> FinalizeApprovedDrafts(int personId, int mtgId, List<Tuple<int, int, int>> approvedDrafts)
         {
+            ExtensionLogger.Info("FINALIZE DRAFTS: System is finalizing approved drafts...", new List<KeyValuePair<string, object>>{ 
+                new KeyValuePair<string,object>("personId", personId),
+                new KeyValuePair<string,object>("mtgId", mtgId),
+                new KeyValuePair<string,object>("approvedDrafts", approvedDrafts)
+            });
+
             //0) Define variables
             var response = new ServiceResponse<bool>();
             var versionAlreadyAllocated = new List<SpecVersion>();
@@ -68,7 +74,7 @@ namespace Etsi.Ultimate.Business
                 response.Report.InfoList.AddRange(nextVersionNumber.Report.InfoList);
                 if (response.Report.GetNumberOfErrors() > 0)
                 {
-                    LogManager.Error(string.Format("An unexpected error occured when system trying to get next version number during FinalizeApprovedDrafts for mtg: {0} and approvedDraft: {1} - {2} - {3}. Please find list of errors return by GetNextVersionForSpec: {4}", mtgId, approvedDraft.Item1, approvedDraft.Item2, approvedDraft.Item3, string.Join(",", response.Report.ErrorList)));
+                    LogManager.Error(string.Format("FINALIZE DRAFTS:    An unexpected error occured when system is trying to get next version number during FinalizeApprovedDrafts for mtg: {0} and approvedDraft: {1} - {2} - {3}. Please find list of errors return by GetNextVersionForSpec: {4}", mtgId, approvedDraft.Item1, approvedDraft.Item2, approvedDraft.Item3, string.Join(",", response.Report.ErrorList)));
                     response.Result = false;
                     return response;
                 }
@@ -93,7 +99,7 @@ namespace Etsi.Ultimate.Business
                 response.Report.InfoList.AddRange(createdVersionResult.Report.InfoList);
                 if (response.Report.GetNumberOfErrors() > 0)
                 {
-                    LogManager.Error(string.Format("An unexpected error occured when system trying to allocate version during FinalizeApprovedDrafts for mtg: {0} and approvedDraft: {1} - {2} - {3}. Please find list of errors return by AllocateVersion: {4}", mtgId, approvedDraft.Item1, approvedDraft.Item2, approvedDraft.Item3, string.Join(",", response.Report.ErrorList)));
+                    LogManager.Error(string.Format("FINALIZE DRAFTS:    An unexpected error occured when system trying to allocate version during FinalizeApprovedDrafts for mtg: {0} and approvedDraft: {1} - {2} - {3}. Please find list of errors return by AllocateVersion: {4}", mtgId, approvedDraft.Item1, approvedDraft.Item2, approvedDraft.Item3, string.Join(",", response.Report.ErrorList)));
                     response.Result = false;
                     return response;
                 }
@@ -102,15 +108,16 @@ namespace Etsi.Ultimate.Business
             }
 
             response.Result = true;
-            var info =
-                "Please find list of allocated versions (and their UCC spec) during FinalizeApprovedDrafts process: " +
+            var message =
+                "FINALIZE DRAFTS:    Please find list of allocated versions (and their UCC spec) during FinalizeApprovedDrafts process: " +
                 string.Join("\n",
                     versionAlreadyAllocated.Select(
                         x =>
                             string.Format("Version: {0} - ({1},{2},{3}), Spec: {4}, Rel: {5}", x.Pk_VersionId,
                                 x.MajorVersion, x.TechnicalVersion, x.EditorialVersion, x.Release.ShortName,
                                 x.Specification.Number)).ToList());
-            LogManager.Debug(info);
+            LogManager.Info(message);
+            LogManager.Info("FINALIZE DRAFTS: Finalization of approved drafts done successfully. END.");
             return response;
         }
     }

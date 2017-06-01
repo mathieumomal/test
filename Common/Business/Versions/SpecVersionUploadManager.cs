@@ -91,6 +91,14 @@ namespace Etsi.Ultimate.Business.Versions
             var finalPath = Path.Combine(currentArchiveFolder, filename);
             File.Move(uniquePath, finalPath);
             LogManager.DebugFormat("UPLOAD VERSION: Version archived! {0}", finalPath);
+
+            //copy the file in TEMPDOWNLOAd path
+            if (!File.Exists(path))
+            {
+                File.Copy(finalPath, path);
+                LogManager.DebugFormat("UPLOAD VERSION: File copied in  {0}", path);
+            }
+
             return finalPath;
         }
     }

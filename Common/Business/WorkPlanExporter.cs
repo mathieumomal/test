@@ -36,7 +36,9 @@ namespace Etsi.Ultimate.Business
         {
             try
             {
+                LogManager.Info("WORKPLAN EXPORT: System is generating WorkPlan... Final path:" + exportPath);
                 var workItemManager = new WorkItemManager(UoW);
+                LogManager.Info("WORKPLAN EXPORT:   System is gathering all workitems...");
                 var workItems = workItemManager.GetAllWorkItems(0);
                 List<WorkItemForExport> workItemExportObjects = new List<WorkItemForExport>();
                 workItemExportObjects.AddRange(workItems.Key.Where(x => !x.DeletedFlag).OrderBy(x => x.WorkplanId).ToList().Select(y => new WorkItemForExport(y)));
@@ -47,12 +49,14 @@ namespace Etsi.Ultimate.Business
                 {
                     List<string> filesToCompress = new List<string> { exportPath + DOC_TITLE + ".xlsx", exportPath + DOC_TITLE + ".docx" };
                     Zip.CompressSetOfFiles(ZIP_NAME, filesToCompress, exportPath);
+                    LogManager.Info("WORKPLAN EXPORT:   WorkPlan compressed.");
                 }
+                LogManager.Info("WORKPLAN EXPORT: WorkPlan successfully generated. END.");
                 return true;
             }
             catch (IOException ex)
             {
-                LogManager.Error("Export of the work plan failed", ex);
+                ExtensionLogger.Exception(ex, new List<object> { exportPath }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, "IOException");
                 return false;
             }
         }
@@ -68,6 +72,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="exportPath">Export Path</param>
         private void ExportToExcel(List<WorkItemForExport> exportWorkPlan, string exportPath)
         {
+            LogManager.Info("WORKPLAN EXPORT:   Generation of WorkPlan Excel...");
             if (!string.IsNullOrEmpty(exportPath) && exportWorkPlan.Count >= 1)
             {
                 try
@@ -225,7 +230,7 @@ namespace Etsi.Ultimate.Business
                 }
                 catch (IOException ex)
                 {
-                    LogManager.Error(ex.Message, ex);
+                    LogManager.Error("WORKPLAN EXPORT:   ", ex);
                     throw new IOException(ex.Message);
                 }
             }
@@ -238,9 +243,9 @@ namespace Etsi.Ultimate.Business
         /// <param name="exportPath">Export Path</param>
         private void ExportToWord(List<WorkItemForExport> exportWorkPlan, string exportPath)
         {
+            LogManager.Info("WORKPLAN EXPORT:   Generation of WorkPlan Word (docx)...");
             if (!string.IsNullOrEmpty(exportPath))
             {
-
                 try
                 {
                     // Get file's full path and delete it if already exists
@@ -346,7 +351,7 @@ namespace Etsi.Ultimate.Business
                 }
                 catch (IOException ex)
                 {
-                    LogManager.Error(ex.Message, ex);
+                    LogManager.Error("WORKPLAN EXPORT:   ", ex);
                     throw new IOException(ex.Message);
                 }
 

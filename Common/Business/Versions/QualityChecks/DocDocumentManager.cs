@@ -39,7 +39,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         /// <param name="myVar">Initial path of the document</param>
         public DocDocumentManager(string myVar)
         {
-            LogManager.Debug("DocDocumentManager - Init document: " + myVar);
+            LogManager.Debug("QUALITY CHECKS:    DocDocumentManager - Init document: " + myVar);
             PathOfInitialFileToAnalyse = myVar;
 
             // Get initial file info
@@ -51,7 +51,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             // If file is doc, convert to docx and get the path
             if (Extension.ToLower().Equals(".doc"))//doc
             {
-                LogManager.Debug("DocDocumentManager - Document is a doc ");
+                LogManager.Debug("QUALITY CHECKS:    DocDocumentManager - Document is a doc ");
                 var word = new Application ();
                 var document = word.Documents.OpenNoRepairDialog(initialFileInfo.FullName, ReadOnly: true);
                 PathOfDocxToAnalyse = ConvertDocToDocx(document, initialFileInfo, PathOfInitialFileToAnalyse);
@@ -59,7 +59,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             }
             else//docx
             {
-                LogManager.Debug("DocDocumentManager - Document is a docx");
+                LogManager.Debug("QUALITY CHECKS:    DocDocumentManager - Document is a docx");
                 //Copy docx to be able to open two copy of the file
                 File.Copy(myVar, PathOfInitialFileToAnalyse + "_temp");
                 PathOfDocxToAnalyse = PathOfInitialFileToAnalyse + "_temp";
@@ -67,11 +67,11 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
 
             GetWordprocessingDocument(PathOfDocxToAnalyse);
 
-            LogManager.Debug("DocDocumentManager - Opening doc...");
+            LogManager.Debug("QUALITY CHECKS:    DocDocumentManager - Opening doc...");
             // Open document with word (usefull for some analyses)
             Word = new Application ();
             Word.Documents.OpenNoRepairDialog(initialFileInfo.FullName, ReadOnly: true);
-            LogManager.Debug("DocDocumentManager - Doc open");
+            LogManager.Debug("QUALITY CHECKS:    DocDocumentManager - Doc open");
         }
 
         #endregion
@@ -80,7 +80,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
 
         public void GetWordprocessingDocument(string path)
         {
-            LogManager.Debug("DocDocumentManager - Opening docx thanks to OpenXML library...");
+            LogManager.Debug("QUALITY CHECKS:    DocDocumentManager - Opening docx thanks to OpenXML library...");
             // Get memoryStream of the docx document
             var stream = new FileStream(path, FileMode.Open);
             MemoryStream = new MemoryStream();
@@ -89,15 +89,15 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
 
             // Get WordProcessingDocument of the docx document
             WordProcessingDocument = WordprocessingDocument.Open(MemoryStream, false);
-            LogManager.Debug("DocDocumentManager - Docx open thanks to OpenXML library");
+            LogManager.Debug("QUALITY CHECKS:    DocDocumentManager - Docx open thanks to OpenXML library");
         }
 
         public string ConvertDocToDocx(Document doc, FileInfo fileinfo, string path)
         {
-            LogManager.Debug("DocDocumentManager - Converting doc to docx...");
+            LogManager.Debug("QUALITY CHECKS:    DocDocumentManager - Converting doc to docx...");
             var newPathForDocx = Path.ChangeExtension(fileinfo.FullName, ".docx");
             doc.SaveAs(newPathForDocx, WdSaveFormat.wdFormatXMLDocument);
-            LogManager.Debug("DocDocumentManager - Doc converted as docx...");
+            LogManager.Debug("QUALITY CHECKS:    DocDocumentManager - Doc converted as docx...");
 
             return Path.ChangeExtension(path, ".docx");
         }
@@ -108,12 +108,12 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
 
         private void CloseWord(Application word)
         {
-            LogManager.Debug("DocDocumentManager - Closing word application [ActiveDocument close]...");
+            LogManager.Debug("QUALITY CHECKS:    DocDocumentManager - Closing word application [ActiveDocument close]...");
             if (word != null && word.ActiveDocument != null)
             {
                 word.ActiveDocument.Close(false);
             }
-            LogManager.Debug("DocDocumentManager - Closing word application [Application close]...");
+            LogManager.Debug("QUALITY CHECKS:    DocDocumentManager - Closing word application [Application close]...");
             if (word != null)
             {
                 word.Quit(false);
@@ -121,13 +121,13 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
                 word = null;
                 GC.Collect();
             }
-            LogManager.Debug("DocDocumentManager - Word application closed");
+            LogManager.Debug("QUALITY CHECKS:    DocDocumentManager - Word application closed");
         }
         public void Dispose()
         {
             CloseWord(Word);
 
-            LogManager.Debug("DocDocumentManager - Closing docx stream and word processing objects...");
+            LogManager.Debug("QUALITY CHECKS:    DocDocumentManager - Closing docx stream and word processing objects...");
             if (MemoryStream != null)
             {
                 MemoryStream.Close();
@@ -136,11 +136,11 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             {
                 WordProcessingDocument.Close();
             }
-            LogManager.Debug("DocDocumentManager -Docx stream and word processing objects closed");
-            LogManager.Debug("DocDocumentManager - Removing temporary docx...");
+            LogManager.Debug("QUALITY CHECKS:    DocDocumentManager -Docx stream and word processing objects closed");
+            LogManager.Debug("QUALITY CHECKS:    DocDocumentManager - Removing temporary docx...");
             if(File.Exists(PathOfDocxToAnalyse))
                 File.Delete(PathOfDocxToAnalyse);
-            LogManager.Debug("DocDocumentManager - Temporary docx removed");
+            LogManager.Debug("QUALITY CHECKS:    DocDocumentManager - Temporary docx removed");
         }
         #endregion
     }

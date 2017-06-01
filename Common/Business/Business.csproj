@@ -92,6 +92,7 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -110,6 +111,7 @@
     <Compile Include="ContributionManager.cs" />
     <Compile Include="CrCategoriesManager.cs" />
     <Compile Include="CrPackManager.cs" />
+    <Compile Include="ExtensionLogger.cs" />
     <Compile Include="FinalizeApprovedDraftsManager.cs" />
     <Compile Include="FinalizeCrsAction.cs" />
     <Compile Include="IChangeRequestStatusManager.cs" />
@@ -139,6 +141,7 @@
     <Compile Include="Specifications\SpecReleaseManager.cs" />
     <Compile Include="Versions\GetNextReleaseAction.cs" />
     <Compile Include="Versions\QualityChecks\DocDocumentManager.cs" />
+    <Compile Include="Versions\QualityChecks\QualityChecksLogger.cs" />
     <Compile Include="Versions\SpecVersionAllocateAction.cs" />
     <Compile Include="Versions\SpecVersionNumberValidator.cs" />
     <Compile Include="Versions\FtpFoldersManager.cs" />

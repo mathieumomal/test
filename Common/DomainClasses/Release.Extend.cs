@@ -33,5 +33,10 @@ namespace Etsi.Ultimate.DomainClasses
             }
             return new string(result.ToArray());
         }
+
+        public override string ToString()
+        {
+            return string.Format("ID: {0}, Shortname: {1}, Code: {2}", Pk_ReleaseId, ShortName, Code);
+        }
     }
 }

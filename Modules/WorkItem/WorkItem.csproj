@@ -92,7 +92,6 @@
       <DependentUpon>AutoComplete.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="FeatureController.cs" />
     <Compile Include="WorkItemDetails.aspx.cs">
       <DependentUpon>WorkItemDetails.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -152,17 +151,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\DomainClasses\DomainClasses.csproj">

@@ -37,7 +37,7 @@ namespace Etsi.Ultimate.Services
             catch (Exception ex)
             {
                 isSuccess = false;
-                LogManager.Error(String.Format("[Service] Failed to get change request categories: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));         
+                ExtensionLogger.Exception(ex, new List<object>(), this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
             }
             return new KeyValuePair<bool, List<Enum_CRCategory>>(isSuccess, enumChangeRequestCategorylist);
         }

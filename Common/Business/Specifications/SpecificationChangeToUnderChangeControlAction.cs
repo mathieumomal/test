@@ -4,6 +4,7 @@ using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Business.Specifications
 {
@@ -19,6 +20,12 @@ namespace Etsi.Ultimate.Business.Specifications
         /// <returns>Status report</returns>
         public ServiceResponse<bool> ChangeSpecificationsStatusToUnderChangeControl(int personId, List<int> specIdsForUcc)
         {
+            ExtensionLogger.Info("CHANGE SPECS AS UCC: System is trying to make spec UCC...", new List<KeyValuePair<string, object>>
+            {
+                new KeyValuePair<string, object>("personId", personId),
+                new KeyValuePair<string, object>("specIdsForUcc", specIdsForUcc)
+            });
+
             var statusChangeReport = new ServiceResponse<bool>();
 
             // Check that user has right to perform operation
@@ -33,9 +40,10 @@ namespace Etsi.Ultimate.Business.Specifications
                 var specNumbers = new List<string>();
                 specsToUpdate.ForEach(x =>
                 {
+                    var uid = x.Number + ": " + x.Title;
                     if (!x.IsUnderChangeControl.GetValueOrDefault() && x.IsActive)
                     {
-                        specNumbers.Add(x.Number + ": " + x.Title);
+                        specNumbers.Add(uid);
                         x.IsUnderChangeControl = true;
                         x.Histories.Add(new History
                         {
@@ -44,6 +52,11 @@ namespace Etsi.Ultimate.Business.Specifications
                             Fk_PersonId = personId,
                             HistoryText = Localization.History_Specification_Status_Changed_UnderChangeControl
                         });
+                        LogManager.Info("CHANGE SPEC AS UCC:    Spec -> " + uid + " is now UCC");
+                    }
+                    else
+                    {
+                        LogManager.Info("CHANGE SPEC AS UCC:    Spec -> " + uid + " is already UCC or is not active.");
                     }
                 });
                 statusChangeReport.Result = true;
@@ -54,10 +67,19 @@ namespace Etsi.Ultimate.Business.Specifications
             }
             else
             {
+                LogManager.Info("CHANGE SPECS AS UCC:    User doesn't have rights: Specification_EditFull or Specification_EditLimitted");
                 statusChangeReport.Result = false;
                 statusChangeReport.Report.LogError(Localization.GenericError);
             }
 
+            if (statusChangeReport.Result)
+            {
+                LogManager.Info("CHANGE SPECS AS UCC: Done successfully. END.");
+            }
+            else
+            {
+                LogManager.Info("CHANGE SPECS AS UCC: Done with errors. END. " + string.Join(", ", statusChangeReport.Report.ErrorList));
+            }
             return statusChangeReport;
         }
     }

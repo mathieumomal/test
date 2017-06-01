@@ -59,7 +59,7 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format("[Business] Failed to create change request: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
+                ExtensionLogger.Exception(ex, new List<object> { personId, changeRequest }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 response.Result = false;
                 response.Report.LogError(Localization.GenericError);
             }
@@ -84,7 +84,7 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format("[Business] Failed to edit change request: {0} - {1}{2}", "WcfBusinessCrEditFailed", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
+                ExtensionLogger.Exception(ex, new List<object> { personId, changeRequest }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 isSuccess = false;
             }
             return isSuccess;
@@ -508,7 +508,7 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception e)
             {
-                LogManager.Error(e.Message + e.StackTrace);
+                ExtensionLogger.Exception(e, new List<object> { crKey, newTsgTdoc, newTsgMeetingId, newTsgSource }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 response.Result = false;
                 response.Report.LogError(e.Message);
             }
@@ -568,7 +568,7 @@ namespace Etsi.Ultimate.Business
             }
             catch (Exception e)
             {
-                LogManager.Error(e.Message + e.StackTrace);
+                ExtensionLogger.Exception(e, new List<object> { crKey, newTsgTdoc, newTsgMeetingId, newTsgSource }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 response.Result = false;
                 response.Report.LogError(e.Message);
             }

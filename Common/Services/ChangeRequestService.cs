@@ -47,7 +47,7 @@ namespace Etsi.Ultimate.Services
             {
                 response.Result = 0;
                 response.Report.LogError(Localization.GenericError);
-                LogManager.Error(String.Format("[Service] Failed to create change request: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
+                ExtensionLogger.Exception(ex, new List<object> { personId, changeRequest }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
             }
 
             return response;
@@ -75,7 +75,7 @@ namespace Etsi.Ultimate.Services
             catch (Exception ex)
             {
                 isSuccess = false;
-                LogManager.Error(String.Format("[Service] Failed to get change request id : {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
+                ExtensionLogger.Exception(ex, new List<object> { personId, changeRequestId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
             }
             return new KeyValuePair<bool, ChangeRequest>(isSuccess, changeRequest);
         }
@@ -103,7 +103,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format("[Service] Failed to edit change request: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
+                ExtensionLogger.Exception(ex, new List<object> { personId, changeRequest }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 isSuccess = false;
             }
 
@@ -132,7 +132,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Service] Failed to GetContributionCrByUid request: " + ex.Message);
+                ExtensionLogger.Exception(ex, new List<object> { contributionUid }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 isSuccess = false;
             }
             return new KeyValuePair<bool, ChangeRequest>(isSuccess, cr);
@@ -160,7 +160,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Service] Failed to GetChangeRequestListByContributionUidList request: " + ex.Message, ex);
+                ExtensionLogger.Exception(ex, new List<object> { contributionUiDs }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 isSuccess = false;
             }
             return new KeyValuePair<bool, List<ChangeRequest>>(isSuccess, crList);
@@ -179,7 +179,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Service] Failed to GetWgCrsByWgTdocList request: " + ex.Message, ex);
+                ExtensionLogger.Exception(ex, new List<object> { contribUids }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
             }
             return new List<ChangeRequest>();
         }
@@ -208,7 +208,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Service] Failed to GetLightChangeRequestForMinuteMan request: ", ex);
+                ExtensionLogger.Exception(ex, new List<object> { uid }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 isSuccess = false;
             }
             return new KeyValuePair<bool, ChangeRequest>(isSuccess, changeRequest);
@@ -236,7 +236,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Service] Failed to GetLightChangeRequestsForMinuteMan request: ", ex);
+                ExtensionLogger.Exception(ex, new List<object> { uids }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 isSuccess = false;
             }
             return new KeyValuePair<bool, List<ChangeRequest>>(isSuccess, changeRequests);
@@ -266,7 +266,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Service] Failed to GetLightChangeRequestsInsideCrPackForMinuteMan request: ", ex);
+                ExtensionLogger.Exception(ex, new List<object> { uid }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 isSuccess = false;
             }
             return new KeyValuePair<bool, List<ChangeRequest>>(isSuccess, changeRequests);
@@ -294,7 +294,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Service] Failed to GetLightChangeRequestsInsideCrPacksForMinuteMan request: ", ex);
+                ExtensionLogger.Exception(ex, new List<object> { uids }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 isSuccess = false;
             }
             return new KeyValuePair<bool, List<ChangeRequest>>(isSuccess, changeRequests);
@@ -321,7 +321,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Service] Failed to get list of change request status: " + ex.Message);
+                ExtensionLogger.Exception(ex, new List<object>(), this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 isSuccess = false;
             }
             return new KeyValuePair<bool, List<Enum_ChangeRequestStatus>>(isSuccess, crStatusList);
@@ -350,7 +350,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format("[Service] Failed to UpdateChangeRequestPackRelatedCrs: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
+                ExtensionLogger.Exception(ex, new List<object> { crPackDecisionlst }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 return response;
             }
             return response;
@@ -381,7 +381,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error(e.Message + e.StackTrace);
+                ExtensionLogger.Exception(e, new List<object> { personId, tdocNumbers }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 response.Result = false;
                 response.Report.LogError(Localization.GenericError);
             }
@@ -396,11 +396,19 @@ namespace Etsi.Ultimate.Services
         /// <returns>List of change requests</returns>
         public ServiceResponse<KeyValuePair<List<ChangeRequestListFacade>, int>> GetChangeRequests(int personId, ChangeRequestsSearch searchObj)
         {
-            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var crManager = ManagerFactory.Resolve<IChangeRequestManager>();
-                crManager.UoW = uow;
-                return crManager.GetChangeRequests(personId, searchObj);
+                using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var crManager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    crManager.UoW = uow;
+                    return crManager.GetChangeRequests(personId, searchObj);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, searchObj }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -413,14 +421,22 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public ServiceResponse<bool> DoesCrNumberRevisionCoupleExist(int specId, string crNumber, int revision)
         {
-            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var crManager = ManagerFactory.Resolve<IChangeRequestManager>();
-                crManager.UoW = uow;
-                return new ServiceResponse<bool>
+                using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
                 {
-                    Result = crManager.DoesCrNumberRevisionCoupleExist(specId, crNumber, revision)
-                };
+                    var crManager = ManagerFactory.Resolve<IChangeRequestManager>();
+                    crManager.UoW = uow;
+                    return new ServiceResponse<bool>
+                    {
+                        Result = crManager.DoesCrNumberRevisionCoupleExist(specId, crNumber, revision)
+                    };
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { specId, crNumber, revision }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -444,7 +460,7 @@ namespace Etsi.Ultimate.Services
                 catch (Exception ex)
                 {
                     response.Report.LogError("Failed to get matching Spec# / CR # / Revision");
-                    LogManager.Error(String.Format("[Service] Failed to get matching Spec# / CR # / Revision: {0}{1}{2}{3}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty), ex.StackTrace, ex.Source));
+                    ExtensionLogger.Exception(ex, new List<object> { crKeys }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, "Failed to get matching Spec# / CR # / Revision");
                 }
             }
 
@@ -471,7 +487,7 @@ namespace Etsi.Ultimate.Services
                 catch (Exception ex)
                 {
                     response.Report.LogError("Failed to get matching Spec# / CR # / Revision");
-                    LogManager.Error(String.Format("[Service] Failed to get matching Spec# / CR # / Revision: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnterException:" + ex.InnerException : String.Empty)));
+                    ExtensionLogger.Exception(ex, new List<object> { crKey }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, "Failed to get matching Spec# / CR # / Revision");
                 }
             }
 
@@ -501,7 +517,7 @@ namespace Etsi.Ultimate.Services
                 catch (Exception ex)
                 {
                     response.Report.LogError("Failed to get WgTdoc number of parent CRs");
-                    LogManager.Error("[Service] Failed to get WgTdoc number of parent CRs (GetCrWgTdocNumberOfParent):", ex);
+                    ExtensionLogger.Exception(ex, new List<object> { crKeys }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 }
             }
 
@@ -534,7 +550,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error(e.Message + e.StackTrace);
+                ExtensionLogger.Exception(e, new List<object> { crKey, newTsgTdoc, newTsgMeetingId, newTsgSource }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 response.Result = false;
                 response.Report.LogError(e.Message);
             }
@@ -567,7 +583,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error(e.Message + e.StackTrace);
+                ExtensionLogger.Exception(e, new List<object> { crKey, newTsgTdoc, newTsgMeetingId, newTsgSource }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 response.Result = false;
                 response.Report.LogError(e.Message);
             }
@@ -604,7 +620,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error(e.Message + e.StackTrace);
+                ExtensionLogger.Exception(e, new List<object> { personId, crsIds, crPackId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 response.Result = false;
                 response.Report.LogError(Localization.GenericError);
             }
@@ -628,7 +644,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error(e.Message + e.StackTrace);
+                ExtensionLogger.Exception(e, new List<object> { uid, status }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 response.Result = false;
                 response.Report.LogError(Localization.GenericError);
             }
@@ -657,7 +673,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error(e.Message + e.StackTrace);
+                ExtensionLogger.Exception(e, new List<object> { crsOfCrPack }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 response.Result = false;
                 response.Report.LogError(Localization.GenericError);
             }

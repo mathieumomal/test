@@ -79,5 +79,10 @@ namespace Etsi.Ultimate.DomainClasses
         }
 
         public string WIReportPath{get;set;}
+
+        public override string ToString()
+        {
+            return string.Format("ID: {0}, Version: {1}, Release: {2}, Spec: {3}, WKI: {4}", Pk_VersionId, Version, Fk_ReleaseId, Fk_SpecificationId, ETSI_WKI_ID);
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Etsi.Ultimate.Business.ItuRecommendation;
+﻿using Etsi.Ultimate.Business;
+using Etsi.Ultimate.Business.ItuRecommendation;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
@@ -36,9 +37,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error("Exception while exporting ITU recommendation: " + e.Message);
-                LogManager.Error(e.StackTrace);
-
+                ExtensionLogger.Exception(e, new List<object> { personId, ituRecommendationName, startReleaseId, endReleaseId, saPlenaryMeetingId, seedFilePath }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 var errorResponse = new ServiceResponse<string>{ Result = null };
                 errorResponse.Report.LogError(Localization.GenericError);
                 return errorResponse;
@@ -68,8 +67,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error("Exception while exporting ITU Preliminary: " + e.Message);
-                LogManager.Error(e.StackTrace);
+                ExtensionLogger.Exception(e, new List<object> { personId, ituRecommendationName, startReleaseId, endReleaseId, saPlenaryMeetingId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 var errorResponse = new ServiceResponse<string> { Result = null };
                 errorResponse.Report.LogError(Localization.GenericError);
                 return errorResponse;

@@ -30,7 +30,7 @@
           <desktopModule>
             <moduleName>WorkItem</moduleName>
             <foldername>WorkItem</foldername>
-            <businessControllerClass>Etsi.Ultimate.Module.WorkItem.Components.FeatureController</businessControllerClass>
+            <businessControllerClass></businessControllerClass>
             <supportedFeatures />
             <moduleDefinitions>
               <moduleDefinition>

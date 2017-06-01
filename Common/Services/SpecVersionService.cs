@@ -17,21 +17,37 @@ namespace Etsi.Ultimate.Services
 
         public List<SpecVersion> GetVersionsBySpecId(int specificationId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specVersionManager = new SpecVersionsManager();
-                specVersionManager.UoW = uoW;
-                return specVersionManager.GetVersionsBySpecId(specificationId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specVersionManager = new SpecVersionsManager();
+                    specVersionManager.UoW = uoW;
+                    return specVersionManager.GetVersionsBySpecId(specificationId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { specificationId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public List<SpecVersion> GetVersionsForSpecRelease(int specificationId, int releaseId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specVersionManager = new SpecVersionsManager();
-                specVersionManager.UoW = uoW;
-                return specVersionManager.GetVersionsForASpecRelease(specificationId, releaseId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specVersionManager = new SpecVersionsManager();
+                    specVersionManager.UoW = uoW;
+                    return specVersionManager.GetVersionsForASpecRelease(specificationId, releaseId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { specificationId, releaseId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -42,20 +58,36 @@ namespace Etsi.Ultimate.Services
         /// <returns>List of Spec Versions</returns>
         public List<SpecVersion> GetLatestVersionsBySpecIds(List<int> specIds)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specVersionManager = ManagerFactory.Resolve<ISpecVersionManager>();
-                specVersionManager.UoW = uoW;
-                return specVersionManager.GetLatestVersionsBySpecIds(specIds);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specVersionManager = ManagerFactory.Resolve<ISpecVersionManager>();
+                    specVersionManager.UoW = uoW;
+                    return specVersionManager.GetLatestVersionsBySpecIds(specIds);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { specIds }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public KeyValuePair<SpecVersion, UserRightsContainer> GetVersionsById(int versionId, int personId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specVersionManager = new SpecVersionsManager {UoW = uoW};
-                return specVersionManager.GetSpecVersionById(versionId, personId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specVersionManager = new SpecVersionsManager { UoW = uoW };
+                    return specVersionManager.GetSpecVersionById(versionId, personId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { versionId, personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -67,10 +99,18 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public ServiceResponse<VersionForCrListFacade> GetVersionNumberWithSpecNumberByVersionId(int personId, int versionId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specVersionManager = new SpecVersionsManager {UoW = uoW};
-                return specVersionManager.GetVersionNumberWithSpecNumberByVersionId(personId, versionId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specVersionManager = new SpecVersionsManager { UoW = uoW };
+                    return specVersionManager.GetVersionNumberWithSpecNumberByVersionId(personId, versionId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, versionId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -82,17 +122,25 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public Report AllocateVersion(int personId, SpecVersion version)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specVersionAllocateAction = new SpecVersionAllocateAction {UoW = uoW};
-                var result = specVersionAllocateAction.AllocateVersion(personId, version);
-
-                if (result != null && (result.Report.ErrorList == null || result.Report.ErrorList.Count() == 0))
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
                 {
-                    uoW.Save();
-                }
+                    var specVersionAllocateAction = new SpecVersionAllocateAction { UoW = uoW };
+                    var result = specVersionAllocateAction.AllocateVersion(personId, version);
 
-                return result.Report;
+                    if (result != null && (result.Report.ErrorList == null || result.Report.ErrorList.Count() == 0))
+                    {
+                        uoW.Save();
+                    }
+
+                    return result.Report;
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, version }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -106,10 +154,18 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public ServiceResponse<string> CheckVersionForUpload(int personId, SpecVersion version, string path, bool shouldAvoidQualityChecks = false)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specVersionUploadAction = new SpecVersionUploadAction {UoW = uoW};
-                return specVersionUploadAction.CheckVersionForUpload(personId, version, path, shouldAvoidQualityChecks);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specVersionUploadAction = new SpecVersionUploadAction { UoW = uoW };
+                    return specVersionUploadAction.CheckVersionForUpload(personId, version, path, shouldAvoidQualityChecks);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, version, path, shouldAvoidQualityChecks }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -121,12 +177,20 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public ServiceResponse<string> UploadVersion(int personId, string token)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specVersionUploadAction = new SpecVersionUploadAction {UoW = uoW};
-                var result = specVersionUploadAction.UploadVersion(personId, token);
-                uoW.Save();
-                return result;
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specVersionUploadAction = new SpecVersionUploadAction { UoW = uoW };
+                    var result = specVersionUploadAction.UploadVersion(personId, token);
+                    uoW.Save();
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, token }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -150,7 +214,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error("SpecVersionService - DeleteVersion : an unexpected error occured", e);
+                    ExtensionLogger.Exception(e, new List<object> { personId, versionId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     response.Result = false;
                     response.Report.LogError(Localization.GenericError);
                 }
@@ -165,11 +229,19 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public int CountVersionsPendingUploadByReleaseId(int releaseId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specVersionManager = new SpecVersionsManager();
-                specVersionManager.UoW = uoW;
-                return specVersionManager.CountVersionsPendingUploadByReleaseId(releaseId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specVersionManager = new SpecVersionsManager();
+                    specVersionManager.UoW = uoW;
+                    return specVersionManager.CountVersionsPendingUploadByReleaseId(releaseId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { releaseId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -181,16 +253,24 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public ServiceResponse<SpecVersion> UpdateVersion(SpecVersion version, int personId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var specVersionManager = ManagerFactory.Resolve<ISpecVersionManager>();
-                specVersionManager.UoW = uoW;
-                var result = specVersionManager.UpdateVersion(version, personId);
-                if(result.Result != null && result.Report.GetNumberOfErrors() == 0)
-                    uoW.Save();
-                else
-                    LogManager.Error(Localization.GenericError + ": " + string.Join(", ", result.Report.ErrorList));
-                return result;
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var specVersionManager = ManagerFactory.Resolve<ISpecVersionManager>();
+                    specVersionManager.UoW = uoW;
+                    var result = specVersionManager.UpdateVersion(version, personId);
+                    if (result.Result != null && result.Report.GetNumberOfErrors() == 0)
+                        uoW.Save();
+                    else
+                        LogManager.Error(Localization.GenericError + ": " + string.Join(", ", result.Report.ErrorList));
+                    return result;
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { version, personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -212,7 +292,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception e)
                 {
-                    LogManager.Error(string.Format("Error occured when trying to check if user have right to edit version number -> versionId:{0}", version.Pk_VersionId), e);
+                    ExtensionLogger.Exception(e, new List<object> { version, personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     return new ServiceResponse<bool> { Result = false, Report = new Report { ErrorList = new List<string> { Localization.GenericError } } };
                 }
             }
@@ -247,7 +327,7 @@ namespace Etsi.Ultimate.Services
             {
                 response.Result = false;
                 response.Report.LogError(Localization.GenericError);
-                LogManager.Error("[Service] Failed to Create and fill version latest folder", e);
+                ExtensionLogger.Exception(e, new List<object> { folderName, personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
             }
             
             return response;
@@ -259,8 +339,16 @@ namespace Etsi.Ultimate.Services
         /// <returns>Ftp Folders Manager Status</returns>
         public FtpFoldersManagerStatus GetFtpFoldersManagerStatus()
         {
-            var ftpFoldersManager = ManagerFactory.Resolve<IFtpFoldersManager>();
-            return ftpFoldersManager.GetStatus();
+            try
+            {
+                var ftpFoldersManager = ManagerFactory.Resolve<IFtpFoldersManager>();
+                return ftpFoldersManager.GetStatus();
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object>(), this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
+            }
         }
 
         /// <summary>
@@ -278,8 +366,9 @@ namespace Etsi.Ultimate.Services
                     return ftpFoldersManager.GetFTPLatestFolderName();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                ExtensionLogger.Exception(e, new List<object>(), this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 return string.Empty;
             }
         }
@@ -289,8 +378,16 @@ namespace Etsi.Ultimate.Services
         /// </summary>
         public void ClearFtpFoldersManagerStatus()
         {
-            var ftpFoldersManager = ManagerFactory.Resolve<IFtpFoldersManager>();
-            ftpFoldersManager.ClearStatus();
+            try
+            {
+                var ftpFoldersManager = ManagerFactory.Resolve<IFtpFoldersManager>();
+                ftpFoldersManager.ClearStatus();
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object>(), this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
+            }
         }
 
         /// <summary>
@@ -299,8 +396,16 @@ namespace Etsi.Ultimate.Services
         /// <returns>True or False</returns>
         public bool IsCopyLatestFolderInProgress()
         {
-            var result = GetFtpFoldersManagerStatus();
-            return result != null && !result.Finished;
+            try
+            {
+                var result = GetFtpFoldersManagerStatus();
+                return result != null && !result.Finished;
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object>(), this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
+            }
         }
 
         #region IOfflineService Members
@@ -339,9 +444,7 @@ namespace Etsi.Ultimate.Services
                     }
                     catch (Exception ex)
                     {
-                        LogManager.Error("[Offline] Specification Insert Error: " + ex.Message);
-                        if (ex.InnerException != null)
-                            LogManager.Error("Inner Exception: " + ex.InnerException);
+                        ExtensionLogger.Exception(ex, new List<object> { entity, terminalName }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     }
                 }
             }
@@ -372,9 +475,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception ex)
                 {
-                    LogManager.Error("[Offline] Specification Update Error: " + ex.Message);
-                    if (ex.InnerException != null)
-                        LogManager.Error("Inner Exception: " + ex.InnerException);
+                    ExtensionLogger.Exception(ex, new List<object> { entity }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     isSuccess = false;
                 }
             }
@@ -405,9 +506,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception ex)
                 {
-                    LogManager.Error("[Offline] Specification Delete Error: " + ex.Message);
-                    if (ex.InnerException != null)
-                        LogManager.Error("Inner Exception: " + ex.InnerException);
+                    ExtensionLogger.Exception(ex, new List<object> { primaryKey }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     isSuccess = false;
                 }
             }
@@ -421,11 +520,19 @@ namespace Etsi.Ultimate.Services
 
         public ServiceResponse<SpecVersionCurrentAndNew> GetNextVersionForSpec(int personId, int specId, int releaseId, bool forUpload)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var versionMgr = new GetNextReleaseAction();
-                versionMgr.UoW = uoW;
-                return versionMgr.GetNextVersionForSpec(personId, specId, releaseId, forUpload);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var versionMgr = new GetNextReleaseAction();
+                    versionMgr.UoW = uoW;
+                    return versionMgr.GetNextVersionForSpec(personId, specId, releaseId, forUpload);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, specId, releaseId, forUpload }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -460,7 +567,7 @@ namespace Etsi.Ultimate.Services
             {
                 svcResponse.Result = false;
                 svcResponse.Report.LogError(ex.Message);
-                LogManager.Error("AllocateOrAssociateDraftVersion : an unexpected error occured", ex);
+                ExtensionLogger.Exception(ex, new List<object> { personId, specId, releaseId, meetingId, majorVersion, technicalVersion, editorialVersion, relatedTdoc }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
             }
 
             return svcResponse;
@@ -493,6 +600,7 @@ namespace Etsi.Ultimate.Services
             {
                 svcResponse.Result = false;
                 svcResponse.Report.LogError(ex.Message);
+                ExtensionLogger.Exception(ex, new List<object> { personId, specId, releaseId, majorVersion, technicalVersion, editorialVersion }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
             }
 
             return svcResponse;
@@ -522,7 +630,7 @@ namespace Etsi.Ultimate.Services
             {
                 svcResponse.Result = false;
                 svcResponse.Report.LogError(ex.Message);
-                LogManager.Error("Unexpected error occured when system trying to unlink tdoc from version", ex);
+                ExtensionLogger.Exception(ex, new List<object> { uid, personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
             }
             return svcResponse;
         }
@@ -556,7 +664,7 @@ namespace Etsi.Ultimate.Services
             {
                 svcResponse.Result = false;
                 svcResponse.Report.LogError(ex.Message);
-                LogManager.Error("Unexpected error occured when system trying to create a pCR draft version", ex);
+                ExtensionLogger.Exception(ex, new List<object> { personId, specId, releaseId, majorVersion, technicalVersion, editorialVersion }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
             }
             return svcResponse;
         }

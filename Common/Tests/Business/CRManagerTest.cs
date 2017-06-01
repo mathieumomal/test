@@ -143,8 +143,8 @@ namespace Etsi.Ultimate.Tests.Business
 
             //Assert
             Assert.IsFalse(response.Result);
-            Assert.AreEqual(1, events.Length);
-            Assert.IsTrue(events[0].MessageObject.ToString().Contains("Test Exception Raised"));
+            Assert.AreEqual(4, events.Length);
+            Assert.IsTrue(events[0].MessageObject.ToString().StartsWith("### EXCEPTION ###     CLASS: ChangeRequestManager, METHOD: CreateChangeRequest, MESSAGE: "));
             Assert.AreEqual(Level.Error, events[0].Level);
         }
 
@@ -207,8 +207,8 @@ namespace Etsi.Ultimate.Tests.Business
 
             //Assert
             Assert.IsFalse(result);
-            Assert.AreEqual(1, events.Length);
-            Assert.IsTrue(events[0].MessageObject.ToString().Contains("WcfBusinessCrEditFailed"));
+            Assert.AreEqual(4, events.Length);
+            Assert.IsTrue(events[0].MessageObject.ToString().StartsWith("### EXCEPTION ###     CLASS: ChangeRequestManager, METHOD: EditChangeRequest, MESSAGE: "));
             Assert.AreEqual(Level.Error, events[0].Level);
         }
 

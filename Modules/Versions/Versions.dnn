@@ -31,7 +31,7 @@
           <desktopModule>
             <moduleName>Versions</moduleName>
             <foldername>Versions</foldername>
-            <businessControllerClass>Christoc.Modules.Versions.Components.FeatureController</businessControllerClass>
+            <businessControllerClass></businessControllerClass>
             <supportedFeatures />
             <moduleDefinitions>
               <moduleDefinition>

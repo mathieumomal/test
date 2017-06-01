@@ -31,7 +31,7 @@
           <desktopModule>
             <moduleName>Release</moduleName>
             <foldername>Release</foldername>
-            <businessControllerClass>Etsi.Ultimate.Module.Release.Components.FeatureController</businessControllerClass>
+            <businessControllerClass></businessControllerClass>
             <supportedFeatures />
             <moduleDefinitions>
               <moduleDefinition>

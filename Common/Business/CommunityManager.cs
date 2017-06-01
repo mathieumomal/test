@@ -22,11 +22,6 @@ namespace Etsi.Ultimate.Business
 
         #endregion
 
-        #region Constructor
-
-
-        #endregion
-
         #region Public Methods
 
         /// <summary>

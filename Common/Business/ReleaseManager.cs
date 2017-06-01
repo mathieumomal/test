@@ -152,6 +152,13 @@ namespace Etsi.Ultimate.Business
         /// <param name="FreezeMtgRef">Freeze Meeting Reference</param>
         public ServiceResponse<bool> FreezeRelease(int releaseId, DateTime? endDate, int personId, int? FreezeMtgId, string FreezeMtgRef)
         {
+            ExtensionLogger.Info("FREEZE RELEASE: Freezing release...", new List<KeyValuePair<string, object>> { 
+                new KeyValuePair<string, object>("releaseId", releaseId),
+                new KeyValuePair<string, object>("endDate", endDate),
+                new KeyValuePair<string, object>("personId", personId),
+                new KeyValuePair<string, object>("FreezeMtgId", FreezeMtgId),
+                new KeyValuePair<string, object>("FreezeMtgRef", FreezeMtgRef),
+            });
             var response = new ServiceResponse<bool> { Result = true };
 
             // First check that user has right to Freeze the release
@@ -202,6 +209,7 @@ namespace Etsi.Ultimate.Business
             historyRepo.InsertOrUpdate(history);
 
             //Transposition
+            LogManager.Info("FREEZE RELEASE:    Transposition...");
             var transposeMgr = ManagerFactory.Resolve<ITranspositionManager>();
             transposeMgr.UoW = UoW;
             //Get release related specs
@@ -227,6 +235,7 @@ namespace Etsi.Ultimate.Business
             //Transposition
 
             ClearCache();
+            LogManager.Info("FREEZE RELEASE: Done. END.");
             return response;
         }
 
@@ -240,6 +249,13 @@ namespace Etsi.Ultimate.Business
         /// <param name="personID">Person ID</param>
         public ServiceResponse<bool> CloseRelease(int releaseId, DateTime? closureDate, string closureMtgRef, int? closureMtgId, int personID)
         {
+            ExtensionLogger.Info("CLOSE RELEASE: Closing release...", new List<KeyValuePair<string, object>> { 
+                new KeyValuePair<string, object>("releaseId", releaseId),
+                new KeyValuePair<string, object>("closureDate", closureDate),
+                new KeyValuePair<string, object>("closureMtgRef", closureMtgRef),
+                new KeyValuePair<string, object>("closureMtgId", closureMtgId),
+                new KeyValuePair<string, object>("personID", personID),
+            });
             var response = new ServiceResponse<bool> { Result = true };
 
             // First check that user has right to close the release
@@ -282,7 +298,7 @@ namespace Etsi.Ultimate.Business
             historyRepo.InsertOrUpdate(history);
 
             ClearCache();
-
+            LogManager.Info("CLOSE RELEASE: Done. END.");
             return response;
         }
 
@@ -295,6 +311,11 @@ namespace Etsi.Ultimate.Business
         /// <returns>New Release</returns>
         public Release CreateRelease(Release release, int previousReleaseId, int personId)
         {
+            ExtensionLogger.Info("CREATE RELEASE: System is creating release...", new List<KeyValuePair<string, object>> { 
+                new KeyValuePair<string, object>("release", release),
+                new KeyValuePair<string, object>("previousReleaseId", previousReleaseId),
+                new KeyValuePair<string, object>("personId", personId),
+            });
             ClearCache();
 
             releaseRepo = RepositoryFactory.Resolve<IReleaseRepository>();
@@ -323,7 +344,8 @@ namespace Etsi.Ultimate.Business
             ManageSortOrder(aReleaseToAdd, previousReleaseId);
 
             releaseRepo.InsertOrUpdate(aReleaseToAdd);
-            
+
+            LogManager.Info("CREATE RELEASE: Done. END.");
             return aReleaseToAdd;
         }
 
@@ -335,6 +357,11 @@ namespace Etsi.Ultimate.Business
         /// <param name="personId">Person ID</param>
         public void EditRelease(Release release, int previousReleaseId, int personId)
         {
+            ExtensionLogger.Info("EDIT RELEASE: System is editing release...", new List<KeyValuePair<string, object>> { 
+                new KeyValuePair<string, object>("release", release),
+                new KeyValuePair<string, object>("previousReleaseId", previousReleaseId),
+                new KeyValuePair<string, object>("personId", personId),
+            });
             // We are in edit mode, therefore we do not want the cache to be targeted.
             ClearCache();
             
@@ -351,6 +378,7 @@ namespace Etsi.Ultimate.Business
 
             // Finally save the release
             releaseRepo.InsertOrUpdate(releaseToUpdate);
+            LogManager.Info("EDIT RELEASE: Done. END.");
         }
 
         /// <summary>

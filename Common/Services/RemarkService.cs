@@ -25,11 +25,18 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public ServiceResponse<List<Remark>> GetRemarks(string entityName, int primaryKey, int personId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var remarkMgr = new RemarkManager(uoW);
-
-                return remarkMgr.GetRemarks(entityName, primaryKey, personId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var remarkMgr = new RemarkManager(uoW);
+                    return remarkMgr.GetRemarks(entityName, primaryKey, personId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { entityName, primaryKey, personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -52,6 +59,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
+                ExtensionLogger.Exception(e, new List<object> { remarks, personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 var response = new ServiceResponse<bool> { Result = false };
                 response.Report.LogError(Localization.GenericError);
                 return response;
@@ -95,9 +103,7 @@ namespace Etsi.Ultimate.Services
                     }
                     catch (Exception ex)
                     {
-                        LogManager.Error("[Offline] Remark Insert Error: " + ex.Message);
-                        if (ex.InnerException != null)
-                            LogManager.Error("Inner Exception: " + ex.InnerException);
+                        ExtensionLogger.Exception(ex, new List<object> { entity, terminalName }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     }
                 }
             }
@@ -127,9 +133,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception ex)
                 {
-                    LogManager.Error("[Offline] Remark Update Error: " + ex.Message);
-                    if (ex.InnerException != null)
-                        LogManager.Error("Inner Exception: " + ex.InnerException);
+                    ExtensionLogger.Exception(ex, new List<object> { entity }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     isSuccess = false;
                 }
             }
@@ -159,9 +163,7 @@ namespace Etsi.Ultimate.Services
                 }
                 catch (Exception ex)
                 {
-                    LogManager.Error("[Offline] Remark Delete Error: " + ex.Message);
-                    if (ex.InnerException != null)
-                        LogManager.Error("Inner Exception: " + ex.InnerException);
+                    ExtensionLogger.Exception(ex, new List<object> { primaryKey }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                     isSuccess = false;
                 }
             }

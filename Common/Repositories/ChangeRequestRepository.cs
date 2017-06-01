@@ -10,7 +10,7 @@ namespace Etsi.Ultimate.Repositories
     /// <summary>
     /// CR Repository to interact database for CR related activities
     /// PERFORMANCE IMPROVMENTS : to improve performance two requests are send potentially to find a CR at WG or TSG level.
-    /// Actually, if we are trying to manage LEFT join with where clause with OR statement the request and 20 time more long... 
+    /// Actually, if we are trying to manage LEFT join with where clause with OR statement the request and 20 time more long...
     /// For more information please see UpdateCrStatus method
     /// </summary>
     public class ChangeRequestRepository : IChangeRequestRepository
@@ -123,7 +123,7 @@ namespace Etsi.Ultimate.Repositories
         }
 
         /// <summary>
-        /// Returns list of CRs using list of contribution UIDs. 
+        /// Returns list of CRs using list of contribution UIDs.
         /// Performance improvment : to avoid any timeout, we split request in multiple requests each LimitOfTdocsPerRequest (integer) tdocs
         /// </summary>
         /// <param name="contributionUiDs">Contribution Uid list</param>
@@ -428,10 +428,14 @@ namespace Etsi.Ultimate.Repositories
                                    && ((searchObj.WorkItemIds.Count == 0) || (searchObj.WorkItemIds.Any(wiId => x.CR_WorkItems.Any(crWi => crWi.Fk_WIId == wiId))))));
 
             //Order by
-            query = query.OrderBy(x => x.Specification.Number).ThenByDescending(y => y.CRNumber).ThenByDescending(z => z.Revision);
-            
-            return searchObj.PageSize != 0 ? 
-                new KeyValuePair<List<ChangeRequest>, int>(query.Skip(searchObj.SkipRecords).Take(searchObj.PageSize).ToList(), query.Count()) : 
+            query = query.OrderBy(x => x.Specification.Number)
+                .ThenByDescending(y => y.CRNumber)
+                .ThenByDescending(z => z.Revision)
+                .ThenByDescending(v => v.WGTDoc)
+                .ThenByDescending(w => w.ChangeRequestTsgDatas.Select(tsg => tsg.TSGTdoc).FirstOrDefault());
+
+            return searchObj.PageSize != 0 ?
+                new KeyValuePair<List<ChangeRequest>, int>(query.Skip(searchObj.SkipRecords).Take(searchObj.PageSize).ToList(), query.Count()) :
                 new KeyValuePair<List<ChangeRequest>, int>(query.ToList(), query.Count());
         }
 
@@ -459,7 +463,7 @@ namespace Etsi.Ultimate.Repositories
             var crNumbers = crKeys.Select(x => x.CrNumber).Distinct().ToList();
             var revisionNumbers = crKeys.Select(x => x.Revision).Distinct().ToList();
 
-            //Search CR to process : 
+            //Search CR to process :
             //1) Search all CR which match with Keys values (Spec ID, CR number, Revision)
             //2) Inside this list search which one match to the exact key value of each one
             var matchingCombinations = AllIncluding(t => t.Enum_CRCategory, t => t.Specification, t => t.Release, t => t.CurrentVersion, t => t.NewVersion, t => t.WgStatus)
@@ -493,10 +497,10 @@ namespace Etsi.Ultimate.Repositories
         }
 
         /// <summary>
-        /// Find WgTdoc number of Crs which have been revised 
-        /// Parent with revision 0 : WgTdoc = CP-1590204 -> have a WgTdoc number 
+        /// Find WgTdoc number of Crs which have been revised
+        /// Parent with revision 0 : WgTdoc = CP-1590204 -> have a WgTdoc number
         /// ..
-        /// Child with revision x : WgTdoc = ??? -> don't have WgTdoc number, we will find it thanks to its parent 
+        /// Child with revision x : WgTdoc = ??? -> don't have WgTdoc number, we will find it thanks to its parent
         /// </summary>
         /// <param name="crKeys">CrKeys with Specification number and CR number</param>
         /// <returns>List of CRKeys and related WgTdoc number</returns>
@@ -512,12 +516,12 @@ namespace Etsi.Ultimate.Repositories
 
             var parentCrsFound = query.ToList();
 
-            return (from crKey in crKeys 
-                    let parentCrFound = parentCrsFound.FirstOrDefault(x => x.CRNumber == crKey.CrNumber && x.Specification.Number == crKey.SpecNumber) 
-                    where parentCrFound != null 
-                    select 
+            return (from crKey in crKeys
+                    let parentCrFound = parentCrsFound.FirstOrDefault(x => x.CRNumber == crKey.CrNumber && x.Specification.Number == crKey.SpecNumber)
+                    where parentCrFound != null
+                    select
                         new KeyValuePair<CrKeyFacade, string>(
-                            new CrKeyFacade {CrNumber = crKey.CrNumber, SpecNumber = crKey.SpecNumber, Revision = 0}, 
+                            new CrKeyFacade {CrNumber = crKey.CrNumber, SpecNumber = crKey.SpecNumber, Revision = 0},
                             parentCrFound.WGTDoc))
                     .ToList();
         }
@@ -547,15 +551,15 @@ namespace Etsi.Ultimate.Repositories
         }
 
         /// <summary>
-        /// Update CR status. 
-        /// Actually, this request seems strange. 
+        /// Update CR status.
+        /// Actually, this request seems strange.
         /// The fact is that a CR (NOT a CR link to a CR-Pack) could be at WG level or TSG level.
         /// - CR at WG level : the uid is unique inside the ChangeRequest table
         /// - CR at TSG level : the uid is unique inside the ChangeRequestTsgData table
-        /// Rule 1 : a CR UID cannot be found at WG level and at TSG level in the same time. 
+        /// Rule 1 : a CR UID cannot be found at WG level and at TSG level in the same time.
         /// Rule 2 : a CR UID cannot be present multiple time on ChangeRequest table (same for ChangeRequestTsgData table)
-        /// 
-        /// So, the request has been transform to improve performance by searching first of all inside ChangeRequest table 
+        ///
+        /// So, the request has been transform to improve performance by searching first of all inside ChangeRequest table
         /// and if the UID is not found as a WGTdoc number, the system will search inside ChangeRequestTsgData table (as a TSGTdoc number)
         /// </summary>
         /// <param name="uid"></param>
@@ -612,7 +616,7 @@ namespace Etsi.Ultimate.Repositories
                     tsgCr.Fk_TsgStatus = item.PkEnumStatus;
                 }
             }
-           
+
             return true;
         }
     }
@@ -622,7 +626,7 @@ namespace Etsi.Ultimate.Repositories
     /// </summary>
     public interface IChangeRequestRepository : IEntityRepository<ChangeRequest>
     {
-        
+
         /// <summary>
         /// Finds the by specification identifier.
         /// </summary>
@@ -638,7 +642,7 @@ namespace Etsi.Ultimate.Repositories
         ChangeRequest GetChangeRequestByContributionUID(string contributionUid);
 
         /// <summary>
-        /// Returns list of CRs using list of contribution UIDs. 
+        /// Returns list of CRs using list of contribution UIDs.
         /// </summary>
         /// <param name="contributionUiDs"></param>
         /// <returns>List of CRs</returns>
@@ -745,7 +749,7 @@ namespace Etsi.Ultimate.Repositories
         List<ChangeRequest> FindCrsByIds(List<int> crsIds);
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="uid"></param>
         /// <param name="pkStatus"></param>
@@ -760,10 +764,10 @@ namespace Etsi.Ultimate.Repositories
         bool UpdateCrsStatusOfCrPack(List<CrOfCrPackFacade> crsOfCrPack);
 
         /// <summary>
-        /// Find WgTdoc number of Crs which have been revised 
-        /// Parent with revision 0 : WgTdoc = CP-1590204 -> have a WgTdoc number 
+        /// Find WgTdoc number of Crs which have been revised
+        /// Parent with revision 0 : WgTdoc = CP-1590204 -> have a WgTdoc number
         /// ..
-        /// Child with revision x : WgTdoc = ??? -> don't have WgTdoc number, we will find it thanks to its parent 
+        /// Child with revision x : WgTdoc = ??? -> don't have WgTdoc number, we will find it thanks to its parent
         /// </summary>
         /// <param name="crKeys">CrKeys with Specification number and CR number</param>
         /// <returns>List of CRKeys and related WgTdoc number</returns>

@@ -6,6 +6,7 @@ using Etsi.Ultimate.Business.Specifications.Interfaces;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Business.Specifications;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Business.Versions
 {
@@ -15,6 +16,11 @@ namespace Etsi.Ultimate.Business.Versions
 
         public ServiceResponse<SpecVersion> AllocateVersion(int personId, SpecVersion version)
         {
+            ExtensionLogger.Info("ALLOCATE VERSION: ", new List<KeyValuePair<string, object>> { 
+                new KeyValuePair<string, object>("personId", personId),
+                new KeyValuePair<string, object>("version", version)
+            });
+
             var response = new ServiceResponse<SpecVersion>();
 
             try
@@ -57,6 +63,7 @@ namespace Etsi.Ultimate.Business.Versions
             }
             catch (Exception ex)
             {
+                ExtensionLogger.Exception(ex, new List<object> { personId, version.ToString() }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, "Exception message: " + ex.Message);
                 response.Report.LogError(ex.Message);
             }
 

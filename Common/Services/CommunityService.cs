@@ -11,21 +11,37 @@ namespace Etsi.Ultimate.Services
     {
         public List<Community> GetCommunities()
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var communityManager = ManagerFactory.Resolve<ICommunityManager>();
-                communityManager.UoW = uoW ;
-                return communityManager.GetCommunities();
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var communityManager = ManagerFactory.Resolve<ICommunityManager>();
+                    communityManager.UoW = uoW;
+                    return communityManager.GetCommunities();
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object>(), this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public string GetCommmunityshortNameById(int id)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var communityManager = ManagerFactory.Resolve<ICommunityManager>();
-                communityManager.UoW = uoW;
-                return communityManager.GetCommmunityshortNameById(id);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var communityManager = ManagerFactory.Resolve<ICommunityManager>();
+                    communityManager.UoW = uoW;
+                    return communityManager.GetCommmunityshortNameById(id);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { id }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -42,7 +58,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error("CommunityService - GetCommunitiesByIds - IDs: " + string.Join(", ", ids), e);
+                ExtensionLogger.Exception(e, new List<object> { ids }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 return null;
             }
         }

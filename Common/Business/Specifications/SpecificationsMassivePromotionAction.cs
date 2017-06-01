@@ -5,6 +5,7 @@ using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.Business.Specifications.Interfaces;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Business.Specifications
 {
@@ -61,13 +62,21 @@ namespace Etsi.Ultimate.Business.Specifications
 
         public void PromoteMassivelySpecification(int personId, List<int> specificationIds, int targetReleaseId)
         {
+            ExtensionLogger.Info("MASSIVE PROMOTION: System is beginning massive promotion of specs...", new List<KeyValuePair<string, object>> { 
+                new KeyValuePair<string, object>("personId", personId),
+                new KeyValuePair<string, object>("specificationIds", specificationIds),
+                new KeyValuePair<string, object>("targetReleaseId", targetReleaseId)
+            });
+
             var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
             specMgr.UoW = UoW;
             DateTime actionDate = DateTime.UtcNow;
             foreach (int id in specificationIds)
             {
                 specMgr.GetSpecificationById(personId, id).Key.Specification_Release.Add(new Specification_Release { isWithdrawn = false, CreationDate = actionDate, UpdateDate = actionDate, Fk_ReleaseId = targetReleaseId });
+                LogManager.Debug("MASSIVE PROMOTION:    Promotion done for spec: " + id);
             }
+            LogManager.Debug("MASSIVE PROMOTION: Massive promote done. END.");
         }
         #endregion
     }

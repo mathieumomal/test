@@ -1,9 +1,11 @@
-﻿using Etsi.Ultimate.Utils;
+﻿using Etsi.Ultimate.DomainClasses;
+using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
 using log4net.Appender;
 using log4net.Core;
 using NUnit.Framework;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 

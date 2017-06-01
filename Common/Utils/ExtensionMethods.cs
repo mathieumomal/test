@@ -4,6 +4,18 @@ namespace Etsi.Ultimate.Utils
 {
     public static class ExtensionMethods
     {
+        /// <summary>
+        /// ToString overide method which is checing if object is null. 
+        /// If no: apply ToString on it. 
+        /// If yes: return default value (DEFAULT: "NULL")
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static object ToStringNullSafe(this object obj, string defaultValue = "NULL")
+        {
+            return obj == null ? defaultValue : obj.ToString();
+        }
 
         public static string Remove3GppAtTheBeginningOfAString(this string str)
         {

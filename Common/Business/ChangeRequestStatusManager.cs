@@ -68,6 +68,14 @@ namespace Etsi.Ultimate.Business
             crRepo.UoW = UoW;
 
             response.Result = crRepo.UpdateCrStatus(uid, statusId);
+            if (response.Result)
+            {
+                LogManager.Info("UPDATE CR STATUS: CR's (UID: " + uid + ", STATUS: " + status + ") status udpate -> OK");
+            }
+            else
+            {
+                LogManager.Error("UPDATE CR STATUS: CR's (UID: " + uid + ", STATUS: " + status + ") status udpate -> ERROR");
+            }
             return response;
         }
 
@@ -78,6 +86,9 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         public ServiceResponse<bool> UpdateCrsStatusOfCrPack(List<CrOfCrPackFacade> crsOfCrPack)
         {
+            ExtensionLogger.Info("UPDATE CRs STATUS (CR-PACK): ", new List<KeyValuePair<string, object>> { 
+                new KeyValuePair<string, object>("crsOfCrPack", crsOfCrPack)
+            });
             var response = new ServiceResponse<bool> { Result = false };
 
             var crStatusMgr = ManagerFactory.Resolve<IChangeRequestStatusManager>();
@@ -106,6 +117,14 @@ namespace Etsi.Ultimate.Business
             crRepo.UoW = UoW;
 
             response.Result = crRepo.UpdateCrsStatusOfCrPack(crsOfCrPack);
+            if (response.Result)
+            {
+                LogManager.Info("UPDATE CRs STATUS (CR-PACK): statuses udpate -> OK");
+            }
+            else
+            {
+                LogManager.Error("UPDATE CRs STATUS (CR-PACK): statuses udpate -> ERROR");
+            }
             return response;
         }  
 

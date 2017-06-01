@@ -2,6 +2,8 @@
 using System.IO;
 using DotNetNuke.Instrumentation;
 using log4net.Config;
+using System.Collections.Generic;
+using System.Web.Script.Serialization;
 
 namespace Etsi.Ultimate.Utils.Core
 {
@@ -252,7 +254,6 @@ namespace Etsi.Ultimate.Utils.Core
         {
             Logger.InfoFormat(format, args);
         }
-
         #endregion
 
         #region Trace

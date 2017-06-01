@@ -4,6 +4,7 @@ using Etsi.Ultimate.Repositories;
 using System.Collections.Generic;
 using System.Linq;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Business
 {
@@ -33,6 +34,15 @@ namespace Etsi.Ultimate.Business
         /// <returns>List of workitems along with rights container</returns>
         public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName, List<int> tbIds)
         {
+            ExtensionLogger.Info("WORKPLAN RESEARCH: System is searching for Workitems with following search criterias...", new List<KeyValuePair<string, object>>{
+                new KeyValuePair<string, object>("personId", personId),
+                new KeyValuePair<string, object>("releaseIds", releaseIds),
+                new KeyValuePair<string, object>("granularity", granularity),
+                new KeyValuePair<string, object>("hidePercentComplete", hidePercentComplete),
+                new KeyValuePair<string, object>("wiAcronym", wiAcronym),
+                new KeyValuePair<string, object>("wiName", wiName),
+                new KeyValuePair<string, object>("tbIds", tbIds)
+            });
             IWorkItemRepository repo = RepositoryFactory.Resolve<IWorkItemRepository>();
             repo.UoW = _uoW;
 
@@ -42,6 +52,7 @@ namespace Etsi.Ultimate.Business
             // Additionally, if TSG/WG are passed, we will clean up the mess.
             if (string.IsNullOrEmpty(wiAcronym) && string.IsNullOrEmpty(wiName) && !hidePercentComplete)
             {
+                LogManager.Info("WORKPLAN RESEARCH:     FAST research is running...");
                 var wiList = repo.GetAllWorkItemsForReleases(releaseIds);
                 if (tbIds.Count > 0)
                 {
@@ -70,10 +81,11 @@ namespace Etsi.Ultimate.Business
                         wi.TdocLink = "javascript:openTdoc('" + string.Format(ConfigVariables.TdocDetailsUrl, wi.Wid) + "','" + wi.Wid + "')";
                     }
                 });
-               
+                LogManager.Info("WORKPLAN RESEARCH: Research for workitems is finished. END.");
                 return new KeyValuePair<List<WorkItem>, UserRightsContainer>(wiList, GetRights(personId));
             }
 
+            LogManager.Info("WORKPLAN RESEARCH:     LONG research is running...");
             List<WorkItem> AllWorkItems = new List<WorkItem>();
 
             var workItemsOfSearchCriteria = repo.GetWorkItemsBySearchCriteria(releaseIds, granularity, wiAcronym, wiName, tbIds);
@@ -81,6 +93,7 @@ namespace Etsi.Ultimate.Business
 
             //Get Parents
             List<WorkItem> parentWorkItems = new List<WorkItem>();
+            LogManager.Info("WORKPLAN RESEARCH:     System is gathering info about parents of WIs...");
             foreach (var workItem in workItemsOfSearchCriteria)
             {
                 GetParentWorkItems(workItem, AllWorkItems, parentWorkItems, repo);
@@ -90,6 +103,7 @@ namespace Etsi.Ultimate.Business
             //Remove 100% records at Level 1
             if (hidePercentComplete)
             {
+                LogManager.Info("WORKPLAN RESEARCH:     System is removing WIs with 100% of completion at level 1...");
                 List<WorkItem> workItemsToRemove = new List<WorkItem>();
                 AllWorkItems.Where(x => x.WiLevel == 1 && x.Completion >= 100).ToList().ForEach(x =>
                     {
@@ -100,6 +114,7 @@ namespace Etsi.Ultimate.Business
             }
 
             //Get child records for the given granularity
+            LogManager.Info("WORKPLAN RESEARCH:     System is gathering info about childs of WIs for the given granularity...");
             List<WorkItem> childRecordsForGranularityLevel = new List<WorkItem>();
             AllWorkItems.Where(x => x.WiLevel == granularity).ToList().ForEach(x =>
                 {
@@ -108,6 +123,7 @@ namespace Etsi.Ultimate.Business
 
             AllWorkItems.AddRange(childRecordsForGranularityLevel);
 
+            LogManager.Info("WORKPLAN RESEARCH: Research for workitems is finished. END.");
             return new KeyValuePair<List<WorkItem>, UserRightsContainer>(AllWorkItems, GetRights(personId));
         }
 

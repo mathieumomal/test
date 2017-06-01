@@ -197,5 +197,10 @@ namespace Etsi.Ultimate.DomainClasses
             }
         }
         #endregion
+
+        public override string ToString()
+        {
+            return string.Format("ID: {0}, Number: {1}", Pk_SpecificationId, Number);
+        }
     }
 }

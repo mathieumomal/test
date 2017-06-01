@@ -45,7 +45,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error("CrPackService - UpdateCrsInsideCrPack", e);
+                ExtensionLogger.Exception(e, new List<object> { crPack, crs, personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 return new ServiceResponse<bool>{Result = false, Report = new Report{ErrorList = new List<string>{Localization.GenericError}}};
             }
         }

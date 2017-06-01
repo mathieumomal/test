@@ -5,6 +5,7 @@ using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
+using System.Collections.Generic;
 
 namespace Etsi.Ultimate.Business.Versions
 {
@@ -26,6 +27,13 @@ namespace Etsi.Ultimate.Business.Versions
         public ServiceResponse<bool> CheckSpecVersionNumber(SpecVersion dbVersion, SpecVersion uiVersion, SpecNumberValidatorMode mode,
             int personId)
         {
+            ExtensionLogger.Info("CHECK VERSION NUMBER: ", new List<KeyValuePair<string, object>> { 
+                new KeyValuePair<string, object>("dbVersion", dbVersion),
+                new KeyValuePair<string, object>("uiVersion", uiVersion),
+                new KeyValuePair<string, object>("mode", mode),
+                new KeyValuePair<string, object>("personId", personId),
+            });
+
             var response = new ServiceResponse<bool>{ Result = true };
 
             try
@@ -169,7 +177,7 @@ namespace Etsi.Ultimate.Business.Versions
             }
             catch (Exception e)
             {
-                LogManager.Error("CheckSpecVersionNumber in allocate mode - an unexpected error occured", e);
+                ExtensionLogger.Exception(e, new List<object> { dbVersion, uiVersion, mode, personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name, "Exception message: " + e.Message);
                 response.Report.ErrorList.Add(e.Message);
                 response.Result = false;
             }

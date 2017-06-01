@@ -12,7 +12,7 @@ namespace Etsi.Ultimate.DomainClasses
         {
             get
             {
-                return Specification.Number;
+                return Specification != null ? Specification.Number : string.Empty;
             }
         }
 
@@ -41,5 +41,10 @@ namespace Etsi.Ultimate.DomainClasses
         public string RevisionOf { get; set; }
 
         public bool IsAutoNumberingOff { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("ID: {0}, CRNumber: {1}, Revision: {2}, Release: {3}, Spec: {4}", Pk_ChangeRequest, CRNumber, Revision, Fk_Release, Fk_Specification);
+        }
     }
 }

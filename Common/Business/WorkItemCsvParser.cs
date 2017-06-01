@@ -76,6 +76,7 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         public KeyValuePair<List<WorkItem>, Report> ParseCsv(string fileLocation)
         {
+            LogManager.Info("WORKITEM IMPORT:   Parsing of the CSV...");
             try
             {
                 var now = DateTime.UtcNow;
@@ -89,6 +90,7 @@ namespace Etsi.Ultimate.Business
                 if (!fileLocation.EndsWith("csv"))
                 {
                     Report.LogError(Utils.Localization.WorkItem_Import_Invalid_File_Format);
+                    LogManager.Error("WORKITEM IMPORT:   Invalid file format (" + fileLocation + ")");
                     return new KeyValuePair<List<WorkItem>, Report>(ModifiedWorkItems, Report);
                 }
 
@@ -152,10 +154,10 @@ namespace Etsi.Ultimate.Business
                 return new KeyValuePair<List<WorkItem>, Report>(ModifiedWorkItems, Report);
             }
 
-            catch (FileNotFoundException)
+            catch (FileNotFoundException e)
             {
                 // Log the error
-                LogManager.Error("Error occured in WorkplanCsvParser: cannot find file" + fileLocation);
+                LogManager.Error("WORKITEM IMPORT:   Error occured in WorkplanCsvParser: cannot find file -> " + fileLocation, e);
                 var errorReport = new Report();
                 errorReport.LogError(String.Format(Utils.Localization.WorkItem_Import_FileNotFound, fileLocation));
 
@@ -163,16 +165,16 @@ namespace Etsi.Ultimate.Business
             }
             catch (CsvBadDataException e)
             {
+                LogManager.Error("WORKITEM IMPORT:   CSV bad data exception -> " + fileLocation, e);
                 var errorReport = new Report();
                 errorReport.LogError(String.Format(Utils.Localization.WorkItem_Import_Bad_Format, e.Message));
 
                 return new KeyValuePair<List<WorkItem>, Report>(new List<WorkItem>(), errorReport);
             }
-
             catch (Exception e)
             {
                 // Log the error
-                LogManager.Error("Error occured in WorkplanCsvParser:", e);
+                LogManager.Error("WORKITEM IMPORT:   Error occured in WorkplanCsvParser:", e);
 
                 string lastSuccessfullyTreatedWi = "None";
                 if (_lastTreatedWi != null)
@@ -228,9 +230,10 @@ namespace Etsi.Ultimate.Business
         /// <param name="now">Import date</param>
         private void DeleteLogicallyOldWorkItemsNotJustImported(List<int> wiUids, List<WorkItem> modifiedWorkItems, DateTime now)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Deleting logically old workitems not just imported...");
             //Find all Wis not just imported (according to UIDs not found inside CSV file)
             var allWisNotJustImported = AllWorkItems.Where(x => !wiUids.Contains(x.Pk_WorkItemUid)).ToList();
-            LogManager.Info(string.Format("Please find the list of WIs logically deleted after the current import: {0}", string.Join(", ", allWisNotJustImported.Select(x => x.Pk_WorkItemUid).ToList())));
+            LogManager.Debug(string.Format("WORKITEM IMPORT:   Please find the list of WIs logically deleted after the current import: {0}", string.Join(", ", allWisNotJustImported.Select(x => x.Pk_WorkItemUid).ToList())));
             
             foreach (var wi in allWisNotJustImported)
             {
@@ -255,6 +258,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="now"></param>
         private void TreatImportDates(WorkItem wi, DateTime now)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating import dates...");
             //NEW WI
             if (wi.IsNew)
             {
@@ -267,7 +271,7 @@ namespace Etsi.Ultimate.Business
             }
 
             if (!IsCurrentWiModified)
-                LogManager.Debug("Current WI not modified except its ImportLastModificationDate: " + wi.Pk_WorkItemUid);
+                LogManager.Debug("WORKITEM IMPORT:   Current WI not modified except its ImportLastModificationDate: " + wi.Pk_WorkItemUid);
             IsCurrentWiModified = true;//LAST MODIFICATION DATE FOR IMPORT UPDATED !
         }
 
@@ -278,6 +282,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatResource(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating resource...");
             string resourceStr = record.Resource_Names;
             if (resourceStr == "-")
                 resourceStr = "";
@@ -337,6 +342,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatLastModifiedDate(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating last modified date...");
             DateTime? lastModifiedDate = null;
             if (!string.IsNullOrEmpty(record.last_modif) && record.last_modif != "-")
             {
@@ -369,6 +375,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatCreationDate(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating creation date...");
             DateTime? creationDate = null;
             if (!string.IsNullOrEmpty(record.Created) && record.Created != "-")
             {
@@ -402,6 +409,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatStoppedPcgMeeting(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating stopped PCG meeting...");
             string stoppedPcgMtgRef = record.PCG_stopped;
             if (stoppedPcgMtgRef == "-")
                 stoppedPcgMtgRef = "";
@@ -444,6 +452,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatStoppedTsgMeeting(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Parsing stopped TSG meeting...");
             string stoppedTsgMtgRef = record.TSG_stopped;
             if (stoppedTsgMtgRef == "-")
                 stoppedTsgMtgRef = "";
@@ -484,6 +493,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatApprovedPcgMeeting(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating approved PCG meeting...");
             string approvedPcgMtgRef = record.PCG_approved;
             if (approvedPcgMtgRef == "-")
                 approvedPcgMtgRef = "";
@@ -524,6 +534,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatApprovedTsgMeeting(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating approved TSG meeting...");
             var approvedTsgMtgRef = record.TSG_approved;
             if (approvedTsgMtgRef == "-")
                 approvedTsgMtgRef = "";
@@ -566,6 +577,7 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         private int GetMeetingForRef(string mtgRef)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Getting meeting for ref...");
             // Try to fetch the meeting ID
             try
             {
@@ -592,6 +604,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatTssAndTrs(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating TSS and TRS...");
             string tsAndTr = record.Impacted_TSs_and_TRs;
 
             if (tsAndTr == "-")
@@ -622,6 +635,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatRemarks(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating remarks...");
             string remarkStr = record.Notes;
             if (remarkStr == "-")
                 remarkStr = "";
@@ -665,6 +679,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatRapporteur(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating rapporteur...");
             string rapporteurStr = record.WI_rapporteur_e_mail;
             if (rapporteurStr == "-")
                 rapporteurStr = "";
@@ -721,6 +736,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatRapporteurCompany(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating rapporteur company...");
             string rapporteurCompanyName = record.WI_rapporteur_name;
             if (rapporteurCompanyName == "-")
                 rapporteurCompanyName = "";
@@ -739,6 +755,7 @@ namespace Etsi.Ultimate.Business
 
         private void TreatStatusReport(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating status report...");
             string statusReport = record.Status_Report;
             if (statusReport == "-")
                 statusReport = "";
@@ -772,6 +789,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatWid(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating WID...");
             string wid = record.Hyperlink;
             if (wid == "-")
                 wid = "";
@@ -805,6 +823,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatCompletion(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating completion...");
             string completion = record.Percent_Complete;
             int? compl = null;
             bool warning = false;
@@ -848,6 +867,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatEndDate(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating end date...");
             DateTime? endDate = null;
             if (!string.IsNullOrEmpty(record.Finish_Date) && record.Finish_Date != "-")
             {
@@ -881,6 +901,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatStartDate(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating start date...");
             DateTime? startDate = null;
             if (!string.IsNullOrEmpty(record.Start_Date) && record.Start_Date != "-")
             {
@@ -914,6 +935,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatRelease(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating release...");
             int? releaseFk = null;
 
             if (record.Release == "-")
@@ -960,6 +982,7 @@ namespace Etsi.Ultimate.Business
 
         private void TreatAcronym(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating acronym...");
             var acronym = record.Acronym;
             
             if (acronym == "-")
@@ -1032,6 +1055,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatLevel(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating elevel...");
             // Check that the level is indeed an int. Else default it to 0.
             int level;
             if (String.IsNullOrEmpty(record.Outline_Level) || record.Outline_Level == "-")
@@ -1082,6 +1106,7 @@ namespace Etsi.Ultimate.Business
         /// <param name="wi"></param>
         private void TreatName(WorkItemImportClass record, WorkItem wi)
         {
+            LogManager.Debug("WORKITEM IMPORT:   Treating name...");
             string name = record.Name;
             if (wi.Name != name)
             {
@@ -1104,6 +1129,7 @@ namespace Etsi.Ultimate.Business
         private WorkItem TreatWiUid(WorkItemImportClass record)
         {
             var uidToSearchFor = record.Unique_ID;
+            LogManager.Info("WORKITEM IMPORT:   Treating WI UID... -> " + uidToSearchFor);
 
             WorkItem searchWi;
             // Exception: if UID = 0, we are looking for UID = WorkplanId
@@ -1179,6 +1205,7 @@ namespace Etsi.Ultimate.Business
                 IsCurrentWiModified = true;
             }
             wi.WorkplanId = record.ID;
+            LogManager.Debug("WORKITEM IMPORT:   Treating WPId... -> " + wi.WorkplanId);
 
             // Check order is correct
             if (_lastTreatedWi != null && _lastTreatedWi.WorkplanId > wi.WorkplanId)

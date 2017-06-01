@@ -46,7 +46,7 @@
           <desktopModule>
             <moduleName>Specifications</moduleName>
             <foldername>Specifications</foldername>
-            <businessControllerClass>Christoc.Modules.Specifications.Components.FeatureController</businessControllerClass>
+            <businessControllerClass></businessControllerClass>
             <supportedFeatures />
             <moduleDefinitions>
               <moduleDefinition>

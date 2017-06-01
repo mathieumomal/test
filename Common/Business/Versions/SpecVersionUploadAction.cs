@@ -221,7 +221,6 @@ namespace Etsi.Ultimate.Business.Versions
         /// <returns></returns>
         public ServiceResponse<string> UploadVersion(int personId, string token)
         {
-            LogManager.Debug("Upload Version start ---");
             var svcResponse = new ServiceResponse<string>();
             try
             {
@@ -229,17 +228,26 @@ namespace Etsi.Ultimate.Business.Versions
                 if (versionInfos == null)
                     throw new InvalidOperationException("An error occured during file retrieval. Please try again.");
 
+                ExtensionLogger.Info("UPLOAD VERSION: System is trying to upload version...", new List<KeyValuePair<string, object>>
+                {
+                    new KeyValuePair<string, object>("personId", personId),
+                    new KeyValuePair<string, object>("token", token),
+                    new KeyValuePair<string, object>("version", versionInfos.Version),
+                    new KeyValuePair<string, object>("report", versionInfos.ValidationReport),
+                    new KeyValuePair<string, object>("TempFilePath", versionInfos.TmpUploadedFilePath)
+                });
+
                 GetRelatedSpecAndRelease(personId, versionInfos.Version);
                 CheckPersonRightToUploadVersion(versionInfos.Version, personId);
 
                 TransferToFtp(versionInfos.Version, versionInfos.TmpUploadedFilePath);
 
                 UpdateDatabase(versionInfos.Version, versionInfos.ValidationReport, personId);
-                LogManager.Debug("Upload Version end ---");
+                LogManager.Info("UPLOAD VERSION: System successfully upload version for user: " + personId);
             }
             catch (Exception e)
             {
-                LogManager.Error("An error occured while uploading version: ", e);
+                ExtensionLogger.Exception(e, new List<object> { personId, token }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 svcResponse.Report.LogError("An error occured while uploading: " + e.Message);
             }
             return svcResponse;
@@ -353,88 +361,57 @@ namespace Etsi.Ultimate.Business.Versions
         /// <returns>Validation Summary</returns>
         private Report ValidateDocument(IQualityChecks qualityChecks, string version, string title, string release, DateTime meetingDate, string tsgTitle, bool isTs)
         {
+            ExtensionLogger.Info("QUALITY CHECKS: are running on provided document with following arguments: ", new List<KeyValuePair<string, object>> { 
+                new KeyValuePair<string, object>("version" , version),
+                new KeyValuePair<string, object>("title" , title),
+                new KeyValuePair<string, object>("release" , release),
+                new KeyValuePair<string, object>("meetingDate" , meetingDate),
+                new KeyValuePair<string, object>("tsgTitle" , tsgTitle),
+                new KeyValuePair<string, object>("isTs" , isTs)
+            });
+
             var validationReport = new Report();
 
-            var watcher = new Stopwatch();
-
-            watcher.Start();
             if (qualityChecks.HasTrackedRevisions())
                 validationReport.LogWarning(ConstQualityCheckRevisionmark);
-            watcher.Stop();
-            LogManager.Debug("HasTrackedRevisions " + watcher.ElapsedMilliseconds + "ms");
 
-            watcher.Restart();
             var changeHistoryIsNotTheLastOne = !qualityChecks.ChangeHistoryTableIsTheLastOne();
-            watcher.Stop();
-            LogManager.Debug("ChangeHistoryTableIsTheLastOne " + watcher.ElapsedMilliseconds + "ms");
             if (changeHistoryIsNotTheLastOne)
             {
                 validationReport.LogWarning(ConstQualityCheckChangeHistoryIsNotTheLastTable);
             }
             else
             {
-                watcher.Restart();
                 if (!qualityChecks.IsHistoryVersionCorrect(version))
                     validationReport.LogWarning(ConstQualityCheckVersionHistory);
-                watcher.Stop();
-                LogManager.Debug("IsHistoryVersionCorrect " + watcher.ElapsedMilliseconds + "ms");
             }
             
-            
-
-            watcher.Restart();
             if (!qualityChecks.IsCoverPageVersionCorrect(version))
                 validationReport.LogWarning(ConstQualityCheckVersionCoverpage);
-            watcher.Stop();
-            LogManager.Debug("IsCoverPageVersionCorrect " + watcher.ElapsedMilliseconds + "ms");
 
-            watcher.Restart();
             if (!qualityChecks.IsCoverPageDateCorrect(meetingDate))
                 validationReport.LogWarning(ConstQualityCheckDateCoverpage);
-            watcher.Stop();
-            LogManager.Debug("IsCoverPageDateCorrect " + watcher.ElapsedMilliseconds + "ms");
 
-            watcher.Restart();
             if (!qualityChecks.IsCopyRightYearCorrect(DateTime.UtcNow))
                 validationReport.LogWarning(ConstQualityCheckYearCopyright);
-            watcher.Stop();
-            LogManager.Debug("IsCopyRightYearCorrect " + watcher.ElapsedMilliseconds + "ms");
 
-            watcher.Restart();
             if (!qualityChecks.IsTitleCorrect(title))
                 validationReport.LogWarning(ConstQualityCheckTitleCoverpage);
-            watcher.Stop();
-            LogManager.Debug("IsTitleCorrect " + watcher.ElapsedMilliseconds + "ms");
 
-            watcher.Restart();
             if (!qualityChecks.IsReleaseCorrect(release))
                 validationReport.LogWarning(ConstQualityCheckRelease);
-            watcher.Stop();
-            LogManager.Debug("IsReleaseCorrect " + watcher.ElapsedMilliseconds + "ms");
 
-            watcher.Restart();
             if (!qualityChecks.IsReleaseStyleCorrect(release))
                 validationReport.LogWarning(ConstQualityCheckReleaseStyle);
-            watcher.Stop();
-            LogManager.Debug("IsReleaseStyleCorrect " + watcher.ElapsedMilliseconds + "ms");
 
-            watcher.Restart();
             if (qualityChecks.IsAutomaticNumberingPresent())
                 validationReport.LogWarning(ConstQualityCheckAutoNumbering);
-            watcher.Stop();
-            LogManager.Debug("IsAutomaticNumberingPresent " + watcher.ElapsedMilliseconds + "ms");
 
-            watcher.Restart();
             if (!qualityChecks.IsFirstTwoLinesOfTitleCorrect(tsgTitle))
                 validationReport.LogWarning(ConstQualityCheckFirstTwoLinesTitle);
-            watcher.Stop();
-            LogManager.Debug("IsFirstTwoLinesOfTitleCorrect " + watcher.ElapsedMilliseconds + "ms");
 
-            watcher.Restart();
             if (!qualityChecks.IsAnnexureStylesCorrect(isTs))
                 validationReport.LogWarning(ConstQualityCheckAnnexureStyle);
-            watcher.Stop();
-            LogManager.Debug("IsAnnexureStylesCorrect " + watcher.ElapsedMilliseconds + "ms");
 
             return validationReport;
         }
@@ -506,7 +483,7 @@ namespace Etsi.Ultimate.Business.Versions
         {
             var specVersionPathMgr = UtilsFactory.Resolve<ISpecVersionPathHelper>();
 
-            LogManager.Debug(string.Format("START - Transfer to FTP of version (Spec: {0}, Rel: {1}, Number: {2}.{3}.{4}) begin...", version.Fk_SpecificationId, version.Fk_ReleaseId, version.MajorVersion, version.TechnicalVersion, version.EditorialVersion));
+            LogManager.Debug(string.Format("UPLOAD VERSION:   START - Transfer to FTP of version (Spec: {0}, Rel: {1}, Number: {2}.{3}.{4}) begin...", version.Fk_SpecificationId, version.Fk_ReleaseId, version.MajorVersion, version.TechnicalVersion, version.EditorialVersion));
             var specNumber = version.Specification.Number;
             var destinationFolder = String.Format(specVersionPathMgr.GetFtpArchivePath, destinationBasePath, specNumber.Split('.')[0], specNumber);
             var destinationFile = Path.Combine(destinationFolder, destinationFileName);
@@ -516,12 +493,12 @@ namespace Etsi.Ultimate.Business.Versions
                 Directory.CreateDirectory(destinationFolder);
 
             File.Copy(sourceFile, destinationFile, true);
-            LogManager.Debug("Version just copy/paste at: " + destinationFile);
+            LogManager.Debug("UPLOAD VERSION:   (DURATION)Version just copy/paste at: " + destinationFile);
 
             var spec = version.Specification;
             if (spec.IsActive && version.MajorVersion < 3) //Draft
             {
-                LogManager.Debug("Version considered as DRAFT");
+                LogManager.Debug("UPLOAD VERSION:   Version considered as DRAFT");
                 var draftPath = String.Format(specVersionPathMgr.GetFtpLatestDraftsPath, destinationBasePath);
                 var isDraftPathExists = Directory.Exists(draftPath);
                 if (!isDraftPathExists)
@@ -533,16 +510,16 @@ namespace Etsi.Ultimate.Business.Versions
                 {
                     var hardLinkPath = Path.Combine(draftPath, destinationFileName);
                     CreateHardLink(hardLinkPath, destinationFile, IntPtr.Zero);
-                    LogManager.Debug("Version just copy/paste at: " + hardLinkPath);
+                    LogManager.Debug("UPLOAD VERSION:   Version just copy/paste at: " + hardLinkPath);
                 }
                 else
                 {
-                    LogManager.Debug("Version was not last draft version for this spec release. No copy/paste occured.");
+                    LogManager.Debug("UPLOAD VERSION:   Version was not last draft version for this spec release. No copy/paste occured.");
                 }
             }
             else //Under Change Control
             {
-                LogManager.Debug("Version considered as UCC");
+                LogManager.Debug("UPLOAD VERSION:   Version considered as UCC");
                 if ((uploadMeeting.START_DATE != null))
                 {
                     var ftpFoldersManager = ManagerFactory.Resolve<IFtpFoldersManager>();
@@ -552,7 +529,7 @@ namespace Etsi.Ultimate.Business.Versions
                     if (String.IsNullOrEmpty(latestFolder))
                     {
                         latestFolder = String.Format("{0:0000}-{1:00}", uploadMeeting.START_DATE.Value.Year, uploadMeeting.START_DATE.Value.Month);
-                        LogManager.Debug("Latest folder not found in db. New latest folder will be created: " + latestFolder);
+                        LogManager.Debug("UPLOAD VERSION:   Latest folder not found in db. New latest folder will be created: " + latestFolder);
                     }
 
                     var underChangeControlPath = String.Format(specVersionPathMgr.GetFtpCustomPath, destinationBasePath, latestFolder, version.Release.Code, spec.Number.Split('.')[0]);
@@ -564,7 +541,7 @@ namespace Etsi.Ultimate.Business.Versions
                     var hardLinkPath = Path.Combine(underChangeControlPath, fileName);
 
                     CreateHardLink(hardLinkPath, destinationFile, IntPtr.Zero);
-                    LogManager.Debug("Version just copy/paste at: " + hardLinkPath);
+                    LogManager.Debug("UPLOAD VERSION:   Version just copy/paste at: " + hardLinkPath);
 
                     //Delete all drafts for this version if current version is the latest version uploaded (with higher version number)
                     ClearLatestDraftFolder(destinationBasePath, version);
@@ -583,7 +560,7 @@ namespace Etsi.Ultimate.Business.Versions
                     {
                         var hardLinkPathInLatestFolder = Path.Combine(latestFolderPath, fileName);
                         CreateHardLink(hardLinkPathInLatestFolder, hardLinkPath, IntPtr.Zero);
-                        LogManager.Debug("Version just copy/paste at: " + hardLinkPathInLatestFolder);
+                        LogManager.Debug("UPLOAD VERSION:   Version just copy/paste at: " + hardLinkPathInLatestFolder);
                     }
                     
                     //Some versions need to be move inside a (configured <=> web.config setting) folder in order to be transposed
@@ -609,11 +586,11 @@ namespace Etsi.Ultimate.Business.Versions
                         {
                             File.Copy(hardLinkPath, versionToBeTransposedCopyPath);
                         }
-                        LogManager.Debug("Version 'to be transposed' just copy/paste at: " + versionToBeTransposedCopyPath);
+                        LogManager.Debug("UPLOAD VERSION:   Version 'to be transposed' just copy/paste at: " + versionToBeTransposedCopyPath);
                     }
                 }
             }
-            LogManager.Debug(string.Format("END - Transfer to FTP of version (Spec: {0}, Rel: {1}, Number: {2}.{3}.{4}) is now done.", version.Fk_SpecificationId, version.Fk_ReleaseId, version.MajorVersion, version.TechnicalVersion, version.EditorialVersion));
+            LogManager.Debug(string.Format("UPLOAD VERSION:   Transfer to FTP of version (Spec: {0}, Rel: {1}, Number: {2}.{3}.{4}) is now done.", version.Fk_SpecificationId, version.Fk_ReleaseId, version.MajorVersion, version.TechnicalVersion, version.EditorialVersion));
         }
 
         /// <summary>
@@ -692,7 +669,7 @@ namespace Etsi.Ultimate.Business.Versions
                 currentVersionIsLatestVersionUploaded = true;
             }
 
-            LogManager.Debug(currentVersionIsLatestVersionUploaded ? "Latest folder cleaned because current version is latest version" : "Current version is not the latest uploaded");
+            LogManager.Debug(currentVersionIsLatestVersionUploaded ? "UPLOAD VERSION:   Latest folder cleaned because current version is latest version" : "UPLOAD VERSION:   Current version is not the latest uploaded");
             return currentVersionIsLatestVersionUploaded;
         }
 
@@ -773,14 +750,14 @@ namespace Etsi.Ultimate.Business.Versions
                 if (version.MajorVersion > 2
                     && (!version.Specification.IsUnderChangeControl.HasValue || !version.Specification.IsUnderChangeControl.Value))
                 {
-                    LogManager.Debug("Related spec of version transfored as UCC because major version greater than 2");
+                    LogManager.Debug("UPLOAD VERSION:   Related spec of version transfored as UCC because major version greater than 2");
                     var specChangeToUccAction = new SpecificationChangeToUnderChangeControlAction { UoW = UoW };
                     var responseUcc = specChangeToUccAction.ChangeSpecificationsStatusToUnderChangeControl(personId, new List<int> { version.Fk_SpecificationId ?? 0 });
 
                     if (!responseUcc.Result && responseUcc.Report.ErrorList.Count > 0)
                     {
                         validationReport.ErrorList.AddRange(responseUcc.Report.ErrorList.ToArray());
-                        LogManager.Error("Error occured when system trying to ChangeSpecificationsStatusToUnderChangeControl: " + string.Join(", ",responseUcc.Report.ErrorList));
+                        LogManager.Error("UPLOAD VERSION:   Error occured when system trying to ChangeSpecificationsStatusToUnderChangeControl: " + string.Join(", ", responseUcc.Report.ErrorList));
                     }
                 }
 
@@ -792,7 +769,7 @@ namespace Etsi.Ultimate.Business.Versions
             catch (Exception e)
             {
                 validationReport.ErrorList.Add("A error occured while updating data during version upload");
-                LogManager.Error("An error occured while updating database during uploading version", e);
+                LogManager.Error("UPLOAD VERSION:   An error occured while updating database during uploading version", e);
             }
         }
 

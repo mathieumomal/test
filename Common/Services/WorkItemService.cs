@@ -21,11 +21,18 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public KeyValuePair<string, Report> AnalyseWorkPlanForImport(String path)
         {
-
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var csvImport = new WorkItemImporter() { UoW = uoW };
-                return csvImport.TryImportCsv(path);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var csvImport = new WorkItemImporter() { UoW = uoW };
+                    return csvImport.TryImportCsv(path);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { path }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -61,20 +68,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error("Failed to import Workplan: " + e.Message + "\n" + e.StackTrace);
-                Exception e2 = e;
-                while (e2 != null)
-                {
-                    if (e2.InnerException != null)
-                    {
-                        LogManager.Error("Workplan import innerException: " + e2.InnerException.Message);
-                        e2 = e2.InnerException;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
+                ExtensionLogger.Exception(e, new List<object> { token, exportPath }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 return false;
             }
 
@@ -93,10 +87,18 @@ namespace Etsi.Ultimate.Services
         /// <returns>List of workitems along with rights container</returns>
         public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName, List<int> tbIds)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var workItemManager = new WorkItemManager(uoW);
-                return workItemManager.GetWorkItemsBySearchCriteria(personId, releaseIds, granularity, hidePercentComplete, wiAcronym, wiName, tbIds);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var workItemManager = new WorkItemManager(uoW);
+                    return workItemManager.GetWorkItemsBySearchCriteria(personId, releaseIds, granularity, hidePercentComplete, wiAcronym, wiName, tbIds);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, releaseIds, granularity, hidePercentComplete, wiAcronym, wiName, tbIds }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -109,10 +111,18 @@ namespace Etsi.Ultimate.Services
         /// <returns>Work items</returns>
         public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemsBySearchCriteria(int personId, string searchString, bool shouldHaveAcronym = false)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var workItemManager = new WorkItemManager(uoW);
-                return workItemManager.GetWorkItemsBySearchCriteria(personId, searchString, shouldHaveAcronym);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var workItemManager = new WorkItemManager(uoW);
+                    return workItemManager.GetWorkItemsBySearchCriteria(personId, searchString, shouldHaveAcronym);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, searchString, shouldHaveAcronym }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -123,10 +133,18 @@ namespace Etsi.Ultimate.Services
         /// <returns>List of workitems along with rights container</returns>
         public KeyValuePair<List<WorkItem>, UserRightsContainer> GetAllWorkItems(int personId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var workItemManager = new WorkItemManager(uoW);
-                return workItemManager.GetAllWorkItems(personId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var workItemManager = new WorkItemManager(uoW);
+                    return workItemManager.GetAllWorkItems(personId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -138,10 +156,18 @@ namespace Etsi.Ultimate.Services
         /// <returns>Work Item along with right container</returns>
         public KeyValuePair<WorkItem, UserRightsContainer> GetWorkItemById(int personId, int workItemId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var workItemManager = new WorkItemManager(uoW);
-                return workItemManager.GetWorkItemById(personId, workItemId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var workItemManager = new WorkItemManager(uoW);
+                    return workItemManager.GetWorkItemById(personId, workItemId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, workItemId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -153,10 +179,18 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public KeyValuePair<List<WorkItem>, UserRightsContainer> GetWorkItemByIds(int personId, List<int> workItemIds)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var workItemManager = new WorkItemManager(uoW);
-                return workItemManager.GetWorkItemByIds(personId, workItemIds);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var workItemManager = new WorkItemManager(uoW);
+                    return workItemManager.GetWorkItemByIds(personId, workItemIds);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, workItemIds }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -168,11 +202,19 @@ namespace Etsi.Ultimate.Services
         /// <returns>List of workitems</returns>
         public List<WorkItem> GetWorkItemsByKeywords(int personId, List<string> keywords)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var workItemManager = new WorkItemManager(uoW);
-                return workItemManager.GetWorkItemsByKeywords(personId, keywords);
-            }        
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var workItemManager = new WorkItemManager(uoW);
+                    return workItemManager.GetWorkItemsByKeywords(personId, keywords);
+                } 
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, keywords }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
+            }  
         }
 
         /// <summary>
@@ -192,7 +234,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error(Localization.GenericError, e);
+                ExtensionLogger.Exception(e, new List<object> { specificationID }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 return null;
             }  
         }
@@ -205,11 +247,19 @@ namespace Etsi.Ultimate.Services
         /// <returns>Work Item, right container and other required properties</returns>
         public KeyValuePair<WorkItem, UserRightsContainer> GetWorkItemByIdExtend(int personId, int workItemId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var workItemManager = new WorkItemManager(uoW);
-                return workItemManager.GetWorkItemByIdExtend(personId, workItemId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var workItemManager = new WorkItemManager(uoW);
+                    return workItemManager.GetWorkItemByIdExtend(personId, workItemId);
+                }
             }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, workItemId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
+            } 
         }
 
         /// <summary>
@@ -224,11 +274,19 @@ namespace Etsi.Ultimate.Services
         /// <returns>Work Item Count</returns>
         public int GetWorkItemsCountBySearchCriteria(List<int> releaseIds, int granularity, bool hidePercentComplete, string wiAcronym, string wiName, List<int> tbIds)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var workItemManager = new WorkItemManager(uoW);
-                return workItemManager.GetWorkItemsCountBySearchCriteria(releaseIds, granularity, hidePercentComplete, wiAcronym, wiName, tbIds);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var workItemManager = new WorkItemManager(uoW);
+                    return workItemManager.GetWorkItemsCountBySearchCriteria(releaseIds, granularity, hidePercentComplete, wiAcronym, wiName, tbIds);
+                }
             }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { releaseIds, granularity, hidePercentComplete, wiAcronym, wiName, tbIds }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
+            } 
         }
 
         /// <summary>
@@ -249,7 +307,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error("An unexpected error occured inside WorkItemServcie.GetReleaseRelatedToOneOfWiWithTheLowerWiLevel", e);
+                ExtensionLogger.Exception(e, new List<object> { personId, workitemsIds }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 return null;
             }
         }
@@ -260,10 +318,18 @@ namespace Etsi.Ultimate.Services
         /// <returns>List of Acronyms</returns>
         public List<string> GetAllAcronyms()
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var workItemManager = new WorkItemManager(uoW);
-                return workItemManager.GetAllAcronyms();
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var workItemManager = new WorkItemManager(uoW);
+                    return workItemManager.GetAllAcronyms();
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object>(), this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -284,7 +350,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error("Unexpected error occured during LookForAcronyms: ", e);
+                ExtensionLogger.Exception(e, new List<object> { keyword }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 return new List<string>();
             }
         }

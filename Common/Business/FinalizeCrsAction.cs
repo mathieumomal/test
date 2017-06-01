@@ -22,6 +22,11 @@ namespace Etsi.Ultimate.Business
         /// <returns></returns>
         public ServiceResponse<bool> FinalizeCrs(int personId, List<string> tdocUids)
         {
+            ExtensionLogger.Info("FINALIZE CRS: System is finalizing CRs...", new List<KeyValuePair<string, object>>{ 
+                new KeyValuePair<string,object>("personId", personId),
+                new KeyValuePair<string,object>("tdocUids", tdocUids)
+            });
+
             var response = new ServiceResponse<bool> { Result = true };
             // Find approved CR status
             var crStatusManager = new ChangeRequestStatusManager { UoW = UoW };
@@ -40,6 +45,10 @@ namespace Etsi.Ultimate.Business
             var candidateChangeRequests = crs
                 .Where(cr => cr.ChangeRequestTsgDatas.Any(x => x.Fk_TsgStatus == crApprovedStatus.Pk_EnumChangeRequestStatus)
                              && !cr.Fk_NewVersion.HasValue).ToList();
+            if (candidateChangeRequests.Count > 0)
+            {
+                LogManager.Info("FINALIZE CRS:    Candidate CRs -> " + string.Join(", ", candidateChangeRequests.Select(x => x.Pk_ChangeRequest).ToList()));
+            }
 
             var specManager = new SpecificationManager { UoW = UoW };
 
@@ -108,6 +117,7 @@ namespace Etsi.Ultimate.Business
                             Fk_SpecificationId = changeRequest.Fk_Specification.GetValueOrDefault(),
                             Fk_ReleaseId = changeRequest.Fk_Release.GetValueOrDefault()
                         });
+                        LogManager.Debug("FINALIZE CRS:    SpecRelease created (" + changeRequest.Fk_Specification.GetValueOrDefault() + ", " + changeRequest.Fk_Release.GetValueOrDefault() + ")");
                     }
                 }
                 else if (specRelease.isWithdrawn.GetValueOrDefault())
@@ -125,11 +135,11 @@ namespace Etsi.Ultimate.Business
                         .ThenByDescending(v => v.EditorialVersion)
                         .FirstOrDefault();
 
+                LogManager.Debug(string.Format("FINALIZE CRS:    System is finalizing CR(Id: {0}, Spec: {1}, Rel: {2}, last related version: {3} - AlreadyUploaded ? {4})", changeRequest.Pk_ChangeRequest, changeRequest.Fk_Specification.GetValueOrDefault(), changeRequest.Fk_Release.GetValueOrDefault(), version == null ? "VERSION NOT FOUND" : version.Pk_VersionId.ToString(), (version == null ? "-" : (string.IsNullOrEmpty(version.Location) ? "NO" : "YES"))));
                 LogManager.Debug(string.Format("FinalizeCrs : CR: {0}", changeRequest.Pk_ChangeRequest));
                 LogManager.Debug(string.Format("CR, SPEC: {0}, RELEASE: {1}", changeRequest.Fk_Specification.GetValueOrDefault(), changeRequest.Fk_Release.GetValueOrDefault()));
                 LogManager.Debug(string.Format("Last related version found is {0}", (version == null ? "VERSION NOT FOUND" : version.Pk_VersionId.ToString())));
-                LogManager.Debug(string.Format("Location is {0}", (version == null ? "VERSION NOT FOUND" : version.Location)));
-                if (version == null || !string.IsNullOrEmpty(version.Location))
+                LogManager.Debug(string.Format("Location is {0}", (version == null ? "VERSION NOT FOUND" : version.Location)));                if (version == null || !string.IsNullOrEmpty(version.Location))
                 {
                     LogManager.Debug("NEW VERSION WILL BE ALLOCATED");
                     int majorVersion = release.Version3g.GetValueOrDefault();
@@ -148,15 +158,29 @@ namespace Etsi.Ultimate.Business
                         version = AllocateNewVersion(personId, majorVersion, technicalVersion,
                             changeRequest);
                         LogManager.Debug(string.Format("NEW Version allocated: Spec: {0}, Release: {1}, major: {2}, minor: {3}", (version == null ? "VERSION NOT FOUND" : version.Fk_SpecificationId.ToString()), (version == null ? "VERSION NOT FOUND" : version.Fk_ReleaseId.ToString()), majorVersion, technicalVersion));
+                        LogManager.Debug(string.Format("FINALIZE CRS:    New version allocated: Spec: {0}, Release: {1}, major: {2}, minor: {3}",
+                                changeRequest.Fk_Specification.GetValueOrDefault(),
+                                changeRequest.Fk_Release.GetValueOrDefault(), 
+                                majorVersion,
+                                technicalVersion));
                         alreadyAllocatedVersion.Add(version);
+                    }
+                    else
+                    {
+                        LogManager.Debug("FINALIZE CRS:    Version already allocated");
                     }
                     changeRequest.NewVersion = version;
                 }
                 else
                 {
-                    LogManager.Debug(string.Format("ALREADY EXISTING VERSION WILL BE USED, ID: {0}", version.Pk_VersionId));
+                    LogManager.Debug(string.Format("FINALIZE CRS:    Already existing version will be used, Id: {0}", version.Pk_VersionId));
                     changeRequest.Fk_NewVersion = version.Pk_VersionId;
                 }
+            }
+            LogManager.Info("FINALIZE CRS: Finalize action done -> Result: " + (response.Result ? "SUCCESS" : "FAILURE") + ". END.");
+            if (!response.Result)
+            {
+                LogManager.Error(string.Join(", ", response.Report.ErrorList));
             }
             return response;
         }

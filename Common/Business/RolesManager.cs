@@ -45,7 +45,6 @@ namespace Etsi.Ultimate.Business
         }
         #endregion
 
-
         #region Get person
         public List<View_Persons> GetSpecMgr()
         {

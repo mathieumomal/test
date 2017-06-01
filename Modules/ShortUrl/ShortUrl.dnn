@@ -31,7 +31,7 @@
           <desktopModule>
             <moduleName>ShortUrl</moduleName>
             <foldername>ShortUrl</foldername>
-            <businessControllerClass>Etsi.Ultimate.Modules.ShortUrl.Components.FeatureController</businessControllerClass>
+            <businessControllerClass></businessControllerClass>
             <supportedFeatures />
             <moduleDefinitions>
               <moduleDefinition>

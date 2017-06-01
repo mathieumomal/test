@@ -7,6 +7,7 @@ using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
+using System.Collections.Generic;
 
 namespace Etsi.Ultimate.Business.Versions
 {
@@ -18,10 +19,16 @@ namespace Etsi.Ultimate.Business.Versions
 
         public bool Transpose(Specification spec, SpecVersion version)
         {
+            ExtensionLogger.Info("TRANSPOSITION: System is trying to transpose...", new List<KeyValuePair<string, object>> { 
+                new KeyValuePair<string, object>("spec", spec),
+                new KeyValuePair<string, object>("version", version)
+            });
+
             var importResult = false;
 
             if (TransposeAllowed(version))
             {
+                LogManager.Debug("TRANSPOSITION:    Transposition allowed.");
                 if ((version != null) && (version.Location != null))
                 {
                     //Two steps to perform transposition
@@ -34,10 +41,12 @@ namespace Etsi.Ultimate.Business.Versions
                         var creator = new WpmRecordCreator(UoW);
                         importResult = creator.AddWpmRecords(version);
                         version.DocumentPassedToPub = DateTime.Now;
-                    }                    
+                    }
+                    LogManager.Info("TRANSPOSITION: Done with -> " + ((transferResult && importResult) ? "SUCCESS" : "ERRORS") + ". END.");
                     return (transferResult && importResult);
                 }
             }
+            LogManager.Error("TRANSPOSITION: Transposition not allowed. End.");
             return false;
         }
 
@@ -50,7 +59,6 @@ namespace Etsi.Ultimate.Business.Versions
         {
             try
             {
-                
                 //Get the target folder path
                 string transpositionFolder = ConfigVariables.TranspositionFolderPath;
                 string filePath;                
@@ -69,18 +77,20 @@ namespace Etsi.Ultimate.Business.Versions
                 if (File.Exists(filePath) && Directory.Exists(transpositionFolder)) 
                 {
                     File.Copy(filePath, transpositionFolder + fileName, true);
+                    LogManager.Debug("TRANSPOSITION:    Copy from " + filePath + " to " + transpositionFolder + fileName);
                 }
                 return true;
             }
             catch (Exception e)
             {
-                LogManager.Error("ForceTransposition error: " + e.Message);
+                ExtensionLogger.Exception(e, new List<object> { versionUrl }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 return false;
             }
         }
 
         public bool TransposeAllowed(SpecVersion specVersion)
         {
+            LogManager.Debug("TRANSPOSITION:    Checking if transposition is allowed...");
             var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
             specMgr.UoW = UoW;
             var releaseMgr = ManagerFactory.Resolve<IReleaseManager>();

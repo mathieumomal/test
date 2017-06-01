@@ -8,6 +8,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Etsi.Ultimate.Business.Versions.Interfaces;
 using Etsi.Ultimate.Utils.Core;
+using System.Diagnostics;
 
 namespace Etsi.Ultimate.Business.Versions.QualityChecks
 {
@@ -21,6 +22,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         #region Variables
 
         private readonly DocDocumentManager _docDocumentManager;
+        private Stopwatch Watcher = new Stopwatch();
 
         #endregion
 
@@ -47,7 +49,10 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         {
             try
             {
-                return _docDocumentManager.Word.ActiveDocument.Revisions.Count > 0;
+                var qcLogger = new QualityChecksLogger(System.Reflection.MethodBase.GetCurrentMethod().Name, null, false);
+                var result = _docDocumentManager.Word.ActiveDocument.Revisions.Count > 0;
+                qcLogger.QcStopping(result);
+                return result;
 
                 #region legacy implementation
                 /*
@@ -155,11 +160,14 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         /// <returns></returns>
         public bool ChangeHistoryTableIsTheLastOne()
         {
+            var qcLogger = new QualityChecksLogger(System.Reflection.MethodBase.GetCurrentMethod().Name, null, true);
+
             //Find last table and take the innerText
             var lastTable = _docDocumentManager.WordProcessingDocument.MainDocumentPart.Document.Body.OfType<Table>().LastOrDefault();
             if (lastTable == null)
             {
-                return false;
+                qcLogger.Log("There is no table inside the document.");
+                return qcLogger.QcStopping(false);
             }
             var lasttableText = lastTable.InnerText;
 
@@ -176,7 +184,8 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             //If no paragraph has been found with the 'change history' text raised a warning
             if (changeHistoryP == null)
             {
-                return false;
+                qcLogger.Log("There is no text changehistory inside the document.");
+                return qcLogger.QcStopping(false);
             }
 
             //Check if the last 'change history' text has been found:
@@ -195,26 +204,26 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
                 //If "Change history" is not contain inside a TableCell return the warning
                 if (changeHistoryP.Parent.GetType() != typeof(TableCell))
                 {
-                    LogManager.Debug("DocXQualityChecks - ChangeHistoryTableIsTheLastOne: last occurence of change history text is not inside a cell -> " + changeHistoryP.Parent.GetType());
-                    return false;
+                    qcLogger.Log("last occurence of change history text is not inside a cell -> " + changeHistoryP.Parent.GetType());
+                    return qcLogger.QcStopping(false);
                 }
                 else if (changeHistoryP.Parent.Parent.Parent.GetType() != typeof (Table))
                 {
-                    LogManager.Debug("DocXQualityChecks - ChangeHistoryTableIsTheLastOne: last occurence of change history text is not inside a table -> " + changeHistoryP.Parent.Parent.Parent.GetType());
-                    return false;
+                    qcLogger.Log("last occurence of change history text is not inside a table -> " + changeHistoryP.Parent.Parent.Parent.GetType());
+                    return qcLogger.QcStopping(false);
                 }
                 table = changeHistoryP.Parent.Parent.Parent as Table;
                 if (table == null)
-                    return false;
+                    return qcLogger.QcStopping(false);
             }
 
             var tableTextToCompare = table.InnerText;
             if (tableTextToCompare.Equals(lasttableText, StringComparison.InvariantCultureIgnoreCase))
             {
-                return true;
+                return qcLogger.QcStopping(true);
             }
 
-            return false;
+            return qcLogger.QcStopping(false);
         }
 
         /// <summary>
@@ -227,6 +236,8 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         /// <returns>True/False</returns>
         public bool IsHistoryVersionCorrect(string versionToCheck)
         {
+            var qcLogger = new QualityChecksLogger(System.Reflection.MethodBase.GetCurrentMethod().Name, versionToCheck, true);
+
             bool isHistoryVersionCorrect = false;
             var lastTable = _docDocumentManager.WordProcessingDocument.MainDocumentPart.Document.Body.OfType<Table>().LastOrDefault();
             if (lastTable != null)
@@ -247,7 +258,8 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
                         }
                         else
                         {
-                            return false;
+                            qcLogger.Log("Second row with one column detected. System is not able to find a correctly formatted table.");
+                            return qcLogger.QcStopping(false);
                         }
                     }
 
@@ -278,9 +290,13 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
                             }
                         }
                     }
+                    else
+                    {
+                        qcLogger.Log("System not able to find keywords 'new', 'newversion' or 'new' AND 'version' inside as a column name.");
+                    }
                 }
             }
-            return isHistoryVersionCorrect;
+            return qcLogger.QcStopping(isHistoryVersionCorrect);
         }
 
         /// <summary>
@@ -291,12 +307,18 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         /// <param name="versionToCheck">version</param>
         /// <returns>True/False</returns>
         public bool IsCoverPageVersionCorrect(string versionToCheck)
-        { 
+        {
+            var qcLogger = new QualityChecksLogger(System.Reflection.MethodBase.GetCurrentMethod().Name, versionToCheck, true);
+
             bool isCoverPageVersionCorrect = false;
 
             const string title = "3rd generation partnership project;"; //Search version on cover page till we found fixed 3GPP title
 
             var paragraphs = _docDocumentManager.WordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
+
+            string versionToFind = "v" + versionToCheck;
+            qcLogger.Log("Version text to find: " + versionToFind);
+
             foreach (var paragraph in paragraphs)
             {
                 var paragraphText = GetPlainText(paragraph).Replace("\r\n", String.Empty).Trim().ToLower();
@@ -308,7 +330,6 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
                 }
                 else
                 {
-                    string versionToFind = "v" + versionToCheck;
                     if (paragraphText.Contains(versionToFind))
                     {
                         isCoverPageVersionCorrect = true;
@@ -317,7 +338,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
                 }
             }
 
-            return isCoverPageVersionCorrect;
+            return qcLogger.QcStopping(isCoverPageVersionCorrect);
         }
 
         /// <summary>
@@ -329,6 +350,8 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         /// <returns>True/False</returns>
         public bool IsCoverPageDateCorrect(DateTime meetingDate)
         {
+            var qcLogger = new QualityChecksLogger(System.Reflection.MethodBase.GetCurrentMethod().Name, meetingDate, true);
+
             bool isCoverPageDateCorrect = false;
 
             string title = "3rd generation partnership project;"; //Search meeting date on cover page till we found fixed 3GPP title
@@ -351,20 +374,26 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
                     foreach (Match match in regex.Matches(paragraphText))
                     {
                         var coverPageDate = match.Value.TrimStart('(').TrimEnd(')');
+                        qcLogger.Log("Date which match found: " + coverPageDate);
                         double coverPageYear = Convert.ToDouble(coverPageDate.Split('-')[0]);
                         double coverPageMonth = Convert.ToDouble(coverPageDate.Split('-')[1]);
                         double coverPageDateInMonths = (coverPageYear * 12) + coverPageMonth;
                         double meetingDateInMonths = (meetingDate.Year * 12) + meetingDate.Month;
                         if (((meetingDateInMonths - 2) <= coverPageDateInMonths) && (coverPageDateInMonths <= (meetingDateInMonths + 2)))
                         {
+                            qcLogger.Log("Date is correct");
                             isCoverPageDateCorrect = true;
                             break;
+                        }
+                        else
+                        {
+                            qcLogger.Log("Date is incorrect");
                         }
                     }
                 }
             }
 
-            return isCoverPageDateCorrect;
+            return qcLogger.QcStopping(isCoverPageDateCorrect);
         }
 
         /// <summary>
@@ -377,6 +406,8 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         /// <returns>True/False</returns>
         public bool IsCopyRightYearCorrect(DateTime now)
         {
+            var qcLogger = new QualityChecksLogger(System.Reflection.MethodBase.GetCurrentMethod().Name, now, true);
+
             bool isCopyRightYearCorrect = false;
 
             //Find the copyright year, based on the 'copyrightaddon' bookmark
@@ -389,6 +420,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
                 {
                     if (bookMark.Name.ToString().ToLower().Equals("copyrightaddon"))
                     {
+                        qcLogger.Log("Bookmark 'copyrightaddon' found");
                         isCopyRightAddOnBookmarkFound = true;
                         break;
                     }
@@ -401,6 +433,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
                     {
                         if (paragraphText.Contains("© " + (now.Year - 1)))
                         {
+                            qcLogger.Log("© " + (now.Year - 1) + " found");
                             isCopyRightYearCorrect = true;
                             break;
                         }
@@ -408,13 +441,14 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
 
                     if (paragraphText.Contains("© " + now.Year))
                     {
+                        qcLogger.Log("© " + (now.Year) + " found");
                         isCopyRightYearCorrect = true;
                         break;
                     }
-                }                
+                }   
             }
 
-            return isCopyRightYearCorrect;
+            return qcLogger.QcStopping(isCopyRightYearCorrect);
         }
 
         /// <summary>
@@ -426,7 +460,10 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         /// <returns>True/False</returns>
         public bool IsFirstTwoLinesOfTitleCorrect(string tsgTitle)
         {
+            var qcLogger = new QualityChecksLogger(System.Reflection.MethodBase.GetCurrentMethod().Name, tsgTitle, true);
+
             string firstTwoLinesOfTitle = String.Format("3rd Generation Partnership Project;{0};", tsgTitle);
+            qcLogger.Log("First two lines of title should look like: " + firstTwoLinesOfTitle);
             bool isFirstTwoLinesOfTitleCorrect = false;
 
             //Search title on cover page based on bookmarks page1 & page2 (title should be on page1 bookmark range)
@@ -456,10 +493,11 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             }
 
             string formattedPage = page1Text.ToString().Replace("\r\n", String.Empty).Replace(" ", String.Empty);
+            qcLogger.Log("Text of the page 1 found by the system (system should find first two lines of title inside): " + formattedPage);
             if (formattedPage.Contains(firstTwoLinesOfTitle.Replace(" ", String.Empty).ToLower()))
                 isFirstTwoLinesOfTitleCorrect = true;
 
-            return isFirstTwoLinesOfTitleCorrect;
+            return qcLogger.QcStopping(isFirstTwoLinesOfTitleCorrect);
         }
 
         /// <summary>
@@ -469,6 +507,8 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         /// <returns>True/False</returns>
         public bool IsTitleCorrect(string title)
         {
+            var qcLogger = new QualityChecksLogger(System.Reflection.MethodBase.GetCurrentMethod().Name, title, true);
+
             bool isTitleCorrect = false;
 
             //Search title on cover page based on bookmarks page1 & page2 (title should be on page1 bookmark range)
@@ -498,10 +538,11 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             }
 
             string formattedPage = page1Text.ToString().Replace("\r\n", String.Empty).Replace(" ", String.Empty);
+            qcLogger.Log("Text of the page 1 found by the system (system should find title inside): " + formattedPage);
             if (formattedPage.Contains(title.Replace(" ", String.Empty).ToLower()))
                 isTitleCorrect = true;
 
-            return isTitleCorrect;
+            return qcLogger.QcStopping(isTitleCorrect);
         }
 
         /// <summary>
@@ -513,6 +554,8 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         /// <returns>True/False</returns>
         public bool IsReleaseCorrect(string release)
         {
+            var qcLogger = new QualityChecksLogger(System.Reflection.MethodBase.GetCurrentMethod().Name, release, true);
+
             bool isReleaseCorrect = false;
 
             //Search title on cover page based on bookmarks page1 & page2 (title should be on page1 bookmark range)
@@ -542,12 +585,16 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             }
 
             string formattedPage = page1Text.ToString().Replace("\r\n", String.Empty).Replace(" ", String.Empty);
+            qcLogger.Log("Text of the page 1 found by the system (system should find release after title inside): " + formattedPage);
             string title = "3rd generation partnership project;";
             string releaseText = "(" + release + ")";
             if (formattedPage.Contains(title.Replace(" ", String.Empty).ToLower()))
             {
+                qcLogger.Log("Title detected");
                 int indexOfTitle = formattedPage.IndexOf(title.Replace(" ", String.Empty).ToLower());
+                qcLogger.Log("Index of the title defined by the system: " + indexOfTitle);
                 int indexOfRelease = formattedPage.IndexOf(releaseText.Replace(" ", String.Empty).ToLower());
+                qcLogger.Log("Index of the release defined by the system: " + indexOfRelease);
                 if (indexOfTitle < indexOfRelease)
                     isReleaseCorrect = true;
 
@@ -555,7 +602,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             else if (formattedPage.Contains(releaseText.Replace(" ", String.Empty).ToLower()))
                 isReleaseCorrect = true;
 
-            return isReleaseCorrect;
+            return qcLogger.QcStopping(isReleaseCorrect);
         }
 
         /// <summary>
@@ -567,11 +614,16 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         /// <returns>True/False</returns>
         public bool IsReleaseStyleCorrect(string release)
         {
+            var qcLogger = new QualityChecksLogger(System.Reflection.MethodBase.GetCurrentMethod().Name, release, true);
+
             bool isReleaseStyleCorrect = false;
             StyleDefinitionsPart styleDefinitionPart = _docDocumentManager.WordProcessingDocument.MainDocumentPart.StyleDefinitionsPart;
+            qcLogger.Log("System is searching for style: ZGSM...");
             bool isReleaseStyleExist = styleDefinitionPart.RootElement.Elements<Style>().Any(x => x.StyleId.Value.Equals("ZGSM", StringComparison.InvariantCultureIgnoreCase));
+            
             if (isReleaseStyleExist)
             {
+                qcLogger.Log("Style: ZGSM found");
                 var paragraphs = _docDocumentManager.WordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<Paragraph>();
                 StringBuilder zgsmText = new StringBuilder();
                 foreach (var paragraph in paragraphs)
@@ -581,11 +633,23 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
                         break;
                 }
 
+                qcLogger.Log("Text with ZGSM style found: " + zgsmText);
                 if (zgsmText.ToString().Equals(release, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    qcLogger.Log("Correct release detected.");
                     isReleaseStyleCorrect = true;
+                }
+                else
+                {
+                    qcLogger.Log("Incorrect release detected.");
+                }
+            }
+            else
+            {
+                qcLogger.Log("Style: ZGSM not found");
             }
 
-            return isReleaseStyleCorrect;
+            return qcLogger.QcStopping(isReleaseStyleCorrect);
         }
 
         /// <summary>
@@ -595,12 +659,14 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         /// <returns>True/False</returns>
         public bool IsAutomaticNumberingPresent()
         {
+            var qcLogger = new QualityChecksLogger(System.Reflection.MethodBase.GetCurrentMethod().Name, null, false);
+
             //--- DOCUMENT.XML file
 
             //Find all lists inside document and the related list style id : NUMBERING ID (ex: <w:numId w:val="3"/>)
             var numberedIdsUsed = _docDocumentManager.WordProcessingDocument.MainDocumentPart.RootElement.Descendants().OfType<NumberingId>().Where(x => x.Val != "0").Select(x => x.Val.ToString()).Distinct().ToList();
             if (numberedIdsUsed.Count == 0)
-                return false;
+                return qcLogger.QcStopping(false);
 
 
             //--- NUMBERING.XML file
@@ -608,7 +674,7 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
             //Get access to the numbering.xml content
             var numberingDefinitionsPart = _docDocumentManager.WordProcessingDocument.MainDocumentPart.GetPartsOfType<NumberingDefinitionsPart>().FirstOrDefault();
             if (numberingDefinitionsPart == null)
-                return false;
+                return qcLogger.QcStopping(false);
 
             //INFO : A list inside document.xml have a kind of id (NumberingId, ex: <w:numId w:val="3"/>) 
             //and this id is related to another id inside numbering.xml file (AbstractNumId, ex: <w:abstractNumId w:val="0"/>).
@@ -654,11 +720,11 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
                     if (numFmt.Val == NumberFormatValues.Decimal || numFmt.Val == NumberFormatValues.LowerLetter ||
                         numFmt.Val == NumberFormatValues.LowerRoman)
                     {
-                        return true;
+                        return qcLogger.QcStopping(true);
                     }
                 }
             }
-            return false;
+            return qcLogger.QcStopping(false);
         }
 
         /// <summary>
@@ -672,7 +738,8 @@ namespace Etsi.Ultimate.Business.Versions.QualityChecks
         /// <returns>True/False</returns>
         public bool IsAnnexureStylesCorrect(bool isTechnicalSpecification)
         {
-            return true;
+            var qcLogger = new QualityChecksLogger(System.Reflection.MethodBase.GetCurrentMethod().Name, isTechnicalSpecification, true);
+            return qcLogger.QcStopping(true);
         }
 
         #endregion

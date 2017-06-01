@@ -316,8 +316,8 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
             //Assert
             Assert.AreEqual(1, response.Report.GetNumberOfErrors());
             Assert.AreEqual(0, response.Result);
-            Assert.AreEqual(1, events.Length);
-            Assert.IsTrue(events[0].MessageObject.ToString().Contains("The key value [12345] does not exists in the referenced table [Releases :: Pk_ReleaseId]"));
+            Assert.AreEqual(4, events.Length);
+            Assert.IsTrue(events[0].MessageObject.ToString().StartsWith("### EXCEPTION ###     CLASS: ChangeRequestService, METHOD: CreateChangeRequest, MESSAGE: "));
             Assert.AreEqual(Level.Error, events[0].Level);
         }
 
@@ -385,8 +385,8 @@ namespace Etsi.Ultimate.Tests.Services.ChangeRequestTests
 
             //Assert
             Assert.IsFalse(result);
-            Assert.AreEqual(1, events.Length);
-            Assert.IsTrue(events[0].MessageObject.ToString().StartsWith("[Service] Failed to edit change request: Validation failed for one or more entities. See 'EntityValidationErrors' property for more details."));
+            Assert.AreEqual(4, events.Length);
+            Assert.IsTrue(events[0].MessageObject.ToString().StartsWith("### EXCEPTION ###     CLASS: ChangeRequestService, METHOD: EditChangeRequest, MESSAGE: "));
             Assert.AreEqual(Level.Error, events[0].Level);
         }
 

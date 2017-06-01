@@ -29,7 +29,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error("An unexpected error occured when FinalizeApprovedDrafts", e);
+                ExtensionLogger.Exception(e, new List<object> { personId, mtgId, approvedDrafts }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 response.Result = false;
                 response.Report.ErrorList.Add(Localization.GenericError);
                 return response;

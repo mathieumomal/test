@@ -5,6 +5,7 @@ using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.Business.Specifications.Interfaces;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Business.Versions
 {
@@ -23,6 +24,14 @@ namespace Etsi.Ultimate.Business.Versions
         /// <returns>Return a Response service object with a report, a rights container and a result (the old version number with the version)</returns>
         public ServiceResponse<SpecVersionCurrentAndNew> GetNextVersionForSpec(int personId, int specId, int releaseId, bool forUpload, bool considerSpecAsUnderChangeControl = false)
         {
+            ExtensionLogger.Info("GET NEXT VERSION FOR SPEC: System is searching for next version...", new List<KeyValuePair<string, object>> { 
+                new KeyValuePair<string, object>("personId", personId),
+                new KeyValuePair<string, object>("specId", specId),
+                new KeyValuePair<string, object>("releaseId", releaseId),
+                new KeyValuePair<string, object>("forUpload", forUpload),
+                new KeyValuePair<string, object>("considerSpecAsUnderChangeControl", considerSpecAsUnderChangeControl)
+            });
+
             var response = new ServiceResponse<SpecVersionCurrentAndNew>();
             var resultVersionsCurrentAndNew = new SpecVersionCurrentAndNew();
 
@@ -53,9 +62,11 @@ namespace Etsi.Ultimate.Business.Versions
                 response.Rights = specMgr.GetRightsForSpecRelease(userRights, personId, spec, releaseId, new List<Release> { release }).Value;
 
                 response.Result = resultVersionsCurrentAndNew;
+                LogManager.Info("GET NEXT VERSION FOR SPEC: End.");
             }
             catch (Exception ex)
             {
+                ExtensionLogger.Exception(ex, new List<object>(), this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 response.Report.LogError(ex.Message);
             }
             return response;
@@ -69,7 +80,9 @@ namespace Etsi.Ultimate.Business.Versions
             var existingVersions = versionMgr.GetVersionsBySpecId(specId);
             if (isSpecUcc)
             {
+                LogManager.Debug("GET NEXT VERSION FOR SPEC:    Spec is UCC.");
                 existingVersions = existingVersions.Where(v => v.Fk_ReleaseId == releaseId).ToList();
+                LogManager.Debug("GET NEXT VERSION FOR SPEC:    List of versions trunc -> " + string.Join(", ", existingVersions.Select(x => x.Pk_VersionId).ToList()));
             }
 
             resultVersions.NewSpecVersion.EditorialVersion = 0;
@@ -79,6 +92,7 @@ namespace Etsi.Ultimate.Business.Versions
             // - In draft, 0.0.0
             if (existingVersions.Count == 0)
             {
+                LogManager.Debug("GET NEXT VERSION FOR SPEC:    No versions found...");
                 resultVersions.NewSpecVersion.TechnicalVersion = 0;
                 resultVersions.NewSpecVersion.MajorVersion = 0;
                 if (isSpecUcc)
@@ -86,6 +100,7 @@ namespace Etsi.Ultimate.Business.Versions
                     resultVersions.NewSpecVersion.MajorVersion = release.Version3g;
                 }
 
+                LogManager.Debug("GET NEXT VERSION FOR SPEC:    Final version is: " + resultVersions.NewSpecVersion.Version);
                 return;
             }
 
@@ -102,6 +117,7 @@ namespace Etsi.Ultimate.Business.Versions
                 resultVersions.NewSpecVersion.TechnicalVersion = eligibleVersion.TechnicalVersion;
                 resultVersions.NewSpecVersion.EditorialVersion = eligibleVersion.EditorialVersion;
                 resultVersions.NewSpecVersion.Source = eligibleVersion.Source;
+                LogManager.Debug("GET NEXT VERSION FOR SPEC:    Final version is: " + resultVersions.NewSpecVersion.Version + " with source: " + resultVersions.NewSpecVersion.Source);
             }
             else
             {
@@ -121,6 +137,7 @@ namespace Etsi.Ultimate.Business.Versions
                     resultVersions.NewSpecVersion.TechnicalVersion = lastTechnicalVersionNumber + 1;
 
                 //EDITORIAL VERSION NUMBER -> 0 by default
+                LogManager.Debug("GET NEXT VERSION FOR SPEC:    Final version is: " + resultVersions.NewSpecVersion.Version);
             }
         }
 
@@ -145,6 +162,7 @@ namespace Etsi.Ultimate.Business.Versions
                         break;
                 }
             }
+            LogManager.Debug("GET NEXT VERSION FOR SPEC:    Elligible version is " + (eligibleVersion == null ? "NULL" : eligibleVersion.Version));
             return eligibleVersion;
         }
 

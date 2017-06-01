@@ -5,6 +5,7 @@ using Etsi.Ultimate.Business.Security;
 using Etsi.Ultimate.DomainClasses;
 using Etsi.Ultimate.Repositories;
 using System.Linq;
+using Etsi.Ultimate.Utils.Core;
 
 namespace Etsi.Ultimate.Services
 {
@@ -22,12 +23,20 @@ namespace Etsi.Ultimate.Services
         /// <returns>List of matching meetings</returns>
         public List<Meeting> GetMatchingMeetings(string SearchText)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var meetingManager = new MeetingManager();
-                meetingManager.UoW = uoW;
-                //Get list of meetings
-                return meetingManager.GetMatchingMeetings(SearchText);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var meetingManager = new MeetingManager();
+                    meetingManager.UoW = uoW;
+                    //Get list of meetings
+                    return meetingManager.GetMatchingMeetings(SearchText);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { SearchText }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -37,7 +46,15 @@ namespace Etsi.Ultimate.Services
         /// <returns>List of meetings</returns>
         public List<Meeting> GetLatestMeetings()
         {
-            return GetLatestMeetings(0);
+            try
+            {
+                return GetLatestMeetings(0);
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object>(), this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
+            }
         }
 
         /// <summary>
@@ -47,12 +64,20 @@ namespace Etsi.Ultimate.Services
         /// <returns>List of latest meetings</returns>
         public List<Meeting> GetLatestMeetings(int includeMeetingId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var meetingManager = new MeetingManager();
-                meetingManager.UoW = uoW;
-                //Get list of meetings
-                return meetingManager.GetLatestMeetings(includeMeetingId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var meetingManager = new MeetingManager();
+                    meetingManager.UoW = uoW;
+                    //Get list of meetings
+                    return meetingManager.GetLatestMeetings(includeMeetingId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { includeMeetingId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -63,12 +88,20 @@ namespace Etsi.Ultimate.Services
         /// <returns>Matching details</returns>
         public Meeting GetMeetingById(int MeetingId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var meetingManager = new MeetingManager();
-                meetingManager.UoW = uoW;
-                
-                return meetingManager.GetMeetingById(MeetingId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var meetingManager = new MeetingManager();
+                    meetingManager.UoW = uoW;
+
+                    return meetingManager.GetMeetingById(MeetingId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { MeetingId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -79,12 +112,20 @@ namespace Etsi.Ultimate.Services
         /// <returns>List of meetings</returns>
         public List<Meeting> GetMeetingsByIds(List<int> meetingIds)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var meetingManager = new MeetingManager();
-                meetingManager.UoW = uoW;
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var meetingManager = new MeetingManager();
+                    meetingManager.UoW = uoW;
 
-                return meetingManager.GetMeetingsByIds(meetingIds);
+                    return meetingManager.GetMeetingsByIds(meetingIds);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { meetingIds }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 

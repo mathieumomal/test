@@ -35,7 +35,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error(String.Format("[Service] Failed to GetCrPacksByTbIdAndKeywords: {0}{1}", ex.Message, ((ex.InnerException != null) ? "\n InnerException:" + ex.InnerException : String.Empty)));
+                ExtensionLogger.Exception(ex, new List<object> { personId, tbId, keywords }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 response.Report.LogError(Localization.GenericError);
             }
             return response;
@@ -76,7 +76,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception ex)
             {
-                LogManager.Error("[Service] Failed to generate Tdoc List after sending CRs to CR pack", ex);
+                ExtensionLogger.Exception(ex, new List<object> { personId, crPackId, crsIds }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 response.Report.LogError("Failed to generate Tdoc List after sending CRs to CR pack");
                 return response;
             }

@@ -21,12 +21,20 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public KeyValuePair<List<DomainClasses.Release>,UserRightsContainer> GetAllReleases(int personId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
-                releaseManager.UoW = uoW;
-                //Get list of releases
-                return releaseManager.GetAllReleases(personId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
+                    releaseManager.UoW = uoW;
+                    //Get list of releases
+                    return releaseManager.GetAllReleases(personId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -36,44 +44,76 @@ namespace Etsi.Ultimate.Services
         /// <returns></returns>
         public KeyValuePair<List<DomainClasses.Release>, UserRightsContainer> GetAllReleasesByStatus(int personId, string releaseStatus)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
-                releaseManager.UoW = uoW;
-                //Get list of releases filtered by status
-                return releaseManager.GetAllReleasesByStatus(personId, releaseStatus);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
+                    releaseManager.UoW = uoW;
+                    //Get list of releases filtered by status
+                    return releaseManager.GetAllReleasesByStatus(personId, releaseStatus);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, releaseStatus }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         } 
 
         public KeyValuePair<Release, UserRightsContainer> GetReleaseById(int personId, int releaseId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
-                releaseManager.UoW = uoW;
-                return releaseManager.GetReleaseById(personId,releaseId); 
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
+                    releaseManager.UoW = uoW;
+                    return releaseManager.GetReleaseById(personId, releaseId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { personId, releaseId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public KeyValuePair<int, string> GetPreviousReleaseCode(int releaseId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
-                releaseManager.UoW = uoW;
-                return releaseManager.GetPreviousReleaseCode(releaseId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
+                    releaseManager.UoW = uoW;
+                    return releaseManager.GetPreviousReleaseCode(releaseId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { releaseId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
         public ServiceResponse<bool> FreezeRelease(int releaseId, DateTime? endDate, int personId, int? FreezeMtgId, string FreezeMtgRef)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
-                releaseManager.UoW = uoW;
-                var response = releaseManager.FreezeRelease(releaseId, endDate, personId, FreezeMtgId, FreezeMtgRef);
-                uoW.Save();
-                return response;
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
+                    releaseManager.UoW = uoW;
+                    var response = releaseManager.FreezeRelease(releaseId, endDate, personId, FreezeMtgId, FreezeMtgRef);
+                    uoW.Save();
+                    return response;
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { releaseId, endDate, personId, FreezeMtgId, FreezeMtgRef }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -87,13 +127,21 @@ namespace Etsi.Ultimate.Services
         /// <param name="personID">Person ID</param>
         public ServiceResponse<bool> CloseRelease(int releaseId, DateTime? closureDate, string closureMtgRef, int? closureMtgId, int personID)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
-                releaseManager.UoW = uoW;
-                var response = releaseManager.CloseRelease(releaseId, closureDate, closureMtgRef, closureMtgId, personID);
-                uoW.Save();
-                return response;
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
+                    releaseManager.UoW = uoW;
+                    var response = releaseManager.CloseRelease(releaseId, closureDate, closureMtgRef, closureMtgId, personID);
+                    uoW.Save();
+                    return response;
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { releaseId, closureDate, closureMtgRef, closureMtgId, personID }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -103,12 +151,20 @@ namespace Etsi.Ultimate.Services
         /// <param name="releaseId">The identifier of the release to exclude form the returned list</param>
         /// <returns></returns>
         public Dictionary<int, string> GetAllReleasesCodes(int releaseId)
-        {            
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+        {
+            try
             {
-                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
-                releaseManager.UoW = uoW;
-                return releaseManager.GetAllReleasesCodes(releaseId);
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
+                    releaseManager.UoW = uoW;
+                    return releaseManager.GetAllReleasesCodes(releaseId);
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { releaseId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -120,12 +176,20 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId">The person identifier</param>
         public void EditRelease(Release release, int previousReleaseId, int personId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
-                releaseManager.UoW = uoW;
-                releaseManager.EditRelease(release, previousReleaseId, personId);
-                uoW.Save();
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
+                    releaseManager.UoW = uoW;
+                    releaseManager.EditRelease(release, previousReleaseId, personId);
+                    uoW.Save();
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { release, previousReleaseId, personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -137,13 +201,21 @@ namespace Etsi.Ultimate.Services
         /// <param name="personId">The person identifier</param>
         public int CreateRelease(Release release, int previousReleaseId, int personId)
         {
-            using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            try
             {
-                var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
-                releaseManager.UoW = uoW;
-                var newRelease = releaseManager.CreateRelease(release, previousReleaseId, personId);
-                uoW.Save();
-                return newRelease.Pk_ReleaseId;
+                using (var uoW = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+                {
+                    var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
+                    releaseManager.UoW = uoW;
+                    var newRelease = releaseManager.CreateRelease(release, previousReleaseId, personId);
+                    uoW.Save();
+                    return newRelease.Pk_ReleaseId;
+                }
+            }
+            catch (Exception e)
+            {
+                ExtensionLogger.Exception(e, new List<object> { release, previousReleaseId, personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                throw e;
             }
         }
 
@@ -169,7 +241,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error("GetReleasesLinkedToASpec : an unexpected error occured", e);
+                ExtensionLogger.Exception(e, new List<object> { specId, personId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 return new ServiceResponse<List<Release>>{Result = null, Report = new Report{ErrorList = new List<string>{ Localization.GenericError }}};
             }
         }
@@ -187,7 +259,7 @@ namespace Etsi.Ultimate.Services
             }
             catch (Exception e)
             {
-                LogManager.Error("GetHighestNonClosedReleaseLinkedToASpec : an unexpected error occured", e);
+                ExtensionLogger.Exception(e, new List<object> { specId }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 return null;
             }
         }

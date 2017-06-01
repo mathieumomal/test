@@ -187,6 +187,17 @@ namespace Etsi.Ultimate.Business.Versions
         public ServiceResponse<bool> AllocateOrAssociateDraftVersion(int personId, int specId, int releaseId, int meetingId, int majorVersion, int technicalVersion,
             int editorialVersion, string relatedTdoc)
         {
+            ExtensionLogger.Info("ALLOCATE OR ASSOCIATE DRAFT VERSION: System is trying to allocate or associate draft version", new List<KeyValuePair<string, object>> { 
+                new KeyValuePair<string, object>("personId", personId),
+                new KeyValuePair<string, object>("specId", specId),
+                new KeyValuePair<string, object>("releaseId", releaseId),
+                new KeyValuePair<string, object>("meetingId", meetingId),
+                new KeyValuePair<string, object>("majorVersion", majorVersion),
+                new KeyValuePair<string, object>("technicalVersion", technicalVersion),
+                new KeyValuePair<string, object>("editorialVersion", editorialVersion),
+                new KeyValuePair<string, object>("relatedTdoc", relatedTdoc)
+            });
+
             var svcResponse = new ServiceResponse<bool> { Result = true };
 
             var repo = RepositoryFactory.Resolve<ISpecVersionsRepository>();
@@ -204,6 +215,7 @@ namespace Etsi.Ultimate.Business.Versions
             var version = repo.GetVersion(specId, majorVersion, technicalVersion, editorialVersion);
             if (version == null || version.Fk_ReleaseId != releaseId)
             {
+                LogManager.Info("ALLOCATE OR ASSOCIATE DRAFT VERSION:   Version will be allocated.");
                 //Version don't exist -> ALLOCATION
                 var specVersionAllocateAction = new SpecVersionAllocateAction { UoW = UoW };
                 version = new SpecVersion
@@ -225,6 +237,7 @@ namespace Etsi.Ultimate.Business.Versions
             else
             {
                 //Version exist -> ASSOCIATION
+                LogManager.Info("ALLOCATE OR ASSOCIATE DRAFT VERSION:   Version will be associated.");
                 version.RelatedTDoc = relatedTdoc;
             }
 
@@ -245,6 +258,15 @@ namespace Etsi.Ultimate.Business.Versions
         /// <returns>Draft creation or association status along with validation failures</returns>
         public ServiceResponse<bool> CheckDraftCreationOrAssociation(int personId, int specId, int releaseId, int majorVersion, int technicalVersion, int editorialVersion)
         {
+            ExtensionLogger.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: System is trying to check if current draft version can be allocated or associated", new List<KeyValuePair<string, object>> { 
+                new KeyValuePair<string, object>("personId", personId),
+                new KeyValuePair<string, object>("specId", specId),
+                new KeyValuePair<string, object>("releaseId", releaseId),
+                new KeyValuePair<string, object>("majorVersion", majorVersion),
+                new KeyValuePair<string, object>("technicalVersion", technicalVersion),
+                new KeyValuePair<string, object>("editorialVersion", editorialVersion)
+            });
+
             var svcResponse = new ServiceResponse<bool> { Result = true };
             var rightsMgr = ManagerFactory.Resolve<IRightsManager>();
             rightsMgr.UoW = UoW;
@@ -255,6 +277,7 @@ namespace Etsi.Ultimate.Business.Versions
             {
                 svcResponse.Report.LogError(Localization.Error_Version_Major_Number_Should_Be_Draft);
                 svcResponse.Result = false;
+                LogManager.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: " + Localization.Error_Version_Major_Number_Should_Be_Draft);
                 return svcResponse;
             }
 
@@ -266,6 +289,7 @@ namespace Etsi.Ultimate.Business.Versions
             {
                 svcResponse.Report.LogError(Localization.Error_Spec_Does_Not_Exist);
                 svcResponse.Result = false;
+                LogManager.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: " + Localization.Error_Spec_Does_Not_Exist);
                 return svcResponse;
             }
 
@@ -277,6 +301,7 @@ namespace Etsi.Ultimate.Business.Versions
             {
                 svcResponse.Report.LogError(Localization.Error_Release_Does_Not_Exist);
                 svcResponse.Result = false;
+                LogManager.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: " + Localization.Error_Release_Does_Not_Exist);
                 return svcResponse;
             }
 
@@ -285,18 +310,21 @@ namespace Etsi.Ultimate.Business.Versions
             {
                 svcResponse.Report.LogError(Localization.Error_Spec_Draft_Status);
                 svcResponse.Result = false;
+                LogManager.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: " + Localization.Error_Spec_Draft_Status);
                 return svcResponse;
             }
 
             //If user is not MCC
             if (!userRights.HasRight(Enum_UserRights.Contribution_DraftTsTrEnabledReleaseField))
             {
+                LogManager.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: User is not MCC (doesn't have right: Contribution_DraftTsTrEnabledReleaseField)");
                 //[4] Spec-Release should exist
                 var specRelease = specRepo.GetSpecificationReleaseByReleaseIdAndSpecId(specId, releaseId, false);
                 if (specRelease == null)
                 {
                     svcResponse.Report.LogError(Localization.Allocate_Error_SpecRelease_Does_Not_Exist);
                     svcResponse.Result = false;
+                    LogManager.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: " + Localization.Allocate_Error_SpecRelease_Does_Not_Exist);
                     return svcResponse;
                 }
 
@@ -312,12 +340,14 @@ namespace Etsi.Ultimate.Business.Versions
                     if (dbversion.Fk_ReleaseId == releaseId)
                     {
                         svcResponse.Result = true;
+                        LogManager.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: Version already allocated/uploaded. OK.");
                     }
                     else
                     {
                         /* throw error when version exists but release doesn't correspond */
                         svcResponse.Report.LogError(Localization.Wrong_Release_Version);
                         svcResponse.Result = false;
+                        LogManager.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: " + Localization.Wrong_Release_Version);
                     }
 
                     return svcResponse;
@@ -341,6 +371,8 @@ namespace Etsi.Ultimate.Business.Versions
                         svcResponse.Report.LogError(String.Format(Localization.Error_Lower_Version,
                             latestVersion.MajorVersion, latestVersion.TechnicalVersion, latestVersion.EditorialVersion));
                         svcResponse.Result = false;
+                        LogManager.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: " + String.Format(Localization.Error_Lower_Version,
+                            latestVersion.MajorVersion, latestVersion.TechnicalVersion, latestVersion.EditorialVersion));
                         return svcResponse;
                     }
                 }
@@ -360,10 +392,12 @@ namespace Etsi.Ultimate.Business.Versions
                         release.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Closed)
                     {
                         svcResponse.Report.LogError(Localization.Specification_reserve_withdrawn_error);
+                        LogManager.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: " + Localization.Specification_reserve_withdrawn_error);
                     }
                     else
                     {
                         svcResponse.Report.LogError(Localization.Drafts_Rights_Error_Not_Reporteur);
+                        LogManager.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: " + Localization.Drafts_Rights_Error_Not_Reporteur);
                     }
 
                     svcResponse.Result = false;
@@ -372,11 +406,13 @@ namespace Etsi.Ultimate.Business.Versions
             }
             else////If user is MCC
             {
+                LogManager.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: User is MCC (has right: Contribution_DraftTsTrEnabledReleaseField)");
                 //Release should not be closed
                 if (release.Enum_ReleaseStatus.Code == Enum_ReleaseStatus.Closed)
                 {
                     svcResponse.Report.LogError(Localization.Specification_reserve_withdrawn_error);
                     svcResponse.Result = false;
+                    LogManager.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: " + Localization.Specification_reserve_withdrawn_error);
                     return svcResponse;
                 }
 
@@ -389,6 +425,7 @@ namespace Etsi.Ultimate.Business.Versions
                     {
                         svcResponse.Report.LogError(Localization.Specification_reserve_withdrawn_error);
                         svcResponse.Result = false;
+                        LogManager.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: " + Localization.Specification_reserve_withdrawn_error);
                         return svcResponse;
                     }
 
@@ -398,6 +435,7 @@ namespace Etsi.Ultimate.Business.Versions
                 //Else: -> spec-release and version will be created. No matter if version number already exists for another spec-release
             }
 
+            LogManager.Info("CHECK FOR ALLOCATE OR ASSOCIATE DRAFT VERSION: End.");
             return svcResponse;
         }
 
@@ -409,6 +447,12 @@ namespace Etsi.Ultimate.Business.Versions
         /// <returns>True for success case</returns>
         public ServiceResponse<bool> UnlinkTdocFromVersion(string uid, int personId)
         {
+            ExtensionLogger.Info("UNLINK TDOC FROM VERSION(S): System is trying to unlink current tdoc from all the concerned versions...", new List<KeyValuePair<string, object>>
+            {
+                new KeyValuePair<string, object>("uid", uid),
+                new KeyValuePair<string, object>("personId", personId)
+            });
+
             var svcResponse = new ServiceResponse<bool> { Result = true };
 
             //Check user rights
@@ -422,6 +466,7 @@ namespace Etsi.Ultimate.Business.Versions
             {
                 svcResponse.Result = false;
                 svcResponse.Report.LogError(Localization.RightError);
+                LogManager.Info("UNLINK TDOC FROM VERSION(S): User doesn't have rights Contribution_Change_Type or Contribution_Change_Type_Limited");
                 return svcResponse;
             }
 
@@ -430,6 +475,7 @@ namespace Etsi.Ultimate.Business.Versions
             repo.UoW = UoW;
             var previousVersions = repo.GetVersionsByRelatedTDoc(uid);
             previousVersions.ForEach(v => v.RelatedTDoc = null);
+            LogManager.Info("UNLINK TDOC FROM VERSION(S): Unlink done successfully for versions: " + string.Join(", ", previousVersions.Select(x => x.Pk_VersionId).ToList()));
 
             return svcResponse;
         }

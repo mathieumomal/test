@@ -6,6 +6,7 @@ using System.Linq;
 using Etsi.Ultimate.Business.Versions;
 using Etsi.Ultimate.Utils;
 using Etsi.Ultimate.Utils.Core;
+using System.Collections.Generic;
 
 namespace Etsi.Ultimate.Business
 {
@@ -29,7 +30,10 @@ namespace Etsi.Ultimate.Business
         /// <returns>ETSI work item identifier</returns>
         public bool AddWpmRecords(SpecVersion version) 
         {
-            LogManager.Debug("Start AddWpmRecords...");
+            ExtensionLogger.Info("WPM RECORDS: System is starting to add WPM records...", new List<KeyValuePair<string, object>> { 
+                new KeyValuePair<string, object>("version", version)
+            });
+
             if (version == null)
                 return false; 
             try
@@ -89,27 +93,27 @@ namespace Etsi.Ultimate.Business
                 IWorkProgramRepository wpRepo = RepositoryFactory.Resolve<IWorkProgramRepository>();
                 wpRepo.UoW = UoW;
 
-                LogManager.Debug("-> InsertEtsiWorkITem");
+                LogManager.Debug("WPM RECORDS:    -> InsertEtsiWorkITem");
                 //Import Work Item to WPMDB
                 int wkiId = wpRepo.InsertEtsiWorkITem(importData);
 
-                LogManager.Debug("-> InsertWIScheduleEntry");
+                LogManager.Debug("WPM RECORDS:    -> InsertWIScheduleEntry");
                 //Import Schedule to WPMDB
                 wpRepo.InsertWIScheduleEntry(wkiId, version.MajorVersion.GetValueOrDefault(), version.TechnicalVersion.GetValueOrDefault(), version.EditorialVersion.GetValueOrDefault());
 
-                LogManager.Debug("-> InsertWIRemeark");
+                LogManager.Debug("WPM RECORDS:    -> InsertWIRemeark");
                 //Import Remark to WPMDB
                 wpRepo.InsertWIRemeark(wkiId, SeqNo, RemarkText);
 
-                LogManager.Debug("-> InsertWkiKeywords");
+                LogManager.Debug("WPM RECORDS:    -> InsertWkiKeywords");
                 //Import Keywords to WPMDB
                 InsertWkiKeywords(wkiId, spec.Pk_SpecificationId, c.TbId);
 
-                LogManager.Debug("-> InsertWIMemo");
+                LogManager.Debug("WPM RECORDS:    -> InsertWIMemo");
                 //Import memo to WPMDB
                 wpRepo.InsertWIMemo(wkiId, mtgShortRef);
 
-                LogManager.Debug("-> ImportProjectsToWpmdb");
+                LogManager.Debug("WPM RECORDS:    -> ImportProjectsToWpmdb");
                 //Import project to WPMDB
                 ImportProjectsToWpmdb(version, wkiId, wpRepo);
 
@@ -118,12 +122,12 @@ namespace Etsi.Ultimate.Business
                 //Add ETSI_WKI_ID field in version TABLE IF(WKI_ID != -1)                    
                 version.ETSI_WKI_ID = wkiId;
 
-                LogManager.Debug("End of AddWpmRecords.");
+                LogManager.Info("WPM RECORDS: WPM records created with ETSI_WKI_ID: " + wkiId);
                 return true;
             }
             catch (Exception e)
             {
-                LogManager.Error("WPM record creation error",e);
+                ExtensionLogger.Exception(e, new List<object> { version }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
                 return false;
             }
         }
