@@ -239,13 +239,28 @@ namespace Etsi.Ultimate.Module.Specifications
                 specificationRemarks.IsEditMode = false;
                 specificationRemarks.UserRights = userRights;
                 specificationRemarks.DataSource = specification.Remarks.ToList();
-
+                
                 //Version folder link
+
                 if (!string.IsNullOrEmpty(specNumber) && specNumber.Trim() != CONST_EMPTY_FIELD.Trim())
                 {
-                    var specVersionPathHelper = UtilsFactory.Resolve<ISpecVersionPathHelper>();
-                    versionFolderHpl.Visible = true;
-                    versionFolderHpl.NavigateUrl = string.Format(specVersionPathHelper.GetFtpArchivePath, ConfigVariables.FtpBaseAddress, specNumber.Split('.')[0], specNumber);
+                    bool displayLink = false;
+                    // Only display link if at least one Version has been uploaded
+                    foreach(var version in specification.Versions)
+                    {
+                        if(version.Location != null && version.DocumentUploaded != null)
+                        {
+                            displayLink = true;
+                            break;
+                        }
+                    }
+                    if (displayLink)
+                    {
+                        var specVersionPathHelper = UtilsFactory.Resolve<ISpecVersionPathHelper>();
+                        versionFolderHpl.Visible = true;
+                        versionFolderHpl.NavigateUrl = string.Format(specVersionPathHelper.GetFtpArchivePath, ConfigVariables.FtpBaseAddress, specNumber.Split('.')[0], specNumber);
+                    }
+                    
                 }
             }
 

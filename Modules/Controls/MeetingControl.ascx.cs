@@ -8,6 +8,7 @@ using Etsi.Ultimate.Services;
 using DotNetNuke.Entities.Users;
 using Telerik.Web.UI;
 using System.Data;
+using System.Threading;
 
 namespace Etsi.Ultimate.Controls
 {
@@ -126,6 +127,7 @@ namespace Etsi.Ultimate.Controls
         {
             if (e.Text.Length > 1)
             {
+                Thread.Sleep(3500);
                 if (DataSource == null)
                 {
                     IMeetingService svc = ServicesFactory.Resolve<IMeetingService>();

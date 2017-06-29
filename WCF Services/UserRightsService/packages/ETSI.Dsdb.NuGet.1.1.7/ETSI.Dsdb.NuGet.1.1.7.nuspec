@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>ETSI.Dsdb.NuGet</id>
+    <version>1.1.7</version>
+    <title>ETSI DSDB Package</title>
+    <authors>ETSI</authors>
+    <owners>ETSI</owners>
+    <projectUrl>http://swintmaetsi01:8081/repository/tma-etsi-packages/</projectUrl>
+    <iconUrl>https://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>ETSI-NGPP DS database packages.</description>
+    <summary>ETSI-NGPP DS database packages.</summary>
+    <releaseNotes>First alpha release of the package.</releaseNotes>
+    <copyright>Copyright  2014</copyright>
+    <language>en-US</language>
+    <tags>ETSI DSDB Libraries .Net 4.5</tags>
+  </metadata>
+</package>

@@ -134,7 +134,7 @@
 
 <telerik:RadWindowManager ID="rwmCommunity" runat="server">
     <Windows>
-        <telerik:RadWindow ID="rwCommunity" runat="server" Width="400" Height="500" Behaviors="None" Modal="true" VisibleStatusbar="false" Title="Responsible group(s)">
+        <telerik:RadWindow ID="rwCommunity" runat="server" Width="400" Height="500" Behaviors="None" Modal="true" VisibleStatusbar="false" Title="Responsible group(s)" CssClass="RadWindowFixed">
             <ContentTemplate>
                 <asp:UpdatePanel ID="upCommunityPanel" runat="server" UpdateMode="Always">
                     <ContentTemplate>

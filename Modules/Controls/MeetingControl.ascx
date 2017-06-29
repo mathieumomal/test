@@ -10,7 +10,6 @@
     }
     function OnClientTextChanged<%=lblEndDate.ClientID%>(sender, eventArgs) {
         var text = sender.get_text();
-
         var combo = $find("<%= rcbMeetings.ClientID %>");
         var item = combo.findItemByText(" ");
         if (item) {

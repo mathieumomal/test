@@ -257,6 +257,7 @@
 		<Right value="Contribution_Build_CrPack"/> 
 		
 		<Right value="Release_Test_Page_Access"/>
+		<Right value="ContributionResetCache"/>
       </UserRole>
     </UserRoles>
   </Portal>
