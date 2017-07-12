@@ -200,6 +200,15 @@ namespace Etsi.Ultimate.Services
         bool WithdrawForRelease(int personId, int releaseId, int specificationId, int withdrawalMtgId);
 
         /// <summary>
+        /// Unwithdrawn a specification from a given release.
+        /// </summary>
+        /// <param name="personId">ID of the person requesting the unwithdrawal</param>
+        /// <param name="releaseId">ID of release for which spec should be unwothdrawn</param>
+        /// <param name="specificationId">ID of spec to be unwithdrawn</param>
+        /// <returns></returns>
+        bool UnWithdrawnForRelease(int personId, int releaseId, int specificationId);
+
+        /// <summary>
         /// Withdraws definively a specification.
         /// </summary>
         /// <param name="personId">ID of the person requesting the withdrawal</param>

@@ -226,7 +226,7 @@ namespace Etsi.Ultimate.DataAccess
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Transposition_CreateWiRemarkEntry", wKI_IDParameter, sEQ_NOParameter, rEMARK_TEXTParameter);
         }
     
-        public virtual int Transposition_CreateWiScheduleEntries(Nullable<int> wKI_ID, Nullable<int> mAJOR_VERSION, Nullable<int> tECHNICAL_VERSION, Nullable<int> eDITORIAL_VERSION)
+        public virtual int Transposition_CreateWiScheduleEntries(Nullable<int> wKI_ID, Nullable<int> mAJOR_VERSION, Nullable<int> tECHNICAL_VERSION, Nullable<int> eDITORIAL_VERSION, Nullable<int> mEETING_ID)
         {
             var wKI_IDParameter = wKI_ID.HasValue ?
                 new ObjectParameter("WKI_ID", wKI_ID) :
@@ -244,7 +244,11 @@ namespace Etsi.Ultimate.DataAccess
                 new ObjectParameter("EDITORIAL_VERSION", eDITORIAL_VERSION) :
                 new ObjectParameter("EDITORIAL_VERSION", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Transposition_CreateWiScheduleEntries", wKI_IDParameter, mAJOR_VERSIONParameter, tECHNICAL_VERSIONParameter, eDITORIAL_VERSIONParameter);
+            var mEETING_IDParameter = mEETING_ID.HasValue ?
+                new ObjectParameter("MEETING_ID", mEETING_ID) :
+                new ObjectParameter("MEETING_ID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Transposition_CreateWiScheduleEntries", wKI_IDParameter, mAJOR_VERSIONParameter, tECHNICAL_VERSIONParameter, eDITORIAL_VERSIONParameter, mEETING_IDParameter);
         }
     
         public virtual int Transposition_CreateWiMemoEntry(Nullable<int> wKI_ID, string wKI_SCOPE)

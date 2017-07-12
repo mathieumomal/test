@@ -23,14 +23,13 @@ namespace Etsi.Ultimate.Business.Specifications
             rightManager.UoW = UoW;
             var personRights = rightManager.GetRights(personId);
 
-            var releaseManager = ManagerFactory.Resolve<IReleaseManager>();
-            releaseManager.UoW = UoW;
+            var releaseManager = ManagerFactory.Resolve<IReleaseManager>();            
+            releaseManager.UoW = UoW;            
 
             // Get source release Specifications 
             var sourceSpecs = new  List<Specification>();
             releaseManager.GetReleaseById(personId, initialReleaseId).Key.Specification_Release.ToList().ForEach(e => sourceSpecs.Add(e.Specification));
-            
-            
+                        
             // Get target release Specifications 
             var targetReleaseSpecIds = new  List<int>();
             releaseManager.GetReleaseById(personId, targetReleaseId).Key.Specification_Release.ToList().ForEach(e => targetReleaseSpecIds.Add(e.Fk_SpecificationId));
@@ -38,6 +37,8 @@ namespace Etsi.Ultimate.Business.Specifications
             //Remove element exisiting in target release
             sourceSpecs.RemoveAll(s => targetReleaseSpecIds.Contains(s.Pk_SpecificationId));
             sourceSpecs.RemoveAll(s => !s.IsActive);
+            sourceSpecs.RemoveAll(s => s.Specification_Release.Where(sp => sp.isWithdrawn.Value).ToList().Count > 0);        
+
             //If specification is not a draft, not inhibited from promotion, and has a version in the initial relase => New version allocation is enabled
             //Get specification ids havig a version for the initial release 
             var versionRepo = RepositoryFactory.Resolve<ISpecVersionsRepository>();

@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using Etsi.Ultimate.Utils;
+using Etsi.Ultimate.Services;
 
 namespace Etsi.Ultimate.Module.Specifications
 {
@@ -49,11 +50,22 @@ namespace Etsi.Ultimate.Module.Specifications
                         else
                             status = "Spec is in Draft status";
                     }
-                    else
-                        status = "Spec is Withdrawn from this Release";
+                    else                    
+                        status = "Spec is Withdrawn from this Release";                       
+                    
                 }
                 else
                     status = "Spec is Withdrawn from this Release";
+
+                if (SpecRelease.isWithdrawn.HasValue && SpecRelease.isWithdrawn.Value && SpecRelease.WithdrawMeetingId.HasValue && SpecRelease.WithdrawMeetingId > 0)
+                {
+                    var svc = ServicesFactory.Resolve<IMeetingService>();
+                    string meetingName = svc.GetMeetingById(SpecRelease.WithdrawMeetingId.Value).MTG_REF;
+                    if (meetingName.ToUpper().StartsWith("3GPP"))
+                        meetingName = meetingName.Remove(0, 4);                        
+                    status += " at " + meetingName;
+                }
+
 
                 lblStatus.Text = string.Format("({0})", status);
 

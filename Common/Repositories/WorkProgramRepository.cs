@@ -34,9 +34,9 @@ namespace Etsi.Ultimate.Repositories
             return (int)outputparameter.Value;
         }
 
-        public void InsertWIScheduleEntry(int WKI_ID, int MajVersion, int TechVersion, int EditVersion)
+        public void InsertWIScheduleEntry(int WKI_ID, int MajVersion, int TechVersion, int EditVersion, int MeetingId)
         {
-            UoW.Context.Transposition_CreateWiScheduleEntries(WKI_ID, MajVersion, TechVersion, EditVersion);
+            UoW.Context.Transposition_CreateWiScheduleEntries(WKI_ID, MajVersion, TechVersion, EditVersion, MeetingId);
         }
 
         public void InsertWIKeyword(int WKI_ID, string kEYWORD_CODE)
@@ -71,7 +71,7 @@ namespace Etsi.Ultimate.Repositories
 
         int InsertEtsiWorkITem(EtsiWorkItemImport entry);
 
-        void InsertWIScheduleEntry(int WKI_ID, int MajVersion, int TechVersion, int EditVersion);
+        void InsertWIScheduleEntry(int WKI_ID, int MajVersion, int TechVersion, int EditVersion, int MeetingId);
 
         void InsertWIKeyword(int WKI_ID, string kEYWORD_CODE);
 

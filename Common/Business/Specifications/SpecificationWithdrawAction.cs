@@ -61,5 +61,37 @@ namespace Etsi.Ultimate.Business.Specifications
 
             return true;
         }
+
+        public bool UnWithdrawFromRelease(int personId, int releaseId, int specId)
+        {
+            var specMgr = ManagerFactory.Resolve<ISpecificationManager>();
+            specMgr.UoW = UoW;
+            var spec = specMgr.GetSpecificationById(personId, specId);
+            if (spec.Key == null)
+            {
+                throw new InvalidOperationException("Spec " + specId + " cannot be found");
+            }
+
+            // Check rights
+            var rights = specMgr.GetRightsForSpecReleases(personId, spec.Key);
+            var rightsForRelease = rights.FirstOrDefault(r => r.Key.Fk_ReleaseId == releaseId);
+            if (rightsForRelease.Value == null || !rightsForRelease.Value.HasRight(Enum_UserRights.Specification_UnWithdrawFromRelease))
+            {
+                throw new InvalidOperationException("User has no right to unwithdraw spec " + specId + " for release " + releaseId);
+            }
+
+            // Update spec release
+            var specRel = spec.Key.Specification_Release.First(sr => sr.Fk_ReleaseId == releaseId);
+            specRel.isWithdrawn = false;
+            specRel.WithdrawMeetingId = null;
+
+            //Update history
+            var historyRepo = RepositoryFactory.Resolve<IHistoryRepository>();
+            historyRepo.UoW = UoW;
+            string historyText = String.Format("Specification has been unwithdrawn for release '{0}'", (specRel.Release == null) ? String.Empty : specRel.Release.Name);
+            var history = new History { Fk_SpecificationId = specId, Fk_PersonId = personId, CreationDate = DateTime.UtcNow, HistoryText = historyText };
+            historyRepo.InsertOrUpdate(history);
+            return true;
+        }
     }
 }

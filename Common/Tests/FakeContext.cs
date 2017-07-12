@@ -168,7 +168,7 @@ namespace Etsi.Ultimate.Tests
             throw new NotImplementedException();
         }
 
-        public virtual int Transposition_CreateWiScheduleEntries(Nullable<int> wKI_ID, Nullable<int> mAJOR_VERSION, Nullable<int> tECHNICAL_VERSION, Nullable<int> eDITORIAL_VERSION)
+        public virtual int Transposition_CreateWiScheduleEntries(Nullable<int> wKI_ID, Nullable<int> mAJOR_VERSION, Nullable<int> tECHNICAL_VERSION, Nullable<int> eDITORIAL_VERSION, Nullable<int> mEETING_ID)
         {
             throw new NotImplementedException();
         }

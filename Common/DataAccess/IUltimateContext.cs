@@ -72,7 +72,7 @@ namespace Etsi.Ultimate.DataAccess
         int Transposition_CreateWiKeywordEntry(Nullable<int> wKI_ID, string kEYWORD_CODE);
         int Transposition_CreateWiProjectEntry(Nullable<int> wKI_ID, Nullable<int> pROJECT_ID);
         int Transposition_CreateWiRemarkEntry(Nullable<int> wKI_ID, Nullable<int> sEQ_NO, string rEMARK_TEXT);
-        int Transposition_CreateWiScheduleEntries(Nullable<int> wKI_ID, Nullable<int> mAJOR_VERSION, Nullable<int> tECHNICAL_VERSION, Nullable<int> eDITORIAL_VERSION);
+        int Transposition_CreateWiScheduleEntries(Nullable<int> wKI_ID, Nullable<int> mAJOR_VERSION, Nullable<int> tECHNICAL_VERSION, Nullable<int> eDITORIAL_VERSION, Nullable<int> mEETING_ID);
         int Transposition_CreateWiMemoEntry(Nullable<int> wKI_ID, string wKI_SCOPE);
     }
 }

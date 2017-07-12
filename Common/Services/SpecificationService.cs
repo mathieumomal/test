@@ -603,6 +603,26 @@ namespace Etsi.Ultimate.Services
             }
         }
 
+        public bool UnWithdrawnForRelease(int personID, int releaseID, int specificationID)
+        {
+            using (var uow = RepositoryFactory.Resolve<IUltimateUnitOfWork>())
+            {
+                var specWithdrawnAction = new SpecificationWithdrawAction { UoW = uow };
+                try
+                {
+                    specWithdrawnAction.UnWithdrawFromRelease(personID, releaseID, specificationID);
+                    uow.Save();
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    ExtensionLogger.Exception(e, new List<object> { personID, releaseID, specificationID }, this.GetType().Name, System.Reflection.MethodBase.GetCurrentMethod().Name);
+                    return false;
+                    
+                }
+            }
+        }
+
         /// <summary>
         /// Promote Specification to next release
         /// </summary>

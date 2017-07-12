@@ -243,12 +243,20 @@
                         $('#loader').show();
                         var isValid = true;
                         var hidIsRequiredValue = $('#hidIsRequired').val() == "True";
-                        if (hidIsRequiredValue) {
-                            var meetingControl = $find('<%= UploadMeeting.ClientID %>');
-                            var selectedMeetingID = meetingControl.get_value().split("|")[0];
-                            if (selectedMeetingID <= 0) {
-                                isValid = false;
-                                $('#meetingRequiredMsg').show();
+                        //if it's a draft version, meeting is not mandatory
+                        if ($('#NewVersionMajorVal').val() == "") {
+                            alert("Major version must be filled.");
+                            isValid = false;
+                            $('#loader').hide();
+                        }
+                        else {
+                            if (hidIsRequiredValue && parseInt($('#NewVersionMajorVal').val()) > 2) {
+                                var meetingControl = $find('<%= UploadMeeting.ClientID %>');
+                                var selectedMeetingID = meetingControl.get_value().split("|")[0];
+                                if (selectedMeetingID <= 0) {
+                                    isValid = false;
+                                    $('#meetingRequiredMsg').show();
+                                }
                             }
                         }
                         return isValid;

@@ -198,7 +198,7 @@ namespace Etsi.Ultimate.Module.Versions
         protected void UploadVersionBtn_Click(object sender, EventArgs e)
         {
             var meetingId = UploadMeeting.SelectedMeetingId;
-            if (meetingId > 0 || IsDraft)
+            if (meetingId > 0 || IsDraft || NewVersionMajorVal.Value < 2)
             {
                 preVersionUploadScreen.Visible = false;
                 confirmation.Visible = true;

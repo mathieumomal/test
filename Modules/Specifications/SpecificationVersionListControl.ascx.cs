@@ -95,6 +95,8 @@ namespace Etsi.Ultimate.Module.Specifications
                     imgWithdrawSpec.Visible = userRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease);
                     imgWithdrawSpec.OnClientClick = string.Format(OpenRadWin, string.Format(ConfigVariables.SpecificationWithdrawMeetingSelectPopUpRelativeLink, SpecId.GetValueOrDefault(), ReleaseId.GetValueOrDefault()), "Withdraw", 450, 220, "Withdraw specification", "false");
 
+                    imgUnWithdrawnSpec.Visible = userRights.HasRight(Enum_UserRights.Specification_UnWithdrawFromRelease);
+
                     imgAllocateVersion.Visible = (userRights.HasRight(Enum_UserRights.Versions_Allocate) && IsSpecNumberAssigned);
                     imgAllocateVersion.OnClientClick = string.Format(OpenRadWin, string.Format(ConfigVariables.SpecificationUploadVersionRelativeLink, ReleaseId.GetValueOrDefault(), SpecId.GetValueOrDefault(), "allocate"), "Version allocate", 440, 320, "Allocate version", "true");
 
@@ -249,6 +251,16 @@ namespace Etsi.Ultimate.Module.Specifications
             {
                 var specSvc = ServicesFactory.Resolve<ISpecificationService>();
                 specSvc.DemoteSpecification(PersonId.Value, SpecId.Value, ReleaseId.Value);
+                Refresh();
+            }
+        }
+
+        protected void imgUnWithdrawnSpec_Click(object sender, System.Web.UI.ImageClickEventArgs e)
+        {
+            if(SpecId.HasValue && PersonId.HasValue && ReleaseId.HasValue)
+            {
+                var specSvc = ServicesFactory.Resolve<ISpecificationService>();
+                specSvc.UnWithdrawnForRelease(PersonId.Value, ReleaseId.Value, SpecId.Value);
                 Refresh();
             }
         }

@@ -33,6 +33,7 @@
         Specification_ForceTransposition,
         Specification_UnforceTransposition,
         Specification_WithdrawFromRelease,
+        Specification_UnWithdrawFromRelease,
         Specification_InhibitPromote,
         Specification_Promote,
         Specification_Demote,

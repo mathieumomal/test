@@ -105,6 +105,7 @@
         <asp:ImageButton ID="imgPromoteSpec" ToolTip="Promote specification to next Release" ImageUrl="images/spec_rel-p.png" CssClass="icon_display_size" runat="server" OnClick="imgPromoteSpec_Click" />
         <asp:ImageButton ID="imgDemoteSpec" ToolTip="Demote specification to previous Release" ImageUrl="images/spec_rel-d.png" CssClass="icon_display_size" runat="server" OnClick="imgDemoteSpec_Click"/>
         <asp:ImageButton ID="imgWithdrawSpec" ToolTip="Withdraw specification from Release" ImageUrl="images/spec_rel-w.png" CssClass="icon_display_size" runat="server" />
+        <asp:ImageButton ID="imgUnWithdrawnSpec" ToolTip="Unwithdrawn specification from Release" ImageUrl="images/spec_rel-rw.png" CssClass="icon_display_size" runat="server" OnClick="imgUnWithdrawnSpec_Click" />
         <asp:ImageButton ID="imgDeleteSpecRelease" ImageUrl="images/delete.png" CssClass="icon_display_size_remove" runat="server"/>
     </asp:Panel>
     <telerik:RadGrid runat="server" ID="specificationsVersionGrid"

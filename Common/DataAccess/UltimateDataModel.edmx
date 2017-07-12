@@ -28,10 +28,10 @@
           <Property Name="Fk_Impact" Type="int" />
           <Property Name="MOD_BY" Type="varchar" MaxLength="100" />
           <Property Name="MOD_TS" Type="datetime" />
-          <Property Name="ClausesAffected" Type="varchar" MaxLength="200" />
-          <Property Name="OtherCoreSpecifications" Type="varchar" MaxLength="200" />
-          <Property Name="TestSpecifications" Type="varchar" MaxLength="200" />
-          <Property Name="OMSpecifications" Type="varchar" MaxLength="200" />
+          <Property Name="ClausesAffected" Type="varchar" MaxLength="500" />
+          <Property Name="OtherCoreSpecifications" Type="varchar" MaxLength="500" />
+          <Property Name="TestSpecifications" Type="varchar" MaxLength="500" />
+          <Property Name="OMSpecifications" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="ChangeRequestTsgData">
           <Key>
@@ -1058,6 +1058,7 @@ avertissement 6002: La table/vue 'U3GPPDB.dbo.View_Persons' n'a pas de clé prim
           <Parameter Name="MAJOR_VERSION" Type="int" Mode="In" />
           <Parameter Name="TECHNICAL_VERSION" Type="int" Mode="In" />
           <Parameter Name="EDITORIAL_VERSION" Type="int" Mode="In" />
+          <Parameter Name="MEETING_ID" Type="int" Mode="In" />
         </Function>
         <Function Name="Versions_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="WorkItems_CleanAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
@@ -1535,6 +1536,7 @@ avertissement 6002: La table/vue 'U3GPPDB.dbo.View_Persons' n'a pas de clé prim
             <Parameter Name="MAJOR_VERSION" Mode="In" Type="Int32" />
             <Parameter Name="TECHNICAL_VERSION" Mode="In" Type="Int32" />
             <Parameter Name="EDITORIAL_VERSION" Mode="In" Type="Int32" />
+            <Parameter Name="MEETING_ID" Mode="In" Type="Int32" />
           </FunctionImport>
           <EntitySet Name="SyncInfoes" EntityType="Etsi.Ultimate.DataAccess.SyncInfo" />
           <AssociationSet Name="FK_SyncInfo_Version" Association="Etsi.Ultimate.DataAccess.FK_SyncInfo_Version">
@@ -2219,10 +2221,10 @@ avertissement 6002: La table/vue 'U3GPPDB.dbo.View_Persons' n'a pas de clé prim
           <NavigationProperty Name="Specification" Relationship="Etsi.Ultimate.DataAccess.FK_CRSpecification" FromRole="ChangeRequest" ToRole="Specification" />
           <Property Name="MOD_BY" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="MOD_TS" Type="DateTime" Precision="3" />
-          <Property Name="ClausesAffected" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="OtherCoreSpecifications" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="TestSpecifications" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="OMSpecifications" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ClausesAffected" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="OtherCoreSpecifications" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="TestSpecifications" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="OMSpecifications" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_CRCurrentVersion">
           <End Type="Etsi.Ultimate.DataAccess.SpecVersion" Role="SpecVersion" Multiplicity="0..1" />

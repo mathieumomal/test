@@ -434,7 +434,7 @@ namespace Etsi.Ultimate.Business.Specifications
                 if (userRights.HasRight(Enum_UserRights.Specification_WithdrawFromRelease))
                 {
                     rights.AddRight(Enum_UserRights.Specification_WithdrawFromRelease);
-                }
+                }                
 
                 // Test the right of the user to upload/Allocate a version
                 // Conditions :
@@ -471,10 +471,15 @@ namespace Etsi.Ultimate.Business.Specifications
                     }
                 }
 
-                if (!spec.IsUnderChangeControl.GetValueOrDefault())
-                {
+                    //Major version field is always enabled
                     if(userRights.HasRight(Enum_UserRights.Versions_Modify_MajorVersion))
                         rights.AddRight(Enum_UserRights.Versions_Modify_MajorVersion);
+                }
+            else if(spec.IsActive && specRelease.isWithdrawn.GetValueOrDefault())
+            {
+                if (userRights.HasRight(Enum_UserRights.Specification_UnWithdrawFromRelease))
+                {
+                    rights.AddRight(Enum_UserRights.Specification_UnWithdrawFromRelease);
                 }
             }
 

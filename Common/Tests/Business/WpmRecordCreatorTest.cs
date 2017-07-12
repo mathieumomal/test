@@ -68,7 +68,7 @@ namespace Etsi.Ultimate.Tests.Business
             var WorkProgramRepoMock = MockRepository.GenerateMock<IWorkProgramRepository>();
             //Set WKI_ID to 1
             WorkProgramRepoMock.Expect(wp => wp.InsertEtsiWorkITem(Arg<EtsiWorkItemImport>.Is.Anything)).Return(1);
-            WorkProgramRepoMock.Expect(wp => wp.InsertWIScheduleEntry(Arg<int>.Is.Equal(1), Arg<int>.Is.Equal(10), Arg<int>.Is.Equal(2), Arg<int>.Is.Equal(1)));
+            WorkProgramRepoMock.Expect(wp => wp.InsertWIScheduleEntry(Arg<int>.Is.Equal(1), Arg<int>.Is.Equal(10), Arg<int>.Is.Equal(2), Arg<int>.Is.Equal(1), Arg<int>.Is.Equal(1)));
             WorkProgramRepoMock.Expect(wp => wp.InsertWIRemeark(Arg<int>.Is.Equal(1), Arg<int>.Is.Anything, Arg<string>.Is.Anything));
             WorkProgramRepoMock.Expect(wp => wp.InsertWIMemo(Arg<int>.Is.Equal(1), Arg<string>.Is.Equal("MTGSHORTREF")));
             

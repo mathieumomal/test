@@ -99,7 +99,7 @@ namespace Etsi.Ultimate.Business
 
                 LogManager.Debug("WPM RECORDS:    -> InsertWIScheduleEntry");
                 //Import Schedule to WPMDB
-                wpRepo.InsertWIScheduleEntry(wkiId, version.MajorVersion.GetValueOrDefault(), version.TechnicalVersion.GetValueOrDefault(), version.EditorialVersion.GetValueOrDefault());
+                wpRepo.InsertWIScheduleEntry(wkiId, version.MajorVersion.GetValueOrDefault(), version.TechnicalVersion.GetValueOrDefault(), version.EditorialVersion.GetValueOrDefault(), version.Source.GetValueOrDefault());
 
                 LogManager.Debug("WPM RECORDS:    -> InsertWIRemeark");
                 //Import Remark to WPMDB

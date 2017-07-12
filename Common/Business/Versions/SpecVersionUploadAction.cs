@@ -66,8 +66,9 @@ namespace Etsi.Ultimate.Business.Versions
                     var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(path);
                     var uploadedFileExtension = Path.GetExtension(path);
                     var fileExtension = String.Empty;
-                    var fileToAnalyzePath = String.Empty;
-                    var isUcc = version.Specification.IsUnderChangeControl.GetValueOrDefault();
+                    var fileToAnalyzePath = String.Empty;                    
+                    var isUcc = version.MajorVersion > 2;
+                    //var isUcc = version.Specification.IsUnderChangeControl.GetValueOrDefault();
 
                     var specVersionUploadMgr = ManagerFactory.Resolve<ISpecVersionUploadManager>();
                     var uniquePath = specVersionUploadMgr.GetUniquePath(path);
@@ -284,7 +285,7 @@ namespace Etsi.Ultimate.Business.Versions
             var versionMgr = ManagerFactory.Resolve<ISpecVersionManager>();
             versionMgr.UoW = UoW;
 
-            if ((version.Specification.IsUnderChangeControl.GetValueOrDefault()) && (version.Source == null || version.Source <= 0))
+            if ((version.MajorVersion > 2) && (version.Source == null || version.Source <= 0))
                 throw new InvalidOperationException(Localization.Upload_Version_Error_Meeting_Id_Not_Provided);
 
             //Check if version already uploaded
@@ -731,8 +732,9 @@ namespace Etsi.Ultimate.Business.Versions
 
                 if (existingVersion == null)
                 {
-                    //Transposition of the existing version
-                    transposeMgr.Transpose(spec, version);
+                    //Transposition if major version > 2
+                    if(version.MajorVersion > 2)                    
+                        transposeMgr.Transpose(spec, version);
                     repo.InsertOrUpdate(version);
                 }
                 else
@@ -742,8 +744,9 @@ namespace Etsi.Ultimate.Business.Versions
                     existingVersion.ProvidedBy = version.ProvidedBy;
                     existingVersion.DocumentUploaded = version.DocumentUploaded;
                     version.Remarks.ToList().ForEach(r => existingVersion.Remarks.Add(r));
-                    //Transposition of the existing version
-                    transposeMgr.Transpose(spec, existingVersion);
+                    //Transposition of the existing version only if major version > 2                    
+                    if(version.MajorVersion > 2)
+                        transposeMgr.Transpose(spec, existingVersion);
                 }
 
                 //Change spec to UCC when a version is uploaded with a major version number greater than 2
